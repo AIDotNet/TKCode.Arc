@@ -112,13 +112,6 @@ a `BudgetVarianceLabels`: replace it to localize the block, including the senten
 
 <!-- api: BudgetVarianceLabels -->
 
-## Keyboard
-
-- **Tab** moves to the period switch, then into the departments, then out of the block.
-- On the period switch, **Left** and **Right** change the window.
-- In the departments, **Up** and **Down** move to the previous or next one, and **Home** and **End** to the first or last.
-- **Enter** or **Space** opens or closes the department in focus.
-
 ## Accessibility
 
 - Each department row is a button that reports expanded or collapsed, and its name is a full sentence: what was spent of
@@ -127,6 +120,13 @@ a `BudgetVarianceLabels`: replace it to localize the block, including the senten
 - Changing the window announces the window and the total through a polite live region.
 - Variance never relies on color: amounts carry a sign and every share ends in over, under or on plan.
 - Pointer focus draws no ring; keyboard focus fills the row and shows Arc's focus ring.
+
+### Keyboard
+
+- **Tab** moves to the period switch, then into the departments, then out of the block.
+- On the period switch, **Left** and **Right** change the window.
+- In the departments, **Up** and **Down** move to the previous or next one, and **Home** and **End** to the first or last.
+- **Enter** or **Space** opens or closes the department in focus.
 
 ## Motion
 

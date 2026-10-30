@@ -410,7 +410,7 @@ internal sealed partial class UsageForecastPlot : Control
         if (Bounds.Width > 0 && _y.Length > 0)
         {
             UpdateMarkers(snap: changed);
-            _loop.Start();
+            Kick();
         }
         InvalidateVisual();
     }
@@ -468,7 +468,7 @@ internal sealed partial class UsageForecastPlot : Control
                 _panelAlpha.Start(1, ArcMotionPresets.Fast, AnalyticsEasings.Enter);
             }
         }
-        _loop.Start();
+        Kick();
         InvalidateVisual();
     }
 
@@ -506,7 +506,7 @@ internal sealed partial class UsageForecastPlot : Control
         {
             _handleHover.Start(active ? 1 : 0, ArcMotionPresets.Fast, AnalyticsEasings.Standard);
         }
-        _loop.Start();
+        Kick();
         InvalidateVisual();
     }
 
@@ -573,7 +573,7 @@ internal sealed partial class UsageForecastPlot : Control
             RefreshPanel();
             _panelX.Jump(PanelTargetX(_inspectDay));
         }
-        _loop.Start();
+        Kick();
         InvalidateVisual();
     }
 
@@ -652,8 +652,8 @@ internal sealed partial class UsageForecastPlot : Control
             {
                 // Measured: the pill fades out over about 400ms (halving every 33ms).
                 _crossAlpha.Start(wantVisible ? 1 : 0, TimeSpan.FromMilliseconds(400), AnalyticsEasings.EaseOut);
+                moving = true;
             }
-            moving = true;
         }
         var budgetValue = ValueOfY(by);
         for (var k = 0; k < _thresholdPercents.Length; k++)
@@ -688,8 +688,8 @@ internal sealed partial class UsageForecastPlot : Control
                     _thWipe[k].Start(shown ? 1 : 0, TimeSpan.FromMilliseconds(700), AnalyticsEasings.CssSpring);
                     _thLabel[k].Start(shown ? 1 : 0, TimeSpan.FromMilliseconds(shown ? 160 : 135), AnalyticsEasings.EaseOut,
                         shown ? TimeSpan.FromMilliseconds(80) : default);
+                    moving = true;
                 }
-                moving = true;
             }
         }
         return moving;
@@ -714,6 +714,18 @@ internal sealed partial class UsageForecastPlot : Control
     #endregion
 
     #region Frame loop
+
+    /// <summary>
+    /// Runs the frame loop while something animates. With motion off every change has jumped already: one step here
+    /// settles what is left, so the loop does not start.
+    /// </summary>
+    private void Kick()
+    {
+        if (ArcMotion.GetEffectiveLevel(this) != ArcMotionLevel.Off || Advance(0))
+        {
+            _loop.Start();
+        }
+    }
 
     private bool Advance(double dt)
     {

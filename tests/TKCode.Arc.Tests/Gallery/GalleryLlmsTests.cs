@@ -48,8 +48,9 @@ public class GalleryLlmsTests
         button.ShouldContain($"[简体中文]({BaseUrl}/zh-CN/components/button.md)");
 
         files["zh-CN/components/button.md"].ShouldContain("- 包：`TKCode.Arc`");
-        files["zh-TW/blocks/sidebar.md"].ShouldContain("- 套件：`TKCode.Arc.Blocks`，尚未發佈到 NuGet");
-        files["components/data-grid.md"].ShouldContain("not on NuGet yet: reference the project from https://github.com/AIDotNet/TKCode.Arc and call `UseArcAdvancedCharts()`");
+        // Every package is on NuGet since 0.3.0-preview.5: block and data grid pages give the install command too.
+        files["zh-TW/blocks/sidebar.md"].ShouldContain("- 套件：`TKCode.Arc.Blocks`，`dotnet add package TKCode.Arc.Blocks --version ");
+        files["components/data-grid.md"].ShouldContain("- Package: `TKCode.Arc.AdvancedCharts`, `dotnet add package TKCode.Arc.AdvancedCharts --version ");
     }
 
     [AvaloniaFact]

@@ -108,6 +108,7 @@ public static class GalleryText
             "Media" => GalleryShellLangResourceKind.Category_Media,
             "TextEffects" => GalleryShellLangResourceKind.Category_TextEffects,
             "Content" => GalleryShellLangResourceKind.Category_Content,
+            "Playful" => GalleryShellLangResourceKind.Category_Playful,
             "Ai" => GalleryShellLangResourceKind.Category_Ai,
             "Illustrations" => GalleryShellLangResourceKind.Category_Illustrations,
             "Cursor" => GalleryShellLangResourceKind.Category_Cursor,

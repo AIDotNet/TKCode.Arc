@@ -427,13 +427,26 @@ public class CornerStyleTests
             .Where(p => p.PropertyType == typeof(bool) && p.CanWrite && p.GetIndexParameters().Length == 0
                         && System.Text.RegularExpressions.Regex.IsMatch(p.Name, "^Is\\w*(Open|Expanded|Shown)$"));
 
-    private static void OpenFlags(Control control)
+    private static void OpenFlags(Control control) => SetFlags(control, true);
+
+    private static void CloseFlags(Control control) => SetFlags(control, false);
+
+    private static void SetFlags(Control control, bool open)
     {
         foreach (var property in OpenProperties(control))
         {
             try
             {
-                property.SetValue(control, true);
+                // A read-only flag (PhoneInput.IsPickerOpen) opens through its public method (OpenPicker), which builds the
+                // popup's content; writing the flag through its private setter would only flip it.
+                if (property.SetMethod is not { IsPublic: true } && ToggleMethod(control, property.Name, open) is { } method)
+                {
+                    method.Invoke(control, null);
+                }
+                else
+                {
+                    property.SetValue(control, open);
+                }
             }
             catch
             {
@@ -442,20 +455,11 @@ public class CornerStyleTests
         }
     }
 
-    private static void CloseFlags(Control control)
-    {
-        foreach (var property in OpenProperties(control))
-        {
-            try
-            {
-                property.SetValue(control, false);
-            }
-            catch
-            {
-                // Same as OpenFlags.
-            }
-        }
-    }
+    /// <summary>The public parameterless <c>Open{X}</c> / <c>Close{X}</c> method that goes with an <c>Is{X}Open</c> flag.</summary>
+    private static System.Reflection.MethodInfo? ToggleMethod(Control control, string flag, bool open)
+        => System.Text.RegularExpressions.Regex.Match(flag, "^Is(\\w+)Open$") is { Success: true } match
+            ? control.GetType().GetMethod((open ? "Open" : "Close") + match.Groups[1].Value, Type.EmptyTypes)
+            : null;
 
     private static Type[] ControlTypes()
     {

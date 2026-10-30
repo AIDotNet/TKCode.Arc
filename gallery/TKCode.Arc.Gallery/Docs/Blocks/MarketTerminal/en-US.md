@@ -139,17 +139,6 @@ status line.
 
 <!-- api: MarketTerminalLabels -->
 
-## Keyboard
-
-- **Tab** moves through the Live button, the range switch, the average toggles, the zoom buttons, the chart, the watchlist
-  rows and the ticket.
-- On the chart, **Left** and **Right** move the crosshair one candle (with **Shift**, ten), and the view scrolls when the
-  crosshair passes an edge. **Home** and **End** go to the first and the latest candle. **+** and **-** zoom around the
-  crosshair, **0** resets the view and **Escape** clears the crosshair.
-- In the watchlist, **Up** and **Down** move between symbols and **Home** and **End** jump to the first and the last.
-  **Enter** or **Space** charts the focused symbol.
-- The range switch and the ticket's switches follow the segmented control: the arrows change the choice.
-
 ## Accessibility
 
 - The chart is a focusable element named after the symbol, the range and the candle size ("ORBT price chart, six months of
@@ -162,6 +151,17 @@ status line.
   filling and canceling an order are announced.
 - Pointer focus draws no ring; keyboard focus shows Arc's focus ring around the chart, the rows, the toggles and the
   buttons.
+
+### Keyboard
+
+- **Tab** moves through the Live button, the range switch, the average toggles, the zoom buttons, the chart, the watchlist
+  rows and the ticket.
+- On the chart, **Left** and **Right** move the crosshair one candle (with **Shift**, ten), and the view scrolls when the
+  crosshair passes an edge. **Home** and **End** go to the first and the latest candle. **+** and **-** zoom around the
+  crosshair, **0** resets the view and **Escape** clears the crosshair.
+- In the watchlist, **Up** and **Down** move between symbols and **Home** and **End** jump to the first and the last.
+  **Enter** or **Space** charts the focused symbol.
+- The range switch and the ticket's switches follow the segmented control: the arrows change the choice.
 
 ## Motion
 

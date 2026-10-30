@@ -92,7 +92,7 @@
                                     <StackPanel Orientation="Horizontal" Spacing="{arc:SmallMultiplesTokenResource KeyTextGap}">
                                         <Border Width="{arc:SmallMultiplesTokenResource KeyWidth}"
                                                 Height="2"
-                                                CornerRadius="1"
+                                                CornerRadius="{arc:ArcDesignTokenResource RadiusStep1}"
                                                 VerticalAlignment="Center"
                                                 Background="{arc:ArcDesignTokenResource Series1}" />
                                         <TextBlock Classes="legend" Text="{TemplateBinding SeriesLegendText}" />
@@ -116,11 +116,11 @@
                                     BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
                                     BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}">
                                 <Panel Name="PART_GridHost">
+                                    <!-- Its bottom-only radius follows RadiusStep18; SmallMultiples binds it when the template is applied. -->
                                     <Border Name="PART_FocusRing"
                                             IsVisible="False"
                                             IsHitTestVisible="False"
                                             Margin="2"
-                                            CornerRadius="0,0,18,18"
                                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                                 </Panel>

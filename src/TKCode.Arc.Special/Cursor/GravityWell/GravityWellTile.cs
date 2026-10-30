@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
 using Avalonia.Media;
+using TKCode.Arc.DesignTokens;
 
 namespace TKCode.Arc;
 
@@ -16,6 +17,13 @@ internal sealed class GravityWellTile : ContentControl
 {
     public const string RingPart = "PART_Ring";
 
+    /// <summary>
+    /// How much rounder the ring's corners are than the tile's: the 2px it sits outside, read from the <c>RadiusStep2</c>
+    /// token so the corner styles scale it with the tile (half under a 0.5 scale, nothing under Square).
+    /// </summary>
+    private static readonly StyledProperty<CornerRadius> RingGrowthProperty =
+        AvaloniaProperty.Register<GravityWellTile, CornerRadius>("RingGrowth", new CornerRadius(2));
+
     private readonly MatrixTransform _transform = new();
     private Border? _ring;
     private double _ringOpacity;
@@ -24,6 +32,7 @@ internal sealed class GravityWellTile : ContentControl
     {
         RenderTransform = _transform;
         RenderTransformOrigin = RelativePoint.Center;
+        ArcTokens.Bind(this, RingGrowthProperty, ArcDesignTokenKind.RadiusStep2);
     }
 
     /// <summary>How bright the shockwave ring is (0 to 1).</summary>
@@ -67,13 +76,13 @@ internal sealed class GravityWellTile : ContentControl
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-        if (change.Property == CornerRadiusProperty)
+        if (change.Property == CornerRadiusProperty || change.Property == RingGrowthProperty)
         {
             UpdateRingRadius();
         }
     }
 
-    // The ring sits 2px outside the tile, so its corners are 2px rounder.
+    // The ring sits 2px outside the tile, so its corners are 2px rounder (the growth follows the corner style, see RingGrowth).
     private void UpdateRingRadius()
     {
         if (_ring is null)
@@ -81,8 +90,10 @@ internal sealed class GravityWellTile : ContentControl
             return;
         }
         var r = CornerRadius;
-        _ring.CornerRadius = new CornerRadius(Grow(r.TopLeft), Grow(r.TopRight), Grow(r.BottomRight), Grow(r.BottomLeft));
+        var growth = GetValue(RingGrowthProperty).TopLeft;
+        _ring.CornerRadius = new CornerRadius(Grow(r.TopLeft, growth), Grow(r.TopRight, growth), Grow(r.BottomRight, growth),
+            Grow(r.BottomLeft, growth));
     }
 
-    private static double Grow(double radius) => radius > 0 ? radius + 2 : 0;
+    private static double Grow(double radius, double growth) => radius > 0 ? radius + growth : 0;
 }

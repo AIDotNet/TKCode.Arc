@@ -267,7 +267,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="-4"
-                            CornerRadius="18"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep18}"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
@@ -398,7 +398,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="-4"
-                            CornerRadius="13"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep13}"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
@@ -470,7 +470,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="-4"
-                            CornerRadius="13"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep13}"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>

@@ -115,6 +115,12 @@
         <target state="translated">擴充</target>
       </segment>
     </unit>
+    <unit id="Category_Playful">
+      <segment>
+        <source>Playful</source>
+        <target state="translated">趣味</target>
+      </segment>
+    </unit>
     <unit id="Category_Ai">
       <segment>
         <source>AI</source>

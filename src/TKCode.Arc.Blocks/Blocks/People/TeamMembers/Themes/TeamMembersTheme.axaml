@@ -470,7 +470,7 @@
             <Setter Property="Spacing" Value="{arc:TeamMembersTokenResource RoleFieldGap}" />
         </Style>
         <Style Selector="^ /template/ Border#PART_FocusRing">
-            <Setter Property="CornerRadius" Value="22" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep22}" />
         </Style>
         <Style Selector="^:ghost">
             <Setter Property="Background" Value="Transparent" />
@@ -482,7 +482,7 @@
                 <Setter Property="Spacing" Value="{arc:TeamMembersTokenResource RoleGhostGap}" />
             </Style>
             <Style Selector="^ /template/ Border#PART_FocusRing">
-                <Setter Property="CornerRadius" Value="12" />
+                <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
             </Style>
         </Style>
         <Style Selector="^:ghost:pointerover, ^:ghost:open">

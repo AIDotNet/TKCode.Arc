@@ -85,6 +85,7 @@ public enum GalleryShellLangResourceKind
     Category_Media,
     Category_TextEffects,
     Category_Content,
+    Category_Playful,
     Category_Ai,
     Category_Illustrations,
     Category_Cursor,

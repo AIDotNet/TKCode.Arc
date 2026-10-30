@@ -5,6 +5,8 @@ using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Data;
+using TKCode.Arc.DesignTokens;
 
 namespace TKCode.Arc;
 
@@ -79,6 +81,13 @@ public partial class SmallMultiples
         _dimSwitch = e.NameScope.Find<Switch>(DimSwitchPart);
         _gridHost = e.NameScope.Find<Panel>(GridHostPart);
         _focusRing = e.NameScope.Find<Control>(FocusRingPart);
+        if (_focusRing is Border ring)
+        {
+            // The ring lines the bottom of the card, so only its bottom corners are rounded: the RadiusStep18 token (the
+            // card's 20 less the ring's 2px inset) without its top corners, so the corner styles reach it too.
+            ring.Bind(Border.CornerRadiusProperty, ring.GetResourceObservable(ArcDesignTokenKind.RadiusStep18, BottomCorners),
+                BindingPriority.Template);
+        }
         _periodText = e.NameScope.Find<TextBlock>(PeriodPart);
         _stateText = e.NameScope.Find<TextBlock>(StatePart);
         _totalText = e.NameScope.Find<TextBlock>(TotalPart);
@@ -477,6 +486,10 @@ public partial class SmallMultiples
         }
         RaiseEvent(new SmallMultiplesIndexChangedEventArgs(CrosshairIndexChangedEvent, index));
     }
+
+    /// <summary>Keeps the bottom corners of a corner radius token value (the focus ring's top edge is straight).</summary>
+    private static object? BottomCorners(object? value)
+        => value is CornerRadius radius ? new CornerRadius(0, 0, radius.BottomRight, radius.BottomLeft) : AvaloniaProperty.UnsetValue;
 
     /// <summary>Shows the shared focus ring around the panels while they have keyboard focus.</summary>
     internal void OnGridFocusChanged()

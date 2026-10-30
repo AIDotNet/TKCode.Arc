@@ -272,7 +272,7 @@
                             IsHitTestVisible="False"
                             Margin="-4"
                             BorderThickness="2"
-                            CornerRadius="14"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep14}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
@@ -370,7 +370,7 @@
                                 IsHitTestVisible="False"
                                 Margin="-4"
                                 BorderThickness="2"
-                                CornerRadius="6"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusStep6}"
                                 BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                     </Panel>
                     <ContentPresenter Name="PART_ContentPresenter"

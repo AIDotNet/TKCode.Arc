@@ -30,6 +30,8 @@ internal enum AnalyticsThumbStyle
 /// <summary>
 /// The geometry, colours and spring of an <see cref="AnalyticsSegmentSwitch"/>, one preset per measured look. Copy one
 /// with <c>with { … }</c> to vary it. Outer height = <see cref="SegmentHeight"/> + 2 × <see cref="Inset"/> + 2 (border).
+/// Radii are ArcDesign tokens (<c>RadiusStepN</c> for N px, <c>RadiusPill</c> for a capsule), so the corner styles
+/// reach them.
 /// </summary>
 internal sealed record AnalyticsSegmentLook
 {
@@ -48,11 +50,14 @@ internal sealed record AnalyticsSegmentLook
     /// <summary>Smallest segment width (0 = text + padding).</summary>
     public double MinSegmentWidth { get; init; }
 
-    /// <summary>Frame radius; NaN = pill.</summary>
-    public double FrameRadius { get; init; } = 18;
+    /// <summary>Frame radius token (<c>RadiusPill</c>: a capsule).</summary>
+    public ArcDesignTokenKind FrameRadius { get; init; } = ArcDesignTokenKind.RadiusStep18;
 
-    /// <summary>Segment and thumb radius; NaN = pill.</summary>
-    public double SegmentRadius { get; init; } = 14;
+    /// <summary>Segment and thumb radius token (<c>RadiusPill</c>: a capsule).</summary>
+    public ArcDesignTokenKind SegmentRadius { get; init; } = ArcDesignTokenKind.RadiusStep14;
+
+    /// <summary>Focus ring radius token: the segment radius plus the ring's 4px offset (<c>RadiusPill</c> around a capsule).</summary>
+    public ArcDesignTokenKind FocusRingRadius { get; init; } = ArcDesignTokenKind.RadiusStep18;
 
     /// <summary>Label size (14; small looks 12, Journey flow 13), Medium weight, tabular figures.</summary>
     public double FontSize { get; init; } = 14;
@@ -79,13 +84,15 @@ internal sealed record AnalyticsSegmentLook
     /// <summary>KPI drilldown range / breakdown switch: 34 high, 26px segments, inset 3, gap 2, radii 10 / 7, 12px, TextMuted, Smooth.</summary>
     public static AnalyticsSegmentLook Compact { get; } = new()
     {
-        SegmentHeight = 26, FrameRadius = 10, SegmentRadius = 7, FontSize = 12
+        SegmentHeight = 26, FrameRadius = ArcDesignTokenKind.RadiusStep10, SegmentRadius = ArcDesignTokenKind.RadiusStep7,
+        FocusRingRadius = ArcDesignTokenKind.RadiusStep11, FontSize = 12
     };
 
     /// <summary>Journey flow channel switch: 34 high, 28px segments, inset 2, gap 2, padding 10, radii 10 / 8, 13px, TextSecondary, Quick.</summary>
     public static AnalyticsSegmentLook Flow { get; } = new()
     {
-        Inset = 2, SegmentHeight = 28, SegmentPadding = 10, FrameRadius = 10, SegmentRadius = 8, FontSize = 13,
+        Inset = 2, SegmentHeight = 28, SegmentPadding = 10, FrameRadius = ArcDesignTokenKind.RadiusStep10,
+        SegmentRadius = ArcDesignTokenKind.RadiusStep8, FocusRingRadius = ArcDesignTokenKind.RadiusStep12, FontSize = 13,
         MutedLabels = false, Spring = AnalyticsSprings.Quick
     };
 
@@ -95,8 +102,9 @@ internal sealed record AnalyticsSegmentLook
     /// </summary>
     public static AnalyticsSegmentLook Small { get; } = new()
     {
-        Inset = 2, Gap = 0, SegmentHeight = 26, SegmentPadding = 10, MinSegmentWidth = 40, FrameRadius = 10, SegmentRadius = 8,
-        FontSize = 12, MutedLabels = false, Thumb = AnalyticsThumbStyle.Ring, Spring = AnalyticsSprings.Quick
+        Inset = 2, Gap = 0, SegmentHeight = 26, SegmentPadding = 10, MinSegmentWidth = 40, FrameRadius = ArcDesignTokenKind.RadiusStep10,
+        SegmentRadius = ArcDesignTokenKind.RadiusStep8, FocusRingRadius = ArcDesignTokenKind.RadiusStep12, FontSize = 12,
+        MutedLabels = false, Thumb = AnalyticsThumbStyle.Ring, Spring = AnalyticsSprings.Quick
     };
 
     /// <summary>
@@ -105,8 +113,9 @@ internal sealed record AnalyticsSegmentLook
     /// </summary>
     public static AnalyticsSegmentLook Pill { get; } = new()
     {
-        Inset = 2, Gap = 0, SegmentHeight = 26, SegmentPadding = 10, FrameRadius = double.NaN, SegmentRadius = double.NaN,
-        FontSize = 12, MutedLabels = false, Thumb = AnalyticsThumbStyle.Tint, HasFill = false, Spring = AnalyticsSprings.Gentle
+        Inset = 2, Gap = 0, SegmentHeight = 26, SegmentPadding = 10, FrameRadius = ArcDesignTokenKind.RadiusPill,
+        SegmentRadius = ArcDesignTokenKind.RadiusPill, FocusRingRadius = ArcDesignTokenKind.RadiusPill, FontSize = 12,
+        MutedLabels = false, Thumb = AnalyticsThumbStyle.Tint, HasFill = false, Spring = AnalyticsSprings.Gentle
     };
 }
 
@@ -329,8 +338,8 @@ internal sealed class AnalyticsSegmentSwitch : Control
             binding.Dispose();
         }
         _bindings.Clear();
-        var frameRadius = double.IsNaN(look.FrameRadius) ? (look.SegmentHeight + 2 * look.Inset + 2) / 2 : look.FrameRadius;
-        _frame.CornerRadius = new CornerRadius(frameRadius);
+        // Radii follow their tokens (the corner styles scale or zero them); a pill token draws at half the height.
+        _bindings.Add(ArcTokens.Bind(_frame, Border.CornerRadiusProperty, look.FrameRadius));
         _frame.BorderThickness = new Thickness(1);
         _frame.Padding = new Thickness(look.Inset);
         _bindings.Add(ArcTokens.Bind(_frame, Border.BorderBrushProperty, ArcDesignTokenKind.Border));
@@ -342,15 +351,14 @@ internal sealed class AnalyticsSegmentSwitch : Control
         {
             _frame.Background = null;
         }
-        var segmentRadius = double.IsNaN(look.SegmentRadius) ? look.SegmentHeight / 2 : look.SegmentRadius;
-        _thumb.CornerRadius = new CornerRadius(segmentRadius);
+        _bindings.Add(ArcTokens.Bind(_thumb, GlidingIndicator.CornerRadiusProperty, look.SegmentRadius));
         foreach (var button in _buttons)
         {
             button.Height = look.SegmentHeight;
             button.MinWidth = look.MinSegmentWidth;
             button.Padding = new Thickness(look.SegmentPadding, 0);
-            button.CornerRadius = new CornerRadius(segmentRadius);
-            button.FocusRingRadius = new CornerRadius(segmentRadius + 4);
+            _bindings.Add(ArcTokens.Bind(button, TemplatedControl.CornerRadiusProperty, look.SegmentRadius));
+            _bindings.Add(ArcTokens.Bind(button, AnalyticsSegmentButton.FocusRingRadiusProperty, look.FocusRingRadius));
             button.FontSize = look.FontSize;
             button.Classes.Set("secondary", !look.MutedLabels);
         }
