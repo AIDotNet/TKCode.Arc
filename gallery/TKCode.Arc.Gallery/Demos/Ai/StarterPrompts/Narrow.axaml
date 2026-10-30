@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.StarterPromptsNarrowDemo">
+    <!-- In a 360px column the cards stack in one column, the tabs scroll inside themselves, Shuffle is an icon and the
+         padding and corner radius step down. -->
+    <Border MaxWidth="360">
+        <arc:StarterPrompts x:Name="Prompts"
+                            Greeting="{x:Static demos:StarterPromptsDemoData.Greeting}"
+                            Description="{x:Static demos:StarterPromptsDemoData.Description}"
+                            Placeholder="{x:Static demos:StarterPromptsDemoData.Placeholder}"
+                            ModelName="{x:Static demos:StarterPromptsDemoData.ModelName}" />
+    </Border>
+</UserControl>

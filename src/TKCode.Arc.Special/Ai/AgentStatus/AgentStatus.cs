@@ -25,8 +25,8 @@ namespace TKCode.Arc;
 /// Drive it from your agent's events: set <see cref="Status"/>, keep <see cref="Activity"/> to the latest tool call in the
 /// present tense, add <see cref="Steps"/>, give a fixed <see cref="StartedAt"/> (the timer leaves out paused and failed
 /// time itself) and handle the action events; <see cref="Actions"/> chooses which buttons are offered, the counterpart of
-/// showing a control only when its handler exists. With nothing set, or with a <see cref="Simulation"/>, it plays an
-/// invented sample run on its own.
+/// showing a control only when its handler exists. Without run data of its own it plays a <see cref="Simulation"/> when one
+/// is set (your scripted run), and otherwise rests at Ready.
 /// </para>
 /// </summary>
 [TemplatePart(SlotPart, typeof(Border))]
@@ -47,7 +47,7 @@ public sealed partial class AgentStatus : TemplatedControl
     internal const string ExpandedPseudoClass = ":expanded";
     internal const string CompactPseudoClass = ":compact";
 
-    /// <summary>Where the run is. Ignored while a <see cref="Simulation"/> drives the pill.</summary>
+    /// <summary>Where the run is. Setting it (or <see cref="Activity"/>, <see cref="StartedAt"/> or a step) shows your data instead of a <see cref="Simulation"/>.</summary>
     public static readonly StyledProperty<AgentStatusRunState> StatusProperty =
         AvaloniaProperty.Register<AgentStatus, AgentStatusRunState>(nameof(Status));
 
@@ -66,7 +66,10 @@ public sealed partial class AgentStatus : TemplatedControl
     public static readonly StyledProperty<DateTimeOffset?> EndedAtProperty =
         AvaloniaProperty.Register<AgentStatus, DateTimeOffset?>(nameof(EndedAt));
 
-    /// <summary>The agent and its mark (drawn at 12px inside the ring); null is a plain "Agent" with a default mark.</summary>
+    /// <summary>
+    /// The agent and its mark (drawn at 12px inside the ring); null takes the simulated run's agent, or a plain "Agent" with
+    /// a default mark.
+    /// </summary>
     public static readonly StyledProperty<AgentModel?> AgentProperty =
         AvaloniaProperty.Register<AgentStatus, AgentModel?>(nameof(Agent));
 
@@ -99,8 +102,9 @@ public sealed partial class AgentStatus : TemplatedControl
         AvaloniaProperty.Register<AgentStatus, AgentStatusLabels>(nameof(Labels), new AgentStatusLabels());
 
     /// <summary>
-    /// A simulated run that drives the pill (its status, activity, steps and times; its buttons are routed back to it).
-    /// With no data set at all the pill plays the first sample run on its own.
+    /// A simulated run that drives the pill while the app sets no <see cref="Status"/>, <see cref="Activity"/>,
+    /// <see cref="StartedAt"/> or steps: the pill starts it once attached, shows its status, activity, steps and times, and
+    /// routes its buttons back to it. Null (the default) leaves a pill without data at Ready. Give each pill its own.
     /// </summary>
     public static readonly StyledProperty<AgentRunSimulation?> SimulationProperty =
         AvaloniaProperty.Register<AgentStatus, AgentRunSimulation?>(nameof(Simulation));
@@ -153,6 +157,7 @@ public sealed partial class AgentStatus : TemplatedControl
 
     static AgentStatus()
     {
+        SpecialFocusModality.Watch();
         IsTabStopProperty.OverrideDefaultValue<AgentStatus>(false);
         FocusableProperty.OverrideDefaultValue<AgentStatus>(false);
         HorizontalAlignmentProperty.OverrideDefaultValue<AgentStatus>(HorizontalAlignment.Left);

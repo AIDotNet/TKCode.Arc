@@ -1,0 +1,8 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SourceCardsNarrowDemo">
+    <!-- Below 540px the grid has two columns and the stack is the last tile. Seven finished results, three cards, the rest
+         in the stack; press it or Show all to open it. -->
+    <arc:SourceCards x:Name="Cards" MaxWidth="420" Duration="0:0:2.4" />
+</UserControl>

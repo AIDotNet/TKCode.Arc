@@ -20,7 +20,7 @@ public class ToolCallLogicTests
     [Fact]
     public void Total_Counts_Only_Successful_Calls()
     {
-        var calls = ToolCallSamples.SettledCalls();
+        var calls = ToolCallTestCalls.SettledCalls();
         ToolCallFormat.TotalDuration(calls).ShouldBe(TimeSpan.FromMilliseconds(2970));
         calls[3].Status = ToolCallStatus.Denied;
         ToolCallFormat.TotalDuration(calls).ShouldBe(TimeSpan.FromMilliseconds(2360));
@@ -32,7 +32,7 @@ public class ToolCallLogicTests
     public void Header_Phrasing_Priority()
     {
         var labels = ToolCallLabels.Default;
-        var calls = ToolCallSamples.SettledCalls().ToList();
+        var calls = ToolCallTestCalls.SettledCalls().ToList();
         var header = ToolCallFormat.Header(calls, null, labels);
         header.Label.ShouldBe("Used 4 tools");
         header.Meta.ShouldBe("3.0s");
@@ -58,16 +58,16 @@ public class ToolCallLogicTests
     [Fact]
     public void Meta_And_Status_Words()
     {
-        var item = ToolCallSamples.TicketSearch();
+        var item = ToolCallTestCalls.TicketSearch();
         var labels = ToolCallLabels.Default;
         ToolCallFormat.MetaText(item, labels).ShouldBe("4 results · 1.2s");
         ToolCallFormat.MetaText(item, labels, compact: true).ShouldBe("1.2s");
         ToolCallFormat.MetaText(item, labels, tight: true).ShouldBeNull();
         ToolCallFormat.RowName(item, labels).ShouldBe("Tracker: Searched tickets in finance/close Done, 4 results, 1.2s");
-        var error = ToolCallSamples.JobLogQuery(ToolCallStatus.Error);
+        var error = ToolCallTestCalls.JobLogQuery(ToolCallStatus.Error);
         ToolCallFormat.RowName(error, labels).ShouldBe("Warehouse: Could not read the export job log Failed: Connection to reporting_replica timed out after 5s");
         ToolCallFormat.MetaText(error, labels).ShouldBeNull();
-        var denied = ToolCallSamples.StatusNote(ToolCallStatus.Denied);
+        var denied = ToolCallTestCalls.StatusNote(ToolCallStatus.Denied);
         ToolCallFormat.MetaText(denied, labels).ShouldBe("Denied");
     }
 
@@ -92,7 +92,7 @@ public class ToolCallLogicTests
     [Fact]
     public void Sample_Checklist_Is_Thirty_Five_Lines_And_Tinted()
     {
-        var text = ((ToolCallJsonOutput)ToolCallSamples.ChecklistRead().Output!).Json;
+        var text = ((ToolCallJsonOutput)ToolCallTestCalls.ChecklistRead().Output!).Json;
         text.Split('\n').Length.ShouldBe(35);
         var line = ToolCallJson.TokenizeLine("    \"name\": \"Ledger lock\", ");
         line.Select(t => t.Kind).ShouldBe([ToolCallJsonTokenKind.Punctuation, ToolCallJsonTokenKind.Key,
@@ -105,7 +105,7 @@ public class ToolCallLogicTests
     [Fact]
     public void Titles_Fall_Back_To_The_Settled_Phrase()
     {
-        var item = ToolCallSamples.StatusNote();
+        var item = ToolCallTestCalls.StatusNote();
         item.TitleFor(ToolCallStatus.Approval).ShouldBe("Post a status note to #finance-ops");
         item.TitleFor(ToolCallStatus.Running).ShouldBe("Posting to #finance-ops");
         item.TitleFor(ToolCallStatus.Success).ShouldBe("Posted to #finance-ops");
@@ -158,7 +158,7 @@ public class ToolCallLogicTests
     public void Simulation_Plays_The_Measured_Script()
     {
         var time = new ManualTime();
-        using var sim = new ToolCallSimulation(null, time);
+        using var sim = new ToolCallSimulation(ToolCallTestCalls.Script(), time);
         var phases = new List<ToolCallSimulationPhase>();
         sim.Changed += (_, e) => phases.Add(e.Phase);
         sim.Start();
@@ -204,7 +204,7 @@ public class ToolCallLogicTests
     public void Simulation_Deny_Finishes_With_The_Shorter_Total()
     {
         var time = new ManualTime();
-        using var sim = new ToolCallSimulation(null, time);
+        using var sim = new ToolCallSimulation(ToolCallTestCalls.Script(), time);
         sim.Start();
         time.Advance(TimeSpan.FromSeconds(5));
         sim.Retry(sim.WaitingCall!);

@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.DomainVerifySendingDemo">
+    <arc:DomainVerify x:Name="Block"
+                      Margin="0,12"
+                      Title="Sending domain"
+                      Description="Verify the domain your emails come from before delivery is turned on."
+                      DefaultDomain="mail.northwind.dev"
+                      Provider="{x:Null}"
+                      AutoPlay="False" />
+</UserControl>

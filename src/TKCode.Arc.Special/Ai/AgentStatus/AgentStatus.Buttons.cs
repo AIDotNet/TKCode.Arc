@@ -241,28 +241,29 @@ public sealed partial class AgentStatus
             return;
         }
         RaiseEvent(new AgentStatusActionEventArgs(routed, action, _display));
+        var sim = ActiveSim;
         switch (action)
         {
             case AgentStatusActions.Pause:
-                _sim?.Pause();
+                sim?.Pause();
                 break;
             case AgentStatusActions.Resume:
-                _sim?.Resume();
+                sim?.Resume();
                 break;
             case AgentStatusActions.Stop:
-                _sim?.Stop();
+                sim?.Stop();
                 break;
             case AgentStatusActions.Approve:
-                _sim?.Approve();
+                sim?.Approve();
                 break;
             case AgentStatusActions.Deny:
-                _sim?.Deny();
+                sim?.Deny();
                 break;
             case AgentStatusActions.Retry:
-                _sim?.Retry();
+                sim?.Retry();
                 break;
             case AgentStatusActions.OpenRun:
-                _sim?.OpenRun();
+                sim?.OpenRun();
                 ConfirmOpened();
                 break;
         }

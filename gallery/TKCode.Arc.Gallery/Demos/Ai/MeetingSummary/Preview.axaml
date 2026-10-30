@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.MeetingSummaryPreviewDemo">
+    <!-- The card in its main states. Live plays a simulation of the demo's call: a short summarizing pass, the notes
+         streaming in, then one item ticked off and another sent (simulated, nothing is sent). Hover a line for its
+         transcript quote. The card fills its container up to 640px, so its width never follows the streaming text. -->
+    <StackPanel Spacing="20" MaxWidth="640">
+        <arc:SegmentedControl x:Name="Scenario"
+                              HorizontalAlignment="Center"
+                              SelectedValue="live"
+                              SelectionChanged="OnScenarioChanged">
+            <arc:SegmentedOption Value="live" Label="Live" />
+            <arc:SegmentedOption Value="error" Label="Error" />
+            <arc:SegmentedOption Value="empty" Label="No transcript" />
+        </arc:SegmentedControl>
+        <arc:MeetingSummary x:Name="Card">
+            <arc:MeetingSummary.Simulation>
+                <arc:MeetingSummarySimulation Meeting="{x:Static demos:MeetingSummaryDemoData.Meeting}"
+                                              Model="{x:Static demos:MeetingSummaryDemoData.Model}"
+                                              ReferenceFormats="{x:Static demos:MeetingSummaryDemoData.ReferenceFormats}"
+                                              FirstReferenceNumber="{x:Static demos:MeetingSummaryDemoData.FirstReferenceNumber}" />
+            </arc:MeetingSummary.Simulation>
+        </arc:MeetingSummary>
+    </StackPanel>
+</UserControl>

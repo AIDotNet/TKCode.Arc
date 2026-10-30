@@ -6,6 +6,7 @@ using Avalonia.Automation;
 using Avalonia.Automation.Peers;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
+using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
 using Avalonia.Media;
 
@@ -14,7 +15,8 @@ namespace TKCode.Arc;
 /// <summary>
 /// One place in an <see cref="AvatarGroup"/> stack: a member's <see cref="Avatar"/> or the "+N" overflow chip. It
 /// draws the 1px ring outside the 2px surface border, carries every hover move as a single translate (so the stack
-/// never changes size), shows the member's name above itself, and enters / leaves by growing its slot (P19).
+/// never changes size), shows the member's name above itself, and enters / leaves by growing its slot (P19). The name
+/// sits in the adorner layer, so a scroll viewer's clip or a table's sticky header cannot cover it.
 /// </summary>
 internal sealed class AvatarGroupSlot : Control
 {
@@ -23,6 +25,7 @@ internal sealed class AvatarGroupSlot : Control
     private readonly TranslateTransform _translate = new();
     private readonly TranslateTransform _tipTranslate = new();
     private Border? _tip;
+    private AvatarGroupTipHost? _tipHost;
     private TextBlock? _tipText;
     private ArcContentSwap? _count;
     private MotionValue<double>? _presence;
@@ -170,9 +173,9 @@ internal sealed class AvatarGroupSlot : Control
         _tip = new Border { Child = _tipText, IsHitTestVisible = false, Opacity = 0, RenderTransform = _tipTranslate };
         AutomationProperties.SetAccessibilityView(_tip, AccessibilityView.Raw);
         _group.StyleTip(_tip, _tipText);
-        LogicalChildren.Add(_tip);
-        VisualChildren.Add(_tip);
-        InvalidateMeasure();
+        _tipHost = new AvatarGroupTipHost(_tip);
+        AdornerLayer.SetIsClipEnabled(_tipHost, false);
+        AdornerLayer.SetAdorner(this, _tipHost);
     }
 
     private MotionValue<double> CreateValue(double initial, bool measure)
@@ -217,7 +220,6 @@ internal sealed class AvatarGroupSlot : Control
     {
         var d = _group.Diameter;
         Content.Measure(new Size(d, d));
-        _tip?.Measure(Size.Infinity);
         return new Size(d, d);
     }
 
@@ -225,11 +227,6 @@ internal sealed class AvatarGroupSlot : Control
     {
         var d = _group.Diameter;
         Content.Arrange(new Rect(0, 0, d, d));
-        if (_tip is not null)
-        {
-            var size = _tip.DesiredSize;
-            _tip.Arrange(new Rect((d - size.Width) / 2, -8 - size.Height, size.Width, size.Height));
-        }
         return finalSize;
     }
 
@@ -262,5 +259,36 @@ internal sealed class AvatarGroupSlot : Control
                 context.DrawEllipse(null, _ringHoverPen, center, radius, radius);
             }
         }
+    }
+}
+
+/// <summary>
+/// The adorner that carries a slot's name: it covers the slot (the adorner layer follows the slot's transforms) and
+/// places the name centered, 8px above it.
+/// </summary>
+internal sealed class AvatarGroupTipHost : Control
+{
+    private readonly Control _tip;
+
+    public AvatarGroupTipHost(Control tip)
+    {
+        _tip = tip;
+        IsHitTestVisible = false;
+        ClipToBounds = false;
+        LogicalChildren.Add(tip);
+        VisualChildren.Add(tip);
+    }
+
+    protected override Size MeasureOverride(Size availableSize)
+    {
+        _tip.Measure(Size.Infinity);
+        return default;
+    }
+
+    protected override Size ArrangeOverride(Size finalSize)
+    {
+        var size = _tip.DesiredSize;
+        _tip.Arrange(new Rect((finalSize.Width - size.Width) / 2, -8 - size.Height, size.Width, size.Height));
+        return finalSize;
     }
 }

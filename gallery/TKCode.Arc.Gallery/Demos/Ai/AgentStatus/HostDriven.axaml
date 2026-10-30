@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
              x:Class="TKCode.Arc.Gallery.Demos.AgentStatusHostDrivenDemo">
     <!-- Your code owns the run: it sets Status, Activity and Steps, and answers the events. The pill never changes its own
          status when it has data. The log below shows each event the buttons raise. -->
@@ -8,7 +9,7 @@
         <arc:AgentStatus x:Name="Pill"
                          HorizontalAlignment="Center"
                          Margin="0,24,0,0"
-                         Agent="{x:Static arc:AgentStatusSamples.ResearchAgent}"
+                         Agent="{x:Static demos:AgentStatusDemoData.ResearchAgent}"
                          PauseRequested="OnPause"
                          ResumeRequested="OnResume"
                          StopRequested="OnStop"

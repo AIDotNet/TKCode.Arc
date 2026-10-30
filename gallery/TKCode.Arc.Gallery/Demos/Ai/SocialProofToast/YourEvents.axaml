@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SocialProofToastYourEventsDemo">
+    <!-- The app's own feed, oldest first, plus Push for an event that just happened. In a real page these come from your
+         billing or analytics backend; the ones here are invented. -->
+    <StackPanel Spacing="16" MaxWidth="400">
+        <arc:SocialProofToast x:Name="Stack" Interval="0:0:5" Prefill="1">
+            <arc:SocialProofEvent Id="1" Name="Sofia" Action="started a Pro trial" Meta="Madrid" TimeText="2 min ago" />
+            <arc:SocialProofEvent Id="2" Name="Contoso Labs" Action="upgraded to Business" Meta="48 seats"
+                                  TimeText="4 min ago" Actor="Company" VerifiedLabel="Verified purchase" />
+            <arc:SocialProofEvent Id="3" Name="Mateo" Action="bought the Team plan" Meta="Lisbon"
+                                  TimeText="9 min ago" IsVerified="True" />
+            <arc:SocialProofEvent Id="4" Name="Fabrikam" Action="renewed Enterprise" Meta="120 seats"
+                                  TimeText="12 min ago" Actor="Company" />
+        </arc:SocialProofToast>
+        <arc:Button Content="Simulate a purchase" Variant="Secondary" Size="Small" HorizontalAlignment="Left" Click="OnPush" />
+    </StackPanel>
+</UserControl>

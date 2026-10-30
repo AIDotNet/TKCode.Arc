@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AskYourDataStreamingDemo">
+    <!-- Wired to a model that streams its SQL in chunks (the panel grows with them) and a query that reports its progress.
+         Both are simulated in the code-behind with an invented dataset; KeepSqlOpen leaves the SQL on show. -->
+    <Panel MaxWidth="680">
+        <arc:AskYourData x:Name="Card"
+                         Question="Average order value by region this year"
+                         KeepSqlOpen="True"
+                         AutoRun="True" />
+    </Panel>
+</UserControl>

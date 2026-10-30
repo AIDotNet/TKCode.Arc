@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.ImageGenerationNarrowDemo">
+    <!-- In a 360px column the aspect chips move to a second row and the footer stacks: the status on top, three equal
+         buttons below. -->
+    <Border MaxWidth="360" Margin="0,12">
+        <arc:ImageGeneration Prompt="A neon city street after rain at night, reflections on the asphalt">
+            <arc:ImageGeneration.Simulation>
+                <arc:ImageGenerationSimulation Models="{x:Static demos:ImageGenerationDemoData.Models}"
+                                               Suggestions="{x:Static demos:ImageGenerationDemoData.Suggestions}"
+                                               Painter="{x:Static demos:ImageGenerationDemoData.Painter}" />
+            </arc:ImageGeneration.Simulation>
+        </arc:ImageGeneration>
+    </Border>
+</UserControl>

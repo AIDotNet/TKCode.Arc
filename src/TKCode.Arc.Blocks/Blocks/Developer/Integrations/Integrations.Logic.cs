@@ -61,6 +61,7 @@ public partial class Integrations
 
     public Integrations()
     {
+        BlockFocusModality.Watch();
         _sheet = new IntegrationSheet { Owner = this };
         Items.CollectionChanged += OnItemsChanged;
         Categories.CollectionChanged += OnCategoriesChanged;
@@ -439,13 +440,15 @@ public partial class Integrations
         UpdateRows();
         if (refocus is { } target)
         {
+            // A row that leaves after a click hands focus on without the keyboard ring.
+            var method = BlockFocusModality.For(this);
             if (target is IntegrationItem survivor && RowFor(survivor) is { } row)
             {
-                row.FocusFirst(NavigationMethod.Tab);
+                row.FocusFirst(method);
             }
             else
             {
-                _filters?.FocusSelected(NavigationMethod.Tab);
+                _filters?.FocusSelected(method);
             }
         }
         VisibleCount = next.Count;
@@ -641,7 +644,7 @@ public partial class Integrations
             return;
         }
         SelectFilterFromUser(AllFilter);
-        _filters?.FocusSelected(NavigationMethod.Tab);
+        _filters?.FocusSelected(BlockFocusModality.For(this));
     }
 
     #endregion
@@ -905,7 +908,7 @@ public partial class Integrations
         }
         else if (configureHadFocus && RowFor(item) is { } stillThere)
         {
-            stillThere.Pill?.Focus(NavigationMethod.Tab);
+            stillThere.Pill?.Focus(BlockFocusModality.For(this));
         }
         return true;
     }
@@ -986,16 +989,18 @@ public partial class Integrations
         {
             return;
         }
+        // A drawer closed with the mouse hands focus back without the keyboard ring.
+        var method = BlockFocusModality.For(this);
         if (trigger is { IsEffectivelyVisible: true, IsEffectivelyEnabled: true } && trigger.IsAttachedToVisualTree() &&
-            trigger.Focus(NavigationMethod.Tab))
+            trigger.Focus(method))
         {
             return;
         }
-        if (item is not null && RowFor(item) is { } row && row.FocusFirst(NavigationMethod.Tab))
+        if (item is not null && RowFor(item) is { } row && row.FocusFirst(method))
         {
             return;
         }
-        _title?.Focus(NavigationMethod.Tab);
+        _title?.Focus(method);
     }
 
     #endregion

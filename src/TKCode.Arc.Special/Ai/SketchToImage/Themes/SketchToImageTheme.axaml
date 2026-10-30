@@ -1,0 +1,155 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.SketchToImageTheme">
+
+    <!--
+        The card is a figure: the canvas (blank paper at 3:2, rounded, every layer clipped to it), a thin progress line under
+        it, then the caption: the stage label with its icon over the prompt on the left, the percent at a fixed width and the
+        Replay button on the right. The pencil, pen tip, stage icon and progress line take the tone: the accent, or the
+        foreground for the neutral tone. The card fills its container up to the size's maximum width.
+    -->
+    <ControlTheme x:Key="{x:Type arc:SketchToImage}" TargetType="arc:SketchToImage">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="MaxWidth" Value="{arc:SketchToImageTokenResource MaxWidthMD}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:SketchToImageTokenResource CardCornerRadius}" />
+        <Setter Property="Padding" Value="{arc:SketchToImageTokenResource CardPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SketchToImage">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <StackPanel>
+                        <Border CornerRadius="{arc:SketchToImageTokenResource CanvasCornerRadius}" ClipToBounds="True">
+                            <arc:SketchToImageCanvas Name="PART_Canvas"
+                                                     Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                                     TipSize="{arc:SketchToImageTokenResource TipSize}" />
+                        </Border>
+                        <arc:SketchToImageProgress Name="PART_Progress"
+                                                   Height="{arc:SketchToImageTokenResource ProgressHeight}"
+                                                   Margin="{arc:SketchToImageTokenResource ProgressMargin}"
+                                                   Track="{arc:ArcDesignTokenResource BorderSubtle}" />
+                        <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="{arc:SketchToImageTokenResource CaptionGap}">
+                            <StackPanel Spacing="{arc:SketchToImageTokenResource CaptionLineGap}"
+                                        VerticalAlignment="Center"
+                                        ClipToBounds="True">
+                                <arc:ArcContentSwap Name="PART_Stage"
+                                                    Mode="Label"
+                                                    HorizontalContentAlignment="Left"
+                                                    HorizontalAlignment="Stretch" />
+                                <TextBlock Name="PART_Prompt"
+                                           FontSize="{arc:SketchToImageTokenResource PromptFontSize}"
+                                           LineHeight="{arc:SketchToImageTokenResource PromptLineHeight}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                           TextTrimming="CharacterEllipsis"
+                                           TextWrapping="NoWrap"
+                                           MaxLines="1" />
+                            </StackPanel>
+                            <TextBlock Name="PART_Percent"
+                                       Grid.Column="1"
+                                       Width="{arc:SketchToImageTokenResource PercentWidth}"
+                                       TextAlignment="Right"
+                                       VerticalAlignment="Center"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                       AutomationProperties.AccessibilityView="Raw" />
+                            <arc:Button Name="PART_Replay"
+                                        Grid.Column="2"
+                                        Classes="sketch-replay"
+                                        Variant="Ghost"
+                                        Size="Small"
+                                        VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.RotateCcw}"
+                                                  Size="{arc:SketchToImageTokenResource ReplayGlyphSize}"
+                                                  VerticalAlignment="Center" />
+                                    <TextBlock Name="PART_ReplayText" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </arc:Button>
+                        </Grid>
+                        <arc:ExplainerAnnouncer Name="PART_Announcer" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Non-triggered values of template parts (state styles cannot override local template values). -->
+        <Style Selector="^ /template/ arc|SketchToImageCanvas#PART_Canvas">
+            <Setter Property="InkBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="PencilWidth" Value="{arc:SketchToImageTokenResource PencilWidthMD}" />
+        </Style>
+        <Style Selector="^ /template/ arc|SketchToImageProgress#PART_Progress">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.sketch-replay">
+            <Setter Property="Height" Value="{arc:SketchToImageTokenResource ReplayHeight}" />
+            <Setter Property="MinHeight" Value="{arc:SketchToImageTokenResource ReplayHeight}" />
+            <Setter Property="Padding" Value="{arc:SketchToImageTokenResource ReplayPadding}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_ReplayText">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:small">
+            <Setter Property="MaxWidth" Value="{arc:SketchToImageTokenResource MaxWidthSM}" />
+            <Setter Property="Padding" Value="{arc:SketchToImageTokenResource CardPaddingSM}" />
+        </Style>
+        <Style Selector="^:small /template/ arc|SketchToImageCanvas#PART_Canvas">
+            <Setter Property="PencilWidth" Value="{arc:SketchToImageTokenResource PencilWidthSM}" />
+        </Style>
+        <Style Selector="^:large">
+            <Setter Property="MaxWidth" Value="{arc:SketchToImageTokenResource MaxWidthLG}" />
+        </Style>
+        <Style Selector="^:large /template/ arc|SketchToImageCanvas#PART_Canvas">
+            <Setter Property="PencilWidth" Value="{arc:SketchToImageTokenResource PencilWidthLG}" />
+        </Style>
+        <Style Selector="^:compact /template/ TextBlock#PART_ReplayText">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|Button.sketch-replay">
+            <Setter Property="Padding" Value="{arc:SketchToImageTokenResource ReplayIconPadding}" />
+        </Style>
+
+        <Style Selector="^:neutral /template/ arc|SketchToImageCanvas#PART_Canvas">
+            <Setter Property="InkBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:neutral /template/ arc|SketchToImageProgress#PART_Progress">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- A stage label: the stage's icon in the tone and its word, which shimmers while the stage is in progress. -->
+    <ControlTheme x:Key="{x:Type arc:SketchToImageStageLabel}" TargetType="arc:SketchToImageStageLabel">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SketchToImageStageLabel">
+                <StackPanel Orientation="Horizontal" Spacing="{arc:SketchToImageTokenResource StageGap}">
+                    <arc:ArcGlyph Data="{TemplateBinding Glyph}"
+                                  Foreground="{TemplateBinding GlyphBrush}"
+                                  Size="{arc:SketchToImageTokenResource StageGlyphSize}"
+                                  VerticalAlignment="Center" />
+                    <arc:ToolCallText Text="{TemplateBinding Text}"
+                                      IsShimmering="{TemplateBinding IsShimmering}"
+                                      FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                      FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                      LineHeight="{arc:SketchToImageTokenResource StageLineHeight}"
+                                      Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                      MutedForeground="{arc:ArcDesignTokenResource TextMuted}"
+                                      VerticalAlignment="Center" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

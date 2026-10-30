@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AiSparkPillDemo">
+    <StackPanel Spacing="12" Margin="0,8" MaxWidth="560">
+        <arc:AiSpark Variant="Pill" Status="Idle" Announce="False" />
+        <arc:AiSpark Variant="Pill" Status="Thinking" Announce="False" />
+        <arc:AiSpark Variant="Pill" Status="Generating" Announce="False" />
+        <arc:AiSpark Variant="Pill" Status="Done" Announce="False" />
+        <arc:AiSpark Variant="Pill" Status="Error" Announce="False" />
+        <arc:AiSpark Variant="Pill" Status="Thinking" Label="Searching 4 sources" />
+    </StackPanel>
+</UserControl>

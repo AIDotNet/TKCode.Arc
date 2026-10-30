@@ -51,6 +51,11 @@ from the Arc core, which does the digit work. The counter adds the label, the af
 its theme sets the font, size, weight and foreground of the number, so you rarely need to set those yourself. Because
 it is a template, you can restyle the counter with a `ControlTheme` in the same way as any other Arc control.
 
+`RollingDigits` also works on its own, for a number inside a layout of your own. Its wheels turn on the `Smooth` spring;
+`WheelSpring` picks another Arc preset, and `WheelMotion` takes any spring or timed ease as a `MotionSpec`, such as
+`MotionSpec.Spring(SpringSpec.FromVisual(0.28, 0))` or `MotionSpec.Tween(TimeSpan.FromMilliseconds(240), easing)`.
+Reduced and Off motion still change the digits at once.
+
 `Value` takes the raw number, not a formatted string. The counter formats it with `Decimals`, `CultureName`, `Prefix`
 and `Suffix`, so the same value can show "$48,250" with en-US or "48.250" with de-DE, without changing the data.
 

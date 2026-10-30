@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.ResponseFeedbackStreamingDemo">
+    <!-- While the reply streams the thumbs are off, so people rate the finished answer. -->
+    <StackPanel MaxWidth="640" Margin="0,12" Spacing="12">
+        <arc:ResponseFeedback ModelName="{x:Static demos:ResponseFeedbackDemoData.ModelName}"
+                              IsRatingEnabled="{Binding #StreamingSwitch.IsChecked, Converter={x:Static BoolConverters.Not}}"
+                              Prompt="Summarize the incident in one paragraph."
+                              Reply="At 09:12 a configuration push disabled the cache in one region. Requests fell back to the database, which slowed checkout for 14 minutes until the push was rolled back."
+                              CopyText="At 09:12 a configuration push disabled the cache in one region." />
+        <arc:Switch x:Name="StreamingSwitch" Content="Still streaming" IsChecked="True" />
+    </StackPanel>
+</UserControl>

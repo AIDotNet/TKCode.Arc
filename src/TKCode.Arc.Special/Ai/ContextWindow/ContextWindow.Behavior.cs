@@ -51,18 +51,13 @@ public partial class ContextWindow
     private MenuSurface? _menu;
     private bool _isBuilt;
 
-    // Data in effect: the given lists, or the sample session.
+    // Data in effect: copies of the given lists.
     private List<ContextWindowItem> _items = new();
     private IReadOnlyList<ContextWindowModel> _models = Array.Empty<ContextWindowModel>();
     private IReadOnlyList<ContextWindowTurn> _turns = Array.Empty<ContextWindowTurn>();
     private IReadOnlyList<ContextWindowTurn> _files = Array.Empty<ContextWindowTurn>();
     private ContextWindowModel? _model;
-    private bool _usesSamples;
     private bool _dataRead;
-    private List<ContextWindowItem>? _sampleItems;
-    private IReadOnlyList<ContextWindowModel>? _sampleModels;
-    private IReadOnlyList<ContextWindowTurn>? _sampleTurns;
-    private IReadOnlyList<ContextWindowTurn>? _sampleFiles;
     private int _turnCursor;
     private int _fileCursor;
     private int _created;
@@ -106,7 +101,7 @@ public partial class ContextWindow
     /// <summary>The arrangement on screen (tests).</summary>
     internal ContextWindowLayout? CurrentLayout => _layout;
 
-    /// <summary>The items in effect: the given ones or the sample session (tests).</summary>
+    /// <summary>The items in effect (tests).</summary>
     internal IReadOnlyList<ContextWindowItem> EffectiveItems => _items;
 
     /// <summary>The models in effect (tests).</summary>
@@ -114,9 +109,6 @@ public partial class ContextWindow
 
     /// <summary>The model in effect.</summary>
     internal ContextWindowModel? EffectiveModel => _model;
-
-    /// <summary>True while the card shows the sample session.</summary>
-    internal bool UsesSamples => _usesSamples;
 
     /// <summary>The status sentence and tone (tests).</summary>
     internal string StatusText => _statusText;
@@ -209,18 +201,8 @@ public partial class ContextWindow
         {
             return;
         }
-        var wasSample = _usesSamples;
-        if (wasSample)
-        {
-            // Your first item starts your own session: the sample items, turns and files go away.
-            _usesSamples = false;
-            _sampleItems = null;
-            _items = new List<ContextWindowItem>();
-            _turns = Turns?.ToArray() ?? Array.Empty<ContextWindowTurn>();
-            _files = Files?.ToArray() ?? Array.Empty<ContextWindowTurn>();
-        }
         var index = InsertItem(item);
-        Rebuild(!wasSample && item.Category == ContextWindowCategory.Messages && index == _items.Count - 1
+        Rebuild(item.Category == ContextWindowCategory.Messages && index == _items.Count - 1
             ? ContextWindowWave.Append
             : ContextWindowWave.Insert);
         var tokens = ContextWindowFormat.Tokens(item.Tokens);
@@ -482,35 +464,10 @@ public partial class ContextWindow
 
     private void ReadData()
     {
-        var models = Models;
         var items = Items;
-        var turns = Turns;
-        var files = Files;
-        var samples = (models?.Count ?? 0) == 0 && (items?.Count ?? 0) == 0 && (turns?.Count ?? 0) == 0 && (files?.Count ?? 0) == 0;
-        if (samples)
-        {
-            if (!_usesSamples || _sampleItems is null)
-            {
-                _sampleItems = ContextWindowSamples.CreateItems().ToList();
-                _turnCursor = 0;
-                _fileCursor = 0;
-            }
-            _items = _sampleItems;
-            _turns = _sampleTurns ??= ContextWindowSamples.CreateTurns();
-            _files = _sampleFiles ??= ContextWindowSamples.CreateFiles();
-        }
-        else
-        {
-            if (_usesSamples)
-            {
-                _turnCursor = 0;
-                _fileCursor = 0;
-            }
-            _items = items is null ? new List<ContextWindowItem>() : items.ToList();
-            _turns = turns?.ToArray() ?? Array.Empty<ContextWindowTurn>();
-            _files = files?.ToArray() ?? Array.Empty<ContextWindowTurn>();
-        }
-        _usesSamples = samples;
+        _items = items is null ? new List<ContextWindowItem>() : items.ToList();
+        _turns = Turns?.ToArray() ?? Array.Empty<ContextWindowTurn>();
+        _files = Files?.ToArray() ?? Array.Empty<ContextWindowTurn>();
         ReadModels();
         _dataRead = true;
     }
@@ -522,13 +479,13 @@ public partial class ContextWindow
         {
             _models = models.ToArray();
         }
-        else if (!_usesSamples && SelectedModel is { } only)
+        else if (SelectedModel is { } only)
         {
             _models = [only];
         }
         else
         {
-            _models = _sampleModels ??= ContextWindowSamples.CreateModels();
+            _models = Array.Empty<ContextWindowModel>();
         }
         _model = ResolveModel();
     }
@@ -693,21 +650,13 @@ public partial class ContextWindow
             }
         }
         _items.Insert(index, item);
-        if (!_usesSamples)
-        {
-            WriteItems(list => list.Insert(Math.Min(index, list.Count), item));
-        }
+        WriteItems(list => list.Insert(Math.Min(index, list.Count), item));
         return index;
     }
 
     private void ReplaceItems(IReadOnlyList<ContextWindowItem> items)
     {
         _items = items.ToList();
-        if (_usesSamples)
-        {
-            _sampleItems = _items;
-            return;
-        }
         WriteItems(list =>
         {
             list.Clear();

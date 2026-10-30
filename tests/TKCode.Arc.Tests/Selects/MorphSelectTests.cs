@@ -198,6 +198,7 @@ public class MorphSelectTests
             select.IsOpen.ShouldBeTrue();
             var options = select.OptionView!;
             var point = options.TranslatePoint(options.OptionRect(1).Center, window)!.Value;
+            FocusRingInput.WaitUntilOver(window, options, point);
             window.MouseMove(point);
             Dispatcher.UIThread.RunJobs();
             options.ActiveOption.ShouldBe(1);
@@ -235,6 +236,7 @@ public class MorphSelectTests
             surface.ShapeSize.Width.ShouldBe(272, 0.5);
             var options = select.OptionView!;
             var point = options.TranslatePoint(options.OptionRect(4).Center, window)!.Value;
+            FocusRingInput.WaitUntilOver(window, options, point);
             window.MouseMove(point);
             window.MouseDown(point, MouseButton.Left);
             window.MouseUp(point, MouseButton.Left);

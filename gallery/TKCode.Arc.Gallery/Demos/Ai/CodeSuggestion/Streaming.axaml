@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CodeSuggestionStreamingDemo">
+    <!-- Your own suggestion, streamed: the status goes Thinking, Streaming (hunks and their lines are appended as they
+         arrive) and Ready. Stop keeps the hunks that finished; Regenerate asks again. The line under the card shows what
+         the app would write. -->
+    <StackPanel Spacing="12" MaxWidth="720">
+        <arc:CodeSuggestion x:Name="Card"
+                            AllowsStop="True"
+                            AllowsRegenerate="True"
+                            StopRequested="OnStop"
+                            RegenerateRequested="OnRegenerate"
+                            DecisionMade="OnDecision"
+                            Resolved="OnResolved" />
+        <TextBlock x:Name="Log" Foreground="{arc:ArcDesignTokenResource TextMuted}" FontSize="12" TextWrapping="Wrap" />
+    </StackPanel>
+</UserControl>

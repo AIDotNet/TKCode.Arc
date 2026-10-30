@@ -1,0 +1,540 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.TicketRouterTheme">
+
+    <!--
+        The ticket router card: a header (the model mark on a tinted tile, the title, the model name, a status and Pause), the
+        stage (the incoming ticket over the classifier strip), the connector and the lanes. The card fills its container up to
+        840px; below 600px of content the lanes fold into a 2 by 2 grid, the connector hides and the labels stack over the
+        route target (the stage gets taller), below 400px the meter and the model name hide.
+    -->
+    <ControlTheme x:Key="{x:Type arc:TicketRouter}" TargetType="arc:TicketRouter">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="MaxWidth" Value="{arc:TicketRouterTokenResource CardMaxWidth}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep20}" />
+        <Setter Property="Padding" Value="{arc:TicketRouterTokenResource CardPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TicketRouter">
+                <Border Name="PART_Card"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Panel>
+                        <StackPanel Spacing="{arc:TicketRouterTokenResource SectionGap}">
+                            <Grid Height="{arc:TicketRouterTokenResource HeaderHeight}" ColumnDefinitions="Auto,*,Auto,Auto">
+                                <Border Width="{arc:TicketRouterTokenResource MarkTileSize}"
+                                        Height="{arc:TicketRouterTokenResource MarkTileSize}"
+                                        CornerRadius="{arc:ArcDesignTokenResource RadiusStep8}"
+                                        Background="{arc:ArcDesignTokenResource AccentSubtle}"
+                                        VerticalAlignment="Center">
+                                    <arc:ArcGlyph Name="PART_Mark"
+                                                  Size="{arc:TicketRouterTokenResource MarkGlyphSize}"
+                                                  Foreground="{arc:ArcDesignTokenResource Accent}"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center" />
+                                </Border>
+                                <Grid Grid.Column="1" ColumnDefinitions="Auto,*" Margin="10,0,8,0" VerticalAlignment="Center">
+                                    <TextBlock Name="PART_Title"
+                                               FontSize="{arc:TicketRouterTokenResource TitleFontSize}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               TextTrimming="CharacterEllipsis"
+                                               VerticalAlignment="Center" />
+                                    <TextBlock Name="PART_Model"
+                                               Grid.Column="1"
+                                               Margin="8,0,0,0"
+                                               FontSize="{arc:TicketRouterTokenResource MetaFontSize}"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                               TextTrimming="CharacterEllipsis"
+                                               VerticalAlignment="Center" />
+                                </Grid>
+                                <StackPanel Grid.Column="2"
+                                            Orientation="Horizontal"
+                                            Spacing="6"
+                                            Margin="0,0,8,0"
+                                            VerticalAlignment="Center">
+                                    <Ellipse Name="PART_StatusDot"
+                                             Width="{arc:TicketRouterTokenResource StatusDotSize}"
+                                             Height="{arc:TicketRouterTokenResource StatusDotSize}"
+                                             VerticalAlignment="Center" />
+                                    <TextBlock Name="PART_StatusText"
+                                               FontSize="{arc:TicketRouterTokenResource MetaFontSize}"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                               VerticalAlignment="Center" />
+                                </StackPanel>
+                                <arc:Button Name="PART_Pause"
+                                            Grid.Column="3"
+                                            Classes="ticket-router-action"
+                                            Variant="Ghost"
+                                            Size="Small"
+                                            VerticalAlignment="Center">
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <arc:ArcGlyph Name="PART_PauseGlyph" Size="14" VerticalAlignment="Center" />
+                                        <TextBlock Name="PART_PauseText" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </arc:Button>
+                            </Grid>
+
+                            <Grid Name="PART_Stage" RowDefinitions="Auto,*">
+                                <Panel Name="PART_TicketHost" Height="{arc:TicketRouterTokenResource TicketHeight}">
+                                    <arc:TicketRouterTicketCard Name="PART_Ticket" />
+                                    <arc:TicketRouterNotice Name="PART_Notice" IsVisible="False" />
+                                </Panel>
+                                <Grid Name="PART_Strip"
+                                      Grid.Row="1"
+                                      Margin="0,8,0,0"
+                                      ColumnDefinitions="*,Auto"
+                                      RowDefinitions="Auto,Auto">
+                                    <arc:ToolCallText Name="PART_Classifying"
+                                                      Grid.ColumnSpan="2"
+                                                      Height="{arc:TicketRouterTokenResource ChipHeight}"
+                                                      FontSize="{arc:TicketRouterTokenResource ChipFontSize}"
+                                                      Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                      MutedForeground="{arc:ArcDesignTokenResource TextMuted}"
+                                                      IsVisible="False" />
+                                    <StackPanel Orientation="Horizontal"
+                                                Spacing="{arc:TicketRouterTokenResource ChipGap}"
+                                                VerticalAlignment="Center">
+                                        <arc:TicketRouterChip Name="PART_Intent" />
+                                        <arc:TicketRouterChip Name="PART_Sentiment" />
+                                        <arc:TicketRouterMeter Name="PART_Confidence" />
+                                    </StackPanel>
+                                    <StackPanel Name="PART_Route"
+                                                Grid.Column="1"
+                                                Orientation="Horizontal"
+                                                VerticalAlignment="Center">
+                                        <arc:TicketRouterChip Name="PART_RouteChip" />
+                                    </StackPanel>
+                                    <WrapPanel Name="PART_Error"
+                                               Grid.ColumnSpan="2"
+                                               Grid.RowSpan="2"
+                                               ItemSpacing="8"
+                                               LineSpacing="6"
+                                               IsVisible="False">
+                                        <StackPanel Orientation="Horizontal" Spacing="6" Height="28">
+                                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.CircleAlert}"
+                                                          Size="14"
+                                                          Foreground="{arc:ArcDesignTokenResource Danger}"
+                                                          VerticalAlignment="Center" />
+                                            <TextBlock Name="PART_ErrorText"
+                                                       FontSize="{arc:TicketRouterTokenResource ChipFontSize}"
+                                                       Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                       VerticalAlignment="Center" />
+                                        </StackPanel>
+                                        <arc:Button Name="PART_Retry" Classes="ticket-router-action" Variant="Secondary" Size="Small" />
+                                        <arc:Button Name="PART_SendToReview" Classes="ticket-router-action" Variant="Ghost" Size="Small" />
+                                    </WrapPanel>
+                                </Grid>
+                            </Grid>
+
+                            <arc:TicketRouterConnector Name="PART_Connector"
+                                                       Height="{arc:TicketRouterTokenResource ConnectorHeight}"
+                                                       LineBrush="{arc:ArcDesignTokenResource Border}"
+                                                       PulseBrush="{arc:ArcDesignTokenResource Accent}"
+                                                       StrokeWidth="{arc:TicketRouterTokenResource ConnectorStrokeWidth}"
+                                                       PulseWidth="{arc:TicketRouterTokenResource PulseStrokeWidth}"
+                                                       Gap="{arc:TicketRouterTokenResource LaneGap}"
+                                                       IsHitTestVisible="False" />
+
+                            <arc:TicketRouterLanePanel Name="PART_Lanes" Gap="{arc:TicketRouterTokenResource LaneGap}" />
+                        </StackPanel>
+                        <arc:ExplainerAnnouncer Name="PART_Live" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Non-triggered values of template parts (state styles cannot override local template values). -->
+        <Style Selector="^ /template/ Grid#PART_Stage">
+            <Setter Property="Height" Value="{arc:TicketRouterTokenResource StageHeight}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Route">
+            <Setter Property="Margin" Value="8,0,0,0" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+        </Style>
+        <Style Selector="^ /template/ Ellipse#PART_StatusDot">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.ticket-router-action">
+            <Setter Property="Height" Value="28" />
+            <Setter Property="MinHeight" Value="28" />
+            <Setter Property="Padding" Value="10,0" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        </Style>
+
+        <Style Selector="^:paused /template/ Ellipse#PART_StatusDot">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:idle /template/ Ellipse#PART_StatusDot">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:narrow /template/ Grid#PART_Stage">
+            <Setter Property="Height" Value="{arc:TicketRouterTokenResource StageStackedHeight}" />
+        </Style>
+        <Style Selector="^:narrow /template/ StackPanel#PART_Route">
+            <Setter Property="Margin" Value="0,8,0,0" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+
+        <Style Selector="^:motion-full /template/ Ellipse#PART_StatusDot">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Fill" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The incoming ticket: channel tile, customer and company, channel and time, the subject (the flight's start) and the first words. -->
+    <ControlTheme x:Key="{x:Type arc:TicketRouterTicketCard}" TargetType="arc:TicketRouterTicketCard">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TicketRouterTicketCard">
+                <Border Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                        CornerRadius="{arc:ArcDesignTokenResource RadiusStep14}"
+                        Padding="{arc:TicketRouterTokenResource TicketPadding}">
+                    <Grid RowDefinitions="Auto,*,Auto">
+                        <Grid ColumnDefinitions="Auto,Auto,*,Auto" Height="{arc:TicketRouterTokenResource ChannelTileSize}">
+                            <Border Width="{arc:TicketRouterTokenResource ChannelTileSize}"
+                                    Height="{arc:TicketRouterTokenResource ChannelTileSize}"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusStep7}"
+                                    Background="{arc:ArcDesignTokenResource Surface}">
+                                <arc:ArcGlyph Data="{TemplateBinding ChannelGlyph}"
+                                              Size="{arc:TicketRouterTokenResource ChannelGlyphSize}"
+                                              Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+                            </Border>
+                            <TextBlock Grid.Column="1"
+                                       Margin="8,0,0,0"
+                                       Text="{TemplateBinding Customer}"
+                                       FontSize="{arc:TicketRouterTokenResource MetaFontSize}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="2"
+                                       Margin="4,0,8,0"
+                                       Text="{TemplateBinding Company}"
+                                       FontSize="{arc:TicketRouterTokenResource MetaFontSize}"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center" />
+                            <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                                <TextBlock Text="{TemplateBinding Channel}"
+                                           FontSize="{arc:TicketRouterTokenResource MetaFontSize}"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                <TextBlock Text="{TemplateBinding ReceivedAt}"
+                                           FontSize="{arc:TicketRouterTokenResource MetaFontSize}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </StackPanel>
+                        </Grid>
+                        <Border Name="PART_Flight" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left">
+                            <TextBlock Text="{TemplateBinding Subject}"
+                                       FontSize="{arc:TicketRouterTokenResource SubjectFontSize}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       TextTrimming="CharacterEllipsis" />
+                        </Border>
+                        <TextBlock Grid.Row="2"
+                                   Text="{TemplateBinding Preview}"
+                                   FontSize="{arc:TicketRouterTokenResource PreviewFontSize}"
+                                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                   TextTrimming="CharacterEllipsis" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- The stage with no ticket: "No tickets yet" or "All caught up", centered. -->
+    <ControlTheme x:Key="{x:Type arc:TicketRouterNotice}" TargetType="arc:TicketRouterNotice">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TicketRouterNotice">
+                <Border Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                        CornerRadius="{arc:ArcDesignTokenResource RadiusStep14}">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="4" Margin="12,0">
+                        <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+                            <arc:ArcGlyph Data="{TemplateBinding Glyph}"
+                                          Size="16"
+                                          Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                          VerticalAlignment="Center" />
+                            <TextBlock Text="{TemplateBinding Text}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+                        <TextBlock Text="{TemplateBinding Hint}"
+                                   HorizontalAlignment="Center"
+                                   FontSize="{arc:TicketRouterTokenResource MetaFontSize}"
+                                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                   TextTrimming="CharacterEllipsis" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- A label chip: a glyph and a word on a muted pill; the tone colors the glyph (the word always says it). -->
+    <ControlTheme x:Key="{x:Type arc:TicketRouterChip}" TargetType="arc:TicketRouterChip">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Height" Value="{arc:TicketRouterTokenResource ChipHeight}" />
+        <Setter Property="Padding" Value="{arc:TicketRouterTokenResource ChipPadding}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="FontSize" Value="{arc:TicketRouterTokenResource ChipFontSize}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TicketRouterChip">
+                <Border Background="{TemplateBinding Background}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <StackPanel Orientation="Horizontal" Spacing="5" VerticalAlignment="Center">
+                        <arc:ArcGlyph Name="PART_Glyph"
+                                      Data="{TemplateBinding Glyph}"
+                                      Size="{arc:TicketRouterTokenResource ChipGlyphSize}"
+                                      VerticalAlignment="Center" />
+                        <TextBlock Text="{TemplateBinding Text}"
+                                   Foreground="{TemplateBinding Foreground}"
+                                   TextTrimming="CharacterEllipsis"
+                                   VerticalAlignment="Center" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:accent">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:accent /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:success /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:danger /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:warning">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource WarningSubtle}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:warning /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Warning}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The confidence: a short meter and the percentage in reserved tabular width; the fill turns to warning below the threshold. -->
+    <ControlTheme x:Key="{x:Type arc:TicketRouterMeter}" TargetType="arc:TicketRouterMeter">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TicketRouterMeter">
+                <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                    <Border Name="PART_Track"
+                            Width="{arc:TicketRouterTokenResource MeterWidth}"
+                            Height="{arc:TicketRouterTokenResource MeterHeight}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Background="{arc:ArcDesignTokenResource BorderSubtle}"
+                            IsVisible="{TemplateBinding ShowsBar}"
+                            VerticalAlignment="Center">
+                        <Border Name="PART_Fill"
+                                HorizontalAlignment="Left"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" />
+                    </Border>
+                    <TextBlock Text="{TemplateBinding Text}"
+                               MinWidth="30"
+                               FontSize="{arc:TicketRouterTokenResource ChipFontSize}"
+                               FontFeatures="+tnum"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Border#PART_Fill">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:low /template/ Border#PART_Fill">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Warning}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- A lane: its name (a help glyph on the review lane) and a rolling count, over a fixed-height list of rows. -->
+    <ControlTheme x:Key="{x:Type arc:TicketRouterLaneView}" TargetType="arc:TicketRouterLaneView">
+        <Setter Property="Focusable" Value="False" />
+        <!-- Rows fly in from the stage: the lane never clips them. -->
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="RowExtent" Value="{arc:TicketRouterTokenResource RowExtent}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TicketRouterLaneView">
+                <Border Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                        CornerRadius="{arc:ArcDesignTokenResource RadiusStep14}"
+                        Padding="{arc:TicketRouterTokenResource LanePadding}">
+                    <StackPanel Spacing="6">
+                        <Grid ColumnDefinitions="Auto,*,Auto" Height="{arc:TicketRouterTokenResource LaneHeaderHeight}" Margin="2,0">
+                            <arc:ArcGlyph Name="PART_LaneGlyph"
+                                          Data="{x:Static arc:ArcIcons.CircleHelp}"
+                                          Size="13"
+                                          Margin="0,0,6,0"
+                                          Foreground="{arc:ArcDesignTokenResource Warning}"
+                                          VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="1"
+                                       Margin="0,0,6,0"
+                                       Text="{TemplateBinding Label}"
+                                       FontSize="{arc:TicketRouterTokenResource LaneLabelFontSize}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center" />
+                            <arc:RollingDigits Grid.Column="2"
+                                               Value="{TemplateBinding Count}"
+                                               UseGrouping="False"
+                                               MinWidth="22"
+                                               FontSize="{arc:TicketRouterTokenResource LaneLabelFontSize}"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                               VerticalAlignment="Center" />
+                        </Grid>
+                        <StackPanel Name="PART_Rows" Height="{TemplateBinding RowsHeight}" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_LaneGlyph">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:review /template/ arc|ArcGlyph#PART_LaneGlyph">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A row in a lane: the assignee's avatar, the subject over a meta line. A review row is a button: a help tile in place of
+        the avatar, the confidence and target lane in the meta line and an arrow; pointer over strengthens its edge, keyboard
+        focus draws a 2px ring outside it. A landing tints it with the accent, which then fades.
+    -->
+    <ControlTheme x:Key="{x:Type arc:TicketRouterRow}" TargetType="arc:TicketRouterRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep10}" />
+        <Setter Property="Padding" Value="{arc:TicketRouterTokenResource RowPadding}" />
+        <Setter Property="Height" Value="{arc:TicketRouterTokenResource RowHeight}" />
+        <Setter Property="Margin" Value="{arc:TicketRouterTokenResource RowMargin}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TicketRouterRow">
+                <Panel>
+                    <Border Name="PART_Surface"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <Border Name="PART_Highlight"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Background="{arc:ArcDesignTokenResource AccentSubtle}"
+                            Opacity="0"
+                            IsHitTestVisible="False" />
+                    <Grid ColumnDefinitions="Auto,*,Auto" Margin="{TemplateBinding Padding}">
+                        <Panel Width="{arc:TicketRouterTokenResource RowAvatarSize}" VerticalAlignment="Center">
+                            <arc:Avatar Name="PART_Avatar"
+                                        DisplayName="{TemplateBinding Assignee}"
+                                        Size="Small"
+                                        Width="{arc:TicketRouterTokenResource RowAvatarSize}"
+                                        Height="{arc:TicketRouterTokenResource RowAvatarSize}" />
+                            <Border Name="PART_ReviewTile"
+                                    Width="{arc:TicketRouterTokenResource RowAvatarSize}"
+                                    Height="{arc:TicketRouterTokenResource RowAvatarSize}"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                    Background="{arc:ArcDesignTokenResource WarningSubtle}">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.CircleHelp}"
+                                              Size="13"
+                                              Foreground="{arc:ArcDesignTokenResource Warning}"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+                            </Border>
+                        </Panel>
+                        <StackPanel Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="{TemplateBinding Subject}"
+                                       FontSize="{arc:TicketRouterTokenResource RowSubjectFontSize}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                       TextTrimming="CharacterEllipsis" />
+                            <TextBlock Text="{TemplateBinding Meta}"
+                                       FontSize="{arc:TicketRouterTokenResource RowMetaFontSize}"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                       TextTrimming="CharacterEllipsis" />
+                        </StackPanel>
+                        <arc:ArcGlyph Name="PART_Go"
+                                      Grid.Column="2"
+                                      Data="{x:Static arc:ArcIcons.ArrowRight}"
+                                      Size="14"
+                                      Margin="6,0,0,0"
+                                      Foreground="{arc:ArcDesignTokenResource Accent}"
+                                      VerticalAlignment="Center" />
+                    </Grid>
+                    <Border Name="PART_FocusRing"
+                            Margin="-3"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep13}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            IsHitTestVisible="False" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Border#PART_ReviewTile">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Go">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:review">
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+        <Style Selector="^:review /template/ arc|Avatar#PART_Avatar">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:review /template/ Border#PART_ReviewTile">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:review /template/ arc|ArcGlyph#PART_Go">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:review:pointerover">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:review:pressed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Surface">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

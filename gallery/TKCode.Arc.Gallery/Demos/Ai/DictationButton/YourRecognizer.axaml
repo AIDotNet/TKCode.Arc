@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.DictationButtonYourRecognizerDemo">
+    <!-- A recognizer of your own (here a stand-in that "hears" a fixed sentence) and the composer's events: every status
+         change, the inserted text and a send that takes a moment. The model label is your own; null hides it. -->
+    <StackPanel MaxWidth="640" Margin="0,24" Spacing="12">
+        <arc:DictationButton x:Name="Composer" Placeholder="Ask about this ticket" MaxDuration="30" />
+        <TextBlock x:Name="Log"
+                   TextWrapping="Wrap"
+                   FontSize="12"
+                   LineHeight="18"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

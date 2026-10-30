@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.GhostMascotTonesDemo">
+    <!-- Accent (default), the pale Sheet with a hairline, Ink, and two custom colors: a brand violet with light eyes and an
+         amber sheet whose eyes become a dark mix of it. -->
+    <WrapPanel Margin="0,8" ItemSpacing="20" LineSpacing="16" MaxWidth="640">
+        <arc:GhostMascot Size="88" Status="Listening" Tone="Accent" />
+        <arc:GhostMascot Size="88" Status="Listening" Tone="Sheet" />
+        <arc:GhostMascot Size="88" Status="Listening" Tone="Ink" />
+        <arc:GhostMascot Size="88" Status="Listening" SheetBrush="#7747FF" EyeBrush="White" />
+        <arc:GhostMascot Size="88" Status="Listening" SheetBrush="#F5B841" />
+    </WrapPanel>
+</UserControl>

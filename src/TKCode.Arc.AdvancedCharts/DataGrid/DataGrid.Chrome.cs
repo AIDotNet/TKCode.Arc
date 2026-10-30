@@ -405,8 +405,10 @@ public partial class DataGrid
             if (e.Key == Key.Escape)
             {
                 e.Handled = true;
-                popup.IsOpen = false;
+                // Before the popup closes: closing it with focus inside puts focus back by itself, without the keyboard
+                // ring, and focusing the already focused anchor then changes nothing.
                 anchor.Focus(NavigationMethod.Tab);
+                popup.IsOpen = false;
             }
         }, RoutingStrategies.Bubble);
         ((ISetLogicalParent)popup).SetParent(this);
@@ -418,7 +420,8 @@ public partial class DataGrid
         }
         else
         {
-            list.Children.OfType<Checkbox>().FirstOrDefault()?.Focus(NavigationMethod.Tab);
+            // Opened with a click: the first value takes focus without the keyboard ring.
+            list.Children.OfType<Checkbox>().FirstOrDefault()?.Focus(DataGridFocusModality.For(anchor));
         }
     }
 

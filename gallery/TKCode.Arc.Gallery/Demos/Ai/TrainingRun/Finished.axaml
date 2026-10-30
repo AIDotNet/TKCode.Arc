@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TrainingRunFinishedDemo">
+    <!-- A finished run from history with its own results. Actions="Deploy" offers only Deploy; the deploy is simulated
+         (1.2 seconds, then an example endpoint). The losses and scores are samples. -->
+    <arc:TrainingRun x:Name="Run"
+                     MaxWidth="640"
+                     Status="Completed"
+                     JobName="triage-v2"
+                     TotalSteps="1200"
+                     Epochs="2"
+                     Step="1200"
+                     Elapsed="0:09:12"
+                     Actions="Deploy" />
+</UserControl>

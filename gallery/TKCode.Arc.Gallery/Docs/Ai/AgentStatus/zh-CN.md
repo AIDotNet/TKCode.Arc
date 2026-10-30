@@ -1,7 +1,7 @@
 ---
 title: Agent status
 summary: 运行中智能体的实时状态胶囊：标识位于旋转的环中，显示当前步骤与计时；按一下即展开为最近的步骤，并带有暂停、停止与审批控件。
-source-hash: 6d0078b450f9
+source-hash: f143ca47a5cb
 ---
 
 <Demo name="Preview" />
@@ -26,7 +26,7 @@ source-hash: 6d0078b450f9
 
 ## 用法
 
-未设置任何内容时，胶囊会自行播放一次示例运行：一个虚构的编码智能体依次完成六个步骤，并停在一个等待多久都可以的审批上。上方的预览还加了一个开关，可切换到第二个示例（研究智能体，其第三步会失败一次，以便看到重试），以及一个 Replay 按钮；这两个控件属于演示本身，而不属于胶囊。
+未设置任何内容时，胶囊停在“就绪”（Ready）状态：显示名为 "Agent" 的默认标记，没有环，也没有计时器。包里不附带任何示例运行。上方的预览播放的是展示库编写的模拟运行：一个以 Claude Sonnet 5.5 命名的编码智能体依次完成六个步骤，并停在一个等待多久都可以的审批上。它的开关可切换到第二个运行（以 Gemini 4 Argon 命名的研究智能体，其第三步会失败一次，以便看到重试），Replay 则从头开始；开关、Replay 按钮和这些运行都属于演示本身，而不属于胶囊。模型名称是真实的；任务、文件和计数是虚构的。
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
@@ -136,18 +136,29 @@ pill.ApproveRequested += (_, e) =>
 
 ### 模拟
 
-示例运行不属于控件的一部分。`AgentRunSimulation` 是一个没有界面的驱动器，它按计时器播放一个 `AgentRunScenario`：列出步骤、推进计数、无限期等待审批或失败，并将 Pause、Resume、Stop、Approve、Deny、Retry 与 Open run 应用到它自己的状态上。把它交给 `AgentStatus.Simulation`，胶囊就会显示它并把按钮操作路由回去；你也可以自行读取它的 `Status`、`Activity`、`Steps` 与 `Notice`，以驱动其他任何视图。
+模拟运行用于预览、新手引导和测试，由你的应用编写。`AgentRunScenario` 包含智能体、步骤、结果和通知；每个 `AgentRunScenarioStep` 都有一个现在时的标签、一个过去时的标签、一个图标、一段时长、一个可选的计数、一个可选的审批关卡，以及首次尝试时可选的失败。`AgentRunSimulation` 是一个没有界面的驱动器，它按计时器播放该场景：列出步骤、推进计数、无限期等待审批或失败，并将 Pause、Resume、Stop、Approve、Deny、Retry 与 Open run 应用到它自己的状态上。把它交给 `AgentStatus.Simulation`，胶囊出现在屏幕上后就会启动它、显示它并把按钮操作路由回去；你也可以自行读取它的 `Status`、`Activity`、`Steps` 与 `Notice`，以驱动其他任何视图。
 
 ```csharp
-var simulation = new AgentRunSimulation(AgentStatusSamples.Research);
+var run = new AgentRunScenario
+{
+    Agent = new AgentModel("Release bot", ArcIcons.Sparkles),
+    Outcome = "2 files touched",
+    Steps =
+    [
+        new() { Id = "read", ActiveLabel = "Reading 12 files", DoneLabel = "Read 12 files",
+                Icon = ArcIcons.Search, Duration = TimeSpan.FromSeconds(2) },
+        new() { Id = "push", ActiveLabel = "Pushing the branch", DoneLabel = "Pushed the branch",
+                Icon = ArcIcons.CloudUpload, Duration = TimeSpan.FromSeconds(1.5),
+                Request = "Waiting on you to push", WaitingLabel = "Approval needed to push" }
+    ]
+};
+var simulation = new AgentRunSimulation(run);
 pill.Simulation = simulation;
 simulation.Replay();                                   // clears the run and starts again after 0.5 s
-simulation.Scenario = AgentStatusSamples.Coding;       // starts over after 0.9 s
+simulation.Scenario = otherRun;                        // starts over after 0.9 s
 ```
 
-开始延迟为 0.9 秒（`StartDelay`），`Replay()` 之后为 0.5 秒（`ReplayDelay`）。已完成或已停止的运行会保持原样，直到胶囊将其结算。计时器运行在 `TimeProvider` 上，因此测试可以用手动时钟推进运行；胶囊自身也有一个 `TimeProvider` 属性，用于计时和结算延迟。
-
-`AgentStatusSamples` 包含两个虚构的场景、它们的智能体（`CodingAgent`、`ResearchAgent`）以及两种活动。你可以用 `AgentRunScenarioStep` 构建自己的 `AgentRunScenario`：每个步骤都有一个现在时的标签、一个过去时的标签、一个图标、一段时长、一个可选的计数、一个可选的审批关卡，以及首次尝试时可选的失败。
+在 XAML 中，请在 `<arc:AgentStatus.Simulation>` 里为每个胶囊创建一个模拟，并用 `{x:Static}` 设置它的 `Scenario`，写法见预览的 Code 标签（无参数的模拟只有一个空运行，会停在就绪状态）。开始延迟为 0.9 秒（`StartDelay`），`Replay()` 之后为 0.5 秒（`ReplayDelay`）。已完成或已停止的运行会保持原样，直到胶囊将其结算。计时器运行在 `TimeProvider` 上，因此测试可以用手动时钟推进运行；胶囊自身也有一个 `TimeProvider` 属性，用于计时和结算延迟。把 `Simulation` 设回 null 后，胶囊停在就绪状态；运行本身会继续，直到你调用 `Dispose()`。
 
 ### 窄容器
 
@@ -198,7 +209,7 @@ simulation.Scenario = AgentStatusSamples.Coding;       // starts over after 0.9 
 
 **如何为已经开始的运行显示计时器？** 将 `StartedAt` 设为真实的开始时间，胶囊会从那里开始计时。
 
-**如果同时设置了 `Status` 和 `Simulation` 会怎样？** 由模拟驱动胶囊，`Status` 会被忽略。
+**如果同时设置了 `Status` 和 `Simulation` 会怎样？** 以你的数据为准：只要设置了 `Status`、`Activity`、`StartedAt` 或某个步骤，胶囊就显示它们，不理会模拟（不会启动它，按钮也只引发各自的事件）。单独设置 `Agent` 不算：它只是为模拟运行的智能体命名。
 
 **为什么计数不像新活动那样滚动？** 只有新的文字和图标会滚动。计数是原地更改的，因此它可以每秒跳动好几次。
 
@@ -222,8 +233,6 @@ simulation.Scenario = AgentStatusSamples.Coding;       // starts over after 0.9 
 
 <!-- api: AgentRunScenarioStep -->
 
-<!-- api: AgentStatusSamples -->
-
 枚举如下：
 
 | 类型 | 取值 |
@@ -237,8 +246,8 @@ simulation.Scenario = AgentStatusSamples.Coding;       // starts over after 0.9 
 
 ## 无障碍
 
-- 胶囊是一个带有展开状态的按钮。它的名称会读出智能体、带计数的活动以及已经过的时间（如 "Juniper Code 3: Checking specs 8 of 12, 0:09 elapsed"）；运行完成后则读出其结果。
-- 礼貌级别的实时区域会播报每个新的活动和每个结果（如 "Juniper Code 3: done in 14 seconds, 5 files touched"），以及通过 `Notice` 传出的操作结果。它不播报计数或计时器的跳动。
+- 胶囊是一个带有展开状态的按钮。它的名称会读出智能体、带计数的活动以及已经过的时间（如 "Claude Sonnet 5.5: Checking specs 8 of 12, 0:09 elapsed"）；运行完成后则读出其结果。
+- 礼貌级别的实时区域会播报每个新的活动和每个结果（如 "Claude Sonnet 5.5: done in 14 seconds, 5 files touched"），以及通过 `Notice` 传出的操作结果。它不播报计数或计时器的跳动。
 - 打开的面板是一个名为 "{agent} run details" 的区域；进度条是一个名为 "Run progress" 的进度条，其值如 "4 of 6 steps finished"。
 - 状态从不只依赖颜色：每种状态都有一个文字（"Ready"、"Paused"、"Done in"、"Stopped after"）以及不同的环或图标；步骤在运行时使用现在时，完成后使用过去时。
 - 窄容器中的图标按钮都有无障碍名称。被截断的文字在胶囊名称和面板的步骤列表中保持完整。

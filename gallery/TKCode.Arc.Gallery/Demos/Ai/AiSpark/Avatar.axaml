@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AiSparkAvatarDemo">
+    <StackPanel Spacing="16" Margin="0,8" MaxWidth="560">
+        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+            <arc:AiSpark Variant="Avatar" Status="Generating" Announce="False" VerticalAlignment="Top" />
+            <Border Grid.Column="1"
+                    Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                    CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
+                    Padding="14,10">
+                <TextBlock TextWrapping="Wrap"
+                           Text="Here is a first pass at the launch note. I kept the intro to two sentences and moved the pricing table to the end." />
+            </Border>
+        </Grid>
+        <StackPanel Orientation="Horizontal" Spacing="12">
+            <arc:AiSpark Variant="Avatar" Size="24" Status="Idle" Twinkle="False" Announce="False" />
+            <arc:AiSpark Variant="Avatar" Size="32" Status="Thinking" Announce="False" />
+            <arc:AiSpark Variant="Avatar" Size="40" Status="Done" Announce="False" />
+            <arc:AiSpark Variant="Avatar" Size="48" Status="Error" Announce="False" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CodeSuggestionLongFileDemo">
+    <!-- MaxCodeHeight caps the code area; a longer file scrolls inside it. Shortcuts are off here, so Accept all shows no
+         hint, and Model="{x:Null}" hides the model line. The file is demo content. -->
+    <StackPanel MaxWidth="720">
+        <arc:CodeSuggestion x:Name="Card"
+                            MaxCodeHeight="220"
+                            AreShortcutsEnabled="False"
+                            Model="{x:Null}" />
+    </StackPanel>
+</UserControl>

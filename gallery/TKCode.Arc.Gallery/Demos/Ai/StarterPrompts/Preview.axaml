@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.StarterPromptsPreviewDemo">
+    <!-- The empty state of a chat with the demo's invented starters: pick a tab, shuffle, pick a card and press Enter (the
+         send is simulated). Loading shows the placeholder cards; Empty has no starters and no words of its own. The control
+         fills its column up to 760px, so its width never follows the cards or the composer text. The model name is a real
+         one. -->
+    <StackPanel Spacing="20" MaxWidth="760">
+        <arc:SegmentedControl x:Name="State"
+                              HorizontalAlignment="Center"
+                              SelectedValue="ready"
+                              SelectionChanged="OnStateChanged">
+            <arc:SegmentedOption Value="ready" Label="Starters" />
+            <arc:SegmentedOption Value="loading" Label="Loading" />
+            <arc:SegmentedOption Value="empty" Label="Empty" />
+        </arc:SegmentedControl>
+        <arc:StarterPrompts x:Name="Prompts"
+                            Greeting="{x:Static demos:StarterPromptsDemoData.Greeting}"
+                            Description="{x:Static demos:StarterPromptsDemoData.Description}"
+                            Placeholder="{x:Static demos:StarterPromptsDemoData.Placeholder}"
+                            ModelName="{x:Static demos:StarterPromptsDemoData.ModelName}" />
+    </StackPanel>
+</UserControl>

@@ -188,6 +188,7 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
     {
         FocusableProperty.OverrideDefaultValue<MultiSelect>(true);
         SelectionModeProperty.OverrideDefaultValue<MultiSelect>(SelectionMode.Multiple | SelectionMode.Toggle);
+        FocusModality.Watch();
     }
 
     public MultiSelect()
@@ -467,6 +468,12 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
     private void ClosePopup()
     {
         var restoreFocus = _search?.IsFocused == true;
+        if (restoreFocus)
+        {
+            // Before the popup closes (closing it with focus inside puts focus back by itself, without the keyboard
+            // ring); after a click the trigger gets focus without the ring as well.
+            Focus(FocusModality.For(this));
+        }
         if (_popup is { IsOpen: true })
         {
             _popup.IsOpen = false;
@@ -474,10 +481,6 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
         // A closed menu forgets its highlight, so the next open starts clean.
         _options?.SetActive(-1, animate: false);
         SetQuery(string.Empty);
-        if (restoreFocus)
-        {
-            Focus(NavigationMethod.Tab);
-        }
     }
 
     private void OnPopupClosed(object? sender, EventArgs e)

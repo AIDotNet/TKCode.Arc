@@ -204,7 +204,8 @@ public partial class KanbanBoard
             {
                 target = _panel.Heads[cell.Column].AddButton;
             }
-            target?.Focus(NavigationMethod.Tab);
+            // Cancel or Add clicked with the mouse hands focus back without the keyboard ring.
+            target?.Focus(BlockFocusModality.For(this));
         }
         if (!animate || _composerHeight is null || _composerOpacity is null)
         {

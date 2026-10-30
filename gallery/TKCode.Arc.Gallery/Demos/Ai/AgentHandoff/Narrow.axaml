@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentHandoffNarrowDemo">
+    <!-- In a 360px column the padding tightens and the bubbles may take more of the row; long titles truncate and message
+         text wraps. A shorter Height keeps the thread scrolling inside. -->
+    <StackPanel MaxWidth="360" Margin="0,12">
+        <arc:AgentHandoff Height="520"
+                          Title="Ticket 20931 · Replacement parts for a standing desk"
+                          AssistantModel="{x:Static demos:AgentHandoffDemoData.AssistantModel}"
+                          ReplyEstimate="{x:Static demos:AgentHandoffDemoData.ReplyEstimate}">
+            <arc:AgentHandoff.Simulation>
+                <arc:AgentHandoffSimulation Script="{x:Static demos:AgentHandoffDemoData.Script}" />
+            </arc:AgentHandoff.Simulation>
+        </arc:AgentHandoff>
+    </StackPanel>
+</UserControl>

@@ -347,7 +347,7 @@ public sealed class DemoCustomersTable : Border
                 Header = header,
                 ToggleType = MenuEntryToggleType.CheckBox,
                 StaysOpenOnClick = true,
-                Icon = owners ? new Avatar { DisplayName = text, Size = AvatarSize.Small } : null
+                Icon = owners ? new Avatar { DisplayName = text, Source = DemoPhotos.For(text), Size = AvatarSize.Small } : null
             };
             TextSearch.SetText(entry, text);
             entry.Click += (_, _) =>
@@ -403,7 +403,7 @@ public sealed class DemoCustomersTable : Border
         foreach (var owner in DemoData.CustomerOwners)
         {
             var name = DemoData.Person(owner).Name;
-            var entry = new MenuEntry { Header = name, ToggleType = MenuEntryToggleType.Radio, GroupName = "assign", Icon = new Avatar { DisplayName = name, Size = AvatarSize.Small } };
+            var entry = new MenuEntry { Header = name, ToggleType = MenuEntryToggleType.Radio, GroupName = "assign", Icon = new Avatar { DisplayName = name, Source = DemoPhotos.For(name), Size = AvatarSize.Small } };
             entry.Click += (_, _) =>
             {
                 entry.IsChecked = false;
@@ -1107,7 +1107,7 @@ public sealed class DemoCustomersTable : Border
     private Control OwnerCell(DemoCustomer customer)
     {
         var name = DemoData.Person(customer.Owner).Name;
-        var avatar = new Avatar { DisplayName = name, Size = AvatarSize.Small, Width = 24, Height = 24, VerticalAlignment = VerticalAlignment.Center };
+        var avatar = new Avatar { DisplayName = name, Source = DemoPhotos.For(name), Size = AvatarSize.Small, Width = 24, Height = 24, VerticalAlignment = VerticalAlignment.Center };
         if (_width < Breadth.Wide)
         {
             ToolTip.SetTip(avatar, name);
@@ -1148,7 +1148,7 @@ public sealed class DemoCustomersTable : Border
                 ToggleType = MenuEntryToggleType.Radio,
                 GroupName = "owner",
                 IsChecked = customer.Owner == owner,
-                Icon = new Avatar { DisplayName = name, Size = AvatarSize.Small }
+                Icon = new Avatar { DisplayName = name, Source = DemoPhotos.For(name), Size = AvatarSize.Small }
             };
             entry.Click += (_, _) => Reassign([customer], owner);
             menu.Items.Add(entry);

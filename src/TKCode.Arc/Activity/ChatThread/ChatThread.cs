@@ -347,6 +347,8 @@ public class ChatThread : ItemsControl
     static ChatThread()
     {
         FocusableProperty.OverrideDefaultValue<ChatThread>(false);
+        // The reaction picker moves focus after a click on React (it is created only then).
+        FocusModality.Watch();
     }
 
     public ChatThread()

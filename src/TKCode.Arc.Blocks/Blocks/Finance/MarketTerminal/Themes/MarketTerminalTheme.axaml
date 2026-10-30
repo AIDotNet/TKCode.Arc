@@ -632,6 +632,7 @@
     <!-- An order row: two lines, a status pill (working neutral, filled green, canceled muted) and a cancel button while working. -->
     <ControlTheme x:Key="{x:Type arc:MarketOrderRow}" TargetType="arc:MarketOrderRow">
         <Setter Property="MinHeight" Value="{arc:MarketTerminalTokenResource OrderRowHeight}" />
+        <Setter Property="ClipToBounds" Value="False" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:MarketOrderRow">
                 <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">

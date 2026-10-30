@@ -1,0 +1,387 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.EnrichColumnTheme">
+
+    <!--
+        A table card with an AI column: the top bar (the table's name, the row count with its note, the column button),
+        the header row (the row column's header and the AI column's sparkle, name, prompt and edit control), the column
+        editor folded under the header, the rows in a virtualizing list, and the footer (the model, the progress). The
+        gutters tighten below 440px; the model detail folds away below 560px.
+    -->
+    <ControlTheme x:Key="{x:Type arc:EnrichColumn}" TargetType="arc:EnrichColumn">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:EnrichColumnTokenResource CardCornerRadius}" />
+        <Setter Property="Padding" Value="{arc:EnrichColumnTokenResource Gutter}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:EnrichColumn">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <Grid RowDefinitions="Auto,Auto,Auto,*,Auto">
+                        <!-- Top bar -->
+                        <Grid ColumnDefinitions="*,Auto"
+                              ColumnSpacing="12"
+                              Height="{arc:EnrichColumnTokenResource TopBarHeight}"
+                              Margin="{TemplateBinding Padding}">
+                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" VerticalAlignment="Center">
+                                <TextBlock Name="PART_Title"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           TextTrimming="CharacterEllipsis"
+                                           VerticalAlignment="Center" />
+                                <TextBlock Name="PART_Meta"
+                                           Grid.Column="1"
+                                           FontSize="{arc:EnrichColumnTokenResource MetaFontSize}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                           TextTrimming="CharacterEllipsis"
+                                           VerticalAlignment="Center" />
+                            </Grid>
+                            <arc:Button Name="PART_Run"
+                                        Grid.Column="1"
+                                        Classes="enrich-run"
+                                        Variant="Secondary"
+                                        Size="Small"
+                                        VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <arc:ArcGlyph Name="PART_RunGlyph"
+                                                  Size="{arc:EnrichColumnTokenResource IconSize}"
+                                                  VerticalAlignment="Center" />
+                                    <TextBlock Name="PART_RunText" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </arc:Button>
+                        </Grid>
+
+                        <!-- Header row -->
+                        <Border Grid.Row="1"
+                                Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                BorderThickness="0,1,0,0"
+                                Padding="{TemplateBinding Padding}"
+                                AutomationProperties.ControlTypeOverride="Header">
+                            <Grid ColumnDefinitions="2*,3*"
+                                  ColumnSpacing="{arc:EnrichColumnTokenResource ColumnGap}"
+                                  Height="{arc:EnrichColumnTokenResource HeaderHeight}">
+                                <TextBlock Name="PART_RowHeader"
+                                           FontSize="{arc:EnrichColumnTokenResource MetaFontSize}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                           TextTrimming="CharacterEllipsis"
+                                           VerticalAlignment="Center"
+                                           AutomationProperties.ControlTypeOverride="HeaderItem" />
+                                <Grid Grid.Column="1"
+                                      ColumnDefinitions="Auto,*,Auto"
+                                      ColumnSpacing="{arc:EnrichColumnTokenResource CellGap}">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Sparkles}"
+                                                  Size="{arc:EnrichColumnTokenResource StatusSize}"
+                                                  Foreground="{arc:ArcDesignTokenResource Accent}"
+                                                  VerticalAlignment="Center" />
+                                    <StackPanel Name="PART_ColumnHeader"
+                                                Grid.Column="1"
+                                                VerticalAlignment="Center"
+                                                Spacing="1"
+                                                AutomationProperties.ControlTypeOverride="HeaderItem">
+                                        <TextBlock Name="PART_ColumnName"
+                                                   FontSize="{arc:EnrichColumnTokenResource CellFontSize}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   TextTrimming="CharacterEllipsis" />
+                                        <TextBlock Name="PART_ColumnPrompt"
+                                                   FontSize="{arc:EnrichColumnTokenResource MetaFontSize}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                   TextTrimming="CharacterEllipsis" />
+                                    </StackPanel>
+                                    <arc:EnrichColumnButton Name="PART_Edit"
+                                                            Grid.Column="2"
+                                                            Classes="icon"
+                                                            VerticalAlignment="Center">
+                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Pencil}"
+                                                      Size="{arc:EnrichColumnTokenResource IconSize}" />
+                                    </arc:EnrichColumnButton>
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                        <!-- Column editor: a critically damped height spring (0.25s, no bounce) -->
+                        <arc:SpringSizeDecorator Name="PART_Editor"
+                                                 Grid.Row="2"
+                                                 Axis="Height"
+                                                 Spring="Quick"
+                                                 CrossClipOverflow="8">
+                            <Border Name="PART_EditorBody"
+                                    BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                    BorderThickness="0,1,0,0"
+                                    Padding="{arc:EnrichColumnTokenResource EditorPadding}">
+                                <StackPanel Spacing="10">
+                                    <arc:Input Name="PART_NameInput" Size="Small" />
+                                    <arc:Textarea Name="PART_PromptInput" Size="Small" />
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                        <TextBlock Name="PART_Hint"
+                                                   FontSize="{arc:EnrichColumnTokenResource MetaFontSize}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   VerticalAlignment="Center" />
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                                            <arc:Button Name="PART_Cancel" Classes="enrich-run" Variant="Ghost" Size="Small" />
+                                            <arc:Button Name="PART_Save" Classes="enrich-run" Variant="Primary" Size="Small" />
+                                        </StackPanel>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+                        </arc:SpringSizeDecorator>
+
+                        <!-- Rows -->
+                        <ScrollViewer Grid.Row="3"
+                                      HorizontalScrollBarVisibility="Disabled"
+                                      VerticalScrollBarVisibility="Auto">
+                            <ItemsControl Name="PART_List"
+                                          AutomationProperties.ControlTypeOverride="Table" />
+                        </ScrollViewer>
+
+                        <!-- Footer -->
+                        <Border Name="PART_Footer"
+                                Grid.Row="4"
+                                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                BorderThickness="0,1,0,0"
+                                Padding="{TemplateBinding Padding}">
+                            <Grid ColumnDefinitions="*,Auto"
+                                  ColumnSpacing="12"
+                                  Height="{arc:EnrichColumnTokenResource FooterHeight}">
+                                <Grid ColumnDefinitions="Auto,Auto,*" ColumnSpacing="6" VerticalAlignment="Center">
+                                    <arc:ArcGlyph Name="PART_ModelMark"
+                                                  Size="{arc:EnrichColumnTokenResource IconSize}"
+                                                  VerticalAlignment="Center" />
+                                    <TextBlock Name="PART_ModelName"
+                                               Grid.Column="1"
+                                               FontSize="{arc:EnrichColumnTokenResource MetaFontSize}"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                               VerticalAlignment="Center" />
+                                    <TextBlock Name="PART_ModelDetail"
+                                               Grid.Column="2"
+                                               FontSize="{arc:EnrichColumnTokenResource MetaFontSize}"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                               TextTrimming="CharacterEllipsis"
+                                               VerticalAlignment="Center" />
+                                </Grid>
+                                <StackPanel Grid.Column="1"
+                                            Orientation="Horizontal"
+                                            Spacing="10"
+                                            VerticalAlignment="Center">
+                                    <TextBlock Name="PART_Failed"
+                                               FontSize="{arc:EnrichColumnTokenResource MetaFontSize}"
+                                               Foreground="{arc:ArcDesignTokenResource Danger}"
+                                               VerticalAlignment="Center"
+                                               IsVisible="False" />
+                                    <TextBlock Name="PART_Progress"
+                                               FontSize="{arc:EnrichColumnTokenResource MetaFontSize}"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                               VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+
+                        <arc:ExplainerAnnouncer Name="PART_Announcer" Grid.Row="4" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_ModelMark">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.enrich-run">
+            <Setter Property="Height" Value="{arc:EnrichColumnTokenResource ActionHeight}" />
+            <Setter Property="MinHeight" Value="{arc:EnrichColumnTokenResource ActionHeight}" />
+            <Setter Property="Padding" Value="{arc:EnrichColumnTokenResource ActionPadding}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        </Style>
+
+        <Style Selector="^:narrow">
+            <Setter Property="Padding" Value="{arc:EnrichColumnTokenResource NarrowGutter}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- One row: the row header and the AI cell. The run or retry control shows under the pointer, on focus and on touch. -->
+    <ControlTheme x:Key="{x:Type arc:EnrichColumnRowView}" TargetType="arc:EnrichColumnRowView">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Height" Value="{arc:EnrichColumnTokenResource RowHeight}" />
+        <Setter Property="Padding" Value="{arc:EnrichColumnTokenResource Gutter}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="FontSize" Value="{arc:EnrichColumnTokenResource CellFontSize}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:EnrichColumnRowView">
+                <Panel Background="Transparent">
+                    <Border Name="PART_Hover" Background="{arc:ArcDesignTokenResource SurfaceMuted}" Opacity="0" />
+                    <Border BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="0,1,0,0"
+                            Padding="{TemplateBinding Padding}">
+                        <Grid ColumnDefinitions="2*,3*" ColumnSpacing="{arc:EnrichColumnTokenResource ColumnGap}">
+                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" VerticalAlignment="Center">
+                                <arc:EnrichColumnLogo Name="PART_Logo"
+                                                      Size="{arc:EnrichColumnTokenResource LogoSize}"
+                                                      CornerRadius="{arc:EnrichColumnTokenResource LogoCornerRadius}"
+                                                      Tint="{arc:ArcDesignTokenResource AccentSubtle}"
+                                                      Ink="{arc:ArcDesignTokenResource AccentStrong}"
+                                                      GlyphBrush="{arc:ArcDesignTokenResource Foreground}"
+                                                      FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                                                      VerticalAlignment="Center" />
+                                <TextBlock Name="PART_Name"
+                                           Grid.Column="1"
+                                           LineHeight="{arc:EnrichColumnTokenResource CellLineHeight}"
+                                           TextTrimming="CharacterEllipsis"
+                                           VerticalAlignment="Center"
+                                           AutomationProperties.ControlTypeOverride="HeaderItem" />
+                            </Grid>
+                            <Grid Grid.Column="1"
+                                  ColumnDefinitions="Auto,*,Auto"
+                                  ColumnSpacing="{arc:EnrichColumnTokenResource CellGap}">
+                                <arc:EnrichColumnStatusGlyph Name="PART_Status"
+                                                             Width="{arc:EnrichColumnTokenResource StatusSize}"
+                                                             Height="{arc:EnrichColumnTokenResource StatusSize}"
+                                                             VerticalAlignment="Center"
+                                                             MutedBrush="{arc:ArcDesignTokenResource TextMuted}"
+                                                             SuccessBrush="{arc:ArcDesignTokenResource Success}"
+                                                             DangerBrush="{arc:ArcDesignTokenResource Danger}"
+                                                             AccentBrush="{arc:ArcDesignTokenResource Accent}" />
+                                <arc:ArcContentSwap Name="PART_Cell"
+                                                    Grid.Column="1"
+                                                    Mode="Label"
+                                                    HorizontalContentAlignment="Stretch"
+                                                    VerticalContentAlignment="Center"
+                                                    VerticalAlignment="Center" />
+                                <Panel Name="PART_ActionHost"
+                                       Grid.Column="2"
+                                       Width="{arc:EnrichColumnTokenResource IconButtonSize}"
+                                       VerticalAlignment="Center">
+                                    <arc:EnrichColumnButton Name="PART_Action" Classes="icon">
+                                        <arc:ArcGlyph Name="PART_ActionGlyph" Size="{arc:EnrichColumnTokenResource IconSize}" />
+                                    </arc:EnrichColumnButton>
+                                </Panel>
+                            </Grid>
+                        </Grid>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ Panel#PART_ActionHost">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:pointerover /template/ Panel#PART_ActionHost">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:focus-within /template/ Panel#PART_ActionHost">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:touch /template/ Panel#PART_ActionHost">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:pointerover /template/ Border#PART_Hover">
+            <Setter Property="Opacity" Value="0.5" />
+        </Style>
+        <Style Selector="^:narrow">
+            <Setter Property="Height" Value="{arc:EnrichColumnTokenResource NarrowRowHeight}" />
+            <Setter Property="Padding" Value="{arc:EnrichColumnTokenResource NarrowGutter}" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ Panel#PART_ActionHost">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Hover">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Style Selector="^ /template/ Panel#PART_ActionHost">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- The quiet buttons: .icon (26px square) and .source (the link after a value). -->
+    <ControlTheme x:Key="{x:Type arc:EnrichColumnButton}" TargetType="arc:EnrichColumnButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="CornerRadius" Value="{arc:EnrichColumnTokenResource IconButtonCornerRadius}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:EnrichColumnButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^.icon">
+            <Setter Property="Width" Value="{arc:EnrichColumnTokenResource IconButtonSize}" />
+            <Setter Property="Height" Value="{arc:EnrichColumnTokenResource IconButtonSize}" />
+            <Style Selector="^:pointerover">
+                <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            </Style>
+        </Style>
+        <Style Selector="^.source">
+            <Setter Property="Padding" Value="4,2" />
+            <Setter Property="FontSize" Value="{arc:EnrichColumnTokenResource MetaFontSize}" />
+            <Style Selector="^:pointerover">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+            </Style>
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

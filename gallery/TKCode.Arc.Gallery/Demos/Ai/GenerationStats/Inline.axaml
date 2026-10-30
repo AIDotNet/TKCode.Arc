@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.GenerationStatsInlineDemo">
+    <!-- The inline variant under an assistant message: one quiet line that wraps on narrow widths; Details opens the
+         breakdown as a panel below it. With no status it plays its simulation. -->
+    <StackPanel MaxWidth="640" Spacing="10">
+        <Border Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                CornerRadius="16"
+                Padding="16,12">
+            <TextBlock TextWrapping="Wrap"
+                       Text="The import job now skips rows it has already written, so a retry after a timeout no longer creates duplicates. I also added a dry-run flag that reports what would change." />
+        </Border>
+        <arc:GenerationStats Variant="Inline" Note="{x:Static demos:GenerationStatsDemoData.SimulatedNote}">
+            <arc:GenerationStats.Simulation>
+                <arc:GenerationStatsSimulation Runs="{x:Static demos:GenerationStatsDemoData.Runs}" />
+            </arc:GenerationStats.Simulation>
+        </arc:GenerationStats>
+    </StackPanel>
+</UserControl>

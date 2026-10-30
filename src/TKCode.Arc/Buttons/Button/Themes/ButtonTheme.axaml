@@ -19,11 +19,11 @@
                         <Panel Name="PART_Layers">
                             <arc:SpringSizeDecorator Name="PART_LabelSlot"
                                                      Axis="Width"
-                                                     Spring="Morph"
+                                                     Spring="{TemplateBinding LabelSpring}"
                                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
                                 <arc:ArcContentSwap Name="PART_Label"
-                                                    Mode="BlurSwap"
+                                                    Mode="{TemplateBinding LabelSwapMode}"
                                                     Content="{TemplateBinding Content}"
                                                     ContentTemplate="{TemplateBinding ContentTemplate}" />
                             </arc:SpringSizeDecorator>

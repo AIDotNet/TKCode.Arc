@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ResponseFeedbackOwnRowDemo">
+    <!-- FeedbackActions under a message you render yourself: a copy button before the thumbs, the time and the token count
+         pinned to the end of the row. -->
+    <StackPanel MaxWidth="600" Margin="0,12" Spacing="8">
+        <TextBlock TextWrapping="Wrap"
+                   LineHeight="22"
+                   Text="Your March invoice is higher because two seats were added on March 12 and billed for the rest of the month. The next invoice returns to the usual amount." />
+        <arc:FeedbackActions MessageId="msg_0192">
+            <arc:FeedbackActions.Leading>
+                <arc:CopyButton IsIconOnly="True"
+                                Variant="Plain"
+                                Label="Copy reply"
+                                Value="Your March invoice is higher because two seats were added on March 12." />
+            </arc:FeedbackActions.Leading>
+            <arc:FeedbackActions.Trailing>
+                <TextBlock Text="2:41 PM · 412 tokens" />
+            </arc:FeedbackActions.Trailing>
+        </arc:FeedbackActions>
+    </StackPanel>
+</UserControl>

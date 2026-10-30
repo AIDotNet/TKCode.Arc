@@ -1,7 +1,17 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
              x:Class="TKCode.Arc.Gallery.Demos.AgentPlanNarrowDemo">
     <!-- In a 360px column the padding tightens, long titles wrap and the draft's two buttons share the row. -->
-    <arc:AgentPlan Width="360" HorizontalAlignment="Center" />
+    <arc:AgentPlan Width="360" HorizontalAlignment="Center">
+        <arc:AgentPlan.Simulation>
+            <arc:AgentPlanSimulation Goal="{x:Static demos:AgentPlanDemoData.Goal}"
+                                     Model="{x:Static demos:AgentPlanDemoData.Model}"
+                                     Steps="{x:Static demos:AgentPlanDemoData.Steps}"
+                                     Suggestions="{x:Static demos:AgentPlanDemoData.Suggestions}"
+                                     GenericScript="{x:Static demos:AgentPlanDemoData.GenericScript}"
+                                     Summary="{x:Static demos:AgentPlanDemoData.Summary}" />
+        </arc:AgentPlan.Simulation>
+    </arc:AgentPlan>
 </UserControl>

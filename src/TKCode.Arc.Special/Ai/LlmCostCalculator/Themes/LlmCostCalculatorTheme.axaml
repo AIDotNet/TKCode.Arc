@@ -1,0 +1,534 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.LlmCostCalculatorTheme">
+
+    <!--
+        A pricing calculator as one quiet panel, at most 720px wide: the heading with the selected model's monthly total at
+        the right (under the heading when compact), the workload presets, three sliders (stacked when narrow) and the cache
+        switch, the ranked model list (or its loading, error and empty states at the same height), the breakdown of the
+        selected model, its price line and the fine print.
+    -->
+    <ControlTheme x:Key="{x:Type arc:LlmCostCalculator}" TargetType="arc:LlmCostCalculator">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="MaxWidth" Value="{arc:LlmCostCalculatorTokenResource PanelMaxWidth}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Padding" Value="{arc:LlmCostCalculatorTokenResource PanelPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:LlmCostCalculator">
+                <Border Name="PART_Card"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <StackPanel Spacing="{arc:LlmCostCalculatorTokenResource SectionGap}">
+                        <!-- Header: the heading and its source at the left, the total and the selected model at the right. -->
+                        <Grid Name="PART_Header" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="16">
+                            <StackPanel Spacing="2" VerticalAlignment="Top">
+                                <TextBlock Name="PART_Title"
+                                           FontSize="{arc:LlmCostCalculatorTokenResource TitleFontSize}"
+                                           LineHeight="{arc:LlmCostCalculatorTokenResource TitleLineHeight}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           TextWrapping="Wrap" />
+                                <TextBlock Name="PART_Description"
+                                           FontSize="{arc:LlmCostCalculatorTokenResource DescriptionFontSize}"
+                                           LineHeight="{arc:LlmCostCalculatorTokenResource DescriptionLineHeight}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                           TextWrapping="Wrap" />
+                            </StackPanel>
+                            <StackPanel Name="PART_TotalBox" Grid.Column="1" Spacing="2" VerticalAlignment="Top">
+                                <StackPanel Name="PART_TotalLine" Orientation="Horizontal" Spacing="4">
+                                    <Panel>
+                                        <arc:RollingDigits Name="PART_Total"
+                                                           Classes="figure"
+                                                           FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                                           FontSize="{arc:LlmCostCalculatorTokenResource TotalFontSize}"
+                                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                        <TextBlock Classes="dash"
+                                                   Text="—"
+                                                   FontSize="{arc:LlmCostCalculatorTokenResource TotalFontSize}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    </Panel>
+                                    <TextBlock Name="PART_TotalUnit"
+                                               VerticalAlignment="Bottom"
+                                               Margin="0,0,0,6"
+                                               FontSize="{arc:LlmCostCalculatorTokenResource TotalUnitFontSize}"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                </StackPanel>
+                                <arc:ArcContentSwap Name="PART_SelectedName"
+                                                    Mode="Crossfade"
+                                                    MinHeight="18"
+                                                    TextElement.FontSize="{arc:LlmCostCalculatorTokenResource DescriptionFontSize}"
+                                                    TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            </StackPanel>
+                        </Grid>
+
+                        <arc:SegmentedControl Name="PART_Presets" HorizontalAlignment="Left" />
+
+                        <arc:LlmCostCalculatorColumns Name="PART_Sliders"
+                                                      Columns="3"
+                                                      ColumnSpacing="{arc:LlmCostCalculatorTokenResource SliderGap}"
+                                                      RowSpacing="{arc:LlmCostCalculatorTokenResource SliderGap}">
+                            <arc:Slider Name="PART_InputSlider" />
+                            <arc:Slider Name="PART_OutputSlider" />
+                            <arc:Slider Name="PART_RequestsSlider" />
+                        </arc:LlmCostCalculatorColumns>
+
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                            <arc:Switch Name="PART_CacheSwitch" VerticalAlignment="Center" />
+                            <TextBlock Name="PART_CacheShare"
+                                       Grid.Column="1"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Right"
+                                       TextTrimming="CharacterEllipsis"
+                                       FontSize="{arc:LlmCostCalculatorTokenResource FinePrintFontSize}" />
+                        </Grid>
+
+                        <!-- The list area: every state is drawn at the same height (the placeholder keeps it). -->
+                        <Panel Name="PART_ListArea">
+                            <arc:LlmCostCalculatorSkeleton Name="PART_Skeleton"
+                                                           Fill="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                                           PlaceholderRows="{arc:LlmCostCalculatorTokenResource PlaceholderRows}"
+                                                           RowPadding="{arc:LlmCostCalculatorTokenResource RowPadding}"
+                                                           CostWidth="{arc:LlmCostCalculatorTokenResource CostWidth}"
+                                                           PulseLow="{arc:LlmCostCalculatorTokenResource PulseLowOpacity}"
+                                                           PulsePeriod="{arc:LlmCostCalculatorTokenResource PulsePeriod}"
+                                                           Opacity="0" />
+                            <arc:LlmCostCalculatorList Name="PART_List" />
+                            <StackPanel Name="PART_Error"
+                                        Spacing="6"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Opacity="0">
+                                <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.CircleAlert}"
+                                                  Size="16"
+                                                  VerticalAlignment="Center"
+                                                  Foreground="{arc:ArcDesignTokenResource Danger}" />
+                                    <TextBlock Name="PART_ErrorTitle"
+                                               VerticalAlignment="Center"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                </StackPanel>
+                                <TextBlock Name="PART_ErrorText"
+                                           TextAlignment="Center"
+                                           TextWrapping="Wrap"
+                                           MaxWidth="360"
+                                           FontSize="{arc:LlmCostCalculatorTokenResource DescriptionFontSize}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                <arc:Button Name="PART_Retry"
+                                            Variant="Secondary"
+                                            Size="Small"
+                                            Margin="0,6,0,0"
+                                            HorizontalAlignment="Center" />
+                            </StackPanel>
+                            <StackPanel Name="PART_Empty"
+                                        Spacing="4"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Opacity="0">
+                                <TextBlock Name="PART_EmptyTitle"
+                                           TextAlignment="Center"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                <TextBlock Name="PART_EmptyText"
+                                           TextAlignment="Center"
+                                           TextWrapping="Wrap"
+                                           FontSize="{arc:LlmCostCalculatorTokenResource DescriptionFontSize}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </StackPanel>
+                        </Panel>
+
+                        <Border Height="1" Background="{arc:ArcDesignTokenResource BorderSubtle}" />
+
+                        <!-- The selected model's month, part by part, and one request. -->
+                        <arc:LlmCostCalculatorColumns Name="PART_Breakdown"
+                                                      Columns="4"
+                                                      ColumnSpacing="{arc:LlmCostCalculatorTokenResource FigureGap}"
+                                                      RowSpacing="{arc:LlmCostCalculatorTokenResource FigureGap}">
+                            <StackPanel Spacing="2">
+                                <TextBlock Name="PART_InputLabel" Classes="figure-label" />
+                                <Panel>
+                                    <arc:RollingDigits Name="PART_InputCost" Classes="figure" />
+                                    <TextBlock Classes="dash" Text="—" />
+                                </Panel>
+                            </StackPanel>
+                            <StackPanel Spacing="2">
+                                <TextBlock Name="PART_CachedLabel" Classes="figure-label" />
+                                <Panel>
+                                    <arc:RollingDigits Name="PART_CachedCost" Classes="figure" />
+                                    <TextBlock Classes="dash" Text="—" />
+                                </Panel>
+                            </StackPanel>
+                            <StackPanel Spacing="2">
+                                <TextBlock Name="PART_OutputLabel" Classes="figure-label" />
+                                <Panel>
+                                    <arc:RollingDigits Name="PART_OutputCost" Classes="figure" />
+                                    <TextBlock Classes="dash" Text="—" />
+                                </Panel>
+                            </StackPanel>
+                            <StackPanel Spacing="2">
+                                <TextBlock Name="PART_PerRequestLabel" Classes="figure-label" />
+                                <Panel>
+                                    <arc:RollingDigits Name="PART_PerRequestCost" Classes="figure" />
+                                    <TextBlock Classes="dash" Text="—" />
+                                </Panel>
+                            </StackPanel>
+                        </arc:LlmCostCalculatorColumns>
+
+                        <arc:ArcContentSwap Name="PART_PriceLine"
+                                            Mode="Crossfade"
+                                            MinHeight="{arc:LlmCostCalculatorTokenResource FinePrintLineHeight}"
+                                            TextElement.FontSize="{arc:LlmCostCalculatorTokenResource FinePrintFontSize}"
+                                            TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Info}"
+                                          Size="13"
+                                          VerticalAlignment="Top"
+                                          Margin="0,2,0,0"
+                                          Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            <TextBlock Name="PART_Note"
+                                       TextWrapping="Wrap"
+                                       FontSize="{arc:LlmCostCalculatorTokenResource FinePrintFontSize}"
+                                       LineHeight="{arc:LlmCostCalculatorTokenResource FinePrintLineHeight}"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        </StackPanel>
+
+                        <arc:ExplainerAnnouncer Name="PART_Announcer" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Non-triggered values of template parts (state styles cannot override local template values). -->
+        <Style Selector="^ /template/ StackPanel#PART_TotalBox">
+            <Setter Property="Grid.Row" Value="0" />
+            <Setter Property="Grid.Column" Value="1" />
+            <Setter Property="Margin" Value="0" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_TotalLine">
+            <Setter Property="HorizontalAlignment" Value="Right" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcContentSwap#PART_SelectedName">
+            <Setter Property="HorizontalContentAlignment" Value="Right" />
+        </Style>
+        <Style Selector="^ /template/ arc|LlmCostCalculatorList#PART_List">
+            <Setter Property="RowHeight" Value="{arc:LlmCostCalculatorTokenResource RowHeight}" />
+        </Style>
+        <Style Selector="^ /template/ arc|LlmCostCalculatorSkeleton#PART_Skeleton">
+            <Setter Property="RowHeight" Value="{arc:LlmCostCalculatorTokenResource RowHeight}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_CacheShare">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="Opacity" Value="0.6" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.figure-label">
+            <Setter Property="FontSize" Value="{arc:LlmCostCalculatorTokenResource FigureLabelFontSize}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ arc|RollingDigits.figure">
+            <Setter Property="IsVisible" Value="True" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="FontSize" Value="{arc:LlmCostCalculatorTokenResource FigureFontSize}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^ /template/ arc|RollingDigits#PART_Total">
+            <Setter Property="FontSize" Value="{arc:LlmCostCalculatorTokenResource TotalFontSize}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.dash">
+            <Setter Property="IsVisible" Value="False" />
+            <Setter Property="FontSize" Value="{arc:LlmCostCalculatorTokenResource FigureFontSize}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+
+        <Style Selector="^:cached /template/ TextBlock#PART_CacheShare">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+
+        <!-- Loading, error and empty: the figures read as dashes. -->
+        <Style Selector="^:no-data /template/ arc|RollingDigits.figure">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:no-data /template/ TextBlock.dash">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <!-- Below 600px the sliders stack. -->
+        <Style Selector="^:narrow /template/ arc|LlmCostCalculatorColumns#PART_Sliders">
+            <Setter Property="Columns" Value="1" />
+        </Style>
+
+        <!-- Below 520px: the total under the heading, rows of 58px with the bar on its own line, a 2 × 2 breakdown. -->
+        <Style Selector="^:compact /template/ StackPanel#PART_TotalBox">
+            <Setter Property="Grid.Row" Value="1" />
+            <Setter Property="Grid.Column" Value="0" />
+            <Setter Property="Margin" Value="0,12,0,0" />
+        </Style>
+        <Style Selector="^:compact /template/ StackPanel#PART_TotalLine">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|ArcContentSwap#PART_SelectedName">
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|LlmCostCalculatorList#PART_List">
+            <Setter Property="RowHeight" Value="{arc:LlmCostCalculatorTokenResource CompactRowHeight}" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|LlmCostCalculatorSkeleton#PART_Skeleton">
+            <Setter Property="RowHeight" Value="{arc:LlmCostCalculatorTokenResource CompactRowHeight}" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|LlmCostCalculatorColumns#PART_Breakdown">
+            <Setter Property="Columns" Value="2" />
+        </Style>
+
+        <!-- States crossfade the list area (160ms; reduced motion keeps a short fade). -->
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ arc|LlmCostCalculatorList#PART_List">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ arc|LlmCostCalculatorSkeleton#PART_Skeleton">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_Error">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_Empty">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_CacheShare">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Style Selector="^ /template/ arc|LlmCostCalculatorList#PART_List">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ arc|LlmCostCalculatorSkeleton#PART_Skeleton">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_Error">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_Empty">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        One ranked model: a tinted background and an accent bar at the left edge when selected, the mark (or a monogram),
+        the name and provider, a bar relative to the most expensive model and the rolling monthly cost in a fixed column.
+        Compact rows (58px) put the bar on its own line under the name.
+    -->
+    <ControlTheme x:Key="{x:Type arc:LlmCostCalculatorRow}" TargetType="arc:LlmCostCalculatorRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:LlmCostCalculatorRow">
+                <Panel Background="Transparent">
+                    <Border Name="PART_Hover"
+                            CornerRadius="{arc:LlmCostCalculatorTokenResource RowCornerRadius}"
+                            Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                            Opacity="0" />
+                    <Border Name="PART_Selection"
+                            CornerRadius="{arc:LlmCostCalculatorTokenResource RowCornerRadius}"
+                            Background="{arc:ArcDesignTokenResource AccentSubtle}" />
+                    <Border Name="PART_AccentBar"
+                            Width="{arc:LlmCostCalculatorTokenResource AccentBarWidth}"
+                            Margin="{arc:LlmCostCalculatorTokenResource AccentBarMargin}"
+                            HorizontalAlignment="Left"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Background="{arc:ArcDesignTokenResource Accent}" />
+                    <Grid Name="PART_Grid"
+                          Margin="{arc:LlmCostCalculatorTokenResource RowPadding}"
+                          ColumnDefinitions="Auto,2*,3*,Auto"
+                          RowDefinitions="Auto,Auto"
+                          ColumnSpacing="{arc:LlmCostCalculatorTokenResource RowGap}"
+                          VerticalAlignment="Center">
+                        <Panel Width="{arc:LlmCostCalculatorTokenResource MarkSize}"
+                               Height="{arc:LlmCostCalculatorTokenResource MarkSize}"
+                               VerticalAlignment="Center">
+                            <arc:ArcGlyph Name="PART_Mark" Size="{arc:LlmCostCalculatorTokenResource MarkSize}" />
+                            <Border Name="PART_Monogram"
+                                    CornerRadius="{arc:LlmCostCalculatorTokenResource MonogramCornerRadius}"
+                                    Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+                                <TextBlock Name="PART_MonogramText"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           FontSize="{arc:LlmCostCalculatorTokenResource MonogramFontSize}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            </Border>
+                        </Panel>
+                        <DockPanel Name="PART_Names" Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Name="PART_Name"
+                                       DockPanel.Dock="Left"
+                                       TextTrimming="CharacterEllipsis"
+                                       FontSize="{arc:LlmCostCalculatorTokenResource NameFontSize}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       VerticalAlignment="Center" />
+                            <TextBlock Name="PART_Provider"
+                                       Margin="6,0,0,0"
+                                       TextTrimming="CharacterEllipsis"
+                                       FontSize="{arc:LlmCostCalculatorTokenResource ProviderFontSize}"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                       VerticalAlignment="Center" />
+                        </DockPanel>
+                        <arc:LlmCostCalculatorBar Name="PART_Bar"
+                                                  Height="{arc:LlmCostCalculatorTokenResource MarkSize}"
+                                                  Thickness="{arc:LlmCostCalculatorTokenResource BarHeight}"
+                                                  Track="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                                  VerticalAlignment="Center" />
+                        <Panel Grid.Column="3" Width="{arc:LlmCostCalculatorTokenResource CostWidth}" VerticalAlignment="Center">
+                            <arc:RollingDigits Name="PART_Cost"
+                                               HorizontalAlignment="Right"
+                                               FontSize="{arc:LlmCostCalculatorTokenResource CostFontSize}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        </Panel>
+                    </Grid>
+                    <Border Name="PART_FocusRing"
+                            Margin="1"
+                            CornerRadius="{arc:LlmCostCalculatorTokenResource RowCornerRadius}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            IsVisible="False"
+                            IsHitTestVisible="False" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Non-triggered values of template parts. -->
+        <Style Selector="^ /template/ Border#PART_Selection">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_AccentBar">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Mark">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Name">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^ /template/ arc|LlmCostCalculatorBar#PART_Bar">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="Grid.Row" Value="0" />
+            <Setter Property="Grid.Column" Value="2" />
+            <Setter Property="Grid.ColumnSpan" Value="1" />
+            <Setter Property="Margin" Value="0" />
+        </Style>
+        <Style Selector="^ /template/ DockPanel#PART_Names">
+            <Setter Property="Grid.ColumnSpan" Value="1" />
+        </Style>
+
+        <Style Selector="^:pointerover /template/ Border#PART_Hover">
+            <Setter Property="Opacity" Value="0.6" />
+        </Style>
+        <Style Selector="^:selected /template/ Border#PART_Selection">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:selected /template/ Border#PART_AccentBar">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:selected /template/ TextBlock#PART_Name">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:selected /template/ arc|LlmCostCalculatorBar#PART_Bar">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <!-- Compact: the name spans the middle, the bar takes its own line under it. -->
+        <Style Selector="^:compact /template/ DockPanel#PART_Names">
+            <Setter Property="Grid.ColumnSpan" Value="2" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|LlmCostCalculatorBar#PART_Bar">
+            <Setter Property="Grid.Row" Value="1" />
+            <Setter Property="Grid.Column" Value="1" />
+            <Setter Property="Grid.ColumnSpan" Value="3" />
+            <Setter Property="Margin" Value="0,6,0,0" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ Border#PART_Hover">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Selection">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Border#PART_AccentBar">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ arc|LlmCostCalculatorBar#PART_Bar">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Fill" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

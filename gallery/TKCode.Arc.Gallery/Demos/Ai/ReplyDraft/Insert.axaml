@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.ReplyDraftInsertDemo">
+    <!-- An insert handler that takes a moment: Insert shows a spinner, then the draft (with your edits) lands in the
+         composer below. Edit a word first, or press Ctrl+Enter (Cmd+Enter on a Mac) inside the card. -->
+    <StackPanel Spacing="16" MaxWidth="600">
+        <arc:ReplyDraft x:Name="Draft" AutoPlay="False">
+            <arc:ReplyDraft.Simulation>
+                <arc:ReplyDraftSimulation Message="{x:Static demos:ReplyDraftDemoData.Message}"
+                                          Suggestions="{x:Static demos:ReplyDraftDemoData.Suggestions}"
+                                          Model="{x:Static demos:ReplyDraftDemoData.Model}"
+                                          Replies="{x:Static demos:ReplyDraftDemoData.Replies}" />
+            </arc:ReplyDraft.Simulation>
+        </arc:ReplyDraft>
+        <Border CornerRadius="14" Padding="14,12" BorderThickness="1" BorderBrush="#33808080">
+            <StackPanel Spacing="6">
+                <TextBlock Text="Composer" FontSize="12" Opacity="0.6" />
+                <TextBlock x:Name="Composer" Text="Nothing inserted yet." TextWrapping="Wrap" />
+            </StackPanel>
+        </Border>
+    </StackPanel>
+</UserControl>

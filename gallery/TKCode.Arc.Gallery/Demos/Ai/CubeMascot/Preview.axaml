@@ -1,0 +1,51 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CubeMascotPreviewDemo">
+    <!-- Pick a status and watch the large cube blend from the pose it is in. "Auto" leaves Status unset, so it plays
+         through every state on its own; the row below holds each state still at 64px. -->
+    <StackPanel Spacing="24" Margin="0,16" MaxWidth="640">
+        <arc:SegmentedControl x:Name="Statuses" SelectedValue="auto" SelectionChanged="OnStatusChanged">
+            <arc:SegmentedOption Value="auto" Label="Auto" />
+            <arc:SegmentedOption Value="Idle" Label="Idle" />
+            <arc:SegmentedOption Value="Thinking" Label="Thinking" />
+            <arc:SegmentedOption Value="Writing" Label="Writing" />
+            <arc:SegmentedOption Value="Done" Label="Done" />
+            <arc:SegmentedOption Value="Error" Label="Error" />
+        </arc:SegmentedControl>
+        <StackPanel Orientation="Horizontal" Spacing="24">
+            <arc:CubeMascot x:Name="Hero" Size="144" AssistantName="Atlas" Announce="True" />
+            <StackPanel Spacing="4" VerticalAlignment="Center">
+                <TextBlock Text="Atlas" FontWeight="SemiBold" />
+                <TextBlock x:Name="Caption" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            </StackPanel>
+        </StackPanel>
+        <WrapPanel ItemSpacing="20" LineSpacing="12">
+            <StackPanel Spacing="6">
+                <arc:CubeMascot Size="64" Status="Idle" />
+                <TextBlock Text="Idle" FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                           Foreground="{arc:ArcDesignTokenResource TextMuted}" HorizontalAlignment="Center" />
+            </StackPanel>
+            <StackPanel Spacing="6">
+                <arc:CubeMascot Size="64" Status="Thinking" />
+                <TextBlock Text="Thinking" FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                           Foreground="{arc:ArcDesignTokenResource TextMuted}" HorizontalAlignment="Center" />
+            </StackPanel>
+            <StackPanel Spacing="6">
+                <arc:CubeMascot Size="64" Status="Writing" />
+                <TextBlock Text="Writing" FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                           Foreground="{arc:ArcDesignTokenResource TextMuted}" HorizontalAlignment="Center" />
+            </StackPanel>
+            <StackPanel Spacing="6">
+                <arc:CubeMascot Size="64" Status="Done" />
+                <TextBlock Text="Done" FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                           Foreground="{arc:ArcDesignTokenResource TextMuted}" HorizontalAlignment="Center" />
+            </StackPanel>
+            <StackPanel Spacing="6">
+                <arc:CubeMascot Size="64" Status="Error" />
+                <TextBlock Text="Error" FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                           Foreground="{arc:ArcDesignTokenResource TextMuted}" HorizontalAlignment="Center" />
+            </StackPanel>
+        </WrapPanel>
+    </StackPanel>
+</UserControl>

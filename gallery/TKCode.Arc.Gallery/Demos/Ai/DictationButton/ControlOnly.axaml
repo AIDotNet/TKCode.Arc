@@ -1,0 +1,30 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.DictationButtonControlOnlyDemo">
+    <!-- Only the mic and its pill, in a composer of your own: the code-behind renders the live words with the settled part
+         in the text color and the guess muted, appends the final text and drops the live words on cancel. The simulation
+         speaks the demo's invented scripts. -->
+    <Border MaxWidth="560"
+            Margin="0,24"
+            Padding="14,10,10,10"
+            CornerRadius="20"
+            BorderThickness="1"
+            Background="{arc:ArcDesignTokenResource Surface}"
+            BorderBrush="{arc:ArcDesignTokenResource Border}">
+        <Grid ColumnDefinitions="*,Auto">
+            <SelectableTextBlock x:Name="Note"
+                                 VerticalAlignment="Center"
+                                 TextWrapping="Wrap"
+                                 FontSize="15"
+                                 LineHeight="22"
+                                 Foreground="{arc:ArcDesignTokenResource Foreground}" />
+            <arc:DictationControl x:Name="Mic" Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Bottom">
+                <arc:DictationControl.Simulation>
+                    <arc:SimulatedDictationRecognizer Scripts="{x:Static demos:DictationButtonDemoData.Scripts}" />
+                </arc:DictationControl.Simulation>
+            </arc:DictationControl>
+        </Grid>
+    </Border>
+</UserControl>

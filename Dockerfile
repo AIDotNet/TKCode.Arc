@@ -1,6 +1,6 @@
 # Gallery WebAssembly host: publish in a container, pre-compress the output, serve it with nginx (brotli + gzip).
 # Built by .github/workflows/docker-gallery.yml, not locally. The project is not in TKCode.Arc.slnx
-# because WasmBuildNative needs the wasm-tools-net10 workload.
+# because WasmBuildNative needs the wasm-tools workload.
 
 ARG BUILDER_IMAGE=mcr.microsoft.com/dotnet/sdk:10.0
 ARG RUNTIME_BASE=alpine:3.21
@@ -24,9 +24,11 @@ ENV DOTNET_ROOT=/opt/dotnet \
     PATH=/opt/dotnet:$PATH \
     DOTNET_NOLOGO=1 \
     DOTNET_CLI_TELEMETRY_OPTOUT=1
-RUN dotnet --info && dotnet workload install wasm-tools-net10
+# The host targets net11.0-browser: the wasm-tools workload (wasm-tools-net10 is for net10.0-browser).
+RUN dotnet --info && dotnet workload install wasm-tools
 COPY . .
-# Trimmed (compiling ahead of time to WebAssembly is off: -p:ArcAot=true, see the Browser project file).
+# Trimmed and compiled ahead of time to WebAssembly, except the assemblies the Browser project file keeps interpreted (-p:ArcAot=false
+# publishes interpreted, much faster).
 RUN dotnet publish gallery/TKCode.Arc.Gallery.Browser/TKCode.Arc.Gallery.Browser.csproj \
         -c Release -o /app \
         ${STREAMMARK_VERSION:+-p:StreamMarkVersion=${STREAMMARK_VERSION}}

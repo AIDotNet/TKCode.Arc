@@ -19,8 +19,8 @@ namespace TKCode.Arc;
 /// Crossing the threshold after a send or an attachment, or switching to a model the window overfills, folds every
 /// message but the newest two into one summary (about 6% of them, between 4K and 24K), and the space comes back. The card
 /// rewrites <see cref="Items"/> as it goes and raises <see cref="ItemsChanged"/>, <see cref="Compacted"/> and
-/// <see cref="ModelChanged"/>. Given no data at all it shows an invented sample session with three sample models
-/// (<see cref="ContextWindowSamples"/>).
+/// <see cref="ModelChanged"/>. Without models or items the card is empty: no model pill, every cell free, and no Send
+/// message or Attach file without <see cref="Turns"/> and <see cref="Files"/>.
 /// </para>
 /// </summary>
 [TemplatePart(ReadoutPart, typeof(ContextWindowReadout))]
@@ -153,8 +153,8 @@ public partial class ContextWindow : TemplatedControl
         RoutedEvent.Register<ContextWindow, ContextWindowItemsChangedEventArgs>(nameof(ItemsChanged), RoutingStrategies.Bubble);
 
     /// <summary>
-    /// The models the pill switches between, in menu order, each with its window and output reserve. Empty uses the sample
-    /// models (or only <see cref="SelectedModel"/> when it is set).
+    /// The models the pill switches between, in menu order, each with its window and output reserve. Empty uses only
+    /// <see cref="SelectedModel"/> when it is set, and otherwise shows no model (a window of zero tokens).
     /// </summary>
     public AvaloniaList<ContextWindowModel> Models { get => GetValue(ModelsProperty); set => SetValue(ModelsProperty, value); }
 
@@ -163,16 +163,15 @@ public partial class ContextWindow : TemplatedControl
 
     /// <summary>
     /// What is in the window. Items are grouped by category in the grid, so their order matters only within a category.
-    /// Send message, Attach file, <see cref="AddItem"/> and compaction rewrite this list. When it, <see cref="Models"/>,
-    /// <see cref="Turns"/> and <see cref="Files"/> are all empty the card shows the sample session.
+    /// Send message, Attach file, <see cref="AddItem"/> and compaction rewrite this list. Empty, every cell is free.
     /// </summary>
     [Content]
     public AvaloniaList<ContextWindowItem> Items { get => GetValue(ItemsProperty); set => SetValue(ItemsProperty, value); }
 
-    /// <summary>The turns Send message adds, in order, starting over after the last. Empty hides Send message (outside the sample).</summary>
+    /// <summary>The turns Send message adds, in order, starting over after the last. Empty hides Send message.</summary>
     public AvaloniaList<ContextWindowTurn> Turns { get => GetValue(TurnsProperty); set => SetValue(TurnsProperty, value); }
 
-    /// <summary>The files Attach file adds, in order, starting over after the last. Empty hides Attach file (outside the sample).</summary>
+    /// <summary>The files Attach file adds, in order, starting over after the last. Empty hides Attach file.</summary>
     public AvaloniaList<ContextWindowTurn> Files { get => GetValue(FilesProperty); set => SetValue(FilesProperty, value); }
 
     /// <summary>The share of the window at which compaction runs on its own (default 0.8). The dashed line sits on the nearest row boundary.</summary>
@@ -236,7 +235,7 @@ public partial class ContextWindow : TemplatedControl
     private long _freeTokens;
     private bool _canCompact;
 
-    /// <summary>Creates the card; with no data it shows the sample session.</summary>
+    /// <summary>Creates the card with empty lists: no models, no items, no turns and no files.</summary>
     public ContextWindow()
     {
         SetCurrentValue(ModelsProperty, new AvaloniaList<ContextWindowModel>());

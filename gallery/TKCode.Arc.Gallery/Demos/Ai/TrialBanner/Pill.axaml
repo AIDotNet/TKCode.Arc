@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.TrialBannerPillDemo">
+    <!-- A dense header with the trial pill at its end: the pill opens the card in a popover. The trial is the demo's own
+         (TrialBannerDemoData); the features are written out here. -->
+    <Border MaxWidth="720"
+            Padding="12,8"
+            CornerRadius="14"
+            BorderThickness="1"
+            BorderBrush="{arc:ArcDesignTokenResource Border}"
+            Background="{arc:ArcDesignTokenResource Surface}">
+        <Grid ColumnDefinitions="*,Auto">
+            <TextBlock Text="Northwind / Roadmap" VerticalAlignment="Center" FontWeight="Medium" />
+            <arc:TrialBanner Grid.Column="1" Variant="Pill" DaysLeft="3"
+                             Plan="{x:Static demos:TrialBannerDemoData.Plan}"
+                             Workspace="{x:Static demos:TrialBannerDemoData.Workspace}"
+                             LossSummary="{x:Static demos:TrialBannerDemoData.LossSummary}">
+                <arc:TrialBanner.Features>
+                    <arc:TrialFeature Id="sso" Label="SAML single sign-on" Detail="for every member" Icon="{x:Static arc:ArcIcons.Key}" />
+                    <arc:TrialFeature Id="alerts" Label="Alerts in team chat" Detail="incidents and mentions" Icon="{x:Static arc:ArcIcons.Bell}" />
+                    <arc:TrialFeature Id="sync" Label="Two-way issue sync" Detail="status and comments" Icon="{x:Static arc:ArcIcons.RefreshCw}" />
+                    <arc:TrialFeature Id="seats" Label="Team seats" Detail="12 seats" Icon="{x:Static arc:ArcIcons.Users}" />
+                </arc:TrialBanner.Features>
+            </arc:TrialBanner>
+        </Grid>
+    </Border>
+</UserControl>

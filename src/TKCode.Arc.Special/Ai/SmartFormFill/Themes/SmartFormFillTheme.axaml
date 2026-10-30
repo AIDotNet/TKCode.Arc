@@ -1,0 +1,247 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.SmartFormFillTheme">
+
+    <!--
+        A paste-to-fill form card: the title and a line under it, then the body (the paste well and the form, side by side
+        from 720px of content, stacked below that) and a footer with the status and the actions. The well holds a heading
+        with the model chip, the text area (or, once a read starts, the pasted text with each field's source highlighted)
+        and Try sample, Edit text and Fill. Breakpoints are applied in code from the card's own width.
+    -->
+    <ControlTheme x:Key="{x:Type arc:SmartFormFill}" TargetType="arc:SmartFormFill">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:SmartFormFillTokenResource CardCornerRadius}" />
+        <Setter Property="Padding" Value="{arc:SmartFormFillTokenResource CardPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="HighlightBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="ReviewHighlightBrush" Value="{arc:ArcDesignTokenResource WarningSubtle}" />
+        <Setter Property="HighlightRestOpacity" Value="{arc:SmartFormFillTokenResource HighlightRestOpacity}" />
+        <Setter Property="HighlightCornerRadius" Value="{arc:SmartFormFillTokenResource HighlightCornerRadius}" />
+        <Setter Property="HighlightOutset" Value="{arc:SmartFormFillTokenResource HighlightOutset}" />
+        <Setter Property="EditorHeight" Value="{arc:SmartFormFillTokenResource EditorHeight}" />
+        <Setter Property="EditorMinHeight" Value="{arc:SmartFormFillTokenResource EditorMinHeight}" />
+        <Setter Property="SectionGap" Value="{arc:SmartFormFillTokenResource SectionGap}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SmartFormFill">
+                <Border Name="PART_Card"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <StackPanel>
+                        <StackPanel Spacing="2" Margin="0,0,0,16">
+                            <TextBlock Name="PART_Title"
+                                       FontSize="{arc:SmartFormFillTokenResource TitleFontSize}"
+                                       LineHeight="{arc:SmartFormFillTokenResource TitleLineHeight}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                       TextTrimming="CharacterEllipsis" />
+                            <TextBlock Name="PART_Description"
+                                       FontSize="{arc:SmartFormFillTokenResource DescriptionFontSize}"
+                                       LineHeight="{arc:SmartFormFillTokenResource DescriptionLineHeight}"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                       TextWrapping="Wrap" />
+                        </StackPanel>
+
+                        <Grid Name="PART_Body" ColumnDefinitions="5*,7*" RowDefinitions="Auto,Auto">
+                            <Border Name="PART_Well"
+                                    Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                    CornerRadius="{arc:SmartFormFillTokenResource WellCornerRadius}"
+                                    Padding="{arc:SmartFormFillTokenResource WellPadding}">
+                                <Grid RowDefinitions="Auto,*,Auto">
+                                    <Grid ColumnDefinitions="*,Auto" Margin="2,0,2,0">
+                                        <TextBlock Name="PART_WellHeading"
+                                                   FontSize="{arc:SmartFormFillTokenResource WellHeadingFontSize}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                   VerticalAlignment="Center" />
+                                        <StackPanel Grid.Column="1"
+                                                    Orientation="Horizontal"
+                                                    Spacing="5"
+                                                    Margin="8,0,0,0"
+                                                    VerticalAlignment="Center">
+                                            <arc:ArcGlyph Name="PART_ModelMark"
+                                                          Size="13"
+                                                          Foreground="{arc:ArcDesignTokenResource Accent}"
+                                                          VerticalAlignment="Center" />
+                                            <TextBlock Name="PART_ModelName"
+                                                       FontSize="{arc:SmartFormFillTokenResource WellHeadingFontSize}"
+                                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                       VerticalAlignment="Center" />
+                                        </StackPanel>
+                                    </Grid>
+                                    <arc:SmartFormFillWellHost Name="PART_WellHost"
+                                                               Grid.Row="1"
+                                                               Margin="0,10,0,10">
+                                        <arc:Textarea Name="PART_Editor"
+                                                      IsLabelVisible="False"
+                                                      IsResizable="False"
+                                                      VerticalAlignment="Stretch" />
+                                        <Border Name="PART_SourceFrame"
+                                                Background="{arc:ArcDesignTokenResource Surface}"
+                                                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                                CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
+                                                ClipToBounds="True">
+                                            <ScrollViewer Name="PART_SourceScroll"
+                                                          Focusable="True"
+                                                          FocusAdorner="{x:Null}"
+                                                          HorizontalScrollBarVisibility="Disabled"
+                                                          VerticalScrollBarVisibility="Auto">
+                                                <arc:DecoratedTextBlock Name="PART_Source"
+                                                                        Margin="{arc:SmartFormFillTokenResource SourcePadding}"
+                                                                        TextWrapping="Wrap"
+                                                                        FontSize="{arc:SmartFormFillTokenResource SourceFontSize}"
+                                                                        LineHeight="{arc:SmartFormFillTokenResource SourceLineHeight}"
+                                                                        Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                                        SelectionBrush="{arc:ArcDesignTokenResource AccentSubtle}" />
+                                            </ScrollViewer>
+                                        </Border>
+                                        <Border Name="PART_SourceFocus"
+                                                CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
+                                                BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                                                BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                                                IsVisible="False"
+                                                IsHitTestVisible="False" />
+                                    </arc:SmartFormFillWellHost>
+                                    <Grid Grid.Row="2" ColumnDefinitions="*,Auto">
+                                        <StackPanel Orientation="Horizontal" Spacing="4">
+                                            <arc:Button Name="PART_Sample" Classes="smart-form-fill-action" Variant="Ghost" Size="Small" />
+                                            <arc:Button Name="PART_Edit" Classes="smart-form-fill-action" Variant="Ghost" Size="Small" />
+                                        </StackPanel>
+                                        <arc:Button Name="PART_Fill"
+                                                    Grid.Column="1"
+                                                    Classes="smart-form-fill-action"
+                                                    Variant="Secondary"
+                                                    Size="Small" />
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                            <arc:SmartFormFillFormPanel Name="PART_Form"
+                                                        Grid.Column="1"
+                                                        ColumnGap="{arc:SmartFormFillTokenResource FieldColumnGap}"
+                                                        RowGap="{arc:SmartFormFillTokenResource FieldRowGap}" />
+                        </Grid>
+
+                        <Border Margin="0,20,0,0"
+                                Padding="0,16,0,0"
+                                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}">
+                            <Grid Name="PART_Footer" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                                <arc:ArcContentSwap Name="PART_Status"
+                                                    Mode="Label"
+                                                    HorizontalContentAlignment="Left"
+                                                    VerticalContentAlignment="Center"
+                                                    VerticalAlignment="Center" />
+                                <StackPanel Name="PART_Actions"
+                                            Grid.Column="1"
+                                            Orientation="Horizontal"
+                                            Spacing="{arc:SmartFormFillTokenResource ActionGap}"
+                                            VerticalAlignment="Center">
+                                    <arc:Button Name="PART_Undo" Variant="Ghost" Size="Small" />
+                                    <arc:Button Name="PART_Submit" Variant="Primary" Size="Small" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Non-triggered values of template parts (state styles cannot override local template values). -->
+        <Style Selector="^ /template/ arc|Textarea#PART_Editor">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_SourceFrame">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.smart-form-fill-action">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        </Style>
+
+        <Style Selector="^:source">
+            <Style Selector="^ /template/ arc|Textarea#PART_Editor">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_SourceFrame">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        One field: the label with the confidence badge at the far end, the Arc input with an accent tint over it (the arrival
+        breath) and a warning ring while the value asks for review, and the reason under it.
+    -->
+    <ControlTheme x:Key="{x:Type arc:SmartFormFillFieldView}" TargetType="arc:SmartFormFillFieldView">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="TintPeakOpacity" Value="{arc:SmartFormFillTokenResource TintPeakOpacity}" />
+        <Setter Property="LogoSize" Value="{arc:SmartFormFillTokenResource LogoSize}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SmartFormFillFieldView">
+                <StackPanel Spacing="{arc:SmartFormFillTokenResource LabelGap}">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <TextBlock Name="PART_Label"
+                                   Text="{TemplateBinding Label}"
+                                   FontSize="{arc:SmartFormFillTokenResource LabelFontSize}"
+                                   LineHeight="{arc:SmartFormFillTokenResource LabelLineHeight}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                   TextTrimming="CharacterEllipsis"
+                                   VerticalAlignment="Center" />
+                        <arc:ArcContentSwap Name="PART_Badge"
+                                            Grid.Column="1"
+                                            Mode="Label"
+                                            Margin="8,0,0,0"
+                                            HorizontalContentAlignment="Right"
+                                            VerticalContentAlignment="Center"
+                                            VerticalAlignment="Center" />
+                    </Grid>
+                    <Panel>
+                        <arc:Input Name="PART_Input" IsLabelVisible="False" />
+                        <Border Name="PART_Tint"
+                                Background="{arc:ArcDesignTokenResource Accent}"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
+                                Opacity="0"
+                                IsHitTestVisible="False" />
+                        <Border Name="PART_Ring"
+                                BorderBrush="{arc:ArcDesignTokenResource Warning}"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
+                                IsHitTestVisible="False" />
+                    </Panel>
+                    <TextBlock Name="PART_Note"
+                               IsVisible="False"
+                               TextWrapping="Wrap"
+                               FontSize="{arc:SmartFormFillTokenResource NoteFontSize}"
+                               LineHeight="{arc:SmartFormFillTokenResource NoteLineHeight}"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Border#PART_Ring">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:review /template/ Border#PART_Ring">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Ring">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

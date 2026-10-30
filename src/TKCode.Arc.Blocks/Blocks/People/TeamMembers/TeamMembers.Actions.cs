@@ -619,7 +619,8 @@ public partial class TeamMembers
     {
         if (next is { IsEffectivelyVisible: true, IsEffectivelyEnabled: true })
         {
-            next.Focus(NavigationMethod.Tab);
+            // Remove clicked with the mouse moves focus on without the keyboard ring.
+            next.Focus(BlockFocusModality.For(this));
         }
         else if (_search is { IsEffectivelyVisible: true })
         {

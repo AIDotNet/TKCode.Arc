@@ -153,6 +153,7 @@ public abstract class Explainer : TemplatedControl
 
     static Explainer()
     {
+        SpecialFocusModality.Watch();
         FocusableProperty.OverrideDefaultValue<Explainer>(false);
     }
 
@@ -587,7 +588,8 @@ public abstract class Explainer : TemplatedControl
         // At the end the step button turns off: keep focus in the card on Restart instead of dropping it to the page.
         if (!CanStep && stepHadFocus && _restartButton is not null)
         {
-            _restartButton.Focus(NavigationMethod.Tab);
+            // With the keyboard ring only when a key pressed Step.
+            _restartButton.Focus(SpecialFocusModality.For(this));
         }
     }
 

@@ -240,7 +240,8 @@ internal sealed class WebhookAddForm : StackPanel
         }
         if (eventsError is not null)
         {
-            _boxes[0].Box.Focus(NavigationMethod.Tab);
+            // Add clicked with the mouse: the first event box takes focus without the keyboard ring.
+            _boxes[0].Box.Focus(BlockFocusModality.For(this));
             _owner.Announce(eventsError);
             return null;
         }

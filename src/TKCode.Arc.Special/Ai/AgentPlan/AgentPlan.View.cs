@@ -66,9 +66,11 @@ public partial class AgentPlan
     /// <summary>The accessible name of the plan.</summary>
     internal string AccessibleName => Labels.PlanName(EffectiveModel?.Name, EffectiveGoal);
 
-    internal AgentModel? EffectiveModel => Model ?? (_sampleFilled ? AgentPlanSamples.SampleModel : null);
+    /// <summary>The model shown: <see cref="Model"/>, else the running simulation's.</summary>
+    internal AgentModel? EffectiveModel => Model ?? ActiveSimulation?.Model;
 
-    internal string? EffectiveGoal => Goal ?? (_sampleFilled ? AgentPlanSamples.Goal : null);
+    /// <summary>The goal shown: <see cref="Goal"/>, else the running simulation's.</summary>
+    internal string? EffectiveGoal => Goal ?? ActiveSimulation?.Goal;
 
     internal string? EffectiveSummary => Summary ?? (Status is null ? ActiveSimulation?.Summary : null);
 

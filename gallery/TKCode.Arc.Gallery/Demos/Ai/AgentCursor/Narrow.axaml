@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentCursorNarrowDemo">
+    <!-- Under 480px the document padding tightens and the review bar drops "by" and the agent's name; text wraps and cursor
+         tags flip left near the right edge. -->
+    <Border MaxWidth="360" Margin="0,12">
+        <arc:AgentCursor>
+            <arc:AgentCursor.Simulation>
+                <arc:AgentCursorSimulation Blocks="{x:Static demos:AgentCursorDemoData.Blocks}"
+                                           Edits="{x:Static demos:AgentCursorDemoData.Edits}"
+                                           Agent="{x:Static demos:AgentCursorDemoData.Agent}"
+                                           Collaborator="{x:Static demos:AgentCursorDemoData.Collaborator}"
+                                           Meta="{x:Static demos:AgentCursorDemoData.Meta}" />
+            </arc:AgentCursor.Simulation>
+        </arc:AgentCursor>
+    </Border>
+</UserControl>

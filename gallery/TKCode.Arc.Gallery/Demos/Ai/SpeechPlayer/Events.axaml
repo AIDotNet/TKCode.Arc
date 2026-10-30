@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SpeechPlayerEventsDemo">
+    <!-- The events a player raises, with a caption that follows WordChanged. Read aloud, scrub, change the speed or the
+         voice and watch the log. Simulated: no audio plays. -->
+    <StackPanel Spacing="14" MaxWidth="640">
+        <arc:SpeechPlayer x:Name="Player"
+                          ShowsDefaultActions="False"
+                          Text="Your order ships tomorrow from the Leeds warehouse. Tracking arrives by email once the courier scans it, usually before noon." />
+        <Border Padding="12,8"
+                CornerRadius="10"
+                BorderThickness="1"
+                BorderBrush="{arc:ArcDesignTokenResource Border}">
+            <StackPanel Spacing="6">
+                <TextBlock x:Name="Caption"
+                           Text="Caption: (not reading)"
+                           FontWeight="SemiBold" />
+                <TextBlock x:Name="Log"
+                           FontSize="12"
+                           TextWrapping="Wrap"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                           Text="Events appear here." />
+            </StackPanel>
+        </Border>
+    </StackPanel>
+</UserControl>

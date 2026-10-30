@@ -1,0 +1,33 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.GhostMascotCanvasDemo">
+    <!-- Over an image canvas while it generates: a 64px ghost thinks in the corner of a generated gradient. Switch
+         "Generating" off and it turns to done; Paused freezes it on the current frame. -->
+    <StackPanel Spacing="14" Margin="0,8" MaxWidth="520">
+        <Border Height="220" CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}" ClipToBounds="True">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                    <GradientStop Color="#2B3A67" Offset="0" />
+                    <GradientStop Color="#6A4C93" Offset="0.55" />
+                    <GradientStop Color="#F4A259" Offset="1" />
+                </LinearGradientBrush>
+            </Border.Background>
+            <arc:GhostMascot x:Name="Ghost"
+                             Size="64"
+                             Status="Thinking"
+                             Tone="Sheet"
+                             ShowGround="False"
+                             Announce="True"
+                             AssistantName="Atlas"
+                             IsPaused="{Binding #PauseSwitch.IsChecked}"
+                             HorizontalAlignment="Right"
+                             VerticalAlignment="Bottom"
+                             Margin="12" />
+        </Border>
+        <WrapPanel ItemSpacing="20" LineSpacing="10">
+            <arc:Switch x:Name="GeneratingSwitch" Content="Generating" IsChecked="True" />
+            <arc:Switch x:Name="PauseSwitch" Content="Paused" />
+        </WrapPanel>
+    </StackPanel>
+</UserControl>

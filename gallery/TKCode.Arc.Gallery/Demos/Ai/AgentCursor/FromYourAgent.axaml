@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentCursorFromYourAgentDemo">
+    <StackPanel Spacing="12" MaxWidth="680" Margin="0,12">
+        <!-- Run fetches the edits (here a simulated request of about a second). Stop cancels it; a failed request offers Retry. -->
+        <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+            <arc:Switch x:Name="FailNext" />
+            <TextBlock Text="Fail the next request" VerticalAlignment="Center" FontSize="13" />
+        </StackPanel>
+        <arc:AgentCursor x:Name="Card" AutoPlay="False" PhaseChanged="OnPhaseChanged" />
+        <TextBlock x:Name="Log"
+                   TextAlignment="Center"
+                   FontSize="13"
+                   Text="Phase: Idle"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

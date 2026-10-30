@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.GhostTextSingleLineDemo">
+    <!-- A single-line commit message: the field scrolls sideways with the caret and the chip stays inline at its end.
+         The whole suggestion arrives at once from a task. -->
+    <arc:GhostText x:Name="Field"
+                   MaxWidth="560"
+                   IsMultiline="False"
+                   Placeholder="Commit message"
+                   AutomationProperties.Name="Commit message" />
+</UserControl>

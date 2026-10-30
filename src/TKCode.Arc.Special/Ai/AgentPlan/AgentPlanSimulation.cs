@@ -19,11 +19,14 @@ internal interface IAgentPlanSimulationHost
 }
 
 /// <summary>
-/// The built-in simulated agent of an <see cref="AgentPlan"/> that has no <see cref="AgentPlan.Status"/>: it answers the
-/// plan's buttons (Approve plan, Keep planning, Pause, Resume, Retry, Skip, Start over) and plays a scripted run, one step
-/// after the other, with the beats measured on the reference. Scripts are found by step id; a step without one runs
+/// A simulated agent for an <see cref="AgentPlan"/> that has no <see cref="AgentPlan.Status"/>: give it to
+/// <see cref="AgentPlan.Simulation"/> and it answers the plan's buttons (Approve plan, Keep planning, Pause, Resume, Retry,
+/// Skip, Start over) and plays a scripted run, one step after the other, with the beats measured on the reference. Your app
+/// writes the content: the draft (<see cref="Steps"/>), what Keep planning suggests (<see cref="Suggestions"/>), the goal,
+/// the model and the summary; nothing ships with the package. Scripts are found by step id; a step without one runs
 /// <see cref="GenericScript"/>. It is event-driven: exactly one timer waits per state change, nothing runs while the plan
-/// is idle, and Pause keeps the remaining time of that timer so Resume continues where the run stopped.
+/// is idle, and Pause keeps the remaining time of that timer so Resume continues where the run stopped. The data is read
+/// when the plan attaches the simulation; create one per plan, since it keeps the run's state.
 /// </summary>
 public sealed class AgentPlanSimulation
 {
@@ -58,7 +61,7 @@ public sealed class AgentPlanSimulation
     private int _nextSuggestion;
     private bool _planning;
 
-    /// <summary>Creates a simulation of the invented sample (<see cref="AgentPlanSamples"/>).</summary>
+    /// <summary>Creates a simulation with no steps; set its data (in XAML too) before the plan attaches it.</summary>
     public AgentPlanSimulation()
         : this(new AgentPlanDispatcherScheduler())
     {
@@ -69,17 +72,26 @@ public sealed class AgentPlanSimulation
         _scheduler = scheduler;
     }
 
-    /// <summary>The scripted steps: the draft a plan with no steps starts from, and the scripts of those ids.</summary>
-    public IReadOnlyList<AgentPlanScriptedStep> Steps { get; init; } = AgentPlanSamples.Steps;
+    /// <summary>The scripted steps: the draft a plan with no steps starts from, and the scripts of those ids. Empty by default.</summary>
+    public IReadOnlyList<AgentPlanScriptedStep> Steps { get; set; } = [];
 
-    /// <summary>What Keep planning suggests, in order (each goes in before the last step).</summary>
-    public IReadOnlyList<AgentPlanScriptedStep> Suggestions { get; init; } = AgentPlanSamples.Suggestions;
+    /// <summary>What Keep planning suggests, in order (each goes in before the last step). Empty by default.</summary>
+    public IReadOnlyList<AgentPlanScriptedStep> Suggestions { get; set; } = [];
 
-    /// <summary>The script of a step that has none (a step you added).</summary>
-    public AgentPlanStepScript GenericScript { get; init; } = AgentPlanSamples.GenericScript;
+    /// <summary>
+    /// The script of a step that has none (a step you added); null (the default) finishes such a step without activity lines
+    /// or a time.
+    /// </summary>
+    public AgentPlanStepScript? GenericScript { get; set; }
+
+    /// <summary>The goal shown while the simulation runs, unless the plan sets its own <see cref="AgentPlan.Goal"/>.</summary>
+    public string? Goal { get; set; }
+
+    /// <summary>The model shown while the simulation runs, unless the plan sets its own <see cref="AgentPlan.Model"/>.</summary>
+    public AgentModel? Model { get; set; }
 
     /// <summary>The summary shown when the run is done, unless the plan sets its own <see cref="AgentPlan.Summary"/>.</summary>
-    public string? Summary { get; init; } = AgentPlanSamples.Summary;
+    public string? Summary { get; set; }
 
     /// <summary>The status the simulation shows.</summary>
     public AgentPlanStatus Status { get; private set; }
@@ -201,8 +213,11 @@ public sealed class AgentPlanSimulation
         }
     }
 
+    /// <summary>A step without a script and no <see cref="GenericScript"/>: no lines, no time.</summary>
+    private static readonly AgentPlanStepScript s_noScript = new([], TimeSpan.Zero);
+
     private AgentPlanStepScript ScriptOf(AgentPlanStep step) =>
-        _scripts.TryGetValue(step.Id, out var script) ? script : GenericScript;
+        _scripts.TryGetValue(step.Id, out var script) ? script : GenericScript ?? s_noScript;
 
     // The plan's buttons ----------------------------------------------------------------------------------------------
 
@@ -423,7 +438,7 @@ public sealed class AgentPlanSimulation
             // Waits for Retry or Skip: no timer.
             return;
         }
-        Complete(step, script.Duration);
+        Complete(step, ReferenceEquals(script, s_noScript) ? null : script.Duration);
     }
 
     private void RetryLine(AgentPlanStep step, AgentPlanStepScript script, int index)
@@ -438,7 +453,7 @@ public sealed class AgentPlanSimulation
         Complete(step, script.RetryDuration ?? script.Duration);
     }
 
-    private void Complete(AgentPlanStep step, TimeSpan duration)
+    private void Complete(AgentPlanStep step, TimeSpan? duration)
     {
         step.Duration = duration;
         step.State = AgentPlanStepState.Done;

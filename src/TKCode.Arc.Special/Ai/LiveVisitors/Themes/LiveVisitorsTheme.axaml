@@ -1,0 +1,262 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.LiveVisitorsTheme">
+
+    <!--
+        A realtime visitors card: a header with the live status (a pulsing dot and a word in a reserved width) and a pause
+        toggle, the count rolling digit by digit with the words after it, a dotted world map where arrivals ping in, and two
+        lists (the top pages with bars, the latest signups and upgrades) side by side, stacked below 520px. At most 640 wide;
+        it fills narrower containers and never follows its content's width.
+    -->
+    <ControlTheme x:Key="{x:Type arc:LiveVisitors}" TargetType="arc:LiveVisitors">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="MaxWidth" Value="{arc:LiveVisitorsTokenResource CardMaxWidth}" />
+        <Setter Property="NarrowWidth" Value="{arc:LiveVisitorsTokenResource NarrowWidth}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:LiveVisitorsTokenResource CardCornerRadius}" />
+        <Setter Property="Padding" Value="{arc:LiveVisitorsTokenResource CardPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:LiveVisitors">
+                <Border Name="PART_Card"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
+                        Padding="{TemplateBinding Padding}">
+                    <StackPanel Spacing="{arc:LiveVisitorsTokenResource SectionGap}">
+                        <Grid ColumnDefinitions="*,Auto" Height="{arc:LiveVisitorsTokenResource HeaderHeight}">
+                            <StackPanel Orientation="Horizontal"
+                                        Spacing="{arc:LiveVisitorsTokenResource StatusGap}"
+                                        VerticalAlignment="Center">
+                                <Panel Width="{arc:LiveVisitorsTokenResource StatusDotSize}"
+                                       Height="{arc:LiveVisitorsTokenResource StatusDotSize}"
+                                       VerticalAlignment="Center">
+                                    <arc:LiveVisitorsStatusDot Name="PART_StatusDot"
+                                                               DotSize="{arc:LiveVisitorsTokenResource StatusDotSize}"
+                                                               PulseScale="{arc:LiveVisitorsTokenResource StatusPulseScale}"
+                                                               HorizontalAlignment="Center"
+                                                               VerticalAlignment="Center"
+                                                               Margin="-20" />
+                                </Panel>
+                                <Panel Name="PART_StatusBox"
+                                       VerticalAlignment="Center"
+                                       TextElement.FontSize="{arc:LiveVisitorsTokenResource StatusFontSize}"
+                                       TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}">
+                                    <arc:ArcContentSwap Name="PART_Status"
+                                                        Mode="Crossfade"
+                                                        HorizontalContentAlignment="Left" />
+                                </Panel>
+                            </StackPanel>
+                            <arc:LiveVisitorsPauseButton Name="PART_Pause"
+                                                         Grid.Column="1"
+                                                         VerticalAlignment="Center" />
+                        </Grid>
+                        <Panel Name="PART_CountBox">
+                            <!-- A grid, not a horizontal stack, so the words get the width left and end in an ellipsis. -->
+                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="{arc:LiveVisitorsTokenResource CountLabelGap}">
+                                <Panel Height="{arc:LiveVisitorsTokenResource CountLineHeight}">
+                                    <arc:RollingDigits Name="PART_Digits"
+                                                       AutomationProperties.AccessibilityView="Raw"
+                                                       FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                                       FontSize="{arc:LiveVisitorsTokenResource CountFontSize}"
+                                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                       Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                       IsShortestTurn="False"
+                                                       VerticalAlignment="Center" />
+                                    <arc:LiveVisitorsPlaceholder Name="PART_CountPlaceholder"
+                                                                 Width="{arc:LiveVisitorsTokenResource CountPlaceholderWidth}"
+                                                                 Height="{arc:LiveVisitorsTokenResource BarHeight}"
+                                                                 CornerRadius="{arc:LiveVisitorsTokenResource BarCornerRadius}"
+                                                                 Fill="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                                                 IsVisible="False" />
+                                </Panel>
+                                <TextBlock Name="PART_CountLabel"
+                                           Grid.Column="1"
+                                           AutomationProperties.AccessibilityView="Raw"
+                                           VerticalAlignment="Center"
+                                           TextTrimming="CharacterEllipsis"
+                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            </Grid>
+                        </Panel>
+                        <arc:LiveVisitorsMap Name="PART_Map"
+                                             AutomationProperties.AccessibilityView="Raw"
+                                             LandBrush="{arc:LiveVisitorsTokenResource LandColor}"
+                                             PingBrush="{arc:ArcDesignTokenResource Accent}"
+                                             LabelBackground="{arc:ArcDesignTokenResource SurfaceRaised}"
+                                             LabelBorderBrush="{arc:ArcDesignTokenResource Border}"
+                                             Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                             FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                                             LabelFontSize="{arc:LiveVisitorsTokenResource MapLabelFontSize}"
+                                             PingDot="{arc:LiveVisitorsTokenResource PingDot}"
+                                             EventPingDot="{arc:LiveVisitorsTokenResource EventPingDot}"
+                                             RingReach="{arc:LiveVisitorsTokenResource RingReach}"
+                                             EventRingReach="{arc:LiveVisitorsTokenResource EventRingReach}"
+                                             RingThickness="{arc:LiveVisitorsTokenResource RingThickness}"
+                                             EventRingThickness="{arc:LiveVisitorsTokenResource EventRingThickness}" />
+                        <arc:LiveVisitorsColumns Name="PART_Columns"
+                                                 ColumnGap="{arc:LiveVisitorsTokenResource ColumnGap}"
+                                                 StackedGap="{arc:LiveVisitorsTokenResource StackedGap}">
+                            <StackPanel Spacing="{arc:LiveVisitorsTokenResource HeadingGap}">
+                                <TextBlock Name="PART_PagesHeading"
+                                           TextTrimming="CharacterEllipsis"
+                                           FontSize="{arc:LiveVisitorsTokenResource HeadingFontSize}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                <arc:LiveVisitorsRowList Name="PART_Pages"
+                                                         RowHeight="{arc:LiveVisitorsTokenResource RowHeight}"
+                                                         BarHeight="{arc:LiveVisitorsTokenResource BarHeight}"
+                                                         BarCornerRadius="{arc:LiveVisitorsTokenResource BarCornerRadius}"
+                                                         PlaceholderBrush="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                                         EmptyForeground="{arc:ArcDesignTokenResource TextMuted}"
+                                                         FontSize="{arc:LiveVisitorsTokenResource RowFontSize}" />
+                            </StackPanel>
+                            <StackPanel Spacing="{arc:LiveVisitorsTokenResource HeadingGap}">
+                                <TextBlock Name="PART_EventsHeading"
+                                           TextTrimming="CharacterEllipsis"
+                                           FontSize="{arc:LiveVisitorsTokenResource HeadingFontSize}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                <arc:LiveVisitorsRowList Name="PART_Events"
+                                                         RowHeight="{arc:LiveVisitorsTokenResource RowHeight}"
+                                                         BarHeight="{arc:LiveVisitorsTokenResource BarHeight}"
+                                                         BarCornerRadius="{arc:LiveVisitorsTokenResource BarCornerRadius}"
+                                                         PlaceholderBrush="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                                         EmptyForeground="{arc:ArcDesignTokenResource TextMuted}"
+                                                         FontSize="{arc:LiveVisitorsTokenResource RowFontSize}" />
+                            </StackPanel>
+                        </arc:LiveVisitorsColumns>
+                        <arc:ExplainerAnnouncer Name="PART_Announcer" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ arc|LiveVisitorsStatusDot#PART_StatusDot">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:connecting /template/ arc|LiveVisitorsStatusDot#PART_StatusDot">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:reconnecting /template/ arc|LiveVisitorsStatusDot#PART_StatusDot">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource Warning}" />
+        </Style>
+        <Style Selector="^:nodata /template/ arc|LiveVisitorsStatusDot#PART_StatusDot">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <!-- Last, so it wins: while paused the word reads Paused whatever the stream's state, and the dot matches it. -->
+        <Style Selector="^:paused /template/ arc|LiveVisitorsStatusDot#PART_StatusDot">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:narrow">
+            <Setter Property="Padding" Value="{arc:LiveVisitorsTokenResource NarrowCardPadding}" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|LiveVisitorsColumns#PART_Columns">
+            <Setter Property="IsStacked" Value="True" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The pause toggle: 28 square, a Pause glyph (Play while paused), SurfaceMuted under the pointer, a keyboard ring outside. -->
+    <ControlTheme x:Key="{x:Type arc:LiveVisitorsPauseButton}" TargetType="arc:LiveVisitorsPauseButton">
+        <!-- Templated controls clip by default; keyboard focus rings sit outside the box. -->
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Width" Value="{arc:LiveVisitorsTokenResource PauseButtonSize}" />
+        <Setter Property="Height" Value="{arc:LiveVisitorsTokenResource PauseButtonSize}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="CornerRadius" Value="{arc:LiveVisitorsTokenResource PauseCornerRadius}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:LiveVisitorsPauseButton">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            Margin="-3"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep11}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            IsVisible="False"
+                            IsHitTestVisible="False" />
+                    <Border Name="PART_Surface"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <arc:ArcGlyph Name="PART_Glyph"
+                                      Data="{x:Static arc:ArcIcons.Pause}"
+                                      Size="{arc:LiveVisitorsTokenResource PauseGlyphSize}"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:checked /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Data" Value="{x:Static arc:ArcIcons.Play}" />
+        </Style>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource ControlTrack}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A page row: the bar in AccentSubtle, the path in Foreground, the count in TextSecondary. -->
+    <ControlTheme x:Key="{x:Type arc:LiveVisitorsPageRow}" TargetType="arc:LiveVisitorsPageRow">
+        <Setter Property="BarBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="BarHeight" Value="{arc:LiveVisitorsTokenResource BarHeight}" />
+        <Setter Property="BarCornerRadius" Value="{arc:LiveVisitorsTokenResource BarCornerRadius}" />
+        <Setter Property="Inset" Value="{arc:LiveVisitorsTokenResource RowInset}" />
+        <Setter Property="CountColumnWidth" Value="{arc:LiveVisitorsTokenResource CountColumnWidth}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="CountForeground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontSize" Value="{arc:LiveVisitorsTokenResource RowFontSize}" />
+    </ControlTheme>
+
+    <!-- An event row: a SurfaceMuted code chip, the label in Foreground, the city in TextSecondary, the time in TextMuted. -->
+    <ControlTheme x:Key="{x:Type arc:LiveVisitorsEventRow}" TargetType="arc:LiveVisitorsEventRow">
+        <Setter Property="ChipBrush" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="ChipForeground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="ChipFontFamily" Value="{arc:ArcDesignTokenResource MonoFontFamily}" />
+        <Setter Property="ChipWidth" Value="{arc:LiveVisitorsTokenResource CodeChipWidth}" />
+        <Setter Property="ChipHeight" Value="{arc:LiveVisitorsTokenResource CodeChipHeight}" />
+        <Setter Property="ChipCornerRadius" Value="{arc:LiveVisitorsTokenResource CodeChipCornerRadius}" />
+        <Setter Property="ChipFontSize" Value="{arc:LiveVisitorsTokenResource CodeChipFontSize}" />
+        <Setter Property="TimeColumnWidth" Value="{arc:LiveVisitorsTokenResource TimeColumnWidth}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SecondaryForeground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="TimeForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="FontSize" Value="{arc:LiveVisitorsTokenResource RowFontSize}" />
+    </ControlTheme>
+</ResourceDictionary>

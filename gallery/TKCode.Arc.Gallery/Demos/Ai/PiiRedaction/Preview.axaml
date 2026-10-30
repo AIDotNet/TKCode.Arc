@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.PiiRedactionPreviewDemo">
+    <!-- A simulation plays the demo's invented support conversation on a loop while the card is on screen: scan, the swap
+         to placeholders, the trip to the model and the restored reply (simulated; nothing is sent). Press any button, toggle
+         Show original or edit the message to take over. The card fills its container up to 640px. -->
+    <Panel MaxWidth="640" Margin="0,12">
+        <arc:PiiRedaction>
+            <arc:PiiRedaction.Simulation>
+                <arc:PiiRedactionSimulation Message="{x:Static demos:PiiRedactionDemoData.Message}"
+                                            Names="{x:Static demos:PiiRedactionDemoData.Names}"
+                                            Reply="{x:Static demos:PiiRedactionDemoData.Reply}"
+                                            ModelName="{x:Static demos:PiiRedactionDemoData.ModelName}" />
+            </arc:PiiRedaction.Simulation>
+        </arc:PiiRedaction>
+    </Panel>
+</UserControl>

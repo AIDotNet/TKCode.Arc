@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.TldrToggleNarrowDemo">
+    <!-- At 360px the length slider sits under the mode switch at full width and the padding steps down to 16px. -->
+    <Panel MaxWidth="360">
+        <arc:TldrToggle Mode="Summary" Length="1" AutoPlay="False">
+            <arc:TldrToggle.Simulation>
+                <arc:TldrToggleSimulation Article="{x:Static demos:TldrToggleDemoData.Article}"
+                                          Summaries="{x:Static demos:TldrToggleDemoData.Summaries}"
+                                          KeyPoints="{x:Static demos:TldrToggleDemoData.KeyPoints}"
+                                          Model="{x:Static demos:TldrToggleDemoData.Model}" />
+            </arc:TldrToggle.Simulation>
+        </arc:TldrToggle>
+    </Panel>
+</UserControl>

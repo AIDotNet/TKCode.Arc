@@ -1,0 +1,409 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.TrialBannerTheme">
+
+    <!--
+        A trial status banner on one surface with three faces: the banner row (a ring with the days, two lines of copy,
+        Compare plans and Add payment method, snooze and dismiss), the card (the ring, the plan and its end date, what the
+        workspace loses, the actions and a note line) and the pill (a small ring and a label). The stage springs the surface
+        between the faces when the banner folds into the pill or opens again. The last days take the warning tone.
+    -->
+    <ControlTheme x:Key="{x:Type arc:TrialBanner}" TargetType="arc:TrialBanner">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TrialBanner">
+                <Panel>
+                    <arc:TrialBannerStage Name="PART_Stage">
+                        <Border Name="PART_Surface"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                IsHitTestVisible="False" />
+
+                        <!-- The banner row. -->
+                        <Border Name="PART_BannerFace"
+                                Padding="{arc:TrialBannerTokenResource BannerPadding}"
+                                MinHeight="{arc:TrialBannerTokenResource BannerMinHeight}"
+                                IsVisible="False">
+                            <arc:TrialBannerRow Name="PART_BannerRow"
+                                                VerticalAlignment="Center"
+                                                Gap="{arc:TrialBannerTokenResource BannerGap}"
+                                                RowGap="{arc:TrialBannerTokenResource BannerRowGap}"
+                                                CompactBelow="{arc:TrialBannerTokenResource CompactBelow}">
+                                <Panel Width="{arc:TrialBannerTokenResource BannerRingSize}"
+                                       Height="{arc:TrialBannerTokenResource BannerRingSize}"
+                                       VerticalAlignment="Top">
+                                    <arc:ArcRing Name="PART_BannerRing"
+                                                 Classes="trial-ring"
+                                                 Width="{arc:TrialBannerTokenResource BannerRingSize}"
+                                                 Height="{arc:TrialBannerTokenResource BannerRingSize}"
+                                                 Thickness="{arc:TrialBannerTokenResource BannerRingThickness}" />
+                                    <arc:ArcContentSwap Name="PART_BannerMark"
+                                                        Classes="trial-mark"
+                                                        HorizontalAlignment="Center"
+                                                        VerticalAlignment="Center"
+                                                        HorizontalContentAlignment="Center"
+                                                        VerticalContentAlignment="Center"
+                                                        TextElement.FontSize="{arc:TrialBannerTokenResource BannerDaysFontSize}"
+                                                        TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                        TextElement.Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                </Panel>
+                                <StackPanel VerticalAlignment="Center">
+                                    <arc:ArcContentSwap Name="PART_BannerTitle"
+                                                        Classes="trial-copy"
+                                                        TextElement.FontSize="{arc:TrialBannerTokenResource TitleFontSize}"
+                                                        TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                        TextElement.Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                        TextBlock.LineHeight="{arc:TrialBannerTokenResource TitleLineHeight}"
+                                                        TextBlock.TextTrimming="CharacterEllipsis"
+                                                        TextBlock.MaxLines="1" />
+                                    <arc:ArcContentSwap Name="PART_BannerDetail"
+                                                        Classes="trial-copy"
+                                                        TextElement.FontSize="{arc:TrialBannerTokenResource DetailFontSize}"
+                                                        TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                        TextBlock.LineHeight="{arc:TrialBannerTokenResource DetailLineHeight}"
+                                                        TextBlock.TextTrimming="CharacterEllipsis"
+                                                        TextBlock.MaxLines="1" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal"
+                                            Spacing="{arc:TrialBannerTokenResource ActionGap}"
+                                            VerticalAlignment="Center">
+                                    <arc:Button Name="PART_BannerCompare"
+                                                Classes="trial-action"
+                                                Variant="Ghost"
+                                                Size="Small" />
+                                    <arc:Button Name="PART_BannerPrimary"
+                                                Classes="trial-action"
+                                                Variant="Primary"
+                                                Size="Small" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Spacing="2" VerticalAlignment="Center">
+                                    <arc:Button Name="PART_BannerSnooze" Classes="trial-tool" Variant="Ghost" Size="Small">
+                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Clock}"
+                                                      Size="{arc:TrialBannerTokenResource ToolGlyphSize}" />
+                                    </arc:Button>
+                                    <arc:Button Name="PART_BannerDismiss" Classes="trial-tool" Variant="Ghost" Size="Small">
+                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}"
+                                                      Size="{arc:TrialBannerTokenResource ToolGlyphSize}" />
+                                    </arc:Button>
+                                </StackPanel>
+                            </arc:TrialBannerRow>
+                        </Border>
+
+                        <!-- The sidebar card. -->
+                        <Border Name="PART_CardFace"
+                                Padding="{arc:TrialBannerTokenResource CardPadding}"
+                                MaxWidth="{arc:TrialBannerTokenResource CardMaxWidth}"
+                                HorizontalAlignment="Stretch"
+                                IsVisible="False">
+                            <StackPanel Spacing="{arc:TrialBannerTokenResource CardGap}">
+                                <Grid ColumnDefinitions="Auto,*,Auto">
+                                    <Panel Width="{arc:TrialBannerTokenResource CardRingSize}"
+                                           Height="{arc:TrialBannerTokenResource CardRingSize}"
+                                           VerticalAlignment="Top">
+                                        <arc:ArcRing Name="PART_CardRing"
+                                                     Classes="trial-ring"
+                                                     Width="{arc:TrialBannerTokenResource CardRingSize}"
+                                                     Height="{arc:TrialBannerTokenResource CardRingSize}"
+                                                     Thickness="{arc:TrialBannerTokenResource CardRingThickness}" />
+                                        <arc:ArcContentSwap Name="PART_CardMark"
+                                                            Classes="trial-mark"
+                                                            HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center"
+                                                            HorizontalContentAlignment="Center"
+                                                            VerticalContentAlignment="Center"
+                                                            TextElement.FontSize="{arc:TrialBannerTokenResource CardDaysFontSize}"
+                                                            TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                            TextElement.Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    </Panel>
+                                    <StackPanel Grid.Column="1"
+                                                Margin="{arc:TrialBannerTokenResource CardHeadTextMargin}"
+                                                VerticalAlignment="Center">
+                                        <TextBlock Name="PART_CardHeading"
+                                                   FontSize="{arc:TrialBannerTokenResource TitleFontSize}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   LineHeight="{arc:TrialBannerTokenResource TitleLineHeight}"
+                                                   Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                   TextTrimming="CharacterEllipsis" />
+                                        <arc:ArcContentSwap Name="PART_CardDetail"
+                                                            Classes="trial-copy"
+                                                            TextElement.FontSize="{arc:TrialBannerTokenResource DetailFontSize}"
+                                                            TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                            TextBlock.LineHeight="{arc:TrialBannerTokenResource DetailLineHeight}"
+                                                            TextBlock.TextTrimming="CharacterEllipsis"
+                                                            TextBlock.MaxLines="1" />
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2"
+                                                Orientation="Horizontal"
+                                                Spacing="2"
+                                                VerticalAlignment="Top">
+                                        <arc:Button Name="PART_CardSnooze" Classes="trial-tool" Variant="Ghost" Size="Small">
+                                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Clock}"
+                                                          Size="{arc:TrialBannerTokenResource ToolGlyphSize}" />
+                                        </arc:Button>
+                                        <arc:Button Name="PART_CardDismiss" Classes="trial-tool" Variant="Ghost" Size="Small">
+                                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}"
+                                                          Size="{arc:TrialBannerTokenResource ToolGlyphSize}" />
+                                        </arc:Button>
+                                    </StackPanel>
+                                </Grid>
+                                <StackPanel Spacing="{arc:TrialBannerTokenResource FeatureGap}">
+                                    <arc:ArcContentSwap Name="PART_CardLead"
+                                                        Classes="trial-copy"
+                                                        TextElement.FontSize="{arc:TrialBannerTokenResource FeatureFontSize}"
+                                                        TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                        TextBlock.LineHeight="{arc:TrialBannerTokenResource FeatureLineHeight}"
+                                                        TextBlock.TextWrapping="Wrap" />
+                                    <StackPanel Name="PART_CardFeatures"
+                                                Spacing="{arc:TrialBannerTokenResource FeatureGap}"
+                                                TextElement.FontSize="{arc:TrialBannerTokenResource FeatureFontSize}"
+                                                TextBlock.LineHeight="{arc:TrialBannerTokenResource FeatureLineHeight}" />
+                                </StackPanel>
+                                <StackPanel Spacing="6">
+                                    <arc:Button Name="PART_CardPrimary"
+                                                Classes="trial-action"
+                                                Variant="Primary"
+                                                Size="Small"
+                                                HorizontalAlignment="Stretch" />
+                                    <arc:Button Name="PART_CardCompare"
+                                                Classes="trial-action"
+                                                Variant="Ghost"
+                                                Size="Small"
+                                                HorizontalAlignment="Stretch" />
+                                    <arc:ArcContentSwap Name="PART_CardNote"
+                                                        Classes="trial-copy"
+                                                        HorizontalContentAlignment="Center"
+                                                        MinHeight="{arc:TrialBannerTokenResource NoteLineHeight}"
+                                                        TextElement.FontSize="{arc:TrialBannerTokenResource NoteFontSize}"
+                                                        TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                        TextBlock.LineHeight="{arc:TrialBannerTokenResource NoteLineHeight}"
+                                                        TextBlock.TextWrapping="Wrap" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- The trial pill. -->
+                        <arc:TrialBannerPill Name="PART_Pill"
+                                             HorizontalAlignment="Left"
+                                             VerticalAlignment="Top"
+                                             IsVisible="False" />
+                    </arc:TrialBannerStage>
+
+                    <!-- The polite live region: billing, snooze and dismiss results. -->
+                    <arc:ExplainerAnnouncer Name="PART_Live" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- The surface's radius follows the face: 14 for the banner, 18 for the card, a capsule for the pill. -->
+        <Style Selector="^ /template/ Border#PART_Surface">
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep14}" />
+        </Style>
+        <Style Selector="^:card /template/ Border#PART_Surface">
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep18}" />
+        </Style>
+        <Style Selector="^:pill /template/ Border#PART_Surface">
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        </Style>
+        <Style Selector="^:folded /template/ Border#PART_Surface">
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        </Style>
+        <Style Selector="^:warning /template/ Border#PART_Surface">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource WarningSubtle}" />
+        </Style>
+
+        <!-- In the pill's popover the popover is the surface: the card drops its own and its padding. -->
+        <Style Selector="^:popover /template/ Border#PART_Surface">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:popover /template/ Border#PART_CardFace">
+            <Setter Property="Padding" Value="0" />
+        </Style>
+
+        <!-- The ring: the accent, the warning tone, muted once expired, success once upgraded. -->
+        <Style Selector="^ /template/ arc|ArcRing.trial-ring">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="TrackBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+        <Style Selector="^:warning /template/ arc|ArcRing.trial-ring">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Warning}" />
+        </Style>
+        <Style Selector="^:expired /template/ arc|ArcRing.trial-ring">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:upgraded /template/ arc|ArcRing.trial-ring">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+
+        <!-- The actions trade labels with the quiet crossfade the rest of the copy uses, and their width glides without bounce. -->
+        <Style Selector="^ /template/ arc|Button.trial-action">
+            <Setter Property="LabelSwapMode" Value="Label" />
+            <Setter Property="LabelSpring" Value="Quick" />
+            <Setter Property="Height" Value="{arc:TrialBannerTokenResource ActionHeight}" />
+            <Setter Property="MinHeight" Value="{arc:TrialBannerTokenResource ActionHeight}" />
+            <Setter Property="Padding" Value="{arc:TrialBannerTokenResource ActionPadding}" />
+            <Setter Property="FontSize" Value="{arc:TrialBannerTokenResource ActionFontSize}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.trial-tool">
+            <Setter Property="Width" Value="{arc:TrialBannerTokenResource ToolSize}" />
+            <Setter Property="Height" Value="{arc:TrialBannerTokenResource ToolSize}" />
+            <Setter Property="MinWidth" Value="{arc:TrialBannerTokenResource ToolSize}" />
+            <Setter Property="MinHeight" Value="{arc:TrialBannerTokenResource ToolSize}" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+
+        <!-- Copy, days and icons trade places with one crossfade in a shared cell (reduced motion and Off: at once). -->
+        <Style Selector="^ /template/ arc|ArcContentSwap.trial-copy">
+            <Setter Property="Mode" Value="None" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcContentSwap.trial-mark">
+            <Setter Property="Mode" Value="None" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ arc|ArcContentSwap.trial-copy">
+                <Setter Property="Mode" Value="Label" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcContentSwap.trial-mark">
+                <Setter Property="Mode" Value="Label" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcRing.trial-ring">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Surface">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                        <arc:SpringCornerRadiusTransition Property="CornerRadius" Spring="Settle" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The trial pill: a small ring (the lock or the check in it once the trial has ended or is paid) and a label whose
+        width springs to its text. The banner's surface is its fill; it adds the hover tint and a keyboard ring.
+    -->
+    <ControlTheme x:Key="{x:Type arc:TrialBannerPill}" TargetType="arc:TrialBannerPill">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Padding" Value="{arc:TrialBannerTokenResource PillPadding}" />
+        <Setter Property="Height" Value="{arc:TrialBannerTokenResource PillHeight}" />
+        <Setter Property="FontSize" Value="{arc:TrialBannerTokenResource PillFontSize}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TrialBannerPill">
+                <Panel>
+                    <Border Name="PART_Hover"
+                            Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Opacity="0" />
+                    <StackPanel Orientation="Horizontal"
+                                Margin="{TemplateBinding Padding}"
+                                Spacing="{arc:TrialBannerTokenResource PillGap}"
+                                VerticalAlignment="Center">
+                        <Panel Width="{arc:TrialBannerTokenResource PillRingSize}"
+                               Height="{arc:TrialBannerTokenResource PillRingSize}"
+                               VerticalAlignment="Center">
+                            <arc:ArcRing Name="PART_Ring"
+                                         Value="{TemplateBinding RingValue}"
+                                         Width="{arc:TrialBannerTokenResource PillRingSize}"
+                                         Height="{arc:TrialBannerTokenResource PillRingSize}"
+                                         Thickness="{arc:TrialBannerTokenResource PillRingThickness}" />
+                            <arc:ArcGlyph Name="PART_Mark"
+                                          Data="{TemplateBinding Mark}"
+                                          Size="{arc:TrialBannerTokenResource PillGlyphSize}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          IsVisible="{TemplateBinding Mark, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                        </Panel>
+                        <arc:SpringSizeDecorator Name="PART_LabelSlot"
+                                                 Axis="Width"
+                                                 Spring="Quick"
+                                                 VerticalAlignment="Center">
+                            <arc:ArcContentSwap Name="PART_Label"
+                                                Content="{TemplateBinding Label}" />
+                        </arc:SpringSizeDecorator>
+                    </StackPanel>
+                    <Border Name="PART_FocusRing"
+                            Margin="-3"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            IsVisible="False"
+                            IsHitTestVisible="False" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ arc|ArcRing#PART_Ring">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="TrackBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+        <Style Selector="^:warning /template/ arc|ArcRing#PART_Ring">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Warning}" />
+        </Style>
+        <Style Selector="^:expired /template/ arc|ArcRing#PART_Ring">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:upgraded /template/ arc|ArcRing#PART_Ring">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Mark">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:upgraded /template/ arc|ArcGlyph#PART_Mark">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcContentSwap#PART_Label">
+            <Setter Property="Mode" Value="None" />
+        </Style>
+
+        <Style Selector="^:pointerover /template/ Border#PART_Hover">
+            <Setter Property="Opacity" Value="{arc:TrialBannerTokenResource HoverOpacity}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ Border#PART_Hover">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ arc|ArcRing#PART_Ring">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ arc|ArcContentSwap#PART_Label">
+                <Setter Property="Mode" Value="Label" />
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

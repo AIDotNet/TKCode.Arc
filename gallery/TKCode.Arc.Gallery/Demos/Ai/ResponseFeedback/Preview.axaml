@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.ResponseFeedbackPreviewDemo">
+    <!-- A reply with simulated feedback (no FeedbackHandler): press thumbs down for the reasons, thumbs up for what was
+         good, or the active thumb again to clear it. The question and answer are demo content, the rich reply is built in
+         code; the model name is a real one. -->
+    <arc:ResponseFeedback x:Name="Card"
+                          MaxWidth="640"
+                          Margin="0,12"
+                          AllowsRegenerate="True"
+                          ModelName="{x:Static demos:ResponseFeedbackDemoData.ModelName}"
+                          Prompt="{x:Static demos:ResponseFeedbackDemoData.Prompt}"
+                          CopyText="{x:Static demos:ResponseFeedbackDemoData.CopyText}" />
+</UserControl>

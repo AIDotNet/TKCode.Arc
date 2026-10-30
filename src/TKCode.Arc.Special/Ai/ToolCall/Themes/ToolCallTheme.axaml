@@ -51,7 +51,6 @@
                                         <arc:ToolCallText Name="PART_Title"
                                                           LineHeight="{arc:ToolCallTokenResource TitleLineHeight}"
                                                           LetterSpacing="{arc:ToolCallTokenResource TitleLetterSpacing}"
-                                                          Foreground="{arc:ArcDesignTokenResource Foreground}"
                                                           MutedForeground="{arc:ArcDesignTokenResource TextMuted}" />
                                         <TextBlock Name="PART_Note"
                                                    FontSize="{arc:ArcDesignTokenResource TypeXS}"
@@ -113,7 +112,7 @@
                                     </arc:ToolCallHeadPanel>
                                 </Panel>
                             </arc:SpringSizeDecorator>
-                            <arc:ToolCallCollapsible Name="PART_Body" />
+                            <arc:AiHeightBox Name="PART_Body" />
                         </StackPanel>
                         <Border Name="PART_Outline"
                                 CornerRadius="{arc:ToolCallTokenResource RowCornerRadius}"
@@ -158,8 +157,18 @@
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
         </Style>
 
+        <!-- In a style, not on the template element, so the denied and empty states can mute it. -->
+        <Style Selector="^ /template/ arc|ToolCallText#PART_Title">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
         <Style Selector="^:denied /template/ arc|ToolCallText#PART_Title">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:empty /template/ arc|ToolCallText#PART_Title">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:empty /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="IsVisible" Value="False" />
         </Style>
 
         <Style Selector="^:approval /template/ Border#PART_Tint">

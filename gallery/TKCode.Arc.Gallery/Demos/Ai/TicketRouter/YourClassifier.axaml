@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.TicketRouterYourClassifierDemo">
+    <!-- Your own lanes, tickets and classifier. The classifier here is a stand-in for a model call: it waits, looks for a
+         few words and answers with a confidence. Below 0.8 a ticket waits for review. The line under the card shows what
+         TicketRouted and ReviewConfirmed report. Appending a ticket after "All caught up" starts the flow again. -->
+    <StackPanel Spacing="12" MaxWidth="840">
+        <arc:TicketRouter x:Name="Router"
+                          Title="Support inbox"
+                          Model="{x:Static demos:TicketRouterDemoData.YourModel}"
+                          ReviewThreshold="0.8" />
+        <StackPanel Orientation="Horizontal" Spacing="12">
+            <arc:Button x:Name="Add" Content="Add a ticket" Variant="Secondary" Size="Small" />
+            <TextBlock x:Name="Log"
+                       VerticalAlignment="Center"
+                       FontSize="12"
+                       TextTrimming="CharacterEllipsis"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

@@ -1,7 +1,7 @@
 ---
 title: Agent plan
 summary: 将智能体的计划呈现为可编辑的清单：草稿阶段可以重排、改名和添加步骤，批准后则逐步跟随运行过程。
-source-hash: 2ce58e71cf24
+source-hash: 001769f62b45
 ---
 
 <Demo name="Preview" />
@@ -13,7 +13,7 @@ source-hash: 2ce58e71cf24
 - **编码或运维智能体的计划模式**：智能体提出步骤，人编辑并批准，卡片随后跟踪工作进展。批准之前不会运行任何内容。
 - **跟踪多步任务的侧边面板或聊天消息**：显示当前的一个步骤，已完成的步骤回落为安静的文字；底部的页脚以总耗时和一行摘要收尾。
 - **可能中途失败的工作**：失败的步骤会停止运行，并显示失败原因以及 Retry 和 Skip，而不是把失败隐藏在日志里。
-- **在页面或演示中体验完整流程**：在没有数据且没有状态时，卡片会在内置的模拟中播放一份虚构的计划，因此无需智能体即可看到每一种状态。
+- **在页面或演示中体验完整流程**：给卡片一个带有你自己脚本的 `AgentPlanSimulation`，它就会播放这份计划，因此无需智能体即可看到每一种状态。
 
 ## 何时不用
 
@@ -25,7 +25,7 @@ source-hash: 2ce58e71cf24
 
 ## 用法
 
-在没有 `Steps` 也没有 `Status` 时，卡片会显示一份虚构的草稿（为帮助中心添加全文搜索），并在批准后运行内置的模拟。
+在没有 `Steps`、`Status` 和 `Simulation` 时，卡片是一份空草稿："Nothing is planned yet. Add a step, or let the agent keep planning."，并带有 Add step、Keep planning 和处于禁用状态的 Approve plan；它的按钮只引发各自的事件。包里不附带示例计划。上方的预览给卡片设置了一个由展示库编写的模拟：GPT-6.1 Sol（真实的模型名称）为帮助中心添加全文搜索起草计划（任务是虚构的），批准后由模拟运行。
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
@@ -98,7 +98,7 @@ plan.StepAction += (_, e) => agent.Decide(e.Step, e.Kind);
 
 ### 模拟
 
-`AgentPlanSimulation` 是内置的智能体，在 `Status` 为 null 时运行。它由事件驱动：每次状态变化只等待一个计时器，计划空闲时不运行任何内容；Pause 会保留剩余时间，Resume 则从那里继续。它响应的按钮与宿主相同。其节拍依据测得的流程（1× 速度）：
+`AgentPlanSimulation` 是用于预览、新手引导和测试的模拟智能体：把它设为 `Simulation`，它会在 `Status` 为 null 时运行。它由事件驱动：每次状态变化只等待一个计时器，计划空闲时不运行任何内容；Pause 会保留剩余时间，Resume 则从那里继续。它响应的按钮与宿主相同。其节拍依据测得的流程（1× 速度）：
 
 | 节拍 | 时间 |
 |---|---|
@@ -111,9 +111,9 @@ plan.StepAction += (_, e) => agent.Decide(e.Step, e.Kind);
 | Retry → 第一条新行，然后 577ms，再 465ms → 完成 | 555ms |
 | Skip → 下一个步骤开始 | 277ms |
 
-在示例中，智能体会在第三个步骤的第二行之后（417ms 后）插入一个步骤，而测试步骤在其最后一行之后失败一次，然后无限期地等待 Retry 或 Skip。没有脚本的步骤（即你添加的步骤）会运行 `GenericScript`：三条活动行和 30 秒。脚本通过步骤 id 查找，因此改名后的步骤会保留其脚本，被删除的步骤则会被跳过。Start over 会回到运行开始时的草稿，并让所有建议重新可用。
+模拟所说的一切都由你的应用编写：`Steps`（草稿，每一项是一个 `AgentPlanScriptedStep`，带有由活动行和时间组成的 `AgentPlanStepScript`、可选的失败以及智能体可选插入的步骤）、Keep planning 用的 `Suggestions`、没有脚本的步骤（即你添加的步骤）所用的 `GenericScript`（未设置时，这样的步骤完成时没有活动行，也没有时间），以及 `Goal`、`Model` 和 `Summary`（计划未设置自己的值时显示）。在预览中，智能体会在第三个步骤的第二行之后（417ms 后）插入一个步骤，而测试步骤在其最后一行之后失败一次，然后无限期地等待 Retry 或 Skip。脚本通过步骤 id 查找，因此改名后的步骤会保留其脚本，被删除的步骤则会被跳过。Start over 会回到运行开始时的草稿，并让所有建议重新可用。计划挂接模拟时读取这些数据；每个计划各建一个模拟，因为它保存运行状态。在 XAML 中，把 `<arc:AgentPlan.Simulation>` 设为一个 `AgentPlanSimulation`，其属性来自 `{x:Static}`，写法见预览的 Code 标签。把 `Simulation` 设回 null 会带走它的草稿，计划变为空。
 
-将你自己的步骤、建议和摘要交给模拟，即可演示另一个流程：
+下面的示例还替换了文字，并在代码中设置模拟：
 
 <Demo name="Labels" />
 
@@ -169,7 +169,7 @@ plan.Simulation = new AgentPlanSimulation
 
 ### 常见问题
 
-**计划会运行任何东西吗？** 不会。它只显示计划，在没有 `Status` 时播放一段虚构的模拟。真正的工作由你负责：响应 `Approved` 并更新步骤。
+**计划会运行任何东西吗？** 不会。它只显示计划，在没有 `Status` 时播放你给它的 `Simulation`（如果有）。真正的工作由你负责：响应 `Approved` 并更新步骤。
 
 **如何展示智能体添加的步骤？** 在计划运行时插入一个 `AgentPlanStep`，并设置 `NoteKind = AgentPlanNoteKind.AddedByAgent`。它会滑入，带有底纹和备注，并且会被公告。
 
@@ -213,11 +213,9 @@ plan.Simulation = new AgentPlanSimulation
 | `AgentPlanChangeKind` | `Rename`、`Move`、`Remove`、`Add`、`SuggestionStreamed` |
 | `AgentPlanStepActionKind` | `Retry`、`Skip` |
 
-`AgentPlanSamples` 保存虚构的示例（`Steps`、`Suggestions`、`GenericScript`、`Goal`、`Summary`、`CreateModel()`、`CreateSteps()`），因此页面可以从它开始，只修改其中一个步骤。
-
 ## 无障碍
 
-- 卡片是一个以模型名称和目标命名的分组（"Lumen 2 Pro plan: Add full-text search to the help center"）。步骤是一个有序列表，因此屏幕阅读器会读出总数以及每个位置。
+- 卡片是一个以模型名称和目标命名的分组（"GPT-6.1 Sol plan: Add full-text search to the help center"）。步骤是一个有序列表，因此屏幕阅读器会读出总数以及每个位置。
 - 计划运行时，每个步骤在标题之前都会以文字播报其状态（Pending、In progress、Done、Failed、Skipped）。每种状态还有自己的形状，因此不只依赖颜色。
 - 失败的步骤会读出 Failed 一词、失败原因，以及两个带标签的按钮（Retry 和 Skip，各自以步骤名称命名）。
 - 标题是一个带标签的文本区域（"Step 3"），并由一条提示描述，提示中说明 Alt 加方向键以及 Escape。手柄和删除按钮以其位置和步骤命名（"Move step 3: …"）。

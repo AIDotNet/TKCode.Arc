@@ -1,0 +1,622 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.MeetingSummaryTheme">
+
+    <!--
+        AI notes for one call as a card: a header (the platform's mark in a tinted tile, the title, the platform, date and
+        length, the attendee stack), a body that springs to its height between the summarizing pass, the notes, the error and
+        the empty state, and a footer crediting the model with copy and regenerate. The notes are three sections of lines
+        built in code (MeetingSummaryLineView, MeetingSummaryActionRow).
+    -->
+    <ControlTheme x:Key="{x:Type arc:MeetingSummary}" TargetType="arc:MeetingSummary">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="MaxWidth" Value="{arc:MeetingSummaryTokenResource CardMaxWidth}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep20}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="NarrowBreakpoint" Value="{arc:MeetingSummaryTokenResource NarrowBreakpoint}" />
+        <Setter Property="CompactBreakpoint" Value="{arc:MeetingSummaryTokenResource CompactBreakpoint}" />
+        <Setter Property="QuoteGap" Value="{arc:MeetingSummaryTokenResource QuoteGap}" />
+        <Setter Property="QuoteEnterOffset" Value="{arc:MeetingSummaryTokenResource QuoteEnterOffset}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MeetingSummary">
+                <Border Name="PART_Card"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                    <StackPanel>
+                        <Grid Name="PART_Header"
+                              Margin="{arc:MeetingSummaryTokenResource HeaderPadding}"
+                              ColumnDefinitions="Auto,*,Auto"
+                              RowDefinitions="Auto,Auto">
+                            <Border Name="PART_MarkTile"
+                                    Width="{arc:MeetingSummaryTokenResource MarkTileSize}"
+                                    Height="{arc:MeetingSummaryTokenResource MarkTileSize}"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusStep10}"
+                                    Background="{arc:ArcDesignTokenResource AccentSubtle}"
+                                    VerticalAlignment="Top">
+                                <arc:ArcGlyph Name="PART_Mark"
+                                              Size="{arc:MeetingSummaryTokenResource MarkGlyphSize}"
+                                              Foreground="{arc:ArcDesignTokenResource Accent}"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+                            </Border>
+                            <StackPanel Grid.Column="1"
+                                        Margin="{arc:MeetingSummaryTokenResource TitleMargin}"
+                                        Spacing="2"
+                                        VerticalAlignment="Center">
+                                <TextBlock Name="PART_Title"
+                                           AutomationProperties.HeadingLevel="2"
+                                           FontSize="{arc:MeetingSummaryTokenResource TitleFontSize}"
+                                           LineHeight="{arc:MeetingSummaryTokenResource TitleLineHeight}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                           TextTrimming="CharacterEllipsis" />
+                                <TextBlock Name="PART_Meta"
+                                           FontSize="{arc:MeetingSummaryTokenResource MetaFontSize}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                           TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+                            <arc:AvatarGroup Name="PART_Attendees"
+                                             Grid.Column="2"
+                                             Size="Small"
+                                             MaxVisibleCount="4"
+                                             VerticalAlignment="Center" />
+                        </Grid>
+                        <Border Height="1" Background="{arc:ArcDesignTokenResource BorderSubtle}" />
+                        <arc:AiHeightBox Name="PART_Body" IsExpanded="True" FollowsContent="True" CrossClipOverflow="12">
+                            <Panel Margin="{arc:MeetingSummaryTokenResource BodyPadding}">
+                                <StackPanel Name="PART_Loading" Classes="ms-state" Spacing="12">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Sparkles}"
+                                                      Size="16"
+                                                      Foreground="{arc:ArcDesignTokenResource Accent}"
+                                                      VerticalAlignment="Center" />
+                                        <arc:ToolCallText Name="PART_LoadingLabel"
+                                                          LineHeight="20"
+                                                          VerticalAlignment="Center"
+                                                          Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                          MutedForeground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    </StackPanel>
+                                    <Border Classes="ms-skeleton" Margin="0,4,48,0" />
+                                    <Border Classes="ms-skeleton" Margin="0,0,112,0" />
+                                    <Border Classes="ms-skeleton" Margin="0,0,180,0" />
+                                </StackPanel>
+                                <StackPanel Name="PART_Notes" Classes="ms-state" Spacing="{arc:MeetingSummaryTokenResource SectionGap}">
+                                    <StackPanel Name="PART_SummarySection" Spacing="{arc:MeetingSummaryTokenResource HeadingGap}">
+                                        <TextBlock Name="PART_SummaryHeading" Classes="ms-heading" AutomationProperties.HeadingLevel="3" />
+                                        <StackPanel Name="PART_SummaryList" />
+                                    </StackPanel>
+                                    <StackPanel Name="PART_DecisionsSection" Spacing="{arc:MeetingSummaryTokenResource HeadingGap}">
+                                        <TextBlock Name="PART_DecisionsHeading" Classes="ms-heading" AutomationProperties.HeadingLevel="3" />
+                                        <StackPanel Name="PART_DecisionsList" />
+                                    </StackPanel>
+                                    <StackPanel Name="PART_ActionsSection" Spacing="{arc:MeetingSummaryTokenResource HeadingGap}">
+                                        <TextBlock Name="PART_ActionsHeading" Classes="ms-heading" AutomationProperties.HeadingLevel="3" />
+                                        <StackPanel Name="PART_ActionsList" Spacing="2" />
+                                    </StackPanel>
+                                </StackPanel>
+                                <StackPanel Name="PART_Error" Classes="ms-state" Spacing="4">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.CircleAlert}"
+                                                      Size="16"
+                                                      Foreground="{arc:ArcDesignTokenResource Danger}"
+                                                      VerticalAlignment="Center" />
+                                        <TextBlock Name="PART_ErrorTitle"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                   VerticalAlignment="Center" />
+                                    </StackPanel>
+                                    <TextBlock Name="PART_ErrorText"
+                                               Margin="24,0,0,8"
+                                               TextWrapping="Wrap"
+                                               LineHeight="20"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    <arc:Button Name="PART_TryAgain"
+                                                Margin="24,0,0,0"
+                                                Variant="Secondary"
+                                                Size="Small"
+                                                HorizontalAlignment="Left" />
+                                </StackPanel>
+                                <StackPanel Name="PART_Empty" Classes="ms-state" Spacing="4">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.FileText}"
+                                                      Size="16"
+                                                      Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                      VerticalAlignment="Center" />
+                                        <TextBlock Name="PART_EmptyTitle"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                   VerticalAlignment="Center" />
+                                    </StackPanel>
+                                    <TextBlock Name="PART_EmptyText"
+                                               Margin="24,0,0,0"
+                                               TextWrapping="Wrap"
+                                               LineHeight="20"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                </StackPanel>
+                            </Panel>
+                        </arc:AiHeightBox>
+                        <Border Height="1" Background="{arc:ArcDesignTokenResource BorderSubtle}" />
+                        <Grid Name="PART_Footer"
+                              Margin="{arc:MeetingSummaryTokenResource FooterPadding}"
+                              ColumnDefinitions="*,Auto,Auto">
+                            <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center" ClipToBounds="True">
+                                <arc:ArcGlyph Name="PART_ModelMark"
+                                              Size="14"
+                                              Foreground="{arc:ArcDesignTokenResource Accent}"
+                                              VerticalAlignment="Center" />
+                                <TextBlock Name="PART_Credit"
+                                           FontSize="{arc:MeetingSummaryTokenResource MetaFontSize}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                           TextTrimming="CharacterEllipsis"
+                                           VerticalAlignment="Center" />
+                            </StackPanel>
+                            <arc:CopyButton Name="PART_Copy"
+                                            Grid.Column="1"
+                                            IsIconOnly="True"
+                                            Variant="Plain"
+                                            VerticalAlignment="Center" />
+                            <arc:Button Name="PART_Regenerate"
+                                        Grid.Column="2"
+                                        Classes="ms-icon"
+                                        Variant="Ghost"
+                                        Size="Small"
+                                        VerticalAlignment="Center">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.RefreshCw}" Size="15" />
+                            </arc:Button>
+                        </Grid>
+                        <arc:ExplainerAnnouncer Name="PART_Announcer" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Non-triggered values of template parts (state styles cannot override local template values). -->
+        <Style Selector="^ /template/ TextBlock.ms-heading">
+            <Setter Property="FontSize" Value="{arc:MeetingSummaryTokenResource HeadingFontSize}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ Border.ms-skeleton">
+            <Setter Property="Height" Value="{arc:MeetingSummaryTokenResource SkeletonHeight}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.ms-icon">
+            <Setter Property="Width" Value="32" />
+            <Setter Property="Height" Value="32" />
+            <Setter Property="MinHeight" Value="32" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ arc|AvatarGroup#PART_Attendees">
+            <Setter Property="Grid.Row" Value="0" />
+            <Setter Property="Grid.Column" Value="2" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="Margin" Value="0" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel.ms-state">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+
+        <!-- Below 460px the attendee stack moves under the date. -->
+        <Style Selector="^:narrow /template/ arc|AvatarGroup#PART_Attendees">
+            <Setter Property="Grid.Row" Value="1" />
+            <Setter Property="Grid.Column" Value="1" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Margin" Value="{arc:MeetingSummaryTokenResource NarrowAttendeesMargin}" />
+        </Style>
+
+        <Style Selector="^:motion-full /template/ StackPanel.ms-state">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ StackPanel.ms-state">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A Summary or Decisions line: a dot, the streaming text and its timestamp; a muted fill while its quote is open. -->
+    <ControlTheme x:Key="{x:Type arc:MeetingSummaryLineView}" TargetType="arc:MeetingSummaryLineView">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Margin" Value="{arc:MeetingSummaryTokenResource RowMargin}" />
+        <Setter Property="Padding" Value="{arc:MeetingSummaryTokenResource RowPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep8}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MeetingSummaryLineView">
+                <Border Name="PART_Surface"
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <Ellipse Name="PART_Bullet"
+                                 Width="{arc:MeetingSummaryTokenResource BulletSize}"
+                                 Height="{arc:MeetingSummaryTokenResource BulletSize}"
+                                 Margin="{arc:MeetingSummaryTokenResource BulletMargin}"
+                                 VerticalAlignment="Top" />
+                        <arc:MeetingSummaryLineText Name="PART_Text"
+                                                    Grid.Column="1"
+                                                    FontSize="{arc:MeetingSummaryTokenResource LineFontSize}"
+                                                    LineHeight="{arc:MeetingSummaryTokenResource LineLineHeight}"
+                                                    Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                    MutedForeground="{arc:ArcDesignTokenResource TextMuted}" />
+                        <arc:MeetingSummaryStamp Name="PART_Stamp"
+                                                 Grid.Column="2"
+                                                 VerticalAlignment="Top"
+                                                 Margin="{arc:MeetingSummaryTokenResource StampMargin}" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Ellipse#PART_Bullet">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^ /template/ arc|MeetingSummaryStamp#PART_Stamp">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:decision /template/ Ellipse#PART_Bullet">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:quoted">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:streaming /template/ arc|MeetingSummaryStamp#PART_Stamp">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ arc|MeetingSummaryStamp#PART_Stamp">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        An action item: the checkbox (a 16px square in a 32px hit area), the text over the owner and due date, then the
+        timestamp and the send buttons. Meta and buttons keep their space while the text streams and fade in after.
+    -->
+    <ControlTheme x:Key="{x:Type arc:MeetingSummaryActionRow}" TargetType="arc:MeetingSummaryActionRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Margin" Value="{arc:MeetingSummaryTokenResource RowMargin}" />
+        <Setter Property="Padding" Value="{arc:MeetingSummaryTokenResource RowPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep8}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MeetingSummaryActionRow">
+                <Border Name="PART_Surface"
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <arc:MeetingSummaryCheck Name="PART_Check"
+                                                 VerticalAlignment="Top"
+                                                 Margin="{arc:MeetingSummaryTokenResource CheckMargin}" />
+                        <StackPanel Grid.Column="1" Spacing="3">
+                            <arc:MeetingSummaryLineText Name="PART_Text"
+                                                        FontSize="{arc:MeetingSummaryTokenResource LineFontSize}"
+                                                        LineHeight="{arc:MeetingSummaryTokenResource LineLineHeight}"
+                                                        Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                        MutedForeground="{arc:ArcDesignTokenResource TextMuted}" />
+                            <StackPanel Name="PART_Meta" Orientation="Horizontal" Spacing="6">
+                                <arc:Avatar Name="PART_OwnerAvatar"
+                                            Size="Small"
+                                            Width="{arc:MeetingSummaryTokenResource OwnerAvatarSize}"
+                                            Height="{arc:MeetingSummaryTokenResource OwnerAvatarSize}"
+                                            FontSize="{arc:MeetingSummaryTokenResource OwnerAvatarFontSize}"
+                                            VerticalAlignment="Center" />
+                                <TextBlock Name="PART_Owner" Classes="ms-meta" />
+                                <TextBlock Name="PART_Dot" Classes="ms-meta" Text="·" AutomationProperties.AccessibilityView="Raw" />
+                                <TextBlock Name="PART_Due" Classes="ms-meta" />
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Name="PART_Sends"
+                                    Grid.Column="2"
+                                    Orientation="Horizontal"
+                                    Spacing="2"
+                                    VerticalAlignment="Top"
+                                    Margin="8,-2.5,0,0">
+                            <arc:MeetingSummaryStamp Name="PART_Stamp" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ TextBlock.ms-meta">
+            <Setter Property="FontSize" Value="{arc:MeetingSummaryTokenResource MetaFontSize}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Meta">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Sends">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:quoted">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:streaming /template/ StackPanel#PART_Meta">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:streaming /template/ StackPanel#PART_Sends">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ StackPanel#PART_Meta">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_Sends">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- The timestamp: mono, muted, a muted fill under the pointer and while its quote is open; a ring for the keyboard. -->
+    <ControlTheme x:Key="{x:Type arc:MeetingSummaryStamp}" TargetType="arc:MeetingSummaryStamp">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource MonoFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:MeetingSummaryTokenResource StampFontSize}" />
+        <Setter Property="Padding" Value="{arc:MeetingSummaryTokenResource StampPadding}" />
+        <Setter Property="Height" Value="{arc:MeetingSummaryTokenResource StampHeight}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep6}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MeetingSummaryStamp">
+                <Panel>
+                    <Border Name="PART_Surface"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Content="{TemplateBinding Content}" VerticalAlignment="Center" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            Margin="-2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep8}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            IsVisible="False"
+                            IsHitTestVisible="False" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^[IsExpanded=True]">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The checkbox: a transparent 32px hit area around the drawn 16px square; the press scales the square, the ring hugs it. -->
+    <ControlTheme x:Key="{x:Type arc:MeetingSummaryCheck}" TargetType="arc:MeetingSummaryCheck">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Width" Value="{arc:MeetingSummaryTokenResource CheckHitSize}" />
+        <Setter Property="Height" Value="{arc:MeetingSummaryTokenResource CheckHitSize}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MeetingSummaryCheck">
+                <Panel Background="Transparent">
+                    <Border Name="PART_FocusRing"
+                            Width="{arc:MeetingSummaryTokenResource CheckRingSize}"
+                            Height="{arc:MeetingSummaryTokenResource CheckRingSize}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep7}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            IsVisible="False"
+                            IsHitTestVisible="False" />
+                    <arc:MeetingSummaryCheckMark Name="PART_Mark"
+                                                 Width="{arc:MeetingSummaryTokenResource CheckSize}"
+                                                 Height="{arc:MeetingSummaryTokenResource CheckSize}"
+                                                 HorizontalAlignment="Center"
+                                                 VerticalAlignment="Center"
+                                                 RenderTransformOrigin="50%,50%"
+                                                 Fill="{arc:ArcDesignTokenResource Accent}"
+                                                 CheckBrush="{arc:ArcDesignTokenResource AccentForeground}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|MeetingSummaryCheckMark#PART_Mark">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="RenderTransform" Value="scale(1)" />
+        </Style>
+        <Style Selector="^:pointerover /template/ arc|MeetingSummaryCheckMark#PART_Mark">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:pressed /template/ arc|MeetingSummaryCheckMark#PART_Mark">
+            <Setter Property="RenderTransform" Value="scale(0.9)" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|MeetingSummaryCheckMark#PART_Mark">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A send button: a square ghost button with the target's mark, a chip once sent, an alert and Retry when it failed. -->
+    <ControlTheme x:Key="{x:Type arc:MeetingSummarySendButton}" TargetType="arc:MeetingSummarySendButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="FontSize" Value="{arc:MeetingSummaryTokenResource SendFontSize}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Height" Value="{arc:MeetingSummaryTokenResource SendHeight}" />
+        <Setter Property="MinWidth" Value="{arc:MeetingSummaryTokenResource SendHeight}" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MeetingSummarySendButton">
+                <Panel>
+                    <Border Name="PART_Surface"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          HorizontalAlignment="Left"
+                                          VerticalAlignment="Center" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            Margin="-2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            IsVisible="False"
+                            IsHitTestVisible="False" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:sent">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:failed">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The quote card: the speaker and the time over the passage. -->
+    <ControlTheme x:Key="{x:Type arc:MeetingSummaryQuoteCard}" TargetType="arc:MeetingSummaryQuoteCard">
+        <Setter Property="IsHitTestVisible" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
+        <Setter Property="Padding" Value="{arc:MeetingSummaryTokenResource QuotePadding}" />
+        <Setter Property="MaxWidth" Value="{arc:MeetingSummaryTokenResource QuoteMaxWidth}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MeetingSummaryQuoteCard">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <StackPanel Spacing="8">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <arc:Avatar DisplayName="{TemplateBinding Speaker}"
+                                        Source="{TemplateBinding Portrait}"
+                                        Size="Small"
+                                        Width="{arc:MeetingSummaryTokenResource QuoteAvatarSize}"
+                                        Height="{arc:MeetingSummaryTokenResource QuoteAvatarSize}"
+                                        FontSize="{arc:MeetingSummaryTokenResource OwnerAvatarFontSize}"
+                                        VerticalAlignment="Center" />
+                            <TextBlock Text="{TemplateBinding Speaker}"
+                                       FontSize="{arc:MeetingSummaryTokenResource MetaFontSize}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                       VerticalAlignment="Center" />
+                            <TextBlock Text="{TemplateBinding Role}"
+                                       IsVisible="{TemplateBinding HasRole}"
+                                       FontSize="{arc:MeetingSummaryTokenResource MetaFontSize}"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                       VerticalAlignment="Center" />
+                            <TextBlock Text="{TemplateBinding Time}"
+                                       FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                                       FontSize="{arc:MeetingSummaryTokenResource StampFontSize}"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+                        <TextBlock Text="{TemplateBinding Quote}"
+                                   TextWrapping="Wrap"
+                                   FontSize="{arc:MeetingSummaryTokenResource QuoteFontSize}"
+                                   LineHeight="{arc:MeetingSummaryTokenResource QuoteLineHeight}"
+                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

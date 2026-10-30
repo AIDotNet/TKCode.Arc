@@ -14,6 +14,15 @@
       "ResetRadius": "20",
       "SwatchRadius": "4"
     },
+    "AgentCursor": {
+      "TagCornerRadius": "12",
+      "TintCornerRadius": "8"
+    },
+    "AgentHandoff": {
+      "BubbleCornerRadius": "32",
+      "CardCornerRadius": "32",
+      "HandoffCornerRadius": "28"
+    },
     "AgentLoop": {
       "ChipCornerRadius": "28"
     },
@@ -27,6 +36,10 @@
     "AiAnswer": {
       "ComposerCornerRadius": "52"
     },
+    "AiCommandPalette": {
+      "KeycapCornerRadius": "10",
+      "RowCornerRadius": "20"
+    },
     "AiComposer": {
       "DropCoverRadius": "40",
       "InlineCornerRadius": "48",
@@ -36,6 +49,12 @@
       "BubbleRadius": "28",
       "CardRadius": "28",
       "CloseButtonRadius": "20"
+    },
+    "AiSpark": {
+      "PillCornerRadius": "28"
+    },
+    "AiTranslate": {
+      "CardCornerRadius": "32"
     },
     "AnnouncementBar": {
       "LinkFocusRingRadius": "16"
@@ -80,6 +99,11 @@
       "RadiusStep9": "18",
       "RadiusSurface": "68"
     },
+    "AskYourData": {
+      "CardCornerRadius": "40",
+      "SqlCornerRadius": "28",
+      "SqlWellCornerRadius": "20"
+    },
     "AvailabilityPicker": {
       "CompactDayFocusRadius": "32",
       "CompactDayRadius": "24",
@@ -100,6 +124,15 @@
       "CrumbRadius": "14",
       "FocusRingRadius": "22"
     },
+    "BudgetVariance": {
+      "BandRadius": "6",
+      "CardRadius": "32",
+      "RowRadius": "24"
+    },
+    "BuildingBlocks": {
+      "BlockCornerRadius": "16",
+      "FrameCornerRadius": "32"
+    },
     "Button": {
       "FocusRingRadius": "44"
     },
@@ -119,6 +152,13 @@
     "Carousel": {
       "ViewportRingRadius": "64"
     },
+    "Cascader": {
+      "ClearGlyphRadius": "22",
+      "ClearRingRadius": "28",
+      "FocusRingRadius": "44",
+      "MenuCornerRadius": "40",
+      "OptionCornerRadius": "28"
+    },
     "ChatComposer": {
       "BoxRadius": "42",
       "FieldRadius": "40",
@@ -137,11 +177,26 @@
       "BoxRadiusValue": "10",
       "FocusRingRadius": "44"
     },
+    "ChoroplethExplorer": {
+      "CardRadius": "32",
+      "RowRadius": "20"
+    },
     "CodeBlock": {
       "ExpandCornerRadius": "0,0,50,50",
       "ExpandFocusRingRadius": "24",
       "FocusRingRadius": "24",
       "HeaderCornerRadius": "50,50,0,0"
+    },
+    "CodeSuggestion": {
+      "CardCornerRadius": "32",
+      "FileMarkCornerRadius": "8",
+      "FocusCornerRadius": "20",
+      "MarkBoxCornerRadius": "16",
+      "PanelCornerRadius": "24"
+    },
+    "CohortRetention": {
+      "CellRadius": "10",
+      "CompactCellRadius": "6"
     },
     "ColorPicker": {
       "AddFocusRingRadius": "999",
@@ -171,6 +226,12 @@
       "ResolvedRadius": "44",
       "SuggestionRadius": "20",
       "SuggestionsRadius": "28"
+    },
+    "ConnectorMark": {
+      "TileCornerRadius": "20"
+    },
+    "ConnectorSetup": {
+      "CardCornerRadius": "40"
     },
     "ContextWindow": {
       "CellRadius": "6",
@@ -209,6 +270,18 @@
       "TriggerFocusRingRadius": "44",
       "TriggerRadius": "36"
     },
+    "DesignToCode": {
+      "BoxCornerRadius": "12",
+      "CardCornerRadius": "40",
+      "DropTileCornerRadius": "24",
+      "DropZoneCornerRadius": "28",
+      "PreviewCardCornerRadius": "36",
+      "ShotCornerRadius": "24",
+      "TagCornerRadius": "12"
+    },
+    "DictationButton": {
+      "KeyCornerRadius": "12"
+    },
     "DrawerSurface": {
       "NarrowRadiusBottom": "36,36,0,0",
       "NarrowRadiusLeft": "0,36,36,0",
@@ -226,6 +299,11 @@
       "TabRadius": "18",
       "TrackRadius": "24"
     },
+    "EnrichColumn": {
+      "CardCornerRadius": "32",
+      "IconButtonCornerRadius": "16",
+      "LogoCornerRadius": "8"
+    },
     "ExpandableCard": {
       "FocusRingRadius": "76"
     },
@@ -239,6 +317,9 @@
       "StopButtonRadius": "24",
       "StopFocusRingRadius": "32",
       "TickRadius": "3"
+    },
+    "FeedbackActions": {
+      "PanelCornerRadius": "32"
     },
     "FieldIconButton": {
       "FocusRingRadius": "44"
@@ -263,8 +344,45 @@
       "ItemRadiusMD": "26",
       "ItemRadiusSM": "22"
     },
+    "GenerationStats": {
+      "CardCornerRadius": "32",
+      "InlinePanelCornerRadius": "28"
+    },
     "HoldToConfirm": {
       "FocusRingRadius": "44"
+    },
+    "HorizonChart": {
+      "BandRadius": "8",
+      "RampCellRadius": "4"
+    },
+    "ImageGeneration": {
+      "CardCornerRadius": "40",
+      "ShapeCornerRadius": "4",
+      "TileCornerRadius": "24",
+      "TileFocusCornerRadius": "30"
+    },
+    "ImageReveal": {
+      "CanvasCornerRadius": "36",
+      "CanvasCornerRadiusLG": "48",
+      "CanvasCornerRadiusSM": "24"
+    },
+    "InstallSnippet": {
+      "CardCornerRadius": "40",
+      "CodeCornerRadius": "24",
+      "HighlightCornerRadius": "14",
+      "MonogramCornerRadius": "8",
+      "SmallHighlightCornerRadius": "12",
+      "SmallTrackCornerRadius": "16",
+      "TrackCornerRadius": "20"
+    },
+    "InvitePeople": {
+      "CardRadius": "32",
+      "ErrorsRadius": "36",
+      "FieldRadius": "36"
+    },
+    "JourneyFlow": {
+      "ClearButtonRadius": "16",
+      "TableButtonRadius": "20"
     },
     "JsonViewer": {
       "InsetToolRadius": "18",
@@ -283,11 +401,32 @@
       "SlotRadius": "32",
       "StepFieldRadius": "28"
     },
+    "KpiDrilldown": {
+      "CloseRadius": "18",
+      "CompareRadius": "18",
+      "KpiCardRadius": "28"
+    },
     "LayoutMorph": {
       "ActionRadius": "36",
       "OptionFocusRadius": "38",
       "OptionRadius": "30",
       "TagRadius": "24"
+    },
+    "LineReplay": {
+      "MomentRadius": "36"
+    },
+    "LiveVisitors": {
+      "BarCornerRadius": "12",
+      "CardCornerRadius": "40",
+      "CodeChipCornerRadius": "8",
+      "PauseCornerRadius": "16"
+    },
+    "LlmCostCalculator": {
+      "MonogramCornerRadius": "8",
+      "RowCornerRadius": "20"
+    },
+    "MarketTerminal": {
+      "WatchRowRadius": "36"
     },
     "MediaButton": {
       "WideFocusRingRadius": "44"
@@ -304,6 +443,13 @@
       "AccountRadius": "20",
       "HighlightRadius": "40",
       "SheetRadius": "52,52,0,0"
+    },
+    "MetricExplorer": {
+      "SurfaceRadius": "32"
+    },
+    "MetricsDashboard": {
+      "CheckBoxRadius": "8",
+      "ExportRadius": "20"
     },
     "ModelMenu": {
       "EffortCellRadius": "26",
@@ -360,6 +506,9 @@
       "CardRadius": "40",
       "StageRadius": "38,38,0,0"
     },
+    "PageCurl": {
+      "PageRadius": "6"
+    },
     "PageHeader": {
       "BodyFocusRingRadius": "24",
       "CompactRadius": "16",
@@ -381,6 +530,17 @@
     "PhoneInput": {
       "TriggerCornerRadius": "28"
     },
+    "PiiRedaction": {
+      "BoxCornerRadius": "28",
+      "CardCornerRadius": "40",
+      "CellCornerRadius": "24",
+      "MarkCornerRadius": "10"
+    },
+    "ProfilePage": {
+      "CardRadius": "24",
+      "FieldRadius": "20",
+      "GlowRadius": "12"
+    },
     "ProjectBoard": {
       "AddFocusRadius": "28",
       "AddRadius": "20",
@@ -397,6 +557,11 @@
     "PromptCache": {
       "PanelRadius": "44"
     },
+    "ProviderStatus": {
+      "CardCornerRadius": "40",
+      "MonogramCornerRadius": "8",
+      "TickCornerRadius": "4"
+    },
     "RadioCards": {
       "CardRadius": "40",
       "FocusRingRadius": "48",
@@ -410,11 +575,29 @@
       "HighlightRadius": "35",
       "RingRadius": "17"
     },
+    "ReasoningBlock": {
+      "CardCornerRadius": "32"
+    },
+    "ReferralCard": {
+      "SegmentCornerRadius": "8"
+    },
     "ReleaseReadiness": {
       "CardRadius": "32"
     },
     "ReorderableList": {
       "HandleRadius": "22"
+    },
+    "ReplyDraft": {
+      "CardCornerRadius": "40",
+      "DraftCornerRadius": "28"
+    },
+    "ResponseFeedback": {
+      "CardCornerRadius": "40",
+      "PromptCornerRadius": "36"
+    },
+    "RevenueExplorer": {
+      "PlotFocusRadius": "24",
+      "WindowRadius": "20"
     },
     "RevenueGlobe": {
       "BlockRadius": "32",
@@ -426,6 +609,15 @@
       "SlashRowRadius": "24",
       "ToolButtonRadius": "22",
       "ToolbarRadius": "32"
+    },
+    "RolesPermissions": {
+      "BandRadius": "20",
+      "BarRadius": "28",
+      "BoxRadius": "10",
+      "CardRadius": "32",
+      "CellRadius": "16",
+      "GroupButtonRadius": "16",
+      "RoleButtonRadius": "20"
     },
     "ScrollViewer": {
       "IndicatorThumbCornerRadius": "2",
@@ -518,6 +710,32 @@
     "Skeleton": {
       "BlockRadius": "36"
     },
+    "SketchToImage": {
+      "CanvasCornerRadius": "24",
+      "CardCornerRadius": "40"
+    },
+    "SmallMultiples": {
+      "CardRadius": "40"
+    },
+    "SmartFormFill": {
+      "CardCornerRadius": "40",
+      "HighlightCornerRadius": "8",
+      "LogoCornerRadius": "12",
+      "WellCornerRadius": "32"
+    },
+    "SourceCards": {
+      "CardCornerRadius": "24",
+      "NumberCornerRadius": "10",
+      "OutlineCornerRadius": "30",
+      "PreviewCornerRadius": "28"
+    },
+    "SourceCitation": {
+      "ChipCornerRadius": "10"
+    },
+    "SpeechPlayer": {
+      "CardCornerRadius": "32",
+      "HighlightCornerRadius": "10"
+    },
     "SplitButton": {
       "EndRadius": "0,34,34,0",
       "EndRingRadius": "8,42,42,8",
@@ -527,6 +745,16 @@
       "PillStartRingRadius": "9999,8,8,9999",
       "StartRadius": "34,0,0,34",
       "StartRingRadius": "42,8,8,42"
+    },
+    "StarterPrompts": {
+      "CardCornerRadius": "32",
+      "CardFocusRingRadius": "38",
+      "ComposerCornerRadius": "40",
+      "MarkCornerRadius": "16",
+      "SendFocusRingRadius": "40",
+      "SkeletonCornerRadius": "10",
+      "SurfaceCornerRadius": "56",
+      "SurfaceCornerRadiusNarrow": "40"
     },
     "SwipeActionsRow": {
       "MoreRadius": "24",
@@ -542,6 +770,24 @@
       "ScrollEndRadius": "0,34,34,0",
       "ScrollStartRadius": "34,0,0,34"
     },
+    "TeamDirectory": {
+      "CardRadius": "32",
+      "RowRadius": "20"
+    },
+    "TeamMembers": {
+      "CardRadius": "32",
+      "FieldRadius": "36",
+      "MenuItemRadius": "20",
+      "MenuRadius": "40",
+      "RoleGhostRadius": "16"
+    },
+    "TeamSwitcher": {
+      "HighlightCornerRadius": "24",
+      "KeycapCornerRadius": "12",
+      "MenuCornerRadius": "36",
+      "TriggerCornerRadius": "28",
+      "TriggerFocusRingCornerRadius": "36"
+    },
     "ThemeSwitcher": {
       "IconOnlyRadius": "24"
     },
@@ -551,8 +797,19 @@
     "Timeline": {
       "FocusRingRadius": "40"
     },
+    "TldrToggle": {
+      "AlertCornerRadius": "24",
+      "CardCornerRadius": "40",
+      "HighlightCornerRadius": "8",
+      "MonogramCornerRadius": "12"
+    },
     "TokenTextEditor": {
       "TokenCornerRadius": "12"
+    },
+    "ToneTuner": {
+      "CardCornerRadius": "40",
+      "HighlightCornerRadius": "8",
+      "MessageCornerRadius": "28"
     },
     "ToolCall": {
       "FrameCornerRadius": "32",
@@ -560,6 +817,10 @@
     },
     "ToolCallGroup": {
       "CardCornerRadius": "32"
+    },
+    "TrainingRun": {
+      "CardCornerRadius": "40",
+      "MarkCornerRadius": "14"
     },
     "TreeTable": {
       "TableCornerRadius": "52"
@@ -570,6 +831,14 @@
     },
     "Treemap": {
       "StageRadius": "24"
+    },
+    "UptimeStatus": {
+      "BarRadius": "3",
+      "RowRadius": "20"
+    },
+    "UsageForecast": {
+      "FrameRadius": "32",
+      "PanelRadius": "28"
     },
     "UsageMeter": {
       "LegendFocusRingRadius": "32",
@@ -618,6 +887,15 @@
       "ResetRadius": "20",
       "SwatchRadius": "4"
     },
+    "AgentCursor": {
+      "TagCornerRadius": "12",
+      "TintCornerRadius": "8"
+    },
+    "AgentHandoff": {
+      "BubbleCornerRadius": "32",
+      "CardCornerRadius": "32",
+      "HandoffCornerRadius": "28"
+    },
     "AgentLoop": {
       "ChipCornerRadius": "28"
     },
@@ -631,6 +909,10 @@
     "AiAnswer": {
       "ComposerCornerRadius": "52"
     },
+    "AiCommandPalette": {
+      "KeycapCornerRadius": "10",
+      "RowCornerRadius": "20"
+    },
     "AiComposer": {
       "DropCoverRadius": "40",
       "InlineCornerRadius": "48",
@@ -640,6 +922,12 @@
       "BubbleRadius": "28",
       "CardRadius": "28",
       "CloseButtonRadius": "20"
+    },
+    "AiSpark": {
+      "PillCornerRadius": "28"
+    },
+    "AiTranslate": {
+      "CardCornerRadius": "32"
     },
     "AnnouncementBar": {
       "LinkFocusRingRadius": "16"
@@ -684,6 +972,11 @@
       "RadiusStep9": "18",
       "RadiusSurface": "68"
     },
+    "AskYourData": {
+      "CardCornerRadius": "40",
+      "SqlCornerRadius": "28",
+      "SqlWellCornerRadius": "20"
+    },
     "AvailabilityPicker": {
       "CompactDayFocusRadius": "32",
       "CompactDayRadius": "24",
@@ -704,6 +997,15 @@
       "CrumbRadius": "14",
       "FocusRingRadius": "22"
     },
+    "BudgetVariance": {
+      "BandRadius": "6",
+      "CardRadius": "32",
+      "RowRadius": "24"
+    },
+    "BuildingBlocks": {
+      "BlockCornerRadius": "16",
+      "FrameCornerRadius": "32"
+    },
     "Button": {
       "FocusRingRadius": "44"
     },
@@ -723,6 +1025,13 @@
     "Carousel": {
       "ViewportRingRadius": "64"
     },
+    "Cascader": {
+      "ClearGlyphRadius": "22",
+      "ClearRingRadius": "28",
+      "FocusRingRadius": "44",
+      "MenuCornerRadius": "40",
+      "OptionCornerRadius": "28"
+    },
     "ChatComposer": {
       "BoxRadius": "42",
       "FieldRadius": "40",
@@ -741,11 +1050,26 @@
       "BoxRadiusValue": "10",
       "FocusRingRadius": "44"
     },
+    "ChoroplethExplorer": {
+      "CardRadius": "32",
+      "RowRadius": "20"
+    },
     "CodeBlock": {
       "ExpandCornerRadius": "0,0,50,50",
       "ExpandFocusRingRadius": "24",
       "FocusRingRadius": "24",
       "HeaderCornerRadius": "50,50,0,0"
+    },
+    "CodeSuggestion": {
+      "CardCornerRadius": "32",
+      "FileMarkCornerRadius": "8",
+      "FocusCornerRadius": "20",
+      "MarkBoxCornerRadius": "16",
+      "PanelCornerRadius": "24"
+    },
+    "CohortRetention": {
+      "CellRadius": "10",
+      "CompactCellRadius": "6"
     },
     "ColorPicker": {
       "AddFocusRingRadius": "999",
@@ -775,6 +1099,12 @@
       "ResolvedRadius": "44",
       "SuggestionRadius": "20",
       "SuggestionsRadius": "28"
+    },
+    "ConnectorMark": {
+      "TileCornerRadius": "20"
+    },
+    "ConnectorSetup": {
+      "CardCornerRadius": "40"
     },
     "ContextWindow": {
       "CellRadius": "6",
@@ -813,6 +1143,18 @@
       "TriggerFocusRingRadius": "44",
       "TriggerRadius": "36"
     },
+    "DesignToCode": {
+      "BoxCornerRadius": "12",
+      "CardCornerRadius": "40",
+      "DropTileCornerRadius": "24",
+      "DropZoneCornerRadius": "28",
+      "PreviewCardCornerRadius": "36",
+      "ShotCornerRadius": "24",
+      "TagCornerRadius": "12"
+    },
+    "DictationButton": {
+      "KeyCornerRadius": "12"
+    },
     "DrawerSurface": {
       "NarrowRadiusBottom": "36,36,0,0",
       "NarrowRadiusLeft": "0,36,36,0",
@@ -830,6 +1172,11 @@
       "TabRadius": "18",
       "TrackRadius": "24"
     },
+    "EnrichColumn": {
+      "CardCornerRadius": "32",
+      "IconButtonCornerRadius": "16",
+      "LogoCornerRadius": "8"
+    },
     "ExpandableCard": {
       "FocusRingRadius": "76"
     },
@@ -843,6 +1190,9 @@
       "StopButtonRadius": "24",
       "StopFocusRingRadius": "32",
       "TickRadius": "3"
+    },
+    "FeedbackActions": {
+      "PanelCornerRadius": "32"
     },
     "FieldIconButton": {
       "FocusRingRadius": "44"
@@ -867,8 +1217,45 @@
       "ItemRadiusMD": "26",
       "ItemRadiusSM": "22"
     },
+    "GenerationStats": {
+      "CardCornerRadius": "32",
+      "InlinePanelCornerRadius": "28"
+    },
     "HoldToConfirm": {
       "FocusRingRadius": "44"
+    },
+    "HorizonChart": {
+      "BandRadius": "8",
+      "RampCellRadius": "4"
+    },
+    "ImageGeneration": {
+      "CardCornerRadius": "40",
+      "ShapeCornerRadius": "4",
+      "TileCornerRadius": "24",
+      "TileFocusCornerRadius": "30"
+    },
+    "ImageReveal": {
+      "CanvasCornerRadius": "36",
+      "CanvasCornerRadiusLG": "48",
+      "CanvasCornerRadiusSM": "24"
+    },
+    "InstallSnippet": {
+      "CardCornerRadius": "40",
+      "CodeCornerRadius": "24",
+      "HighlightCornerRadius": "14",
+      "MonogramCornerRadius": "8",
+      "SmallHighlightCornerRadius": "12",
+      "SmallTrackCornerRadius": "16",
+      "TrackCornerRadius": "20"
+    },
+    "InvitePeople": {
+      "CardRadius": "32",
+      "ErrorsRadius": "36",
+      "FieldRadius": "36"
+    },
+    "JourneyFlow": {
+      "ClearButtonRadius": "16",
+      "TableButtonRadius": "20"
     },
     "JsonViewer": {
       "InsetToolRadius": "18",
@@ -887,11 +1274,32 @@
       "SlotRadius": "32",
       "StepFieldRadius": "28"
     },
+    "KpiDrilldown": {
+      "CloseRadius": "18",
+      "CompareRadius": "18",
+      "KpiCardRadius": "28"
+    },
     "LayoutMorph": {
       "ActionRadius": "36",
       "OptionFocusRadius": "38",
       "OptionRadius": "30",
       "TagRadius": "24"
+    },
+    "LineReplay": {
+      "MomentRadius": "36"
+    },
+    "LiveVisitors": {
+      "BarCornerRadius": "12",
+      "CardCornerRadius": "40",
+      "CodeChipCornerRadius": "8",
+      "PauseCornerRadius": "16"
+    },
+    "LlmCostCalculator": {
+      "MonogramCornerRadius": "8",
+      "RowCornerRadius": "20"
+    },
+    "MarketTerminal": {
+      "WatchRowRadius": "36"
     },
     "MediaButton": {
       "WideFocusRingRadius": "44"
@@ -908,6 +1316,13 @@
       "AccountRadius": "20",
       "HighlightRadius": "40",
       "SheetRadius": "52,52,0,0"
+    },
+    "MetricExplorer": {
+      "SurfaceRadius": "32"
+    },
+    "MetricsDashboard": {
+      "CheckBoxRadius": "8",
+      "ExportRadius": "20"
     },
     "ModelMenu": {
       "EffortCellRadius": "26",
@@ -964,6 +1379,9 @@
       "CardRadius": "40",
       "StageRadius": "38,38,0,0"
     },
+    "PageCurl": {
+      "PageRadius": "6"
+    },
     "PageHeader": {
       "BodyFocusRingRadius": "24",
       "CompactRadius": "16",
@@ -985,6 +1403,17 @@
     "PhoneInput": {
       "TriggerCornerRadius": "28"
     },
+    "PiiRedaction": {
+      "BoxCornerRadius": "28",
+      "CardCornerRadius": "40",
+      "CellCornerRadius": "24",
+      "MarkCornerRadius": "10"
+    },
+    "ProfilePage": {
+      "CardRadius": "24",
+      "FieldRadius": "20",
+      "GlowRadius": "12"
+    },
     "ProjectBoard": {
       "AddFocusRadius": "28",
       "AddRadius": "20",
@@ -1001,6 +1430,11 @@
     "PromptCache": {
       "PanelRadius": "44"
     },
+    "ProviderStatus": {
+      "CardCornerRadius": "40",
+      "MonogramCornerRadius": "8",
+      "TickCornerRadius": "4"
+    },
     "RadioCards": {
       "CardRadius": "40",
       "FocusRingRadius": "48",
@@ -1014,11 +1448,29 @@
       "HighlightRadius": "35",
       "RingRadius": "17"
     },
+    "ReasoningBlock": {
+      "CardCornerRadius": "32"
+    },
+    "ReferralCard": {
+      "SegmentCornerRadius": "8"
+    },
     "ReleaseReadiness": {
       "CardRadius": "32"
     },
     "ReorderableList": {
       "HandleRadius": "22"
+    },
+    "ReplyDraft": {
+      "CardCornerRadius": "40",
+      "DraftCornerRadius": "28"
+    },
+    "ResponseFeedback": {
+      "CardCornerRadius": "40",
+      "PromptCornerRadius": "36"
+    },
+    "RevenueExplorer": {
+      "PlotFocusRadius": "24",
+      "WindowRadius": "20"
     },
     "RevenueGlobe": {
       "BlockRadius": "32",
@@ -1030,6 +1482,15 @@
       "SlashRowRadius": "24",
       "ToolButtonRadius": "22",
       "ToolbarRadius": "32"
+    },
+    "RolesPermissions": {
+      "BandRadius": "20",
+      "BarRadius": "28",
+      "BoxRadius": "10",
+      "CardRadius": "32",
+      "CellRadius": "16",
+      "GroupButtonRadius": "16",
+      "RoleButtonRadius": "20"
     },
     "ScrollViewer": {
       "IndicatorThumbCornerRadius": "2",
@@ -1122,6 +1583,32 @@
     "Skeleton": {
       "BlockRadius": "36"
     },
+    "SketchToImage": {
+      "CanvasCornerRadius": "24",
+      "CardCornerRadius": "40"
+    },
+    "SmallMultiples": {
+      "CardRadius": "40"
+    },
+    "SmartFormFill": {
+      "CardCornerRadius": "40",
+      "HighlightCornerRadius": "8",
+      "LogoCornerRadius": "12",
+      "WellCornerRadius": "32"
+    },
+    "SourceCards": {
+      "CardCornerRadius": "24",
+      "NumberCornerRadius": "10",
+      "OutlineCornerRadius": "30",
+      "PreviewCornerRadius": "28"
+    },
+    "SourceCitation": {
+      "ChipCornerRadius": "10"
+    },
+    "SpeechPlayer": {
+      "CardCornerRadius": "32",
+      "HighlightCornerRadius": "10"
+    },
     "SplitButton": {
       "EndRadius": "0,34,34,0",
       "EndRingRadius": "8,42,42,8",
@@ -1131,6 +1618,16 @@
       "PillStartRingRadius": "9999,8,8,9999",
       "StartRadius": "34,0,0,34",
       "StartRingRadius": "42,8,8,42"
+    },
+    "StarterPrompts": {
+      "CardCornerRadius": "32",
+      "CardFocusRingRadius": "38",
+      "ComposerCornerRadius": "40",
+      "MarkCornerRadius": "16",
+      "SendFocusRingRadius": "40",
+      "SkeletonCornerRadius": "10",
+      "SurfaceCornerRadius": "56",
+      "SurfaceCornerRadiusNarrow": "40"
     },
     "SwipeActionsRow": {
       "MoreRadius": "24",
@@ -1146,6 +1643,24 @@
       "ScrollEndRadius": "0,34,34,0",
       "ScrollStartRadius": "34,0,0,34"
     },
+    "TeamDirectory": {
+      "CardRadius": "32",
+      "RowRadius": "20"
+    },
+    "TeamMembers": {
+      "CardRadius": "32",
+      "FieldRadius": "36",
+      "MenuItemRadius": "20",
+      "MenuRadius": "40",
+      "RoleGhostRadius": "16"
+    },
+    "TeamSwitcher": {
+      "HighlightCornerRadius": "24",
+      "KeycapCornerRadius": "12",
+      "MenuCornerRadius": "36",
+      "TriggerCornerRadius": "28",
+      "TriggerFocusRingCornerRadius": "36"
+    },
     "ThemeSwitcher": {
       "IconOnlyRadius": "24"
     },
@@ -1155,8 +1670,19 @@
     "Timeline": {
       "FocusRingRadius": "40"
     },
+    "TldrToggle": {
+      "AlertCornerRadius": "24",
+      "CardCornerRadius": "40",
+      "HighlightCornerRadius": "8",
+      "MonogramCornerRadius": "12"
+    },
     "TokenTextEditor": {
       "TokenCornerRadius": "12"
+    },
+    "ToneTuner": {
+      "CardCornerRadius": "40",
+      "HighlightCornerRadius": "8",
+      "MessageCornerRadius": "28"
     },
     "ToolCall": {
       "FrameCornerRadius": "32",
@@ -1164,6 +1690,10 @@
     },
     "ToolCallGroup": {
       "CardCornerRadius": "32"
+    },
+    "TrainingRun": {
+      "CardCornerRadius": "40",
+      "MarkCornerRadius": "14"
     },
     "TreeTable": {
       "TableCornerRadius": "52"
@@ -1174,6 +1704,14 @@
     },
     "Treemap": {
       "StageRadius": "24"
+    },
+    "UptimeStatus": {
+      "BarRadius": "3",
+      "RowRadius": "20"
+    },
+    "UsageForecast": {
+      "FrameRadius": "32",
+      "PanelRadius": "28"
     },
     "UsageMeter": {
       "LegendFocusRingRadius": "32",

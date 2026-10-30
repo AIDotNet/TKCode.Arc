@@ -1,0 +1,30 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.InstallSnippetPreviewDemo">
+    <!-- The card for three readers, with this library's real install steps passed through an InstallSnippetSimulation
+         (InstallSnippetDemoData). New reader: a simulated key generator (press Generate key). Signed in: the reader's own
+         key is already in every snippet. Key fails: the generator throws, so step 2 shows the error and Try again. Empty:
+         no frameworks and no simulation. The card fills its container up to 640px, so its width never follows the code.
+         The keys are invented demo keys. -->
+    <StackPanel Spacing="20" MaxWidth="640">
+        <arc:SegmentedControl x:Name="Scenario"
+                              HorizontalAlignment="Center"
+                              SelectedValue="new"
+                              SelectionChanged="OnScenarioChanged">
+            <arc:SegmentedOption Value="new" Label="New reader" />
+            <arc:SegmentedOption Value="signed-in" Label="Signed in" />
+            <arc:SegmentedOption Value="fails" Label="Key fails" />
+            <arc:SegmentedOption Value="empty" Label="Empty" />
+        </arc:SegmentedControl>
+        <arc:InstallSnippet x:Name="Snippet"
+                            Description="{x:Static demos:InstallSnippetDemoData.Description}"
+                            Version="{x:Static demos:InstallSnippetDemoData.Version}">
+            <arc:InstallSnippet.Simulation>
+                <arc:InstallSnippetSimulation Frameworks="{x:Static demos:InstallSnippetDemoData.Frameworks}"
+                                              KeyPrefix="{x:Static demos:InstallSnippetDemoData.KeyPrefix}" />
+            </arc:InstallSnippet.Simulation>
+        </arc:InstallSnippet>
+    </StackPanel>
+</UserControl>

@@ -55,7 +55,7 @@ public sealed class AgentStatusLabels
     /// <summary>The progress bar's accessible name.</summary>
     public string RunProgress { get; set; } = "Run progress";
 
-    /// <summary>The panel's accessible name: the agent's name, "Atlas Scout 2 run details".</summary>
+    /// <summary>The panel's accessible name: the agent's name, "Research agent run details".</summary>
     public Func<string, string> RunDetails { get; set; } = agent => $"{agent} run details";
 
     /// <summary>The panel's text before a run has any step: the agent's name.</summary>
@@ -63,14 +63,14 @@ public sealed class AgentStatusLabels
 
     /// <summary>
     /// The pill's accessible name: the agent, the activity with its count, and the timer when one shows (null otherwise),
-    /// "Juniper Code 3: Checking specs 8 of 12, 0:09 elapsed".
+    /// "Coding agent: Checking specs 8 of 12, 0:09 elapsed".
     /// </summary>
     public Func<string, string, string?, string> PillName { get; set; } =
         (agent, activity, elapsed) => elapsed is null ? $"{agent}: {activity}" : $"{agent}: {activity}, {elapsed} elapsed";
 
     /// <summary>
     /// A polite announcement: the agent, the activity (without its count) or outcome, and an action's notice (null when
-    /// none), "Juniper Code 3: Paused. The run holds where it is.".
+    /// none), "Coding agent: Paused. The run holds where it is.".
     /// </summary>
     public Func<string, string, string?, string> Announcement { get; set; } =
         (agent, text, notice) => string.IsNullOrEmpty(notice) ? $"{agent}: {text}" : $"{agent}: {text}. {notice}";

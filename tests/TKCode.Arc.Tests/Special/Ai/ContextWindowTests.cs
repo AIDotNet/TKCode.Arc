@@ -5,23 +5,33 @@ using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
+using Avalonia.Media;
+using Avalonia.Media.Immutable;
 using Avalonia.Threading;
 using TKCode.Arc.Motion;
 
 namespace TKCode.Arc.Tests.Special.Ai;
 
 /// <summary>
-/// ContextWindow as a control: the sample session it opens on, Send / Attach / Compact now, the warning and the automatic
+/// ContextWindow as a control: the empty card, the test's own invented session (passed as data), Send / Attach / Compact now, the warning and the automatic
 /// compaction (540ms after a crossing send, 600ms after a model switch, 700ms of summarizing), overflow, data written back
 /// to Items, the model menu's keyboard model, focus kept inside while summarizing, the breakpoints and reduced motion.
 /// </summary>
 public class ContextWindowTests
 {
+    /// <summary>Opens a card on <see cref="ContextWindowTestSample"/>'s session, unless <paramref name="empty"/>.</summary>
     private static (ContextWindow Card, Window Window, ContextWindowTestTimers Timers) Open(ArcMotionLevel level = ArcMotionLevel.Off,
-        Action<ContextWindow>? setup = null, double width = 792)
+        Action<ContextWindow>? setup = null, double width = 792, bool empty = false)
     {
         var timers = new ContextWindowTestTimers();
         var card = new ContextWindow { Timers = timers, VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top };
+        if (!empty)
+        {
+            card.Models.AddRange(ContextWindowTestSample.CreateModels());
+            card.Items.AddRange(ContextWindowTestSample.CreateItems());
+            card.Turns.AddRange(ContextWindowTestSample.CreateTurns());
+            card.Files.AddRange(ContextWindowTestSample.CreateFiles());
+        }
         setup?.Invoke(card);
         var window = TestHelpers.Show(card, level);
         window.Width = width;
@@ -58,12 +68,38 @@ public class ContextWindowTests
     private static ContextWindowLegendRow Row(ContextWindow card, ContextWindowPart part) => card.LegendRows[(int)part]!;
 
     [AvaloniaFact]
-    public void Opens_On_The_Sample_Session()
+    public void Without_Data_The_Card_Is_Empty()
+    {
+        var (card, window, _) = Open(empty: true);
+        try
+        {
+            card.EffectiveModel.ShouldBeNull();
+            card.EffectiveModels.ShouldBeEmpty();
+            card.Pill!.IsVisible.ShouldBeFalse();
+            card.UsedTokens.ShouldBe(0);
+            card.FreeTokens.ShouldBe(0);
+            card.SendButton!.IsVisible.ShouldBeFalse();
+            card.AttachButton!.IsVisible.ShouldBeFalse();
+            card.CanCompact.ShouldBeFalse();
+            // Data given later fills it in.
+            card.Models.AddRange(ContextWindowTestSample.CreateModels());
+            card.Items.AddRange(ContextWindowTestSample.CreateItems());
+            Pump();
+            card.EffectiveModel!.Name.ShouldBe("Atlas 1");
+            card.UsedTokens.ShouldBe(436_000);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Opens_On_The_Given_Session()
     {
         var (card, window, _) = Open();
         try
         {
-            card.UsesSamples.ShouldBeTrue();
             card.EffectiveItems.Count.ShouldBe(32);
             card.EffectiveModel!.Name.ShouldBe("Atlas 1");
             card.UsedTokens.ShouldBe(436_000);
@@ -130,8 +166,9 @@ public class ContextWindowTests
             // The free tokens never roll; at Off the rolling numbers land at once too.
             card.ReadoutPartControl!.FreeText.ShouldBe("469K free");
             card.ReadoutPartControl.NumberText.ShouldBe("467K");
-            // The sample's Items stay empty: the card works on its own copy.
-            card.Items.Count.ShouldBe(0);
+            // The card writes the sent turn back into the given Items.
+            card.Items.Count.ShouldBe(33);
+            card.Items[^1].Label.ShouldBe("Add a dry-run flag to the import job");
         }
         finally
         {
@@ -344,14 +381,13 @@ public class ContextWindowTests
             new(ContextWindowCategory.Messages, "Third", 8_000)
         };
         var model = new ContextWindowModel("small", "Small", 100_000, 8_000);
-        var (card, window, timers) = Open(setup: c =>
+        var (card, window, timers) = Open(empty: true, setup: c =>
         {
             c.Items = items;
             c.Models.Add(model);
         });
         try
         {
-            card.UsesSamples.ShouldBeFalse();
             card.SendButton!.IsVisible.ShouldBeFalse();
             card.AttachButton!.IsVisible.ShouldBeFalse();
             card.CompactButton!.IsVisible.ShouldBeTrue();
@@ -593,4 +629,87 @@ public class ContextWindowTests
             window.Close();
         }
     }
+}
+
+/// <summary>The test's own invented session: made-up models, items, turns and files.</summary>
+internal static class ContextWindowTestSample
+{
+    private static readonly IBrush s_atlasMark = new ImmutableSolidColorBrush(Color.Parse("#E58F00"));
+
+    /// <summary>Three sample models: Atlas 1 (1M window, 64K reserve), Cirrus M (512K, 32K) and Kestrel S (400K, 32K).</summary>
+    public static IReadOnlyList<ContextWindowModel> CreateModels() =>
+    [
+        new("atlas-1", "Atlas 1", 1_000_000, 64_000, ArcIcons.Sparkles, s_atlasMark),
+        new("cirrus-m", "Cirrus M", 512_000, 32_000, ArcIcons.Cloud),
+        new("kestrel-s", "Kestrel S", 400_000, 32_000, ArcIcons.Zap)
+    ];
+
+    /// <summary>A session of 436K tokens: a 3.8K system prompt, 30.2K of tools, 98K of files and 24 turns (304K).</summary>
+    public static IReadOnlyList<ContextWindowItem> CreateItems()
+    {
+        var items = new List<ContextWindowItem>
+        {
+            new(ContextWindowCategory.System, "System prompt", 3_800, "system"),
+            new(ContextWindowCategory.Tools, "search_docs", 12_400, "tool-search-docs"),
+            new(ContextWindowCategory.Tools, "run_tests", 9_100, "tool-run-tests"),
+            new(ContextWindowCategory.Tools, "query_db", 8_700, "tool-query-db"),
+            new(ContextWindowCategory.Files, "AGENTS.md", 6_200, "file-agents"),
+            new(ContextWindowCategory.Files, "memory/project-notes.md", 21_800, "file-notes"),
+            new(ContextWindowCategory.Files, "schema.sql", 20_500, "file-schema"),
+            new(ContextWindowCategory.Files, "src/ingest/queue.go", 49_500, "file-queue")
+        };
+        for (var i = 0; i < s_messages.Length; i++)
+        {
+            var (label, tokens) = s_messages[i];
+            items.Add(new ContextWindowItem(ContextWindowCategory.Messages, label, tokens, $"message-{i + 1}"));
+        }
+        return items;
+    }
+
+    /// <summary>Five turns for Send message: 30.6K, 27.4K, 35.2K, 24.8K and 18.6K.</summary>
+    public static IReadOnlyList<ContextWindowTurn> CreateTurns() =>
+    [
+        new("Add a dry-run flag to the import job", 30_600),
+        new("Write tests for the dedupe step", 27_400),
+        new("Why does the nightly sync time out?", 35_200),
+        new("Rename the queue metrics to snake_case", 24_800),
+        new("Draft release notes for 2.4", 18_600)
+    ];
+
+    /// <summary>Three files for Attach file: 62K, 21K and 18.5K.</summary>
+    public static IReadOnlyList<ContextWindowTurn> CreateFiles() =>
+    [
+        new("spec/ingest-api.yaml", 62_000),
+        new("docs/oncall-playbook.md", 21_000),
+        new("src/ingest/dedupe.go", 18_500)
+    ];
+
+    // 22 older turns (279K, between 6K and 25K) and the newest two (11.6K and 13.4K).
+    private static readonly (string Label, long Tokens)[] s_messages =
+    [
+        ("Plan the importer rewrite", 9_400),
+        ("Fix the flaky retry test", 14_200),
+        ("Map the CSV columns to the schema", 7_800),
+        ("Explain the backoff settings", 18_600),
+        ("Add logging around the batch writer", 11_300),
+        ("Split the parser into two stages", 6_400),
+        ("Review the queue consumer", 22_100),
+        ("Handle empty rows in the import", 13_700),
+        ("Bump the client library", 8_900),
+        ("Trace the duplicate events", 16_200),
+        ("Write a migration for the status column", 10_500),
+        ("Profile the nightly job", 24_300),
+        ("Tidy the config loader", 7_100),
+        ("Add a health check endpoint", 12_800),
+        ("Investigate the memory spike", 15_600),
+        ("Cache the schema lookups", 9_700),
+        ("Document the import flags", 19_400),
+        ("Rename the staging tables", 6_900),
+        ("Check the timezone handling", 11_800),
+        ("Speed up the dedupe query", 13_100),
+        ("Add retries to the uploader", 8_200),
+        ("Summarize the open questions", 11_000),
+        ("Draft the rollout checklist", 11_600),
+        ("Review the failing import run", 13_400)
+    ];
 }

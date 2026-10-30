@@ -1418,6 +1418,19 @@ internal sealed class RichTextEditorSurface : Control
         return _tops[block] + (view.Layout is null ? Math.Min(14, view.Height / 2) : view.TextY + view.LineHeight / 2);
     }
 
+    /// <summary>The left edge of what <paramref name="block"/> draws first: a list item's marker column (so the handle sits beside a nested item, not at the page edge), 0 for any other block.</summary>
+    internal double HandleX(int block)
+    {
+        if (block < 0 || block >= _views.Count)
+        {
+            return 0;
+        }
+        var item = _views[block].Block;
+        return item.Type is RichTextBlockType.BulletedList or RichTextBlockType.NumberedList or RichTextBlockType.TodoList or RichTextBlockType.Toggle
+            ? item.Level * (ListIndentEm + ListItemPaddingEm) * BaseFontSize
+            : 0;
+    }
+
     /// <summary>The y of the block boundary <paramref name="gap"/> (0 to the block count), in surface coordinates.</summary>
     internal double BlockHeightForTests(int block) => _views[block].Height;
 

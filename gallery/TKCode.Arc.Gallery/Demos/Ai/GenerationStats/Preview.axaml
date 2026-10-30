@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.GenerationStatsPreviewDemo">
+    <!-- With no status the strip plays its simulation: four runs of real models at their list prices (the tokens and
+         timings are invented). It waits for the first token, streams, settles, and the last run fails once and retries.
+         Open Details to hold a run on screen. The strip fills its container up to 720px. -->
+    <Panel MaxWidth="720">
+        <arc:GenerationStats Note="{x:Static demos:GenerationStatsDemoData.SimulatedNote}">
+            <arc:GenerationStats.Simulation>
+                <arc:GenerationStatsSimulation Runs="{x:Static demos:GenerationStatsDemoData.Runs}" />
+            </arc:GenerationStats.Simulation>
+        </arc:GenerationStats>
+    </Panel>
+</UserControl>

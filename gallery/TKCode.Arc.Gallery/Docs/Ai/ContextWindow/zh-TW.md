@@ -1,7 +1,7 @@
 ---
 title: Context window
 summary: 模型的上下文視窗呈現為 200 格的方格，逐段填滿，並帶有壓縮門檻、圖例，以及顯示還剩多少空間的動作。
-source-hash: 10028f4973b8
+source-hash: 9f00beff2aa3
 ---
 
 <Demo name="Preview" />
@@ -13,7 +13,7 @@ source-hash: 10028f4973b8
 - **開發者工具與代理主控台**：在對話紀錄旁顯示工作階段的預算，讓人看出為何長時間執行時會開始遺忘內容，以及一個大型附件會耗用多少空間。
 - **會壓縮長工作階段的程式設計代理**：讓壓縮過程可見。較舊的訊息會收合成一段簡短摘要，格子隨之釋放，狀態列會說明收合了多少內容。
 - **在上下文中選擇模型**：切換到視窗較小的模型時，方格會立即重新排列，並顯示工作階段是否仍放得下；若放不下，卡片會收合對話並說明此事。
-- **文件與新手導覽**：用一個可以實際操作的範例說明上下文視窗、輸出保留空間與壓縮。沒有資料時，卡片會播放一段虛構的程式設計工作階段。
+- **文件與新手導覽**：用一段可以實際操作的工作階段說明上下文視窗、輸出保留空間與壓縮，就像本頁的預覽那樣。
 
 ## 何時不用
 
@@ -27,13 +27,19 @@ source-hash: 10028f4973b8
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
-    <arc:ContextWindow />
+    <arc:ContextWindow>
+        <arc:ContextWindow.Models>
+            <arc:ContextWindowModel Id="your-model" Name="Your model" Window="200000" Reserve="16000" />
+        </arc:ContextWindow.Models>
+        <arc:ContextWindowItem Category="System" Label="System prompt" Tokens="3800" />
+        <arc:ContextWindowItem Category="Messages" Label="Plan the importer rewrite" Tokens="9400" />
+    </arc:ContextWindow>
 </UserControl>
 ```
 
 `ContextWindow` 是 Special 套件中的 `TemplatedControl`。請在 `UseArcControls()` 旁呼叫 `UseArcSpecial()` 來註冊該套件。卡片最寬為 744px，並依自身寬度調整，而非視窗的寬度。
 
-完全沒有資料（沒有模型、項目、回合或檔案）時，卡片會顯示 `ContextWindowSamples` 提供的虛構範例工作階段：三個範例模型，視窗分別為 1M、512K 與 400K；一個 436K token 的程式設計工作階段；Send message 的五個回合，以及 Attach file 的三個檔案。範例使用它自己的副本，因此 `Items` 保持為空。只要你為卡片提供上述四個清單中的任何一個，卡片就會改用你的資料。
+沒有資料（沒有模型、項目、回合或檔案）時，卡片是空的：沒有模型膠囊，所有格子都空著，也沒有 Send message 與 Attach file。請提供你的模型與項目，並為這兩個按鈕提供 `Turns` 與 `Files`。本頁的展示使用真實模型及其廠商公布的上下文視窗（核對於 2026-10-29：Claude Sonnet 5.5 為 1M，Grok 4.7 為 500K，Mistral Medium 3.5 為 256K），以及一個虛構的、436K token 的程式設計工作階段；輸出保留空間是展示應用程式單次回覆所請求的量（32K），絕不超過該模型公布的輸出上限。
 
 ### 結構
 
@@ -65,8 +71,8 @@ Send message 會加入 `Turns` 中的下一則，放在視窗末端；Attach fil
 | 超過門檻時傳送 | Added “Why does the nightly sync time out?” (+35K) · past 80% | 0 |
 | 開始收合 | Past 80%: folding 35 earlier messages… | 540ms |
 | 摘要出現 | Folded 608K into a 24K summary | 1,240ms |
-| 切換到較小的模型 | 436K is over 80% of Cirrus M | 0 |
-| 開始收合 | Too full for Cirrus M: folding 22 earlier messages… | 600ms |
+| 切換到較小的模型 | 436K is over 80% of Grok 4.7 | 0 |
+| 開始收合 | Too full for Grok 4.7: folding 22 earlier messages… | 600ms |
 
 檔案永遠不會被收合。視窗超過門檻且只剩最新的訊息時，狀態列會說明目前還沒有可收合的內容；壓縮後若視窗仍超過門檻，狀態列會說明收合了多少，並建議移除檔案。已使用的 token 可以超過視窗大小：此時讀數會顯示超過 100%，且沒有剩餘 token。
 
@@ -159,7 +165,7 @@ card.Labels = new ContextWindowLabels
 **避免**
 
 - 用計時器重建 `Items`。每次變化都會有動畫；只要更新有變動的項目即可。
-- 把範例工作階段當成真實數字呈現。它是虛構的。
+- 把虛構的工作階段當成真實用量呈現。
 - 把方格用於單一視窗以外的用途。它永遠有 200 格；其比例只對應一種預算才有意義。
 
 ### 常見問題
@@ -170,7 +176,7 @@ card.Labels = new ContextWindowLabels
 
 **切換到較大的模型會發生什麼？** 方格會重新排列，狀態列會說明新的模型與視窗，且不會收合任何內容。
 
-**為什麼沒有 Send message 與 Attach file？** 在範例之外，當 `Turns` 或 `Files` 為空時，它們會隱藏。
+**為什麼沒有 Send message 與 Attach file？** 當 `Turns` 或 `Files` 為空時，它們會隱藏。
 
 **視窗可以溢出嗎？** 可以。讀數會超過 100%，剩餘空間顯示 0，而那些放不進保留空間之前的部分不會分到格子。
 
@@ -201,12 +207,10 @@ card.Labels = new ContextWindowLabels
 | `ContextWindowCompactReason` | `Manual`, `Threshold`, `ModelSwitch` |
 | `ContextWindowChange` | `Sent`, `Attached`, `Added`, `Compacted` |
 
-`ContextWindowSamples` 保存範例工作階段（`CreateModels()`、`CreateItems()`、`CreateTurns()`、`CreateFiles()`），讓頁面能從它開始，並只修改其中一個部分。
-
 ## 無障礙
 
 - 卡片是一個名為 "Context window" 的群組。方格是一張圖像，其名稱完整描述它：模型、視窗已使用的 token、每個部分及其 token 數與門檻。每次變化都會更新，但不會隨動畫的每個影格更新。
-- 讀數會被朗讀為一行（"436K of 1M tokens, 44% used, 500K free"）。圖例是一個名為 "Context breakdown" 的清單，每列朗讀其名稱、token 數與占比，因此不依賴顏色。
+- 讀數會被朗讀為一行（"436K of 1M tokens, 44% used, 532K free"）。圖例是一個名為 "Context breakdown" 的清單，每列朗讀其名稱、token 數與占比，因此不依賴顏色。
 - 膠囊以模型及其視窗命名，並說明它會切換模型。選單中的模型是單選項目，目前選取的會打勾。
 - 每次傳送、附加、切換模型與壓縮，都會透過禮貌的即時區域播報，每個狀態都同時有圖示與文字。
 - 訊息收合期間，所有動作都會關閉。卡片不會讓鍵盤焦點掉到頁面上，而是把它保留在一個以狀態命名的隱藏容器上，並在壓縮完成時交還：交還給原本擁有焦點的動作，若該動作已停用，則交給 Send message。

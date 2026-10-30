@@ -264,6 +264,7 @@ public partial class InvitePeople : TemplatedControl
 
     static InvitePeople()
     {
+        BlockFocusModality.Watch();
         FocusableProperty.OverrideDefaultValue<InvitePeople>(false);
     }
 

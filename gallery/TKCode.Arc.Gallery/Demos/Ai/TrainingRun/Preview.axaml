@@ -1,0 +1,28 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.TrainingRunPreviewDemo">
+    <!-- With no Status the card plays its simulation (the demo's job): a LoRA run that queues, starts up, trains through
+         three epochs and completes with Deploy. Out of memory fails once at step 940 so Retry from checkpoint can be
+         tried. The run freezes while the card is off screen. The job, the dataset and the losses are invented. -->
+    <StackPanel Spacing="20" MaxWidth="640">
+        <arc:SegmentedControl x:Name="Scenario"
+                              HorizontalAlignment="Center"
+                              SelectedValue="healthy"
+                              SelectionChanged="OnScenarioChanged">
+            <arc:SegmentedOption Value="healthy" Label="Healthy run" />
+            <arc:SegmentedOption Value="oom" Label="Out of memory" />
+        </arc:SegmentedControl>
+        <arc:TrainingRun x:Name="Run">
+            <arc:TrainingRun.Simulation>
+                <arc:TrainingRunSimulation JobName="support-v4"
+                                           BaseModel="{x:Static demos:TrainingRunDemoData.BaseModel}"
+                                           Details="{x:Static demos:TrainingRunDemoData.Details}"
+                                           Dataset="{x:Static demos:TrainingRunDemoData.Dataset}"
+                                           Hardware="8× H200"
+                                           Endpoint="https://inference.example.com/v1/support-v4" />
+            </arc:TrainingRun.Simulation>
+        </arc:TrainingRun>
+    </StackPanel>
+</UserControl>

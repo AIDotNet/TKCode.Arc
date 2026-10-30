@@ -1,0 +1,25 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.PixelMascotTheme">
+
+    <!--
+        The pixel mascot: a fixed square of 24 × Scale, sitting on a text line (left, vertically centered). The sprite's
+        neutrals come from the control token, the accent and danger from the ArcDesign tokens. There are no transitions:
+        the sprite is a frame-stepped state machine on a 40ms clock (a LiveLoop in code), which a ControlTheme cannot
+        express, and it holds a resting pose per status under reduced motion.
+    -->
+    <ControlTheme x:Key="{x:Type arc:PixelMascot}" TargetType="arc:PixelMascot">
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="AccentBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="DangerInk" Value="{arc:ArcDesignTokenResource Danger}" />
+        <Setter Property="OutlineInk" Value="{arc:PixelMascotTokenResource OutlineColor}" />
+        <Setter Property="ShellInk" Value="{arc:PixelMascotTokenResource ShellColor}" />
+        <Setter Property="ShadeInk" Value="{arc:PixelMascotTokenResource ShadeColor}" />
+        <Setter Property="ScreenInk" Value="{arc:PixelMascotTokenResource ScreenColor}" />
+        <Setter Property="ShadowInk" Value="{arc:PixelMascotTokenResource ShadowColor}" />
+    </ControlTheme>
+</ResourceDictionary>

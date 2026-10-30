@@ -1,0 +1,81 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.StickerPeelTheme">
+
+    <!--
+        The surface: content under the stickers, then the stickers, clipped to the rounded box (a carried sticker can
+        stretch past the edges while it is held). The status line is read by screen readers and never seen.
+    -->
+    <ControlTheme x:Key="{x:Type arc:StickerPeel}" TargetType="arc:StickerPeel">
+        <Setter Property="MinHeight" Value="{arc:StickerPeelTokenResource SurfaceMinHeight}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:StickerPeel">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <Panel>
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          Padding="{TemplateBinding Padding}"
+                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        <arc:StickerPeelLayer Name="PART_Layer" />
+                        <TextBlock Name="PART_Status"
+                                   Width="1"
+                                   Height="1"
+                                   Opacity="0"
+                                   IsHitTestVisible="False"
+                                   AutomationProperties.LiveSetting="Polite" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!--
+        A sticker: a white die cut border around the printed face. The paper layers above and below it draw the shadow, the
+        focus ring (keyboard only) and the folded-back flap.
+    -->
+    <ControlTheme x:Key="{x:Type arc:StickerPeelSticker}" TargetType="arc:StickerPeelSticker">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:StickerPeelSticker">
+                <Panel>
+                    <arc:StickerPeelPaper Name="PART_Underlay"
+                                          Layer="Underlay"
+                                          FocusRingBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <Border Name="PART_Face"
+                            Background="{arc:StickerPeelTokenResource DieCutColor}"
+                            Padding="{arc:StickerPeelTokenResource DieCutPadding}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <Border Name="PART_Inner" ClipToBounds="True">
+                            <ContentPresenter Name="PART_ContentPresenter"
+                                              Content="{TemplateBinding Content}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}" />
+                        </Border>
+                    </Border>
+                    <arc:StickerPeelPaper Name="PART_Overlay"
+                                          Layer="Overlay"
+                                          PaperBrush="{arc:StickerPeelTokenResource BackingColor}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:focus-visible /template/ arc|StickerPeelPaper#PART_Underlay">
+            <Setter Property="ShowFocusRing" Value="True" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

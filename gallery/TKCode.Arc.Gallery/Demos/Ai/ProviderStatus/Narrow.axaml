@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.ProviderStatusNarrowDemo">
+    <!-- Below 560px of card width every row takes two lines: the name with its latency and the health above, the
+         full-width uptime bar and its percentage below. The rule follows the card, not the window. -->
+    <arc:ProviderStatus MaxWidth="380" Footnote="{x:Static demos:ProviderStatusDemoData.Footnote}">
+        <arc:ProviderStatus.Simulation>
+            <arc:ProviderStatusSimulation Steps="{x:Static demos:ProviderStatusDemoData.Story}" />
+        </arc:ProviderStatus.Simulation>
+    </arc:ProviderStatus>
+</UserControl>

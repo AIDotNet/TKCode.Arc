@@ -1,0 +1,107 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.BuildingBlocksTheme">
+
+    <!--
+        The frame (one self-drawn stage: the mini app's six blocks over their dashed slots) and, under it, a status line of
+        fixed height: the status mark, the phase label that swaps with a quiet crossfade, and Replay, which fades in on
+        Ready. The frame grows to the size's width and never past the container; the status line keeps its left edge.
+    -->
+    <ControlTheme x:Key="{x:Type arc:BuildingBlocks}" TargetType="arc:BuildingBlocks">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:BuildingBlocksTokenResource LabelFontSize}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:BuildingBlocks">
+                <StackPanel Spacing="{arc:BuildingBlocksTokenResource StatusGap}">
+                    <arc:BuildingBlocksStage Name="PART_Stage"
+                                             Tone="{TemplateBinding Tone}"
+                                             Tint="{TemplateBinding Tint}"
+                                             WidthSM="{arc:BuildingBlocksTokenResource WidthSM}"
+                                             WidthMD="{arc:BuildingBlocksTokenResource WidthMD}"
+                                             WidthLG="{arc:BuildingBlocksTokenResource WidthLG}"
+                                             NarrowWidth="{arc:BuildingBlocksTokenResource NarrowWidth}"
+                                             Aspect="{arc:BuildingBlocksTokenResource FrameAspect}"
+                                             FrameCornerRadius="{arc:BuildingBlocksTokenResource FrameCornerRadius}"
+                                             BlockCornerRadius="{arc:BuildingBlocksTokenResource BlockCornerRadius}"
+                                             ReferenceWidth="{arc:BuildingBlocksTokenResource ReferenceWidth}"
+                                             PlaceholderOpacity="{arc:BuildingBlocksTokenResource PlaceholderOpacity}"
+                                             FillOpacity="{arc:BuildingBlocksTokenResource FillOpacity}"
+                                             TitleInkOpacity="{arc:BuildingBlocksTokenResource TitleInkOpacity}"
+                                             LineInkOpacity="{arc:BuildingBlocksTokenResource LineInkOpacity}"
+                                             AccentInk="{arc:ArcDesignTokenResource Accent}"
+                                             OnAccentInk="{arc:ArcDesignTokenResource AccentForeground}"
+                                             ForegroundInk="{arc:ArcDesignTokenResource Foreground}"
+                                             BackgroundInk="{arc:ArcDesignTokenResource Background}"
+                                             SurfaceInk="{arc:ArcDesignTokenResource Surface}"
+                                             CanvasInk="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                             EdgeInk="{arc:ArcDesignTokenResource Border}"
+                                             SlotInk="{arc:ArcDesignTokenResource BorderStrong}"
+                                             MutedInk="{arc:ArcDesignTokenResource TextMuted}"
+                                             PhotoInk1="{arc:ArcDesignTokenResource Series1}"
+                                             PhotoInk2="{arc:ArcDesignTokenResource Series2}"
+                                             PhotoInk3="{arc:ArcDesignTokenResource Series3}"
+                                             PhotoInk4="{arc:ArcDesignTokenResource Series4}" />
+                    <Grid Name="PART_Status"
+                          ColumnDefinitions="*,Auto"
+                          Height="{arc:BuildingBlocksTokenResource StatusHeight}"
+                          IsVisible="{TemplateBinding IsLabelVisible}">
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="{arc:BuildingBlocksTokenResource MarkGap}"
+                                    VerticalAlignment="Center"
+                                    ClipToBounds="True">
+                            <arc:BuildingBlocksMark Name="PART_Mark"
+                                                    Width="{arc:BuildingBlocksTokenResource MarkSize}"
+                                                    Height="{arc:BuildingBlocksTokenResource MarkSize}"
+                                                    VerticalAlignment="Center"
+                                                    Tone="{TemplateBinding Tone}"
+                                                    Tint="{TemplateBinding Tint}"
+                                                    AccentInk="{arc:ArcDesignTokenResource Accent}"
+                                                    ForegroundInk="{arc:ArcDesignTokenResource Foreground}"
+                                                    MutedInk="{arc:ArcDesignTokenResource TextMuted}" />
+                            <arc:ArcContentSwap Name="PART_Label"
+                                                Mode="Label"
+                                                HorizontalAlignment="Left"
+                                                HorizontalContentAlignment="Left"
+                                                VerticalContentAlignment="Center"
+                                                VerticalAlignment="Center" />
+                        </StackPanel>
+                        <arc:PresenceHost Name="PART_ReplayHost"
+                                          Grid.Column="1"
+                                          Mode="Fade"
+                                          VerticalAlignment="Center">
+                            <arc:Button Name="PART_Replay"
+                                        Variant="Secondary"
+                                        Size="Small">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.RotateCcw}"
+                                                  Size="13"
+                                                  VerticalAlignment="Center" />
+                                    <TextBlock Name="PART_ReplayText" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </arc:Button>
+                        </arc:PresenceHost>
+                    </Grid>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ arc|Button#PART_Replay">
+            <Setter Property="Height" Value="{arc:BuildingBlocksTokenResource ReplayHeight}" />
+            <Setter Property="MinHeight" Value="{arc:BuildingBlocksTokenResource ReplayHeight}" />
+            <Setter Property="Padding" Value="{arc:BuildingBlocksTokenResource ReplayPadding}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        </Style>
+
+        <Style Selector="^:narrow">
+            <Setter Property="FontSize" Value="{arc:BuildingBlocksTokenResource NarrowLabelFontSize}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

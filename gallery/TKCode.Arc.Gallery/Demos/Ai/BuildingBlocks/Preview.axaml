@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.BuildingBlocksPreviewDemo">
+    <!-- Simulated plays the built-in build on a loop (nothing is generated). Idle, Building and Done are what an app sets
+         from its request. The frame grows to 400px and never past its container, so its width never follows the label. -->
+    <StackPanel Spacing="20" MaxWidth="400" Margin="0,12">
+        <arc:SegmentedControl x:Name="Scenario"
+                              HorizontalAlignment="Center"
+                              SelectedValue="simulated"
+                              SelectionChanged="OnScenarioChanged">
+            <arc:SegmentedOption Value="simulated" Label="Simulated" />
+            <arc:SegmentedOption Value="idle" Label="Idle" />
+            <arc:SegmentedOption Value="building" Label="Building" />
+            <arc:SegmentedOption Value="done" Label="Done" />
+        </arc:SegmentedControl>
+        <arc:BuildingBlocks x:Name="Blocks" />
+    </StackPanel>
+</UserControl>

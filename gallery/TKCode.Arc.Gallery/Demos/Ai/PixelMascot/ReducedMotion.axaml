@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PixelMascotReducedMotionDemo">
+    <!-- Under reduced motion every status holds a clear resting pose: open eyes, the bubble with three dots, the
+         keyboard, happy eyes and crossed eyes. -->
+    <WrapPanel arc:ArcMotion.Level="Reduced" ItemSpacing="24" LineSpacing="16" Margin="0,12">
+        <arc:PixelMascot Status="Idle" Scale="3" Announce="False" />
+        <arc:PixelMascot Status="Thinking" Scale="3" Announce="False" />
+        <arc:PixelMascot Status="Writing" Scale="3" Announce="False" />
+        <arc:PixelMascot Status="Done" Scale="3" Announce="False" />
+        <arc:PixelMascot Status="Error" Scale="3" Announce="False" />
+    </WrapPanel>
+</UserControl>

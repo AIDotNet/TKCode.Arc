@@ -525,11 +525,12 @@ internal sealed class EnvVariableRow : Border
         UpdateTint();
         if (restoreFocus || hadFocus)
         {
-            _edit.Focus(NavigationMethod.Tab);
+            // Save or Cancel clicked with the mouse hands focus back without the keyboard ring.
+            _edit.Focus(BlockFocusModality.For(this));
         }
     }
 
-    public void FocusEdit() => _edit.Focus(NavigationMethod.Tab);
+    public void FocusEdit() => _edit.Focus(BlockFocusModality.For(this));
 
     public void ShowConflict(string text)
     {
@@ -1158,7 +1159,7 @@ internal sealed class EnvAddPanel : Border
             }
             else if (errors.Environments is not null)
             {
-                _singlePills.Children.OfType<EnvScopeToggle>().FirstOrDefault()?.Focus(NavigationMethod.Tab);
+                _singlePills.Children.OfType<EnvScopeToggle>().FirstOrDefault()?.Focus(BlockFocusModality.For(this));
             }
         }
         return errors;
@@ -1471,8 +1472,12 @@ internal sealed class EnvRedeployBanner : EnvTintBorder
     }
 
     // Posted: the button leaves its loading state (and becomes focusable again) in the same pass.
-    public void FocusAction() =>
-        Dispatcher.UIThread.Post(() => _action?.Focus(NavigationMethod.Tab), DispatcherPriority.Loaded);
+    public void FocusAction()
+    {
+        // Redeploy clicked with the mouse: the retry takes focus without the keyboard ring.
+        var method = BlockFocusModality.For(this);
+        Dispatcher.UIThread.Post(() => _action?.Focus(method), DispatcherPriority.Loaded);
+    }
 
     public void SetNarrow(bool narrow)
     {
@@ -1776,7 +1781,7 @@ internal sealed class EnvComparePane : StackPanel
                 _empty.Action = () =>
                 {
                     _owner.SetCurrentValue(EnvVariables.ShowMatchingProperty, true);
-                    _showMatching.Focus(NavigationMethod.Tab);
+                    _showMatching.Focus(BlockFocusModality.For(this));
                 };
                 _empty.Set(labels.InSyncTitle(leftName, rightName), labels.InSyncDetail, labels.ShowMatchingButton, _narrow);
             }
@@ -1816,13 +1821,15 @@ internal sealed class EnvComparePane : StackPanel
             return;
         }
         Update(animate: true);
+        // Copy clicked with the mouse moves focus on without the keyboard ring.
+        var method = BlockFocusModality.For(this);
         if (next is not null && _list.ContainerFor(next) is EnvCompareRowView view && view.CopyButton is { } button)
         {
-            button.Focus(NavigationMethod.Tab);
+            button.Focus(method);
         }
         else
         {
-            _showMatching.Focus(NavigationMethod.Tab);
+            _showMatching.Focus(method);
         }
     }
 

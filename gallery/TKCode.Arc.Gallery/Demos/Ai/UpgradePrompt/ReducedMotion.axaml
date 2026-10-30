@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.UpgradePromptReducedMotionDemo">
+    <!-- Under reduced motion the bar and the price jump to their values and every crossfade is a plain fade. -->
+    <Border MaxWidth="440" Margin="0,12">
+        <arc:UpgradePrompt arc:ArcMotion.Level="Reduced" Used="42" Limit="50" ResetsOn="Nov 1"
+                           Plan="{x:Static demos:UpgradePromptDemoData.ProPlan}" />
+    </Border>
+</UserControl>

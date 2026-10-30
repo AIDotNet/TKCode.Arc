@@ -66,6 +66,7 @@
                                             Padding="0"
                                             Background="Transparent"
                                             Cursor="Hand"
+                                            ClipToBounds="False"
                                             RenderTransformOrigin="50%,50%"
                                             RenderTransform="scale(1)"
                                             AutomationProperties.Name="Clear selection">

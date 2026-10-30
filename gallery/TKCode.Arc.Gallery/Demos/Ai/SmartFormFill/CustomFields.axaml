@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SmartFormFillCustomFieldsDemo">
+    <!-- Any form: a vendor record with its own fields. With no extractor the stand-in reader maps emails, phone numbers,
+         web addresses and companies by kind and other fields by id. Your own samples feed Try sample. -->
+    <arc:SmartFormFill x:Name="Card"
+                       MaxWidth="860"
+                       Margin="0,12"
+                       AutoPlay="False"
+                       Title="New vendor"
+                       Description="Paste the vendor's invoice footer."
+                       SubmitLabel="Add vendor"
+                       ReviewThreshold="0.85">
+        <arc:SmartFormFillField Id="company" Label="Vendor" Kind="Company" Span="Full" Placeholder="Legal name" />
+        <arc:SmartFormFillField Id="email" Label="Billing email" Kind="Email" Placeholder="billing@vendor.com" />
+        <arc:SmartFormFillField Id="phone" Label="Phone" Kind="Phone" />
+        <arc:SmartFormFillField Id="url" Label="Website" Kind="Url" />
+        <arc:SmartFormFillField Id="address" Label="Address" Placeholder="Street, city" />
+    </arc:SmartFormFill>
+</UserControl>

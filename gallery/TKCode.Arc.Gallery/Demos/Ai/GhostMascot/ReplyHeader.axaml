@@ -1,0 +1,28 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.GhostMascotReplyHeaderDemo">
+    <!-- Inline in reply headers at 24px: the compact drawing frames the ghost tighter and enlarges its eyes and marks. -->
+    <StackPanel Spacing="14" Margin="0,8" MaxWidth="520">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+            <arc:GhostMascot Size="24" Status="Thinking" AssistantName="Atlas" Announce="True" />
+            <TextBlock Text="Atlas" FontWeight="SemiBold" VerticalAlignment="Center" />
+            <TextBlock Text="Thinking" VerticalAlignment="Center" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Spacing="8">
+            <arc:GhostMascot Size="24" Status="Writing" AssistantName="Atlas" />
+            <TextBlock Text="Atlas" FontWeight="SemiBold" VerticalAlignment="Center" />
+            <TextBlock Text="Writing" VerticalAlignment="Center" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Spacing="8">
+            <arc:GhostMascot Size="24" Status="Done" AssistantName="Atlas" />
+            <TextBlock Text="Atlas" FontWeight="SemiBold" VerticalAlignment="Center" />
+            <TextBlock Text="Answered in 4s" VerticalAlignment="Center" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Spacing="8">
+            <arc:GhostMascot Size="24" Status="Error" AssistantName="Atlas" />
+            <TextBlock Text="Atlas" FontWeight="SemiBold" VerticalAlignment="Center" />
+            <TextBlock Text="Couldn't finish" VerticalAlignment="Center" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

@@ -200,6 +200,7 @@
     <!-- The brand: the mark and the name, 8 apart. -->
     <ControlTheme x:Key="{x:Type arc:SiteFooterBrand}" TargetType="arc:SiteFooterBrand">
         <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="ClipToBounds" Value="False" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:SiteFooterBrand">
                 <StackPanel Orientation="Horizontal" Spacing="{arc:SiteFooterTokenResource BrandGap}">
@@ -222,6 +223,7 @@
 
     <!-- One column: the title (display face, 14 / 1.1) 12 above its links, which are 8 apart. -->
     <ControlTheme x:Key="{x:Type arc:SiteFooterColumnView}" TargetType="arc:SiteFooterColumnView">
+        <Setter Property="ClipToBounds" Value="False" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:SiteFooterColumnView">
                 <StackPanel>

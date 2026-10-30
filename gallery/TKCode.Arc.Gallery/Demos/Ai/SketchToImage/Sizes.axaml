@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.SketchToImageSizesDemo">
+    <!-- Small (340px at most; here without Replay, as in a composer), medium (520px) and large (720px). Each fills its
+         container up to its maximum width, and the pencil gets a little heavier with the size so lines stay crisp. -->
+    <StackPanel Spacing="20" MaxWidth="720">
+        <arc:SketchToImage Size="Small" ShowsReplay="False"
+                           Scene="{x:Static demos:SketchToImageDemoData.Alpine}"
+                           Prompt="{x:Static demos:SketchToImageDemoData.Prompt}" />
+        <arc:SketchToImage Size="Medium"
+                           Scene="{x:Static demos:SketchToImageDemoData.Alpine}"
+                           Prompt="{x:Static demos:SketchToImageDemoData.Prompt}" />
+        <arc:SketchToImage Size="Large"
+                           Scene="{x:Static demos:SketchToImageDemoData.Alpine}"
+                           Prompt="{x:Static demos:SketchToImageDemoData.Prompt}" />
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,56 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.OrbitLogosPreviewDemo">
+    <!--
+        Fourteen made-up integrations over five categories. The marks are drawn path data on a 24 by 24 grid: the ones
+        with a Color keep it, the others follow the text color. Pick a logo, a category, or step with the arrow keys.
+    -->
+    <arc:OrbitLogos MaxWidth="900">
+        <arc:OrbitLogo Name="Nimbus" Category="Payments" Color="#4F7CFF" IsConnected="True"
+                       Icon="M7 18a5 5 0 0 1-.6-9.96A6 6 0 0 1 18 9a4.5 4.5 0 0 1-.5 9z"
+                       Description="Starts trials and bills usage as customers grow."
+                       Href="https://example.com/docs/nimbus" />
+        <arc:OrbitLogo Name="Ledgerly" Category="Payments"
+                       Icon="M4 4h16v4H4zM4 10h16v4H4zM4 16h10v4H4z"
+                       Description="Posts every invoice to the books the moment it is paid." />
+        <arc:OrbitLogo Name="Coinwise" Category="Payments" Color="#E0A12B"
+                       Icon="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10z"
+                       Description="Splits payouts between teams and partners." />
+        <arc:OrbitLogo Name="Gitpost" Category="Dev"
+                       Icon="M12 2l8.66 5v10L12 22l-8.66-5V7z"
+                       Description="Comments preview links on every pull request."
+                       Href="https://example.com/docs/gitpost" />
+        <arc:OrbitLogo Name="Buildkit" Category="Dev" Color="#2FA37C" IsConnected="True"
+                       Icon="M12 3l10 18H2z"
+                       Description="Runs your pipeline and reports the result back here." />
+        <arc:OrbitLogo Name="Stackr" Category="Dev"
+                       Icon="M12 2l10 10-10 10L2 12z"
+                       Description="Keeps staging and production in step." />
+        <arc:OrbitLogo Name="Chatterbox" Category="Comms" Color="#8A5CF6" IsConnected="True"
+                       Icon="M4 4h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-7l-5 4v-4H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"
+                       Description="Posts deploy alerts to your channels." />
+        <arc:OrbitLogo Name="Pingline" Category="Comms"
+                       Icon="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z"
+                       Description="Pages whoever is on call when a check fails." />
+        <arc:OrbitLogo Name="Mailroom" Category="Comms" Color="#E5603E"
+                       Icon="M5 4h17l-3 16H2z"
+                       Description="Sends receipts and product updates from your own domain." />
+        <arc:OrbitLogo Name="Sketchpad" Category="Design" Color="#F2994A"
+                       Icon="M12 2l3 7 7.5.6-5.7 4.9 1.8 7.3L12 17.8l-6.6 4 1.8-7.3L1.5 9.6 9 9z"
+                       Description="Turns frames into tokens your app can read." />
+        <arc:OrbitLogo Name="Palettely" Category="Design"
+                       Icon="M12 2a10 10 0 1 0 10 10H12z"
+                       Description="Keeps brand colors in one shared list." />
+        <arc:OrbitLogo Name="Vaultbox" Category="Storage"
+                       Icon="M6 3h12a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3z"
+                       Description="Stores uploads with a link that expires."
+                       Href="https://example.com/docs/vaultbox" />
+        <arc:OrbitLogo Name="Driftfile" Category="Storage" Color="#3AA6D8"
+                       Icon="M3 5h7l2 3h9v11H3z"
+                       Description="Syncs a folder of exports to the team drive." />
+        <arc:OrbitLogo Name="Archivo" Category="Storage"
+                       Icon="M10 3h4v7h7v4h-7v7h-4v-7H3v-4h7z"
+                       Description="Keeps a year of snapshots you can roll back to." />
+    </arc:OrbitLogos>
+</UserControl>

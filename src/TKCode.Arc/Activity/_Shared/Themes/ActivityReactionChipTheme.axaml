@@ -38,6 +38,7 @@
                             <TextBlock Name="PART_Emoji"
                                        Text="{TemplateBinding Emoji}"
                                        FontFamily="{arc:ActivityReactionChipTokenResource EmojiFontFamily}"
+                                       ClipToBounds="False"
                                        VerticalAlignment="Center" />
                             <arc:RollingDigits Name="PART_Count"
                                                Value="{TemplateBinding Count}"

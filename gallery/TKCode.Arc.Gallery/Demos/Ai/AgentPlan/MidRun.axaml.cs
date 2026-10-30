@@ -8,7 +8,7 @@ public partial class AgentPlanMidRunDemo : UserControl
     public AgentPlanMidRunDemo()
     {
         InitializeComponent();
-        Plan.Model = new AgentModel("Ember 1", ArcIcons.Sparkles);
+        Plan.Model = AgentPlanDemoData.SmallPlansModel;
         Plan.Steps.Add(Finished("Find the slowest ten tasks", 18, "Ran the build with timing", "Found 4 tasks over a minute"));
         Plan.Steps.Add(Finished("Cache the generated sources", 41, "Edited build/cache.json", "Ran 12 tests"));
         var added = Finished("Skip the cache when the lockfile changes", 25, "Edited build/cache.json");

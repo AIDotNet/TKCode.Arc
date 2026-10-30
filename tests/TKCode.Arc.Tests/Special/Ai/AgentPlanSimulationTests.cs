@@ -21,7 +21,7 @@ public class AgentPlanSimulationTests
     private static (AgentPlanSimulation Sim, FakeHost Host, AgentPlanManualScheduler Clock) Start()
     {
         var clock = new AgentPlanManualScheduler();
-        var sim = new AgentPlanSimulation(clock);
+        var sim = AgentPlanTestScript.Simulation(clock);
         var host = new FakeHost();
         sim.Attach(host);
         return (sim, host, clock);
@@ -87,10 +87,10 @@ public class AgentPlanSimulationTests
     [Fact]
     public void The_Sample_Has_Six_Steps_Three_Suggestions_And_One_Failure()
     {
-        Assert.Equal(6, AgentPlanSamples.Steps.Count);
-        Assert.Equal(3, AgentPlanSamples.Suggestions.Count);
-        Assert.Equal(1, AgentPlanSamples.Steps.Count(s => s.Script.FailureReason is not null));
-        Assert.Single(AgentPlanSamples.Steps, s => s.Script.Inserts is not null);
+        Assert.Equal(6, AgentPlanTestScript.Steps.Count);
+        Assert.Equal(3, AgentPlanTestScript.Suggestions.Count);
+        Assert.Equal(1, AgentPlanTestScript.Steps.Count(s => s.Script.FailureReason is not null));
+        Assert.Single(AgentPlanTestScript.Steps, s => s.Script.Inserts is not null);
     }
 
     [Fact]

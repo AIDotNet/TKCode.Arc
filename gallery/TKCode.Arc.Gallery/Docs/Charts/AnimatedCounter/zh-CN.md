@@ -1,7 +1,7 @@
 ---
 title: 动画计数器
 summary: 让变化的总数具有清晰的动感。
-source-hash: 87248781031b
+source-hash: bf322a01198b
 ---
 
 <Demo name="RollingDigits" />
@@ -36,6 +36,8 @@ source-hash: 87248781031b
 ```
 
 `AnimatedCounter` 派生自 Avalonia 的 `TemplatedControl`。其模板由一个标签和位于其上的 `RollingDigits` 组成，后者是 Arc 核心中负责数位滚动的基础件。计数器本身加入标签、前后缀以及首次查看时的显现效果；它的主题会设置数字的字体、字号、字重和前景色，因此你很少需要自行设置这些属性。由于它使用模板，你可以像对待其他 Arc 控件一样，用 `ControlTheme` 重新设计计数器的外观。
+
+`RollingDigits` 也可以单独使用，放在你自己的布局里显示数字。它的数位滚轮默认按 `Smooth` 弹簧转动；`WheelSpring` 可选其他 Arc 预设，`WheelMotion` 接受任意弹簧或定时缓动的 `MotionSpec`，例如 `MotionSpec.Spring(SpringSpec.FromVisual(0.28, 0))` 或 `MotionSpec.Tween(TimeSpan.FromMilliseconds(240), easing)`。减弱动效和关闭动效时数位仍立即变化。
 
 `Value` 接收原始数字，而不是格式化后的字符串。计数器会用 `Decimals`、`CultureName`、`Prefix` 和 `Suffix` 对它进行格式化，因此同一个值在 en-US 下可显示为“$48,250”，在 de-DE 下可显示为“48.250”，而数据本身无需改变。
 

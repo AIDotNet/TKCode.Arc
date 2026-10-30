@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.SmartFormFillExtractorDemo">
+    <!-- The app reads the text: Extract stands in for a call to a model with structured output (here a short delay and a
+         couple of rules), Submit stands in for saving the record. Escape or Stop cancels the token the extractor gets. Try
+         sample pastes the demo's texts (Samples). -->
+    <StackPanel Spacing="12" MaxWidth="860" Margin="0,12">
+        <arc:SmartFormFill x:Name="Card"
+                           AutoPlay="False"
+                           Samples="{x:Static demos:SmartFormFillDemoData.Samples}"
+                           ModelName="{x:Static demos:SmartFormFillDemoData.ModelName}" />
+        <TextBlock x:Name="Log"
+                   TextWrapping="Wrap"
+                   FontSize="13"
+                   Text="Paste a signature or press Try sample."
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

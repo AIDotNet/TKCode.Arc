@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.CodeSuggestionPreviewDemo">
+    <!-- The card in its main states. Live plays a simulated suggestion: it reads the file, streams the hunks in and
+         reviews itself until you touch it. Review is a finished suggestion waiting for you; Failed is the error state with
+         Retry; Empty has no data and no simulation. The card fills its container up to 720px, so its width never follows
+         the code. The code is demo content; the model name is a real one. -->
+    <StackPanel Spacing="20" MaxWidth="720">
+        <arc:SegmentedControl x:Name="Scenario"
+                              HorizontalAlignment="Center"
+                              SelectedValue="live"
+                              SelectionChanged="OnScenarioChanged">
+            <arc:SegmentedOption Value="live" Label="Live" />
+            <arc:SegmentedOption Value="review" Label="Review" />
+            <arc:SegmentedOption Value="failed" Label="Failed" />
+            <arc:SegmentedOption Value="empty" Label="Empty" />
+        </arc:SegmentedControl>
+        <arc:CodeSuggestion x:Name="Card"
+                            FileName="{x:Static demos:CodeSuggestionDemoData.SimulatedFileName}"
+                            FilePath="{x:Static demos:CodeSuggestionDemoData.SimulatedFilePath}"
+                            Instruction="{x:Static demos:CodeSuggestionDemoData.SimulatedInstruction}"
+                            Model="{x:Static demos:CodeSuggestionDemoData.Model}">
+            <arc:CodeSuggestion.Simulation>
+                <arc:CodeSuggestionSimulation Code="{x:Static demos:CodeSuggestionDemoData.SimulatedCode}"
+                                              Hunks="{x:Static demos:CodeSuggestionDemoData.SimulatedHunks}" />
+            </arc:CodeSuggestion.Simulation>
+        </arc:CodeSuggestion>
+    </StackPanel>
+</UserControl>

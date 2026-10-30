@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.DesignToCodeNarrowDemo">
+    <!-- At 400px the panes stack (each 352px tall), the footer drops the file name, Import design file shows only its
+         icon, and the meta text and the model name hide while the model's mark stays. Long lines wrap with a hanging
+         indent, so nothing scrolls sideways. -->
+    <Panel MaxWidth="400" Margin="0,12">
+        <arc:DesignToCode>
+            <arc:DesignToCode.Simulation>
+                <arc:DesignToCodeSimulation Source="{x:Static demos:DesignToCodeDemoData.Source}"
+                                            Regions="{x:Static demos:DesignToCodeDemoData.Regions}"
+                                            Parts="{x:Static demos:DesignToCodeDemoData.Parts}"
+                                            Model="{x:Static demos:DesignToCodeDemoData.Model}"
+                                            FileName="PricingCard.tsx"
+                                            FrameName="Pricing / Pro card"
+                                            PreviewFactory="{x:Static demos:DesignToCodeDemoData.Preview}"
+                                            PreviewAction="{x:Static demos:DesignToCodeDemoData.FlipBilling}" />
+            </arc:DesignToCode.Simulation>
+        </arc:DesignToCode>
+    </Panel>
+</UserControl>

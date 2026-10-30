@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.ModelCardPickerDemo">
+    <!-- The detail pane of a model picker: highlight a model, then press Use model to make it the default. These models
+         publish GPQA Diamond (Science) and two of them Terminal-Bench 2.1 (Shell); the other two read as not published. -->
+    <StackPanel Spacing="16" MaxWidth="640">
+        <arc:SegmentedControl x:Name="Picker" HorizontalAlignment="Center" SelectionChanged="OnPicked" />
+        <arc:ModelCard x:Name="Card"
+                       CanSelect="True"
+                       MonthlyTokens="25000000"
+                       Rivals="{x:Static demos:ModelCardDemoData.OpenWeights}"
+                       Benchmarks="{x:Static demos:ModelCardDemoData.OpenWeightsBenchmarks}"
+                       Labels="{x:Static demos:ModelCardDemoData.Labels}"
+                       Note="{x:Static demos:ModelCardDemoData.Note}" />
+        <TextBlock x:Name="Current" HorizontalAlignment="Center" Opacity="0.7" />
+    </StackPanel>
+</UserControl>

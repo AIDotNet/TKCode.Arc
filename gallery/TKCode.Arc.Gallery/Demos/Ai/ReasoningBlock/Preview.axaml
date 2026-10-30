@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.ReasoningBlockPreviewDemo">
+    <!-- The block in its states. Live plays a simulated model that streams the demo's reasoning and opens when it is
+         done; Finished is a block from history; Interrupted failed half way and offers Retry; Empty has no data and no
+         simulation. The block fills its container up to 480px, so its width never follows the streaming text. The
+         model's words are demo content. -->
+    <StackPanel Spacing="20" MaxWidth="480">
+        <arc:SegmentedControl x:Name="Scenario"
+                              HorizontalAlignment="Center"
+                              SelectedValue="live"
+                              SelectionChanged="OnScenarioChanged">
+            <arc:SegmentedOption Value="live" Label="Live" />
+            <arc:SegmentedOption Value="finished" Label="Finished" />
+            <arc:SegmentedOption Value="interrupted" Label="Interrupted" />
+            <arc:SegmentedOption Value="empty" Label="Empty" />
+        </arc:SegmentedControl>
+        <arc:ReasoningBlock x:Name="Block" AllowsStop="True">
+            <arc:ReasoningBlock.Simulation>
+                <arc:ReasoningBlockSimulation Reasoning="{x:Static demos:ReasoningBlockDemoData.Reasoning}" />
+            </arc:ReasoningBlock.Simulation>
+        </arc:ReasoningBlock>
+    </StackPanel>
+</UserControl>

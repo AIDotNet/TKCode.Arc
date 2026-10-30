@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TeamSwitcherYourWorkspacesDemo">
+    <!-- Your own workspaces: two carry a brand mark on a brand color, the rest fall back to a tinted letter. The code-behind
+         wires the switch, create and join delegates to a pretend service and keeps the list in sync. The workspaces, marks
+         and the invite code are invented. -->
+    <StackPanel Spacing="12" MaxWidth="320" Margin="0,0,0,24">
+        <arc:TeamSwitcher x:Name="Switcher" Value="halcyon">
+            <arc:TeamSwitcherWorkspace Id="halcyon" Name="Halcyon" Plan="Enterprise" Members="128" Role="Owner"
+                                       TileBackground="#4F46E5" Logo="M12 3 L21 19 L3 19 Z" />
+            <arc:TeamSwitcherWorkspace Id="halcyon-design" Name="Halcyon Design" Plan="Pro" Members="9" Role="Admin"
+                                       TileBackground="#0F766E" Logo="M12 3 A9 9 0 1 0 12.01 3 Z M12 8 A4 4 0 1 1 11.99 8 Z" />
+            <arc:TeamSwitcherWorkspace Id="lumen" Name="Lumen Analytics" Plan="Business" Members="42" Role="Member" />
+            <arc:TeamSwitcherWorkspace Id="orbit" Name="Orbit Support" Plan="Pro" Members="17" Role="Member" />
+            <arc:TeamSwitcherWorkspace Id="juniper" Name="Juniper Retail" Plan="Free" Members="2" Role="Guest" />
+        </arc:TeamSwitcher>
+        <TextBlock x:Name="Log"
+                   TextWrapping="Wrap"
+                   FontSize="12"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                   Text="Try the invite code KESTREL-2026, or create a workspace." />
+    </StackPanel>
+</UserControl>

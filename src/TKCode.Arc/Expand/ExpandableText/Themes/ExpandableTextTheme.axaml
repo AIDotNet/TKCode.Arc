@@ -28,6 +28,7 @@
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
         <Setter Property="LineHeight" Value="{arc:ExpandableTextTokenResource TextLineHeight}" />
+        <Setter Property="ClipToBounds" Value="False" />
     </ControlTheme>
 
     <ControlTheme x:Key="{x:Type arc:ExpandableContent}" TargetType="arc:ExpandableContent">
@@ -54,6 +55,7 @@
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="ClipToBounds" Value="False" />
     </ControlTheme>
 
     <ControlTheme x:Key="{x:Type arc:ExpandableTextToggle}" TargetType="arc:ExpandableTextToggle">
@@ -66,7 +68,8 @@
                     <Border Name="PART_Frame"
                             Background="Transparent"
                             CornerRadius="{arc:ExpandableTextTokenResource ToggleRadius}"
-                            Padding="{TemplateBinding Padding}">
+                            Padding="{TemplateBinding Padding}"
+                            ClipToBounds="True">
                         <StackPanel Orientation="Horizontal" Spacing="{arc:ArcDesignTokenResource Space1}" VerticalAlignment="Center">
                             <Panel VerticalAlignment="Center">
                                 <TextBlock Name="PART_MoreLabel" Text="{TemplateBinding MoreText}" />
@@ -97,6 +100,7 @@
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
         <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClipToBounds" Value="False" />
         <Style Selector="^:pointerover">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
         </Style>

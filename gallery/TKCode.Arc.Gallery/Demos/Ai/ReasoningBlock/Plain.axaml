@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ReasoningBlockPlainDemo">
+    <!-- Variant="Plain" drops the border and the side padding so the block sits flush inside a message bubble. -->
+    <Border MaxWidth="480"
+            CornerRadius="18"
+            Padding="16,8"
+            Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+        <StackPanel Spacing="4">
+            <arc:ReasoningBlock Variant="Plain" Elapsed="0:0:07" IsExpanded="True">
+                <arc:ReasoningStep Heading="Check what is open"
+                                   Text="Two reconciliations are still unmatched and one export job has not finished." />
+                <arc:ReasoningStep Heading="Decide what to say"
+                                   Text="Lead with the blocker and name the second item briefly." />
+            </arc:ReasoningBlock>
+            <TextBlock Text="The close is held up by an export job that has not finished." TextWrapping="Wrap" FontSize="16" />
+        </StackPanel>
+    </Border>
+</UserControl>

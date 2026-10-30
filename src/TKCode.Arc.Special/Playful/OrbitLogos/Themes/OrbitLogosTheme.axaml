@@ -1,0 +1,278 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.OrbitLogosTheme">
+
+    <!--
+        The orbit: category chips (with the sliding pill behind them), the stage with the centre disc, the rings and the
+        name tag, and the detail panel with the idle text and the card. The layout panel places the three parts side by
+        side or in one column. The live region is invisible but announced.
+    -->
+    <ControlTheme x:Key="{x:Type arc:OrbitLogos}" TargetType="arc:OrbitLogos">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="RingBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="ConnectorBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:OrbitLogos">
+                <Panel>
+                    <arc:OrbitLogosLayout Name="PART_Layout">
+                        <ScrollViewer Name="PART_CategoryScroller"
+                                      HorizontalScrollBarVisibility="Auto"
+                                      VerticalScrollBarVisibility="Disabled">
+                            <Panel Margin="0,0,0,4">
+                                <arc:GlidingIndicator Name="PART_Pill"
+                                                      Spring="Morph"
+                                                      Fill="{arc:ArcDesignTokenResource Accent}"
+                                                      CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" />
+                                <StackPanel Name="PART_Categories" Orientation="Horizontal" Spacing="4" />
+                            </Panel>
+                        </ScrollViewer>
+
+                        <arc:OrbitLogosStage Name="PART_Stage">
+                            <Border Name="PART_Disc"
+                                    Background="{arc:ArcDesignTokenResource SurfaceRaised}"
+                                    BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                    BoxShadow="{arc:ArcDesignTokenResource ShadowRaised}"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusPill}">
+                                <ContentPresenter Name="PART_Center"
+                                                  HorizontalContentAlignment="Center"
+                                                  VerticalContentAlignment="Center" />
+                            </Border>
+                            <Border Name="PART_Tag"
+                                    Background="{arc:ArcDesignTokenResource Foreground}"
+                                    Padding="{arc:OrbitLogosTokenResource TagPadding}"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                    Opacity="0">
+                                <TextBlock Name="PART_TagText"
+                                           TextWrapping="NoWrap"
+                                           Foreground="{arc:ArcDesignTokenResource Background}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           FontWeight="Medium" />
+                            </Border>
+                        </arc:OrbitLogosStage>
+
+                        <Panel Name="PART_Detail" MinHeight="{arc:OrbitLogosTokenResource DetailMinHeight}">
+                            <StackPanel Name="PART_Idle" Spacing="6" VerticalAlignment="Center">
+                                <TextBlock Name="PART_IdleTitle"
+                                           FontWeight="SemiBold"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXL}" />
+                                <TextBlock Name="PART_IdleSummary"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeSM}" />
+                                <TextBlock Name="PART_IdleHint"
+                                           TextWrapping="Wrap"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeSM}" />
+                                <TextBlock Name="PART_IdleTotal"
+                                           Margin="0,6,0,0"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}" />
+                            </StackPanel>
+                            <arc:OrbitLogosCard Name="PART_Card"
+                                                IsVisible="False"
+                                                VerticalAlignment="Center"
+                                                Background="{arc:ArcDesignTokenResource SurfaceRaised}"
+                                                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                                BoxShadow="{arc:ArcDesignTokenResource ShadowRaised}"
+                                                CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+                                                Padding="{arc:OrbitLogosTokenResource CardPadding}">
+                                <arc:ArcContentSwap Name="PART_CardSwap"
+                                                    Mode="Slide"
+                                                    HorizontalContentAlignment="Stretch" />
+                            </arc:OrbitLogosCard>
+                        </Panel>
+                    </arc:OrbitLogosLayout>
+
+                    <TextBlock Name="PART_Live"
+                               Height="1"
+                               Opacity="0"
+                               IsHitTestVisible="False"
+                               AutomationProperties.LiveSetting="Polite" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- The name tag fades in and out. The card, the pill and the chips have their own motion. -->
+        <Style Selector="^:motion-full /template/ Border#PART_Tag">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ Border#PART_Tag">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A logo chip: a round raised face with the mark. Hover or keyboard focus lifts it; a chosen chip takes the accent
+        border; chips outside the chosen category dim and shrink. A dot marks a connected chip. The face scales, never
+        the chip, because the chip's own transform places it on its ring.
+    -->
+    <ControlTheme x:Key="{x:Type arc:OrbitLogosChip}" TargetType="arc:OrbitLogosChip">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:OrbitLogosChip">
+                <Panel Background="Transparent">
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:OrbitLogosTokenResource FocusRingMargin}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <Border Name="PART_Face"
+                            RenderTransformOrigin="50%,50%"
+                            Background="{arc:ArcDesignTokenResource SurfaceRaised}"
+                            BorderBrush="{arc:ArcDesignTokenResource Border}"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                            BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}">
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Content}"
+                                          Padding="{TemplateBinding Padding}"
+                                          HorizontalContentAlignment="Stretch"
+                                          VerticalContentAlignment="Stretch" />
+                    </Border>
+                    <Border Name="PART_Dot"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Width="{arc:OrbitLogosTokenResource DotSize}"
+                            Height="{arc:OrbitLogosTokenResource DotSize}"
+                            Background="{arc:ArcDesignTokenResource Success}"
+                            BorderBrush="{arc:ArcDesignTokenResource SurfaceRaised}"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:pointerover /template/ Border#PART_Face">
+            <Setter Property="RenderTransform" Value="scale(1.08)" />
+            <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowRaised}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_Face">
+            <Setter Property="RenderTransform" Value="scale(1.08)" />
+            <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowRaised}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:checked /template/ Border#PART_Face">
+            <Setter Property="RenderTransform" Value="scale(1.1)" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        </Style>
+        <Style Selector="^.dim">
+            <Setter Property="Opacity" Value="0.3" />
+        </Style>
+        <Style Selector="^.dim /template/ Border#PART_Face">
+            <Setter Property="RenderTransform" Value="scale(0.88)" />
+        </Style>
+        <Style Selector="^.connected /template/ Border#PART_Dot">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Border#PART_Face">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                        <arc:ArcBrushTransition Property="BorderBrush" Tween="Standard" />
+                        <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                        <arc:ArcBoxShadowsTransition Property="BoxShadow" Tween="Standard" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A category chip: a pill label; the checked one turns to the accent foreground over the sliding pill. -->
+    <ControlTheme x:Key="{x:Type arc:OrbitLogosCategoryChip}" TargetType="arc:OrbitLogosCategoryChip">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Height" Value="{arc:OrbitLogosTokenResource CategoryHeight}" />
+        <Setter Property="Padding" Value="{arc:OrbitLogosTokenResource CategoryPadding}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:OrbitLogosCategoryChip">
+                <Panel Background="Transparent">
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-3"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <Border Name="PART_Box"
+                            Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" />
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      Padding="{TemplateBinding Padding}"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      HorizontalContentAlignment="Center"
+                                      VerticalContentAlignment="Center" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover:not(:checked) /template/ Border#PART_Box">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <!-- The sliding pill is behind the row; the checked chip's own box steps out of its way. -->
+        <Style Selector="^:checked /template/ Border#PART_Box">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:checked">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

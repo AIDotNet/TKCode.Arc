@@ -1,0 +1,61 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.AiSparkTheme">
+
+    <!-- The spark: the drawn mark, and in the pill a crossfading label whose width eases on a spring. The mark itself is
+         drawn and animated in code (AiSparkMark), so there are no transitions here. -->
+    <ControlTheme x:Key="{x:Type arc:AiSpark}" TargetType="arc:AiSpark">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiSpark">
+                <Border Name="PART_Frame" ClipToBounds="False">
+                    <StackPanel Orientation="Horizontal"
+                                VerticalAlignment="Center"
+                                Spacing="{arc:AiSparkTokenResource PillGap}">
+                        <arc:AiSparkMark Name="PART_Mark"
+                                         VerticalAlignment="Center"
+                                         InheritInk="{TemplateBinding Foreground}" />
+                        <arc:SpringSizeDecorator Name="PART_LabelBox"
+                                                 Axis="Width"
+                                                 Spring="Smooth"
+                                                 IsVisible="False"
+                                                 VerticalAlignment="Center">
+                            <arc:ArcContentSwap Name="PART_Label"
+                                                Mode="Label"
+                                                ClipToBounds="False"
+                                                HorizontalContentAlignment="Left"
+                                                VerticalContentAlignment="Center"
+                                                TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                TextElement.FontWeight="Medium"
+                                                TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </arc:SpringSizeDecorator>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pill /template/ Border#PART_Frame">
+            <Setter Property="Height" Value="{arc:AiSparkTokenResource PillHeight}" />
+            <Setter Property="Padding" Value="{arc:AiSparkTokenResource PillPadding}" />
+            <Setter Property="CornerRadius" Value="{arc:AiSparkTokenResource PillCornerRadius}" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The drawn mark: inks from the ArcDesign tokens (they follow theme and accent switches) and the token mixes. -->
+    <ControlTheme x:Key="{x:Type arc:AiSparkMark}" TargetType="arc:AiSparkMark">
+        <Setter Property="AccentInk" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="ForegroundInk" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="MutedInk" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="DangerInk" Value="{arc:ArcDesignTokenResource Danger}" />
+        <Setter Property="SurfaceInk" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="TileMarkRatio" Value="{arc:AiSparkTokenResource AvatarMarkRatio}" />
+        <Setter Property="TileTint" Value="{arc:AiSparkTokenResource AvatarTint}" />
+        <Setter Property="SoftToneMix" Value="{arc:AiSparkTokenResource SoftToneMix}" />
+        <Setter Property="ErrorMuteMix" Value="{arc:AiSparkTokenResource ErrorMuteMix}" />
+    </ControlTheme>
+</ResourceDictionary>

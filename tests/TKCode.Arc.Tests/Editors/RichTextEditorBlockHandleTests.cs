@@ -147,6 +147,50 @@ public class RichTextEditorBlockHandleTests
     }
 
     [AvaloniaFact]
+    public void The_Handle_Holds_While_The_Pointer_Heads_For_It_And_Sits_Beside_Nested_Items()
+    {
+        var (editor, window, surface) = Show("<p>one</p><p>two</p><p>three</p><ul><li>a<ul><li>b</li></ul></li></ul>");
+        try
+        {
+            var start = InWindow(surface, window, new Point(300, surface.HandleY(0)));
+            window.MouseMove(start);
+            window.MouseMove(start);
+            Dispatcher.UIThread.RunJobs();
+            var handle = editor.BlockHandle!;
+            handle.Block.ShouldBe(0);
+
+            // Far from the handle it follows at once, even on a move to the left.
+            window.MouseMove(InWindow(surface, window, new Point(260, surface.BlockTop(1) + 2)));
+            Dispatcher.UIThread.RunJobs();
+            handle.Block.ShouldBe(1);
+            window.MouseMove(start);
+            window.MouseMove(start);
+            Dispatcher.UIThread.RunJobs();
+            handle.Block.ShouldBe(0);
+
+            // Drifting into the next block on the way left to the grip keeps the handle where it is.
+            window.MouseMove(InWindow(surface, window, new Point(20, surface.BlockTop(1) + 2)));
+            Dispatcher.UIThread.RunJobs();
+            handle.Block.ShouldBe(0);
+
+            // A move that no longer points at the handle follows the pointer again.
+            window.MouseMove(InWindow(surface, window, new Point(20, surface.HandleY(2))));
+            Dispatcher.UIThread.RunJobs();
+            handle.Block.ShouldBe(2);
+
+            Hover(surface, window, 3);
+            handle.Block.ShouldBe(3);
+            Hover(surface, window, 4);
+            handle.Block.ShouldBe(4);
+            surface.HandleX(4).ShouldBeGreaterThan(surface.HandleX(3));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void Dragging_The_Grip_Moves_The_Block_And_Undo_Restores_It()
     {
         var (editor, window, surface) = Show("<p>one</p><p>two</p><p>three</p>");
@@ -214,13 +258,19 @@ public class RichTextEditorBlockHandleTests
     }
 
     [AvaloniaFact]
-    public void The_Plus_Button_Adds_A_Paragraph_And_Opens_The_Slash_Menu()
+    public void An_Empty_Line_Shows_Plus_Which_Opens_The_Slash_Menu_There()
     {
-        var (editor, window, surface) = Show("<p>one</p>");
+        var (editor, window, surface) = Show("<p>one</p><p></p>");
         try
         {
             Hover(surface, window, 0);
             var handle = editor.BlockHandle!;
+            handle.Grip.IsVisible.ShouldBeTrue();
+            handle.Add.IsVisible.ShouldBeFalse();
+            Hover(surface, window, 1);
+            handle.Block.ShouldBe(1);
+            handle.Grip.IsVisible.ShouldBeFalse();
+            handle.Add.IsVisible.ShouldBeTrue();
             var plus = Center(handle.Add, window);
             window.MouseMove(plus);
             Dispatcher.UIThread.RunJobs();

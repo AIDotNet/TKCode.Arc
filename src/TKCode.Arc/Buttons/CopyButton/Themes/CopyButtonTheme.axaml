@@ -15,7 +15,8 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             CornerRadius="{TemplateBinding CornerRadius}"
-                            Padding="{TemplateBinding Padding}">
+                            Padding="{TemplateBinding Padding}"
+                            ClipToBounds="True">
                         <StackPanel Orientation="Horizontal"
                                     Spacing="{arc:CopyButtonTokenResource IconLabelGap}"
                                     HorizontalAlignment="Center"
@@ -59,6 +60,7 @@
         <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="ClipToBounds" Value="False" />
 
         <Style Selector="^:pointerover">
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />

@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.AiTranslateStreamingDemo">
+    <!-- Your translator streams text deltas; here a stand-in model replies from canned text, a few words at a time.
+         The language is detected from the text (German), so the chip reads Detected. -->
+    <StackPanel MaxWidth="620" Spacing="12" Margin="0,12">
+        <arc:AiTranslate x:Name="Card"
+                         Text="Hallo zusammen, der Export hängt seit dem Update bei 80 Prozent. Könnt ihr euch das bitte bis Freitag ansehen?"
+                         Timestamp="Oct 28, 16:40"
+                         ModelName="{x:Static demos:AiTranslateDemoData.ModelName}"
+                         IsSimulated="True" />
+        <TextBlock x:Name="Log"
+                   TextWrapping="Wrap"
+                   FontSize="13"
+                   Text="Pick a language: each event is logged here."
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

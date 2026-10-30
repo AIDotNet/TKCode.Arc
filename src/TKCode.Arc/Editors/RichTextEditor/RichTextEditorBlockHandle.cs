@@ -3,21 +3,31 @@ using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Threading;
+using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
 
 namespace TKCode.Arc;
 
 /// <summary>
-/// The Docs profile's block handle: a "+" and a grip in the left gutter beside the hovered block. The grip drags the block
-/// (its list children or table go with it) to a new place, and opens the block menu on a click; "+" adds a paragraph below and
-/// opens the slash menu there. It lives in the editor's overlay, so it never takes focus from the writing surface.
+/// The Docs profile's block handle in the left gutter beside the hovered block: a chip showing the block's type and a grip,
+/// or "+" on an empty paragraph. The chip drags the block (its list children or table go with it) to a new place, tints the
+/// block while the pointer is on it, and opens the block menu on a click; "+" opens the slash menu on the empty line. It glides
+/// from block to block and lives in the editor's overlay, so it never takes focus from the writing surface.
 /// </summary>
 internal sealed class RichTextEditorBlockHandle
 {
-    private const double ButtonSize = 22;
+    private const double ButtonSize = 24;
+    private const double GripWidth = 40;
+    private const double Gap = 8;
     private const double DragThreshold = 4;
+    // The pointer counts as heading for the handle when its path, measured from a sample this far back, points at it.
+    private const double AimSample = 8;
+    private const double AimSlack = 24;
+    // Only the last stretch toward the handle holds it; anywhere else in the text the handle follows the pointer at once.
+    private const double AimReach = 140;
     private static readonly (string Label, RichTextBlockType Type)[] s_turnInto =
     {
         ("Text", RichTextBlockType.Paragraph), ("Heading 1", RichTextBlockType.Heading1), ("Heading 2", RichTextBlockType.Heading2),
@@ -38,6 +48,7 @@ internal sealed class RichTextEditorBlockHandle
     private readonly RichTextEditor _owner;
     private readonly RichTextEditorToolButton _add;
     private readonly RichTextEditorToolButton _grip;
+    private readonly ArcGlyph _kind = new() { Data = ArcIcons.Type, Size = 16, StrokeThickness = 2 };
     private readonly Border _indicator;
     private MenuSurface? _menu;
     private int _block = -1;
@@ -46,14 +57,29 @@ internal sealed class RichTextEditorBlockHandle
     private bool _dragging;
     private int _gap = -1;
     private readonly DispatcherTimer _hideTimer = new() { Interval = TimeSpan.FromMilliseconds(350) };
+    // While the pointer crosses other blocks on its way to the handle, the handle holds; it follows again once the pointer rests.
+    private readonly DispatcherTimer _aimTimer = new() { Interval = TimeSpan.FromMilliseconds(160) };
+    private Point? _aimFrom;
+    private Point? _aimOlder;
+    private Point _aimPending;
+    // Code-driven: the target comes from block layout on every pointer move, which a ControlTheme transition cannot follow.
+    private readonly MotionValue<Point> _position;
 
     public RichTextEditorBlockHandle(RichTextEditor owner, Panel overlay)
     {
         _owner = owner;
-        _add = Button(ArcIcons.Plus, "Add block", "Add a block below");
+        _add = Button(ArcIcons.Plus, "Add block", "Insert a block");
+        _add.Width = ButtonSize;
         _grip = Button(ArcIcons.GripVertical, "Block actions", "Drag to move, click for actions");
+        _grip.Width = GripWidth;
+        _grip.Content = new StackPanel
+        {
+            Orientation = Orientation.Horizontal, Spacing = 2, HorizontalAlignment = HorizontalAlignment.Center,
+            Children = { _kind, new ArcGlyph { Data = ArcIcons.GripVertical, Size = 14, StrokeThickness = 2 } }
+        };
         _indicator = new Border { Height = 2, CornerRadius = new CornerRadius(1), IsHitTestVisible = false, IsVisible = false };
         ArcTokens.Bind(_indicator, Border.BackgroundProperty, DesignTokens.ArcDesignTokenKind.Accent);
+        ArcTokens.Bind(_kind, ArcGlyph.ForegroundProperty, DesignTokens.ArcDesignTokenKind.Accent, Avalonia.Data.BindingPriority.LocalValue);
         overlay.Children.Add(_indicator);
         overlay.Children.Add(_add);
         overlay.Children.Add(_grip);
@@ -74,13 +100,31 @@ internal sealed class RichTextEditorBlockHandle
             {
                 _over = true;
                 _hideTimer.Stop();
+                if (button == _grip)
+                {
+                    Highlight(true);
+                }
             };
             button.PointerExited += (_, _) =>
             {
                 _over = false;
+                Highlight(false);
                 ScheduleHide();
             };
         }
+        _position = new MotionValue<Point>(owner, default, MotionVectors.Point);
+        // The value is the handle's right edge and top; "+" and the chip both end there.
+        _position.Changed += point =>
+        {
+            Move(_add, point.X - ButtonSize, point.Y);
+            Move(_grip, point.X - GripWidth, point.Y);
+        };
+        _aimTimer.Tick += (_, _) =>
+        {
+            _aimTimer.Stop();
+            _aimFrom = _aimOlder = null;
+            Track(_aimPending);
+        };
         _hideTimer.Tick += (_, _) =>
         {
             _hideTimer.Stop();
@@ -118,9 +162,44 @@ internal sealed class RichTextEditorBlockHandle
 
     private static RichTextEditorToolButton Button(Avalonia.Media.Geometry icon, string name, string tip)
     {
-        var button = new RichTextEditorToolButton(icon, name) { Width = ButtonSize, Height = ButtonSize };
+        var button = new RichTextEditorToolButton(icon, name) { Height = ButtonSize, Classes = { "handle" } }.BindCornerRadius(DesignTokens.ArcDesignTokenKind.RadiusStep6);
         Tooltip.SetTip(button, tip);
         return button;
+    }
+
+    /// <summary>The glyph the chip shows for a block's type, so the handle says what the block is.</summary>
+    private static Avalonia.Media.Geometry KindIcon(RichTextEditorBlock block) => block.Type switch
+    {
+        RichTextBlockType.Heading1 => ArcIcons.Heading1,
+        RichTextBlockType.Heading2 => ArcIcons.Heading2,
+        RichTextBlockType.Heading3 => ArcIcons.Heading3,
+        RichTextBlockType.Heading4 => ArcIcons.Heading4,
+        RichTextBlockType.Heading5 => ArcIcons.Heading5,
+        RichTextBlockType.Heading6 => ArcIcons.Heading6,
+        RichTextBlockType.BulletedList => ArcIcons.List,
+        RichTextBlockType.NumberedList => ArcIcons.ListOrdered,
+        RichTextBlockType.TodoList => ArcIcons.ListTodo,
+        RichTextBlockType.Toggle => ArcIcons.ChevronRight,
+        RichTextBlockType.Quote => ArcIcons.Quote,
+        RichTextBlockType.Callout => ArcIcons.Lightbulb,
+        RichTextBlockType.CodeBlock => ArcIcons.Code,
+        RichTextBlockType.Divider => ArcIcons.Minus,
+        RichTextBlockType.Image => ArcIcons.Image,
+        RichTextBlockType.TableCell => ArcIcons.Table,
+        _ => ArcIcons.Type
+    };
+
+    /// <summary>An empty paragraph gets "+" instead of the chip: there is nothing to move yet, only something to insert.</summary>
+    private static bool IsBlank(RichTextEditorBlock block) => block.Type == RichTextBlockType.Paragraph && block.IsEmpty;
+
+    /// <summary>Tints the block the chip acts on while the pointer is on the chip (a drag or the open menu keeps its own tint).</summary>
+    private void Highlight(bool on)
+    {
+        if (_dragging || _press is not null || _menu is { IsOpen: true } || Surface is not { } surface)
+        {
+            return;
+        }
+        surface.ActiveUnit = on && _block >= 0 ? RichTextEditorEngine.UnitExtent(Engine.Blocks, _block) : null;
     }
 
     private RichTextEditorSurface? Surface => _owner.Surface;
@@ -130,7 +209,7 @@ internal sealed class RichTextEditorBlockHandle
     /// <summary>Follows the pointer over the editor: the handle moves to the block under <paramref name="surfacePoint"/>.</summary>
     public void Track(Point surfacePoint)
     {
-        if (_dragging || _press is not null || _menu is { IsOpen: true } || Surface is not { } surface || surface.IsDragging || surface.IsComposing || _owner.IsReadOnly)
+        if (_dragging || _press is not null || _menu is { IsOpen: true } || _over || Surface is not { } surface || surface.IsDragging || surface.IsComposing || _owner.IsReadOnly)
         {
             return;
         }
@@ -140,7 +219,45 @@ internal sealed class RichTextEditorBlockHandle
             Hide();
             return;
         }
-        Place(UnitStart(surface.BlockIndexAtY(surfacePoint.Y)));
+        var block = UnitStart(surface.BlockIndexAtY(surfacePoint.Y));
+        var point = surface.TranslatePoint(surfacePoint, _owner) ?? surfacePoint;
+        if (block != _block && _block >= 0 && _aimOlder is { } from && AimsAtHandle(from, point))
+        {
+            _aimPending = surfacePoint;
+            _aimTimer.Stop();
+            _aimTimer.Start();
+            return;
+        }
+        _aimTimer.Stop();
+        if (_aimFrom is not { } last || Distance(last, point) >= AimSample)
+        {
+            _aimOlder = _aimFrom ?? point;
+            _aimFrom = point;
+        }
+        Place(block);
+    }
+
+    private static double Distance(Point a, Point b) => Math.Sqrt((a.X - b.X) * (a.X - b.X) + (a.Y - b.Y) * (a.Y - b.Y));
+
+    /// <summary>
+    /// True when the pointer, moving from <paramref name="from"/> to <paramref name="point"/> (editor coordinates), is heading for
+    /// the handle: it is within <see cref="AimReach"/> right of the handle and inside the triangle from <paramref name="from"/> to its right edge.
+    /// </summary>
+    private bool AimsAtHandle(Point from, Point point)
+    {
+        var at = _position.Target;
+        var right = at.X;
+        if (point.X <= right || point.X >= from.X || point.X - right > AimReach)
+        {
+            return false;
+        }
+        var top = new Point(right, at.Y - AimSlack);
+        var bottom = new Point(right, at.Y + ButtonSize + AimSlack);
+        static double Side(Point p, Point a, Point b) => (p.X - b.X) * (a.Y - b.Y) - (a.X - b.X) * (p.Y - b.Y);
+        var d1 = Side(point, from, top);
+        var d2 = Side(point, top, bottom);
+        var d3 = Side(point, bottom, from);
+        return !((d1 < 0 || d2 < 0 || d3 < 0) && (d1 > 0 || d2 > 0 || d3 > 0));
     }
 
     private int UnitStart(int block)
@@ -158,13 +275,25 @@ internal sealed class RichTextEditorBlockHandle
             return;
         }
         var origin = surface.TranslatePoint(default, _owner) ?? default;
-        var y = origin.Y + surface.HandleY(block) - ButtonSize / 2;
-        var x = origin.X - ButtonSize * 2 - 6;
+        var target = new Point(origin.X + surface.HandleX(block) - Gap, origin.Y + surface.HandleY(block) - ButtonSize / 2);
+        var shown = _add.IsVisible || _grip.IsVisible;
+        // Gliding to another block keeps the eye on the handle; showing it, or following a scroll or reflow, puts it there at once.
+        if (_block >= 0 && shown && (block != _block || _position.IsAnimating))
+        {
+            if (_position.Target != target)
+            {
+                _ = _position.AnimateTo(target, MotionSpec.Spring(ArcSpring.Responsive));
+            }
+        }
+        else
+        {
+            _position.Jump(target);
+        }
         _block = block;
-        Move(_add, x, y);
-        Move(_grip, x + ButtonSize + 2, y);
-        _add.IsVisible = true;
-        _grip.IsVisible = true;
+        var blank = IsBlank(Engine.Blocks[block]);
+        _kind.Data = KindIcon(Engine.Blocks[block]);
+        _add.IsVisible = blank;
+        _grip.IsVisible = !blank;
     }
 
     private static void Move(Control control, double x, double y) => control.RenderTransform = new TranslateTransform(x, y);
@@ -191,6 +320,8 @@ internal sealed class RichTextEditorBlockHandle
             return;
         }
         _block = -1;
+        _aimTimer.Stop();
+        _aimFrom = _aimOlder = null;
         _add.IsVisible = false;
         _grip.IsVisible = false;
         _indicator.IsVisible = false;
@@ -356,7 +487,8 @@ internal sealed class RichTextEditorBlockHandle
                 });
             }
         }
-        _menu.Items.Add(new MenuEntry { Header = "Duplicate", Tag = "duplicate", Icon = ArcIcons.Copy, HasSeparatorBefore = _menu.Items.Count > 0 });
+        _menu.Items.Add(new MenuEntry { Header = "Add block below", Tag = "add", Icon = ArcIcons.Plus, HasSeparatorBefore = _menu.Items.Count > 0 });
+        _menu.Items.Add(new MenuEntry { Header = "Duplicate", Tag = "duplicate", Icon = ArcIcons.Copy });
         _menu.Items.Add(new MenuEntry { Header = "Delete", Tag = "delete", Icon = ArcIcons.Trash2, IsDestructive = true });
         _menu.Open(_grip);
     }
@@ -382,6 +514,10 @@ internal sealed class RichTextEditorBlockHandle
             case LineSpacingChoice choice:
                 Engine.SetLineSpacingAt(block, choice.Spacing);
                 break;
+            case "add":
+                // After the menu has closed and handed focus back, so the slash menu opens in the editor.
+                Dispatcher.UIThread.Post(AddBelow);
+                return;
             case "duplicate":
                 Engine.DuplicateUnit(block);
                 _owner.Announce("Block duplicated");

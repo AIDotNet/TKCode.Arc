@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.TldrToggleKeyPointsDemo">
+    <!-- Starts on five key points. Each point ticks when it is written; once the list is done, its ¶ link switches back to
+         the article, scrolls the source paragraph into view, focuses it and highlights it. -->
+    <Panel MaxWidth="680">
+        <arc:TldrToggle Mode="KeyPoints" Length="3" AutoPlay="False">
+            <arc:TldrToggle.Simulation>
+                <arc:TldrToggleSimulation Article="{x:Static demos:TldrToggleDemoData.Article}"
+                                          Summaries="{x:Static demos:TldrToggleDemoData.Summaries}"
+                                          KeyPoints="{x:Static demos:TldrToggleDemoData.KeyPoints}"
+                                          Model="{x:Static demos:TldrToggleDemoData.Model}" />
+            </arc:TldrToggle.Simulation>
+        </arc:TldrToggle>
+    </Panel>
+</UserControl>

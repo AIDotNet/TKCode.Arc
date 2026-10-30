@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ReplyDraftPreviewDemo">
+    <!-- Tour plays a simulation of the demo's email and replies (nothing is sent): the first draft streams in, then Concise,
+         Formal, Short, the second quick reply and Insert follow until you press or type inside the card. On demand waits
+         for Draft reply; Error shows a generator that fails; Empty is the card with no data. The card fills its column up
+         to 600px, so its width never follows the streaming text. -->
+    <StackPanel Spacing="20" MaxWidth="600">
+        <arc:SegmentedControl x:Name="Scenario"
+                              HorizontalAlignment="Center"
+                              SelectedValue="tour"
+                              SelectionChanged="OnScenarioChanged">
+            <arc:SegmentedOption Value="tour" Label="Tour" />
+            <arc:SegmentedOption Value="demand" Label="On demand" />
+            <arc:SegmentedOption Value="error" Label="Error" />
+            <arc:SegmentedOption Value="empty" Label="Empty" />
+        </arc:SegmentedControl>
+        <Border x:Name="Host" />
+    </StackPanel>
+</UserControl>

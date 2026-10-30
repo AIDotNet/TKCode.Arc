@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CubeMascotReplyHeaderDemo">
+    <!-- A 24px cube next to the assistant's name in a reply header. Each phase of the reply maps to a status: waiting for
+         the first token is Thinking, streaming is Writing, finished is Done and failed is Error. -->
+    <StackPanel Spacing="16" Margin="0,8" MaxWidth="560">
+        <arc:SegmentedControl SelectedValue="waiting" SelectionChanged="OnPhaseChanged">
+            <arc:SegmentedOption Value="waiting" Label="Waiting" />
+            <arc:SegmentedOption Value="streaming" Label="Streaming" />
+            <arc:SegmentedOption Value="complete" Label="Complete" />
+            <arc:SegmentedOption Value="failed" Label="Failed" />
+        </arc:SegmentedControl>
+        <StackPanel Orientation="Horizontal" Spacing="8">
+            <arc:CubeMascot x:Name="Mascot" Size="24" Status="Thinking" AssistantName="Atlas" Announce="True" />
+            <TextBlock Text="Atlas" FontWeight="SemiBold" VerticalAlignment="Center" />
+            <TextBlock x:Name="Phase" Text="Thinking" VerticalAlignment="Center"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

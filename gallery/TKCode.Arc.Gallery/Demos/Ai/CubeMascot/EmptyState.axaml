@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CubeMascotEmptyStateDemo">
+    <!-- A 144px cube on an image canvas while it generates. The switch freezes it on the current frame; it resumes from
+         the same frame. -->
+    <StackPanel Spacing="16" Margin="0,8" MaxWidth="560">
+        <Border Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+                Padding="24">
+            <StackPanel Spacing="8">
+                <arc:CubeMascot x:Name="Mascot" Size="144" Status="Thinking" AssistantName="Atlas"
+                                HorizontalAlignment="Center" />
+                <TextBlock Text="Generating your image" FontWeight="SemiBold" HorizontalAlignment="Center" />
+                <TextBlock Text="Atlas is sketching a quiet harbor at dawn."
+                           TextWrapping="Wrap" TextAlignment="Center"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            </StackPanel>
+        </Border>
+        <arc:Switch IsChecked="{Binding #Mascot.IsPaused}" Content="Paused" />
+    </StackPanel>
+</UserControl>

@@ -693,7 +693,8 @@ public partial class InvitePeople
         var labels = Labels;
         var who = invite.Person?.DisplayName ?? string.Empty;
         PendingInvites.RemoveAt(index);
-        _pendingHeading?.Focus(NavigationMethod.Tab);
+        // Revoke clicked with the mouse: the heading takes focus without the keyboard ring.
+        _pendingHeading?.Focus(BlockFocusModality.For(this));
         Announce(labels.Revoked(who));
         RaiseEvent(new InvitePeopleInviteEventArgs(InviteRevokedEvent, invite));
         if (RevokeAction is not { } action)
@@ -752,7 +753,7 @@ public partial class InvitePeople
         SetCurrentValue(CurrentPlanProperty, next);
         if (focusWasOnUpgrade)
         {
-            _send?.Focus(NavigationMethod.Tab);
+            _send?.Focus(BlockFocusModality.For(this));
         }
         Announce(Labels.Upgraded(next.Name ?? string.Empty, next.SeatLimit));
         RaiseEvent(new InvitePeoplePlanUpgradedEventArgs(PlanUpgradedEvent, old, next));

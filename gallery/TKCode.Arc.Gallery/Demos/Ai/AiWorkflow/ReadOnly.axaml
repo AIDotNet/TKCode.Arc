@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.AiWorkflowReadOnlyDemo">
+    <!-- A flow to review rather than edit: no remove buttons and no Add step; Test run still works (simulated from each
+         step's output, since no runner is wired). -->
+    <Border MaxWidth="640">
+        <arc:AiWorkflow Title="Escalate urgent support email"
+                        Description="Runs on every new email to support@example.com"
+                        Steps="{x:Static demos:AiWorkflowDemoData.Steps}"
+                        IsEditable="False"
+                        AutoPlay="False" />
+    </Border>
+</UserControl>

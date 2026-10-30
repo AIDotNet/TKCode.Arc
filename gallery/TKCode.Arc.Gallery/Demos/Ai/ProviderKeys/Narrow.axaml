@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.ProviderKeysNarrowDemo">
+    <!--
+        Under 560px each row stacks: the status beside the name, the key on its own line, last used beside the actions.
+        The form stacks too. It holds at 360px with no horizontal scroll.
+    -->
+    <arc:ProviderKeys MaxWidth="360"
+                      Margin="0,12"
+                      Providers="{x:Static demos:ProviderKeysDemoData.Providers}"
+                      Keys="{x:Static demos:ProviderKeysDemoData.Keys}">
+        <arc:ProviderKeys.Simulation>
+            <arc:ProviderKeysSimulation />
+        </arc:ProviderKeys.Simulation>
+    </arc:ProviderKeys>
+</UserControl>

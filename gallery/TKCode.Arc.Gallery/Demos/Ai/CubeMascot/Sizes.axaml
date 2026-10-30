@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CubeMascotSizesDemo">
+    <!-- 24 and 40px use the compact drawing (a larger cube, bolder eyes, no mouth, shadow or lines); 64px and up draw the
+         full cube with its shadow and the lines it prints while writing. -->
+    <WrapPanel Margin="0,8" ItemSpacing="24" LineSpacing="16" MaxWidth="640">
+        <arc:CubeMascot Size="24" Status="Writing" VerticalAlignment="Bottom" />
+        <arc:CubeMascot Size="40" Status="Writing" VerticalAlignment="Bottom" />
+        <arc:CubeMascot Size="64" Status="Writing" VerticalAlignment="Bottom" />
+        <arc:CubeMascot Size="96" Status="Writing" VerticalAlignment="Bottom" />
+        <arc:CubeMascot Size="160" Status="Writing" VerticalAlignment="Bottom" />
+    </WrapPanel>
+</UserControl>

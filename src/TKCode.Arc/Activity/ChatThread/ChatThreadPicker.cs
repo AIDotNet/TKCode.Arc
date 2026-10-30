@@ -79,7 +79,8 @@ internal sealed class ChatThreadPicker
         {
             if (IsOpen && _buttons.Count > 0)
             {
-                _buttons[0].Focus(NavigationMethod.Tab);
+                // Opened with a click, the first emoji takes focus without the keyboard ring.
+                _buttons[0].Focus(FocusModality.For(_thread));
             }
         }, Avalonia.Threading.DispatcherPriority.Loaded);
     }
@@ -87,6 +88,12 @@ internal sealed class ChatThreadPicker
     public void Close(bool restoreFocus)
     {
         var trigger = Trigger;
+        if (restoreFocus && trigger is not null)
+        {
+            // Before the popup closes: closing it with focus inside puts focus back by itself, without the keyboard
+            // ring, and focusing the already focused trigger then changes nothing.
+            trigger.Focus(FocusModality.For(_thread));
+        }
         if (_popup is not null)
         {
             _popup.IsOpen = false;
@@ -97,10 +104,6 @@ internal sealed class ChatThreadPicker
         if (had)
         {
             _thread.OnPickerClosed();
-        }
-        if (restoreFocus && trigger is not null)
-        {
-            trigger.Focus(NavigationMethod.Tab);
         }
     }
 

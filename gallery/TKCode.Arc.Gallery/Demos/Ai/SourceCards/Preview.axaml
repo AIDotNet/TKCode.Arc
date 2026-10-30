@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.SourceCardsPreviewDemo">
+    <!-- With no Sources the cards play the simulated search they are given. Live searches, streams a cited answer and
+         tours two citations until you interact; Error fails after two sources; Empty finds nothing. The cards fill their
+         container up to 640px, so their width never follows what streams in. The sites and passages are invented. -->
+    <StackPanel Spacing="20" MaxWidth="640">
+        <arc:SegmentedControl x:Name="Scenario"
+                              HorizontalAlignment="Center"
+                              SelectedValue="live"
+                              SelectionChanged="OnScenarioChanged">
+            <arc:SegmentedOption Value="live" Label="Live" />
+            <arc:SegmentedOption Value="error" Label="Error" />
+            <arc:SegmentedOption Value="empty" Label="Empty" />
+        </arc:SegmentedControl>
+        <arc:SourceCards x:Name="Cards">
+            <arc:SourceCards.Simulation>
+                <arc:SourceCardsSimulation Sources="{x:Static demos:SourceCardsDemoData.SimulatedSources}"
+                                           Query="{x:Static demos:SourceCardsDemoData.SimulatedQuery}"
+                                           EmptyQuery="{x:Static demos:SourceCardsDemoData.SimulatedEmptyQuery}"
+                                           Answer="{x:Static demos:SourceCardsDemoData.SimulatedAnswer}"
+                                           Duration="{x:Static demos:SourceCardsDemoData.SimulatedDuration}"
+                                           ErrorText="{x:Static demos:SourceCardsDemoData.ErrorText}" />
+            </arc:SourceCards.Simulation>
+        </arc:SourceCards>
+    </StackPanel>
+</UserControl>

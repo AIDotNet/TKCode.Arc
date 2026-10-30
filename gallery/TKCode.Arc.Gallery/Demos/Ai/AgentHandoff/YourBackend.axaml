@@ -1,0 +1,37 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentHandoffYourBackendDemo">
+    <!-- Driven like a real backend: the app sets Stage, the messages, Typing, Summary and Agent, and answers the events.
+         Talk to a person escalates, Cancel goes back to the assistant, Try again escalates again, and the composer appends
+         the customer's message. Pick a stage to jump to it. -->
+    <StackPanel Spacing="20" MaxWidth="560" Margin="0,12">
+        <arc:SegmentedControl x:Name="StagePicker"
+                              HorizontalAlignment="Center"
+                              SelectedValue="Assistant"
+                              SelectionChanged="OnStageChanged">
+            <arc:SegmentedOption Value="Assistant" Label="Assistant" />
+            <arc:SegmentedOption Value="Transferring" Label="Transferring" />
+            <arc:SegmentedOption Value="Connected" Label="Connected" />
+            <arc:SegmentedOption Value="Resolved" Label="Resolved" />
+            <arc:SegmentedOption Value="Unavailable" Label="Unavailable" />
+        </arc:SegmentedControl>
+        <arc:AgentHandoff x:Name="Chat"
+                          Stage="Assistant"
+                          Height="560"
+                          Title="Order NW-48213"
+                          Subtitle="Northwind Home support"
+                          AssistantModel="{x:Static demos:AgentHandoffDemoData.AssistantModel}"
+                          ProviderName="Northwind desk"
+                          ReplyEstimate="3 min"
+                          ShowsComposer="True"
+                          AllowsRequestHuman="True"
+                          AllowsCancelTransfer="True"
+                          AllowsRetry="True"
+                          HumanRequested="OnHumanRequested"
+                          CancelTransferRequested="OnCancel"
+                          RetryRequested="OnRetry"
+                          SendRequested="OnSend" />
+    </StackPanel>
+</UserControl>

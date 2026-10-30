@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.ProviderKeysEmptyDemo">
+    <!-- No keys is the empty state: every row reads Not set and offers Add key. -->
+    <arc:ProviderKeys MaxWidth="720"
+                      Margin="0,12"
+                      Title="Connect a provider"
+                      Providers="{x:Static demos:ProviderKeysDemoData.Providers}">
+        <arc:ProviderKeys.Simulation>
+            <arc:ProviderKeysSimulation />
+        </arc:ProviderKeys.Simulation>
+    </arc:ProviderKeys>
+</UserControl>

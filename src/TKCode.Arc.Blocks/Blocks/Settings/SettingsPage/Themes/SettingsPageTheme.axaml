@@ -303,5 +303,6 @@
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="ClipToBounds" Value="False" />
     </ControlTheme>
 </ResourceDictionary>

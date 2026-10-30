@@ -348,7 +348,7 @@ public sealed partial class DemoProjectsList : UserControl
             var trigger = new Border { Background = Brushes.Transparent, Focusable = true, Child = name, VerticalAlignment = VerticalAlignment.Center };
             var hover = new HoverCard { Trigger = trigger, Content = card, VerticalAlignment = VerticalAlignment.Center };
             var stack = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
-            stack.Children.Add(new Avatar { DisplayName = lead.Name, Size = AvatarSize.Small, VerticalAlignment = VerticalAlignment.Center });
+            stack.Children.Add(new Avatar { DisplayName = lead.Name, Source = DemoPhotos.For(lead.Name), Size = AvatarSize.Small, VerticalAlignment = VerticalAlignment.Center });
             stack.Children.Add(hover);
             return stack;
         }
@@ -358,11 +358,13 @@ public sealed partial class DemoProjectsList : UserControl
     {
         protected override Control Build(DemoProjectRow row) => new AvatarGroup
         {
-            ItemsSource = row.Team.Select(id => new AvatarGroupMember(DemoData.Person(id).Name)).ToList(),
+            ItemsSource = row.Team.Select(id => new AvatarGroupMember(DemoData.Person(id).Name, DemoPhotos.For(DemoData.Person(id).Name))).ToList(),
             Size = AvatarSize.Small,
             MaxVisibleCount = 3,
             Label = $"{row.Name} team",
-            HorizontalAlignment = HorizontalAlignment.Left
+            HorizontalAlignment = HorizontalAlignment.Left,
+            // Hovering fans the stack out a few pixels past its box; the cell clips, so leave room for it.
+            Margin = new Thickness(8, 4)
         };
     }
 

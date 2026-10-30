@@ -58,6 +58,7 @@ public sealed class ModalPresence : IDisposable
     /// <param name="anchor">Visual that locates the window (and the motion level); defaults to the panel's logical parent.</param>
     public ModalPresence(Control panel, Visual? anchor = null)
     {
+        FocusModality.Watch();
         Panel = panel ?? throw new ArgumentNullException(nameof(panel));
         Anchor = anchor;
         _host = new ModalHost(this);
@@ -652,9 +653,16 @@ public sealed class ModalPresence : IDisposable
     {
         if (FindFocusTarget() is InputElement target)
         {
-            target.Focus(_restoreFocusVisible ? NavigationMethod.Tab : NavigationMethod.Unspecified);
+            target.Focus(KeyboardCaused(target) ? NavigationMethod.Tab : NavigationMethod.Unspecified);
         }
     }
+
+    /// <summary>
+    /// Whether the input that opens or closes the modal was a key: the last press or key the window saw, or (before any)
+    /// whether the opener showed the keyboard ring. A pointer click never lights the ring up, even on an opener that
+    /// had it from earlier keyboard use.
+    /// </summary>
+    private bool KeyboardCaused(Visual target) => FocusModality.LastWasPointer(target) is { } pointer ? !pointer : _restoreFocusVisible;
 
     private void ReturnFocus(DismissReason reason)
     {
@@ -669,7 +677,7 @@ public sealed class ModalPresence : IDisposable
         }
         if (TopLevel.GetTopLevel(target) is not null && target.IsEffectivelyVisible && target.IsEffectivelyEnabled)
         {
-            var keyboard = reason == DismissReason.Escape || _restoreFocusVisible;
+            var keyboard = reason == DismissReason.Escape || KeyboardCaused(target);
             target.Focus(keyboard ? NavigationMethod.Tab : NavigationMethod.Unspecified);
         }
     }

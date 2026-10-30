@@ -7,6 +7,7 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
+using Avalonia.VisualTree;
 using AvaloniaButton = Avalonia.Controls.Button;
 
 namespace TKCode.Arc;
@@ -123,6 +124,7 @@ public class Popover : ContentControl
     {
         AttachProperty.Changed.AddClassHandler<Control>(OnAttachChanged);
         FocusableProperty.OverrideDefaultValue<Popover>(false);
+        FocusModality.Watch();
     }
 
     public Popover()
@@ -392,14 +394,19 @@ public class Popover : ContentControl
         var reason = _pendingReason;
         _pendingReason = DismissReason.Programmatic;
         var anchor = Anchor;
+        // The content is the popover's logical child, shown inside the surface: focus on it counts through the visual tree.
         var focusInside = _surface is not null && TopLevel.GetTopLevel(_surface)?.FocusManager?.GetFocusedElement() is Visual focused &&
-                          (ReferenceEquals(focused, _surface) || _surface.IsLogicalAncestorOf(focused));
-        _presence?.Hide();
-        UpdateTriggerState();
+                          (ReferenceEquals(focused, _surface) || _surface.IsLogicalAncestorOf(focused) || _surface.IsVisualAncestorOf(focused));
         if (anchor is not null && (focusInside || reason == DismissReason.Escape))
         {
-            anchor.Focus(reason == DismissReason.Escape ? NavigationMethod.Tab : NavigationMethod.Unspecified);
+            // Escape, or a key that pressed a closing button inside, gives the anchor its keyboard ring; a click does
+            // not. Before the panel goes: hiding it with focus inside puts focus back by itself, without the ring, and
+            // focusing the already focused anchor then changes nothing.
+            var keyboard = reason == DismissReason.Escape || FocusModality.LastWasPointer(anchor) == false;
+            anchor.Focus(keyboard ? NavigationMethod.Tab : NavigationMethod.Unspecified);
         }
+        _presence?.Hide();
+        UpdateTriggerState();
         _showAnchor = null;
         Closed?.Invoke(this, new OverlayClosedEventArgs(reason, null));
     }

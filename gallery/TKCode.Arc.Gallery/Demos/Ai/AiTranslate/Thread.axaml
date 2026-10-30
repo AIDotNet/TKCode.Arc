@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.AiTranslateThreadDemo">
+    <!-- One card per message, all following a shared preferred language through Value. -->
+    <StackPanel MaxWidth="620" Spacing="16" Margin="0,12">
+        <arc:SegmentedControl x:Name="Preferred"
+                              SelectedValue="original"
+                              SelectionChanged="OnPreferredChanged">
+            <arc:SegmentedOption Value="original" Label="Original" />
+            <arc:SegmentedOption Value="English" Label="English" />
+            <arc:SegmentedOption Value="German" Label="Deutsch" />
+            <arc:SegmentedOption Value="Spanish" Label="Español" />
+        </arc:SegmentedControl>
+        <arc:AiTranslate x:Name="First" AutoPlay="False">
+            <arc:AiTranslate.Simulation>
+                <arc:AiTranslateSimulation Text="{x:Static demos:AiTranslateDemoData.Text}"
+                                           Translations="{x:Static demos:AiTranslateDemoData.Translations}"
+                                           Author="{x:Static demos:AiTranslateDemoData.Author}"
+                                           Timestamp="{x:Static demos:AiTranslateDemoData.Timestamp}"
+                                           ModelName="{x:Static demos:AiTranslateDemoData.ModelName}"
+                                           Tour="{x:Static demos:AiTranslateDemoData.Tour}" />
+            </arc:AiTranslate.Simulation>
+        </arc:AiTranslate>
+        <arc:AiTranslate x:Name="Second"
+                         Text="明日の定例ミーティングは10時開始に変更になりました。"
+                         Timestamp="Oct 27, 10:02"
+                         ModelName="{x:Static demos:AiTranslateDemoData.ModelName}" />
+    </StackPanel>
+</UserControl>

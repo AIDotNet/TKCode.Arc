@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ProviderStatusOwnDataDemo">
+    <!-- Your providers and your refresh handler. The handler here stands in for your aggregation endpoint: it waits a
+         moment and returns new latencies; every third check fails so you can see the retry. Opening the incident's
+         Status page raises IncidentOpened. The providers are real; the incident and every number are invented sample data. -->
+    <StackPanel MaxWidth="760" Spacing="12">
+        <arc:ProviderStatus x:Name="Card"
+                            Title="Model providers"
+                            RefreshInterval="0:0:15"
+                            Footnote="Latency is the median over the last 5 minutes. Sample data: the incident and every number here are invented." />
+        <TextBlock x:Name="Log" Opacity="0.7" FontSize="12" TextWrapping="Wrap" />
+    </StackPanel>
+</UserControl>

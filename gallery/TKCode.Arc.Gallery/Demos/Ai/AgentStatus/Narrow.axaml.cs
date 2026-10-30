@@ -7,7 +7,7 @@ public partial class AgentStatusNarrowDemo : UserControl
     public AgentStatusNarrowDemo()
     {
         InitializeComponent();
-        Pill.Agent = AgentStatusSamples.CodingAgent;
+        Pill.Agent = AgentStatusDemoData.CodingAgent;
         Pill.StartedAt = DateTimeOffset.UtcNow - TimeSpan.FromSeconds(42);
         Pill.Activity = new AgentStatusActivity("Waiting on you to deploy to staging", ArcIcons.Search);
         Pill.Steps.Add(new AgentStatusStep("scan", "Scanned 9 modules", AgentStatusStepState.Done, ArcIcons.Search) { Duration = TimeSpan.FromMilliseconds(1917) });

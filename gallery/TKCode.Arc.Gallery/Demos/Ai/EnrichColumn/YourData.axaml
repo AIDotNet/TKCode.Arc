@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.EnrichColumnYourDataDemo">
+    <!-- Your rows and your enrich delegate. The delegate here stands in for a request to your service: it waits, sets the
+         shimmering label and returns an invented value, or fails. Every settled cell is logged below; persist values there. -->
+    <StackPanel Spacing="14" MaxWidth="760" Margin="0,12">
+        <arc:EnrichColumn x:Name="Table"
+                          Title="Pipeline"
+                          Concurrency="3"
+                          Note="demo service" />
+        <TextBlock x:Name="Log"
+                   TextWrapping="Wrap"
+                   FontSize="13"
+                   Text="Press Run column: each settled cell is logged here."
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

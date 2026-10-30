@@ -1,7 +1,7 @@
 ---
 title: Tool call
 summary: 智能體逐字稿中的工具呼叫列，顯示工具、它做了什麼與結果如何；點開可看到呼叫的輸入與輸出，核准與重試也都在列中完成。
-source-hash: 034f5a63d7bf
+source-hash: 545a5441aa1e
 ---
 
 <Demo name="Preview" />
@@ -24,7 +24,7 @@ source-hash: 034f5a63d7bf
 
 ## 用法
 
-為列提供一個 `ToolCallItem`。工具是資料，不是品牌：它包含供螢幕閱讀器使用的名稱、一個 24 × 24 的描邊標記（Lucide 字符），以及每個狀態的片語。沒有項目時，列會顯示一筆範例網路搜尋。
+為列提供一個 `ToolCallItem`。工具是資料，不是品牌：它包含供螢幕閱讀器使用的名稱、一個 24 × 24 的描邊標記（Lucide 字符），以及每個狀態的片語。沒有項目時，列為空：以淡化顏色顯示一個扳手與 "No tool call"，沒有狀態，也無法展開（見下方狀態示範的最後一列）。沒有呼叫的群組不佔空間。
 
 ```xml
 <arc:ToolCall>
@@ -80,7 +80,7 @@ JSON 建立在 `System.Text.Json.Nodes` 之上，上色則由我們自己的小�
 
 群組會引發 `ApproveRequested`、`DenyRequested` 與 `RetryRequested`（它們從列冒泡而來，並帶著該項目）。由你自己更新呼叫，通常先改為執行中，再改為成功，並設定 `Handled`。控制項絕不會變更你所驅動的狀態。
 
-當沒有人處理某個動作時，控制項會保留本地行為，使沒有接線的頁面仍能運作：**Deny** 會把呼叫標記為已拒絕；**Allow** 與 **Retry** 只會模擬執行，而且只限於內建的範例資料（`ToolCallSamples`、`ToolCallSimulation`）。對於其他資料，什麼都不會改變。模擬執行時，列的即時區域會說明這一點（"This is sample data, so the call is only simulated."）。
+當沒有人處理某個動作時，控制項會保留本地行為，使沒有接線的頁面仍能運作：**Deny** 會把呼叫標記為已拒絕；**Allow** 與 **Retry** 會交給加入該呼叫的 `ToolCallSimulation`，由它繼續執行。對於其他資料，它們什麼都不會改變。模擬執行時，列的即時區域會說明這一點（"This is sample data, so the call is only simulated."）。
 
 ### 展開與摺疊
 
@@ -88,7 +88,23 @@ JSON 建立在 `System.Text.Json.Nodes` 之上，上色則由我們自己的小�
 
 ### 模擬
 
-`ToolCallSimulation` 會依時鐘把一個預先寫好的輪次播放到一個可觀察的清單中：呼叫約每 225 ms 加入一次，執行其所需時間後落定；失敗的呼叫會等待 `Retry`；需要核准的呼叫則等待 `Approve` 或 `Deny`。把群組的 `ItemsSource` 綁定到 `Items`，並把 `IsActive` 綁定到 `IsWorking`。預設腳本是 `ToolCallSamples.Script()`；傳入 `TimeProvider` 即可在測試中逐步執行它。預覽中群組周圍的逐字稿（問題、句子、答案與 "Run again"）屬於示範內容，不是控制項的一部分。
+`ToolCallSimulation` 會依時鐘把一個預先寫好的輪次播放到一個可觀察的清單中：呼叫約每 225 ms 加入一次，執行其所需時間後落定；失敗的呼叫會等待 `Retry`；需要核准的呼叫則等待 `Approve` 或 `Deny`。套件不附帶任何腳本：你用 `ToolCallSimulationStep` 撰寫腳本，每一步是一個 `ToolCallItem`（執行時加入它的副本），加上結果與時序。把模擬交給 `ToolCallGroup.Simulation`：群組沒有自己的呼叫時，會顯示模擬的 `Items`，在它 `IsWorking` 時顯示 "Using"，出現在畫面上時從頭開始執行，離開時停止。`Items` 或 `ItemsSource` 中的呼叫優先於模擬。
+
+```csharp
+var lookup = new ToolCallItem("orders", "Orders", "Looked up order 1042", ToolCallStatus.Success, ArcIcons.Search)
+{
+    RunningTitle = "Looking up order 1042",
+    Summary = "1 result",
+    Duration = TimeSpan.FromMilliseconds(900)
+};
+group.Simulation = new ToolCallSimulation(
+[
+    new ToolCallSimulationStep(lookup) { Delay = TimeSpan.FromMilliseconds(600) }
+]);
+group.Simulation.Start();                       // Run again: plays from the top
+```
+
+在 XAML 中，把 `<arc:ToolCallGroup.Simulation>` 設為一個 `ToolCallSimulation`，其 `Script` 來自 `{x:Static}`，寫法見預覽的 Code 分頁；每個群組使用自己的模擬（它保存播放狀態），腳本可以共用。傳入 `TimeProvider` 即可在測試中逐步執行它。預覽中群組周圍的逐字稿（問題、句子、答案與 "Run again"）是展示庫撰寫的示範內容，財務團隊的那些呼叫也是；它們都不屬於控制項。
 
 ### 窄容器
 
@@ -116,7 +132,7 @@ JSON 建立在 `System.Text.Json.Nodes` 之上，上色則由我們自己的小�
 
 ### 常見問題
 
-**我能使用品牌標誌作為標記嗎？** 標記可以是任何 24 × 24 的描邊幾何圖形。品牌標誌須由你自行取得授權；範例只使用 Lucide 字符。
+**我能使用品牌標誌作為標記嗎？** 標記可以是任何 24 × 24 的描邊幾何圖形。品牌標誌須由你自行取得授權；示範只使用 Lucide 字符。
 
 **Allow 會執行工具嗎？** 不會。它會引發 `ApproveRequested`；由你的程式碼執行工具並更新狀態。
 
@@ -165,13 +181,11 @@ JSON 建立在 `System.Text.Json.Nodes` 之上，上色則由我們自己的小�
 | `ToolCallSimulationState` | `Idle`, `Working`, `WaitingForRetry`, `WaitingForApproval`, `Finished` |
 | `ToolCallSimulationPhase` | `Started`, `CallAppended`, `CallSucceeded`, `CallFailed`, `WaitingForApproval`, `Retried`, `Allowed`, `Denied`, `Finished` |
 
-`ToolCallSamples` 保存虛構的範例呼叫與預設腳本。
-
 ## 無障礙
 
 - 群組標頭與每一列都是按鈕，會回報自己是否已展開。列的名稱會朗讀工具、片語與狀態："Tracker: Searched tickets in finance/close Done, 4 results, 1.2s"。
 - 狀態絕不只靠顏色傳達：每個狀態都有自己的圖示，失敗與等待中的呼叫會顯示原因行，名稱也會把狀態拼寫出來。
-- 每一列都透過禮貌的即時區域通報狀態變化，包括範例呼叫只是被模擬這件事。
+- 每一列都透過禮貌的即時區域通報狀態變化，包括模擬的呼叫只是被模擬這件事。
 - Retry、Allow 與 Deny 會以它們所作用的呼叫來命名："Allow: Post a status note to #finance-ops"。按鈕消失時，焦點會移到其所屬的列，而不會掉到頁面上。
 - Input 與 Output 是有名稱的群組；複製按鈕會透過即時區域確認，且不改變寬度。
 - 指標焦點不畫焦點環；鍵盤焦點會在列內顯示 2 px 的焦點環，因此不會被裁切。

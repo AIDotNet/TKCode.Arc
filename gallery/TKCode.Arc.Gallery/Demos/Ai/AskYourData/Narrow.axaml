@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.AskYourDataNarrowDemo">
+    <!-- Below 520px the source keeps only its icon, the chart switch moves into the result above the legend and the stage
+         grows to fit the wrapped legend and insight. -->
+    <Panel MaxWidth="380">
+        <arc:AskYourData>
+            <arc:AskYourData.Simulation>
+                <arc:AskYourDataSimulation Question="MRR by plan over the last 6 months"
+                                           Suggestions="{x:Static demos:AskYourDataDemoData.Suggestions}"
+                                           Source="{x:Static demos:AskYourDataDemoData.Source}"
+                                           Answers="{x:Static demos:AskYourDataDemoData.Answers}"
+                                           Fallback="{x:Static demos:AskYourDataDemoData.Fallback}" />
+            </arc:AskYourData.Simulation>
+        </arc:AskYourData>
+    </Panel>
+</UserControl>

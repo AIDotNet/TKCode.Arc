@@ -1,0 +1,34 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PixelMascotPreviewDemo">
+    <!-- The five statuses side by side, each in its own animation, and one mascot playing the built-in loop. -->
+    <StackPanel Spacing="24" Margin="0,12">
+        <WrapPanel ItemSpacing="24" LineSpacing="16">
+            <StackPanel Spacing="8">
+                <arc:PixelMascot Status="Idle" Scale="3" Announce="False" />
+                <TextBlock Text="Idle" FontSize="12" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+            </StackPanel>
+            <StackPanel Spacing="8">
+                <arc:PixelMascot Status="Thinking" Scale="3" Announce="False" />
+                <TextBlock Text="Thinking" FontSize="12" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+            </StackPanel>
+            <StackPanel Spacing="8">
+                <arc:PixelMascot Status="Writing" Scale="3" Announce="False" />
+                <TextBlock Text="Writing" FontSize="12" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+            </StackPanel>
+            <StackPanel Spacing="8">
+                <arc:PixelMascot Status="Done" Scale="3" Announce="False" />
+                <TextBlock Text="Done" FontSize="12" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+            </StackPanel>
+            <StackPanel Spacing="8">
+                <arc:PixelMascot Status="Error" Scale="3" Announce="False" />
+                <TextBlock Text="Error" FontSize="12" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+            </StackPanel>
+        </WrapPanel>
+        <StackPanel Spacing="8">
+            <arc:PixelMascot Scale="6" />
+            <TextBlock Text="Built-in loop" FontSize="12" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

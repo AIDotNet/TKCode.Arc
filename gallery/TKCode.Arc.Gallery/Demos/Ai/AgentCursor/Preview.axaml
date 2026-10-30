@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentCursorPreviewDemo">
+    <!-- A simulation plays the demo's invented launch brief and loops: the agent reads the brief, rewrites the summary, adds
+         a heading and fixes a typo while Maya reads along, then Maya accepts from the review bar and it starts over. Nothing
+         is saved. Hover the card or move focus into it to hold the review. The card fills its container up to 680px. -->
+    <Border MaxWidth="680" Margin="0,12">
+        <arc:AgentCursor>
+            <arc:AgentCursor.Simulation>
+                <arc:AgentCursorSimulation Blocks="{x:Static demos:AgentCursorDemoData.Blocks}"
+                                           Edits="{x:Static demos:AgentCursorDemoData.Edits}"
+                                           Agent="{x:Static demos:AgentCursorDemoData.Agent}"
+                                           Collaborator="{x:Static demos:AgentCursorDemoData.Collaborator}"
+                                           Meta="{x:Static demos:AgentCursorDemoData.Meta}" />
+            </arc:AgentCursor.Simulation>
+        </arc:AgentCursor>
+    </Border>
+</UserControl>

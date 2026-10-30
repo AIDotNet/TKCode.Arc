@@ -24,7 +24,7 @@ public sealed class AgentModel
         MarkBrush = markBrush;
     }
 
-    /// <summary>The display name, such as the model's name ("Atlas 3 Pro").</summary>
+    /// <summary>The display name, such as the model's name.</summary>
     public string Name { get; set; } = string.Empty;
 
     /// <summary>A 24 × 24 stroked glyph drawn as the model's mark (for example a Lucide icon); null draws the default mark.</summary>

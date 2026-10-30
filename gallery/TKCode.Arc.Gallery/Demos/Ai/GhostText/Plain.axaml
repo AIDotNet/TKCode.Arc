@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.GhostTextPlainDemo">
+    <!-- Variant="Plain" drops the field's border, background and focus ring so the text sits flush inside a compose card
+         that owns them. -->
+    <Border MaxWidth="560"
+            Padding="16,12"
+            CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+            BorderThickness="1"
+            BorderBrush="{arc:ArcDesignTokenResource Border}"
+            Background="{arc:ArcDesignTokenResource Surface}">
+        <StackPanel Spacing="8">
+            <StackPanel Spacing="2">
+                <TextBlock Text="Reply to Maya Rivera" FontWeight="Medium" />
+                <TextBlock Text="Re: Checkout retries" FontSize="12" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+            </StackPanel>
+            <arc:GhostText x:Name="Field"
+                           Variant="Plain"
+                           Rows="4"
+                           Placeholder="Write a reply"
+                           AutomationProperties.Name="Message" />
+        </StackPanel>
+    </Border>
+</UserControl>

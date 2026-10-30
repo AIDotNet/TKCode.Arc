@@ -1,0 +1,468 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.InstallSnippetTheme">
+
+    <!--
+        A quickstart card: the title, a line under it and the version at the top right; the framework tabs; then three
+        numbered steps on a rail (Install with the package manager tabs, Add your key with Generate key and its status line,
+        Ship), each with a code block. A hidden polite live region speaks framework changes and new keys.
+    -->
+    <ControlTheme x:Key="{x:Type arc:InstallSnippet}" TargetType="arc:InstallSnippet">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:InstallSnippetTokenResource CardCornerRadius}" />
+        <Setter Property="Padding" Value="{arc:InstallSnippetTokenResource CardPadding}" />
+        <Setter Property="MaxWidth" Value="{arc:InstallSnippetTokenResource CardMaxWidth}" />
+        <Setter Property="NarrowWidth" Value="{arc:InstallSnippetTokenResource NarrowBreakpoint}" />
+        <Setter Property="CompactWidth" Value="{arc:InstallSnippetTokenResource CompactBreakpoint}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:InstallSnippet">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Panel>
+                        <StackPanel>
+                            <Grid ColumnDefinitions="*,Auto">
+                                <StackPanel Spacing="2">
+                                    <TextBlock Name="PART_Title"
+                                               Text="{TemplateBinding Title}"
+                                               FontSize="{arc:InstallSnippetTokenResource TitleFontSize}"
+                                               LineHeight="{arc:InstallSnippetTokenResource TitleLineHeight}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                               TextWrapping="Wrap"
+                                               AutomationProperties.HeadingLevel="3" />
+                                    <TextBlock Name="PART_Description"
+                                               Text="{TemplateBinding Description}"
+                                               FontSize="{arc:InstallSnippetTokenResource DescriptionFontSize}"
+                                               LineHeight="{arc:InstallSnippetTokenResource DescriptionLineHeight}"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                               TextWrapping="Wrap" />
+                                </StackPanel>
+                                <Border Name="PART_Version"
+                                        Grid.Column="1"
+                                        VerticalAlignment="Top"
+                                        Margin="{arc:InstallSnippetTokenResource VersionMargin}"
+                                        Padding="{arc:InstallSnippetTokenResource VersionPadding}"
+                                        CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                        BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                        BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                                    <TextBlock Text="{TemplateBinding Version}"
+                                               FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                                               FontSize="{arc:InstallSnippetTokenResource VersionFontSize}"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                </Border>
+                            </Grid>
+                            <arc:InstallSnippetTabs Name="PART_Frameworks"
+                                                    Margin="{arc:InstallSnippetTokenResource TabsMargin}" />
+                            <StackPanel Name="PART_Steps" Margin="{arc:InstallSnippetTokenResource StepsMargin}">
+                                <arc:InstallSnippetStepView Name="PART_InstallStep">
+                                    <arc:InstallSnippetStepView.Accessory>
+                                        <arc:InstallSnippetTabs Name="PART_PackageManagers" IsSmall="True" />
+                                    </arc:InstallSnippetStepView.Accessory>
+                                </arc:InstallSnippetStepView>
+                                <arc:InstallSnippetStepView Name="PART_KeyStep">
+                                    <arc:InstallSnippetStepView.Accessory>
+                                        <!-- Local sizes: the button is shown by the step's presenter, out of reach of this theme's /template/ styles. -->
+                                        <arc:Button Name="PART_Generate"
+                                                    Variant="Secondary"
+                                                    Size="Small"
+                                                    Height="{arc:InstallSnippetTokenResource ActionHeight}"
+                                                    MinHeight="{arc:InstallSnippetTokenResource ActionHeight}"
+                                                    Padding="{arc:InstallSnippetTokenResource ActionPadding}"
+                                                    CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                                    FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                    FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                    </arc:InstallSnippetStepView.Accessory>
+                                    <arc:InstallSnippetStepView.Footer>
+                                        <arc:InstallSnippetKeyStatus Name="PART_KeyStatus"
+                                                                     Margin="{arc:InstallSnippetTokenResource StatusMargin}" />
+                                    </arc:InstallSnippetStepView.Footer>
+                                </arc:InstallSnippetStepView>
+                                <arc:InstallSnippetStepView Name="PART_CodeStep" />
+                            </StackPanel>
+                        </StackPanel>
+                        <arc:ExplainerAnnouncer Name="PART_Live" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:narrow">
+            <Setter Property="Padding" Value="{arc:InstallSnippetTokenResource CardPaddingNarrow}" />
+        </Style>
+
+    </ControlTheme>
+
+    <!-- The key status line: a glyph and one line that crossfades; muted, Success once a key is in, Danger on a failure. -->
+    <ControlTheme x:Key="{x:Type arc:InstallSnippetKeyStatus}" TargetType="arc:InstallSnippetKeyStatus">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="FontSize" Value="{arc:InstallSnippetTokenResource StatusFontSize}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:InstallSnippetKeyStatus">
+                <Grid ColumnDefinitions="Auto,*">
+                    <arc:ArcGlyph Name="PART_Glyph"
+                                  Size="{arc:InstallSnippetTokenResource StatusGlyphSize}"
+                                  VerticalAlignment="Center"
+                                  Margin="0,0,6,0" />
+                    <arc:ArcContentSwap Name="PART_Text"
+                                        Grid.Column="1"
+                                        Mode="Label"
+                                        VerticalAlignment="Center"
+                                        HorizontalContentAlignment="Left"
+                                        TextBlock.LineHeight="{arc:InstallSnippetTokenResource StatusLineHeight}"
+                                        TextBlock.TextTrimming="CharacterEllipsis" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:ready /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:failed">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:failed /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Glyph">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A tab list: tabs on a SurfaceMuted track and a Surface highlight with the resting shadow that the list slides to the
+        selected tab. The package manager list is smaller.
+    -->
+    <ControlTheme x:Key="{x:Type arc:InstallSnippetTabs}" TargetType="arc:InstallSnippetTabs">
+        <!-- Templated controls clip by default; keyboard focus rings sit outside the box. -->
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="Padding" Value="{arc:InstallSnippetTokenResource TrackPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:InstallSnippetTokenResource TrackCornerRadius}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:InstallSnippetTabs">
+                <Border Background="{TemplateBinding Background}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Panel>
+                        <arc:GlidingIndicator Name="PART_Highlight"
+                                              Fill="{arc:ArcDesignTokenResource Surface}"
+                                              BoxShadow="{arc:ArcDesignTokenResource ShadowResting}" />
+                        <StackPanel Name="PART_Strip" Orientation="Horizontal" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|GlidingIndicator#PART_Highlight">
+            <Setter Property="CornerRadius" Value="{arc:InstallSnippetTokenResource HighlightCornerRadius}" />
+        </Style>
+        <Style Selector="^:small">
+            <Setter Property="Padding" Value="{arc:InstallSnippetTokenResource SmallTrackPadding}" />
+            <Setter Property="CornerRadius" Value="{arc:InstallSnippetTokenResource SmallTrackCornerRadius}" />
+            <Style Selector="^ /template/ arc|GlidingIndicator#PART_Highlight">
+                <Setter Property="CornerRadius" Value="{arc:InstallSnippetTokenResource SmallHighlightCornerRadius}" />
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- One tab: a glyph or a monogram and the name, TextSecondary at rest, Foreground when selected or hovered, a keyboard ring. -->
+    <ControlTheme x:Key="{x:Type arc:InstallSnippetTab}" TargetType="arc:InstallSnippetTab">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Height" Value="{arc:InstallSnippetTokenResource TabHeight}" />
+        <Setter Property="Padding" Value="{arc:InstallSnippetTokenResource TabPadding}" />
+        <Setter Property="FontSize" Value="{arc:InstallSnippetTokenResource TabFontSize}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:InstallSnippetTab">
+                <Panel Background="{TemplateBinding Background}">
+                    <Border Name="PART_FocusRing"
+                            Margin="-1"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            CornerRadius="{arc:InstallSnippetTokenResource HighlightCornerRadius}"
+                            IsVisible="False"
+                            IsHitTestVisible="False" />
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="{arc:InstallSnippetTokenResource TabGap}"
+                                Margin="{TemplateBinding Padding}"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
+                        <arc:ArcGlyph Name="PART_Mark"
+                                      Size="{arc:InstallSnippetTokenResource TabMarkSize}"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      VerticalAlignment="Center"
+                                      IsVisible="False" />
+                        <Border Name="PART_Monogram"
+                                Width="{arc:InstallSnippetTokenResource MonogramSize}"
+                                Height="{arc:InstallSnippetTokenResource MonogramSize}"
+                                CornerRadius="{arc:InstallSnippetTokenResource MonogramCornerRadius}"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                BorderBrush="{TemplateBinding Foreground}"
+                                VerticalAlignment="Center"
+                                IsVisible="False">
+                            <TextBlock Name="PART_MonogramText"
+                                       FontSize="{arc:InstallSnippetTokenResource MonogramFontSize}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       Foreground="{TemplateBinding Foreground}"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" />
+                        </Border>
+                        <TextBlock Name="PART_Label"
+                                   Foreground="{TemplateBinding Foreground}"
+                                   VerticalAlignment="Center" />
+                    </StackPanel>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:selected">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:small">
+            <Setter Property="Height" Value="{arc:InstallSnippetTokenResource SmallTabHeight}" />
+            <Setter Property="Padding" Value="{arc:InstallSnippetTokenResource SmallTabPadding}" />
+            <Setter Property="FontSize" Value="{arc:InstallSnippetTokenResource SmallTabFontSize}" />
+            <Style Selector="^ /template/ Border#PART_FocusRing">
+                <Setter Property="CornerRadius" Value="{arc:InstallSnippetTokenResource SmallHighlightCornerRadius}" />
+            </Style>
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        One step: a 24px marker on the rail (the number, or a check on the accent once done), the title row with its control,
+        the line (reserving the height of the step's longest line), a code block (a 36px header with the file name and copy,
+        then the snippet, which scrolls sideways) and an optional footer. The last step has no rail and no gap under it.
+    -->
+    <ControlTheme x:Key="{x:Type arc:InstallSnippetStepView}" TargetType="arc:InstallSnippetStepView">
+        <!-- Templated controls clip by default; keyboard focus rings sit outside the box. -->
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:InstallSnippetStepView">
+                <Grid ColumnDefinitions="Auto,*">
+                    <Panel Width="{arc:InstallSnippetTokenResource MarkerSize}">
+                        <Rectangle Name="PART_Rail"
+                                   Width="{arc:InstallSnippetTokenResource RailWidth}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Stretch"
+                                   Margin="{arc:InstallSnippetTokenResource RailMargin}"
+                                   Fill="{arc:ArcDesignTokenResource Border}" />
+                        <Panel Width="{arc:InstallSnippetTokenResource MarkerSize}"
+                               Height="{arc:InstallSnippetTokenResource MarkerSize}"
+                               VerticalAlignment="Top"
+                               Margin="{arc:InstallSnippetTokenResource MarkerMargin}"
+                               AutomationProperties.AccessibilityView="Raw">
+                            <Ellipse Name="PART_MarkerFill" StrokeThickness="1" />
+                            <TextBlock Name="PART_Number"
+                                       FontSize="{arc:InstallSnippetTokenResource MarkerFontSize}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" />
+                            <arc:ArcGlyph Name="PART_Check"
+                                          Data="{x:Static arc:ArcIcons.Check}"
+                                          Size="{arc:InstallSnippetTokenResource MarkerGlyphSize}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                        </Panel>
+                    </Panel>
+                    <StackPanel Grid.Column="1" Margin="{arc:InstallSnippetTokenResource StepBodyMargin}">
+                        <Grid ColumnDefinitions="*,Auto" MinHeight="{arc:InstallSnippetTokenResource TitleRowHeight}">
+                            <TextBlock Name="PART_Title"
+                                       Text="{TemplateBinding Title}"
+                                       FontSize="{arc:InstallSnippetTokenResource StepTitleFontSize}"
+                                       LineHeight="{arc:InstallSnippetTokenResource StepTitleLineHeight}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                       VerticalAlignment="Center"
+                                       TextTrimming="CharacterEllipsis"
+                                       AutomationProperties.HeadingLevel="4" />
+                            <ContentPresenter Grid.Column="1"
+                                              Content="{TemplateBinding Accessory}"
+                                              VerticalAlignment="Center"
+                                              Margin="{arc:InstallSnippetTokenResource AccessoryMargin}" />
+                        </Grid>
+                        <Grid Margin="{arc:InstallSnippetTokenResource StepDescriptionMargin}"
+                              TextElement.FontSize="{arc:InstallSnippetTokenResource StepDescriptionFontSize}"
+                              TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                              TextBlock.LineHeight="{arc:InstallSnippetTokenResource StepDescriptionLineHeight}"
+                              TextBlock.TextWrapping="Wrap">
+                            <Panel Name="PART_DescriptionReserve"
+                                   Opacity="0"
+                                   IsHitTestVisible="False"
+                                   AutomationProperties.AccessibilityView="Raw" />
+                            <arc:ArcContentSwap Name="PART_Description"
+                                                Mode="Label"
+                                                HorizontalContentAlignment="Left"
+                                                VerticalContentAlignment="Top" />
+                        </Grid>
+                        <Border Margin="{arc:InstallSnippetTokenResource CodeMargin}"
+                                Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                CornerRadius="{arc:InstallSnippetTokenResource CodeCornerRadius}"
+                                ClipToBounds="True">
+                            <DockPanel>
+                                <Border DockPanel.Dock="Top"
+                                        Height="{arc:InstallSnippetTokenResource CodeHeaderHeight}"
+                                        Padding="{arc:InstallSnippetTokenResource CodeHeaderPadding}"
+                                        BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}"
+                                        BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <arc:ArcContentSwap Name="PART_File"
+                                                            Mode="Label"
+                                                            VerticalAlignment="Center"
+                                                            HorizontalContentAlignment="Left"
+                                                            TextElement.FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                                                            TextElement.FontSize="{arc:InstallSnippetTokenResource FileFontSize}"
+                                                            TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                        <arc:CopyButton Name="PART_Copy"
+                                                        Grid.Column="1"
+                                                        IsIconOnly="True"
+                                                        Variant="Plain"
+                                                        VerticalAlignment="Center" />
+                                    </Grid>
+                                </Border>
+                                <ScrollViewer Name="PART_CodeScroll"
+                                              HorizontalScrollBarVisibility="Auto"
+                                              VerticalScrollBarVisibility="Disabled">
+                                    <arc:ArcContentSwap Name="PART_Code"
+                                                        Mode="Label"
+                                                        HorizontalAlignment="Left"
+                                                        HorizontalContentAlignment="Left"
+                                                        VerticalContentAlignment="Top"
+                                                        Margin="{arc:InstallSnippetTokenResource CodePadding}"
+                                                        TextElement.FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                                                        TextElement.FontSize="{arc:InstallSnippetTokenResource CodeFontSize}"
+                                                        TextElement.Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                        TextBlock.LineHeight="{arc:InstallSnippetTokenResource CodeLineHeight}" />
+                                </ScrollViewer>
+                            </DockPanel>
+                        </Border>
+                        <ContentPresenter Content="{TemplateBinding Footer}" />
+                        <Border Name="PART_Gap" Margin="{arc:InstallSnippetTokenResource StepGapMargin}" />
+                    </StackPanel>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Non-triggered values of template parts (state styles cannot override local template values). -->
+        <Style Selector="^ /template/ Ellipse#PART_MarkerFill">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="Stroke" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Number">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Check">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+
+        <Style Selector="^:done /template/ Ellipse#PART_MarkerFill">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="Stroke" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:done /template/ TextBlock#PART_Number">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:done /template/ arc|ArcGlyph#PART_Check">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+
+        <Style Selector="^:last /template/ Rectangle#PART_Rail">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:last /template/ Border#PART_Gap">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ Ellipse#PART_MarkerFill">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Fill" Tween="Standard" />
+                        <arc:ArcBrushTransition Property="Stroke" Tween="Standard" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_Number">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Check">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Style Selector="^ /template/ TextBlock#PART_Number">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Check">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

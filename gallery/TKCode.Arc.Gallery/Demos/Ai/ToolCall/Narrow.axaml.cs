@@ -7,6 +7,6 @@ public partial class ToolCallNarrowDemo : UserControl
     public ToolCallNarrowDemo()
     {
         InitializeComponent();
-        Group.Items.AddRange([ToolCallSamples.TicketSearch(), ToolCallSamples.ChecklistRead(), ToolCallSamples.JobLogQuery(ToolCallStatus.Error)]);
+        Group.Items.AddRange([ToolCallDemoData.TicketSearch(), ToolCallDemoData.ChecklistRead(), ToolCallDemoData.JobLogQuery(ToolCallStatus.Error)]);
     }
 }

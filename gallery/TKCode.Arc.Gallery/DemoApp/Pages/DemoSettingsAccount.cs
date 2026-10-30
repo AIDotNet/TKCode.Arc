@@ -165,7 +165,7 @@ internal sealed partial class DemoSettingsAccount : Panel
         text.Children.Add(DemoUi.Line("Emma Collins", ArcDesignTokenKind.Foreground, DemoUi.BodySize, FontWeight.Medium));
         text.Children.Add(DemoUi.Line("Team plan · Admin", ArcDesignTokenKind.TextMuted, 12));
         var card = new DockPanel();
-        var avatar = new Avatar { DisplayName = "Emma Collins", Size = AvatarSize.Medium, Margin = new Thickness(0, 0, 10, 0) };
+        var avatar = new Avatar { DisplayName = "Emma Collins", Source = DemoPhotos.For("Emma Collins"), Size = AvatarSize.Medium, Margin = new Thickness(0, 0, 10, 0) };
         DockPanel.SetDock(avatar, Dock.Left);
         card.Children.Add(avatar);
         card.Children.Add(text);

@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.InstallSnippetNarrowDemo">
+    <!-- In a 360px column the padding tightens, the framework tabs drop their marks and the version label hides (package
+         manager tabs, for an SDK that installs packages, show their marks only). Long lines scroll inside their code
+         block. -->
+    <arc:InstallSnippet Width="360"
+                        HorizontalAlignment="Center"
+                        Description="{x:Static demos:InstallSnippetDemoData.Description}"
+                        Version="{x:Static demos:InstallSnippetDemoData.Version}">
+        <arc:InstallSnippet.Simulation>
+            <arc:InstallSnippetSimulation Frameworks="{x:Static demos:InstallSnippetDemoData.Frameworks}"
+                                          KeyPrefix="{x:Static demos:InstallSnippetDemoData.KeyPrefix}" />
+        </arc:InstallSnippet.Simulation>
+    </arc:InstallSnippet>
+</UserControl>

@@ -1,7 +1,7 @@
 ---
 title: Context window
 summary: 模型的上下文窗口呈现为一张由 200 个格子组成的网格，分段填充，并附带压缩阈值、图例，以及说明还剩多少空间的操作按钮。
-source-hash: 10028f4973b8
+source-hash: 9f00beff2aa3
 ---
 
 <Demo name="Preview" />
@@ -13,7 +13,7 @@ source-hash: 10028f4973b8
 - **开发者工具与智能体控制台**：在对话记录旁显示会话的预算，让人看清一次长时间运行为何开始遗忘内容，以及一个大附件会占用多少空间。
 - **会压缩长会话的编码智能体**：让压缩可见。较早的消息折叠成一段简短摘要，格子随之释放，状态行说明折叠了多少内容。
 - **上下文中的模型选择**：切换到窗口更小的模型时，网格会立即重新排列，并显示会话是否仍能放下；放不下时，卡片会折叠对话并说明这一点。
-- **文档与入门指南**：用一个可以随意操作的示例来解释上下文窗口、输出预留和压缩。没有数据时，卡片会播放一段虚构的编码会话。
+- **文档与入门指南**：用一段可以随意操作的会话来解释上下文窗口、输出预留和压缩，就像本页的预览那样。
 
 ## 何时不用
 
@@ -27,13 +27,19 @@ source-hash: 10028f4973b8
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
-    <arc:ContextWindow />
+    <arc:ContextWindow>
+        <arc:ContextWindow.Models>
+            <arc:ContextWindowModel Id="your-model" Name="Your model" Window="200000" Reserve="16000" />
+        </arc:ContextWindow.Models>
+        <arc:ContextWindowItem Category="System" Label="System prompt" Tokens="3800" />
+        <arc:ContextWindowItem Category="Messages" Label="Plan the importer rewrite" Tokens="9400" />
+    </arc:ContextWindow>
 </UserControl>
 ```
 
 `ContextWindow` 是 Special 包中的 `TemplatedControl`。请在 `UseArcControls()` 旁调用 `UseArcSpecial()` 以注册该包。卡片最宽为 744px，宽度跟随它自身，而不是窗口的宽度。
 
-完全没有数据时（没有模型、项目、轮次或文件），卡片会显示来自 `ContextWindowSamples` 的虚构示例会话：三个示例模型，窗口分别为 1M、512K 和 400K；一段用量为 436K token 的编码会话；Send message 对应五个轮次，Attach file 对应三个文件。示例使用自己的副本，因此 `Items` 保持为空。只要你提供了四个列表中的任意一个，卡片就会改用你的数据。
+没有数据时（没有模型、项目、轮次或文件），卡片是空的：没有模型胶囊，所有格子都空闲，也没有 Send message 和 Attach file。请提供你的模型和项目，并为这两个按钮提供 `Turns` 和 `Files`。本页的演示使用真实模型及其厂商公布的上下文窗口（核对于 2026-10-29：Claude Sonnet 5.5 为 1M，Grok 4.7 为 500K，Mistral Medium 3.5 为 256K），以及一段虚构的、用量为 436K token 的编码会话；输出预留是演示应用单次回复所请求的量（32K），绝不超过该模型公布的输出上限。
 
 ### 结构
 
@@ -65,8 +71,8 @@ Send message 会把 `Turns` 中的下一条作为消息添加到窗口末尾；A
 | 超过阈值时发送 | Added “Why does the nightly sync time out?” (+35K) · past 80% | 0 |
 | 开始折叠 | Past 80%: folding 35 earlier messages… | 540ms |
 | 摘要生成 | Folded 608K into a 24K summary | 1,240ms |
-| 切换到较小的模型 | 436K is over 80% of Cirrus M | 0 |
-| 开始折叠 | Too full for Cirrus M: folding 22 earlier messages… | 600ms |
+| 切换到较小的模型 | 436K is over 80% of Grok 4.7 | 0 |
+| 开始折叠 | Too full for Grok 4.7: folding 22 earlier messages… | 600ms |
 
 文件永远不会被折叠。窗口超过阈值且只剩最新的消息时，状态行会说明暂时没有可折叠的内容；压缩后窗口仍超过阈值时，状态行会说明折叠了多少，并建议移除文件。已用 token 可以超过窗口：此时读数会显示超过 100%，且没有空闲 token。
 
@@ -159,7 +165,7 @@ card.Labels = new ContextWindowLabels
 **避免**
 
 - 用计时器重建 `Items`。每次变化都会产生动画；应只更新发生变化的项目。
-- 把示例会话当作真实数字来展示。它是虚构的。
+- 把虚构的会话当作真实用量来展示。
 - 把网格用于一个窗口以外的任何事情。它始终有 200 个格子；它的比例只对一个预算有意义。
 
 ### 常见问题
@@ -170,7 +176,7 @@ card.Labels = new ContextWindowLabels
 
 **切换到更大的模型会怎样？** 网格重新排列，状态行写明新模型和窗口，而且不会有任何折叠。
 
-**为什么没有 Send message 和 Attach file？** 在示例之外，当 `Turns` 或 `Files` 为空时它们会隐藏。
+**为什么没有 Send message 和 Attach file？** 当 `Turns` 或 `Files` 为空时它们会隐藏。
 
 **窗口能溢出吗？** 能。读数会超过 100%，空闲空间显示 0，无法放在预留之前的部分不会获得格子。
 
@@ -201,12 +207,10 @@ card.Labels = new ContextWindowLabels
 | `ContextWindowCompactReason` | `Manual`, `Threshold`, `ModelSwitch` |
 | `ContextWindowChange` | `Sent`, `Attached`, `Added`, `Compacted` |
 
-`ContextWindowSamples` 保存示例会话（`CreateModels()`、`CreateItems()`、`CreateTurns()`、`CreateFiles()`），因此页面可以从它开始，只修改其中一个部分。
-
 ## 无障碍
 
 - 卡片是一个名为 "Context window" 的分组。网格是一张图片，其名称完整描述了它：模型、已用 token 数与窗口的对比、每个部分及其 token 数，以及阈值。它随每次变化更新，而不是在滚动的每一帧更新。
-- 读数会被朗读为一行（"436K of 1M tokens, 44% used, 500K free"）。图例是一个名为 "Context breakdown" 的列表，其各行会朗读名称、token 数和占比，因此不依赖颜色。
+- 读数会被朗读为一行（"436K of 1M tokens, 44% used, 532K free"）。图例是一个名为 "Context breakdown" 的列表，其各行会朗读名称、token 数和占比，因此不依赖颜色。
 - 胶囊以模型及其窗口命名，并说明它会切换模型。菜单中的模型是单选项，被选中的那一项带有勾选标记。
 - 每次发送、附加、切换模型和压缩都会通过礼貌级别的实时区域播报，并且每种状态都同时带有图标和文字。
 - 消息折叠期间，所有操作都不可用。为了不让键盘焦点落回页面，卡片会把焦点保留在一个隐藏的占位元素上，该元素以状态命名，并在压缩完成时把焦点交还：交给原先持有焦点的操作，若该操作已不可用，则交给 Send message。

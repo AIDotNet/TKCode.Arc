@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.SmartFormFillNarrowDemo">
+    <!-- In a 380px column the paste well stacks on top at a fixed height, every field takes the full row and the footer puts
+         its status above the actions. The card follows its column, not the window. -->
+    <arc:SmartFormFill Width="380" HorizontalAlignment="Center" Margin="0,12" AutoPlay="False">
+        <arc:SmartFormFill.Simulation>
+            <arc:SmartFormFillSimulation Samples="{x:Static demos:SmartFormFillDemoData.Samples}"
+                                         ModelName="{x:Static demos:SmartFormFillDemoData.ModelName}" />
+        </arc:SmartFormFill.Simulation>
+    </arc:SmartFormFill>
+</UserControl>

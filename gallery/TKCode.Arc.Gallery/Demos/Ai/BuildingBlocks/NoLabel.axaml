@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.BuildingBlocksNoLabelDemo">
+    <!-- Inside a reply bubble that already says what is happening, the status line is turned off. -->
+    <Border MaxWidth="360"
+            Margin="0,12"
+            Padding="14"
+            CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+            Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+        <StackPanel Spacing="10">
+            <TextBlock Text="Building your sales dashboard…" FontSize="14" />
+            <arc:BuildingBlocks IsLabelVisible="False" />
+        </StackPanel>
+    </Border>
+</UserControl>

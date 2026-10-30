@@ -50,9 +50,12 @@ public sealed class AgentRunSimulation : IDisposable
     private DateTimeOffset _segmentStart;
     private bool _disposed;
 
-    /// <summary>Creates a simulation of <see cref="AgentStatusSamples.Coding"/> on the system clock.</summary>
+    /// <summary>
+    /// Creates a simulation with an empty run on the system clock; set <see cref="Scenario"/> (in XAML too) before the pill
+    /// starts it. A run without steps stays Ready.
+    /// </summary>
     public AgentRunSimulation()
-        : this(AgentStatusSamples.Coding)
+        : this(new AgentRunScenario())
     {
     }
 
@@ -67,15 +70,15 @@ public sealed class AgentRunSimulation : IDisposable
     }
 
     /// <summary>
-    /// The run to play. Setting another run starts over with <see cref="StartDelay"/> of Ready (once started); setting the
-    /// same run does nothing.
+    /// The run to play, written by your app. Setting another run starts over with <see cref="StartDelay"/> of Ready (once
+    /// started); setting the same run does nothing; null is an empty run, which stays Ready.
     /// </summary>
     public AgentRunScenario Scenario
     {
         get => _scenario;
         set
         {
-            ArgumentNullException.ThrowIfNull(value);
+            value ??= new AgentRunScenario();
             if (ReferenceEquals(value, _scenario))
             {
                 return;
@@ -305,13 +308,14 @@ public sealed class AgentRunSimulation : IDisposable
         {
             _steps.Add(new AgentStatusStep(step.Id, step.ActiveLabel, AgentStatusStepState.Pending, step.Icon));
         }
-        StartedAt = now;
-        EndedAt = null;
         if (_scenario.Steps.Count == 0)
         {
-            Finish(now);
+            // Nothing to play: the run stays Ready.
+            _phase = Phase.Ended;
             return;
         }
+        StartedAt = now;
+        EndedAt = null;
         BeginStep(0, now);
     }
 

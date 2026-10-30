@@ -12,6 +12,73 @@ using Xunit;
 
 namespace TKCode.Arc.Tests.Special.Ai;
 
+/// <summary>
+/// The invented plan the agent plan tests simulate (the package ships none): a coding agent adding full-text search to a
+/// help center. Six drafted steps, three suggestions, a step the agent inserts while running, a test step that fails once,
+/// and a summary.
+/// </summary>
+internal static class AgentPlanTestScript
+{
+    public const string Goal = "Add full-text search to the help center";
+
+    public const string Summary = "Search now covers all 31 article fields, with a disk fallback and 14 passing tests.";
+
+    public static AgentModel Model { get; } = new("Lumen 2 Pro", ArcIcons.Sparkles);
+
+    /// <summary>The six drafted steps with their scripts, in order.</summary>
+    public static IReadOnlyList<AgentPlanScriptedStep> Steps { get; } =
+    [
+        new("inventory", "Inventory the article fields the help center stores",
+            new(["Read 5 files", "Searched for articleSchema and draftSchema", "Found 31 article fields"], TimeSpan.FromSeconds(23))),
+        new("index", "Build a search index from every published article",
+            new(["Read jobs/publish.ts", "Created search/build-index.ts", "Edited 3 files"], TimeSpan.FromSeconds(46))),
+        new("cache", "Cache the index in object storage for ten minutes",
+            new(["Read lib/storage.ts", "Edited search/build-index.ts", "Ran 7 tests"], TimeSpan.FromSeconds(35))
+            {
+                Inserts = new("fallback", "Rebuild the index from disk when the cache is empty",
+                    new(["Edited lib/storage.ts", "Ran 5 tests"], TimeSpan.FromSeconds(31))),
+                InsertAfterActivity = 1
+            }),
+        new("rank", "Rank results by title match, then by freshness",
+            new(["Edited search/rank.ts", "Ran 9 tests"], TimeSpan.FromSeconds(26))),
+        new("tests", "Write tests for typos, stop words and empty queries",
+            new(["Created search.test.ts", "Ran 14 tests"], TimeSpan.FromSeconds(67))
+            {
+                FailureReason = "3 of 14 tests failed: typo matching skips two-letter words",
+                RetryActivities = ["Edited search/rank.ts", "Ran 14 tests, all passed"],
+                RetryDuration = TimeSpan.FromSeconds(67)
+            }),
+        new("docs", "Describe the search syntax in the help center guide",
+            new(["Read guide/overview.md", "Edited guide/search.md"], TimeSpan.FromSeconds(18)))
+    ];
+
+    /// <summary>The three steps Keep planning suggests, in order; each goes in before the last step.</summary>
+    public static IReadOnlyList<AgentPlanScriptedStep> Suggestions { get; } =
+    [
+        new("highlight", "Highlight matched words in the result snippets",
+            new(["Read search/snippet.ts", "Edited search/snippet.ts", "Ran 4 tests"], TimeSpan.FromSeconds(33))),
+        new("zero-results", "Log searches that return no results",
+            new(["Read lib/telemetry.ts", "Edited search/handler.ts"], TimeSpan.FromSeconds(21))),
+        new("benchmark", "Benchmark search at 500 queries per second",
+            new(["Ran a load script against staging for 60 seconds", "Measured 38 ms p99 at 500 queries per second"], TimeSpan.FromSeconds(69)))
+    ];
+
+    /// <summary>How the simulation runs a step it has no script for (one you added or renamed into a new id).</summary>
+    public static AgentPlanStepScript GenericScript { get; } =
+        new(["Read 2 files", "Edited 3 files", "Ran 5 tests"], TimeSpan.FromSeconds(30));
+
+    /// <summary>A simulation of this plan on <paramref name="scheduler"/>.</summary>
+    public static AgentPlanSimulation Simulation(IAgentPlanScheduler scheduler) => new(scheduler)
+    {
+        Goal = Goal,
+        Model = Model,
+        Steps = Steps,
+        Suggestions = Suggestions,
+        GenericScript = GenericScript,
+        Summary = Summary
+    };
+}
+
 /// <summary>The <see cref="AgentPlan"/> card: draft editing and its keyboard model, focus moves, controlled mode, the simulation, announcements.</summary>
 public class AgentPlanTests
 {
@@ -54,9 +121,38 @@ public class AgentPlanTests
     private static string[] Titles(AgentPlan plan) => plan.Steps.Select(s => s.Title).ToArray();
 
     [AvaloniaFact]
-    public void With_No_Data_The_Plan_Shows_The_Invented_Sample_Draft()
+    public void With_No_Data_And_No_Simulation_The_Plan_Is_An_Empty_Draft()
     {
-        var plan = new AgentPlan { Simulation = new AgentPlanSimulation(new AgentPlanManualScheduler()) };
+        var plan = new AgentPlan();
+        var window = Open(plan);
+        try
+        {
+            Assert.Null(plan.Simulation);
+            Assert.Equal(AgentPlanStatus.Draft, plan.CurrentStatus);
+            Assert.Empty(plan.Steps);
+            Assert.Empty(Rows(plan));
+            Assert.True(plan.Classes.Contains(":empty"));
+            Assert.Equal(new AgentPlanLabels().EmptyPlan, plan.EmptyText.Text);
+            Assert.Null(plan.EffectiveModel);
+            Assert.Null(plan.EffectiveGoal);
+            Assert.False(plan.ApproveButton.IsEnabled);
+            var requested = 0;
+            plan.KeepPlanningRequested += (_, _) => requested++;
+            plan.KeepPlanning();
+            Assert.Equal(1, requested);
+            Assert.Empty(plan.Steps);
+            Assert.False(plan.IsPlanning);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Simulation_Fills_An_Empty_Plan_With_Its_Draft()
+    {
+        var plan = new AgentPlan { Simulation = AgentPlanTestScript.Simulation(new AgentPlanManualScheduler()) };
         var window = Open(plan);
         try
         {
@@ -65,6 +161,72 @@ public class AgentPlanTests
             Assert.Equal(6, Rows(plan).Count);
             Assert.Equal("Lumen 2 Pro plan: Add full-text search to the help center", AutomationProperties.GetName(plan));
             Assert.Equal("6", plan.HeadingCount.Text);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void App_Data_Wins_Over_The_Simulation()
+    {
+        var clock = new AgentPlanManualScheduler();
+        var simulation = AgentPlanTestScript.Simulation(clock);
+        var plan = Controlled();
+        plan.Simulation = simulation;
+        var window = Open(plan);
+        try
+        {
+            Assert.False(simulation.IsAttached, "a plan with a status does not run the simulation");
+            Assert.Equal(4, plan.Steps.Count);
+            Assert.Equal("Test model plan: Ship the report", AutomationProperties.GetName(plan));
+            plan.Approve();
+            clock.Advance(TimeSpan.FromSeconds(5));
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal(AgentPlanStatus.Draft, plan.CurrentStatus);
+            Assert.All(plan.Steps, s => Assert.Equal(AgentPlanStepState.Pending, s.State));
+
+            // Without its own status the plan hands its steps to the simulation; its own goal and model still win.
+            plan.Status = null;
+            Assert.True(simulation.IsAttached);
+            Assert.Equal(4, plan.Steps.Count);
+            Assert.Equal("Test model plan: Ship the report", AutomationProperties.GetName(plan));
+            plan.Goal = null;
+            plan.Model = null;
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal("Lumen 2 Pro plan: Add full-text search to the help center", AutomationProperties.GetName(plan));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Clearing_The_Simulation_Stops_It_And_Takes_Its_Draft_Away()
+    {
+        var clock = new AgentPlanManualScheduler();
+        var simulation = AgentPlanTestScript.Simulation(clock);
+        var plan = new AgentPlan { Simulation = simulation };
+        var window = Open(plan);
+        try
+        {
+            plan.Approve();
+            clock.Advance(TimeSpan.FromMilliseconds(300));
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal(AgentPlanStatus.Running, plan.CurrentStatus);
+            plan.Simulation = null;
+            Dispatcher.UIThread.RunJobs();
+            Assert.False(simulation.IsAttached);
+            Assert.False(simulation.IsWaiting);
+            Assert.Equal(AgentPlanStatus.Draft, plan.CurrentStatus);
+            Assert.Empty(plan.Steps);
+            Assert.Null(plan.EffectiveGoal);
+            clock.Advance(TimeSpan.FromSeconds(30));
+            Dispatcher.UIThread.RunJobs();
+            Assert.Empty(plan.Steps);
+            Assert.Equal(AgentPlanStatus.Draft, plan.CurrentStatus);
         }
         finally
         {
@@ -718,7 +880,7 @@ public class AgentPlanTests
     public void The_Simulation_Drives_A_Plan_With_No_Status_Through_Approve_Failure_Skip_And_Done()
     {
         var clock = new AgentPlanManualScheduler();
-        var plan = new AgentPlan { Simulation = new AgentPlanSimulation(clock) };
+        var plan = new AgentPlan { Simulation = AgentPlanTestScript.Simulation(clock) };
         var window = Open(plan);
         try
         {
@@ -750,7 +912,7 @@ public class AgentPlanTests
             }
             Dispatcher.UIThread.RunJobs();
             Assert.Equal("Done in 2m 59s.", plan.DoneText.Prefix);
-            Assert.Equal(AgentPlanSamples.Summary, plan.DoneText.Text);
+            Assert.Equal(AgentPlanTestScript.Summary, plan.DoneText.Text);
             plan.StartOver();
             Dispatcher.UIThread.RunJobs();
             Dispatcher.UIThread.RunJobs();
@@ -781,7 +943,7 @@ public class AgentPlanTests
     public void A_Plan_Is_Collected_While_Its_Simulation_Lives_On()
     {
         var clock = new AgentPlanManualScheduler();
-        var simulation = new AgentPlanSimulation(clock);
+        var simulation = AgentPlanTestScript.Simulation(clock);
         // Keep planning leaves a suggestion waiting on the simulation's timer when the plan goes away.
         var weak = TestHelpers.ShowAndClose(() => new AgentPlan { Simulation = simulation }, plan => plan.KeepPlanning());
         TestHelpers.Collect(weak);
@@ -845,7 +1007,7 @@ public class AgentPlanTests
     public void A_Simulated_Run_Waits_While_The_Plan_Is_Away_And_Carries_On_When_It_Is_Back()
     {
         var clock = new AgentPlanManualScheduler();
-        var plan = new AgentPlan { Simulation = new AgentPlanSimulation(clock), Width = 560, VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top };
+        var plan = new AgentPlan { Simulation = AgentPlanTestScript.Simulation(clock), Width = 560, VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top };
         var host = new Border { Child = plan };
         var window = TestHelpers.Show(host);
         window.Width = 640;

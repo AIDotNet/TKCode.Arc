@@ -1,0 +1,471 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.PiiRedactionTheme">
+
+    <!--
+        A guardrail card: the head (a shield, "PII guard" and a Simulated tag), the message with its Show original switch,
+        four type cells, the flow strip (you, the guard, the model), the reply under the model's name, and a footer with
+        the status, Reset and the one primary action. Text layers stack in one grid cell, so the swaps never change the
+        height; the reply also reserves the sample reply's height.
+    -->
+    <ControlTheme x:Key="{x:Type arc:PiiRedaction}" TargetType="arc:PiiRedaction">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="MaxWidth" Value="{arc:PiiRedactionTokenResource CardMaxWidth}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:PiiRedactionTokenResource CardCornerRadius}" />
+        <Setter Property="Padding" Value="{arc:PiiRedactionTokenResource CardPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="NameBrush" Value="{arc:ArcDesignTokenResource Series1}" />
+        <Setter Property="EmailBrush" Value="{arc:ArcDesignTokenResource Series2}" />
+        <Setter Property="PhoneBrush" Value="{arc:ArcDesignTokenResource Series3}" />
+        <Setter Property="CardBrush" Value="{arc:ArcDesignTokenResource Series4}" />
+        <Setter Property="MarkCornerRadius" Value="{arc:PiiRedactionTokenResource MarkCornerRadius}" />
+        <Setter Property="MarkOutset" Value="{arc:PiiRedactionTokenResource MarkOutset}" />
+        <Setter Property="MarkTintOpacity" Value="{arc:PiiRedactionTokenResource MarkTintOpacity}" />
+        <Setter Property="CellTintOpacity" Value="{arc:PiiRedactionTokenResource CellTintOpacity}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:PiiRedaction">
+                <Border Name="PART_Card"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Panel>
+                    <StackPanel Name="PART_Stack">
+                        <!-- Head -->
+                        <Grid ColumnDefinitions="Auto,*,Auto">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ShieldCheck}"
+                                          Size="{arc:PiiRedactionTokenResource HeadGlyphSize}"
+                                          Foreground="{arc:ArcDesignTokenResource Accent}"
+                                          VerticalAlignment="Center"
+                                          Margin="0,0,8,0" />
+                            <TextBlock Name="PART_Title"
+                                       Grid.Column="1"
+                                       Text="{Binding Labels.Title, RelativeSource={RelativeSource TemplatedParent}}"
+                                       FontSize="{arc:PiiRedactionTokenResource TitleFontSize}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center" />
+                            <Border Name="PART_Tag"
+                                    Grid.Column="2"
+                                    Height="{arc:PiiRedactionTokenResource TagHeight}"
+                                    Padding="{arc:PiiRedactionTokenResource TagPadding}"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                    Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                    VerticalAlignment="Center"
+                                    IsVisible="False">
+                                <TextBlock Text="{Binding Labels.Simulated, RelativeSource={RelativeSource TemplatedParent}}"
+                                           FontSize="{arc:PiiRedactionTokenResource TagFontSize}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                           VerticalAlignment="Center" />
+                            </Border>
+                        </Grid>
+
+                        <!-- Message -->
+                        <StackPanel Name="PART_MessageSection">
+                            <Grid ColumnDefinitions="*,Auto" Height="{arc:PiiRedactionTokenResource SectionLabelHeight}">
+                                <arc:ToolCallText Name="PART_MessageLabel"
+                                                  Swap="Fade"
+                                                  VerticalAlignment="Center"
+                                                  FontSize="{arc:PiiRedactionTokenResource SectionLabelFontSize}"
+                                                  FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                  Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                  MutedForeground="{arc:ArcDesignTokenResource TextMuted}" />
+                                <arc:Switch Name="PART_ShowOriginal"
+                                            Grid.Column="1"
+                                            Classes="pii-show-original"
+                                            VerticalAlignment="Center">
+                                    <TextBlock Name="PART_ShowOriginalLabel"
+                                               Text="{Binding Labels.ShowOriginal, RelativeSource={RelativeSource TemplatedParent}}"
+                                               FontSize="{arc:PiiRedactionTokenResource SectionLabelFontSize}" />
+                                </arc:Switch>
+                            </Grid>
+                            <Border Name="PART_MessageBox"
+                                    Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                    BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                    CornerRadius="{arc:PiiRedactionTokenResource BoxCornerRadius}"
+                                    Padding="{arc:PiiRedactionTokenResource BoxPadding}">
+                                <Grid MinHeight="{arc:PiiRedactionTokenResource MessageMinHeight}">
+                                    <arc:PiiRedactionEditor Name="PART_Editor" />
+                                    <arc:DecoratedTextBlock Name="PART_Original"
+                                                            TextWrapping="Wrap"
+                                                            FontSize="{arc:PiiRedactionTokenResource TextFontSize}"
+                                                            LineHeight="{arc:PiiRedactionTokenResource TextLineHeight}"
+                                                            Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    <arc:DecoratedTextBlock Name="PART_Redacted"
+                                                            TextWrapping="Wrap"
+                                                            FontSize="{arc:PiiRedactionTokenResource TextFontSize}"
+                                                            LineHeight="{arc:PiiRedactionTokenResource TextLineHeight}"
+                                                            Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+
+                        <!-- Type cells -->
+                        <arc:PiiRedactionCellsPanel Name="PART_Cells" Gap="{arc:PiiRedactionTokenResource CellGap}">
+                            <arc:PiiRedactionTypeCell Name="PART_NameCell" />
+                            <arc:PiiRedactionTypeCell Name="PART_EmailCell" />
+                            <arc:PiiRedactionTypeCell Name="PART_PhoneCell" />
+                            <arc:PiiRedactionTypeCell Name="PART_CardCell" />
+                        </arc:PiiRedactionCellsPanel>
+
+                        <!-- Flow strip: decorative, the status region narrates every hop. -->
+                        <arc:PiiRedactionFlowPanel Name="PART_Flow"
+                                                   Height="{arc:PiiRedactionTokenResource FlowHeight}"
+                                                   ConnectorMinWidth="{arc:PiiRedactionTokenResource FlowConnectorMinWidth}"
+                                                   AutomationProperties.AccessibilityView="Raw"
+                                                   IsHitTestVisible="False">
+                            <arc:PiiRedactionFlowNode Name="PART_FlowYou" Glyph="{x:Static arc:ArcIcons.User}" />
+                            <arc:PiiRedactionConnector Name="PART_FlowOut"
+                                                       VerticalAlignment="Center"
+                                                       LineBrush="{arc:ArcDesignTokenResource Border}"
+                                                       DotBrush="{arc:ArcDesignTokenResource Accent}"
+                                                       LineWidth="{arc:PiiRedactionTokenResource FlowLineWidth}"
+                                                       DotSize="{arc:PiiRedactionTokenResource FlowDotSize}" />
+                            <arc:PiiRedactionFlowNode Name="PART_FlowGuard" Glyph="{x:Static arc:ArcIcons.ShieldCheck}" />
+                            <arc:PiiRedactionConnector Name="PART_FlowIn"
+                                                       VerticalAlignment="Center"
+                                                       LineBrush="{arc:ArcDesignTokenResource Border}"
+                                                       DotBrush="{arc:ArcDesignTokenResource Accent}"
+                                                       LineWidth="{arc:PiiRedactionTokenResource FlowLineWidth}"
+                                                       DotSize="{arc:PiiRedactionTokenResource FlowDotSize}" />
+                            <arc:PiiRedactionFlowNode Name="PART_FlowModel" />
+                        </arc:PiiRedactionFlowPanel>
+
+                        <!-- Reply -->
+                        <Border Name="PART_ReplyBox"
+                                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                CornerRadius="{arc:PiiRedactionTokenResource BoxCornerRadius}"
+                                Padding="{arc:PiiRedactionTokenResource BoxPadding}">
+                            <StackPanel Spacing="6">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <arc:ArcGlyph Name="PART_ReplyMark"
+                                                  Data="{Binding ModelMark, RelativeSource={RelativeSource TemplatedParent}}"
+                                                  Size="{arc:PiiRedactionTokenResource ModelMarkSize}"
+                                                  VerticalAlignment="Center" />
+                                    <TextBlock Name="PART_ReplyModel"
+                                               Text="{Binding ShownModelName, RelativeSource={RelativeSource TemplatedParent}}"
+                                               FontSize="{arc:PiiRedactionTokenResource SectionLabelFontSize}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                               TextTrimming="CharacterEllipsis"
+                                               VerticalAlignment="Center" />
+                                </StackPanel>
+                                <Grid>
+                                    <TextBlock Name="PART_ReplyReserve"
+                                               TextWrapping="Wrap"
+                                               FontSize="{arc:PiiRedactionTokenResource TextFontSize}"
+                                               LineHeight="{arc:PiiRedactionTokenResource TextLineHeight}"
+                                               Opacity="0"
+                                               IsHitTestVisible="False"
+                                               AutomationProperties.AccessibilityView="Raw" />
+                                    <TextBlock Name="PART_ReplyPlaceholder"
+                                               TextWrapping="Wrap"
+                                               FontSize="{arc:PiiRedactionTokenResource TextFontSize}"
+                                               LineHeight="{arc:PiiRedactionTokenResource TextLineHeight}"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    <arc:PiiRedactionStreamText Name="PART_Stream"
+                                                                FontSize="{arc:PiiRedactionTokenResource TextFontSize}"
+                                                                LineHeight="{arc:PiiRedactionTokenResource TextLineHeight}"
+                                                                Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                                VerticalAlignment="Top" />
+                                    <arc:DecoratedTextBlock Name="PART_Restored"
+                                                            TextWrapping="Wrap"
+                                                            FontSize="{arc:PiiRedactionTokenResource TextFontSize}"
+                                                            LineHeight="{arc:PiiRedactionTokenResource TextLineHeight}"
+                                                            Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                            VerticalAlignment="Top" />
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Footer -->
+                        <Grid ColumnDefinitions="*,Auto,Auto" MinHeight="{arc:PiiRedactionTokenResource FooterHeight}">
+                            <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center" Margin="0,0,8,0">
+                                <arc:ArcGlyph Name="PART_StatusGlyph"
+                                              Size="{arc:PiiRedactionTokenResource StatusGlyphSize}"
+                                              VerticalAlignment="Center" />
+                                <arc:ToolCallText Name="PART_Status"
+                                                  Swap="Fade"
+                                                  VerticalAlignment="Center"
+                                                  Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                  MutedForeground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </StackPanel>
+                            <arc:Button Name="PART_Reset"
+                                        Grid.Column="1"
+                                        Classes="pii-action"
+                                        Variant="Ghost"
+                                        Size="Small"
+                                        Width="{arc:PiiRedactionTokenResource ResetWidth}"
+                                        Margin="0,0,6,0"
+                                        Opacity="0" />
+                            <arc:Button Name="PART_Primary"
+                                        Grid.Column="2"
+                                        Classes="pii-action"
+                                        Variant="Primary"
+                                        Size="Small"
+                                        Width="{arc:PiiRedactionTokenResource PrimaryWidth}" />
+                        </Grid>
+                    </StackPanel>
+                    <arc:ExplainerAnnouncer Name="PART_Announcer" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Non-triggered values of template parts (state styles cannot override local template values). -->
+        <Style Selector="^ /template/ StackPanel#PART_Stack">
+            <Setter Property="Spacing" Value="{arc:PiiRedactionTokenResource SectionGap}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_ReplyMark">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_StatusGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^ /template/ arc|PiiRedactionCellsPanel#PART_Cells">
+            <Setter Property="Columns" Value="4" />
+        </Style>
+        <Style Selector="^ /template/ arc|Switch.pii-show-original">
+            <Setter Property="MinHeight" Value="0" />
+        </Style>
+        <Style Selector="^ /template/ arc|Switch.pii-show-original:disabled">
+            <Setter Property="Opacity" Value="0.55" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_ShowOriginalLabel">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_MessageBox:focus-within">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+
+        <Style Selector="^:simulated /template/ Border#PART_Tag">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:resettable /template/ arc|Button#PART_Reset">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:working /template/ arc|ArcGlyph#PART_StatusGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:done /template/ arc|ArcGlyph#PART_StatusGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:error /template/ arc|ArcGlyph#PART_StatusGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:error /template/ arc|ToolCallText#PART_Status">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+
+        <!-- Below 520px two rows of two cells; below 400px tighter gaps and no Simulated tag (the status still says it). -->
+        <Style Selector="^:narrow /template/ arc|PiiRedactionCellsPanel#PART_Cells">
+            <Setter Property="Columns" Value="2" />
+        </Style>
+        <Style Selector="^:compact">
+            <Setter Property="Padding" Value="{arc:PiiRedactionTokenResource CardPaddingCompact}" />
+        </Style>
+        <Style Selector="^:compact /template/ StackPanel#PART_Stack">
+            <Setter Property="Spacing" Value="{arc:PiiRedactionTokenResource SectionGapCompact}" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_Tag">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ arc|Button#PART_Reset">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_StatusGlyph">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Border#PART_MessageBox">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Style Selector="^ /template/ arc|Button#PART_Reset">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- The message field: a frameless text box in the same place, font and line height as the text layers. -->
+    <ControlTheme x:Key="{x:Type arc:PiiRedactionEditor}" TargetType="arc:PiiRedactionEditor">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:PiiRedactionTokenResource TextFontSize}" />
+        <Setter Property="LineHeight" Value="{arc:PiiRedactionTokenResource TextLineHeight}" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="SelectionForegroundBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="PlaceholderForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Cursor" Value="IBeam" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:PiiRedactionEditor">
+                <Panel Background="Transparent">
+                    <TextBlock Name="PART_Placeholder"
+                               Foreground="{TemplateBinding PlaceholderForeground}"
+                               Text="{TemplateBinding PlaceholderText}"
+                               TextWrapping="Wrap"
+                               LineHeight="{TemplateBinding LineHeight}"
+                               VerticalAlignment="Top">
+                        <TextBlock.IsVisible>
+                            <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                <Binding ElementName="PART_TextPresenter" Path="PreeditText" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                                <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Text" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                            </MultiBinding>
+                        </TextBlock.IsVisible>
+                    </TextBlock>
+                    <TextPresenter Name="PART_TextPresenter"
+                                   Text="{TemplateBinding Text, Mode=TwoWay}"
+                                   CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                   CaretIndex="{TemplateBinding CaretIndex}"
+                                   SelectionStart="{TemplateBinding SelectionStart}"
+                                   SelectionEnd="{TemplateBinding SelectionEnd}"
+                                   TextAlignment="{TemplateBinding TextAlignment}"
+                                   TextWrapping="{TemplateBinding TextWrapping}"
+                                   LineHeight="{TemplateBinding LineHeight}"
+                                   LetterSpacing="{TemplateBinding LetterSpacing}"
+                                   SelectionBrush="{TemplateBinding SelectionBrush}"
+                                   SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                   CaretBrush="{TemplateBinding CaretBrush}"
+                                   VerticalAlignment="Top" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- A type cell: a dot and the type's name over the value; a light tint of the type's color once something is found. -->
+    <ControlTheme x:Key="{x:Type arc:PiiRedactionTypeCell}" TargetType="arc:PiiRedactionTypeCell">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Height" Value="{arc:PiiRedactionTokenResource CellHeight}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:PiiRedactionTypeCell">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            CornerRadius="{arc:PiiRedactionTokenResource CellCornerRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}" />
+                    <Border Name="PART_Tint"
+                            CornerRadius="{arc:PiiRedactionTokenResource CellCornerRadius}"
+                            Background="{TemplateBinding TintBrush}" />
+                    <StackPanel Margin="{arc:PiiRedactionTokenResource CellPadding}" VerticalAlignment="Center" Spacing="2">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <Ellipse Width="{arc:PiiRedactionTokenResource CellDotSize}"
+                                     Height="{arc:PiiRedactionTokenResource CellDotSize}"
+                                     Fill="{TemplateBinding TypeBrush}"
+                                     VerticalAlignment="Center" />
+                            <TextBlock Text="{TemplateBinding TypeName}"
+                                       FontSize="{arc:PiiRedactionTokenResource CellFontSize}"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+                        <arc:ToolCallText Name="PART_Value"
+                                          Swap="Fade"
+                                          Text="{TemplateBinding Value}"
+                                          IsShimmering="{TemplateBinding IsChecking}"
+                                          FontSize="{arc:PiiRedactionTokenResource CellFontSize}"
+                                          FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                          FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                                          MutedForeground="{arc:ArcDesignTokenResource TextMuted}" />
+                    </StackPanel>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Border#PART_Tint">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^ /template/ arc|ToolCallText#PART_Value">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:found /template/ Border#PART_Tint">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:found /template/ arc|ToolCallText#PART_Value">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Tint">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A node of the flow strip: the glyph and the label; the active node's glyph takes the accent and its label shimmers. -->
+    <ControlTheme x:Key="{x:Type arc:PiiRedactionFlowNode}" TargetType="arc:PiiRedactionFlowNode">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:PiiRedactionFlowNode">
+                <Grid ColumnDefinitions="Auto,*" VerticalAlignment="Center">
+                    <arc:ArcGlyph Name="PART_Glyph"
+                                  Data="{TemplateBinding Glyph}"
+                                  Size="{arc:PiiRedactionTokenResource FlowGlyphSize}"
+                                  VerticalAlignment="Center"
+                                  Margin="0,0,6,0" />
+                    <arc:ToolCallText Name="PART_Label"
+                                      Grid.Column="1"
+                                      Swap="Fade"
+                                      Text="{TemplateBinding Label}"
+                                      IsShimmering="{TemplateBinding IsActive}"
+                                      FontSize="{arc:PiiRedactionTokenResource CellFontSize}"
+                                      FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                      Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                      MutedForeground="{arc:ArcDesignTokenResource TextMuted}"
+                                      VerticalAlignment="Center" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:active /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

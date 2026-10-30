@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AiSparkPlaybackDemo">
+    <!-- Speed 0.5, 1 and 2; the switch freezes the first spark in place and resumes it from the same phase. -->
+    <StackPanel Spacing="20" Margin="0,8" MaxWidth="560">
+        <StackPanel Orientation="Horizontal" Spacing="32">
+            <arc:AiSpark Name="Spark" Size="56" Status="Thinking" Speed="0.5" />
+            <arc:AiSpark Size="56" Status="Thinking" Announce="False" />
+            <arc:AiSpark Size="56" Status="Thinking" Speed="2" Announce="False" />
+        </StackPanel>
+        <arc:Switch IsChecked="{Binding #Spark.IsPaused}" Content="Paused" />
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,38 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.StarterPromptsOwnStartersDemo">
+    <!-- Your own tabs and starters for a support team. All is added in front; a tab with no starters is hidden. -->
+    <arc:StarterPrompts MaxWidth="760"
+                        Greeting="How can I help the support team today?"
+                        Description="Starters for the queue, the knowledge base and the weekly report."
+                        Placeholder="Ask about a customer, a ticket or a policy"
+                        ModelName="{x:Static demos:StarterPromptsDemoData.ModelName}"
+                        Count="4">
+        <arc:StarterPrompts.Categories>
+            <arc:StarterPromptCategory Id="support" Label="Support" Icon="{x:Static arc:ArcIcons.MessageCircle}" />
+            <arc:StarterPromptCategory Id="knowledge" Label="Knowledge" Icon="{x:Static arc:ArcIcons.BookOpen}" />
+            <arc:StarterPromptCategory Id="report" Label="Report" Icon="{x:Static arc:ArcIcons.ChartLine}" />
+            <arc:StarterPromptCategory Id="empty" Label="Hidden, no starters" />
+        </arc:StarterPrompts.Categories>
+        <arc:StarterPrompt Id="refund" Category="support" App="{x:Static arc:StarterPromptApp.Mail}"
+                           Title="Answer refund requests" Description="Draft replies for the 6 open threads"
+                           Prompt="Draft replies to the 6 open refund threads in my inbox. Be warm, quote our 30 day policy and flag any order older than that." />
+        <arc:StarterPrompt Id="escalations" Category="support" App="{x:Static arc:StarterPromptApp.Issues}"
+                           Title="Triage today's escalations" Description="Sort by customer impact"
+                           Prompt="List today's escalated tickets, sorted by customer impact, with a one line summary and a suggested owner for each." />
+        <arc:StarterPrompt Id="macro" Category="support"
+                           Title="Write a reply macro" Description="For password reset questions"
+                           Prompt="Write a reusable reply for password reset questions, with steps for the web and mobile apps." />
+        <arc:StarterPrompt Id="gaps" Category="knowledge" App="{x:Static arc:StarterPromptApp.Docs}"
+                           Title="Find gaps in the help center" Description="Questions with no article"
+                           Prompt="Compare last month's ticket topics with our help center and list the five questions that have no article yet." />
+        <arc:StarterPrompt Id="article" Category="knowledge"
+                           Title="Draft a help article" Description="Exporting reports to CSV"
+                           Prompt="Draft a short help article on exporting reports to CSV, with steps, one screenshot placeholder and a troubleshooting section." />
+        <arc:StarterPrompt Id="weekly" Category="report"
+                           Title="Write the weekly support report" Description="Volume, response time, top issues"
+                           Prompt="Write the weekly support report: ticket volume, median first response time, the top three issues and what changed since last week." />
+    </arc:StarterPrompts>
+</UserControl>

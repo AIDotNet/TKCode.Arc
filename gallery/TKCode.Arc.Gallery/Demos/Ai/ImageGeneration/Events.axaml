@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.ImageGenerationEventsDemo">
+    <!-- The app listens to the selection and saves downloads itself; the log below shows what the card raised. -->
+    <StackPanel MaxWidth="640" Margin="0,12" Spacing="12">
+        <arc:ImageGeneration x:Name="Card"
+                             AutoGenerate="False"
+                             Prompt="A cosy pastel reading nook with an arched window and a plant">
+            <arc:ImageGeneration.Simulation>
+                <arc:ImageGenerationSimulation Models="{x:Static demos:ImageGenerationDemoData.Models}"
+                                               Suggestions="{x:Static demos:ImageGenerationDemoData.Suggestions}"
+                                               Painter="{x:Static demos:ImageGenerationDemoData.Painter}" />
+            </arc:ImageGeneration.Simulation>
+        </arc:ImageGeneration>
+        <TextBlock x:Name="Log" Text="Generate, then pick or download an image." TextWrapping="Wrap" Opacity="0.7" />
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ConnectorSetupYourFlowDemo">
+    <!--
+        Your own apps and connect handler: the handler reports each step and the sync count, and the first Issues attempt
+        throws "Needs admin approval" to show Retry. The line under the card follows ConnectedIdsChanged.
+    -->
+    <StackPanel Spacing="12" MaxWidth="520">
+        <arc:ConnectorSetup x:Name="Setup"
+                            AssistantName="Atlas"
+                            Description="Pick the apps Atlas may read when it answers questions about your work." />
+        <TextBlock x:Name="Log" Foreground="{arc:ArcDesignTokenResource TextSecondary}" TextWrapping="Wrap" />
+    </StackPanel>
+</UserControl>

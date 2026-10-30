@@ -19,8 +19,9 @@ namespace TKCode.Arc;
 /// <item>the shimmer of the active step (Arc text shimmer): the text rests at 12% of its color mixed into muted text while a
 /// bell-shaped band of the full color sweeps through it in 1.8s, line after line as if the lines were one, then rests for a
 /// third of that; full motion only, on a LiveLoop that pauses off screen;</item>
-/// <item>streaming: words after a given point appear a chunk of 3-5 at a time every 34ms, each chunk fading in (full motion)
-/// or appearing at once (reduced), then <see cref="StreamCompleted"/> fires.</item>
+/// <item>streaming: words after a given point appear a chunk of 3-5 at a time every 34ms, each chunk fading in over 120ms
+/// (full motion, the shared <see cref="AiTextFades"/>) or appearing at once (reduced), then <see cref="StreamCompleted"/>
+/// fires.</item>
 /// </list>
 /// The full text is laid out from the start, so streamed words appear in place and the height does not change as they do.
 /// </summary>
@@ -64,6 +65,7 @@ internal sealed class AgentPlanText : Control
     private readonly SolidColorBrush _baseBrush = new(Colors.Gray);
     private readonly LiveLoop _sweepLoop;
     private readonly LiveLoop _streamLoop;
+    private readonly AiTextFades _fades;
     private readonly MotionValue<Color> _color;
     private readonly MotionValue<double> _settle;
     private TextLayout? _layout;
@@ -89,7 +91,6 @@ internal sealed class AgentPlanText : Control
         public int Start;
         public int Length;
         public double RevealedAt = -1;
-        public Rect[]? Rects;
     }
 
     static AgentPlanText()
@@ -114,6 +115,7 @@ internal sealed class AgentPlanText : Control
         _sweepLoop = new LiveLoop(this, StepSweep) { ViewportMargin = 64 };
         _sweepLoop.RunningChanged += _ => InvalidateVisual();
         _streamLoop = new LiveLoop(this, StepStream) { MinimumLevel = ArcMotionLevel.Off };
+        _fades = new AiTextFades(this, InvalidateVisual) { Duration = AgentPlanMotion.ChunkFade };
     }
 
     public string? Text { get => GetValue(TextProperty); set => SetValue(TextProperty, value); }
@@ -321,6 +323,7 @@ internal sealed class AgentPlanText : Control
         var was = _streaming;
         _streaming = false;
         _chunks.Clear();
+        _fades.Clear();
         _streamLoop.Stop();
         InvalidateVisual();
         if (raise && (was || _streamStart >= 0))
@@ -335,8 +338,13 @@ internal sealed class AgentPlanText : Control
     {
         if (_revealed < _chunks.Count)
         {
-            _chunks[_revealed].RevealedAt = _streamClock;
+            var chunk = _chunks[_revealed];
+            chunk.RevealedAt = _streamClock;
             _revealed++;
+            if (_streamFades)
+            {
+                _fades.Add(chunk.Start, chunk.Start + chunk.Length);
+            }
         }
     }
 
@@ -391,10 +399,7 @@ internal sealed class AgentPlanText : Control
         }
         _layout = Create(text, typeface, _brush, width, overrides);
         _baseLayout = Create(text, typeface, _baseBrush, width, baseOverrides);
-        foreach (var chunk in _chunks)
-        {
-            chunk.Rects = null;
-        }
+        _fades.ForgetLines();
     }
 
     private TextLayout Create(string text, Typeface typeface, IBrush brush, double width, IReadOnlyList<ValueSpan<TextRunProperties>>? overrides) =>
@@ -502,43 +507,7 @@ internal sealed class AgentPlanText : Control
 
     private void RenderStream(DrawingContext context)
     {
-        var layout = _layout!;
-        if (_streamStart > 0)
-        {
-            foreach (var rect in RectsOf(0, _streamStart))
-            {
-                using (context.PushClip(rect))
-                {
-                    layout.Draw(context, default);
-                }
-            }
-        }
-        var fade = AgentPlanMotion.ChunkFade.TotalSeconds;
-        for (var i = 0; i < _revealed; i++)
-        {
-            var chunk = _chunks[i];
-            chunk.Rects ??= RectsOf(chunk.Start, chunk.Length);
-            var opacity = _streamFades ? ArcEasings.Standard.Ease(Math.Clamp((_streamClock - chunk.RevealedAt) / fade, 0, 1)) : 1;
-            if (opacity <= 0.001)
-            {
-                continue;
-            }
-            using (context.PushOpacity(opacity))
-            {
-                foreach (var rect in chunk.Rects)
-                {
-                    using (context.PushClip(rect))
-                    {
-                        layout.Draw(context, default);
-                    }
-                }
-            }
-        }
-    }
-
-    private Rect[] RectsOf(int start, int length)
-    {
-        // Inflate up and down so ascenders and descenders are not cut; the sides stay at the characters' edges.
-        return _layout!.HitTestTextRange(start, length).Select(r => new Rect(r.X, r.Y - 2, r.Width, r.Height + 4)).ToArray();
+        // What came before the stream and the revealed chunks; each chunk still fading at its own opacity.
+        _fades.Draw(context, _layout!, default, VisibleLength);
     }
 }

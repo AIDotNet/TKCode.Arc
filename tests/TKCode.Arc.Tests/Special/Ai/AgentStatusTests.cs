@@ -14,6 +14,68 @@ using TKCode.Arc.Motion;
 
 namespace TKCode.Arc.Tests.Special.Ai;
 
+/// <summary>
+/// Two invented runs the tests play (the package ships none): the coding run takes six steps of 1.9, 1.5, 2.5, 1.9 and
+/// 3.3 seconds (the fifth counting 12 specs) and then waits for an approval; the research run takes five steps, and its
+/// third fails once after five of nine pages.
+/// </summary>
+internal static class AgentStatusTestRuns
+{
+    public static AgentModel CodingAgent { get; } = new("Juniper Code 3", ArcIcons.Sparkles);
+
+    public static AgentModel ResearchAgent { get; } = new("Atlas Scout 2", ArcIcons.Globe);
+
+    public static AgentRunScenario Coding { get; } = new()
+    {
+        Id = "coding",
+        Agent = CodingAgent,
+        Outcome = "5 files touched",
+        DeniedOutcome = "5 files touched, not deployed",
+        ApprovedNotice = "Approved. The deploy is only simulated here.",
+        DeniedNotice = "Denied. Nothing was deployed.",
+        Steps =
+        [
+            new() { Id = "scan", ActiveLabel = "Scanning 9 modules", DoneLabel = "Scanned 9 modules", Icon = ArcIcons.Search, Duration = TimeSpan.FromMilliseconds(1917) },
+            new() { Id = "lookup", ActiveLabel = "Looking up parseDueDate", DoneLabel = "Located 3 usages", Icon = ArcIcons.Search, Duration = TimeSpan.FromMilliseconds(1499) },
+            new() { Id = "patch", ActiveLabel = "Patching lib/dates/parse-due.ts", DoneLabel = "Patched lib/dates/parse-due.ts", Icon = ArcIcons.Search, Duration = TimeSpan.FromMilliseconds(2533) },
+            new() { Id = "tests", ActiveLabel = "Adjusting 4 test suites", DoneLabel = "Adjusted 4 test suites", Icon = ArcIcons.Search, Duration = TimeSpan.FromMilliseconds(1917) },
+            new()
+            {
+                Id = "specs", ActiveLabel = "Checking specs", DoneLabel = "12 of 12 specs green", Icon = ArcIcons.Search,
+                Duration = TimeSpan.FromMilliseconds(3316), ProgressTotal = 12, ProgressInterval = TimeSpan.FromMilliseconds(279)
+            },
+            new()
+            {
+                Id = "deploy", ActiveLabel = "Deploying build 2.4.1", DoneLabel = "Deployed build 2.4.1", Icon = ArcIcons.CloudUpload,
+                Duration = TimeSpan.FromMilliseconds(1440), Request = "Waiting on you to deploy to staging",
+                WaitingLabel = "Approval needed to deploy to staging", SkippedLabel = "Deploy skipped"
+            }
+        ]
+    };
+
+    public static AgentRunScenario Research { get; } = new()
+    {
+        Id = "research",
+        Agent = ResearchAgent,
+        Outcome = "8 pages cited",
+        RetryNotice = "Trying the pages that did not load again.",
+        Steps =
+        [
+            new() { Id = "plan", ActiveLabel = "Drafting 3 sub-questions", DoneLabel = "Drafted 3 sub-questions", Icon = ArcIcons.ListChecks, Duration = TimeSpan.FromMilliseconds(1433) },
+            new() { Id = "search", ActiveLabel = "Querying 2 search engines", DoneLabel = "Collected 21 links", Icon = ArcIcons.Globe, Duration = TimeSpan.FromMilliseconds(1917) },
+            new()
+            {
+                Id = "read", ActiveLabel = "Opening pages", DoneLabel = "Opened 9 pages", Icon = ArcIcons.BookOpen,
+                Duration = TimeSpan.FromMilliseconds(3273), ProgressTotal = 9, ProgressInterval = TimeSpan.FromMilliseconds(363),
+                FailAtProgress = 5, Failure = "Fetch failed · 2 pages did not load", FailedLabel = "2 pages did not load",
+                RetryDuration = TimeSpan.FromMilliseconds(1456)
+            },
+            new() { Id = "compare", ActiveLabel = "Weighing warranty terms across 4 shops", DoneLabel = "Weighed 4 shops", Icon = ArcIcons.Search, Duration = TimeSpan.FromMilliseconds(2217) },
+            new() { Id = "write", ActiveLabel = "Drafting the summary", DoneLabel = "Wrote a 520 word summary", Icon = ArcIcons.Search, Duration = TimeSpan.FromMilliseconds(2350) }
+        ]
+    };
+}
+
 /// <summary>The agent status pill: states, timer, actions, the panel, focus, keyboard, announcements and motion levels.</summary>
 public class AgentStatusTests
 {
@@ -88,12 +150,27 @@ public class AgentStatusTests
     }
 
     [AvaloniaFact]
-    public void With_No_Data_It_Plays_The_First_Sample_Run()
+    public void With_No_Data_And_No_Simulation_It_Rests_At_Ready()
     {
         using var f = new Fixture();
         f.Open(new AgentStatus());
-        f.Status.Simulation.ShouldNotBeNull();
-        f.Status.Simulation!.Scenario.ShouldBe(AgentStatusSamples.Coding);
+        f.Status.Simulation.ShouldBeNull();
+        f.Status.DisplayState.ShouldBe(AgentStatusRunState.Idle);
+        f.Face.LabelText.ShouldBe("Ready");
+        AutomationProperties.GetName(f.Status.Head).ShouldBe("Agent: Ready");
+        f.AdvanceTime(60_000);
+        f.Status.DisplayState.ShouldBe(AgentStatusRunState.Idle);
+        f.Face.LabelText.ShouldBe("Ready");
+        f.Status.Steps.Count.ShouldBe(0);
+    }
+
+    [AvaloniaFact]
+    public void A_Simulation_Plays_Its_Run_Without_Other_Data()
+    {
+        using var f = new Fixture();
+        var sim = new AgentRunSimulation(AgentStatusTestRuns.Coding, f.Time);
+        f.Open(new AgentStatus { Simulation = sim });
+        sim.IsStarted.ShouldBeTrue();
         f.Status.DisplayState.ShouldBe(AgentStatusRunState.Idle);
         f.Face.LabelText.ShouldBe("Ready");
         f.AdvanceTime(900);
@@ -106,6 +183,75 @@ public class AgentStatusTests
         f.Face.LabelText.ShouldBe("Waiting on you to deploy to staging");
         f.Status.InlineApproveButton.IsVisible.ShouldBeTrue();
         f.Status.InlineDenyButton.IsVisible.ShouldBeTrue();
+    }
+
+    [AvaloniaFact]
+    public void A_Simulation_Made_In_Xaml_Takes_Its_Run_From_The_Scenario_Property()
+    {
+        using var f = new Fixture();
+        new AgentRunSimulation().Scenario.Steps.Count.ShouldBe(0, "the parameterless simulation has an empty run");
+        var sim = new AgentRunSimulation(new AgentRunScenario(), f.Time);
+        f.Open(new AgentStatus { Simulation = sim });
+        f.AdvanceTime(900);
+        f.Status.DisplayState.ShouldBe(AgentStatusRunState.Idle, "a run without steps stays Ready");
+        f.Face.LabelText.ShouldBe("Ready");
+        sim.Scenario = AgentStatusTestRuns.Research;
+        f.AdvanceTime(900);
+        f.Status.DisplayState.ShouldBe(AgentStatusRunState.Working);
+        AutomationProperties.GetName(f.Status.Head).ShouldStartWith("Atlas Scout 2: Drafting 3 sub-questions");
+        sim.Dispose();
+    }
+
+    [AvaloniaFact]
+    public void App_Data_Wins_Over_The_Simulation()
+    {
+        using var f = new Fixture();
+        var sim = new AgentRunSimulation(AgentStatusTestRuns.Coding, f.Time);
+        var status = Pill(AgentStatusRunState.NeedsInput, "Needs your approval");
+        status.Simulation = sim;
+        f.Open(status);
+        sim.IsStarted.ShouldBeFalse("a simulation the pill does not show is not started");
+        f.AdvanceTime(5_000);
+        status.DisplayState.ShouldBe(AgentStatusRunState.NeedsInput);
+        f.Face.LabelText.ShouldBe("Needs your approval");
+        AutomationProperties.GetName(status.Head).ShouldStartWith("Atlas Scout 2: Needs your approval");
+        var raised = new List<AgentStatusActions>();
+        status.ApproveRequested += (_, e) => raised.Add(e.Action);
+        status.Invoke(AgentStatusActions.Approve);
+        raised.ShouldBe([AgentStatusActions.Approve]);
+        sim.IsStarted.ShouldBeFalse("the buttons do not reach a simulation the pill does not show");
+        status.DisplayState.ShouldBe(AgentStatusRunState.NeedsInput);
+
+        // Without its own data the pill hands over to the simulation (the app's Agent still names it).
+        status.ClearValue(AgentStatus.StatusProperty);
+        status.ClearValue(AgentStatus.ActivityProperty);
+        sim.IsStarted.ShouldBeTrue();
+        f.AdvanceTime(900);
+        status.DisplayState.ShouldBe(AgentStatusRunState.Working);
+        f.Face.LabelText.ShouldBe("Scanning 9 modules");
+        AutomationProperties.GetName(status.Head).ShouldStartWith("Atlas Scout 2: Scanning 9 modules");
+        sim.Dispose();
+    }
+
+    [AvaloniaFact]
+    public void Clearing_The_Simulation_Stops_Playback()
+    {
+        using var f = new Fixture();
+        var sim = new AgentRunSimulation(AgentStatusTestRuns.Coding, f.Time);
+        var status = new AgentStatus { Simulation = sim };
+        f.Open(status);
+        f.AdvanceTime(900);
+        status.DisplayState.ShouldBe(AgentStatusRunState.Working);
+        status.Simulation = null;
+        status.DisplayState.ShouldBe(AgentStatusRunState.Idle);
+        f.Face.LabelText.ShouldBe("Ready");
+        f.AdvanceTime(12_000);
+        sim.Status.ShouldBe(AgentStatusRunState.NeedsInput, "the app's run goes on by itself");
+        status.DisplayState.ShouldBe(AgentStatusRunState.Idle);
+        f.Face.LabelText.ShouldBe("Ready");
+        status.Invoke(AgentStatusActions.Approve);
+        sim.Status.ShouldBe(AgentStatusRunState.NeedsInput, "the pill's buttons no longer reach it");
+        sim.Dispose();
     }
 
     [AvaloniaFact]
@@ -530,7 +676,7 @@ public class AgentStatusTests
     public void A_Simulation_Drives_The_Pill_And_Receives_Its_Buttons()
     {
         using var f = new Fixture();
-        var sim = new AgentRunSimulation(AgentStatusSamples.Coding, f.Time);
+        var sim = new AgentRunSimulation(AgentStatusTestRuns.Coding, f.Time);
         var status = new AgentStatus { Simulation = sim };
         f.Open(status);
         f.AdvanceTime(900 + 3000);
@@ -852,7 +998,7 @@ public class AgentStatusTests
     public void A_Pill_Is_Collected_While_The_Hosts_Simulation_And_Steps_Live_On()
     {
         var time = new AgentStatusTestClock();
-        var sim = new AgentRunSimulation(AgentStatusSamples.Coding, time);
+        var sim = new AgentRunSimulation(AgentStatusTestRuns.Coding, time);
         var kept = new AgentStatusStep("a", "Read 12 files", AgentStatusStepState.Done);
         var cleared = new AgentStatusStep("b", "Running tests", AgentStatusStepState.Active);
         var reference = PillOver(sim, kept, cleared);
@@ -869,7 +1015,7 @@ public class AgentStatusTests
     public void A_Pill_Put_Back_Follows_Its_Simulation_Again()
     {
         using var f = new Fixture();
-        var sim = new AgentRunSimulation(AgentStatusSamples.Coding, f.Time);
+        var sim = new AgentRunSimulation(AgentStatusTestRuns.Coding, f.Time);
         var status = new AgentStatus { Simulation = sim, TimeProvider = f.Time };
         var host = new Border { Child = status };
         f.Status = status;

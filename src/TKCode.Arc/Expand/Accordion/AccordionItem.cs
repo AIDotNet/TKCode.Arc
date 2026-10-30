@@ -73,6 +73,7 @@ public class AccordionItem : HeaderedContentControl
     static AccordionItem()
     {
         FocusableProperty.OverrideDefaultValue<AccordionItem>(false);
+        FocusModality.Watch();
     }
 
     private Accordion? Owner => ItemsControl.ItemsControlFromItemContainer(this) as Accordion;
@@ -140,8 +141,8 @@ public class AccordionItem : HeaderedContentControl
         var expanded = IsExpanded;
         if (!expanded && _answer.IsKeyboardFocusWithin)
         {
-            // A closed answer is out of reach: focus moves back to its question.
-            _trigger?.Focus(NavigationMethod.Tab);
+            // A closed answer is out of reach: focus moves back to its question (with the keyboard ring after keys only).
+            _trigger?.Focus(FocusModality.For(this));
         }
         ExpandInert.Apply(_answer, !expanded);
         _reveal ??= Create(v => _panel.Opacity = Math.Clamp(v, 0, 1), expanded ? 1 : 0);

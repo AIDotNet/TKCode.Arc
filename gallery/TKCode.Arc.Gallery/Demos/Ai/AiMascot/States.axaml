@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AiMascotStatesDemo">
+    <!-- Every state at 80px. Each one also changes the face, so the state never rests on motion alone. -->
+    <UniformGrid Columns="3" Margin="0,8" MaxWidth="560">
+        <StackPanel Spacing="8" Margin="0,0,0,20">
+            <arc:AiMascot Status="Idle" Size="80" HorizontalAlignment="Center" />
+            <TextBlock Text="Idle" TextAlignment="Center" FontSize="{arc:ArcDesignTokenResource TypeSM}" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        </StackPanel>
+        <StackPanel Spacing="8" Margin="0,0,0,20">
+            <arc:AiMascot Status="Listening" Size="80" HorizontalAlignment="Center" />
+            <TextBlock Text="Listening" TextAlignment="Center" FontSize="{arc:ArcDesignTokenResource TypeSM}" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        </StackPanel>
+        <StackPanel Spacing="8" Margin="0,0,0,20">
+            <arc:AiMascot Status="Thinking" Size="80" HorizontalAlignment="Center" />
+            <TextBlock Text="Thinking" TextAlignment="Center" FontSize="{arc:ArcDesignTokenResource TypeSM}" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        </StackPanel>
+        <StackPanel Spacing="8">
+            <arc:AiMascot Status="Writing" Size="80" HorizontalAlignment="Center" />
+            <TextBlock Text="Writing" TextAlignment="Center" FontSize="{arc:ArcDesignTokenResource TypeSM}" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        </StackPanel>
+        <StackPanel Spacing="8">
+            <arc:AiMascot Status="Done" Size="80" HorizontalAlignment="Center" />
+            <TextBlock Text="Done" TextAlignment="Center" FontSize="{arc:ArcDesignTokenResource TypeSM}" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        </StackPanel>
+        <StackPanel Spacing="8">
+            <arc:AiMascot Status="Error" Size="80" HorizontalAlignment="Center" />
+            <TextBlock Text="Error" TextAlignment="Center" FontSize="{arc:ArcDesignTokenResource TypeSM}" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        </StackPanel>
+    </UniformGrid>
+</UserControl>

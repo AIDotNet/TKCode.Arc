@@ -1,0 +1,124 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PageCurlPreviewDemo">
+    <!--
+        A small magazine. Tap a page or drag its corner; the buttons and the arrow keys turn pages too. Every page is laid
+        out at 288 by 400 and scaled into its slot by a Viewbox, so the book can take any width.
+    -->
+    <UserControl.Styles>
+        <Style Selector="TextBlock.folio">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Margin" Value="24,0,24,20" />
+            <Setter Property="VerticalAlignment" Value="Bottom" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="TextBlock.title">
+            <Setter Property="FontSize" Value="22" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource DisplayFontFamily}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="TextBlock.body">
+            <Setter Property="FontSize" Value="12.5" />
+            <Setter Property="LineHeight" Value="19" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="TextBlock.caption">
+            <Setter Property="FontSize" Value="11.5" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+    </UserControl.Styles>
+
+    <!-- The margin leaves room for a page lifted past the top of the book. -->
+    <arc:PageCurl Label="Slow mornings" Width="520" HorizontalAlignment="Center" Margin="0,48,0,8">
+        <!-- 1: the cover, alone on the right while the book is closed. -->
+        <Viewbox>
+            <Panel Width="288" Height="400" Background="#2B2622">
+                <arc:ArcImage Source="https://picsum.photos/seed/arc-curl-cover/576/800" Stretch="UniformToFill" />
+                <Border>
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0%,45%" EndPoint="0%,100%">
+                            <GradientStop Offset="0" Color="#00000000" />
+                            <GradientStop Offset="1" Color="#B0000000" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                </Border>
+                <StackPanel Margin="22,0,22,24" VerticalAlignment="Bottom" Spacing="4">
+                    <TextBlock Text="No. 07" FontSize="12" Foreground="White" Opacity="0.85" />
+                    <TextBlock Text="Slow mornings" FontSize="26" FontWeight="SemiBold" Foreground="White"
+                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}" />
+                </StackPanel>
+            </Panel>
+        </Viewbox>
+        <!-- 2 -->
+        <Viewbox>
+            <Panel Width="288" Height="400">
+                <StackPanel Margin="24,0" VerticalAlignment="Center" Spacing="12">
+                    <TextBlock Classes="title" Text="Going nowhere, carefully" />
+                    <TextBlock Classes="body"
+                               Text="Five places to stand still for an hour: a road, a shore, a field and two windows. Nothing happens in them, and that is the point." />
+                </StackPanel>
+                <TextBlock Classes="folio" Text="2" HorizontalAlignment="Right" />
+            </Panel>
+        </Viewbox>
+        <!-- 3 -->
+        <Viewbox>
+            <Panel Width="288" Height="400">
+                <StackPanel Margin="22,26,22,0" Spacing="12">
+                    <arc:ArcImage Source="https://picsum.photos/seed/arc-curl-3/488/440" Stretch="UniformToFill" Height="220" />
+                    <TextBlock Classes="caption" Text="Plate one. Taken before anyone else was up." />
+                </StackPanel>
+                <TextBlock Classes="folio" Text="3" HorizontalAlignment="Right" />
+            </Panel>
+        </Viewbox>
+        <!-- 4 -->
+        <Viewbox>
+            <Panel Width="288" Height="400">
+                <StackPanel Margin="22,26,22,0" Spacing="12">
+                    <arc:ArcImage Source="https://picsum.photos/seed/arc-curl-4/488/520" Stretch="UniformToFill" Height="260" />
+                    <TextBlock Classes="caption" Text="Plate two. The same view, an hour later." />
+                </StackPanel>
+                <TextBlock Classes="folio" Text="4" HorizontalAlignment="Left" />
+            </Panel>
+        </Viewbox>
+        <!-- 5 -->
+        <Viewbox>
+            <Panel Width="288" Height="400">
+                <StackPanel Margin="24,0" VerticalAlignment="Center" Spacing="14">
+                    <TextBlock Classes="title" FontSize="24"
+                               Text="“The best part of the trip was the part where we stopped.”" />
+                    <TextBlock Classes="caption" Text="Noor Haddad, walker" />
+                </StackPanel>
+                <TextBlock Classes="folio" Text="5" HorizontalAlignment="Right" />
+            </Panel>
+        </Viewbox>
+        <!-- 6 -->
+        <Viewbox>
+            <Panel Width="288" Height="400" Background="#2B2622">
+                <arc:ArcImage Source="https://picsum.photos/seed/arc-curl-6/576/800" Stretch="UniformToFill" />
+            </Panel>
+        </Viewbox>
+        <!-- 7 -->
+        <Viewbox>
+            <Panel Width="288" Height="400">
+                <StackPanel Margin="24,0" VerticalAlignment="Center" Spacing="12">
+                    <TextBlock Classes="title" Text="Next issue" />
+                    <TextBlock Classes="body"
+                               Text="Late evenings: porches, platforms and the last bus home." />
+                </StackPanel>
+                <TextBlock Classes="folio" Text="7" HorizontalAlignment="Right" />
+            </Panel>
+        </Viewbox>
+        <!-- 8: the back cover, alone on the left once the last page has turned. -->
+        <Viewbox>
+            <Panel Width="288" Height="400" Background="#2B2622">
+                <TextBlock Text="Slow mornings · No. 07" Margin="22,0,22,24" VerticalAlignment="Bottom" FontSize="12"
+                           Foreground="White" Opacity="0.7" />
+            </Panel>
+        </Viewbox>
+    </arc:PageCurl>
+</UserControl>

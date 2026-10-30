@@ -263,6 +263,7 @@
 
     <!-- The form: the pill over the message line, 12 apart. The pill follows the state and its own width (below 300 it stacks). -->
     <ControlTheme x:Key="{x:Type arc:NewsletterForm}" TargetType="arc:NewsletterForm">
+        <Setter Property="ClipToBounds" Value="False" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:NewsletterForm">
                 <StackPanel Spacing="12">

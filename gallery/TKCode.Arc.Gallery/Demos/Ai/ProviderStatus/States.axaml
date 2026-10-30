@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.ProviderStatusStatesDemo">
+    <!-- The states the app sets: skeleton rows while the first load runs, an error in the header when it fails, a healthy
+         list (real providers, invented sample figures) and no providers at all. Automatic checks are off here, so only the
+         refresh button shows. -->
+    <StackPanel MaxWidth="760" Spacing="16">
+        <arc:SegmentedControl x:Name="State" HorizontalAlignment="Center" SelectedValue="loading">
+            <arc:SegmentedOption Value="loading" Label="Loading" />
+            <arc:SegmentedOption Value="failed" Label="Failed load" />
+            <arc:SegmentedOption Value="healthy" Label="All operational" />
+            <arc:SegmentedOption Value="empty" Label="Empty" />
+        </arc:SegmentedControl>
+        <arc:ProviderStatus x:Name="Card"
+                            IsLoading="True"
+                            RefreshInterval="{x:Null}"
+                            Footnote="{x:Static demos:ProviderStatusDemoData.Footnote}" />
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.BuildingBlocksSizesDemo">
+    <!-- Small (280px) and Large (560px). The layout, the radii and the strokes scale with the width; in a narrower
+         container the frame shrinks to fit. -->
+    <StackPanel Spacing="24" MaxWidth="560" Margin="0,12">
+        <arc:BuildingBlocks Size="Small" />
+        <arc:BuildingBlocks Size="Large" />
+    </StackPanel>
+</UserControl>

@@ -18,7 +18,11 @@ internal enum ToolCallTextSwap
     Rise,
 
     /// <summary>A plain crossfade, 160ms each way on CSS ease-out (the group header's meta).</summary>
-    Fade
+    Fade,
+
+    /// <summary>The Reasoning block's label swap: the old text fades out over 100ms, the new one fades in over 160ms on the
+    /// enter curve while it rises 2px (no blur, no offset for the old text).</summary>
+    Lift
 }
 
 /// <summary>
@@ -98,6 +102,7 @@ internal sealed class ToolCallText : Control
         public MotionValue<double>? Presence { get; set; }
         public bool Leaving { get; set; }
         public bool Rise { get; set; }
+        public bool Lift { get; set; }
         public double Sweep { get; set; }
         public bool Shimmers { get; set; }
     }
@@ -231,6 +236,7 @@ internal sealed class ToolCallText : Control
         }
         var full = level == ArcMotionLevel.Full;
         var rise = full && Swap == ToolCallTextSwap.Rise;
+        var lift = full && Swap == ToolCallTextSwap.Lift;
         var outgoing = _current;
         var shown = Math.Clamp(outgoing.Presence?.Value ?? 1, 0, 1);
         outgoing.Presence?.Stop();
@@ -239,7 +245,9 @@ internal sealed class ToolCallText : Control
         // The leaving text keeps the settle it had (solid or shimmering) and its band, which now runs three times faster.
         outgoing.Shimmers = outgoing.Shimmers && Settle < 0.999;
         var exit = full
-            ? MotionSpec.Tween(ArcMotionPresets.Fast, Swap == ToolCallTextSwap.Rise ? ArcEasings.Standard : ToolCallCollapsible.EaseOut)
+            ? Swap == ToolCallTextSwap.Lift
+                ? MotionSpec.Tween(TimeSpan.FromMilliseconds(100), ArcEasings.Standard)
+                : MotionSpec.Tween(ArcMotionPresets.Fast, Swap == ToolCallTextSwap.Rise ? ArcEasings.Standard : AiHeightBox.EaseOut)
             : MotionSpec.Tween(TimeSpan.FromMilliseconds(130), s_linear);
         var leaving = outgoing;
         leaving.Presence = CreateValue(shown);
@@ -250,13 +258,16 @@ internal sealed class ToolCallText : Control
             UpdateLoop();
             InvalidateVisual();
         }), TaskScheduler.Default);
-        _current = new Label { Text = text, Brush = Foreground, Rise = rise, Shimmers = IsShimmering };
+        _current = new Label { Text = text, Brush = Foreground, Rise = rise, Lift = lift, Shimmers = IsShimmering };
         if (full)
         {
             _current.Presence = CreateValue(0);
-            _ = _current.Presence.AnimateTo(1, Swap == ToolCallTextSwap.Rise
-                ? MotionSpec.Tween(ArcMotionPresets.Standard, ArcEasings.Enter)
-                : MotionSpec.Tween(ArcMotionPresets.Fast, ToolCallCollapsible.EaseOut));
+            _ = _current.Presence.AnimateTo(1, Swap switch
+            {
+                ToolCallTextSwap.Rise => MotionSpec.Tween(ArcMotionPresets.Standard, ArcEasings.Enter),
+                ToolCallTextSwap.Lift => MotionSpec.Tween(ArcMotionPresets.Fast, ArcEasings.Enter),
+                _ => MotionSpec.Tween(ArcMotionPresets.Fast, AiHeightBox.EaseOut),
+            });
         }
         // A new running text starts its band after the usual wait; a settled one is solid at once.
         _pause = FirstDelay;
@@ -445,7 +456,7 @@ internal sealed class ToolCallText : Control
                 Reset(current);
             }
             var p = Math.Clamp(current.Presence?.Value ?? 1, 0, 1);
-            var dy = current.Rise ? 0.3 * FontSize * (1 - p) : 0;
+            var dy = current.Rise ? 0.3 * FontSize * (1 - p) : current.Lift ? 2 * (1 - p) : 0;
             DrawLabel(context, current, width, p, dy, current.Rise ? 4 * (1 - p) : 0);
         }
     }

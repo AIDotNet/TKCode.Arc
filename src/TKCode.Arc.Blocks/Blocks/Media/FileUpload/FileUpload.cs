@@ -106,6 +106,7 @@ public class FileUpload : TemplatedControl
 
     static FileUpload()
     {
+        BlockFocusModality.Watch();
         FocusableProperty.OverrideDefaultValue<FileUpload>(false);
     }
 
@@ -268,10 +269,12 @@ public class FileUpload : TemplatedControl
         var neighbor = index + 1 < files.Count ? files[index + 1] : index > 0 ? files[index - 1] : null;
         Update(files.Where(file => !ReferenceEquals(file, item)).ToList());
         SetStatus($"{item.Name} removed.");
+        // Remove clicked with the mouse moves focus on without the keyboard ring.
+        var method = BlockFocusModality.For(this);
         Dispatcher.UIThread.Post(() =>
         {
             Control? target = neighbor is not null ? RowOf(neighbor)?.RemoveButton : _dropzone;
-            target?.Focus(NavigationMethod.Tab);
+            target?.Focus(method);
         });
     }
 

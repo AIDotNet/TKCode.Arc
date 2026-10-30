@@ -565,6 +565,7 @@ public partial class DataGrid : TemplatedControl
     static DataGrid()
     {
         FocusableProperty.OverrideDefaultValue<DataGrid>(false);
+        DataGridFocusModality.Watch();
     }
 
     public DataGrid()

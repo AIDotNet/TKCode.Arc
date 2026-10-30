@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AiMascotReducedMotionDemo">
+    <!-- Under reduced motion every state is a still pose and changes switch in place. The first mascot has no Status:
+         its tour still moves from state to state. -->
+    <WrapPanel arc:ArcMotion.Level="Reduced" ItemSpacing="20" LineSpacing="16" Margin="0,8">
+        <arc:AiMascot Size="72" />
+        <arc:AiMascot Status="Thinking" Size="72" />
+        <arc:AiMascot Status="Writing" Size="72" />
+        <arc:AiMascot Status="Done" Size="72" />
+        <arc:AiMascot Status="Error" Size="72" />
+    </WrapPanel>
+</UserControl>

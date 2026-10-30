@@ -4,6 +4,7 @@ using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
 using TKCode.Arc.DesignTokens;
+using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
 using AvaloniaButton = Avalonia.Controls.Button;
 
@@ -55,6 +56,20 @@ public class Button : AvaloniaButton
     public static readonly StyledProperty<bool> IsPressScaleEnabledProperty =
         AvaloniaProperty.Register<Button, bool>(nameof(IsPressScaleEnabled), true);
 
+    /// <summary>
+    /// How a new label replaces the old one: BlurSwap (default, a short blur), or Label for the quiet crossfade of Arc's
+    /// AI blocks (100ms out, 160ms in rising 2px), or any other content swap mode.
+    /// </summary>
+    public static readonly StyledProperty<ContentSwapMode> LabelSwapModeProperty =
+        AvaloniaProperty.Register<Button, ContentSwapMode>(nameof(LabelSwapMode), ContentSwapMode.BlurSwap);
+
+    /// <summary>
+    /// Spring the button's width follows when its label changes: Morph (default, a slight bounce), or Quick for a
+    /// bounce-free 0.25s glide that pairs with the Label swap.
+    /// </summary>
+    public static readonly StyledProperty<ArcSpring> LabelSpringProperty =
+        AvaloniaProperty.Register<Button, ArcSpring>(nameof(LabelSpring), ArcSpring.Morph);
+
     /// <inheritdoc cref="VariantProperty"/>
     public ButtonVariant Variant
     {
@@ -80,6 +95,20 @@ public class Button : AvaloniaButton
     {
         get => GetValue(IsPressScaleEnabledProperty);
         set => SetValue(IsPressScaleEnabledProperty, value);
+    }
+
+    /// <inheritdoc cref="LabelSwapModeProperty"/>
+    public ContentSwapMode LabelSwapMode
+    {
+        get => GetValue(LabelSwapModeProperty);
+        set => SetValue(LabelSwapModeProperty, value);
+    }
+
+    /// <inheritdoc cref="LabelSpringProperty"/>
+    public ArcSpring LabelSpring
+    {
+        get => GetValue(LabelSpringProperty);
+        set => SetValue(LabelSpringProperty, value);
     }
 
     #endregion

@@ -95,7 +95,7 @@ public sealed partial class DemoOverviewPage
             Person = person;
             var avatar = new Avatar
             {
-                DisplayName = person.Name, Size = AvatarSize.Small, Status = person.Online ? AvatarStatus.Online : AvatarStatus.Offline,
+                DisplayName = person.Name, Source = DemoPhotos.For(person.Name), Size = AvatarSize.Small, Status = person.Online ? AvatarStatus.Online : AvatarStatus.Offline,
                 VerticalAlignment = VerticalAlignment.Center
             };
 

@@ -108,12 +108,12 @@ internal sealed class MetricExplorerStage : Panel
         }
     }
 
-    /// <summary>Moves keyboard focus to card <paramref name="index"/>.</summary>
-    public void FocusCard(int index)
+    /// <summary>Moves focus to card <paramref name="index"/> (with the keyboard ring unless <paramref name="method"/> is Pointer).</summary>
+    public void FocusCard(int index, NavigationMethod method = NavigationMethod.Tab)
     {
         if ((uint)index < (uint)_cards.Count)
         {
-            _cards[index].Focus(NavigationMethod.Tab);
+            _cards[index].Focus(method);
         }
     }
 

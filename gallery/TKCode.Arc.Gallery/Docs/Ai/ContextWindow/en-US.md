@@ -20,8 +20,8 @@ message, Attach file and Compact now change the window, and a status line under 
   the cells come back, and the status line says how much was folded.
 - **Model choice in context**: switching to a model with a smaller window rearranges the grid at once and shows whether
   the session still fits; when it does not, the card folds the conversation and says so.
-- **Documentation and onboarding**: explain context windows, output reserves and compaction with a sample that people
-  can poke at. With no data the card plays an invented coding session.
+- **Documentation and onboarding**: explain context windows, output reserves and compaction with a session that people
+  can poke at, like the preview on this page.
 
 ## When not to use
 
@@ -36,17 +36,24 @@ message, Attach file and Compact now change the window, and a status line under 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
-    <arc:ContextWindow />
+    <arc:ContextWindow>
+        <arc:ContextWindow.Models>
+            <arc:ContextWindowModel Id="your-model" Name="Your model" Window="200000" Reserve="16000" />
+        </arc:ContextWindow.Models>
+        <arc:ContextWindowItem Category="System" Label="System prompt" Tokens="3800" />
+        <arc:ContextWindowItem Category="Messages" Label="Plan the importer rewrite" Tokens="9400" />
+    </arc:ContextWindow>
 </UserControl>
 ```
 
 `ContextWindow` is a `TemplatedControl` in the Special package. Register the package with `UseArcSpecial()` next to
 `UseArcControls()`. The card is at most 744px wide and follows its own width, not the window's.
 
-Given no data at all (no models, items, turns or files) the card shows the invented sample session from
-`ContextWindowSamples`: three sample models with 1M, 512K and 400K windows, a coding session of 436K tokens, five turns
-for Send message and three files for Attach file. The sample works on its own copy, so `Items` stays empty. As soon as
-you give the card any of the four lists it uses yours.
+Without data (no models, items, turns or files) the card is empty: no model pill, every cell free, and no Send message
+or Attach file. Give it your models and items, and `Turns` and `Files` for the two buttons. The demos on this page use
+real models with the context windows their vendors publish (checked 2026-10-29: Claude Sonnet 5.5 1M, Grok 4.7 500K,
+Mistral Medium 3.5 256K) and an invented coding session of 436K tokens; the output reserve is what the demo app asks for
+in one reply (32K), never more than the model's published output limit.
 
 ### Anatomy
 
@@ -100,8 +107,8 @@ demand while there are more messages than the newest two.
 | A send past the threshold | Added “Why does the nightly sync time out?” (+35K) · past 80% | 0 |
 | Folding starts | Past 80%: folding 35 earlier messages… | 540ms |
 | The summary lands | Folded 608K into a 24K summary | 1,240ms |
-| A switch to a smaller model | 436K is over 80% of Cirrus M | 0 |
-| Folding starts | Too full for Cirrus M: folding 22 earlier messages… | 600ms |
+| A switch to a smaller model | 436K is over 80% of Grok 4.7 | 0 |
+| Folding starts | Too full for Grok 4.7: folding 22 earlier messages… | 600ms |
 
 Files are never folded. When the window is past the threshold and only the newest messages are left, the status line
 says there is nothing to fold yet; when a compaction leaves the window past the threshold, it says how much was folded
@@ -217,7 +224,7 @@ card.Labels = new ContextWindowLabels
 **Avoid**
 
 - Rebuilding `Items` on a timer. Each change animates; update the items that changed instead.
-- Presenting the sample session as real numbers. It is made up.
+- Presenting an invented session as real usage.
 - Using the grid for anything but one window. It always has 200 cells; its proportions only make sense for one budget.
 
 ### Common questions
@@ -231,7 +238,7 @@ Remove or replace the summary item in `Items` when your app rewrites it.
 **What happens when I switch to a bigger model?** The grid rearranges, the status line names the new model and window,
 and nothing folds.
 
-**Why are Send message and Attach file missing?** They hide when `Turns` or `Files` is empty outside the sample.
+**Why are Send message and Attach file missing?** They hide when `Turns` or `Files` is empty.
 
 **Can the window overflow?** Yes. The readout passes 100%, free space reads 0, and the parts that do not fit before the
 reserve get no cells.
@@ -263,15 +270,12 @@ The enums:
 | `ContextWindowCompactReason` | `Manual`, `Threshold`, `ModelSwitch` |
 | `ContextWindowChange` | `Sent`, `Attached`, `Added`, `Compacted` |
 
-`ContextWindowSamples` holds the sample session (`CreateModels()`, `CreateItems()`, `CreateTurns()`,
-`CreateFiles()`), so a page can start from it and change one part.
-
 ## Accessibility
 
 - The card is a group named "Context window". The grid is one image whose name describes it in full: the model, the
   tokens used of the window, every part with its tokens and the threshold. It updates with every change, not with
   every frame of a roll.
-- The readout is read as one line ("436K of 1M tokens, 44% used, 500K free"). The legend is a list named "Context
+- The readout is read as one line ("436K of 1M tokens, 44% used, 532K free"). The legend is a list named "Context
   breakdown" whose rows read their name, tokens and share, so nothing depends on color.
 - The pill is named after the model and its window and says that it changes the model. The menu's models are radio
   items with the selected one checked.

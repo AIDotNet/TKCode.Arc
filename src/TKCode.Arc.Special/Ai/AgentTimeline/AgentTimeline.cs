@@ -26,9 +26,10 @@ namespace TKCode.Arc;
 /// replay; live mode follows a run in progress.
 /// </summary>
 /// <remarks>
-/// With no data the timeline shows <see cref="AgentTimelineSamples.CreateIncidentRun"/> and replays it the first time it
-/// is about a fifth in view. Given a run it opens finished, ready to replay. Under reduced motion it always opens finished;
-/// playback still works, without the shine, connector draw-in and card glide.
+/// Given a run it opens finished, ready to replay; with <see cref="AutoPlay"/> it replays the run the first time it is
+/// about a fifth in view. With no data it is empty: the default title ("Agent run") over an empty axis, with nothing to
+/// play. Under reduced motion it always opens finished; playback still works, without the shine, connector draw-in and
+/// card glide. To show a finished run as if it were happening now, feed it through an <see cref="AgentTimelineLiveDriver"/>.
 /// </remarks>
 [TemplatePart(TitlePart, typeof(TextBlock))]
 [TemplatePart(StatusPart, typeof(AgentTimelineStatusLine))]
@@ -233,7 +234,6 @@ public class AgentTimeline : TemplatedControl
     private readonly List<INotifyCollectionChanged> _observedLists = new();
     private readonly List<AgentTimelineSpan> _observedSpans = new();
     private AgentTimelineModel _model = AgentTimelineModel.Empty;
-    private AgentTimelineRun? _sample;
     private AgentTimelinePalette? _palette;
     private ViewportVisibility? _visibility;
     private TextBlock? _title;
@@ -277,7 +277,7 @@ public class AgentTimeline : TemplatedControl
         FocusableProperty.OverrideDefaultValue<AgentTimeline>(false);
     }
 
-    /// <summary>Creates a timeline (it shows the sample run until it is given data).</summary>
+    /// <summary>Creates a timeline (empty until it is given data).</summary>
     public AgentTimeline()
         : this(null)
     {
@@ -297,7 +297,7 @@ public class AgentTimeline : TemplatedControl
 
     /// <summary>
     /// The run to show: its agents (rows, the orchestrator first), spans and handoffs. Null with no <see cref="Agents"/> and
-    /// <see cref="Spans"/> shows the invented sample run.
+    /// <see cref="Spans"/> shows the empty timeline.
     /// </summary>
     public AgentTimelineRun? Run { get => GetValue(RunProperty); set => SetValue(RunProperty, value); }
 
@@ -314,8 +314,8 @@ public class AgentTimeline : TemplatedControl
     public string? Title { get => GetValue(TitleProperty); set => SetValue(TitleProperty, value); }
 
     /// <summary>
-    /// Replays from zero the first time the timeline is about a fifth in view. Null (the default) means yes for the sample
-    /// run and no for your own data, which opens finished, ready to replay. Reduced motion always opens finished.
+    /// Replays from zero the first time the timeline is about a fifth in view when true. Null or false (the default) opens
+    /// the run finished, ready to replay. Reduced motion always opens finished.
     /// </summary>
     public bool? AutoPlay { get => GetValue(AutoPlayProperty); set => SetValue(AutoPlayProperty, value); }
 
@@ -396,8 +396,8 @@ public class AgentTimeline : TemplatedControl
     /// <summary>The story time right now (the clock's, not the 20 Hz <see cref="CurrentTime"/>).</summary>
     internal double Now => _clock.Time;
 
-    /// <summary>True when the timeline shows the built-in sample run.</summary>
-    internal bool UsesSample => Run is null && Agents is null && Spans is null;
+    /// <summary>True when the timeline has no data (no run, agents or spans): it shows its empty state.</summary>
+    internal bool IsEmpty => Run is null && Agents is null && Spans is null;
 
     internal AgentTimelineModel Model => _model;
 
@@ -507,6 +507,7 @@ public class AgentTimeline : TemplatedControl
         {
             _restartButton.Click += OnRestartClick;
         }
+        UpdatePlayable();
         if (_speed is not null)
         {
             _speed.SelectionChanged += OnSpeedSelectionChanged;
@@ -559,7 +560,7 @@ public class AgentTimeline : TemplatedControl
             return;
         }
         _started = true;
-        if (_clock.IsLive || !(AutoPlay ?? UsesSample) || !ArcMotion.IsFull(this) || _model.Duration <= 0)
+        if (_clock.IsLive || AutoPlay != true || !ArcMotion.IsFull(this) || _model.Duration <= 0)
         {
             return;
         }
@@ -645,10 +646,6 @@ public class AgentTimeline : TemplatedControl
     {
         Unobserve();
         var run = Run;
-        if (UsesSample)
-        {
-            run = _sample ??= AgentTimelineSamples.CreateIncidentRun();
-        }
         IList<AgentTimelineAgent> agents = Agents ?? (IList<AgentTimelineAgent>?)run?.Agents ?? [];
         IList<AgentTimelineSpan> spans = Spans ?? (IList<AgentTimelineSpan>?)run?.Spans ?? [];
         IList<AgentTimelineHandoff> handoffs = Handoffs ?? (IList<AgentTimelineHandoff>?)run?.Handoffs ?? [];
@@ -680,7 +677,22 @@ public class AgentTimeline : TemplatedControl
         Duration = _clock.IsLive ? Math.Max(_clock.Time, _model.DataEnd) : _model.Duration;
         ApplyModel();
         UpdateTexts();
+        UpdatePlayable();
         SyncView(animate: false);
+    }
+
+    /// <summary>Without agents there is nothing to replay: play and restart are disabled until data arrives.</summary>
+    private void UpdatePlayable()
+    {
+        var playable = _model.Rows.Length > 0 || _clock.IsLive;
+        if (_playButton is not null)
+        {
+            _playButton.IsEnabled = playable;
+        }
+        if (_restartButton is not null)
+        {
+            _restartButton.IsEnabled = playable;
+        }
     }
 
     private void Observe<T>(IList<T> list)
@@ -761,7 +773,7 @@ public class AgentTimeline : TemplatedControl
 
     private void UpdateTexts()
     {
-        var run = UsesSample ? _sample : Run;
+        var run = Run;
         ActualTitle = Title ?? run?.Title ?? Labels.DefaultTitle;
         if (_title is not null)
         {
@@ -1308,9 +1320,10 @@ public class AgentTimeline : TemplatedControl
             return;
         }
         _started = true;
-        var run = UsesSample ? _sample : Run;
+        var run = Run;
         _liveAxis = 0;
         _clock.StartLive(run?.StartedAt);
+        UpdatePlayable();
         UpdateLiveAxis(animate: false);
         UpdateSummary();
         AfterJump();
@@ -1326,6 +1339,7 @@ public class AgentTimeline : TemplatedControl
         var length = _model.HasOpenSpans ? Math.Max(_model.Duration, _liveEnd) : _model.Duration;
         _clock.Duration = length;
         _clock.StopLive();
+        UpdatePlayable();
         Duration = length;
         _plot?.SetAxis(_axisValue.Value, length);
         if (ArcMotion.IsFull(this))

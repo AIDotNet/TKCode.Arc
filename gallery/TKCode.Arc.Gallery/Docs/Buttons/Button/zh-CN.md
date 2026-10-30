@@ -1,7 +1,7 @@
 ---
 title: 按钮
 summary: 清晰、响应迅速的操作按钮，次要状态保持低调。
-source-hash: 2e7052f3cb01
+source-hash: a6c5d133a709
 ---
 
 <Demo name="Variants" />
@@ -92,6 +92,12 @@ source-hash: 2e7052f3cb01
 ```
 
 `IsLoading` 适用于几秒内完成的工作。对于耗时更长的任务，例如导出数千行数据，应在页面中显示进度（例如进度指示器或状态行），让按钮只负责发起任务的请求。转了一分钟的加载圆环无法告诉人们工作进展到了哪里。
+
+`LabelSwapMode` 和 `LabelSpring` 改变标签变形的方式，适合需要与周围较安静的文案保持一致的按钮。`LabelSwapMode="Label"` 以普通交叉淡化替换标签（100 ms 淡出，160 ms 淡入并上升 2 px，没有模糊），`LabelSpring="Quick"` 让宽度滑向新标签，不带默认 `Morph` 弹簧的轻微回弹。两者都需要显式设置；不设置时，每个按钮仍使用模糊替换和变形弹簧。
+
+```xml
+<arc:Button Content="{Binding ActionLabel}" LabelSwapMode="Label" LabelSpring="Quick" />
+```
 
 ### 纯图标按钮
 

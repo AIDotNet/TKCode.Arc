@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.DictationButtonBlockedDemo">
+    <!-- A recognizer that rejects every start, like a blocked microphone: press the mic and it springs into Try again with
+         a mic-off icon, while the toolbar says where to fix it. Escape dismisses it. -->
+    <arc:DictationButton MaxWidth="640"
+                         Margin="0,24"
+                         AutoPlay="False"
+                         Model="{x:Static demos:DictationButtonDemoData.Model}"
+                         Placeholder="{x:Static demos:DictationButtonDemoData.Placeholder}">
+        <arc:DictationButton.Recognizer>
+            <arc:SimulatedDictationRecognizer Deny="True" />
+        </arc:DictationButton.Recognizer>
+    </arc:DictationButton>
+</UserControl>

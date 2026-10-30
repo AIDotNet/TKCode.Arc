@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.BuildingBlocksHostDrivenDemo">
+    <!-- The app maps its request to Status. Generate starts a pretend request that takes 7 seconds: the frame re-assembles
+         while it runs and fast forwards to Ready when it ends. Replay asks the app to generate again. -->
+    <StackPanel Spacing="16" MaxWidth="400" Margin="0,12">
+        <arc:BuildingBlocks x:Name="Blocks"
+                            Status="Idle"
+                            AllowsReplay="True"
+                            ReplayRequested="OnReplayRequested"
+                            PhaseChanged="OnPhaseChanged" />
+        <StackPanel Orientation="Horizontal" Spacing="12">
+            <arc:Button x:Name="Generate" Content="Generate a CRM" Variant="Primary" Size="Small" Click="OnGenerate" />
+            <TextBlock x:Name="Log"
+                       VerticalAlignment="Center"
+                       FontSize="13"
+                       Text="Waiting for a prompt."
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

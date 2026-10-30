@@ -160,7 +160,10 @@ internal sealed class DataGridEditorLayer : Control
         InvalidateArrange();
         UpdateLayout();
         var first = host.GetVisualDescendants().OfType<InputElement>().FirstOrDefault(c => c.Focusable && c.IsEffectivelyVisible && c.IsEffectivelyEnabled);
-        (first ?? host as InputElement)?.Focus(NavigationMethod.Tab);
+        // Editing started with a double-click: a non-text editor takes focus without the keyboard ring (a text box keeps
+        // Tab, which selects its text).
+        var target = first ?? host as InputElement;
+        target?.Focus(target is TextBox ? NavigationMethod.Tab : DataGridFocusModality.For(this));
     }
 
     private void OnHostKeyDown(object? sender, KeyEventArgs e)

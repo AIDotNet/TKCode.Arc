@@ -1,0 +1,195 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ImageRevealTheme">
+
+    <!--
+        An image generation canvas: the self-drawn canvas (surface tone, queued shimmer, soft preview, grain, band, sharp
+        image, sheen), a translucent progress pill at the top left (spinner, ring or check, a crossfading label and a step
+        count with reserved width, its width on a bounce-free spring), the error state in the middle (an alert, the message
+        and Retry) and a hidden polite live region. The canvas fills its container up to 560px and keeps the aspect ratio.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ImageReveal}" TargetType="arc:ImageReveal">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="MaxWidth" Value="{arc:ImageRevealTokenResource CanvasMaxWidth}" />
+        <Setter Property="CornerRadius" Value="{arc:ImageRevealTokenResource CanvasCornerRadius}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ImageRevealTokenResource PillFontSize}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ImageReveal">
+                <Panel>
+                    <arc:ImageRevealCanvas Name="PART_Canvas"
+                                           CornerRadius="{TemplateBinding CornerRadius}"
+                                           SurfaceBrush="{arc:ImageRevealTokenResource SurfaceTone}"
+                                           ShimmerBrush="{arc:ImageRevealTokenResource ShimmerLight}"
+                                           BandRatio="{arc:ImageRevealTokenResource BandRatio}"
+                                           GrainOpacity="{arc:ImageRevealTokenResource GrainOpacity}" />
+                    <arc:SpringSizeDecorator Name="PART_PillHost"
+                                             Axis="Width"
+                                             Spring="Quick"
+                                             HorizontalAlignment="Left"
+                                             VerticalAlignment="Top"
+                                             IsHitTestVisible="False">
+                        <arc:ImageRevealPill Name="PART_Pill"
+                                             HorizontalAlignment="Left"
+                                             ClipToBounds="True"
+                                             CornerRadius="{arc:ArcDesignTokenResource RadiusPill}">
+                            <Panel>
+                                <Border Name="PART_PillFill"
+                                        Background="{arc:ArcDesignTokenResource SurfaceRaised}"
+                                        Opacity="{arc:ImageRevealTokenResource PillFillOpacity}" />
+                                <StackPanel Name="PART_PillRow"
+                                            Orientation="Horizontal"
+                                            Spacing="{arc:ImageRevealTokenResource PillGap}"
+                                            VerticalAlignment="Center">
+                                    <Panel Name="PART_Indicator" VerticalAlignment="Center">
+                                        <arc:ArcSpinner Name="PART_Spinner" IsVisible="False" />
+                                        <arc:ArcRing Name="PART_Ring"
+                                                     IsVisible="False"
+                                                     Thickness="{arc:ImageRevealTokenResource RingThickness}"
+                                                     TrackBrush="{arc:ArcDesignTokenResource Border}" />
+                                        <arc:ArcGlyph Name="PART_Check"
+                                                      Data="{x:Static arc:ArcIcons.Check}"
+                                                      IsVisible="False" />
+                                    </Panel>
+                                    <arc:ArcContentSwap Name="PART_Label"
+                                                        Mode="Crossfade"
+                                                        EnterDelay="0:0:0.06"
+                                                        HorizontalContentAlignment="Left"
+                                                        VerticalAlignment="Center" />
+                                    <Panel VerticalAlignment="Center">
+                                        <TextBlock Name="PART_CountReserve" Opacity="0" IsVisible="False" />
+                                        <TextBlock Name="PART_Count"
+                                                   HorizontalAlignment="Right"
+                                                   IsVisible="False" />
+                                    </Panel>
+                                </StackPanel>
+                            </Panel>
+                        </arc:ImageRevealPill>
+                    </arc:SpringSizeDecorator>
+                    <StackPanel Name="PART_Error"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Margin="{arc:ImageRevealTokenResource ErrorPadding}"
+                                MaxWidth="{arc:ImageRevealTokenResource ErrorMaxWidth}"
+                                Spacing="{arc:ImageRevealTokenResource ErrorGap}">
+                        <arc:ArcGlyph Name="PART_ErrorGlyph"
+                                      Data="{x:Static arc:ArcIcons.CircleAlert}"
+                                      Size="{arc:ImageRevealTokenResource ErrorGlyphSize}"
+                                      HorizontalAlignment="Center" />
+                        <TextBlock Name="PART_ErrorText"
+                                   TextAlignment="Center"
+                                   TextWrapping="Wrap"
+                                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        <arc:Button Name="PART_Retry"
+                                    Variant="Secondary"
+                                    Size="Small"
+                                    HorizontalAlignment="Center" />
+                    </StackPanel>
+                    <arc:ExplainerAnnouncer Name="PART_Live" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Non-triggered values of template parts, so the size styles below can change them. -->
+        <Style Selector="^ /template/ arc|SpringSizeDecorator#PART_PillHost">
+            <Setter Property="Margin" Value="{arc:ImageRevealTokenResource PillMargin}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ImageRevealPill#PART_Pill">
+            <Setter Property="Height" Value="{arc:ImageRevealTokenResource PillHeight}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_PillRow">
+            <Setter Property="Margin" Value="{arc:ImageRevealTokenResource PillPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Panel#PART_Indicator">
+            <Setter Property="Width" Value="{arc:ImageRevealTokenResource RingSize}" />
+            <Setter Property="Height" Value="{arc:ImageRevealTokenResource RingSize}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Check">
+            <Setter Property="Size" Value="{arc:ImageRevealTokenResource RingSize}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcRing#PART_Ring">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcSpinner#PART_Spinner">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="Thickness" Value="{arc:ImageRevealTokenResource RingThickness}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcContentSwap#PART_Label">
+            <Setter Property="TextElement.FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Count">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Error">
+            <Setter Property="IsVisible" Value="False" />
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:error /template/ StackPanel#PART_Error">
+            <Setter Property="IsVisible" Value="True" />
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_ErrorGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+
+        <Style Selector="^:small">
+            <Setter Property="CornerRadius" Value="{arc:ImageRevealTokenResource CanvasCornerRadiusSM}" />
+            <Setter Property="FontSize" Value="{arc:ImageRevealTokenResource PillFontSizeSM}" />
+            <Style Selector="^ /template/ arc|SpringSizeDecorator#PART_PillHost">
+                <Setter Property="Margin" Value="{arc:ImageRevealTokenResource PillMarginSM}" />
+            </Style>
+            <Style Selector="^ /template/ arc|ImageRevealPill#PART_Pill">
+                <Setter Property="Height" Value="{arc:ImageRevealTokenResource PillHeightSM}" />
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_PillRow">
+                <Setter Property="Margin" Value="{arc:ImageRevealTokenResource PillPaddingSM}" />
+            </Style>
+            <Style Selector="^ /template/ Panel#PART_Indicator">
+                <Setter Property="Width" Value="{arc:ImageRevealTokenResource RingSizeSM}" />
+                <Setter Property="Height" Value="{arc:ImageRevealTokenResource RingSizeSM}" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Check">
+                <Setter Property="Size" Value="{arc:ImageRevealTokenResource RingSizeSM}" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_ErrorText">
+                <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            </Style>
+        </Style>
+        <Style Selector="^:large">
+            <Setter Property="CornerRadius" Value="{arc:ImageRevealTokenResource CanvasCornerRadiusLG}" />
+            <Setter Property="FontSize" Value="{arc:ImageRevealTokenResource PillFontSizeLG}" />
+            <Style Selector="^ /template/ arc|SpringSizeDecorator#PART_PillHost">
+                <Setter Property="Margin" Value="{arc:ImageRevealTokenResource PillMarginLG}" />
+            </Style>
+            <Style Selector="^ /template/ arc|ImageRevealPill#PART_Pill">
+                <Setter Property="Height" Value="{arc:ImageRevealTokenResource PillHeightLG}" />
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_PillRow">
+                <Setter Property="Margin" Value="{arc:ImageRevealTokenResource PillPaddingLG}" />
+            </Style>
+            <Style Selector="^ /template/ Panel#PART_Indicator">
+                <Setter Property="Width" Value="{arc:ImageRevealTokenResource RingSizeLG}" />
+                <Setter Property="Height" Value="{arc:ImageRevealTokenResource RingSizeLG}" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Check">
+                <Setter Property="Size" Value="{arc:ImageRevealTokenResource RingSizeLG}" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ StackPanel#PART_Error">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

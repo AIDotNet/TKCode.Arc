@@ -1,0 +1,336 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.CodeSuggestionTheme">
+
+    <!--
+        An AI code edit suggestion as a card: a header (the model's mark in a tinted square, the instruction over the model's
+        name), an editor panel (a file tab with the language mark, the file, its folder and the +/− counts over a hairline,
+        then the code with its hunks and review bars) and a footer (the status icon and label, the actions). The card fills
+        its container up to 720px; below 520px the folder hides, below 440px the gutter narrows, code drops to 12px, hunk
+        summaries hide and the footer stacks the status over full width actions.
+    -->
+    <ControlTheme x:Key="{x:Type arc:CodeSuggestion}" TargetType="arc:CodeSuggestion">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="MaxWidth" Value="{arc:CodeSuggestionTokenResource CardMaxWidth}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:CodeSuggestionTokenResource CardCornerRadius}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CodeSuggestion">
+                <Border Name="PART_Card"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <Panel>
+                        <StackPanel>
+                            <Grid ColumnDefinitions="Auto,*" Margin="{arc:CodeSuggestionTokenResource HeaderPadding}">
+                                <Border Name="PART_MarkBox"
+                                        Width="{arc:CodeSuggestionTokenResource MarkBoxSize}"
+                                        Height="{arc:CodeSuggestionTokenResource MarkBoxSize}"
+                                        CornerRadius="{arc:CodeSuggestionTokenResource MarkBoxCornerRadius}"
+                                        Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                        BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                        BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                        VerticalAlignment="Center">
+                                    <arc:ArcGlyph Name="PART_Mark"
+                                                  Size="{arc:CodeSuggestionTokenResource MarkSize}"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center" />
+                                </Border>
+                                <StackPanel Grid.Column="1"
+                                            Margin="{arc:CodeSuggestionTokenResource HeaderGapMargin}"
+                                            VerticalAlignment="Center">
+                                    <TextBlock Name="PART_Title"
+                                               FontSize="{arc:CodeSuggestionTokenResource TitleFontSize}"
+                                               LineHeight="{arc:CodeSuggestionTokenResource TitleLineHeight}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                               TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Name="PART_Model"
+                                               FontSize="{arc:CodeSuggestionTokenResource ModelFontSize}"
+                                               LineHeight="{arc:CodeSuggestionTokenResource ModelLineHeight}"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                               TextTrimming="CharacterEllipsis" />
+                                </StackPanel>
+                            </Grid>
+
+                            <Border Name="PART_Panel"
+                                    Margin="{arc:CodeSuggestionTokenResource PanelMargin}"
+                                    CornerRadius="{arc:CodeSuggestionTokenResource PanelCornerRadius}"
+                                    Background="{arc:ArcDesignTokenResource Background}"
+                                    BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                    ClipToBounds="True">
+                                <StackPanel>
+                                    <Grid Height="{arc:CodeSuggestionTokenResource TabHeight}"
+                                          Margin="{arc:CodeSuggestionTokenResource TabPadding}"
+                                          ColumnDefinitions="Auto,Auto,*,Auto">
+                                        <Panel VerticalAlignment="Center" Margin="{arc:CodeSuggestionTokenResource TabGapMargin}">
+                                            <ContentPresenter Name="PART_FileMark"
+                                                              Width="{arc:CodeSuggestionTokenResource FileMarkSize}"
+                                                              Height="{arc:CodeSuggestionTokenResource FileMarkSize}"
+                                                              IsVisible="False" />
+                                            <arc:CodeSuggestionFileMark Name="PART_Monogram" />
+                                        </Panel>
+                                        <TextBlock Name="PART_FileName"
+                                                   Grid.Column="1"
+                                                   VerticalAlignment="Center"
+                                                   FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                                                   FontSize="{arc:CodeSuggestionTokenResource FileFontSize}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                        <TextBlock Name="PART_Folder"
+                                                   Grid.Column="2"
+                                                   Margin="{arc:CodeSuggestionTokenResource FolderMargin}"
+                                                   VerticalAlignment="Center"
+                                                   FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                                                   FontSize="{arc:CodeSuggestionTokenResource FileFontSize}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                   TextTrimming="CharacterEllipsis" />
+                                        <StackPanel Name="PART_Counts"
+                                                    Grid.Column="3"
+                                                    Orientation="Horizontal"
+                                                    Spacing="6"
+                                                    VerticalAlignment="Center"
+                                                    Focusable="False">
+                                            <TextBlock Name="PART_AddedCount"
+                                                       FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                                                       FontSize="{arc:CodeSuggestionTokenResource CountFontSize}"
+                                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                            <TextBlock Name="PART_RemovedCount"
+                                                       FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                                                       FontSize="{arc:CodeSuggestionTokenResource CountFontSize}"
+                                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                        </StackPanel>
+                                    </Grid>
+                                    <Border Height="1" Background="{arc:ArcDesignTokenResource BorderSubtle}" />
+                                    <arc:CodeSuggestionCodeArea Name="PART_CodeArea">
+                                        <ScrollViewer Name="PART_Scroll"
+                                                      Focusable="False"
+                                                      MaxHeight="{TemplateBinding MaxCodeHeight}"
+                                                      HorizontalScrollBarVisibility="Auto"
+                                                      VerticalScrollBarVisibility="Auto">
+                                            <arc:CodeSuggestionView Name="PART_View" />
+                                        </ScrollViewer>
+                                    </arc:CodeSuggestionCodeArea>
+                                </StackPanel>
+                            </Border>
+
+                            <Grid Name="PART_Footer"
+                                  ColumnDefinitions="*,Auto"
+                                  RowDefinitions="Auto,Auto"
+                                  MinHeight="{arc:CodeSuggestionTokenResource FooterMinHeight}"
+                                  Margin="{arc:CodeSuggestionTokenResource FooterPadding}">
+                                <Grid ColumnDefinitions="Auto,*" VerticalAlignment="Center">
+                                    <arc:ArcContentSwap Name="PART_StatusIcon"
+                                                        Mode="Crossfade"
+                                                        Width="{arc:CodeSuggestionTokenResource StatusGlyphSize}"
+                                                        Height="{arc:CodeSuggestionTokenResource StatusGlyphSize}"
+                                                        VerticalAlignment="Center" />
+                                    <arc:ArcContentSwap Name="PART_StatusLabel"
+                                                        Grid.Column="1"
+                                                        Mode="Label"
+                                                        Margin="{arc:CodeSuggestionTokenResource StatusLabelMargin}"
+                                                        HorizontalContentAlignment="Left"
+                                                        VerticalAlignment="Center"
+                                                        TextElement.FontSize="{arc:CodeSuggestionTokenResource StatusFontSize}" />
+                                </Grid>
+                                <arc:ArcContentSwap Name="PART_Actions"
+                                                    Grid.Column="1"
+                                                    Mode="Crossfade"
+                                                    HorizontalContentAlignment="Right"
+                                                    VerticalAlignment="Center"
+                                                    Margin="{arc:CodeSuggestionTokenResource ActionsMargin}" />
+                            </Grid>
+                        </StackPanel>
+                        <arc:ExplainerAnnouncer Name="PART_Announcer" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Below 440px: smaller code, a narrow gutter, the actions under the status at full width. -->
+        <Style Selector="^ /template/ arc|CodeSuggestionView#PART_View">
+            <Setter Property="FontSize" Value="{arc:CodeSuggestionTokenResource CodeFontSize}" />
+            <Setter Property="GutterWidth" Value="{arc:CodeSuggestionTokenResource GutterWidth}" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|CodeSuggestionView#PART_View">
+            <Setter Property="FontSize" Value="{arc:CodeSuggestionTokenResource CodeFontSizeNarrow}" />
+            <Setter Property="GutterWidth" Value="{arc:CodeSuggestionTokenResource GutterWidthNarrow}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcContentSwap#PART_Actions">
+            <Setter Property="Grid.Row" Value="0" />
+            <Setter Property="Grid.Column" Value="1" />
+            <Setter Property="Grid.ColumnSpan" Value="1" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|ArcContentSwap#PART_Actions">
+            <Setter Property="Grid.Row" Value="1" />
+            <Setter Property="Grid.Column" Value="0" />
+            <Setter Property="Grid.ColumnSpan" Value="2" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="Margin" Value="{arc:CodeSuggestionTokenResource StackedActionsMargin}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The code area: a focus ring 2px inside its edge for keyboard focus only. -->
+    <ControlTheme x:Key="{x:Type arc:CodeSuggestionCodeArea}" TargetType="arc:CodeSuggestionCodeArea">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CodeSuggestionCodeArea">
+                <Panel Background="{TemplateBinding Background}">
+                    <ContentPresenter Name="PART_ContentPresenter" Content="{TemplateBinding Content}" />
+                    <Border Name="PART_FocusRing"
+                            Margin="2"
+                            CornerRadius="{arc:CodeSuggestionTokenResource FocusCornerRadius}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            IsVisible="False"
+                            IsHitTestVisible="False" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The drawn code: the code font, fixed rows, the gutter and the diff colors. -->
+    <ControlTheme x:Key="{x:Type arc:CodeSuggestionView}" TargetType="arc:CodeSuggestionView">
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource MonoFontFamily}" />
+        <Setter Property="RowHeight" Value="{arc:CodeSuggestionTokenResource RowHeight}" />
+        <Setter Property="SignWidth" Value="{arc:CodeSuggestionTokenResource SignWidth}" />
+        <Setter Property="CodeInset" Value="{arc:CodeSuggestionTokenResource CodeInset}" />
+        <Setter Property="CodeEndPadding" Value="{arc:CodeSuggestionTokenResource CodeEndPadding}" />
+        <Setter Property="Padding" Value="{arc:CodeSuggestionTokenResource CodePadding}" />
+        <Setter Property="BarHeight" Value="{arc:CodeSuggestionTokenResource BarHeight}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="NumberBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="RemovedTint" Value="{arc:ArcDesignTokenResource DangerSubtle}" />
+        <Setter Property="AddedTint" Value="{arc:ArcDesignTokenResource SuccessSubtle}" />
+        <Setter Property="RemovedInk" Value="{arc:ArcDesignTokenResource Danger}" />
+        <Setter Property="AddedInk" Value="{arc:ArcDesignTokenResource Success}" />
+    </ControlTheme>
+
+    <!-- The review bar under a pending hunk: a hairline, the summary, Reject and Accept. -->
+    <ControlTheme x:Key="{x:Type arc:CodeSuggestionReviewBar}" TargetType="arc:CodeSuggestionReviewBar">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CodeSuggestionReviewBar">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}">
+                    <Grid ColumnDefinitions="*,Auto,Auto"
+                          Margin="{arc:CodeSuggestionTokenResource BarPadding}"
+                          VerticalAlignment="Center">
+                        <TextBlock Name="PART_Summary"
+                                   Text="{TemplateBinding Summary}"
+                                   VerticalAlignment="Center"
+                                   FontSize="{arc:CodeSuggestionTokenResource BarFontSize}"
+                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                   TextTrimming="CharacterEllipsis" />
+                        <arc:Button Name="PART_Reject"
+                                    Grid.Column="1"
+                                    Classes="cs-bar"
+                                    Variant="Ghost"
+                                    Size="Small"
+                                    Content="{TemplateBinding RejectText}" />
+                        <arc:Button Name="PART_Accept"
+                                    Grid.Column="2"
+                                    Classes="cs-bar"
+                                    Variant="Secondary"
+                                    Size="Small"
+                                    Content="{TemplateBinding AcceptText}" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|Button.cs-bar">
+            <Setter Property="Height" Value="{arc:CodeSuggestionTokenResource BarButtonHeight}" />
+            <Setter Property="MinHeight" Value="{arc:CodeSuggestionTokenResource BarButtonHeight}" />
+            <Setter Property="Padding" Value="{arc:CodeSuggestionTokenResource BarButtonPadding}" />
+            <Setter Property="Margin" Value="{arc:CodeSuggestionTokenResource BarButtonMargin}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="FontSize" Value="{arc:CodeSuggestionTokenResource BarFontSize}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        </Style>
+        <Style Selector="^:compact /template/ TextBlock#PART_Summary">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+    </ControlTheme>
+
+    <!-- One set of footer buttons; the footer crossfades between sets. -->
+    <ControlTheme x:Key="{x:Type arc:CodeSuggestionActions}" TargetType="arc:CodeSuggestionActions">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CodeSuggestionActions">
+                <arc:CodeSuggestionActionsPanel Stretches="{TemplateBinding IsStacked}"
+                                                Spacing="{arc:CodeSuggestionTokenResource ActionGap}">
+                    <arc:Button Name="PART_Stop" Classes="cs-action" Variant="Secondary" Size="Small" Content="{TemplateBinding StopText}" />
+                    <arc:Button Name="PART_RejectAll" Classes="cs-action" Variant="Ghost" Size="Small" Content="{TemplateBinding RejectAllText}" />
+                    <arc:Button Name="PART_AcceptAll" Classes="cs-action" Variant="Primary" Size="Small">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <TextBlock Text="{TemplateBinding AcceptAllText}" VerticalAlignment="Center" />
+                            <TextBlock Name="PART_Hint"
+                                       Text="{TemplateBinding HintText}"
+                                       IsVisible="{TemplateBinding ShowsHint}"
+                                       VerticalAlignment="Center"
+                                       Opacity="0.72"
+                                       FontSize="{arc:CodeSuggestionTokenResource HintFontSize}" />
+                        </StackPanel>
+                    </arc:Button>
+                    <arc:Button Name="PART_Regenerate" Classes="cs-action" Variant="Secondary" Size="Small" Content="{TemplateBinding RegenerateText}" />
+                    <arc:Button Name="PART_Retry" Classes="cs-action" Variant="Secondary" Size="Small" Content="{TemplateBinding RetryText}" />
+                </arc:CodeSuggestionActionsPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|Button.cs-action">
+            <Setter Property="Height" Value="{arc:CodeSuggestionTokenResource ActionHeight}" />
+            <Setter Property="MinHeight" Value="{arc:CodeSuggestionTokenResource ActionHeight}" />
+            <Setter Property="Padding" Value="{arc:CodeSuggestionTokenResource ActionInlinePadding}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The language mark: two letters in a tinted rounded square. -->
+    <ControlTheme x:Key="{x:Type arc:CodeSuggestionFileMark}" TargetType="arc:CodeSuggestionFileMark">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="IsHitTestVisible" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CodeSuggestionFileMark">
+                <Border Width="{arc:CodeSuggestionTokenResource FileMarkSize}"
+                        Height="{arc:CodeSuggestionTokenResource FileMarkSize}"
+                        CornerRadius="{arc:CodeSuggestionTokenResource FileMarkCornerRadius}"
+                        Background="{arc:ArcDesignTokenResource AccentSubtle}">
+                    <TextBlock Text="{TemplateBinding Text}"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                               FontSize="{arc:CodeSuggestionTokenResource FileMarkFontSize}"
+                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                               Foreground="{arc:ArcDesignTokenResource AccentStrong}" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.EnrichColumnSavedValuesDemo">
+    <!-- Values saved from an earlier run come back through InitialCells, so nothing runs on its own. The column header is
+         read only here. Re-run a row from its control, or the whole column from the top bar. -->
+    <Border MaxWidth="760" Margin="0,12">
+        <arc:EnrichColumn x:Name="Table" IsEditable="False" AutoRun="False">
+            <arc:EnrichColumn.Simulation>
+                <arc:EnrichColumnSimulation Title="Target accounts"
+                                            Column="{x:Static demos:EnrichColumnDemoData.Column}"
+                                            Model="{x:Static demos:EnrichColumnDemoData.Model}"
+                                            Rows="{x:Static demos:EnrichColumnDemoData.Rows}"
+                                            Answers="{x:Static demos:EnrichColumnDemoData.Answers}" />
+            </arc:EnrichColumn.Simulation>
+        </arc:EnrichColumn>
+    </Border>
+</UserControl>

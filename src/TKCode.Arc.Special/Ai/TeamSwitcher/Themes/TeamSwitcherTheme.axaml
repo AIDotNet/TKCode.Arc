@@ -1,0 +1,460 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.TeamSwitcherTheme">
+
+    <!--
+        A workspace switcher: the trigger (the workspace's tile, its name over the plan line, a chevron that becomes a
+        spinner while a workspace loads) and, under it, the menu in an anchored popup. The root is up to 360px wide and
+        fills narrower containers; a polite live region (invisible) says what happened.
+    -->
+    <ControlTheme x:Key="{x:Type arc:TeamSwitcher}" TargetType="arc:TeamSwitcher">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Focusable" Value="False" />
+        <!-- Templated controls clip by default; the trigger's focus ring sits 4px outside the switcher. -->
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="MaxWidth" Value="{arc:TeamSwitcherTokenResource MaxWidth}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TeamSwitcher">
+                <Panel>
+                    <arc:ExplainerAnnouncer Name="PART_Live" />
+                    <arc:TeamSwitcherTrigger Name="PART_Trigger"
+                                             HorizontalAlignment="Stretch"
+                                             HorizontalContentAlignment="Stretch">
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{arc:TeamSwitcherTokenResource TriggerGap}">
+                            <arc:TeamSwitcherFace Name="PART_Face"
+                                                  TileSize="{arc:TeamSwitcherTokenResource TriggerTileSize}" />
+                            <Panel Grid.Column="1"
+                                   Width="{arc:TeamSwitcherTokenResource TriggerGlyphSize}"
+                                   Height="{arc:TeamSwitcherTokenResource TriggerGlyphSize}"
+                                   VerticalAlignment="Center">
+                                <arc:ArcGlyph Name="PART_Chevron"
+                                              Data="{x:Static arc:ArcIcons.ChevronsUpDown}"
+                                              Size="{arc:TeamSwitcherTokenResource TriggerGlyphSize}"
+                                              Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                <arc:ArcSpinner Name="PART_Spinner"
+                                                Width="14"
+                                                Height="14"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                IsVisible="False" />
+                            </Panel>
+                        </Grid>
+                    </arc:TeamSwitcherTrigger>
+                    <arc:TeamSwitcherPopup Name="PART_Popup"
+                                           Placement="BottomEdgeAlignedLeft"
+                                           MarginToAnchor="{arc:TeamSwitcherTokenResource MenuGap}">
+                        <arc:TeamSwitcherMenu Name="PART_Menu" />
+                    </arc:TeamSwitcherPopup>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:switching /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:switching /template/ arc|ArcSpinner#PART_Spinner">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The trigger: transparent at rest, SurfaceMuted under the pointer or while open, a 2px keyboard ring outside it. -->
+    <ControlTheme x:Key="{x:Type arc:TeamSwitcherTrigger}" TargetType="arc:TeamSwitcherTrigger">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:TeamSwitcherTokenResource TriggerCornerRadius}" />
+        <Setter Property="Padding" Value="{arc:TeamSwitcherTokenResource TriggerPadding}" />
+        <Setter Property="Height" Value="{arc:TeamSwitcherTokenResource TriggerHeight}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TeamSwitcherTrigger">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            Margin="-4"
+                            CornerRadius="{arc:TeamSwitcherTokenResource TriggerFocusRingCornerRadius}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            IsVisible="False"
+                            IsHitTestVisible="False" />
+                    <Border Name="PART_Body"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <Panel>
+                            <Border Name="PART_Hover"
+                                    CornerRadius="{TemplateBinding CornerRadius}"
+                                    Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                    Opacity="0" />
+                            <ContentPresenter Name="PART_ContentPresenter"
+                                              Content="{TemplateBinding Content}"
+                                              Padding="{TemplateBinding Padding}"
+                                              HorizontalContentAlignment="Stretch"
+                                              VerticalContentAlignment="Center" />
+                        </Panel>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover /template/ Border#PART_Hover">
+            <Setter Property="Opacity" Value="{arc:TeamSwitcherTokenResource HoverOpacity}" />
+        </Style>
+        <Style Selector="^[IsExpanded=True] /template/ Border#PART_Hover">
+            <Setter Property="Opacity" Value="{arc:TeamSwitcherTokenResource HoverOpacity}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.5" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Hover">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ Border#PART_Hover">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- What the trigger shows: tile, name over plan line, each crossfading on its own (Arc's label swap). -->
+    <ControlTheme x:Key="{x:Type arc:TeamSwitcherFace}" TargetType="arc:TeamSwitcherFace">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="IsHitTestVisible" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TeamSwitcherFace">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="{arc:TeamSwitcherTokenResource TriggerGap}">
+                    <arc:ArcContentSwap Name="PART_Tile"
+                                        Mode="Label"
+                                        Width="{TemplateBinding TileSize}"
+                                        Height="{TemplateBinding TileSize}"
+                                        VerticalAlignment="Center" />
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                        <arc:ArcContentSwap Name="PART_Name"
+                                            Mode="Label"
+                                            HorizontalContentAlignment="Left"
+                                            Height="{arc:TeamSwitcherTokenResource NameLineHeight}"
+                                            TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                            TextElement.Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        <arc:ArcContentSwap Name="PART_Plan"
+                                            Mode="Label"
+                                            HorizontalContentAlignment="Left"
+                                            Height="{arc:TeamSwitcherTokenResource PlanLineHeight}"
+                                            TextElement.FontSize="{arc:TeamSwitcherTokenResource PlanFontSize}"
+                                            TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                    </StackPanel>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!--
+        The menu panel: a raised surface as wide as the trigger (288px at least). The list view (search, heading, the rows over one gliding
+        highlight, a hairline and the two actions) sets the panel's height; the create and join forms crossfade in its
+        place and stretch to that height.
+    -->
+    <ControlTheme x:Key="{x:Type arc:TeamSwitcherMenu}" TargetType="arc:TeamSwitcherMenu">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="CornerRadius" Value="{arc:TeamSwitcherTokenResource MenuCornerRadius}" />
+        <Setter Property="RowHeight" Value="{arc:TeamSwitcherTokenResource RowHeight}" />
+        <Setter Property="VisibleRows" Value="{arc:TeamSwitcherTokenResource VisibleRows}" />
+        <Setter Property="ViewShift" Value="{arc:TeamSwitcherTokenResource ViewShift}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TeamSwitcherMenu">
+                <Border Name="PART_Surface"
+                        Width="{TemplateBinding SurfaceWidth}"
+                        MinWidth="{arc:TeamSwitcherTokenResource MenuMinWidth}"
+                        Background="{arc:ArcDesignTokenResource SurfaceRaised}"
+                        BorderBrush="{arc:ArcDesignTokenResource Border}"
+                        BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{arc:TeamSwitcherTokenResource MenuPadding}"
+                        KeyboardNavigation.TabNavigation="Cycle">
+                    <Panel Name="PART_Views" ClipToBounds="True">
+                        <Panel Name="PART_ListView">
+                            <arc:GlidingIndicator Name="PART_Highlight"
+                                                  FadeDuration="0:0:0.08"
+                                                  Fill="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                                  CornerRadius="{arc:TeamSwitcherTokenResource HighlightCornerRadius}" />
+                            <StackPanel>
+                                <arc:Input Name="PART_Search"
+                                           Size="Small"
+                                           Margin="{arc:TeamSwitcherTokenResource SearchMargin}">
+                                    <arc:Input.Prefix>
+                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Search}"
+                                                      Size="14"
+                                                      Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    </arc:Input.Prefix>
+                                </arc:Input>
+                                <TextBlock Name="PART_Section"
+                                           Height="{arc:TeamSwitcherTokenResource SectionHeight}"
+                                           Padding="{arc:TeamSwitcherTokenResource SectionPadding}"
+                                           FontSize="{arc:TeamSwitcherTokenResource RoleFontSize}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           LineHeight="{arc:TeamSwitcherTokenResource SectionHeight}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                <Panel Name="PART_ListArea">
+                                    <ScrollViewer Name="PART_Scroll"
+                                                  HorizontalScrollBarVisibility="Disabled"
+                                                  VerticalScrollBarVisibility="Hidden">
+                                        <StackPanel Name="PART_Rows" />
+                                    </ScrollViewer>
+                                    <StackPanel Name="PART_Empty"
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Stretch"
+                                                Margin="12,0"
+                                                Spacing="2"
+                                                IsVisible="False">
+                                        <TextBlock Name="PART_EmptyText"
+                                                   TextAlignment="Center"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                        <TextBlock Name="PART_EmptyHint"
+                                                   TextAlignment="Center"
+                                                   FontSize="{arc:TeamSwitcherTokenResource RoleFontSize}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    </StackPanel>
+                                </Panel>
+                                <Border Height="1"
+                                        Margin="{arc:TeamSwitcherTokenResource SeparatorMargin}"
+                                        Background="{arc:ArcDesignTokenResource Border}" />
+                                <arc:TeamSwitcherActionRow Name="PART_CreateRow" Glyph="{x:Static arc:ArcIcons.Plus}" />
+                                <arc:TeamSwitcherActionRow Name="PART_JoinRow" Glyph="{x:Static arc:ArcIcons.Link}" />
+                            </StackPanel>
+                        </Panel>
+                        <Grid Name="PART_CreateView"
+                              RowDefinitions="Auto,Auto,*,Auto"
+                              Margin="{arc:TeamSwitcherTokenResource ViewPadding}">
+                            <Grid ColumnDefinitions="Auto,*"
+                                  ColumnSpacing="6"
+                                  Height="{arc:TeamSwitcherTokenResource ViewHeaderHeight}">
+                                <arc:Button Name="PART_CreateBack"
+                                            Classes="team-switcher-back"
+                                            Variant="Ghost"
+                                            Size="Small"
+                                            VerticalAlignment="Center">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ArrowLeft}" Size="16" />
+                                </arc:Button>
+                                <TextBlock Name="PART_CreateTitle"
+                                           Grid.Column="1"
+                                           VerticalAlignment="Center"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           TextTrimming="CharacterEllipsis" />
+                            </Grid>
+                            <arc:Input Name="PART_NameInput"
+                                       Grid.Row="1"
+                                       Margin="6,4,6,0" />
+                            <Grid Name="PART_CreateError"
+                                  Grid.Row="2"
+                                  ColumnDefinitions="Auto,*"
+                                  ColumnSpacing="6"
+                                  Margin="{arc:TeamSwitcherTokenResource FormErrorMargin}"
+                                  VerticalAlignment="Top"
+                                  IsVisible="False">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.CircleAlert}"
+                                              Size="14"
+                                              Margin="0,1,0,0"
+                                              VerticalAlignment="Top"
+                                              Foreground="{arc:ArcDesignTokenResource Danger}" />
+                                <TextBlock Name="PART_CreateErrorText"
+                                           Grid.Column="1"
+                                           TextWrapping="Wrap"
+                                           MaxLines="3"
+                                           TextTrimming="CharacterEllipsis"
+                                           FontSize="{arc:TeamSwitcherTokenResource PlanFontSize}"
+                                           LineHeight="{arc:TeamSwitcherTokenResource PlanLineHeight}"
+                                           Foreground="{arc:ArcDesignTokenResource Danger}" />
+                            </Grid>
+                            <StackPanel Grid.Row="3"
+                                        Orientation="Horizontal"
+                                        HorizontalAlignment="Right"
+                                        Spacing="8"
+                                        Margin="6,0">
+                                <arc:Button Name="PART_CreateCancel" Variant="Ghost" Size="Small" />
+                                <arc:Button Name="PART_CreateSubmit" Variant="Primary" Size="Small" />
+                            </StackPanel>
+                        </Grid>
+                        <Grid Name="PART_JoinView"
+                              RowDefinitions="Auto,Auto,*,Auto"
+                              Margin="{arc:TeamSwitcherTokenResource ViewPadding}">
+                            <Grid ColumnDefinitions="Auto,*"
+                                  ColumnSpacing="6"
+                                  Height="{arc:TeamSwitcherTokenResource ViewHeaderHeight}">
+                                <arc:Button Name="PART_JoinBack"
+                                            Classes="team-switcher-back"
+                                            Variant="Ghost"
+                                            Size="Small"
+                                            VerticalAlignment="Center">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ArrowLeft}" Size="16" />
+                                </arc:Button>
+                                <TextBlock Name="PART_JoinTitle"
+                                           Grid.Column="1"
+                                           VerticalAlignment="Center"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           TextTrimming="CharacterEllipsis" />
+                            </Grid>
+                            <arc:Input Name="PART_InviteInput"
+                                       Grid.Row="1"
+                                       Margin="6,4,6,0" />
+                            <Grid Name="PART_JoinError"
+                                  Grid.Row="2"
+                                  ColumnDefinitions="Auto,*"
+                                  ColumnSpacing="6"
+                                  Margin="{arc:TeamSwitcherTokenResource FormErrorMargin}"
+                                  VerticalAlignment="Top"
+                                  IsVisible="False">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.CircleAlert}"
+                                              Size="14"
+                                              Margin="0,1,0,0"
+                                              VerticalAlignment="Top"
+                                              Foreground="{arc:ArcDesignTokenResource Danger}" />
+                                <TextBlock Name="PART_JoinErrorText"
+                                           Grid.Column="1"
+                                           TextWrapping="Wrap"
+                                           MaxLines="3"
+                                           TextTrimming="CharacterEllipsis"
+                                           FontSize="{arc:TeamSwitcherTokenResource PlanFontSize}"
+                                           LineHeight="{arc:TeamSwitcherTokenResource PlanLineHeight}"
+                                           Foreground="{arc:ArcDesignTokenResource Danger}" />
+                            </Grid>
+                            <StackPanel Grid.Row="3"
+                                        Orientation="Horizontal"
+                                        HorizontalAlignment="Right"
+                                        Spacing="8"
+                                        Margin="6,0">
+                                <arc:Button Name="PART_JoinCancel" Variant="Ghost" Size="Small" />
+                                <arc:Button Name="PART_JoinSubmit" Variant="Primary" Size="Small" />
+                            </StackPanel>
+                        </Grid>
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|Button.team-switcher-back">
+            <Setter Property="Width" Value="32" />
+            <Setter Property="MinWidth" Value="32" />
+            <Setter Property="Height" Value="32" />
+            <Setter Property="MinHeight" Value="32" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A workspace row (48px): tile, name over plan line (both truncate), the role and the shortcut keycap (both keep
+        their width) and the check of the active workspace. The highlight is drawn by the menu behind the rows.
+    -->
+    <ControlTheme x:Key="{x:Type arc:TeamSwitcherRow}" TargetType="arc:TeamSwitcherRow">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Height" Value="{arc:TeamSwitcherTokenResource RowHeight}" />
+        <Setter Property="Padding" Value="{arc:TeamSwitcherTokenResource RowPadding}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TeamSwitcherRow">
+                <Grid Background="{TemplateBinding Background}"
+                      Margin="{TemplateBinding Padding}"
+                      ColumnDefinitions="Auto,*,Auto,Auto,Auto"
+                      ColumnSpacing="{arc:TeamSwitcherTokenResource RowGap}">
+                    <arc:TeamSwitcherTile Workspace="{TemplateBinding Workspace}"
+                                          TileSize="{arc:TeamSwitcherTokenResource RowTileSize}"
+                                          VerticalAlignment="Center" />
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                        <TextBlock Name="PART_Name"
+                                   Text="{Binding Workspace.Name, RelativeSource={RelativeSource TemplatedParent}}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   LineHeight="{arc:TeamSwitcherTokenResource NameLineHeight}"
+                                   TextTrimming="CharacterEllipsis" />
+                        <TextBlock Name="PART_Plan"
+                                   Text="{TemplateBinding PlanLine}"
+                                   FontSize="{arc:TeamSwitcherTokenResource PlanFontSize}"
+                                   LineHeight="{arc:TeamSwitcherTokenResource PlanLineHeight}"
+                                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                   TextTrimming="CharacterEllipsis" />
+                    </StackPanel>
+                    <TextBlock Name="PART_Role"
+                               Grid.Column="2"
+                               Text="{TemplateBinding Role}"
+                               IsVisible="{TemplateBinding Role, Converter={x:Static ObjectConverters.IsNotNull}}"
+                               VerticalAlignment="Center"
+                               FontSize="{arc:TeamSwitcherTokenResource RoleFontSize}"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                    <Border Name="PART_Keycap"
+                            Grid.Column="3"
+                            IsVisible="{TemplateBinding Shortcut, Converter={x:Static ObjectConverters.IsNotNull}}"
+                            Height="{arc:TeamSwitcherTokenResource KeycapHeight}"
+                            Padding="{arc:TeamSwitcherTokenResource KeycapPadding}"
+                            CornerRadius="{arc:TeamSwitcherTokenResource KeycapCornerRadius}"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                            Background="{arc:ArcDesignTokenResource Surface}"
+                            VerticalAlignment="Center">
+                        <TextBlock Text="{TemplateBinding Shortcut}"
+                                   VerticalAlignment="Center"
+                                   FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                                   FontSize="{arc:TeamSwitcherTokenResource KeycapFontSize}"
+                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                    </Border>
+                    <arc:ArcGlyph Name="PART_Check"
+                                  Grid.Column="4"
+                                  Data="{x:Static arc:ArcIcons.Check}"
+                                  Size="{arc:TeamSwitcherTokenResource CheckSize}"
+                                  VerticalAlignment="Center"
+                                  Opacity="0" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Check">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:current /template/ arc|ArcGlyph#PART_Check">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+    </ControlTheme>
+
+    <!-- Create workspace / Join with invite: a glyph and the words, 40px, the highlight behind. -->
+    <ControlTheme x:Key="{x:Type arc:TeamSwitcherActionRow}" TargetType="arc:TeamSwitcherActionRow">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Height" Value="{arc:TeamSwitcherTokenResource ActionHeight}" />
+        <Setter Property="Padding" Value="{arc:TeamSwitcherTokenResource RowPadding}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TeamSwitcherActionRow">
+                <Grid Background="{TemplateBinding Background}"
+                      Margin="{TemplateBinding Padding}"
+                      ColumnDefinitions="Auto,*"
+                      ColumnSpacing="{arc:TeamSwitcherTokenResource RowGap}">
+                    <Panel Width="{arc:TeamSwitcherTokenResource RowTileSize}" VerticalAlignment="Center">
+                        <arc:ArcGlyph Data="{TemplateBinding Glyph}"
+                                      Size="{arc:TeamSwitcherTokenResource ActionGlyphSize}"
+                                      HorizontalAlignment="Center"
+                                      Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                    </Panel>
+                    <TextBlock Grid.Column="1"
+                               Text="{TemplateBinding Text}"
+                               VerticalAlignment="Center"
+                               TextTrimming="CharacterEllipsis"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

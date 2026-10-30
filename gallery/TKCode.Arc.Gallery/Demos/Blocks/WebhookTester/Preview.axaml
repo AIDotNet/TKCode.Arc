@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.WebhookTesterPreviewDemo">
+    <!-- Five sample events, a sample secret and five earlier deliveries (WebhookTesterDemoData). No SendAction: the block simulates the endpoint, and sends one event when it scrolls into view. -->
+    <arc:WebhookTester x:Name="Block" Margin="0,12" />
+</UserControl>

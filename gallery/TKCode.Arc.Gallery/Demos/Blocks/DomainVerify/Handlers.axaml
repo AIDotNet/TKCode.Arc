@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.DomainVerifyHandlersDemo">
+    <StackPanel Spacing="12" Margin="0,12">
+        <arc:DomainVerify x:Name="Block"
+                          DefaultDomain="shop.northwind.dev"
+                          Provider="{x:Null}"
+                          AutoPlay="False" />
+        <TextBlock x:Name="Log"
+                   HorizontalAlignment="Center"
+                   TextAlignment="Center"
+                   TextWrapping="Wrap"
+                   MaxWidth="560"
+                   Text="Add the domain, then check it. The first check fails, the records propagate over the next polls." />
+    </StackPanel>
+</UserControl>

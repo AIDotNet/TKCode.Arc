@@ -19,7 +19,7 @@ public partial class AgentPlanLabelsDemo : UserControl
             Suggested = "Idea",
             DoneIn = total => $"Finished in {total}."
         };
-        Plan.Model = new AgentModel("Ember 1", ArcIcons.Sparkles);
+        Plan.Model = AgentPlanDemoData.SmallPlansModel;
         Plan.Simulation = new AgentPlanSimulation
         {
             Steps =

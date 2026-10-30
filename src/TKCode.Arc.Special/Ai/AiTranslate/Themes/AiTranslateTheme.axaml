@@ -1,0 +1,168 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.AiTranslateTheme">
+
+    <!--
+        A message card: the byline (avatar, name over role and time, the language chip at the far end), the paragraph that
+        translations stream into, and a row of controls: the Translate picker, the Show original toggle, Retry after a
+        failure and the status line led by the model's mark. Below 470px the status line drops under the controls, in line
+        with the text, and the card pads 16px; below 380px the chip shows just the language name.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiTranslate}" TargetType="arc:AiTranslate">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="MaxWidth" Value="{arc:AiTranslateTokenResource CardMaxWidth}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:AiTranslateTokenResource CardCornerRadius}" />
+        <Setter Property="Padding" Value="{arc:AiTranslateTokenResource CardPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiTranslate">
+                <Border Name="PART_Card"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <StackPanel Spacing="{arc:AiTranslateTokenResource SectionGap}">
+                        <Grid Name="PART_Byline" ColumnDefinitions="Auto,*,Auto">
+                            <arc:Avatar Name="PART_Avatar"
+                                        Size="Small"
+                                        VerticalAlignment="Center"
+                                        Margin="0,0,10,0" />
+                            <StackPanel Name="PART_Who"
+                                        Grid.Column="1"
+                                        VerticalAlignment="Center"
+                                        Margin="0,0,12,0">
+                                <TextBlock Name="PART_Name"
+                                           FontSize="{arc:AiTranslateTokenResource NameFontSize}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           TextTrimming="CharacterEllipsis"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <TextBlock Name="PART_Meta"
+                                           FontSize="{arc:AiTranslateTokenResource MetaFontSize}"
+                                           TextTrimming="CharacterEllipsis"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </StackPanel>
+                            <arc:Badge Name="PART_Chip"
+                                       Grid.Column="2"
+                                       Size="Small"
+                                       Tone="Neutral"
+                                       VerticalAlignment="Center" />
+                        </Grid>
+                        <arc:AiTranslateParagraph Name="PART_Text"
+                                                  FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                                                  FontSize="{arc:AiTranslateTokenResource TextFontSize}"
+                                                  LineHeight="{arc:AiTranslateTokenResource TextLineHeight}"
+                                                  DimOpacity="{arc:AiTranslateTokenResource DimOpacity}"
+                                                  Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        <Grid Name="PART_Footer" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" Margin="-10,0,0,0">
+                            <WrapPanel Name="PART_Actions" Orientation="Horizontal" ItemSpacing="{arc:AiTranslateTokenResource ActionGap}">
+                                <arc:Button Name="PART_Picker"
+                                            Classes="translate-action"
+                                            Variant="Ghost"
+                                            Size="Small"
+                                            IsPressScaleEnabled="False">
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <arc:ArcGlyph Classes="translate-glyph"
+                                                      Data="{x:Static arc:ArcIcons.Languages}"
+                                                      Size="{arc:AiTranslateTokenResource ActionGlyphSize}"
+                                                      VerticalAlignment="Center" />
+                                        <arc:AiTranslateSlot Name="PART_PickerLabel" VerticalAlignment="Center" />
+                                        <arc:ArcGlyph Classes="translate-glyph"
+                                                      Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                                      Size="14"
+                                                      VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </arc:Button>
+                                <arc:Button Name="PART_Toggle"
+                                            Classes="translate-action"
+                                            Variant="Ghost"
+                                            Size="Small">
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <arc:ArcGlyph Classes="translate-glyph"
+                                                      Data="{x:Static arc:ArcIcons.Eye}"
+                                                      Size="{arc:AiTranslateTokenResource ActionGlyphSize}"
+                                                      VerticalAlignment="Center" />
+                                        <arc:AiTranslateSlot Name="PART_ToggleLabel" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </arc:Button>
+                                <arc:Button Name="PART_Retry"
+                                            Classes="translate-action"
+                                            Variant="Ghost"
+                                            Size="Small"
+                                            IsVisible="False">
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <arc:ArcGlyph Classes="translate-glyph"
+                                                      Data="{x:Static arc:ArcIcons.RotateCcw}"
+                                                      Size="{arc:AiTranslateTokenResource ActionGlyphSize}"
+                                                      VerticalAlignment="Center" />
+                                        <TextBlock Name="PART_RetryLabel" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </arc:Button>
+                            </WrapPanel>
+                            <StackPanel Name="PART_Status"
+                                        Grid.Column="1"
+                                        Orientation="Horizontal"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
+                                        Margin="12,0,0,0"
+                                        Background="Transparent">
+                                <arc:AiTranslateSlot Name="PART_StatusLabel"
+                                                     VerticalAlignment="Center"
+                                                     GlyphSize="{arc:AiTranslateTokenResource StatusMarkSize}"
+                                                     GlyphGap="{arc:AiTranslateTokenResource StatusGap}"
+                                                     TextElement.FontSize="{arc:AiTranslateTokenResource StatusFontSize}"
+                                                     TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Non-triggered values of template parts (state styles cannot override local template values). -->
+        <Style Selector="^ /template/ arc|Button.translate-action">
+            <Setter Property="Height" Value="{arc:AiTranslateTokenResource ActionHeight}" />
+            <Setter Property="MinHeight" Value="{arc:AiTranslateTokenResource ActionHeight}" />
+            <Setter Property="Padding" Value="{arc:AiTranslateTokenResource ActionInlinePadding}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="FontSize" Value="{arc:AiTranslateTokenResource ActionFontSize}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph.translate-glyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+
+        <!-- Without an author the chip stays, at the start of the row. -->
+        <Style Selector="^:no-author /template/ arc|Avatar#PART_Avatar">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:no-author /template/ StackPanel#PART_Who">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:no-author /template/ arc|Badge#PART_Chip">
+            <Setter Property="Grid.Column" Value="0" />
+            <Setter Property="Grid.ColumnSpan" Value="3" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+
+        <Style Selector="^:narrow">
+            <Setter Property="Padding" Value="{arc:AiTranslateTokenResource CardPaddingNarrow}" />
+        </Style>
+        <Style Selector="^:narrow /template/ StackPanel#PART_Status">
+            <Setter Property="Grid.Row" Value="1" />
+            <Setter Property="Grid.Column" Value="0" />
+            <Setter Property="Grid.ColumnSpan" Value="2" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Margin" Value="{arc:AiTranslateTokenResource StatusNarrowMargin}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

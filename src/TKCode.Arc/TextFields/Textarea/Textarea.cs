@@ -28,11 +28,21 @@ public class Textarea : FieldTextBox
     public static readonly StyledProperty<double> FrameHeightProperty =
         AvaloniaProperty.Register<Textarea, double>(nameof(FrameHeight), double.NaN);
 
+    /// <summary>
+    /// Smallest height of the field's frame, border and padding included, in px. The theme sets Arc's 110px; lower it for
+    /// a short note or prompt box (two lines of text at the default size need 66px). The grip never drags below it.
+    /// </summary>
+    public static readonly StyledProperty<double> FrameMinHeightProperty =
+        AvaloniaProperty.Register<Textarea, double>(nameof(FrameMinHeight), 110);
+
     /// <summary>Shows the corner grip.</summary>
     public bool IsResizable { get => GetValue(IsResizableProperty); set => SetValue(IsResizableProperty, value); }
 
     /// <summary>Height chosen with the grip.</summary>
     public double FrameHeight { get => GetValue(FrameHeightProperty); set => SetValue(FrameHeightProperty, value); }
+
+    /// <inheritdoc cref="FrameMinHeightProperty"/>
+    public double FrameMinHeight { get => GetValue(FrameMinHeightProperty); set => SetValue(FrameMinHeightProperty, value); }
 
     private Control? _grip;
     private Point? _dragStart;
@@ -54,6 +64,7 @@ public class Textarea : FieldTextBox
             _grip.PointerCaptureLost -= OnGripCaptureLost;
         }
         base.OnApplyTemplate(e);
+        ApplyFrameMinHeight();
         _grip = e.NameScope.Find<Control>(ResizeGripPart);
         if (_grip is not null)
         {
@@ -61,6 +72,25 @@ public class Textarea : FieldTextBox
             _grip.PointerMoved += OnGripMoved;
             _grip.PointerReleased += OnGripReleased;
             _grip.PointerCaptureLost += OnGripCaptureLost;
+        }
+    }
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == FrameMinHeightProperty)
+        {
+            ApplyFrameMinHeight();
+        }
+    }
+
+    // Written as the frame's local value, like the token it replaces: a template binding would sit below the frame's own
+    // size triggers (FieldFrame[Size=Small] sets a 36px minimum).
+    private void ApplyFrameMinHeight()
+    {
+        if (Frame is not null)
+        {
+            Frame.MinHeight = FrameMinHeight;
         }
     }
 

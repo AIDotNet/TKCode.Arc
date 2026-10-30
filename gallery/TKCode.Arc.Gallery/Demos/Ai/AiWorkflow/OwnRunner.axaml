@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AiWorkflowOwnRunnerDemo">
+    <!-- Your own flow and your own runner. RunStep stands in for a test endpoint: it waits, then returns each step's output;
+         the first attempt at the chat step fails so Retry shows. The line under the card follows StepsChanged and
+         RunCompleted. -->
+    <StackPanel Spacing="12" MaxWidth="640">
+        <arc:AiWorkflow x:Name="Flow"
+                        Title="Enrich new signups"
+                        Description="Runs when someone signs up on the website"
+                        AutoPlay="False" />
+        <TextBlock x:Name="Log" FontSize="12" Opacity="0.7" TextWrapping="Wrap" />
+    </StackPanel>
+</UserControl>

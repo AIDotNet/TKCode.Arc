@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AiMascotPreviewDemo">
+    <!-- With no Status the mascot plays through every state on its own; picking a state sets Status, Auto clears it. -->
+    <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto,*" RowSpacing="16" Margin="0,24">
+        <arc:AiMascot x:Name="Mascot" Grid.Column="1" Size="144" AssistantName="Atlas" />
+        <TextBlock x:Name="Caption"
+                   Grid.Row="1"
+                   Grid.ColumnSpan="3"
+                   Text="Atlas, idle"
+                   TextAlignment="Center"
+                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        <arc:SegmentedControl Grid.Row="2"
+                              Grid.ColumnSpan="3"
+                              HorizontalAlignment="Center"
+                              SelectedValue="auto"
+                              SelectionChanged="OnStatusChosen">
+            <arc:SegmentedOption Value="auto" Label="Auto" />
+            <arc:SegmentedOption Value="Idle" Label="Idle" />
+            <arc:SegmentedOption Value="Listening" Label="Listening" />
+            <arc:SegmentedOption Value="Thinking" Label="Thinking" />
+            <arc:SegmentedOption Value="Writing" Label="Writing" />
+            <arc:SegmentedOption Value="Done" Label="Done" />
+            <arc:SegmentedOption Value="Error" Label="Error" />
+        </arc:SegmentedControl>
+    </Grid>
+</UserControl>

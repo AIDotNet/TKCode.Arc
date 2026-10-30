@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.AiCommandPalettePreviewDemo">
+    <!-- With no items and no responder the palette plays the simulation it is given: an invented workspace and a simulated
+         model, with a walkthrough while it is on screen. It searches, opens Ask AI with Tab, asks a question, streams the
+         answer with sources and runs an action. Click or press a key inside to take over. It fills its container up to
+         680px. The model name is a real one. -->
+    <arc:AiCommandPalette Margin="0,12" ModelName="{x:Static demos:AiCommandPaletteDemoData.ModelName}">
+        <arc:AiCommandPalette.Simulation>
+            <arc:AiCommandPaletteSimulation Items="{x:Static demos:AiCommandPaletteDemoData.Items}"
+                                            Questions="{x:Static demos:AiCommandPaletteDemoData.Questions}"
+                                            Answers="{x:Static demos:AiCommandPaletteDemoData.Answers}"
+                                            SearchQuery="{x:Static demos:AiCommandPaletteDemoData.SearchQuery}" />
+        </arc:AiCommandPalette.Simulation>
+    </arc:AiCommandPalette>
+</UserControl>

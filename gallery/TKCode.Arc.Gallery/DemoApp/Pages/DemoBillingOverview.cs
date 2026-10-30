@@ -120,7 +120,7 @@ internal sealed class DemoBillingOverview : Border
         _usagePanel = Section(usage);
 
         var invoices = new StackPanel();
-        var recipient = DemoUi.Actions(new Avatar { DisplayName = "Emma Collins", Size = AvatarSize.Small }, DemoUi.Caption("Sent to Emma Collins"));
+        var recipient = DemoUi.Actions(new Avatar { DisplayName = "Emma Collins", Source = DemoPhotos.For("Emma Collins"), Size = AvatarSize.Small }, DemoUi.Caption("Sent to Emma Collins"));
         recipient.Children[1].VerticalAlignment = VerticalAlignment.Center;
         invoices.Children.Add(PanelHead("Invoices", recipient));
         _invoiceList.Margin = new Thickness(-12, 8, -12, -8);

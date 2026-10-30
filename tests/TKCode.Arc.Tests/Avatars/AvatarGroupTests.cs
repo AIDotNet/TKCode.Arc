@@ -2,6 +2,7 @@ using TKCode.Arc.Motion;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Collections;
+using Avalonia.Controls.Primitives;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
@@ -95,6 +96,9 @@ public class AvatarGroupTests
             target.ZIndex.ShouldBe(1);
             target.Emphasis.ShouldBe(1);
             target.TipOpacity.ShouldBe(1);
+            // The name lives in the adorner layer, so clipping parents and sticky table headers cannot cover it.
+            var tip = AdornerLayer.GetAdornerLayer(group)!.Children.OfType<AvatarGroupTipHost>().ShouldHaveSingleItem();
+            AdornerLayer.GetAdornedElement(tip).ShouldBe(target);
             group.Slots[0].ZIndex.ShouldBe(0);
             window.MouseMove(new Point(390, 290));
             Dispatcher.UIThread.RunJobs();

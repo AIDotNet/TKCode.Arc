@@ -1,0 +1,588 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ProviderKeysTheme">
+
+    <!--
+        A quiet settings card: the title and description, one row per provider separated by hairlines, and a footer with a
+        lock and the encryption note. A hidden polite live region speaks reveals, copies, test results, removals and undo.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ProviderKeys}" TargetType="arc:ProviderKeys">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep20}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="NarrowWidth" Value="{arc:ProviderKeysTokenResource NarrowBreakpoint}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ProviderKeys">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <StackPanel>
+                        <StackPanel Name="PART_Header" Spacing="2">
+                            <TextBlock Name="PART_Title"
+                                       FontSize="{arc:ProviderKeysTokenResource TitleFontSize}"
+                                       LineHeight="{arc:ProviderKeysTokenResource TitleLineHeight}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                       TextTrimming="CharacterEllipsis" />
+                            <TextBlock Name="PART_Description"
+                                       FontSize="{arc:ProviderKeysTokenResource DescriptionFontSize}"
+                                       LineHeight="{arc:ProviderKeysTokenResource DescriptionLineHeight}"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                       TextWrapping="Wrap" />
+                        </StackPanel>
+                        <StackPanel Name="PART_List" />
+                        <Border Name="PART_Footer"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
+                                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                Padding="{arc:ProviderKeysTokenResource FooterPadding}">
+                            <Grid ColumnDefinitions="Auto,*">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Lock}"
+                                              Size="{arc:ProviderKeysTokenResource FooterGlyphSize}"
+                                              Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                              VerticalAlignment="Top"
+                                              Margin="0,3,8,0" />
+                                <TextBlock Name="PART_FooterText"
+                                           Grid.Column="1"
+                                           FontSize="{arc:ProviderKeysTokenResource FooterFontSize}"
+                                           LineHeight="18"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                           TextWrapping="Wrap" />
+                            </Grid>
+                        </Border>
+                        <arc:ExplainerAnnouncer Name="PART_Announcer" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ StackPanel#PART_Header">
+            <Setter Property="Margin" Value="{arc:ProviderKeysTokenResource HeaderPadding}" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        One provider row. Wide (560px and up): mark | name over key | status over last used | actions, on one line.
+        Narrow: the status moves beside the name, the key gets its own line and last used shares a line with the actions.
+        The inline form opens under the row (from the name column when wide, full width when narrow).
+    -->
+    <ControlTheme x:Key="{x:Type arc:ProviderKeysRow}" TargetType="arc:ProviderKeysRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Padding" Value="{arc:ProviderKeysTokenResource RowPadding}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessTop}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ProviderKeysRow">
+                <Border BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Padding="{TemplateBinding Padding}">
+                    <Grid Name="PART_Layout" ColumnDefinitions="Auto,*,Auto,Auto" RowDefinitions="Auto,Auto,Auto,Auto">
+                        <Border Name="PART_Mark"
+                                Width="{arc:ProviderKeysTokenResource MarkSize}"
+                                Height="{arc:ProviderKeysTokenResource MarkSize}"
+                                Margin="{arc:ProviderKeysTokenResource MarkMargin}"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusStep9}"
+                                Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                VerticalAlignment="Center">
+                            <Panel>
+                                <arc:ArcGlyph Name="PART_MarkGlyph"
+                                              Size="{arc:ProviderKeysTokenResource MarkGlyphSize}"
+                                              Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+                                <TextBlock Name="PART_Monogram"
+                                           FontSize="{arc:ProviderKeysTokenResource MarkFontSize}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center" />
+                            </Panel>
+                        </Border>
+                        <TextBlock Name="PART_Name"
+                                   Grid.Column="1"
+                                   VerticalAlignment="Center"
+                                   FontSize="{arc:ProviderKeysTokenResource NameFontSize}"
+                                   LineHeight="{arc:ProviderKeysTokenResource NameLineHeight}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                   TextTrimming="CharacterEllipsis" />
+                        <arc:ArcContentSwap Name="PART_Key"
+                                            Grid.Column="1"
+                                            Grid.Row="1"
+                                            Mode="Label"
+                                            ClipToBounds="False"
+                                            Height="{arc:ProviderKeysTokenResource TextLineHeight}"
+                                            HorizontalContentAlignment="Left"
+                                            VerticalContentAlignment="Center"
+                                            TextElement.FontSize="{arc:ProviderKeysTokenResource KeyFontSize}"
+                                            TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        <arc:ProviderKeysStatusButton Name="PART_Status"
+                                                      Grid.Column="2"
+                                                      HorizontalAlignment="Left"
+                                                      VerticalAlignment="Center">
+                            <arc:ArcContentSwap Name="PART_StatusSwap"
+                                                Mode="Label"
+                                                Height="{arc:ProviderKeysTokenResource TextLineHeight}"
+                                                HorizontalContentAlignment="Left"
+                                                VerticalContentAlignment="Center"
+                                                TextElement.FontSize="{arc:ProviderKeysTokenResource StatusFontSize}"
+                                                TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                        </arc:ProviderKeysStatusButton>
+                        <arc:ArcContentSwap Name="PART_Meta"
+                                            Grid.Column="2"
+                                            Grid.Row="1"
+                                            Mode="Label"
+                                            Height="{arc:ProviderKeysTokenResource TextLineHeight}"
+                                            HorizontalContentAlignment="Left"
+                                            VerticalContentAlignment="Center"
+                                            TextElement.FontSize="{arc:ProviderKeysTokenResource MetaFontSize}"
+                                            TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        <Panel Name="PART_Actions"
+                               Grid.Column="3"
+                               VerticalAlignment="Center">
+                            <StackPanel Name="PART_KeyActions"
+                                        Orientation="Horizontal"
+                                        Spacing="{arc:ProviderKeysTokenResource ActionGap}"
+                                        HorizontalAlignment="Right">
+                                <Panel>
+                                    <arc:ProviderKeysRevealButton Name="PART_Reveal">
+                                        <arc:ProviderKeysSwapGlyph Name="PART_RevealGlyph"
+                                                                   Size="{arc:ProviderKeysTokenResource IconGlyphSize}"
+                                                                   Data="{x:Static arc:ArcIcons.Eye}" />
+                                    </arc:ProviderKeysRevealButton>
+                                    <arc:ArcRing Name="PART_RevealRing"
+                                                 Width="{arc:ProviderKeysTokenResource RevealRingSize}"
+                                                 Height="{arc:ProviderKeysTokenResource RevealRingSize}"
+                                                 Thickness="{arc:ProviderKeysTokenResource RevealRingThickness}"
+                                                 Foreground="{arc:ArcDesignTokenResource Accent}"
+                                                 HorizontalAlignment="Center"
+                                                 VerticalAlignment="Center"
+                                                 IsHitTestVisible="False"
+                                                 IsVisible="False" />
+                                </Panel>
+                                <arc:CopyButton Name="PART_Copy" IsIconOnly="True" Variant="Plain" />
+                                <arc:ProviderKeysDisclosureButton Name="PART_Rotate">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.RotateCw}"
+                                                  Size="{arc:ProviderKeysTokenResource IconGlyphSize}" />
+                                </arc:ProviderKeysDisclosureButton>
+                                <arc:ProviderKeysIconButton Name="PART_Remove">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Trash2}"
+                                                  Size="{arc:ProviderKeysTokenResource IconGlyphSize}" />
+                                </arc:ProviderKeysIconButton>
+                            </StackPanel>
+                            <arc:ProviderKeysDisclosureButton Name="PART_Add"
+                                                              Classes="text"
+                                                              HorizontalAlignment="Right">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Plus}"
+                                                  Size="{arc:ProviderKeysTokenResource IconGlyphSize}"
+                                                  VerticalAlignment="Center" />
+                                    <TextBlock Name="PART_AddText" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </arc:ProviderKeysDisclosureButton>
+                            <arc:Button Name="PART_Undo"
+                                        Classes="provider-keys-undo"
+                                        Variant="Secondary"
+                                        Size="Small"
+                                        HorizontalAlignment="Right">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <arc:ArcRing Name="PART_UndoRing"
+                                                 Width="{arc:ProviderKeysTokenResource UndoRingSize}"
+                                                 Height="{arc:ProviderKeysTokenResource UndoRingSize}"
+                                                 Thickness="{arc:ProviderKeysTokenResource UndoRingThickness}"
+                                                 TrackBrush="{arc:ArcDesignTokenResource Border}"
+                                                 Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                 VerticalAlignment="Center"
+                                                 IsVisible="False" />
+                                    <TextBlock Name="PART_UndoText" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </arc:Button>
+                        </Panel>
+                        <arc:AiHeightBox Name="PART_FormBox"
+                                         Grid.Row="2"
+                                         Grid.Column="1"
+                                         Grid.ColumnSpan="3"
+                                         KeepsContent="True"
+                                         FadeOutDuration="0:0:0.1"
+                                         CrossClipOverflow="8">
+                            <StackPanel Margin="{arc:ProviderKeysTokenResource FormMargin}">
+                                <Grid Name="PART_FormLine" ColumnDefinitions="*,Auto,Auto" RowDefinitions="Auto,Auto">
+                                    <arc:Input Name="PART_Input"
+                                               Size="Small"
+                                               IsLabelVisible="False"
+                                               FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                                               VerticalAlignment="Center" />
+                                    <arc:Button Name="PART_Cancel"
+                                                Grid.Column="1"
+                                                Variant="Ghost"
+                                                Size="Small"
+                                                VerticalAlignment="Center" />
+                                    <arc:Button Name="PART_Save"
+                                                Grid.Column="2"
+                                                Variant="Primary"
+                                                Size="Small"
+                                                VerticalAlignment="Center" />
+                                </Grid>
+                                <arc:ArcContentSwap Name="PART_Helper"
+                                                    Mode="Label"
+                                                    HorizontalContentAlignment="Left"
+                                                    VerticalContentAlignment="Top"
+                                                    Margin="{arc:ProviderKeysTokenResource HelperMargin}"
+                                                    TextElement.FontSize="{arc:ProviderKeysTokenResource HelperFontSize}" />
+                            </StackPanel>
+                        </arc:AiHeightBox>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Wide placement (non-triggered values, so the narrow styles can move them). -->
+        <Style Selector="^ /template/ Border#PART_Mark">
+            <Setter Property="Grid.RowSpan" Value="2" />
+        </Style>
+        <Style Selector="^ /template/ arc|ProviderKeysStatusButton#PART_Status">
+            <Setter Property="Grid.Row" Value="0" />
+            <Setter Property="Grid.ColumnSpan" Value="1" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Width" Value="NaN" />
+            <Setter Property="Margin" Value="{arc:ProviderKeysTokenResource StatusButtonMargin}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcContentSwap#PART_Meta">
+            <Setter Property="Grid.Row" Value="1" />
+            <Setter Property="Grid.Column" Value="2" />
+            <Setter Property="Width" Value="{arc:ProviderKeysTokenResource StatusColumnWidth}" />
+            <Setter Property="Margin" Value="{arc:ProviderKeysTokenResource StatusColumnMargin}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcContentSwap#PART_StatusSwap">
+            <Setter Property="Width" Value="{arc:ProviderKeysTokenResource StatusColumnWidth}" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcContentSwap#PART_Key">
+            <Setter Property="Grid.ColumnSpan" Value="1" />
+        </Style>
+        <Style Selector="^ /template/ Panel#PART_Actions">
+            <Setter Property="Grid.Row" Value="0" />
+            <Setter Property="Grid.RowSpan" Value="2" />
+            <Setter Property="Grid.Column" Value="3" />
+            <Setter Property="Grid.ColumnSpan" Value="1" />
+            <Setter Property="Width" Value="{arc:ProviderKeysTokenResource ActionsColumnWidth}" />
+        </Style>
+        <Style Selector="^ /template/ arc|AiHeightBox#PART_FormBox">
+            <Setter Property="Grid.Column" Value="1" />
+            <Setter Property="Grid.ColumnSpan" Value="3" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button#PART_Cancel">
+            <Setter Property="Margin" Value="8,0,0,0" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button#PART_Save">
+            <Setter Property="Margin" Value="8,0,0,0" />
+        </Style>
+        <Style Selector="^ /template/ arc|Input#PART_Input">
+            <Setter Property="Grid.ColumnSpan" Value="1" />
+        </Style>
+        <Style Selector="^:first">
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+
+        <!-- Narrow: the status beside the name, the key on its own line, last used beside the actions. -->
+        <Style Selector="^:narrow">
+            <Setter Property="Padding" Value="{arc:ProviderKeysTokenResource RowPaddingNarrow}" />
+            <Style Selector="^ /template/ Border#PART_Mark">
+                <Setter Property="Grid.RowSpan" Value="1" />
+            </Style>
+            <Style Selector="^ /template/ arc|ProviderKeysStatusButton#PART_Status">
+                <Setter Property="Grid.ColumnSpan" Value="2" />
+                <Setter Property="HorizontalAlignment" Value="Right" />
+                <Setter Property="Margin" Value="8,0,-6,0" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcContentSwap#PART_StatusSwap">
+                <Setter Property="Width" Value="NaN" />
+                <Setter Property="HorizontalContentAlignment" Value="Right" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcContentSwap#PART_Key">
+                <Setter Property="Grid.ColumnSpan" Value="3" />
+                <Setter Property="Margin" Value="0,6,0,0" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcContentSwap#PART_Meta">
+                <Setter Property="Grid.Row" Value="2" />
+                <Setter Property="Grid.Column" Value="1" />
+                <Setter Property="Width" Value="NaN" />
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+            </Style>
+            <Style Selector="^ /template/ Panel#PART_Actions">
+                <Setter Property="Grid.Row" Value="2" />
+                <Setter Property="Grid.RowSpan" Value="1" />
+                <Setter Property="Grid.Column" Value="2" />
+                <Setter Property="Grid.ColumnSpan" Value="2" />
+                <Setter Property="Width" Value="NaN" />
+                <Setter Property="Margin" Value="8,6,0,0" />
+            </Style>
+            <Style Selector="^ /template/ arc|AiHeightBox#PART_FormBox">
+                <Setter Property="Grid.Row" Value="3" />
+                <Setter Property="Grid.Column" Value="0" />
+                <Setter Property="Grid.ColumnSpan" Value="4" />
+            </Style>
+            <Style Selector="^ /template/ arc|Input#PART_Input">
+                <Setter Property="Grid.ColumnSpan" Value="3" />
+            </Style>
+            <Style Selector="^ /template/ arc|Button#PART_Cancel">
+                <Setter Property="Grid.Row" Value="1" />
+                <Setter Property="Margin" Value="0,8,0,0" />
+            </Style>
+            <Style Selector="^ /template/ arc|Button#PART_Save">
+                <Setter Property="Grid.Row" Value="1" />
+                <Setter Property="Margin" Value="8,8,0,0" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:placeholder /template/ TextBlock#PART_Name">
+            <Setter Property="Opacity" Value="0.5" />
+        </Style>
+        <Style Selector="^:placeholder /template/ Panel#PART_Actions">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+
+        <Style Selector="^ /template/ arc|CopyButton#PART_Copy">
+            <Setter Property="Width" Value="{arc:ProviderKeysTokenResource IconButtonSize}" />
+            <Setter Property="Height" Value="{arc:ProviderKeysTokenResource IconButtonSize}" />
+            <Setter Property="MinHeight" Value="{arc:ProviderKeysTokenResource IconButtonSize}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep10}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.provider-keys-undo">
+            <Setter Property="Height" Value="{arc:ProviderKeysTokenResource IconButtonSize}" />
+            <Setter Property="MinHeight" Value="{arc:ProviderKeysTokenResource IconButtonSize}" />
+            <Setter Property="Padding" Value="10,0,12,0" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The shared look of the row's icon buttons: 32px, transparent at rest, SurfaceMuted under the pointer, a focus ring. -->
+    <ControlTheme x:Key="ProviderKeysIconButtonBase" TargetType="Button">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Width" Value="{arc:ProviderKeysTokenResource IconButtonSize}" />
+        <Setter Property="Height" Value="{arc:ProviderKeysTokenResource IconButtonSize}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep10}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="RenderTransform" Value="scale(1)" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="Button">
+                <Panel>
+                    <Border Name="PART_Fill"
+                            Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Opacity="0" />
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      Margin="{TemplateBinding Padding}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                    <Border Name="PART_FocusRing"
+                            Margin="-3"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep13}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            IsVisible="False"
+                            IsHitTestVisible="False" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:pointerover /template/ Border#PART_Fill">
+            <Setter Property="Opacity" Value="{arc:ProviderKeysTokenResource HoverOpacity}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.4" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Border#PART_Fill">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <!-- The press scale only plays with full motion (reduced motion drops it). -->
+        <Style Selector="^:motion-full:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.94)" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:ProviderKeysIconButton}" TargetType="arc:ProviderKeysIconButton"
+                  BasedOn="{StaticResource ProviderKeysIconButtonBase}" />
+
+    <ControlTheme x:Key="{x:Type arc:ProviderKeysDisclosureButton}" TargetType="arc:ProviderKeysDisclosureButton"
+                  BasedOn="{StaticResource ProviderKeysIconButtonBase}">
+        <!-- Add key: a text button with a hairline outline, as wide as its words. -->
+        <Style Selector="^.text">
+            <Setter Property="Width" Value="NaN" />
+            <Setter Property="Padding" Value="10,0,12,0" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+        <Style Selector="^.text /template/ Border#PART_Fill">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+        <Style Selector="^.text:pointerover /template/ Border#PART_Fill">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^[IsExpanded=True]">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:ProviderKeysRevealButton}" TargetType="arc:ProviderKeysRevealButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Width" Value="{arc:ProviderKeysTokenResource IconButtonSize}" />
+        <Setter Property="Height" Value="{arc:ProviderKeysTokenResource IconButtonSize}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep10}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="RenderTransform" Value="scale(1)" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ProviderKeysRevealButton">
+                <Panel>
+                    <Border Name="PART_Fill"
+                            Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Opacity="0" />
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      Margin="{TemplateBinding Padding}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                    <Border Name="PART_FocusRing"
+                            Margin="-3"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep13}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            IsVisible="False"
+                            IsHitTestVisible="False" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:checked">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:pointerover /template/ Border#PART_Fill">
+            <Setter Property="Opacity" Value="{arc:ProviderKeysTokenResource HoverOpacity}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.4" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Border#PART_Fill">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-full:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.94)" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The status button: icon plus label in a hit area as tall as the line; a quiet fill under the pointer. -->
+    <ControlTheme x:Key="{x:Type arc:ProviderKeysStatusButton}" TargetType="arc:ProviderKeysStatusButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="{arc:ProviderKeysTokenResource StatusButtonPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep6}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ProviderKeysStatusButton">
+                <Panel>
+                    <Border Name="PART_Fill"
+                            Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Opacity="0" />
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      Padding="{TemplateBinding Padding}"
+                                      HorizontalContentAlignment="Stretch"
+                                      ClipToBounds="True" />
+                    <Border Name="PART_FocusRing"
+                            Margin="-2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep8}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            IsVisible="False"
+                            IsHitTestVisible="False" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover /template/ Border#PART_Fill">
+            <Setter Property="Opacity" Value="{arc:ProviderKeysTokenResource HoverOpacity}" />
+        </Style>
+        <Style Selector="^.static">
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Fill">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

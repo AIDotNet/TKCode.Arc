@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.SocialProofToastCornerDemo">
+    <!-- Pick a corner and the stack leaves the page for that corner of the window, 360px wide and 24px from the edges
+         (across the width with 16px gutters on a window under 480px). Top corners stack downward. -->
+    <StackPanel Spacing="16" MaxWidth="400">
+        <arc:SegmentedControl x:Name="Placement" SelectedValue="Inline">
+            <arc:SegmentedOption Value="Inline" Label="Inline" />
+            <arc:SegmentedOption Value="BottomLeft" Label="Bottom left" />
+            <arc:SegmentedOption Value="BottomRight" Label="Bottom right" />
+            <arc:SegmentedOption Value="TopRight" Label="Top right" />
+        </arc:SegmentedControl>
+        <arc:SocialProofToast x:Name="Stack" Prefill="1" Interval="0:0:5">
+            <arc:SocialProofToast.Simulation>
+                <arc:SocialProofToastSimulation Events="{x:Static demos:SocialProofToastDemoData.Events}" />
+            </arc:SocialProofToast.Simulation>
+        </arc:SocialProofToast>
+    </StackPanel>
+</UserControl>

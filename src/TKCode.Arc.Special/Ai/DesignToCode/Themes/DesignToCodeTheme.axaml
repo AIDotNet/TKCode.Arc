@@ -1,0 +1,391 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.DesignToCodeTheme">
+
+    <!--
+        A screenshot-to-code card: the design pane (header with the design's name and Remove, the screenshot with its region
+        boxes and tags, or the drop zone) beside the output pane (header with the file name, the model, the Code / Preview
+        toggle and Copy, then the two layers), and a footer with the status, Import design file and the main action. The
+        panes sit side by side from 640px of card width and stack below it, each at a fixed height.
+    -->
+    <ControlTheme x:Key="{x:Type arc:DesignToCode}" TargetType="arc:DesignToCode">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:DesignToCodeTokenResource CardCornerRadius}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="SplitWidth" Value="{arc:DesignToCodeTokenResource SplitWidth}" />
+        <Setter Property="CompactWidth" Value="{arc:DesignToCodeTokenResource CompactWidth}" />
+        <Setter Property="NarrowWidth" Value="{arc:DesignToCodeTokenResource NarrowWidth}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:DesignToCode">
+                <Panel>
+                    <Border Name="PART_Card"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            ClipToBounds="True">
+                        <DockPanel>
+                            <Border Name="PART_Footer"
+                                    DockPanel.Dock="Bottom"
+                                    BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
+                                    MinHeight="{arc:DesignToCodeTokenResource FooterHeight}"
+                                    Padding="{arc:DesignToCodeTokenResource FooterPadding}">
+                                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="{arc:DesignToCodeTokenResource HeaderGap}">
+                                    <arc:ArcContentSwap Name="PART_Status"
+                                                        Mode="Crossfade"
+                                                        HorizontalContentAlignment="Left"
+                                                        VerticalAlignment="Center"
+                                                        ClipToBounds="True" />
+                                    <arc:Button Name="PART_Import"
+                                                Grid.Column="1"
+                                                Classes="dtc-action"
+                                                Variant="Secondary"
+                                                Size="Small" />
+                                    <!-- Its width follows the label (Generate code, Stop, Regenerate) on the bounce-free quick spring. -->
+                                    <arc:Button Name="PART_Main"
+                                                Grid.Column="2"
+                                                Classes="dtc-action"
+                                                Variant="Primary"
+                                                Size="Small"
+                                                LabelSpring="Quick" />
+                                </Grid>
+                            </Border>
+                            <arc:DesignToCodeSplit Name="PART_Split"
+                                                   DesignWidth="{arc:DesignToCodeTokenResource DesignPaneWidth}"
+                                                   PaneHeight="{arc:DesignToCodeTokenResource PaneHeight}">
+                                <Border Name="PART_DesignPane" Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+                                    <DockPanel>
+                                        <Grid DockPanel.Dock="Top"
+                                              Height="{arc:DesignToCodeTokenResource HeaderHeight}"
+                                              Margin="{arc:DesignToCodeTokenResource HeaderPadding}"
+                                              ColumnDefinitions="Auto,Auto,*,Auto,Auto"
+                                              ColumnSpacing="{arc:DesignToCodeTokenResource HeaderGap}">
+                                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Image}"
+                                                          Size="{arc:DesignToCodeTokenResource GlyphSize}"
+                                                          Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                          VerticalAlignment="Center" />
+                                            <TextBlock Name="PART_DesignLabel"
+                                                       Grid.Column="1"
+                                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                       VerticalAlignment="Center" />
+                                            <TextBlock Name="PART_SourceName"
+                                                       Grid.Column="2"
+                                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                       TextTrimming="CharacterEllipsis"
+                                                       VerticalAlignment="Center" />
+                                            <Border Grid.Column="3"
+                                                    IsVisible="False"
+                                                    Background="{arc:ArcDesignTokenResource Surface}"
+                                                    BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                                    CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                                    Padding="7,1"
+                                                    VerticalAlignment="Center">
+                                                <TextBlock Name="PART_SourceKind"
+                                                           FontSize="11"
+                                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                            </Border>
+                                            <arc:Button Name="PART_Remove"
+                                                        Grid.Column="4"
+                                                        Classes="dtc-icon"
+                                                        Variant="Ghost"
+                                                        Size="Small">
+                                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}" Size="16" />
+                                            </arc:Button>
+                                        </Grid>
+                                        <Panel>
+                                            <arc:DesignToCodeCanvas Name="PART_Canvas" />
+                                            <Panel Name="PART_DropZone" Margin="{arc:DesignToCodeTokenResource DropZoneMargin}">
+                                                <Rectangle Stroke="{arc:ArcDesignTokenResource BorderStrong}"
+                                                           StrokeThickness="1"
+                                                           StrokeDashArray="4,3"
+                                                           RadiusX="14"
+                                                           RadiusY="14"
+                                                           Fill="{arc:ArcDesignTokenResource Surface}" />
+                                                <StackPanel Spacing="6"
+                                                            Margin="16"
+                                                            HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center">
+                                                    <Border Width="{arc:DesignToCodeTokenResource DropTileSize}"
+                                                            Height="{arc:DesignToCodeTokenResource DropTileSize}"
+                                                            Margin="0,0,0,6"
+                                                            HorizontalAlignment="Center"
+                                                            Background="{arc:ArcDesignTokenResource AccentSubtle}"
+                                                            CornerRadius="{arc:DesignToCodeTokenResource DropTileCornerRadius}">
+                                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Upload}"
+                                                                      Size="20"
+                                                                      Foreground="{arc:ArcDesignTokenResource Accent}"
+                                                                      HorizontalAlignment="Center"
+                                                                      VerticalAlignment="Center" />
+                                                    </Border>
+                                                    <TextBlock Name="PART_DropTitle"
+                                                               HorizontalAlignment="Center"
+                                                               TextAlignment="Center"
+                                                               TextWrapping="Wrap"
+                                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                                    <TextBlock Name="PART_DropHint"
+                                                               HorizontalAlignment="Center"
+                                                               TextAlignment="Center"
+                                                               TextWrapping="Wrap"
+                                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                                    <StackPanel Orientation="Horizontal"
+                                                                Spacing="8"
+                                                                Margin="0,8,0,0"
+                                                                HorizontalAlignment="Center">
+                                                        <arc:Button Name="PART_ChooseFile"
+                                                                    Classes="dtc-action"
+                                                                    Variant="Secondary"
+                                                                    Size="Small" />
+                                                        <arc:Button Name="PART_UseSample"
+                                                                    Classes="dtc-action"
+                                                                    Variant="Ghost"
+                                                                    Size="Small" />
+                                                    </StackPanel>
+                                                    <TextBlock Name="PART_DropError"
+                                                               MaxWidth="260"
+                                                               Margin="0,6,0,0"
+                                                               HorizontalAlignment="Center"
+                                                               TextAlignment="Center"
+                                                               TextWrapping="Wrap"
+                                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                               Foreground="{arc:ArcDesignTokenResource Danger}"
+                                                               IsVisible="False" />
+                                                </StackPanel>
+                                            </Panel>
+                                            <Panel Name="PART_DragCover"
+                                                   IsVisible="False"
+                                                   IsHitTestVisible="False"
+                                                   Margin="{arc:DesignToCodeTokenResource DropZoneMargin}">
+                                                <Rectangle Stroke="{arc:ArcDesignTokenResource Accent}"
+                                                           StrokeThickness="1.5"
+                                                           StrokeDashArray="4,3"
+                                                           RadiusX="14"
+                                                           RadiusY="14"
+                                                           Fill="{arc:ArcDesignTokenResource AccentSubtle}" />
+                                                <StackPanel Spacing="8" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Upload}"
+                                                                  Size="20"
+                                                                  HorizontalAlignment="Center"
+                                                                  Foreground="{arc:ArcDesignTokenResource Accent}" />
+                                                    <TextBlock Name="PART_DragCoverText"
+                                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                               Foreground="{arc:ArcDesignTokenResource AccentStrong}" />
+                                                </StackPanel>
+                                            </Panel>
+                                        </Panel>
+                                    </DockPanel>
+                                </Border>
+                                <Border Name="PART_OutputPane"
+                                        BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                        BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessLeft}">
+                                    <DockPanel>
+                                        <Grid DockPanel.Dock="Top"
+                                              Height="{arc:DesignToCodeTokenResource HeaderHeight}"
+                                              Margin="{arc:DesignToCodeTokenResource HeaderPadding}"
+                                              ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto"
+                                              ColumnSpacing="{arc:DesignToCodeTokenResource HeaderGap}">
+                                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.FileCode}"
+                                                          Size="{arc:DesignToCodeTokenResource GlyphSize}"
+                                                          Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                          VerticalAlignment="Center" />
+                                            <TextBlock Name="PART_FileName"
+                                                       Grid.Column="1"
+                                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                       TextTrimming="CharacterEllipsis"
+                                                       VerticalAlignment="Center" />
+                                            <arc:ArcGlyph Name="PART_ModelMark"
+                                                          Grid.Column="2"
+                                                          Size="14"
+                                                          VerticalAlignment="Center" />
+                                            <TextBlock Name="PART_ModelName"
+                                                       Grid.Column="3"
+                                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                       Margin="-4,0,0,0"
+                                                       VerticalAlignment="Center" />
+                                            <arc:SegmentedControl Name="PART_ViewToggle"
+                                                                  Grid.Column="4"
+                                                                  VerticalAlignment="Center" />
+                                            <arc:CopyButton Name="PART_Copy"
+                                                            Grid.Column="5"
+                                                            IsIconOnly="True"
+                                                            Variant="Plain"
+                                                            VerticalAlignment="Center" />
+                                        </Grid>
+                                        <arc:DesignToCodeLayers Name="PART_Layers">
+                                            <Panel Name="PART_CodeLayer">
+                                                <ScrollViewer Name="PART_CodeScroll"
+                                                              Focusable="True"
+                                                              HorizontalScrollBarVisibility="Disabled"
+                                                              VerticalScrollBarVisibility="Auto">
+                                                    <arc:DesignToCodeCodeView Name="PART_Code" />
+                                                </ScrollViewer>
+                                                <arc:ArcContentSwap Name="PART_CodePlaceholder"
+                                                                    Mode="Crossfade"
+                                                                    Margin="24"
+                                                                    HorizontalAlignment="Stretch"
+                                                                    VerticalAlignment="Stretch"
+                                                                    HorizontalContentAlignment="Center"
+                                                                    VerticalContentAlignment="Center"
+                                                                    IsHitTestVisible="False" />
+                                            </Panel>
+                                            <Panel Name="PART_PreviewLayer" Opacity="0" IsVisible="False">
+                                                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                                                    <Decorator Name="PART_PreviewHost" Margin="16,4,16,16" MinHeight="260" />
+                                                </ScrollViewer>
+                                            </Panel>
+                                        </arc:DesignToCodeLayers>
+                                    </DockPanel>
+                                </Border>
+                            </arc:DesignToCodeSplit>
+                        </DockPanel>
+                    </Border>
+                    <arc:ExplainerAnnouncer Name="PART_Announcer" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Non-triggered values of template parts (state styles cannot override local template values). -->
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_ModelMark">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.dtc-action">
+            <Setter Property="Height" Value="{arc:DesignToCodeTokenResource ActionHeight}" />
+            <Setter Property="MinHeight" Value="{arc:DesignToCodeTokenResource ActionHeight}" />
+            <Setter Property="Padding" Value="{arc:DesignToCodeTokenResource ActionPadding}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.dtc-icon">
+            <Setter Property="Width" Value="{arc:DesignToCodeTokenResource IconButtonSize}" />
+            <Setter Property="Height" Value="{arc:DesignToCodeTokenResource IconButtonSize}" />
+            <Setter Property="MinHeight" Value="{arc:DesignToCodeTokenResource IconButtonSize}" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="^ /template/ arc|SegmentedControl#PART_ViewToggle">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        </Style>
+        <Style Selector="^ /template/ arc|DesignToCodeCodeView#PART_Code">
+            <Setter Property="Padding" Value="{arc:DesignToCodeTokenResource CodePadding}" />
+        </Style>
+
+        <Style Selector="^:stacked /template/ Border#PART_OutputPane">
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessTop}" />
+        </Style>
+        <Style Selector="^:narrow /template/ TextBlock#PART_ModelName">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:narrow /template/ TextBlock#PART_SourceName">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The design side's drawing area: only the padding around the screenshot. -->
+    <ControlTheme x:Key="{x:Type arc:DesignToCodeCanvas}" TargetType="arc:DesignToCodeCanvas">
+        <Setter Property="ShotPadding" Value="{arc:DesignToCodeTokenResource ShotPadding}" />
+    </ControlTheme>
+
+    <!-- The screenshot: the sample card drawn in the theme's colors, or the dropped image in a rounded frame. -->
+    <ControlTheme x:Key="{x:Type arc:DesignToCodeShot}" TargetType="arc:DesignToCodeShot">
+        <Setter Property="PaperBrush" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="WellBrush" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="InkBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="MutedInkBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="LineBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="AccentBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="AccentSubtleBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="AccentForegroundBrush" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        <Setter Property="CornerRadius" Value="{arc:DesignToCodeTokenResource ShotCornerRadius}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+    </ControlTheme>
+
+    <!-- Region boxes and the scan line over the screenshot. -->
+    <ControlTheme x:Key="{x:Type arc:DesignToCodeOverlay}" TargetType="arc:DesignToCodeOverlay">
+        <Setter Property="AccentBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="BoxCornerRadius" Value="{arc:DesignToCodeTokenResource BoxCornerRadius}" />
+        <Setter Property="BoxStrokeThickness" Value="{arc:DesignToCodeTokenResource BoxStrokeThickness}" />
+        <Setter Property="BoxHighlightStrokeThickness" Value="{arc:DesignToCodeTokenResource BoxHighlightStrokeThickness}" />
+        <Setter Property="BoxRestOpacity" Value="{arc:DesignToCodeTokenResource BoxRestOpacity}" />
+        <Setter Property="BoxFillOpacity" Value="{arc:DesignToCodeTokenResource BoxFillOpacity}" />
+        <Setter Property="ScanLineThickness" Value="{arc:DesignToCodeTokenResource ScanLineThickness}" />
+        <Setter Property="ScanBandHeight" Value="{arc:DesignToCodeTokenResource ScanBandHeight}" />
+    </ControlTheme>
+
+    <!-- The generated code: monospace, line numbers muted, region tints from the accent's subtle tone. -->
+    <ControlTheme x:Key="{x:Type arc:DesignToCodeCodeView}" TargetType="arc:DesignToCodeCodeView">
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource MonoFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:DesignToCodeTokenResource CodeFontSize}" />
+        <Setter Property="LineHeight" Value="{arc:DesignToCodeTokenResource CodeLineHeight}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="GutterBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="TintBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="PageBrush" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="GutterGap" Value="{arc:DesignToCodeTokenResource GutterGap}" />
+        <Setter Property="HangingIndent" Value="{arc:DesignToCodeTokenResource HangingIndent}" />
+        <Setter Property="WritingTintOpacity" Value="{arc:DesignToCodeTokenResource WritingTintOpacity}" />
+        <Setter Property="HighlightTintOpacity" Value="{arc:DesignToCodeTokenResource HighlightTintOpacity}" />
+    </ControlTheme>
+
+    <!-- A region's tag: a small accent-tinted label that flags its box; highlighted it turns solid. -->
+    <ControlTheme x:Key="{x:Type arc:DesignToCodeRegionTag}" TargetType="arc:DesignToCodeRegionTag">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Height" Value="{arc:DesignToCodeTokenResource TagHeight}" />
+        <Setter Property="Padding" Value="{arc:DesignToCodeTokenResource TagPadding}" />
+        <Setter Property="FontSize" Value="{arc:DesignToCodeTokenResource TagFontSize}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        <Setter Property="CornerRadius" Value="{arc:DesignToCodeTokenResource TagCornerRadius}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:DesignToCodeRegionTag">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          VerticalAlignment="Center"
+                                          Foreground="{TemplateBinding Foreground}" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            Margin="-3"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep9}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            IsVisible="False"
+                            IsHitTestVisible="False" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:highlighted">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

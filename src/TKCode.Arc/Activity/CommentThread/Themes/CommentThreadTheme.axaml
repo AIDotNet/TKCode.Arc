@@ -120,6 +120,12 @@
             <Setter Property="FontFamily" Value="{arc:CommentThreadTokenResource EmojiFontFamily}" />
             <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <!-- Color emoji ink runs past the glyph advance (✅, 🚀); TextBlock clips to its bounds by default. -->
+            <Setter Property="ContentTemplate">
+                <DataTemplate x:DataType="x:String">
+                    <TextBlock Text="{Binding}" ClipToBounds="False" />
+                </DataTemplate>
+            </Setter>
         </Style>
         <Style Selector="^[Kind=Pill]">
             <Setter Property="Height" Value="{arc:CommentThreadTokenResource ResolveHeight}" />

@@ -89,6 +89,40 @@ public class TextareaTests
     }
 
     [AvaloniaFact]
+    public void Frame_Min_Height_Defaults_To_The_Token_And_Can_Be_Lowered()
+    {
+        var textarea = new Textarea { Label = "Notes", Width = 360 };
+        var window = TestHelpers.Show(textarea);
+        try
+        {
+            var frame = textarea.GetVisualDescendants().OfType<FieldFrame>().First();
+            textarea.FrameMinHeight.ShouldBe(110);
+            frame.MinHeight.ShouldBe(110);
+
+            // A short note: the frame sits at the lower minimum, and a smaller FrameHeight is held at it.
+            textarea.FrameMinHeight = 66;
+            Dispatcher.UIThread.RunJobs();
+            frame.Bounds.Height.ShouldBe(66, 0.5);
+            textarea.FrameHeight = 40;
+            Dispatcher.UIThread.RunJobs();
+            frame.Bounds.Height.ShouldBe(66, 0.5);
+            textarea.FrameHeight = 90;
+            Dispatcher.UIThread.RunJobs();
+            frame.Bounds.Height.ShouldBe(90, 0.5);
+
+            // Clearing the local value goes back to the theme's 110px.
+            textarea.FrameHeight = double.NaN;
+            textarea.ClearValue(Textarea.FrameMinHeightProperty);
+            Dispatcher.UIThread.RunJobs();
+            frame.Bounds.Height.ShouldBe(110, 0.5);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void Focus_Darkens_The_Border_And_Draws_No_Halo()
     {
         var textarea = new Textarea { Label = "Notes", Width = 360 };

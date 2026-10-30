@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.TicketRouterNarrowDemo">
+    <!-- In a 480px column the lanes fold into a 2 by 2 grid with two rows each, the connector hides and the labels stack
+         above the route target. Below 400px of content the confidence meter and the model name hide too. -->
+    <StackPanel MaxWidth="480">
+        <arc:TicketRouter>
+            <arc:TicketRouter.Simulation>
+                <arc:TicketRouterSimulation Model="{x:Static demos:TicketRouterDemoData.Model}"
+                                            Lanes="{x:Static demos:TicketRouterDemoData.Lanes}"
+                                            Tickets="{x:Static demos:TicketRouterDemoData.Tickets}"
+                                            Routed="{x:Static demos:TicketRouterDemoData.Routed}" />
+            </arc:TicketRouter.Simulation>
+        </arc:TicketRouter>
+    </StackPanel>
+</UserControl>

@@ -53,6 +53,7 @@
         </Setter>
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="ClipToBounds" Value="False" />
 
         <Style Selector="^ /template/ arc|Button#PART_Trigger">
             <Setter Property="Padding" Value="{arc:UserMenuTokenResource TriggerInset}" />

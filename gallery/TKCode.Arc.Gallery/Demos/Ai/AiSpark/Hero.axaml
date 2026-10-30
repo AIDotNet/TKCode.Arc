@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AiSparkHeroDemo">
+    <StackPanel Spacing="14" Margin="0,16" MaxWidth="420">
+        <arc:AiSpark Size="96" Status="Idle" Announce="False" />
+        <TextBlock Text="Ask anything about your workspace"
+                   FontSize="{arc:ArcDesignTokenResource TypeLG}"
+                   FontWeight="SemiBold" />
+        <TextBlock TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                   Text="Summaries, drafts and answers grounded in your docs. Nothing leaves your workspace." />
+    </StackPanel>
+</UserControl>

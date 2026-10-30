@@ -198,9 +198,6 @@ public sealed class ToolCallItem : AvaloniaObject
     public string? SummaryText(ToolCallLabels? labels = null) =>
         !string.IsNullOrEmpty(Summary) ? Summary : Output?.DeriveSummary(labels ?? ToolCallLabels.Default);
 
-    /// <summary>Built-in sample data (<see cref="ToolCallSamples"/>): Allow and Retry with no handler are simulated.</summary>
-    internal bool IsSample { get; set; }
-
     /// <summary>The simulation that drives this call, if any; actions nobody handled go to it.</summary>
     internal ToolCallSimulation? Simulation { get; set; }
 
@@ -221,8 +218,7 @@ public sealed class ToolCallItem : AvaloniaObject
             Output = Output,
             Summary = Summary,
             Message = Message,
-            Duration = Duration,
-            IsSample = IsSample
+            Duration = Duration
         };
         copy.Input.AddRange(Input);
         return copy;

@@ -46,6 +46,7 @@
                                                 <ControlTheme TargetType="arc:BreadcrumbItem">
                                                     <Setter Property="FocusAdorner" Value="{x:Null}" />
                                                     <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+                                                    <Setter Property="ClipToBounds" Value="False" />
                                                     <Setter Property="Template">
                                                         <ControlTemplate TargetType="arc:BreadcrumbItem">
                                                             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{arc:PageHeaderTokenResource CrumbGap}">

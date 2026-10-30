@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.ResponseFeedbackPersistingDemo">
+    <!-- A FeedbackHandler that pretends to call a server. Turn on "Fail the next send" to see the inline error and
+         Try again; the log lists every submission. -->
+    <StackPanel MaxWidth="640" Margin="0,12" Spacing="12">
+        <arc:ResponseFeedback x:Name="Card"
+                              MessageId="msg_7f3a"
+                              ModelName="{x:Static demos:ResponseFeedbackDemoData.ModelName}"
+                              Prompt="{x:Static demos:ResponseFeedbackDemoData.Prompt}"
+                              CopyText="{x:Static demos:ResponseFeedbackDemoData.CopyText}" />
+        <arc:Switch x:Name="FailSwitch" Content="Fail the next send" />
+        <TextBlock x:Name="Log"
+                   TextWrapping="Wrap"
+                   FontSize="13"
+                   Text="Rate the reply to see what is sent."
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

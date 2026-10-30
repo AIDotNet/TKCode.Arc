@@ -1,0 +1,22 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.CubeMascotTheme">
+
+    <!-- The cube is drawn and animated in code (CubeMascot), so there are no transitions here: only the inks, which follow
+         theme and accent switches, and the token values for the compact drawing and the shading. -->
+    <ControlTheme x:Key="{x:Type arc:CubeMascot}" TargetType="arc:CubeMascot">
+        <Setter Property="BodyBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="FaceBrush" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        <Setter Property="LineBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="SparkleBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="CompactBelow" Value="{arc:CubeMascotTokenResource CompactBelow}" />
+        <Setter Property="TopLift" Value="{arc:CubeMascotTokenResource TopLift}" />
+        <Setter Property="FrontShade" Value="{arc:CubeMascotTokenResource FrontShade}" />
+        <Setter Property="SideShade" Value="{arc:CubeMascotTokenResource SideShade}" />
+        <Setter Property="ShadowTone" Value="{arc:CubeMascotTokenResource ShadowColor}" />
+        <Setter Property="ShadowOpacity" Value="{arc:CubeMascotTokenResource ShadowOpacity}" />
+        <Setter Property="LineOpacity" Value="{arc:CubeMascotTokenResource LineOpacity}" />
+    </ControlTheme>
+</ResourceDictionary>

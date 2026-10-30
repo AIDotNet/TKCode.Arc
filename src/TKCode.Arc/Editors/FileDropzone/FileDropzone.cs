@@ -135,6 +135,7 @@ public class FileDropzone : TemplatedControl
 
     public FileDropzone()
     {
+        FocusModality.Watch();
         Items = new ObservableCollection<FileDropzoneItem>();
         Items.CollectionChanged += OnItemsChanged;
         _list.KeyDown += OnListKeyDown;
@@ -294,15 +295,17 @@ public class FileDropzone : TemplatedControl
         }
         if (hadFocus || neighbor is null)
         {
+            // A Remove clicked with the mouse moves focus on without the keyboard ring.
+            var method = FocusModality.For(this);
             Dispatcher.UIThread.Post(() =>
             {
                 if (neighbor is not null && RowOf(neighbor)?.RemoveButton is { } remove)
                 {
-                    remove.Focus(NavigationMethod.Tab);
+                    remove.Focus(method);
                 }
                 else if (hadFocus)
                 {
-                    _trigger?.Focus(NavigationMethod.Tab);
+                    _trigger?.Focus(method);
                 }
             }, DispatcherPriority.Loaded);
         }
@@ -317,7 +320,8 @@ public class FileDropzone : TemplatedControl
         }
         Announce($"Retrying {item.Name}");
         StartUpload(item);
-        Dispatcher.UIThread.Post(() => RowOf(item)?.RemoveButton?.Focus(NavigationMethod.Tab), DispatcherPriority.Loaded);
+        var method = FocusModality.For(this);
+        Dispatcher.UIThread.Post(() => RowOf(item)?.RemoveButton?.Focus(method), DispatcherPriority.Loaded);
     }
 
     /// <summary>Reports upload progress for a row the app uploads itself (0–100; the bar never moves back).</summary>

@@ -1,8 +1,14 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
              x:Class="TKCode.Arc.Gallery.Demos.ContextWindowReducedMotionDemo">
     <!-- Under reduced motion cells and numbers change at once, a compaction lands right away and every status is still
          announced. -->
-    <arc:ContextWindow arc:ArcMotion.Level="Reduced" Margin="0,12" />
+    <arc:ContextWindow arc:ArcMotion.Level="Reduced"
+                       Margin="0,12"
+                       Models="{x:Static demos:ContextWindowDemoData.SessionModels}"
+                       Items="{x:Static demos:ContextWindowDemoData.SessionItems}"
+                       Turns="{x:Static demos:ContextWindowDemoData.SessionTurns}"
+                       Files="{x:Static demos:ContextWindowDemoData.SessionFiles}" />
 </UserControl>

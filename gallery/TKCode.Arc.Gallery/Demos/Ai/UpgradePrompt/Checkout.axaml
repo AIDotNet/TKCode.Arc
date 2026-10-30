@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.UpgradePromptCheckoutDemo">
+    <!-- An app-supplied upgrade: the first attempt is declined so the error state shows, Try again succeeds.
+         Nothing is charged; the handler only waits. -->
+    <StackPanel Spacing="16" Margin="0,12" MaxWidth="440">
+        <arc:UpgradePrompt x:Name="Prompt" Used="50" Limit="50" ResetsOn="Nov 1" Plan="{x:Static demos:UpgradePromptDemoData.ProPlan}" />
+        <TextBlock x:Name="Log"
+                   TextWrapping="Wrap"
+                   FontSize="13"
+                   Text="Press Upgrade to Pro."
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

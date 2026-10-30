@@ -1,7 +1,7 @@
 ---
 title: Agent plan
 summary: "代理的計畫是一份可編輯的檢查清單：草稿階段可以重新排序、改名與新增步驟，核准後則依序追蹤執行過程。"
-source-hash: 2ce58e71cf24
+source-hash: 001769f62b45
 ---
 
 <Demo name="Preview" />
@@ -13,7 +13,7 @@ source-hash: 2ce58e71cf24
 - **編碼或維運代理的計畫模式**：代理提出步驟，人員編輯並核准，卡片再追蹤工作進度。核准之前什麼都不會執行。
 - **追蹤多步驟任務的側邊面板或聊天訊息**：一個目前步驟，已完成的步驟會沉降為安靜的文字，頁尾則以總時間與一行摘要收尾。
 - **可能中途失敗的工作**：失敗的步驟會停止執行，並顯示原因與 Retry 和 Skip，而不是把失敗藏在記錄裡。
-- **在頁面或示範中試用完整流程**：沒有資料也沒有狀態時，卡片會在內建模擬上播放一個虛構的計畫，因此不需要代理也能看到每一種狀態。
+- **在頁面或示範中試用完整流程**：給卡片一個帶有你自己腳本的 `AgentPlanSimulation`，它就會播放這份計畫，因此不需要代理也能看到每一種狀態。
 
 ## 何時不用
 
@@ -25,7 +25,7 @@ source-hash: 2ce58e71cf24
 
 ## 用法
 
-未設定 `Steps` 與 `Status` 時，卡片會顯示一份虛構的草稿（為說明中心新增全文搜尋），並在核准時執行內建模擬。
+未設定 `Steps`、`Status` 與 `Simulation` 時，卡片是一份空草稿："Nothing is planned yet. Add a step, or let the agent keep planning."，並帶有 Add step、Keep planning 與停用中的 Approve plan；它的按鈕只會引發各自的事件。套件不附帶範例計畫。上方的預覽為卡片設定了一個由展示庫撰寫的模擬：GPT-6.1 Sol（真實的模型名稱）為說明中心新增全文搜尋起草計畫（任務是虛構的），核准後由模擬執行。
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
@@ -98,7 +98,7 @@ plan.StepAction += (_, e) => agent.Decide(e.Step, e.Kind);
 
 ### 模擬
 
-`AgentPlanSimulation` 是內建的代理，當 `Status` 為 null 時執行。它由事件驅動：每次狀態變化只等待一個計時器，計畫閒置時不執行任何東西；Pause 會保留剩餘時間，Resume 則從該處繼續。它會回應主機會發出的同樣按鈕。節拍依照實測的流程（1× 速度）設定：
+`AgentPlanSimulation` 是用於預覽、新手導覽與測試的模擬代理：把它設為 `Simulation`，它會在 `Status` 為 null 時執行。它由事件驅動：每次狀態變化只等待一個計時器，計畫閒置時不執行任何東西；Pause 會保留剩餘時間，Resume 則從該處繼續。它會回應主機會發出的同樣按鈕。節拍依照實測的流程（1× 速度）設定：
 
 | 節拍 | 時間 |
 |---|---|
@@ -111,9 +111,9 @@ plan.StepAction += (_, e) => agent.Decide(e.Step, e.Kind);
 | Retry → 第一行新活動，接著 577ms，再 465ms → 完成 | 555ms |
 | Skip → 下一個步驟開始 | 277ms |
 
-在範例中，代理會在第三個步驟的第二行之後（417ms 之後）插入一個步驟，而測試步驟會在最後一行之後失敗一次，接著只要需要就會一直等待 Retry 或 Skip。沒有腳本的步驟（例如你新增的）會執行 `GenericScript`：三行活動與 30 秒。腳本是依步驟 id 尋找的，因此改名的步驟會保留其腳本，被移除的步驟則會被略過。Start over 會回到執行開始前的草稿，所有建議都會再次可用。
+模擬所說的一切都由你的應用程式撰寫：`Steps`（草稿，每一項是一個 `AgentPlanScriptedStep`，帶有由活動行與時間組成的 `AgentPlanStepScript`、可選的失敗，以及代理可選插入的步驟）、Keep planning 用的 `Suggestions`、沒有腳本的步驟（例如你新增的）所用的 `GenericScript`（未設定時，這樣的步驟完成時沒有活動行，也沒有時間），以及 `Goal`、`Model` 與 `Summary`（計畫未設定自己的值時顯示）。在預覽中，代理會在第三個步驟的第二行之後（417ms 之後）插入一個步驟，而測試步驟會在最後一行之後失敗一次，接著只要需要就會一直等待 Retry 或 Skip。腳本是依步驟 id 尋找的，因此改名的步驟會保留其腳本，被移除的步驟則會被略過。Start over 會回到執行開始前的草稿，所有建議都會再次可用。計畫掛接模擬時讀取這些資料；每個計畫各建一個模擬，因為它保存執行狀態。在 XAML 中，把 `<arc:AgentPlan.Simulation>` 設為一個 `AgentPlanSimulation`，其屬性來自 `{x:Static}`，寫法見預覽的 Code 分頁。把 `Simulation` 設回 null 會帶走它的草稿，計畫變為空。
 
-給模擬你自己的步驟、建議與摘要，以示範另一段流程：
+下面的示範還替換了文字，並在程式碼中設定模擬：
 
 <Demo name="Labels" />
 
@@ -169,7 +169,7 @@ plan.Simulation = new AgentPlanSimulation
 
 ### 常見問題
 
-**計畫會執行任何東西嗎？** 不會。它只顯示計畫；沒有 `Status` 時，它會播放虛構的模擬。實際工作由你負責：回應 `Approved` 並更新步驟。
+**計畫會執行任何東西嗎？** 不會。它只顯示計畫；沒有 `Status` 時，它會播放你給它的 `Simulation`（如果有）。實際工作由你負責：回應 `Approved` 並更新步驟。
 
 **如何顯示代理新增的步驟？** 計畫執行期間，插入一個 `NoteKind = AgentPlanNoteKind.AddedByAgent` 的 `AgentPlanStep`。它會滑入、帶有底色與註記，並會被播報。
 
@@ -213,11 +213,9 @@ plan.Simulation = new AgentPlanSimulation
 | `AgentPlanChangeKind` | `Rename`, `Move`, `Remove`, `Add`, `SuggestionStreamed` |
 | `AgentPlanStepActionKind` | `Retry`, `Skip` |
 
-`AgentPlanSamples` 保存虛構的範例（`Steps`、`Suggestions`、`GenericScript`、`Goal`、`Summary`、`CreateModel()`、`CreateSteps()`），讓頁面能從它開始，並只修改其中一個步驟。
-
 ## 無障礙
 
-- 卡片是一個群組，以模型與目標命名（例如 "Lumen 2 Pro plan: Add full-text search to the help center"）。步驟是有序清單，因此螢幕閱讀器會朗讀總數與每個步驟的位置。
+- 卡片是一個群組，以模型與目標命名（例如 "GPT-6.1 Sol plan: Add full-text search to the help center"）。步驟是有序清單，因此螢幕閱讀器會朗讀總數與每個步驟的位置。
 - 計畫執行時，每個步驟都會在標題前以文字播報其狀態（Pending、In progress、Done、Failed、Skipped）。每種狀態也有自己的形狀，因此絕不只靠顏色傳達。
 - 失敗的步驟會朗讀 Failed 一字、其原因，以及兩個有標籤的按鈕（Retry 與 Skip，各以步驟名稱命名）。
 - 標題是一個有標籤的文字區域（"Step 3"），並有一段提示說明 Alt 加方向鍵與 Escape。把手與移除按鈕則以其位置與步驟命名（"Move step 3: …"）。

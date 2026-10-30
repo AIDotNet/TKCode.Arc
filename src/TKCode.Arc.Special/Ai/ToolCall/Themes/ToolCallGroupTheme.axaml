@@ -24,7 +24,7 @@
         <Setter Property="MutedBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:ToolCallGroup">
-                <arc:ToolCallCollapsible Name="PART_Slot">
+                <arc:AiHeightBox Name="PART_Slot">
                     <Border Name="PART_Card"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
@@ -67,16 +67,16 @@
                                     </Grid>
                                 </arc:ToolCallHeadButton>
                             </Border>
-                            <arc:ToolCallCollapsible Name="PART_List">
+                            <arc:AiHeightBox Name="PART_List">
                                 <Border BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
                                         BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
                                         Padding="{arc:ToolCallGroupTokenResource ListPadding}">
                                     <StackPanel Name="PART_Rows" />
                                 </Border>
-                            </arc:ToolCallCollapsible>
+                            </arc:AiHeightBox>
                         </StackPanel>
                     </Border>
-                </arc:ToolCallCollapsible>
+                </arc:AiHeightBox>
             </ControlTemplate>
         </Setter>
 

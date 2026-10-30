@@ -1,0 +1,42 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.UpgradePromptTheme">
+
+    <!--
+        The upgrade prompt: a raised surface, fluid up to 440px, 24 padding (20 when the card is under 420 wide). Its parts
+        (header, meter, the stacked body panels and the stacked footer) are built in code into PART_Root; the theme gives the
+        frame and the narrow padding.
+    -->
+    <ControlTheme x:Key="{x:Type arc:UpgradePrompt}" TargetType="arc:UpgradePrompt">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="MaxWidth" Value="{arc:UpgradePromptTokenResource CardMaxWidth}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Padding" Value="{arc:UpgradePromptTokenResource CardPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:UpgradePrompt">
+                <Border Name="PART_Card"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        BoxShadow="{arc:ArcDesignTokenResource ShadowRaised}"
+                        Padding="{TemplateBinding Padding}">
+                    <Panel Name="PART_Root" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:narrow">
+            <Setter Property="Padding" Value="{arc:UpgradePromptTokenResource NarrowCardPadding}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

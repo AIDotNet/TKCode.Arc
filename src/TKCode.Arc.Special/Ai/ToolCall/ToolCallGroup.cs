@@ -26,7 +26,8 @@ namespace TKCode.Arc;
 /// staggers the rows in. While the agent works the group stays open; 450ms after every call finished it folds itself away
 /// (<see cref="AutoCollapse"/>) unless the person opened or closed the group or a row. A call that needs a decision (a
 /// failure, an approval) opens a folded group. An empty group takes no space; its first call grows it in. With neither
-/// <see cref="Items"/> nor <see cref="ItemsSource"/> it shows four finished sample calls.
+/// <see cref="Items"/> nor <see cref="ItemsSource"/> it plays its <see cref="Simulation"/> when one is set, and otherwise
+/// stays empty.
 /// </para>
 /// <para>
 /// Allow, Deny and Retry bubble up from the rows as <see cref="ApproveRequested"/>, <see cref="DenyRequested"/> and
@@ -34,8 +35,8 @@ namespace TKCode.Arc;
 /// </para>
 /// </summary>
 [TemplatePart(HeaderPart, typeof(ToolCallHeadButton))]
-[TemplatePart(SlotPart, typeof(ToolCallCollapsible))]
-[TemplatePart(ListPart, typeof(ToolCallCollapsible))]
+[TemplatePart(SlotPart, typeof(AiHeightBox))]
+[TemplatePart(ListPart, typeof(AiHeightBox))]
 [TemplatePart(RowsPart, typeof(StackPanel))]
 [PseudoClasses(ExpandedPseudoClass, ActivePseudoClass, WaitingPseudoClass, FailedPseudoClass, EmptyPseudoClass, HeadHoverPseudoClass)]
 public class ToolCallGroup : TemplatedControl
@@ -64,7 +65,7 @@ public class ToolCallGroup : TemplatedControl
     /// <summary>The entering row's fade.</summary>
     internal static readonly TimeSpan EntranceFade = ArcMotionPresets.Standard;
 
-    /// <summary>An observable list of calls that wins over <see cref="Items"/>.</summary>
+    /// <summary>An observable list of calls that wins over <see cref="Items"/> and <see cref="Simulation"/>.</summary>
     public static readonly StyledProperty<IEnumerable<ToolCallItem>?> ItemsSourceProperty =
         AvaloniaProperty.Register<ToolCallGroup, IEnumerable<ToolCallItem>?>(nameof(ItemsSource));
 
@@ -94,6 +95,16 @@ public class ToolCallGroup : TemplatedControl
     /// <summary>A custom result view for every successful call (see <see cref="ToolCall.OutputTemplate"/>).</summary>
     public static readonly StyledProperty<IDataTemplate?> OutputTemplateProperty =
         AvaloniaProperty.Register<ToolCallGroup, IDataTemplate?>(nameof(OutputTemplate));
+
+    /// <summary>
+    /// A simulated turn to play while the group has no calls of its own (no <see cref="ItemsSource"/> and no
+    /// <see cref="Items"/>): the group shows its <see cref="ToolCallSimulation.Items"/>, says "Using" while it
+    /// <see cref="ToolCallSimulation.IsWorking"/> (unless <see cref="IsActive"/> is set), starts it from the top when it comes
+    /// on screen and stops it when it leaves or is replaced. Null (the default) leaves a group without calls empty. Give
+    /// each group its own.
+    /// </summary>
+    public static readonly StyledProperty<ToolCallSimulation?> SimulationProperty =
+        AvaloniaProperty.Register<ToolCallGroup, ToolCallSimulation?>(nameof(Simulation));
 
     /// <summary>The sum of the successful calls' durations (shown once nothing runs or waits).</summary>
     public static readonly DirectProperty<ToolCallGroup, TimeSpan> TotalDurationProperty =
@@ -126,7 +137,7 @@ public class ToolCallGroup : TemplatedControl
     {
         public required ToolCallItem Item { get; set; }
         public required ToolCall Call { get; init; }
-        public required ToolCallCollapsible Box { get; init; }
+        public required AiHeightBox Box { get; init; }
         public TranslateTransform? Offset { get; set; }
         public MotionValue<double>? Y { get; set; }
         public MotionValue<double>? Fade { get; set; }
@@ -135,11 +146,11 @@ public class ToolCallGroup : TemplatedControl
     private readonly Dictionary<ToolCallItem, Row> _rows = new();
     private readonly Dictionary<ToolCallItem, ToolCallStatus> _statuses = new();
     private readonly List<ToolCallItem> _items = new();
-    private IReadOnlyList<ToolCallItem>? _sample;
     private INotifyCollectionChanged? _observedList;
+    private ToolCallSimulation? _observedSimulation;
     private ToolCallHeadButton? _header;
-    private ToolCallCollapsible? _slot;
-    private ToolCallCollapsible? _list;
+    private AiHeightBox? _slot;
+    private AiHeightBox? _list;
     private StackPanel? _rowsPanel;
     private ToolCallMarkStack? _stack;
     private ToolCallText? _label;
@@ -161,7 +172,7 @@ public class ToolCallGroup : TemplatedControl
         FocusableProperty.OverrideDefaultValue<ToolCallGroup>(false);
     }
 
-    /// <summary>Creates an empty group (showing the sample calls until it gets calls).</summary>
+    /// <summary>Creates an empty group.</summary>
     public ToolCallGroup()
     {
         Items.CollectionChanged += OnItemsCollectionChanged;
@@ -192,6 +203,9 @@ public class ToolCallGroup : TemplatedControl
 
     /// <inheritdoc cref="OutputTemplateProperty"/>
     public IDataTemplate? OutputTemplate { get => GetValue(OutputTemplateProperty); set => SetValue(OutputTemplateProperty, value); }
+
+    /// <inheritdoc cref="SimulationProperty"/>
+    public ToolCallSimulation? Simulation { get => GetValue(SimulationProperty); set => SetValue(SimulationProperty, value); }
 
     /// <inheritdoc cref="TotalDurationProperty"/>
     public TimeSpan TotalDuration
@@ -248,10 +262,16 @@ public class ToolCallGroup : TemplatedControl
 
     internal IBrush? MutedBrush { get => GetValue(MutedBrushProperty); set => SetValue(MutedBrushProperty, value); }
 
-    /// <summary>The clock of the auto collapse and of the rows' sample simulation (tests replace it).</summary>
+    /// <summary>The clock of the auto collapse (tests replace it).</summary>
     internal TimeProvider Time { get; set; } = TimeProvider.System;
 
-    /// <summary>The calls shown (the sample when the group has none).</summary>
+    /// <summary>The simulation the group plays: <see cref="Simulation"/> while the group has no calls of its own.</summary>
+    internal ToolCallSimulation? ShownSimulation => ItemsSource is null && Items.Count == 0 ? Simulation : null;
+
+    /// <summary>Whether the agent works: <see cref="IsActive"/>, else the shown simulation's <see cref="ToolCallSimulation.IsWorking"/>.</summary>
+    private bool? Active => IsActive ?? ShownSimulation?.IsWorking;
+
+    /// <summary>The calls shown.</summary>
     internal IReadOnlyList<ToolCallItem> Shown => _items;
 
     /// <summary>The rows in order.</summary>
@@ -261,14 +281,14 @@ public class ToolCallGroup : TemplatedControl
     internal ToolCall? RowOf(ToolCallItem item) => _rows.TryGetValue(item, out var row) ? row.Call : null;
 
     /// <summary>The row's grow-in box of <paramref name="item"/>.</summary>
-    internal ToolCallCollapsible? RowBoxOf(ToolCallItem item) => _rows.TryGetValue(item, out var row) ? row.Box : null;
+    internal AiHeightBox? RowBoxOf(ToolCallItem item) => _rows.TryGetValue(item, out var row) ? row.Box : null;
 
     /// <summary>The header button, the list box and the mark stack.</summary>
     internal ToolCallHeadButton? Header => _header;
 
-    internal ToolCallCollapsible? List => _list;
+    internal AiHeightBox? List => _list;
 
-    internal ToolCallCollapsible? Slot => _slot;
+    internal AiHeightBox? Slot => _slot;
 
     internal ToolCallMarkStack? Stack => _stack;
 
@@ -301,8 +321,8 @@ public class ToolCallGroup : TemplatedControl
         _rowsPanel?.Children.Clear();
         var scope = e.NameScope;
         _header = scope.Find<ToolCallHeadButton>(HeaderPart);
-        _slot = scope.Find<ToolCallCollapsible>(SlotPart);
-        _list = scope.Find<ToolCallCollapsible>(ListPart);
+        _slot = scope.Find<AiHeightBox>(SlotPart);
+        _list = scope.Find<AiHeightBox>(ListPart);
         _rowsPanel = scope.Find<StackPanel>(RowsPart);
         _stack = scope.Find<ToolCallMarkStack>("PART_Stack");
         _label = scope.Find<ToolCallText>("PART_Label");
@@ -315,7 +335,7 @@ public class ToolCallGroup : TemplatedControl
         }
         if (_slot is not null)
         {
-            _slot.FadeInEasing = ToolCallCollapsible.EaseOut;
+            _slot.FadeInEasing = AiHeightBox.EaseOut;
             _slot.AnimatesClose = false;
         }
         if (_list is not null)
@@ -348,15 +368,19 @@ public class ToolCallGroup : TemplatedControl
     {
         base.OnAttachedToVisualTree(e);
         _attached = true;
-        ObserveList(ItemsSource as INotifyCollectionChanged);
+        ObserveSource();
         Sync(animate: false);
+        StartSimulation();
     }
 
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
         _attached = false;
+        // Off screen the simulated turn stops; it starts again from the top when the group comes back.
+        ShownSimulation?.Stop();
         ObserveList(null);
+        ObserveSimulation(null);
         foreach (var item in _statuses.Keys.ToList())
         {
             item.PropertyChanged -= OnItemPropertyChanged;
@@ -372,8 +396,25 @@ public class ToolCallGroup : TemplatedControl
         {
             if (_attached)
             {
-                ObserveList(change.GetNewValue<IEnumerable<ToolCallItem>?>() as INotifyCollectionChanged);
+                if (change.GetNewValue<IEnumerable<ToolCallItem>?>() is not null)
+                {
+                    // The app's calls win: a simulation that played stops.
+                    Simulation?.Stop();
+                }
+                ObserveSource();
                 Sync(animate: false);
+                StartSimulation();
+            }
+        }
+        else if (change.Property == SimulationProperty)
+        {
+            if (_attached)
+            {
+                // The replaced simulation stops; the new one starts from the top.
+                change.GetOldValue<ToolCallSimulation?>()?.Stop();
+                ObserveSource();
+                Sync(animate: false);
+                StartSimulation();
             }
         }
         else if (change.Property == IsExpandedProperty)
@@ -415,6 +456,49 @@ public class ToolCallGroup : TemplatedControl
         }
     }
 
+    /// <summary>Follows the list on screen (the source, or the simulation's calls) and the simulation's working state.</summary>
+    private void ObserveSource()
+    {
+        var simulation = ItemsSource is null ? Simulation : null;
+        ObserveList(ItemsSource as INotifyCollectionChanged ?? simulation?.Items);
+        ObserveSimulation(simulation);
+    }
+
+    private void ObserveSimulation(ToolCallSimulation? simulation)
+    {
+        if (ReferenceEquals(simulation, _observedSimulation))
+        {
+            return;
+        }
+        if (_observedSimulation is not null)
+        {
+            _observedSimulation.PropertyChanged -= OnSimulationPropertyChanged;
+        }
+        _observedSimulation = simulation;
+        if (simulation is not null)
+        {
+            simulation.PropertyChanged += OnSimulationPropertyChanged;
+        }
+    }
+
+    private void OnSimulationPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+    {
+        if (e.Property == ToolCallSimulation.IsWorkingProperty && ReferenceEquals(sender, ShownSimulation) && IsActive is null)
+        {
+            RefreshHeader();
+            CheckSettled();
+        }
+    }
+
+    /// <summary>Starts the shown simulation from the top once the group is on screen (a playing one goes on).</summary>
+    private void StartSimulation()
+    {
+        if (_attached && ShownSimulation is { State: ToolCallSimulationState.Idle } simulation)
+        {
+            simulation.Start();
+        }
+    }
+
     private void ObserveList(INotifyCollectionChanged? list)
     {
         if (ReferenceEquals(list, _observedList))
@@ -436,13 +520,19 @@ public class ToolCallGroup : TemplatedControl
     {
         if (ItemsSource is null && _attached)
         {
+            if (Items.Count > 0)
+            {
+                // The app's calls win: a simulation that played stops.
+                Simulation?.Stop();
+            }
             Sync(animate: true);
+            StartSimulation();
         }
     }
 
     private void OnSourceChanged(object? sender, NotifyCollectionChangedEventArgs e) => Sync(animate: true);
 
-    /// <summary>The calls to show: the source, the items, or the finished sample.</summary>
+    /// <summary>The calls to show: the source, the items, the simulation's calls, or none.</summary>
     private IEnumerable<ToolCallItem> Source()
     {
         if (ItemsSource is { } source)
@@ -453,7 +543,7 @@ public class ToolCallGroup : TemplatedControl
         {
             return Items;
         }
-        return _sample ??= ToolCallSamples.SettledCalls();
+        return Simulation?.Items ?? (IEnumerable<ToolCallItem>)[];
     }
 
     private bool CanAnimate => IsLoaded && ArcMotion.GetEffectiveLevel(this) == ArcMotionLevel.Full;
@@ -552,7 +642,7 @@ public class ToolCallGroup : TemplatedControl
         {
             if (!_appSetExpanded)
             {
-                SetExpanded(ToolCallFormat.OpensByDefault(next, IsActive), automatic: true);
+                SetExpanded(ToolCallFormat.OpensByDefault(next, Active), automatic: true);
             }
             // The list is part of the group growing in: no separate motion.
             if (IsExpanded)
@@ -573,7 +663,7 @@ public class ToolCallGroup : TemplatedControl
         }
         else if (becameEmpty)
         {
-            _slot?.SetCurrentValue(ToolCallCollapsible.IsExpandedProperty, false);
+            _slot?.SetCurrentValue(AiHeightBox.IsExpandedProperty, false);
             if (!_appSetExpanded)
             {
                 SetExpanded(false, automatic: true);
@@ -591,10 +681,10 @@ public class ToolCallGroup : TemplatedControl
         var call = new ToolCall { Item = item, IsFlush = true };
         Configure(call);
         call.UserToggled += OnRowToggled;
-        var box = new ToolCallCollapsible
+        var box = new AiHeightBox
         {
             Content = call,
-            FadeInEasing = ToolCallCollapsible.EaseOut,
+            FadeInEasing = AiHeightBox.EaseOut,
             FadeInDelay = TimeSpan.FromMilliseconds(60),
             AnimatesClose = false
         };
@@ -605,7 +695,6 @@ public class ToolCallGroup : TemplatedControl
     {
         call.Labels = Labels;
         call.OutputTemplate = OutputTemplate;
-        call.Time = Time;
     }
 
     private void OnItemPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
@@ -651,7 +740,7 @@ public class ToolCallGroup : TemplatedControl
     /// <summary>Starts the auto collapse when every call has just finished; anything that runs again cancels it.</summary>
     private void CheckSettled()
     {
-        var settled = ToolCallFormat.IsSettled(_items, IsActive);
+        var settled = ToolCallFormat.IsSettled(_items, Active);
         if (!settled)
         {
             _wasSettled = false;
@@ -671,7 +760,7 @@ public class ToolCallGroup : TemplatedControl
         _collapseTimer = ToolCallTimer.After(Time, AutoCollapseDelay, () =>
         {
             _collapseTimer = null;
-            if (!_touched && IsExpanded && ToolCallFormat.IsSettled(_items, IsActive))
+            if (!_touched && IsExpanded && ToolCallFormat.IsSettled(_items, Active))
             {
                 SetExpanded(false, automatic: true);
             }
@@ -740,13 +829,13 @@ public class ToolCallGroup : TemplatedControl
         row.Fade.Jump(0);
         box.Opacity = 0;
         _ = row.Y.AnimateTo(0, MotionSpec.Spring(SettleSpring, delay));
-        _ = row.Fade.AnimateTo(1, MotionSpec.Tween(EntranceFade, ToolCallCollapsible.EaseOut, delay));
+        _ = row.Fade.AnimateTo(1, MotionSpec.Tween(EntranceFade, AiHeightBox.EaseOut, delay));
     }
 
     private void RefreshHeader()
     {
         var labels = Labels;
-        var header = ToolCallFormat.Header(_items, IsActive, labels);
+        var header = ToolCallFormat.Header(_items, Active, labels);
         if (_label is not null)
         {
             _label.Text = header.Label;
@@ -765,7 +854,7 @@ public class ToolCallGroup : TemplatedControl
         {
             AutomationProperties.SetName(_header, HeaderText);
         }
-        PseudoClasses.Set(ActivePseudoClass, ToolCallFormat.IsActive(_items, IsActive));
+        PseudoClasses.Set(ActivePseudoClass, ToolCallFormat.IsActive(_items, Active));
         PseudoClasses.Set(WaitingPseudoClass, _items.Any(i => i.Status == ToolCallStatus.Approval));
         PseudoClasses.Set(FailedPseudoClass, FailedCount > 0);
     }

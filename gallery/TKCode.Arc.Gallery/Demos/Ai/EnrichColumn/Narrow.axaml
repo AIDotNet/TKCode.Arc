@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.EnrichColumnNarrowDemo">
+    <!-- In a 400px column the domain, the source text and the model detail fold away, the gutters tighten to 16px, values
+         wrap to two lines in 60px rows and a failure's reason hides behind its label. Given a height, the rows scroll and
+         only the ones on screen are built. -->
+    <Border Width="400" Height="440" Margin="0,12">
+        <arc:EnrichColumn>
+            <arc:EnrichColumn.Simulation>
+                <arc:EnrichColumnSimulation Title="Target accounts"
+                                            Column="{x:Static demos:EnrichColumnDemoData.Column}"
+                                            Model="{x:Static demos:EnrichColumnDemoData.Model}"
+                                            Rows="{x:Static demos:EnrichColumnDemoData.Rows}"
+                                            Answers="{x:Static demos:EnrichColumnDemoData.Answers}" />
+            </arc:EnrichColumn.Simulation>
+        </arc:EnrichColumn>
+    </Border>
+</UserControl>

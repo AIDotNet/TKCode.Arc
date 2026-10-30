@@ -16,7 +16,7 @@ public class AgentRunSimulationTests
     [Fact]
     public void Starts_After_The_Start_Delay_With_Every_Step_Listed()
     {
-        var (sim, clock) = Start(AgentStatusSamples.Coding);
+        var (sim, clock) = Start(AgentStatusTestRuns.Coding);
         sim.Status.ShouldBe(AgentStatusRunState.Idle);
         sim.Steps.Count.ShouldBe(0);
         clock.Advance(899);
@@ -40,7 +40,7 @@ public class AgentRunSimulationTests
     [InlineData(7866, 4, "Checking specs")]
     public void The_Coding_Run_Moves_On_At_The_Measured_Times(double after, int step, string label)
     {
-        var (sim, clock) = Start(AgentStatusSamples.Coding);
+        var (sim, clock) = Start(AgentStatusTestRuns.Coding);
         clock.Advance(900);
         clock.Advance(after);
         sim.Status.ShouldBe(AgentStatusRunState.Working);
@@ -51,7 +51,7 @@ public class AgentRunSimulationTests
     [Fact]
     public void Finished_Steps_Show_Their_Past_Tense_And_Duration()
     {
-        var (sim, clock) = Start(AgentStatusSamples.Coding);
+        var (sim, clock) = Start(AgentStatusTestRuns.Coding);
         clock.Advance(900 + 1917);
         Step(sim, 0).State.ShouldBe(AgentStatusStepState.Done);
         Step(sim, 0).Label.ShouldBe("Scanned 9 modules");
@@ -63,7 +63,7 @@ public class AgentRunSimulationTests
     [Fact]
     public void The_Count_Ticks_In_Place_Every_279_Milliseconds()
     {
-        var (sim, clock) = Start(AgentStatusSamples.Coding);
+        var (sim, clock) = Start(AgentStatusTestRuns.Coding);
         clock.Advance(900 + 7866);
         sim.Activity!.ProgressValue.ShouldBe(1);
         sim.Activity.ProgressTotal.ShouldBe(12);
@@ -87,7 +87,7 @@ public class AgentRunSimulationTests
     [Fact]
     public void It_Waits_Forever_For_An_Approval_While_The_Timer_Would_Keep_Running()
     {
-        var (sim, clock) = Start(AgentStatusSamples.Coding);
+        var (sim, clock) = Start(AgentStatusTestRuns.Coding);
         clock.Advance(900 + 11182);
         sim.Status.ShouldBe(AgentStatusRunState.NeedsInput);
         sim.Activity!.Label.ShouldBe("Waiting on you to deploy to staging");
@@ -103,7 +103,7 @@ public class AgentRunSimulationTests
     [Fact]
     public void Approve_Deploys_For_1440_Milliseconds_Then_The_Run_Is_Done()
     {
-        var (sim, clock) = Start(AgentStatusSamples.Coding);
+        var (sim, clock) = Start(AgentStatusTestRuns.Coding);
         clock.Advance(900 + 11182 + 5000);
         sim.Approve();
         sim.Status.ShouldBe(AgentStatusRunState.Working);
@@ -123,7 +123,7 @@ public class AgentRunSimulationTests
     [Fact]
     public void Deny_Skips_The_Step_And_Finishes()
     {
-        var (sim, clock) = Start(AgentStatusSamples.Coding);
+        var (sim, clock) = Start(AgentStatusTestRuns.Coding);
         clock.Advance(900 + 11182);
         sim.Deny();
         sim.Status.ShouldBe(AgentStatusRunState.Done);
@@ -137,7 +137,7 @@ public class AgentRunSimulationTests
     [Fact]
     public void Pause_Freezes_The_Script_And_Resume_Continues_From_The_Same_Point()
     {
-        var (sim, clock) = Start(AgentStatusSamples.Coding);
+        var (sim, clock) = Start(AgentStatusTestRuns.Coding);
         clock.Advance(900 + 3416 + 584);
         sim.Pause();
         sim.Status.ShouldBe(AgentStatusRunState.Paused);
@@ -155,7 +155,7 @@ public class AgentRunSimulationTests
     [Fact]
     public void Stop_Cancels_The_Running_Step()
     {
-        var (sim, clock) = Start(AgentStatusSamples.Research);
+        var (sim, clock) = Start(AgentStatusTestRuns.Research);
         clock.Advance(900 + 1433 + 1917 + 500);
         sim.Stop();
         sim.Status.ShouldBe(AgentStatusRunState.Stopped);
@@ -170,7 +170,7 @@ public class AgentRunSimulationTests
     [Fact]
     public void The_Research_Run_Fails_Once_And_Retry_Continues_The_Count()
     {
-        var (sim, clock) = Start(AgentStatusSamples.Research);
+        var (sim, clock) = Start(AgentStatusTestRuns.Research);
         clock.Advance(900 + 1433 + 1917);
         sim.Activity!.Label.ShouldBe("Opening pages");
         sim.Activity.ProgressValue.ShouldBe(1);
@@ -206,7 +206,7 @@ public class AgentRunSimulationTests
     [Fact]
     public void Open_Run_Only_Says_So_And_Changes_Nothing()
     {
-        var (sim, clock) = Start(AgentStatusSamples.Coding);
+        var (sim, clock) = Start(AgentStatusTestRuns.Coding);
         clock.Advance(2000);
         var steps = sim.Steps.Select(s => s.State).ToList();
         sim.OpenRun();
@@ -218,7 +218,7 @@ public class AgentRunSimulationTests
     [Fact]
     public void Replay_Clears_The_Run_And_Starts_After_Half_A_Second()
     {
-        var (sim, clock) = Start(AgentStatusSamples.Coding);
+        var (sim, clock) = Start(AgentStatusTestRuns.Coding);
         clock.Advance(900 + 4000);
         sim.Replay();
         sim.Status.ShouldBe(AgentStatusRunState.Idle);
@@ -233,22 +233,22 @@ public class AgentRunSimulationTests
     [Fact]
     public void Changing_The_Scenario_Starts_Over_After_The_Start_Delay()
     {
-        var (sim, clock) = Start(AgentStatusSamples.Coding);
+        var (sim, clock) = Start(AgentStatusTestRuns.Coding);
         clock.Advance(900 + 4000);
-        sim.Scenario = AgentStatusSamples.Research;
+        sim.Scenario = AgentStatusTestRuns.Research;
         sim.Status.ShouldBe(AgentStatusRunState.Idle);
         sim.Agent.Name.ShouldBe("Atlas Scout 2");
         clock.Advance(900);
         sim.Status.ShouldBe(AgentStatusRunState.Working);
         sim.Activity!.Label.ShouldBe("Drafting 3 sub-questions");
-        sim.Scenario = AgentStatusSamples.Research;
+        sim.Scenario = AgentStatusTestRuns.Research;
         sim.Status.ShouldBe(AgentStatusRunState.Working);
     }
 
     [Fact]
     public void A_Late_Timer_Does_Not_Drift_The_Script()
     {
-        var (sim, clock) = Start(AgentStatusSamples.Coding);
+        var (sim, clock) = Start(AgentStatusTestRuns.Coding);
         clock.Advance(900);
         clock.Advance(1917 + 1499 + 400);
         Step(sim, 1).State.ShouldBe(AgentStatusStepState.Done);
@@ -260,7 +260,7 @@ public class AgentRunSimulationTests
     [Fact]
     public void Actions_In_The_Wrong_State_Do_Nothing()
     {
-        var (sim, clock) = Start(AgentStatusSamples.Coding);
+        var (sim, clock) = Start(AgentStatusTestRuns.Coding);
         clock.Advance(900 + 1000);
         sim.Approve();
         sim.Deny();

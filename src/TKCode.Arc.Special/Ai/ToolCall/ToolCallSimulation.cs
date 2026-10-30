@@ -120,10 +120,12 @@ public sealed class ToolCallSimulationStep
 /// <summary>
 /// Plays a scripted agent turn into <see cref="Items"/> on a clock: calls are appended one after another, run for their
 /// time and settle; a failing call waits for <see cref="Retry"/> and a call that needs approval waits for
-/// <see cref="Approve"/> or <see cref="Deny"/>. Bind a <see cref="ToolCallGroup"/>'s <c>ItemsSource</c> to <see cref="Items"/>
-/// and its <c>IsActive</c> to <see cref="IsWorking"/>: Allow, Deny and Retry on the group's rows reach the simulation when
-/// nothing else handles them. The default script is <see cref="ToolCallSamples.Script"/>. Time comes from a
-/// <see cref="TimeProvider"/>, so tests can step it; callbacks run on the UI thread.
+/// <see cref="Approve"/> or <see cref="Deny"/>. Your app writes the <see cref="Script"/>; nothing ships with the package.
+/// Give it to <see cref="ToolCallGroup.Simulation"/> (the group shows <see cref="Items"/>, follows <see cref="IsWorking"/>,
+/// starts the run when it is on screen and stops it when it leaves), or bind a group's <c>ItemsSource</c> to
+/// <see cref="Items"/> and its <c>IsActive</c> to <see cref="IsWorking"/> yourself. Allow, Deny and Retry on the rows reach
+/// the simulation when nothing else handles them. Time comes from a <see cref="TimeProvider"/>, so tests can step it;
+/// callbacks run on the UI thread. Create one per group: it keeps the playback state.
 /// </summary>
 public sealed class ToolCallSimulation : AvaloniaObject, IDisposable
 {
@@ -137,7 +139,7 @@ public sealed class ToolCallSimulation : AvaloniaObject, IDisposable
         AvaloniaProperty.RegisterDirect<ToolCallSimulation, bool>(nameof(IsWorking), s => s.IsWorking);
 
     private readonly TimeProvider _time;
-    private readonly List<ToolCallSimulationStep> _script;
+    private IReadOnlyList<ToolCallSimulationStep> _script;
     private ITimer? _timer;
     private int _generation;
     private int _next;
@@ -146,20 +148,40 @@ public sealed class ToolCallSimulation : AvaloniaObject, IDisposable
     private ToolCallSimulationState _state;
     private bool _isWorking;
 
-    /// <summary>Creates a simulation of <paramref name="script"/> (null plays <see cref="ToolCallSamples.Script"/>).</summary>
-    /// <param name="script">The calls to play, in order.</param>
-    /// <param name="timeProvider">The clock (null: the system clock).</param>
-    public ToolCallSimulation(IEnumerable<ToolCallSimulationStep>? script = null, TimeProvider? timeProvider = null)
+    /// <summary>Creates a simulation with no calls on the system clock; set <see cref="Script"/> (in XAML too).</summary>
+    public ToolCallSimulation()
+        : this([])
     {
-        _script = (script ?? ToolCallSamples.Script()).ToList();
+    }
+
+    /// <summary>Creates a simulation of <paramref name="script"/>.</summary>
+    /// <param name="script">The calls to play, in order (null: none).</param>
+    /// <param name="timeProvider">The clock (null: the system clock).</param>
+    public ToolCallSimulation(IEnumerable<ToolCallSimulationStep>? script, TimeProvider? timeProvider = null)
+    {
+        _script = (script ?? []).ToList();
         _time = timeProvider ?? TimeProvider.System;
     }
 
     /// <summary>The calls of the run so far, appended and changed in place as it plays.</summary>
     public AvaloniaList<ToolCallItem> Items { get; } = new();
 
-    /// <summary>The scripted calls.</summary>
-    public IReadOnlyList<ToolCallSimulationStep> Script => _script;
+    /// <summary>
+    /// The scripted calls, in order, written by your app (each run appends copies of their calls). Setting it while a run
+    /// plays starts again from the top; null is no calls.
+    /// </summary>
+    public IReadOnlyList<ToolCallSimulationStep> Script
+    {
+        get => _script;
+        set
+        {
+            _script = (value ?? []).ToList();
+            if (State != ToolCallSimulationState.Idle)
+            {
+                Start();
+            }
+        }
+    }
 
     /// <inheritdoc cref="StateProperty"/>
     public ToolCallSimulationState State
@@ -286,7 +308,6 @@ public sealed class ToolCallSimulation : AvaloniaObject, IDisposable
     private void Append(ToolCallSimulationStep step)
     {
         var item = step.Call.Copy();
-        item.IsSample = true;
         item.Simulation = this;
         if (step.Outcome == ToolCallSimulationOutcome.NeedsApproval)
         {
