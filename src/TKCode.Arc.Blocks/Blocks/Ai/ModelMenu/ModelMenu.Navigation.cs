@@ -1,3 +1,4 @@
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
@@ -30,7 +31,7 @@ public partial class ModelMenu
     private IDisposable? _clientSizeSubscription;
     private DispatcherTimer? _hoverTimer;
     private ModelMenuActionRow? _hoverRow;
-    private ModelMenuSafeZone? _zone;
+    private SubmenuSafeZone? _zone;
     private DateTime _zoneUntil;
     private bool _towardSubmenu = true;
     private Point _lastPointer;
@@ -58,7 +59,7 @@ public partial class ModelMenu
 
     internal bool IsHoverPending => _hoverTimer?.IsEnabled == true;
 
-    internal ModelMenuSafeZone? SafeZone => _zone;
+    internal SubmenuSafeZone? SafeZone => _zone;
 
     private bool IsMainShown => _main is { IsShown: true };
 
@@ -677,9 +678,9 @@ public partial class ModelMenu
         {
             return;
         }
-        var zone = new ModelMenuSafeZone(exit, new Rect(origin, sub.Panel.Bounds.Size), !sub.Popup.OpensLeft);
+        var zone = new SubmenuSafeZone(exit, new Rect(origin, sub.Panel.Bounds.Size), !sub.Popup.OpensLeft);
         _zone = zone;
-        _zoneUntil = Now() + ModelMenuSafeZone.Lifetime;
+        _zoneUntil = Now() + SubmenuSafeZone.Lifetime;
         _towardSubmenu = zone.IsToward(dx, true);
     }
 

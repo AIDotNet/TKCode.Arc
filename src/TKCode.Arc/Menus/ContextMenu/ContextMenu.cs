@@ -51,6 +51,13 @@ public class ContextMenu : ContentControl
     public static readonly StyledProperty<IDataTemplate?> ItemTemplateProperty =
         AvaloniaProperty.Register<ContextMenu, IDataTemplate?>(nameof(ItemTemplate));
 
+    /// <summary>
+    /// Children of an <see cref="ItemsSource"/> item: a non-empty result makes its row open a submenu of those children
+    /// (same signature as <c>TreeView.ChildrenSelector</c>; applied at every level).
+    /// </summary>
+    public static readonly StyledProperty<Func<object, IEnumerable?>?> ChildrenSelectorProperty =
+        AvaloniaProperty.Register<ContextMenu, Func<object, IEnumerable?>?>(nameof(ChildrenSelector));
+
     /// <summary>Raised when a menu row is clicked; the argument carries the clicked entry and item.</summary>
     public static readonly RoutedEvent<MenuEntryClickedEventArgs> ItemClickedEvent =
         RoutedEvent.Register<ContextMenu, MenuEntryClickedEventArgs>(nameof(ItemClicked), RoutingStrategies.Bubble);
@@ -98,6 +105,13 @@ public class ContextMenu : ContentControl
     {
         get => GetValue(ItemTemplateProperty);
         set => SetValue(ItemTemplateProperty, value);
+    }
+
+    /// <inheritdoc cref="ChildrenSelectorProperty"/>
+    public Func<object, IEnumerable?>? ChildrenSelector
+    {
+        get => GetValue(ChildrenSelectorProperty);
+        set => SetValue(ChildrenSelectorProperty, value);
     }
 
     /// <summary>The menu rows (declare them under <c>&lt;arc:ContextMenu.Items&gt;</c>; the element content is the target).</summary>
@@ -206,6 +220,10 @@ public class ContextMenu : ContentControl
         else if (change.Property == ItemTemplateProperty)
         {
             Menu.ItemTemplate = change.GetNewValue<IDataTemplate?>();
+        }
+        else if (change.Property == ChildrenSelectorProperty)
+        {
+            Menu.ChildrenSelector = change.GetNewValue<Func<object, IEnumerable?>?>();
         }
     }
 

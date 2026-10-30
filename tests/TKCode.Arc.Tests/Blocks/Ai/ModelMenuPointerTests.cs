@@ -1,3 +1,4 @@
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
@@ -274,7 +275,7 @@ public class ModelMenuPointerTests
     public void Safe_Zone_Covers_The_Wedge_From_The_Exit_Point_To_The_Submenu()
     {
         var submenu = new Rect(305, 100, 264, 264);
-        var zone = new ModelMenuSafeZone(new Point(200, 220), submenu, SubmenuOnRight: true);
+        var zone = new SubmenuSafeZone(new Point(200, 220), submenu, SubmenuOnRight: true);
         // The exit point itself (the apex moved 5px back) and points on the way.
         zone.Contains(new Point(200, 220)).ShouldBeTrue();
         zone.Contains(new Point(260, 200)).ShouldBeTrue();
@@ -295,7 +296,7 @@ public class ModelMenuPointerTests
     public void Safe_Zone_Mirrors_For_A_Submenu_On_The_Left()
     {
         var submenu = new Rect(10, 100, 264, 264);
-        var zone = new ModelMenuSafeZone(new Point(380, 220), submenu, SubmenuOnRight: false);
+        var zone = new SubmenuSafeZone(new Point(380, 220), submenu, SubmenuOnRight: false);
         zone.Contains(new Point(380, 220)).ShouldBeTrue();
         zone.Contains(new Point(300, 160)).ShouldBeTrue();
         zone.Contains(new Point(100, 300)).ShouldBeTrue();
@@ -305,19 +306,19 @@ public class ModelMenuPointerTests
         zone.IsToward(2, true).ShouldBeFalse();
         zone.IsToward(0, true).ShouldBeTrue();
         zone.IsToward(0, false).ShouldBeFalse();
-        ModelMenuSafeZone.Lifetime.ShouldBe(TimeSpan.FromMilliseconds(300));
+        SubmenuSafeZone.Lifetime.ShouldBe(TimeSpan.FromMilliseconds(300));
     }
 
     [Fact]
     public void Polygon_Test_Handles_Edges_And_Concave_Shapes()
     {
         ReadOnlySpan<Point> square = [new(0, 0), new(10, 0), new(10, 10), new(0, 10)];
-        ModelMenuSafeZone.IsInPolygon(new Point(5, 5), square).ShouldBeTrue();
-        ModelMenuSafeZone.IsInPolygon(new Point(15, 5), square).ShouldBeFalse();
-        ModelMenuSafeZone.IsInPolygon(new Point(-1, -1), square).ShouldBeFalse();
+        SubmenuSafeZone.IsInPolygon(new Point(5, 5), square).ShouldBeTrue();
+        SubmenuSafeZone.IsInPolygon(new Point(15, 5), square).ShouldBeFalse();
+        SubmenuSafeZone.IsInPolygon(new Point(-1, -1), square).ShouldBeFalse();
         ReadOnlySpan<Point> notch = [new(0, 0), new(10, 0), new(5, 5), new(10, 10), new(0, 10)];
-        ModelMenuSafeZone.IsInPolygon(new Point(8, 5), notch).ShouldBeFalse();
-        ModelMenuSafeZone.IsInPolygon(new Point(2, 5), notch).ShouldBeTrue();
+        SubmenuSafeZone.IsInPolygon(new Point(8, 5), notch).ShouldBeFalse();
+        SubmenuSafeZone.IsInPolygon(new Point(2, 5), notch).ShouldBeTrue();
     }
 
     #endregion

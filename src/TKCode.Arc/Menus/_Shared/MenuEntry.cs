@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Automation;
@@ -12,6 +13,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
+using Avalonia.Metadata;
 
 namespace TKCode.Arc;
 
@@ -22,15 +24,21 @@ namespace TKCode.Arc;
 /// the row under the pointer and jumps to the keyboard position. Activation runs <see cref="Command"/>, raises
 /// <see cref="Click"/> and the surface's <see cref="MenuSurface.ItemClicked"/>, then closes the menu unless
 /// <see cref="StaysOpenOnClick"/> is set.
+/// <para>
+/// A row with child rows (<see cref="Items"/> declared inline, or <see cref="ItemsSource"/>) opens a submenu instead: it
+/// shows a chevron, and a click, Enter, Space or ArrowRight opens the submenu beside the menu (hovering opens it after a
+/// short delay). Rows inside a submenu can open their own submenus.
+/// </para>
 /// </summary>
 [TemplatePart(RowPart, typeof(Border))]
-[PseudoClasses(HighlightedPseudoClass, PressedPseudoClass, CheckedPseudoClass)]
+[PseudoClasses(HighlightedPseudoClass, PressedPseudoClass, CheckedPseudoClass, SubmenuOpenPseudoClass)]
 public class MenuEntry : TemplatedControl
 {
     public const string RowPart = "PART_Row";
     public const string HighlightedPseudoClass = ":highlighted";
     public const string PressedPseudoClass = ":pressed";
     public const string CheckedPseudoClass = ":checked";
+    public const string SubmenuOpenPseudoClass = ":submenu-open";
 
     #region 公共属性定义
 
@@ -89,6 +97,20 @@ public class MenuEntry : TemplatedControl
     /// <summary>Inherited from the owning <see cref="MenuSurface"/>; selects the row geometry.</summary>
     public static readonly StyledProperty<MenuSurfaceVariant> VariantProperty =
         MenuSurface.VariantProperty.AddOwner<MenuEntry>();
+
+    /// <summary>
+    /// Rows of the submenu this row opens, from data (use it or inline <see cref="Items"/>, not both). Items are turned
+    /// into rows the way the menu's own items are: <see cref="MenuEntry"/> instances are used as is.
+    /// </summary>
+    public static readonly StyledProperty<IEnumerable?> ItemsSourceProperty =
+        AvaloniaProperty.Register<MenuEntry, IEnumerable?>(nameof(ItemsSource));
+
+    /// <summary>
+    /// True when the row opens a submenu (it has child rows): it shows a chevron instead of a shortcut hint and opens the
+    /// submenu instead of running <see cref="Command"/> or raising <see cref="Click"/>.
+    /// </summary>
+    public static readonly DirectProperty<MenuEntry, bool> HasSubmenuProperty =
+        AvaloniaProperty.RegisterDirect<MenuEntry, bool>(nameof(HasSubmenu), o => o.HasSubmenu);
 
     public static readonly RoutedEvent<RoutedEventArgs> ClickEvent =
         RoutedEvent.Register<MenuEntry, RoutedEventArgs>(nameof(Click), RoutingStrategies.Bubble);
@@ -202,6 +224,27 @@ public class MenuEntry : TemplatedControl
         set => SetValue(VariantProperty, value);
     }
 
+    /// <inheritdoc cref="ItemsSourceProperty"/>
+    public IEnumerable? ItemsSource
+    {
+        get => GetValue(ItemsSourceProperty);
+        set => SetValue(ItemsSourceProperty, value);
+    }
+
+    /// <summary>
+    /// Child rows declared inline (<see cref="MenuEntry"/>, <see cref="MenuEntrySeparator"/>, <see cref="MenuEntryLabel"/>):
+    /// any child row turns this row into a submenu row.
+    /// </summary>
+    [Content]
+    public ItemCollection Items => EnsureSubmenu().Items;
+
+    /// <inheritdoc cref="HasSubmenuProperty"/>
+    public bool HasSubmenu
+    {
+        get => _hasSubmenu;
+        private set => SetAndRaise(HasSubmenuProperty, ref _hasSubmenu, value);
+    }
+
     /// <summary>Raised when the row is activated (pointer release, Enter or Space), before the menu closes.</summary>
     public event EventHandler<RoutedEventArgs>? Click
     {
@@ -222,6 +265,8 @@ public class MenuEntry : TemplatedControl
     private bool _commandCanExecute = true;
     private bool _pressed;
     private Border? _row;
+    private bool _hasSubmenu;
+    private MenuSurface? _submenu;
 
     internal Geometry? IconGeometry
     {
@@ -299,6 +344,34 @@ public class MenuEntry : TemplatedControl
     /// <summary>Gives a row the first chance at keys the surface does not consume itself (Left / Right in inline switches).</summary>
     internal virtual bool HandleMenuKey(KeyEventArgs e) => false;
 
+    /// <summary>The surface holding the child rows (created on first use: inline rows, ItemsSource or the first open).</summary>
+    internal MenuSurface? Submenu => _submenu;
+
+    /// <summary>True while the row's ItemsSource came from the owning surface's children selector (generated rows).</summary>
+    internal bool HasSelectedChildren { get; set; }
+
+    /// <summary>The submenu surface, created on first use. It floats in its own popup next to this row when it opens.</summary>
+    internal MenuSurface EnsureSubmenu()
+    {
+        if (_submenu is null)
+        {
+            _submenu = new MenuSurface();
+            _submenu.AttachToParentRow(this);
+            _submenu.PropertyChanged += OnSubmenuPropertyChanged;
+        }
+        return _submenu;
+    }
+
+    private void OnSubmenuPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+    {
+        if (e.Property == ItemsControl.ItemCountProperty)
+        {
+            HasSubmenu = e.GetNewValue<int>() > 0;
+        }
+    }
+
+    internal void SetSubmenuOpen(bool open) => PseudoClasses.Set(SubmenuOpenPseudoClass, open);
+
     protected override bool IsEnabledCore => base.IsEnabledCore && _commandCanExecute;
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
@@ -325,7 +398,24 @@ public class MenuEntry : TemplatedControl
         }
         else if (change.Property == InputGestureProperty || change.Property == InputGestureTextProperty)
         {
-            GestureText = InputGestureText ?? FormatGesture(InputGesture);
+            UpdateGestureText();
+        }
+        else if (change.Property == ItemsSourceProperty)
+        {
+            var source = change.GetNewValue<IEnumerable?>();
+            if (source is not null || _submenu is not null)
+            {
+                EnsureSubmenu().ItemsSource = source;
+            }
+        }
+        else if (change.Property == HasSubmenuProperty)
+        {
+            UpdateGestureText();
+            UpdateIndicators();
+            if (!HasSubmenu && _submenu is { IsOpen: true } open)
+            {
+                open.Close(returnFocus: false);
+            }
         }
         else if (change.Property == CommandProperty)
         {
@@ -365,7 +455,14 @@ public class MenuEntry : TemplatedControl
         {
             command.CanExecuteChanged -= OnCanExecuteChanged;
         }
+        if (_submenu is { IsOpen: true } open)
+        {
+            open.Close(returnFocus: false);
+        }
     }
+
+    // A submenu row shows its chevron where the shortcut hint goes.
+    private void UpdateGestureText() => GestureText = HasSubmenu ? null : InputGestureText ?? FormatGesture(InputGesture);
 
     private void OnCanExecuteChanged(object? sender, EventArgs e) => UpdateCanExecute();
 
@@ -404,7 +501,7 @@ public class MenuEntry : TemplatedControl
                 : context && !IsChecked && !toggles ? ArcIcons.Ellipsis : null;
         }
         ShowsRadioDot = icon is null && IsChecked && ToggleType == MenuEntryToggleType.Radio;
-        ShowsTrailingCheck = icon is not null && IsChecked && toggles;
+        ShowsTrailingCheck = icon is not null && IsChecked && toggles && !HasSubmenu;
         HasIconSlot = icon is not null || toggles || IsChecked || context;
     }
 
@@ -436,6 +533,12 @@ public class MenuEntry : TemplatedControl
             return;
         }
         var surface = Surface;
+        if (HasSubmenu)
+        {
+            // A submenu row opens its submenu (keys land on its first row); it never toggles, runs a command or closes.
+            surface?.OpenSubmenu(this, method is NavigationMethod.Pointer or NavigationMethod.Unspecified ? MenuOpenFocus.None : MenuOpenFocus.First);
+            return;
+        }
         if (ToggleType == MenuEntryToggleType.CheckBox)
         {
             SetCurrentValue(IsCheckedProperty, !IsChecked);
@@ -491,8 +594,8 @@ public class MenuEntry : TemplatedControl
 
     protected override AutomationPeer OnCreateAutomationPeer() => new MenuEntryAutomationPeer(this);
 
-    /// <summary>MenuItem role with invoke (and toggle for check / radio rows).</summary>
-    private sealed class MenuEntryAutomationPeer : ControlAutomationPeer, IInvokeProvider, IToggleProvider
+    /// <summary>MenuItem role with invoke (toggle for check / radio rows, expand / collapse for submenu rows).</summary>
+    private sealed class MenuEntryAutomationPeer : ControlAutomationPeer, IInvokeProvider, IToggleProvider, IExpandCollapseProvider
     {
         public MenuEntryAutomationPeer(MenuEntry owner)
             : base(owner)
@@ -515,9 +618,34 @@ public class MenuEntry : TemplatedControl
 
         public void Toggle() => Entry.Activate(NavigationMethod.Unspecified);
 
+        public ExpandCollapseState ExpandCollapseState =>
+            Entry.Submenu is { IsOpen: true } ? ExpandCollapseState.Expanded : ExpandCollapseState.Collapsed;
+
+        public bool ShowsMenu => true;
+
+        public void Expand()
+        {
+            if (Entry.HasSubmenu && Entry.IsEffectivelyEnabled)
+            {
+                Entry.Surface?.OpenSubmenu(Entry, MenuOpenFocus.First);
+            }
+        }
+
+        public void Collapse()
+        {
+            if (Entry.Submenu is { IsOpen: true } submenu)
+            {
+                submenu.Close(returnFocus: true);
+            }
+        }
+
         protected override object? GetProviderCore(Type providerType)
         {
-            if (providerType == typeof(IToggleProvider) && Entry.ToggleType == MenuEntryToggleType.None)
+            if (providerType == typeof(IToggleProvider) && (Entry.ToggleType == MenuEntryToggleType.None || Entry.HasSubmenu))
+            {
+                return null;
+            }
+            if (providerType == typeof(IExpandCollapseProvider) && !Entry.HasSubmenu)
             {
                 return null;
             }

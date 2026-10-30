@@ -15,6 +15,11 @@ namespace TKCode.Arc;
 /// (dropdown: 580ms CSS spring, context: snappy, account: smooth without overshoot), so the motions are replaced
 /// after ArcPopup configures its own. The transform origin and the travel direction are set from the placement that
 /// the positioner actually used (flips included), so the menu always grows from its anchor.
+/// <para>
+/// A submenu is placed against the whole menu instead of its row: the anchor is the menu's width at the row's height,
+/// lifted by the submenu's own inset so its first row lines up with the row. It opens right (left when there is no
+/// room), slides up near the window's bottom instead of flipping, and travels in from the menu's side.
+/// </para>
 /// </summary>
 internal sealed class MenuSurfacePopup : ArcPopup
 {
@@ -29,6 +34,8 @@ internal sealed class MenuSurfacePopup : ArcPopup
     private MenuSide _side = MenuSide.Bottom;
     private MenuAlignment _alignment = MenuAlignment.End;
     private Point? _anchorPoint;
+    private MenuSurface? _submenuOwner;
+    private MenuEntry? _submenuRow;
 
     public MenuSurfacePopup()
     {
@@ -40,12 +47,18 @@ internal sealed class MenuSurfacePopup : ArcPopup
     /// <summary>Point in placement-target coordinates the menu opens at (context menus), or null.</summary>
     public Point? AnchorPoint => _anchorPoint;
 
-    public void Configure(MenuSurfaceVariant variant, MenuSide side, MenuAlignment alignment, double gap, Point? anchorPoint)
+    /// <summary>True when the popup hosts a submenu.</summary>
+    public bool IsSubmenu => _submenuOwner is not null;
+
+    public void Configure(MenuSurfaceVariant variant, MenuSide side, MenuAlignment alignment, double gap, Point? anchorPoint,
+                          MenuSurface? submenuOwner = null, MenuEntry? submenuRow = null)
     {
         _variant = variant;
         _side = side;
         _alignment = alignment;
         _anchorPoint = anchorPoint;
+        _submenuOwner = submenuOwner;
+        _submenuRow = submenuRow;
         MarginToAnchor = anchorPoint is null ? gap : 0;
         HorizontalOffset = 0;
         VerticalOffset = 0;
@@ -129,6 +142,26 @@ internal sealed class MenuSurfacePopup : ArcPopup
 
     protected override void AdjustPlacementAnchor(CustomPopupPlacement placement)
     {
+        if (_submenuOwner is { } owner && _submenuRow is { } row && PlacementTarget is { } submenuTarget &&
+            TopLevel.GetTopLevel(submenuTarget) is { } submenuTopLevel &&
+            row.RowVisual.TranslatePoint(default, submenuTopLevel) is { } rowOrigin)
+        {
+            if (_side is MenuSide.Left or MenuSide.Right && owner.TranslatePoint(default, submenuTopLevel) is { } menuOrigin)
+            {
+                // Beside the menu, never over it: flip to the other side, slide along the window edge (no vertical flip
+                // to end at the row), and slide over the menu only when neither side has room.
+                var inset = Surface is MenuSurface submenu ? submenu.Padding.Top + submenu.BorderThickness.Top : 0;
+                placement.AnchorRectangle = new Rect(menuOrigin.X, rowOrigin.Y - inset, owner.Bounds.Width, row.RowVisual.Bounds.Height);
+                placement.ConstraintAdjustment = PopupPositionerConstraintAdjustment.FlipX | PopupPositionerConstraintAdjustment.SlideX |
+                                                 PopupPositionerConstraintAdjustment.SlideY | PopupPositionerConstraintAdjustment.ResizeY;
+            }
+            else
+            {
+                // Above its row (bottom sheets have no room beside them).
+                placement.AnchorRectangle = new Rect(rowOrigin, row.RowVisual.Bounds.Size);
+            }
+            return;
+        }
         if (_variant != MenuSurfaceVariant.Sheet && _anchorPoint is { } point && PlacementTarget is { } target &&
             TopLevel.GetTopLevel(target) is { } topLevel && target.TranslatePoint(point, topLevel) is { } client)
         {
@@ -222,8 +255,9 @@ internal sealed class MenuSurfacePopup : ArcPopup
             }
         }
         var origin = new RelativePoint(Math.Clamp(originX, 0, 1), Math.Clamp(originY, 0, 1), RelativeUnit.Relative);
-        // Only the dropdown family travels toward its trigger (5px enter, half of it on exit).
-        var travel = _variant == MenuSurfaceVariant.Dropdown ? offset * 5 : default;
+        // The dropdown family travels toward its trigger (5px enter, half of it on exit); every submenu travels in from
+        // the side of the menu it belongs to.
+        var travel = _variant == MenuSurfaceVariant.Dropdown || IsSubmenu ? offset * 5 : default;
         _enter.Origin = origin;
         _enter.Offset = travel;
         _exit.Origin = origin;

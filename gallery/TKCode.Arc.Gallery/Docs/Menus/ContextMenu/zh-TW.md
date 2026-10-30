@@ -1,7 +1,7 @@
 ---
 title: 內容選單
 summary: 將次要操作放在所選物件附近。
-source-hash: d5bb9535fbfa
+source-hash: 540253451084
 ---
 
 <Demo name="FileTile" />
@@ -114,6 +114,25 @@ image.Items.Add(pinned);
     </arc:ContextMenu.Menu>
     <TextBlock Text="在此處按右鍵" HorizontalAlignment="Center" VerticalAlignment="Center" />
 </Border>
+```
+
+### 子選單
+
+在一列內巢狀放入 `MenuEntry` 元素即可為它加入子選單，例如「新增」或「排序方式」。帶子選單的列會顯示箭頭，點按、按 ArrowRight、Enter 或 Space，或將指標停留在該列上時，子選單會在選單旁開啟。在子選單中選擇一列會關閉整個選單，`ItemClicked` 只回報一次。對於 `ItemsSource` 資料，請設定 `ChildrenSelector` 來傳回某一項的子項。
+
+<Demo name="Submenus" />
+
+```xml
+<arc:MenuSurface>
+    <arc:MenuEntry Header="New">
+        <arc:MenuEntry Header="Folder" />
+        <arc:MenuEntry Header="Document" />
+    </arc:MenuEntry>
+    <arc:MenuEntry Header="Sort by">
+        <arc:MenuEntry Header="Name" ToggleType="Radio" GroupName="sort" IsChecked="True" />
+        <arc:MenuEntry Header="Date modified" ToggleType="Radio" GroupName="sort" />
+    </arc:MenuEntry>
+</arc:MenuSurface>
 ```
 
 ### 透過程式碼開啟與關閉
@@ -275,6 +294,7 @@ file.ItemClicked += (_, e) =>
 - 沒有圖示的已勾選列會顯示勾號，但勾選狀態本身不會被播報。使用 `ToggleType="CheckBox"` 或 `ToggleType="Radio"` 的列會向輔助技術公開其狀態，因此狀態重要的列應使用切換類型，或把狀態寫進 `Header`。
 - 破壞性列只以顏色標示，因此應在 `Header` 中寫明將被移除的內容。
 - `Label` 應針對物件寫得具體，例如「Q3 report.pdf 的操作」。它是螢幕閱讀器給目標的唯一名稱。
+- 帶子選單的列會顯示箭頭，並回報其子選單是否已展開；輔助技術可以展開和收合它。
 
 ### 鍵盤
 
@@ -288,6 +308,8 @@ file.ItemClicked += (_, e) =>
 | 字母鍵 | 型別比對會移到文字以所輸入字母開頭的列 |
 | `Enter` / `Space` | 啟用反白的列，然後關閉選單，除非該列保持開啟 |
 | `Escape` / `Tab` | 關閉選單並將焦點交還目標 |
+| 在帶子選單的列上按 `ArrowRight`、`Enter` 或 `Space` | 開啟子選單，並反白其第一列 |
+| 在子選單中按 `ArrowLeft` 或 `Escape` | 只關閉該子選單並回到它的列；`Tab` 關閉所有層級 |
 
 ## 動態效果
 
@@ -303,6 +325,7 @@ file.ItemClicked += (_, e) =>
 | 選單關閉 | 選單縮放到 0.98 並在 120 ms 內淡出 | 快速淡入 | 立即完成 |
 | 反白移動 | 指標反白以靈敏的彈簧滑動；鍵盤反白直接跳轉 | 反白直接跳轉 | 立即完成 |
 | 列出現 | 每列在 240 ms 內淡入，前五列之間錯開 35 ms | 快速淡入 | 立即完成 |
+| 子選單開啟 | 指標在其所在列停留 100 ms 後，子選單從選單一側以同樣靈敏的彈簧展開 | 快速淡入 | 立即完成 |
 | 列被按下 | 該列著色，不縮放 | 該列著色 | 立即完成 |
 
 ## 相關元件

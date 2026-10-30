@@ -60,6 +60,13 @@
                                           IsVisible="{TemplateBinding ShowsTrailingCheck}"
                                           Margin="{arc:MenuEntryTokenResource GestureSpacing}"
                                           VerticalAlignment="Center" />
+                            <arc:ArcGlyph Name="PART_SubmenuChevron"
+                                          Grid.Column="2"
+                                          Data="{x:Static arc:ArcIcons.ChevronRight}"
+                                          Size="{arc:MenuEntryTokenResource GlyphSize}"
+                                          IsVisible="{TemplateBinding HasSubmenu}"
+                                          Margin="{arc:MenuEntryTokenResource GestureSpacing}"
+                                          VerticalAlignment="Center" />
                         </Grid>
                     </Border>
                 </DockPanel>
@@ -82,12 +89,22 @@
         <Style Selector="^ /template/ arc|ArcGlyph#PART_Icon">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
         </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_SubmenuChevron">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
         <Style Selector="^ /template/ Border#PART_Separator">
             <Setter Property="Height" Value="{arc:MenuEntryTokenResource SeparatorThickness}" />
             <Setter Property="Margin" Value="{arc:MenuEntryTokenResource SeparatorMargin}" />
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
         </Style>
 
+        <!-- The chevron of a submenu row brightens like its icon while the row is highlighted or its submenu is open. -->
+        <Style Selector="^:highlighted /template/ arc|ArcGlyph#PART_SubmenuChevron">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:submenu-open /template/ arc|ArcGlyph#PART_SubmenuChevron">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
         <Style Selector="^[IsDestructive=True]">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
             <Style Selector="^ /template/ arc|ArcGlyph#PART_Icon">

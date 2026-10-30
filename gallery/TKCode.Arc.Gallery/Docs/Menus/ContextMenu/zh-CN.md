@@ -1,7 +1,7 @@
 ---
 title: 上下文菜单
 summary: 将次要操作放在所选对象附近。
-source-hash: d5bb9535fbfa
+source-hash: 540253451084
 ---
 
 <Demo name="FileTile" />
@@ -114,6 +114,25 @@ image.Items.Add(pinned);
     </arc:ContextMenu.Menu>
     <TextBlock Text="在此处右键单击" HorizontalAlignment="Center" VerticalAlignment="Center" />
 </Border>
+```
+
+### 子菜单
+
+在一行内嵌套 `MenuEntry` 元素即可为它添加子菜单，例如“新建”或“排序方式”。带子菜单的行会显示箭头，单击、按 ArrowRight、Enter 或 Space，或将指针停留在该行上时，子菜单会在菜单旁打开。在子菜单中选择一行会关闭整个菜单，`ItemClicked` 只报告一次。对于 `ItemsSource` 数据，请设置 `ChildrenSelector` 来返回某一项的子项。
+
+<Demo name="Submenus" />
+
+```xml
+<arc:MenuSurface>
+    <arc:MenuEntry Header="New">
+        <arc:MenuEntry Header="Folder" />
+        <arc:MenuEntry Header="Document" />
+    </arc:MenuEntry>
+    <arc:MenuEntry Header="Sort by">
+        <arc:MenuEntry Header="Name" ToggleType="Radio" GroupName="sort" IsChecked="True" />
+        <arc:MenuEntry Header="Date modified" ToggleType="Radio" GroupName="sort" />
+    </arc:MenuEntry>
+</arc:MenuSurface>
 ```
 
 ### 通过代码打开和关闭
@@ -275,6 +294,7 @@ file.ItemClicked += (_, e) =>
 - 没有图标的已勾选行会显示对勾，但勾选状态本身不会被播报。使用 `ToggleType="CheckBox"` 或 `ToggleType="Radio"` 的行会向辅助技术公开其状态，因此状态重要的行应使用切换类型，或把状态写进 `Header`。
 - 破坏性行只以颜色标示，因此应在 `Header` 中写明将被移除的内容。
 - `Label` 应针对对象写得具体，例如“Q3 report.pdf 的操作”。它是屏幕阅读器给目标的唯一名称。
+- 带子菜单的行会显示箭头，并报告其子菜单是否已展开；辅助技术可以展开和折叠它。
 
 ### 键盘
 
@@ -288,6 +308,8 @@ file.ItemClicked += (_, e) =>
 | 字母键 | 类型匹配会移到文字以所输入字母开头的行 |
 | `Enter` / `Space` | 激活高亮的行，然后关闭菜单，除非该行保持打开 |
 | `Escape` / `Tab` | 关闭菜单并将焦点交还目标 |
+| 在带子菜单的行上按 `ArrowRight`、`Enter` 或 `Space` | 打开子菜单，并高亮其第一行 |
+| 在子菜单中按 `ArrowLeft` 或 `Escape` | 只关闭该子菜单并回到它的行；`Tab` 关闭所有层级 |
 
 ## 动效
 
@@ -303,6 +325,7 @@ file.ItemClicked += (_, e) =>
 | 菜单关闭 | 菜单缩放到 0.98 并在 120 ms 内淡出 | 快速淡入 | 立即完成 |
 | 高亮移动 | 指针高亮以灵敏的弹簧滑动；键盘高亮直接跳转 | 高亮直接跳转 | 立即完成 |
 | 行出现 | 每行在 240 ms 内淡入，前五行之间错开 35 ms | 快速淡入 | 立即完成 |
+| 子菜单打开 | 指针在其所在行停留 100 ms 后，子菜单从菜单一侧以同样轻快的弹簧展开 | 快速淡入 | 立即完成 |
 | 行被按下 | 该行着色，不缩放 | 该行着色 | 立即完成 |
 
 ## 相关组件

@@ -3,57 +3,6 @@ using Avalonia;
 namespace TKCode.Arc;
 
 /// <summary>
-/// The pointer's way from a row to the submenu it opened. When the pointer leaves the row heading for the submenu it
-/// crosses other rows on the diagonal; those must not take the highlight (and close the submenu). The zone is the
-/// polygon from the point where the pointer left the row (moved 5px back, so that point is surely inside) to the
-/// submenu's near corners and around its far side. Pure geometry so it can be tested on its own.
-/// </summary>
-internal readonly record struct ModelMenuSafeZone(Point Exit, Rect Submenu, bool SubmenuOnRight)
-{
-    /// <summary>How far the exit point moves back toward the menu (Radix's "bleed").</summary>
-    public const double Bleed = 5;
-
-    /// <summary>How long a zone holds once the pointer left the row: a pointer that rests on a sibling gets it after this.</summary>
-    public static readonly TimeSpan Lifetime = TimeSpan.FromMilliseconds(300);
-
-    /// <summary>True when <paramref name="point"/> is inside the zone (the submenu itself included).</summary>
-    public bool Contains(Point point)
-    {
-        var apex = new Point(Exit.X + (SubmenuOnRight ? -Bleed : Bleed), Exit.Y);
-        var near = SubmenuOnRight ? Submenu.Left : Submenu.Right;
-        var far = SubmenuOnRight ? Submenu.Right : Submenu.Left;
-        Span<Point> polygon =
-        [
-            apex,
-            new Point(near, Submenu.Top),
-            new Point(far, Submenu.Top),
-            new Point(far, Submenu.Bottom),
-            new Point(near, Submenu.Bottom)
-        ];
-        return IsInPolygon(point, polygon);
-    }
-
-    /// <summary>True when a horizontal move of <paramref name="dx"/> heads toward the submenu (no horizontal move keeps the last direction).</summary>
-    public bool IsToward(double dx, bool lastToward) => dx == 0 ? lastToward : SubmenuOnRight ? dx > 0 : dx < 0;
-
-    /// <summary>Even-odd ray casting (the polygon is convex here, any rule works).</summary>
-    internal static bool IsInPolygon(Point point, ReadOnlySpan<Point> polygon)
-    {
-        var inside = false;
-        for (int i = 0, j = polygon.Length - 1; i < polygon.Length; j = i++)
-        {
-            var a = polygon[i];
-            var b = polygon[j];
-            if (a.Y > point.Y != b.Y > point.Y && point.X < (b.X - a.X) * (point.Y - a.Y) / (b.Y - a.Y) + a.X)
-            {
-                inside = !inside;
-            }
-        }
-        return inside;
-    }
-}
-
-/// <summary>
 /// Menu typeahead: typed letters build a search that resets after a pause; the next row whose name starts with it gets
 /// the highlight, searching from the current row onward and wrapping. Repeating one letter cycles through the rows that
 /// start with it instead of searching for "aa". Pure logic with an injectable clock.

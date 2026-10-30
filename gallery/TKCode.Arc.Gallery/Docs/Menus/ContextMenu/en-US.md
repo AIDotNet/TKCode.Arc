@@ -157,6 +157,28 @@ Use this form when the element already has a template or a parent that you do no
 </Border>
 ```
 
+### Submenus
+
+Nest `MenuEntry` elements inside a row to give it a submenu, such as New or Sort by. A row with a submenu shows a
+chevron and opens it beside the menu on a click, on ArrowRight, Enter or Space, or when the pointer rests on it.
+Choosing a row in a submenu closes the whole menu, and `ItemClicked` reports it once. For `ItemsSource` data, set
+`ChildrenSelector` to return the children of an item.
+
+<Demo name="Submenus" />
+
+```xml
+<arc:MenuSurface>
+    <arc:MenuEntry Header="New">
+        <arc:MenuEntry Header="Folder" />
+        <arc:MenuEntry Header="Document" />
+    </arc:MenuEntry>
+    <arc:MenuEntry Header="Sort by">
+        <arc:MenuEntry Header="Name" ToggleType="Radio" GroupName="sort" IsChecked="True" />
+        <arc:MenuEntry Header="Date modified" ToggleType="Radio" GroupName="sort" />
+    </arc:MenuEntry>
+</arc:MenuSurface>
+```
+
 ### Opening and closing from code
 
 `Open` shows the menu under the target. Pass a point in target coordinates to open it at a position, for example at
@@ -350,6 +372,8 @@ Set `ToggleType="CheckBox"` on a row whose state should flip on activation.
 - Destructive rows are marked by color only, so name what will be removed in the `Header`.
 - Keep the `Label` specific to the object, such as "Actions for Q3 report.pdf". It is the only name a screen reader
   gives the target.
+- A row with a submenu shows a chevron and reports whether its submenu is expanded; assistive technology can
+  expand and collapse it.
 
 ### Keyboard
 
@@ -363,6 +387,8 @@ A focused target opens the menu from the keyboard. Once the menu is open, the ro
 | Letters | Typeahead moves to a row whose text starts with the typed letters |
 | `Enter` / `Space` | Activates the highlighted row, then closes the menu unless the row stays open |
 | `Escape` / `Tab` | Closes the menu and returns focus to the target |
+| `ArrowRight`, `Enter` or `Space` on a row with a submenu | Opens the submenu with its first row highlighted |
+| `ArrowLeft` or `Escape` in a submenu | Closes that submenu only and returns to its row; `Tab` closes every level |
 
 ## Motion
 
@@ -378,6 +404,7 @@ A focused target opens the menu from the keyboard. Once the menu is open, the ro
 | Menu closes | The menu scales to 0.98 and fades in 120 ms | Quick fade | Immediate |
 | Highlight moves | The pointer highlight glides on a snappy spring; the keyboard highlight jumps | The highlight jumps | Immediate |
 | Rows appear | Each row fades in over 240 ms, staggered 35 ms apart up to the fifth row | Quick fade | Immediate |
+| Submenu opens | 100 ms after the pointer rests on its row, the submenu grows from the side of the menu on the same snappy spring | Quick fade | Immediate |
 | Row pressed | The row tints; it does not scale | The row tints | Immediate |
 
 ## Related

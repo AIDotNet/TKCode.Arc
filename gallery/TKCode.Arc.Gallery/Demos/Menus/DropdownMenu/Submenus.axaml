@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.DropdownMenuSubmenusDemo">
+    <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+        <arc:DropdownMenu Label="File" Icon="{x:Static arc:ArcIcons.File}" Alignment="Start">
+            <arc:MenuEntry Header="New file" Icon="{x:Static arc:ArcIcons.FilePlus}" InputGestureText="⌘N" />
+            <arc:MenuEntry Header="Open recent" Icon="{x:Static arc:ArcIcons.Clock}">
+                <arc:MenuEntry Header="invoice-2026-10.pdf" />
+                <arc:MenuEntry Header="q3-revenue.xlsx" />
+                <arc:MenuEntry Header="roadmap.md" />
+            </arc:MenuEntry>
+            <arc:MenuEntry Header="Export" Icon="{x:Static arc:ArcIcons.Download}">
+                <arc:MenuEntry Header="Export CSV" />
+                <arc:MenuEntry Header="Export PDF" />
+                <arc:MenuEntry Header="Share link" HasSeparatorBefore="True">
+                    <arc:MenuEntry Header="Anyone with the link" />
+                    <arc:MenuEntry Header="People in this workspace" />
+                </arc:MenuEntry>
+            </arc:MenuEntry>
+            <arc:MenuEntry Header="Delete file"
+                           Icon="{x:Static arc:ArcIcons.Trash2}"
+                           IsDestructive="True"
+                           HasSeparatorBefore="True" />
+        </arc:DropdownMenu>
+    </WrapPanel>
+</UserControl>

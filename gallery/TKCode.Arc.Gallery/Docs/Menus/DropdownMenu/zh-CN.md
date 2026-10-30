@@ -1,7 +1,7 @@
 ---
 title: 下拉菜单
 summary: 锚定在触发器上的聚焦操作列表。
-source-hash: fc1669f839ad
+source-hash: 452d1a12fdb6
 ---
 
 <Demo name="Actions" />
@@ -102,6 +102,37 @@ menu.ItemClicked += (_, e) => status.Text = $"已选择：{e.Header}";
 ```
 
 当条目不是 `MenuEntry` 对象时，数据驱动的行可通过 `ItemTemplate` 设置其标题。每行背后的条目通过 `ItemClicked` 中的 `e.Item` 报告，因此处理程序可以针对该条目执行命令。
+
+### 子菜单
+
+在一行内嵌套 `MenuEntry` 元素即可为它添加子菜单。该行会在快捷键提示的位置显示一个箭头。单击该行、在该行上按 Enter、Space 或 ArrowRight，或将指针停留在该行上，子菜单就会在菜单旁打开，其第一行与该行对齐。子菜单内还可以再有子菜单。
+
+<Demo name="Submenus" />
+
+```xml
+<arc:DropdownMenu Label="File">
+    <arc:MenuEntry Header="Open" />
+    <arc:MenuEntry Header="Export">
+        <arc:MenuEntry Header="Export CSV" />
+        <arc:MenuEntry Header="Export PDF" />
+    </arc:MenuEntry>
+    <arc:MenuEntry Header="Delete" IsDestructive="True" HasSeparatorBefore="True" />
+</arc:DropdownMenu>
+```
+
+- 带子菜单的行只负责打开子菜单，不会执行 `Command`、引发 `Click`，也不会关闭菜单。
+- 在任意一级选择一行都会关闭整个菜单，`DropdownMenu` 的 `ItemClicked` 只报告该行一次。
+- 子菜单默认在右侧打开，窗口右侧放不下时改在左侧打开；靠近窗口底部时会向上滑动，而不会超出窗口边缘。
+- 指针在移向已打开的子菜单途中经过其他行时，子菜单不会关闭。
+
+对于数据驱动的行，`ChildrenSelector` 返回某一项的子项。每个带子项的项目在各级都会获得子菜单，`ItemClicked` 中的 `e.Item` 就是被选中的数据项。
+
+```csharp
+menu.ItemsSource = folders;
+menu.ChildrenSelector = item => ((Folder)item).Children;
+```
+
+子菜单最好控制在一到两级。更深的层级用 `Cascader` 或 `TreeView` 浏览更方便。
 
 ### 通过代码打开
 
@@ -274,6 +305,7 @@ menu.ItemClicked += (_, e) => viewModel.SortLabel = $"排序：{e.Header}";
 - 破坏性操作行仅以颜色标示，因此其 `Header` 应写明将被删除的内容。
 - 图标与高亮对辅助技术隐藏。
 - 为菜单取名时，`Label` 应写明菜单的作用，例如“排序：最新”或“导出”。没有文字的自定义触发器需要自己的 `AutomationProperties.Name`，因为 `Label` 只为内置触发器命名。
+- 带子菜单的行会显示箭头，并报告其子菜单是否已展开；辅助技术可以展开和折叠它。
 
 ### 键盘
 
@@ -287,6 +319,8 @@ menu.ItemClicked += (_, e) => viewModel.SortLabel = $"排序：{e.Header}";
 | 字母键 | 输入首字母，移动到文字以所输字母开头的行 |
 | 菜单中的 `Enter` / `Space` | 激活高亮的行，然后关闭菜单，除非该行保持打开 |
 | `Escape` / `Tab` | 关闭菜单，并将焦点交还触发器 |
+| 在带子菜单的行上按 `ArrowRight`、`Enter` 或 `Space` | 打开子菜单，并高亮其第一行 |
+| 在子菜单中按 `ArrowLeft` 或 `Escape` | 只关闭该子菜单并回到它的行；`Tab` 关闭所有层级 |
 
 ## 动效
 
@@ -301,6 +335,7 @@ menu.ItemClicked += (_, e) => viewModel.SortLabel = $"排序：{e.Header}";
 | 菜单关闭 | 更快、更小：130 ms，偏移减半，缩放至 0.985 | 快速淡入 | 立即 |
 | 高亮移动 | 指针高亮以灵敏的弹簧滑动；键盘高亮直接跳转 | 高亮直接跳转 | 立即 |
 | 行出现 | 每行在 240 ms 内淡入，相隔 35 ms 错峰 | 快速淡入 | 立即 |
+| 子菜单打开 | 指针在其所在行停留 100 ms 后，子菜单从菜单一侧带 5 px 位移展开，沿用菜单的弹簧与淡入 | 快速淡入 | 立即 |
 | `Label` 变化 | 新标签以 0.3 em 升起并带轻微模糊，触发器宽度以弹簧调整 | 瞬时淡入 | 立即 |
 | 箭头 | 随菜单打开以弹簧旋转 180 度 | 立即转向 | 立即 |
 

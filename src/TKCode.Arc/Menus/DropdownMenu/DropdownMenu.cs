@@ -26,6 +26,10 @@ namespace TKCode.Arc;
 /// toggle the menu on click and never press-scale). Enter, Space or ArrowDown on the trigger open the menu on the first
 /// row; Escape closes it and returns focus to the trigger.
 /// </para>
+/// <para>
+/// Rows with child rows open submenus (nest <see cref="MenuEntry"/> elements, or set <see cref="ChildrenSelector"/> for
+/// <see cref="ItemsSource"/> data); <see cref="ItemClicked"/> reports rows of every level.
+/// </para>
 /// </summary>
 [TemplatePart(TriggerPart, typeof(AvaloniaButton))]
 [TemplatePart(TriggerPresenterPart, typeof(ContentPresenter))]
@@ -90,6 +94,13 @@ public class DropdownMenu : TemplatedControl
     /// <summary>Template that renders each ItemsSource item as a row.</summary>
     public static readonly StyledProperty<IDataTemplate?> ItemTemplateProperty =
         AvaloniaProperty.Register<DropdownMenu, IDataTemplate?>(nameof(ItemTemplate));
+
+    /// <summary>
+    /// Children of an <see cref="ItemsSource"/> item: a non-empty result makes its row open a submenu of those children
+    /// (same signature as <c>TreeView.ChildrenSelector</c>; applied at every level).
+    /// </summary>
+    public static readonly StyledProperty<Func<object, IEnumerable?>?> ChildrenSelectorProperty =
+        AvaloniaProperty.Register<DropdownMenu, Func<object, IEnumerable?>?>(nameof(ChildrenSelector));
 
     public static readonly RoutedEvent<MenuEntryClickedEventArgs> ItemClickedEvent =
         RoutedEvent.Register<DropdownMenu, MenuEntryClickedEventArgs>(nameof(ItemClicked), RoutingStrategies.Bubble);
@@ -159,6 +170,13 @@ public class DropdownMenu : TemplatedControl
     {
         get => GetValue(ItemTemplateProperty);
         set => SetValue(ItemTemplateProperty, value);
+    }
+
+    /// <inheritdoc cref="ChildrenSelectorProperty"/>
+    public Func<object, IEnumerable?>? ChildrenSelector
+    {
+        get => GetValue(ChildrenSelectorProperty);
+        set => SetValue(ChildrenSelectorProperty, value);
     }
 
     /// <summary>Inline rows (<see cref="MenuEntry"/>, <see cref="MenuEntrySeparator"/>, <see cref="MenuEntryLabel"/>).</summary>
@@ -303,6 +321,10 @@ public class DropdownMenu : TemplatedControl
         else if (change.Property == ItemTemplateProperty)
         {
             Menu.ItemTemplate = change.GetNewValue<IDataTemplate?>();
+        }
+        else if (change.Property == ChildrenSelectorProperty)
+        {
+            Menu.ChildrenSelector = change.GetNewValue<Func<object, IEnumerable?>?>();
         }
         else if (change.Property == MaxDropDownHeightProperty)
         {

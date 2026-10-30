@@ -1,7 +1,7 @@
 ---
 title: 下拉選單
 summary: 錨定在觸發器上的聚焦操作清單。
-source-hash: fc1669f839ad
+source-hash: 452d1a12fdb6
 ---
 
 <Demo name="Actions" />
@@ -102,6 +102,37 @@ menu.ItemClicked += (_, e) => status.Text = $"已選取：{e.Header}";
 ```
 
 當項目不是 `MenuEntry` 物件時，資料驅動的列可透過 `ItemTemplate` 設定其標題。每列背後的項目透過 `ItemClicked` 中的 `e.Item` 回報，因此處理常式可以針對該項目執行指令。
+
+### 子選單
+
+在一列內巢狀放入 `MenuEntry` 元素即可為它加入子選單。該列會在快捷鍵提示的位置顯示一個箭頭。點按該列、在該列上按 Enter、Space 或 ArrowRight，或將指標停留在該列上，子選單就會在選單旁開啟，其第一列與該列對齊。子選單內也可以再有子選單。
+
+<Demo name="Submenus" />
+
+```xml
+<arc:DropdownMenu Label="File">
+    <arc:MenuEntry Header="Open" />
+    <arc:MenuEntry Header="Export">
+        <arc:MenuEntry Header="Export CSV" />
+        <arc:MenuEntry Header="Export PDF" />
+    </arc:MenuEntry>
+    <arc:MenuEntry Header="Delete" IsDestructive="True" HasSeparatorBefore="True" />
+</arc:DropdownMenu>
+```
+
+- 帶子選單的列只負責開啟子選單，不會執行 `Command`、引發 `Click`，也不會關閉選單。
+- 在任一層選擇一列都會關閉整個選單，`DropdownMenu` 的 `ItemClicked` 只回報該列一次。
+- 子選單預設在右側開啟，視窗右側放不下時改在左側開啟；靠近視窗底部時會向上滑動，而不會超出視窗邊緣。
+- 指標在移向已開啟的子選單途中經過其他列時，子選單不會關閉。
+
+對於資料驅動的列，`ChildrenSelector` 會傳回某一項的子項。每個帶子項的項目在各層都會獲得子選單，`ItemClicked` 中的 `e.Item` 就是被選中的資料項。
+
+```csharp
+menu.ItemsSource = folders;
+menu.ChildrenSelector = item => ((Folder)item).Children;
+```
+
+子選單最好控制在一到兩層。更深的階層用 `Cascader` 或 `TreeView` 瀏覽更方便。
 
 ### 以程式碼開啟
 
@@ -274,6 +305,7 @@ menu.ItemClicked += (_, e) => viewModel.SortLabel = $"排序：{e.Header}";
 - 破壞性操作列僅以顏色標示，因此其 `Header` 應寫明將被刪除的內容。
 - 圖示與反白對輔助技術隱藏。
 - 為選單取名時，`Label` 應寫明選單的作用，例如「排序：最新」或「匯出」。沒有文字的自訂觸發器需要自己的 `AutomationProperties.Name`，因為 `Label` 只為內建觸發器命名。
+- 帶子選單的列會顯示箭頭，並回報其子選單是否已展開；輔助技術可以展開和收合它。
 
 ### 鍵盤
 
@@ -287,6 +319,8 @@ menu.ItemClicked += (_, e) => viewModel.SortLabel = $"排序：{e.Header}";
 | 字母鍵 | 輸入首字母，移動到文字以所輸字母開頭的列 |
 | 選單中的 `Enter` / `Space` | 啟用反白的列，然後關閉選單，除非該列保持開啟 |
 | `Escape` / `Tab` | 關閉選單，並將焦點交還觸發器 |
+| 在帶子選單的列上按 `ArrowRight`、`Enter` 或 `Space` | 開啟子選單，並反白其第一列 |
+| 在子選單中按 `ArrowLeft` 或 `Escape` | 只關閉該子選單並回到它的列；`Tab` 關閉所有層級 |
 
 ## 動態效果
 
@@ -301,6 +335,7 @@ menu.ItemClicked += (_, e) => viewModel.SortLabel = $"排序：{e.Header}";
 | 選單關閉 | 更快、更小：130 ms，偏移減半，縮放至 0.985 | 快速淡入 | 立即 |
 | 反白移動 | 指標反白以靈敏的彈簧滑動；鍵盤反白直接跳轉 | 反白直接跳轉 | 立即 |
 | 列出現 | 每列在 240 ms 內淡入，相隔 35 ms 錯開 | 快速淡入 | 立即 |
+| 子選單開啟 | 指標在其所在列停留 100 ms 後，子選單從選單一側帶 5 px 位移展開，沿用選單的彈簧與淡入 | 快速淡入 | 立即 |
 | `Label` 變化 | 新標籤以 0.3 em 向上浮現並帶輕微模糊，觸發器寬度以彈簧調整 | 瞬間淡入 | 立即 |
 | 箭頭 | 隨選單開啟以彈簧旋轉 180 度 | 立即轉向 | 立即 |
 

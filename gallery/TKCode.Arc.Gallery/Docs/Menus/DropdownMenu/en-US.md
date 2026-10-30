@@ -138,6 +138,41 @@ that control, and a `Button` opens it on click.
 Data-driven rows take an `ItemTemplate` for their header when the items are not `MenuEntry` objects. The item behind
 each row is reported in `ItemClicked` as `e.Item`, so the handler can run the command for that item.
 
+### Submenus
+
+Nest `MenuEntry` elements inside a row to give it a submenu. The row shows a chevron in place of its shortcut hint.
+Clicking it, pressing Enter, Space or ArrowRight on it, or resting the pointer on it opens the submenu beside the menu,
+with its first row level with the row. A submenu can hold submenus of its own.
+
+<Demo name="Submenus" />
+
+```xml
+<arc:DropdownMenu Label="File">
+    <arc:MenuEntry Header="Open" />
+    <arc:MenuEntry Header="Export">
+        <arc:MenuEntry Header="Export CSV" />
+        <arc:MenuEntry Header="Export PDF" />
+    </arc:MenuEntry>
+    <arc:MenuEntry Header="Delete" IsDestructive="True" HasSeparatorBefore="True" />
+</arc:DropdownMenu>
+```
+
+- A row with a submenu only opens it. It does not run its `Command`, raise `Click` or close the menu.
+- Choosing a row at any level closes the whole menu, and `ItemClicked` on the `DropdownMenu` reports that row once.
+- The submenu opens on the right, and on the left when the window has no room. Near the bottom of the window it slides
+  up instead of running off the edge.
+- The pointer can cross other rows on its way into an open submenu without closing it.
+
+For data-driven rows, `ChildrenSelector` returns the children of an item. Every item with children gets a submenu, at
+every level, and `e.Item` in `ItemClicked` is the data item that was chosen.
+
+```csharp
+menu.ItemsSource = folders;
+menu.ChildrenSelector = item => ((Folder)item).Children;
+```
+
+Keep submenus to one or two levels. A deeper hierarchy is easier to browse in a `Cascader` or a `TreeView`.
+
 ### Opening from code
 
 ```csharp
@@ -340,6 +375,8 @@ search.
 - Icons and the highlight are hidden from assistive technology.
 - Name the trigger with a `Label` that says what the menu does, such as "Sort: Newest" or "Export". A custom,
   text-free trigger needs its own `AutomationProperties.Name`, because `Label` names only the built-in trigger.
+- A row with a submenu shows a chevron and reports whether its submenu is expanded; assistive technology can
+  expand and collapse it.
 
 ### Keyboard
 
@@ -353,6 +390,8 @@ search.
 | Letters | Typeahead moves to a row whose text starts with the typed letters |
 | `Enter` / `Space` in the menu | Activates the highlighted row, then closes the menu unless the row stays open |
 | `Escape` / `Tab` | Closes the menu and returns focus to the trigger |
+| `ArrowRight`, `Enter` or `Space` on a row with a submenu | Opens the submenu with its first row highlighted |
+| `ArrowLeft` or `Escape` in a submenu | Closes that submenu only and returns to its row; `Tab` closes every level |
 
 ## Motion
 
@@ -367,6 +406,7 @@ search.
 | Menu closes | Quicker and smaller: 130 ms, half the offset, scaling to 0.985 | Quick fade | Immediate |
 | Highlight moves | The pointer highlight glides on a snappy spring; the keyboard highlight jumps | The highlight jumps | Immediate |
 | Rows appear | Each row fades in over 240 ms, staggered 35 ms apart | Quick fade | Immediate |
+| Submenu opens | 100 ms after the pointer rests on its row, the submenu grows from the side of the menu with a 5 px travel, on the menu's spring and fade | Quick fade | Immediate |
 | `Label` changes | The new label rises 0.3 em with a soft blur and the trigger width springs to fit | Instant fade | Immediate |
 | Chevron | Turns 180 degrees on the spring as the menu opens | Turns at once | Immediate |
 

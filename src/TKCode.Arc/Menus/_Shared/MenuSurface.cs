@@ -1,3 +1,4 @@
+using System.Collections;
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
 using Avalonia;
@@ -27,6 +28,13 @@ namespace TKCode.Arc;
 /// becomes the header of a generated row). The popup and the row visuals are created on first open and reused.
 /// A surface placed directly in a layout works as a static menu panel (highlight, keyboard and activation without a popup).
 /// </para>
+/// <para>
+/// Rows with child rows open submenus: each submenu is a surface of its own, floating right of the menu with its first
+/// row level with the row that opened it (left when there is no room). Hovering a submenu row opens it after a short
+/// delay, and the pointer can cross other rows on its way into the submenu. ArrowRight, Enter or Space open it on its
+/// first row, ArrowLeft or Escape close only that level, Tab closes them all, and activating a row anywhere closes the
+/// whole menu and raises <see cref="ItemClicked"/> on this (the outermost) surface.
+/// </para>
 /// </summary>
 [TemplatePart(FramePart, typeof(Border))]
 [TemplatePart(ScrollViewerPart, typeof(ScrollViewer))]
@@ -43,6 +51,12 @@ public class MenuSurface : HeaderedItemsControl
     public const string DangerHighlightPseudoClass = ":danger-highlight";
 
     private static readonly TimeSpan HighlightGrace = TimeSpan.FromMilliseconds(70);
+
+    // A submenu opens when the pointer rests on its row this long (passing over the row does not open it).
+    internal static readonly TimeSpan SubmenuHoverDelay = TimeSpan.FromMilliseconds(100);
+
+    // Space between a menu and a submenu beside it.
+    internal const double SubmenuGap = 4;
 
     // Space kept between a floating menu and the window edge when its height is clamped to the window.
     private const double WindowEdgeMargin = 8;
@@ -82,7 +96,14 @@ public class MenuSurface : HeaderedItemsControl
     public static readonly StyledProperty<bool> ClosesOnViewportChangeProperty =
         AvaloniaProperty.Register<MenuSurface, bool>(nameof(ClosesOnViewportChange));
 
-    /// <summary>Raised when a row is activated (before the menu closes).</summary>
+    /// <summary>
+    /// Children of an <see cref="ItemsControl.ItemsSource"/> item: a non-empty result turns its row into a submenu row
+    /// (same signature as <c>TreeView.ChildrenSelector</c>). Submenus use it for their own items too.
+    /// </summary>
+    public static readonly StyledProperty<Func<object, IEnumerable?>?> ChildrenSelectorProperty =
+        AvaloniaProperty.Register<MenuSurface, Func<object, IEnumerable?>?>(nameof(ChildrenSelector));
+
+    /// <summary>Raised when a row is activated (before the menu closes); rows of submenus raise it on the outermost surface.</summary>
     public static readonly RoutedEvent<MenuEntryClickedEventArgs> ItemClickedEvent =
         RoutedEvent.Register<MenuSurface, MenuEntryClickedEventArgs>(nameof(ItemClicked), RoutingStrategies.Bubble);
 
@@ -141,6 +162,13 @@ public class MenuSurface : HeaderedItemsControl
         set => SetValue(ClosesOnViewportChangeProperty, value);
     }
 
+    /// <inheritdoc cref="ChildrenSelectorProperty"/>
+    public Func<object, IEnumerable?>? ChildrenSelector
+    {
+        get => GetValue(ChildrenSelectorProperty);
+        set => SetValue(ChildrenSelectorProperty, value);
+    }
+
     public event EventHandler<MenuEntryClickedEventArgs>? ItemClicked
     {
         add => AddHandler(ItemClickedEvent, value);
@@ -181,6 +209,23 @@ public class MenuSurface : HeaderedItemsControl
     private TopLevel? _dismissTopLevel;
     private MenuSurfaceSheet? _sheet;
 
+    // Submenus: the row this surface belongs to (null for the outermost surface), the row whose submenu is open, the row
+    // waiting for the hover delay, and the safe zone the pointer crosses on its way into an open submenu.
+    private MenuEntry? _parentRow;
+    private MenuEntry? _openRow;
+    private MenuEntry? _hoverRow;
+    private DispatcherTimer? _hoverTimer;
+    private DispatcherTimer? _zoneTimer;
+    private SubmenuSafeZone? _zone;
+    private DateTime _zoneUntil;
+    private bool _towardSubmenu;
+    private bool _pointerOnOpenRow;
+    private bool _zoneHolds;
+    private Point? _chainPoint;
+    private PointerEventArgs? _lastChainArgs;
+    private readonly List<Interactive> _chainHooks = new();
+    private TopLevel? _inlineDismissTopLevel;
+
     static MenuSurface()
     {
         FocusableProperty.OverrideDefaultValue<MenuSurface>(true);
@@ -206,6 +251,43 @@ public class MenuSurface : HeaderedItemsControl
 
     /// <summary>The bottom-sheet presenter (null until the surface first opens as a sheet).</summary>
     internal MenuSurfaceSheet? Sheet => _sheet;
+
+    /// <summary>True for the surface of a submenu (it belongs to a row of another surface).</summary>
+    internal bool IsSubmenu => _parentRow is not null;
+
+    /// <summary>The row that opens this submenu (null for the outermost surface).</summary>
+    internal MenuEntry? ParentRow => _parentRow;
+
+    /// <summary>The surface holding <see cref="ParentRow"/>.</summary>
+    internal MenuSurface? ParentSurface => _parentRow?.Surface;
+
+    /// <summary>The outermost surface of the chain this surface belongs to.</summary>
+    internal MenuSurface Root
+    {
+        get
+        {
+            var surface = this;
+            while (surface.ParentSurface is { } parent)
+            {
+                surface = parent;
+            }
+            return surface;
+        }
+    }
+
+    /// <summary>The row whose submenu is open (null when none is).</summary>
+    internal MenuEntry? OpenSubmenuRow => _openRow;
+
+    /// <summary>The open submenu (null when none is).</summary>
+    internal MenuSurface? OpenSubmenuSurface => _openRow?.Submenu;
+
+    /// <summary>The safe zone the pointer is crossing toward the open submenu (tests).</summary>
+    internal SubmenuSafeZone? SafeZone => _zone;
+
+    /// <summary>How long a safe zone holds (tests lengthen or shorten it so they do not depend on the machine's speed).</summary>
+    internal TimeSpan SafeZoneLifetime { get; set; } = SubmenuSafeZone.Lifetime;
+
+    internal void AttachToParentRow(MenuEntry row) => _parentRow = row;
 
     /// <summary>
     /// Opens the menu against <paramref name="anchor"/> (placed by <see cref="Side"/>, <see cref="Alignment"/> and
@@ -334,15 +416,29 @@ public class MenuSurface : HeaderedItemsControl
             {
                 entry.HeaderTemplate = template;
             }
+            if (item is not null && ChildrenSelector?.Invoke(item) is { } children)
+            {
+                entry.HasSelectedChildren = true;
+                entry.SetCurrentValue(MenuEntry.ItemsSourceProperty, children);
+            }
         }
     }
 
     protected override void ClearContainerForItemOverride(Control container)
     {
         base.ClearContainerForItemOverride(container);
+        if (ReferenceEquals(container, _openRow))
+        {
+            CloseSubmenu(returnFocus: false);
+        }
         if (ReferenceEquals(container, _active))
         {
             _active = null;
+        }
+        if (container is MenuEntry { HasSelectedChildren: true } entry)
+        {
+            entry.HasSelectedChildren = false;
+            entry.SetCurrentValue(MenuEntry.ItemsSourceProperty, null);
         }
     }
 
@@ -390,7 +486,7 @@ public class MenuSurface : HeaderedItemsControl
         }
         popup.PlacementTarget = target;
         popup.OverlayInputPassThroughElement = target;
-        popup.Configure(Variant, Side, Alignment, AnchorGap, _anchorPoint);
+        popup.Configure(Variant, Side, Alignment, AnchorGap, _anchorPoint, ParentSurface, _parentRow);
         SetActive(null, false, animate: false);
         ClampToWindow(target);
         // Every open starts at the first row; a keyboard open on the last row scrolls it into view.
@@ -443,6 +539,9 @@ public class MenuSurface : HeaderedItemsControl
     private void HidePopup()
     {
         StopGrace();
+        // Submenus close first, so focus inside them comes back to this surface (and from here to the anchor).
+        CloseSubmenu(returnFocus: false);
+        ParentSurface?.OnSubmenuClosing(this);
         if (_popup is not { } popup || !_popupOpen || _closing)
         {
             _reopenPending = false;
@@ -487,7 +586,9 @@ public class MenuSurface : HeaderedItemsControl
         _popup = new MenuSurfacePopup
         {
             Child = this,
-            TakesFocusFromNativeControl = true
+            TakesFocusFromNativeControl = true,
+            // A submenu never dismisses itself: the outermost surface closes the whole chain on a press outside it.
+            IsLightDismissEnabled = !IsSubmenu
         };
         _popup.Opened += OnPopupOpened;
         _popup.Closed += OnPopupClosed;
@@ -525,6 +626,8 @@ public class MenuSurface : HeaderedItemsControl
             return;
         }
         _reopenPending = false;
+        CloseSubmenu(returnFocus: false);
+        ParentSurface?.OnSubmenuClosing(this);
         if (!wasClosing && IsOpen)
         {
             // Light dismiss (another window, the anchor detached): sync the state.
@@ -592,7 +695,7 @@ public class MenuSurface : HeaderedItemsControl
     private void AttachDismissHandlers()
     {
         DetachDismissHandlers();
-        if (PlacementTarget is not { } target || TopLevel.GetTopLevel(target) is not { } topLevel)
+        if (IsSubmenu || PlacementTarget is not { } target || TopLevel.GetTopLevel(target) is not { } topLevel)
         {
             return;
         }
@@ -620,9 +723,13 @@ public class MenuSurface : HeaderedItemsControl
     private bool IsInside(object? source) =>
         source is Visual visual && (ReferenceEquals(visual, this) || this.IsVisualAncestorOf(visual));
 
+    /// <summary>True for <paramref name="source"/> inside this surface or any submenu open from it (at any depth).</summary>
+    internal bool IsInsideChain(object? source) =>
+        IsInside(source) || OpenSubmenuSurface is { } submenu && submenu.IsInsideChain(source);
+
     private void OnTopLevelPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (IsInside(e.Source))
+        if (IsInsideChain(e.Source))
         {
             return;
         }
@@ -638,7 +745,7 @@ public class MenuSurface : HeaderedItemsControl
 
     private void OnViewportScrolled(object? sender, ScrollChangedEventArgs e)
     {
-        if (e.OffsetDelta == default || IsInside(e.Source))
+        if (e.OffsetDelta == default || IsInsideChain(e.Source))
         {
             return;
         }
@@ -725,18 +832,30 @@ public class MenuSurface : HeaderedItemsControl
             }
             if (!ReferenceEquals(entry, _active))
             {
+                if (_openRow is not null && _zoneHolds)
+                {
+                    // On the way into the open submenu: rows crossed on the diagonal do not take the highlight.
+                    return;
+                }
                 if (!entry.Focus(NavigationMethod.Pointer) || !ReferenceEquals(entry, _active))
                 {
                     SetActive(entry, _active is not null, animate: true);
                 }
             }
+            ScheduleSubmenu(entry);
             return;
         }
+        StopHover();
         StartGrace();
     }
 
     private void OnScrollChanged(object? sender, ScrollChangedEventArgs e)
     {
+        if (e.OffsetDelta.Y != 0 && _openRow is not null && !_keyboardModality)
+        {
+            // The wheel moved the row an open submenu is attached to; the submenu does not follow it.
+            CloseSubmenu(returnFocus: false);
+        }
         if (e.OffsetDelta.Y == 0 || _keyboardModality || _closing || !_popupOpen || _lastPointer is not { } point)
         {
             return;
@@ -798,7 +917,8 @@ public class MenuSurface : HeaderedItemsControl
 
     private void StartGrace()
     {
-        if (_active is null || _keyboardModality)
+        // The row of an open submenu keeps the highlight while the pointer is away (in the submenu, or on its way there).
+        if (_active is null || _keyboardModality || _openRow is not null)
         {
             return;
         }
@@ -817,7 +937,7 @@ public class MenuSurface : HeaderedItemsControl
     private void OnGraceElapsed(object? sender, EventArgs e)
     {
         StopGrace();
-        if (_active is null || _keyboardModality || _closing)
+        if (_active is null || _keyboardModality || _closing || _openRow is not null)
         {
             return;
         }
@@ -846,6 +966,11 @@ public class MenuSurface : HeaderedItemsControl
     private void MoveTo(MenuEntry entry)
     {
         StopGrace();
+        StopHover();
+        if (_openRow is not null && !ReferenceEquals(entry, _openRow))
+        {
+            CloseSubmenu(returnFocus: false);
+        }
         entry.Focus(NavigationMethod.Directional);
         if (!ReferenceEquals(entry, _active))
         {
@@ -886,15 +1011,31 @@ public class MenuSurface : HeaderedItemsControl
                 _active?.Activate(NavigationMethod.Directional);
                 return;
             case Key.Escape:
+                e.Handled = true;
+                // Escape closes only this level: a submenu hands focus back to its row.
+                CloseLevel();
+                return;
             case Key.Tab:
                 e.Handled = true;
-                Close(returnFocus: true);
+                CloseChain(NavigationMethod.Tab);
                 return;
             case Key.Left:
             case Key.Right:
                 if (_active is { } row && row.HandleMenuKey(e))
                 {
                     e.Handled = true;
+                    return;
+                }
+                if (e.Key == Key.Right && _active is { HasSubmenu: true, IsEffectivelyEnabled: true } parent)
+                {
+                    e.Handled = true;
+                    OpenSubmenu(parent, MenuOpenFocus.First);
+                    return;
+                }
+                if (e.Key == Key.Left && IsSubmenu)
+                {
+                    e.Handled = true;
+                    CloseLevel();
                     return;
                 }
                 break;
@@ -944,11 +1085,362 @@ public class MenuSurface : HeaderedItemsControl
     {
         _keyboardModality = method != NavigationMethod.Pointer;
         var item = ItemFromContainer(entry) ?? entry;
-        RaiseEvent(new MenuEntryClickedEventArgs(ItemClickedEvent, entry, item));
-        if (!entry.StaysOpenOnClick && IsOpen)
+        var root = Root;
+        root._keyboardModality = _keyboardModality;
+        // One event for the whole menu, from the outermost surface (DropdownMenu and ContextMenu listen there).
+        root.RaiseEvent(new MenuEntryClickedEventArgs(ItemClickedEvent, entry, item));
+        if (entry.StaysOpenOnClick)
         {
-            Close(returnFocus: true);
+            return;
         }
+        if (root.IsOpen)
+        {
+            root.Close(returnFocus: true);
+        }
+        else if (!ReferenceEquals(root, this))
+        {
+            // A static (inline) menu stays; its submenus close and focus goes back to the row that opened them.
+            root.CloseSubmenu(returnFocus: true);
+        }
+    }
+
+    /// <summary>Escape (and ArrowLeft in a submenu): closes this level only; a submenu returns focus to its row.</summary>
+    private void CloseLevel()
+    {
+        ParentSurface?.SetKeyboardModality();
+        Close(returnFocus: true);
+    }
+
+    /// <summary>Tab: closes the whole menu from any level.</summary>
+    private void CloseChain(NavigationMethod method)
+    {
+        var root = Root;
+        root._keyboardModality = method != NavigationMethod.Pointer;
+        if (root.IsOpen)
+        {
+            root.Close(returnFocus: true);
+        }
+        else
+        {
+            root.CloseSubmenu(returnFocus: true);
+        }
+    }
+
+    private void SetKeyboardModality()
+    {
+        _keyboardModality = true;
+        StopGrace();
+    }
+
+    #endregion
+
+    #region Submenus
+
+    /// <summary>
+    /// Opens the submenu of <paramref name="row"/> (closing another open one). <see cref="MenuOpenFocus.None"/> keeps focus
+    /// on the row (pointer), <see cref="MenuOpenFocus.First"/> moves the keyboard position to the submenu's first row. A
+    /// submenu that is already open only takes the keyboard position.
+    /// </summary>
+    internal void OpenSubmenu(MenuEntry row, MenuOpenFocus focus)
+    {
+        StopHover();
+        if (!row.HasSubmenu || !row.IsEffectivelyEnabled || TopLevel.GetTopLevel(row) is null)
+        {
+            return;
+        }
+        if (ReferenceEquals(_openRow, row) && row.Submenu is { IsOpen: true } open)
+        {
+            if (focus is MenuOpenFocus.First or MenuOpenFocus.Last)
+            {
+                open.ApplyOpenFocus(focus);
+            }
+            return;
+        }
+        CloseSubmenu(returnFocus: false);
+        if (!ReferenceEquals(row, _active))
+        {
+            SetActive(row, false, animate: false);
+        }
+        if (focus != MenuOpenFocus.None)
+        {
+            _keyboardModality = true;
+        }
+        var submenu = row.EnsureSubmenu();
+        submenu.PrepareAsSubmenuOf(this);
+        _openRow = row;
+        row.SetSubmenuOpen(true);
+        _zone = null;
+        _zoneHolds = false;
+        _pointerOnOpenRow = !_keyboardModality;
+        HookChainPointer(submenu);
+        if (!_popupOpen)
+        {
+            // A static menu has no light-dismiss handler of its own: presses outside the chain close the submenus.
+            HookInlineDismiss();
+        }
+        submenu.Open(row, focus);
+        if (!submenu.IsOpen)
+        {
+            OnSubmenuClosing(submenu);
+        }
+    }
+
+    /// <summary>Closes the open submenu (and the ones below it).</summary>
+    internal void CloseSubmenu(bool returnFocus)
+    {
+        StopHover();
+        if (_openRow?.Submenu is { } submenu)
+        {
+            submenu.Close(returnFocus);
+        }
+        ClearOpenRow();
+    }
+
+    /// <summary>A submenu of this surface started closing (by itself, a key, or its chain).</summary>
+    private void OnSubmenuClosing(MenuSurface submenu)
+    {
+        if (_openRow is { } row && ReferenceEquals(row.Submenu, submenu))
+        {
+            ClearOpenRow();
+        }
+    }
+
+    private void ClearOpenRow()
+    {
+        if (_openRow is not { } row)
+        {
+            return;
+        }
+        _openRow = null;
+        row.SetSubmenuOpen(false);
+        _zone = null;
+        _zoneHolds = false;
+        _zoneTimer?.Stop();
+        UnhookChainPointer();
+        UnhookInlineDismiss();
+    }
+
+    /// <summary>Takes the owner's look and data rules and the place beside its row (called before every open).</summary>
+    private void PrepareAsSubmenuOf(MenuSurface owner)
+    {
+        // A bottom sheet has no side room: its submenus float above their row as account panels. Beside a submenu that
+        // had to open on the left, the next level keeps going left instead of turning back over the menu.
+        var sheet = owner.Variant == MenuSurfaceVariant.Sheet;
+        var left = owner.IsSubmenu && owner.Popup is { LastTravelDirection.X: > 0 };
+        SetCurrentValue(VariantProperty, sheet ? MenuSurfaceVariant.Account : owner.Variant);
+        SetCurrentValue(SideProperty, sheet ? MenuSide.Top : left ? MenuSide.Left : MenuSide.Right);
+        SetCurrentValue(AlignmentProperty, sheet ? MenuAlignment.End : MenuAlignment.Start);
+        SetCurrentValue(AnchorGapProperty, SubmenuGap);
+        SetCurrentValue(ItemTemplateProperty, owner.ItemTemplate);
+        SetCurrentValue(ChildrenSelectorProperty, owner.ChildrenSelector);
+        SetCurrentValue(ClosesOnViewportChangeProperty, false);
+    }
+
+    private void ScheduleSubmenu(MenuEntry entry)
+    {
+        if (!entry.HasSubmenu || ReferenceEquals(entry, _openRow))
+        {
+            if (!ReferenceEquals(entry, _hoverRow))
+            {
+                StopHover();
+            }
+            return;
+        }
+        if (ReferenceEquals(entry, _hoverRow) && _hoverTimer is { IsEnabled: true })
+        {
+            return;
+        }
+        _hoverRow = entry;
+        _hoverTimer ??= new DispatcherTimer(SubmenuHoverDelay, DispatcherPriority.Input, OnHoverElapsed);
+        _hoverTimer.Stop();
+        _hoverTimer.Start();
+    }
+
+    private void StopHover()
+    {
+        _hoverTimer?.Stop();
+        _hoverRow = null;
+    }
+
+    private void OnHoverElapsed(object? sender, EventArgs e)
+    {
+        _hoverTimer?.Stop();
+        var row = _hoverRow;
+        _hoverRow = null;
+        if (row is not null && ReferenceEquals(row, _active) && !_closing && (_popupOpen || this.GetVisualParent() is not null))
+        {
+            OpenSubmenu(row, MenuOpenFocus.None);
+        }
+    }
+
+    /// <summary>
+    /// Follows the pointer while a submenu is open. Moves over a popup end at its host instead of reaching the window, so
+    /// this surface and the submenu report their own moves and the window reports the moves everywhere else.
+    /// </summary>
+    private void HookChainPointer(MenuSurface submenu)
+    {
+        UnhookChainPointer();
+        _chainPoint = null;
+        if (TopLevel.GetTopLevel(this) is { } topLevel)
+        {
+            Hook(topLevel);
+        }
+        Hook(this);
+        Hook(submenu);
+
+        void Hook(Interactive target)
+        {
+            target.AddHandler(PointerMovedEvent, OnChainPointerMoved, RoutingStrategies.Tunnel, handledEventsToo: true);
+            _chainHooks.Add(target);
+        }
+    }
+
+    private void UnhookChainPointer()
+    {
+        foreach (var target in _chainHooks)
+        {
+            target.RemoveHandler(PointerMovedEvent, OnChainPointerMoved);
+        }
+        _chainHooks.Clear();
+        _lastChainArgs = null;
+    }
+
+    private void HookInlineDismiss()
+    {
+        UnhookInlineDismiss();
+        if (TopLevel.GetTopLevel(this) is not { } topLevel)
+        {
+            return;
+        }
+        _inlineDismissTopLevel = topLevel;
+        topLevel.AddHandler(PointerPressedEvent, OnInlinePointerPressed, RoutingStrategies.Tunnel, handledEventsToo: true);
+    }
+
+    private void UnhookInlineDismiss()
+    {
+        if (_inlineDismissTopLevel is { } topLevel)
+        {
+            topLevel.RemoveHandler(PointerPressedEvent, OnInlinePointerPressed);
+            _inlineDismissTopLevel = null;
+        }
+    }
+
+    private void OnInlinePointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        if (!IsInsideChain(e.Source))
+        {
+            CloseSubmenu(returnFocus: false);
+        }
+    }
+
+    /// <summary>
+    /// Every pointer move while a submenu of this surface is open (tunnel, so it runs before the rows see the move): on
+    /// the submenu or its row the submenu stays; leaving the row starts the safe zone toward the submenu, and while the
+    /// pointer heads through it the rows it crosses do not take the highlight. Landing on another row closes the
+    /// submenu (that row takes the highlight right after); gaps, separators and the space outside the menu keep it.
+    /// </summary>
+    private void OnChainPointerMoved(object? sender, PointerEventArgs e)
+    {
+        if (e.Pointer.Type == PointerType.Touch || _openRow is not { Submenu: { } submenu } row || _closing)
+        {
+            return;
+        }
+        if (ReferenceEquals(e, _lastChainArgs))
+        {
+            // Hooked on the window and on the surfaces: a move inside a static menu reaches two of them.
+            return;
+        }
+        _lastChainArgs = e;
+        var point = e.GetPosition(this);
+        var dx = _chainPoint is { } last ? point.X - last.X : 0;
+        _chainPoint = point;
+        _zoneHolds = false;
+        if (submenu.IsInsideChain(e.Source))
+        {
+            _zone = null;
+            _pointerOnOpenRow = false;
+            return;
+        }
+        if (IsInside(e.Source) && new Rect(row.RowVisual.Bounds.Size).Contains(e.GetPosition(row.RowVisual)))
+        {
+            _zone = null;
+            _pointerOnOpenRow = true;
+            return;
+        }
+        if (_pointerOnOpenRow)
+        {
+            _pointerOnOpenRow = false;
+            StartZone(point, submenu);
+        }
+        if (IsInZone(point, dx))
+        {
+            _zoneHolds = true;
+            return;
+        }
+        if (IsInside(e.Source) && EntryFrom(e.Source) is { IsEffectivelyEnabled: true, TracksPointerHighlight: true } other &&
+            !ReferenceEquals(other, row) && new Rect(other.RowVisual.Bounds.Size).Contains(e.GetPosition(other.RowVisual)))
+        {
+            CloseSubmenu(returnFocus: false);
+        }
+    }
+
+    private void StartZone(Point exit, MenuSurface submenu)
+    {
+        _zone = null;
+        if (submenu.TranslatePoint(default, this) is not { } origin)
+        {
+            return;
+        }
+        var rect = new Rect(origin, submenu.Bounds.Size);
+        var zone = new SubmenuSafeZone(exit, rect, rect.Center.X >= exit.X);
+        _zone = zone;
+        _zoneUntil = DateTime.UtcNow + SafeZoneLifetime;
+        _towardSubmenu = true;
+        _zoneTimer ??= new DispatcherTimer(SafeZoneLifetime, DispatcherPriority.Input, OnZoneElapsed);
+        _zoneTimer.Stop();
+        _zoneTimer.Interval = SafeZoneLifetime;
+        _zoneTimer.Start();
+    }
+
+    private bool IsInZone(Point point, double dx)
+    {
+        if (_zone is not { } zone)
+        {
+            return false;
+        }
+        if (DateTime.UtcNow > _zoneUntil)
+        {
+            _zone = null;
+            return false;
+        }
+        _towardSubmenu = zone.IsToward(dx, _towardSubmenu);
+        if (_towardSubmenu && zone.Contains(point))
+        {
+            return true;
+        }
+        _zone = null;
+        return false;
+    }
+
+    /// <summary>The pointer rested on its way: the zone lapses, and a row it rests on takes the highlight (closing the submenu).</summary>
+    private void OnZoneElapsed(object? sender, EventArgs e)
+    {
+        _zoneTimer?.Stop();
+        var held = _zone is not null && _zoneHolds;
+        _zone = null;
+        _zoneHolds = false;
+        if (!held || _openRow is not { } row || _lastPointer is not { } point ||
+            EntryAtPointer(point) is not { IsEffectivelyEnabled: true, TracksPointerHighlight: true } entry ||
+            ReferenceEquals(entry, row))
+        {
+            return;
+        }
+        CloseSubmenu(returnFocus: false);
+        if (!entry.Focus(NavigationMethod.Pointer) || !ReferenceEquals(entry, _active))
+        {
+            SetActive(entry, _active is not null, animate: true);
+        }
+        ScheduleSubmenu(entry);
     }
 
     #endregion
