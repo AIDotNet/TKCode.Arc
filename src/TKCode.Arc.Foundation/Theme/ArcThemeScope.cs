@@ -137,6 +137,7 @@ public static class ArcThemeScope
             {
                 _manager = manager;
                 manager.StateChanged += OnStateChanged;
+                manager.DescriptorsAdded += OnDescriptorsAdded;
             }
         }
 
@@ -145,9 +146,13 @@ public static class ArcThemeScope
             if (_manager is not null)
             {
                 _manager.StateChanged -= OnStateChanged;
+                _manager.DescriptorsAdded -= OnDescriptorsAdded;
                 _manager = null;
             }
         }
+
+        // A package enabled after startup: the scope publishes its tokens for the scope's own state as well.
+        private void OnDescriptorsAdded(object? sender, EventArgs e) => Refresh();
 
         private void OnStateChanged(object? sender, ArcThemeChangedEventArgs e)
         {

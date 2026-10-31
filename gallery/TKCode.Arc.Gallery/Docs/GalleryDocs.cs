@@ -55,7 +55,7 @@ public static partial class GalleryDocs
     /// <c>TKCode.Arc.Illustrations</c>), from the type its page documents; null when the page documents no such type.
     /// </summary>
     public static string? PackageOf(string className)
-        => s_types.TryGetValue(className, out var type) ? type.Owner.Assembly.GetName().Name : null;
+        => s_types.TryGetValue(className, out var type) ? type.Package : null;
 
     /// <summary>The folder of <paramref name="className"/>'s page below <c>Docs/</c>, such as <c>TextFields/Input</c>; null when it has no page.</summary>
     public static string? FolderOf(string className)
@@ -218,14 +218,19 @@ public static partial class GalleryDocs
             markdown.Append(summary).Append("\n\n");
         }
 
-        var properties = type.Members.Where(m => m.Kind == GalleryApiMemberKind.Property).ToList();
-        if (properties.Count > 0)
+        if (type.Members.Any(m => m.Kind == GalleryApiMemberKind.Property))
         {
+            var binding = type.Resolve();
             Row(markdown, text.Property, text.Type, text.Default, text.Description);
             markdown.Append("|---|---|---|---|\n");
-            foreach (var member in properties)
+            for (var i = 0; i < type.Members.Length; i++)
             {
-                Row(markdown, Code(member.Name), Code(member.Type), DefaultOf(member, type.Owner), DescriptionCell(member, language, text));
+                var member = type.Members[i];
+                if (member.Kind == GalleryApiMemberKind.Property)
+                {
+                    Row(markdown, Code(member.Name), Code(member.Type), DefaultOf(binding.Properties[i], binding.Owner),
+                        DescriptionCell(member, language, text));
+                }
             }
             markdown.Append('\n');
         }
@@ -288,9 +293,9 @@ public static partial class GalleryDocs
     }
 
     /// <summary>The default from the property metadata of <paramref name="owner"/>, so overridden defaults show.</summary>
-    private static string DefaultOf(GalleryApiMember member, Type owner)
+    private static string DefaultOf(AvaloniaProperty? property, Type owner)
     {
-        if (member.Property?.GetMetadata(owner) is not IStyledPropertyMetadata metadata)
+        if (property?.GetMetadata(owner) is not IStyledPropertyMetadata metadata)
         {
             return None;
         }

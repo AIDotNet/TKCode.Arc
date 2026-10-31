@@ -1,6 +1,7 @@
 using System.Runtime.CompilerServices;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Threading;
 using TKCode.Arc.Localization;
 
 namespace TKCode.Arc;
@@ -10,16 +11,24 @@ public sealed class ArcRuntime
 {
     private static readonly ConditionalWeakTable<Application, ArcRuntime> s_runtimes = new();
     private readonly List<IDisposable> _owned = new();
+    private readonly List<string> _packages;
+    private readonly Dictionary<string, ArcThemePreset> _presets;
+    private readonly Dictionary<string, string> _tokenOwners;
+    private readonly Dictionary<string, string> _catalogOwners;
+    private readonly ArcThemeLoading _themeLoading;
 
     private ArcRuntime(Application application, ArcThemeManager theme, ArcThemeProvider themes, ArcLanguageManager languages,
-                       IReadOnlyList<string> packages, IReadOnlyDictionary<string, ArcThemePreset> presets)
+                       ArcBuilder builder, Dictionary<string, string> tokenOwners, Dictionary<string, string> catalogOwners)
     {
         Application = application;
         Theme = theme;
         Themes = themes;
         Languages = languages;
-        Packages = packages;
-        Presets = presets;
+        _packages = builder.Packages.Select(p => p.Id).ToList();
+        _presets = new Dictionary<string, ArcThemePreset>(builder.Presets, StringComparer.Ordinal);
+        _tokenOwners = tokenOwners;
+        _catalogOwners = catalogOwners;
+        _themeLoading = builder.ThemeLoading;
     }
 
     /// <summary>The application.</summary>
@@ -34,11 +43,11 @@ public sealed class ArcRuntime
     /// <summary>The language manager: current language and the text of the enabled packages' catalogs.</summary>
     public ArcLanguageManager Languages { get; }
 
-    /// <summary>The enabled packages, dependencies first.</summary>
-    public IReadOnlyList<string> Packages { get; }
+    /// <summary>The enabled packages, dependencies first; packages enabled by <see cref="UsePackages"/> are appended.</summary>
+    public IReadOnlyList<string> Packages => _packages;
 
     /// <summary>The theme presets the enabled packages registered, by name.</summary>
-    public IReadOnlyDictionary<string, ArcThemePreset> Presets { get; }
+    public IReadOnlyDictionary<string, ArcThemePreset> Presets => _presets;
 
     /// <summary>The runtime of <see cref="Application.Current"/>, or null before <c>UseArc(...)</c> set it up.</summary>
     public static ArcRuntime? Current => Application.Current is { } application ? Find(application) : null;
@@ -62,40 +71,14 @@ public sealed class ArcRuntime
             throw new InvalidOperationException("Arc is already set up for this application.");
         }
 
-        var descriptors = new List<ArcTokenDescriptor>();
-        var identities = new Dictionary<string, string>(StringComparer.Ordinal);
-        ArcTokenDescriptor? global = null;
-        foreach (var package in builder.Packages)
-        {
-            foreach (var descriptor in package.Tokens)
-            {
-                if (!identities.TryAdd(descriptor.Identity, package.Id))
-                {
-                    throw new InvalidOperationException(
-                        $"Token identity '{descriptor.Identity}' is registered by both '{identities[descriptor.Identity]}' and '{package.Id}'.");
-                }
-                if (descriptor.IsGlobal)
-                {
-                    if (global is not null)
-                    {
-                        throw new InvalidOperationException(
-                            $"Only one global token identity is allowed: '{global.Identity}' and '{descriptor.Identity}'.");
-                    }
-                    global = descriptor;
-                    descriptors.Insert(0, descriptor);
-                }
-                else
-                {
-                    descriptors.Add(descriptor);
-                }
-            }
-        }
-
-        var languages = CreateLanguages(builder);
+        var tokenOwners = new Dictionary<string, string>(StringComparer.Ordinal);
+        var descriptors = CollectTokens(builder.Packages, tokenOwners, allowGlobal: true);
+        var catalogOwners = new Dictionary<string, string>(StringComparer.Ordinal);
+        var catalogs = CollectCatalogs(builder.Packages, catalogOwners, builder.SupportedLanguages);
+        var languages = new ArcLanguageManager(builder.DefaultLanguage, builder.SupportedLanguages, catalogs);
         var theme = new ArcThemeManager(application, descriptors);
         var themes = new ArcThemeProvider();
-        var runtime = new ArcRuntime(application, theme, themes, languages, builder.Packages.Select(p => p.Id).ToArray(),
-            new Dictionary<string, ArcThemePreset>(builder.Presets, StringComparer.Ordinal));
+        var runtime = new ArcRuntime(application, theme, themes, languages, builder, tokenOwners, catalogOwners);
         s_runtimes.AddOrUpdate(application, runtime);
 
         foreach (var package in builder.Packages)
@@ -141,17 +124,148 @@ public sealed class ArcRuntime
         return runtime;
     }
 
+    /// <summary>
+    /// Enables packages in the running application, typically the package of an assembly that was loaded on demand (a
+    /// browser app that downloads part of itself when a page needs it). Packages that are already enabled are skipped, as
+    /// they are by <c>UsePackage</c>. The new ones are set up as at startup: their token identities, theme files, language
+    /// catalogs and presets are registered, the applied theme is published again with their tokens (the state stays, so
+    /// <see cref="ArcThemeManager.StateChanged"/> is not raised), and their commit callbacks run. Call it on the UI thread.
+    /// </summary>
+    /// <remarks>
+    /// Everything is checked before anything is registered: a token identity, theme key or language catalog another
+    /// package already registered, a catalog that does not cover every language of the application, or a global token
+    /// identity throws <see cref="InvalidOperationException"/>; a preset value the new tokens reject throws
+    /// <see cref="ArcThemeException"/>. Either way the application stays as it was. <paramref name="use"/> only enables
+    /// packages: <c>UseLanguages</c>, <c>WithTheme</c> and <c>WithThemeLoading</c> throw there.
+    /// </remarks>
+    /// <param name="use">Enables the packages, for example <c>arc => arc.UseArcBlocks()</c>.</param>
+    /// <returns>The ids of the packages this call enabled, dependencies first; empty when all of them were enabled already.</returns>
+    public IReadOnlyList<string> UsePackages(Action<ArcBuilder> use)
+    {
+        Dispatcher.UIThread.VerifyAccess();
+        var builder = new ArcBuilder(this);
+        use(builder);
+        var added = builder.Packages;
+        if (added.Count == 0)
+        {
+            return Array.Empty<string>();
+        }
+
+        var tokenOwners = new Dictionary<string, string>(_tokenOwners, StringComparer.Ordinal);
+        var descriptors = CollectTokens(added, tokenOwners, allowGlobal: false);
+        var catalogOwners = new Dictionary<string, string>(_catalogOwners, StringComparer.Ordinal);
+        var catalogs = CollectCatalogs(added, catalogOwners, Languages.SupportedLanguages);
+        var keys = new Dictionary<object, string>();
+        foreach (var package in added)
+        {
+            foreach (var asset in package.Themes)
+            {
+                foreach (var key in asset.Keys)
+                {
+                    if ((Themes.OwnerOf(key) ?? (keys.TryGetValue(key, out var earlier) ? earlier : null)) is { } other)
+                    {
+                        throw new InvalidOperationException($"Theme key '{key}' is defined by both '{other}' and '{asset.Id}'.");
+                    }
+                    keys.Add(key, asset.Id);
+                }
+            }
+        }
+
+        // Tokens first: computing them is the one step that can still fail, and it changes nothing when it does.
+        Theme.Add(descriptors);
+        foreach (var package in added)
+        {
+            var onFirstUse = package.FirstUseCallbacks.Count == 0 ? null : FirstUse(package);
+            foreach (var asset in package.Themes)
+            {
+                Themes.Add(asset, onFirstUse);
+            }
+            foreach (var preset in package.Presets)
+            {
+                _presets[preset.Name] = preset;
+            }
+            _packages.Add(package.Id);
+        }
+        if (catalogs.Count > 0)
+        {
+            Languages.Add(catalogs);
+        }
+        foreach (var (identity, owner) in tokenOwners)
+        {
+            _tokenOwners[identity] = owner;
+        }
+        foreach (var (id, owner) in catalogOwners)
+        {
+            _catalogOwners[id] = owner;
+        }
+        if (_themeLoading == ArcThemeLoading.Eager)
+        {
+            Themes.LoadAll();
+        }
+        foreach (var package in added)
+        {
+            var context = new ArcPackageContext(this, package.Id);
+            foreach (var callback in package.CommitCallbacks)
+            {
+                callback(context);
+            }
+        }
+        return added.Select(p => p.Id).ToArray();
+    }
+
     internal void Own(IDisposable disposable) => _owned.Add(disposable);
 
     /// <summary>
-    /// Collects the enabled packages' language catalogs and checks, before anything is installed, that each covers
-    /// every language the application offers.
+    /// The token identities of <paramref name="packages"/>, the global one first, checked against each other and against
+    /// <paramref name="owners"/> (identity → package), which receives them.
     /// </summary>
-    private static ArcLanguageManager CreateLanguages(ArcBuilder builder)
+    private static List<ArcTokenDescriptor> CollectTokens(IReadOnlyList<ArcPackageBuilder> packages, Dictionary<string, string> owners,
+                                                          bool allowGlobal)
+    {
+        var descriptors = new List<ArcTokenDescriptor>();
+        ArcTokenDescriptor? global = null;
+        foreach (var package in packages)
+        {
+            foreach (var descriptor in package.Tokens)
+            {
+                if (!owners.TryAdd(descriptor.Identity, package.Id))
+                {
+                    throw new InvalidOperationException(
+                        $"Token identity '{descriptor.Identity}' is registered by both '{owners[descriptor.Identity]}' and '{package.Id}'.");
+                }
+                if (descriptor.IsGlobal)
+                {
+                    if (!allowGlobal)
+                    {
+                        throw new InvalidOperationException(
+                            $"Package '{package.Id}' registers the global token identity '{descriptor.Identity}'; that is only possible at startup.");
+                    }
+                    if (global is not null)
+                    {
+                        throw new InvalidOperationException(
+                            $"Only one global token identity is allowed: '{global.Identity}' and '{descriptor.Identity}'.");
+                    }
+                    global = descriptor;
+                    descriptors.Insert(0, descriptor);
+                }
+                else
+                {
+                    descriptors.Add(descriptor);
+                }
+            }
+        }
+        return descriptors;
+    }
+
+    /// <summary>
+    /// The language catalogs of <paramref name="packages"/>, checked against <paramref name="owners"/> (catalog id →
+    /// package, which receives them) and, before anything is installed, for covering every language the application offers.
+    /// </summary>
+    private static List<ArcLanguageCatalog> CollectCatalogs(IReadOnlyList<ArcPackageBuilder> packages, Dictionary<string, string> owners,
+                                                            IReadOnlyList<LanguageTag> supported)
     {
         var catalogs = new List<(string Package, ArcLanguageCatalog Catalog)>();
-        var owners = new Dictionary<string, string>(StringComparer.Ordinal);
-        foreach (var package in builder.Packages)
+        foreach (var package in packages)
         {
             foreach (var catalog in package.Languages)
             {
@@ -163,13 +277,13 @@ public sealed class ArcRuntime
                 catalogs.Add((package.Id, catalog));
             }
         }
-        var gaps = ArcLanguageManager.FindCoverageGaps(builder.SupportedLanguages, catalogs);
+        var gaps = ArcLanguageManager.FindCoverageGaps(supported, catalogs);
         if (gaps.Count > 0)
         {
             throw new InvalidOperationException(
                 "The application's languages are not covered by every enabled package:\n- " + string.Join("\n- ", gaps));
         }
-        return new ArcLanguageManager(builder.DefaultLanguage, builder.SupportedLanguages, catalogs.Select(c => c.Catalog).ToArray());
+        return catalogs.Select(c => c.Catalog).ToList();
     }
 
     private Action FirstUse(ArcPackageBuilder package)

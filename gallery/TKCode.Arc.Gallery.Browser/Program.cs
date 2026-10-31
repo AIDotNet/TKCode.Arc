@@ -37,12 +37,20 @@ internal sealed partial class Program
             GalleryTexts.Source = new HttpTextSource(new Uri(args[1]));
             ChoroplethExplorerDemoData.ReadMap = new HttpMapSource(new Uri(args[1])).Read;
         }
+        // A trimmed publish leaves the Special components out of the boot list (the project file): the first Special page loads them.
+        if (AppContext.TryGetSwitch("Arc.Gallery.SpecialOnDemand", out var specialOnDemand) && specialOnDemand)
+        {
+            s_onDemand = new BrowserAssemblyLoader();
+            s_onDemand.InstallFallback();
+        }
         // The language chosen in the top bar is kept in local storage; until there is one, the browser's languages decide.
         GalleryLanguages.Store = new BrowserLanguageStore();
         // Media players make sound through an HTML audio element each; if the module cannot load they keep time silently.
         await ArcAudioBrowser.UseAsync();
         await BuildAvaloniaApp().StartBrowserAppAsync("out");
     }
+
+    private static BrowserAssemblyLoader? s_onDemand;
 
     public static AppBuilder BuildAvaloniaApp() =>
         AppBuilder.Configure<App>()
@@ -53,5 +61,5 @@ internal sealed partial class Program
                   .UseArc(arc => arc
                       .UseLanguages(GalleryLanguages.Initial(BrowserLanguageStore.Preferred()), GalleryLanguages.Tags)
                       .UseArcControls()
-                      .UseArcGallery());
+                      .UseArcGallery(s_onDemand));
 }

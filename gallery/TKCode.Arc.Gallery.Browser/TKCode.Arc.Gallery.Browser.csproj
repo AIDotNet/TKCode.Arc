@@ -61,6 +61,16 @@
         <_AOT_InternalForceInterpretAssemblies Include="TKCode.Arc.Blocks.dll;TKCode.Arc.Special.dll;TKCode.Arc.Gallery.dll" />
     </ItemGroup>
 
+    <!-- The Special components are left out of the boot list of a trimmed publish and loaded when the first Special page opens
+         (GalleryModules in the gallery, BrowserAssemblyLoader here): 1.3 MB less to download at startup (brotli, measured
+         2026-10-30). The runtime's own lazy loading keeps the file trimmed with the app, fingerprinted and compressed, and with
+         AOT the SDK adds the runtime option that lets compiled code meet an assembly that arrives later. Blocks cannot follow:
+         the top bar and the home page are blocks. -p:ArcSpecialOnDemand=false keeps Special in the boot list. -->
+    <ItemGroup Condition="'$(PublishTrimmed)' == 'true' And '$(ArcSpecialOnDemand)' != 'false'">
+        <BlazorWebAssemblyLazyLoad Include="TKCode.Arc.Special.wasm" />
+        <RuntimeHostConfigurationOption Include="Arc.Gallery.SpecialOnDemand" Value="true" />
+    </ItemGroup>
+
     <!-- The two lists below are for a publish without trimming (-p:PublishTrimmed=false). A trimmed publish needs neither: ILLink drops what
          nothing uses, and an assembly loaded on demand would meet a trimmed runtime that no longer has the members it calls.
          Without trimming, every assembly of the runtime pack and of every package reference goes into the boot list and is

@@ -25,13 +25,24 @@ public enum GalleryApiMemberKind
 
 /// <param name="Type">The property's value type, or the event's argument type.</param>
 /// <param name="Key"><c>DeclaringType.Member</c>, the key of its translations.</param>
-/// <param name="Property">The Avalonia property (null for events and direct properties), whose metadata holds the default.</param>
 public sealed record GalleryApiMember(GalleryApiMemberKind Kind, string Name, string Type, string Key, string? Summary,
-                                      AvaloniaProperty? Property, bool IsReadOnly, bool IsAttached);
+                                      bool IsReadOnly, bool IsAttached);
 
+/// <param name="Package">The assembly that defines the type, which is also its NuGet package (for example <c>TKCode.Arc.Special</c>).</param>
 /// <param name="BaseName">The first non-Arc base class (for example <c>TextBox</c>); its members are not listed.</param>
-public sealed record GalleryApiType(string Name, Type Owner, string? Summary, string? BaseName, string[] PseudoClasses,
-                                    GalleryApiMember[] Members);
+/// <param name="Resolve">
+/// The type and its members' Avalonia properties. A function, called when the API table is built, so that reading the page
+/// list loads no control's assembly and runs no control's static constructor.
+/// </param>
+public sealed record GalleryApiType(string Name, string Package, string? Summary, string? BaseName, string[] PseudoClasses,
+                                    GalleryApiMember[] Members, Func<GalleryApiBinding> Resolve);
+
+/// <summary>What <see cref="GalleryApiType.Resolve"/> returns.</summary>
+/// <param name="Properties">
+/// In the order of <see cref="GalleryApiType.Members"/>, each member's Avalonia property, whose metadata holds the default (null
+/// for events and direct properties).
+/// </param>
+public sealed record GalleryApiBinding(Type Owner, AvaloniaProperty?[] Properties);
 
 /// <param name="Key"><c>Type</c> or <c>DeclaringType.Member</c>.</param>
 public sealed record GalleryApiTranslation(string Language, string Key, string Text);

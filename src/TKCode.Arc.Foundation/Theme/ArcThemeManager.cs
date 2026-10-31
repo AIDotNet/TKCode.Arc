@@ -38,14 +38,14 @@ public sealed class ArcThemeChangedEventArgs : EventArgs
 public sealed class ArcThemeManager
 {
     private readonly Application _application;
-    private readonly ArcTokenDescriptor[] _descriptors;
-    private readonly int _tokenCount;
+    private readonly List<ArcTokenDescriptor> _descriptors;
+    private int _tokenCount;
     private IPlatformSettings? _platformSettings;
 
     internal ArcThemeManager(Application application, IReadOnlyList<ArcTokenDescriptor> descriptors)
     {
         _application = application;
-        _descriptors = descriptors.ToArray();
+        _descriptors = descriptors.ToList();
         foreach (var descriptor in _descriptors)
         {
             _tokenCount += descriptor.Keys.Count;
@@ -63,7 +63,10 @@ public sealed class ArcThemeManager
     /// <summary>Whether the applied state resolves to dark.</summary>
     public bool IsDark { get; private set; }
 
-    /// <summary>The registered token identities, global identity first.</summary>
+    /// <summary>
+    /// The registered token identities, global identity first, then in the order their packages were enabled (packages
+    /// enabled after startup with <see cref="ArcRuntime.UsePackages"/> come last).
+    /// </summary>
     public IReadOnlyList<ArcTokenDescriptor> Descriptors => _descriptors;
 
     /// <summary>Total number of published tokens.</summary>
@@ -86,6 +89,9 @@ public sealed class ArcThemeManager
 
     /// <summary>Raised on the UI thread after a new state was published.</summary>
     public event EventHandler<ArcThemeChangedEventArgs>? StateChanged;
+
+    /// <summary>Raised after token identities were added to the running application; theme scopes publish them too.</summary>
+    internal event EventHandler? DescriptorsAdded;
 
     /// <summary>Whether the platform currently reports a dark appearance.</summary>
     public bool SystemIsDark
@@ -151,6 +157,34 @@ public sealed class ArcThemeManager
             _cacheStates[slot] = State;
         }
         return _cacheValues[slot]!;
+    }
+
+    /// <summary>
+    /// Adds the token identities of packages enabled after startup and publishes their values for the applied state.
+    /// The state is kept, so <see cref="StateChanged"/> is not raised. Computes before it changes anything: a preset value
+    /// the new identities reject throws <see cref="ArcThemeException"/> and nothing is added.
+    /// </summary>
+    internal void Add(IReadOnlyList<ArcTokenDescriptor> descriptors)
+    {
+        Dispatcher.UIThread.VerifyAccess();
+        var all = new List<ArcTokenDescriptor>(_descriptors.Count + descriptors.Count);
+        all.AddRange(_descriptors);
+        all.AddRange(descriptors);
+        var tokenCount = _tokenCount;
+        foreach (var descriptor in descriptors)
+        {
+            tokenCount += descriptor.Keys.Count;
+        }
+        var values = ArcTokenCalculator.Compute(all, tokenCount, State, IsDark);
+        _descriptors.AddRange(descriptors);
+        _tokenCount = tokenCount;
+        var slot = IsDark ? 1 : 0;
+        _cacheStates[1 - slot] = null;
+        _cacheValues[1 - slot] = null;
+        _cacheStates[slot] = State;
+        _cacheValues[slot] = values;
+        LastPublishedCount = ArcTokenCalculator.Publish(Resources, values);
+        DescriptorsAdded?.Invoke(this, EventArgs.Empty);
     }
 
     private readonly ArcThemeState?[] _cacheStates = new ArcThemeState?[2];

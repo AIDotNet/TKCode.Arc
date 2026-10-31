@@ -356,11 +356,13 @@ public sealed class GalleryPageView : Grid
     /// Shows the docs page in <paramref name="language"/>. The gallery's resources hand its text over at once, so the page
     /// is laid out with its first frame; the WebAssembly host fetches it, and the header shows until it arrives. A page
     /// that arrives after the language changed again is dropped, and one that cannot be read says so and is asked for
-    /// again on the next refresh.
+    /// again on the next refresh. A host that loads the Special components on demand loads them first
+    /// (<see cref="GalleryModules"/>): the page's API tables read their types and its demos create their controls.
     /// </summary>
     private async Task ShowDocsAsync(Markdown docs, CopyButton copyPage, string language)
     {
-        var doc = await GalleryDocs.GetAsync(_entry.ClassName, language);
+        var ready = GalleryModules.IsReady(_entry) || await GalleryModules.EnsureAsync(_entry);
+        var doc = ready ? await GalleryDocs.GetAsync(_entry.ClassName, language) : null;
         if (language != _docsLanguage)
         {
             return;

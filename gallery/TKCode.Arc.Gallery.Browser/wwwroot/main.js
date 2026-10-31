@@ -55,6 +55,16 @@ dotnetRuntime.setModuleImports('arc-lazy', {
         const text = readFile(`_lazy/${name}.dll`);
         return text.startsWith('MZ') ? toBytes(text) : null;
     },
+    // An assembly a trimmed publish loads on demand (BlazorWebAssemblyLazyLoad in the project file, BrowserAssemblyLoader.cs),
+    // fetched and loaded by the runtime's own loader (false: it was loaded already).
+    loadAsync: name => dotnetRuntime.INTERNAL.loadLazyAssembly(`${name}.wasm`),
+    // The same file, synchronously, for the runtime's Resolving event; null when it is not one of them. "\0asm" is the start of
+    // a WebAssembly module, the wrapper of the runtime's assembly files.
+    loadSync: name => {
+        const asset = (config.resources?.lazyAssembly ?? []).find(lazy => lazy.virtualPath === `${name}.wasm`);
+        const text = asset ? readFile(`_framework/${asset.name}`) : '';
+        return text.startsWith('\0asm') ? toBytes(text) : null;
+    },
     // A file of the site, such as the Chinese font (CjkFont.cs): the layout asks for a glyph in the middle of measuring.
     file: path => toBytes(readFile(path))
 });

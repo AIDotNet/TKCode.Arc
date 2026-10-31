@@ -17,7 +17,10 @@ public enum ArcThemeLoading
 /// Collects the packages and the initial theme of an application. Given to <c>AppBuilder.UseArc(...)</c>; packages add
 /// themselves with extension methods (<c>arc.UseArcBlocks()</c>) that call <see cref="UsePackage"/>.
 /// </summary>
-/// <remarks>The configuration callbacks run before the application exists: they must not touch Avalonia platform objects.</remarks>
+/// <remarks>
+/// The configuration callbacks run before the application exists: they must not touch Avalonia platform objects.
+/// <see cref="ArcRuntime.UsePackages"/> hands one to a running application's callback; that one enables packages only.
+/// </remarks>
 public sealed class ArcBuilder
 {
     private readonly List<ArcPackageBuilder> _packages = new();
@@ -25,8 +28,32 @@ public sealed class ArcBuilder
     private readonly List<string> _defining = new();
     private readonly List<Action<ArcThemeBuilder>> _theme = new();
     private readonly Dictionary<string, ArcThemePreset> _presets = new(StringComparer.Ordinal);
+    private readonly HashSet<string>? _running;
 
-    /// <summary>The enabled packages, dependencies before dependents.</summary>
+    /// <summary>Creates a builder for <c>UseArc(...)</c> or <see cref="ArcRuntime.Install"/>.</summary>
+    public ArcBuilder()
+    {
+    }
+
+    /// <summary>
+    /// A builder for <see cref="ArcRuntime.UsePackages"/>: the packages <paramref name="runtime"/> runs count as enabled,
+    /// its presets are known, and its languages are the ones every new catalog must cover.
+    /// </summary>
+    internal ArcBuilder(ArcRuntime runtime)
+    {
+        _running = new HashSet<string>(runtime.Packages, StringComparer.Ordinal);
+        foreach (var (name, preset) in runtime.Presets)
+        {
+            _presets.Add(name, preset);
+        }
+        DefaultLanguage = runtime.Languages.DefaultLanguage;
+        SupportedLanguages = runtime.Languages.SupportedLanguages;
+    }
+
+    /// <summary>
+    /// The enabled packages, dependencies before dependents. In a builder from <see cref="ArcRuntime.UsePackages"/>, only
+    /// the packages the running application did not have yet.
+    /// </summary>
     public IReadOnlyList<ArcPackageBuilder> Packages => _packages;
 
     /// <summary>The theme presets the enabled packages registered, by <see cref="ArcThemePreset.Name"/>.</summary>
@@ -52,6 +79,7 @@ public sealed class ArcBuilder
     /// <exception cref="ArgumentException"><paramref name="defaultLanguage"/> is not one of <paramref name="supportedLanguages"/>.</exception>
     public ArcBuilder UseLanguages(LanguageTag defaultLanguage, IEnumerable<LanguageTag> supportedLanguages)
     {
+        ThrowIfRunning(nameof(UseLanguages));
         var supported = supportedLanguages.Distinct().ToArray();
         if (!supported.Contains(defaultLanguage))
         {
@@ -65,7 +93,7 @@ public sealed class ArcBuilder
 
     /// <summary>Whether the package <paramref name="id"/> is enabled.</summary>
     /// <param name="id">The package id (by convention the assembly name).</param>
-    public bool IsEnabled(string id) => _byId.ContainsKey(id);
+    public bool IsEnabled(string id) => _byId.ContainsKey(id) || _running?.Contains(id) == true;
 
     /// <summary>
     /// Enables a package. Idempotent: a package that is already enabled is not defined again, so every package can
@@ -75,7 +103,7 @@ public sealed class ArcBuilder
     /// <param name="define">Declares the package: dependencies, generated assets, startup callbacks.</param>
     public ArcBuilder UsePackage(string id, Action<ArcPackageBuilder> define)
     {
-        if (_byId.ContainsKey(id))
+        if (IsEnabled(id))
         {
             return this;
         }
@@ -111,12 +139,13 @@ public sealed class ArcBuilder
     }
 
     private string PresetOwner(string name)
-        => _packages.FirstOrDefault(p => p.Presets.Any(preset => preset.Name == name))?.Id ?? "?";
+        => _packages.FirstOrDefault(p => p.Presets.Any(preset => preset.Name == name))?.Id ?? (_running is null ? "?" : "an enabled package");
 
     /// <summary>Configures the initial theme; several calls are applied in order.</summary>
     /// <param name="configure">Changes to the default state.</param>
     public ArcBuilder WithTheme(Action<ArcThemeBuilder> configure)
     {
+        ThrowIfRunning(nameof(WithTheme));
         _theme.Add(configure);
         return this;
     }
@@ -125,8 +154,18 @@ public sealed class ArcBuilder
     /// <param name="loading">Lazy or eager.</param>
     public ArcBuilder WithThemeLoading(ArcThemeLoading loading)
     {
+        ThrowIfRunning(nameof(WithThemeLoading));
         ThemeLoading = loading;
         return this;
+    }
+
+    private void ThrowIfRunning(string method)
+    {
+        if (_running is not null)
+        {
+            throw new InvalidOperationException(
+                $"{method} configures startup; a running application only enables packages in UsePackages (change the theme with ArcTheme.Apply and the language with ArcLanguage.Set).");
+        }
     }
 }
 

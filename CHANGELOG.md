@@ -8,6 +8,16 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Workflow`, `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native` and `TKCode.Arc.Audio.Browser`.
 
+## Unreleased
+
+### Added
+
+- **Foundation**: `ArcRuntime.UsePackages(arc => ...)` enables packages in a running application, for example the package of an assembly that a browser app downloads when a page first needs it (issue #34). The new packages are set up as at startup: their token identities, control themes, language catalogs, presets and commit callbacks are registered, and the applied theme is published again with their tokens, theme scopes included. Packages that are already enabled are skipped, and a conflict or a missing translation throws before anything changes.
+
+### Changed
+
+- **Gallery (WebAssembly)**: the Special components (`TKCode.Arc.Special`) are downloaded when the first Special page opens instead of at startup: the home page downloads 1.2 MB less (brotli), 22.2 MB before (issue #34). The gallery also stops running the static constructor of every documented control at startup: the API tables look up their types and properties only when a page shows them.
+
 ## 0.3.2-preview.2 - 2026-10-30
 
 Nested submenus for the menus, row templates for TreeView, bindable inline options and a fix for building on Windows (issues #28, #29, #31 and #32).

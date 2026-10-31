@@ -109,6 +109,9 @@ public sealed class ArcThemeProvider : ResourceProvider
     /// <param name="key">The resource key.</param>
     public bool Defines(object key) => _index.ContainsKey(key);
 
+    /// <summary>The id of the registered theme file that defines <paramref name="key"/>, or null.</summary>
+    internal string? OwnerOf(object key) => _index.TryGetValue(key, out var entry) ? entry.Asset.Id : null;
+
     /// <summary>Loads every registered theme file now (eager mode, and for measurements).</summary>
     public void LoadAll()
     {

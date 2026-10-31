@@ -32,13 +32,14 @@ public sealed class ArcLanguageManager
 {
     private readonly Dictionary<ArcLanguageCatalog, string[]> _resolved = new();
     private readonly Dictionary<object, object?> _values = new();
+    private readonly List<ArcLanguageCatalog> _catalogs;
 
     internal ArcLanguageManager(LanguageTag defaultLanguage, IReadOnlyList<LanguageTag> supportedLanguages,
                                 IReadOnlyList<ArcLanguageCatalog> catalogs)
     {
         DefaultLanguage = defaultLanguage;
         SupportedLanguages = supportedLanguages;
-        Catalogs = catalogs;
+        _catalogs = catalogs.ToList();
         Language = defaultLanguage;
         Culture = defaultLanguage.ToCulture();
         Publish();
@@ -54,7 +55,7 @@ public sealed class ArcLanguageManager
     public IReadOnlyList<LanguageTag> SupportedLanguages { get; }
 
     /// <summary>The catalogs of the enabled packages, dependencies first.</summary>
-    public IReadOnlyList<ArcLanguageCatalog> Catalogs { get; }
+    public IReadOnlyList<ArcLanguageCatalog> Catalogs => _catalogs;
 
     /// <summary>The current language.</summary>
     public LanguageTag Language { get; private set; }
@@ -149,6 +150,16 @@ public sealed class ArcLanguageManager
             }
         }
         return gaps;
+    }
+
+    /// <summary>
+    /// Adds the catalogs of packages enabled after startup (checked by the caller to cover every language) and publishes
+    /// their text in the current language.
+    /// </summary>
+    internal void Add(IReadOnlyList<ArcLanguageCatalog> catalogs)
+    {
+        _catalogs.AddRange(catalogs);
+        Publish();
     }
 
     private string[] Resolve(ArcLanguageCatalog catalog)

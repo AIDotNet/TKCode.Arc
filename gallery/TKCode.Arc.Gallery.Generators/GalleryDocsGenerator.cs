@@ -301,9 +301,11 @@ public sealed class GalleryDocsGenerator : IIncrementalGenerator
 
         code.AppendLine("    public static readonly GalleryApiType[] Types =");
         code.AppendLine("    [");
+        // The type and its property fields are only named inside a lambda per type: reading the page list at startup must not load
+        // the assembly of every documented control or run its static constructor (a host may load an assembly on demand).
         foreach (var type in types.Values.OrderBy(t => t.Name, System.StringComparer.Ordinal))
         {
-            code.Append("        new(").Append(Literal(type.Name)).Append(", typeof(").Append(type.TypeExpression).Append("), ")
+            code.Append("        new(").Append(Literal(type.Name)).Append(", ").Append(Literal(type.Package)).Append(", ")
                 .Append(Literal(type.Summary)).Append(", ").Append(Literal(type.BaseName)).AppendLine(",");
             code.Append("            [").Append(string.Join(", ", type.PseudoClasses.Select(Literal))).AppendLine("],");
             code.AppendLine("            [");
@@ -313,11 +315,12 @@ public sealed class GalleryDocsGenerator : IIncrementalGenerator
                     .Append(member.IsEvent ? "GalleryApiMemberKind.Event" : "GalleryApiMemberKind.Property").Append(", ")
                     .Append(Literal(member.Name)).Append(", ").Append(Literal(member.Type)).Append(", ")
                     .Append(Literal(member.Key)).Append(", ").Append(Literal(member.Summary)).Append(", ")
-                    .Append(member.FieldExpression ?? "null").Append(", ")
                     .Append(member.IsReadOnly ? "true" : "false").Append(", ")
                     .Append(member.IsAttached ? "true" : "false").AppendLine("),");
             }
-            code.AppendLine("            ]),");
+            code.AppendLine("            ],");
+            code.Append("            static () => new(typeof(").Append(type.TypeExpression).Append("), [")
+                .Append(string.Join(", ", type.Members.Select(m => m.FieldExpression ?? "null"))).AppendLine("])),");
         }
         code.AppendLine("    ];");
         code.AppendLine();

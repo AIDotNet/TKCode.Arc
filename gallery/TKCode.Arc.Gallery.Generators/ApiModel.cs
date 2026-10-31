@@ -58,6 +58,7 @@ internal sealed class ApiType
     {
         Name = ApiName(symbol);
         TypeExpression = symbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+        Package = symbol.ContainingAssembly.Name;
         Summary = summary;
         BaseName = baseName;
     }
@@ -65,6 +66,9 @@ internal sealed class ApiType
     public string Name { get; }
 
     public string TypeExpression { get; }
+
+    /// <summary>The assembly that defines the type, which is also its NuGet package.</summary>
+    public string Package { get; }
 
     public string? Summary { get; }
 
