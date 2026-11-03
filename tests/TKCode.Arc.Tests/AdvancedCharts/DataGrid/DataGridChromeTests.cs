@@ -168,6 +168,62 @@ public class DataGridChromeTests
     }
 
     [AvaloniaFact]
+    public async Task Exports_Reach_Streams_That_Only_Accept_Async_Writes()
+    {
+        // The browser's save-file stream throws on synchronous writes ("Browser supports only WriteAsync"); issue #36.
+        var grid = DataGridBehaviorTests.Create();
+        grid.ExportFormats = DataGridExportFormats.All;
+        DataGridBehaviorTests.Show(grid);
+        grid.GroupBy = ["region"];
+        grid.EnsureView();
+        var rows = grid.View.Filtered.Select(i => grid.Store.ItemAt(i)).ToArray();
+        foreach (var format in new[] { DataGridExportFormat.Xlsx, DataGridExportFormat.Csv })
+        {
+            using var target = new AsyncOnlyStream();
+            await grid.WriteExportAsync(target, format, rows, grouped: true);
+            using var expected = new MemoryStream();
+            grid.WriteExport(expected, format, rows, grouped: true);
+            target.ToArray().ShouldBe(expected.ToArray());
+        }
+    }
+
+    /// <summary>A write-only stream that, like the browser's file stream, refuses synchronous writes.</summary>
+    private sealed class AsyncOnlyStream : MemoryStream
+    {
+        private bool _async;
+
+        public override void Write(byte[] buffer, int offset, int count)
+        {
+            if (!_async)
+            {
+                throw new InvalidOperationException("Browser supports only WriteAsync");
+            }
+            base.Write(buffer, offset, count);
+        }
+
+        public override void Write(ReadOnlySpan<byte> buffer) => Write(buffer.ToArray(), 0, buffer.Length);
+
+        public override void WriteByte(byte value) => Write([value], 0, 1);
+
+        public override ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken = default)
+        {
+            _async = true;
+            try
+            {
+                Write(buffer.ToArray(), 0, buffer.Length);
+            }
+            finally
+            {
+                _async = false;
+            }
+            return ValueTask.CompletedTask;
+        }
+
+        public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken) =>
+            WriteAsync(buffer.AsMemory(offset, count), cancellationToken).AsTask();
+    }
+
+    [AvaloniaFact]
     public void Built_In_Text_Follows_The_Language()
     {
         var languages = ArcLanguageManager.Current!;

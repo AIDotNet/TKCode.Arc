@@ -67,7 +67,7 @@ public partial class DataGrid
             }
             await using (var stream = await file.OpenWriteAsync())
             {
-                WriteExport(stream, format, rows, grouped: !checkedRowsOnly);
+                await WriteExportAsync(stream, format, rows, grouped: !checkedRowsOnly);
             }
             file.Dispose();
             Say(DataGridText.Count(DataGridLangResourceKind.ExportedRowsOne, DataGridLangResourceKind.ExportedRowsOther, rows.Count, EffectiveCulture));
@@ -78,6 +78,19 @@ public partial class DataGrid
             Say(DataGridText.Get(DataGridLangResourceKind.ExportFailed));
             return false;
         }
+    }
+
+    /// <summary>
+    /// Writes an export to <paramref name="target"/> with asynchronous writes only: the file is built in memory and then
+    /// copied, because the browser's file stream throws on synchronous writes ("Browser supports only WriteAsync") while
+    /// the CSV and zip writers write synchronously.
+    /// </summary>
+    internal async Task WriteExportAsync(Stream target, DataGridExportFormat format, IReadOnlyList<object> rows, bool grouped)
+    {
+        using var buffer = new MemoryStream();
+        WriteExport(buffer, format, rows, grouped);
+        await target.WriteAsync(buffer.GetBuffer().AsMemory(0, (int)buffer.Length));
+        await target.FlushAsync();
     }
 
     /// <summary>Writes an export of <paramref name="rows"/> (visible columns, view order); groups become xlsx outline rows.</summary>
