@@ -17,14 +17,82 @@ internal sealed class TableLayout
     public bool Compact { get; set; }
     public double SelectWidth { get; set; }
 
+    private double[]? _tops;
+
     public double ColumnX(int index) => index >= 0 && index < _x.Length ? _x[index] : 0;
 
     public double ColumnWidth(int index) => index >= 0 && index < _w.Length ? _w[index] : 0;
+
+    public int ColumnCount => _w.Length;
 
     public void SetColumns(double[] x, double[] w)
     {
         _x = x;
         _w = w;
+    }
+
+    /// <summary>
+    /// Body offsets of every row by display index (count + 1 entries, the last one the body height) when rows have
+    /// their own heights (wrapping columns); null keeps the uniform <see cref="RowHeight"/>. Never mutated in place:
+    /// a FLIP snapshot holds on to the previous array.
+    /// </summary>
+    public double[]? Tops => _tops;
+
+    public void SetTops(double[]? tops) => _tops = tops;
+
+    /// <summary>True when rows have their own heights.</summary>
+    public bool Variable => _tops is not null;
+
+    /// <summary>Top of a row in presenter coordinates (below the header).</summary>
+    public double RowTop(int display) => HeaderHeight + BodyTop(_tops, RowHeight, display);
+
+    public double RowExtent(int display)
+    {
+        if (_tops is { } tops && display >= 0 && display + 1 < tops.Length)
+        {
+            return tops[display + 1] - tops[display];
+        }
+        return RowHeight;
+    }
+
+    public double BodyHeight(int count) =>
+        _tops is { } tops && tops.Length == count + 1 ? tops[count] : count * RowHeight;
+
+    /// <summary>Display index of the row covering <paramref name="bodyY"/> (body coordinates, unclamped for uniform rows).</summary>
+    public int IndexAt(double bodyY)
+    {
+        if (_tops is not { Length: > 1 } tops)
+        {
+            return (int)Math.Floor(bodyY / RowHeight);
+        }
+        if (bodyY < 0)
+        {
+            return -1;
+        }
+        int lo = 0, hi = tops.Length - 2;
+        while (lo < hi)
+        {
+            var mid = (lo + hi + 1) / 2;
+            if (tops[mid] <= bodyY)
+            {
+                lo = mid;
+            }
+            else
+            {
+                hi = mid - 1;
+            }
+        }
+        return bodyY >= tops[^1] ? tops.Length - 1 : lo;
+    }
+
+    /// <summary>Body offset of a row for a given set of tops (or uniform rows).</summary>
+    public static double BodyTop(double[]? tops, double rowHeight, int display)
+    {
+        if (tops is { } t && display >= 0 && display < t.Length)
+        {
+            return t[display];
+        }
+        return display * rowHeight;
     }
 }
 

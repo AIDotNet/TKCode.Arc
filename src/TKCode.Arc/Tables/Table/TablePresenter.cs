@@ -41,6 +41,9 @@ internal sealed class TablePresenter : Control
         public Rect Viewport;
         public double RowHeight;
         public double HeaderHeight;
+        public double[]? Tops;
+
+        public double TopOf(int display) => HeaderHeight + TableLayout.BodyTop(Tops, RowHeight, display);
     }
 
     public TablePresenter(Table table)
@@ -111,8 +114,8 @@ internal sealed class TablePresenter : Control
             top = 0;
             bottom = 900;
         }
-        var first = (int)Math.Floor((top - layout.HeaderHeight) / layout.RowHeight) - Buffer;
-        var last = (int)Math.Ceiling((bottom - layout.HeaderHeight) / layout.RowHeight) + Buffer;
+        var first = layout.IndexAt(top - layout.HeaderHeight) - Buffer;
+        var last = layout.IndexAt(bottom - layout.HeaderHeight) + 1 + Buffer;
         return (Math.Max(0, first), Math.Min(count - 1, last));
     }
 
@@ -126,7 +129,8 @@ internal sealed class TablePresenter : Control
             Animate = animate && _hasViewport,
             Viewport = Viewport,
             RowHeight = layout.RowHeight,
-            HeaderHeight = layout.HeaderHeight
+            HeaderHeight = layout.HeaderHeight,
+            Tops = layout.Tops
         };
         foreach (var pair in _realized)
         {
@@ -200,8 +204,8 @@ internal sealed class TablePresenter : Control
     public void RevealRow(int displayIndex)
     {
         var layout = _table.Layout;
-        var y = layout.HeaderHeight + displayIndex * layout.RowHeight;
-        this.BringIntoView(new Rect(0, Math.Max(0, y - layout.HeaderHeight), Math.Min(Bounds.Width, 1), layout.RowHeight + layout.HeaderHeight));
+        var y = layout.RowTop(displayIndex);
+        this.BringIntoView(new Rect(0, Math.Max(0, y - layout.HeaderHeight), Math.Min(Bounds.Width, 1), layout.RowExtent(displayIndex) + layout.HeaderHeight));
     }
 
     public void UpdateTabStops()
@@ -221,7 +225,7 @@ internal sealed class TablePresenter : Control
             }
             if (firstVisible is null || row.DisplayIndex < firstVisible.DisplayIndex)
             {
-                var y = _table.Layout.HeaderHeight + row.DisplayIndex * _table.Layout.RowHeight;
+                var y = _table.Layout.RowTop(row.DisplayIndex);
                 if (!_hasViewport || y >= _viewport.Top)
                 {
                     firstVisible = row;
@@ -261,14 +265,41 @@ internal sealed class TablePresenter : Control
             _table.OnLayoutModeChanged();
         }
         _header.Measure(new Size(width, layout.HeaderHeight));
+        _table.EnsureRowHeights(layout);
         Realize(layout);
-        foreach (var row in _realized.Values)
+        MeasureRows(layout, width);
+        // Wrapping templated cells are only known once measured: take their heights and realize again for the
+        // corrected offsets (a few passes at most; rows outside the viewport keep their text-based estimate).
+        for (var pass = 0; pass < 3 && layout.Variable && TakeRowHeights(layout); pass++)
         {
-            row.Measure(new Size(width, layout.RowHeight));
+            _table.EnsureRowHeights(layout);
+            Realize(layout);
+            MeasureRows(layout, width);
         }
         var count = _table.RowCount;
-        var body = count > 0 ? count * layout.RowHeight : _table.EmptyRowHeight;
+        var body = count > 0 ? layout.BodyHeight(count) : _table.EmptyRowHeight;
         return new Size(width, layout.HeaderHeight + body);
+    }
+
+    private void MeasureRows(TableLayout layout, double width)
+    {
+        foreach (var row in _realized.Values)
+        {
+            row.Measure(new Size(width, layout.Variable ? double.PositiveInfinity : layout.RowHeight));
+        }
+    }
+
+    private bool TakeRowHeights(TableLayout layout)
+    {
+        var changed = false;
+        foreach (var row in _realized.Values)
+        {
+            if (!row.IsLeaving)
+            {
+                changed |= _table.UpdateRowHeight(row, layout);
+            }
+        }
+        return changed;
     }
 
     private void Realize(TableLayout layout)
@@ -370,7 +401,12 @@ internal sealed class TablePresenter : Control
         _flip = null;
         foreach (var row in _realized.Values)
         {
-            var y = layout.HeaderHeight + row.DisplayIndex * layout.RowHeight;
+            var y = layout.RowTop(row.DisplayIndex);
+            var extent = layout.RowExtent(row.DisplayIndex);
+            if (row.IsLeaving && row.HasLayout)
+            {
+                extent = row.LayoutHeight;
+            }
             if (row.IsLeaving && flip is not null)
             {
                 y = Band(flip, y);
@@ -388,7 +424,7 @@ internal sealed class TablePresenter : Control
                 }
                 else if (row.Key is { } enteringKey && (flip.OldDisplay?.Invoke(enteringKey) ?? -1) is var old && old >= 0)
                 {
-                    from = Band(flip, flip.HeaderHeight + old * flip.RowHeight) - y;
+                    from = Band(flip, flip.TopOf(old)) - y;
                 }
                 row.SlideFrom(from, flip.Animate);
                 if (row.IsLeaving)
@@ -401,8 +437,9 @@ internal sealed class TablePresenter : Control
                 row.Rebase(y - row.LayoutY);
             }
             row.LayoutY = y;
+            row.LayoutHeight = extent;
             row.HasLayout = true;
-            row.Arrange(new Rect(0, y, width, layout.RowHeight));
+            row.Arrange(new Rect(0, y, width, extent));
         }
         _header.StickOffset = StickOffset();
         return finalSize;
@@ -461,7 +498,7 @@ internal sealed class TablePresenter : Control
         {
             // A still tint under the sorted column fills the gaps that open while rows pass each other.
             context.FillRectangle(palette.ColumnTintBrush,
-                new Rect(layout.ColumnX(sorted), layout.HeaderHeight, layout.ColumnWidth(sorted), count * layout.RowHeight));
+                new Rect(layout.ColumnX(sorted), layout.HeaderHeight, layout.ColumnWidth(sorted), layout.BodyHeight(count)));
         }
     }
 }

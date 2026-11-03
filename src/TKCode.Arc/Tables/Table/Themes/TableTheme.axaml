@@ -122,6 +122,9 @@
         <Setter Property="CompactHeaderHeight" Value="{arc:TableTokenResource CompactHeaderHeight}" />
         <Setter Property="EmptyRowHeight" Value="{arc:TableTokenResource EmptyRowHeight}" />
         <Setter Property="CellInlinePadding" Value="{arc:TableTokenResource CellInlinePadding}" />
+        <Setter Property="CellBlockPadding" Value="{arc:TableTokenResource CellBlockPadding}" />
+        <Setter Property="CompactCellBlockPadding" Value="{arc:TableTokenResource CompactCellBlockPadding}" />
+        <Setter Property="WrapColumnMaxWidth" Value="{arc:TableTokenResource WrapColumnMaxWidth}" />
         <Setter Property="PrimaryInsetSelectable" Value="{arc:TableTokenResource PrimaryInsetSelectable}" />
         <Setter Property="SelectColumnWidth" Value="{arc:TableTokenResource SelectColumnWidth}" />
         <Setter Property="MinTableWidth" Value="{arc:TableTokenResource MinTableWidth}" />

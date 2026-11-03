@@ -18,6 +18,15 @@ internal sealed class TableToken : AbstractControlDesignToken
     /// <summary>Header strip height of the compact layout (32px pills plus 4px padding and the rule).</summary>
     public double CompactHeaderHeight { get; set; }
 
+    /// <summary>Space above and below the content of a row that grew for wrapped cells.</summary>
+    public double CellBlockPadding { get; set; }
+
+    /// <summary>Space above and below the content of a grown row in the compact layout.</summary>
+    public double CompactCellBlockPadding { get; set; }
+
+    /// <summary>Widest natural (Auto) width of a wrapping column, so long text wraps instead of widening the table.</summary>
+    public double WrapColumnMaxWidth { get; set; }
+
     /// <summary>Inline cell padding (space-4).</summary>
     public double CellInlinePadding { get; set; }
 
@@ -26,7 +35,6 @@ internal sealed class TableToken : AbstractControlDesignToken
 
     /// <summary>Width of the checkbox column.</summary>
     public double SelectColumnWidth { get; set; }
-
 
     /// <summary>Height of the empty and loading rows.</summary>
     public double EmptyRowHeight { get; set; }
@@ -53,6 +61,9 @@ internal sealed class TableToken : AbstractControlDesignToken
         RowHeight = 52;
         CompactRowHeight = 64;
         CompactHeaderHeight = 41;
+        CellBlockPadding = 14;
+        CompactCellBlockPadding = 10;
+        WrapColumnMaxWidth = 320;
         CellInlinePadding = 16;
         PrimaryInsetSelectable = 8;
         SelectColumnWidth = 44;

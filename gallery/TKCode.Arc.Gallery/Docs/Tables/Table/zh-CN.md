@@ -52,7 +52,7 @@ Arc 称它为 sortable data table（可排序数据表格），早期预览版�
 1. **标题**（`Caption`）：表格的无障碍名称。它不会被绘制出来，因此应写成名词短语，例如“2026 年 10 月的发票”。
 2. **表头行**：高 44 px（含 1 px 分隔线）。表头文字使用中等字重。可排序的表头是按钮；`IsSortable="False"` 的列则是普通标签。已排序列的单元格带有弱化的列底色。
 3. **全选复选框**（`IsSelectable`、`SelectAllLabel`）：表头起始处宽 44 px 的复选框列，第一列前额外留 8 px 的内边距。只选中部分行时显示混合状态。
-4. **数据行**：高 52 px，带 1 px 分隔线（使用次级边框色）和 16 px 的单元格内边距。`IsNumeric` 列右对齐。悬停时整行填充，完整动效下选中背景以标准补间动画淡入。
+4. **数据行**：高 52 px（有换行列时可增高，见“多行内容”），带 1 px 分隔线（使用次级边框色）和 16 px 的单元格内边距。`IsNumeric` 列右对齐。悬停时整行填充，完整动效下选中背景以标准补间动画淡入。
 5. **计数行**（`ItemNameOne`、`ItemNameOther`、`SelectedNoun`）：仅当 `IsSelectable` 为 true 时显示的 44 px 页脚。未选中时读作“6 个项目”，选中一行时为“已选中 2 项”。未选中行时文字为弱化色。
 6. **清除选择**（`ClearSelectionLabel`）：页脚中 30 px 的幽灵按钮，仅在有选中行时显示。
 7. **空行**（`EmptyMessage`）：高 120 px，使用弱化的文字颜色。
@@ -132,6 +132,26 @@ private sealed class StatusPill : Border
     }
 }
 ```
+
+### 多行内容
+
+单元格默认只绘制一行，超出部分以省略号结尾。对内容较长或含换行符的列（备注、错误消息、路径等）设置 `TextWrapping="Wrap"`：其单元格会在列宽处以及每个 `\n` 处换行，每一行随行内最高的换行单元格增高。行高不会低于 52 px，其余单元格保持垂直居中。`MaxLines` 限制换行单元格的行数（最后一行以省略号结尾）；为 0 时显示全部行。文本仍由 `Formatter` 和 `StringFormat` 生成。
+
+<Demo name="MultilineCells" />
+
+```csharp
+table.Columns.Add(new DataTableColumn("错误", j => ((Job)j).Error)
+{
+    Width = new GridLength(1, GridUnitType.Star),
+    TextWrapping = TextWrapping.Wrap,
+    MaxLines = 3
+});
+```
+
+- 在带 `CellTemplate` 的列上，`TextWrapping="Wrap"` 让模板内容（例如 `TextWrapping="Wrap"` 的 `TextBlock`）决定行高，而不是被裁剪到 52 px。
+- 为换行列指定星号或像素 `Width`。自动宽度的换行列最宽 320 px，因此长文本会换行，而不会把表格撑宽；宽度低于 560 px 时表格仍然横向滚动，而不是压缩列宽。
+- 窄宽度布局中，换行的首列会撑高第一行，其他换行列各自在详情行下方占据一个全宽区块。
+- 没有换行列的表格保持统一行高及其开销。存在换行列时，表格会在数据、字体或该列宽度变化时测量每一行的换行文本；排序只重新累加行高。带模板的换行单元格在其所在行进入视口时测量。
 
 ### 排序与事件
 

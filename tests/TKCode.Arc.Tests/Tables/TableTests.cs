@@ -60,6 +60,195 @@ public class TableTests
     private static TableHeaderCell Header(Table table, int column) =>
         table.Presenter!.Header.CellFor(column)!;
 
+    private static Table NotesTable(IEnumerable<Project> items, Action<DataTableColumn>? configure = null)
+    {
+        var table = new Table { ItemsSource = items };
+        table.Columns.Add(DataTableColumn.Create<Project>("Name", p => p.Name));
+        var notes = DataTableColumn.Create<Project>("Notes", p => p.Status, key: "Notes");
+        notes.TextWrapping = Avalonia.Media.TextWrapping.Wrap;
+        notes.Width = new GridLength(200);
+        configure?.Invoke(notes);
+        table.Columns.Add(notes);
+        return table;
+    }
+
+    private static List<TableRow> RowsByDisplay(Table table) =>
+        table.Presenter!.RealizedRows.Where(r => !r.IsLeaving).OrderBy(r => r.DisplayIndex).ToList();
+
+    private static void ShouldStack(Table table)
+    {
+        var rows = RowsByDisplay(table);
+        var layout = table.Layout;
+        foreach (var row in rows)
+        {
+            row.Bounds.Y.ShouldBe(layout.RowTop(row.DisplayIndex), 0.01);
+            row.Bounds.Height.ShouldBe(layout.RowExtent(row.DisplayIndex), 0.01);
+        }
+        for (var i = 1; i < rows.Count; i++)
+        {
+            if (rows[i].DisplayIndex == rows[i - 1].DisplayIndex + 1)
+            {
+                rows[i].Bounds.Y.ShouldBe(rows[i - 1].Bounds.Bottom, 0.01);
+            }
+        }
+    }
+
+    [AvaloniaFact]
+    public void Rows_Keep_The_Uniform_Height_Without_Wrapping_Columns()
+    {
+        var table = Table(Projects());
+        var window = Show(table);
+        try
+        {
+            table.Layout.Variable.ShouldBeFalse();
+            RowsByDisplay(table).ShouldAllBe(r => Math.Abs(r.Bounds.Height - 52) < 0.01);
+            table.Presenter!.DesiredSize.Height.ShouldBe(44 + 5 * 52, 0.01);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Wrapping_Column_Grows_Rows_With_Line_Breaks_And_Long_Text()
+    {
+        ObservableCollection<Project> items =
+        [
+            new("Atlas", "Mina", 1, "Short"),
+            new("Beacon", "Theo", 2, "First line\nSecond line\nThird line"),
+            new("Cobalt", "Ana", 3, string.Join(' ', Enumerable.Repeat("word", 60))),
+            new("Delta", "Lee", 4, "Short")
+        ];
+        var table = NotesTable(items);
+        var window = Show(table);
+        try
+        {
+            table.Layout.Variable.ShouldBeTrue();
+            var rows = RowsByDisplay(table);
+            rows[0].Bounds.Height.ShouldBe(52, 0.01);
+            rows[1].Bounds.Height.ShouldBeGreaterThan(52);
+            rows[2].Bounds.Height.ShouldBeGreaterThan(rows[1].Bounds.Height);
+            rows[3].Bounds.Height.ShouldBe(52, 0.01);
+            ShouldStack(table);
+            table.Presenter!.DesiredSize.Height.ShouldBe(44 + rows.Sum(r => r.Bounds.Height), 0.5);
+
+            // A re-sort moves the tall rows with their items.
+            var tall = rows[2].Bounds.Height;
+            table.Sort(table.Columns[0], DataTableSortDirection.Descending);
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            var sorted = RowsByDisplay(table);
+            ((Project)sorted[1].Item!).Name.ShouldBe("Cobalt");
+            sorted[1].Bounds.Height.ShouldBe(tall, 0.01);
+            ShouldStack(table);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void MaxLines_Caps_A_Wrapped_Cell()
+    {
+        ObservableCollection<Project> items = [new("Atlas", "Mina", 1, "One\nTwo\nThree\nFour\nFive\nSix")];
+        var unlimited = NotesTable(items);
+        var capped = NotesTable(items, c => c.MaxLines = 2);
+        var single = NotesTable(items, c => c.MaxLines = 1);
+        var w1 = Show(unlimited);
+        var w2 = Show(capped);
+        var w3 = Show(single);
+        try
+        {
+            var full = RowsByDisplay(unlimited)[0].Bounds.Height;
+            var two = RowsByDisplay(capped)[0].Bounds.Height;
+            two.ShouldBeGreaterThan(52);
+            full.ShouldBeGreaterThan(two);
+            RowsByDisplay(single)[0].Bounds.Height.ShouldBe(52, 0.01);
+        }
+        finally
+        {
+            w1.Close();
+            w2.Close();
+            w3.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Wrapping_Templated_Column_Sets_The_Row_Height()
+    {
+        ObservableCollection<Project> items =
+        [
+            new("Atlas", "Mina", 1, "Short"),
+            new("Beacon", "Theo", 2, "A\nB\nC\nD")
+        ];
+        var table = NotesTable(items, c => c.CellTemplate = new Avalonia.Controls.Templates.FuncDataTemplate<Project>(
+            (_, _) => new TextBlock { TextWrapping = Avalonia.Media.TextWrapping.Wrap, [!TextBlock.TextProperty] = new Binding(nameof(Project.Status)) }));
+        var window = Show(table);
+        try
+        {
+            var rows = RowsByDisplay(table);
+            rows[0].Bounds.Height.ShouldBe(52, 0.01);
+            rows[1].Bounds.Height.ShouldBeGreaterThan(52);
+            ShouldStack(table);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Compact_Layout_Gives_Wrapped_Columns_Their_Own_Block()
+    {
+        ObservableCollection<Project> items =
+        [
+            new("Atlas", "Mina", 1, ""),
+            new("Beacon", "Theo", 2, "First line\nSecond line\nThird line")
+        ];
+        var table = NotesTable(items);
+        table.Width = 360;
+        var window = Show(table);
+        try
+        {
+            table.Layout.Compact.ShouldBeTrue();
+            var rows = RowsByDisplay(table);
+            rows[0].Bounds.Height.ShouldBe(64, 0.01);
+            rows[1].Bounds.Height.ShouldBeGreaterThan(64);
+            ShouldStack(table);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Wrapped_Rows_Stay_Virtualized()
+    {
+        var items = Enumerable.Range(0, 5000)
+            .Select(i => new Project($"Row {i}", "x", i, i % 3 == 0 ? "Line one\nLine two" : "Short")).ToList();
+        var table = NotesTable(items);
+        table.MaxHeight = 400;
+        var window = Show(table);
+        try
+        {
+            table.Presenter!.RealizedCount.ShouldBeLessThan(30);
+            var expected = 44 + Enumerable.Range(0, 5000).Sum(d => table.Layout.RowExtent(d));
+            table.Presenter.DesiredSize.Height.ShouldBe(expected, 0.5);
+            table.FocusRow(4000);
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+            table.Presenter.RowAt(4000).ShouldNotBeNull();
+            ShouldStack(table);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     [AvaloniaFact]
     public void Header_Sorts_Ascending_Then_Descending_With_Empty_Values_Last()
     {

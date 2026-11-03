@@ -224,6 +224,12 @@ public class Table : TemplatedControl
         AvaloniaProperty.Register<Table, double>(nameof(EmptyRowHeight), 120);
     internal static readonly StyledProperty<double> CellInlinePaddingProperty =
         AvaloniaProperty.Register<Table, double>(nameof(CellInlinePadding), 16);
+    internal static readonly StyledProperty<double> CellBlockPaddingProperty =
+        AvaloniaProperty.Register<Table, double>(nameof(CellBlockPadding), 14);
+    internal static readonly StyledProperty<double> CompactCellBlockPaddingProperty =
+        AvaloniaProperty.Register<Table, double>(nameof(CompactCellBlockPadding), 10);
+    internal static readonly StyledProperty<double> WrapColumnMaxWidthProperty =
+        AvaloniaProperty.Register<Table, double>(nameof(WrapColumnMaxWidth), 320);
     internal static readonly StyledProperty<double> PrimaryInsetSelectableProperty =
         AvaloniaProperty.Register<Table, double>(nameof(PrimaryInsetSelectable), 8);
     internal static readonly StyledProperty<double> SelectColumnWidthProperty =
@@ -253,6 +259,9 @@ public class Table : TemplatedControl
     internal double CompactHeaderHeight { get => GetValue(CompactHeaderHeightProperty); set => SetValue(CompactHeaderHeightProperty, value); }
     internal double EmptyRowHeight { get => GetValue(EmptyRowHeightProperty); set => SetValue(EmptyRowHeightProperty, value); }
     internal double CellInlinePadding { get => GetValue(CellInlinePaddingProperty); set => SetValue(CellInlinePaddingProperty, value); }
+    internal double CellBlockPadding { get => GetValue(CellBlockPaddingProperty); set => SetValue(CellBlockPaddingProperty, value); }
+    internal double CompactCellBlockPadding { get => GetValue(CompactCellBlockPaddingProperty); set => SetValue(CompactCellBlockPaddingProperty, value); }
+    internal double WrapColumnMaxWidth { get => GetValue(WrapColumnMaxWidthProperty); set => SetValue(WrapColumnMaxWidthProperty, value); }
     internal double PrimaryInsetSelectable { get => GetValue(PrimaryInsetSelectableProperty); set => SetValue(PrimaryInsetSelectableProperty, value); }
     internal double SelectColumnWidth { get => GetValue(SelectColumnWidthProperty); set => SetValue(SelectColumnWidthProperty, value); }
     internal double MinTableWidth { get => GetValue(MinTableWidthProperty); set => SetValue(MinTableWidthProperty, value); }
@@ -321,6 +330,12 @@ public class Table : TemplatedControl
     private ColumnState[] _states = [];
     private bool _naturalLocked;
     private int _compactLead = -1;
+    private bool _wraps;
+    private bool _wrapsTemplated;
+    private double[] _rowHeights = [];
+    private HeightKey _heightKey;
+    private int[]? _topsOrder;
+    private bool _topsDirty;
     private TablePresenter? _presenter;
     private ScrollViewer? _scroll;
     private TextBlock? _announcer;
@@ -427,6 +442,38 @@ public class Table : TemplatedControl
     internal string CellText(int sourceIndex, int columnIndex) =>
         TableValues.Format(_states[columnIndex].Column, ValueOf(sourceIndex, columnIndex));
 
+    /// <summary>True when the cells of a column span lines in the given layout (the compact lead number never does).</summary>
+    internal bool WrapsAt(int columnIndex, bool compact) =>
+        columnIndex >= 0 && columnIndex < _states.Length && _states[columnIndex].Column.Wraps
+        && !(compact && IsCompactLeadNumeric(columnIndex));
+
+    /// <summary>The drawn text of one cell (rows draw it, row heights are measured from it).</summary>
+    internal FormattedText CreateCellText(int sourceIndex, int columnIndex, bool compact) =>
+        CreateCellText(CellText(sourceIndex, columnIndex), columnIndex, compact);
+
+    internal FormattedText CreateCellText(string text, int columnIndex, bool compact)
+    {
+        var primary = columnIndex == 0;
+        var small = compact && !primary && !IsCompactLeadNumeric(columnIndex);
+        var typeface = compact && primary ? Palette.Medium : Palette.Regular;
+        var wraps = WrapsAt(columnIndex, compact);
+        var formatted = new FormattedText(text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
+            typeface, small ? Palette.SmallFontSize : Palette.FontSize, null)
+        {
+            MaxLineCount = !wraps ? 1 : _states[columnIndex].Column.MaxLines is > 0 and var lines ? lines : int.MaxValue,
+            Trimming = TextTrimming.CharacterEllipsis
+        };
+        if (IsNumericColumn(columnIndex))
+        {
+            formatted.SetFontFeatures(TablePalette.TabularNumbers);
+            if (wraps && !compact)
+            {
+                formatted.TextAlignment = TextAlignment.Right;
+            }
+        }
+        return formatted;
+    }
+
     /// <summary>Arc right-aligns a column when every non-empty value is a number (sampled for large sources).</summary>
     internal bool IsNumericColumn(int columnIndex)
     {
@@ -518,6 +565,8 @@ public class Table : TemplatedControl
             state.SortProbe?.Release();
         }
         _states = Columns.Select(column => new ColumnState(column)).ToArray();
+        _wraps = _states.Any(state => state.Column.Wraps);
+        _wrapsTemplated = _states.Any(state => state.Column.Wraps && state.Column.CellTemplate is not null);
         _naturalLocked = false;
         UpdateCompactLead();
         _presenter?.Header.Rebuild();
@@ -563,7 +612,8 @@ public class Table : TemplatedControl
         for (var c = 0; c < _states.Length; c++)
         {
             var state = _states[c];
-            var width = header?.CellFor(c)?.MeasureNaturalWidth() ?? 0;
+            var headerWidth = header?.CellFor(c)?.MeasureNaturalWidth() ?? 0;
+            var width = headerWidth;
             var lead = LeadingPadding(c);
             for (var i = 0; i < sample; i++)
             {
@@ -571,6 +621,11 @@ public class Table : TemplatedControl
                 var text = new FormattedText(CellText(source, c), CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
                     Palette.Regular, Palette.FontSize, null);
                 width = Math.Max(width, Math.Ceiling(text.WidthIncludingTrailingWhitespace + lead + CellInlinePadding));
+            }
+            if (state.Column.Wraps)
+            {
+                // Long text wraps rather than widening the table; the header still fits on one line.
+                width = Math.Max(headerWidth, Math.Min(width, WrapColumnMaxWidth));
             }
             state.Natural = width;
             state.ValueProbe?.Release();
@@ -649,6 +704,195 @@ public class Table : TemplatedControl
             x += widths[i];
         }
         layout.SetColumns(xs, widths);
+    }
+
+    #endregion
+
+    #region Row heights (wrapping columns)
+
+    private readonly record struct HeightKey(object? Columns, int Data, int Palette, bool Compact, double Width, double WrapWidths,
+                                             double RowHeight, double Padding, bool Selectable);
+
+    /// <summary>True when some column wraps, so rows have their own heights.</summary>
+    internal bool HasWrappingColumns => _wraps;
+
+    /// <summary>
+    /// Brings the row heights and their offsets up to date for a layout pass. Tables without wrapping columns keep
+    /// the uniform row height (no per-row work). Heights are measured from the cell text for every row, again only
+    /// when the data, the fonts or a wrapping column's width change; a re-sort only re-adds them in the new order.
+    /// </summary>
+    internal void EnsureRowHeights(TableLayout layout)
+    {
+        var count = _items.Count;
+        if (!_wraps || count == 0 || _order.Length != count)
+        {
+            layout.SetTops(null);
+            _rowHeights = [];
+            _topsOrder = null;
+            return;
+        }
+        var wrapWidths = 0.0;
+        for (var c = 0; c < _states.Length; c++)
+        {
+            if (_states[c].Column.Wraps)
+            {
+                wrapWidths += layout.ColumnWidth(c) * (c + 1);
+            }
+        }
+        var key = new HeightKey(_states, DataVersion, Palette.Version, layout.Compact, layout.Compact ? layout.Width : 0,
+            layout.Compact ? 0 : wrapWidths, layout.RowHeight,
+            layout.Compact ? CompactCellBlockPadding : CellBlockPadding, IsSelectable);
+        if (key != _heightKey || _rowHeights.Length != count)
+        {
+            _heightKey = key;
+            var heights = new double[count];
+            for (var i = 0; i < count; i++)
+            {
+                heights[i] = MeasureRowHeight(i, null, layout);
+            }
+            foreach (var state in _states)
+            {
+                state.ValueProbe?.Release();
+            }
+            _rowHeights = heights;
+            _topsDirty = true;
+        }
+        if (_topsDirty || !ReferenceEquals(_topsOrder, _order) || layout.Tops is null)
+        {
+            var tops = new double[count + 1];
+            for (var d = 0; d < count; d++)
+            {
+                tops[d + 1] = tops[d] + _rowHeights[_order[d]];
+            }
+            layout.SetTops(tops);
+            _topsOrder = _order;
+            _topsDirty = false;
+        }
+    }
+
+    /// <summary>
+    /// Takes the height of a realized row whose wrapping columns host templates (their content is only known once
+    /// measured); true when it changed, after which <see cref="EnsureRowHeights"/> rebuilds the offsets.
+    /// </summary>
+    internal bool UpdateRowHeight(TableRow row, TableLayout layout)
+    {
+        var source = row.SourceIndex;
+        if (!_wrapsTemplated || source < 0 || source >= _rowHeights.Length)
+        {
+            return false;
+        }
+        var height = MeasureRowHeight(source, row, layout);
+        if (Math.Abs(height - _rowHeights[source]) < 0.5)
+        {
+            return false;
+        }
+        _rowHeights[source] = height;
+        _topsDirty = true;
+        return true;
+    }
+
+    /// <summary>Whether the compact layout has a details line (columns that neither lead nor wrap).</summary>
+    internal bool HasCompactDetails()
+    {
+        for (var i = 1; i < _states.Length; i++)
+        {
+            if (!IsCompactLeadNumeric(i) && !WrapsAt(i, compact: true))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    internal double CompactLeft => IsSelectable ? 44.0 : 16.0;
+
+    internal double CompactLine1 => Palette.FontSize * 1.43;
+
+    internal double CompactLine2 => Palette.SmallFontSize * 1.45;
+
+    /// <summary>
+    /// Height of one row: the standard height, or more when a wrapped cell needs it (its content plus the block
+    /// padding and the divider). Templated cells count only when the realized <paramref name="row"/> is given.
+    /// </summary>
+    private double MeasureRowHeight(int source, TableRow? row, TableLayout layout)
+    {
+        if (layout.Compact)
+        {
+            return MeasureCompactRowHeight(source, row, layout);
+        }
+        var height = layout.RowHeight;
+        for (var c = 0; c < _states.Length; c++)
+        {
+            if (!_states[c].Column.Wraps)
+            {
+                continue;
+            }
+            double content;
+            if (_states[c].Column.CellTemplate is not null)
+            {
+                content = row?.CellSize(c).Height ?? 0;
+            }
+            else
+            {
+                var text = CreateCellText(source, c, compact: false);
+                text.MaxTextWidth = Math.Max(1, layout.ColumnWidth(c) - LeadingPadding(c) - CellInlinePadding);
+                content = text.Height;
+            }
+            height = Math.Max(height, Math.Ceiling(content + 2 * CellBlockPadding) + 1);
+        }
+        return height;
+    }
+
+    /// <summary>Compact rows: the first line (a wrapping first column grows it), the details line, then one block per wrapping column.</summary>
+    private double MeasureCompactRowHeight(int source, TableRow? row, TableLayout layout)
+    {
+        var count = _states.Length;
+        var room = Math.Max(1, layout.Width - 16 - CompactLeft);
+        var lead = _compactLead > 0 && _compactLead < count ? _compactLead : -1;
+        var leadWidth = 0.0;
+        if (lead > 0)
+        {
+            var width = _states[lead].Column.CellTemplate is not null
+                ? row?.CellSize(lead).Width ?? room / 2
+                : CreateCellText(source, lead, compact: true).WidthIncludingTrailingWhitespace;
+            leadWidth = Math.Min(width, room / 2) + 8;
+        }
+        var content = CompactLine1;
+        if (count > 0 && WrapsAt(0, compact: true))
+        {
+            content = Math.Max(content, CompactBlockHeight(source, 0, row, Math.Max(1, room - leadWidth)));
+        }
+        if (HasCompactDetails())
+        {
+            content += 2 + CompactLine2;
+        }
+        for (var i = 1; i < count; i++)
+        {
+            if (WrapsAt(i, compact: true))
+            {
+                var block = CompactBlockHeight(source, i, row, room);
+                if (block > 0)
+                {
+                    content += 2 + block;
+                }
+            }
+        }
+        return Math.Max(layout.RowHeight, Math.Ceiling(content + 2 * CompactCellBlockPadding) + 1);
+    }
+
+    private double CompactBlockHeight(int source, int column, TableRow? row, double width)
+    {
+        if (_states[column].Column.CellTemplate is not null)
+        {
+            return row?.CellSize(column).Height ?? 0;
+        }
+        if (column > 0 && string.IsNullOrEmpty(CellText(source, column)))
+        {
+            return 0;
+        }
+        var text = CreateCellText(source, column, compact: true);
+        text.MaxTextWidth = Math.Max(1, width);
+        return text.Height;
     }
 
     #endregion
@@ -1488,9 +1732,15 @@ public class Table : TemplatedControl
         {
             UpdatePalette();
         }
+        else if (property == WrapColumnMaxWidthProperty)
+        {
+            _naturalLocked = false;
+            _presenter?.InvalidateMeasure();
+        }
         else if (property == RowHeightProperty || property == HeaderHeightProperty || property == CompactRowHeightProperty ||
                  property == CompactHeaderHeightProperty || property == EmptyRowHeightProperty || property == CellInlinePaddingProperty ||
                  property == PrimaryInsetSelectableProperty || property == SelectColumnWidthProperty ||
+                 property == CellBlockPaddingProperty || property == CompactCellBlockPaddingProperty ||
                  property == MinTableWidthProperty || property == CompactBreakpointProperty)
         {
             _presenter?.InvalidateMeasure();

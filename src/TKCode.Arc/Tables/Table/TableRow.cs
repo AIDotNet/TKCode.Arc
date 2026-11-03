@@ -12,7 +12,7 @@ using Avalonia.Media.Immutable;
 namespace TKCode.Arc;
 
 /// <summary>
-/// One realized body row of a <see cref="Table"/>. Cells are drawn as text (custom
+/// One realized body row of a <see cref="Table"/>. Cells are drawn as text, wrapped for columns that wrap (custom
 /// <see cref="DataTableColumn.CellTemplate"/> content is hosted as children); the fill follows hover and
 /// selection on Arc's 240ms background transition, and the row's vertical offset is a spring-driven render
 /// transform so a re-sort slides rows from their old places (FLIP) without any layout.
@@ -27,8 +27,8 @@ internal sealed class TableRow : Control
     private MotionValue<double>? _hover;
     private MotionValue<double>? _selected;
     private FormattedText?[] _texts = [];
-    private string?[] _strings = [];
     private double[] _maxWidths = [];
+    private bool[] _emptyTexts = [];
     private int _textVersion = -1;
     private bool _textCompact;
     private Control?[] _cells = [];
@@ -66,6 +66,9 @@ internal sealed class TableRow : Control
 
     /// <summary>Arranged top in presenter coordinates.</summary>
     public double LayoutY { get; set; }
+
+    /// <summary>Arranged height (rows grow for wrapped cells).</summary>
+    public double LayoutHeight { get; set; }
 
     public double Offset => _offset?.Value ?? 0;
 
@@ -264,6 +267,9 @@ internal sealed class TableRow : Control
         _textVersion = -1;
     }
 
+    /// <summary>Desired size of a hosted cell (zero for text cells); wrapping columns measure without a height limit.</summary>
+    public Size CellSize(int column) => column >= 0 && column < _cells.Length && _cells[column] is { } cell ? cell.DesiredSize : default;
+
     protected override Size MeasureOverride(Size availableSize)
     {
         var layout = _table.Layout;
@@ -271,8 +277,17 @@ internal sealed class TableRow : Control
         {
             if (_cells[i] is { } cell)
             {
-                var width = layout.Compact ? double.PositiveInfinity : Math.Max(0, layout.ColumnWidth(i) - _table.LeadingPadding(i) - _table.CellInlinePadding);
-                cell.Measure(new Size(width, layout.RowHeight));
+                var wraps = _table.WrapsAt(i, layout.Compact);
+                double width;
+                if (layout.Compact)
+                {
+                    width = wraps ? Math.Max(0, layout.Width - 16 - _table.CompactLeft) : double.PositiveInfinity;
+                }
+                else
+                {
+                    width = Math.Max(0, layout.ColumnWidth(i) - _table.LeadingPadding(i) - _table.CellInlinePadding);
+                }
+                cell.Measure(new Size(width, wraps ? double.PositiveInfinity : layout.RowHeight));
             }
         }
         return new Size(layout.Width, layout.RowHeight);
@@ -464,8 +479,8 @@ internal sealed class TableRow : Control
         if (_texts.Length != count)
         {
             _texts = new FormattedText?[count];
-            _strings = new string?[count];
             _maxWidths = new double[count];
+            _emptyTexts = new bool[count];
             _textVersion = -1;
         }
         if (_textVersion == palette.Version && _textCompact == layout.Compact && Item is not null)
@@ -483,21 +498,8 @@ internal sealed class TableRow : Control
                 continue;
             }
             var text = _table.CellText(SourceIndex, i);
-            var primary = i == 0;
-            var small = layout.Compact && !primary && !_table.IsCompactLeadNumeric(i);
-            var typeface = layout.Compact && primary ? palette.Medium : palette.Regular;
-            var formatted = new FormattedText(text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, typeface,
-                small ? palette.SmallFontSize : palette.FontSize, null)
-            {
-                MaxLineCount = 1,
-                Trimming = TextTrimming.CharacterEllipsis
-            };
-            if (_table.IsNumericColumn(i))
-            {
-                formatted.SetFontFeatures(TablePalette.TabularNumbers);
-            }
-            _strings[i] = text;
-            _texts[i] = formatted;
+            _texts[i] = _table.CreateCellText(text, i, layout.Compact);
+            _emptyTexts[i] = text.Length == 0;
             _maxWidths[i] = -1;
         }
     }
@@ -564,7 +566,8 @@ internal sealed class TableRow : Control
                     continue;
                 }
                 text.SetForegroundBrush(palette.ForegroundBrush);
-                var x = _table.IsNumericColumn(i)
+                // Wrapped numbers are right-aligned inside the cell width by the text itself.
+                var x = _table.IsNumericColumn(i) && !_table.WrapsAt(i, compact: false)
                     ? layout.ColumnX(i) + layout.ColumnWidth(i) - _table.CellInlinePadding - Math.Min(text.WidthIncludingTrailingWhitespace, inner)
                     : layout.ColumnX(i) + lead;
                 context.DrawText(text, new Point(x, Math.Round((size.Height - text.Height) / 2)));
@@ -584,56 +587,69 @@ internal sealed class TableRow : Control
 
     /// <summary>
     /// Phone layout: the first column with its first numeric column on one line, the remaining details below
-    /// (12px secondary text; the sorted value at full contrast). Computed at arrange so hosted cells land in place.
+    /// (12px secondary text; the sorted value at full contrast), then one full-width block per wrapping column.
+    /// A wrapping first column grows the first line. Computed at arrange so hosted cells land in place; the row
+    /// height comes from the same rules (<c>Table.MeasureCompactRowHeight</c>).
     /// </summary>
     private void LayoutCompact(Size size)
     {
         EnsureTexts();
-        var palette = _table.Palette;
         var count = _texts.Length;
         if (_compactSlots.Length != count)
         {
             _compactSlots = new CompactSlot[count];
         }
         _compactSize = size;
-        var left = _table.IsSelectable ? 44.0 : 16.0;
+        var left = _table.CompactLeft;
         var right = size.Width - 16;
         var lead = _table.CompactLeadNumericIndex;
-        var line1 = palette.FontSize * 1.43;
-        var line2 = palette.SmallFontSize * 1.45;
-        var hasSecond = false;
-        for (var i = 1; i < count; i++)
-        {
-            if (i != lead)
-            {
-                hasSecond = true;
-                break;
-            }
-        }
-        var top = Math.Round((size.Height - (hasSecond ? line1 + 2 + line2 : line1)) / 2);
+        var line1 = _table.CompactLine1;
+        var line2 = _table.CompactLine2;
+        var hasSecond = _table.HasCompactDetails();
         var leadWidth = 0.0;
         for (var i = 0; i < count; i++)
         {
             _compactSlots[i] = default;
         }
+        var leadSlot = default(CompactSlot);
         if (lead > 0 && lead < count)
         {
             var room = (right - left) / 2;
             var width = Width(lead, room);
-            _compactSlots[lead] = new CompactSlot { X = right - width, Y = top, Width = width, Height = line1, Visible = true };
+            leadSlot = new CompactSlot { X = right - width, Width = width, Height = line1, Visible = true };
             leadWidth = width + 8;
+        }
+        var primaryWidth = Math.Max(1, right - left - leadWidth);
+        var primaryHeight = line1;
+        if (count > 0 && _table.WrapsAt(0, compact: true))
+        {
+            primaryHeight = Math.Max(line1, Block(0, primaryWidth));
+        }
+        var blockWidth = Math.Max(1, right - left);
+        var content = primaryHeight + (hasSecond ? 2 + line2 : 0);
+        for (var i = 1; i < count; i++)
+        {
+            if (_table.WrapsAt(i, compact: true) && Block(i, blockWidth) is var block and > 0)
+            {
+                content += 2 + block;
+            }
+        }
+        var top = Math.Round((size.Height - content) / 2);
+        if (leadSlot.Visible)
+        {
+            leadSlot.Y = top;
+            _compactSlots[lead] = leadSlot;
         }
         if (count > 0)
         {
-            var primaryWidth = Math.Max(1, right - left - leadWidth);
-            _compactSlots[0] = new CompactSlot { X = left, Y = top, Width = primaryWidth, Height = line1, Visible = true };
+            _compactSlots[0] = new CompactSlot { X = left, Y = top, Width = primaryWidth, Height = primaryHeight, Visible = true };
             TextAt(0, primaryWidth);
         }
         var x = left;
-        var y = top + line1 + 2;
+        var y = top + primaryHeight + 2;
         for (var i = 1; i < count; i++)
         {
-            if (i == lead)
+            if (i == lead || _table.WrapsAt(i, compact: true))
             {
                 continue;
             }
@@ -646,6 +662,17 @@ internal sealed class TableRow : Control
             _compactSlots[i] = new CompactSlot { X = x, Y = y, Width = width, Height = line2, Visible = true };
             x += width + 8;
         }
+        y = top + primaryHeight + (hasSecond ? 2 + line2 : 0);
+        for (var i = 1; i < count; i++)
+        {
+            if (!_table.WrapsAt(i, compact: true) || Block(i, blockWidth) is not (var block and > 0))
+            {
+                continue;
+            }
+            y += 2;
+            _compactSlots[i] = new CompactSlot { X = left, Y = y, Width = blockWidth, Height = block, Visible = true };
+            y += block;
+        }
 
         double Width(int column, double room)
         {
@@ -654,6 +681,20 @@ internal sealed class TableRow : Control
                 return Math.Min(cell.DesiredSize.Width, room);
             }
             return TextAt(column, room) is { } text ? Math.Min(text.WidthIncludingTrailingWhitespace, room) : 0;
+        }
+
+        // Height of a wrapped cell at the given width (empty detail text takes no block).
+        double Block(int column, double width)
+        {
+            if (column < _cells.Length && _cells[column] is { } cell)
+            {
+                return cell.DesiredSize.Height;
+            }
+            if (TextAt(column, width) is not { } text || (column > 0 && _emptyTexts[column]))
+            {
+                return 0;
+            }
+            return text.Height;
         }
     }
 

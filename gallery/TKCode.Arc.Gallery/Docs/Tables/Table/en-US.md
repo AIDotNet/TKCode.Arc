@@ -69,8 +69,9 @@ column that needs more than text sets `CellTemplate`.
    button; a column with `IsSortable="False"` is a plain label. The sorted column's cells carry the muted column tint.
 3. **Select all checkbox** (`IsSelectable`, `SelectAllLabel`): a 44 px checkbox column at the start of the header, with
    8 px extra inset before the first column. It shows a mixed state when only some rows are selected.
-4. **Body rows**: 52 px tall with a 1 px divider in the subtle border color and 16 px inline cell padding. `IsNumeric`
-   columns align right. Hover fills the row, and the selection fill eases in on the standard tween at full motion.
+4. **Body rows**: 52 px tall (taller when a column wraps; see Multi-line cells) with a 1 px divider in the subtle
+   border color and 16 px inline cell padding. `IsNumeric` columns align right. Hover fills the row, and the selection
+   fill eases in on the standard tween at full motion.
 5. **Count line** (`ItemNameOne`, `ItemNameOther`, `SelectedNoun`): a 44 px footer shown only when `IsSelectable` is
    true. It reads "6 projects" with no selection and "2 selected" with one. The text is muted until a row is selected.
 6. **Clear selection** (`ClearSelectionLabel`): a 30 px ghost button in the footer, shown only while rows are selected.
@@ -163,6 +164,35 @@ private sealed class StatusPill : Border
     }
 }
 ```
+
+### Multi-line cells
+
+Cells draw one line and end with an ellipsis. Set `TextWrapping="Wrap"` on a column whose text runs long or carries
+line breaks (notes, error messages, paths): its cells wrap at the column width and at every `\n`, and each row grows to
+its tallest wrapped cell. Rows never shrink below 52 px, and the other cells stay vertically centered. `MaxLines` caps a
+wrapped cell (the last line ends with an ellipsis); 0 shows every line. `Formatter` and `StringFormat` still produce
+the text.
+
+<Demo name="MultilineCells" />
+
+```csharp
+table.Columns.Add(new DataTableColumn("Error", j => ((Job)j).Error)
+{
+    Width = new GridLength(1, GridUnitType.Star),
+    TextWrapping = TextWrapping.Wrap,
+    MaxLines = 3
+});
+```
+
+- On a column with a `CellTemplate`, `TextWrapping="Wrap"` lets the template's content set the row height (for example
+  a `TextBlock` with `TextWrapping="Wrap"`) instead of being clipped to 52 px.
+- Give a wrapping column a star or pixel `Width`. An Auto wrapping column is at most 320 px wide, so long text wraps
+  instead of widening the table; below 560 px the table still scrolls sideways rather than squeezing its columns.
+- In the narrow layout, a wrapping first column grows the first line, and every other wrapping column gets its own
+  full-width block under the details line.
+- Rows without a wrapping column keep the uniform height and its cost. With one, the table measures the wrapped text
+  of every row when the data, the fonts or that column's width change; sorting only re-adds the heights. Templated
+  wrapping cells are measured as their rows come into view.
 
 ### Sorting and events
 

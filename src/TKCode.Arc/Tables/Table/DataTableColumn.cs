@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Interactivity;
+using Avalonia.Media;
 using Avalonia.Metadata;
 
 namespace TKCode.Arc;
@@ -22,7 +23,8 @@ public enum DataTableSortDirection
 /// <see cref="Binding"/> (compiled against the table's item type in XAML); sorting uses
 /// <see cref="SortValueSelector"/> / <see cref="SortBinding"/> when given, else the cell value, and
 /// <see cref="Comparer"/> when given, else Arc's comparison (numbers numerically, text with natural ordering,
-/// empty values last in both directions). Cells are drawn as text; <see cref="CellTemplate"/> hosts custom content.
+/// empty values last in both directions). Cells are drawn as one line of text; <see cref="TextWrapping"/> lets a
+/// column span several lines (the row grows to fit) and <see cref="CellTemplate"/> hosts custom content.
 /// </summary>
 public class DataTableColumn : AvaloniaObject
 {
@@ -49,6 +51,12 @@ public class DataTableColumn : AvaloniaObject
 
     public static readonly StyledProperty<IDataTemplate?> CellTemplateProperty =
         AvaloniaProperty.Register<DataTableColumn, IDataTemplate?>(nameof(CellTemplate));
+
+    public static readonly StyledProperty<TextWrapping> TextWrappingProperty =
+        AvaloniaProperty.Register<DataTableColumn, TextWrapping>(nameof(TextWrapping), TextWrapping.NoWrap);
+
+    public static readonly StyledProperty<int> MaxLinesProperty =
+        AvaloniaProperty.Register<DataTableColumn, int>(nameof(MaxLines), 0, validate: value => value >= 0);
 
     private BindingBase? _binding;
     private BindingBase? _sortBinding;
@@ -91,6 +99,20 @@ public class DataTableColumn : AvaloniaObject
 
     /// <summary>Format for cell text: a composite format (<c>{0:N0} items</c>) or a format string (<c>C0</c>).</summary>
     public string? StringFormat { get => GetValue(StringFormatProperty); set => SetValue(StringFormatProperty, value); }
+
+    /// <summary>
+    /// <c>Wrap</c> (or <c>WrapWithOverflow</c>) breaks cell text at the column width and at line breaks, and the row
+    /// grows to the tallest wrapped cell (never below the standard row height). On a column with a
+    /// <see cref="CellTemplate"/> it lets the template's content set the row height instead of being clipped to it.
+    /// The default, <c>NoWrap</c>, keeps one line with an ellipsis and the uniform row height.
+    /// </summary>
+    public TextWrapping TextWrapping { get => GetValue(TextWrappingProperty); set => SetValue(TextWrappingProperty, value); }
+
+    /// <summary>Most lines a wrapped cell shows before it ends with an ellipsis; 0 (the default) shows every line. Applies when <see cref="TextWrapping"/> wraps.</summary>
+    public int MaxLines { get => GetValue(MaxLinesProperty); set => SetValue(MaxLinesProperty, value); }
+
+    /// <summary>True when cells of this column may span several lines.</summary>
+    internal bool Wraps => TextWrapping != TextWrapping.NoWrap;
 
     /// <summary>Custom cell content (Arc <c>render</c>); the data context is the row item.</summary>
     [InheritDataTypeFromItems(nameof(Table.ItemsSource), AncestorType = typeof(Table))]

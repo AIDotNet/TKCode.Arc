@@ -52,7 +52,7 @@ Arc 稱它為 sortable data table（可排序資料表格），早期預覽版�
 1. **標題**（`Caption`）：表格的無障礙名稱。它不會被繪製出來，因此應寫成名詞片語，例如「2026 年 10 月的發票」。
 2. **表頭列**：高 44 px（含 1 px 分隔線）。表頭文字使用中等字重。可排序的表頭是按鈕；`IsSortable="False"` 的欄位則是一般標籤。已排序欄位的儲存格帶有淡化的欄底色。
 3. **全選核取方塊**（`IsSelectable`、`SelectAllLabel`）：表頭起始處寬 44 px 的核取方塊欄，第一欄前額外留 8 px 的內距。只選取部分列時顯示混合狀態。
-4. **資料列**：高 52 px，帶 1 px 分隔線（使用次要邊框色）和 16 px 的儲存格內距。`IsNumeric` 欄右對齊。懸停時整列填滿，完整動態效果下選取背景以標準補間動畫淡入。
+4. **資料列**：高 52 px（有換行欄位時可增高，見「多行內容」），帶 1 px 分隔線（使用次要邊框色）和 16 px 的儲存格內距。`IsNumeric` 欄右對齊。懸停時整列填滿，完整動態效果下選取背景以標準補間動畫淡入。
 5. **計數列**（`ItemNameOne`、`ItemNameOther`、`SelectedNoun`）：僅當 `IsSelectable` 為 true 時顯示的 44 px 頁尾。未選取時讀作「6 個專案」，選取一列時為「已選取 2 項」。未選取列時文字為淡化色。
 6. **清除選取**（`ClearSelectionLabel`）：頁尾中 30 px 的幽靈按鈕，僅在有選取列時顯示。
 7. **空列**（`EmptyMessage`）：高 120 px，使用淡化的文字顏色。
@@ -132,6 +132,26 @@ private sealed class StatusPill : Border
     }
 }
 ```
+
+### 多行內容
+
+儲存格預設只繪製一行，超出部分以省略號結尾。對內容較長或含換行字元的欄位（備註、錯誤訊息、路徑等）設定 `TextWrapping="Wrap"`：其儲存格會在欄寬處以及每個 `\n` 處換行，每一列隨列內最高的換行儲存格增高。列高不會低於 52 px，其餘儲存格保持垂直置中。`MaxLines` 限制換行儲存格的行數（最後一行以省略號結尾）；為 0 時顯示全部行。文字仍由 `Formatter` 與 `StringFormat` 產生。
+
+<Demo name="MultilineCells" />
+
+```csharp
+table.Columns.Add(new DataTableColumn("錯誤", j => ((Job)j).Error)
+{
+    Width = new GridLength(1, GridUnitType.Star),
+    TextWrapping = TextWrapping.Wrap,
+    MaxLines = 3
+});
+```
+
+- 在帶 `CellTemplate` 的欄位上，`TextWrapping="Wrap"` 讓範本內容（例如 `TextWrapping="Wrap"` 的 `TextBlock`）決定列高，而不是被裁切到 52 px。
+- 為換行欄位指定星號或像素 `Width`。自動寬度的換行欄位最寬 320 px，因此長文字會換行，而不會把表格撐寬；寬度低於 560 px 時表格仍然水平捲動，而不是壓縮欄寬。
+- 窄寬度版面中，換行的首欄會撐高第一行，其他換行欄位各自在詳細資訊行下方佔據一個全寬區塊。
+- 沒有換行欄位的表格維持統一列高及其開銷。存在換行欄位時，表格會在資料、字型或該欄寬度變化時測量每一列的換行文字；排序只重新累加列高。帶範本的換行儲存格在其所在列進入檢視區時測量。
 
 ### 排序與事件
 
