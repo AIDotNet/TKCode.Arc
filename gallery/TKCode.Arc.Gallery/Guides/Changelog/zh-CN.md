@@ -1,6 +1,6 @@
 ---
 title: 更新日志
-source-hash: 8901f704ede9
+source-hash: 7f49fe05dc31
 ---
 
 # 更新日志
@@ -8,6 +8,25 @@ source-hash: 8901f704ede9
 TKCode.Arc 的所有重要变更，最新的在前。版本遵循[语义化版本](https://semver.org/)。版本带有 `-preview` 后缀期间，API 在各发布版本之间仍可能变化；升级前请阅读说明，并在项目中固定版本号。同样的列表也保存在仓库的 `CHANGELOG.md` 中。
 
 每次发布附带的 NuGet 包：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Foundation`（0.3.2 起）、`TKCode.Arc.Fonts` `TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 、`TKCode.Arc.Special`、`TKCode.Arc.Workflow`、`TKCode.Arc.Themes.Pixel`、`TKCode.Arc.Themes.Corners`、`TKCode.Arc.Mobile`、`TKCode.Arc.Terminal`、`TKCode.Arc.Audio`、`TKCode.Arc.Audio.Native` 和 `TKCode.Arc.Audio.Browser`。
+
+## 0.4.0-preview.1（2026-11-03）
+
+新增编辑对象属性的 PropertyGrid、Table 多行单元格、Select 和 ColorPicker 的尺寸、在运行中的应用里加载包，并修复浏览器中 DataGrid 导出失败的问题（issue #30、#34、#36、#37）。
+
+### 新增
+
+- **PropertyGrid**（Extras）：以“标签 + 编辑器”的行编辑一个或多个对象的属性，类似 CAD 或建模软件的属性面板（issue #30）。给类标注 `[PropertyGridModel]`，Foundation 源生成器会在编译期用带类型的委托注册其属性（不使用反射，兼容 AOT 和裁剪），并读取 `[Category]`、`[DisplayName]`、`[Description]`、`[ReadOnly]`、`[Browsable]` 和新的 `[PropertyGridOptions]`。其他类型用 `PropertyGridTypes.Register<T>` 在代码中注册，Avalonia 对象按其已注册的属性描述。内置编辑器是 Arc 的小尺寸字段（`Input`、`NumberField`、`Switch`、`Select`、`ColorPicker`、`DatePicker`）；`Editors` 可按键、属性名或类型加入自定义编辑器。行按类别分组、可搜索过滤、显示选中行的说明，可展开嵌套值（结构体会写回其所有者）和列表（带添加与删除按钮），跟随 `INotifyPropertyChanged`，并支持同时编辑多个对象（`SelectedObjects`，带混合值）。行是 `PropertyGridItem` 控件，带用于样式的伪类。新增生成器诊断 ARCF030–ARCF032。
+- **Table**：多行单元格（issue #37）。`DataTableColumn.TextWrapping`（默认 `NoWrap`，单行加省略号）和 `MaxLines` 让列显示换行符并折行长文本；每行的高度取行内最高的换行单元格，以 52 px（紧凑布局 64 px）为下限。设置了 `TextWrapping="Wrap"` 的 `CellTemplate` 列会把行撑到模板的高度。没有换行列的表格保持统一行高，没有额外开销；有换行列时，只在数据、字体或列宽变化时测量换行文本。新增“多行单元格”示例。
+- **Select** 和 **ColorPicker**：`Size`（Select 为 `Small`、`Medium`、`Large`；ColorPicker 为 `Small` 和 `Medium`），可与小尺寸文本框对齐。默认仍为 Medium。
+- **Foundation**：`ArcRuntime.UsePackages(arc => ...)` 在运行中的应用里启用包，例如浏览器应用在某个页面首次需要时才下载的程序集中的包（issue #34）。新包的设置与启动时相同：注册其令牌标识、控件主题、语言目录、预设和提交回调，并连同它们的令牌（包括主题作用域）重新发布当前主题。已启用的包会被跳过；冲突或缺少翻译会在任何改动之前抛出异常。
+
+### 变更
+
+- **Gallery（WebAssembly）**：Special 组件（`TKCode.Arc.Special`）改为在首个 Special 页面打开时下载，而不是启动时下载：首页少下载 1.2 MB（brotli），之前为 22.2 MB（issue #34）。Gallery 也不再在启动时运行每个已文档化控件的静态构造函数：API 表只在页面显示时才查找其类型和属性。
+
+### 修复
+
+- **DataGrid**：在浏览器中导出 xlsx 或 CSV 不再得到空文件并提示“导出失败”（issue #36）。浏览器的保存文件流只接受异步写入，因此导出内容先在内存中生成，再用 `WriteAsync` 写入。
 
 ## 0.3.2-preview.2（2026-10-30）
 

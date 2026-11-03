@@ -1,6 +1,6 @@
 ---
 title: 更新日誌
-source-hash: 8901f704ede9
+source-hash: 7f49fe05dc31
 ---
 
 # 更新日誌
@@ -8,6 +8,25 @@ source-hash: 8901f704ede9
 TKCode.Arc 的所有重要變更，最新的在前。版本遵循[語意化版本](https://semver.org/)。版本帶有 `-preview` 後綴期間，API 在各發行版本之間仍可能變動；升級前請閱讀說明，並在專案中固定版本號。同一份清單也保存在儲存庫的 `CHANGELOG.md` 中。
 
 每次發行附帶的 NuGet 套件：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Foundation`（0.3.2 起）、`TKCode.Arc.Fonts` 、`TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 、`TKCode.Arc.Special`、`TKCode.Arc.Workflow`、`TKCode.Arc.Themes.Pixel`、`TKCode.Arc.Themes.Corners`、`TKCode.Arc.Mobile`、`TKCode.Arc.Terminal`、`TKCode.Arc.Audio`、`TKCode.Arc.Audio.Native` 與 `TKCode.Arc.Audio.Browser`。
+
+## 0.4.0-preview.1（2026-11-03）
+
+新增編輯物件屬性的 PropertyGrid、Table 多行儲存格、Select 和 ColorPicker 的尺寸、在執行中的應用程式裡載入套件，並修正瀏覽器中 DataGrid 匯出失敗的問題（issue #30、#34、#36、#37）。
+
+### 新增
+
+- **PropertyGrid**（Extras）：以「標籤 + 編輯器」的列編輯一個或多個物件的屬性，類似 CAD 或建模軟體的屬性面板（issue #30）。為類別標註 `[PropertyGridModel]`，Foundation 原始碼產生器會在編譯期以具型別的委派註冊其屬性（不使用反射，相容 AOT 與裁剪），並讀取 `[Category]`、`[DisplayName]`、`[Description]`、`[ReadOnly]`、`[Browsable]` 和新的 `[PropertyGridOptions]`。其他型別以 `PropertyGridTypes.Register<T>` 在程式碼中註冊，Avalonia 物件則依其已註冊的屬性描述。內建編輯器是 Arc 的小尺寸欄位（`Input`、`NumberField`、`Switch`、`Select`、`ColorPicker`、`DatePicker`）；`Editors` 可依鍵、屬性名稱或型別加入自訂編輯器。列依類別分組、可搜尋篩選、顯示選取列的說明，可展開巢狀值（結構會寫回其擁有者）和清單（附新增與刪除按鈕），跟隨 `INotifyPropertyChanged`，並支援同時編輯多個物件（`SelectedObjects`，附混合值）。列是 `PropertyGridItem` 控制項，附供樣式使用的虛擬類別。新增產生器診斷 ARCF030–ARCF032。
+- **Table**：多行儲存格（issue #37）。`DataTableColumn.TextWrapping`（預設 `NoWrap`，單行加省略號）和 `MaxLines` 讓欄位顯示換行字元並折行長文字；每列的高度取列內最高的換行儲存格，以 52 px（精簡版面 64 px）為下限。設定了 `TextWrapping="Wrap"` 的 `CellTemplate` 欄會把列撐到範本的高度。沒有換行欄的表格維持統一列高，沒有額外開銷；有換行欄時，只在資料、字型或欄寬變化時測量換行文字。新增「多行儲存格」範例。
+- **Select** 和 **ColorPicker**：`Size`（Select 為 `Small`、`Medium`、`Large`；ColorPicker 為 `Small` 和 `Medium`），可與小尺寸文字方塊對齊。預設仍為 Medium。
+- **Foundation**：`ArcRuntime.UsePackages(arc => ...)` 在執行中的應用程式裡啟用套件，例如瀏覽器應用程式在某個頁面首次需要時才下載的組件中的套件（issue #34）。新套件的設定與啟動時相同：註冊其權杖識別、控制項主題、語言目錄、預設集和提交回呼，並連同它們的權杖（包括主題範圍）重新發佈目前主題。已啟用的套件會被略過；衝突或缺少翻譯會在任何變更之前擲回例外。
+
+### 變更
+
+- **Gallery（WebAssembly）**：Special 元件（`TKCode.Arc.Special`）改為在第一個 Special 頁面開啟時下載，而不是啟動時下載：首頁少下載 1.2 MB（brotli），之前為 22.2 MB（issue #34）。Gallery 也不再在啟動時執行每個已文件化控制項的靜態建構函式：API 表只在頁面顯示時才查找其型別和屬性。
+
+### 修正
+
+- **DataGrid**：在瀏覽器中匯出 xlsx 或 CSV 不再得到空檔案並顯示「匯出失敗」（issue #36）。瀏覽器的儲存檔案串流只接受非同步寫入，因此匯出內容先在記憶體中產生，再以 `WriteAsync` 寫入。
 
 ## 0.3.2-preview.2（2026-10-30）
 

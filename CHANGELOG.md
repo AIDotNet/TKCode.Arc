@@ -8,17 +8,24 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Workflow`, `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native` and `TKCode.Arc.Audio.Browser`.
 
-## Unreleased
+## 0.4.0-preview.1 - 2026-11-03
+
+PropertyGrid for editing the properties of objects, multiline Table cells, Select and ColorPicker sizes, loading packages into a running app and a fix for DataGrid exports in the browser (issues #30, #34, #36 and #37).
 
 ### Added
 
 - **PropertyGrid** (Extras): edits the properties of one or more objects in rows of label and editor, like the properties palette of a CAD or modeling tool (issue #30). Mark a class `[PropertyGridModel]` and the Foundation generator registers its properties with typed delegates at compile time (no reflection; AOT and trimming safe), reading `[Category]`, `[DisplayName]`, `[Description]`, `[ReadOnly]`, `[Browsable]` and the new `[PropertyGridOptions]`. Other types are registered in code with `PropertyGridTypes.Register<T>`, and Avalonia objects are described by their registered properties. Built-in editors are Arc's small fields (`Input`, `NumberField`, `Switch`, `Select`, `ColorPicker`, `DatePicker`); `Editors` adds custom ones by key, property name or type. Rows group by category, filter by search, show the selected row's description, expand nested values (structs are written back to their owner) and lists (with add and remove buttons), follow `INotifyPropertyChanged`, and edit several objects at once (`SelectedObjects`, with mixed values). Rows are `PropertyGridItem` controls with pseudo-classes for styling. New generator diagnostics ARCF030–ARCF032.
+- **Table**: multiline cells (issue #37). `DataTableColumn.TextWrapping` (default `NoWrap`, one line with an ellipsis) and `MaxLines` let a column show line breaks and wrap long text; each row is as tall as its tallest wrapped cell, with 52 px (64 px in the compact layout) as the minimum. `CellTemplate` columns with `TextWrapping="Wrap"` grow the row to the template. Tables without a wrapping column keep the uniform row height and cost nothing extra; with one, wrapped text is measured only when data, font or column width changes. New `Multiline cells` example.
 - **Select** and **ColorPicker**: `Size` (`Small`, `Medium`, `Large` for Select; `Small` and `Medium` for ColorPicker), so they line up with small text fields. The default stays Medium.
 - **Foundation**: `ArcRuntime.UsePackages(arc => ...)` enables packages in a running application, for example the package of an assembly that a browser app downloads when a page first needs it (issue #34). The new packages are set up as at startup: their token identities, control themes, language catalogs, presets and commit callbacks are registered, and the applied theme is published again with their tokens, theme scopes included. Packages that are already enabled are skipped, and a conflict or a missing translation throws before anything changes.
 
 ### Changed
 
 - **Gallery (WebAssembly)**: the Special components (`TKCode.Arc.Special`) are downloaded when the first Special page opens instead of at startup: the home page downloads 1.2 MB less (brotli), 22.2 MB before (issue #34). The gallery also stops running the static constructor of every documented control at startup: the API tables look up their types and properties only when a page shows them.
+
+### Fixed
+
+- **DataGrid**: exporting to xlsx or CSV in the browser no longer ends with an empty file and "export failed" (issue #36). The browser's save-file stream accepts only asynchronous writes, so the export is built in memory and then written with `WriteAsync`.
 
 ## 0.3.2-preview.2 - 2026-10-30
 
