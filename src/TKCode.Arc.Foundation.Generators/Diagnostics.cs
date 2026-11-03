@@ -62,6 +62,21 @@ namespace TKCode.Arc.Foundation.Generators
             "Resource key '{0}' is defined by both '{1}' and '{2}'",
             Category, DiagnosticSeverity.Error, isEnabledByDefault: true);
 
+        public static readonly DiagnosticDescriptor PropertyGridModelShape = new DiagnosticDescriptor(
+            "ARCF030", "PropertyGrid model must be a non-generic class or struct",
+            "'{0}' is marked [PropertyGridModel] but is generic or static; register a closed generic type in code with PropertyGridTypes.Register<T>",
+            Category, DiagnosticSeverity.Error, isEnabledByDefault: true);
+
+        public static readonly DiagnosticDescriptor PropertyGridModelAccess = new DiagnosticDescriptor(
+            "ARCF031", "PropertyGrid model must be accessible",
+            "'{0}' is marked [PropertyGridModel] but it or a containing type is private or protected; make it public or internal",
+            Category, DiagnosticSeverity.Error, isEnabledByDefault: true);
+
+        public static readonly DiagnosticDescriptor PropertyGridNoModuleInitializer = new DiagnosticDescriptor(
+            "ARCF032", "PropertyGrid models need module initializers",
+            "'{0}' is marked [PropertyGridModel], but the target framework has no ModuleInitializerAttribute (.NET 5 or later); register it in code with PropertyGridTypes.Register<T>",
+            Category, DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
         public static readonly DiagnosticDescriptor EmptyThemeFile = new DiagnosticDescriptor(
             "ARCF014", "Theme file defines no resources",
             "Theme file '{0}' has no keyed top-level resources, so nothing can ever load it",

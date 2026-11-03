@@ -1,0 +1,33 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.PropertyGridCustomEditorsDemo">
+    <UserControl.Styles>
+        <!-- [PropertyGridOptions(Classes = "key")] on Radius adds the class to its row. -->
+        <Style Selector="arc|PropertyGridItem.key /template/ TextBlock#PART_Label">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        </Style>
+        <!-- Rows can also be picked by property name. -->
+        <Style Selector="arc|PropertyGridItem[PropertyName=Visible]">
+            <Setter Property="Opacity" Value="0.7" />
+        </Style>
+    </UserControl.Styles>
+    <arc:PropertyGrid x:Name="Properties"
+                      Width="380"
+                      Height="560"
+                      HorizontalAlignment="Center">
+        <arc:PropertyGrid.Editors>
+            <!-- Layer is marked [PropertyGridOptions(EditorKey = "Layer")]: pick it from the drawing's layers. -->
+            <arc:PropertyGridEditor EditorKey="Layer">
+                <DataTemplate x:DataType="arc:PropertyGridRow">
+                    <arc:Select Size="Small"
+                                ItemsSource="{x:Static demos:PropertyGridDemoData.Layers}"
+                                SelectedItem="{Binding Value, Mode=TwoWay}"
+                                IsEnabled="{Binding !IsReadOnly}" />
+                </DataTemplate>
+            </arc:PropertyGridEditor>
+        </arc:PropertyGrid.Editors>
+    </arc:PropertyGrid>
+</UserControl>

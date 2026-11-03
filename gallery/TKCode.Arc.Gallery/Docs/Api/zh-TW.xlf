@@ -5668,6 +5668,10 @@
         <source>Most saved swatches; saving past it drops the oldest (Arc: 7).</source>
         <target>最多儲存的色票數；超出時會捨棄最舊的一個（Arc 為 7）。</target>
       </trans-unit>
+      <trans-unit id="ColorPicker.Size">
+        <source>Trigger height: Medium (default) is the 44px swatch with its name; Small is a 36px swatch with the value only, the height of a small text field.</source>
+        <target>觸發器高度：Medium（預設）是 44px、帶名稱的色塊；Small 是 36px、只顯示值的色塊，與小型文字方塊同高。</target>
+      </trans-unit>
       <trans-unit id="ColorPicker.Swatches">
         <source>Saved swatches, newest first (two-way; every change produces a new list).</source>
         <target>已儲存的色票，最新的排在前面（雙向繫結；每次變更都會產生新清單）。</target>
@@ -18344,6 +18348,134 @@
         <source>The user message of this version.</source>
         <target>此版本的使用者訊息。</target>
       </trans-unit>
+      <trans-unit id="PropertyGrid">
+        <source>Edits the properties of one or more objects in rows of label and editor, grouped by category, with search, a description area, nested values and lists. Properties come from `PropertyGridTypes`: types marked `PropertyGridModelAttribute` (registered by the generator), types registered in code, and the Avalonia properties of an `AvaloniaObject`. Nothing is reflected, so it is safe for AOT and trimming.</source>
+        <target>以「標籤 + 編輯器」的列編輯一個或多個物件的屬性，依分類分組，附搜尋、說明區、巢狀值和清單。屬性來自 `PropertyGridTypes`：標記了 `PropertyGridModelAttribute` 的型別（由產生器註冊）、在程式碼中註冊的型別，以及 `AvaloniaObject` 的 Avalonia 屬性。不使用反映，因此對 AOT 和修剪安全。</target>
+      </trans-unit>
+      <trans-unit id="PropertyGrid.AddItemText">
+        <source>Accessible name of a list's add button.</source>
+        <target>清單新增按鈕的協助工具名稱。</target>
+      </trans-unit>
+      <trans-unit id="PropertyGrid.CollectionSummaryFormat">
+        <source>Text of a list's row; `{0}` is the item count.</source>
+        <target>清單所在列的文字；`{0}` 是元素個數。</target>
+      </trans-unit>
+      <trans-unit id="PropertyGrid.EmptyText">
+        <source>Shown when there is nothing to edit, or nothing matches the search.</source>
+        <target>沒有可編輯的內容，或搜尋沒有符合項目時顯示。</target>
+      </trans-unit>
+      <trans-unit id="PropertyGrid.FilterText">
+        <source>Shows only the rows whose label or name contains this text (two-way with the search field).</source>
+        <target>只顯示標籤或名稱包含此文字的列（與搜尋框雙向同步）。</target>
+      </trans-unit>
+      <trans-unit id="PropertyGrid.IsCategorized">
+        <source>Whether rows are grouped under category headers (true) or listed alphabetically (false).</source>
+        <target>各列是依分類標題分組（true）還是依字母順序排列（false）。</target>
+      </trans-unit>
+      <trans-unit id="PropertyGrid.IsDescriptionVisible">
+        <source>Whether the description area under the rows shows the selected row's name and description.</source>
+        <target>列下方的說明區是否顯示選取列的名稱和說明。</target>
+      </trans-unit>
+      <trans-unit id="PropertyGrid.IsReadOnly">
+        <source>When true, every row shows its value without an editor.</source>
+        <target>為 true 時，每一列只顯示值，不顯示編輯器。</target>
+      </trans-unit>
+      <trans-unit id="PropertyGrid.IsSearchVisible">
+        <source>Whether the search field is shown above the rows.</source>
+        <target>是否在列上方顯示搜尋框。</target>
+      </trans-unit>
+      <trans-unit id="PropertyGrid.LabelWidth">
+        <source>Width of the label column; the line between label and editor can be dragged. Inherited by the rows.</source>
+        <target>標籤欄的寬度；標籤和編輯器之間的分隔線可以拖曳。由各列繼承。</target>
+      </trans-unit>
+      <trans-unit id="PropertyGrid.MiscCategoryText">
+        <source>The category of properties that name none.</source>
+        <target>未指定分類的屬性所在的分類。</target>
+      </trans-unit>
+      <trans-unit id="PropertyGrid.MixedValueText">
+        <source>What a value shows while the selected objects disagree on it.</source>
+        <target>選取物件的取值不一致時顯示的文字。</target>
+      </trans-unit>
+      <trans-unit id="PropertyGrid.PropertyFilter">
+        <source>Filters the properties shown (true keeps one); applied to every level.</source>
+        <target>篩選要顯示的屬性（傳回 true 表示保留）；套用於每一層。</target>
+      </trans-unit>
+      <trans-unit id="PropertyGrid.PropertyValueChanged">
+        <source>Raised after an edit wrote a value (or added or removed a list item).</source>
+        <target>一次編輯寫入值（或新增、移除清單元素）後觸發。</target>
+      </trans-unit>
+      <trans-unit id="PropertyGrid.RemoveItemText">
+        <source>Accessible name of a list item's remove button.</source>
+        <target>清單元素移除按鈕的協助工具名稱。</target>
+      </trans-unit>
+      <trans-unit id="PropertyGrid.Rows">
+        <source>The top-level rows (the properties of the selected objects).</source>
+        <target>最上層的列（選取物件的屬性）。</target>
+      </trans-unit>
+      <trans-unit id="PropertyGrid.SearchPlaceholder">
+        <source>Placeholder of the search field.</source>
+        <target>搜尋框的預留位置文字。</target>
+      </trans-unit>
+      <trans-unit id="PropertyGrid.SelectedObject">
+        <source>The object whose properties are edited (ignored while `SelectedObjects` has items).</source>
+        <target>要編輯其屬性的物件（`SelectedObjects` 有元素時忽略）。</target>
+      </trans-unit>
+      <trans-unit id="PropertyGrid.SelectedObjects">
+        <source>Several objects edited together: the rows are the properties they share, and an edit writes all of them.</source>
+        <target>同時編輯的多個物件：各列是它們共有的屬性，編輯會寫入所有物件。</target>
+      </trans-unit>
+      <trans-unit id="PropertyGrid.SelectedRow">
+        <source>The selected row (two-way): highlighted, and described in the description area.</source>
+        <target>選取的列（雙向）：醒目顯示，並在說明區中說明。</target>
+      </trans-unit>
+      <trans-unit id="PropertyGridCategoryItem">
+        <source>A category header of a `PropertyGrid`: a click, Enter or Space collapses or expands its rows.</source>
+        <target>`PropertyGrid` 的分類標題：按一下、Enter 或 Space 收合或展開其中的列。</target>
+      </trans-unit>
+      <trans-unit id="PropertyGridCategoryItem.Category">
+        <source>The category shown.</source>
+        <target>顯示的分類。</target>
+      </trans-unit>
+      <trans-unit id="PropertyGridCategoryItem.Header">
+        <source>The header text.</source>
+        <target>標題文字。</target>
+      </trans-unit>
+      <trans-unit id="PropertyGridEditor">
+        <source>A custom editor of a `PropertyGrid`: a data template built for the matching rows, with the `PropertyGridRow` as its data context (bind to `Value`, `IsReadOnly`, `IsMixed`). A row is matched by `EditorKey` first, then by `PropertyName`, then by `PropertyType`; the first editor of the best kind wins, and rows nothing matches use the built-in editors.</source>
+        <target>`PropertyGrid` 的自訂編輯器：為符合的列建立的資料範本，資料內容是 `PropertyGridRow`（繫結 `Value`、`IsReadOnly`、`IsMixed`）。列先依 `EditorKey` 比對，再依 `PropertyName`，最後依 `PropertyType`；同一級中第一個編輯器生效，沒有符合的列使用內建編輯器。</target>
+      </trans-unit>
+      <trans-unit id="PropertyGridItem">
+        <source>One row of a `PropertyGrid`: the label (indented by depth, with a chevron when the value expands) and the editor, plus the add and remove buttons of lists. Created by the grid; style it with its pseudo-classes or by `PropertyName`, for example `arc|PropertyGridItem[PropertyName=Radius]`.</source>
+        <target>`PropertyGrid` 的一列：標籤（依層級縮排，值可展開時帶箭頭）和編輯器，以及清單的新增、移除按鈕。由屬性面板建立；可以依虛擬類別或 `PropertyName` 設定樣式，例如 `arc|PropertyGridItem[PropertyName=Radius]`。</target>
+      </trans-unit>
+      <trans-unit id="PropertyGridItem.Indent">
+        <source>The label's left indent (nesting level × `IndentStep`).</source>
+        <target>標籤的左縮排（層級 × `IndentStep`）。</target>
+      </trans-unit>
+      <trans-unit id="PropertyGridItem.IndentStep">
+        <source>Indent of one nesting level.</source>
+        <target>每一層的縮排。</target>
+      </trans-unit>
+      <trans-unit id="PropertyGridItem.Label">
+        <source>The label text.</source>
+        <target>標籤文字。</target>
+      </trans-unit>
+      <trans-unit id="PropertyGridItem.LabelWidth">
+        <source>Width of the label column, inherited from the grid.</source>
+        <target>標籤欄的寬度，繼承自屬性面板。</target>
+      </trans-unit>
+      <trans-unit id="PropertyGridItem.PropertyName">
+        <source>The name of the row's property (for style selectors).</source>
+        <target>該列屬性的名稱（用於樣式選取器）。</target>
+      </trans-unit>
+      <trans-unit id="PropertyGridItem.Row">
+        <source>The row shown.</source>
+        <target>顯示的列。</target>
+      </trans-unit>
+      <trans-unit id="PropertyGridOptionsAttribute">
+        <source>Options of one property in a `PropertyGrid`, read at compile time by the generator.</source>
+        <target>`PropertyGrid` 中單一屬性的選項，由產生器在編譯時讀取。</target>
+      </trans-unit>
       <trans-unit id="ProviderKey">
         <source>One provider's stored key in `ProviderKeys`. Pass `Value` to enable reveal and copy, or only `Last4` when your server never returns full keys (the row then shows the masked key and disables both).</source>
         <target>`ProviderKeys` 中某個供應商已儲存的金鑰。傳入 `Value` 以啟用顯示與複製；如果伺服器從不傳回完整金鑰，則只傳 `Last4`（該列隨後顯示遮罩金鑰，並停用這兩項操作）。</target>
@@ -21119,6 +21251,10 @@
       <trans-unit id="Select.SelectedText">
         <source>Defines the `SelectedText` property.</source>
         <target>定義 `SelectedText` 屬性。</target>
+      </trans-unit>
+      <trans-unit id="Select.Size">
+        <source>Trigger height: Small 36, Medium 44 (default), Large 50, as for the text fields.</source>
+        <target>觸發器高度：Small 36、Medium 44（預設）、Large 50，與文字方塊一致。</target>
       </trans-unit>
       <trans-unit id="Select.TextSelector">
         <source>Defines the `TextSelector` property.</source>

@@ -114,6 +114,10 @@ public class ColorPicker : TemplatedControl, IPickerAutomation
     public static readonly StyledProperty<string?> DescriptionProperty = Field.DescriptionProperty.AddOwner<ColorPicker>();
     public static readonly StyledProperty<string?> ErrorMessageProperty = Field.ErrorMessageProperty.AddOwner<ColorPicker>();
 
+    /// <summary>Trigger height: Medium (default) is the 44px swatch with its name; Small is a 36px swatch with the value only,
+    /// the height of a small text field.</summary>
+    public static readonly StyledProperty<ControlSize> SizeProperty = Field.SizeProperty.AddOwner<ColorPicker>();
+
     /// <summary>Format of the value field; the format button cycles it.</summary>
     public static readonly StyledProperty<ColorPickerFormat> FormatProperty =
         AvaloniaProperty.Register<ColorPicker, ColorPickerFormat>(nameof(Format), defaultBindingMode: BindingMode.TwoWay);
@@ -167,6 +171,9 @@ public class ColorPicker : TemplatedControl, IPickerAutomation
 
     /// <summary>Error copy under the swatch.</summary>
     public string? ErrorMessage { get => GetValue(ErrorMessageProperty); set => SetValue(ErrorMessageProperty, value); }
+
+    /// <summary>Trigger height.</summary>
+    public ControlSize Size { get => GetValue(SizeProperty); set => SetValue(SizeProperty, value); }
 
     /// <summary>Format of the value field.</summary>
     public ColorPickerFormat Format { get => GetValue(FormatProperty); set => SetValue(FormatProperty, value); }
@@ -637,7 +644,8 @@ public class ColorPicker : TemplatedControl, IPickerAutomation
     }
 
     private PickerMorphShape TriggerShape => _trigger is { } trigger
-        ? new PickerMorphShape(0, 0, trigger.Bounds.Width, trigger.Bounds.Height, TriggerRadius)
+        ? new PickerMorphShape(0, 0, trigger.Bounds.Width, trigger.Bounds.Height,
+            trigger is Border { CornerRadius.TopLeft: > 0 } border ? border.CornerRadius.TopLeft : TriggerRadius)
         : new PickerMorphShape(0, 0, 160, 44, TriggerRadius);
 
     /// <summary>The panel opens over the swatch and grows down and right; it moves left or up only where the window ends.</summary>
@@ -668,7 +676,7 @@ public class ColorPicker : TemplatedControl, IPickerAutomation
         _panel.SetNarrow(viewport <= 360);
         UpdateVisuals(animate: false);
         _panel.Swatches?.Sync(Swatches ?? [], HexValue, animate: false);
-        _panel.Measure(Size.Infinity);
+        _panel.Measure(Avalonia.Size.Infinity);
         _surface.ExpectContentSize(_panel.DesiredSize);
         PseudoClasses.Set(OpenPseudoClass, true);
         var level = IsLoaded ? ArcMotion.GetEffectiveLevel(this) : ArcMotionLevel.Off;

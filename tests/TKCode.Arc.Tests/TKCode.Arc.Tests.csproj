@@ -24,5 +24,8 @@
         <ProjectReference Include="../../gallery/TKCode.Arc.Gallery.Llms/TKCode.Arc.Gallery.Llms.csproj" />
         <!-- The Docs-section pages show Lucide icons in their XAML examples. -->
         <ProjectReference Include="../../src/TKCode.Arc.Icons.Lucide/TKCode.Arc.Icons.Lucide.csproj" />
+        <!-- PropertyGrid tests use [PropertyGridModel] types: the Foundation generator registers them (no themes or tokens here). -->
+        <ProjectReference Include="../../src/TKCode.Arc.Foundation.Generators/TKCode.Arc.Foundation.Generators.csproj"
+                          OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="all" />
     </ItemGroup>
 </Project>

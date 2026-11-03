@@ -90,6 +90,9 @@ public static partial class GalleryCatalog
             new("Cascader", "Cascader", "cascader", 0,
                 "Pick one node of a hierarchy level by level, such as province, city and district, with a field and menu that match Select.",
                 IsArc: false, AddedOn: "2026-10-28"),
+            new("PropertyGrid", "Property grid", "property-grid", 0,
+                "Edit the properties of one or more objects in rows of label and editor, grouped by category, with search, nested values and lists.",
+                IsArc: false, AddedOn: "2026-11-03"),
         ], IsArc: false),
     ];
 

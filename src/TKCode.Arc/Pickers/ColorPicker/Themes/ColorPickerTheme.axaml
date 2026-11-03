@@ -18,25 +18,21 @@
                                 IsHitTestVisible="False"
                                 Margin="{arc:ColorPickerTokenResource TriggerFocusRingMargin}"
                                 BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                                CornerRadius="{arc:ColorPickerTokenResource TriggerFocusRingRadius}"
                                 BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                         <Border Name="PART_Trigger"
-                                Height="{arc:ColorPickerTokenResource TriggerHeight}"
-                                Padding="{arc:ColorPickerTokenResource TriggerInset}"
                                 BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
-                                CornerRadius="{arc:ColorPickerTokenResource TriggerRadius}"
                                 Background="{arc:ColorPickerTokenResource PanelFill}"
                                 BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
                                 Cursor="Hand">
                             <StackPanel Orientation="Horizontal" Spacing="{arc:ColorPickerTokenResource TriggerGap}">
-                                <arc:ColorPickerChip Width="{arc:ColorPickerTokenResource ChipDiameter}"
-                                                     Height="{arc:ColorPickerTokenResource ChipDiameter}"
+                                <arc:ColorPickerChip Name="PART_TriggerChip"
                                                      VerticalAlignment="Center"
                                                      Color="{TemplateBinding Color}"
                                                      CheckerColor="{arc:ColorPickerTokenResource CheckerColor}"
                                                      CheckerBase="{arc:ColorPickerTokenResource CheckerBase}" />
                                 <StackPanel VerticalAlignment="Center">
-                                    <TextBlock Text="{TemplateBinding Label}"
+                                    <TextBlock Name="PART_TriggerName"
+                                               Text="{TemplateBinding Label}"
                                                FontSize="{arc:ArcDesignTokenResource TypeXS}"
                                                LineHeight="{arc:ColorPickerTokenResource NameLineHeight}"
                                                Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
@@ -65,8 +61,36 @@
         <Setter Property="PanelBorder" Value="{arc:ArcDesignTokenResource Border}" />
         <Setter Property="FloatShadow" Value="{arc:ColorPickerTokenResource FloatShadow}" />
 
+        <!-- Size: the trigger geometry lives in styles so Small can replace it (template values would win). -->
         <Style Selector="^ /template/ Border#PART_Trigger">
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="Height" Value="{arc:ColorPickerTokenResource TriggerHeight}" />
+            <Setter Property="Padding" Value="{arc:ColorPickerTokenResource TriggerInset}" />
+            <Setter Property="CornerRadius" Value="{arc:ColorPickerTokenResource TriggerRadius}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ColorPickerChip#PART_TriggerChip">
+            <Setter Property="Width" Value="{arc:ColorPickerTokenResource ChipDiameter}" />
+            <Setter Property="Height" Value="{arc:ColorPickerTokenResource ChipDiameter}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_FocusRing">
+            <Setter Property="CornerRadius" Value="{arc:ColorPickerTokenResource TriggerFocusRingRadius}" />
+        </Style>
+        <Style Selector="^[Size=Small]">
+            <Style Selector="^ /template/ Border#PART_Trigger">
+                <Setter Property="Height" Value="{arc:ColorPickerTokenResource TriggerHeightSM}" />
+                <Setter Property="Padding" Value="{arc:ColorPickerTokenResource TriggerInsetSM}" />
+                <Setter Property="CornerRadius" Value="{arc:ColorPickerTokenResource TriggerRadiusSM}" />
+            </Style>
+            <Style Selector="^ /template/ arc|ColorPickerChip#PART_TriggerChip">
+                <Setter Property="Width" Value="{arc:ColorPickerTokenResource ChipDiameterSM}" />
+                <Setter Property="Height" Value="{arc:ColorPickerTokenResource ChipDiameterSM}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_FocusRing">
+                <Setter Property="CornerRadius" Value="{arc:ColorPickerTokenResource TriggerFocusRingRadiusSM}" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_TriggerName">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
         </Style>
         <Style Selector="^ /template/ Border#PART_Trigger:pointerover">
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />

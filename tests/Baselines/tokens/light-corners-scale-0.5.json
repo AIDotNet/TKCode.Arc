@@ -1542,6 +1542,7 @@
       "CheckerBase": "#FFFFFFFF",
       "CheckerColor": "#FFD7D7D7",
       "ChipDiameter": "32",
+      "ChipDiameterSM": "24",
       "ErrorMargin": "2,-10,2,-4",
       "FieldHeight": "40",
       "FieldMargin": "0,2,0,0",
@@ -1571,10 +1572,14 @@
       "TrackThickness": "14",
       "TriggerFocusRingMargin": "-4,-4,-4,-4",
       "TriggerFocusRingRadius": "13,13,13,13",
+      "TriggerFocusRingRadiusSM": "22,22,22,22",
       "TriggerGap": "10",
       "TriggerHeight": "44",
+      "TriggerHeightSM": "36",
       "TriggerInset": "6,5,16,5",
-      "TriggerRadius": "11,11,11,11"
+      "TriggerInsetSM": "6,6,14,6",
+      "TriggerRadius": "11,11,11,11",
+      "TriggerRadiusSM": "18,18,18,18"
     },
     "Combobox": {
       "ClearButtonSize": "22",
@@ -4555,6 +4560,38 @@
       "VarsPadding": "16,14,16,16",
       "VarsPaddingCompact": "12,14,12,16"
     },
+    "PropertyGrid": {
+      "DescriptionGap": "2",
+      "DescriptionHeight": "76",
+      "DescriptionPadding": "14,10,14,12",
+      "EmptyPadding": "16,24,16,24",
+      "ListPadding": "4,4,4,8",
+      "SearchMargin": "8,8,8,4"
+    },
+    "PropertyGridCategoryItem": {
+      "ChevronGap": "6",
+      "ChevronSize": "14",
+      "FocusRingMargin": "-2,-2,-2,-2",
+      "FocusRingRadius": "12,12,12,12",
+      "HeaderCornerRadius": "10,10,10,10",
+      "HeaderHeight": "34",
+      "HeaderMargin": "0,4,0,0",
+      "HeaderPadding": "6,0,10,0"
+    },
+    "PropertyGridItem": {
+      "ActionCornerRadius": "10,10,10,10",
+      "ActionSize": "28",
+      "ChevronSize": "14",
+      "ExpanderWidth": "18",
+      "FocusRingMargin": "-2,-2,-2,-2",
+      "FocusRingRadius": "14,14,14,14",
+      "IndentStep": "14",
+      "LabelGap": "10",
+      "RowCornerRadius": "12,12,12,12",
+      "RowHeight": "40",
+      "RowPadding": "4,2,4,2",
+      "SplitterWidth": "7"
+    },
     "ProviderKeys": {
       "ActionGap": "2",
       "ActionsColumnWidth": "134",
@@ -6079,10 +6116,12 @@
       "TriggerRadius": "7.5,7.5,7.5,7.5"
     },
     "Table": {
+      "CellBlockPadding": "14",
       "CellInlinePadding": "16",
       "ClearButtonHeight": "30",
       "ClearButtonInset": "12,0,12,0",
       "CompactBreakpoint": "620",
+      "CompactCellBlockPadding": "10",
       "CompactHeaderHeight": "41",
       "CompactRowHeight": "64",
       "CountGap": "4",
@@ -6094,7 +6133,8 @@
       "MinTableWidth": "560",
       "PrimaryInsetSelectable": "8",
       "RowHeight": "52",
-      "SelectColumnWidth": "44"
+      "SelectColumnWidth": "44",
+      "WrapColumnMaxWidth": "320"
     },
     "Tabs": {
       "ContentFocusRingRadius": "11,11,11,11",

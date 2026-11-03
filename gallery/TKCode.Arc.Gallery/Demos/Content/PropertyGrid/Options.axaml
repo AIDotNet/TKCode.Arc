@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PropertyGridOptionsDemo">
+    <StackPanel Width="380" Spacing="12" HorizontalAlignment="Center">
+        <WrapPanel ItemSpacing="16" LineSpacing="8">
+            <arc:Checkbox x:Name="Categorized" Content="Categories" IsChecked="True" />
+            <arc:Checkbox x:Name="Search" Content="Search" IsChecked="True" />
+            <arc:Checkbox x:Name="Description" Content="Description" IsChecked="True" />
+            <arc:Checkbox x:Name="ReadOnly" Content="Read-only" />
+        </WrapPanel>
+        <arc:PropertyGrid x:Name="Properties"
+                          Height="480"
+                          IsCategorized="{Binding #Categorized.IsChecked}"
+                          IsSearchVisible="{Binding #Search.IsChecked}"
+                          IsDescriptionVisible="{Binding #Description.IsChecked}"
+                          IsReadOnly="{Binding #ReadOnly.IsChecked}" />
+    </StackPanel>
+</UserControl>

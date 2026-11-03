@@ -20,6 +20,13 @@ internal sealed class ColorPickerToken : AbstractControlDesignToken
     public Thickness TriggerFocusRingMargin { get; set; }
     public CornerRadius TriggerFocusRingRadius { get; set; }
 
+    /// <summary>The small trigger (<see cref="ColorPicker.Size"/> Small): 36px pill (radius 18), 24px chip, hex only.</summary>
+    public double TriggerHeightSM { get; set; }
+    public CornerRadius TriggerRadiusSM { get; set; }
+    public Thickness TriggerInsetSM { get; set; }
+    public double ChipDiameterSM { get; set; }
+    public CornerRadius TriggerFocusRingRadiusSM { get; set; }
+
     /// <summary>Panel: min(19rem, viewport − 32px) wide; body inset 8 / 14 (plus the 1px border), 14px rhythm.</summary>
     public double PanelWidth { get; set; }
     public Thickness BodyInset { get; set; }
@@ -77,6 +84,11 @@ internal sealed class ColorPickerToken : AbstractControlDesignToken
         HexLineHeight = 14 * 1.15;
         TriggerFocusRingMargin = new Thickness(-4);
         TriggerFocusRingRadius = new CornerRadius(26);
+        TriggerHeightSM = 36;
+        TriggerRadiusSM = new CornerRadius(18);
+        TriggerInsetSM = new Thickness(6, 6, 14, 6);
+        ChipDiameterSM = 24;
+        TriggerFocusRingRadiusSM = new CornerRadius(22);
         PanelWidth = 304;
         BodyInset = new Thickness(15, 8, 15, 15);
         BodyGap = 14;

@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PropertyGridControlsDemo">
+    <WrapPanel HorizontalAlignment="Center" ItemSpacing="24" LineSpacing="16">
+        <Border Width="240" Height="200">
+            <arc:Button x:Name="Preview"
+                        Content="Save changes"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
+        </Border>
+        <arc:PropertyGrid x:Name="Properties"
+                          Width="360"
+                          Height="440"
+                          IsSearchVisible="False" />
+    </WrapPanel>
+</UserControl>

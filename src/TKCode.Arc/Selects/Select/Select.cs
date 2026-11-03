@@ -59,6 +59,10 @@ public class Select : SelectingItemsControl, ISelectOptionHost, ISelectFieldAuto
     public static readonly StyledProperty<string?> PlaceholderProperty =
         AvaloniaProperty.Register<Select, string?>(nameof(Placeholder), "Select an option");
 
+    /// <summary>Trigger height: Small 36, Medium 44 (default), Large 50, as for the text fields.</summary>
+    public static readonly StyledProperty<ControlSize> SizeProperty =
+        Field.SizeProperty.AddOwner<Select>();
+
     /// <summary>Defines the <see cref="IsOpen"/> property.</summary>
     public static readonly StyledProperty<bool> IsOpenProperty =
         AvaloniaProperty.Register<Select, bool>(nameof(IsOpen), defaultBindingMode: BindingMode.TwoWay);
@@ -102,6 +106,13 @@ public class Select : SelectingItemsControl, ISelectOptionHost, ISelectFieldAuto
     {
         get => GetValue(PlaceholderProperty);
         set => SetValue(PlaceholderProperty, value);
+    }
+
+    /// <summary>Trigger height.</summary>
+    public ControlSize Size
+    {
+        get => GetValue(SizeProperty);
+        set => SetValue(SizeProperty, value);
     }
 
     /// <summary>Whether the menu is open (two-way).</summary>

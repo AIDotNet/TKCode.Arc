@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PropertyGridMultiSelectDemo">
+    <StackPanel Width="380" Spacing="8" HorizontalAlignment="Center">
+        <arc:Select x:Name="Kind" Size="Small" />
+        <arc:PropertyGrid x:Name="Properties" Height="520" />
+    </StackPanel>
+</UserControl>
