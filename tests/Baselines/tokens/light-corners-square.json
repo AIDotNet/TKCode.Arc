@@ -4572,22 +4572,17 @@
       "ChevronGap": "6",
       "ChevronSize": "14",
       "FocusRingMargin": "-2,-2,-2,-2",
-      "FocusRingRadius": "12,12,12,12",
-      "HeaderCornerRadius": "10,10,10,10",
       "HeaderHeight": "34",
       "HeaderMargin": "0,4,0,0",
       "HeaderPadding": "6,0,10,0"
     },
     "PropertyGridItem": {
-      "ActionCornerRadius": "10,10,10,10",
       "ActionSize": "28",
       "ChevronSize": "14",
       "ExpanderWidth": "18",
       "FocusRingMargin": "-2,-2,-2,-2",
-      "FocusRingRadius": "14,14,14,14",
       "IndentStep": "14",
       "LabelGap": "10",
-      "RowCornerRadius": "12,12,12,12",
       "RowHeight": "40",
       "RowPadding": "4,2,4,2",
       "SplitterWidth": "7"

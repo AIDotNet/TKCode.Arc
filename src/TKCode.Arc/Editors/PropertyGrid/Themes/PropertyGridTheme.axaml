@@ -106,7 +106,7 @@
                     <Border Name="PART_Root"
                             MinHeight="{arc:PropertyGridItemTokenResource RowHeight}"
                             Padding="{arc:PropertyGridItemTokenResource RowPadding}"
-                            CornerRadius="{arc:PropertyGridItemTokenResource RowCornerRadius}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep12}"
                             Background="Transparent">
                         <DockPanel>
                             <Panel Name="PART_LabelHost"
@@ -178,7 +178,7 @@
                             IsHitTestVisible="False"
                             Margin="{arc:PropertyGridItemTokenResource FocusRingMargin}"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{arc:PropertyGridItemTokenResource FocusRingRadius}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep14}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
@@ -230,7 +230,7 @@
             <Setter Property="Height" Value="{arc:PropertyGridItemTokenResource ActionSize}" />
             <Setter Property="MinHeight" Value="0" />
             <Setter Property="Padding" Value="0" />
-            <Setter Property="CornerRadius" Value="{arc:PropertyGridItemTokenResource ActionCornerRadius}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep10}" />
         </Style>
 
         <Style Selector="^:motion-full">
@@ -268,7 +268,7 @@
                     <Border Name="PART_Root"
                             Height="{arc:PropertyGridCategoryItemTokenResource HeaderHeight}"
                             Padding="{arc:PropertyGridCategoryItemTokenResource HeaderPadding}"
-                            CornerRadius="{arc:PropertyGridCategoryItemTokenResource HeaderCornerRadius}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep10}"
                             Cursor="Hand">
                         <StackPanel Orientation="Horizontal"
                                     Spacing="{arc:PropertyGridCategoryItemTokenResource ChevronGap}"
@@ -293,7 +293,7 @@
                             IsHitTestVisible="False"
                             Margin="{arc:PropertyGridCategoryItemTokenResource FocusRingMargin}"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{arc:PropertyGridCategoryItemTokenResource FocusRingRadius}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep12}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>

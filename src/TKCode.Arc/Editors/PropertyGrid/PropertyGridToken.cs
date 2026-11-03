@@ -41,8 +41,6 @@ internal sealed class PropertyGridItemToken : AbstractControlDesignToken
 
     public Thickness RowPadding { get; set; }
 
-    public CornerRadius RowCornerRadius { get; set; }
-
     /// <summary>Indent of one nesting level.</summary>
     public double IndentStep { get; set; }
 
@@ -60,27 +58,20 @@ internal sealed class PropertyGridItemToken : AbstractControlDesignToken
     /// <summary>The add and remove buttons of lists.</summary>
     public double ActionSize { get; set; }
 
-    public CornerRadius ActionCornerRadius { get; set; }
-
     public Thickness FocusRingMargin { get; set; }
-
-    public CornerRadius FocusRingRadius { get; set; }
 
     public override void CalculateTokenValues(bool isDarkMode)
     {
         base.CalculateTokenValues(isDarkMode);
         RowHeight = 40;
         RowPadding = new Thickness(4, 2, 4, 2);
-        RowCornerRadius = new CornerRadius(12);
         IndentStep = 14;
         ExpanderWidth = 18;
         ChevronSize = 14;
         LabelGap = 10;
         SplitterWidth = 7;
         ActionSize = 28;
-        ActionCornerRadius = new CornerRadius(10);
         FocusRingMargin = new Thickness(-2);
-        FocusRingRadius = new CornerRadius(14);
     }
 }
 
@@ -91,8 +82,6 @@ internal sealed class PropertyGridCategoryItemToken : AbstractControlDesignToken
 
     public Thickness HeaderPadding { get; set; }
 
-    public CornerRadius HeaderCornerRadius { get; set; }
-
     public double ChevronSize { get; set; }
 
     public double ChevronGap { get; set; }
@@ -102,18 +91,14 @@ internal sealed class PropertyGridCategoryItemToken : AbstractControlDesignToken
 
     public Thickness FocusRingMargin { get; set; }
 
-    public CornerRadius FocusRingRadius { get; set; }
-
     public override void CalculateTokenValues(bool isDarkMode)
     {
         base.CalculateTokenValues(isDarkMode);
         HeaderHeight = 34;
         HeaderPadding = new Thickness(6, 0, 10, 0);
-        HeaderCornerRadius = new CornerRadius(10);
         ChevronSize = 14;
         ChevronGap = 6;
         HeaderMargin = new Thickness(0, 4, 0, 0);
         FocusRingMargin = new Thickness(-2);
-        FocusRingRadius = new CornerRadius(12);
     }
 }
