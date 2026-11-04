@@ -632,6 +632,48 @@ public class ArcBaseThemeTests
     }
 
     [AvaloniaFact]
+    public void An_Application_Theme_For_One_Type_Yields_Only_That_Type()
+    {
+        // Issue #39: a ControlTheme for PopupRoot alone must not take the ItemsControl or ScrollViewer themes with it.
+        var app = SetupWithoutAppWindowTheme_NoRegister();
+        var own = new ControlTheme(typeof(PopupRoot));
+        app.Resources[typeof(PopupRoot)] = own;
+
+        ArcBaseTheme.DefinesBuiltInThemes(app).ShouldBeFalse();
+        ArcBaseTheme.ShouldRegister(app).ShouldBeTrue();
+        ArcBaseTheme.TryRegister(app).ShouldBeTrue();
+
+        app.Resources[typeof(PopupRoot)].ShouldBeSameAs(own);
+        var merged = app.Resources.MergedDictionaries.ShouldHaveSingleItem();
+        merged.TryGetResource(typeof(PopupRoot), null, out _).ShouldBeFalse();
+        foreach (var type in new[] { typeof(ItemsControl), typeof(ScrollViewer), typeof(ScrollBar), typeof(PathIcon), typeof(OverlayPopupHost) })
+        {
+            merged.TryGetResource(type, null, out var theme).ShouldBeTrue(type.Name);
+            theme.ShouldBeOfType<ControlTheme>();
+        }
+        ArcBaseTheme.TryRegister(app).ShouldBeFalse();
+    }
+
+    [AvaloniaFact]
+    public void ScrollViewer_And_ScrollBar_Yield_Together()
+    {
+        var app = SetupWithoutAppWindowTheme_NoRegister();
+        app.Resources[typeof(ScrollBar)] = new ControlTheme(typeof(ScrollBar));
+        ArcBaseTheme.TryRegister(app).ShouldBeTrue();
+        var merged = app.Resources.MergedDictionaries.ShouldHaveSingleItem();
+        merged.TryGetResource(typeof(ScrollViewer), null, out _).ShouldBeFalse();
+        merged.TryGetResource(typeof(ScrollBar), null, out _).ShouldBeFalse();
+        merged.TryGetResource(typeof(ItemsControl), null, out _).ShouldBeTrue();
+    }
+
+    private static Application SetupWithoutAppWindowTheme_NoRegister()
+    {
+        var app = Application.Current!;
+        app.Resources.Remove(typeof(Window));
+        return app;
+    }
+
+    [AvaloniaFact]
     public void Detects_A_Theme_That_Is_Not_Yet_In_An_Application()
     {
         ArcBaseTheme.DefinesBuiltInThemes(new FluentTheme()).ShouldBeTrue();

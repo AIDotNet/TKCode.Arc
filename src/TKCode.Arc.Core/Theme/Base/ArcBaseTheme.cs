@@ -14,14 +14,11 @@ namespace TKCode.Arc;
 /// </summary>
 /// <remarks>
 /// <para>
-/// The base theme yields to any theme that already styles these controls: when the application resolves a default
-/// ControlTheme for one of <see cref="StyledTypes"/> other than <see cref="Window"/> (FluentTheme and SimpleTheme in
-/// <c>App.axaml</c> do), nothing is registered, so their keys never clash and their look stays whole. The check runs when
+/// The base theme yields per type: for each of <see cref="StyledTypes"/> the application already resolves a default
+/// ControlTheme for (FluentTheme and SimpleTheme in <c>App.axaml</c> do for all of them, an application's own theme for
+/// one of them), that type's file is not registered, so their keys never clash and their look stays whole; the rest is
+/// registered. ScrollViewer and ScrollBar are one unit: if either is defined, neither is registered. The check runs when
 /// Arc is set up, after the application loaded its own styles.
-/// </para>
-/// <para>
-/// <see cref="Window"/> yields on its own: an application that themes only its window keeps that theme and still gets the
-/// rest of the base theme. A window that sets its template itself (the gallery's) is not affected either way.
 /// </para>
 /// <para>
 /// The theme files live in <c>Theme/Base/</c>, outside the <c>Themes/*Theme.axaml</c> pattern, so the Foundation generator
@@ -38,63 +35,77 @@ public static class ArcBaseTheme
         typeof(OverlayPopupHost), typeof(PopupRoot), typeof(EmbeddableControlRoot), typeof(Window)
     ];
 
+    // One entry per theme file; a file holds the types that must stay together. ScrollViewer and ScrollBar are one entry so
+    // an application never ends up with another theme's ScrollViewer next to Arc's ScrollBar.
+    private static readonly (Type[] Types, Func<ResourceDictionary> Create)[] Entries =
+    [
+        ([typeof(ScrollViewer), typeof(ScrollBar)], static () => new ScrollViewerBaseTheme()),
+        ([typeof(ItemsControl)], static () => new ItemsControlBaseTheme()),
+        ([typeof(PathIcon)], static () => new PathIconBaseTheme()),
+        ([typeof(TextSelectionHandle)], static () => new TextSelectionHandleBaseTheme()),
+        ([typeof(OverlayPopupHost)], static () => new OverlayPopupHostBaseTheme()),
+        ([typeof(PopupRoot)], static () => new PopupRootBaseTheme()),
+        ([typeof(EmbeddableControlRoot)], static () => new EmbeddableControlRootBaseTheme()),
+        ([typeof(Window)], static () => new WindowBaseTheme())
+    ];
+
     /// <summary>
     /// Creates the base theme's resources: one dictionary that merges the theme files. They are small, so they are
     /// loaded together.
     /// </summary>
-    public static ResourceDictionary Create() => Create(includeWindow: true);
+    public static ResourceDictionary Create() => Create(static _ => true);
 
-    private static ResourceDictionary Create(bool includeWindow)
+    private static ResourceDictionary Create(Func<Type[], bool> include)
     {
         var resources = new ResourceDictionary();
-        resources.MergedDictionaries.Add(new ScrollViewerBaseTheme());
-        resources.MergedDictionaries.Add(new ItemsControlBaseTheme());
-        resources.MergedDictionaries.Add(new PathIconBaseTheme());
-        resources.MergedDictionaries.Add(new TextSelectionHandleBaseTheme());
-        resources.MergedDictionaries.Add(new PopupHostBaseTheme());
-        if (includeWindow)
+        foreach (var (types, create) in Entries)
         {
-            resources.MergedDictionaries.Add(new WindowBaseTheme());
+            if (include(types))
+            {
+                resources.MergedDictionaries.Add(create());
+            }
         }
         return resources;
     }
 
     /// <summary>
-    /// Whether <paramref name="resources"/> already resolve a default ControlTheme for one of <see cref="StyledTypes"/>
-    /// (FluentTheme, SimpleTheme, another theme, or the base theme itself). A theme for <see cref="Window"/> alone does not
-    /// count: an application's own window theme is not a theme for the built-in controls.
+    /// Whether <paramref name="resources"/> already resolve a default ControlTheme for every one of
+    /// <see cref="StyledTypes"/> (other than <see cref="Window"/>), as FluentTheme and SimpleTheme do, or the base theme
+    /// itself. A theme for only some of them, an application's own <see cref="PopupRoot"/> theme for example, does not
+    /// count: <see cref="TryRegister"/> then registers the missing types.
     /// </summary>
     /// <param name="resources">An application, a theme (<c>new FluentTheme()</c>) or any resource node.</param>
     public static bool DefinesBuiltInThemes(IResourceNode resources)
     {
         foreach (var type in StyledTypes)
         {
-            if (type != typeof(Window) && DefinesTheme(resources, type))
+            if (type != typeof(Window) && !DefinesTheme(resources, type))
             {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
-    /// <summary>Whether <see cref="TryRegister"/> would register the base theme in <paramref name="application"/>.</summary>
+    /// <summary>Whether <see cref="TryRegister"/> would register anything in <paramref name="application"/>.</summary>
     /// <param name="application">The application, after it loaded its own styles.</param>
-    public static bool ShouldRegister(Application application) => !DefinesBuiltInThemes(application);
+    public static bool ShouldRegister(Application application)
+        => !DefinesBuiltInThemes(application) && Create(types => !DefinesAny(application, types)).MergedDictionaries.Count > 0;
 
     /// <summary>
-    /// Adds the base theme to <paramref name="application"/>'s merged dictionaries unless another theme already styles the
-    /// built-in controls (see <see cref="ShouldRegister"/>). The <see cref="Window"/> theme is left out when the application
-    /// already has one. Calling it again does nothing.
+    /// Adds the theme files for the types <paramref name="application"/> has no default ControlTheme for yet to its merged
+    /// dictionaries; a type it already styles (FluentTheme, SimpleTheme, its own theme) is left alone. Calling it again
+    /// does nothing.
     /// </summary>
     /// <param name="application">The application, after it loaded its own styles.</param>
-    /// <returns>True when the base theme was registered by this call.</returns>
+    /// <returns>True when the base theme registered at least one theme in this call.</returns>
     public static bool TryRegister(Application application)
     {
-        if (!ShouldRegister(application))
+        var resources = Create(types => !DefinesAny(application, types));
+        if (resources.MergedDictionaries.Count == 0)
         {
             return false;
         }
-        var resources = Create(includeWindow: !DefinesTheme(application, typeof(Window)));
         application.Resources.MergedDictionaries.Add(resources);
         // Avalonia.Browser creates its root (an EmbeddableControlRoot) and applies its template before Arc is set up (its
         // AfterApplicationSetup callback runs ahead of AfterSetup), and a control looks up its default theme only when it
@@ -108,6 +119,18 @@ public static class ArcBaseTheme
             });
         }
         return true;
+    }
+
+    private static bool DefinesAny(IResourceNode resources, Type[] types)
+    {
+        foreach (var type in types)
+        {
+            if (DefinesTheme(resources, type))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static bool DefinesTheme(IResourceNode resources, Type type)
@@ -141,10 +164,22 @@ internal sealed partial class TextSelectionHandleBaseTheme : ResourceDictionary
     public TextSelectionHandleBaseTheme() => AvaloniaXamlLoader.Load(this);
 }
 
-/// <summary>OverlayPopupHost, PopupRoot and EmbeddableControlRoot (<c>PopupHostBaseTheme.axaml</c>).</summary>
-internal sealed partial class PopupHostBaseTheme : ResourceDictionary
+/// <summary>OverlayPopupHost (<c>OverlayPopupHostBaseTheme.axaml</c>).</summary>
+internal sealed partial class OverlayPopupHostBaseTheme : ResourceDictionary
 {
-    public PopupHostBaseTheme() => AvaloniaXamlLoader.Load(this);
+    public OverlayPopupHostBaseTheme() => AvaloniaXamlLoader.Load(this);
+}
+
+/// <summary>PopupRoot (<c>PopupRootBaseTheme.axaml</c>).</summary>
+internal sealed partial class PopupRootBaseTheme : ResourceDictionary
+{
+    public PopupRootBaseTheme() => AvaloniaXamlLoader.Load(this);
+}
+
+/// <summary>EmbeddableControlRoot (<c>EmbeddableControlRootBaseTheme.axaml</c>).</summary>
+internal sealed partial class EmbeddableControlRootBaseTheme : ResourceDictionary
+{
+    public EmbeddableControlRootBaseTheme() => AvaloniaXamlLoader.Load(this);
 }
 
 /// <summary>Window (<c>WindowBaseTheme.axaml</c>).</summary>
