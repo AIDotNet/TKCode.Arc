@@ -174,8 +174,4 @@ public enum GalleryShellLangResourceKind
     UpdateDownload,
     WindowPin,
     WindowUnpin,
-    WindowMinimize,
-    WindowMaximize,
-    WindowRestore,
-    WindowClose,
 }

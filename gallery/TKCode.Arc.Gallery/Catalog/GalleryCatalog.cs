@@ -93,6 +93,9 @@ public static partial class GalleryCatalog
             new("PropertyGrid", "Property grid", "property-grid", 0,
                 "Edit the properties of one or more objects in rows of label and editor, grouped by category, with search, nested values and lists.",
                 IsArc: false, AddedOn: "2026-11-03"),
+            new("ArcWindow", "Window", "arc-window", 0,
+                "A desktop window with an Arc title bar: left, center and right areas for your controls, native dragging, snapping and resizing, and caption buttons that follow the theme.",
+                IsArc: false, AddedOn: "2026-11-04"),
         ], IsArc: false),
     ];
 

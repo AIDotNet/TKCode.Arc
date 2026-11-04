@@ -8,6 +8,16 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Workflow`, `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native` and `TKCode.Arc.Audio.Browser`.
 
+## Unreleased
+
+### Added
+
+- **ArcWindow** (Extras): a desktop window with an Arc title bar, like WPF's `WindowChrome` (issue #38). The client area extends into the decorations and a `TitleBar` is drawn at the top in the theme's colors, with `LeftContent`, `CenterContent` (centered on the whole bar while it fits) and `RightContent` for your own controls. Dragging the bar moves the window, a double click maximizes or restores it, and the edges resize it. On Windows the bar is the system caption (system menu, Aero Snap) and its maximize button opens Windows 11 Snap Layouts; on macOS the traffic lights stay. `CaptionButtons` (`Auto`, `Drawn`, `System`, `None`) picks who draws minimize, maximize and close, and the bar's `Height` sets the title bar height the window asks the system for. Caption button tooltips are localized (en-US, zh-CN, zh-TW).
+
+### Changed
+
+- **Gallery (desktop)**: the gallery window is an `ArcWindow`; its own title bar class is gone.
+
 ## 0.4.0-preview.1 - 2026-11-03
 
 PropertyGrid for editing the properties of objects, multiline Table cells, Select and ColorPicker sizes, loading packages into a running app and a fix for DataGrid exports in the browser (issues #30, #34, #36 and #37).

@@ -3276,6 +3276,18 @@
         <source>The heading; null leaves it out.</source>
         <target>标题;null 则省略。</target>
       </trans-unit>
+      <trans-unit id="ArcWindow">
+        <source>A desktop window whose client area extends into the title bar, with an Arc `TitleBar` drawn at the top. The title bar's empty part moves the window, a double click maximizes or restores it, and on Windows the system treats it as the caption (system menu, Aero Snap) and its maximize button as the system's (Snap Layouts). The window keeps resizing and, on macOS, the traffic lights. Its template hosts the bar and the content in a visual layer manager, so popups, toasts and tooltips work in both.</source>
+        <target>工作区扩展到标题栏的桌面窗口，顶部绘制 Arc `TitleBar`。拖动标题栏的空白部分移动窗口，双击最大化或还原；在 Windows 上，系统把它当作标题栏（系统菜单、Aero 贴靠），把其中的最大化按钮当作系统按钮（贴靠布局）。窗口保留缩放功能，在 macOS 上保留红绿灯按钮。模板把标题栏和内容放在一个可视层管理器中，因此弹出层、通知和工具提示在两者中都能使用。</target>
+      </trans-unit>
+      <trans-unit id="ArcWindow.IsTitleBarVisible">
+        <source>Whether the title bar shows. Without it the content reaches the top of the window, which still extends into the decorations; set `ExtendClientAreaToDecorationsHint` to false as well to get the system's title bar back.</source>
+        <target>是否显示标题栏。不显示时内容延伸到窗口顶部，窗口仍扩展到装饰区域；同时把 `ExtendClientAreaToDecorationsHint` 设为 false 可恢复系统标题栏。</target>
+      </trans-unit>
+      <trans-unit id="ArcWindow.TitleBar">
+        <source>The title bar at the top of the window. A new `TitleBar` by default; set your own to fill its left, center and right content, or null for none.</source>
+        <target>窗口顶部的标题栏。默认是一个新的 `TitleBar`；设为你自己的标题栏以填充左、中、右内容，设为 null 则不显示。</target>
+      </trans-unit>
       <trans-unit id="ArenaPaneState">
         <source>What one of the arena's two answers shows. The arena owns and updates it; read it to follow a round. Before the vote `Model` is set but nothing the person sees carries its name (see `IsBlind`).</source>
         <target>竞技场两个回答之一的显示状态。由竞技场拥有并更新；通过它可跟踪某一轮。投票前，`Model` 已设置，但用户看到的任何内容都不显示其名称（参见 `IsBlind`）。</target>
@@ -25359,6 +25371,38 @@
       <trans-unit id="TimelineEvent">
         <source>One update in a `Timeline` (Arc's `TimelineEvent`): who did what and when, with optional context and a detail revealed in place. Events are read when they are added; replace an event to change it.</source>
         <target>`Timeline` 中的一条更新（Arc 的 `TimelineEvent`）：谁在何时做了什么，可附带上下文，并可在原位展开详细信息。事件在添加时读取；如需修改，请替换该事件。</target>
+      </trans-unit>
+      <trans-unit id="TitleBar">
+        <source>The title bar of an `ArcWindow`: an icon and the window title, then three areas for your own controls (left, center and right) and the caption buttons. Its empty part moves the window and a double click maximizes or restores it; controls placed in the three areas take their own input. On Windows the bar is the system caption (system menu, Aero Snap) and the maximize button is the system's (Snap Layouts). The center content is centered on the whole bar while it fits between the sides. Only the window's own bar drives the window; one placed anywhere else is a preview.</source>
+        <target>`ArcWindow` 的标题栏：图标和窗口标题，随后是放置你自己控件的三个区域（左、中、右）以及标题栏按钮。拖动空白部分移动窗口，双击最大化或还原；三个区域中的控件自己处理输入。在 Windows 上，它就是系统标题栏（系统菜单、Aero 贴靠），最大化按钮就是系统按钮（贴靠布局）。中间内容在两侧放得下时居中于整个标题栏。只有窗口自己的标题栏会控制窗口；放在其他位置的只是预览。</target>
+      </trans-unit>
+      <trans-unit id="TitleBar.CaptionButtons">
+        <source>Who draws minimize, maximize and close: the bar (`Drawn`), the system (`System`, the macOS traffic lights, with room left for them) or neither (`None`). `Auto` picks `System` on macOS and `Drawn` elsewhere.</source>
+        <target>由谁绘制最小化、最大化和关闭按钮：标题栏（`Drawn`）、系统（`System`，即 macOS 红绿灯，标题栏为其留出位置）或都不绘制（`None`）。`Auto` 在 macOS 上选择 `System`，其他系统选择 `Drawn`。</target>
+      </trans-unit>
+      <trans-unit id="TitleBar.CenterContent">
+        <source>Content in the middle of the bar (a search field, tabs). It is centered on the whole bar while it fits between the sides; give it a `Width` or `MaxWidth`.</source>
+        <target>标题栏中间的内容（搜索框、标签页）。在两侧放得下时居中于整个标题栏；请为它设置 `Width` 或 `MaxWidth`。</target>
+      </trans-unit>
+      <trans-unit id="TitleBar.Icon">
+        <source>The icon before the title, such as an `Image` or an `ArcGlyph`; none by default.</source>
+        <target>标题前的图标，例如 `Image` 或 `ArcGlyph`；默认没有。</target>
+      </trans-unit>
+      <trans-unit id="TitleBar.LeftContent">
+        <source>Content after the title, at the left of the bar (a menu, navigation).</source>
+        <target>标题之后、标题栏左侧的内容（菜单、导航）。</target>
+      </trans-unit>
+      <trans-unit id="TitleBar.RightContent">
+        <source>Content before the caption buttons, at the right of the bar (tool buttons, a theme switcher).</source>
+        <target>标题栏按钮之前、标题栏右侧的内容（工具按钮、主题切换）。</target>
+      </trans-unit>
+      <trans-unit id="TitleBar.Title">
+        <source>The title. Follows the window's `Title` unless set.</source>
+        <target>标题。未设置时跟随窗口的 `Title`。</target>
+      </trans-unit>
+      <trans-unit id="TitleBarCaptionButtons">
+        <source>Who draws minimize, maximize and close (see `CaptionButtons`).</source>
+        <target>由谁绘制最小化、最大化和关闭按钮（参见 `CaptionButtons`）。</target>
       </trans-unit>
       <trans-unit id="TldrArticle">
         <source>The article a `TldrToggle` shows and summarizes: its title, its paragraphs (with stable ids) and the optional source, author, date and reading time of the header. Data only; give the card a new article to change it.</source>

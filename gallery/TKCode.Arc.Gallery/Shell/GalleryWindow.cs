@@ -1,28 +1,21 @@
-using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Gallery.Catalog;
+using TKCode.Arc.Gallery.Localization;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Chrome;
-using Avalonia.Controls.Presenters;
-using Avalonia.Controls.Primitives;
-using Avalonia.Controls.Templates;
 using Avalonia.Input;
 using Avalonia.Layout;
-using Avalonia.Styling;
-using Avalonia.Threading;
 
 namespace TKCode.Arc.Gallery.Shell;
 
 /// <summary>
-/// The desktop window around a <see cref="GalleryShell"/>; the browser host shows the shell as its single view. The client
-/// area extends into the decorations and the window draws its own <see cref="GalleryTitleBar"/> above the shell (on macOS
-/// the system's traffic lights stay in it). Its template hosts bar and shell in a named visual layer manager, so popups,
-/// toasts, tooltips and focus adorners have their overlay and adorner layers, and its text defaults follow ArcDesign.
+/// The desktop window around a <see cref="GalleryShell"/>; the browser host shows the shell as its single view. It is an
+/// <see cref="ArcWindow"/>: an Arc <see cref="Arc.TitleBar"/> with the logo, the window title and the keep-on-top pin sits
+/// above the shell, with minimize, maximize and close drawn on Windows and Linux and the traffic lights kept on macOS.
 /// </summary>
-public sealed class GalleryWindow : Window
+public sealed class GalleryWindow : ArcWindow
 {
     private readonly GalleryShell _shell = new();
-    private Control? _frame;
+    private IDisposable? _pinLabel;
 
     /// <summary>A window for this system: caption buttons drawn on Windows and Linux, the traffic lights kept on macOS.</summary>
     public GalleryWindow()
@@ -30,7 +23,10 @@ public sealed class GalleryWindow : Window
     {
     }
 
-    /// <param name="drawsCaptionButtons">Whether the title bar draws minimize, maximize and close (see <see cref="GalleryTitleBar"/>).</param>
+    /// <param name="drawsCaptionButtons">
+    /// Whether the title bar draws minimize, maximize and close (<see cref="TitleBarCaptionButtons.Drawn"/>); otherwise it
+    /// leaves room for the system's (<see cref="TitleBarCaptionButtons.System"/>).
+    /// </param>
     public GalleryWindow(bool drawsCaptionButtons)
     {
         Title = "TKCode.Arc Gallery";
@@ -39,17 +35,27 @@ public sealed class GalleryWindow : Window
         Height = 860;
         MinWidth = 900;
         MinHeight = 600;
-        TitleBar = new GalleryTitleBar(this, drawsCaptionButtons);
-        ExtendClientAreaToDecorationsHint = true;
-        ExtendClientAreaTitleBarHeightHint = GalleryTitleBar.BarHeight;
-        // Where the system leaves the decorations to the app (Windows, Linux), Avalonia draws a title bar from the
-        // decorations theme; an empty theme draws nothing, so the gallery's bar is the only one. Resize grips stay.
-        WindowDecorationsTheme = new ControlTheme(typeof(WindowDrawnDecorations));
-        Template = new FuncControlTemplate<GalleryWindow>(BuildTemplate);
-        ArcTokens.Bind(this, BackgroundProperty, ArcDesignTokenKind.Background);
-        ArcTokens.Bind(this, ForegroundProperty, ArcDesignTokenKind.Foreground);
-        ArcTokens.Bind(this, FontFamilyProperty, ArcDesignTokenKind.BodyFontFamily);
-        ArcTokens.Bind(this, FontSizeProperty, ArcDesignTokenKind.TypeSM);
+
+        PinButton = new Button
+        {
+            Variant = ButtonVariant.Ghost,
+            Size = ControlSize.Small,
+            IsPressScaleEnabled = false,
+            Padding = new Thickness(0),
+            Width = 30,
+            Height = 30,
+            MinWidth = 30,
+            MinHeight = 30,
+            Focusable = false
+        };
+        PinButton.Click += (_, _) => Topmost = !Topmost;
+        TitleBar = new TitleBar
+        {
+            Icon = new Image { Source = GalleryBrand.CreateLogo(), Width = 18, Height = 18, VerticalAlignment = VerticalAlignment.Center },
+            RightContent = PinButton,
+            CaptionButtons = drawsCaptionButtons ? TitleBarCaptionButtons.Drawn : TitleBarCaptionButtons.System
+        };
+        SyncPin();
         Content = _shell;
     }
 
@@ -59,10 +65,10 @@ public sealed class GalleryWindow : Window
 
     public GalleryTopBar TopBar => _shell.TopBar;
 
-    /// <summary>The window's own title bar: logo, title, the keep-on-top pin and (not on macOS) the caption buttons.</summary>
-    public GalleryTitleBar TitleBar { get; }
-
     public GalleryShell Shell => _shell;
+
+    /// <summary>Keeps the window above other windows (<see cref="Window.Topmost"/>) or lets it go; in the title bar's right area.</summary>
+    public Button PinButton { get; }
 
     protected override void OnKeyDown(KeyEventArgs e)
     {
@@ -80,45 +86,36 @@ public sealed class GalleryWindow : Window
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-        if (change.Property == WindowStateProperty)
+        if (change.Property == TopmostProperty)
         {
-            // Windows keeps the frame of a maximized window off screen; the next layout knows the margin.
-            Dispatcher.UIThread.Post(SyncOffScreenMargin);
+            SyncPin();
         }
     }
 
-    private void SyncOffScreenMargin()
+    /// <summary>A pinned window shows the crossed-out pin on a secondary (filled) button; the tooltip says what a press does next.</summary>
+    private void SyncPin()
     {
-        if (_frame is not null)
+        var button = PinButton;
+        if (button is null)
         {
-            _frame.Margin = WindowState == WindowState.Maximized ? OffScreenMargin : default;
+            return;
         }
+        var pinned = Topmost;
+        button.Content = new ArcGlyph { Data = pinned ? GalleryIcons.PinOff : GalleryIcons.Pin, Size = 15 };
+        button.Variant = pinned ? ButtonVariant.Secondary : ButtonVariant.Ghost;
+        _pinLabel?.Dispose();
+        var text = pinned ? GalleryShellLangResourceKind.WindowUnpin : GalleryShellLangResourceKind.WindowPin;
+        var tip = GalleryText.Bind(button, Tooltip.TipProperty, text);
+        var name = GalleryText.Bind(button, Avalonia.Automation.AutomationProperties.NameProperty, text);
+        _pinLabel = new Labels(tip, name);
     }
 
-    /// <summary>
-    /// Background, then the title bar over the content inside a visual layer manager. Avalonia 12 gives the manager named
-    /// <c>PART_VisualLayerManager</c> its overlay layer, which hosts Arc's popups, tooltips and toasts.
-    /// </summary>
-    private static Control BuildTemplate(GalleryWindow window, INameScope scope)
+    private sealed class Labels(IDisposable tip, IDisposable name) : IDisposable
     {
-        var presenter = new ContentPresenter();
-        presenter.Bind(ContentPresenter.ContentProperty, window.GetObservable(ContentProperty));
-        presenter.Bind(ContentPresenter.ContentTemplateProperty, window.GetObservable(ContentTemplateProperty));
-        presenter.Bind(Layoutable.MarginProperty, window.GetObservable(PaddingProperty));
-        scope.Register("PART_ContentPresenter", presenter);
-
-        var frame = new DockPanel();
-        DockPanel.SetDock(window.TitleBar, Dock.Top);
-        frame.Children.Add(window.TitleBar);
-        frame.Children.Add(presenter);
-
-        var layers = new VisualLayerManager { Child = frame };
-        scope.Register("PART_VisualLayerManager", layers);
-
-        var background = new Border { Child = layers };
-        background.Bind(Border.BackgroundProperty, window.GetObservable(BackgroundProperty));
-        window._frame = background;
-        window.SyncOffScreenMargin();
-        return background;
+        public void Dispose()
+        {
+            tip.Dispose();
+            name.Dispose();
+        }
     }
 }

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="2.1" srcLang="en-US" trgLang="zh-TW" xmlns="urn:oasis:names:tc:xliff:document:2.0">
+  <file id="TKCode.Arc.Localization.TitleBarLangResourceKind">
+    <unit id="Close">
+      <segment>
+        <source>Close</source>
+        <target state="translated">關閉</target>
+      </segment>
+    </unit>
+    <unit id="Maximize">
+      <segment>
+        <source>Maximize</source>
+        <target state="translated">最大化</target>
+      </segment>
+    </unit>
+    <unit id="Minimize">
+      <segment>
+        <source>Minimize</source>
+        <target state="translated">最小化</target>
+      </segment>
+    </unit>
+    <unit id="Restore">
+      <segment>
+        <source>Restore</source>
+        <target state="translated">還原</target>
+      </segment>
+    </unit>
+  </file>
+</xliff>

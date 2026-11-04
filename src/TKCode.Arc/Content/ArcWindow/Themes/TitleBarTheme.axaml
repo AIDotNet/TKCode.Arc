@@ -1,0 +1,197 @@
+<!--
+    TitleBar (design/components/content/arc-window.md): left (room for the macOS traffic lights, icon, title, left content),
+    center content and right (right content, a hairline, minimize / maximize / close), laid out by TitleBarPanel. The caption
+    buttons are TitleBarCaptionButton, themed here: ghost squares, close turns danger under the pointer.
+-->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.TitleBarTheme">
+    <ControlTheme x:Key="{x:Type arc:TitleBarCaptionButton}" TargetType="arc:TitleBarCaptionButton">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Width" Value="{arc:TitleBarTokenResource CaptionButtonSize}" />
+        <Setter Property="Height" Value="{arc:TitleBarTokenResource CaptionButtonSize}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TitleBarCaptionButton">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <!-- Close is the one destructive caption button: danger fill and glyph under the pointer. -->
+        <Style Selector="^.close:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource DangerSubtle}" />
+        </Style>
+        <Style Selector="^.close:pressed">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource DangerSubtle}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:TitleBar}" TargetType="arc:TitleBar">
+        <Setter Property="Height" Value="{arc:TitleBarTokenResource Height}" />
+        <Setter Property="Padding" Value="{arc:TitleBarTokenResource Padding}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="BorderThickness" Value="{arc:TitleBarTokenResource BorderThickness}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontSize" Value="{arc:TitleBarTokenResource TitleFontSize}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TitleBar">
+                <Border Name="PART_Root"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Padding="{TemplateBinding Padding}">
+                    <arc:TitleBarPanel Name="PART_Panel" Spacing="{arc:TitleBarTokenResource SectionSpacing}">
+                        <StackPanel Name="PART_Leading"
+                                    Orientation="Horizontal"
+                                    Spacing="{arc:TitleBarTokenResource ItemSpacing}"
+                                    VerticalAlignment="Center">
+                            <!-- The macOS traffic lights; shown in System mode outside full screen (which hides them). -->
+                            <Border Name="PART_SystemInset"
+                                    Width="{arc:TitleBarTokenResource SystemButtonsWidth}"
+                                    IsVisible="False" />
+                            <ContentPresenter Name="PART_IconPresenter"
+                                              Content="{TemplateBinding Icon}"
+                                              IsVisible="{TemplateBinding Icon, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                              MaxWidth="{arc:TitleBarTokenResource IconSize}"
+                                              MaxHeight="{arc:TitleBarTokenResource IconSize}"
+                                              VerticalAlignment="Center" />
+                            <!-- Not hit-testable: a press on the title is a press on the bar. -->
+                            <TextBlock Name="PART_Title"
+                                       Text="{TemplateBinding Title}"
+                                       IsVisible="{TemplateBinding Title, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                       IsHitTestVisible="False"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center" />
+                            <ContentPresenter Name="PART_LeftPresenter"
+                                              Content="{TemplateBinding LeftContent}"
+                                              IsVisible="{TemplateBinding LeftContent, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                              VerticalAlignment="Center" />
+                        </StackPanel>
+                        <ContentPresenter Name="PART_CenterPresenter"
+                                          Content="{TemplateBinding CenterContent}"
+                                          IsVisible="{TemplateBinding CenterContent, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                          VerticalAlignment="Center" />
+                        <StackPanel Name="PART_Trailing"
+                                    Orientation="Horizontal"
+                                    Spacing="{arc:TitleBarTokenResource ButtonSpacing}"
+                                    VerticalAlignment="Center">
+                            <ContentPresenter Name="PART_RightPresenter"
+                                              Content="{TemplateBinding RightContent}"
+                                              IsVisible="{TemplateBinding RightContent, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                              VerticalAlignment="Center" />
+                            <Border Name="PART_CaptionDivider"
+                                    Width="1"
+                                    Height="{arc:TitleBarTokenResource DividerHeight}"
+                                    Margin="4,0"
+                                    VerticalAlignment="Center"
+                                    IsVisible="False" />
+                            <StackPanel Name="PART_CaptionButtons"
+                                        Orientation="Horizontal"
+                                        Spacing="{arc:TitleBarTokenResource ButtonSpacing}"
+                                        VerticalAlignment="Center"
+                                        IsVisible="False">
+                                <arc:TitleBarCaptionButton Name="PART_MinimizeButton"
+                                                           arc:Tooltip.Tip="{arc:TitleBarLangResource Minimize}"
+                                                           AutomationProperties.Name="{arc:TitleBarLangResource Minimize}">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Minus}" Size="{arc:TitleBarTokenResource CaptionGlyphSize}" />
+                                </arc:TitleBarCaptionButton>
+                                <arc:TitleBarCaptionButton Name="PART_MaximizeButton">
+                                    <arc:ArcGlyph Name="PART_MaximizeGlyph" />
+                                </arc:TitleBarCaptionButton>
+                                <arc:TitleBarCaptionButton Name="PART_CloseButton"
+                                                           Classes="close"
+                                                           arc:Tooltip.Tip="{arc:TitleBarLangResource Close}"
+                                                           AutomationProperties.Name="{arc:TitleBarLangResource Close}">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}" Size="{arc:TitleBarTokenResource CaptionGlyphSize}" />
+                                </arc:TitleBarCaptionButton>
+                            </StackPanel>
+                        </StackPanel>
+                    </arc:TitleBarPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ Border#PART_CaptionDivider">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        </Style>
+
+        <!-- Maximize, or restore while maximized: glyph, tooltip and name follow the state. -->
+        <Style Selector="^ /template/ arc|TitleBarCaptionButton#PART_MaximizeButton">
+            <Setter Property="arc:Tooltip.Tip" Value="{arc:TitleBarLangResource Maximize}" />
+            <Setter Property="AutomationProperties.Name" Value="{arc:TitleBarLangResource Maximize}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_MaximizeGlyph">
+            <Setter Property="Data" Value="{x:Static arc:ArcIcons.Square}" />
+            <Setter Property="Size" Value="{arc:TitleBarTokenResource MaximizeGlyphSize}" />
+        </Style>
+        <Style Selector="^:maximized">
+            <Style Selector="^ /template/ arc|TitleBarCaptionButton#PART_MaximizeButton">
+                <Setter Property="arc:Tooltip.Tip" Value="{arc:TitleBarLangResource Restore}" />
+                <Setter Property="AutomationProperties.Name" Value="{arc:TitleBarLangResource Restore}" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_MaximizeGlyph">
+                <Setter Property="Data" Value="{x:Static arc:ArcIcons.Copy}" />
+                <Setter Property="Size" Value="{arc:TitleBarTokenResource RestoreGlyphSize}" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:drawn-buttons /template/ StackPanel#PART_CaptionButtons">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:drawn-buttons:has-right /template/ Border#PART_CaptionDivider">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:system-buttons:not(:fullscreen) /template/ Border#PART_SystemInset">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <!-- The title dims while another window is active. -->
+        <Style Selector="^:inactive /template/ TextBlock#PART_Title">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>
