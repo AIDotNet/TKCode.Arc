@@ -298,4 +298,32 @@ public class SliderTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void The_Control_Row_Gives_Way_In_A_Short_Parent()
+    {
+        // Issue #42: the row asks for 44px; in a parent shorter than the slider it used to spill out the bottom.
+        var natural = new Slider { Label = "Opacity", Value = 100, Width = 322 };
+        var squeezed = new Slider { Label = "Opacity", Value = 100, Width = 322 };
+        var window = TestHelpers.Show(new StackPanel
+        {
+            Children = { natural, new Border { Height = 44, Child = squeezed } },
+        });
+        try
+        {
+            natural.Rail!.Bounds.Height.ShouldBe(44);
+
+            squeezed.Bounds.Height.ShouldBeLessThanOrEqualTo(44);
+            var rail = squeezed.Rail!;
+            rail.Bounds.Height.ShouldBe(44 - 19.6, 1); // layout rounding
+            rail.Bounds.Bottom.ShouldBeLessThanOrEqualTo(squeezed.Bounds.Height + 0.01);
+            var thumb = rail.Thumbs[0].Bounds;
+            (thumb.Top + thumb.Height / 2).ShouldBe(rail.Bounds.Height / 2, 0.01);
+            thumb.Height.ShouldBe(22);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }
