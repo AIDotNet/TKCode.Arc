@@ -9,6 +9,7 @@ using Avalonia.Controls.Selection;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 
 namespace TKCode.Arc;
 
@@ -347,6 +348,13 @@ public class ChipGroup : SelectingItemsControl
             _syncPosted = false;
             Sync(animate: IsLoaded);
         }, DispatcherPriority.Background);
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        // Drop any pending refresh so it neither roots the control nor blocks a later attach.
+        _syncPosted = false;
     }
 
     private void OnSelectionChangedInternal()

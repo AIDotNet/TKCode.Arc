@@ -1,5 +1,6 @@
 using TKCode.Arc.Primitives;
 using System.Collections.Specialized;
+using System.Globalization;
 using TKCode.Arc.Motion;
 using Avalonia;
 using Avalonia.Automation;
@@ -165,20 +166,24 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
     /// <inheritdoc cref="EndContentProperty"/>
     public object? EndContent { get => GetValue(EndContentProperty); set => SetValue(EndContentProperty, value); }
 
-    private IList<SliderMark> _marks = new AvaloniaList<SliderMark>();
+    private IList<SliderMark>? _marks;
     // Marks may be a view model's list, and their properties may be bound: they are observed only while the slider is
     // shown, and re-read when it comes back.
-    private readonly ObservedItems _observedMarks;
+    private ObservedItems? _observedMarks;
     private bool _watching;
 
     /// <summary>Ticks on the track; labeled marks also print under it and are clickable.</summary>
     public IList<SliderMark> Marks
     {
-        get => _marks;
+        get => _marks ??= new AvaloniaList<SliderMark>();
         set
         {
-            if (SetAndRaise(MarksProperty, ref _marks, value ?? new AvaloniaList<SliderMark>()))
+            var next = value ?? new AvaloniaList<SliderMark>();
+            if (!EqualityComparer<IList<SliderMark>>.Default.Equals(_marks!, next))
             {
+                var old = _marks;
+                _marks = next;
+                RaisePropertyChanged(MarksProperty, old!, next);
                 WatchMarks();
                 UpdateMarks();
             }
@@ -203,11 +208,11 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
 
     private sealed class ThumbMotion
     {
-        public required MotionValue<double> Position { get; init; }
-        public required MotionValue<double> Lag { get; init; }
-        public required MotionValue<double> Lift { get; init; }
+        public MotionValue<double>? Position { get; set; }
+        public MotionValue<double>? Lag { get; set; }
+        public MotionValue<double>? Lift { get; set; }
         public double Goal { get; set; } = double.NaN;
-        public double Shown => Position.Value + Lag.Value;
+        public double Shown => (Position?.Value ?? 0) + (Lag?.Value ?? 0);
     }
 
     private sealed class DragState
@@ -219,10 +224,12 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
         public double Raw;
     }
 
-    private readonly ThumbMotion[] _thumbs = new ThumbMotion[2];
+    private static readonly CultureInfo s_culture = CultureInfo.GetCultureInfo("en-US");
+    private readonly ThumbMotion[] _thumbs = [new ThumbMotion(), new ThumbMotion()];
     private readonly double[] _values = new double[2];
-    private readonly SliderVelocityTracker _tracker = new();
-    private readonly DragState _dragState = new();
+    private readonly Action<double> _onMoved;
+    private SliderVelocityTracker? _tracker;
+    private DragState? _dragState;
     private bool _dragActive;
     private SliderRail? _rail;
     private SliderMarkLabels? _markLabels;
@@ -244,19 +251,28 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
 
     public Slider()
     {
-        _observedMarks = new ObservedItems(_ => UpdateMarks());
-        for (var i = 0; i < 2; i++)
-        {
-            var index = i;
-            var position = new MotionValue<double>(this, 0, MotionVectors.Double);
-            var lag = new MotionValue<double>(this, 0, MotionVectors.Double);
-            var lift = new MotionValue<double>(this, 1, MotionVectors.Double);
-            position.Changed += _ => OnThumbMoved();
-            lag.Changed += _ => OnThumbMoved();
-            lift.Changed += _ => OnThumbMoved();
-            _thumbs[index] = new ThumbMotion { Position = position, Lag = lag, Lift = lift };
-        }
+        // One cached delegate for every thumb motion value instead of one capturing lambda each.
+        _onMoved = OnMoved;
         UpdatePseudoClasses();
+    }
+
+    /// <summary>Creates a thumb's motion values the first time they are needed: a never-shown slider allocates none.</summary>
+    private void EnsureThumbMotion(int index)
+    {
+        var thumb = _thumbs[index];
+        if (thumb.Position is not null)
+        {
+            return;
+        }
+        var position = new MotionValue<double>(this, 0, MotionVectors.Double);
+        var lag = new MotionValue<double>(this, 0, MotionVectors.Double);
+        var lift = new MotionValue<double>(this, 1, MotionVectors.Double);
+        position.Changed += _onMoved;
+        lag.Changed += _onMoved;
+        lift.Changed += _onMoved;
+        thumb.Position = position;
+        thumb.Lag = lag;
+        thumb.Lift = lift;
     }
 
     protected override Type StyleKeyOverride => typeof(Slider);
@@ -269,7 +285,14 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
 
     private double Step => SmallChange > 0 ? SmallChange : 1;
 
-    private int Decimals => Math.Max(SliderMath.DecimalsOf(Step), SliderMath.DecimalsOf(Minimum));
+    // Decimals and the "N" format string are derived from Minimum and SmallChange; both change rarely, so they are
+    // cached and invalidated in OnPropertyChanged.
+    private int _decimals = -1;
+    private string? _format;
+
+    private int Decimals => _decimals >= 0 ? _decimals : _decimals = Math.Max(SliderMath.DecimalsOf(Step), SliderMath.DecimalsOf(Minimum));
+
+    private string FormatString => _format ??= "N" + Math.Clamp(Decimals, 0, 15);
 
     /// <summary>PageUp / PageDown / Shift+arrow step: <see cref="RangeBase.LargeChange"/> when set, else a tenth of the range.</summary>
     internal double LargeStep => IsSet(LargeChangeProperty) && LargeChange > 0
@@ -296,7 +319,7 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
         return high < low ? low : Math.Clamp(snapped, low, high);
     }
 
-    internal string FormatValue(double value) => ValueFormatter?.Invoke(value) ?? SliderMath.Format(value, Decimals);
+    internal string FormatValue(double value) => ValueFormatter?.Invoke(value) ?? value.ToString(FormatString, s_culture);
 
     // Minimum can briefly exceed Maximum while XAML sets them one by one (Minimum="360" before Maximum="900"): RangeBase
     // coerces Maximum only after Minimum's change is reported, and Math.Clamp throws when min > max.
@@ -359,22 +382,27 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
         for (var i = 0; i < Count; i++)
         {
             var thumb = _thumbs[i];
+            if (thumb.Position is not { } position || thumb.Lag is not { } lag)
+            {
+                // No template yet: the values are read and ApplyTemplate will place the thumbs.
+                continue;
+            }
             var target = ToPosition(_values[i]);
-            if ((_dragActive && _dragState.Index == i) || thumb.Goal == target)
+            if ((_dragActive && _dragState!.Index == i) || thumb.Goal == target)
             {
                 continue;
             }
             var wasPlaced = !double.IsNaN(thumb.Goal);
             thumb.Goal = target;
             var from = thumb.Shown;
-            thumb.Lag.Jump(0);
+            lag.Jump(0);
             if (!animate || !wasPlaced || !IsLoaded)
             {
-                thumb.Position.Jump(target);
+                position.Jump(target);
                 continue;
             }
-            thumb.Position.Jump(from);
-            _ = thumb.Position.AnimateTo(target, MotionSpec.Spring(ThumbSpring));
+            position.Jump(from);
+            _ = position.AnimateTo(target, MotionSpec.Spring(ThumbSpring));
         }
         UpdateTexts();
         _rail?.InvalidateVisual();
@@ -394,6 +422,8 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
         _readoutHigh = e.NameScope.Find<SliderNumberText>(ReadoutHighPart);
         if (_rail is not null)
         {
+            EnsureThumbMotion(0);
+            EnsureThumbMotion(1);
             _rail.Slider = this;
             _rail.Setup(this, this, 2, CreateBubbleText, bubble =>
             {
@@ -433,6 +463,8 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
         else if (change.Property == MinimumProperty || change.Property == MaximumProperty || change.Property == SmallChangeProperty ||
                  change.Property == MinStepsBetweenThumbsProperty)
         {
+            _decimals = -1;
+            _format = null;
             foreach (var thumb in _thumbs)
             {
                 thumb.Goal = double.NaN;
@@ -468,7 +500,8 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
     /// <summary>Listens to the current marks while shown (and to nothing otherwise).</summary>
     private void WatchMarks()
     {
-        _observedMarks.Observe(_watching ? _marks : null);
+        var observed = _observedMarks ??= new ObservedItems(_ => UpdateMarks());
+        observed.Observe(_watching ? Marks : null);
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -536,7 +569,8 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
     private void UpdateTexts()
     {
         var low = FormatValue(_values[0]);
-        var high = FormatValue(_values[1]);
+        // Without a range the two values are the same (ReadValues), so reuse the low string.
+        var high = IsRange ? FormatValue(_values[1]) : low;
         _readoutLow?.SetText(low);
         _readoutHigh?.SetText(high);
         _bubbleTexts[0]?.SetText(low);
@@ -555,6 +589,8 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
 
     void ISliderRailOwner.OnRailArranged(SliderRailBase rail) => PlaceVisuals();
 
+    private void OnMoved(double _) => OnThumbMoved();
+
     private void OnThumbMoved()
     {
         PlaceVisuals();
@@ -571,7 +607,7 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
         {
             var motion = _thumbs[i];
             var x = motion.Shown / SliderMath.Span * rail.TrackWidth;
-            rail.Thumbs[i].Place(x, motion.Lift.Value);
+            rail.Thumbs[i].Place(x, motion.Lift?.Value ?? 1);
             rail.PlaceBubble(i, rail.TrackLeft + x);
         }
     }
@@ -595,7 +631,7 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
         {
             var target = i == index ? 1.16 : 1.0;
             var lift = _thumbs[i].Lift;
-            if (lift.Target != target)
+            if (lift is not null && lift.Target != target)
             {
                 _ = lift.AnimateTo(target, MotionSpec.Spring(ArcSpring.Snappy));
             }
@@ -695,12 +731,14 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
         e.Pointer.Capture(rail);
         e.Handled = true;
         _dragActive = true;
-        _dragState.Pointer = e.Pointer;
-        _dragState.Index = -1;
-        _dragState.Grab = 0;
-        _dragState.StartX = x;
-        _dragState.Raw = at;
-        _tracker.Reset();
+        var drag = _dragState ??= new DragState();
+        drag.Pointer = e.Pointer;
+        drag.Index = -1;
+        drag.Grab = 0;
+        drag.StartX = x;
+        drag.Raw = at;
+        var tracker = _tracker ??= new SliderVelocityTracker();
+        tracker.Reset();
         if (grabbed == -2)
         {
             // Stacked range thumbs wait for the first movement to decide which one the pointer means.
@@ -709,18 +747,20 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
         }
         var index = grabbed >= 0 ? grabbed : Nearest(at);
         Begin(rail, index, at, press: grabbed < 0, e.Timestamp);
-        _tracker.Add(e.Timestamp, _thumbs[index].Position.Value);
+        tracker.Add(e.Timestamp, _thumbs[index].Position!.Value);
     }
 
     /// <summary>Starts tracking one thumb. A pressed track springs the thumb over; a grabbed thumb keeps its grab offset.</summary>
     private void Begin(SliderRailBase rail, int index, double at, bool press, ulong time)
     {
+        EnsureThumbMotion(index);
         var thumb = _thumbs[index];
+        var drag = _dragState!;
         var from = thumb.Shown;
-        _dragState.Index = index;
-        _dragState.Grab = press ? 0 : at - from;
-        thumb.Lag.Jump(0);
-        thumb.Position.Jump(from);
+        drag.Index = index;
+        drag.Grab = press ? 0 : at - from;
+        thumb.Lag!.Jump(0);
+        thumb.Position!.Jump(from);
         _dragging = index;
         _lastActive = index;
         ClearLinger();
@@ -737,46 +777,50 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
     /// <summary>Places the dragged thumb under the pointer, with resistance past its limits, and commits the stepped value.</summary>
     private void Follow(SliderRailBase rail, double at, ulong time, bool press = false)
     {
-        var index = _dragState.Index;
+        var drag = _dragState!;
+        var index = drag.Index;
         if (index < 0)
         {
             return;
         }
         var thumb = _thumbs[index];
+        var position = thumb.Position!;
+        var lag = thumb.Lag!;
         var width = rail.TrackWidth;
         var full = ArcMotion.IsFull(this);
-        var raw = at - _dragState.Grab;
+        var raw = at - drag.Grab;
         var low = ToPosition(LowOf(index));
         var high = ToPosition(HighOf(index));
         var edge = Math.Clamp(raw, Math.Min(low, high), Math.Max(low, high));
         var placed = full ? edge + SliderMath.Rubber((raw - edge) / SliderMath.Span * width, Stretch) / width * SliderMath.Span : edge;
         if (press && full)
         {
-            var from = thumb.Position.Value;
-            thumb.Position.Jump(placed);
-            thumb.Lag.Jump(from - placed);
-            _ = thumb.Lag.AnimateTo(0, MotionSpec.Spring(ThumbSpring));
+            var from = position.Value;
+            position.Jump(placed);
+            lag.Jump(from - placed);
+            _ = lag.AnimateTo(0, MotionSpec.Spring(ThumbSpring));
         }
         else
         {
-            thumb.Position.Jump(placed);
+            position.Jump(placed);
         }
-        _dragState.Raw = raw;
-        _tracker.Add(time, placed);
+        drag.Raw = raw;
+        _tracker!.Add(time, placed);
         Commit(index, Settle(index, ValueAt(raw)));
     }
 
     void ISliderRailOwner.OnRailMoved(SliderRailBase rail, PointerEventArgs e)
     {
-        if (!_dragActive || e.Pointer != _dragState.Pointer)
+        var drag = _dragState;
+        if (!_dragActive || drag is null || e.Pointer != drag.Pointer)
         {
             return;
         }
         var x = e.GetPosition(rail).X;
         var at = rail.ToPosition(x);
-        if (_dragState.Index < 0)
+        if (drag.Index < 0)
         {
-            var dx = x - _dragState.StartX;
+            var dx = x - drag.StartX;
             if (Math.Abs(dx) < 2)
             {
                 return;
@@ -788,7 +832,7 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
 
     void ISliderRailOwner.OnRailReleased(SliderRailBase rail, PointerReleasedEventArgs e)
     {
-        if (!_dragActive || e.Pointer != _dragState.Pointer)
+        if (!_dragActive || e.Pointer != _dragState!.Pointer)
         {
             return;
         }
@@ -807,36 +851,39 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
     private void End(SliderRailBase rail, ulong time, bool release)
     {
         _dragActive = false;
-        var index = _dragState.Index;
-        _dragState.Pointer = null;
+        var drag = _dragState!;
+        var index = drag.Index;
+        drag.Pointer = null;
         if (index < 0)
         {
             return;
         }
         var thumb = _thumbs[index];
+        var position = thumb.Position!;
+        var lag = thumb.Lag!;
         var width = rail.TrackWidth;
         // Velocity in track units per second; a release during the catch-up spring keeps that spring's speed too.
-        var velocity = (release ? _tracker.Velocity(time) : 0) + thumb.Lag.Velocity;
+        var velocity = (release ? _tracker?.Velocity(time) ?? 0 : 0) + lag.Velocity;
         var stepPosition = Step / Span * SliderMath.Span;
         var carry = release && stepPosition / SliderMath.Span * width >= SnapPixels
             ? Math.Clamp(SliderMath.Project(velocity), -stepPosition, stepPosition)
             : 0;
-        var next = Settle(index, ValueAt(_dragState.Raw + carry));
+        var next = Settle(index, ValueAt(drag.Raw + carry));
         var from = thumb.Shown;
         var target = ToPosition(next);
-        thumb.Lag.Jump(0);
-        thumb.Position.Jump(from);
+        lag.Jump(0);
+        position.Jump(from);
         thumb.Goal = target;
         if (IsLoaded && ArcMotion.IsFull(this))
         {
-            _ = thumb.Position.AnimateTo(target, MotionSpec.Spring(ThumbSpring), velocity);
+            _ = position.AnimateTo(target, MotionSpec.Spring(ThumbSpring), velocity);
         }
         else
         {
-            thumb.Position.Jump(target);
+            position.Jump(target);
         }
         Commit(index, next);
-        _dragState.Index = -1;
+        drag.Index = -1;
         _dragging = -1;
         SetLifted(-1);
         UpdatePseudoClasses();
@@ -875,6 +922,7 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
             return;
         }
         var index = thumb.Index;
+        EnsureThumbMotion(index);
         var now = _values[index];
         var step = Step;
         var large = LargeStep;
@@ -915,10 +963,10 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
             // At a limit the thumb strains toward the press and springs home, so the key still answers.
             var toward = Math.Sign(wanted - now);
             var motion = _thumbs[index];
-            if (toward != 0 && _rail is not null && IsLoaded && ArcMotion.IsFull(this) && !double.IsNaN(motion.Goal))
+            if (toward != 0 && _rail is not null && IsLoaded && ArcMotion.IsFull(this) && !double.IsNaN(motion.Goal) && motion.Position is { } position)
             {
                 var velocity = toward * BumpSpeed / _rail.TrackWidth * SliderMath.Span;
-                _ = motion.Position.AnimateTo(motion.Goal, MotionSpec.Spring(KickSpring), velocity);
+                _ = position.AnimateTo(motion.Goal, MotionSpec.Spring(KickSpring), velocity);
             }
             return;
         }

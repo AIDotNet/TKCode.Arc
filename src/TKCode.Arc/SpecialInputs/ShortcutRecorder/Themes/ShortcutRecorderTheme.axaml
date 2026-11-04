@@ -176,9 +176,19 @@
             <ControlTemplate TargetType="arc:ShortcutRecorder">
                 <Panel>
                     <StackPanel>
-                        <arc:Field Name="PART_Field"
-                                   Label="{TemplateBinding Label}"
-                                   IsLabelVisible="{TemplateBinding IsLabelVisible}">
+                        <!-- Field's template is inlined so ShortcutRecorder no longer nests a themed Field control. -->
+                        <StackPanel>
+                            <TextBlock Name="PART_Label"
+                                       Text="{TemplateBinding Label}"
+                                       Margin="{arc:FieldTokenResource LabelMargin}"
+                                       TextWrapping="Wrap">
+                                <TextBlock.IsVisible>
+                                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="IsLabelVisible" />
+                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Label" Converter="{x:Static StringConverters.IsNotNullOrEmpty}" />
+                                    </MultiBinding>
+                                </TextBlock.IsVisible>
+                            </TextBlock>
                             <arc:FieldFrame Name="PART_Frame"
                                             Padding="0"
                                             Spacing="0"
@@ -202,7 +212,7 @@
                                     </StackPanel>
                                 </Grid>
                             </arc:FieldFrame>
-                        </arc:Field>
+                        </StackPanel>
                         <arc:ShortcutRecorderMessageSlot Name="PART_Message" />
                     </StackPanel>
                     <arc:SpecialInputsLiveRegion Name="PART_LiveRegion" />
@@ -213,6 +223,14 @@
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="VerticalAlignment" Value="Top" />
         <Setter Property="Background" Value="Transparent" />
+
+        <Style Selector="^ /template/ TextBlock#PART_Label">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="LineHeight" Value="{arc:FieldTokenResource LabelLineHeight}" />
+        </Style>
 
         <!-- The recording tint: accent at 4% over the surface. -->
         <Style Selector="^ /template/ Border#PART_Tint">

@@ -65,11 +65,19 @@
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:PhoneInput">
                 <Panel>
-                    <arc:Field Name="PART_Field"
-                               Label="{TemplateBinding Label}"
-                               Description="{TemplateBinding DisplayDescription}"
-                               ErrorMessage="{TemplateBinding DisplayErrorMessage}"
-                               IsLabelVisible="{TemplateBinding IsLabelVisible}">
+                    <!-- Field's template is inlined so PhoneInput no longer nests a themed Field control. -->
+                    <StackPanel>
+                        <TextBlock Name="PART_Label"
+                                   Text="{TemplateBinding Label}"
+                                   Margin="{arc:FieldTokenResource LabelMargin}"
+                                   TextWrapping="Wrap">
+                            <TextBlock.IsVisible>
+                                <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                    <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="IsLabelVisible" />
+                                    <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Label" Converter="{x:Static StringConverters.IsNotNullOrEmpty}" />
+                                </MultiBinding>
+                            </TextBlock.IsVisible>
+                        </TextBlock>
                         <arc:FieldFrame Name="PART_Frame"
                                         Cursor="IBeam"
                                         Spacing="0"
@@ -146,7 +154,13 @@
                                 </Panel>
                             </DockPanel>
                         </arc:FieldFrame>
-                    </arc:Field>
+                        <arc:FieldMessage Name="PART_Description"
+                                          Kind="Description"
+                                          Text="{TemplateBinding DisplayDescription}" />
+                        <arc:FieldMessage Name="PART_Error"
+                                          Kind="Error"
+                                          Text="{TemplateBinding DisplayErrorMessage}" />
+                    </StackPanel>
                     <arc:PhoneInputPopup Name="PART_Popup"
                                          TakesFocusFromNativeControl="False"
                                          WindowManagerAddShadowHint="False" />
@@ -169,6 +183,14 @@
         <Setter Property="VerticalAlignment" Value="Top" />
         <Setter Property="OptionHighlight" Value="{arc:PhoneInputTokenResource HighlightColor}" />
         <Setter Property="ControlFill" Value="{arc:PhoneInputTokenResource ControlFillColor}" />
+
+        <Style Selector="^ /template/ TextBlock#PART_Label">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="LineHeight" Value="{arc:FieldTokenResource LabelLineHeight}" />
+        </Style>
 
         <!-- The shell: one border, padding 0, the control height. -->
         <Style Selector="^ /template/ arc|FieldFrame#PART_Frame">

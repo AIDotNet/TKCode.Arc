@@ -36,13 +36,23 @@ public sealed class ArcMotion
     private static readonly AttachedProperty<bool> ActiveProperty =
         AvaloniaProperty.RegisterAttached<ArcMotion, Control, bool>("Active");
 
+    // True while the token-source events below are attached. A control whose inherited level is Off is Off whatever the
+    // MotionMode token says, so it stays unsubscribed and never pays for the lookup or the two event subscriptions.
+    private static readonly AttachedProperty<bool> SubscribedProperty =
+        AvaloniaProperty.RegisterAttached<ArcMotion, Control, bool>("Subscribed");
+
     private static readonly AttachedProperty<int> SettlingProperty =
         AvaloniaProperty.RegisterAttached<ArcMotion, Control, int>("Settling");
 
     static ArcMotion()
     {
         TracksProperty.Changed.AddClassHandler<Control>(OnTracksChanged);
-        LevelProperty.Changed.AddClassHandler<Control>((c, _) => Refresh(c));
+        LevelProperty.Changed.AddClassHandler<Control>((c, _) =>
+        {
+            // The inherited level decides whether the MotionMode token can still change the effective level.
+            EnsureTokenTracking(c);
+            Refresh(c);
+        });
     }
 
     public static ArcMotionLevel GetLevel(AvaloniaObject element) => element.GetValue(LevelProperty);
@@ -180,16 +190,15 @@ public sealed class ArcMotion
             return;
         }
         control.SetValue(ActiveProperty, true);
-        control.ResourcesChanged += s_onResourcesChanged;
-        control.ActualThemeVariantChanged += s_onThemeVariantChanged;
-        ReadTokenLevel(control);
+        EnsureTokenTracking(control);
         Refresh(control);
     }
 
     private static void Deactivate(Control control)
     {
-        if (control.GetValue(ActiveProperty))
+        if (control.GetValue(SubscribedProperty))
         {
+            control.SetValue(SubscribedProperty, false);
             control.ResourcesChanged -= s_onResourcesChanged;
             control.ActualThemeVariantChanged -= s_onThemeVariantChanged;
         }
@@ -197,6 +206,37 @@ public sealed class ArcMotion
         var pseudo = (IPseudoClasses)control.Classes;
         pseudo.Set(FullPseudoClass, false);
         pseudo.Set(ReducedPseudoClass, false);
+    }
+
+    /// <summary>
+    /// Connects the MotionMode token (one resource lookup plus the two change events) only while the token can still
+    /// change the effective level. A tracking control whose inherited <see cref="LevelProperty"/> is Off is Off whatever
+    /// the token says, so it keeps neither: the common "motion off" run (the benchmark, screenshot passes) allocates no
+    /// subscription and no lookup per control. When the inherited level goes Off the events are let go again, and when it
+    /// comes back the token is re-read, so an enabled run behaves exactly as before.
+    /// </summary>
+    private static void EnsureTokenTracking(Control control)
+    {
+        var needed = control.GetValue(ActiveProperty)
+            && control.GetValue(TracksProperty)
+            && control.GetValue(LevelProperty) != ArcMotionLevel.Off;
+        if (needed == control.GetValue(SubscribedProperty))
+        {
+            return;
+        }
+        if (needed)
+        {
+            control.SetValue(SubscribedProperty, true);
+            control.ResourcesChanged += s_onResourcesChanged;
+            control.ActualThemeVariantChanged += s_onThemeVariantChanged;
+            ReadTokenLevel(control);
+        }
+        else
+        {
+            control.SetValue(SubscribedProperty, false);
+            control.ResourcesChanged -= s_onResourcesChanged;
+            control.ActualThemeVariantChanged -= s_onThemeVariantChanged;
+        }
     }
 
     private static void OnTokenSourceChanged(object? sender)

@@ -310,6 +310,21 @@ public class IntegrationsTests
     [AvaloniaFact]
     public void The_drawer_shows_who_connected_the_app_and_the_permissions()
     {
+        // The sheet formats its date in the current culture; pin English as the repo's other culture-sensitive tests do.
+        var culture = System.Globalization.CultureInfo.CurrentCulture;
+        System.Globalization.CultureInfo.CurrentCulture = System.Globalization.CultureInfo.GetCultureInfo("en-US");
+        try
+        {
+            ShowsWhoConnectedAndPermissions();
+        }
+        finally
+        {
+            System.Globalization.CultureInfo.CurrentCulture = culture;
+        }
+    }
+
+    private static void ShowsWhoConnectedAndPermissions()
+    {
         var rig = new Rig();
         IntegrationItem? opened = null;
         rig.Block.ConfigurationOpened += (_, e) => opened = e.Item;

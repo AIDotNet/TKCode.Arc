@@ -9,6 +9,7 @@ using Avalonia.Controls.Selection;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using AvaloniaButton = Avalonia.Controls.Button;
 
 namespace TKCode.Arc;
@@ -183,6 +184,7 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
     private PresenceHost? _emptyHost;
     private TextBlock? _announcer;
     private bool _syncingSearch;
+    private bool _entriesRefreshPosted;
 
     static MultiSelect()
     {
@@ -367,11 +369,24 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
         {
             Refilter();
         }
+        // Coalesce: several entry changes before the queue drains need one refresh; the post is dropped when the
+        // control leaves the tree (a pending closure would root it).
+        if (_entriesRefreshPosted)
+        {
+            return;
+        }
+        _entriesRefreshPosted = true;
         Dispatcher.UIThread.Post(() =>
         {
-            RebuildOrder();
-            UpdateChips();
+            _entriesRefreshPosted = false;
+            RefreshEntriesDeferred();
         }, DispatcherPriority.Background);
+    }
+
+    private void RefreshEntriesDeferred()
+    {
+        RebuildOrder();
+        UpdateChips();
     }
 
     // ---------------------------------------------------------------- selection order and chips
@@ -690,6 +705,8 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
+        // Drop any pending refresh so it neither roots the control nor blocks a later attach.
+        _entriesRefreshPosted = false;
         SetCurrentValue(IsOpenProperty, false);
     }
 }

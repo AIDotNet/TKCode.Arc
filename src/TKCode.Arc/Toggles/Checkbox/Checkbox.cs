@@ -3,6 +3,7 @@ using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Automation;
+using Avalonia.Automation.Peers;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
@@ -112,14 +113,8 @@ public class Checkbox : AvaloniaCheckBox
     private CheckboxMark? _mark;
     private LazyFocusRing? _focusRing;
     private bool _syncing;
-    private bool _usesFallbackName;
 
     protected override Type StyleKeyOverride => typeof(Checkbox);
-
-    public Checkbox()
-    {
-        UpdateFallbackName();
-    }
 
     /// <summary>Unchecked and indeterminate both become checked; checked becomes unchecked (Radix). With
     /// <see cref="ToggleButton.IsThreeState"/> the Avalonia cycle (unchecked, checked, indeterminate) is used instead.</summary>
@@ -218,27 +213,21 @@ public class Checkbox : AvaloniaCheckBox
         {
             AutomationProperties.SetIsRequiredForForm(this, IsRequired);
         }
-        else if (change.Property == ContentProperty)
-        {
-            UpdateFallbackName();
-        }
     }
 
-    private void UpdateFallbackName()
+    protected override AutomationPeer OnCreateAutomationPeer()
     {
-        var name = AutomationProperties.GetName(this);
-        if (Content is null)
+        return new CheckboxAutomationPeer(this);
+    }
+
+    // The accessible name falls back to FallbackName at query time, so constructing a Checkbox never touches
+    // AutomationProperties.Name (the old ctor-time UpdateFallbackName cost +264 B on every instance).
+    private sealed class CheckboxAutomationPeer(Checkbox owner) : ToggleButtonAutomationPeer(owner)
+    {
+        protected override string? GetNameCore()
         {
-            if (string.IsNullOrEmpty(name))
-            {
-                AutomationProperties.SetName(this, FallbackName);
-                _usesFallbackName = true;
-            }
-        }
-        else if (_usesFallbackName && name == FallbackName)
-        {
-            ClearValue(AutomationProperties.NameProperty);
-            _usesFallbackName = false;
+            var name = base.GetNameCore();
+            return string.IsNullOrWhiteSpace(name) ? FallbackName : name;
         }
     }
 

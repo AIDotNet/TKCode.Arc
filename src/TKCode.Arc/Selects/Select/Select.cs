@@ -8,6 +8,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 
 namespace TKCode.Arc;
 
@@ -179,6 +180,7 @@ public class Select : SelectingItemsControl, ISelectOptionHost, ISelectFieldAuto
     private int _lastIndex = -1;
     private bool _optionsDirty = true;
     private bool _pressedOnTrigger;
+    private bool _entriesRefreshPosted;
 
     static Select()
     {
@@ -332,7 +334,18 @@ public class Select : SelectingItemsControl, ISelectOptionHost, ISelectFieldAuto
         {
             EnsureOptions();
         }
-        Dispatcher.UIThread.Post(() => UpdateValue(animate: false), DispatcherPriority.Background);
+        // Coalesce: several entry changes before the queue drains need one refresh; the post is dropped when the
+        // control leaves the tree (a pending closure would root it).
+        if (_entriesRefreshPosted)
+        {
+            return;
+        }
+        _entriesRefreshPosted = true;
+        Dispatcher.UIThread.Post(() =>
+        {
+            _entriesRefreshPosted = false;
+            UpdateValue(animate: false);
+        }, DispatcherPriority.Background);
     }
 
     private void EnsureOptions()
@@ -746,6 +759,8 @@ public class Select : SelectingItemsControl, ISelectOptionHost, ISelectFieldAuto
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
+        // Drop any pending refresh so it neither roots the control nor blocks a later attach.
+        _entriesRefreshPosted = false;
         StopAutoScroll();
         SetCurrentValue(IsOpenProperty, false);
     }

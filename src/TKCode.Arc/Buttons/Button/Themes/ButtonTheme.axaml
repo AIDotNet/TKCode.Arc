@@ -65,6 +65,8 @@
             <Style Selector="^:pointerover">
                 <Setter Property="Opacity" Value="{arc:ButtonTokenResource HoverOpacity}" />
             </Style>
+            <!-- Hover lifts the frame with a resting drop shadow. Kept per-variant (not theme-level) so ghost/danger
+                 do not pick up a shadow they were never designed with. -->
             <Style Selector="^:pointerover /template/ Border#PART_Frame">
                 <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowResting}" />
             </Style>
@@ -86,10 +88,6 @@
             <Style Selector="^:pointerover /template/ Border#PART_Frame">
                 <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowResting}" />
             </Style>
-            <Style Selector="^:pressed">
-                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
-                <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
-            </Style>
             <Style Selector="^:disabled">
                 <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
                 <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
@@ -102,10 +100,6 @@
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderBrush" Value="Transparent" />
             <Style Selector="^:pointerover">
-                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
-                <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
-            </Style>
-            <Style Selector="^:pressed">
                 <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
                 <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
             </Style>
@@ -126,10 +120,6 @@
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
             <Style Selector="^:pointerover">
-                <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Danger}" />
-                <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
-            </Style>
-            <Style Selector="^:pressed">
                 <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Danger}" />
                 <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
             </Style>
