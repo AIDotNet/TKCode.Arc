@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ArcWindowBasicDemo">
+    <StackPanel HorizontalAlignment="Center" Width="560" Spacing="12">
+        <!-- A preview of the bar an ArcWindow draws; inside the gallery it moves and closes nothing. -->
+        <Border BorderBrush="{arc:ArcDesignTokenResource Border}"
+                BorderThickness="1"
+                CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+                ClipToBounds="True">
+            <DockPanel>
+                <arc:TitleBar DockPanel.Dock="Top" Title="Untitled document" CaptionButtons="Drawn">
+                    <arc:TitleBar.Icon>
+                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.FileText}" Size="16" />
+                    </arc:TitleBar.Icon>
+                </arc:TitleBar>
+                <Border Height="140" Background="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            </DockPanel>
+        </Border>
+        <arc:Button x:Name="OpenButton" Content="Open a window" HorizontalAlignment="Left" Click="OnOpen" />
+    </StackPanel>
+</UserControl>

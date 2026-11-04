@@ -791,6 +791,10 @@
       "WeightMedium": "500",
       "WeightRegular": "400"
     },
+    "ArcWindow": {
+      "MinHeight": "240",
+      "MinWidth": "360"
+    },
     "AskYourData": {
       "AskGlyphSize": "16",
       "AskSize": "32",
@@ -6474,6 +6478,22 @@
       "TriggerColumnGapNarrow": "8",
       "TriggerPadding": "12,12,12,12",
       "TriggerPaddingNarrow": "8,12,8,12"
+    },
+    "TitleBar": {
+      "BorderThickness": "0,0,0,1",
+      "ButtonSpacing": "4",
+      "CaptionButtonSize": "30",
+      "CaptionGlyphSize": "15",
+      "DividerHeight": "16",
+      "Height": "40",
+      "IconSize": "18",
+      "ItemSpacing": "8",
+      "MaximizeGlyphSize": "13",
+      "Padding": "14,0,6,0",
+      "RestoreGlyphSize": "14",
+      "SectionSpacing": "12",
+      "SystemButtonsWidth": "60",
+      "TitleFontSize": "13"
     },
     "TldrToggle": {
       "ActionGlyphSize": "16",

@@ -1,0 +1,37 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ArcWindowAreasDemo">
+    <Border HorizontalAlignment="Center"
+            Width="760"
+            BorderBrush="{arc:ArcDesignTokenResource Border}"
+            BorderThickness="1"
+            CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+            ClipToBounds="True">
+        <arc:TitleBar Title="Atlas" CaptionButtons="Drawn">
+            <arc:TitleBar.Icon>
+                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Layers}" Size="16" />
+            </arc:TitleBar.Icon>
+            <arc:TitleBar.LeftContent>
+                <StackPanel Orientation="Horizontal" Spacing="2">
+                    <arc:Button Content="File" Variant="Ghost" Size="Small" />
+                    <arc:Button Content="Edit" Variant="Ghost" Size="Small" />
+                    <arc:Button Content="View" Variant="Ghost" Size="Small" />
+                </StackPanel>
+            </arc:TitleBar.LeftContent>
+            <arc:TitleBar.CenterContent>
+                <arc:Input Placeholder="Search" Size="Small" Width="220" />
+            </arc:TitleBar.CenterContent>
+            <arc:TitleBar.RightContent>
+                <StackPanel Orientation="Horizontal" Spacing="2">
+                    <arc:Button Variant="Ghost" Size="Small" AutomationProperties.Name="Notifications">
+                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Bell}" Size="15" />
+                    </arc:Button>
+                    <arc:Button Variant="Ghost" Size="Small" AutomationProperties.Name="Settings">
+                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Settings}" Size="15" />
+                    </arc:Button>
+                </StackPanel>
+            </arc:TitleBar.RightContent>
+        </arc:TitleBar>
+    </Border>
+</UserControl>

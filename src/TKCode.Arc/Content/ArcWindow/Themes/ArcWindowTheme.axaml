@@ -1,0 +1,45 @@
+<!--
+    ArcWindow (design/components/content/arc-window.md): the background with the title bar over the content inside a visual
+    layer manager. PART_VisualLayerManager is the name Avalonia's Window looks for to switch on its overlay layer, which
+    hosts Arc's popups, toasts and tooltips for the bar and the content alike. PART_Root steps in by the off-screen margin
+    while maximized (ArcWindow.SyncOffScreenMargin).
+-->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ArcWindowTheme">
+    <ControlTheme x:Key="{x:Type arc:ArcWindow}" TargetType="arc:ArcWindow">
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="FontStyle" Value="Normal" />
+        <Setter Property="MinWidth" Value="{arc:ArcWindowTokenResource MinWidth}" />
+        <Setter Property="MinHeight" Value="{arc:ArcWindowTokenResource MinHeight}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ArcWindow">
+                <Panel>
+                    <Border Name="PART_TransparencyFallback" IsHitTestVisible="False" />
+                    <Border Name="PART_Root" Background="{TemplateBinding Background}">
+                        <VisualLayerManager Name="PART_VisualLayerManager" EnableOverlayLayer="True">
+                            <DockPanel>
+                                <ContentPresenter Name="PART_TitleBarPresenter"
+                                                  DockPanel.Dock="Top"
+                                                  Content="{TemplateBinding TitleBar}"
+                                                  IsVisible="{TemplateBinding IsTitleBarVisible}" />
+                                <ContentPresenter Name="PART_ContentPresenter"
+                                                  Margin="{TemplateBinding Padding}"
+                                                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                  Content="{TemplateBinding Content}"
+                                                  ContentTemplate="{TemplateBinding ContentTemplate}" />
+                            </DockPanel>
+                        </VisualLayerManager>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>
