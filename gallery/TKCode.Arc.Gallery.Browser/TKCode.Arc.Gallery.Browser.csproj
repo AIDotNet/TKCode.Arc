@@ -14,14 +14,15 @@
         <!-- Publishing trims the app with ILLink; builds and dotnet run do not. -p:PublishTrimmed=false publishes untrimmed; the
              boot-list pruning below then applies instead. -->
         <PublishTrimmed Condition="'$(PublishTrimmed)' == '' And '$(_IsPublishing)' == 'true'">true</PublishTrimmed>
-        <!-- A Release publish also compiles the .NET code ahead of time to WebAssembly (the SDK allows it only for a trimmed publish;
+        <!-- Off by default since 2026-11-04: with AOT, switching pages froze the site. -p:ArcAot=true publishes with it (a Release
+             publish then compiles the .NET code ahead of time to WebAssembly; the SDK allows it only for a trimmed publish;
              the wasm-tools workload brings the compiler). Measured 2026-10-30 on .NET 11 in headless Edge with the CPU four times
              slower than an M5: opening the Changelog guide (StreamMark parsing and laying out a long document) kept the main thread
              busy about 3.7 s interpreted and 1.2 to 1.35 s compiled. Builds and dotnet run stay interpreted; -p:ArcAot=false publishes
              interpreted. The compiling happens in the SDK's nested publish build, which clears _IsPublishing and passes it on as
              _WasmIsPublishing. The 0.3.0-preview.5 build that crashed at startup ("memory access out of bounds", 2026-10-24) was the
              AtomUI one; the .NET 11 build without AtomUI starts and walks the pages. -->
-        <RunAOTCompilation Condition="'$(RunAOTCompilation)' == '' And '$(ArcAot)' != 'false' And ('$(_IsPublishing)' == 'true' Or '$(_WasmIsPublishing)' == 'true') And '$(PublishTrimmed)' == 'true' And '$(Configuration)' == 'Release'">true</RunAOTCompilation>
+        <RunAOTCompilation Condition="'$(RunAOTCompilation)' == '' And '$(ArcAot)' == 'true' And ('$(_IsPublishing)' == 'true' Or '$(_WasmIsPublishing)' == 'true') And '$(PublishTrimmed)' == 'true' And '$(Configuration)' == 'Release'">true</RunAOTCompilation>
         <!-- Publishing also shrinks the boot list (ArcWasmUnusedAssembly and ArcWasmLazyAssembly below); builds and dotnet run keep
              everything. -p:ArcWasmPrune=false publishes with everything, -p:ArcWasmPrune=true shrinks a build as well. -->
         <ArcWasmPrune Condition="'$(ArcWasmPrune)' == ''">$(_IsPublishing)</ArcWasmPrune>

@@ -27,8 +27,7 @@ ENV DOTNET_ROOT=/opt/dotnet \
 # The host targets net11.0-browser: the wasm-tools workload (wasm-tools-net10 is for net10.0-browser).
 RUN dotnet --info && dotnet workload install wasm-tools
 COPY . .
-# Trimmed and compiled ahead of time to WebAssembly, except the assemblies the Browser project file keeps interpreted (-p:ArcAot=false
-# publishes interpreted, much faster).
+# Trimmed and interpreted: compiling ahead of time to WebAssembly froze the site on page switches, so it is off (-p:ArcAot=true turns it on).
 RUN dotnet publish gallery/TKCode.Arc.Gallery.Browser/TKCode.Arc.Gallery.Browser.csproj \
         -c Release -o /app \
         ${STREAMMARK_VERSION:+-p:StreamMarkVersion=${STREAMMARK_VERSION}}
