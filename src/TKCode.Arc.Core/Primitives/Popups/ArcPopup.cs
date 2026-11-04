@@ -184,6 +184,7 @@ public class ArcPopup : Popup
     private bool _awaitingRest;
     private int _motionGeneration;
     private TopLevel? _dismissTopLevel;
+    private bool _forcedNativeWindow;
 
     public ArcPopup()
     {
@@ -247,6 +248,22 @@ public class ArcPopup : Popup
             _frame.Surface = surface;
         }
         return _frame;
+    }
+
+    /// <summary>
+    /// A native popup window (<c>PopupRoot</c>) has no layer for popups: Avalonia only switches that layer on in a
+    /// <c>Window</c>, and the switch is internal. A popup anchored inside one would throw ("no overlay layer is found")
+    /// when it asks for the overlay layer, so for this open it becomes a native popup window itself.
+    /// </summary>
+    private void AvoidOverlayLayerInPopupWindow()
+    {
+        if (!ShouldUseOverlayLayer || (PlacementTarget ?? Parent as Control) is not { } target ||
+            TopLevel.GetTopLevel(target) is not PopupRoot)
+        {
+            return;
+        }
+        _forcedNativeWindow = true;
+        SetCurrentValue(ShouldUseOverlayLayerProperty, false);
     }
 
     private void SyncZoom()
@@ -552,6 +569,7 @@ public class ArcPopup : Popup
             // the surface must have before the popup measures it.
             UpdateMotions();
             SyncZoom();
+            AvoidOverlayLayerInPopupWindow();
             SyncShadow(ShouldUseOverlayLayer);
         }
         else if (change.Property == ArcZoom.ScaleProperty)
@@ -665,6 +683,11 @@ public class ArcPopup : Popup
 
     private void HandleClosed(object? sender, EventArgs e)
     {
+        if (_forcedNativeWindow)
+        {
+            _forcedNativeWindow = false;
+            SetCurrentValue(ShouldUseOverlayLayerProperty, true);
+        }
         _exiting = false;
         _motionGeneration++;
         UnhookLightDismiss();
