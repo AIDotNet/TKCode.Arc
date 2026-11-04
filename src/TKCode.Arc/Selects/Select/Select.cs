@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Automation.Peers;
@@ -32,6 +33,7 @@ namespace TKCode.Arc;
 [PseudoClasses(OpenPseudoClass, PlaceholderPseudoClass, PressedPseudoClass)]
 public class Select : SelectingItemsControl, ISelectOptionHost, ISelectFieldAutomation
 {
+    private LazyFocusRing? _focusRing;
     public const string TriggerPart = "PART_Trigger";
     public const string ValuePart = "PART_Value";
     public const string PopupPart = "PART_Popup";
@@ -215,6 +217,9 @@ public class Select : SelectingItemsControl, ISelectOptionHost, ISelectFieldAuto
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
+        // The ring is built the first time the field is keyboard focused, over the trigger in the field's panel.
+        _focusRing ??= new LazyFocusRing(this, SelectTokens.Key(SelectTokenKind.FocusRingMargin), SelectTokens.Key(SelectTokenKind.FocusRingRadius));
+        _focusRing.Attach(e.NameScope.Find<Control>(TriggerPart)?.Parent as Panel);
         if (_trigger is not null)
         {
             _trigger.PointerPressed -= OnTriggerPressed;
@@ -745,9 +750,16 @@ public class Select : SelectingItemsControl, ISelectOptionHost, ISelectFieldAuto
         SetCurrentValue(IsOpenProperty, false);
     }
 
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
     protected override void OnLostFocus(FocusChangedEventArgs e)
     {
         base.OnLostFocus(e);
         PseudoClasses.Set(PressedPseudoClass, false);
+        _focusRing?.Update();
     }
 }

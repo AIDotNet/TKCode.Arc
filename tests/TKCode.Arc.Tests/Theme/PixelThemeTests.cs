@@ -130,6 +130,8 @@ public class PixelThemeTests
         try
         {
             var defaults = new[] { button.BorderThickness, input.BorderThickness, card.BorderThickness, toggle.BorderThickness, badge.BorderThickness };
+            // The ring is built on first keyboard focus.
+            button.Focus(Avalonia.Input.NavigationMethod.Tab);
             var focus = TestHelpers.Descendant<Border>(button, "PART_FocusRing");
             focus.BorderThickness.ShouldBe(new Thickness(2));
             var defaultRadii = new[] { button.CornerRadius, card.CornerRadius, badge.CornerRadius };

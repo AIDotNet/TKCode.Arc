@@ -127,6 +127,13 @@ internal static class TestHelpers
     public static T Descendant<T>(Visual root, string name) where T : Control =>
         root.GetVisualDescendants().OfType<T>().First(c => c.Name == name);
 
+    /// <summary>
+    /// Whether <paramref name="control"/> shows its keyboard focus ring. Controls that build the ring on first keyboard
+    /// focus (<see cref="Primitives.LazyFocusRing"/>) have none until then, which counts as hidden.
+    /// </summary>
+    public static bool IsFocusRingVisible(Visual control) =>
+        control.GetVisualDescendants().OfType<Border>().FirstOrDefault(c => c.Name == Primitives.LazyFocusRing.PartName) is { IsVisible: true };
+
     public static Color ColorOf(object? value) => value switch
     {
         ISolidColorBrush solid => solid.Color,

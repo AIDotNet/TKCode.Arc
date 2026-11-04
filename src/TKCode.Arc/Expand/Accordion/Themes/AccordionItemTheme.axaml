@@ -115,13 +115,6 @@
                                           HorizontalContentAlignment="Stretch"
                                           Content="{TemplateBinding Content}" />
                     </Border>
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            Margin="{arc:AccordionItemTokenResource FocusRingMargin}"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{arc:AccordionItemTokenResource FocusRingRadius}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
         </Setter>
@@ -138,9 +131,6 @@
         <Setter Property="ClipToBounds" Value="False" />
         <Style Selector="^:pointerover">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
-        </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
         </Style>
         <Style Selector="^:motion-full">
             <Setter Property="Transitions">

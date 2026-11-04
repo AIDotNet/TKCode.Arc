@@ -6,6 +6,8 @@ using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Mixins;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
+using TKCode.Arc.DesignTokens;
+using TKCode.Arc.Primitives;
 using AvaloniaSelectingItemsControl = Avalonia.Controls.Primitives.SelectingItemsControl;
 
 namespace TKCode.Arc;
@@ -38,6 +40,8 @@ public class TabItem : HeaderedContentControl, ISelectable
         PressedMixin.Attach<TabItem>();
         FocusableProperty.OverrideDefaultValue<TabItem>(true);
     }
+
+    private LazyFocusRing? _focusRing;
 
     private Tabs? Owner => ItemsControl.ItemsControlFromItemContainer(this) as Tabs;
 
@@ -87,10 +91,53 @@ public class TabItem : HeaderedContentControl, ISelectable
         }
     }
 
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        _focusRing ??= new LazyFocusRing(this, TabItemTokens.Key(TabItemTokenKind.FocusRingMargin), TabItemTokens.Key(TabItemTokenKind.FocusRingRadius));
+        _focusRing.Attach(AddRing, RemoveRing);
+    }
+
+    // The ring is a logical child (for its token lookups) and the last visual child, so it draws over the frame.
+    private void AddRing(Control ring)
+    {
+        LogicalChildren.Add(ring);
+        VisualChildren.Add(ring);
+        InvalidateMeasure();
+    }
+
+    private void RemoveRing(Control ring)
+    {
+        VisualChildren.Remove(ring);
+        LogicalChildren.Remove(ring);
+    }
+
+    protected override Size MeasureOverride(Size availableSize)
+    {
+        var size = base.MeasureOverride(availableSize);
+        // The template lays out only its root; the ring follows the tab's box and never changes its size.
+        _focusRing?.Ring?.Measure(availableSize);
+        return size;
+    }
+
+    protected override Size ArrangeOverride(Size finalSize)
+    {
+        var size = base.ArrangeOverride(finalSize);
+        _focusRing?.Ring?.Arrange(new Rect(size));
+        return size;
+    }
+
     protected override void OnGotFocus(FocusChangedEventArgs e)
     {
         base.OnGotFocus(e);
+        _focusRing?.Update();
         Owner?.OnTabFocused(this, e.NavigationMethod);
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing?.Update();
     }
 
     protected override AutomationPeer OnCreateAutomationPeer() => new TabItemAutomationPeer(this);

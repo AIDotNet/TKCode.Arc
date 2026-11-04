@@ -37,6 +37,28 @@ public class FocusRingClipTests
     }
 
     [AvaloniaFact]
+    public void Button_Focused_By_Tab_Shows_Its_Whole_Ring()
+    {
+        // The button hosts its ring itself (built on first keyboard focus), outside the template.
+        var button = new Button
+        {
+            Content = "Save changes",
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Top,
+            Margin = new Thickness(24)
+        };
+        var window = TestHelpers.Show(button);
+        try
+        {
+            ShouldShowWholeRing(button);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void TabItem_Focused_By_Tab_Shows_Its_Whole_Ring()
     {
         var tabs = new Tabs { VerticalAlignment = VerticalAlignment.Top, Margin = new Thickness(24) };
@@ -64,6 +86,9 @@ public class FocusRingClipTests
         var ring = control.GetVisualDescendants().OfType<Border>().First(b => b.Name == "PART_FocusRing");
         ring.IsVisible.ShouldBeTrue();
         ring.Margin.Left.ShouldBeLessThan(0);
+        // Laid out around the control, not left unarranged.
+        ring.Bounds.Width.ShouldBe(control.Bounds.Width - ring.Margin.Left - ring.Margin.Right, 0.5);
+        ring.Bounds.Height.ShouldBe(control.Bounds.Height - ring.Margin.Top - ring.Margin.Bottom, 0.5);
         // No ancestor up to the window clips the ring's box (a clip at the control's own box leaves only the corners).
         for (Visual? v = ring.GetVisualParent(); v is not null; v = v.GetVisualParent())
         {

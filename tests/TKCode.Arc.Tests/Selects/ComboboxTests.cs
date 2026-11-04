@@ -272,8 +272,7 @@ public class ComboboxTests
             combobox.FocusInput();
             Dispatcher.UIThread.RunJobs();
             // Arc's focus halo is transparent: no ring is drawn around the field.
-            var ring = combobox.GetVisualDescendants().OfType<Border>().First(b => b.Name == "PART_FocusRing");
-            ring.IsVisible.ShouldBeFalse();
+            TestHelpers.IsFocusRingVisible(combobox).ShouldBeFalse();
         }
         finally
         {

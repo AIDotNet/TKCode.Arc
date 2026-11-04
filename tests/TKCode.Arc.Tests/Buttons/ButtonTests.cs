@@ -41,6 +41,9 @@ public class ButtonTests
             var spinner = TestHelpers.Descendant<Primitives.ArcSpinner>(button, "PART_Spinner");
             spinner.IsVisible.ShouldBeTrue();
             spinner.Width.ShouldBe(16);
+            // Centered over the button.
+            spinner.Bounds.Center.X.ShouldBe(button.Bounds.Width / 2, 0.5);
+            spinner.Bounds.Center.Y.ShouldBe(button.Bounds.Height / 2, 0.5);
             button.IsLoading = false;
             spinner.IsVisible.ShouldBeFalse();
         }

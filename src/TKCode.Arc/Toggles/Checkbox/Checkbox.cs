@@ -1,4 +1,6 @@
 using TKCode.Arc.Motion;
+using TKCode.Arc.DesignTokens;
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
@@ -108,6 +110,7 @@ public class Checkbox : AvaloniaCheckBox
     #endregion
 
     private CheckboxMark? _mark;
+    private LazyFocusRing? _focusRing;
     private bool _syncing;
     private bool _usesFallbackName;
 
@@ -145,6 +148,21 @@ public class Checkbox : AvaloniaCheckBox
         base.OnApplyTemplate(e);
         _mark = e.NameScope.Find<CheckboxMark>(MarkPart);
         _mark?.Apply(ToState(IsChecked), animate: false);
+        // The ring sits under the box, inside the 44px hit area; built the first time the box is keyboard focused.
+        _focusRing ??= new LazyFocusRing(this, CheckboxTokens.Key(CheckboxTokenKind.FocusRingMargin), CheckboxTokens.Key(CheckboxTokenKind.FocusRingRadius));
+        _focusRing.Attach(e.NameScope.Find<Panel>("PART_Box"), below: true);
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing?.Update();
     }
 
     /// <summary>A value that arrives with a new data context is not a click: the mark jumps instead of drawing in.</summary>

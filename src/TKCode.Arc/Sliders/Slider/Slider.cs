@@ -228,7 +228,8 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
     private SliderMarkLabels? _markLabels;
     private SliderNumberText? _readoutLow;
     private SliderNumberText? _readoutHigh;
-    private readonly SliderNumberText[] _bubbleTexts = new SliderNumberText[2];
+    // Built with their bubbles, the first time a bubble shows.
+    private readonly SliderNumberText?[] _bubbleTexts = new SliderNumberText?[2];
     private DispatcherTimer? _lingerTimer;
     private int _dragging = -1;
     private int _keyFocus = -1;
@@ -254,7 +255,6 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
             lag.Changed += _ => OnThumbMoved();
             lift.Changed += _ => OnThumbMoved();
             _thumbs[index] = new ThumbMotion { Position = position, Lag = lag, Lift = lift };
-            _bubbleTexts[index] = new SliderNumberText();
         }
         UpdatePseudoClasses();
     }
@@ -395,7 +395,7 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
         if (_rail is not null)
         {
             _rail.Slider = this;
-            _rail.Setup(this, this, 2, index => _bubbleTexts[index], bubble =>
+            _rail.Setup(this, this, 2, CreateBubbleText, bubble =>
             {
                 bubble.EnterScale = 0.6;
                 bubble.ExitScale = 0.8;
@@ -526,14 +526,21 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
         OnThumbMoved();
     }
 
+    private SliderNumberText CreateBubbleText(int index)
+    {
+        var text = _bubbleTexts[index] ??= new SliderNumberText();
+        text.SetText(FormatValue(_values[index]));
+        return text;
+    }
+
     private void UpdateTexts()
     {
         var low = FormatValue(_values[0]);
         var high = FormatValue(_values[1]);
         _readoutLow?.SetText(low);
         _readoutHigh?.SetText(high);
-        _bubbleTexts[0].SetText(low);
-        _bubbleTexts[1].SetText(high);
+        _bubbleTexts[0]?.SetText(low);
+        _bubbleTexts[1]?.SetText(high);
         if (_rail is not null)
         {
             // Spoken value text (aria-valuetext).
@@ -578,7 +585,7 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
         for (var i = 0; i < 2; i++)
         {
             var shown = i < Count && (_dragging == i || _keyFocus == i || _linger == i);
-            _rail.Bubbles[i].Show(shown);
+            _rail.ShowBubble(i, shown);
         }
     }
 
@@ -982,7 +989,7 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
     // Read by tests.
     internal double ShownPosition(int index) => _thumbs[index].Shown;
 
-    internal bool IsBubbleShown(int index) => _rail?.Bubbles[index].IsShown ?? false;
+    internal bool IsBubbleShown(int index) => _rail?.IsBubbleShown(index) ?? false;
 
     internal SliderRail? Rail => _rail;
 }

@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Automation.Peers;
@@ -14,6 +15,8 @@ namespace TKCode.Arc;
 [PseudoClasses(BadgePseudoClass, LargePseudoClass)]
 internal sealed class BillingToggleItem : TogglesItem
 {
+    protected override (object Margin, object Radius)? FocusRingKeys => (BillingToggleTokens.Key(BillingToggleTokenKind.FocusRingMargin), ArcDesignTokens.Key(ArcDesignTokenKind.RadiusPill));
+
     public const string BadgePseudoClass = ":badge";
     public const string LargePseudoClass = ":large";
 

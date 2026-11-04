@@ -16,13 +16,6 @@
                            Width="{arc:ArcDesignTokenResource ControlSizeMD}"
                            Height="{arc:ArcDesignTokenResource ControlSizeMD}"
                            VerticalAlignment="Top">
-                        <Border Name="PART_FocusRing"
-                                IsVisible="False"
-                                IsHitTestVisible="False"
-                                Margin="{arc:CheckboxTokenResource FocusRingMargin}"
-                                BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                                CornerRadius="{arc:CheckboxTokenResource FocusRingRadius}"
-                                BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                         <Panel Name="PART_Visual"
                                Width="{arc:CheckboxTokenResource BoxSize}"
                                Height="{arc:CheckboxTokenResource BoxSize}"
@@ -94,9 +87,6 @@
             <Style Selector="^ /template/ Panel#PART_Box">
                 <Setter Property="Opacity" Value="{arc:CheckboxTokenResource DisabledOpacity}" />
             </Style>
-        </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
         </Style>
 
         <!-- The square dips on press (instant) and returns on the CSS spring; its border recolors on fast. -->

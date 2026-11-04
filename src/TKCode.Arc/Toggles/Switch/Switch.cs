@@ -1,4 +1,6 @@
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -41,6 +43,7 @@ public class Switch : ToggleButton
     private ScaleTransform? _thumbScale;
     private MotionValue<double>? _stretch;
     private long _releasedAt = long.MinValue;
+    private LazyFocusRing? _focusRing;
 
     protected override Type StyleKeyOverride => typeof(Switch);
 
@@ -61,6 +64,21 @@ public class Switch : ToggleButton
                 }
             };
         }
+        // The pill ring sits under the track; built the first time the switch is keyboard focused.
+        _focusRing ??= new LazyFocusRing(this, SwitchTokens.Key(SwitchTokenKind.FocusRingMargin), ArcDesignTokens.Key(ArcDesignTokenKind.RadiusPill));
+        _focusRing.Attach(e.NameScope.Find<Panel>("PART_TrackHost"), below: true);
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing?.Update();
     }
 
     protected override void OnPointerReleased(PointerReleasedEventArgs e)

@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
 using Avalonia;
@@ -6,7 +7,9 @@ using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
+using Avalonia.Data;
 using Avalonia.Input;
+using Avalonia.Layout;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
@@ -253,8 +256,9 @@ public class Tabs : SelectingItemsControl
         _viewport = e.NameScope.Find<ScrollViewer>(ListViewportPart);
         _listPanel = e.NameScope.Find<TabsListPanel>(ListPanelPart);
         _pill = e.NameScope.Find<GlidingIndicator>(SelectionPillPart);
-        _scrollLeft = e.NameScope.Find<AvaloniaButton>(ScrollLeftPart);
-        _scrollRight = e.NameScope.Find<AvaloniaButton>(ScrollRightPart);
+        // Built by UpdateOverflow the first time the list overflows, next to the viewport.
+        _scrollLeft = null;
+        _scrollRight = null;
         _contentHost = e.NameScope.Find<TabsPanelHost>(ContentHostPart);
         _pillTarget = default;
 
@@ -263,14 +267,6 @@ public class Tabs : SelectingItemsControl
             _viewport.ScrollChanged += OnViewportScrollChanged;
             _viewport.SizeChanged += OnViewportSizeChanged;
             _viewport.AddHandler(PointerWheelChangedEvent, OnViewportWheel, RoutingStrategies.Tunnel);
-        }
-        if (_scrollLeft is not null)
-        {
-            _scrollLeft.Click += OnScrollLeftClick;
-        }
-        if (_scrollRight is not null)
-        {
-            _scrollRight.Click += OnScrollRightClick;
         }
         if (_listPanel is not null)
         {
@@ -550,7 +546,8 @@ public class Tabs : SelectingItemsControl
         var overflow = extent > width + 1;
         var start = overflow && offset > 1;
         var end = overflow && offset < max - 1;
-        if (overflow != _overflow || start != _scrolledStart || end != _scrolledEnd)
+        var built = overflow && _scrollLeft is null && EnsureScrollButtons();
+        if (built || overflow != _overflow || start != _scrolledStart || end != _scrolledEnd)
         {
             _overflow = overflow;
             _scrolledStart = start;
@@ -558,16 +555,8 @@ public class Tabs : SelectingItemsControl
             PseudoClasses.Set(OverflowPseudoClass, overflow);
             PseudoClasses.Set(ScrolledStartPseudoClass, start);
             PseudoClasses.Set(ScrolledEndPseudoClass, end);
-            if (_scrollLeft is not null)
-            {
-                _scrollLeft.IsVisible = overflow;
-                _scrollLeft.IsEnabled = start;
-            }
-            if (_scrollRight is not null)
-            {
-                _scrollRight.IsVisible = overflow;
-                _scrollRight.IsEnabled = end;
-            }
+            UpdateScrollButton(_scrollLeft, overflow, start);
+            UpdateScrollButton(_scrollRight, overflow, end);
         }
         UpdateEdgeMask(width);
     }
@@ -601,6 +590,64 @@ public class Tabs : SelectingItemsControl
         };
         _viewport.OpacityMask = new ImmutableLinearGradientBrush(stops, 1, null, null, GradientSpreadMethod.Pad,
             new RelativePoint(0, 0.5, RelativeUnit.Relative), new RelativePoint(1, 0.5, RelativeUnit.Relative));
+    }
+
+    /// <summary>
+    /// Builds the two scroll buttons over the ends of the list. Done in code (not in the template) because most tab lists
+    /// never overflow, and two templated buttons per Tabs cost more than the rest of the list header.
+    /// </summary>
+    private bool EnsureScrollButtons()
+    {
+        if (_viewport?.Parent is not Panel host)
+        {
+            return false;
+        }
+        _scrollLeft = CreateScrollButton(ScrollLeftPart, ArcIcons.ChevronLeft, HorizontalAlignment.Left, TabsTokenKind.ScrollStartRadius, ScrollLeftLabelProperty);
+        _scrollRight = CreateScrollButton(ScrollRightPart, ArcIcons.ChevronRight, HorizontalAlignment.Right, TabsTokenKind.ScrollEndRadius, ScrollRightLabelProperty);
+        _scrollLeft.Click += OnScrollLeftClick;
+        _scrollRight.Click += OnScrollRightClick;
+        host.Children.Add(_scrollLeft);
+        host.Children.Add(_scrollRight);
+        return true;
+    }
+
+    private Button CreateScrollButton(string name, Geometry glyph, HorizontalAlignment alignment, TabsTokenKind radius, StyledProperty<string> label)
+    {
+        var icon = new ArcGlyph { Data = glyph, StrokeThickness = 2 };
+        icon.Bind(ArcGlyph.SizeProperty, icon.GetResourceObservable(TabsTokens.Key(TabsTokenKind.ScrollGlyphSize)));
+        // Local values: a ghost button's hover and press fills would otherwise show over the list's muted shell.
+        var button = new Button
+        {
+            Name = name,
+            Variant = ButtonVariant.Ghost,
+            IsVisible = false,
+            HorizontalAlignment = alignment,
+            VerticalAlignment = VerticalAlignment.Stretch,
+            MinHeight = 0,
+            Padding = default,
+            BorderThickness = default,
+            IsPressScaleEnabled = false,
+            Content = icon
+        };
+        button.Bind(WidthProperty, button.GetResourceObservable(TabsTokens.Key(TabsTokenKind.ScrollButtonWidth)), BindingPriority.LocalValue);
+        button.Bind(Button.CornerRadiusProperty, button.GetResourceObservable(TabsTokens.Key(radius)), BindingPriority.LocalValue);
+        ArcTokens.Bind(button, BackgroundProperty, ArcDesignTokenKind.SurfaceMuted, BindingPriority.LocalValue);
+        ArcTokens.Bind(button, ForegroundProperty, ArcDesignTokenKind.Foreground, BindingPriority.LocalValue);
+        button.Bind(Avalonia.Automation.AutomationProperties.NameProperty, this.GetObservable(label));
+        return button;
+    }
+
+    // A disabled end button (the list is scrolled to that end) is invisible and lets the pointer through.
+    private static void UpdateScrollButton(AvaloniaButton? button, bool overflow, bool enabled)
+    {
+        if (button is null)
+        {
+            return;
+        }
+        button.IsVisible = overflow;
+        button.IsEnabled = enabled;
+        button.Opacity = enabled ? 1 : 0;
+        button.IsHitTestVisible = enabled;
     }
 
     private void OnScrollLeftClick(object? sender, RoutedEventArgs e) => ScrollList(-1);

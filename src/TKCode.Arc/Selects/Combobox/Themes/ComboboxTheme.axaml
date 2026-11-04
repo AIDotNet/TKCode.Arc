@@ -23,13 +23,6 @@
                                    HorizontalAlignment="Left"
                                    VerticalAlignment="Top"
                                    AutomationProperties.LiveSetting="Polite" />
-                        <Border Name="PART_FocusRing"
-                                IsVisible="False"
-                                IsHitTestVisible="False"
-                                Margin="{arc:ComboboxTokenResource FocusRingMargin}"
-                                BorderThickness="{arc:ComboboxTokenResource FocusRingThickness}"
-                                CornerRadius="{arc:ComboboxTokenResource FocusRingRadius}"
-                                BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                         <Border Name="PART_Frame"
                                 MinHeight="{arc:ArcDesignTokenResource ControlSizeMD}"
                                 Padding="{arc:ComboboxTokenResource FieldPadding}"

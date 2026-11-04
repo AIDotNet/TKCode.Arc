@@ -9,8 +9,8 @@
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:TabItem">
-                <Panel>
-                    <Border Name="PART_Frame"
+                <!-- The focus ring is built by the tab the first time it is keyboard focused and hosted over this frame. -->
+                <Border Name="PART_Frame"
                             Background="{TemplateBinding Background}"
                             CornerRadius="{arc:TabItemTokenResource TriggerRadius}"
                             Padding="{TemplateBinding Padding}"
@@ -20,15 +20,7 @@
                                           VerticalAlignment="Center"
                                           Content="{TemplateBinding Header}"
                                           ContentTemplate="{TemplateBinding HeaderTemplate}" />
-                    </Border>
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            Margin="{arc:TabItemTokenResource FocusRingMargin}"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{arc:TabItemTokenResource FocusRingRadius}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
-                </Panel>
+                </Border>
             </ControlTemplate>
         </Setter>
 
@@ -55,9 +47,6 @@
         <Style Selector="^:disabled">
             <Setter Property="Opacity" Value="{arc:TabItemTokenResource DisabledOpacity}" />
             <Setter Property="Cursor" Value="No" />
-        </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
         </Style>
 
         <Style Selector="^:motion-full">

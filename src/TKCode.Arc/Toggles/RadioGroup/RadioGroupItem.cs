@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Automation.Peers;
@@ -7,6 +8,8 @@ namespace TKCode.Arc;
 /// <summary>One row of a <see cref="RadioGroup"/>: a ring with a springing dot, the label and an optional description.</summary>
 internal sealed class RadioGroupItem : TogglesItem
 {
+    protected override (object Margin, object Radius)? FocusRingKeys => (RadioGroupTokens.Key(RadioGroupTokenKind.FocusRingMargin), RadioGroupTokens.Key(RadioGroupTokenKind.FocusRingRadius));
+
     public static readonly StyledProperty<string?> DescriptionProperty =
         AvaloniaProperty.Register<RadioGroupItem, string?>(nameof(Description));
 

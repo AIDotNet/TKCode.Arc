@@ -126,26 +126,30 @@ public class SpringSizeDecorator : Decorator
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-        if (change.Property == IsHeldProperty && !change.GetNewValue<bool>() && _size is not null && !SameSize(_size.Target, _lastTarget))
+        if (change.Property == IsHeldProperty && !change.GetNewValue<bool>() && _hasSize && !SameSize(_size?.Target ?? _rest, _lastTarget))
         {
             // Released: catch up with the content that arrived while held.
             if (!IsLoaded || !ArcMotion.IsFull(this))
             {
-                _size.Jump(_lastTarget);
+                JumpTo(_lastTarget);
             }
             else
             {
-                var shrinking = _lastTarget.Width < _size.Value.Width || _lastTarget.Height < _size.Value.Height;
-                var spring = shrinking && ShrinkSpring is { } shrink ? shrink : Spring;
-                _ = _size.AnimateTo(_lastTarget, MotionSpec.Spring(spring));
+                var current = Current;
+                var shrinking = _lastTarget.Width < current.Width || _lastTarget.Height < current.Height;
+                AnimateTo(_lastTarget, shrinking);
             }
         }
     }
 
+    // The spring is built the first time the size animates; until then (and for most instances, always) the size is a
+    // plain field.
     private MotionValue<Size>? _size;
+    private Size _rest;
+    private bool _hasSize;
     private Size? _lastAvailable;
     private Size _lastTarget;
-    private readonly RectangleGeometry _clip = new();
+    private RectangleGeometry? _clip;
     private double _measuredHeight;
 
     protected override Size MeasureOverride(Size availableSize)
@@ -169,7 +173,12 @@ public class SpringSizeDecorator : Decorator
         {
             target = target.WithHeight(0);
         }
-        _size ??= CreateValue(target);
+        if (!_hasSize)
+        {
+            _hasSize = true;
+            _rest = target;
+            _lastTarget = target;
+        }
         var passive = _lastAvailable is { } last && !SameSize(last, availableSize);
         _lastAvailable = availableSize;
         if (!SameSize(target, _lastTarget))
@@ -181,16 +190,15 @@ public class SpringSizeDecorator : Decorator
             {
                 if (!IsLoaded || passive || !ArcMotion.IsFull(this))
                 {
-                    _size.Jump(target);
+                    JumpTo(target);
                 }
                 else
                 {
-                    var spring = shrinking && ShrinkSpring is { } shrink ? shrink : Spring;
-                    _ = _size.AnimateTo(target, MotionSpec.Spring(spring));
+                    AnimateTo(target, shrinking);
                 }
             }
         }
-        var current = _size.Value;
+        var current = Current;
         var result = axis switch
         {
             SpringSizeAxis.Width => new Size(current.Width, target.Height),
@@ -235,9 +243,28 @@ public class SpringSizeDecorator : Decorator
         return finalSize;
     }
 
+    private Size Current => _size?.Value ?? _rest;
+
+    private void JumpTo(Size target)
+    {
+        if (_size is null)
+        {
+            // Read by the measure pass that asked for it (IsHeld affects measure too).
+            _rest = target;
+            return;
+        }
+        _size.Jump(target);
+    }
+
+    private void AnimateTo(Size target, bool shrinking)
+    {
+        _size ??= CreateValue(_rest);
+        var spring = shrinking && ShrinkSpring is { } shrink ? shrink : Spring;
+        _ = _size.AnimateTo(target, MotionSpec.Spring(spring));
+    }
+
     private MotionValue<Size> CreateValue(Size initial)
     {
-        _lastTarget = initial;
         var value = new MotionValue<Size>(this, initial, MotionVectors.Size);
         value.Changed += v =>
         {
@@ -265,7 +292,7 @@ public class SpringSizeDecorator : Decorator
     private void UpdateClip(Size size)
     {
         // Held content that no longer matches the held size is clipped like a moving one.
-        var animating = _size?.IsAnimating == true || (IsHeld && _size is not null && !SameSize(_size.Value, _lastTarget));
+        var animating = _size?.IsAnimating == true || (IsHeld && _hasSize && !SameSize(Current, _lastTarget));
         var cross = CrossClipOverflow;
         Rect? clip;
         if (Axis == SpringSizeAxis.Width)
@@ -280,10 +307,14 @@ public class SpringSizeDecorator : Decorator
         }
         if (clip is not { } rect)
         {
-            Clip = null;
+            if (Clip is not null)
+            {
+                Clip = null;
+            }
             return;
         }
         // One geometry, updated in place: a moving clip allocates nothing per frame.
+        _clip ??= new RectangleGeometry();
         _clip.Rect = rect;
         Clip = _clip;
         InvalidateVisual();
