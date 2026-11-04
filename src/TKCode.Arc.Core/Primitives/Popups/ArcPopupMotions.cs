@@ -36,27 +36,30 @@ public abstract class ArcPopupMotion
 }
 
 /// <summary>
-/// P10 enter: origin-aware scale + offset + fade. Default timing is Arc's popover / tooltip enter (fast, ease enter).
+/// P10 enter: origin-aware scale + offset + fade. The opacity runs Arc's popover enter (fast, ease enter); the travel and
+/// scale run on <c>transformSpec</c> when given (Arc's pickers and selects: the snappy spring), else on the opacity's tween.
 /// </summary>
 public sealed class ArcPopupEnterMotion : ArcPopupMotion
 {
     private readonly MotionSpec _spec;
+    private readonly MotionSpec _transformSpec;
 
     public ArcPopupEnterMotion(RelativePoint origin, Vector offset, double scale = 0.97, bool fadeOnly = false,
-                               TimeSpan? duration = null, Easing? easing = null)
+                               TimeSpan? duration = null, Easing? easing = null, MotionSpec? transformSpec = null)
     {
         Origin = origin;
         Offset = offset;
         Scale = scale;
         FadeOnly = fadeOnly;
         _spec = MotionSpec.Tween(duration ?? ArcMotionPresets.Fast, easing ?? ArcEasings.Enter);
+        _transformSpec = transformSpec ?? _spec;
     }
 
     /// <inheritdoc />
     public override MotionSpec OpacitySpec => _spec;
 
     /// <inheritdoc />
-    public override MotionSpec TransformSpec => _spec;
+    public override MotionSpec TransformSpec => _transformSpec;
 }
 
 /// <summary>P10 exit: shorter than the enter, fades and shrinks slightly toward the origin.</summary>

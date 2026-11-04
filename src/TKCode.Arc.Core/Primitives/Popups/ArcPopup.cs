@@ -595,8 +595,11 @@ public class ArcPopup : Popup
         var (origin, direction) = OriginFor(RequestedPlacement ?? Placement);
         var fadeOnly = level == ArcMotionLevel.Reduced || IsInstant;
         var offset = direction * EnterOffset;
+        // Arc's pickers and selects: opacity on the fast enter tween, travel and scale on the snappy spring (it settles
+        // with a slight overshoot, which a 160 ms tween on the transform loses).
         OpenMotion = new ArcPopupEnterMotion(origin, offset, EnterScale, fadeOnly,
-            duration: fadeOnly ? ArcMotionPresets.Instant : ArcMotionPresets.Fast);
+            duration: fadeOnly ? ArcMotionPresets.Instant : ArcMotionPresets.Fast,
+            transformSpec: fadeOnly ? null : MotionSpec.Spring(ArcSpring.Snappy));
         CloseMotion = IsExitInstant && level == ArcMotionLevel.Full
             ? null
             : new ArcPopupExitMotion(origin, 0.98, level == ArcMotionLevel.Reduced);

@@ -10,8 +10,8 @@ internal sealed class SwitchToken : AbstractControlDesignToken
     public Thickness TrackInset { get; set; }
     public double ThumbSize { get; set; }
     public double ThumbStretchedWidth { get; set; }
-    public Thickness ThumbOnMargin { get; set; }
-    public Thickness ThumbOnPressedMargin { get; set; }
+    public double ThumbOnOffset { get; set; }
+    public double ThumbOnPressedOffset { get; set; }
     public Thickness LabelMargin { get; set; }
     public double DisabledOpacity { get; set; }
     public Thickness FocusRingMargin { get; set; }
@@ -25,8 +25,8 @@ internal sealed class SwitchToken : AbstractControlDesignToken
         TrackInset = new Thickness(3);
         ThumbSize = 18;
         ThumbStretchedWidth = 23;
-        ThumbOnMargin = new Thickness(18, 0, 0, 0);
-        ThumbOnPressedMargin = new Thickness(13, 0, 0, 0);
+        ThumbOnOffset = 18;
+        ThumbOnPressedOffset = 13;
         LabelMargin = new Thickness(12, 0, 0, 0);
         DisabledOpacity = 0.5;
         FocusRingMargin = new Thickness(-4);

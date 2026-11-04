@@ -6,12 +6,19 @@
     <ControlTheme x:Key="{x:Type arc:Input}" TargetType="arc:Input">
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:Input">
-                <arc:Field Name="PART_Field"
-                           Label="{TemplateBinding Label}"
-                           Description="{TemplateBinding Description}"
-                           ErrorMessage="{TemplateBinding EffectiveErrorMessage}"
-                           IsLabelVisible="{TemplateBinding IsLabelVisible}"
-                           Size="{TemplateBinding Size}">
+                <!-- Field's template is inlined so a text input no longer nests a second themed Field control. -->
+                <StackPanel>
+                    <TextBlock Name="PART_Label"
+                               Text="{TemplateBinding Label}"
+                               Margin="{arc:FieldTokenResource LabelMargin}"
+                               TextWrapping="Wrap">
+                        <TextBlock.IsVisible>
+                            <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="IsLabelVisible" />
+                                <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Label" Converter="{x:Static StringConverters.IsNotNullOrEmpty}" />
+                            </MultiBinding>
+                        </TextBlock.IsVisible>
+                    </TextBlock>
                     <arc:FieldFrame Name="PART_Frame"
                                     Cursor="IBeam"
                                     Size="{TemplateBinding Size}"
@@ -57,7 +64,13 @@
                             </Panel>
                         </ScrollViewer>
                     </arc:FieldFrame>
-                </arc:Field>
+                    <arc:FieldMessage Name="PART_Description"
+                                      Kind="Description"
+                                      Text="{TemplateBinding Description}" />
+                    <arc:FieldMessage Name="PART_Error"
+                                      Kind="Error"
+                                      Text="{TemplateBinding EffectiveErrorMessage}" />
+                </StackPanel>
             </ControlTemplate>
         </Setter>
 
@@ -75,6 +88,17 @@
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="VerticalAlignment" Value="Top" />
 
+        <Style Selector="^ /template/ TextBlock#PART_Label">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="LineHeight" Value="{arc:FieldTokenResource LabelLineHeight}" />
+        </Style>
+        <Style Selector="^[Size=Small] /template/ TextBlock#PART_Label">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="{arc:FieldTokenResource LabelLineHeightSM}" />
+        </Style>
         <Style Selector="^:disabled /template/ arc|FieldFrame#PART_Frame">
             <Setter Property="Opacity" Value="{arc:InputTokenResource DisabledOpacity}" />
         </Style>

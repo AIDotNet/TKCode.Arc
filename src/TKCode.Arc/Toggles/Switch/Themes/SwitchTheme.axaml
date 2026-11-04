@@ -21,15 +21,22 @@
                                 CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
                                 Background="{arc:ArcDesignTokenResource ControlOn}" />
                         <Panel Margin="{arc:SwitchTokenResource TrackInset}">
-                            <Border Name="PART_Thumb"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    Margin="{TemplateBinding ThumbMargin}"
-                                    Width="{TemplateBinding ThumbWidth}"
-                                    Height="{arc:SwitchTokenResource ThumbSize}"
-                                    RenderTransformOrigin="50%,50%"
-                                    CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
-                                    BoxShadow="{arc:ArcDesignTokenResource ControlThumbShadow}" />
+                            <!-- The host carries the position as a render-only translate driven by ThumbOffset (set in
+                                 Switch.cs: a TemplateBinding on a Transform does not resolve, since a Transform has no
+                                 templated parent). Position must not be a Margin/Thickness: that is AffectsMeasure and
+                                 would run a measure pass through the window on every toggle. The thumb keeps its own
+                                 transform for the press scale. -->
+                            <Panel Name="PART_ThumbHost"
+                                   HorizontalAlignment="Left"
+                                   VerticalAlignment="Center"
+                                   RenderTransformOrigin="0%,50%">
+                                <Border Name="PART_Thumb"
+                                        Width="{TemplateBinding ThumbWidth}"
+                                        Height="{arc:SwitchTokenResource ThumbSize}"
+                                        RenderTransformOrigin="50%,50%"
+                                        CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                        BoxShadow="{arc:ArcDesignTokenResource ControlThumbShadow}" />
+                            </Panel>
                         </Panel>
                     </Panel>
                     <ContentPresenter Name="PART_Label"
@@ -49,9 +56,9 @@
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="ThumbWidth" Value="{arc:SwitchTokenResource ThumbSize}" />
-        <!-- The off position is set, not left at the default: a style value that falls back to the default while a
+        <!-- The off position is set, not left at the default: a styled value that falls back to the default while a
              transition runs raises no change, so turning off from a press would finish the press glide first. -->
-        <Setter Property="ThumbMargin" Value="0" />
+        <Setter Property="ThumbOffset" Value="0" />
         <!-- The focus ring sits outside the control. -->
         <Setter Property="ClipToBounds" Value="False" />
         <!-- Base fills live in styles (not the template) so state styles can override them. -->
@@ -66,7 +73,7 @@
             <Setter Property="ThumbWidth" Value="{arc:SwitchTokenResource ThumbStretchedWidth}" />
         </Style>
         <Style Selector="^:checked">
-            <Setter Property="ThumbMargin" Value="{arc:SwitchTokenResource ThumbOnMargin}" />
+            <Setter Property="ThumbOffset" Value="{arc:SwitchTokenResource ThumbOnOffset}" />
             <Style Selector="^ /template/ Border#PART_TrackOn">
                 <Setter Property="Opacity" Value="1" />
             </Style>
@@ -75,7 +82,7 @@
             </Style>
         </Style>
         <Style Selector="^:checked:pressed">
-            <Setter Property="ThumbMargin" Value="{arc:SwitchTokenResource ThumbOnPressedMargin}" />
+            <Setter Property="ThumbOffset" Value="{arc:SwitchTokenResource ThumbOnPressedOffset}" />
         </Style>
         <Style Selector="^:not(:checked):pointerover /template/ Border#PART_Track">
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource ControlTrackHover}" />
@@ -88,8 +95,8 @@
         <Style Selector="^:motion-full">
             <Setter Property="Transitions">
                 <Transitions>
-                    <arc:SpringThicknessTransition Property="ThumbMargin" VisualDuration="0.3" Bounce="0" />
                     <arc:SpringDoubleTransition Property="ThumbWidth" Spring="Snappy" />
+                    <arc:SpringDoubleTransition Property="ThumbOffset" VisualDuration="0.3" Bounce="0" />
                 </Transitions>
             </Setter>
             <Style Selector="^ /template/ Border#PART_Track">
@@ -117,9 +124,6 @@
         <!-- Reduced motion: no stretch, the thumb jumps, colors still change instantly. -->
         <Style Selector="^:motion-reduced">
             <Setter Property="ThumbWidth" Value="{arc:SwitchTokenResource ThumbSize}" />
-        </Style>
-        <Style Selector="^:motion-reduced:checked">
-            <Setter Property="ThumbMargin" Value="{arc:SwitchTokenResource ThumbOnMargin}" />
         </Style>
     </ControlTheme>
 </ResourceDictionary>

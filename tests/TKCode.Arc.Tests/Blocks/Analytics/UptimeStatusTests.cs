@@ -15,6 +15,11 @@ public class UptimeStatusTests
 {
     private static readonly DateTimeOffset Now = new(2027, 3, 14, 14, 30, 0, TimeSpan.Zero);
 
+    // The engine works on UTC days. Build instants with an explicit zero offset: a DateTime converted to DateTimeOffset
+    // takes the machine's local offset, which moves an incident onto the previous UTC day on machines east of UTC.
+    private static DateTimeOffset UtcAt(int addDays, int hours) =>
+        new(Now.UtcDateTime.Date.AddDays(addDays).AddHours(hours), TimeSpan.Zero);
+
     // Bars ---------------------------------------------------------------------------------------------------------------------
 
     [Theory]
@@ -78,7 +83,7 @@ public class UptimeStatusTests
     public void A_Day_Is_One_Minus_Its_Downtime_Over_1440_And_Shows_Two_Decimals()
     {
         var end = DateOnly.FromDateTime(Now.UtcDateTime);
-        var days = UptimeEngine.Bucket(end, 90, "api", [Interval(Now.AddDays(-22).Date.AddHours(7), 23, ServiceStatus.Outage, "api")]);
+        var days = UptimeEngine.Bucket(end, 90, "api", [Interval(UtcAt(-22, 7), 23, ServiceStatus.Outage, "api")]);
         var day = days[89 - 22];
         day.Minutes.ShouldBe(23);
         UptimeEngine.PercentText(day.Uptime).ShouldBe("98.40%");
@@ -111,14 +116,14 @@ public class UptimeStatusTests
     [InlineData(137, "99.89%")]
     public void The_Window_Uptime_Is_One_Minus_All_Minutes_Over_Days_Times_1440(int minutes, string expected)
     {
-        var days = UptimeEngine.Bucket(new DateOnly(2027, 3, 14), 90, "a", [Interval(Now.AddDays(-10).Date.AddHours(3), minutes, ServiceStatus.Degraded, "a")]);
+        var days = UptimeEngine.Bucket(new DateOnly(2027, 3, 14), 90, "a", [Interval(UtcAt(-10, 3), minutes, ServiceStatus.Degraded, "a")]);
         UptimeEngine.PercentText(UptimeEngine.WindowUptime(days)).ShouldBe(expected);
     }
 
     [Fact]
     public void The_Most_Severe_Incident_Sets_The_Day_And_Other_Services_Are_Left_Alone()
     {
-        var start = Now.Date.AddHours(2);
+        var start = UtcAt(0, 2);
         List<UptimeInterval> intervals =
         [
             Interval(start, 30, ServiceStatus.Degraded, "a", "b"),
@@ -204,7 +209,7 @@ public class UptimeStatusTests
 
     private static UptimeIncident MakeIncident(string key, int daysAgo, int minutes, ServiceStatus severity, bool resolved, params string[] services)
     {
-        var start = Now.Date.AddDays(-daysAgo).AddHours(7);
+        var start = UtcAt(-daysAgo, 7);
         var incident = new UptimeIncident { Key = key, Title = "Incident " + key, Severity = severity, Start = start, Duration = TimeSpan.FromMinutes(minutes), IsResolved = resolved };
         incident.ServiceKeys.AddRange(services);
         incident.Updates.Add(new IncidentUpdate("Investigating", start, "Looking into it.", IncidentTone.Warning));

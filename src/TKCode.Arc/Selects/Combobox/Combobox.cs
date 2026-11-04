@@ -150,6 +150,7 @@ public class Combobox : SelectingItemsControl, ISelectOptionHost, ISelectFieldAu
     private TextBlock? _announcer;
     private TextBlock? _description;
     private bool _syncingText;
+    private bool _entriesRefreshPosted;
     private MotionValue<double>? _settle;
     private TranslateTransform? _settleShift;
 
@@ -277,8 +278,7 @@ public class Combobox : SelectingItemsControl, ISelectOptionHost, ISelectFieldAu
         else if (change.Property == SelectedIndexProperty)
         {
             var index = change.GetNewValue<int>();
-            SelectedText = index >= 0 ? _entries.TextAt(index) : null;
-            SyncInput();
+            RefreshSelectedText();
             UpdateClear();
             _options?.InvalidateRows();
             PlaySettle(index >= 0);
@@ -320,11 +320,25 @@ public class Combobox : SelectingItemsControl, ISelectOptionHost, ISelectFieldAu
         {
             Refilter();
         }
+        // Coalesce: several entry changes before the queue drains need one refresh, and the post is dropped when the
+        // control leaves the tree (a pending closure would root it).
+        if (_entriesRefreshPosted)
+        {
+            return;
+        }
+        _entriesRefreshPosted = true;
         Dispatcher.UIThread.Post(() =>
         {
-            SelectedText = SelectedIndex >= 0 ? _entries.TextAt(SelectedIndex) : null;
-            SyncInput();
+            _entriesRefreshPosted = false;
+            RefreshSelectedText();
         }, DispatcherPriority.Background);
+    }
+
+    /// <summary>Re-reads the chosen label and pushes it into the field.</summary>
+    private void RefreshSelectedText()
+    {
+        SelectedText = SelectedIndex >= 0 ? _entries.TextAt(SelectedIndex) : null;
+        SyncInput();
     }
 
     /// <summary>The field shows the query while open and the chosen label (not the value) while closed.</summary>
@@ -663,6 +677,8 @@ public class Combobox : SelectingItemsControl, ISelectOptionHost, ISelectFieldAu
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
+        // A pending job must not hold the control; clearing the flag lets a later attach post again.
+        _entriesRefreshPosted = false;
         SetCurrentValue(IsOpenProperty, false);
     }
 }

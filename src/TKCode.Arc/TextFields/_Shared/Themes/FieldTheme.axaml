@@ -7,13 +7,17 @@
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:Field">
                 <StackPanel>
-                    <Panel IsVisible="{TemplateBinding IsLabelVisible}">
-                        <TextBlock Name="PART_Label"
-                                   IsVisible="{TemplateBinding Label, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                                   Text="{TemplateBinding Label}"
-                                   Margin="{arc:FieldTokenResource LabelMargin}"
-                                   TextWrapping="Wrap" />
-                    </Panel>
+                    <TextBlock Name="PART_Label"
+                               Text="{TemplateBinding Label}"
+                               Margin="{arc:FieldTokenResource LabelMargin}"
+                               TextWrapping="Wrap">
+                        <TextBlock.IsVisible>
+                            <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="IsLabelVisible" />
+                                <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Label" Converter="{x:Static StringConverters.IsNotNullOrEmpty}" />
+                            </MultiBinding>
+                        </TextBlock.IsVisible>
+                    </TextBlock>
                     <ContentPresenter Name="PART_ContentPresenter"
                                       Content="{TemplateBinding Content}"
                                       ContentTemplate="{TemplateBinding ContentTemplate}"

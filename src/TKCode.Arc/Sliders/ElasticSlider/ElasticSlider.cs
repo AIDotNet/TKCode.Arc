@@ -1,5 +1,6 @@
 using TKCode.Arc.Primitives;
 using System.Collections.Specialized;
+using System.Globalization;
 using TKCode.Arc.Motion;
 using Avalonia;
 using Avalonia.Animation.Easings;
@@ -100,20 +101,24 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
     public object? StartIcon { get => GetValue(StartIconProperty); set => SetValue(StartIconProperty, value); }
     public object? EndIcon { get => GetValue(EndIconProperty); set => SetValue(EndIconProperty, value); }
 
-    private IList<SliderMark> _marks = new AvaloniaList<SliderMark>();
+    private IList<SliderMark>? _marks;
     // Marks may be a view model's list, and their properties may be bound: they are observed only while the slider is
     // shown, and re-read when it comes back.
-    private readonly ObservedItems _observedMarks;
+    private ObservedItems? _observedMarks;
     private bool _watching;
 
     /// <summary>Detents: a dragged thumb clicks into each one and holds for a few pixels. Labels print under the track.</summary>
     public IList<SliderMark> Marks
     {
-        get => _marks;
+        get => _marks ??= new AvaloniaList<SliderMark>();
         set
         {
-            if (SetAndRaise(MarksProperty, ref _marks, value ?? new AvaloniaList<SliderMark>()))
+            var next = value ?? new AvaloniaList<SliderMark>();
+            if (!EqualityComparer<IList<SliderMark>>.Default.Equals(_marks!, next))
             {
+                var old = _marks;
+                _marks = next;
+                RaisePropertyChanged(MarksProperty, old!, next);
                 WatchMarks();
                 UpdateMarks();
             }
@@ -138,16 +143,17 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
 
     #endregion
 
-    private readonly MotionValue<double> _position;
-    private readonly MotionValue<double> _lag;
-    private readonly MotionValue<double> _over;
-    private readonly MotionValue<double> _press;
-    private readonly MotionValue<double> _lift;
-    private readonly ElasticSliderSway _sway;
-    private readonly SliderVelocityTracker _tracker = new();
-    private readonly SliderVelocityTracker _overTracker = new();
-    private readonly TranslateTransform _startShift = new();
-    private readonly TranslateTransform _endShift = new();
+    private static readonly CultureInfo s_culture = CultureInfo.GetCultureInfo("en-US");
+    private MotionValue<double>? _position;
+    private MotionValue<double>? _lag;
+    private MotionValue<double>? _over;
+    private MotionValue<double>? _press;
+    private MotionValue<double>? _lift;
+    private ElasticSliderSway? _sway;
+    private SliderVelocityTracker? _tracker;
+    private SliderVelocityTracker? _overTracker;
+    private TranslateTransform? _startShift;
+    private TranslateTransform? _endShift;
     // Built with the tag bubble, the first time it shows.
     private TextBlock? _tagText;
     private MotionValue<double>?[] _pulses = [];
@@ -171,15 +177,28 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
 
     public ElasticSlider()
     {
-        _observedMarks = new ObservedItems(_ => UpdateMarks());
-        _position = Create(0, OnMoved);
-        _lag = Create(0, OnMoved);
-        _over = Create(0, OnMoved);
+    }
+
+    /// <summary>
+    /// Creates the motion state the first time the template is applied: a slider that is never shown needs none of it.
+    /// </summary>
+    private void EnsureMotion()
+    {
+        if (_position is not null)
+        {
+            return;
+        }
+        // One delegate for the three layout-driving values instead of one per value.
+        Action moved = OnMoved;
+        _position = Create(0, moved);
+        _lag = Create(0, moved);
+        _over = Create(0, moved);
         _press = Create(0, () => _rail?.InvalidateVisual());
         _lift = Create(1, Place);
         _sway = new ElasticSliderSway(this);
         _sway.Changed += Place;
-        ValueText = FormatValue(Value);
+        _startShift = new TranslateTransform();
+        _endShift = new TranslateTransform();
     }
 
     private MotionValue<double> Create(double initial, Action changed)
@@ -197,7 +216,14 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
 
     private double Step => SmallChange > 0 ? SmallChange : 1;
 
-    private int Decimals => Math.Max(SliderMath.DecimalsOf(Step), SliderMath.DecimalsOf(Minimum));
+    // Decimals and the "N" format string are derived from Minimum and SmallChange; both change rarely, so they are
+    // cached and invalidated in OnPropertyChanged.
+    private int _decimals = -1;
+    private string? _format;
+
+    private int Decimals => _decimals >= 0 ? _decimals : _decimals = Math.Max(SliderMath.DecimalsOf(Step), SliderMath.DecimalsOf(Minimum));
+
+    private string FormatString => _format ??= "N" + Math.Clamp(Decimals, 0, 15);
 
     internal double LargeStep => IsSet(LargeChangeProperty) && LargeChange > 0
         ? LargeChange
@@ -213,16 +239,16 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
     // Math.Clamp throws when min > max.
     private double ClampToRange(double value) => Math.Clamp(value, Minimum, Math.Max(Minimum, Maximum));
 
-    internal string FormatValue(double value) => ValueFormatter?.Invoke(value) ?? SliderMath.Format(value, Decimals);
+    internal string FormatValue(double value) => ValueFormatter?.Invoke(value) ?? value.ToString(FormatString, s_culture);
 
     /// <summary>Thumb position in track per-mille (committed position plus catch-up offset).</summary>
-    internal double ShownPosition => _position.Value + _lag.Value;
+    internal double ShownPosition => (_position?.Value ?? 0) + (_lag?.Value ?? 0);
 
     /// <summary>Rubber-band stretch in pixels, signed by side.</summary>
-    internal double Over => _over.Value;
+    internal double Over => _over?.Value ?? 0;
 
     /// <summary>Press thickening (0..1).</summary>
-    internal double Press => _press.Value;
+    internal double Press => _press?.Value ?? 0;
 
     /// <summary>The detent pop of tick <paramref name="index"/>: 1 → 2.1 → 1 over 0.34s, each half on the enter ease.</summary>
     internal double TickScale(int index)
@@ -254,6 +280,7 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
+        EnsureMotion();
         _rail = e.NameScope.Find<ElasticSliderRail>(RailPart);
         _markLabels = e.NameScope.Find<SliderMarkLabels>(MarksPart);
         if (e.NameScope.Find<Control>(StartIconPart) is { } start)
@@ -300,6 +327,8 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
         }
         else if (change.Property == MinimumProperty || change.Property == MaximumProperty || change.Property == SmallChangeProperty)
         {
+            _decimals = -1;
+            _format = null;
             _goal = double.NaN;
             SyncThumb(animate: false);
             UpdateMarks();
@@ -318,6 +347,12 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
     private void SyncThumb(bool animate)
     {
         UpdateText();
+        if (_position is not { } position || _lag is not { } lag)
+        {
+            _rail?.InvalidateVisual();
+            _markLabels?.InvalidateVisual();
+            return;
+        }
         var target = ToPosition(ClampToRange(Value));
         if (_dragging || _goal == target)
         {
@@ -328,16 +363,16 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
         var placed = !double.IsNaN(_goal);
         _goal = target;
         var from = ShownPosition;
-        _lag.Jump(0);
+        lag.Jump(0);
         if (!animate || !placed || !IsLoaded)
         {
-            _position.Jump(target);
-            _sway.Jump(target);
+            position.Jump(target);
+            _sway!.Jump(target);
         }
         else
         {
-            _position.Jump(from);
-            _ = _position.AnimateTo(target, MotionSpec.Spring(ThumbSpring));
+            position.Jump(from);
+            _ = position.AnimateTo(target, MotionSpec.Spring(ThumbSpring));
         }
         _rail?.InvalidateVisual();
         _markLabels?.InvalidateVisual();
@@ -359,7 +394,8 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
     /// <summary>Listens to the current marks while shown (and to nothing otherwise).</summary>
     private void WatchMarks()
     {
-        _observedMarks.Observe(_watching ? _marks : null);
+        var observed = _observedMarks ??= new ObservedItems(_ => UpdateMarks());
+        observed.Observe(_watching ? Marks : null);
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -380,7 +416,7 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
 
     private void UpdateMarks()
     {
-        _pulses = new MotionValue<double>?[_marks.Count];
+        _pulses = new MotionValue<double>?[_marks?.Count ?? 0];
         _markLabels?.Refresh();
         if (_markLabels is not null)
         {
@@ -411,7 +447,7 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
 
     private void OnMoved()
     {
-        _sway.Follow(ShownPosition, IsLoaded && ArcMotion.IsFull(this) && _rail is not null);
+        _sway!.Follow(ShownPosition, IsLoaded && ArcMotion.IsFull(this) && _rail is not null);
         Place();
         _rail?.InvalidateVisual();
     }
@@ -422,22 +458,25 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
         {
             return;
         }
+        var sway = _sway!;
         var width = rail.TrackWidth;
-        var over = _over.Value;
-        rail.Thumbs[0].Place(ShownPosition / SliderMath.Span * width + over, _lift.Value);
+        var over = _over!.Value;
+        rail.Thumbs[0].Place(ShownPosition / SliderMath.Span * width + over, _lift!.Value);
         var full = ArcMotion.IsFull(this);
-        var tagAt = full ? _sway.Position : ShownPosition;
-        var angle = full ? Math.Clamp(-_sway.Velocity / SliderMath.Span * width * 0.009, -11, 11) : 0;
+        var tagAt = full ? sway.Position : ShownPosition;
+        var angle = full ? Math.Clamp(-sway.Velocity / SliderMath.Span * width * 0.009, -11, 11) : 0;
         rail.PlaceBubble(0, rail.TrackLeft + tagAt / SliderMath.Span * width, over, angle);
         var startShift = Math.Min(0, over);
         var endShift = Math.Max(0, over);
-        if (_startShift.X != startShift)
+        var start = _startShift!;
+        var end = _endShift!;
+        if (start.X != startShift)
         {
-            _startShift.X = startShift;
+            start.X = startShift;
         }
-        if (_endShift.X != endShift)
+        if (end.X != endShift)
         {
-            _endShift.X = endShift;
+            end.X = endShift;
         }
     }
 
@@ -488,9 +527,14 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
 
     private int MarkIndexOf(double value)
     {
-        for (var i = 0; i < _marks.Count; i++)
+        var marks = _marks;
+        if (marks is null)
         {
-            if (_marks[i].Value == value)
+            return -1;
+        }
+        for (var i = 0; i < marks.Count; i++)
+        {
+            if (marks[i].Value == value)
             {
                 return i;
             }
@@ -500,11 +544,16 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
 
     private int DetentAt(double position, double width)
     {
+        var marks = _marks;
+        if (marks is null)
+        {
+            return -1;
+        }
         var best = -1;
         var gap = DetentPixels + 1;
-        for (var i = 0; i < _marks.Count; i++)
+        for (var i = 0; i < marks.Count; i++)
         {
-            var value = _marks[i].Value;
+            var value = marks[i].Value;
             if (value < Minimum || value > Maximum)
             {
                 continue;
@@ -522,15 +571,17 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
     /// <summary>Moves the thumb to a new resting spot through a spring on the catch-up offset, so the jump reads as travel.</summary>
     private void Glide(double placed, bool full)
     {
+        var position = _position!;
+        var lag = _lag!;
         var from = ShownPosition;
-        _position.Jump(placed);
+        position.Jump(placed);
         if (!full)
         {
-            _lag.Jump(0);
+            lag.Jump(0);
             return;
         }
-        _lag.Jump(from - placed);
-        _ = _lag.AnimateTo(0, MotionSpec.Spring(ThumbSpring));
+        lag.Jump(from - placed);
+        _ = lag.AnimateTo(0, MotionSpec.Spring(ThumbSpring));
     }
 
     void ISliderRailOwner.OnRailPressed(SliderRailBase rail, PointerPressedEventArgs e)
@@ -545,14 +596,16 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
         var grabbed = Math.Abs(x - rail.ToPixel(from)) <= rail.ThumbDiameter / 2 + ThumbReach;
         e.Pointer.Capture(rail);
         e.Handled = true;
-        _lag.Jump(0);
-        _position.Jump(from);
+        _lag!.Jump(0);
+        _position!.Jump(from);
         _pointer = e.Pointer;
         _grab = grabbed ? at - from : 0;
         _detent = -1;
         _edge = from;
-        _tracker.Reset();
-        _overTracker.Reset();
+        var tracker = _tracker ??= new SliderVelocityTracker();
+        var overTracker = _overTracker ??= new SliderVelocityTracker();
+        tracker.Reset();
+        overTracker.Reset();
         _dragging = true;
         _lingerTimer?.Stop();
         _linger = false;
@@ -562,8 +615,8 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
             thumb.Focus(NavigationMethod.Pointer);
         }
         // Springs jump under reduced motion (Arc: duration 0), so the thumb still swells, just at once.
-        _ = _press.AnimateTo(1, MotionSpec.Spring(ArcSpring.Snappy));
-        _ = _lift.AnimateTo(LiftedScale, MotionSpec.Spring(ArcSpring.Snappy));
+        _ = _press!.AnimateTo(1, MotionSpec.Spring(ArcSpring.Snappy));
+        _ = _lift!.AnimateTo(LiftedScale, MotionSpec.Spring(ArcSpring.Snappy));
         UpdateBubble();
         // A grabbed thumb stays put under the finger; a pressed track pulls the thumb over on a spring.
         Follow(rail, grabbed ? from + _grab : at, e.Timestamp, first: true);
@@ -575,11 +628,13 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
         var full = IsLoaded && ArcMotion.IsFull(this);
         var raw = at - _grab;
         var edge = Math.Clamp(raw, 0, SliderMath.Span);
-        var over = full ? SliderMath.Rubber((raw - edge) / SliderMath.Span * width, Stretch) : 0;
-        _over.Jump(over);
-        _overTracker.Add(time, over);
+        var overValue = full ? SliderMath.Rubber((raw - edge) / SliderMath.Span * width, Stretch) : 0;
+        var over = _over!;
+        var position = _position!;
+        over.Jump(overValue);
+        _overTracker!.Add(time, overValue);
         var detent = DetentAt(edge, width);
-        var placed = detent >= 0 ? ToPosition(_marks[detent].Value) : edge;
+        var placed = detent >= 0 ? ToPosition(_marks![detent].Value) : edge;
         if (first || detent != _detent)
         {
             if (detent >= 0 && !first)
@@ -590,12 +645,12 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
         }
         else
         {
-            _position.Jump(placed);
+            position.Jump(placed);
         }
         _detent = detent;
         _edge = edge;
-        _tracker.Add(time, placed);
-        Emit(detent >= 0 ? _marks[detent].Value : Snap(ValueAt(edge)));
+        _tracker!.Add(time, placed);
+        Emit(detent >= 0 ? _marks![detent].Value : Snap(ValueAt(edge)));
     }
 
     void ISliderRailOwner.OnRailMoved(SliderRailBase rail, PointerEventArgs e)
@@ -627,27 +682,32 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
     {
         _dragging = false;
         _pointer = null;
-        var velocity = (release ? _tracker.Velocity(time) : 0) + _lag.Velocity;
-        var overVelocity = release ? _overTracker.Velocity(time) : 0;
-        var next = _detent >= 0 ? _marks[_detent].Value : Snap(ValueAt(_edge));
+        var position = _position!;
+        var lag = _lag!;
+        var over = _over!;
+        var press = _press!;
+        var lift = _lift!;
+        var velocity = (release ? _tracker?.Velocity(time) ?? 0 : 0) + lag.Velocity;
+        var overVelocity = release ? _overTracker?.Velocity(time) ?? 0 : 0;
+        var next = _detent >= 0 ? _marks![_detent].Value : Snap(ValueAt(_edge));
         var from = ShownPosition;
         var target = ToPosition(next);
-        _lag.Jump(0);
-        _position.Jump(from);
+        lag.Jump(0);
+        position.Jump(from);
         _goal = target;
         if (IsLoaded && ArcMotion.IsFull(this))
         {
-            _ = _position.AnimateTo(target, MotionSpec.Spring(ThumbSpring), velocity);
-            _ = _over.AnimateTo(0, MotionSpec.Spring(SnapBack), overVelocity);
-            _ = _press.AnimateTo(0, MotionSpec.Spring(ArcSpring.Snappy));
-            _ = _lift.AnimateTo(1, MotionSpec.Spring(ArcSpring.Snappy));
+            _ = position.AnimateTo(target, MotionSpec.Spring(ThumbSpring), velocity);
+            _ = over.AnimateTo(0, MotionSpec.Spring(SnapBack), overVelocity);
+            _ = press.AnimateTo(0, MotionSpec.Spring(ArcSpring.Snappy));
+            _ = lift.AnimateTo(1, MotionSpec.Spring(ArcSpring.Snappy));
         }
         else
         {
-            _position.Jump(target);
-            _over.Jump(0);
-            _press.Jump(0);
-            _lift.Jump(1);
+            position.Jump(target);
+            over.Jump(0);
+            press.Jump(0);
+            lift.Jump(1);
         }
         Emit(next);
         HoldBubble();
@@ -703,9 +763,9 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
         {
             // At a limit the track still stretches toward the press and snaps back, so the key visibly lands on something.
             var toward = Math.Sign(wanted - now);
-            if (toward != 0 && IsLoaded && ArcMotion.IsFull(this))
+            if (toward != 0 && IsLoaded && ArcMotion.IsFull(this) && _over is { } over)
             {
-                _ = _over.AnimateTo(0, MotionSpec.Spring(SnapBack), toward * BumpSpeed);
+                _ = over.AnimateTo(0, MotionSpec.Spring(SnapBack), toward * BumpSpeed);
             }
             return;
         }
@@ -767,7 +827,7 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
     // Read by tests.
     internal bool IsTagShown => _rail?.IsBubbleShown(0) ?? false;
 
-    internal double ThumbScale => _lift.Value;
+    internal double ThumbScale => _lift?.Value ?? 1;
 
     internal ElasticSliderRail? Rail => _rail;
 }

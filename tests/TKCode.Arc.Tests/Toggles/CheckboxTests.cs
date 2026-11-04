@@ -1,4 +1,5 @@
 using Avalonia.Automation;
+using Avalonia.Automation.Peers;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
@@ -93,9 +94,10 @@ public class CheckboxTests
     {
         var box = new Checkbox { Description = "We will email you." };
         AutomationProperties.GetHelpText(box).ShouldBe("We will email you.");
-        AutomationProperties.GetName(box).ShouldBe("Checkbox");
+        // The accessible name falls back to the label at query time, not through AutomationProperties.Name.
+        ControlAutomationPeer.CreatePeerForElement(box)!.GetName().ShouldBe("Checkbox");
         box.Content = "Subscribe";
-        AutomationProperties.GetName(box).ShouldBeNullOrEmpty();
+        ControlAutomationPeer.CreatePeerForElement(box)!.GetName().ShouldBe("Subscribe");
     }
 
     [AvaloniaFact]

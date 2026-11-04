@@ -13,6 +13,7 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using AvaloniaButton = Avalonia.Controls.Button;
 
 namespace TKCode.Arc;
@@ -211,6 +212,7 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
     private TextBlock? _label;
     private int _lastIndex = -1;
     private int _closeGeneration;
+    private bool _entriesRefreshPosted;
     private bool _syncingQuery;
     private (int Direction, Vector? Fly)? _pendingChange;
 
@@ -390,7 +392,18 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
         {
             Refilter(keepActive: true);
         }
-        Dispatcher.UIThread.Post(() => UpdateValue(animate: false), DispatcherPriority.Background);
+        // Coalesce: several entry changes before the queue drains need one refresh; the post is dropped when the
+        // control leaves the tree (a pending closure would root it).
+        if (_entriesRefreshPosted)
+        {
+            return;
+        }
+        _entriesRefreshPosted = true;
+        Dispatcher.UIThread.Post(() =>
+        {
+            _entriesRefreshPosted = false;
+            UpdateValue(animate: false);
+        }, DispatcherPriority.Background);
     }
 
     // ---------------------------------------------------------------- value
@@ -1344,6 +1357,8 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
     {
         base.OnDetachedFromVisualTree(e);
         _closeGeneration++;
+        // Drop any pending refresh so it neither roots the control nor blocks a later attach.
+        _entriesRefreshPosted = false;
         if (_popup is { IsOpen: true })
         {
             _popup.IsOpen = false;

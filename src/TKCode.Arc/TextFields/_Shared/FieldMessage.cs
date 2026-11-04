@@ -718,9 +718,19 @@ public class FieldMessage : Control
                 content += padding.Top + padding.Bottom;
             }
             var target = _present ? content : 0;
+            var desiredWidth = double.IsInfinity(availableSize.Width)
+                ? natural + padding.Left + padding.Right
+                : availableSize.Width;
             if (_height is null)
             {
-                _height = new MotionValue<double>(this, target, MotionVectors.Double);
+                // A closed row that has never opened keeps no motion value at all, so the two closed message rows every
+                // text field mounts stay allocation-free; the row simply measures to zero height.
+                if (!_present && target <= 0)
+                {
+                    return new Size(desiredWidth, 0);
+                }
+                // First open: start the row closed (zero) and let the block below animate it open on the smooth spring.
+                _height = new MotionValue<double>(this, 0, MotionVectors.Double);
                 _height.Changed += _ =>
                 {
                     if (!_measuring)
@@ -729,7 +739,7 @@ public class FieldMessage : Control
                     }
                 };
             }
-            else if (Math.Abs(_height.Target - target) > 0.25)
+            if (Math.Abs(_height.Target - target) > 0.25)
             {
                 if (IsLoaded && ArcMotion.IsFull(this))
                 {
@@ -748,9 +758,6 @@ public class FieldMessage : Control
                     }
                 }
             }
-            var desiredWidth = double.IsInfinity(availableSize.Width)
-                ? natural + padding.Left + padding.Right
-                : availableSize.Width;
             return new Size(desiredWidth, Math.Max(0, _height.Value));
         }
         finally

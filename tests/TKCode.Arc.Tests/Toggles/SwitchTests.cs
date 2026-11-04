@@ -18,10 +18,10 @@ public class SwitchTests
         var window = TestHelpers.Show(toggle);
         try
         {
-            toggle.ThumbMargin.Left.ShouldBe(0);
+            toggle.ThumbOffsetX.ShouldBe(0);
             toggle.IsChecked = true;
             Dispatcher.UIThread.RunJobs();
-            toggle.ThumbMargin.Left.ShouldBe(18);
+            toggle.ThumbOffsetX.ShouldBe(18);
         }
         finally
         {
@@ -45,12 +45,12 @@ public class SwitchTests
             host.DataContext = new Item { On = true };
             Dispatcher.UIThread.RunJobs();
             toggle.IsChecked.ShouldBe(true);
-            toggle.ThumbMargin.Left.ShouldBe(18, 0.01);
+            toggle.ThumbOffsetX.ShouldBe(18, 0.01);
             toggle.Classes.Contains(Motion.ArcMotion.FullPseudoClass).ShouldBeTrue();
             // A real toggle still glides.
             toggle.IsChecked = false;
             Dispatcher.UIThread.RunJobs();
-            toggle.ThumbMargin.Left.ShouldBeGreaterThan(1);
+            toggle.ThumbOffsetX.ShouldBeGreaterThan(1);
         }
         finally
         {
@@ -73,17 +73,17 @@ public class SwitchTests
         {
             var point = new Point(20, 12);
             window.MouseDown(point, MouseButton.Left);
-            TestHelpers.PumpUntil(() => toggle.ThumbMargin.Left < 13.5, 2000).ShouldBeTrue();
+            TestHelpers.PumpUntil(() => toggle.ThumbOffsetX < 13.5, 2000).ShouldBeTrue();
             window.MouseUp(point, MouseButton.Left);
             toggle.IsChecked.ShouldBe(false);
             // The press shifted the thumb toward the start; the release must keep heading there, not glide back to the
             // checked spot first (the off position once fell back to the default, which a running transition missed).
-            var released = toggle.ThumbMargin.Left;
+            var released = toggle.ThumbOffsetX;
             var highest = released;
             TestHelpers.PumpUntil(() =>
             {
-                highest = Math.Max(highest, toggle.ThumbMargin.Left);
-                return toggle.ThumbMargin.Left < 0.5;
+                highest = Math.Max(highest, toggle.ThumbOffsetX);
+                return toggle.ThumbOffsetX < 0.5;
             }, 5000).ShouldBeTrue();
             highest.ShouldBeLessThan(released + 0.5);
         }
