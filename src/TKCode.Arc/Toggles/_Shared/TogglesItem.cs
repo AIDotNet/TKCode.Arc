@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
+using TKCode.Arc.Primitives;
 
 namespace TKCode.Arc;
 
@@ -27,6 +28,7 @@ internal abstract class TogglesItem : ContentControl
     }
 
     private IPointer? _pressPointer;
+    private LazyFocusRing? _focusRing;
 
     static TogglesItem()
     {
@@ -113,6 +115,35 @@ internal abstract class TogglesItem : ContentControl
             e.Handled = true;
         }
         base.OnKeyDown(e);
+    }
+
+    /// <summary>
+    /// Resource keys of the item's keyboard focus ring (margin, radius), or null when the template draws its own. The
+    /// ring is built the first time the item is keyboard focused, as the last child of the template's root panel.
+    /// </summary>
+    protected virtual (object Margin, object Radius)? FocusRingKeys => null;
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        if (FocusRingKeys is not { } keys)
+        {
+            return;
+        }
+        _focusRing ??= new LazyFocusRing(this, keys.Margin, keys.Radius);
+        _focusRing.Attach(VisualChildren.Count > 0 ? VisualChildren[0] as Panel : null);
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing?.Update();
     }
 
     private void EndPress()

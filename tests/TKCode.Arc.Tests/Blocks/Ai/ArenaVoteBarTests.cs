@@ -364,7 +364,7 @@ public class ArenaVoteBarTests
             Settle(window);
             Click(window, bar.VoteButtons[2]);
             bar.ActionButton!.IsFocused.ShouldBeTrue();
-            TestHelpers.Descendant<Border>(bar.ActionButton, "PART_FocusRing").IsVisible.ShouldBeFalse();
+            TestHelpers.IsFocusRingVisible(bar.ActionButton).ShouldBeFalse();
 
             // A row without buttons leaves the focus alone (the owner moves it to Run).
             bar.Kind = ArenaVoteKind.Pending;

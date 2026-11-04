@@ -148,7 +148,8 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
     private readonly SliderVelocityTracker _overTracker = new();
     private readonly TranslateTransform _startShift = new();
     private readonly TranslateTransform _endShift = new();
-    private readonly TextBlock _tagText = new();
+    // Built with the tag bubble, the first time it shows.
+    private TextBlock? _tagText;
     private MotionValue<double>?[] _pulses = [];
     private ElasticSliderRail? _rail;
     private SliderMarkLabels? _markLabels;
@@ -266,7 +267,7 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
         if (_rail is not null)
         {
             _rail.Slider = this;
-            _rail.Setup(this, this, 1, _ => _tagText, bubble =>
+            _rail.Setup(this, this, 1, _ => _tagText ??= new TextBlock { Text = ValueText }, bubble =>
             {
                 bubble.EnterScale = 0.7;
                 bubble.ExitScale = 0.85;
@@ -345,7 +346,10 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
     private void UpdateText()
     {
         ValueText = FormatValue(ClampToRange(Value));
-        _tagText.Text = ValueText;
+        if (_tagText is not null)
+        {
+            _tagText.Text = ValueText;
+        }
         if (_rail is not null)
         {
             AutomationProperties.SetItemStatus(_rail.Thumbs[0], ValueText);
@@ -440,7 +444,7 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
     private void UpdateBubble()
     {
         var shown = _dragging || _keyed || _linger;
-        _rail?.Bubbles[0].Show(shown);
+        _rail?.ShowBubble(0, shown);
         PseudoClasses.Set(TagPseudoClass, shown);
         PseudoClasses.Set(DraggingPseudoClass, _dragging);
     }
@@ -761,7 +765,7 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
     #endregion
 
     // Read by tests.
-    internal bool IsTagShown => _rail?.Bubbles[0].IsShown ?? false;
+    internal bool IsTagShown => _rail?.IsBubbleShown(0) ?? false;
 
     internal double ThumbScale => _lift.Value;
 

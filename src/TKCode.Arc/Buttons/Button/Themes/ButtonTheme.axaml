@@ -9,34 +9,26 @@
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:Button">
-                <Panel>
-                    <Border Name="PART_Frame"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="{TemplateBinding CornerRadius}"
-                            Padding="{TemplateBinding Padding}">
-                        <Panel Name="PART_Layers">
-                            <arc:SpringSizeDecorator Name="PART_LabelSlot"
-                                                     Axis="Width"
-                                                     Spring="{TemplateBinding LabelSpring}"
-                                                     HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                     VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
-                                <arc:ArcContentSwap Name="PART_Label"
-                                                    Mode="{TemplateBinding LabelSwapMode}"
-                                                    Content="{TemplateBinding Content}"
-                                                    ContentTemplate="{TemplateBinding ContentTemplate}" />
-                            </arc:SpringSizeDecorator>
-                        </Panel>
-                    </Border>
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            Margin="{arc:ButtonTokenResource FocusRingMargin}"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{arc:ButtonTokenResource FocusRingRadius}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
-                </Panel>
+                <!-- The spinner (first load) and the focus ring (first keyboard focus) are built in code and hosted by the
+                     button itself (Button.EnsureSpinner, LazyFocusRing): most buttons never need either, and a panel to
+                     hold them would cost every button a node. -->
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <arc:SpringSizeDecorator Name="PART_LabelSlot"
+                                             Axis="Width"
+                                             Spring="{TemplateBinding LabelSpring}"
+                                             HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                             VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                        <arc:ArcContentSwap Name="PART_Label"
+                                            Mode="{TemplateBinding LabelSwapMode}"
+                                            Content="{TemplateBinding Content}"
+                                            ContentTemplate="{TemplateBinding ContentTemplate}" />
+                    </arc:SpringSizeDecorator>
+                </Border>
             </ControlTemplate>
         </Setter>
 
@@ -53,18 +45,20 @@
         <Setter Property="RenderTransformOrigin" Value="50%,50%" />
         <Setter Property="ClipToBounds" Value="False" />
 
+        <!-- Variant, size and press scale are pseudo-classes set by Button: a property selector ([Variant=Ghost]) costs every
+             button a property subscription and a boxed comparison per style that uses it, a class costs a list entry. -->
         <!-- Sizes: heights 36 / 44 / 50, inline padding 12 / 16 / 20. -->
-        <Style Selector="^[Size=Small]">
+        <Style Selector="^:small">
             <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
             <Setter Property="Padding" Value="{arc:ButtonTokenResource InlinePaddingSM}" />
         </Style>
-        <Style Selector="^[Size=Large]">
+        <Style Selector="^:large">
             <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeLG}" />
             <Setter Property="Padding" Value="{arc:ButtonTokenResource InlinePaddingLG}" />
         </Style>
 
         <!-- Primary: foreground fill with background text (not accent). -->
-        <Style Selector="^[Variant=Primary]">
+        <Style Selector="^:primary">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
@@ -82,7 +76,7 @@
             </Style>
         </Style>
 
-        <Style Selector="^[Variant=Secondary]">
+        <Style Selector="^:secondary">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
@@ -103,7 +97,7 @@
             </Style>
         </Style>
 
-        <Style Selector="^[Variant=Ghost]">
+        <Style Selector="^:ghost">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderBrush" Value="Transparent" />
@@ -127,7 +121,7 @@
             </Style>
         </Style>
 
-        <Style Selector="^[Variant=Danger]">
+        <Style Selector="^:danger">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
@@ -154,10 +148,6 @@
             </Style>
         </Style>
 
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
-        </Style>
-
         <!-- Motion: colors on fast + standard ease; presses on a snappy spring (full motion only). -->
         <Style Selector="^:motion-full">
             <Setter Property="RenderTransform" Value="scale(1)" />
@@ -177,13 +167,13 @@
                     </Transitions>
                 </Setter>
             </Style>
-            <Style Selector="^[IsPressScaleEnabled=True]:pressed">
+            <Style Selector="^:press-scale:pressed">
                 <Setter Property="RenderTransform" Value="scale(0.97)" />
             </Style>
-            <Style Selector="^[IsPressScaleEnabled=True]:pressed:narrow">
+            <Style Selector="^:press-scale:pressed:narrow">
                 <Setter Property="RenderTransform" Value="scale(0.96)" />
             </Style>
-            <Style Selector="^[IsPressScaleEnabled=True]:pressed:wide">
+            <Style Selector="^:press-scale:pressed:wide">
                 <Setter Property="RenderTransform" Value="scale(0.985)" />
             </Style>
         </Style>

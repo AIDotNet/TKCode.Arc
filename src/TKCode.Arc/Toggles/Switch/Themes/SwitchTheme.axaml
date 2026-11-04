@@ -14,13 +14,6 @@
                            Width="{arc:SwitchTokenResource TrackWidth}"
                            Height="{arc:SwitchTokenResource TrackHeight}"
                            VerticalAlignment="Center">
-                        <Border Name="PART_FocusRing"
-                                IsVisible="False"
-                                IsHitTestVisible="False"
-                                Margin="{arc:SwitchTokenResource FocusRingMargin}"
-                                BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                                CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
-                                BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                         <Border Name="PART_Track"
                                 CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" />
                         <Border Name="PART_TrackOn"
@@ -89,9 +82,6 @@
         </Style>
         <Style Selector="^:disabled">
             <Setter Property="Opacity" Value="{arc:SwitchTokenResource DisabledOpacity}" />
-        </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
         </Style>
 
         <!-- Thumb glides on a critically damped 0.3s spring; the press stretch uses snappy. -->

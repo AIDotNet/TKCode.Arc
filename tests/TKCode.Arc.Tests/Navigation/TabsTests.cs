@@ -177,6 +177,22 @@ public class TabsTests
     }
 
     [AvaloniaFact]
+    public void A_List_That_Fits_Builds_No_Scroll_Buttons()
+    {
+        var tabs = Inline("Inbox", "Drafts");
+        var window = TestHelpers.Show(tabs);
+        try
+        {
+            tabs.Classes.Contains(":overflow").ShouldBeFalse();
+            tabs.GetVisualDescendants().OfType<Button>().ShouldBeEmpty();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void Narrow_List_Overflows_And_Shows_Scroll_Button()
     {
         var tabs = Inline("Inbox", "Drafts", "Sent", "Scheduled", "Spam", "Trash", "Archive");
@@ -189,6 +205,12 @@ public class TabsTests
             var right = TestHelpers.Descendant<Visual>(tabs).GetVisualDescendants().OfType<Button>().First(b => b.Name == Tabs.ScrollRightPart);
             right.IsVisible.ShouldBeTrue();
             right.IsEnabled.ShouldBeTrue();
+            right.Bounds.Width.ShouldBeGreaterThan(0);
+            right.Bounds.Right.ShouldBe(TestHelpers.Descendant<ScrollViewer>(tabs).Bounds.Right, 0.5);
+            // At the start the left button is disabled: invisible and not hit-testable.
+            var left = tabs.GetVisualDescendants().OfType<Button>().First(b => b.Name == Tabs.ScrollLeftPart);
+            left.Opacity.ShouldBe(0);
+            left.IsHitTestVisible.ShouldBeFalse();
             tabs.SelectedIndex = 6;
             Dispatcher.UIThread.RunJobs();
             var viewport = TestHelpers.Descendant<ScrollViewer>(tabs);

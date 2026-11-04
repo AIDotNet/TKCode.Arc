@@ -104,13 +104,13 @@ internal interface IMotionDriver
 public sealed class MotionValue<T> : IMotionDriver, IDisposable where T : struct
 {
     private readonly IMotionVector<T> _vector;
-    private readonly WeakReference<Visual> _owner;
-    private readonly double[] _position;
-    private readonly double[] _velocity;
-    private readonly double[] _target;
-    private readonly double[] _segmentStart;
-    private readonly double[] _segmentVelocity;
-    private readonly double[] _scratch;
+    // A strong reference: the owner keeps its motion values in fields and their Changed handlers capture it anyway, so a
+    // weak handle per value only cost GC time. The scheduler drops a value on the first frame after its owner detaches.
+    private readonly Visual _owner;
+    // One buffer: position and target always; velocity, segment start, segment velocity and scratch are appended the
+    // first time the value animates (most values in a template only ever jump).
+    private readonly int _n;
+    private double[] _state;
     private MotionSpec _spec = MotionSpec.Instant;
     private double _elapsed;
     private double _delayRemaining;
@@ -120,31 +120,59 @@ public sealed class MotionValue<T> : IMotionDriver, IDisposable where T : struct
 
     public MotionValue(Visual owner, T initial, IMotionVector<T> vector)
     {
-        _owner = new WeakReference<Visual>(owner);
+        _owner = owner;
         _vector = vector;
-        var n = vector.Dimensions;
-        _position = new double[n];
-        _velocity = new double[n];
-        _target = new double[n];
-        _segmentStart = new double[n];
-        _segmentVelocity = new double[n];
-        _scratch = new double[n];
-        vector.Write(initial, _position);
-        vector.Write(initial, _target);
+        _n = vector.Dimensions;
+        _state = new double[2 * _n];
+        vector.Write(initial, PositionBuffer);
+        vector.Write(initial, TargetBuffer);
+    }
+
+    private Span<double> PositionBuffer => _state.AsSpan(0, _n);
+
+    private Span<double> TargetBuffer => _state.AsSpan(_n, _n);
+
+    private bool HasMotionState => _state.Length > 2 * _n;
+
+    private Span<double> VelocityBuffer => EnsureMotionState().AsSpan(2 * _n, _n);
+
+    private Span<double> SegmentStartBuffer => EnsureMotionState().AsSpan(3 * _n, _n);
+
+    private Span<double> SegmentVelocityBuffer => EnsureMotionState().AsSpan(4 * _n, _n);
+
+    private Span<double> ScratchBuffer => EnsureMotionState().AsSpan(5 * _n, _n);
+
+    private double[] EnsureMotionState()
+    {
+        if (!HasMotionState)
+        {
+            var grown = new double[6 * _n];
+            _state.AsSpan().CopyTo(grown);
+            _state = grown;
+        }
+        return _state;
+    }
+
+    private void ClearVelocity()
+    {
+        if (HasMotionState)
+        {
+            _state.AsSpan(2 * _n, _n).Clear();
+        }
     }
 
     /// <summary>Raised after every step and on jumps; write the value to a property or invalidate rendering here.</summary>
     public event Action<T>? Changed;
 
-    public T Value => _vector.Read(_position);
+    public T Value => _vector.Read(PositionBuffer);
 
-    public T Velocity => _vector.Read(_velocity);
+    public T Velocity => _vector.Read(VelocityBuffer);
 
-    public T Target => _vector.Read(_target);
+    public T Target => _vector.Read(TargetBuffer);
 
     public bool IsAnimating => _animating;
 
-    Visual? IMotionDriver.Owner => _owner.TryGetTarget(out var o) ? o : null;
+    Visual? IMotionDriver.Owner => _owner;
 
     /// <summary>
     /// Animates to <paramref name="target"/>. Honors the effective motion level of the owner: Off jumps,
@@ -152,8 +180,8 @@ public sealed class MotionValue<T> : IMotionDriver, IDisposable where T : struct
     /// </summary>
     public Task<bool> AnimateTo(T target, MotionSpec spec, T? initialVelocity = null)
     {
-        var owner = _owner.TryGetTarget(out var o) ? o : null;
-        if (owner is null || spec is MotionSpec.InstantSpec)
+        var owner = _owner;
+        if (spec is MotionSpec.InstantSpec)
         {
             Jump(target);
             return s_completed;
@@ -167,19 +195,19 @@ public sealed class MotionValue<T> : IMotionDriver, IDisposable where T : struct
         // Pointer handlers retarget on every move: the same target with the same spec keeps the run going as it is.
         if (_animating && initialVelocity is null && _completion is { } running && _spec.Equals(spec))
         {
-            _vector.Write(target, _scratch);
-            if (_scratch.AsSpan().SequenceEqual(_target))
+            _vector.Write(target, ScratchBuffer);
+            if (ScratchBuffer.SequenceEqual(TargetBuffer))
             {
                 return running.Task;
             }
         }
-        _vector.Write(target, _target);
+        _vector.Write(target, TargetBuffer);
         if (initialVelocity is { } iv)
         {
-            _vector.Write(iv, _velocity);
+            _vector.Write(iv, VelocityBuffer);
         }
-        _position.CopyTo(_segmentStart, 0);
-        _velocity.CopyTo(_segmentVelocity, 0);
+        PositionBuffer.CopyTo(SegmentStartBuffer);
+        VelocityBuffer.CopyTo(SegmentVelocityBuffer);
         _spec = spec;
         _elapsed = 0;
         _delayRemaining = spec.Delay.TotalSeconds;
@@ -200,9 +228,9 @@ public sealed class MotionValue<T> : IMotionDriver, IDisposable where T : struct
     /// <summary>Sets the value immediately and stops; velocity becomes zero.</summary>
     public void Jump(T value)
     {
-        _vector.Write(value, _position);
-        _vector.Write(value, _target);
-        Array.Clear(_velocity);
+        _vector.Write(value, PositionBuffer);
+        _vector.Write(value, TargetBuffer);
+        ClearVelocity();
         StopInternal(true);
         Changed?.Invoke(value);
     }
@@ -210,8 +238,8 @@ public sealed class MotionValue<T> : IMotionDriver, IDisposable where T : struct
     /// <summary>Stops at the current value.</summary>
     public void Stop()
     {
-        _position.CopyTo(_target, 0);
-        Array.Clear(_velocity);
+        PositionBuffer.CopyTo(TargetBuffer);
+        ClearVelocity();
         StopInternal(false);
     }
 
@@ -242,16 +270,23 @@ public sealed class MotionValue<T> : IMotionDriver, IDisposable where T : struct
         }
         _elapsed += dt;
         var atRest = true;
+        var state = EnsureMotionState();
+        var n = _n;
+        var position = state.AsSpan(0, n);
+        var target = state.AsSpan(n, n);
+        var velocity = state.AsSpan(2 * n, n);
+        var segmentStart = state.AsSpan(3 * n, n);
         switch (_spec)
         {
             case MotionSpec.SpringMotion spring:
             {
-                for (var i = 0; i < _position.Length; i++)
+                var segmentVelocity = state.AsSpan(4 * n, n);
+                for (var i = 0; i < n; i++)
                 {
-                    var x0 = _segmentStart[i] - _target[i];
-                    var (x, v) = SpringSolver.Evaluate(spring.Spec, x0, _segmentVelocity[i], _elapsed);
-                    _position[i] = _target[i] + x;
-                    _velocity[i] = v;
+                    var x0 = segmentStart[i] - target[i];
+                    var (x, v) = SpringSolver.Evaluate(spring.Spec, x0, segmentVelocity[i], _elapsed);
+                    position[i] = target[i] + x;
+                    velocity[i] = v;
                     var granular = Math.Abs(x0) < 5;
                     var restDelta = granular ? 0.005 : 0.5;
                     var restSpeed = granular ? 0.01 : 2;
@@ -267,11 +302,11 @@ public sealed class MotionValue<T> : IMotionDriver, IDisposable where T : struct
                 var duration = Math.Max(tween.Duration.TotalSeconds, 1e-6);
                 var p = Math.Min(1, _elapsed / duration);
                 var eased = tween.Easing.Ease(p);
-                for (var i = 0; i < _position.Length; i++)
+                for (var i = 0; i < n; i++)
                 {
-                    var previous = _position[i];
-                    _position[i] = _segmentStart[i] + (_target[i] - _segmentStart[i]) * eased;
-                    _velocity[i] = dt > 0 ? (_position[i] - previous) / dt : 0;
+                    var previous = position[i];
+                    position[i] = segmentStart[i] + (target[i] - segmentStart[i]) * eased;
+                    velocity[i] = dt > 0 ? (position[i] - previous) / dt : 0;
                 }
                 atRest = p >= 1;
                 break;
@@ -279,8 +314,8 @@ public sealed class MotionValue<T> : IMotionDriver, IDisposable where T : struct
         }
         if (atRest)
         {
-            _target.CopyTo(_position, 0);
-            Array.Clear(_velocity);
+            target.CopyTo(position);
+            velocity.Clear();
             Changed?.Invoke(Value);
             StopInternal(true);
             return false;

@@ -36,9 +36,6 @@ public sealed class ArcMotion
     private static readonly AttachedProperty<bool> ActiveProperty =
         AvaloniaProperty.RegisterAttached<ArcMotion, Control, bool>("Active");
 
-    private static readonly AttachedProperty<IDisposable?> TokenSubscriptionProperty =
-        AvaloniaProperty.RegisterAttached<ArcMotion, Control, IDisposable?>("TokenSubscription");
-
     private static readonly AttachedProperty<int> SettlingProperty =
         AvaloniaProperty.RegisterAttached<ArcMotion, Control, int>("Settling");
 
@@ -134,13 +131,38 @@ public sealed class ArcMotion
         }
     }
 
+    // Controls loaded in one pass are activated together by a single posted job instead of one post each.
+    private static readonly List<Control> s_pending = new();
+    private static bool s_flushPosted;
+
+    // Shared handlers: a tracking control costs two event subscriptions, not an observable, an observer and a disposable.
+    private static readonly EventHandler<ResourcesChangedEventArgs> s_onResourcesChanged = (sender, _) => OnTokenSourceChanged(sender);
+    private static readonly EventHandler s_onThemeVariantChanged = (sender, _) => OnTokenSourceChanged(sender);
+
     private static void OnLoaded(object? sender, RoutedEventArgs e)
     {
         if (sender is Control control)
         {
             // Posted so that values applied while loading settle before transitions are enabled.
-            Dispatcher.UIThread.Post(() => Activate(control), DispatcherPriority.Background);
+            s_pending.Add(control);
+            if (!s_flushPosted)
+            {
+                s_flushPosted = true;
+                Dispatcher.UIThread.Post(FlushPending, DispatcherPriority.Background);
+            }
         }
+    }
+
+    private static void FlushPending()
+    {
+        s_flushPosted = false;
+        // Activation can load more controls (a pseudo-class that shows a part): they queue for the next post.
+        var count = s_pending.Count;
+        for (var i = 0; i < count; i++)
+        {
+            Activate(s_pending[i]);
+        }
+        s_pending.RemoveRange(0, count);
     }
 
     private static void OnUnloaded(object? sender, RoutedEventArgs e)
@@ -153,24 +175,45 @@ public sealed class ArcMotion
 
     private static void Activate(Control control)
     {
-        if (!control.IsLoaded || control.GetValue(ActiveProperty))
+        if (!control.IsLoaded || control.GetValue(ActiveProperty) || !control.GetValue(TracksProperty))
         {
             return;
         }
         control.SetValue(ActiveProperty, true);
-        var subscription = control.GetResourceObservable(ArcDesignTokenKind.MotionMode).Subscribe(new TokenObserver(control));
-        control.SetValue(TokenSubscriptionProperty, subscription);
+        control.ResourcesChanged += s_onResourcesChanged;
+        control.ActualThemeVariantChanged += s_onThemeVariantChanged;
+        ReadTokenLevel(control);
         Refresh(control);
     }
 
     private static void Deactivate(Control control)
     {
-        control.GetValue(TokenSubscriptionProperty)?.Dispose();
-        control.ClearValue(TokenSubscriptionProperty);
+        if (control.GetValue(ActiveProperty))
+        {
+            control.ResourcesChanged -= s_onResourcesChanged;
+            control.ActualThemeVariantChanged -= s_onThemeVariantChanged;
+        }
         control.SetValue(ActiveProperty, false);
         var pseudo = (IPseudoClasses)control.Classes;
         pseudo.Set(FullPseudoClass, false);
         pseudo.Set(ReducedPseudoClass, false);
+    }
+
+    private static void OnTokenSourceChanged(object? sender)
+    {
+        if (sender is Control control && control.GetValue(ActiveProperty))
+        {
+            ReadTokenLevel(control);
+            Refresh(control);
+        }
+    }
+
+    private static void ReadTokenLevel(Control control)
+    {
+        var level = control.TryFindResource(ArcDesignTokenKind.MotionMode, control.ActualThemeVariant, out var mode)
+            ? Parse(mode as string)
+            : ArcMotionLevel.Full;
+        control.SetValue(TokenLevelProperty, level);
     }
 
     /// <summary>
@@ -210,29 +253,5 @@ public sealed class ArcMotion
         var pseudo = (IPseudoClasses)control.Classes;
         pseudo.Set(FullPseudoClass, level == ArcMotionLevel.Full);
         pseudo.Set(ReducedPseudoClass, level == ArcMotionLevel.Reduced);
-    }
-
-    private sealed class TokenObserver : IObserver<object?>
-    {
-        private readonly WeakReference<Control> _control;
-
-        public TokenObserver(Control control) => _control = new WeakReference<Control>(control);
-
-        public void OnCompleted()
-        {
-        }
-
-        public void OnError(Exception error)
-        {
-        }
-
-        public void OnNext(object? value)
-        {
-            if (_control.TryGetTarget(out var control))
-            {
-                control.SetValue(TokenLevelProperty, Parse(value as string));
-                Refresh(control);
-            }
-        }
     }
 }

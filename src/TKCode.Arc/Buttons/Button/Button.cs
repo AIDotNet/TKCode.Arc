@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
+using Avalonia.Input;
 using Avalonia.Layout;
 using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
@@ -24,13 +25,34 @@ public enum ButtonVariant
 /// label changes crossfade with a short blur while the width springs to fit, and <see cref="IsLoading"/>
 /// shows a spinner while keeping keyboard focus (clicks are swallowed instead of disabling the button).
 /// </summary>
-[PseudoClasses(LoadingPseudoClass, NarrowPseudoClass, WidePseudoClass, RaisedPseudoClass)]
-[TemplatePart("PART_Layers", typeof(Panel))]
+[PseudoClasses(LoadingPseudoClass, NarrowPseudoClass, WidePseudoClass, RaisedPseudoClass, PrimaryPseudoClass, SecondaryPseudoClass,
+    GhostPseudoClass, DangerPseudoClass, SmallPseudoClass, LargePseudoClass, PressScalePseudoClass)]
 public class Button : AvaloniaButton
 {
     public const string LoadingPseudoClass = ":loading";
     public const string NarrowPseudoClass = ":narrow";
     public const string WidePseudoClass = ":wide";
+
+    /// <summary><see cref="Variant"/> as a pseudo-class (the theme selects on these, not on the property).</summary>
+    public const string PrimaryPseudoClass = ":primary";
+
+    /// <inheritdoc cref="PrimaryPseudoClass"/>
+    public const string SecondaryPseudoClass = ":secondary";
+
+    /// <inheritdoc cref="PrimaryPseudoClass"/>
+    public const string GhostPseudoClass = ":ghost";
+
+    /// <inheritdoc cref="PrimaryPseudoClass"/>
+    public const string DangerPseudoClass = ":danger";
+
+    /// <summary><see cref="Size"/> Small or Large as a pseudo-class (Medium has none).</summary>
+    public const string SmallPseudoClass = ":small";
+
+    /// <inheritdoc cref="SmallPseudoClass"/>
+    public const string LargePseudoClass = ":large";
+
+    /// <summary>Set while <see cref="IsPressScaleEnabled"/> is true.</summary>
+    public const string PressScalePseudoClass = ":press-scale";
 
     /// <summary>The button sits on a raised surface (<see cref="ArcSurface.ElevationProperty"/>): ghost hover uses a stronger fill.</summary>
     public const string RaisedPseudoClass = ":raised";
@@ -113,24 +135,89 @@ public class Button : AvaloniaButton
 
     #endregion
 
-    // Most buttons never load, so the spinner is built the first time IsLoading turns true, not with every template.
-    private Panel? _content;
+    public Button()
+    {
+        UpdateVariantPseudoClasses();
+        UpdateSizePseudoClasses();
+        PseudoClasses.Set(PressScalePseudoClass, IsPressScaleEnabled);
+    }
+
+    private void UpdateVariantPseudoClasses()
+    {
+        var variant = Variant;
+        PseudoClasses.Set(PrimaryPseudoClass, variant == ButtonVariant.Primary);
+        PseudoClasses.Set(SecondaryPseudoClass, variant == ButtonVariant.Secondary);
+        PseudoClasses.Set(GhostPseudoClass, variant == ButtonVariant.Ghost);
+        PseudoClasses.Set(DangerPseudoClass, variant == ButtonVariant.Danger);
+    }
+
+    private void UpdateSizePseudoClasses()
+    {
+        var size = Size;
+        PseudoClasses.Set(SmallPseudoClass, size == ControlSize.Small);
+        PseudoClasses.Set(LargePseudoClass, size == ControlSize.Large);
+    }
+
+    // Most buttons never load and are never focused by keyboard, so the spinner and the focus ring are built the first
+    // time they are needed, not with every template.
     private ArcSpinner? _spinner;
+    private LazyFocusRing? _focusRing;
+    private bool _templated;
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        _content = e.NameScope.Find<Panel>("PART_Layers");
+        // The extras sit after the template root, so they draw above it; a new template starts them over.
+        RemoveExtra(_spinner);
         _spinner = null;
+        _templated = true;
         if (IsLoading)
         {
             EnsureSpinner();
         }
+        _focusRing ??= new LazyFocusRing(this, ButtonTokens.Key(ButtonTokenKind.FocusRingMargin), ButtonTokens.Key(ButtonTokenKind.FocusRingRadius));
+        _focusRing.Attach(AddExtra, RemoveExtra);
+    }
+
+    /// <summary>Hosts a code-built part (spinner, focus ring) over the template; it is laid out over the whole button.</summary>
+    private void AddExtra(Control part)
+    {
+        LogicalChildren.Add(part);
+        VisualChildren.Add(part);
+        InvalidateMeasure();
+    }
+
+    protected override Size MeasureOverride(Size availableSize)
+    {
+        var size = base.MeasureOverride(availableSize);
+        // The template lays out only its root; the extras follow the button's box and never change its size.
+        _spinner?.Measure(availableSize);
+        _focusRing?.Ring?.Measure(availableSize);
+        return size;
+    }
+
+    protected override Size ArrangeOverride(Size finalSize)
+    {
+        var size = base.ArrangeOverride(finalSize);
+        var box = new Rect(size);
+        _spinner?.Arrange(box);
+        _focusRing?.Ring?.Arrange(box);
+        return size;
+    }
+
+    private void RemoveExtra(Control? part)
+    {
+        if (part is null)
+        {
+            return;
+        }
+        LogicalChildren.Remove(part);
+        VisualChildren.Remove(part);
     }
 
     private void EnsureSpinner()
     {
-        if (_content is null)
+        if (!_templated)
         {
             return;
         }
@@ -142,12 +229,24 @@ public class Button : AvaloniaButton
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center
             };
-            _content.Children.Add(_spinner);
+            AddExtra(_spinner);
             var size = _spinner.GetResourceObservable(ButtonTokens.Key(ButtonTokenKind.SpinnerSize));
             _spinner.Bind(WidthProperty, size);
             _spinner.Bind(HeightProperty, size);
         }
         _spinner.IsVisible = IsLoading;
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing?.Update();
     }
 
     protected override void OnClick()
@@ -163,7 +262,19 @@ public class Button : AvaloniaButton
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-        if (change.Property == IsLoadingProperty)
+        if (change.Property == VariantProperty)
+        {
+            UpdateVariantPseudoClasses();
+        }
+        else if (change.Property == SizeProperty)
+        {
+            UpdateSizePseudoClasses();
+        }
+        else if (change.Property == IsPressScaleEnabledProperty)
+        {
+            PseudoClasses.Set(PressScalePseudoClass, IsPressScaleEnabled);
+        }
+        else if (change.Property == IsLoadingProperty)
         {
             PseudoClasses.Set(LoadingPseudoClass, IsLoading);
             if (IsLoading || _spinner is not null)

@@ -31,11 +31,14 @@ public class ThemeStateTests
             invalid.ShouldNotBe(off);
             on.ShouldNotBe(off);
             on.ShouldNotBe(invalid);
-            var ring = Part<Border>(box, "PART_FocusRing");
-            ring.IsVisible.ShouldBeFalse();
+            TestHelpers.IsFocusRingVisible(box).ShouldBeFalse();
             box.Focus(NavigationMethod.Tab);
             Dispatcher.UIThread.RunJobs();
+            // The ring is built under the square, inside the hit area.
+            var ring = Part<Border>(box, "PART_FocusRing");
             ring.IsVisible.ShouldBeTrue();
+            ring.Parent.ShouldBe(Part<Panel>(box, "PART_Box"));
+            ((Panel)ring.Parent!).Children.IndexOf(ring).ShouldBe(0);
         }
         finally
         {

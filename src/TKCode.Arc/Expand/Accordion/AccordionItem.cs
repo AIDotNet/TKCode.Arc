@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
 using Avalonia;
@@ -215,9 +216,31 @@ public class AccordionItem : HeaderedContentControl
 /// <summary>The row trigger of an <see cref="AccordionItem"/>: a button that exposes the expand / collapse pattern.</summary>
 internal sealed class AccordionTrigger : AvaloniaButton
 {
+    private LazyFocusRing? _focusRing;
+
     public AccordionItem? Row { get; set; }
 
     protected override Type StyleKeyOverride => typeof(AccordionTrigger);
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        // Built the first time the trigger is keyboard focused, over the template's root panel.
+        _focusRing ??= new LazyFocusRing(this, AccordionItemTokens.Key(AccordionItemTokenKind.FocusRingMargin), AccordionItemTokens.Key(AccordionItemTokenKind.FocusRingRadius));
+        _focusRing.Attach(VisualChildren.Count > 0 ? VisualChildren[0] as Panel : null);
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing?.Update();
+    }
 
     public AccordionTrigger()
     {

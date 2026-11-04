@@ -107,7 +107,10 @@ internal abstract class SliderRailBase : Control, ICustomHitTest
     public Thickness BubblePadding { get => GetValue(BubblePaddingProperty); set => SetValue(BubblePaddingProperty, value); }
 
     private readonly List<SliderThumb> _thumbs = new();
-    private readonly List<SliderBubble> _bubbles = new();
+    // A bubble (border, content, four motion values) is built the first time it shows: most sliders are never dragged.
+    private SliderBubble?[] _bubbles = [];
+    private Func<int, Control>? _bubbleContent;
+    private Action<SliderBubble>? _configureBubble;
     private ISliderRailOwner? _owner;
     private IBrush? _tickOn;
 
@@ -119,7 +122,37 @@ internal abstract class SliderRailBase : Control, ICustomHitTest
 
     public IReadOnlyList<SliderThumb> Thumbs => _thumbs;
 
-    public IReadOnlyList<SliderBubble> Bubbles => _bubbles;
+    /// <summary>Shows or hides bubble <paramref name="index"/>; the bubble is built the first time it shows.</summary>
+    public void ShowBubble(int index, bool shown)
+    {
+        var bubble = _bubbles[index];
+        if (bubble is null)
+        {
+            if (!shown)
+            {
+                return;
+            }
+            bubble = CreateBubble(index);
+        }
+        bubble.Show(shown);
+    }
+
+    /// <summary>Whether bubble <paramref name="index"/> is showing.</summary>
+    public bool IsBubbleShown(int index) => _bubbles[index]?.IsShown ?? false;
+
+    private SliderBubble CreateBubble(int index)
+    {
+        var content = _bubbleContent!(index);
+        content.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center;
+        var bubble = new SliderBubble { Child = content, ZIndex = 10 }.BindCornerRadius(ArcDesignTokenKind.RadiusPill);
+        _configureBubble?.Invoke(bubble);
+        ApplyBubbleStyle(bubble);
+        _bubbles[index] = bubble;
+        VisualChildren.Add(bubble);
+        // Measured and arranged in the next pass; arranging places it over its thumb (ISliderRailOwner.OnRailArranged).
+        InvalidateMeasure();
+        return bubble;
+    }
 
     /// <summary>Ticks inside the fill: <c>color-mix(in oklab, var(--control-glyph) 60%, transparent)</c>.</summary>
     protected IBrush? TickOnBrush => _tickOn ??= TickOnSource is ISolidColorBrush solid
@@ -140,15 +173,9 @@ internal abstract class SliderRailBase : Control, ICustomHitTest
             _thumbs.Add(thumb);
             VisualChildren.Add(thumb);
         }
-        for (var i = 0; i < thumbCount; i++)
-        {
-            var content = bubbleContent(i);
-            content.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center;
-            var bubble = new SliderBubble { Child = content, ZIndex = 10 };
-            configureBubble(bubble);
-            _bubbles.Add(bubble);
-            VisualChildren.Add(bubble);
-        }
+        _bubbles = new SliderBubble?[thumbCount];
+        _bubbleContent = bubbleContent;
+        _configureBubble = configureBubble;
         ApplyChildStyles();
     }
 
@@ -180,15 +207,22 @@ internal abstract class SliderRailBase : Control, ICustomHitTest
         }
         foreach (var bubble in _bubbles)
         {
-            bubble.Background = BubbleBackground;
-            bubble.BorderBrush = BubbleBorderBrush;
-            bubble.BorderThickness = BubbleBorderThickness;
-            bubble.BoxShadow = BubbleShadow;
-            bubble.MinHeight = BubbleMinHeight;
-            bubble.Padding = BubblePadding;
-            bubble.BindCornerRadius(ArcDesignTokenKind.RadiusPill);
-            bubble.SetValue(Avalonia.Controls.Documents.TextElement.ForegroundProperty, BubbleForeground);
+            if (bubble is not null)
+            {
+                ApplyBubbleStyle(bubble);
+            }
         }
+    }
+
+    private void ApplyBubbleStyle(SliderBubble bubble)
+    {
+        bubble.Background = BubbleBackground;
+        bubble.BorderBrush = BubbleBorderBrush;
+        bubble.BorderThickness = BubbleBorderThickness;
+        bubble.BoxShadow = BubbleShadow;
+        bubble.MinHeight = BubbleMinHeight;
+        bubble.Padding = BubblePadding;
+        bubble.SetValue(Avalonia.Controls.Documents.TextElement.ForegroundProperty, BubbleForeground);
     }
 
     /// <summary>Left edge of the track (half a thumb in).</summary>
@@ -218,7 +252,7 @@ internal abstract class SliderRailBase : Control, ICustomHitTest
         }
         foreach (var bubble in _bubbles)
         {
-            bubble.Measure(Size.Infinity);
+            bubble?.Measure(Size.Infinity);
         }
         return default;
     }
@@ -234,7 +268,7 @@ internal abstract class SliderRailBase : Control, ICustomHitTest
         }
         foreach (var bubble in _bubbles)
         {
-            bubble.Arrange(new Rect(bubble.DesiredSize));
+            bubble?.Arrange(new Rect(bubble.DesiredSize));
         }
         _owner?.OnRailArranged(this);
         return finalSize;
@@ -246,7 +280,10 @@ internal abstract class SliderRailBase : Control, ICustomHitTest
     /// </summary>
     public void PlaceBubble(int index, double centerX, double shift = 0, double angle = 0)
     {
-        var bubble = _bubbles[index];
+        if (_bubbles[index] is not { } bubble)
+        {
+            return;
+        }
         var width = bubble.Bounds.Width;
         var height = bubble.Bounds.Height;
         var left = Math.Clamp(centerX - width / 2, 0, Math.Max(0, _size.Width - width)) + shift;
