@@ -10,7 +10,9 @@
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:ElasticSlider">
-                <StackPanel Spacing="{arc:ElasticSliderTokenResource RowGap}">
+                <!-- Top-aligned grid, not a stack: in a parent shorter than the slider the control row (*) gives way down to
+                     RailMinHeight instead of spilling out the bottom (issue #42); otherwise every row takes its natural height. -->
+                <Grid RowDefinitions="Auto,*" RowSpacing="{arc:ElasticSliderTokenResource RowGap}" VerticalAlignment="Top">
                     <DockPanel Name="PART_Header">
                         <!-- While the tag rides the thumb it carries the value, so the readout steps back. -->
                         <TextBlock Name="PART_Readout"
@@ -27,7 +29,7 @@
                                    LineHeight="{arc:ElasticSliderTokenResource LabelLineHeight}"
                                    TextTrimming="CharacterEllipsis" />
                     </DockPanel>
-                    <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto">
+                    <Grid Grid.Row="1" ColumnDefinitions="Auto,*,Auto" RowDefinitions="*,Auto">
                         <ContentPresenter Name="PART_StartIcon"
                                           IsVisible="{TemplateBinding StartIcon, Converter={x:Static ObjectConverters.IsNotNull}}"
                                           Content="{TemplateBinding StartIcon}"
@@ -36,7 +38,8 @@
                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
                         <arc:ElasticSliderRail Name="PART_Rail"
                                                Grid.Column="1"
-                                               Height="{arc:ArcDesignTokenResource ControlSizeMD}"
+                                               RowHeight="{arc:ArcDesignTokenResource ControlSizeMD}"
+                                               MinHeight="{arc:ElasticSliderTokenResource RailMinHeight}"
                                                Cursor="Hand"
                                                TrackBrush="{arc:ArcDesignTokenResource ControlTrack}"
                                                FillBrush="{arc:ArcDesignTokenResource ControlFill}"
@@ -72,7 +75,7 @@
                                               OnForeground="{arc:ArcDesignTokenResource Foreground}"
                                               HoverForeground="{arc:ArcDesignTokenResource Foreground}" />
                     </Grid>
-                </StackPanel>
+                </Grid>
             </ControlTemplate>
         </Setter>
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />

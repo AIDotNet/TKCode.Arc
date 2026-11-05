@@ -10,7 +10,9 @@
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:Slider">
-                <StackPanel>
+                <!-- Top-aligned grid, not a stack: in a parent shorter than the slider the control row (*) gives way down to
+                     RailMinHeight instead of spilling out the bottom (issue #42); otherwise every row takes its natural height. -->
+                <Grid RowDefinitions="Auto,*" VerticalAlignment="Top">
                     <DockPanel Name="PART_Header">
                         <StackPanel Name="PART_Readout"
                                     DockPanel.Dock="Right"
@@ -35,7 +37,7 @@
                                    LineHeight="{arc:SliderTokenResource LabelLineHeight}"
                                    TextTrimming="CharacterEllipsis" />
                     </DockPanel>
-                    <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto">
+                    <Grid Grid.Row="1" ColumnDefinitions="Auto,*,Auto" RowDefinitions="*,Auto">
                         <ContentPresenter Name="PART_Start"
                                           IsVisible="{TemplateBinding StartContent, Converter={x:Static ObjectConverters.IsNotNull}}"
                                           Content="{TemplateBinding StartContent}"
@@ -44,7 +46,8 @@
                         <!-- The whole row takes the press; the track is inset by half a thumb. -->
                         <arc:SliderRail Name="PART_Rail"
                                         Grid.Column="1"
-                                        Height="{arc:ArcDesignTokenResource ControlSizeMD}"
+                                        RowHeight="{arc:ArcDesignTokenResource ControlSizeMD}"
+                                        MinHeight="{arc:SliderTokenResource RailMinHeight}"
                                         Cursor="Hand"
                                         TrackBrush="{arc:ArcDesignTokenResource ControlTrack}"
                                         FillBrush="{arc:ArcDesignTokenResource ControlFill}"
@@ -82,7 +85,7 @@
                                               OnForeground="{arc:ArcDesignTokenResource TextSecondary}"
                                               HoverForeground="{arc:ArcDesignTokenResource Foreground}" />
                     </Grid>
-                </StackPanel>
+                </Grid>
             </ControlTemplate>
         </Setter>
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />

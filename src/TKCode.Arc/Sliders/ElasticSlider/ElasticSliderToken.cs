@@ -21,6 +21,11 @@ internal sealed class ElasticSliderToken : AbstractControlDesignToken
     public Thickness ReadoutMargin { get; set; }
     public Thickness StartMargin { get; set; }
     public Thickness EndMargin { get; set; }
+    /// <summary>
+    /// The least height the control row gives way to in a short parent (the row asks for <c>ControlSizeMD</c>): a dragged
+    /// thumb still fits; its drag scale and focus ring may overhang, as the slider does not clip.
+    /// </summary>
+    public double RailMinHeight { get; set; }
     public double MarksHeight { get; set; }
     public double LabelLineHeight { get; set; }
     public double DisabledOpacity { get; set; }
@@ -40,6 +45,7 @@ internal sealed class ElasticSliderToken : AbstractControlDesignToken
         ReadoutMargin = new Thickness(16, 0, 0, 0);
         StartMargin = new Thickness(0, 0, 12, 0);
         EndMargin = new Thickness(12, 0, 0, 0);
+        RailMinHeight = 24;
         MarksHeight = 20;
         LabelLineHeight = 19.6;
         DisabledOpacity = 0.5;

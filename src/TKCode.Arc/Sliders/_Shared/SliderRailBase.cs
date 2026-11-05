@@ -87,6 +87,16 @@ internal abstract class SliderRailBase : Control, ICustomHitTest
     public static readonly StyledProperty<Thickness> BubblePaddingProperty =
         AvaloniaProperty.Register<SliderRailBase, Thickness>(nameof(BubblePadding), new Thickness(12, 0));
 
+    /// <summary>
+    /// The row height the rail asks for (Arc's 44px <c>.control</c>). It is a preference, not a fixed height: in a parent
+    /// shorter than the slider the row gives way down to its <see cref="Avalonia.Layout.Layoutable.MinHeight"/>, and the track, thumbs
+    /// and bubbles stay centered in what is left.
+    /// </summary>
+    public static readonly StyledProperty<double> RowHeightProperty =
+        AvaloniaProperty.Register<SliderRailBase, double>(nameof(RowHeight), 44);
+
+    public double RowHeight { get => GetValue(RowHeightProperty); set => SetValue(RowHeightProperty, value); }
+
     public IBrush? TrackBrush { get => GetValue(TrackBrushProperty); set => SetValue(TrackBrushProperty, value); }
     public IBrush? FillBrush { get => GetValue(FillBrushProperty); set => SetValue(FillBrushProperty, value); }
     public IBrush? TickBrush { get => GetValue(TickBrushProperty); set => SetValue(TickBrushProperty, value); }
@@ -118,6 +128,7 @@ internal abstract class SliderRailBase : Control, ICustomHitTest
     {
         AffectsRender<SliderRailBase>(TrackBrushProperty, FillBrushProperty, TickBrushProperty, TickOnSourceProperty, TrackThicknessProperty, TickDiameterProperty);
         AffectsArrange<SliderRailBase>(ThumbDiameterProperty, BubbleGapProperty);
+        AffectsMeasure<SliderRailBase>(RowHeightProperty);
     }
 
     public IReadOnlyList<SliderThumb> Thumbs => _thumbs;
@@ -254,7 +265,8 @@ internal abstract class SliderRailBase : Control, ICustomHitTest
         {
             bubble?.Measure(Size.Infinity);
         }
-        return default;
+        // Layout clamps this to the available height (never below MinHeight), so a short parent squeezes the row.
+        return new Size(0, RowHeight);
     }
 
     protected override Size ArrangeOverride(Size finalSize)

@@ -187,4 +187,32 @@ public class ElasticSliderTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void The_Control_Row_Gives_Way_In_A_Short_Parent()
+    {
+        // Issue #42: the row asks for 44px; in a parent shorter than the slider it used to spill out the bottom.
+        var natural = new ElasticSlider { Label = "Opacity", Value = 100, Width = 324 };
+        var squeezed = new ElasticSlider { Label = "Opacity", Value = 100, Width = 324 };
+        var window = TestHelpers.Show(new StackPanel
+        {
+            Children = { natural, new Border { Height = 56, Child = squeezed } },
+        });
+        try
+        {
+            natural.Rail!.Bounds.Height.ShouldBe(44);
+
+            squeezed.Bounds.Height.ShouldBeLessThanOrEqualTo(56);
+            var rail = squeezed.Rail!;
+            rail.Bounds.Height.ShouldBe(56 - 19.6 - 8, 1); // layout rounding
+            rail.Bounds.Bottom.ShouldBeLessThanOrEqualTo(squeezed.Bounds.Height + 0.01);
+            var thumb = rail.Thumbs[0].Bounds;
+            (thumb.Top + thumb.Height / 2).ShouldBe(rail.Bounds.Height / 2, 0.01);
+            thumb.Height.ShouldBe(24);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }
