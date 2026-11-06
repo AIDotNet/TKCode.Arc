@@ -1,0 +1,42 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demo="clr-namespace:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.SidebarItemsSourceDemo">
+    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="24" HorizontalAlignment="Center">
+        <Border Height="360"
+                CornerRadius="20"
+                BorderThickness="1"
+                ClipToBounds="True"
+                BorderBrush="{arc:ArcDesignTokenResource Border}">
+            <arc:Sidebar x:Name="Nav"
+                         BorderThickness="0"
+                         IsCollapseButtonVisible="False"
+                         KeyMember="Key"
+                         LabelMember="Title"
+                         ChildrenMember="Children"
+                         SelectedKey="home">
+                <arc:Sidebar.TrailingTemplate>
+                    <DataTemplate x:DataType="demo:SidebarMenuNode">
+                        <arc:Button Variant="Ghost"
+                                    Size="Small"
+                                    Content="+"
+                                    IsVisible="{Binding CanAdd}"
+                                    Click="OnAdd" />
+                    </DataTemplate>
+                </arc:Sidebar.TrailingTemplate>
+            </arc:Sidebar>
+        </Border>
+        <StackPanel Grid.Column="1" Spacing="10" VerticalAlignment="Center" Width="300">
+            <TextBlock Text="{Binding #Nav.SelectedKey, StringFormat='Route: /{0}'}"
+                       FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+            <TextBlock x:Name="Log"
+                       Text="Pages marked CanAdd show a + button."
+                       TextWrapping="Wrap"
+                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        </StackPanel>
+    </Grid>
+</UserControl>

@@ -1,0 +1,135 @@
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using TKCode.Arc.Motion;
+using Avalonia.Controls;
+using Avalonia.Controls.Templates;
+using Avalonia.Headless.XUnit;
+using Avalonia.Threading;
+
+namespace TKCode.Arc.Tests.Blocks;
+
+public class SidebarItemsSourceTests
+{
+    private sealed class MenuNode : INotifyPropertyChanged
+    {
+        private string _title = "";
+
+        public string Key { get; set; } = "";
+
+        public string Title
+        {
+            get => _title;
+            set
+            {
+                _title = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Title)));
+            }
+        }
+
+        public bool CanAdd { get; set; }
+        public ObservableCollection<MenuNode> Children { get; } = new();
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+    }
+
+    private sealed class CustomItem : SidebarItem
+    {
+        public bool CanAdd { get; set; }
+    }
+
+    private static Sidebar Make(object source)
+    {
+        var sidebar = new Sidebar
+        {
+            ItemsSource = (System.Collections.IEnumerable)source,
+            KeyMember = nameof(MenuNode.Key),
+            LabelMember = nameof(MenuNode.Title),
+            ChildrenMember = nameof(MenuNode.Children)
+        };
+        return sidebar;
+    }
+
+    [AvaloniaFact]
+    public void Data_objects_become_items_with_mapped_members_and_children()
+    {
+        var parent = new MenuNode { Key = "p", Title = "Parent", Children = { new MenuNode { Key = "c", Title = "Child" } } };
+        var data = new ObservableCollection<MenuNode> { parent, new MenuNode { Key = "q", Title = "Other" } };
+        var sidebar = Make(data);
+
+        var items = sidebar.Sections[0].Items;
+        items.Count.ShouldBe(2);
+        items[0].Label.ShouldBe("Parent");
+        items[0].Key.ShouldBe("p");
+        items[0].Tag.ShouldBeSameAs(parent);
+        items[0].Items.Count.ShouldBe(1);
+        items[0].Items[0].Label.ShouldBe("Child");
+
+        parent.Title = "Renamed";
+        items[0].Label.ShouldBe("Renamed");
+    }
+
+    [AvaloniaFact]
+    public void Collection_changes_are_followed_and_items_are_kept()
+    {
+        var a = new MenuNode { Key = "a", Title = "A" };
+        var data = new ObservableCollection<MenuNode> { a };
+        var sidebar = Make(data);
+        var first = sidebar.Sections[0].Items[0];
+        first.IsExpanded = true;
+
+        data.Add(new MenuNode { Key = "b", Title = "B" });
+        a.Children.Add(new MenuNode { Key = "a1", Title = "A1" });
+
+        var items = sidebar.Sections[0].Items;
+        items.Count.ShouldBe(2);
+        items[0].ShouldBeSameAs(first);
+        items[0].IsExpanded.ShouldBeTrue();
+        items[0].Items.Count.ShouldBe(1);
+
+        data.Clear();
+        items.Count.ShouldBe(0);
+        sidebar.ItemsSource = null;
+        sidebar.Sections.Count.ShouldBe(0);
+    }
+
+    [AvaloniaFact]
+    public void Trailing_template_gets_the_data_as_data_context()
+    {
+        var data = new[] { new MenuNode { Key = "a", Title = "A", CanAdd = true } };
+        var sidebar = Make(data);
+        sidebar.TrailingTemplate = new FuncDataTemplate<MenuNode>((_, _) => new Button());
+
+        var trailing = sidebar.Sections[0].Items[0].TrailingIcon.ShouldBeOfType<Button>();
+        trailing.DataContext.ShouldBeSameAs(data[0]);
+    }
+
+    [AvaloniaFact]
+    public void Subclassed_items_are_used_as_they_are()
+    {
+        var custom = new CustomItem { Key = "x", Label = "X", CanAdd = true };
+        var sidebar = new Sidebar { ItemsSource = new[] { custom } };
+        sidebar.TrailingTemplate = new FuncDataTemplate<CustomItem>((_, _) => new Button());
+
+        sidebar.Sections[0].Items[0].ShouldBeSameAs(custom);
+        custom.TrailingIcon.ShouldBeOfType<Button>().DataContext.ShouldBeSameAs(custom);
+    }
+
+    [AvaloniaFact]
+    public void Bound_rows_are_shown_and_selected_by_key()
+    {
+        var data = new[] { new MenuNode { Key = "a", Title = "A" }, new MenuNode { Key = "b", Title = "B" } };
+        var sidebar = Make(data);
+        sidebar.SelectedKey = "b";
+        var window = TestHelpers.Show(new DockPanel { Children = { sidebar } }, ArcMotionLevel.Off);
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            sidebar.SelectedItem.ShouldBeSameAs(sidebar.Sections[0].Items[1]);
+            sidebar.RowOf(sidebar.Sections[0].Items[0]).ShouldNotBeNull();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+}

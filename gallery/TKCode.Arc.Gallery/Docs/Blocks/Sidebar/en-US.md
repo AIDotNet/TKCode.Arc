@@ -231,8 +231,7 @@ sidebar.ItemInvoked += (_, e) => router.Navigate(e.Item.Key!);
 
 ### Binding to a view model
 
-The sidebar has no `ItemsSource`: its sections are XAML content, so the rows are written in XAML or, for data that
-changes, added and removed in code. The view model holds the route and the collapsed state; the sidebar binds to them
+The view model holds the route and the collapsed state; the sidebar binds to them
 with two-way bindings and runs a command for each choice.
 
 ```csharp
@@ -283,6 +282,48 @@ sidebar.Sections.Add(new SidebarSection
 // The row updates in place when the count changes: no rebuild and no lost focus.
 inbox.Badge = unreadCount > 0 ? unreadCount.ToString(CultureInfo.InvariantCulture) : null;
 ```
+
+### Bound items
+
+`ItemsSource` builds the rows from your own data, so the menu can come from a view model (a permission list, a menu the
+server returns) and follow it when it changes. Each object becomes a row in a header-less section placed before the
+sections written in XAML. Map the fields with the `*Member` names, and draw extra content at the end of a row with
+`TrailingTemplate`: its control gets your object as `DataContext`, so it can bind to your own fields.
+
+<Demo name="ItemsSource" />
+
+```csharp
+public class MenuNode
+{
+    public string Key { get; set; } = "";
+    public string Title { get; set; } = "";
+    public bool CanAdd { get; set; }
+    public ObservableCollection<MenuNode> Children { get; } = new();
+}
+```
+
+```xml
+<arc:Sidebar ItemsSource="{Binding Menus}"
+             KeyMember="Key"
+             LabelMember="Title"
+             ChildrenMember="Children"
+             SelectedKey="{Binding SelectedKey, Mode=TwoWay}">
+    <arc:Sidebar.TrailingTemplate>
+        <DataTemplate>
+            <arc:Button IsVisible="{Binding CanAdd}" Command="{Binding AddCommand}" Content="+" />
+        </DataTemplate>
+    </arc:Sidebar.TrailingTemplate>
+</arc:Sidebar>
+```
+
+- `LabelMember`, `KeyMember`, `IconMember`, `BadgeMember`, `IsEnabledMember` and `ChildrenMember` are property paths. The
+  rows follow `INotifyPropertyChanged` on your object and `INotifyCollectionChanged` on `ItemsSource` and on the
+  children, and keep their expanded state when the list changes.
+- Your object is kept in `SidebarItem.Tag`, so `SelectedItem.Tag` (or the `Item.Tag` of `ItemInvoked`) is the data of
+  the chosen page.
+- Prefer your own fields on a subclass? Put `SidebarItem` subclasses in `ItemsSource` and they are used as they are: no
+  `*Member` names are needed, and `TrailingTemplate` still gets the item as `DataContext`.
+- A `TrailingIcon` that is already set on an item wins over `TrailingTemplate`.
 
 ### Icon rail
 

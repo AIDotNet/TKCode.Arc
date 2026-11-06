@@ -1,7 +1,7 @@
 ---
 title: 側邊欄
 summary: 工作區導覽，包含群組、巢狀頁面、數量與滑動的選取標記；可收合為圖示窄欄。
-source-hash: 4b3733075654
+source-hash: 5b906d198a84
 ---
 
 <Demo name="Preview" />
@@ -156,7 +156,7 @@ sidebar.ItemInvoked += (_, e) => router.Navigate(e.Item.Key!);
 
 ### 繫結到檢視模型
 
-側邊欄沒有 `ItemsSource`：它的群組是 XAML 內容，因此列要嘛在 XAML 中撰寫，要嘛在程式碼中加入與移除（用於會變動的資料）。檢視模型保存路由與收合狀態；側邊欄透過雙向繫結與之關聯，並為每次選取執行一個命令。
+檢視模型保存路由與收合狀態；側邊欄透過雙向繫結與之關聯，並為每次選取執行一個命令。
 
 ```csharp
 public partial class WorkspaceShellViewModel : ObservableObject
@@ -203,6 +203,41 @@ sidebar.Sections.Add(new SidebarSection
 // 數量變動時該列會原地更新：無需重建，也不會遺失焦點。
 inbox.Badge = unreadCount > 0 ? unreadCount.ToString(CultureInfo.InvariantCulture) : null;
 ```
+
+### 繫結資料
+
+`ItemsSource` 以你自己的資料產生列，因此選單可以來自檢視模型（權限清單、伺服器回傳的選單），並在資料變動時隨之更新。每個物件成為一個無標題群組中的一列，該群組位於 XAML 中撰寫的群組之前。用 `*Member` 名稱對應欄位，用 `TrailingTemplate` 在列尾繪製額外內容：它的控制項以你的物件作為 `DataContext`，因此可以繫結到你自己的欄位。
+
+<Demo name="ItemsSource" />
+
+```csharp
+public class MenuNode
+{
+    public string Key { get; set; } = "";
+    public string Title { get; set; } = "";
+    public bool CanAdd { get; set; }
+    public ObservableCollection<MenuNode> Children { get; } = new();
+}
+```
+
+```xml
+<arc:Sidebar ItemsSource="{Binding Menus}"
+             KeyMember="Key"
+             LabelMember="Title"
+             ChildrenMember="Children"
+             SelectedKey="{Binding SelectedKey, Mode=TwoWay}">
+    <arc:Sidebar.TrailingTemplate>
+        <DataTemplate>
+            <arc:Button IsVisible="{Binding CanAdd}" Command="{Binding AddCommand}" Content="+" />
+        </DataTemplate>
+    </arc:Sidebar.TrailingTemplate>
+</arc:Sidebar>
+```
+
+- `LabelMember`、`KeyMember`、`IconMember`、`BadgeMember`、`IsEnabledMember` 與 `ChildrenMember` 是屬性路徑。列會跟隨物件上的 `INotifyPropertyChanged`，以及 `ItemsSource` 與子層集合上的 `INotifyCollectionChanged`，清單變動時保留各列的展開狀態。
+- 你的物件保存在 `SidebarItem.Tag` 中，因此 `SelectedItem.Tag`（或 `ItemInvoked` 的 `Item.Tag`）就是所選頁面的資料。
+- 想在子類別上放自己的欄位？把 `SidebarItem` 的子類別放進 `ItemsSource`，它們會被原樣使用：不需要 `*Member` 名稱，`TrailingTemplate` 仍以該項作為 `DataContext`。
+- 項目上已設定的 `TrailingIcon` 優先於 `TrailingTemplate`。
 
 ### 圖示窄欄
 

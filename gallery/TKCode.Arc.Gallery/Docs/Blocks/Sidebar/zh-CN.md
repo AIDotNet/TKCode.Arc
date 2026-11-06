@@ -1,7 +1,7 @@
 ---
 title: 侧边栏
 summary: 工作区导航，包含分组、嵌套页面、数量和滑动的选中标记；可收起为图标窄栏。
-source-hash: 4b3733075654
+source-hash: 5b906d198a84
 ---
 
 <Demo name="Preview" />
@@ -156,7 +156,7 @@ sidebar.ItemInvoked += (_, e) => router.Navigate(e.Item.Key!);
 
 ### 绑定到视图模型
 
-侧边栏没有 `ItemsSource`：它的分组是 XAML 内容，因此行要么在 XAML 中编写，要么在代码中添加和移除（用于会变化的数据）。视图模型保存路由和收起状态；侧边栏通过双向绑定与之关联，并为每次选择执行一个命令。
+视图模型保存路由和收起状态；侧边栏通过双向绑定与之关联，并为每次选择执行一个命令。
 
 ```csharp
 public partial class WorkspaceShellViewModel : ObservableObject
@@ -203,6 +203,41 @@ sidebar.Sections.Add(new SidebarSection
 // 数量变化时该行会原地更新：无需重建，也不会丢失焦点。
 inbox.Badge = unreadCount > 0 ? unreadCount.ToString(CultureInfo.InvariantCulture) : null;
 ```
+
+### 绑定数据
+
+`ItemsSource` 用你自己的数据生成行，因此菜单可以来自视图模型（权限列表、服务端返回的菜单），并在数据变化时随之更新。每个对象成为一个无标题分组中的一行，该分组位于 XAML 中编写的分组之前。用 `*Member` 名称映射字段，用 `TrailingTemplate` 在行尾绘制额外内容：它的控件以你的对象作为 `DataContext`，因此可以绑定到你自己的字段。
+
+<Demo name="ItemsSource" />
+
+```csharp
+public class MenuNode
+{
+    public string Key { get; set; } = "";
+    public string Title { get; set; } = "";
+    public bool CanAdd { get; set; }
+    public ObservableCollection<MenuNode> Children { get; } = new();
+}
+```
+
+```xml
+<arc:Sidebar ItemsSource="{Binding Menus}"
+             KeyMember="Key"
+             LabelMember="Title"
+             ChildrenMember="Children"
+             SelectedKey="{Binding SelectedKey, Mode=TwoWay}">
+    <arc:Sidebar.TrailingTemplate>
+        <DataTemplate>
+            <arc:Button IsVisible="{Binding CanAdd}" Command="{Binding AddCommand}" Content="+" />
+        </DataTemplate>
+    </arc:Sidebar.TrailingTemplate>
+</arc:Sidebar>
+```
+
+- `LabelMember`、`KeyMember`、`IconMember`、`BadgeMember`、`IsEnabledMember` 和 `ChildrenMember` 是属性路径。行会跟随对象上的 `INotifyPropertyChanged`，以及 `ItemsSource` 和子级集合上的 `INotifyCollectionChanged`，列表变化时保留各行的展开状态。
+- 你的对象保存在 `SidebarItem.Tag` 中，因此 `SelectedItem.Tag`（或 `ItemInvoked` 的 `Item.Tag`）就是所选页面的数据。
+- 想在子类上放自己的字段？把 `SidebarItem` 的子类放进 `ItemsSource`，它们会被原样使用：不需要 `*Member` 名称，`TrailingTemplate` 仍以该项作为 `DataContext`。
+- 项上已设置的 `TrailingIcon` 优先于 `TrailingTemplate`。
 
 ### 图标窄栏
 

@@ -44,7 +44,7 @@ namespace TKCode.Arc;
 [TemplatePart(NoMatchesPart, typeof(TextBlock))]
 [TemplatePart(PaneHostPart, typeof(Panel))]
 [PseudoClasses(CollapsedPseudoClass, FilteringPseudoClass, FilterToggleSidePseudoClass, OverlayPseudoClass)]
-public class Sidebar : TemplatedControl
+public partial class Sidebar : TemplatedControl
 {
     public const string PaneHostPart = "PART_PaneHost";
     public const string ListPart = "PART_List";
@@ -592,6 +592,7 @@ public class Sidebar : TemplatedControl
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
+        OnBoundSourceChanged(change);
         if (change.Property == SelectedItemProperty)
         {
             var item = change.GetNewValue<SidebarItem?>();
