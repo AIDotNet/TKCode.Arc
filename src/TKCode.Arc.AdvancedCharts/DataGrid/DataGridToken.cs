@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Media;
 
 namespace TKCode.Arc;
 
@@ -93,9 +94,18 @@ internal sealed class DataGridToken : AbstractControlDesignToken
     /// <summary>Time a status message with an action (Undo) stays.</summary>
     public TimeSpan StatusActionDuration { get; set; }
 
+    /// <summary>Fill of the cells of odd rows when <see cref="DataGrid.IsStriped"/> is on.</summary>
+    public Color StripeCellBackground { get; set; }
+
+    /// <summary>Fill of the gutter of odd rows when <see cref="DataGrid.IsStriped"/> is on.</summary>
+    public Color StripeGutterBackground { get; set; }
+
     public override void CalculateTokenValues(bool isDarkMode)
     {
         base.CalculateTokenValues(isDarkMode);
+        var n = ArcPalette.Neutrals(isDarkMode);
+        StripeCellBackground = Oklch.MixOklab(n.SurfaceRaised, n.Foreground, 0.025);
+        StripeGutterBackground = Oklch.MixOklab(n.Surface, n.Foreground, 0.025);
         RowHeightCompact = 32;
         RowHeightStandard = 40;
         RowHeightComfortable = 48;

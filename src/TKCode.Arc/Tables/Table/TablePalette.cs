@@ -21,6 +21,10 @@ internal sealed class TablePalette
     public Color[] Selected { get; } = new Color[2];
     public Color[] SelectedHover { get; } = new Color[2];
 
+    /// <summary>Striped-row bases (0 over Surface, 1 over the sorted column tint) and their hover fills.</summary>
+    public Color[] Stripe { get; } = new Color[2];
+    public Color[] StripeHover { get; } = new Color[2];
+
     public IBrush SurfaceBrush { get; private set; } = Brushes.Transparent;
     public IBrush ColumnTintBrush { get; private set; } = Brushes.Transparent;
     public IBrush ForegroundBrush { get; private set; } = Brushes.Black;
@@ -43,7 +47,7 @@ internal sealed class TablePalette
     public void Update(Color surface, Color columnTint, Color foreground, Color textSecondary, Color textMuted,
                        Color border, Color borderSubtle, Color borderStrong, Color accent, Color controlOn,
                        Color controlGlyph, Color? focusRing, FontFamily fontFamily, double fontSize, double smallFontSize,
-                       FontWeight medium)
+                       FontWeight medium, Color stripe, Color stripeColumn)
     {
         Surface = surface;
         ColumnTint = columnTint;
@@ -58,6 +62,12 @@ internal sealed class TablePalette
             Hover[i] = Oklch.MixOklab(bases[i], foreground, 0.03);
             Selected[i] = Oklch.MixOklab(bases[i], accent, 0.08);
             SelectedHover[i] = Oklch.MixOklab(bases[i], accent, 0.11);
+        }
+        Stripe[0] = stripe;
+        Stripe[1] = stripeColumn;
+        for (var i = 0; i < 2; i++)
+        {
+            StripeHover[i] = Oklch.MixOklab(Stripe[i], foreground, 0.03);
         }
         SurfaceBrush = new ImmutableSolidColorBrush(surface);
         ColumnTintBrush = new ImmutableSolidColorBrush(columnTint);
@@ -79,10 +89,10 @@ internal sealed class TablePalette
     }
 
     /// <summary>Row fill for a base (0 surface, 1 column tint) at the given hover and selection progress.</summary>
-    public Color RowFill(int baseIndex, double hover, double selected)
+    public Color RowFill(int baseIndex, double hover, double selected, bool striped = false)
     {
-        var bases = baseIndex == 0 ? Surface : ColumnTint;
-        var idle = TablesBDrawing.Lerp(bases, Hover[baseIndex], hover);
+        var bases = striped ? Stripe[baseIndex] : baseIndex == 0 ? Surface : ColumnTint;
+        var idle = TablesBDrawing.Lerp(bases, striped ? StripeHover[baseIndex] : Hover[baseIndex], hover);
         if (selected <= 0.001)
         {
             return idle;

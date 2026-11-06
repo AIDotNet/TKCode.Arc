@@ -107,6 +107,8 @@
         <Setter Property="SmallFontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
         <Setter Property="MediumWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
         <Setter Property="ColumnTintBrush" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="StripeBrush" Value="{arc:TableTokenResource StripeBackground}" />
+        <Setter Property="StripeColumnBrush" Value="{arc:TableTokenResource StripeColumnBackground}" />
         <Setter Property="SecondaryForeground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
         <Setter Property="MutedForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
         <Setter Property="RuleBrush" Value="{arc:ArcDesignTokenResource Border}" />

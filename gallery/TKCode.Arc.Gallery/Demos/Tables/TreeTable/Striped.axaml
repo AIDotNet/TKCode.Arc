@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TreeTableStripedDemo">
+    <StackPanel Spacing="12" MaxWidth="720">
+        <arc:Switch x:Name="StripedSwitch" Content="Striped rows" IsChecked="True" />
+        <arc:TreeTable x:Name="Table"
+                       IsStriped="{Binding #StripedSwitch.IsChecked}"
+                       Caption="Files"
+                       MaxHeight="300" />
+    </StackPanel>
+</UserControl>

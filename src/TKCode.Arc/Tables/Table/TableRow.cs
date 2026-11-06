@@ -61,6 +61,12 @@ internal sealed class TableRow : Control
     public bool IsSelected { get; private set; }
     public bool IsLast { get; set; }
 
+    /// <summary>True for the odd rows (by shown order) of a table with <see cref="Table.IsStriped"/>.</summary>
+    public bool IsStriped => _table.IsStriped && DisplayIndex >= 0 && (DisplayIndex & 1) == 1;
+
+    /// <summary>The idle fill of the row body as drawn now (stripe, hover and selection included).</summary>
+    internal Color BodyFill => _table.Palette.RowFill(0, _hover?.Value ?? 0, _selected?.Value ?? (IsSelected ? 1 : 0), IsStriped);
+
     /// <summary>Kept realized only to finish a slide out of the viewport.</summary>
     public bool IsLeaving { get; set; }
 
@@ -82,9 +88,14 @@ internal sealed class TableRow : Control
         var newItem = !ReferenceEquals(item, Item);
         var stale = newItem || _dataVersion != _table.DataVersion;
         _dataVersion = _table.DataVersion;
+        var wasStriped = IsStriped;
         Key = key;
         SourceIndex = sourceIndex;
         DisplayIndex = displayIndex;
+        if (wasStriped != IsStriped)
+        {
+            InvalidateVisual();
+        }
         if (newItem)
         {
             Item = item;
@@ -533,7 +544,8 @@ internal sealed class TableRow : Control
         var hover = _hover?.Value ?? 0;
         var selected = _selected?.Value ?? (IsSelected ? 1 : 0);
         var sorted = layout.Compact ? -1 : _table.SortedColumnIndex;
-        var fill = Brush(ref _fillA, palette.RowFill(0, hover, selected));
+        var striped = IsStriped;
+        var fill = Brush(ref _fillA, palette.RowFill(0, hover, selected, striped));
         if (sorted < 0)
         {
             context.FillRectangle(fill, new Rect(size));
@@ -544,7 +556,7 @@ internal sealed class TableRow : Control
             var width = layout.ColumnWidth(sorted);
             context.FillRectangle(fill, new Rect(0, 0, x, size.Height));
             context.FillRectangle(fill, new Rect(x + width, 0, Math.Max(0, size.Width - x - width), size.Height));
-            context.FillRectangle(Brush(ref _fillB, palette.RowFill(1, hover, selected)), new Rect(x, 0, width, size.Height));
+            context.FillRectangle(Brush(ref _fillB, palette.RowFill(1, hover, selected, striped)), new Rect(x, 0, width, size.Height));
         }
         if (!IsLast)
         {

@@ -1,7 +1,7 @@
 ---
 title: 樹狀表格
 summary: 帶巢狀列、三態選取、保持階層的排序，以及按需載入子列的表格。
-source-hash: ee6c67ae7e45
+source-hash: acf39441d900
 ---
 
 <Demo name="Budget" />
@@ -132,6 +132,16 @@ table.ChildrenLoader = async item => await api.GetChildrenAsync(((Account)item).
 ### 啟動一列
 
 點選沒有子列的列，或在其上按 Enter，會觸發 `RowActivated`，你可以在這裡開啟檔案或紀錄。父列則會切換展開狀態。
+
+### 隔行變色
+
+將 `IsStriped` 設為 true 可為每隔一列可見列著色。條紋依畫面上可見列的順序計數，與階層深度無關，因此展開、收合、排序與載入子列後仍保持交替。父列下方的載入列與重試列不著色。滑鼠移入、鍵盤焦點與選取的底色會覆蓋條紋。預設關閉，`Table` 與 `DataGrid` 使用同名屬性。
+
+<Demo name="Striped" />
+
+```xml
+<arc:TreeTable IsStriped="True" ItemsSource="{Binding Files}" />
+```
 
 ### 回應式欄位
 

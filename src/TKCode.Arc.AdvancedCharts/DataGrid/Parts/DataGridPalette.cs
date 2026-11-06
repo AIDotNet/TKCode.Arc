@@ -17,6 +17,14 @@ internal sealed class DataGridPalette
     public Color Accent { get; private set; }
 
     public IBrush SurfaceBrush { get; private set; } = Brushes.Transparent;
+    public IBrush StripeCellBrush { get; private set; } = Brushes.Transparent;
+    public IBrush StripeGutterBrush { get; private set; } = Brushes.Transparent;
+    /// <summary>Background of a row's cells: the checked tint over the stripe over the plain cell fill.</summary>
+    public IBrush CellFill(bool striped, bool isChecked) => isChecked ? CheckedBrush : striped ? StripeCellBrush : CellBrush;
+
+    /// <summary>Background of a row's gutter, by the same precedence.</summary>
+    public IBrush GutterFill(bool striped, bool isChecked) => isChecked ? CheckedBrush : striped ? StripeGutterBrush : SurfaceBrush;
+
     public IBrush CellBrush { get; private set; } = Brushes.Transparent;
     public IBrush CheckedBrush { get; private set; } = Brushes.Transparent;
     public IBrush GroupBrush { get; private set; } = Brushes.Transparent;
@@ -80,7 +88,7 @@ internal sealed class DataGridPalette
     public void Update(Color surface, Color surfaceRaised, Color surfaceMuted, Color border, Color borderSubtle, Color borderStrong,
                        Color foreground, Color textSecondary, Color textMuted, Color accent, Color controlOn, Color controlGlyph,
                        Color? focusRing, double selectionOpacity, double checkedOpacity, double washOpacity, bool isDark,
-                       FontFamily fontFamily, double fontSize, double smallFontSize, FontWeight medium)
+                       FontFamily fontFamily, double fontSize, double smallFontSize, FontWeight medium, Color stripeCell, Color stripeGutter)
     {
         Surface = surface;
         SurfaceRaised = surfaceRaised;
@@ -88,6 +96,8 @@ internal sealed class DataGridPalette
         TextMuted = textMuted;
         Accent = accent;
         SurfaceBrush = new ImmutableSolidColorBrush(surface);
+        StripeCellBrush = new ImmutableSolidColorBrush(stripeCell);
+        StripeGutterBrush = new ImmutableSolidColorBrush(stripeGutter);
         CellBrush = new ImmutableSolidColorBrush(surfaceRaised);
         CheckedBrush = new ImmutableSolidColorBrush(Oklch.MixOklab(surface, accent, checkedOpacity));
         GroupBrush = new ImmutableSolidColorBrush(Oklch.MixOklab(surfaceRaised, surfaceMuted, 0.55));

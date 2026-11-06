@@ -160,6 +160,15 @@ internal sealed class TablePresenter : Control
         InvalidateMeasure();
     }
 
+    /// <summary>Repaints the rows after <see cref="Table.IsStriped"/> changed.</summary>
+    public void InvalidateStripes()
+    {
+        foreach (var row in _realized.Values)
+        {
+            row.InvalidateVisual();
+        }
+    }
+
     public void InvalidateRows()
     {
         foreach (var row in _realized.Values)

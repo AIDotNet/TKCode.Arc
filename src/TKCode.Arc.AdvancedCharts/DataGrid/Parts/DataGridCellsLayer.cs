@@ -150,7 +150,7 @@ internal sealed class DataGridCellsLayer : Avalonia.Controls.Control
             var opacity = _viewport.ArriveOpacity(key);
             using (opacity < 0.999 ? context.PushOpacity(opacity) : default(DrawingContext.PushedState?))
             {
-                RenderRow(context, row, key, y, rowHeight, layout, firstColumn, lastColumn, shift, size, palette);
+                RenderRow(context, row, line, key, y, rowHeight, layout, firstColumn, lastColumn, shift, size, palette);
             }
         }
         var contentBottom = Math.Min(size.Height, Math.Max(0, _grid.LineCount * rowHeight - offsetY));
@@ -199,21 +199,22 @@ internal sealed class DataGridCellsLayer : Avalonia.Controls.Control
         return (first, last, shift);
     }
 
-    private void RenderRow(DrawingContext context, int row, object? key, double y, double rowHeight, DataGridLayout layout,
+    private void RenderRow(DrawingContext context, int row, int line, object? key, double y, double rowHeight, DataGridLayout layout,
                            int firstColumn, int lastColumn, double shift, Size size, DataGridPalette palette)
     {
         var isChecked = _grid.IsChecked(key);
+        var striped = _grid.IsStripedLine(line);
         var cellsLeft = firstColumn <= lastColumn ? layout.Lefts[firstColumn] + shift : 0;
         var cellsRight = firstColumn <= lastColumn ? layout.Right(lastColumn) + shift : 0;
         if (_pinned && layout.Gutter > 0)
         {
-            RenderGutter(context, row, key, y, rowHeight, layout.Gutter, isChecked, palette);
+            RenderGutter(context, row, key, y, rowHeight, layout.Gutter, isChecked, palette, striped);
         }
         if (firstColumn > lastColumn)
         {
             return;
         }
-        context.FillRectangle(isChecked ? palette.CheckedBrush : palette.CellBrush, new Rect(cellsLeft, y, cellsRight - cellsLeft, rowHeight));
+        context.FillRectangle(palette.CellFill(striped, isChecked), new Rect(cellsLeft, y, cellsRight - cellsLeft, rowHeight));
         context.DrawLine(palette.GridPen, new Point(cellsLeft, y + rowHeight - 0.5), new Point(cellsRight, y + rowHeight - 0.5));
         if (key is null)
         {
@@ -319,9 +320,9 @@ internal sealed class DataGridCellsLayer : Avalonia.Controls.Control
     }
 
     private void RenderGutter(DrawingContext context, int row, object? key, double y, double rowHeight, double gutter, bool isChecked,
-                              DataGridPalette palette)
+                              DataGridPalette palette, bool striped)
     {
-        context.FillRectangle(isChecked ? palette.CheckedBrush : palette.SurfaceBrush, new Rect(0, y, gutter, rowHeight));
+        context.FillRectangle(palette.GutterFill(striped, isChecked), new Rect(0, y, gutter, rowHeight));
         context.DrawLine(palette.GridPen, new Point(0, y + rowHeight - 0.5), new Point(gutter, y + rowHeight - 0.5));
         context.DrawLine(palette.BorderPen, new Point(gutter - 0.5, y), new Point(gutter - 0.5, y + rowHeight));
         if (ShowsCheckbox(row))

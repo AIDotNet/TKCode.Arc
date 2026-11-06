@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.DataGridStripedDemo">
+    <StackPanel Spacing="12">
+        <arc:Switch x:Name="StripedSwitch" Content="Striped rows" IsChecked="True" />
+        <arc:DataGrid x:Name="Grid"
+                      Label="Invoices"
+                      IsStriped="{Binding #StripedSwitch.IsChecked}"
+                      ShowToolbar="False"
+                      ShowTotals="False"
+                      MaxViewportHeight="280">
+            <arc:DataGridColumn Key="invoice" Header="Invoice" Width="140" />
+            <arc:DataGridColumn Key="customer" Header="Customer" Width="180" />
+            <arc:DataGridColumn Key="amount" Header="Amount" Type="Currency" Width="130" />
+        </arc:DataGrid>
+    </StackPanel>
+</UserControl>

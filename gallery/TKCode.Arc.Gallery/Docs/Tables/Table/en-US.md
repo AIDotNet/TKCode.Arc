@@ -296,6 +296,16 @@ public partial class InvoicesViewModel : ObservableObject
   key, so it survives a refresh when the rows are the same objects or `RowKeySelector` returns the same key.
 - Compiled bindings need `x:DataType` on the view (the examples here leave it out for brevity).
 
+### Striped rows
+
+Set `IsStriped` to shade every second row, which helps the eye follow a row across wide tables. The stripe follows the order the rows are shown in, so it stays alternating after a sort, while scrolling and when rows are added or removed. Hover and selection draw over the stripe, and the focus ring is unchanged. It is off by default, and uses the same name on `TreeTable` and `DataGrid`.
+
+<Demo name="Striped" />
+
+```xml
+<arc:Table IsStriped="True" ItemsSource="{Binding Projects}" />
+```
+
 ### Data shape and performance
 
 Each row is one record with the same fields for every column. The table sorts the rows it is given on the client, so

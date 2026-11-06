@@ -1,7 +1,7 @@
 ---
 title: 表格
 summary: 通过可排序的列比较结构化记录。
-source-hash: 989db1c7afb4
+source-hash: eeb0aad72b8c
 ---
 
 <Demo name="Projects" />
@@ -247,6 +247,16 @@ public partial class InvoicesViewModel : ObservableObject
 - 将 `IsLoading` 绑定到忙碌标志，使请求进行期间遮罩覆盖各行。
 - 刷新时重建集合，或修改现有的 `ObservableCollection<T>`。选择跟随行的键，因此当行对应的仍是同一对象或 `RowKeySelector` 返回相同的键时，选择在刷新后得以保留。
 - 编译绑定需要在视图上设置 `x:DataType`（示例为求简洁省略了它）。
+
+### 隔行变色
+
+将 `IsStriped` 设为 true 可为每隔一行着色，方便在较宽的表格中沿行阅读。条纹按行的显示顺序交替，因此排序后、滚动时以及增删行后仍保持交替。悬停和选中的底色会覆盖条纹，焦点环保持不变。默认关闭，`TreeTable` 与 `DataGrid` 使用同名属性。
+
+<Demo name="Striped" />
+
+```xml
+<arc:Table IsStriped="True" ItemsSource="{Binding Projects}" />
+```
 
 ### 数据结构与性能
 

@@ -1,7 +1,7 @@
 ---
 title: 数据表格
 summary: 电子表格式的表格：范围选择、就地编辑、填充柄、剪贴板、撤销、排序、筛选、分组、合计与导出。
-source-hash: 6f5dd7d44970
+source-hash: cc0f46d78e42
 ---
 
 <Demo name="Renewals" />
@@ -323,6 +323,16 @@ await grid.ExportAsync(DataGridExportFormat.Xlsx);
 数据量过大、无法一次发送时，将 `DataSource` 设为 `IDataGridDataSource`。网格会请求覆盖可视行的数据块，在加载期间显示占位行，并最多保留 40 个数据块。排序、筛选或搜索变化时，它会重新开始并取消正在进行的请求。此时网格为只读，不分组，隐藏“全选”，导出时仅导出已勾选的行。还需要设置 `RowKeySelector`，使用数据源时它是必需的。
 
 <Demo name="ServerData" />
+
+### 隔行变色
+
+将 `IsStriped` 设为 true 可为单元格和行号栏中每隔一行着色。行按其在显示顺序中的行号计数，因此排序、筛选、滚动以及增删行后条纹仍保持交替。分组标题行和合计行不着色（它们有自己的底色），开启分组时，分组标题行也占用一个计数位置。勾选行、选区和活动单元格会覆盖条纹，固定列同样适用。默认关闭，`Table` 与 `TreeTable` 使用同名属性。
+
+<Demo name="Striped" />
+
+```xml
+<arc:DataGrid IsStriped="True" />
+```
 
 ### 加载与空状态
 

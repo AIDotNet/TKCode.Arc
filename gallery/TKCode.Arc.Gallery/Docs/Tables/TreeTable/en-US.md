@@ -170,6 +170,16 @@ table.ChildrenLoader = async item => await api.GetChildrenAsync(((Account)item).
 A click or Enter on a row without children raises `RowActivated`, which is where you open the file or the record.
 A parent row toggles instead.
 
+### Striped rows
+
+Set `IsStriped` to shade every second visible row. The stripe is counted over the rows on screen, not by depth, so expanding, collapsing, sorting and loading children keep it alternating. The loading and retry lines under a parent are not striped. Hover, keyboard focus and selection draw over the stripe. It is off by default, and uses the same name on `Table` and `DataGrid`.
+
+<Demo name="Striped" />
+
+```xml
+<arc:TreeTable IsStriped="True" ItemsSource="{Binding Files}" />
+```
+
 ### Responsive columns
 
 A table adapts to the width it is given, not to the window. Set `HideBelow` on the columns that matter least, such as

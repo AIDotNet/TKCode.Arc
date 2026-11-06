@@ -65,6 +65,14 @@ public class Table : TemplatedControl
     public static readonly StyledProperty<bool> SelectsOnRowClickProperty =
         AvaloniaProperty.Register<Table, bool>(nameof(SelectsOnRowClick), true);
 
+    /// <summary>
+    /// Alternates the row background: every second row, counted by its place in the shown order (after sorting; scrolling,
+    /// inserts and removals keep the alternation), gets a slightly different fill. Hover and selection stay on top of the stripe.
+    /// Default false.
+    /// </summary>
+    public static readonly StyledProperty<bool> IsStripedProperty =
+        AvaloniaProperty.Register<Table, bool>(nameof(IsStriped));
+
     public static readonly StyledProperty<IList?> SelectedItemsProperty =
         AvaloniaProperty.Register<Table, IList?>(nameof(SelectedItems), defaultBindingMode: BindingMode.TwoWay);
 
@@ -137,6 +145,9 @@ public class Table : TemplatedControl
     /// </summary>
     public bool SelectsOnRowClick { get => GetValue(SelectsOnRowClickProperty); set => SetValue(SelectsOnRowClickProperty, value); }
 
+    /// <inheritdoc cref="IsStripedProperty"/>
+    public bool IsStriped { get => GetValue(IsStripedProperty); set => SetValue(IsStripedProperty, value); }
+
     /// <summary>Selected row items in display order (two-way). A bound mutable list is updated in place.</summary>
     public IList? SelectedItems { get => GetValue(SelectedItemsProperty); set => SetValue(SelectedItemsProperty, value); }
 
@@ -190,6 +201,10 @@ public class Table : TemplatedControl
 
     internal static readonly StyledProperty<IBrush?> ColumnTintBrushProperty =
         AvaloniaProperty.Register<Table, IBrush?>(nameof(ColumnTintBrush));
+    internal static readonly StyledProperty<IBrush?> StripeBrushProperty =
+        AvaloniaProperty.Register<Table, IBrush?>(nameof(StripeBrush));
+    internal static readonly StyledProperty<IBrush?> StripeColumnBrushProperty =
+        AvaloniaProperty.Register<Table, IBrush?>(nameof(StripeColumnBrush));
     internal static readonly StyledProperty<IBrush?> SecondaryForegroundProperty =
         AvaloniaProperty.Register<Table, IBrush?>(nameof(SecondaryForeground));
     internal static readonly StyledProperty<IBrush?> MutedForegroundProperty =
@@ -242,6 +257,8 @@ public class Table : TemplatedControl
         AvaloniaProperty.Register<Table, double>(nameof(ControlRadius), 18);
 
     internal IBrush? ColumnTintBrush { get => GetValue(ColumnTintBrushProperty); set => SetValue(ColumnTintBrushProperty, value); }
+    internal IBrush? StripeBrush { get => GetValue(StripeBrushProperty); set => SetValue(StripeBrushProperty, value); }
+    internal IBrush? StripeColumnBrush { get => GetValue(StripeColumnBrushProperty); set => SetValue(StripeColumnBrushProperty, value); }
     internal IBrush? SecondaryForeground { get => GetValue(SecondaryForegroundProperty); set => SetValue(SecondaryForegroundProperty, value); }
     internal IBrush? MutedForeground { get => GetValue(MutedForegroundProperty); set => SetValue(MutedForegroundProperty, value); }
     internal IBrush? RuleBrush { get => GetValue(RuleBrushProperty); set => SetValue(RuleBrushProperty, value); }
@@ -1598,7 +1615,8 @@ public class Table : TemplatedControl
         Palette.Update(ColorOf(Background), ColorOf(ColumnTintBrush), ColorOf(Foreground), ColorOf(SecondaryForeground),
             ColorOf(MutedForeground), ColorOf(RuleBrush), ColorOf(DividerBrush), ColorOf(CheckboxBorderBrush),
             ColorOf(AccentBrush), ColorOf(CheckboxOnBrush), ColorOf(CheckmarkBrush),
-            FocusRingBrush is ISolidColorBrush ring ? ring.Color : null, FontFamily, FontSize, SmallFontSize, MediumWeight);
+            FocusRingBrush is ISolidColorBrush ring ? ring.Color : null, FontFamily, FontSize, SmallFontSize, MediumWeight,
+            ColorOf(StripeBrush), ColorOf(StripeColumnBrush));
         _presenter?.InvalidateRows();
         _presenter?.InvalidateMeasure();
     }
@@ -1698,6 +1716,10 @@ public class Table : TemplatedControl
         {
             RebuildItems(animate: false);
         }
+        else if (property == IsStripedProperty)
+        {
+            _presenter?.InvalidateStripes();
+        }
         else if (property == IsLoadingProperty)
         {
             UpdatePseudoClasses();
@@ -1727,6 +1749,7 @@ public class Table : TemplatedControl
                  property == SecondaryForegroundProperty || property == MutedForegroundProperty || property == RuleBrushProperty ||
                  property == DividerBrushProperty || property == CheckboxBorderBrushProperty || property == AccentBrushProperty ||
                  property == CheckboxOnBrushProperty || property == CheckmarkBrushProperty || property == FocusRingBrushProperty ||
+                 property == StripeBrushProperty || property == StripeColumnBrushProperty ||
                  property == FontFamilyProperty || property == FontSizeProperty || property == SmallFontSizeProperty ||
                  property == MediumWeightProperty)
         {

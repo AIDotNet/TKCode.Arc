@@ -92,6 +92,7 @@ internal sealed class TreeTableRow : Grid
     internal const string SelectedPseudoClass = ":selected";
     internal const string PendingPseudoClass = ":pending";
     internal const string ExpandablePseudoClass = ":expandable";
+    internal const string StripedPseudoClass = ":striped";
 
     private readonly TreeTable _owner;
     private readonly List<Control> _cells = new();
@@ -189,6 +190,11 @@ internal sealed class TreeTableRow : Grid
             AutomationProperties.SetItemStatus(this, line.Expandable ? line.Expanded ? "expanded" : "collapsed" : string.Empty);
         }
     }
+
+    /// <summary>True for the odd rows of a table with <see cref="TreeTable.IsStriped"/> (by visible order).</summary>
+    internal bool IsStriped => PseudoClasses.Contains(StripedPseudoClass);
+
+    internal void SetStriped(bool striped) => PseudoClasses.Set(StripedPseudoClass, striped);
 
     /// <summary>Updates selection, check state, guides and the chevron without touching the cells.</summary>
     public void Sync(bool selected, CheckboxState check, object? activeBranch, bool loading, bool animate)
