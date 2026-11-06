@@ -6,6 +6,11 @@
         <source>Close</source>
       </segment>
     </unit>
+    <unit id="KeepOnTop">
+      <segment>
+        <source>Keep on top</source>
+      </segment>
+    </unit>
     <unit id="Maximize">
       <segment>
         <source>Maximize</source>
@@ -19,6 +24,11 @@
     <unit id="Restore">
       <segment>
         <source>Restore</source>
+      </segment>
+    </unit>
+    <unit id="StopKeepingOnTop">
+      <segment>
+        <source>Stop keeping on top</source>
       </segment>
     </unit>
   </file>

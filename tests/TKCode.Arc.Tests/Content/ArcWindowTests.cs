@@ -549,4 +549,69 @@ public class ArcWindowTests
             window.Close();
         }
     }
+
+    private static Avalonia.Controls.Primitives.ToggleButton Pin(TitleBar bar) =>
+        Part<Avalonia.Controls.Primitives.ToggleButton>(bar, TitleBar.TopmostButtonPart);
+
+    [AvaloniaFact]
+    public void The_Topmost_Button_Is_Hidden_Unless_Asked_For()
+    {
+        var window = Open(new ArcWindow());
+        try
+        {
+            var bar = window.TitleBar.ShouldNotBeNull();
+            bar.ShowTopmostButton.ShouldBeFalse();
+            Pin(bar).IsEffectivelyVisible.ShouldBeFalse();
+            bar.ShowTopmostButton = true;
+            Dispatcher.UIThread.RunJobs();
+            Pin(bar).IsEffectivelyVisible.ShouldBeTrue();
+            Pin(bar).IsChecked.ShouldBe(false);
+            bar.ShowTopmostButton = false;
+            Dispatcher.UIThread.RunJobs();
+            Pin(bar).IsEffectivelyVisible.ShouldBeFalse();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void The_Topmost_Button_Sets_And_Follows_Window_Topmost()
+    {
+        var languages = ArcLanguageManager.Current!;
+        var window = Open(new ArcWindow { TitleBar = new TitleBar { ShowTopmostButton = true } });
+        try
+        {
+            var pin = Pin(window.TitleBar!);
+            window.Topmost.ShouldBeFalse();
+            Tooltip.GetTip(pin).ShouldBe("Keep on top");
+
+            pin.IsChecked = true;
+            window.Topmost.ShouldBeTrue();
+            Tooltip.GetTip(pin).ShouldBe("Stop keeping on top");
+            Avalonia.Automation.AutomationProperties.GetName(pin).ShouldBe("Stop keeping on top");
+
+            pin.IsChecked = false;
+            window.Topmost.ShouldBeFalse();
+
+            window.Topmost = true;
+            pin.IsChecked.ShouldBe(true);
+            window.Topmost = false;
+            pin.IsChecked.ShouldBe(false);
+
+            pin.Focusable.ShouldBeTrue();
+            languages.Set(LanguageTags.ZhCN);
+            Dispatcher.UIThread.RunJobs();
+            Tooltip.GetTip(pin).ShouldBe("置顶");
+            languages.Set(LanguageTags.ZhTW);
+            Dispatcher.UIThread.RunJobs();
+            Tooltip.GetTip(pin).ShouldBe("置頂");
+        }
+        finally
+        {
+            languages.Set(LanguageTags.EnUS);
+            window.Close();
+        }
+    }
 }

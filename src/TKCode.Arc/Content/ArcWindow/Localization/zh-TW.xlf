@@ -7,6 +7,12 @@
         <target state="translated">關閉</target>
       </segment>
     </unit>
+    <unit id="KeepOnTop">
+      <segment>
+        <source>Keep on top</source>
+        <target state="translated">置頂</target>
+      </segment>
+    </unit>
     <unit id="Maximize">
       <segment>
         <source>Maximize</source>
@@ -23,6 +29,12 @@
       <segment>
         <source>Restore</source>
         <target state="translated">還原</target>
+      </segment>
+    </unit>
+    <unit id="StopKeepingOnTop">
+      <segment>
+        <source>Stop keeping on top</source>
+        <target state="translated">取消置頂</target>
       </segment>
     </unit>
   </file>

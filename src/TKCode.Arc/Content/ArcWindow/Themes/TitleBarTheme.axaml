@@ -68,6 +68,69 @@
         </Style>
     </ControlTheme>
 
+    <!-- The always-on-top toggle: the same ghost square; while checked it takes the accent. -->
+    <ControlTheme x:Key="{x:Type arc:TitleBarCaptionToggleButton}" TargetType="arc:TitleBarCaptionToggleButton">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Width" Value="{arc:TitleBarTokenResource CaptionButtonSize}" />
+        <Setter Property="Height" Value="{arc:TitleBarTokenResource CaptionButtonSize}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TitleBarCaptionToggleButton">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:checked">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        </Style>
+        <Style Selector="^:checked:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_Frame">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
     <ControlTheme x:Key="{x:Type arc:TitleBar}" TargetType="arc:TitleBar">
         <Setter Property="Height" Value="{arc:TitleBarTokenResource Height}" />
         <Setter Property="Padding" Value="{arc:TitleBarTokenResource Padding}" />
@@ -123,6 +186,10 @@
                                               Content="{TemplateBinding RightContent}"
                                               IsVisible="{TemplateBinding RightContent, Converter={x:Static ObjectConverters.IsNotNull}}"
                                               VerticalAlignment="Center" />
+                            <arc:TitleBarCaptionToggleButton Name="PART_TopmostButton"
+                                                             IsVisible="False">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Pin}" Size="{arc:TitleBarTokenResource CaptionGlyphSize}" />
+                            </arc:TitleBarCaptionToggleButton>
                             <Border Name="PART_CaptionDivider"
                                     Width="1"
                                     Height="{arc:TitleBarTokenResource DividerHeight}"
@@ -177,6 +244,18 @@
                 <Setter Property="Data" Value="{x:Static arc:ArcIcons.Copy}" />
                 <Setter Property="Size" Value="{arc:TitleBarTokenResource RestoreGlyphSize}" />
             </Style>
+        </Style>
+
+        <Style Selector="^:topmost-button /template/ arc|TitleBarCaptionToggleButton#PART_TopmostButton">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^ /template/ arc|TitleBarCaptionToggleButton#PART_TopmostButton">
+            <Setter Property="arc:Tooltip.Tip" Value="{arc:TitleBarLangResource KeepOnTop}" />
+            <Setter Property="AutomationProperties.Name" Value="{arc:TitleBarLangResource KeepOnTop}" />
+        </Style>
+        <Style Selector="^ /template/ arc|TitleBarCaptionToggleButton#PART_TopmostButton:checked">
+            <Setter Property="arc:Tooltip.Tip" Value="{arc:TitleBarLangResource StopKeepingOnTop}" />
+            <Setter Property="AutomationProperties.Name" Value="{arc:TitleBarLangResource StopKeepingOnTop}" />
         </Style>
 
         <Style Selector="^:drawn-buttons /template/ StackPanel#PART_CaptionButtons">
