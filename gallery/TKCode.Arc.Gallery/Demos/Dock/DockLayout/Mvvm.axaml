@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.DockLayoutMvvmDemo">
+    <!-- The documents come from a collection of view-models: "New file" adds one, closing a tab removes it. -->
+    <StackPanel Spacing="12">
+        <StackPanel Orientation="Horizontal" Spacing="12">
+            <arc:Button Content="New file" Variant="Secondary" Size="Small" Click="OnNewFile" />
+            <TextBlock x:Name="Status" VerticalAlignment="Center" FontSize="13" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+        <arc:DockLayout x:Name="Layout" Height="340" CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}">
+            <arc:DockLayout.DocumentTemplate>
+                <DataTemplate x:DataType="demos:DockLayoutMvvmFile">
+                    <arc:DockPane Id="{Binding Path}" Title="{Binding Name}" Icon="{x:Static arc:ArcIcons.FileText}">
+                        <TextBlock Margin="16,8" TextWrapping="Wrap" Text="{Binding Text}" />
+                    </arc:DockPane>
+                </DataTemplate>
+            </arc:DockLayout.DocumentTemplate>
+            <arc:DockSplit Orientation="Horizontal">
+                <arc:DockGroup Size="26">
+                    <arc:DockPane Id="files" Title="Files" Icon="{x:Static arc:ArcIcons.Folder}" PreferredSide="Left">
+                        <TextBlock Margin="14,6" TextWrapping="Wrap" Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                   Text="Documents are bound to DocumentsSource." />
+                    </arc:DockPane>
+                </arc:DockGroup>
+                <arc:DockDocumentArea Size="74" />
+            </arc:DockSplit>
+        </arc:DockLayout>
+    </StackPanel>
+</UserControl>

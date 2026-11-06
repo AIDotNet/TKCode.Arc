@@ -8076,6 +8076,142 @@
         <source>Raised whenever the live transcript changes (render it in your field, the interim part muted). Bubbles.</source>
         <target>即時轉寫內容每次變化時引發（在你的輸入框中呈現，暫定部分用淡色）。會向上傳遞。</target>
       </trans-unit>
+      <trans-unit id="DockDocumentArea">
+        <source>The central area that holds the documents: one `DockGroup`, or a split of document groups (side-by-side editors). Documents stay inside it; tools enter it only with `CanDockAsDocument`. A workspace has at most one, and it is never removed, even when it is empty (it then shows `EmptyDocumentContent`).</source>
+        <target>存放文件的中央區域：一個 `DockGroup`，或由文件群組組成的分割（並排編輯）。文件只能留在其中；工具只有在 `CanDockAsDocument` 時才能進入。一個工作區至多有一個，即使為空也不會移除（此時顯示 `EmptyDocumentContent`）。</target>
+      </trans-unit>
+      <trans-unit id="DockDocumentArea.Root">
+        <source>The document group or split of document groups; null when no document is open.</source>
+        <target>文件群組或由文件群組組成的分割；沒有開啟的文件時為 null。</target>
+      </trans-unit>
+      <trans-unit id="DockGroup">
+        <source>A tab group: its `Panes` share one card, one tab each, and `ActivePane` is the one shown. A group whose last pane leaves is removed from the layout.</source>
+        <target>分頁群組：其 `Panes` 共用一張卡片，每個一個分頁，`ActivePane` 是正在顯示的那個。最後一個面板離開的群組會從版面中移除。</target>
+      </trans-unit>
+      <trans-unit id="DockGroup.ActivePane">
+        <source>The pane whose tab is selected and whose content is shown. Two-way; always one of `Panes` (or null when empty).</source>
+        <target>分頁被選取、內容正在顯示的面板。雙向；總是 `Panes` 之一（為空時為 null）。</target>
+      </trans-unit>
+      <trans-unit id="DockGroup.IsDocumentGroup">
+        <source>True when the group is inside the `DockDocumentArea` (its tabs then look like document tabs).</source>
+        <target>群組位於 `DockDocumentArea` 內時為 true（其分頁此時顯示為文件分頁）。</target>
+      </trans-unit>
+      <trans-unit id="DockLayout">
+        <source>An IDE-style dock layout: panes (`DockPane`) sit in tab groups, groups are nested in horizontal and vertical splits with draggable dividers, and documents live in a central `DockDocumentArea`. Each group is a rounded card with 6px gaps between cards. Panes move with `Move` or the tab menu (Move to, Dock to), close from their tab, menu or keyboard, and the whole layout saves to JSON (`SaveLayout`) and loads back (`LoadLayout`). Write the tree as the content in XAML, or build a `DockWorkspace` in code.</source>
+        <target>IDE 式停靠版面：面板（`DockPane`）位於分頁群組中，群組巢狀在帶可拖曳分隔線的水平與垂直分割裡，文件位於中央的 `DockDocumentArea`。每個群組是一張圓角卡片，卡片之間留 6px 縫。面板可透過 `Move` 或分頁選單（移動到、停靠到）移動，可從分頁、選單或鍵盤關閉，整個版面可儲存為 JSON（`SaveLayout`）並讀回（`LoadLayout`）。在 XAML 中把樹寫成內容，或在程式碼中建構 `DockWorkspace`。</target>
+      </trans-unit>
+      <trans-unit id="DockLayout.ActivePane">
+        <source>The active pane: the one whose content last had focus or whose tab was last chosen. Two-way; setting it selects the pane's tab (use `Activate` to also move focus into it).</source>
+        <target>作用中面板：最後取得內容焦點或最後被選取分頁的面板。雙向；設定它會選取該面板的分頁（要同時把焦點移入面板，用 `Activate`）。</target>
+      </trans-unit>
+      <trans-unit id="DockLayout.ActivePaneChanged">
+        <source>Raised when `ActivePane` changes.</source>
+        <target>`ActivePane` 變更時引發。</target>
+      </trans-unit>
+      <trans-unit id="DockLayout.EmptyDocumentContent">
+        <source>What the document area shows while no document is open; by default an empty state that reads "No open documents".</source>
+        <target>沒有開啟的文件時文件區顯示的內容；預設是顯示「No open documents」的空狀態。</target>
+      </trans-unit>
+      <trans-unit id="DockLayout.IsLocked">
+        <source>Locks the layout: panes cannot be moved, closed, floated or auto-hidden; the dividers still resize.</source>
+        <target>鎖定版面：面板不能移動、關閉、浮動或自動隱藏；分隔線仍可調整。</target>
+      </trans-unit>
+      <trans-unit id="DockLayout.LayoutChanged">
+        <source>Raised after any change of the layout (move, close, open, resize, activate, load); handy for saving it automatically.</source>
+        <target>版面發生任何變化（移動、關閉、開啟、調整大小、啟用、讀入）之後引發；便於自動儲存。</target>
+      </trans-unit>
+      <trans-unit id="DockLayout.PaneClosed">
+        <source>Raised after a pane closed.</source>
+        <target>面板關閉後引發。</target>
+      </trans-unit>
+      <trans-unit id="DockLayout.PaneClosing">
+        <source>Raised before a pane closes; set `Cancel` to keep it open.</source>
+        <target>面板關閉前引發；設定 `Cancel` 可保持其開啟。</target>
+      </trans-unit>
+      <trans-unit id="DockLayout.PaneResolver">
+        <source>Supplies panes while a saved layout loads, for ids that no pane of this layout has had (declared in XAML or opened since). Return null to skip the id.</source>
+        <target>讀入儲存的版面時，為本版面從未有過的面板 Id（XAML 中宣告或之後開啟的除外）提供面板。傳回 null 則略過該 Id。</target>
+      </trans-unit>
+      <trans-unit id="DockLayout.Workspace">
+        <source>The layout model. Replace it to show another layout; never null.</source>
+        <target>版面模型。取代它即可顯示另一套版面；不能為 null。</target>
+      </trans-unit>
+      <trans-unit id="DockNode.MinSize">
+        <source>Smallest size in px along the parent split's direction (default 120).</source>
+        <target>沿父分割方向的最小尺寸（px，預設 120）。</target>
+      </trans-unit>
+      <trans-unit id="DockNode.Size">
+        <source>The node's share of its parent split, relative to its siblings (shares need not add up to 100). Updated when a divider is dragged; setting it moves the divider.</source>
+        <target>節點在父分割中的份額，相對於同層節點（份額之和不必為 100）。拖曳分隔線時更新；設定它會移動分隔線。</target>
+      </trans-unit>
+      <trans-unit id="DockPane">
+        <source>One dockable pane of a `DockLayout`: a tool (with a `PreferredSide`) or a document (without one). The pane is its own content host: when it moves between groups it is the same instance under a new parent, so its content keeps its state (scroll position, input, selection). Only the active pane of a group is in the visual tree.</source>
+        <target>`DockLayout` 中的一個可停靠面板：工具（有 `PreferredSide`）或文件（沒有）。面板本身就是內容宿主：在群組之間移動時是同一個執行個體換了父層，內容會保留狀態（捲動位置、輸入、選取）。每個群組只有作用中面板在視覺樹中。</target>
+      </trans-unit>
+      <trans-unit id="DockPane.CanAutoHide">
+        <source>Whether a tool pane can be auto-hidden to an edge strip (documents never are). Default true.</source>
+        <target>工具面板能否自動隱藏到邊欄（文件從不自動隱藏）。預設 true。</target>
+      </trans-unit>
+      <trans-unit id="DockPane.CanClose">
+        <source>Whether the user can close the pane (tab close button, menu, keyboard). Default true.</source>
+        <target>使用者能否關閉該面板（分頁關閉按鈕、選單、鍵盤）。預設 true。</target>
+      </trans-unit>
+      <trans-unit id="DockPane.CanDockAsDocument">
+        <source>Whether a tool pane may be placed inside the document area. Default false.</source>
+        <target>工具面板能否放入文件區。預設 false。</target>
+      </trans-unit>
+      <trans-unit id="DockPane.CanFloat">
+        <source>Whether the pane can move to a floating window. Default true.</source>
+        <target>面板能否移到浮動視窗。預設 true。</target>
+      </trans-unit>
+      <trans-unit id="DockPane.CanMove">
+        <source>Whether the user can move the pane (drag, Move to and Dock to commands, keyboard reordering). Default true.</source>
+        <target>使用者能否移動該面板（拖曳、移動到與停靠到命令、鍵盤重排）。預設 true。</target>
+      </trans-unit>
+      <trans-unit id="DockPane.Group">
+        <source>The group the pane is in; null while it is auto-hidden or not in a layout.</source>
+        <target>面板所在的群組；自動隱藏或不在版面中時為 null。</target>
+      </trans-unit>
+      <trans-unit id="DockPane.Icon">
+        <source>A 24×24 Lucide stroke path shown before the title in the tab (for example `{x:Static arc:ArcIcons.Folder}`); none by default.</source>
+        <target>顯示在分頁標題前的 24×24 Lucide 描邊路徑（例如 `{x:Static arc:ArcIcons.Folder}`）；預設無。</target>
+      </trans-unit>
+      <trans-unit id="DockPane.Id">
+        <source>Stable id, unique within a workspace; saved layouts refer to panes by it. Required.</source>
+        <target>穩定的 Id，在工作區內唯一；儲存的版面依它參照面板。必填。</target>
+      </trans-unit>
+      <trans-unit id="DockPane.IsModified">
+        <source>Shows the document tab's modified dot (unsaved changes).</source>
+        <target>顯示文件分頁的修改圓點（有未儲存的變更）。</target>
+      </trans-unit>
+      <trans-unit id="DockPane.IsPinned">
+        <source>False while the pane is auto-hidden.</source>
+        <target>面板自動隱藏時為 false。</target>
+      </trans-unit>
+      <trans-unit id="DockPane.PreferredSide">
+        <source>The edge a tool pane belongs to (null for a document): used when it is first placed, when it is opened without a target and when a restored layout does not mention it.</source>
+        <target>工具面板所屬的邊（文件為 null）：首次放置、不指定目標開啟、以及還原的版面沒有提到它時使用。</target>
+      </trans-unit>
+      <trans-unit id="DockPane.PreferredSize">
+        <source>The width (left and right) or height (top and bottom) in px a tool pane asks for when it is placed on its own along an edge. Default 280.</source>
+        <target>工具面板單獨沿某邊放置時要求的寬度（左右）或高度（上下），單位 px。預設 280。</target>
+      </trans-unit>
+      <trans-unit id="DockPane.State">
+        <source>Where the pane is: docked, auto-hidden or floating.</source>
+        <target>面板所在之處：停靠、自動隱藏或浮動。</target>
+      </trans-unit>
+      <trans-unit id="DockPane.Title">
+        <source>The text of the pane's tab, menus and accessible name.</source>
+        <target>面板分頁、選單和無障礙名稱的文字。</target>
+      </trans-unit>
+      <trans-unit id="DockSplit">
+        <source>Places its `Children` side by side (`Horizontal`) or one above the other (`Vertical`), with draggable dividers between them. Each child's `Size` is its share. A split left with one child is replaced by that child; a split inside a split of the same orientation is merged into it.</source>
+        <target>把 `Children` 左右排列（`Horizontal`）或上下排列（`Vertical`），之間有可拖曳的分隔線。每個子節點的 `Size` 是它的份額。只剩一個子節點的分割由該子節點取代；同方向巢狀的分割會合併。</target>
+      </trans-unit>
+      <trans-unit id="DockSplit.Orientation">
+        <source>Side by side (Horizontal, the default) or one above the other (Vertical).</source>
+        <target>左右排列（Horizontal，預設）或上下排列（Vertical）。</target>
+      </trans-unit>
       <trans-unit id="DocumentExtraction">
         <source>Turns a document into typed data and shows where each value came from. A quiet viewer of the document sits on the left and an editable form on the right; while a model reads, the fields fill in one by one and the text each value came from is tinted. Pointing at a field or at its text lights both and draws a curved link between them; values the model is unsure of carry its reason and a "Looks right" button; "Accept all" hands the typed result to the app.</source>
         <target>文件擷取會把文件轉為具型別的資料，並顯示每個值的來源。左側是文件的唯讀檢視器，右側是可編輯的表單；模型讀取時，欄位會逐一填入，每個值的來源文字會被上色。指向欄位或其文字會同時點亮兩者，並畫出一條曲線連線；模型不確定的值會附上理由和「看起來正確」按鈕；「全部接受」把具型別的結果交給應用程式。</target>
@@ -19481,8 +19617,8 @@
         <target>空值（null、空文字）不通過。</target>
       </trans-unit>
       <trans-unit id="ResizablePanel">
-        <source>One pane of a `ResizablePanels` group. It carries the pane's configuration (label, default share, limits, collapsibility) and shows its content. Below its minimum the content keeps its minimum width, stays anchored to the moving edge and fades, so a closing pane slides away like a drawer instead of being crushed.</source>
-        <target>`ResizablePanels` 群組中的一個窗格。它承載窗格的設定（標籤、預設比例、限制、是否可摺疊）並顯示其內容。低於最小尺寸時，內容保持最小寬度，錨定在移動的邊緣並淡出，因此關閉中的窗格會像抽屜一樣滑走，而不是被壓扁。</target>
+        <source>One pane of a `ResizablePanels` group. It carries the pane's configuration (label, default share, limits, collapsibility) and shows its content. Below its minimum the content keeps its minimum size along the group's axis (width, or height in a vertical group), stays anchored to the moving edge and fades, so a closing pane slides away like a drawer instead of being crushed.</source>
+        <target>`ResizablePanels` 群組中的一個窗格。它承載窗格的設定（標籤、預設佔比、限制、是否可摺疊）並顯示其內容。低於最小尺寸時，內容在群組的方向上保持最小尺寸（寬度，垂直群組中為高度），錨定在移動的邊緣並淡出，因此關閉中的窗格會像抽屜一樣滑走，而不是被擠壓。</target>
       </trans-unit>
       <trans-unit id="ResizablePanel.DefaultSize">
         <source>Starting share of the group; shares are relative and need not add up to 100.</source>
@@ -19505,16 +19641,20 @@
         <target>為分隔線標示此窗格的名稱，例如 "Folders"。</target>
       </trans-unit>
       <trans-unit id="ResizablePanel.MaxSize">
-        <source>Maximum width in px (infinite by default).</source>
-        <target>最大寬度，單位為 px（預設無限制）。</target>
+        <source>Maximum size in px along the group's axis: width, or height in a vertical group (infinite by default).</source>
+        <target>沿群組方向的最大尺寸，單位為 px：寬度，垂直群組中為高度（預設無限制）。</target>
       </trans-unit>
       <trans-unit id="ResizablePanel.MinSize">
-        <source>Width in px where the pane starts to resist (Arc: 80). Its content never reflows below it.</source>
-        <target>窗格開始產生阻力的寬度，單位為 px（Arc 為 80）。低於此寬度時內容不會重新排版。</target>
+        <source>Size in px where the pane starts to resist (Arc: 80): its width, or its height in a vertical group. Its content never reflows below it.</source>
+        <target>窗格開始產生阻力的尺寸，單位為 px（Arc 為 80）：寬度，垂直群組中為高度。低於此尺寸時內容不會重新排版。</target>
       </trans-unit>
       <trans-unit id="ResizablePanels">
-        <source>Arc resizable panels: a horizontal split view whose panes trade space when the dividers between them are dragged, the way a mail or code editor window works. Dividers follow the pointer 1:1, resist past a pane's limits (rubber band up to 44px) and snap collapsible panes closed when dragged well past their minimum or flicked toward the edge; on release the panes settle on the smooth spring keeping the pointer's velocity. Each divider is focusable: arrows resize by 16px (Shift 64px) on the snappy spring, Home / End jump to the limits, Enter hides or restores a collapsible neighbour, Escape during a drag puts the divider back, and a double-click resets the layout. The group needs a definite height. `Sizes` (two-way, percent) persists the layout.</source>
-        <target>Arc 可調整大小的窗格：水平分割檢視，拖曳其間的分隔線時窗格之間相互讓出空間，與郵件或程式碼編輯器視窗的方式相同。分隔線以 1:1 緊隨指標，超出窗格限制時產生回彈（最多 44px）；拖到明顯超過最小尺寸，或朝邊緣快速輕掃時，可摺疊窗格會吸附關閉。放開後，窗格會以保留指標速度的平滑彈簧穩定下來。每條分隔線都可取得焦點：方向鍵每次調整 16px（按住 Shift 為 64px），使用靈敏彈簧；Home / End 跳到限制位置；Enter 隱藏或還原可摺疊的相鄰窗格；拖曳過程中按 Escape 會將分隔線復位；雙擊會重設版面配置。此群組需要確定的高度。`Sizes`（雙向，百分比）用於儲存版面配置。</target>
+        <source>Arc resizable panels: a split view whose panes, side by side or stacked (`Orientation`), trade space when the dividers between them are dragged, the way a mail or code editor window works. Dividers follow the pointer 1:1, resist past a pane's limits (rubber band up to 44px) and snap collapsible panes closed when dragged well past their minimum or flicked toward the edge; on release the panes settle on the smooth spring keeping the pointer's velocity. Each divider is focusable: arrows (Left / Right, or Up / Down when vertical) resize by 16px (Shift 64px) on the snappy spring, Home / End jump to the limits, Enter hides or restores a collapsible neighbour, Escape during a drag puts the divider back, and a double-click resets the layout. The group needs a definite height, whichever the orientation. `Sizes` (two-way, percent) persists the layout.</source>
+        <target>Arc 可調整大小的窗格：分割檢視，窗格並排或上下堆疊（`Orientation`），拖曳其間的分隔線時窗格之間相互讓出空間，與郵件或程式碼編輯器視窗的方式相同。分隔線以 1:1 緊隨指標，超出窗格限制時產生回彈（最多 44px）；拖到明顯超過最小尺寸，或朝邊緣快速輕掃時，可摺疊窗格會吸附關閉。放開後，窗格會以保留指標速度的平滑彈簧穩定下來。每條分隔線都可取得焦點：方向鍵（Left / Right，垂直時為 Up / Down）每次調整 16px（按住 Shift 為 64px），使用靈敏彈簧；Home / End 跳到限制位置；Enter 隱藏或還原可摺疊的相鄰窗格；拖曳過程中按 Escape 會將分隔線復位；雙擊會重設版面配置。無論哪個方向，此群組都需要確定的高度。`Sizes`（雙向，百分比）用於儲存版面配置。</target>
+      </trans-unit>
+      <trans-unit id="ResizablePanels.Gap">
+        <source>Space in px between adjacent panes (default 1: the one pixel divider line). A wider gap shows no line at rest; the line and grip appear centred in it while the divider is hovered, focused or dragged, and the whole gap grabs.</source>
+        <target>相鄰窗格之間的間距，單位為 px（預設 1：一像素的分隔線）。間距較寬時靜止狀態下不畫線；分隔線懸停、聚焦或拖曳時，線與握把出現在間距中央，並且整個間距都可以抓取。</target>
       </trans-unit>
       <trans-unit id="ResizablePanels.Label">
         <source>Names the group for assistive technology.</source>
@@ -19523,6 +19663,10 @@
       <trans-unit id="ResizablePanels.LayoutChanged">
         <source>Raised with each pane's share in percent after a resize settles.</source>
         <target>調整大小完成並穩定後引發，附帶每個窗格的比例（百分比）。</target>
+      </trans-unit>
+      <trans-unit id="ResizablePanels.Orientation">
+        <source>Horizontal (default) lays the panes out left to right with vertical dividers; Vertical stacks them top to bottom with horizontal dividers, sizes, limits and shares then being heights and the arrow keys Up / Down.</source>
+        <target>Horizontal（預設）從左到右排列窗格，分隔線為直線；Vertical 從上到下堆疊窗格，分隔線為橫線，此時尺寸、限制與佔比都指高度，方向鍵為 Up / Down。</target>
       </trans-unit>
       <trans-unit id="ResizablePanels.Sizes">
         <source>Each pane's share in percent. Updated after every resize settles; set it (for example from saved settings) to restore a layout. Two-way.</source>
@@ -28323,6 +28467,30 @@
       <trans-unit id="WorkflowZoomControls.Target">
         <source>The canvas the buttons zoom.</source>
         <target>按鈕所縮放的畫布。</target>
+      </trans-unit>
+      <trans-unit id="DockLayout.DocumentsSource">
+        <source>Data items that each become a document pane in the document area. Adding an item opens its pane, removing it closes the pane; when the user closes a tab and the collection is a writable list, the item is removed from it.</source>
+        <target>每一項產生一個文件面板、放入文件區的資料集合。新增一項會開啟它的面板，移除一項會關閉面板；使用者關閉分頁且集合是可寫入的清單時，該項會從集合中移除。</target>
+      </trans-unit>
+      <trans-unit id="DockLayout.DocumentTemplate">
+        <source>Builds a document item's pane. A template that produces a `DockPane` is used as it is; anything else is wrapped in a pane. The pane's `DataContext` is the item; without an `Id` or `Title` it takes them from `IDockItem` or the item's `ToString()`.</source>
+        <target>產生文件項目的面板。範本產出 `DockPane` 時直接使用；產出其他內容時包進一個面板。面板的 `DataContext` 是該項；沒有 `Id` 或 `Title` 時從 `IDockItem` 或該項的 `ToString()` 取值。</target>
+      </trans-unit>
+      <trans-unit id="DockLayout.ToolsSource">
+        <source>Data items that each become a tool pane, placed by its `PreferredSide` (left when the template sets none). Same rules as `DocumentsSource`.</source>
+        <target>每一項產生一個工具面板的資料集合，依 `PreferredSide` 放置（範本未設定時放在左側）。規則與 `DocumentsSource` 相同。</target>
+      </trans-unit>
+      <trans-unit id="DockLayout.ToolTemplate">
+        <source>Builds a tool item's pane; same rules as `DocumentTemplate`.</source>
+        <target>產生工具項目的面板；規則與 `DocumentTemplate` 相同。</target>
+      </trans-unit>
+      <trans-unit id="DockLayout.FloatingMode">
+        <source>How panes float: `Auto` (the default) uses real windows in a desktop window of a classic desktop application and floating cards inside the layout anywhere else; `Window` and `Overlay` force one of them; `Disabled` keeps every pane docked (dragging out of the layout puts the pane back, and `CanFloat` counts as false).</source>
+        <target>面板如何浮動：`Auto`（預設）在傳統桌面應用程式的桌面視窗中使用真正的視窗，在其他地方使用版面內的浮動卡片；`Window` 和 `Overlay` 強制使用其中一種；`Disabled` 讓所有面板保持停靠（拖出版面會放回原處，`CanFloat` 視為 false）。</target>
+      </trans-unit>
+      <trans-unit id="DockLayout.ShowDockIndicators">
+        <source>Whether a drag shows the compass and the edge buttons. Off, panes still dock by where the pointer is in a group (a quarter from an edge splits that side, the middle joins as a tab) and close to the layout's edge; only the preview shows.</source>
+        <target>拖曳時是否顯示羅盤和邊緣按鈕。關閉後，面板仍依指標在群組內的位置停靠（離邊四分之一以內分割那一側，中間作為分頁加入），靠近版面邊緣時停靠到該邊；只顯示預覽框。</target>
       </trans-unit>
     </body>
   </file>

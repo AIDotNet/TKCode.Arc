@@ -1,0 +1,76 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.DockLayoutPreviewDemo">
+    <!-- An editor's layout: tools on the left and at the bottom, two documents in the middle, and the outline auto-hidden
+         on the right. Click a tab, drag a gap between cards, click Outline on the right edge, or right-click a tab for
+         Move to, Dock to, Auto hide and Maximize. Ctrl+Tab switches panes. -->
+    <UserControl.Styles>
+        <Style Selector="TextBlock.file">
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource MonoFontFamily}" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="TextBlock.code">
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource MonoFontFamily}" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="LineHeight" Value="21" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+    </UserControl.Styles>
+    <arc:DockLayout Height="400" CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}">
+        <arc:DockLayout.Workspace>
+            <arc:DockWorkspace>
+                <arc:DockSplit Orientation="Horizontal">
+                    <arc:DockGroup Size="24">
+                        <arc:DockPane Id="explorer" Title="Explorer" Icon="{x:Static arc:ArcIcons.Folder}" PreferredSide="Left">
+                            <StackPanel Margin="14,6" Spacing="8">
+                                <TextBlock Classes="file" Text="src/" />
+                                <TextBlock Classes="file" Text="  App.axaml" />
+                                <TextBlock Classes="file" Text="  MainWindow.axaml" />
+                                <TextBlock Classes="file" Text="  Program.cs" />
+                                <TextBlock Classes="file" Text="tests/" />
+                                <TextBlock Classes="file" Text="README.md" />
+                            </StackPanel>
+                        </arc:DockPane>
+                        <arc:DockPane Id="search" Title="Search" Icon="{x:Static arc:ArcIcons.Search}" PreferredSide="Left">
+                            <TextBlock Classes="file" Margin="14,6" Text="No results yet" />
+                        </arc:DockPane>
+                    </arc:DockGroup>
+                    <arc:DockSplit Orientation="Vertical" Size="76">
+                        <arc:DockDocumentArea Size="66">
+                            <arc:DockGroup>
+                                <arc:DockPane Id="doc:readme" Title="README.md" Icon="{x:Static arc:ArcIcons.FileText}">
+                                    <TextBlock Classes="code" Margin="16,8" TextWrapping="Wrap"
+                                               Text="# Northwind&#10;&#10;A desktop client for the Northwind order desk.&#10;&#10;dotnet run --project src/App" />
+                                </arc:DockPane>
+                                <arc:DockPane Id="doc:app" Title="App.axaml" Icon="{x:Static arc:ArcIcons.FileCode}" IsModified="True">
+                                    <TextBlock Classes="code" Margin="16,8"
+                                               Text="&lt;Application x:Class=&quot;Northwind.App&quot;&gt;&#10;    &lt;Application.Styles&gt;&#10;        &lt;arc:ArcTheme /&gt;&#10;    &lt;/Application.Styles&gt;&#10;&lt;/Application&gt;" />
+                                </arc:DockPane>
+                            </arc:DockGroup>
+                        </arc:DockDocumentArea>
+                        <arc:DockGroup Size="34">
+                            <arc:DockPane Id="terminal" Title="Terminal" Icon="{x:Static arc:ArcIcons.Terminal}" PreferredSide="Bottom">
+                                <TextBlock Classes="code" Margin="16,4"
+                                           Text="$ dotnet build&#10;  Northwind -> bin/Debug/net10.0/Northwind.dll&#10;Build succeeded in 2.4s" />
+                            </arc:DockPane>
+                            <arc:DockPane Id="problems" Title="Problems" Icon="{x:Static arc:ArcIcons.TriangleAlert}" PreferredSide="Bottom">
+                                <TextBlock Classes="file" Margin="16,4" Text="No problems found" />
+                            </arc:DockPane>
+                        </arc:DockGroup>
+                    </arc:DockSplit>
+                </arc:DockSplit>
+                <arc:DockWorkspace.RightHidden>
+                    <arc:DockPane Id="outline" Title="Outline" Icon="{x:Static arc:ArcIcons.List}" PreferredSide="Right" PreferredSize="220">
+                        <StackPanel Margin="14,6" Spacing="8">
+                            <TextBlock Classes="file" Text="# Northwind" />
+                            <TextBlock Classes="file" Text="  Getting started" />
+                            <TextBlock Classes="file" Text="  Configuration" />
+                        </StackPanel>
+                    </arc:DockPane>
+                </arc:DockWorkspace.RightHidden>
+            </arc:DockWorkspace>
+        </arc:DockLayout.Workspace>
+    </arc:DockLayout>
+</UserControl>

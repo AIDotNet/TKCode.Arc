@@ -1,9 +1,36 @@
+using Avalonia;
+
 namespace TKCode.Arc;
+
+/// <summary>
+/// The main axis of a <see cref="ResizablePanels"/> group: horizontal groups size panes by width and lay them out along x,
+/// vertical groups by height along y. Layout and drawing work in (main, cross) coordinates and go through this to reach
+/// screen coordinates, so both orientations share one code path.
+/// </summary>
+internal readonly struct ResizablePanelsAxis
+{
+    public ResizablePanelsAxis(bool vertical) => IsVertical = vertical;
+
+    public bool IsVertical { get; }
+
+    public double Main(Size size) => IsVertical ? size.Height : size.Width;
+
+    public double Cross(Size size) => IsVertical ? size.Width : size.Height;
+
+    public double Main(Point point) => IsVertical ? point.Y : point.X;
+
+    public Size Size(double main, double cross) => IsVertical ? new Size(cross, main) : new Size(main, cross);
+
+    public Point Point(double main, double cross) => IsVertical ? new Point(cross, main) : new Point(main, cross);
+
+    public Rect Rect(double main, double cross, double mainLength, double crossLength)
+        => IsVertical ? new Rect(cross, main, crossLength, mainLength) : new Rect(main, cross, mainLength, crossLength);
+}
 
 /// <summary>Pure helpers of <see cref="ResizablePanels"/> (Arc's drag physics and the flex distribution).</summary>
 internal static class ResizablePanelsMath
 {
-    /// <summary>Width in px where a pane starts to resist (Arc: 80).</summary>
+    /// <summary>Size in px (width, or height in a vertical group) where a pane starts to resist (Arc: 80).</summary>
     public const double DefaultMin = 80;
 
     /// <summary>How far in px a pane can be pulled past a limit before it stops giving (Arc: 44).</summary>

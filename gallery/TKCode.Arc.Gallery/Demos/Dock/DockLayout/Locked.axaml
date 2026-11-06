@@ -1,0 +1,45 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.DockLayoutLockedDemo">
+    <!-- A locked layout keeps every pane in place: no closing, moving or auto-hiding. The dividers still resize, and
+         auto-hidden panes still slide out. -->
+    <StackPanel Spacing="12">
+        <arc:Switch x:Name="LockSwitch" Content="Lock the layout" IsChecked="True" />
+        <arc:DockLayout Height="340"
+                        CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+                        IsLocked="{Binding #LockSwitch.IsChecked}">
+            <arc:DockLayout.Workspace>
+                <arc:DockWorkspace>
+                    <arc:DockSplit Orientation="Vertical">
+                        <arc:DockSplit Orientation="Horizontal" Size="62">
+                            <arc:DockGroup Size="50">
+                                <arc:DockPane Id="revenue" Title="Revenue" Icon="{x:Static arc:ArcIcons.ChartLine}" PreferredSide="Left">
+                                    <TextBlock Margin="16,8" FontSize="28" FontWeight="SemiBold" Text="$48,210" />
+                                </arc:DockPane>
+                            </arc:DockGroup>
+                            <arc:DockGroup Size="50">
+                                <arc:DockPane Id="orders" Title="Orders" Icon="{x:Static arc:ArcIcons.Package}" PreferredSide="Right">
+                                    <TextBlock Margin="16,8" FontSize="28" FontWeight="SemiBold" Text="1,284" />
+                                </arc:DockPane>
+                                <arc:DockPane Id="returns" Title="Returns" Icon="{x:Static arc:ArcIcons.Undo2}" PreferredSide="Right">
+                                    <TextBlock Margin="16,8" FontSize="28" FontWeight="SemiBold" Text="37" />
+                                </arc:DockPane>
+                            </arc:DockGroup>
+                        </arc:DockSplit>
+                        <arc:DockGroup Size="38">
+                            <arc:DockPane Id="activity" Title="Activity" Icon="{x:Static arc:ArcIcons.Activity}" PreferredSide="Bottom">
+                                <TextBlock Margin="16,6" Text="Order #1042 shipped · 2 min ago" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            </arc:DockPane>
+                        </arc:DockGroup>
+                    </arc:DockSplit>
+                    <arc:DockWorkspace.RightHidden>
+                        <arc:DockPane Id="filters" Title="Filters" Icon="{x:Static arc:ArcIcons.Filter}" PreferredSide="Right" PreferredSize="220">
+                            <TextBlock Margin="14,6" Text="Last 30 days · All regions" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </arc:DockPane>
+                    </arc:DockWorkspace.RightHidden>
+                </arc:DockWorkspace>
+            </arc:DockLayout.Workspace>
+        </arc:DockLayout>
+    </StackPanel>
+</UserControl>

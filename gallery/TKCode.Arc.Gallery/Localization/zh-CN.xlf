@@ -109,6 +109,12 @@
         <target state="translated">工作流</target>
       </segment>
     </unit>
+    <unit id="Category_Dock">
+      <segment>
+        <source>Dock</source>
+        <target state="translated">停靠布局</target>
+      </segment>
+    </unit>
     <unit id="Category_Content">
       <segment>
         <source>Extras</source>

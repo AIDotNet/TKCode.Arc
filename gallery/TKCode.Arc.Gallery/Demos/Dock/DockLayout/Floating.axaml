@@ -1,0 +1,41 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.DockLayoutFloatingDemo">
+    <!-- Float a pane from the button, its tab menu (Float) or by dropping its tab outside the layout. On the desktop it opens
+         in its own window; in the browser, or with "Floating cards" on, it floats as a card inside the layout. Drag the
+         window's tab or title bar back onto the compass, double-click the title bar, or choose Dock in the tab menu. -->
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="8" Margin="0,0,0,12">
+            <arc:Button x:Name="FloatButton" Content="Float Properties" Variant="Secondary" Size="Small" />
+            <arc:Button x:Name="DockButton" Content="Dock all" Variant="Secondary" Size="Small" />
+            <arc:Switch x:Name="CardsSwitch" Content="Floating cards" VerticalAlignment="Center" Margin="8,0,0,0" />
+        </StackPanel>
+        <arc:DockLayout x:Name="Layout" Height="420" CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}">
+            <arc:DockSplit Orientation="Horizontal">
+                <arc:DockDocumentArea Size="70">
+                    <arc:DockGroup>
+                        <arc:DockPane Id="doc:canvas" Title="Canvas" Icon="{x:Static arc:ArcIcons.Palette}">
+                            <TextBlock Margin="16,8" Text="Artboard 1" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </arc:DockPane>
+                    </arc:DockGroup>
+                </arc:DockDocumentArea>
+                <arc:DockSplit Orientation="Vertical" Size="30">
+                    <arc:DockGroup>
+                        <arc:DockPane Id="properties" Title="Properties" Icon="{x:Static arc:ArcIcons.SlidersHorizontal}" PreferredSide="Right">
+                            <StackPanel Margin="14,6" Spacing="6">
+                                <TextBlock Text="Width  1440" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                <TextBlock Text="Height  900" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            </StackPanel>
+                        </arc:DockPane>
+                    </arc:DockGroup>
+                    <arc:DockGroup>
+                        <arc:DockPane Id="layers" Title="Layers" Icon="{x:Static arc:ArcIcons.Layers}" PreferredSide="Right">
+                            <TextBlock Margin="14,6" Text="3 layers" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </arc:DockPane>
+                    </arc:DockGroup>
+                </arc:DockSplit>
+            </arc:DockSplit>
+        </arc:DockLayout>
+    </DockPanel>
+</UserControl>

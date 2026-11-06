@@ -1,0 +1,85 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.DockGroupViewTheme">
+    <!-- The small square buttons at the end of a tab strip: the overflow list (chevron) and the pane menu (ellipsis). -->
+    <ControlTheme x:Key="DockGroupActionButtonTheme" TargetType="Button">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="Button">
+                <Border Background="{TemplateBinding Background}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                    <ContentPresenter Content="{TemplateBinding Content}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Width" Value="{arc:DockGroupViewTokenResource ActionSize}" />
+        <Setter Property="Height" Value="{arc:DockGroupViewTokenResource ActionSize}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep8}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:DockGroupView}" TargetType="arc:DockGroupView">
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:DockGroupView">
+                <Border Name="PART_Card"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <DockPanel>
+                        <Grid Name="PART_StripRow"
+                              DockPanel.Dock="Top"
+                              Height="{arc:DockGroupViewTokenResource StripHeight}"
+                              Margin="{arc:DockGroupViewTokenResource StripPadding}"
+                              ColumnDefinitions="*,Auto,Auto">
+                            <arc:DockTabStrip Name="PART_Strip" VerticalAlignment="Stretch" />
+                            <Button Name="PART_Overflow"
+                                    Grid.Column="1"
+                                    Theme="{StaticResource DockGroupActionButtonTheme}"
+                                    IsVisible="False">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronDown}" Size="{arc:DockGroupViewTokenResource ActionGlyphSize}" />
+                            </Button>
+                            <Button Name="PART_More"
+                                    Grid.Column="2"
+                                    Theme="{StaticResource DockGroupActionButtonTheme}">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Ellipsis}" Size="{arc:DockGroupViewTokenResource ActionGlyphSize}" />
+                            </Button>
+                        </Grid>
+                        <Decorator Name="PART_Content" />
+                    </DockPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

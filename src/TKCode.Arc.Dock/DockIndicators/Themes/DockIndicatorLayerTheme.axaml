@@ -1,0 +1,95 @@
+<!--
+    The drag indicators of a dock layout (design/components/dock/dock.md sections 7 and 9): compass and edge buttons, and the
+    ghost that trails the pointer. The preview and the insertion line are code-built in DockIndicatorLayer.
+-->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.DockIndicatorLayerTheme">
+    <ControlTheme x:Key="{x:Type arc:DockCompassButton}" TargetType="arc:DockCompassButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Width" Value="{arc:DockIndicatorTokenResource ButtonSize}" />
+        <Setter Property="Height" Value="{arc:DockIndicatorTokenResource ButtonSize}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep10}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:DockCompassButton">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        BoxShadow="{arc:ArcDesignTokenResource ShadowRaised}">
+                    <arc:ArcGlyph Data="{TemplateBinding Glyph}"
+                                  Size="{arc:DockIndicatorTokenResource GlyphSize}"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:hot">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:disabled /template/ Border#PART_Frame">
+            <Setter Property="Opacity" Value="0.45" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="BorderBrush" />
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:DockDragGhost}" TargetType="arc:DockDragGhost">
+        <Setter Property="Height" Value="{arc:DockTabTokenResource Height}" />
+        <Setter Property="Padding" Value="{arc:DockTabTokenResource InlinePadding}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep8}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:DockTabTokenResource FontSize}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Opacity" Value="{arc:DockIndicatorTokenResource GhostOpacity}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:DockDragGhost">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}"
+                        BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}">
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="{arc:DockTabTokenResource ItemGap}"
+                                VerticalAlignment="Center">
+                        <arc:ArcGlyph Data="{TemplateBinding Icon}"
+                                      Size="{arc:DockTabTokenResource IconSize}"
+                                      VerticalAlignment="Center"
+                                      IsVisible="{TemplateBinding Icon, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                        <TextBlock Text="{TemplateBinding Title}" VerticalAlignment="Center" />
+                        <TextBlock Text="{TemplateBinding Extra}"
+                                   VerticalAlignment="Center"
+                                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                   IsVisible="{TemplateBinding Extra, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

@@ -34,6 +34,7 @@ public class PackageTests
         references.ShouldNotContain("TKCode.Arc.Blocks");
         references.ShouldNotContain("TKCode.Arc.Special");
         references.ShouldNotContain("TKCode.Arc.Workflow");
+        references.ShouldNotContain("TKCode.Arc.Dock");
     }
 
     [Fact]

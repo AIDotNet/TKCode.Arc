@@ -7,7 +7,8 @@ summary: Trade space between panes by dragging the divider between them.
 
 ## When to use
 
-`ResizablePanels` splits one area into side-by-side panes and lets the person decide how much room each pane gets.
+`ResizablePanels` splits one area into side-by-side or stacked panes and lets the person decide how much room each
+pane gets.
 It fits the working area of an application: the body under a page header, where a list, a detail view and a
 secondary pane must share the window. The group needs a definite height from its parent, so it belongs in the
 content region of a shell, not in an auto-sized row.
@@ -27,11 +28,11 @@ content region of a shell, not in an auto-sized row.
 
 - **A panel that covers the page**: use `Drawer` for a pane that slides over the content and must be dismissed
   before the person returns to the page.
-- **Stacked sections of one page**: `ResizablePanels` splits horizontally only. Use `Accordion` for sections that
-  open and close one above another.
+- **Stacked sections of one page**: use `Accordion` for sections that open and close one above another. A vertical
+  `ResizablePanels` shows every pane at once and trades height between them.
 - **One pane at a time**: use `Tabs` when the person switches between views and never needs to see two at once.
-- **A narrow screen or a phone layout**: the panes never stack. Use `Tabs` or let the page change its structure
-  for the narrow width.
+- **A narrow screen or a phone layout**: the panes never wrap to another row. Use `Tabs` or let the page change its
+  structure for the narrow width.
 - **A fixed split that nobody adjusts**: a plain Avalonia `Grid` with star-sized columns is simpler and has no
   dividers to operate.
 - **Content that is longer than its pane**: keep the split and put a `ScrollArea` inside the pane. The group does
@@ -69,7 +70,8 @@ content region of a shell, not in an auto-sized row.
 
 `ResizablePanels` derives from Avalonia's `Control`, and `ResizablePanel` derives from `ContentControl`. The group
 takes its `Panels` collection as its content, so the panes are written directly inside it. The group lays the
-panes out itself: each pane's width comes from its share and its limits, not from a `Width` you set on it. The
+panes out itself: each pane's width (height in a vertical group) comes from its share and its limits, not from a
+`Width` or `Height` you set on it. The
 dividers between panes are created by the group and are focusable, so the keyboard reaches them without extra
 markup.
 
@@ -77,22 +79,27 @@ markup.
 
 ### Anatomy
 
-1. **Group** (`ResizablePanels`): clipped to its bounds and laid out left to right. It has no visual of its own
+1. **Group** (`ResizablePanels`): clipped to its bounds and laid out left to right, or top to bottom when
+   `Orientation` is `Vertical`. It has no visual of its own
    besides the dividers and restore tabs. Text inside the group uses the body font at the `TypeSM` size in the
    foreground color unless a pane sets its own.
 2. **Pane** (`ResizablePanel`): its content stretches to fill the pane. Below the pane's effective minimum the
    content keeps that minimum width and stays anchored to the moving edge, so a closing pane slides away instead of
    being squeezed.
-3. **Divider line**: a 1 px line in the border color. It becomes the strong border color while the pointer is over
-   it, the divider is dragged or the divider has keyboard focus.
-4. **Grab area**: 6 px on each side of the line, 13 px in total. Pressing anywhere in it starts a drag.
+3. **Divider line**: a 1 px line in the border color, which is the default 1 px `Gap` between panes. It becomes the
+   strong border color while the pointer is over it, the divider is dragged or the divider has keyboard focus. With a
+   wider `Gap` the line is not drawn at rest; it appears in the strong border color in the middle of the gap while the
+   divider is hovered, focused or dragged.
+4. **Grab area**: the gap plus 6 px on each side of it, 13 px in total with the default gap. Pressing anywhere in it
+   starts a drag.
 5. **Grip**: a 4 × 32 px rounded pill centered on the line. It forms when the divider is hovered, focused or dragged,
    in the strong border color, and turns to the foreground color while it is dragged.
 6. **Restore tab**: an 18 × 40 px pill 5 px from the line, on the side the hidden pane returns to. It appears when a
    neighbor pane is hidden. It has the surface fill, a border stroke that darkens on hover or focus, a secondary
    text chevron and the resting shadow. The hit area of a hidden divider reaches 30 px into the visible pane so the
    tab is easy to press.
-7. **Cursor**: a horizontal resize cursor over an open divider and a hand cursor over a hidden one.
+7. **Cursor**: a resize cursor across the divider over an open divider (left-right in a horizontal group, up-down in a
+   vertical one) and a hand cursor over a hidden one.
 
 ### Sizing panes
 
@@ -104,14 +111,48 @@ is fixed at that limit, and the remaining room is shared again among the others.
 | Property | Default | Meaning |
 |---|---|---|
 | `DefaultSize` | `1` | Starting share. Also the size the group returns to on `Reset()`. |
-| `MinSize` | `80` px | Width where the pane starts to resist. Its content never reflows below it. |
-| `MaxSize` | Unlimited | Upper width limit in px. A value of zero or less means no limit. |
+| `MinSize` | `80` px | Width (height in a vertical group) where the pane starts to resist. Its content never reflows below it. |
+| `MaxSize` | Unlimited | Upper width (height in a vertical group) limit in px. A value of zero or less means no limit. |
 | `IsCollapsible` | `False` | Lets the pane be hidden by its divider, the keyboard or a flick. |
 | `IsCollapsed` | `False` | Starts the pane hidden. Takes effect only with `IsCollapsible="True"`. Two-way. |
 | `Id` | None | Stable key for the pane. It names the divider when `Label` is empty. |
 
 A group narrower than the sum of every pane's minimum scales the minimums down in proportion, so all panes stay
 visible.
+
+### Vertical
+
+Set `Orientation="Vertical"` to stack the panes from top to bottom, as in an editor above a terminal or a chart above
+its data table. Everything else works the same way along the other axis: `DefaultSize`, `MinSize`, `MaxSize` and
+`Sizes` describe heights, the dividers are horizontal and follow the pointer up and down, the Up and Down arrows move a
+focused divider, and a collapsing first pane slides away upward with its content held to its bottom edge. The group
+then needs a definite height from its parent, as a horizontal group does.
+
+<Demo name="Vertical" />
+
+Nest groups to build a grid of panes, for example a vertical group inside one pane of a horizontal group. Give each
+group its own `Label` so the dividers of the inner and outer layout can be told apart.
+
+### Gap between panes
+
+`Gap` is the space in pixels between two neighboring panes. The default of 1 is the 1 px divider line. A wider gap
+suits panes drawn as separate cards, such as a dock of tool windows: the gap shows the background through it, no line
+is drawn at rest, and the line and grip appear in the middle of the gap while the divider is hovered, focused or
+dragged. The whole gap grabs the divider.
+
+```xml
+<arc:ResizablePanels Label="Workspace" Gap="6">
+    <arc:ResizablePanel Id="explorer" Label="Explorer" DefaultSize="25" />
+    <arc:ResizablePanel Id="editor" Label="Editor" DefaultSize="75" />
+</arc:ResizablePanels>
+```
+
+### Adding and removing panes
+
+`Panels` can change while the group is shown. Panes that stay keep their current size. A removed pane's space goes to
+the panes beside it, in proportion to their sizes. A new pane gets a size from its `DefaultSize` compared with the
+average `DefaultSize` and size of the panes that stay, and the panes make room for it in proportion. Hidden panes stay
+hidden. These changes take effect at once, without animation, and `Sizes` is updated once with the new layout.
 
 ### Collapsed by default
 
@@ -195,8 +236,8 @@ public partial class MailViewModel : ObservableObject
 - `Sizes` holds one value per pane in order, in percent of the room, and the values add up to 100. A hidden pane
   holds 0. The view model sees a new value when a resize settles (`LayoutChanged` fires at the same moment), not on
   every pointer move, so saving in the property-changed handler writes to storage once per gesture.
-- Store the layout with the pane set it came from. The group expects the same panes for its whole life, so discard
-  a saved array when the pane list changes and let the defaults apply.
+- Store the layout with the pane set it came from. A saved array is applied only when it has one value per pane, so
+  discard it when the pane list changes and let the defaults apply.
 - `Reset()` is a method, not a property. Call it from a button's click handler in the view's code-behind,
   because it returns every pane to its default share and its default collapsed state.
 
@@ -221,7 +262,7 @@ measured from pointer samples, so test the collapse gestures on the devices you 
 
 ### Narrow windows
 
-The panes never stack. When the window narrows, the minimums scale down in proportion and a pane below its minimum
+The panes never wrap to another row. When the window narrows, the minimums scale down in proportion and a pane below its minimum
 fades with its width, its content held at the minimum width as it slides away. A phone-width layout needs a different
 structure: switch to `Tabs` or change the page layout at that width.
 
@@ -359,15 +400,17 @@ headings, so the divider names match what the person sees.
   action again, so keep the primary action in a pane that stays open.
 - Setting `IsCollapsible` on a pane whose hidden state would hide information the person needs to notice, such as
   an error list or a pending approval.
-- Changing the set of panes while the group is in use. The group is built for a fixed pane set, and a saved layout
-  from another set does not describe it.
+- Restoring a saved `Sizes` array after the set of panes changed. A layout saved for another set of panes does not
+  describe this one.
 - Nesting groups inside a narrow pane, where the outer and inner minimums compete for the same few pixels.
-- Expecting a vertical split. The group is horizontal only, so build the stacked part of the layout outside it.
+- Nesting a group inside another group of the same orientation. Add the panes to the outer group instead, so one
+  set of dividers shares the room.
 
 ### Common questions
 
 **Why does the group show nothing?** It needs a definite height from its parent. In a `StackPanel` or an auto-sized
-row the group has no height to share, so set `Height` or place it in a `Grid` row with star height.
+row the group has no height to share, so set `Height` or place it in a `Grid` row with star height. A vertical group
+splits its height, so it needs one just as much.
 
 **Why did my pane not collapse when I dragged the divider?** Only a pane with `IsCollapsible="True"` can collapse.
 A drag collapses the pane only once it passes the collapse threshold; a shorter drag stops at the pane's `MinSize`
@@ -398,7 +441,9 @@ the 100 percent.
 - A divider takes the label of the pane before it, or that pane's `Id` when the label is empty.
 - A collapsed pane is removed from hit testing and the tab order, and is hidden from the control view of the
   accessibility tree.
-- Left and Right arrows resize the divider by a small step. Shift with an arrow resizes by a large step.
+- Left and Right arrows resize the divider by a small step, or Up and Down in a vertical group. Shift with an arrow
+  resizes by a large step.
+- The item type of the group and of each divider is `horizontal` or `vertical`, after `Orientation`.
 - Home and End move the divider to its smallest and largest position. Enter hides or restores a collapsible neighbor.
 - Escape during a pointer drag returns the divider to where the drag started.
 
@@ -409,9 +454,9 @@ Each divider is a tab stop. The keys below apply while the divider has focus and
 | Keys | Action |
 |---|---|
 | `Tab` / `Shift+Tab` | Move to the next or previous divider or focusable control |
-| `Left` / `Right` | Move the divider 16 px. At a limit, it collapses a collapsible pane on that side |
-| `Shift` + `Left` / `Right` | Move the divider 64 px |
-| `Left` / `Right` toward a hidden pane | Restore the hidden pane |
+| `Left` / `Right` (`Up` / `Down` when vertical) | Move the divider 16 px. At a limit, it collapses a collapsible pane on that side |
+| `Shift` + `Left` / `Right` (`Up` / `Down` when vertical) | Move the divider 64 px |
+| `Left` / `Right` (`Up` / `Down` when vertical) toward a hidden pane | Restore the hidden pane |
 | `Home` / `End` | Move the divider to its smallest or largest position. Ignored while a neighbor is hidden |
 | `Enter` | Restore a hidden neighbor. Otherwise collapse the pane before the divider if it is collapsible, else the pane after it |
 | `Escape` (during a drag) | Return the divider to where the drag started |

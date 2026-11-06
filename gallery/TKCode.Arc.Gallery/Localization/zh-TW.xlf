@@ -109,6 +109,12 @@
         <target state="translated">工作流程</target>
       </segment>
     </unit>
+    <unit id="Category_Dock">
+      <segment>
+        <source>Dock</source>
+        <target state="translated">停靠版面</target>
+      </segment>
+    </unit>
     <unit id="Category_Content">
       <segment>
         <source>Extras</source>

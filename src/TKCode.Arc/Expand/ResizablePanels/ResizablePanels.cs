@@ -8,6 +8,7 @@ using Avalonia.Controls.Metadata;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Metadata;
 
@@ -23,18 +24,20 @@ public sealed class ResizablePanelsLayoutChangedEventArgs : RoutedEventArgs
 }
 
 /// <summary>
-/// Arc resizable panels: a horizontal split view whose panes trade space when the dividers between them are dragged,
-/// the way a mail or code editor window works. Dividers follow the pointer 1:1, resist past a pane's limits (rubber
+/// Arc resizable panels: a split view whose panes, side by side or stacked (<see cref="Orientation"/>), trade space when
+/// the dividers between them are dragged, the way a mail or code editor window works. Dividers follow the pointer 1:1, resist past a pane's limits (rubber
 /// band up to 44px) and snap collapsible panes closed when dragged well past their minimum or flicked toward the edge;
 /// on release the panes settle on the smooth spring keeping the pointer's velocity. Each divider is focusable: arrows
-/// resize by 16px (Shift 64px) on the snappy spring, Home / End jump to the limits, Enter hides or restores a
+/// (Left / Right, or Up / Down when vertical) resize by 16px (Shift 64px) on the snappy spring, Home / End jump to the limits, Enter hides or restores a
 /// collapsible neighbour, Escape during a drag puts the divider back, and a double-click resets the layout. The group
-/// needs a definite height. <see cref="Sizes"/> (two-way, percent) persists the layout.
+/// needs a definite height, whichever the orientation. <see cref="Sizes"/> (two-way, percent) persists the layout.
 /// </summary>
-[PseudoClasses(ResizingPseudoClass)]
+[PseudoClasses(ResizingPseudoClass, VerticalPseudoClass)]
 public class ResizablePanels : Control
 {
     public const string ResizingPseudoClass = ":resizing";
+
+    public const string VerticalPseudoClass = ":vertical";
 
     #region Properties
 
@@ -49,6 +52,21 @@ public class ResizablePanels : Control
     public static readonly StyledProperty<IReadOnlyList<double>?> SizesProperty =
         AvaloniaProperty.Register<ResizablePanels, IReadOnlyList<double>?>(nameof(Sizes), defaultBindingMode: BindingMode.TwoWay);
 
+    /// <summary>
+    /// Horizontal (default) lays the panes out left to right with vertical dividers; Vertical stacks them top to bottom
+    /// with horizontal dividers, sizes, limits and shares then being heights and the arrow keys Up / Down.
+    /// </summary>
+    public static readonly StyledProperty<Orientation> OrientationProperty =
+        AvaloniaProperty.Register<ResizablePanels, Orientation>(nameof(Orientation));
+
+    /// <summary>
+    /// Space in px between adjacent panes (default 1: the one pixel divider line). A wider gap shows no line at rest;
+    /// the line and grip appear centred in it while the divider is hovered, focused or dragged, and the whole gap grabs.
+    /// </summary>
+    public static readonly StyledProperty<double> GapProperty =
+        AvaloniaProperty.Register<ResizablePanels, double>(nameof(Gap), 1, coerce: (_, value) => double.IsFinite(value) ? Math.Max(0, value) : 1);
+
+    /// <summary>Raised with each pane's share in percent after a resize settles.</summary>
     public static readonly RoutedEvent<ResizablePanelsLayoutChangedEventArgs> LayoutChangedEvent =
         RoutedEvent.Register<ResizablePanels, ResizablePanelsLayoutChangedEventArgs>(nameof(LayoutChanged), RoutingStrategies.Bubble);
 
@@ -73,7 +91,12 @@ public class ResizablePanels : Control
     internal static readonly StyledProperty<BoxShadows> RestoreShadowProperty =
         AvaloniaProperty.Register<ResizablePanels, BoxShadows>(nameof(RestoreShadow));
 
-    /// <summary>The panes, in order. The set of panes should stay the same for the life of the group.</summary>
+    /// <summary>
+    /// The panes, in order. Panes can be added and removed at run time: once the group has been laid out, the panes
+    /// that stay keep their current size, a removed pane's space goes to its neighbours in proportion to their sizes, a
+    /// new pane gets a size from its <see cref="ResizablePanel.DefaultSize"/> relative to the average of the panes that
+    /// stay, and <see cref="Sizes"/> is written once. Such changes jump, without animation.
+    /// </summary>
     [Content]
     public AvaloniaList<ResizablePanel> Panels { get; } = new();
 
@@ -82,6 +105,12 @@ public class ResizablePanels : Control
 
     /// <inheritdoc cref="SizesProperty"/>
     public IReadOnlyList<double>? Sizes { get => GetValue(SizesProperty); set => SetValue(SizesProperty, value); }
+
+    /// <inheritdoc cref="OrientationProperty"/>
+    public Orientation Orientation { get => GetValue(OrientationProperty); set => SetValue(OrientationProperty, value); }
+
+    /// <inheritdoc cref="GapProperty"/>
+    public double Gap { get => GetValue(GapProperty); set => SetValue(GapProperty, value); }
 
     /// <summary>Raised with each pane's share in percent after a resize settles.</summary>
     public event EventHandler<ResizablePanelsLayoutChangedEventArgs>? LayoutChanged
@@ -114,7 +143,9 @@ public class ResizablePanels : Control
     private double[] _goals = [];
     private bool _hasGoals;
     private bool _stale = true;
+    private bool _laidOut;
     private double _room;
+    private double _length;
     private int _token;
     private bool _writingSizes;
     private bool _writingCollapsed;
@@ -124,6 +155,7 @@ public class ResizablePanels : Control
     {
         public required int Handle { get; init; }
         public required IPointer Pointer { get; init; }
+        /// <summary>Pointer position along the group's axis (x, or y when vertical) where the drag started.</summary>
         public required double StartX { get; init; }
         public required double A0 { get; init; }
         public required double B0 { get; init; }
@@ -149,8 +181,10 @@ public class ResizablePanels : Control
         Panels.CollectionChanged += (_, _) => Rebuild();
     }
 
-    /// <summary>Current width of each pane in px (tests).</summary>
-    internal IReadOnlyList<double> ActualWidths => _actual;
+    /// <summary>Current size of each pane along the axis in px (tests).</summary>
+    internal IReadOnlyList<double> ActualSizes => _actual;
+
+    internal ResizablePanelsAxis Axis => new(Orientation == Orientation.Vertical);
 
     internal IReadOnlyList<ResizablePanelsHandle> Handles => _handles;
 
@@ -160,54 +194,293 @@ public class ResizablePanels : Control
 
     private void Rebuild()
     {
-        foreach (var pane in _panes)
+        var old = _panes.ToArray();
+        var next = new List<ResizablePanel>(Panels);
+        if (_drag is { } drag)
         {
+            // The divider being dragged may be about to go; the drag ends where it is.
+            _drag = null;
+            SetResizing(drag.Handle, false);
+            drag.Pointer.Capture(null);
+        }
+        _token++;
+        var carried = Carry(old, next);
+        var kept = new HashSet<ResizablePanel>(next);
+        for (var i = 0; i < old.Length; i++)
+        {
+            var pane = old[i];
+            if (kept.Contains(pane))
+            {
+                continue;
+            }
+            // A pane that leaves the group gets back the state the group put on it.
             pane.ConfigChanged -= OnPaneConfigChanged;
+            pane.AnchorEnd = false;
+            pane.ClearValue(OpacityProperty);
+            ExpandInert.Apply(pane, false);
+            _defaultHidden.Remove(pane);
             LogicalChildren.Remove(pane);
             VisualChildren.Remove(pane);
         }
-        foreach (var handle in _handles)
-        {
-            VisualChildren.Remove(handle);
-            LogicalChildren.Remove(handle);
-        }
-        _panes.Clear();
-        _handles.Clear();
         foreach (var sizes in _sizes)
         {
             sizes.Dispose();
         }
-        _panes.AddRange(Panels);
+        var previous = new HashSet<ResizablePanel>(old);
+        _panes.Clear();
+        _panes.AddRange(next);
         var count = _panes.Count;
         _collapsed = new bool[count];
         _free = new bool[count];
         _restore = new double?[count];
         _actual = new double[count];
         _goals = new double[count];
+        _hasGoals = false;
         _sizes = new MotionValue<double>[count];
-        var initial = InitialSizes();
+        var initial = carried?.Sizes ?? InitialSizes();
+        var axis = Axis;
         for (var i = 0; i < count; i++)
         {
             var pane = _panes[i];
-            _collapsed[i] = pane.IsCollapsible && pane.IsCollapsed;
+            _collapsed[i] = carried?.Collapsed[i] ?? (pane.IsCollapsible && pane.IsCollapsed);
+            _restore[i] = carried?.Restore[i];
             _sizes[i] = new MotionValue<double>(this, initial[i], MotionVectors.Double);
             _sizes[i].Changed += _ => InvalidateMeasure();
             pane.AnchorEnd = i == 0 && count > 1;
-            pane.ConfigChanged += OnPaneConfigChanged;
-            LogicalChildren.Add(pane);
-            VisualChildren.Add(pane);
+            pane.Axis = axis;
+            if (!previous.Contains(pane))
+            {
+                pane.ConfigChanged += OnPaneConfigChanged;
+                LogicalChildren.Add(pane);
+                VisualChildren.Add(pane);
+                if (carried is not null)
+                {
+                    ExpandInert.Apply(pane, _collapsed[i]);
+                }
+            }
+            pane.InvalidateMeasure();
         }
         _shares = ResizablePanelsMath.ToShares(initial);
+        // Dividers are kept by position (a focused one stays focused) and renumbered.
+        while (_handles.Count > Math.Max(0, count - 1))
+        {
+            var handle = _handles[^1];
+            _handles.RemoveAt(_handles.Count - 1);
+            VisualChildren.Remove(handle);
+            LogicalChildren.Remove(handle);
+        }
         for (var i = 0; i < count - 1; i++)
         {
-            var handle = new ResizablePanelsHandle(this, i);
-            _handles.Add(handle);
-            VisualChildren.Add(handle);
-            LogicalChildren.Add(handle);
-            handle.SetMode(ModeOf(i));
+            if (i == _handles.Count)
+            {
+                var handle = new ResizablePanelsHandle(this, i);
+                _handles.Add(handle);
+                VisualChildren.Add(handle);
+                LogicalChildren.Add(handle);
+            }
+            _handles[i].Index = i;
+            _handles[i].SetMode(ModeOf(i));
+            _handles[i].InvalidateMeasure();
         }
         _stale = true;
+        if (carried is not null)
+        {
+            // Lay the new set out right away, so a further change before the next layout pass starts from real sizes.
+            FitActual(_length);
+            WriteSizes();
+        }
         InvalidateMeasure();
+    }
+
+    private sealed record Carried(double[] Sizes, bool[] Collapsed, double?[] Restore);
+
+    /// <summary>
+    /// Sizes for a pane set that changed after layout: panes that stay keep their px size, a removed pane's space (and
+    /// its divider's gap) goes to its nearest staying neighbours in proportion to their sizes, and a new pane asks for
+    /// its DefaultSize relative to the staying panes' average. Null before the first layout or when no pane stays.
+    /// </summary>
+    private Carried? Carry(ResizablePanel[] old, List<ResizablePanel> next)
+    {
+        if (!_laidOut || old.Length == 0 || old.Length != _actual.Length)
+        {
+            return null;
+        }
+        var index = new Dictionary<ResizablePanel, int>(old.Length);
+        for (var i = 0; i < old.Length; i++)
+        {
+            index.TryAdd(old[i], i);
+        }
+        var stays = new bool[old.Length];
+        var any = false;
+        foreach (var pane in next)
+        {
+            if (index.TryGetValue(pane, out var i))
+            {
+                stays[i] = true;
+                any = true;
+            }
+        }
+        if (!any)
+        {
+            return null;
+        }
+        // A settle in flight counts as finished: the panes start from where they were heading.
+        var px = new double[old.Length];
+        for (var i = 0; i < old.Length; i++)
+        {
+            px[i] = _collapsed[i] ? 0 : Math.Max(0, _hasGoals && _goals.Length == old.Length ? _goals[i] : _actual[i]);
+        }
+        var gained = new double[old.Length];
+        var gap = Gap;
+        var candidates = new List<int>(old.Length);
+        for (var i = 0; i < old.Length; i++)
+        {
+            if (stays[i])
+            {
+                continue;
+            }
+            candidates.Clear();
+            for (var j = i - 1; j >= 0; j--)
+            {
+                if (stays[j])
+                {
+                    candidates.Add(j);
+                    break;
+                }
+            }
+            for (var j = i + 1; j < old.Length; j++)
+            {
+                if (stays[j])
+                {
+                    candidates.Add(j);
+                    break;
+                }
+            }
+            candidates.RemoveAll(j => _collapsed[j]);
+            if (candidates.Count == 0)
+            {
+                for (var j = 0; j < old.Length; j++)
+                {
+                    if (stays[j] && !_collapsed[j])
+                    {
+                        candidates.Add(j);
+                    }
+                }
+            }
+            if (candidates.Count == 0)
+            {
+                continue;
+            }
+            var freed = px[i] + gap;
+            var total = 0.0;
+            foreach (var j in candidates)
+            {
+                total += px[j];
+            }
+            foreach (var j in candidates)
+            {
+                gained[j] += total > 0 ? freed * px[j] / total : freed / candidates.Count;
+            }
+        }
+        var count = next.Count;
+        var sizes = new double[count];
+        var collapsed = new bool[count];
+        var restore = new double?[count];
+        var known = new bool[count];
+        var openPx = 0.0;
+        var openDefault = 0.0;
+        var open = 0;
+        for (var k = 0; k < count; k++)
+        {
+            if (!index.TryGetValue(next[k], out var i))
+            {
+                continue;
+            }
+            known[k] = true;
+            collapsed[k] = _collapsed[i];
+            restore[k] = _restore[i];
+            sizes[k] = collapsed[k] ? 0 : px[i] + gained[i];
+            if (!collapsed[k])
+            {
+                openPx += sizes[k];
+                openDefault += Math.Max(0, next[k].DefaultSize);
+                open++;
+            }
+        }
+        var newDefaults = 0.0;
+        for (var k = 0; k < count; k++)
+        {
+            if (!known[k])
+            {
+                newDefaults += Math.Max(0, next[k].DefaultSize);
+            }
+        }
+        var room = Math.Max(0, _length - gap * Math.Max(0, count - 1));
+        for (var k = 0; k < count; k++)
+        {
+            if (known[k])
+            {
+                continue;
+            }
+            var pane = next[k];
+            collapsed[k] = pane.IsCollapsible && pane.IsCollapsed;
+            var wanted = Math.Max(0, pane.DefaultSize);
+            if (collapsed[k])
+            {
+                sizes[k] = 0;
+            }
+            else if (open > 0 && openDefault > 0)
+            {
+                sizes[k] = wanted / (openDefault / open) * (openPx / open);
+            }
+            else if (open > 0)
+            {
+                sizes[k] = openPx / open;
+            }
+            else
+            {
+                // Every staying pane is hidden: the new panes share the room by their defaults.
+                sizes[k] = newDefaults > 0 ? room * wanted / newDefaults : room / count;
+            }
+        }
+        return new Carried(sizes, collapsed, restore);
+    }
+
+    /// <summary>Distributes <paramref name="length"/> the way a layout pass would and records the result.</summary>
+    private void FitActual(double length)
+    {
+        var count = _panes.Count;
+        if (count == 0)
+        {
+            return;
+        }
+        _room = RoomFor(length);
+        Span<double> grow = stackalloc double[count];
+        Span<double> min = stackalloc double[count];
+        Span<double> max = stackalloc double[count];
+        Span<double> sizes = stackalloc double[count];
+        for (var i = 0; i < count; i++)
+        {
+            grow[i] = Math.Max(0, _sizes[i].Value);
+            var loose = _free[i] || _collapsed[i];
+            min[i] = loose ? 0 : MinOf(i);
+            max[i] = loose ? double.PositiveInfinity : MaxOf(i);
+        }
+        ResizablePanelsMath.Distribute(_room, grow, min, max, sizes);
+        sizes.CopyTo(_actual);
+    }
+
+    private void WriteSizes()
+    {
+        _writingSizes = true;
+        try
+        {
+            SetCurrentValue(SizesProperty, _shares);
+        }
+        finally
+        {
+            _writingSizes = false;
+        }
     }
 
     private double[] InitialSizes()
@@ -260,6 +533,41 @@ public class ResizablePanels : Control
         {
             AutomationProperties.SetName(this, Label);
         }
+        else if (change.Property == OrientationProperty)
+        {
+            if (_drag is { } drag)
+            {
+                _drag = null;
+                SetResizing(drag.Handle, false);
+                drag.Pointer.Capture(null);
+                Commit();
+            }
+            PseudoClasses.Set(VerticalPseudoClass, Orientation == Orientation.Vertical);
+            var axis = Axis;
+            foreach (var pane in _panes)
+            {
+                pane.Axis = axis;
+                pane.InvalidateMeasure();
+            }
+            foreach (var handle in _handles)
+            {
+                handle.RefreshCursor();
+                handle.InvalidateMeasure();
+                handle.InvalidateVisual();
+            }
+            _stale = true;
+            InvalidateMeasure();
+        }
+        else if (change.Property == GapProperty)
+        {
+            foreach (var handle in _handles)
+            {
+                handle.InvalidateMeasure();
+                handle.InvalidateVisual();
+            }
+            _stale = true;
+            InvalidateMeasure();
+        }
         else if (change.Property == SizesProperty && !_writingSizes && Sizes is { } sizes && sizes.Count == _panes.Count)
         {
             // Restoring a saved layout: the shares become flex factors, so they fit any width.
@@ -298,7 +606,7 @@ public class ResizablePanels : Control
 
     private double MaxOf(int index) => _panes[index].MaxSize is var max and > 0 ? max : double.PositiveInfinity;
 
-    private double RoomFor(double width) => Math.Max(0, width - Math.Max(0, _panes.Count - 1));
+    private double RoomFor(double length) => Math.Max(0, length - Gap * Math.Max(0, _panes.Count - 1));
 
     protected override Size MeasureOverride(Size availableSize)
     {
@@ -307,18 +615,23 @@ public class ResizablePanels : Control
         {
             return default;
         }
-        var width = double.IsInfinity(availableSize.Width) ? 0 : availableSize.Width;
-        var room = RoomFor(width);
+        var axis = Axis;
+        var available = axis.Main(availableSize);
+        var crossAvailable = axis.Cross(availableSize);
+        var length = double.IsInfinity(available) ? 0 : available;
+        var room = RoomFor(length);
         if (Math.Abs(room - _room) > 0.5)
         {
             // Only a group resize (or the first layout) puts the sizes out of step with the screen.
             _stale = true;
         }
         _room = room;
+        _length = length;
+        _laidOut |= length > 0;
         Span<double> grow = stackalloc double[count];
         Span<double> min = stackalloc double[count];
         Span<double> max = stackalloc double[count];
-        Span<double> widths = stackalloc double[count];
+        Span<double> sizes = stackalloc double[count];
         for (var i = 0; i < count; i++)
         {
             grow[i] = Math.Max(0, _sizes[i].Value);
@@ -326,38 +639,41 @@ public class ResizablePanels : Control
             min[i] = loose ? 0 : MinOf(i);
             max[i] = loose ? double.PositiveInfinity : MaxOf(i);
         }
-        ResizablePanelsMath.Distribute(room, grow, min, max, widths);
-        var height = 0.0;
+        ResizablePanelsMath.Distribute(room, grow, min, max, sizes);
+        var cross = 0.0;
         for (var i = 0; i < count; i++)
         {
-            _actual[i] = widths[i];
+            _actual[i] = sizes[i];
             var pane = _panes[i];
-            pane.ContentMinWidth = MinOf(i);
+            pane.ContentMin = MinOf(i);
             // Content fades as a pane is squeezed below its minimum, so a collapsing pane dissolves rather than crushes.
-            pane.Opacity = Math.Clamp(widths[i] / Math.Max(1, MinOf(i)), 0, 1);
-            pane.Measure(new Size(widths[i], availableSize.Height));
-            height = Math.Max(height, pane.DesiredSize.Height);
+            pane.Opacity = Math.Clamp(sizes[i] / Math.Max(1, MinOf(i)), 0, 1);
+            pane.Measure(axis.Size(sizes[i], crossAvailable));
+            cross = Math.Max(cross, axis.Cross(pane.DesiredSize));
         }
         foreach (var handle in _handles)
         {
-            handle.Measure(new Size(handle.ReachWidth, availableSize.Height));
+            handle.Measure(axis.Size(handle.ReachLength, crossAvailable));
         }
-        return new Size(width, double.IsInfinity(availableSize.Height) ? height : availableSize.Height);
+        return axis.Size(length, double.IsInfinity(crossAvailable) ? cross : crossAvailable);
     }
 
     protected override Size ArrangeOverride(Size finalSize)
     {
-        var x = 0.0;
+        var axis = Axis;
+        var cross = axis.Cross(finalSize);
+        var gap = Gap;
+        var position = 0.0;
         for (var i = 0; i < _panes.Count; i++)
         {
-            var w = _actual[i];
-            _panes[i].Arrange(new Rect(x, 0, w, finalSize.Height));
-            x += w;
+            var size = _actual[i];
+            _panes[i].Arrange(axis.Rect(position, 0, size, cross));
+            position += size;
             if (i < _handles.Count)
             {
                 var handle = _handles[i];
-                handle.Arrange(new Rect(x - handle.LineOffset, 0, handle.ReachWidth, finalSize.Height));
-                x += 1;
+                handle.Arrange(axis.Rect(position - handle.LineOffset, 0, handle.ReachLength, cross));
+                position += gap;
             }
         }
         return finalSize;
@@ -411,15 +727,7 @@ public class ResizablePanels : Control
         }
         _shares = ResizablePanelsMath.ToShares(values);
         _hasGoals = false;
-        _writingSizes = true;
-        try
-        {
-            SetCurrentValue(SizesProperty, _shares);
-        }
-        finally
-        {
-            _writingSizes = false;
-        }
+        WriteSizes();
         InvalidateMeasure();
         RaiseEvent(new ResizablePanelsLayoutChangedEventArgs(LayoutChangedEvent, _shares));
     }
@@ -796,7 +1104,27 @@ public class ResizablePanels : Control
             Glide(Pair(handle, drag.A0, drag.B0), MotionSpec.Spring(ArcSpring.Smooth));
             return true;
         }
-        if (_drag is not null || key is not (Key.Left or Key.Right or Key.Home or Key.End or Key.Enter))
+        if (_drag is not null)
+        {
+            return false;
+        }
+        // The arrows along the axis resize; the other pair is left to the app. Below, Left means "toward the start"
+        // (Up in a vertical group) and Right "toward the end" (Down).
+        var vertical = Orientation == Orientation.Vertical;
+        if (vertical)
+        {
+            if (key is Key.Left or Key.Right)
+            {
+                return false;
+            }
+            key = key switch
+            {
+                Key.Up => Key.Left,
+                Key.Down => Key.Right,
+                _ => key
+            };
+        }
+        if (key is not (Key.Left or Key.Right or Key.Home or Key.End or Key.Enter))
         {
             return false;
         }
@@ -920,6 +1248,9 @@ public class ResizablePanels : Control
         }
 
         protected override AutomationControlType GetAutomationControlTypeCore() => AutomationControlType.Group;
+
+        // Avalonia's peers have no orientation property; the item type carries the axis ("horizontal" / "vertical").
+        protected override string GetItemTypeCore() => ((ResizablePanels)Owner).Orientation == Orientation.Vertical ? "vertical" : "horizontal";
     }
 
     #endregion

@@ -91,6 +91,11 @@
         <source>Workflow</source>
       </segment>
     </unit>
+    <unit id="Category_Dock">
+      <segment>
+        <source>Dock</source>
+      </segment>
+    </unit>
     <unit id="Category_Content">
       <segment>
         <source>Extras</source>

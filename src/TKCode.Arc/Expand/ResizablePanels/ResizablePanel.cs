@@ -7,8 +7,8 @@ namespace TKCode.Arc;
 
 /// <summary>
 /// One pane of a <see cref="ResizablePanels"/> group. It carries the pane's configuration (label, default share,
-/// limits, collapsibility) and shows its content. Below its minimum the content keeps its minimum width, stays
-/// anchored to the moving edge and fades, so a closing pane slides away like a drawer instead of being crushed.
+/// limits, collapsibility) and shows its content. Below its minimum the content keeps its minimum size along the
+/// group's axis (width, or height in a vertical group), stays anchored to the moving edge and fades, so a closing pane slides away like a drawer instead of being crushed.
 /// </summary>
 public class ResizablePanel : ContentControl
 {
@@ -24,11 +24,11 @@ public class ResizablePanel : ContentControl
     public static readonly StyledProperty<double> DefaultSizeProperty =
         AvaloniaProperty.Register<ResizablePanel, double>(nameof(DefaultSize), 1);
 
-    /// <summary>Width in px where the pane starts to resist (Arc: 80). Its content never reflows below it.</summary>
+    /// <summary>Size in px where the pane starts to resist (Arc: 80): its width, or its height in a vertical group. Its content never reflows below it.</summary>
     public static readonly StyledProperty<double> MinSizeProperty =
         AvaloniaProperty.Register<ResizablePanel, double>(nameof(MinSize), ResizablePanelsMath.DefaultMin);
 
-    /// <summary>Maximum width in px (infinite by default).</summary>
+    /// <summary>Maximum size in px along the group's axis: width, or height in a vertical group (infinite by default).</summary>
     public static readonly StyledProperty<double> MaxSizeProperty =
         AvaloniaProperty.Register<ResizablePanel, double>(nameof(MaxSize), double.PositiveInfinity);
 
@@ -61,11 +61,14 @@ public class ResizablePanel : ContentControl
     /// <inheritdoc cref="IsCollapsedProperty"/>
     public bool IsCollapsed { get => GetValue(IsCollapsedProperty); set => SetValue(IsCollapsedProperty, value); }
 
-    /// <summary>Set by the group: the content keeps at least this width (the effective minimum).</summary>
-    internal double ContentMinWidth { get; set; }
+    /// <summary>Set by the group: the content keeps at least this size along the axis (the effective minimum).</summary>
+    internal double ContentMin { get; set; }
 
-    /// <summary>Set by the group: the first pane anchors its content to its trailing edge.</summary>
+    /// <summary>Set by the group: the first pane anchors its content to its trailing (or bottom) edge.</summary>
     internal bool AnchorEnd { get; set; }
+
+    /// <summary>Set by the group: the axis the pane is sized along.</summary>
+    internal ResizablePanelsAxis Axis { get; set; }
 
     /// <summary>Raised when a configuration property the group depends on changes.</summary>
     internal event Action<ResizablePanel, AvaloniaProperty>? ConfigChanged;
@@ -91,21 +94,24 @@ public class ResizablePanel : ContentControl
 
     protected override Size MeasureOverride(Size availableSize)
     {
-        var min = ContentMinWidth;
-        var width = double.IsInfinity(availableSize.Width) ? availableSize.Width : Math.Max(availableSize.Width, min);
-        var size = base.MeasureOverride(availableSize.WithWidth(width));
-        return new Size(Math.Min(size.Width, availableSize.Width), size.Height);
+        var axis = Axis;
+        var available = axis.Main(availableSize);
+        var main = double.IsInfinity(available) ? available : Math.Max(available, ContentMin);
+        var size = base.MeasureOverride(axis.Size(main, axis.Cross(availableSize)));
+        return axis.Size(Math.Min(axis.Main(size), available), axis.Cross(size));
     }
 
     protected override Size ArrangeOverride(Size finalSize)
     {
-        var width = Math.Max(finalSize.Width, ContentMinWidth);
-        var x = AnchorEnd ? finalSize.Width - width : 0;
+        var axis = Axis;
+        var length = axis.Main(finalSize);
+        var main = Math.Max(length, ContentMin);
+        var offset = AnchorEnd ? length - main : 0;
         foreach (var child in VisualChildren)
         {
             if (child is Avalonia.Layout.Layoutable layoutable)
             {
-                layoutable.Arrange(new Rect(x, 0, width, finalSize.Height));
+                layoutable.Arrange(axis.Rect(offset, 0, main, axis.Cross(finalSize)));
             }
         }
         return finalSize;

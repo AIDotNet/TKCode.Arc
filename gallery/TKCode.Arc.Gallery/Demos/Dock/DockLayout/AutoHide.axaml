@@ -1,0 +1,47 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.DockLayoutAutoHideDemo">
+    <!-- Explorer and Search are auto-hidden on the left, Terminal at the bottom. Click a strip button to slide a pane out,
+         click outside or press Escape to put it back, and pin it with the button in its header. Right-click a tab for
+         Auto hide, or press Shift+Escape inside a tool. -->
+    <arc:DockLayout Height="400" CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}">
+        <arc:DockLayout.Workspace>
+            <arc:DockWorkspace>
+                <arc:DockSplit Orientation="Horizontal">
+                    <arc:DockDocumentArea Size="72">
+                        <arc:DockGroup>
+                            <arc:DockPane Id="doc:orders" Title="Orders.cs" Icon="{x:Static arc:ArcIcons.FileCode}">
+                                <TextBlock Margin="16,8" FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}" FontSize="13" LineHeight="21"
+                                           Text="public sealed class OrderService&#10;{&#10;    public Task&lt;Order&gt; PlaceAsync(Cart cart) =&gt; ...&#10;}" />
+                            </arc:DockPane>
+                        </arc:DockGroup>
+                    </arc:DockDocumentArea>
+                    <arc:DockGroup Size="28">
+                        <arc:DockPane Id="properties" Title="Properties" Icon="{x:Static arc:ArcIcons.SlidersHorizontal}" PreferredSide="Right">
+                            <TextBlock Margin="14,6" Text="OrderService · class" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </arc:DockPane>
+                    </arc:DockGroup>
+                </arc:DockSplit>
+                <arc:DockWorkspace.LeftHidden>
+                    <arc:DockPane Id="explorer" Title="Explorer" Icon="{x:Static arc:ArcIcons.Folder}" PreferredSide="Left" PreferredSize="240">
+                        <StackPanel Margin="14,6" Spacing="8">
+                            <TextBlock Text="src/" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            <TextBlock Text="  Orders.cs" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            <TextBlock Text="  Cart.cs" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </StackPanel>
+                    </arc:DockPane>
+                    <arc:DockPane Id="search" Title="Search" Icon="{x:Static arc:ArcIcons.Search}" PreferredSide="Left" PreferredSize="240">
+                        <arc:Input Margin="12,4" Placeholder="Search files" />
+                    </arc:DockPane>
+                </arc:DockWorkspace.LeftHidden>
+                <arc:DockWorkspace.BottomHidden>
+                    <arc:DockPane Id="terminal" Title="Terminal" Icon="{x:Static arc:ArcIcons.Terminal}" PreferredSide="Bottom" PreferredSize="150">
+                        <TextBlock Margin="16,4" FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}" FontSize="13"
+                                   Text="$ dotnet test&#10;Passed! 42 tests in 1.8s" />
+                    </arc:DockPane>
+                </arc:DockWorkspace.BottomHidden>
+            </arc:DockWorkspace>
+        </arc:DockLayout.Workspace>
+    </arc:DockLayout>
+</UserControl>

@@ -103,6 +103,7 @@ public static class GalleryText
             "Charts" => GalleryShellLangResourceKind.Category_Charts,
             "AdvancedCharts" => GalleryShellLangResourceKind.Category_AdvancedCharts,
             "Workflow" => GalleryShellLangResourceKind.Category_Workflow,
+            "Dock" => GalleryShellLangResourceKind.Category_Dock,
             "Tables" => GalleryShellLangResourceKind.Category_Tables,
             "Activity" => GalleryShellLangResourceKind.Category_Activity,
             "Media" => GalleryShellLangResourceKind.Category_Media,

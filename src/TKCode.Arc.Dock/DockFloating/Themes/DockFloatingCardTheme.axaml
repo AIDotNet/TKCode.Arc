@@ -1,0 +1,105 @@
+<!--
+    A floating card (design/components/dock/dock.md sections 5.5 and 7): the popup surface (SurfaceRaised, floating shadow,
+    RadiusStep12) with a title bar (title, Dock, Close) over the float's tree and a resize grip in the bottom-right corner.
+-->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.DockFloatingCardTheme">
+    <ControlTheme x:Key="DockFloatingCardButtonTheme" TargetType="Button">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="Button">
+                <Border Background="{TemplateBinding Background}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                    <ContentPresenter Content="{TemplateBinding Content}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Width" Value="{arc:DockGroupViewTokenResource ActionSize}" />
+        <Setter Property="Height" Value="{arc:DockGroupViewTokenResource ActionSize}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep8}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:DockFloatingCard}" TargetType="arc:DockFloatingCard">
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Padding" Value="{arc:DockFloatingWindowTokenResource CardContentPadding}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:DockFloatingCard">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}">
+                    <DockPanel>
+                        <Grid Name="PART_TitleBar"
+                              DockPanel.Dock="Top"
+                              Height="{arc:DockFloatingWindowTokenResource CardTitleHeight}"
+                              Background="Transparent"
+                              Cursor="SizeAll"
+                              ColumnDefinitions="*,Auto,Auto"
+                              Margin="12,0,4,0">
+                            <TextBlock Text="{TemplateBinding Title}"
+                                       VerticalAlignment="Center"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       TextTrimming="CharacterEllipsis"
+                                       IsHitTestVisible="False" />
+                            <Button Name="PART_Dock"
+                                    Grid.Column="1"
+                                    Theme="{StaticResource DockFloatingCardButtonTheme}">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.PanelLeft}" Size="{arc:DockGroupViewTokenResource ActionGlyphSize}" />
+                            </Button>
+                            <Button Name="PART_Close"
+                                    Grid.Column="2"
+                                    Theme="{StaticResource DockFloatingCardButtonTheme}">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}" Size="{arc:DockGroupViewTokenResource ActionGlyphSize}" />
+                            </Button>
+                        </Grid>
+                        <Panel>
+                            <ContentPresenter Name="PART_ContentPresenter"
+                                              Content="{TemplateBinding Content}"
+                                              Margin="{TemplateBinding Padding}" />
+                            <Border Name="PART_Grip"
+                                    Width="{arc:DockFloatingWindowTokenResource CardGripSize}"
+                                    Height="{arc:DockFloatingWindowTokenResource CardGripSize}"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Bottom"
+                                    Background="Transparent"
+                                    Cursor="BottomRightCorner" />
+                        </Panel>
+                    </DockPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

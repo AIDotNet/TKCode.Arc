@@ -79,6 +79,12 @@ public static partial class GalleryCatalog
                 "Show a workflow on a dotted canvas and play its runs: each step lights up in turn, the data draws along the edges, and every step reports its result and time.",
                 IsArc: false, AddedOn: "2026-10-24"),
         ], IsArc: false),
+        new("Dock", "Dock", "停靠布局",
+        [
+            new("DockLayout", "Dock layout", "dock-layout", 0,
+                "An IDE-style layout of tabbed panes in nested, resizable splits around a document area, with commands to move and dock panes, keyboard control, and layouts saved to JSON.",
+                IsArc: false, AddedOn: "2026-11-05"),
+        ], IsArc: false),
         new("Content", "Extras", "扩展",
         [
             new("Markdown", "Markdown", "markdown", 0,
@@ -286,10 +292,13 @@ public static partial class GalleryCatalog
     /// <summary>The workflow group (TKCode.Arc.Workflow); listed after Advanced charts, not part of the 112 Arc components.</summary>
     public static GalleryCategory Workflow => Extras[1];
 
-    /// <summary>The Components section of the sidebar: Arc's groups with Advanced charts and Workflow after Charts, then the other extras.</summary>
+    /// <summary>The dock group (TKCode.Arc.Dock); listed after Workflow, not part of the 112 Arc components.</summary>
+    public static GalleryCategory Dock => Extras[2];
+
+    /// <summary>The Components section of the sidebar: Arc's groups with Advanced charts, Workflow and Dock after Charts, then the other extras.</summary>
     public static IEnumerable<GalleryCategory> AllCategories =>
-        Categories.SelectMany(c => c.Code == "Charts" ? new[] { c, AdvancedCharts, Workflow } : new[] { c })
-                  .Concat(Extras.Where(e => !ReferenceEquals(e, AdvancedCharts) && !ReferenceEquals(e, Workflow)));
+        Categories.SelectMany(c => c.Code == "Charts" ? new[] { c, AdvancedCharts, Workflow, Dock } : new[] { c })
+                  .Concat(Extras.Where(e => !ReferenceEquals(e, AdvancedCharts) && !ReferenceEquals(e, Workflow) && !ReferenceEquals(e, Dock)));
 
     /// <summary>Every entry the gallery lists: the Docs, Components, Blocks and Special components sections.</summary>
     public static IEnumerable<GalleryEntry> AllEntries =>
