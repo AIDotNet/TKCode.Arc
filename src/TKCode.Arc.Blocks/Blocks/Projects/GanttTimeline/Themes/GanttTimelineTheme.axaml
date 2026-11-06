@@ -1,0 +1,157 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.GanttTimelineTheme">
+
+    <!-- The drawing surface: every brush from the ArcDesign tokens, sizes from the control token. -->
+    <ControlTheme x:Key="{x:Type arc:GanttChart}" TargetType="arc:GanttChart">
+        <Setter Property="HeaderHeight" Value="{arc:GanttTimelineTokenResource HeaderHeight}" />
+        <Setter Property="BarHeight" Value="{arc:GanttTimelineTokenResource BarHeight}" />
+        <Setter Property="BarRadius" Value="{arc:GanttTimelineTokenResource BarRadius}" />
+        <Setter Property="TaskColumnWidth" Value="{arc:GanttTimelineTokenResource TaskColumnWidth}" />
+        <Setter Property="NarrowTaskColumnWidth" Value="{arc:GanttTimelineTokenResource NarrowTaskColumnWidth}" />
+        <Setter Property="SurfaceBrush" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="TextBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="MutedBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="GridBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="WeekendBrush" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="BarBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BarFillBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="SummaryBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="ArrowBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="ConflictBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+        <Setter Property="TodayBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="TodayTextBrush" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="FocusBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+    </ControlTheme>
+
+    <!-- Zoom switch button: quiet text; the checked one is a raised pill. -->
+    <ControlTheme x:Key="GanttSwitchButtonTheme" TargetType="ToggleButton">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Height" Value="{arc:GanttTimelineTokenResource SwitchButtonHeight}" />
+        <Setter Property="Padding" Value="{arc:GanttTimelineTokenResource SwitchButtonPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="ToggleButton">
+                <Border Name="PART_Frame"
+                        Background="Transparent"
+                        CornerRadius="{arc:GanttTimelineTokenResource SwitchButtonRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <ContentPresenter Content="{TemplateBinding Content}"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:checked /template/ Border#PART_Frame">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowResting}" />
+        </Style>
+        <Style Selector="^:checked">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_Frame">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource FocusEdgeThickness}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- Today / Undo / Reset: an outlined pill; hover fills SurfaceMuted; disabled fades. -->
+    <ControlTheme x:Key="GanttPillButtonTheme" TargetType="Button">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Height" Value="{arc:GanttTimelineTokenResource PillHeight}" />
+        <Setter Property="Padding" Value="{arc:GanttTimelineTokenResource PillPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="Button">
+                <Border Name="PART_Frame"
+                        Background="Transparent"
+                        BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                        BorderThickness="1"
+                        CornerRadius="{arc:GanttTimelineTokenResource PillRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <ContentPresenter Content="{TemplateBinding Content}"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover /template/ Border#PART_Frame">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{arc:GanttTimelineTokenResource DisabledOpacity}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_Frame">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:GanttTimeline}" TargetType="arc:GanttTimeline">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="Padding" Value="{arc:GanttTimelineTokenResource RootPadding}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:GanttTimeline">
+                <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="{arc:GanttTimelineTokenResource SectionGap}">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                                <TextBlock Text="{TemplateBinding Title}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           VerticalAlignment="Center" />
+                                <TextBlock Name="PART_Subtitle"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                           VerticalAlignment="Center" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="{arc:GanttTimelineTokenResource ToolbarGap}">
+                                <Border Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                        CornerRadius="{arc:GanttTimelineTokenResource SwitchRadius}"
+                                        Padding="{arc:GanttTimelineTokenResource SwitchPadding}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <ToggleButton Name="PART_Day" Content="Day" Theme="{StaticResource GanttSwitchButtonTheme}" />
+                                        <ToggleButton Name="PART_Week" Content="Week" Theme="{StaticResource GanttSwitchButtonTheme}" />
+                                        <ToggleButton Name="PART_Month" Content="Month" Theme="{StaticResource GanttSwitchButtonTheme}" />
+                                    </StackPanel>
+                                </Border>
+                                <Button Name="PART_Today" Content="Today" Theme="{StaticResource GanttPillButtonTheme}" />
+                            </StackPanel>
+                        </Grid>
+                        <Border Grid.Row="1"
+                                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                BorderThickness="1"
+                                CornerRadius="{arc:GanttTimelineTokenResource FrameRadius}"
+                                ClipToBounds="True"
+                                MinHeight="{arc:GanttTimelineTokenResource DefaultChartHeight}">
+                            <arc:GanttChart Name="PART_Chart" />
+                        </Border>
+                        <Grid Grid.Row="2" ColumnDefinitions="*,Auto">
+                            <TextBlock Name="PART_Status"
+                                       Text="Drag a bar to move it, or its edges to change dates"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                       VerticalAlignment="Center"
+                                       TextTrimming="CharacterEllipsis"
+                                       AutomationProperties.LiveSetting="Polite" />
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                                <Button Name="PART_Undo" Content="Undo" IsEnabled="False" Theme="{StaticResource GanttPillButtonTheme}" />
+                                <Button Name="PART_Reset" Content="Reset" IsEnabled="False" Theme="{StaticResource GanttPillButtonTheme}" />
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

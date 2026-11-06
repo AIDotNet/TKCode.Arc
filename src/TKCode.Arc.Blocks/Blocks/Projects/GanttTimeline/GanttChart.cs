@@ -1,0 +1,302 @@
+using System.Globalization;
+using Avalonia;
+using Avalonia.Automation.Peers;
+using Avalonia.Controls;
+using Avalonia.Controls.Documents;
+using Avalonia.Input;
+using Avalonia.Media;
+using Avalonia.Threading;
+using TKCode.Arc.Motion;
+
+namespace TKCode.Arc;
+
+/// <summary>
+/// The drawing surface of <see cref="GanttTimeline"/>: the sticky task column, the two-tier calendar header, the grid,
+/// the bars, the phase summaries and the dependency arrows, all drawn in <see cref="Render"/> and driven by a few motion
+/// values (day width, row layout, release spring) so everything moves together. Pointer and keyboard editing live here.
+/// </summary>
+internal sealed partial class GanttChart : Control
+{
+    public static readonly StyledProperty<double> TaskColumnWidthProperty = AvaloniaProperty.Register<GanttChart, double>(nameof(TaskColumnWidth), 248);
+    public static readonly StyledProperty<double> NarrowTaskColumnWidthProperty = AvaloniaProperty.Register<GanttChart, double>(nameof(NarrowTaskColumnWidth), 132);
+    public static readonly StyledProperty<double> HeaderHeightProperty = AvaloniaProperty.Register<GanttChart, double>(nameof(HeaderHeight), 56);
+    public static readonly StyledProperty<double> BarHeightProperty = AvaloniaProperty.Register<GanttChart, double>(nameof(BarHeight), 24);
+    public static readonly StyledProperty<double> BarRadiusProperty = AvaloniaProperty.Register<GanttChart, double>(nameof(BarRadius), 8);
+    public static readonly StyledProperty<IBrush?> SurfaceBrushProperty = AvaloniaProperty.Register<GanttChart, IBrush?>(nameof(SurfaceBrush));
+    public static readonly StyledProperty<IBrush?> TextBrushProperty = AvaloniaProperty.Register<GanttChart, IBrush?>(nameof(TextBrush));
+    public static readonly StyledProperty<IBrush?> MutedBrushProperty = AvaloniaProperty.Register<GanttChart, IBrush?>(nameof(MutedBrush));
+    public static readonly StyledProperty<IBrush?> GridBrushProperty = AvaloniaProperty.Register<GanttChart, IBrush?>(nameof(GridBrush));
+    public static readonly StyledProperty<IBrush?> WeekendBrushProperty = AvaloniaProperty.Register<GanttChart, IBrush?>(nameof(WeekendBrush));
+    public static readonly StyledProperty<IBrush?> BarBrushProperty = AvaloniaProperty.Register<GanttChart, IBrush?>(nameof(BarBrush));
+    public static readonly StyledProperty<IBrush?> BarFillBrushProperty = AvaloniaProperty.Register<GanttChart, IBrush?>(nameof(BarFillBrush));
+    public static readonly StyledProperty<IBrush?> SummaryBrushProperty = AvaloniaProperty.Register<GanttChart, IBrush?>(nameof(SummaryBrush));
+    public static readonly StyledProperty<IBrush?> ArrowBrushProperty = AvaloniaProperty.Register<GanttChart, IBrush?>(nameof(ArrowBrush));
+    public static readonly StyledProperty<IBrush?> ConflictBrushProperty = AvaloniaProperty.Register<GanttChart, IBrush?>(nameof(ConflictBrush));
+    public static readonly StyledProperty<IBrush?> TodayBrushProperty = AvaloniaProperty.Register<GanttChart, IBrush?>(nameof(TodayBrush));
+    public static readonly StyledProperty<IBrush?> TodayTextBrushProperty = AvaloniaProperty.Register<GanttChart, IBrush?>(nameof(TodayTextBrush));
+    public static readonly StyledProperty<IBrush?> FocusBrushProperty = AvaloniaProperty.Register<GanttChart, IBrush?>(nameof(FocusBrush));
+
+    private readonly Dictionary<string, FormattedText> _textCache = [];
+    private readonly MotionValue<double> _dayWidth;
+    private readonly MotionValue<double> _layoutT;
+    private readonly MotionValue<double> _release;
+    private GanttModel _model = new([], [], new HashSet<string>());
+    private GanttZoom _zoom = GanttZoom.Week;
+    private DateOnly _today = DateOnly.FromDateTime(DateTime.Today);
+    private DateOnly _first;
+    private DateOnly _last;
+    private double _scrollX;
+    private double _scrollY;
+    private string? _selectedId;
+    private string? _focusId;
+    private Dictionary<string, Snapshot> _before = [];
+    private bool _jumpNext = true;
+    private bool _viewportReady;
+    private double _anchorDays;
+    private bool _zooming;
+
+    private readonly record struct Snapshot(double Y, double X0, double X1, bool Present);
+
+    static GanttChart()
+    {
+        AffectsRender<GanttChart>(SurfaceBrushProperty, TextBrushProperty, MutedBrushProperty, GridBrushProperty, WeekendBrushProperty,
+            BarBrushProperty, BarFillBrushProperty, SummaryBrushProperty, ArrowBrushProperty, ConflictBrushProperty, TodayBrushProperty,
+            TodayTextBrushProperty, FocusBrushProperty, BarHeightProperty, BarRadiusProperty, HeaderHeightProperty);
+        AffectsMeasure<GanttChart>(HeaderHeightProperty);
+        FocusableProperty.OverrideDefaultValue<GanttChart>(true);
+        ClipToBoundsProperty.OverrideDefaultValue<GanttChart>(true);
+    }
+
+    public GanttChart()
+    {
+        _dayWidth = new MotionValue<double>(this, GanttModel.DayWidth(_zoom), MotionVectors.Double);
+        _dayWidth.Changed += _ => OnScaleFrame();
+        _layoutT = new MotionValue<double>(this, 1, MotionVectors.Double);
+        _layoutT.Changed += _ => InvalidateVisual();
+        _release = new MotionValue<double>(this, 0, MotionVectors.Double);
+        _release.Changed += _ => InvalidateVisual();
+    }
+
+    public double TaskColumnWidth { get => GetValue(TaskColumnWidthProperty); set => SetValue(TaskColumnWidthProperty, value); }
+    public double NarrowTaskColumnWidth { get => GetValue(NarrowTaskColumnWidthProperty); set => SetValue(NarrowTaskColumnWidthProperty, value); }
+    public double HeaderHeight { get => GetValue(HeaderHeightProperty); set => SetValue(HeaderHeightProperty, value); }
+    public double BarHeight { get => GetValue(BarHeightProperty); set => SetValue(BarHeightProperty, value); }
+    public double BarRadius { get => GetValue(BarRadiusProperty); set => SetValue(BarRadiusProperty, value); }
+    public IBrush? SurfaceBrush { get => GetValue(SurfaceBrushProperty); set => SetValue(SurfaceBrushProperty, value); }
+    public IBrush? TextBrush { get => GetValue(TextBrushProperty); set => SetValue(TextBrushProperty, value); }
+    public IBrush? MutedBrush { get => GetValue(MutedBrushProperty); set => SetValue(MutedBrushProperty, value); }
+    public IBrush? GridBrush { get => GetValue(GridBrushProperty); set => SetValue(GridBrushProperty, value); }
+    public IBrush? WeekendBrush { get => GetValue(WeekendBrushProperty); set => SetValue(WeekendBrushProperty, value); }
+    public IBrush? BarBrush { get => GetValue(BarBrushProperty); set => SetValue(BarBrushProperty, value); }
+    public IBrush? BarFillBrush { get => GetValue(BarFillBrushProperty); set => SetValue(BarFillBrushProperty, value); }
+    public IBrush? SummaryBrush { get => GetValue(SummaryBrushProperty); set => SetValue(SummaryBrushProperty, value); }
+    public IBrush? ArrowBrush { get => GetValue(ArrowBrushProperty); set => SetValue(ArrowBrushProperty, value); }
+    public IBrush? ConflictBrush { get => GetValue(ConflictBrushProperty); set => SetValue(ConflictBrushProperty, value); }
+    public IBrush? TodayBrush { get => GetValue(TodayBrushProperty); set => SetValue(TodayBrushProperty, value); }
+    public IBrush? TodayTextBrush { get => GetValue(TodayTextBrushProperty); set => SetValue(TodayTextBrushProperty, value); }
+    public IBrush? FocusBrush { get => GetValue(FocusBrushProperty); set => SetValue(FocusBrushProperty, value); }
+
+    /// <summary>Raised when an edit commits (drag release or keyboard step).</summary>
+    public event Action<GanttTask, DateOnly, DateOnly, GanttChangeKind>? Edited;
+
+    /// <summary>Raised when a phase row is toggled.</summary>
+    public event Action<string>? GroupToggled;
+
+    /// <summary>Raised with a sentence for the status line.</summary>
+    public event Action<string>? Announce;
+
+    public GanttModel Model => _model;
+
+    public DateOnly Today => _today;
+
+    internal bool IsReduced => ArcMotion.GetEffectiveLevel(this) != ArcMotionLevel.Full;
+
+    private double ColumnWidth => Bounds.Width < 560 + 0 ? NarrowTaskColumnWidth : TaskColumnWidth;
+
+    private double DayPx => _dayWidth.Value;
+
+    private double ViewWidth => Math.Max(0, Bounds.Width - ColumnWidth);
+
+    private double ContentWidth => ((_last.DayNumber - _first.DayNumber) + 1) * DayPx;
+
+    private double ContentHeight => _model.Rows.Count * GanttModel.RowHeight;
+
+    private double XOf(DateOnly d) => (d.DayNumber - _first.DayNumber) * DayPx;
+
+    /// <summary>Replaces the data; the change from the old layout is animated unless <paramref name="animate"/> is false.</summary>
+    public void SetData(GanttModel model, DateOnly today, bool animate)
+    {
+        var firstTime = _model.Rows.Count == 0;
+        _before = Capture();
+        _model = model;
+        _today = today;
+        var (first, last) = model.Range(today);
+        if (firstTime || first != _first || last != _last)
+        {
+            var shift = firstTime ? 0 : (_first.DayNumber - first.DayNumber) * DayPx;
+            _first = first;
+            _last = last;
+            _scrollX += shift;
+        }
+        if (_focusId is null || !model.ById.ContainsKey(_focusId))
+        {
+            _focusId = model.VisibleTasks().FirstOrDefault()?.Id;
+        }
+        if (_selectedId is not null && !model.ById.ContainsKey(_selectedId))
+        {
+            _selectedId = null;
+        }
+        ClampScroll();
+        if (animate && !firstTime && !IsReduced)
+        {
+            _layoutT.Jump(0);
+            _ = _layoutT.AnimateTo(1, MotionSpec.Spring(ProjectsSprings.Card));
+        }
+        else
+        {
+            _layoutT.Jump(1);
+        }
+        if (firstTime)
+        {
+            _jumpNext = true;
+        }
+        InvalidateVisual();
+    }
+
+    public void SetZoom(GanttZoom zoom, bool animate)
+    {
+        if (zoom == _zoom)
+        {
+            return;
+        }
+        _zoom = zoom;
+        _anchorDays = DayPx > 0 ? (_scrollX + ViewWidth / 2) / DayPx : 0;
+        var target = GanttModel.DayWidth(zoom);
+        _zooming = true;
+        if (animate && !IsReduced)
+        {
+            _ = _dayWidth.AnimateTo(target, MotionSpec.Spring(ProjectsSprings.CssSpring)).ContinueWith(_ => Dispatcher.UIThread.Post(() => _zooming = false));
+        }
+        else
+        {
+            _dayWidth.Jump(target);
+            OnScaleFrame();
+            _zooming = false;
+        }
+    }
+
+    public void ScrollToToday(bool animate)
+    {
+        var target = XOf(_today) + DayPx / 2 - ViewWidth / 2;
+        _scrollX = Math.Clamp(target, 0, Math.Max(0, ContentWidth - ViewWidth));
+        InvalidateVisual();
+    }
+
+    public void SetCollapsedChanged() => InvalidateVisual();
+
+    private void OnScaleFrame()
+    {
+        if (_zooming && ViewWidth > 0)
+        {
+            _scrollX = _anchorDays * DayPx - ViewWidth / 2;
+        }
+        ClampScroll();
+        InvalidateVisual();
+    }
+
+    private void ClampScroll()
+    {
+        _scrollX = Math.Clamp(_scrollX, 0, Math.Max(0, ContentWidth - ViewWidth));
+        _scrollY = Math.Clamp(_scrollY, 0, Math.Max(0, ContentHeight - (Bounds.Height - HeaderHeight)));
+    }
+
+    protected override void OnSizeChanged(SizeChangedEventArgs e)
+    {
+        base.OnSizeChanged(e);
+        if (!_viewportReady && Bounds.Width > 0)
+        {
+            _viewportReady = true;
+            ScrollToToday(false);
+        }
+        ClampScroll();
+    }
+
+    protected override Size MeasureOverride(Size availableSize)
+    {
+        var w = double.IsInfinity(availableSize.Width) ? 640 : availableSize.Width;
+        var h = double.IsInfinity(availableSize.Height) ? HeaderHeight + ContentHeight : availableSize.Height;
+        return new Size(w, h);
+    }
+
+    private Dictionary<string, Snapshot> Capture()
+    {
+        var map = new Dictionary<string, Snapshot>();
+        var t = _layoutT.Value;
+        var y = 0.0;
+        foreach (var row in _model.Rows)
+        {
+            var id = RowId(row);
+            var x0 = 0.0;
+            var x1 = 0.0;
+            if (row.Task is { } task)
+            {
+                x0 = XOf(task.Start);
+                x1 = XOf(task.IsMilestone ? task.Start : task.End.AddDays(1));
+            }
+            map[id] = new Snapshot(y, x0, x1, true);
+            y += GanttModel.RowHeight;
+        }
+        _ = t;
+        return map;
+    }
+
+    private static string RowId(GanttRow row) => row.Task is { } t ? "t:" + t.Id : "g:" + row.Group!.Id;
+
+    protected override AutomationPeer OnCreateAutomationPeer() => new GanttChartPeer(this);
+
+    private FormattedText Text(string text, double size, IBrush? brush, FontWeight weight = FontWeight.Normal, double maxWidth = double.PositiveInfinity)
+    {
+        var family = TextElement.GetFontFamily(this);
+        var key = $"{text}|{size}|{(int)weight}|{maxWidth:F0}|{brush?.GetHashCode()}";
+        if (_textCache.TryGetValue(key, out var cached))
+        {
+            return cached;
+        }
+        if (_textCache.Count > 600)
+        {
+            _textCache.Clear();
+        }
+        var ft = new FormattedText(text, CultureInfo.CurrentUICulture, FlowDirection.LeftToRight, new Typeface(family, FontStyle.Normal, weight), size, brush)
+        {
+            MaxLineCount = 1,
+            Trimming = TextTrimming.CharacterEllipsis,
+        };
+        if (!double.IsInfinity(maxWidth))
+        {
+            ft.MaxTextWidth = Math.Max(1, maxWidth);
+        }
+        _textCache[key] = ft;
+        return ft;
+    }
+
+    private static string AvatarKey(ProjectPerson p) => string.IsNullOrEmpty(p.Key) ? p.Name : p.Key;
+
+    private static IBrush AvatarBrush(ProjectPerson p)
+    {
+        var key = AvatarKey(p);
+        var hash = 17;
+        foreach (var c in key)
+        {
+            hash = unchecked(hash * 31 + c);
+        }
+        var hue = p.Hue ?? Math.Abs(hash % 360);
+        var a = new HslColor(1, hue, 0.72, 0.58).ToRgb();
+        var b = new HslColor(1, (hue + 70) % 360, 0.78, 0.62).ToRgb();
+        return new LinearGradientBrush
+        {
+            StartPoint = new RelativePoint(0, 0, RelativeUnit.Relative),
+            EndPoint = new RelativePoint(1, 1, RelativeUnit.Relative),
+            GradientStops = { new GradientStop(a, 0), new GradientStop(b, 1) },
+        };
+    }
+}
