@@ -8,6 +8,20 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native` and `TKCode.Arc.Audio.Browser`.
 
+## 0.4.0-preview.3 - 2026-11-06
+
+GanttTimeline for planning projects, `Sidebar` rows built from your own data, and fixes for the markup extensions and the ArcWindow demos.
+
+### Added
+
+- **GanttTimeline** (Blocks › Projects): a project timeline of phases and tasks on a calendar. Drag a bar to move it or an end to resize it (snapping to whole days, with undo and reset), dependency arrows turn red when a task starts before one it depends on has ended, phases fold into one summary bar, `Zoom` switches between day, week and month, and a today line marks where the plan stands. Edits are reported through `TasksChanged`. Keyboard: arrows move between bars, Alt+arrows move a task, Alt+Shift+arrows change its end. Bars spring to their snapped day; reduced motion jumps instead.
+- **Sidebar `ItemsSource`**: builds the rows from your own data (a permission list, a menu the server returns) and follows it when it changes. `LabelMember`, `KeyMember`, `IconMember`, `BadgeMember`, `IsEnabledMember` and `ChildrenMember` map the fields, `TrailingTemplate` draws extra content at the end of a row with your object as `DataContext`, and your object is kept in `SidebarItem.Tag`. `SidebarItem` subclasses in `ItemsSource` are used as they are.
+
+### Fixed
+
+- **Markup extensions**: the generated token and text extensions (`ArcDesignTokenResource` and the localized text extensions) return `object` from `ProvideValue`, so they resolve in every property type.
+- **Gallery**: the ArcWindow demos clip their title bar preview inside the rounded border instead of on the border itself.
+
 ## 0.4.0-preview.2 - 2026-11-06
 
 A Dock layout in the new package `TKCode.Arc.Dock`, `ArcWindow` with an Arc title bar, vertical `ResizablePanels`, lighter controls and fixes for popups inside popups and for the base theme (issues #35, #38, #39 and #40).
@@ -794,6 +808,7 @@ ArcTheme.Apply(t => t
 
 First preview release.
 
+[0.4.0-preview.3]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.4.0-preview.2...v0.4.0-preview.3
 [0.4.0-preview.2]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.4.0-preview.1...v0.4.0-preview.2
 [0.4.0-preview.1]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.2-preview.2...v0.4.0-preview.1
 [0.3.2-preview.2]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.2-preview.1...v0.3.2-preview.2

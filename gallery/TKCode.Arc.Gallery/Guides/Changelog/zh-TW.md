@@ -1,6 +1,6 @@
 ---
 title: 更新日誌
-source-hash: 36a2e58f342b
+source-hash: 9ec115b4538b
 ---
 
 # 更新日誌
@@ -8,6 +8,20 @@ source-hash: 36a2e58f342b
 TKCode.Arc 的所有重要變更，最新的在前。版本遵循[語意化版本](https://semver.org/)。版本帶有 `-preview` 後綴期間，API 在各發行版本之間仍可能變動；升級前請閱讀說明，並在專案中固定版本號。同一份清單也保存在儲存庫的 `CHANGELOG.md` 中。
 
 每次發行附帶的 NuGet 套件：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Foundation`（0.3.2 起）、`TKCode.Arc.Fonts` 、`TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 、`TKCode.Arc.Special`、`TKCode.Arc.Workflow`、`TKCode.Arc.Dock`（0.4.0-preview.2 起）、`TKCode.Arc.Themes.Pixel`、`TKCode.Arc.Themes.Corners`、`TKCode.Arc.Mobile`、`TKCode.Arc.Terminal`、`TKCode.Arc.Audio`、`TKCode.Arc.Audio.Native` 與 `TKCode.Arc.Audio.Browser`。
+
+## 0.4.0-preview.3（2026-11-06）
+
+新增用於規劃專案的 GanttTimeline、由自有資料產生列的 `Sidebar` `ItemsSource`，並修正標記延伸與 ArcWindow 範例的問題。
+
+### 新增
+
+- **GanttTimeline**（Blocks › Projects）：在日曆上排列階段與任務的專案時間線。拖曳長條可移動，拖曳兩端可調整日期（依整天吸附，支援復原與重設）；任務早於其相依任務結束時，相依箭頭變紅；階段可摺疊為一條彙總條；`Zoom` 在日、週、月之間切換；今日線標出計畫進度。編輯透過 `TasksChanged` 回報。鍵盤：方向鍵在長條間移動，Alt+方向鍵移動任務，Alt+Shift+方向鍵調整結束日期。長條以彈簧動畫落到吸附的日期；減少動態時直接跳轉。
+- **Sidebar `ItemsSource`**：用自有資料產生列（權限清單、伺服器回傳的選單），資料變動時隨之更新。`LabelMember`、`KeyMember`、`IconMember`、`BadgeMember`、`IsEnabledMember` 與 `ChildrenMember` 對應欄位，`TrailingTemplate` 在列尾繪製額外內容（`DataContext` 為你的物件），你的物件保存在 `SidebarItem.Tag` 中。`ItemsSource` 中的 `SidebarItem` 子類別原樣使用。
+
+### 修正
+
+- **標記延伸**：產生的權杖與文字延伸（`ArcDesignTokenResource` 及在地化文字延伸）的 `ProvideValue` 回傳 `object`，可用於任何屬性型別。
+- **Gallery**：ArcWindow 範例把標題列預覽裁切在圓角邊框內部，而不是邊框本身。
 
 ## 0.4.0-preview.2（2026-11-06）
 
