@@ -45,7 +45,7 @@ namespace Demo.Controls.DesignTokens
         public DemoDesignTokenKind Kind { get; set; }
 
         /// <summary>Returns a dynamic resource binding to the token's key (local priority, see <c>ArcResourceReference</c>).</summary>
-        public global::Avalonia.Data.BindingBase ProvideValue(global::System.IServiceProvider serviceProvider)
+        public object ProvideValue(global::System.IServiceProvider serviceProvider)
             => global::TKCode.Arc.ArcResourceReference.Create(DemoDesignTokens.Key(Kind), serviceProvider);
     }
 

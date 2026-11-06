@@ -22008,6 +22008,14 @@
         <source>The app's main navigation (an original TKCode design): a header for a logo or a workspace switcher, an optional filter box, sections of pages with icons, counts and one level of nested pages, and a footer for the signed-in user. The selected page carries a muted block behind it and an accent-colored icon; the block glides between rows on a snappy spring. Parents open their pages with a height spring and a turning chevron. The sidebar collapses to a 64px icon rail on a width spring: labels and counts fade, counts become dots, every page gets a tooltip on the right and a parent shows its pages in a menu. Keyboard (WAI-ARIA tree model): the list is one tab stop; ↑ / ↓, Home / End move, → opens a parent or enters it, ← closes it or goes back to the parent, Enter / Space choose, typing jumps to a page by its first letters, and Cmd / Ctrl+B collapses or expands the sidebar while focus is inside it.</source>
         <target>应用的主导航（TKCode 原创设计）：顶部区域放徽标或工作区切换器，下面是可选的筛选框，然后是分区的页面（带图标和计数，并支持一层嵌套页面），底部区域显示已登录的用户。选中的页面背后有一块柔和色块，图标变为强调色，色块以轻快的弹簧动画在各行之间滑动；父级页面通过高度弹簧动画展开子页面，并带有旋转的 V 形箭头。侧边栏通过宽度弹簧动画收起为 64px 的图标窄栏：文字和计数淡出，计数变为圆点，每个页面在右侧显示工具提示，父级页面则以菜单形式显示其子页面。键盘操作（WAI-ARIA 树形模型）：列表只占一个 Tab 停靠点；↑ / ↓、Home / End 移动焦点，→ 展开父级或进入其中，← 收起或返回父级，Enter / Space 选择，输入字母可按页面首字母跳转，焦点在侧边栏内时 Cmd / Ctrl+B 可收起或展开侧边栏。</target>
       </trans-unit>
+      <trans-unit id="Sidebar.BadgeMember">
+        <source>The property path of an item's badge text.</source>
+        <target>项目徽标文本的属性路径。</target>
+      </trans-unit>
+      <trans-unit id="Sidebar.ChildrenMember">
+        <source>The property path of an item's child items (a collection of the same kind of data).</source>
+        <target>项目子项的属性路径（同类数据的集合）。</target>
+      </trans-unit>
       <trans-unit id="Sidebar.CollapseButtonPlacement">
         <source>Where the collapse button sits while the sidebar is open: in the header row (default) or beside the filter box. On the rail it always sits at the top.</source>
         <target>侧边栏展开时收起按钮的位置：头部行（默认）或筛选框旁边。在窄栏上它总是位于顶部。</target>
@@ -22036,6 +22044,10 @@
         <source>Content at the top (a logo and title, a workspace switcher), beside the collapse button when that sits in the header row. It is hidden on the rail while the collapse button shows.</source>
         <target>顶部内容（徽标和标题、工作区切换器）；收起按钮位于头部行时，显示在它旁边。在窄栏上，收起按钮显示时此区域隐藏。</target>
       </trans-unit>
+      <trans-unit id="Sidebar.IconMember">
+        <source>The property path of an item's icon (a geometry or a control).</source>
+        <target>项目图标的属性路径（几何图形或控件）。</target>
+      </trans-unit>
       <trans-unit id="Sidebar.IsCollapseButtonVisible">
         <source>Shows the collapse / expand button (PanelLeft icon). Its place is `CollapseButtonPlacement`.</source>
         <target>显示收起或展开按钮（PanelLeft 图标）。它的位置由 `CollapseButtonPlacement` 决定。</target>
@@ -22043,6 +22055,10 @@
       <trans-unit id="Sidebar.IsCollapsed">
         <source>Whether the sidebar is the 64px icon rail (two-way). The width springs between the two.</source>
         <target>侧边栏是否为 64px 图标窄栏（双向）。宽度在两种状态之间以弹簧动画变化。</target>
+      </trans-unit>
+      <trans-unit id="Sidebar.IsEnabledMember">
+        <source>The property path of an item's enabled state (a bool).</source>
+        <target>项目启用状态的属性路径（bool）。</target>
       </trans-unit>
       <trans-unit id="Sidebar.IsFilterVisible">
         <source>Shows the filter box under the header (it becomes a search button on the rail).</source>
@@ -22052,9 +22068,21 @@
         <source>Raised when a page is chosen (click, Enter or Space, or a page in a rail menu), also when it already was the selected page.</source>
         <target>选择页面时触发（点击、Enter 或 Space 键，或在窄栏菜单中选择页面），即使该页面已是选中的页面也会触发。</target>
       </trans-unit>
+      <trans-unit id="Sidebar.ItemsSource">
+        <source>The pages as data. Each item becomes a row in a header-less section placed before the sections declared in `Sections`. An item that is a `SidebarItem` (or a subclass with your own fields) is used as it is; any other object is mapped through the `*Member` names, and its object is kept in `Tag`. Collection changes are followed when the source is an `INotifyCollectionChanged`.</source>
+        <target>以数据形式提供的页面。每一项成为一个无标题分组中的一行，该分组位于 `Sections` 中声明的分组之前。属于 `SidebarItem`（或带有你自己字段的子类）的项原样使用；其他对象通过 `*Member` 名称映射，对象本身保存在 `Tag` 中。当数据源是 `INotifyCollectionChanged` 时会跟随集合变化。</target>
+      </trans-unit>
+      <trans-unit id="Sidebar.KeyMember">
+        <source>The property path of an item's key, which `SelectedKey` matches against.</source>
+        <target>项目键的属性路径，`SelectedKey` 与其匹配。</target>
+      </trans-unit>
       <trans-unit id="Sidebar.Label">
         <source>Name of the navigation landmark.</source>
         <target>导航地标的名称。</target>
+      </trans-unit>
+      <trans-unit id="Sidebar.LabelMember">
+        <source>The property path of an item's label (for items that are not `SidebarItem`s).</source>
+        <target>项目标签的属性路径（用于不是 `SidebarItem` 的项）。</target>
       </trans-unit>
       <trans-unit id="Sidebar.NoMatchesText">
         <source>Text shown when the filter matches no page.</source>
@@ -22075,6 +22103,10 @@
       <trans-unit id="Sidebar.SelectedKey">
         <source>The `Key` of the selected page (two-way), kept in step with `SelectedItem`; bind it to your route.</source>
         <target>选中页面的 `Key`（双向），与 `SelectedItem` 保持同步；可绑定到路由。</target>
+      </trans-unit>
+      <trans-unit id="Sidebar.TrailingTemplate">
+        <source>Builds the content at the end of each bound row. The control gets the item's data (the object in `ItemsSource`) as its `DataContext`, so a template can bind to your own fields, e.g. show an add button only while `CanAdd` is true. A `TrailingIcon` that is already set wins.</source>
+        <target>生成每个绑定行末尾的内容。该控件以项的数据（`ItemsSource` 中的对象）作为 `DataContext`，因此模板可以绑定到你自己的字段，例如仅当 `CanAdd` 为 true 时显示新增按钮。项上已设置的 `TrailingIcon` 优先。</target>
       </trans-unit>
       <trans-unit id="Sidebar.UnreadText">
         <source>Added to the accessible name of a page that has `IsUnread` ("Inbox, unread").</source>
@@ -28491,6 +28523,46 @@
       <trans-unit id="DockLayout.ShowDockIndicators">
         <source>Whether a drag shows the compass and the edge buttons. Off, panes still dock by where the pointer is in a group (a quarter from an edge splits that side, the middle joins as a tab) and close to the layout's edge; only the preview shows.</source>
         <target>拖拽时是否显示罗盘和边缘按钮。关闭后，面板仍按指针在组内的位置停靠（离边四分之一以内拆分那一侧，中间作为标签加入），靠近布局边缘时停靠到该边；只显示预览框。</target>
+      </trans-unit>
+      <trans-unit id="GanttTimeline">
+        <source>A project timeline: tasks grouped by phase on a calendar, with a today line, dependency arrows and a summary bar per phase. Drag a bar to move it or its ends to change the dates (snapped to whole days, with a dashed snap target, a date label and a spring on release); arrows re-route as bars move and turn red when a task starts before one it depends on ends. Zoom glides between day, week and month around the middle of the view; folding a phase slides its rows into it. Everything works from the keyboard (arrows to move between bars, Alt and Alt + Shift with arrows to change dates). Sized for tens of tasks; each arrow is redrawn every frame while something moves.</source>
+        <target>项目时间线：任务按阶段分组排在日历上，带今天线、依赖箭头和每个阶段一条的汇总条。拖动条形可移动，拖动两端可改日期（吸附到整天，拖动时显示虚线吸附目标和日期标签，松手后弹簧归位）；箭头随条形移动重新走线，任务早于其依赖任务结束开始时变红。缩放在日、周、月之间围绕视图中心滑动；折叠阶段时其行滑入阶段行。全部功能都可用键盘操作（方向键在条形间移动，Alt 与 Alt + Shift 配合方向键改日期）。适合几十个任务；有物体移动时每个箭头每帧重画。</target>
+      </trans-unit>
+      <trans-unit id="GanttTimeline.CollapsedChanged">
+        <source>Raised when a phase is folded or unfolded.</source>
+        <target>阶段被折叠或展开时引发。</target>
+      </trans-unit>
+      <trans-unit id="GanttTimeline.CollapsedGroups">
+        <source>The ids of the folded phases.</source>
+        <target>已折叠阶段的 id。</target>
+      </trans-unit>
+      <trans-unit id="GanttTimeline.Groups">
+        <source>The phases in display order.</source>
+        <target>按显示顺序排列的阶段。</target>
+      </trans-unit>
+      <trans-unit id="GanttTimeline.Tasks">
+        <source>The tasks. Set once; the timeline keeps its own working copy and reports changes through `TasksChanged`.</source>
+        <target>任务。设置一次即可；时间线保留自己的工作副本，并通过 `TasksChanged` 报告变化。</target>
+      </trans-unit>
+      <trans-unit id="GanttTimeline.TasksChanged">
+        <source>Raised after a move, resize, undo or reset with every task and what changed.</source>
+        <target>移动、改长、撤销或重置之后引发，附带所有任务和发生的变化。</target>
+      </trans-unit>
+      <trans-unit id="GanttTimeline.Title">
+        <source>The heading in the toolbar.</source>
+        <target>工具栏中的标题。</target>
+      </trans-unit>
+      <trans-unit id="GanttTimeline.Today">
+        <source>The day that places the today line and the initial scroll (default: the current date).</source>
+        <target>决定今天线和初始滚动位置的日期（默认为当前日期）。</target>
+      </trans-unit>
+      <trans-unit id="GanttTimeline.Zoom">
+        <source>The scale: day, week or month.</source>
+        <target>缩放级别：日、周或月。</target>
+      </trans-unit>
+      <trans-unit id="GanttTimeline.ZoomChanged">
+        <source>Raised when the zoom changes.</source>
+        <target>缩放变化时引发。</target>
       </trans-unit>
     </body>
   </file>

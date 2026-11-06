@@ -87,7 +87,7 @@ namespace Demo.Controls.Localization
         public global::Demo.Controls.Localization.DemoLangResourceKind Kind { get; set; }
 
         /// <summary>Returns a dynamic resource binding to the text's key (local priority, see <c>ArcResourceReference</c>).</summary>
-        public global::Avalonia.Data.BindingBase ProvideValue(global::System.IServiceProvider serviceProvider)
+        public object ProvideValue(global::System.IServiceProvider serviceProvider)
             => global::TKCode.Arc.ArcResourceReference.Create(DemoLangResources.Key(Kind), serviceProvider);
     }
 }

@@ -337,7 +337,7 @@ namespace TKCode.Arc.Foundation.Generators
             sb.Append(indent).Append("    public ").Append(kind).AppendLine(" Kind { get; set; }");
             sb.AppendLine();
             sb.Append(indent).AppendLine("    /// <summary>Returns a dynamic resource binding to the text's key (local priority, see <c>ArcResourceReference</c>).</summary>");
-            sb.Append(indent).AppendLine("    public global::Avalonia.Data.BindingBase ProvideValue(global::System.IServiceProvider serviceProvider)");
+            sb.Append(indent).AppendLine("    public object ProvideValue(global::System.IServiceProvider serviceProvider)");
             sb.Append(indent).Append("        => global::TKCode.Arc.ArcResourceReference.Create(").Append(resources)
               .AppendLine(".Key(Kind), serviceProvider);");
             sb.Append(indent).AppendLine("}");

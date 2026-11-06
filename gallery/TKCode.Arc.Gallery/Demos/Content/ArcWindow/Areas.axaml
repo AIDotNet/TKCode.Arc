@@ -6,8 +6,8 @@
             Width="760"
             BorderBrush="{arc:ArcDesignTokenResource Border}"
             BorderThickness="1"
-            CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
-            ClipToBounds="True">
+            CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}">
+        <Border CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}" ClipToBounds="True">
         <arc:TitleBar Title="Atlas" CaptionButtons="Drawn">
             <arc:TitleBar.Icon>
                 <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Layers}" Size="16" />
@@ -33,5 +33,6 @@
                 </StackPanel>
             </arc:TitleBar.RightContent>
         </arc:TitleBar>
+        </Border>
     </Border>
 </UserControl>

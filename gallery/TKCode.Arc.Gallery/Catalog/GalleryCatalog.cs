@@ -57,6 +57,7 @@ public static partial class GalleryCatalog
             "MobileIconButton", "MobileSegmented"]),
         ("2026-10-27", ["FileUpload", "MediaPlayer"]),
         ("2026-10-29", ["DomainVerify", "WebhookTester"]),
+        ("2026-11-06", ["GanttTimeline"]),
     }.SelectMany(g => g.Classes.Select(c => (c, g.Date))).ToDictionary(e => e.c, e => e.Date);
 
     private static string? AddedOnOf(string className) => s_addedOn.GetValueOrDefault(className);

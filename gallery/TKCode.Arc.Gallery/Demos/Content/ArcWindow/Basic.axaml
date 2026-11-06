@@ -6,8 +6,8 @@
         <!-- A preview of the bar an ArcWindow draws; inside the gallery it moves and closes nothing. -->
         <Border BorderBrush="{arc:ArcDesignTokenResource Border}"
                 BorderThickness="1"
-                CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
-                ClipToBounds="True">
+                CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}">
+            <Border CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}" ClipToBounds="True">
             <DockPanel>
                 <arc:TitleBar DockPanel.Dock="Top" Title="Untitled document" CaptionButtons="Drawn">
                     <arc:TitleBar.Icon>
@@ -16,6 +16,7 @@
                 </arc:TitleBar>
                 <Border Height="140" Background="{arc:ArcDesignTokenResource SurfaceMuted}" />
             </DockPanel>
+            </Border>
         </Border>
         <arc:Button x:Name="OpenButton" Content="Open a window" HorizontalAlignment="Left" Click="OnOpen" />
     </StackPanel>
