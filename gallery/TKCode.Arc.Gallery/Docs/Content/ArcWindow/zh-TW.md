@@ -1,7 +1,7 @@
 ---
 title: 視窗
 summary: 帶 Arc 標題列的桌面視窗：左、中、右三個區域放置你的控制項，保留原生拖曳、貼齊和縮放，標題列按鈕跟隨主題。
-source-hash: fd16b683183f
+source-hash: fe593f766b60
 ---
 
 <Demo name="Basic" />
@@ -99,6 +99,14 @@ public partial class MainWindow : ArcWindow
 
 視窗最大化時，最大化按鈕顯示為還原。`CanResize` 或 `CanMaximize` 為 false 時最大化按鈕停用，`CanMinimize` 為 false 時最小化按鈕停用。
 
+### 視窗置頂
+
+在 `TitleBar` 上將 `ShowTopmostButton` 設為 `True`，標題列按鈕之前會出現一個圖釘開關。視窗的 `Topmost` 為 true 時開關處於選取狀態，切換開關會設定 `Topmost`，因此在程式碼中修改 `Topmost` 也會更新按鈕。預設關閉，且在任何 `CaptionButtons` 值下都會顯示。
+
+```xml
+<arc:TitleBar ShowTopmostButton="True" />
+```
+
 ### 不顯示標題列
 
 把 `IsTitleBarVisible` 設為 `False`（或把 `TitleBar` 設為 null），內容會延伸到視窗頂端；視窗仍延伸到裝飾區域，並可從邊緣調整大小。此時需要由你的內容來移動視窗，例如呼叫 `BeginMoveDrag`。同時把 `ExtendClientAreaToDecorationsHint` 設為 `False` 可以恢復系統標題列。
@@ -120,6 +128,7 @@ public partial class MainWindow : ArcWindow
 - 標題列按鈕帶有工具提示和協助工具名稱（最小化、最大化或還原、關閉），使用應用程式目前的語言。
 - 與系統標題列一樣，它們不在 Tab 順序中。鍵盤可以透過系統使用相同的命令（Windows 上 Alt+Space 開啟系統選單，Alt+F4 關閉視窗）。
 - 其他視窗處於使用中狀態時，標題變暗。
+- 置頂開關具有工具提示和無障礙名稱（置頂、取消置頂），位於 Tab 順序中，可用空白鍵或 Enter 切換。
 
 ## 動態效果
 

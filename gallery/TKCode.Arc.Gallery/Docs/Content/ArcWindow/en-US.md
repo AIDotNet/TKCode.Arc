@@ -109,6 +109,14 @@ The bar is 40 px tall. Set `Height` on the bar for another height; the window pa
 Maximize shows restore while the window is maximized. It is disabled when `CanResize` or `CanMaximize` is false, and
 minimize when `CanMinimize` is false.
 
+### Always on top
+
+Set `ShowTopmostButton` to `True` on the `TitleBar` and a pin toggle appears before the caption buttons. It is checked while the window's `Topmost` is true and sets `Topmost` when toggled, so changing `Topmost` from code updates the button too. It is off by default, and it shows with every `CaptionButtons` value.
+
+```xml
+<arc:TitleBar ShowTopmostButton="True" />
+```
+
 ### Without the bar
 
 Set `IsTitleBarVisible` to `False` (or `TitleBar` to null) and the content reaches the top of the window, which still
@@ -134,6 +142,7 @@ on this page, draws the same bar and moves, maximizes and closes nothing.
 - They are not in the Tab order, as on system title bars. The keyboard reaches the same commands through the system
   (Alt+Space opens the system menu on Windows, Alt+F4 closes the window).
 - The title dims while another window is active.
+- The always-on-top toggle has a tooltip and an accessible name (Keep on top, Stop keeping on top), is in the Tab order and toggles with Space or Enter.
 
 ## Motion
 

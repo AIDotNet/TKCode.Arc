@@ -8,6 +8,7 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using AvaloniaButton = Avalonia.Controls.Button;
+using AvaloniaToggleButton = Avalonia.Controls.Primitives.ToggleButton;
 using AvaloniaWindow = Avalonia.Controls.Window;
 
 namespace TKCode.Arc;
@@ -42,8 +43,9 @@ public enum TitleBarCaptionButtons
 [TemplatePart(MinimizeButtonPart, typeof(AvaloniaButton))]
 [TemplatePart(MaximizeButtonPart, typeof(AvaloniaButton))]
 [TemplatePart(CloseButtonPart, typeof(AvaloniaButton))]
+[TemplatePart(TopmostButtonPart, typeof(AvaloniaToggleButton))]
 [PseudoClasses(MaximizedPseudoClass, FullScreenPseudoClass, InactivePseudoClass, DrawnButtonsPseudoClass,
-    SystemButtonsPseudoClass, HasRightPseudoClass)]
+    SystemButtonsPseudoClass, HasRightPseudoClass, TopmostButtonPseudoClass)]
 public class TitleBar : TemplatedControl
 {
     public const string RootPart = "PART_Root";
@@ -53,6 +55,7 @@ public class TitleBar : TemplatedControl
     public const string MinimizeButtonPart = "PART_MinimizeButton";
     public const string MaximizeButtonPart = "PART_MaximizeButton";
     public const string CloseButtonPart = "PART_CloseButton";
+    public const string TopmostButtonPart = "PART_TopmostButton";
 
     public const string MaximizedPseudoClass = ":maximized";
     public const string FullScreenPseudoClass = ":fullscreen";
@@ -60,6 +63,7 @@ public class TitleBar : TemplatedControl
     public const string DrawnButtonsPseudoClass = ":drawn-buttons";
     public const string SystemButtonsPseudoClass = ":system-buttons";
     public const string HasRightPseudoClass = ":has-right";
+    public const string TopmostButtonPseudoClass = ":topmost-button";
 
     /// <summary>The icon before the title, such as an <c>Image</c> or an <c>ArcGlyph</c>; none by default.</summary>
     public static readonly StyledProperty<object?> IconProperty =
@@ -91,11 +95,20 @@ public class TitleBar : TemplatedControl
     public static readonly StyledProperty<TitleBarCaptionButtons> CaptionButtonsProperty =
         AvaloniaProperty.Register<TitleBar, TitleBarCaptionButtons>(nameof(CaptionButtons));
 
+    /// <summary>
+    /// Shows a pin toggle before the caption buttons that keeps the window above other windows: it is checked while the
+    /// window's <c>Topmost</c> is true and sets it when toggled. Off by default. It shows whatever <see cref="CaptionButtons"/>
+    /// is, and only the window's own bar drives the window.
+    /// </summary>
+    public static readonly StyledProperty<bool> ShowTopmostButtonProperty =
+        AvaloniaProperty.Register<TitleBar, bool>(nameof(ShowTopmostButton));
+
     private AvaloniaWindow? _window;
     private IDisposable? _titleBinding;
     private AvaloniaButton? _minimize;
     private AvaloniaButton? _maximize;
     private AvaloniaButton? _close;
+    private AvaloniaToggleButton? _topmost;
 
     public TitleBar()
     {
@@ -144,6 +157,13 @@ public class TitleBar : TemplatedControl
         set => SetValue(CaptionButtonsProperty, value);
     }
 
+    /// <inheritdoc cref="ShowTopmostButtonProperty"/>
+    public bool ShowTopmostButton
+    {
+        get => GetValue(ShowTopmostButtonProperty);
+        set => SetValue(ShowTopmostButtonProperty, value);
+    }
+
     /// <summary>What <see cref="CaptionButtons"/> means on this system: never <see cref="TitleBarCaptionButtons.Auto"/>.</summary>
     public TitleBarCaptionButtons EffectiveCaptionButtons => CaptionButtons == TitleBarCaptionButtons.Auto
         ? OperatingSystem.IsMacOS() ? TitleBarCaptionButtons.System : TitleBarCaptionButtons.Drawn
@@ -166,6 +186,10 @@ public class TitleBar : TemplatedControl
         Unhook(_minimize, OnMinimizeClick);
         Unhook(_maximize, OnMaximizeClick);
         Unhook(_close, OnCloseClick);
+        if (_topmost is not null)
+        {
+            _topmost.IsCheckedChanged -= OnTopmostToggled;
+        }
 
         _minimize = e.NameScope.Find<AvaloniaButton>(MinimizeButtonPart);
         _maximize = e.NameScope.Find<AvaloniaButton>(MaximizeButtonPart);
@@ -173,6 +197,11 @@ public class TitleBar : TemplatedControl
         Hook(_minimize, OnMinimizeClick);
         Hook(_maximize, OnMaximizeClick);
         Hook(_close, OnCloseClick);
+        _topmost = e.NameScope.Find<AvaloniaToggleButton>(TopmostButtonPart);
+        if (_topmost is not null)
+        {
+            _topmost.IsCheckedChanged += OnTopmostToggled;
+        }
 
         // Controls placed in the three areas take their own input where the system would see a title bar; the areas'
         // empty parts are not hit, so they stay the bar.
@@ -191,6 +220,7 @@ public class TitleBar : TemplatedControl
         }
         SyncRole();
         SyncButtons();
+        SyncTopmost();
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -212,6 +242,10 @@ public class TitleBar : TemplatedControl
         if (change.Property == CaptionButtonsProperty)
         {
             SyncCaptionButtons();
+        }
+        else if (change.Property == ShowTopmostButtonProperty)
+        {
+            PseudoClasses.Set(TopmostButtonPseudoClass, change.GetNewValue<bool>());
         }
         else if (change.Property == RightContentProperty)
         {
@@ -266,6 +300,7 @@ public class TitleBar : TemplatedControl
         SyncState();
         SyncActive();
         SyncButtons();
+        SyncTopmost();
     }
 
     /// <summary>
@@ -284,6 +319,11 @@ public class TitleBar : TemplatedControl
         SetRole(_minimize, attached ? WindowDecorationsElementRole.MinimizeButton : WindowDecorationsElementRole.None);
         SetRole(_maximize, attached ? WindowDecorationsElementRole.MaximizeButton : WindowDecorationsElementRole.None);
         SetRole(_close, attached ? WindowDecorationsElementRole.CloseButton : WindowDecorationsElementRole.None);
+        // The toggle is the app's own control: a press on it must not start a window drag.
+        if (_topmost is not null)
+        {
+            WindowDecorationProperties.SetElementRole(_topmost, WindowDecorationsElementRole.User);
+        }
     }
 
     private static void SetRole(AvaloniaButton? button, WindowDecorationsElementRole role)
@@ -299,6 +339,10 @@ public class TitleBar : TemplatedControl
         if (e.Property == AvaloniaWindow.WindowStateProperty)
         {
             SyncState();
+        }
+        else if (e.Property == AvaloniaWindow.TopmostProperty)
+        {
+            SyncTopmost();
         }
         else if (e.Property == WindowBase.IsActiveProperty)
         {
@@ -321,6 +365,32 @@ public class TitleBar : TemplatedControl
 
     /// <summary>The title dims while another window is active, as system title bars do.</summary>
     private void SyncActive() => PseudoClasses.Set(InactivePseudoClass, _window is { IsActive: false });
+
+    private void SyncTopmost()
+    {
+        if (_topmost is null)
+        {
+            return;
+        }
+        var topmost = _window?.Topmost ?? false;
+        if (_topmost.IsChecked != topmost)
+        {
+            _topmost.IsChecked = topmost;
+        }
+        _topmost.IsEnabled = _window is not null;
+    }
+
+    private void OnTopmostToggled(object? sender, RoutedEventArgs e)
+    {
+        if (_window is not null && sender is AvaloniaToggleButton toggle)
+        {
+            var on = toggle.IsChecked == true;
+            if (_window.Topmost != on)
+            {
+                _window.Topmost = on;
+            }
+        }
+    }
 
     private void SyncCaptionButtons()
     {

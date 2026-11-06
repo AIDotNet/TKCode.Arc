@@ -1,7 +1,7 @@
 ---
 title: 窗口
 summary: 带 Arc 标题栏的桌面窗口：左、中、右三个区域放置你的控件，保留原生拖动、贴靠和缩放，标题栏按钮跟随主题。
-source-hash: fd16b683183f
+source-hash: fe593f766b60
 ---
 
 <Demo name="Basic" />
@@ -99,6 +99,14 @@ public partial class MainWindow : ArcWindow
 
 窗口最大化时，最大化按钮显示为还原。`CanResize` 或 `CanMaximize` 为 false 时最大化按钮禁用，`CanMinimize` 为 false 时最小化按钮禁用。
 
+### 窗口置顶
+
+在 `TitleBar` 上将 `ShowTopmostButton` 设为 `True`，标题栏按钮之前会出现一个图钉开关。窗口的 `Topmost` 为 true 时开关处于选中状态，切换开关会设置 `Topmost`，因此在代码中修改 `Topmost` 也会更新按钮。默认关闭，且在任何 `CaptionButtons` 取值下都会显示。
+
+```xml
+<arc:TitleBar ShowTopmostButton="True" />
+```
+
 ### 不显示标题栏
 
 把 `IsTitleBarVisible` 设为 `False`（或把 `TitleBar` 设为 null），内容会延伸到窗口顶部；窗口仍扩展到装饰区域，并可从边缘调整大小。此时需要由你的内容来移动窗口，例如调用 `BeginMoveDrag`。同时把 `ExtendClientAreaToDecorationsHint` 设为 `False` 可以恢复系统标题栏。
@@ -120,6 +128,7 @@ public partial class MainWindow : ArcWindow
 - 标题栏按钮带有工具提示和无障碍名称（最小化、最大化或还原、关闭），使用应用当前的语言。
 - 与系统标题栏一样，它们不在 Tab 顺序中。键盘可以通过系统使用相同的命令（Windows 上 Alt+Space 打开系统菜单，Alt+F4 关闭窗口）。
 - 其他窗口处于活动状态时，标题变暗。
+- 置顶开关带有工具提示和无障碍名称（置顶、取消置顶），在 Tab 顺序中，可用空格或回车切换。
 
 ## 动效
 
