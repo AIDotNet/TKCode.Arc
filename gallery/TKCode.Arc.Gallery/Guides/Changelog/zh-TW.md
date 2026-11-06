@@ -1,13 +1,36 @@
 ---
 title: 更新日誌
-source-hash: 7f49fe05dc31
+source-hash: 36a2e58f342b
 ---
 
 # 更新日誌
 
 TKCode.Arc 的所有重要變更，最新的在前。版本遵循[語意化版本](https://semver.org/)。版本帶有 `-preview` 後綴期間，API 在各發行版本之間仍可能變動；升級前請閱讀說明，並在專案中固定版本號。同一份清單也保存在儲存庫的 `CHANGELOG.md` 中。
 
-每次發行附帶的 NuGet 套件：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Foundation`（0.3.2 起）、`TKCode.Arc.Fonts` 、`TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 、`TKCode.Arc.Special`、`TKCode.Arc.Workflow`、`TKCode.Arc.Themes.Pixel`、`TKCode.Arc.Themes.Corners`、`TKCode.Arc.Mobile`、`TKCode.Arc.Terminal`、`TKCode.Arc.Audio`、`TKCode.Arc.Audio.Native` 與 `TKCode.Arc.Audio.Browser`。
+每次發行附帶的 NuGet 套件：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Foundation`（0.3.2 起）、`TKCode.Arc.Fonts` 、`TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 、`TKCode.Arc.Special`、`TKCode.Arc.Workflow`、`TKCode.Arc.Dock`（0.4.0-preview.2 起）、`TKCode.Arc.Themes.Pixel`、`TKCode.Arc.Themes.Corners`、`TKCode.Arc.Mobile`、`TKCode.Arc.Terminal`、`TKCode.Arc.Audio`、`TKCode.Arc.Audio.Native` 與 `TKCode.Arc.Audio.Browser`。
+
+## 0.4.0-preview.2（2026-11-06）
+
+新包 `TKCode.Arc.Dock` 提供停靠版面；新增帶 Arc 標題列的 `ArcWindow`；`ResizablePanels` 支援垂直方向；控制項更輕；修正彈出層內再開彈出層的問題和基礎主題的問題（issue #35、#38、#39、#40）。
+
+### 新增
+
+- **停靠版面**（新包 `TKCode.Arc.Dock`，`UseArcDock()`；issue #35）：IDE 式的面板版面。面板（`DockPane`）組成標籤組，巢狀在水平或垂直分割裡，圍繞中央的文件區；分割的分隔條就是 `ResizablePanels`。版面樹可以寫在 XAML 裡（`DockSplit`、`DockGroup`、`DockDocumentArea`），也可以在程式碼裡建構 `DockWorkspace`；模型會自動整理：空組移除，只剩一個子項的分割折疊，同方向的分割合併。面板用 `Move(pane, DockTarget)` 或標籤選單移動（關閉、關閉其他、全部關閉、移動到 › 左/右/上/下新組、停靠到 › 左/右/上/下），移動時保留內容執行個體；可以從標籤、選單或鍵盤關閉（`PaneClosing` 可取消）。標籤放不下時可捲動，並列在溢出選單裡；文件標籤顯示關閉按鈕和已修改圓點。鍵盤：方向鍵、Home、End 在標籤間移動，Ctrl/⌘+Shift+方向鍵調整順序，Delete 和 Ctrl+F4/⌘+W 關閉，Shift+F10 開啟選單。`SaveLayout` 與 `LoadLayout` 以 JSON 讀寫版面（`tkcode-arc-dock` 第 1 版，手寫讀寫器，不用反射）。內建文案有 en-US、zh-CN、zh-TW。Gallery 新增“停靠版面”分組。
+- **停靠版面：拖放與浮動**：沿標籤列拖曳標籤可調整順序（其他標籤以彈簧讓位），拖離標籤列則開始停靠：幽靈標籤跟隨指標；指標下方組上的羅盤可合併或分割該組，文件區上的指示環停靠在所有文件旁邊，邊緣按鈕沿整個版面停靠，標籤列裡的豎線指出標籤的落點，預覽框在目標之間滑動。拖曳標籤列的空白處可移動整個組，Esc 取消。`ShowDockIndicators="False"` 時不顯示羅盤，按指標在組內的位置停靠。面板可以用 `Float`、標籤選單（浮動）或拖到版面外浮動，用 `Dock`（回到原處）、選單、雙擊標題列或把視窗拖到羅盤上停回。`FloatingMode`：`Auto`（經典桌面應用程式用附屬視窗，瀏覽器等其他宿主用版面內的浮動卡片）、`Window`、`Overlay`、`Disabled`。浮動視窗與 `Workspace.Floats` 雙向同步，隨儲存的版面一起恢復，並會被拉回可見螢幕；關閉浮動視窗會關閉其中可關閉的面板，其餘面板停回。Wayland 上視窗由系統決定位置，透過選單停回。新增 `FloatActiveCommand`。
+- **停靠版面：自動隱藏、資料來源、面板切換、最大化**：`AutoHide`（標籤選單，Shift+Esc）把工具面板收到離其所在組最近的版面邊緣的側邊欄；點按側邊欄按鈕，面板以卡片形式滑出覆蓋在內容上（寬度與停靠時相同，最多為版面的 70%，內側邊緣可調整大小），點按外部、按 Esc 或焦點離開時滑回；`Pin`（卡片上的圖釘、選單、`Dock`）把它放回原組。自動隱藏的面板隨版面儲存，也可以在 XAML 裡透過 `DockWorkspace.LeftHidden` / `RightHidden` / `TopHidden` / `BottomHidden` 宣告。`DocumentsSource` / `ToolsSource` 配合 `DocumentTemplate` / `ToolTemplate` 為每個資料項生成一個面板（`DataContext` 為資料項；可選 `IDockItem` 提供 id 和標題；`DockPane.IdOf`）：新增資料項即開啟面板，移除即關閉，關閉標籤時會從可寫清單中移除該項，儲存的版面按 id 恢復這些面板。Ctrl+Tab 按最近使用順序開啟面板切換器（鬆開 Ctrl 即切換）。雙擊標籤列空白處（或選單中的最大化）讓一個組鋪滿版面，直到還原。新增 `AutoHideActiveCommand`、`ShowPaneSwitcherCommand`、`ToggleMaximizeCommand`。
+- **ArcWindow**（Extras）：帶 Arc 標題列的桌面視窗，類似 WPF 的 `WindowChrome`（issue #38）。用戶端區域延伸到視窗裝飾裡，頂部用主題顏色繪製 `TitleBar`，可透過 `LeftContent`、`CenterContent`（放得下時在整個標題列上居中）和 `RightContent` 放入自己的控制項。拖曳標題列移動視窗，雙擊最大化或還原，拖曳邊緣調整大小。在 Windows 上標題列就是系統標題區（系統選單、Aero Snap），最大化按鈕會開啟 Windows 11 的貼靠版面；macOS 上保留紅綠燈按鈕。`CaptionButtons`（`Auto`、`Drawn`、`System`、`None`）決定由誰繪製最小化、最大化和關閉按鈕，標題列的 `Height` 設定向系統申請的標題列高度。標題列按鈕的提示已本地化（en-US、zh-CN、zh-TW）。
+
+### 變更
+
+- **ResizablePanels**：新增 `Orientation`（預設 `Horizontal`，或 `Vertical`）、`Gap`（窗格之間的間距，預設 1），並支援執行時增刪窗格，留下的窗格保持原有尺寸（其他窗格按比例讓出空間）。新增“垂直”範例。停靠版面的分割就是用它實現的。
+- **控制項**：很少用到的範本部件改為首次需要時才建立：鍵盤焦點環（Button、Checkbox、Switch、TabItem、Select 等）、Tabs 的捲動按鈕和 Slider 的數值氣泡。Button 的狀態改用偽類。500 個按鈕的清單分配記憶體從 61.7 MB 降到 52.7 MB，常駐從 41.7 MB 降到 35.5 MB。文字框、選擇器、滑桿和開關的動效與 Token 有小幅調整。
+- **Gallery（桌面）**：Gallery 視窗改為 `ArcWindow`，原先自帶的標題列類已移除。
+
+### 修正
+
+- **彈出層**：在 `ArcPopup` 對話框（原生彈出視窗）裡開啟 `Select`、提示或其他彈出層，不再擲出 "Unable to create IPopupImpl and no overlay layer is found"，而是以原生彈出視窗開啟（issue #40）。
+- **基礎主題**：應用程式為某個內建類型（例如 `PopupRoot`）提供的 `ControlTheme` 不再關掉整個基礎主題，只跳過應用程式自己設定了樣式的類型（issue #39）。
+- **Gallery（WebAssembly）**：切換頁面不再讓網站凍結；WebAssembly 宿主預設不使用 AOT 編譯發佈（用 `-p:ArcAot=true` 開啟）。
 
 ## 0.4.0-preview.1（2026-11-03）
 

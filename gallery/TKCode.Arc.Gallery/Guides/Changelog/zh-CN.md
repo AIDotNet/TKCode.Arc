@@ -1,13 +1,36 @@
 ---
 title: 更新日志
-source-hash: 7f49fe05dc31
+source-hash: 36a2e58f342b
 ---
 
 # 更新日志
 
 TKCode.Arc 的所有重要变更，最新的在前。版本遵循[语义化版本](https://semver.org/)。版本带有 `-preview` 后缀期间，API 在各发布版本之间仍可能变化；升级前请阅读说明，并在项目中固定版本号。同样的列表也保存在仓库的 `CHANGELOG.md` 中。
 
-每次发布附带的 NuGet 包：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Foundation`（0.3.2 起）、`TKCode.Arc.Fonts` `TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 、`TKCode.Arc.Special`、`TKCode.Arc.Workflow`、`TKCode.Arc.Themes.Pixel`、`TKCode.Arc.Themes.Corners`、`TKCode.Arc.Mobile`、`TKCode.Arc.Terminal`、`TKCode.Arc.Audio`、`TKCode.Arc.Audio.Native` 和 `TKCode.Arc.Audio.Browser`。
+每次发布附带的 NuGet 包：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Foundation`（0.3.2 起）、`TKCode.Arc.Fonts` `TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 、`TKCode.Arc.Special`、`TKCode.Arc.Workflow`、`TKCode.Arc.Dock`（0.4.0-preview.2 起）、`TKCode.Arc.Themes.Pixel`、`TKCode.Arc.Themes.Corners`、`TKCode.Arc.Mobile`、`TKCode.Arc.Terminal`、`TKCode.Arc.Audio`、`TKCode.Arc.Audio.Native` 和 `TKCode.Arc.Audio.Browser`。
+
+## 0.4.0-preview.2（2026-11-06）
+
+新包 `TKCode.Arc.Dock` 提供停靠布局；新增带 Arc 标题栏的 `ArcWindow`；`ResizablePanels` 支持竖直方向；控件更轻；修复弹层内再开弹层的问题和基础主题的问题（issue #35、#38、#39、#40）。
+
+### 新增
+
+- **停靠布局**（新包 `TKCode.Arc.Dock`，`UseArcDock()`；issue #35）：IDE 式的面板布局。面板（`DockPane`）组成标签组，嵌套在水平或竖直分割里，围绕中央的文档区；分割的分隔条就是 `ResizablePanels`。布局树可以写在 XAML 里（`DockSplit`、`DockGroup`、`DockDocumentArea`），也可以在代码里构建 `DockWorkspace`；模型会自动整理：空组移除，只剩一个子项的分割折叠，同方向的分割合并。面板用 `Move(pane, DockTarget)` 或标签菜单移动（关闭、关闭其他、全部关闭、移动到 › 左/右/上/下新组、停靠到 › 左/右/上/下），移动时保留内容实例；可以从标签、菜单或键盘关闭（`PaneClosing` 可取消）。标签放不下时可滚动，并列在溢出菜单里；文档标签显示关闭按钮和已修改圆点。键盘：方向键、Home、End 在标签间移动，Ctrl/⌘+Shift+方向键调整顺序，Delete 和 Ctrl+F4/⌘+W 关闭，Shift+F10 打开菜单。`SaveLayout` 与 `LoadLayout` 以 JSON 读写布局（`tkcode-arc-dock` 第 1 版，手写读写器，不用反射）。内置文案有 en-US、zh-CN、zh-TW。Gallery 新增“停靠布局”分组。
+- **停靠布局：拖放与浮动**：沿标签栏拖动标签可调整顺序（其他标签以弹簧让位），拖离标签栏则开始停靠：幽灵标签跟随指针；指针下方组上的罗盘可合并或分割该组，文档区上的指示环停靠在所有文档旁边，边缘按钮沿整个布局停靠，标签栏里的竖线指出标签的落点，预览框在目标之间滑动。拖动标签栏的空白处可移动整个组，Esc 取消。`ShowDockIndicators="False"` 时不显示罗盘，按指针在组内的位置停靠。面板可以用 `Float`、标签菜单（浮动）或拖到布局外浮动，用 `Dock`（回到原处）、菜单、双击标题栏或把窗口拖到罗盘上停回。`FloatingMode`：`Auto`（经典桌面应用用附属窗口，浏览器等其他宿主用布局内的浮动卡片）、`Window`、`Overlay`、`Disabled`。浮动窗口与 `Workspace.Floats` 双向同步，随保存的布局一起恢复，并会被拉回可见屏幕；关闭浮动窗口会关闭其中可关闭的面板，其余面板停回。Wayland 上窗口由系统决定位置，通过菜单停回。新增 `FloatActiveCommand`。
+- **停靠布局：自动隐藏、数据源、面板切换、最大化**：`AutoHide`（标签菜单，Shift+Esc）把工具面板收到离其所在组最近的布局边缘的侧栏；点击侧栏按钮，面板以卡片形式滑出覆盖在内容上（宽度与停靠时相同，最多为布局的 70%，内侧边缘可调整大小），点击外部、按 Esc 或焦点离开时滑回；`Pin`（卡片上的图钉、菜单、`Dock`）把它放回原组。自动隐藏的面板随布局保存，也可以在 XAML 里通过 `DockWorkspace.LeftHidden` / `RightHidden` / `TopHidden` / `BottomHidden` 声明。`DocumentsSource` / `ToolsSource` 配合 `DocumentTemplate` / `ToolTemplate` 为每个数据项生成一个面板（`DataContext` 为数据项；可选 `IDockItem` 提供 id 和标题；`DockPane.IdOf`）：添加数据项即打开面板，移除即关闭，关闭标签时会从可写列表中移除该项，保存的布局按 id 恢复这些面板。Ctrl+Tab 按最近使用顺序打开面板切换器（松开 Ctrl 即切换）。双击标签栏空白处（或菜单中的最大化）让一个组铺满布局，直到还原。新增 `AutoHideActiveCommand`、`ShowPaneSwitcherCommand`、`ToggleMaximizeCommand`。
+- **ArcWindow**（Extras）：带 Arc 标题栏的桌面窗口，类似 WPF 的 `WindowChrome`（issue #38）。客户区延伸到窗口装饰里，顶部用主题颜色绘制 `TitleBar`，可通过 `LeftContent`、`CenterContent`（放得下时在整个标题栏上居中）和 `RightContent` 放入自己的控件。拖动标题栏移动窗口，双击最大化或还原，拖动边缘调整大小。在 Windows 上标题栏就是系统标题区（系统菜单、Aero Snap），最大化按钮会打开 Windows 11 的贴靠布局；macOS 上保留红绿灯按钮。`CaptionButtons`（`Auto`、`Drawn`、`System`、`None`）决定由谁绘制最小化、最大化和关闭按钮，标题栏的 `Height` 设置向系统申请的标题栏高度。标题栏按钮的提示已本地化（en-US、zh-CN、zh-TW）。
+
+### 变更
+
+- **ResizablePanels**：新增 `Orientation`（默认 `Horizontal`，或 `Vertical`）、`Gap`（窗格之间的间距，默认 1），并支持运行时增删窗格，留下的窗格保持原有尺寸（其他窗格按比例让出空间）。新增“竖直”示例。停靠布局的分割就是用它实现的。
+- **控件**：很少用到的模板部件改为首次需要时才创建：键盘焦点环（Button、Checkbox、Switch、TabItem、Select 等）、Tabs 的滚动按钮和 Slider 的数值气泡。Button 的状态改用伪类。500 个按钮的列表分配内存从 61.7 MB 降到 52.7 MB，常驻从 41.7 MB 降到 35.5 MB。文本框、选择器、滑块和开关的动效与 Token 有小幅调整。
+- **Gallery（桌面）**：Gallery 窗口改为 `ArcWindow`，原先自带的标题栏类已移除。
+
+### 修复
+
+- **弹层**：在 `ArcPopup` 对话框（原生弹出窗口）里打开 `Select`、提示或其他弹层，不再抛出 "Unable to create IPopupImpl and no overlay layer is found"，而是以原生弹出窗口打开（issue #40）。
+- **基础主题**：应用为某个内置类型（例如 `PopupRoot`）提供的 `ControlTheme` 不再关掉整个基础主题，只跳过应用自己设置了样式的类型（issue #39）。
+- **Gallery（WebAssembly）**：切换页面不再让网站卡死；WebAssembly 宿主默认不使用 AOT 编译发布（用 `-p:ArcAot=true` 开启）。
 
 ## 0.4.0-preview.1（2026-11-03）
 
