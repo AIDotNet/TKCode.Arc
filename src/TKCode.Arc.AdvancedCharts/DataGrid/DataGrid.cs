@@ -120,6 +120,15 @@ public partial class DataGrid : TemplatedControl
     public static readonly StyledProperty<bool> IsRowCheckEnabledProperty =
         AvaloniaProperty.Register<DataGrid, bool>(nameof(IsRowCheckEnabled), true);
 
+    /// <summary>
+    /// Alternates the row background: every second row line, counted from the top of the shown rows (after sorting, filtering,
+    /// grouping and row inserts or removals; scrolling keeps the alternation), gets a slightly different fill in the cells and
+    /// the gutter. Group header rows and the totals row are not striped. Checked rows, the selection and the active cell stay on
+    /// top of the stripe. Default false.
+    /// </summary>
+    public static readonly StyledProperty<bool> IsStripedProperty =
+        AvaloniaProperty.Register<DataGrid, bool>(nameof(IsStriped));
+
     /// <summary>Shows the row number in the gutter. When false the gutter narrows to 40px and its checkboxes always show.</summary>
     public static readonly StyledProperty<bool> ShowRowNumbersProperty =
         AvaloniaProperty.Register<DataGrid, bool>(nameof(ShowRowNumbers), true);
@@ -292,6 +301,12 @@ public partial class DataGrid : TemplatedControl
     /// <inheritdoc cref="IsRowCheckEnabledProperty"/>
     public bool IsRowCheckEnabled { get => GetValue(IsRowCheckEnabledProperty); set => SetValue(IsRowCheckEnabledProperty, value); }
 
+    /// <inheritdoc cref="IsStripedProperty"/>
+    public bool IsStriped { get => GetValue(IsStripedProperty); set => SetValue(IsStripedProperty, value); }
+
+    /// <summary>True when the row line is one the stripe fills (every second line of a striped grid).</summary>
+    internal bool IsStripedLine(int line) => IsStriped && line >= 0 && (line & 1) == 1;
+
     /// <inheritdoc cref="ShowRowNumbersProperty"/>
     public bool ShowRowNumbers { get => GetValue(ShowRowNumbersProperty); set => SetValue(ShowRowNumbersProperty, value); }
 
@@ -414,6 +429,10 @@ public partial class DataGrid : TemplatedControl
 
     internal static readonly StyledProperty<IBrush?> SurfaceRaisedBrushProperty =
         AvaloniaProperty.Register<DataGrid, IBrush?>(nameof(SurfaceRaisedBrush));
+    internal static readonly StyledProperty<IBrush?> StripeCellBrushProperty =
+        AvaloniaProperty.Register<DataGrid, IBrush?>(nameof(StripeCellBrush));
+    internal static readonly StyledProperty<IBrush?> StripeGutterBrushProperty =
+        AvaloniaProperty.Register<DataGrid, IBrush?>(nameof(StripeGutterBrush));
     internal static readonly StyledProperty<IBrush?> SurfaceMutedBrushProperty =
         AvaloniaProperty.Register<DataGrid, IBrush?>(nameof(SurfaceMutedBrush));
     internal static readonly StyledProperty<IBrush?> SubtleBorderBrushProperty =
@@ -494,6 +513,8 @@ public partial class DataGrid : TemplatedControl
         AvaloniaProperty.Register<DataGrid, TimeSpan>(nameof(StatusActionDuration), TimeSpan.FromMilliseconds(6000));
 
     internal IBrush? SurfaceRaisedBrush { get => GetValue(SurfaceRaisedBrushProperty); set => SetValue(SurfaceRaisedBrushProperty, value); }
+    internal IBrush? StripeCellBrush { get => GetValue(StripeCellBrushProperty); set => SetValue(StripeCellBrushProperty, value); }
+    internal IBrush? StripeGutterBrush { get => GetValue(StripeGutterBrushProperty); set => SetValue(StripeGutterBrushProperty, value); }
     internal IBrush? SurfaceMutedBrush { get => GetValue(SurfaceMutedBrushProperty); set => SetValue(SurfaceMutedBrushProperty, value); }
     internal IBrush? SubtleBorderBrush { get => GetValue(SubtleBorderBrushProperty); set => SetValue(SubtleBorderBrushProperty, value); }
     internal IBrush? StrongBorderBrush { get => GetValue(StrongBorderBrushProperty); set => SetValue(StrongBorderBrushProperty, value); }
@@ -746,6 +767,10 @@ public partial class DataGrid : TemplatedControl
         {
             InvalidateColumns();
         }
+        else if (property == IsStripedProperty)
+        {
+            Viewport.InvalidateLayers();
+        }
         else if (property == ShowTotalsProperty || property == MaxViewportHeightProperty)
         {
             Viewport.InvalidateMeasure();
@@ -795,7 +820,7 @@ public partial class DataGrid : TemplatedControl
         }
         else if (property == ForegroundProperty || property == BackgroundProperty || property == BorderBrushProperty ||
                  property == FontFamilyProperty || property == FontSizeProperty || property == SurfaceRaisedBrushProperty ||
-                 property == SurfaceMutedBrushProperty || property == SubtleBorderBrushProperty || property == StrongBorderBrushProperty ||
+                 property == SurfaceMutedBrushProperty || property == StripeCellBrushProperty || property == StripeGutterBrushProperty || property == SubtleBorderBrushProperty || property == StrongBorderBrushProperty ||
                  property == SecondaryForegroundProperty || property == MutedForegroundProperty || property == AccentBrushProperty ||
                  property == ControlOnBrushProperty || property == ControlGlyphBrushProperty || property == FocusRingBrushProperty ||
                  property == SmallFontSizeProperty || property == MediumWeightProperty || property == SelectionFillOpacityProperty ||
@@ -823,7 +848,8 @@ public partial class DataGrid : TemplatedControl
         Palette.Update(surface, ColorOf(SurfaceRaisedBrush), ColorOf(SurfaceMutedBrush), ColorOf(BorderBrush), ColorOf(SubtleBorderBrush),
             ColorOf(StrongBorderBrush), ColorOf(Foreground), ColorOf(SecondaryForeground), ColorOf(MutedForeground), ColorOf(AccentBrush),
             ColorOf(ControlOnBrush), ColorOf(ControlGlyphBrush), FocusRingBrush is ISolidColorBrush ring ? ring.Color : null,
-            SelectionFillOpacity, CheckedRowFillOpacity, WashOpacity, IsDark(surface), FontFamily, FontSize, SmallFontSize, MediumWeight);
+            SelectionFillOpacity, CheckedRowFillOpacity, WashOpacity, IsDark(surface), FontFamily, FontSize, SmallFontSize, MediumWeight,
+            ColorOf(StripeCellBrush), ColorOf(StripeGutterBrush));
         Palette.UpdateTones(ColorOf(AccentBrush), ColorOf(AccentSubtleBrush), ColorOf(SuccessBrush), ColorOf(SuccessSubtleBrush),
             ColorOf(WarningBrush), ColorOf(WarningSubtleBrush), ColorOf(DangerBrush), ColorOf(DangerSubtleBrush));
         Viewport.InvalidateText();

@@ -1,7 +1,7 @@
 ---
 title: 資料表格
 summary: 試算表式的表格：範圍選取、就地編輯、填滿控點、剪貼簿、復原、排序、篩選、分組、總計與匯出。
-source-hash: 6f5dd7d44970
+source-hash: cc0f46d78e42
 ---
 
 <Demo name="Renewals" />
@@ -323,6 +323,16 @@ await grid.ExportAsync(DataGridExportFormat.Xlsx);
 資料量過大、無法一次傳送時，將 `DataSource` 設為 `IDataGridDataSource`。表格會請求涵蓋可視列的資料區塊，在載入期間顯示預留位置列，並最多保留 40 個資料區塊。排序、篩選或搜尋變動時，它會重新開始並取消進行中的請求。此時表格為唯讀，不分組，隱藏「全選」，匯出時僅匯出已勾選的列。還需要設定 `RowKeySelector`，使用資料來源時它是必要的。
 
 <Demo name="ServerData" />
+
+### 隔行變色
+
+將 `IsStriped` 設為 true 可為儲存格與列號欄中每隔一列著色。列依其在顯示順序中的行號計數，因此排序、篩選、捲動以及新增或移除列後條紋仍保持交替。群組標題列與合計列不著色（它們有自己的底色），開啟群組時，群組標題列也佔用一個計數位置。勾選列、選取範圍與使用中的儲存格會覆蓋條紋，固定欄同樣適用。預設關閉，`Table` 與 `TreeTable` 使用同名屬性。
+
+<Demo name="Striped" />
+
+```xml
+<arc:DataGrid IsStriped="True" />
+```
 
 ### 載入與空白狀態
 

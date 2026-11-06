@@ -431,6 +431,16 @@ and exports only checked rows. Set `RowKeySelector` as well, which is required w
 
 <Demo name="ServerData" />
 
+### Striped rows
+
+Set `IsStriped` to shade every second row in the cells and the gutter. Rows are counted by their line in the shown order, so the stripe stays alternating after sorting, filtering, scrolling and when rows are added or removed. Group header rows and the totals row are not striped (they have their own fill), and with grouping on a group header takes up a line in the count. Checked rows, the selection and the active cell draw over the stripe, and it works with pinned columns. It is off by default, and uses the same name on `Table` and `TreeTable`.
+
+<Demo name="Striped" />
+
+```xml
+<arc:DataGrid IsStriped="True" />
+```
+
 ### Loading and empty states
 
 `IsLoading` shows six placeholder rows, and the totals row reads "Loading". `EmptyMessage` replaces the built-in "No rows

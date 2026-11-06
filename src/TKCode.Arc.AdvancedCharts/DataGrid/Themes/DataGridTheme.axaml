@@ -93,6 +93,8 @@
         <Setter Property="SmallFontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
         <Setter Property="MediumWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
         <Setter Property="SurfaceRaisedBrush" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="StripeCellBrush" Value="{arc:DataGridTokenResource StripeCellBackground}" />
+        <Setter Property="StripeGutterBrush" Value="{arc:DataGridTokenResource StripeGutterBackground}" />
         <Setter Property="SurfaceMutedBrush" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
         <Setter Property="SubtleBorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
         <Setter Property="StrongBorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />

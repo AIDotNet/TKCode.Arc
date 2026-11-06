@@ -119,6 +119,8 @@ internal sealed class TreeTableRowsHost : StackPanel
             Children.RemoveAt(Children.Count - 1);
         }
 
+        Restripe(lines);
+
         // Rows start their enter once they are in the tree, where the motion level is known.
         foreach (var (row, takeOver, position) in entering)
         {
@@ -129,6 +131,24 @@ internal sealed class TreeTableRowsHost : StackPanel
         {
             LayoutUpdated += OnLayoutAfterSort;
             InvalidateMeasure();
+        }
+    }
+
+    /// <summary>Marks every second row of <paramref name="lines"/> (loading and retry lines are skipped and not counted).</summary>
+    internal void Restripe(IReadOnlyList<TreeTableLine> lines)
+    {
+        var index = 0;
+        foreach (var line in lines)
+        {
+            if (line.Kind != TreeTableLineKind.Row)
+            {
+                continue;
+            }
+            if (_rows.TryGetValue(line.Key, out var row))
+            {
+                row.SetStriped(_owner.IsStriped && (index & 1) == 1);
+            }
+            index++;
         }
     }
 

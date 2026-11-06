@@ -1,7 +1,7 @@
 ---
 title: 树表格
 summary: 带嵌套行、三态选择、保持层级的排序和按需加载子行的表格。
-source-hash: ee6c67ae7e45
+source-hash: acf39441d900
 ---
 
 <Demo name="Budget" />
@@ -132,6 +132,16 @@ table.ChildrenLoader = async item => await api.GetChildrenAsync(((Account)item).
 ### 激活一行
 
 点击没有子行的行或在其上按 Enter 会触发 `RowActivated`，你可以在这里打开文件或记录。父行则会切换展开状态。
+
+### 隔行变色
+
+将 `IsStriped` 设为 true 可为每隔一个可见行着色。条纹按屏幕上可见行的顺序计数，与层级深度无关，因此展开、折叠、排序和加载子行后仍保持交替。父行下方的加载行和重试行不着色。悬停、键盘焦点和选中的底色会覆盖条纹。默认关闭，`Table` 与 `DataGrid` 使用同名属性。
+
+<Demo name="Striped" />
+
+```xml
+<arc:TreeTable IsStriped="True" ItemsSource="{Binding Files}" />
+```
 
 ### 响应式列
 

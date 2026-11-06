@@ -72,11 +72,20 @@
     <ControlTheme x:Key="{x:Type arc:TreeTableRow}" TargetType="arc:TreeTableRow">
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Background" Value="Transparent" />
+        <Style Selector="^:striped">
+            <Setter Property="Background" Value="{arc:TreeTableTokenResource StripeBackground}" />
+        </Style>
         <Style Selector="^:pointerover:not(:pending)">
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
         </Style>
+        <Style Selector="^:striped:pointerover">
+            <Setter Property="Background" Value="{arc:TreeTableTokenResource StripeHoverBackground}" />
+        </Style>
         <Style Selector="^:focus-visible">
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:striped:focus-visible">
+            <Setter Property="Background" Value="{arc:TreeTableTokenResource StripeHoverBackground}" />
         </Style>
         <Style Selector="^:selected">
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />

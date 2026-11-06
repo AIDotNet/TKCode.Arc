@@ -82,6 +82,15 @@ public class TreeTable : TemplatedControl
     public static readonly StyledProperty<bool> IsSelectableProperty =
         AvaloniaProperty.Register<TreeTable, bool>(nameof(IsSelectable));
 
+    /// <summary>
+    /// Alternates the row background: every second visible row, counted from the top of what is shown (so expanding,
+    /// collapsing, sorting and loading children keep the alternation; tree depth plays no part), gets a slightly different
+    /// fill. The loading and retry lines of a parent that is still fetching are not striped and not counted. Hover, keyboard
+    /// focus and selection stay on top of the stripe. Default false.
+    /// </summary>
+    public static readonly StyledProperty<bool> IsStripedProperty =
+        AvaloniaProperty.Register<TreeTable, bool>(nameof(IsStriped));
+
     /// <summary>The keys of the expanded rows (two-way; Arc <c>expanded</c> / <c>defaultExpanded</c>).</summary>
     public static readonly StyledProperty<IReadOnlyList<object>?> ExpandedKeysProperty =
         AvaloniaProperty.Register<TreeTable, IReadOnlyList<object>?>(nameof(ExpandedKeys), defaultBindingMode: BindingMode.TwoWay);
@@ -166,6 +175,9 @@ public class TreeTable : TemplatedControl
 
     /// <inheritdoc cref="IsSelectableProperty"/>
     public bool IsSelectable { get => GetValue(IsSelectableProperty); set => SetValue(IsSelectableProperty, value); }
+
+    /// <inheritdoc cref="IsStripedProperty"/>
+    public bool IsStriped { get => GetValue(IsStripedProperty); set => SetValue(IsStripedProperty, value); }
 
     /// <inheritdoc cref="ExpandedKeysProperty"/>
     public IReadOnlyList<object>? ExpandedKeys { get => GetValue(ExpandedKeysProperty); set => SetValue(ExpandedKeysProperty, value); }
@@ -1381,6 +1393,10 @@ public class TreeTable : TemplatedControl
             _failed.Clear();
             _loading.Clear();
             Rebuild(animate: false, rebuildCells: property != ItemsSourceProperty);
+        }
+        else if (property == IsStripedProperty)
+        {
+            _host?.Restripe(_lines);
         }
         else if (property == IsSelectableProperty)
         {

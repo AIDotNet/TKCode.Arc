@@ -1,7 +1,7 @@
 ---
 title: 表格
 summary: 透過可排序的欄位比較結構化紀錄。
-source-hash: 989db1c7afb4
+source-hash: eeb0aad72b8c
 ---
 
 <Demo name="Projects" />
@@ -247,6 +247,16 @@ public partial class InvoicesViewModel : ObservableObject
 - 將 `IsLoading` 繫結到忙碌旗標，使請求進行期間遮罩覆蓋各列。
 - 重新整理時重建集合，或修改現有的 `ObservableCollection<T>`。選取跟隨列的鍵，因此當列對應的仍是同一物件或 `RowKeySelector` 回傳相同的鍵時，選取在重新整理後得以保留。
 - 編譯繫結需要在檢視上設定 `x:DataType`（範例為求簡潔省略了它）。
+
+### 隔行變色
+
+將 `IsStriped` 設為 true 可為每隔一列著色，方便在較寬的表格中沿列閱讀。條紋依列的顯示順序交替，因此排序後、捲動時以及新增或移除列後仍保持交替。滑鼠移入與選取的底色會覆蓋條紋，焦點環維持不變。預設關閉，`TreeTable` 與 `DataGrid` 使用同名屬性。
+
+<Demo name="Striped" />
+
+```xml
+<arc:Table IsStriped="True" ItemsSource="{Binding Projects}" />
+```
 
 ### 資料結構與效能
 

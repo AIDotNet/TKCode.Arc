@@ -2024,6 +2024,8 @@
       "StatusActionDuration": "6000ms",
       "StatusBarHeight": "34",
       "StatusMessageDuration": "2400ms",
+      "StripeCellBackground": "#FF232323",
+      "StripeGutterBackground": "#FF1D1D1D",
       "ToolButtonHeight": "32",
       "ToolbarHeight": "52",
       "TotalsRowHeight": "40",
@@ -2629,6 +2631,29 @@
       "RuleLengthSM": "15",
       "RuleMargin": "2,0,2,0",
       "VerticalRuleMargin": "0,2,0,2"
+    },
+    "GanttTimeline": {
+      "BarHeight": "24",
+      "BarRadius": "8",
+      "DefaultChartHeight": "480",
+      "DisabledOpacity": "0.4",
+      "FrameRadius": "20,20,20,20",
+      "HeaderHeight": "56",
+      "NarrowRootPadding": "12,12,12,8",
+      "NarrowTaskColumnWidth": "132",
+      "PillGap": "6",
+      "PillHeight": "36",
+      "PillPadding": "14,0,14,0",
+      "PillRadius": "18,18,18,18",
+      "RootPadding": "20,16,20,12",
+      "SectionGap": "12",
+      "SwitchButtonHeight": "32",
+      "SwitchButtonPadding": "14,0,14,0",
+      "SwitchButtonRadius": "12,12,12,12",
+      "SwitchPadding": "4,4,4,4",
+      "SwitchRadius": "16,16,16,16",
+      "TaskColumnWidth": "248",
+      "ToolbarGap": "12"
     },
     "Gauge": {
       "CaptionGap": "10",
@@ -6204,6 +6229,8 @@
       "PrimaryInsetSelectable": "8",
       "RowHeight": "52",
       "SelectColumnWidth": "44",
+      "StripeBackground": "#FF1C1C1C",
+      "StripeColumnBackground": "#FF272727",
       "WrapColumnMaxWidth": "320"
     },
     "Tabs": {
@@ -6770,6 +6797,8 @@
       "HeaderHeight": "40",
       "IndentWidth": "20",
       "RowHeight": "44",
+      "StripeBackground": "#FF1C1C1C",
+      "StripeHoverBackground": "#FF292929",
       "TableCornerRadius": "26,26,26,26",
       "TreeCellMargin": "10"
     },

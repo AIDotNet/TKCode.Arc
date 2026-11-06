@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Media;
 
 namespace TKCode.Arc;
 
@@ -54,9 +55,18 @@ internal sealed class TableToken : AbstractControlDesignToken
     /// <summary>Below this width rows fold into two lines and the header becomes a strip of sort pills.</summary>
     public double CompactBreakpoint { get; set; }
 
+    /// <summary>Fill of the odd rows when <see cref="Table.IsStriped"/> is on (the surface, a little toward the text color).</summary>
+    public Color StripeBackground { get; set; }
+
+    /// <summary>The same stripe over the tinted sorted column.</summary>
+    public Color StripeColumnBackground { get; set; }
+
     public override void CalculateTokenValues(bool isDarkMode)
     {
         base.CalculateTokenValues(isDarkMode);
+        var n = ArcPalette.Neutrals(isDarkMode);
+        StripeBackground = Oklch.MixOklab(n.Surface, n.Foreground, 0.02);
+        StripeColumnBackground = Oklch.MixOklab(n.SurfaceMuted, n.Foreground, 0.02);
         HeaderHeight = 44;
         RowHeight = 52;
         CompactRowHeight = 64;
