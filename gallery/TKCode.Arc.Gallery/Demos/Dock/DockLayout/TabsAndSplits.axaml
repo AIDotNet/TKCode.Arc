@@ -1,0 +1,39 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.DockLayoutTabsAndSplitsDemo">
+    <!-- Two editors side by side inside the document area, and a column of two tool groups on the right. -->
+    <arc:DockLayout Height="360" CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}">
+        <arc:DockSplit Orientation="Horizontal">
+            <arc:DockDocumentArea Size="70">
+                <arc:DockSplit Orientation="Horizontal">
+                    <arc:DockGroup>
+                        <arc:DockPane Id="doc:orders" Title="Orders.cs">
+                            <TextBlock Margin="16,8" Text="public sealed class Orders { }" FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}" FontSize="13" />
+                        </arc:DockPane>
+                        <arc:DockPane Id="doc:invoices" Title="Invoices.cs">
+                            <TextBlock Margin="16,8" Text="public sealed class Invoices { }" FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}" FontSize="13" />
+                        </arc:DockPane>
+                    </arc:DockGroup>
+                    <arc:DockGroup>
+                        <arc:DockPane Id="doc:tests" Title="OrdersTests.cs">
+                            <TextBlock Margin="16,8" Text="public sealed class OrdersTests { }" FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}" FontSize="13" />
+                        </arc:DockPane>
+                    </arc:DockGroup>
+                </arc:DockSplit>
+            </arc:DockDocumentArea>
+            <arc:DockSplit Orientation="Vertical" Size="30">
+                <arc:DockGroup>
+                    <arc:DockPane Id="outline" Title="Outline" Icon="{x:Static arc:ArcIcons.List}" PreferredSide="Right">
+                        <TextBlock Margin="14,6" Text="Orders" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                    </arc:DockPane>
+                </arc:DockGroup>
+                <arc:DockGroup>
+                    <arc:DockPane Id="properties" Title="Properties" Icon="{x:Static arc:ArcIcons.SlidersHorizontal}" PreferredSide="Right">
+                        <TextBlock Margin="14,6" Text="Nothing selected" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                    </arc:DockPane>
+                </arc:DockGroup>
+            </arc:DockSplit>
+        </arc:DockSplit>
+    </arc:DockLayout>
+</UserControl>

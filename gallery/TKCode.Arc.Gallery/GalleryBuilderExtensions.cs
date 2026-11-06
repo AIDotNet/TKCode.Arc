@@ -11,7 +11,7 @@ public static class GalleryBuilderExtensions
     /// Registers the gallery's shell text (<c>Localization/*.xlf</c>) and enables everything the gallery's pages show: the
     /// blocks (<c>UseArcBlocks()</c>), the mobile components (<c>UseArcMobile()</c>), the Pixel and corner styles the
     /// Appearance panel offers (<c>UseArcPixelTheme()</c>, <c>UseArcCorners()</c>), <c>UseArcAdvancedCharts()</c>,
-    /// <c>UseArcWorkflow()</c> and <c>UseArcSpecial()</c>. Call it inside <c>UseArc(...)</c> in every host that shows a
+    /// <c>UseArcWorkflow()</c>, <c>UseArcDock()</c> and <c>UseArcSpecial()</c>. Call it inside <c>UseArc(...)</c> in every host that shows a
     /// <see cref="Shell.GalleryWindow"/>; the host's <c>UseLanguages</c> decides which of the translations are used.
     /// </summary>
     /// <param name="builder">The Arc builder.</param>
@@ -37,6 +37,7 @@ public static class GalleryBuilderExtensions
             .DependsOn(static b => b.UseArcBlocks())
             .DependsOn(static b => b.UseArcAdvancedCharts())
             .DependsOn(static b => b.UseArcWorkflow())
+            .DependsOn(static b => b.UseArcDock())
             .DependsOn(static b => b.UseArcMobile())
             .DependsOn(static b => b.UseArcPixelTheme())
             .DependsOn(static b => b.UseArcCorners()));

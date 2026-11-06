@@ -1,0 +1,47 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.DockLayoutTheme">
+    <ControlTheme x:Key="{x:Type arc:DockLayout}" TargetType="arc:DockLayout">
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="Padding" Value="{arc:DockLayoutTokenResource Padding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="ClipToBounds" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:DockLayout">
+                <Border Background="{TemplateBinding Background}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Panel>
+                        <!-- The auto-hide strips take room only while their edge has auto-hidden panes. -->
+                        <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,*,Auto">
+                            <arc:DockAutoHideStrip Name="PART_LeftStrip" Grid.Row="1" Grid.Column="0" Side="Left" />
+                            <arc:DockAutoHideStrip Name="PART_RightStrip" Grid.Row="1" Grid.Column="2" Side="Right" />
+                            <arc:DockAutoHideStrip Name="PART_TopStrip" Grid.Row="0" Grid.Column="1" Side="Top" />
+                            <arc:DockAutoHideStrip Name="PART_BottomStrip" Grid.Row="2" Grid.Column="1" Side="Bottom" />
+                            <Panel Name="PART_Host" Grid.Row="1" Grid.Column="1" />
+                            <arc:DockAutoHideFlyout Name="PART_Flyout" Grid.Row="1" Grid.Column="1" />
+                        </Grid>
+                        <!-- Floating cards (FloatingMode Overlay, or where there are no windows) above the layout and the auto-hide flyout. -->
+                        <Canvas Name="PART_Floats" />
+                        <TextBlock Name="PART_Announcer"
+                                   Width="1"
+                                   Height="1"
+                                   Opacity="0"
+                                   IsHitTestVisible="False"
+                                   ClipToBounds="True"
+                                   HorizontalAlignment="Left"
+                                   VerticalAlignment="Top"
+                                   AutomationProperties.LiveSetting="Polite" />
+                        <arc:DockPaneSwitcher Name="PART_Switcher" />
+                        <!-- The drag indicators (compass, preview, drag ghost) above everything. -->
+                        <arc:DockIndicatorLayer Name="PART_Indicators" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

@@ -2191,6 +2191,75 @@
       "WaveformHeight": "18",
       "WaveformMargin": "8,0,8,0"
     },
+    "DockAutoHide": {
+      "ButtonGap": "4",
+      "ButtonPadding": "10,0,10,0",
+      "ButtonThickness": "26",
+      "FocusRingMargin": "0,0,0,0",
+      "FontSize": "13",
+      "GripThickness": "6",
+      "HeaderHeight": "36",
+      "HeaderPadding": "12,0,4,0",
+      "IconSize": "14",
+      "IndicatorThickness": "2"
+    },
+    "DockFloatingWindow": {
+      "CardContentPadding": "6,0,6,6",
+      "CardGripSize": "14",
+      "CardTitleHeight": "32",
+      "MinHeight": "240",
+      "MinWidth": "320",
+      "OpenOffsetX": "24",
+      "OpenOffsetY": "16"
+    },
+    "DockGroupView": {
+      "ActionGlyphSize": "14",
+      "ActionSize": "24",
+      "StripHeight": "36",
+      "StripPadding": "4,0,4,0"
+    },
+    "DockIndicator": {
+      "ButtonGap": "6",
+      "ButtonSize": "36",
+      "EdgeInset": "8",
+      "GhostOffset": "12",
+      "GhostOpacity": "0.92",
+      "GlyphSize": "18",
+      "InsertionLineWidth": "2",
+      "PreviewFillOpacity": "0.55",
+      "PreviewStroke": "1.5"
+    },
+    "DockLayout": {
+      "FlyoutMaxShare": "0.7",
+      "Gap": "6",
+      "Padding": "6,6,6,6",
+      "StripThickness": "32"
+    },
+    "DockPane": {
+      "DefaultPreferredSize": "280"
+    },
+    "DockPaneSwitcher": {
+      "CaptionHeight": "28",
+      "FontSize": "13",
+      "IconSize": "14",
+      "MaxListHeight": "360",
+      "Padding": "6,6,6,6",
+      "RowHeight": "32",
+      "RowPadding": "10,0,10,0",
+      "Width": "320"
+    },
+    "DockTab": {
+      "CloseGlyphSize": "12",
+      "CloseSize": "16",
+      "FocusRingMargin": "0,0,0,0",
+      "FontSize": "13",
+      "Height": "28",
+      "IconSize": "14",
+      "InlinePadding": "10,0,10,0",
+      "ItemGap": "6",
+      "ModifiedDotSize": "6",
+      "TabGap": "2"
+    },
     "DocumentExtraction": {
       "BarHeight": "48",
       "BodyHeight": "600",

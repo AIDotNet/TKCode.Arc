@@ -5,18 +5,31 @@ while the version carries a `-preview` suffix the API may still change between r
 
 NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Foundation` (from 0.3.2),
 `TKCode.Arc.Fonts`, `TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special`,
-`TKCode.Arc.Workflow`, `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
+`TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native` and `TKCode.Arc.Audio.Browser`.
 
-## Unreleased
+## 0.4.0-preview.2 - 2026-11-06
+
+A Dock layout in the new package `TKCode.Arc.Dock`, `ArcWindow` with an Arc title bar, vertical `ResizablePanels`, lighter controls and fixes for popups inside popups and for the base theme (issues #35, #38, #39 and #40).
 
 ### Added
 
+- **Dock layout** (new package `TKCode.Arc.Dock`, `UseArcDock()`; issue #35): an IDE-style layout of panes (`DockPane`) in tab groups, nested in horizontal and vertical splits whose dividers are `ResizablePanels`, around a central document area. Write the tree in XAML (`DockSplit`, `DockGroup`, `DockDocumentArea`) or build a `DockWorkspace` in code; the model tidies itself (emptied groups go, one-child splits collapse, same-direction splits merge). Panes move with `Move(pane, DockTarget)` or the tab menu (Close, Close others, Close all, Move to › New group left/right/above/below, Dock to › Left/Right/Top/Bottom), keep their content instance when they move, and close from the tab, the menu or the keyboard (`PaneClosing` can cancel). Tabs scroll and list themselves in an overflow menu when they do not fit; document tabs show a close button and a modified dot. Keyboard: arrows, Home and End between tabs, Ctrl/⌘+Shift+arrows to reorder, Delete and Ctrl+F4/⌘+W to close, Shift+F10 for the menu. `SaveLayout` and `LoadLayout` write and read the layout as JSON (`tkcode-arc-dock`, version 1, hand-written reader and writer, no reflection). Built-in text in en-US, zh-CN and zh-TW. New gallery group "Dock".
+- **Dock layout: drag and drop, floating**: drag a tab along its strip to reorder it (the other tabs spring aside) or away from it to dock it: a ghost follows the pointer, a compass over the group under the pointer joins or splits it, a ring over the document area docks beside all documents, edge buttons dock along the whole layout, a line in a tab strip shows where the tab goes, and the preview glides between targets. Drag a strip's empty part to move the whole group; Escape cancels. `ShowDockIndicators="False"` docks by the pointer's place in a group without the compass. Panes float with `Float`, the tab menu (Float) or by dropping them outside the layout, and dock back with `Dock` (to where they were), the menu, a double click on the title bar or by dragging their window onto the compass. `FloatingMode`: `Auto` (owned windows in classic desktop apps, floating cards inside the layout elsewhere, such as the browser), `Window`, `Overlay`, `Disabled`. Floating windows follow `Workspace.Floats` both ways and come back with a saved layout, pulled onto a visible screen; closing one closes its panes that can close and docks the others. On Wayland, windows open where the system puts them and dock back from the menu. New `FloatActiveCommand`.
+- **Dock layout: auto hide, item sources, pane switcher, maximize**: `AutoHide` (tab menu, Shift+Escape) moves a tool to a strip on the layout edge nearest its group; its strip button slides it out over the content as a card (as wide as it was docked, at most 70% of the layout, inner edge resizable), and a click outside, Escape or focus leaving slides it back; `Pin` (the card's pin, the menu, `Dock`) returns it to its group. Auto-hidden panes are saved with the layout and can be declared in XAML through `DockWorkspace.LeftHidden` / `RightHidden` / `TopHidden` / `BottomHidden`. `DocumentsSource` / `ToolsSource` with `DocumentTemplate` / `ToolTemplate` make one pane per item (`DataContext` = item, optional `IDockItem` for id and title, `DockPane.IdOf`): adding an item opens its pane, removing it closes it, closing a tab removes the item from a writable list, and saved layouts restore these panes by id. Ctrl+Tab opens a pane switcher in most-recently-used order (release Ctrl to switch). A double click on a tab strip's empty part (or Maximize in the menu) makes a group fill the layout until restored. New `AutoHideActiveCommand`, `ShowPaneSwitcherCommand`, `ToggleMaximizeCommand`.
 - **ArcWindow** (Extras): a desktop window with an Arc title bar, like WPF's `WindowChrome` (issue #38). The client area extends into the decorations and a `TitleBar` is drawn at the top in the theme's colors, with `LeftContent`, `CenterContent` (centered on the whole bar while it fits) and `RightContent` for your own controls. Dragging the bar moves the window, a double click maximizes or restores it, and the edges resize it. On Windows the bar is the system caption (system menu, Aero Snap) and its maximize button opens Windows 11 Snap Layouts; on macOS the traffic lights stay. `CaptionButtons` (`Auto`, `Drawn`, `System`, `None`) picks who draws minimize, maximize and close, and the bar's `Height` sets the title bar height the window asks the system for. Caption button tooltips are localized (en-US, zh-CN, zh-TW).
 
 ### Changed
 
+- **ResizablePanels**: `Orientation` (`Horizontal`, the default, or `Vertical`), `Gap` (the space between panes, 1 by default) and panes added or removed at run time, which keep the sizes of the panes that stay (the others give up room in proportion). New `Vertical` example. The Dock layout uses it for its splits.
+- **Controls**: rarely used template parts are built when first needed: the keyboard focus ring (Button, Checkbox, Switch, TabItem, Select and others), the Tabs scroll buttons and the Slider value bubbles. Button states map to pseudo-classes. A list of 500 buttons allocates 52.7 MB instead of 61.7 MB and keeps 35.5 MB instead of 41.7 MB. Text fields, selects, sliders and toggles get small motion and token updates.
 - **Gallery (desktop)**: the gallery window is an `ArcWindow`; its own title bar class is gone.
+
+### Fixed
+
+- **Popups**: a `Select`, tooltip or other popup opened inside an `ArcPopup` dialog (a native popup window) no longer throws "Unable to create IPopupImpl and no overlay layer is found"; it opens as a native popup window (issue #40).
+- **Base theme**: an application `ControlTheme` for one built-in type (for example `PopupRoot`) no longer turns off the whole base theme; only the types the app styles itself are skipped (issue #39).
+- **Gallery (WebAssembly)**: switching pages no longer freezes the site; the WebAssembly host is published without ahead-of-time compilation by default (`-p:ArcAot=true` turns it on).
 
 ## 0.4.0-preview.1 - 2026-11-03
 
@@ -781,6 +794,8 @@ ArcTheme.Apply(t => t
 
 First preview release.
 
+[0.4.0-preview.2]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.4.0-preview.1...v0.4.0-preview.2
+[0.4.0-preview.1]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.2-preview.2...v0.4.0-preview.1
 [0.3.2-preview.2]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.2-preview.1...v0.3.2-preview.2
 [0.3.2-preview.1]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.1-preview.6...v0.3.2-preview.1
 [0.3.1-preview.6]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.1-preview.5...v0.3.1-preview.6

@@ -1,0 +1,189 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.DockAutoHideTheme">
+    <!-- The button of an auto-hidden pane on an edge strip. -->
+    <ControlTheme x:Key="{x:Type arc:DockAutoHideButton}" TargetType="arc:DockAutoHideButton">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:DockAutoHideButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <!-- Turned 90° on the left and right strips (DockAutoHideButton sets IsTurned). -->
+                        <arc:DockTurnedPresenter Name="PART_Rotate"
+                                                 HorizontalAlignment="Center"
+                                                 VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal"
+                                        Spacing="6"
+                                        Margin="{TemplateBinding Padding}"
+                                        VerticalAlignment="Center">
+                                <arc:ArcGlyph Data="{TemplateBinding Icon}"
+                                              Size="{arc:DockAutoHideTokenResource IconSize}"
+                                              VerticalAlignment="Center"
+                                              IsVisible="{TemplateBinding Icon, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                                <TextBlock Text="{TemplateBinding Title}" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </arc:DockTurnedPresenter>
+                    </Border>
+                    <Border Name="PART_Indicator"
+                            Background="{arc:ArcDesignTokenResource Accent}"
+                            CornerRadius="1"
+                            IsVisible="False" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Padding" Value="{arc:DockAutoHideTokenResource ButtonPadding}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep8}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:DockAutoHideTokenResource FontSize}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Style Selector="^:vertical">
+            <Setter Property="Width" Value="{arc:DockAutoHideTokenResource ButtonThickness}" />
+        </Style>
+        <Style Selector="^:top">
+            <Setter Property="Height" Value="{arc:DockAutoHideTokenResource ButtonThickness}" />
+        </Style>
+        <Style Selector="^:bottom">
+            <Setter Property="Height" Value="{arc:DockAutoHideTokenResource ButtonThickness}" />
+        </Style>
+        <!-- The accent bar sits on the side that faces the content. -->
+        <Style Selector="^:vertical /template/ Border#PART_Indicator">
+            <Setter Property="Width" Value="{arc:DockAutoHideTokenResource IndicatorThickness}" />
+            <Setter Property="Margin" Value="0,6" />
+        </Style>
+        <Style Selector="^:left /template/ Border#PART_Indicator">
+            <Setter Property="HorizontalAlignment" Value="Right" />
+        </Style>
+        <Style Selector="^:right /template/ Border#PART_Indicator">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+        <Style Selector="^:top /template/ Border#PART_Indicator">
+            <Setter Property="Height" Value="{arc:DockAutoHideTokenResource IndicatorThickness}" />
+            <Setter Property="Margin" Value="6,0" />
+            <Setter Property="VerticalAlignment" Value="Bottom" />
+        </Style>
+        <Style Selector="^:bottom /template/ Border#PART_Indicator">
+            <Setter Property="Height" Value="{arc:DockAutoHideTokenResource IndicatorThickness}" />
+            <Setter Property="Margin" Value="6,0" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+        </Style>
+        <Style Selector="^:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:selected">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        </Style>
+        <Style Selector="^:selected /template/ Border#PART_Indicator">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" />
+                    <arc:ArcBrushTransition Property="Background" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The pin button in the flyout header. -->
+    <ControlTheme x:Key="DockAutoHidePinButtonTheme" TargetType="Button">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="Button">
+                <Border Background="{TemplateBinding Background}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                    <ContentPresenter Content="{TemplateBinding Content}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Width" Value="{arc:DockGroupViewTokenResource ActionSize}" />
+        <Setter Property="Height" Value="{arc:DockGroupViewTokenResource ActionSize}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep8}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The flyout card: SurfaceRaised with the floating shadow, like ArcPopup. -->
+    <ControlTheme x:Key="{x:Type arc:DockAutoHideCard}" TargetType="arc:DockAutoHideCard">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="arc:ArcSurface.Elevation" Value="Raised" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:DockAutoHideCard">
+                <Border Name="PART_Card"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}">
+                    <Border CornerRadius="{TemplateBinding CornerRadius}" ClipToBounds="True">
+                        <DockPanel>
+                            <Grid Name="PART_Header"
+                                  DockPanel.Dock="Top"
+                                  Height="{arc:DockAutoHideTokenResource HeaderHeight}"
+                                  Margin="{arc:DockAutoHideTokenResource HeaderPadding}"
+                                  Background="Transparent"
+                                  ColumnDefinitions="Auto,*,Auto">
+                                <arc:ArcGlyph Data="{TemplateBinding Icon}"
+                                              Size="{arc:DockAutoHideTokenResource IconSize}"
+                                              Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                              Margin="0,0,8,0"
+                                              VerticalAlignment="Center"
+                                              IsVisible="{TemplateBinding Icon, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                                <TextBlock Grid.Column="1"
+                                           Text="{TemplateBinding Title}"
+                                           FontSize="{arc:DockTabTokenResource FontSize}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           VerticalAlignment="Center"
+                                           TextTrimming="CharacterEllipsis" />
+                                <Button Name="PART_Pin"
+                                        Grid.Column="2"
+                                        Theme="{StaticResource DockAutoHidePinButtonTheme}"
+                                        IsVisible="{TemplateBinding CanPin}">
+                                    <arc:ArcGlyph Data="{x:Static arc:DockGlyphs.Pin}" Size="{arc:DockGroupViewTokenResource ActionGlyphSize}" />
+                                </Button>
+                            </Grid>
+                            <Decorator Name="PART_Content" />
+                        </DockPanel>
+                    </Border>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

@@ -20,5 +20,8 @@
         <Style Selector="^:resizing">
             <Setter Property="Cursor" Value="SizeWestEast" />
         </Style>
+        <Style Selector="^:vertical:resizing">
+            <Setter Property="Cursor" Value="SizeNorthSouth" />
+        </Style>
     </ControlTheme>
 </ResourceDictionary>

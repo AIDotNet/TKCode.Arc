@@ -1,0 +1,39 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.DockLayoutSaveAndRestoreDemo">
+    <!-- Rearrange the panes (right-click a tab), save the layout to the box, change it again, then restore it. -->
+    <Grid ColumnDefinitions="*,280" ColumnSpacing="16" Height="380">
+        <arc:DockLayout x:Name="Layout" CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}">
+            <arc:DockSplit Orientation="Horizontal">
+                <arc:DockGroup Size="30">
+                    <arc:DockPane Id="files" Title="Files" Icon="{x:Static arc:ArcIcons.Folder}" PreferredSide="Left">
+                        <TextBlock Margin="14,6" Text="3 files" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                    </arc:DockPane>
+                    <arc:DockPane Id="history" Title="History" Icon="{x:Static arc:ArcIcons.Clock}" PreferredSide="Left">
+                        <TextBlock Margin="14,6" Text="Saved 2 minutes ago" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                    </arc:DockPane>
+                </arc:DockGroup>
+                <arc:DockDocumentArea Size="70">
+                    <arc:DockGroup>
+                        <arc:DockPane Id="doc:notes" Title="Notes.md">
+                            <TextBlock Margin="16,8" Text="Release notes for 0.4" />
+                        </arc:DockPane>
+                        <arc:DockPane Id="doc:plan" Title="Plan.md">
+                            <TextBlock Margin="16,8" Text="Milestones" />
+                        </arc:DockPane>
+                    </arc:DockGroup>
+                </arc:DockDocumentArea>
+            </arc:DockSplit>
+        </arc:DockLayout>
+        <DockPanel Grid.Column="1">
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Spacing="8" Margin="0,12,0,0">
+                <arc:Button x:Name="SaveButton" Content="Save layout" Variant="Secondary" Size="Small" />
+                <arc:Button x:Name="RestoreButton" Content="Restore layout" Variant="Secondary" Size="Small" />
+            </StackPanel>
+            <TextBlock x:Name="Status" DockPanel.Dock="Bottom" Margin="0,8,0,0" FontSize="13"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+            <arc:Textarea x:Name="Json" Label="Saved layout" FrameHeight="250" IsResizable="False" FontSize="12" />
+        </DockPanel>
+    </Grid>
+</UserControl>

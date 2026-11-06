@@ -80,6 +80,7 @@ public enum GalleryShellLangResourceKind
     Category_Charts,
     Category_AdvancedCharts,
     Category_Workflow,
+    Category_Dock,
     Category_Tables,
     Category_Activity,
     Category_Media,

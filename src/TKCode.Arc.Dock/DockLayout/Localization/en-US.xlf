@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="2.1" srcLang="en-US" xmlns="urn:oasis:names:tc:xliff:document:2.0">
+  <file id="TKCode.Arc.Localization.DockLangResourceKind">
+    <unit id="AnnounceAutoHidden">
+      <segment>
+        <source>{0} auto hidden</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceClosed">
+      <segment>
+        <source>{0} closed</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceDockedAbove">
+      <segment>
+        <source>{0} docked above {1}</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceDockedBelow">
+      <segment>
+        <source>{0} docked below {1}</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceDockedEdgeBottom">
+      <segment>
+        <source>{0} docked to the bottom edge</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceDockedEdgeLeft">
+      <segment>
+        <source>{0} docked to the left edge</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceDockedEdgeRight">
+      <segment>
+        <source>{0} docked to the right edge</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceDockedEdgeTop">
+      <segment>
+        <source>{0} docked to the top edge</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceDockedLeft">
+      <segment>
+        <source>{0} docked to the left of {1}</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceDockedRight">
+      <segment>
+        <source>{0} docked to the right of {1}</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceFloating">
+      <segment>
+        <source>{0} moved to a new window</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceJoined">
+      <segment>
+        <source>{0} moved next to {1}</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceReordered">
+      <segment>
+        <source>{0}, tab {1} of {2}</source>
+      </segment>
+    </unit>
+    <unit id="AutoHiddenHelp">
+      <segment>
+        <source>Auto hidden, press Enter to show</source>
+      </segment>
+    </unit>
+    <unit id="AutoHide">
+      <segment>
+        <source>Auto hide</source>
+      </segment>
+    </unit>
+    <unit id="Close">
+      <segment>
+        <source>Close</source>
+      </segment>
+    </unit>
+    <unit id="CloseAll">
+      <segment>
+        <source>Close all</source>
+      </segment>
+    </unit>
+    <unit id="CloseOthers">
+      <segment>
+        <source>Close others</source>
+      </segment>
+    </unit>
+    <unit id="CloseTab">
+      <segment>
+        <source>Close {0}</source>
+      </segment>
+    </unit>
+    <unit id="Dock">
+      <segment>
+        <source>Dock</source>
+      </segment>
+    </unit>
+    <unit id="DockTo">
+      <segment>
+        <source>Dock to</source>
+      </segment>
+    </unit>
+    <unit id="Float">
+      <segment>
+        <source>Float</source>
+      </segment>
+    </unit>
+    <unit id="IndicatorBottom">
+      <segment>
+        <source>Dock bottom</source>
+      </segment>
+    </unit>
+    <unit id="IndicatorCenter">
+      <segment>
+        <source>Dock as tab</source>
+      </segment>
+    </unit>
+    <unit id="IndicatorLeft">
+      <segment>
+        <source>Dock left</source>
+      </segment>
+    </unit>
+    <unit id="IndicatorRight">
+      <segment>
+        <source>Dock right</source>
+      </segment>
+    </unit>
+    <unit id="IndicatorTop">
+      <segment>
+        <source>Dock top</source>
+      </segment>
+    </unit>
+    <unit id="LayoutName">
+      <segment>
+        <source>Dock layout</source>
+      </segment>
+    </unit>
+    <unit id="Maximize">
+      <segment>
+        <source>Maximize</source>
+      </segment>
+    </unit>
+    <unit id="MoreActions">
+      <segment>
+        <source>More actions</source>
+      </segment>
+    </unit>
+    <unit id="MoreTabs">
+      <segment>
+        <source>More tabs</source>
+      </segment>
+    </unit>
+    <unit id="MoveTo">
+      <segment>
+        <source>Move to</source>
+      </segment>
+    </unit>
+    <unit id="NewGroupAbove">
+      <segment>
+        <source>New group above</source>
+      </segment>
+    </unit>
+    <unit id="NewGroupBelow">
+      <segment>
+        <source>New group below</source>
+      </segment>
+    </unit>
+    <unit id="NewGroupLeft">
+      <segment>
+        <source>New group left</source>
+      </segment>
+    </unit>
+    <unit id="NewGroupRight">
+      <segment>
+        <source>New group right</source>
+      </segment>
+    </unit>
+    <unit id="NoOpenDocuments">
+      <segment>
+        <source>No open documents</source>
+      </segment>
+    </unit>
+    <unit id="PaneSwitcher">
+      <segment>
+        <source>Pane switcher</source>
+      </segment>
+    </unit>
+    <unit id="Pin">
+      <segment>
+        <source>Pin</source>
+      </segment>
+    </unit>
+    <unit id="Restore">
+      <segment>
+        <source>Restore</source>
+      </segment>
+    </unit>
+    <unit id="SideBottom">
+      <segment>
+        <source>Bottom</source>
+      </segment>
+    </unit>
+    <unit id="SideLeft">
+      <segment>
+        <source>Left</source>
+      </segment>
+    </unit>
+    <unit id="SideRight">
+      <segment>
+        <source>Right</source>
+      </segment>
+    </unit>
+    <unit id="SideTop">
+      <segment>
+        <source>Top</source>
+      </segment>
+    </unit>
+    <unit id="TabModified">
+      <segment>
+        <source>{0}, modified</source>
+      </segment>
+    </unit>
+  </file>
+</xliff>
