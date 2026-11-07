@@ -28,6 +28,9 @@ internal sealed class SettingsGroupToken : AbstractControlDesignToken
     /// <summary>Gap between the header text and the header actions.</summary>
     public Thickness HeaderActionsMargin { get; set; }
 
+    /// <summary>Default gap between columns when the rows are laid out in more than one.</summary>
+    public double ColumnGap { get; set; }
+
     /// <summary>The footer strip: the foreground at 2.5%, over the card surface.</summary>
     public Color FooterBackground { get; set; }
 
@@ -45,6 +48,7 @@ internal sealed class SettingsGroupToken : AbstractControlDesignToken
         PlainFooterInset = new Thickness(0, 14, 0, 0);
         HeaderGap = 4;
         HeaderActionsMargin = new Thickness(16, 0, 0, 0);
+        ColumnGap = 32;
         FooterBackground = Oklch.WithAlpha(n.Foreground, isDarkMode ? 0.04 : 0.025);
         BodyLineHeight = 14 * 1.4;
     }

@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SettingsPageColumnsDemo">
+    <arc:SettingsGroup Header="General" Description="Application preferences." Columns="2" MaxWidth="880">
+        <arc:SettingsRow Header="Notifications" Description="Desktop alerts." StackWidth="240">
+            <arc:Switch IsChecked="True" />
+        </arc:SettingsRow>
+        <arc:SettingsRow Header="Start at login" Description="Open with your computer." StackWidth="240">
+            <arc:Switch />
+        </arc:SettingsRow>
+        <arc:SettingsRow Header="Sounds" Description="Play a sound on new messages." StackWidth="240">
+            <arc:Switch IsChecked="True" />
+        </arc:SettingsRow>
+        <arc:SettingsRow Header="Badges" Description="Show unread counts on the icon." StackWidth="240">
+            <arc:Switch IsChecked="True" />
+        </arc:SettingsRow>
+        <arc:SettingsRow Header="Default language" Description="Used for new documents and emails." arc:SettingsGroup.ColumnSpan="0">
+            <arc:Select Width="180" SelectedIndex="0">
+                <arc:SelectItem Content="English" Value="en" />
+                <arc:SelectItem Content="Nederlands" Value="nl" />
+            </arc:Select>
+        </arc:SettingsRow>
+    </arc:SettingsGroup>
+</UserControl>

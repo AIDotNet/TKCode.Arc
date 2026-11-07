@@ -1,7 +1,7 @@
 ---
 title: 設定頁面
 summary: 完整的設定頁面：導覽區帶有帳戶卡片，旁邊顯示所選區段，並提供未儲存變更的儲存列。
-source-hash: bcc22b2a736f
+source-hash: 7b3f7d3a7054
 ---
 
 <Demo name="Overview" />
@@ -140,6 +140,46 @@ Page.DiscardRequested += (_, _) => ViewModel.DiscardCommand.Execute(null);
 群組預設繪製為卡片，可選的 `Header`、`Description`、`HeaderActions` 以及帶淡色底的 `Footer` 條。`Appearance="Plain"` 會去掉外框，適用於頁面內用細線分隔的群組。區段本身已有標題，因此在區段內優先使用 `Plain`，避免頁面中出現卡片套卡片。
 
 <Demo name="Rows" />
+
+### 多欄
+
+群組預設把設定列排成一欄。設定 `Columns` 可以讓設定列並排：設定列由左到右依序填滿每一列中等寬的欄，同一列裡的設定列與其中最高的一項等高，只有第一列以下的設定列繪製細線。`ColumnSpacing`（預設 32）是欄間距，`RowSpacing`（預設 0）是列間距。附加屬性 `SettingsGroup.ColumnSpan` 讓設定列跨越多欄；`0` 跨越整列，適合需要更多空間的設定，例如選項較長的下拉選單。目前這一列剩餘的空間放不下的設定列會從下一列開始。
+
+窄欄中的設定列在寬度低於其 `StackWidth` 時仍會把控制項移到文字下方。對於只有標題和開關這類較短的設定列，可以調低 `StackWidth`，讓控制項在欄中仍留在文字旁邊。
+
+<Demo name="Columns" />
+
+### 響應式欄數
+
+設定 `MinColumnWidth` 後，群組會依自身寬度決定欄數：在不小於該寬度的前提下盡可能多分欄，最多 `Columns` 欄；連兩欄都放不下時為一欄。`Columns="0"` 取消上限，群組會依能放下的數量分欄，但欄數不會超過設定列的數量。`ActualColumns` 反映目前使用的欄數。
+
+<Demo name="ResponsiveColumns" />
+
+```xml
+<!-- 寬視窗中為兩欄，寬度低於 2 × 320 px 加欄間距時為一欄。 -->
+<arc:SettingsGroup Columns="2" MinColumnWidth="320">
+    <arc:SettingsRow Header="Notifications">
+        <arc:Switch IsChecked="True" />
+    </arc:SettingsRow>
+    <arc:SettingsRow Header="Start at login">
+        <arc:Switch />
+    </arc:SettingsRow>
+</arc:SettingsGroup>
+```
+
+如果要用其他方式排列設定列，可以把 `ItemsPanel` 換成任意 Avalonia 面板，例如 `WrapPanel` 或 `UniformGrid`。此時與欄相關的屬性不再生效。
+
+### 標籤寬度與對齊
+
+`LabelWidth`、`ContentAlignment` 和 `ContentSpacing` 決定控制項在設定列中的位置。在群組上設定後，群組內的每一列都會繼承；在某一列上設定則只覆寫該列。
+
+- `LabelWidth` 固定從設定列左邊緣到控制項的距離（包含圖示），因此無論設定列是否帶圖示，群組內的控制項都會對齊。不設定時，文字依需要佔用寬度，控制項位於右側。
+- `ContentAlignment` 決定控制項在固定 `LabelWidth` 旁邊空間中的位置：`Right`（預設）、`Left`、`Center`，或用 `Stretch` 填滿該空間，適合輸入框和下拉選單。不設定 `LabelWidth` 時，控制項保持自身寬度並位於右側。
+- `ContentSpacing` 是文字與控制項之間的間距：控制項在文字旁邊時預設為 16 px，在文字下方時預設為上方 12 px。
+
+當設定列窄於其 `StackWidth` 時，控制項移到文字下方，標籤寬度不再生效。此時控制項位於左側，使用 `Stretch` 時填滿整列。
+
+<Demo name="LabelWidth" />
 
 ### 文字
 
@@ -293,6 +333,7 @@ Larkspur Studio 的管理後台打開時停留在成員區段，而一般區段�
 - 頁面依自身寬度而不是視窗寬度判斷，所以放在側邊面板、對話方塊或手機預覽裡也會以同樣的方式切換。
 - 只有導覽會變化：各分區保持自己的版面，並排的欄位在緊湊頁面上仍然並排。請在手機寬度下檢查這些分區，太擠時為它們改用一欄。
 - 頁面旁邊還有其他內容時調大 `CompactWidth`，避免分區清單擠壓欄位。
+- 設定了 `MinColumnWidth` 的 `SettingsGroup` 會隨寬度變窄而減少欄數，因此兩欄的群組在手機寬度下變為一欄。
 
 ## 相關元件
 

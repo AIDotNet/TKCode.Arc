@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SettingsPageLabelWidthDemo">
+    <arc:SettingsGroup Header="Profile" Description="Every control starts 200 px from the left and fills the rest."
+                       LabelWidth="200" ContentAlignment="Stretch" ContentSpacing="24" MaxWidth="640">
+        <arc:SettingsRow Header="Display name" Icon="{x:Static arc:ArcIcons.User}">
+            <arc:Input Text="Noor Haddad" />
+        </arc:SettingsRow>
+        <arc:SettingsRow Header="Email">
+            <arc:Input Text="noor@larkspur.studio" />
+        </arc:SettingsRow>
+        <arc:SettingsRow Header="Time zone" Description="Used for reminders.">
+            <arc:Select SelectedIndex="0">
+                <arc:SelectItem Content="Europe/Amsterdam" Value="ams" />
+                <arc:SelectItem Content="America/New_York" Value="nyc" />
+            </arc:Select>
+        </arc:SettingsRow>
+        <arc:SettingsRow Header="Public profile" Description="This row keeps its switch at the right." ContentAlignment="Right">
+            <arc:Switch IsChecked="True" />
+        </arc:SettingsRow>
+    </arc:SettingsGroup>
+</UserControl>

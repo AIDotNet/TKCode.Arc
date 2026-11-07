@@ -185,6 +185,61 @@ already has a title, prefer `Plain` so the page does not show cards inside a car
 
 <Demo name="Rows" />
 
+### Columns
+
+A group stacks its rows in one column by default. Set `Columns` to put rows side by side: the rows fill each line from
+left to right in equal-width columns, every row of a line is as tall as the tallest, and only the rows below the first
+line draw a hairline. `ColumnSpacing` (32 by default) is the gap between columns and `RowSpacing` (0 by default) the
+gap between lines. The attached `SettingsGroup.ColumnSpan` makes a row span more columns; `0` spans the whole line, for
+a setting that needs the room, such as a select with long options. A row that does not fit in what is left of a line
+starts the next one.
+
+A row in a narrow column still moves its control under the text below its `StackWidth`. Lower `StackWidth` on short
+rows, such as a header and a switch, so they keep the control beside the text in a column.
+
+<Demo name="Columns" />
+
+### Responsive columns
+
+Set `MinColumnWidth` to let the group choose the number of columns from its width: it uses as many columns as fit at
+that width, at most `Columns`, and one when even two do not fit. `Columns="0"` removes the cap, and the group then uses
+as many columns as fit, but never more than it has rows. `ActualColumns` reports the number in use.
+
+<Demo name="ResponsiveColumns" />
+
+```xml
+<!-- Two columns in a wide window, one column below 2 × 320 px plus the spacing. -->
+<arc:SettingsGroup Columns="2" MinColumnWidth="320">
+    <arc:SettingsRow Header="Notifications">
+        <arc:Switch IsChecked="True" />
+    </arc:SettingsRow>
+    <arc:SettingsRow Header="Start at login">
+        <arc:Switch />
+    </arc:SettingsRow>
+</arc:SettingsGroup>
+```
+
+To lay the rows out another way, replace `ItemsPanel` with any Avalonia panel, such as a `WrapPanel` or a
+`UniformGrid`. The column properties then have no effect.
+
+### Label width and alignment
+
+`LabelWidth`, `ContentAlignment` and `ContentSpacing` set where the control sits in a row. Set them on the group and
+every row inherits them; set them on a row to override the group for that row.
+
+- `LabelWidth` fixes the distance from the row's left edge to the control, icon included, so the controls of a group
+  line up whether a row has an icon or not. Without it the text takes what it needs and the control sits at the right.
+- `ContentAlignment` places the control in the space beside a fixed `LabelWidth`: `Right` (the default), `Left`,
+  `Center`, or `Stretch` to fill it, which suits inputs and selects. Without a `LabelWidth` the control keeps its own
+  width at the right.
+- `ContentSpacing` is the gap between the text and the control: 16 px by default beside the text, 12 px above a control
+  that sits under the text.
+
+When a row is narrower than its `StackWidth` the control moves under the text and the label width is ignored. The
+control then sits at the left, or fills the row with `Stretch`.
+
+<Demo name="LabelWidth" />
+
 ### Text
 
 `Labels` holds the save bar text and the accessible names. Replace the whole object to translate it.
@@ -358,6 +413,8 @@ holds the text you need. The other texts keep their defaults unless you set them
 - Only the navigation changes: the sections keep their own layout, so a section with fields side by side keeps them
   side by side. Check those sections at phone width and give them one column there if they get too tight.
 - Raise `CompactWidth` when the page sits next to other content, so the section list does not squeeze the fields.
+- A `SettingsGroup` with `MinColumnWidth` drops to fewer columns as it narrows, so a two-column group becomes one column
+  at phone width.
 
 ## Related
 

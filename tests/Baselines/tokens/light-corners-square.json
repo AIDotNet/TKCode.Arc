@@ -5691,6 +5691,7 @@
     },
     "SettingsGroup": {
       "BodyLineHeight": "19.599999999999998",
+      "ColumnGap": "32",
       "FooterBackground": "#060B0B0B",
       "FooterInset": "24,14,24,14",
       "HeaderActionsMargin": "16,0,0,0",

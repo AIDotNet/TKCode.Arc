@@ -1,7 +1,7 @@
 ---
 title: 设置页
 summary: 完整的设置页：导航区带有账户卡片，旁边显示所选分区，并提供未保存修改的保存条。
-source-hash: bcc22b2a736f
+source-hash: 7b3f7d3a7054
 ---
 
 <Demo name="Overview" />
@@ -140,6 +140,46 @@ Page.DiscardRequested += (_, _) => ViewModel.DiscardCommand.Execute(null);
 分组默认绘制为卡片，可选的 `Header`、`Description`、`HeaderActions` 以及带淡色底的 `Footer` 条。`Appearance="Plain"` 会去掉框架，适用于页面内用细线分隔的分组。分区本身已有标题，因此在分区内优先使用 `Plain`，避免页面中出现卡片套卡片。
 
 <Demo name="Rows" />
+
+### 多列
+
+分组默认把设置行排成一列。设置 `Columns` 可以让设置行并排：设置行从左到右依次填满每一行中等宽的列，同一行里的设置行与其中最高的一项等高，只有第一行以下的设置行绘制细线。`ColumnSpacing`（默认 32）是列间距，`RowSpacing`（默认 0）是行间距。附加属性 `SettingsGroup.ColumnSpan` 让设置行跨越多列；`0` 跨越整行，适合需要更多空间的设置，例如选项较长的下拉选择。当前行剩余的空间放不下的设置行会从下一行开始。
+
+窄列中的设置行在宽度低于其 `StackWidth` 时仍会把控件移到文字下方。对于只有标题和开关这类较短的设置行，可以调低 `StackWidth`，让控件在列中仍留在文字旁边。
+
+<Demo name="Columns" />
+
+### 响应式列数
+
+设置 `MinColumnWidth` 后，分组会根据自身宽度决定列数：在不小于该宽度的前提下尽可能多地分列，最多 `Columns` 列；连两列都放不下时为一列。`Columns="0"` 取消上限，分组会按能放下的数量分列，但列数不会超过设置行的数量。`ActualColumns` 反映当前使用的列数。
+
+<Demo name="ResponsiveColumns" />
+
+```xml
+<!-- 宽窗口中为两列，宽度低于 2 × 320 px 加列间距时为一列。 -->
+<arc:SettingsGroup Columns="2" MinColumnWidth="320">
+    <arc:SettingsRow Header="Notifications">
+        <arc:Switch IsChecked="True" />
+    </arc:SettingsRow>
+    <arc:SettingsRow Header="Start at login">
+        <arc:Switch />
+    </arc:SettingsRow>
+</arc:SettingsGroup>
+```
+
+如果要用其他方式排列设置行，可以把 `ItemsPanel` 换成任意 Avalonia 面板，例如 `WrapPanel` 或 `UniformGrid`。此时与列相关的属性不再生效。
+
+### 标签宽度与对齐
+
+`LabelWidth`、`ContentAlignment` 和 `ContentSpacing` 决定控件在设置行中的位置。在分组上设置后，分组内的每一行都会继承；在某一行上设置则只覆盖该行。
+
+- `LabelWidth` 固定从设置行左边缘到控件的距离（包含图标），因此无论设置行是否带图标，分组内的控件都会对齐。不设置时，文字按需占用宽度，控件位于右侧。
+- `ContentAlignment` 决定控件在固定 `LabelWidth` 旁边空间中的位置：`Right`（默认）、`Left`、`Center`，或用 `Stretch` 填满该空间，适合输入框和下拉选择。不设置 `LabelWidth` 时，控件保持自身宽度并位于右侧。
+- `ContentSpacing` 是文字与控件之间的间距：控件在文字旁边时默认为 16 px，在文字下方时默认为上方 12 px。
+
+当设置行窄于其 `StackWidth` 时，控件移到文字下方，标签宽度不再生效。此时控件位于左侧，使用 `Stretch` 时填满整行。
+
+<Demo name="LabelWidth" />
 
 ### 文本
 
@@ -293,6 +333,7 @@ Larkspur Studio 的管理后台打开时停留在成员分区，而常规分区�
 - 页面按自身宽度而不是窗口宽度判断，所以放在侧面板、对话框或手机预览里也会以同样的方式切换。
 - 只有导航会变化：各分区保持自己的布局，并排的字段在紧凑页面上仍然并排。请在手机宽度下检查这些分区，太挤时为它们改用一栏。
 - 页面旁边还有其他内容时调大 `CompactWidth`，避免分区列表挤压字段。
+- 设置了 `MinColumnWidth` 的 `SettingsGroup` 会随宽度变窄而减少列数，因此两列的分组在手机宽度下变为一列。
 
 ## 相关组件
 

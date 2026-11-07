@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SettingsPageResponsiveColumnsDemo">
+    <arc:SettingsGroup Header="Editor" Description="Resize the window: the rows wrap to fewer columns as it narrows."
+                       Columns="0" MinColumnWidth="260" ColumnSpacing="24">
+        <arc:SettingsRow Header="Line numbers" StackWidth="200">
+            <arc:Switch IsChecked="True" />
+        </arc:SettingsRow>
+        <arc:SettingsRow Header="Word wrap" StackWidth="200">
+            <arc:Switch IsChecked="True" />
+        </arc:SettingsRow>
+        <arc:SettingsRow Header="Minimap" StackWidth="200">
+            <arc:Switch />
+        </arc:SettingsRow>
+        <arc:SettingsRow Header="Format on save" StackWidth="200">
+            <arc:Switch IsChecked="True" />
+        </arc:SettingsRow>
+        <arc:SettingsRow Header="Spell check" StackWidth="200">
+            <arc:Switch />
+        </arc:SettingsRow>
+        <arc:SettingsRow Header="Auto save" StackWidth="200">
+            <arc:Switch IsChecked="True" />
+        </arc:SettingsRow>
+    </arc:SettingsGroup>
+</UserControl>

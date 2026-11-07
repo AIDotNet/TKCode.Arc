@@ -5,7 +5,8 @@
                     x:Class="TKCode.Arc.SettingsGroupTheme">
     <!--
         A settings group. Card: Surface, 1px Border, RadiusPanel (like arc:Card), header, rows, and a tinted footer strip
-        clipped to the card's corners. Plain: the same pieces without frame or padding.
+        clipped to the card's corners. Plain: the same pieces without frame or padding. The rows sit in a
+        SettingsGroupPanel, which lays them out in Columns (one by default, like a vertical StackPanel).
     -->
     <ControlTheme x:Key="{x:Type arc:SettingsGroup}" TargetType="arc:SettingsGroup">
         <Setter Property="Template">
@@ -68,9 +69,10 @@
         </Setter>
         <Setter Property="ItemsPanel">
             <ItemsPanelTemplate>
-                <StackPanel />
+                <arc:SettingsGroupPanel />
             </ItemsPanelTemplate>
         </Setter>
+        <Setter Property="ColumnSpacing" Value="{arc:SettingsGroupTokenResource ColumnGap}" />
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
         <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />

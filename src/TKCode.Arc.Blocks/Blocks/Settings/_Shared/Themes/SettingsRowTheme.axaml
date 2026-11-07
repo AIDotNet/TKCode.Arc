@@ -4,8 +4,10 @@
                     x:ClassModifier="internal"
                     x:Class="TKCode.Arc.SettingsRowTheme">
     <!--
-        A settings row: hairline on top (not on the first row), icon tile, header and description, and the control on
-        the right; under :stacked the control drops below the text, aligned with it.
+        A settings row: hairline on top (not on the first row, nor on a group's first line), icon tile, header and
+        description, and the control on the right; under :stacked the control drops below the text, aligned with it.
+        LabelWidth, ContentAlignment and ContentSpacing are applied in code (SettingsRow.ApplyLayoutOptions): the column
+        widths, the control's HorizontalAlignment and, when ContentSpacing is set, its Margin.
     -->
     <ControlTheme x:Key="{x:Type arc:SettingsRow}" TargetType="arc:SettingsRow">
         <Setter Property="ClipToBounds" Value="False" />
@@ -78,6 +80,9 @@
         <Style Selector="^:nth-child(1) /template/ Border#PART_Divider">
             <Setter Property="IsVisible" Value="False" />
         </Style>
+        <Style Selector="^:first-line /template/ Border#PART_Divider">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
         <Style Selector="^:icon /template/ Border#PART_IconTile">
             <Setter Property="IsVisible" Value="True" />
         </Style>
@@ -92,7 +97,6 @@
                 <Setter Property="Grid.Row" Value="1" />
                 <Setter Property="Grid.Column" Value="1" />
                 <Setter Property="Grid.ColumnSpan" Value="2" />
-                <Setter Property="HorizontalAlignment" Value="Left" />
                 <Setter Property="Margin" Value="{arc:SettingsRowTokenResource StackedControlMargin}" />
             </Style>
             <Style Selector="^ /template/ Border#PART_IconTile">

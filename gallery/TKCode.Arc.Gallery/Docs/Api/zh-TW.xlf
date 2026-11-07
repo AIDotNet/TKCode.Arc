@@ -22753,12 +22753,36 @@
         <target>是否開啟該設定（雙向繫結）。</target>
       </trans-unit>
       <trans-unit id="SettingsGroup">
-        <source>A group of related settings: an optional header with a description and actions, a stack of rows (usually `SettingsRow`, written inline or bound through `ItemsSource`), and an optional footer strip for a note or a save button. Drawn as a card by default, or plain inside a page.</source>
-        <target>一組相關設定：可選的標題（含描述與操作）、一組設定列（通常為 `SettingsRow`，可直接寫在 XAML 中，或透過 `ItemsSource` 繫結），以及可選的底部條，用於放置備註或儲存按鈕。預設以卡片樣式繪製，在頁面中則為平鋪。</target>
+        <source>A group of related settings: an optional header with a description and actions, a stack of rows (usually `SettingsRow`, written inline or bound through `ItemsSource`), and an optional footer strip for a note or a save button. Drawn as a card by default, or plain inside a page. The rows sit in one column unless `Columns` or `MinColumnWidth` asks for more, and `LabelWidth`, `ContentAlignment` and `ContentSpacing` set the layout of every row in the group.</source>
+        <target>一組相關設定：選用的標題（含說明和操作）、一組設定列（通常為 `SettingsRow`，可直接寫在 XAML 中，或透過 `ItemsSource` 繫結），以及選用的底部條，用於放置備註或儲存按鈕。預設以卡片形式繪製，在頁面中則為平鋪。除非 `Columns` 或 `MinColumnWidth` 要求更多欄，設定列排成一欄；`LabelWidth`、`ContentAlignment` 和 `ContentSpacing` 決定群組內每一列的版面。</target>
+      </trans-unit>
+      <trans-unit id="SettingsGroup.ActualColumns">
+        <source>The number of columns the rows are laid out in right now, after `MinColumnWidth` is applied.</source>
+        <target>套用 `MinColumnWidth` 之後，設定列目前排成的欄數。</target>
       </trans-unit>
       <trans-unit id="SettingsGroup.Appearance">
         <source>Card (default) or Plain.</source>
         <target>卡片（預設）或平鋪。</target>
+      </trans-unit>
+      <trans-unit id="SettingsGroup.ColumnSpacing">
+        <source>The horizontal gap between columns (32 by default).</source>
+        <target>欄之間的水平間距（預設 32）。</target>
+      </trans-unit>
+      <trans-unit id="SettingsGroup.ColumnSpan">
+        <source>How many columns a row of the group spans (default 1); 0 spans the whole line. A span wider than the current number of columns is cut to the whole line.</source>
+        <target>群組中某個設定列跨越的欄數（預設 1）；0 跨越整列。跨度超過目前欄數時按整列處理。</target>
+      </trans-unit>
+      <trans-unit id="SettingsGroup.Columns">
+        <source>The number of columns the rows are laid out in (default 1). With `MinColumnWidth` it is the most columns the group uses; 0 means as many as fit at `MinColumnWidth`, but no more than there are rows.</source>
+        <target>設定列排成的欄數（預設 1）。與 `MinColumnWidth` 一起使用時，它是群組最多使用的欄數；0 表示依 `MinColumnWidth` 能放下多少欄就用多少欄，但不超過設定列的數量。</target>
+      </trans-unit>
+      <trans-unit id="SettingsGroup.ContentAlignment">
+        <source>Where each row's control sits in the space beside a fixed `LabelWidth`, inherited by the rows of the group (default Right). A row's own `ContentAlignment` overrides it.</source>
+        <target>每一列的控制項在固定 `LabelWidth` 旁邊空間中的位置，由群組內的設定列繼承（預設 Right）。設定列自己的 `ContentAlignment` 會覆寫它。</target>
+      </trans-unit>
+      <trans-unit id="SettingsGroup.ContentSpacing">
+        <source>The gap between each row's text and its control, inherited by the rows of the group (default NaN: 16, or 12 above a control under the text). A row's own `ContentSpacing` overrides it.</source>
+        <target>每一列的文字與控制項之間的間距，由群組內的設定列繼承（預設 NaN：16，控制項在文字下方時為上方 12）。設定列自己的 `ContentSpacing` 會覆寫它。</target>
       </trans-unit>
       <trans-unit id="SettingsGroup.Description">
         <source>A sentence under the header.</source>
@@ -22771,6 +22795,18 @@
       <trans-unit id="SettingsGroup.HeaderActions">
         <source>Content at the right of the header, such as a button.</source>
         <target>標題右側的內容，例如按鈕。</target>
+      </trans-unit>
+      <trans-unit id="SettingsGroup.LabelWidth">
+        <source>The width from each row's left edge to its control, icon included, inherited by the rows of the group (default NaN: as wide as the text needs). A row's own `LabelWidth` overrides it.</source>
+        <target>每一列從左邊緣到控制項的寬度（包含圖示），由群組內的設定列繼承（預設 NaN：依文字需要的寬度）。設定列自己的 `LabelWidth` 會覆寫它。</target>
+      </trans-unit>
+      <trans-unit id="SettingsGroup.MinColumnWidth">
+        <source>The narrowest a column may be (default 0, off). When set, the group drops columns while they would be narrower than this, down to one, so a two-column group becomes one column in a narrow window.</source>
+        <target>欄的最小寬度（預設 0，關閉）。設定後，當欄寬將小於該值時，群組會減少欄數，最少一欄，因此兩欄的群組在窄視窗中變為一欄。</target>
+      </trans-unit>
+      <trans-unit id="SettingsGroup.RowSpacing">
+        <source>The vertical gap between lines of rows (default 0: rows carry their own padding and hairline).</source>
+        <target>設定列各列之間的垂直間距（預設 0：設定列自帶內距和細線）。</target>
       </trans-unit>
       <trans-unit id="SettingsPage">
         <source>A full settings page. The left column holds the page `Title`, one navigation item per `SettingsSection` (icon, header, badge) under a raised selection pill that glides between them, and a `Footer` such as an account card; the chosen section fills the rest of the page. While the chosen section is `IsDirty`, a save bar rises at the bottom with Discard and Save. Narrower than `CompactWidth`, the page becomes one column with the sections as a scrolling row of pills. Write the sections inline (`&lt;arc:SettingsSection Header="Billing" Icon="..."&gt;…&lt;/arc:SettingsSection&gt;`) or bind them through `ItemsSource`; the first enabled section is selected by default.</source>
@@ -22805,8 +22841,16 @@
         <target>導覽上方的頁面標題（預設為「設定」）。</target>
       </trans-unit>
       <trans-unit id="SettingsRow">
-        <source>One setting: an optional icon, a header and description on the left, and the control that changes it (`Content`) on the right. Below `StackWidth` the control moves under the text. Rows in a `SettingsGroup` (or any panel) are separated by a hairline; the first row has none. When the control is a toggle (Switch, Checkbox), clicking the header or description toggles it too, and the control takes the header as its accessible name and the description as its help text unless it has its own.</source>
-        <target>一項設定：左側為可選的圖示、標題與描述，右側為用來變更此設定的控制項（`Content`）。寬度小於 `StackWidth` 時，控制項會移到文字下方。`SettingsGroup`（或任何面板）中的設定列以細線分隔，第一列沒有分隔線。當控制項是開關（Switch）或核取方塊（Checkbox）時，點擊標題或描述也會切換它；除非控制項已有自己的名稱與說明文字，否則會以標題作為無障礙名稱，以描述作為說明文字。</target>
+        <source>One setting: an optional icon, a header and description on the left, and the control that changes it (`Content`) on the right. Below `StackWidth` the control moves under the text. Rows in a `SettingsGroup` (or any panel) are separated by a hairline; the first row has none. When the control is a toggle (Switch, Checkbox), clicking the header or description toggles it too, and the control takes the header as its accessible name and the description as its help text unless it has its own. `LabelWidth`, `ContentAlignment` and `ContentSpacing` are inherited from the `SettingsGroup` that holds the row, so the controls of a group line up; set them on a row to override.</source>
+        <target>一項設定：左側是選用的圖示、標題和說明，右側是用於修改該設定的控制項（`Content`）。寬度小於 `StackWidth` 時，控制項會移到文字下方。`SettingsGroup`（或任意面板）中的設定列之間以細線分隔，第一列沒有分隔線。當控制項是開關（Switch）或核取方塊（Checkbox）時，點擊標題或說明也會切換它；除非控制項已有自己的名稱和說明文字，否則控制項會以標題作為無障礙名稱，以說明作為說明文字。`LabelWidth`、`ContentAlignment` 和 `ContentSpacing` 繼承自包含該列的 `SettingsGroup`，因此群組內的控制項會對齊；在設定列上設定它們即可覆寫。</target>
+      </trans-unit>
+      <trans-unit id="SettingsRow.ContentAlignment">
+        <source>Where the control sits in the space beside a fixed `LabelWidth` (default Right); Stretch fills it. Without a label width the control is as wide as it needs, at the right. Under the text the control is at the left, or fills the row with Stretch. Inherited from the `SettingsGroup`.</source>
+        <target>控制項在固定 `LabelWidth` 旁邊空間中的位置（預設 Right）；Stretch 填滿該空間。沒有標籤寬度時，控制項依需要的寬度位於右側。控制項在文字下方時位於左側，使用 Stretch 時填滿整列。繼承自 `SettingsGroup`。</target>
+      </trans-unit>
+      <trans-unit id="SettingsRow.ContentSpacing">
+        <source>The gap between the text and the control: before the control beside the text, above it under the text (default NaN: 16 beside, 12 under). Inherited from the `SettingsGroup`.</source>
+        <target>文字與控制項之間的間距：控制項在文字旁邊時位於控制項之前，在文字下方時位於控制項上方（預設 NaN：旁邊 16，下方 12）。繼承自 `SettingsGroup`。</target>
       </trans-unit>
       <trans-unit id="SettingsRow.Description">
         <source>A sentence under the header that explains the setting; also the control's help text.</source>
@@ -22823,6 +22867,10 @@
       <trans-unit id="SettingsRow.IsStacked">
         <source>Whether the control currently sits under the text (the row is narrower than `StackWidth`).</source>
         <target>控制項目前是否位於文字下方（即設定列寬度小於 `StackWidth`）。</target>
+      </trans-unit>
+      <trans-unit id="SettingsRow.LabelWidth">
+        <source>The width from the row's left edge to the control, icon included, so controls line up across rows with and without icons (default NaN: as wide as the text needs). Inherited from the `SettingsGroup`. Ignored while the control sits under the text.</source>
+        <target>從設定列左邊緣到控制項的寬度（包含圖示），因此帶圖示和不帶圖示的設定列中的控制項會對齊（預設 NaN：依文字需要的寬度）。繼承自 `SettingsGroup`。控制項位於文字下方時不生效。</target>
       </trans-unit>
       <trans-unit id="SettingsRow.StackWidth">
         <source>Below this width the control moves under the header and description (default 440).</source>
