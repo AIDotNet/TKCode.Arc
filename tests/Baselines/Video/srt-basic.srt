@@ -1,0 +1,45 @@
+1
+00:00:01,000 --> 00:00:04,000
+Hello, <b>world</b>!
+
+2
+00:00:04,000 --> 00:00:06,500
+Two lines,
+second <i>italic</i> line.
+
+3
+00:00:06.500 --> 00:00:08.000 X1:100 X2:200 Y1:10 Y2:20
+<font color="#ffff00">Yellow</font> <U>upper-case tag</U>
+
+4
+00:00:08,000 --> 00:00:10,000
+{\an8}Top positioned (tag stripped) {\i1}and more{\i0}
+5
+00:00:10,000 --> 00:00:12,000
+No blank line before this cue
+<3 and a < b, &amp; stays literal
+
+6
+00:00:12,000 --> 00:00:11,000
+Ends before start
+
+7
+00:00:aa,000 --> 00:00:14,000
+Bad timing
+
+garbage block without timing
+
+00:00:20,000 --> 00:00:21,000
+No index line
+
+9
+0:0:15,5 --> 0:0:16,25
+One-digit fields and short fractions
+
+10
+00:16,000 --> 00:17,000
+Missing hours
+
+11
+00:00:18,000 --> 00:00:19,000
+<b>bold <i>both</b> italic?</i> rest

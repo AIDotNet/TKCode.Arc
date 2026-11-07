@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="2.1" srcLang="en-US" xmlns="urn:oasis:names:tc:xliff:document:2.0">
+  <file id="TKCode.Arc.Localization.VideoLangResourceKind">
+    <unit id="BackendHint">
+      <segment>
+        <source>No video backend is available. Showing a test picture.</source>
+      </segment>
+    </unit>
+    <unit id="Buffering">
+      <segment>
+        <source>Buffering</source>
+      </segment>
+    </unit>
+    <unit id="CaptionSize">
+      <segment>
+        <source>Caption size</source>
+      </segment>
+    </unit>
+    <unit id="Captions">
+      <segment>
+        <source>Captions</source>
+      </segment>
+    </unit>
+    <unit id="CaptionsOff">
+      <segment>
+        <source>Off</source>
+      </segment>
+    </unit>
+    <unit id="CaptionsOffAnnounce">
+      <segment>
+        <source>Captions off</source>
+      </segment>
+    </unit>
+    <unit id="CaptionsOnAnnounce">
+      <segment>
+        <source>Captions on: {0}</source>
+      </segment>
+    </unit>
+    <unit id="Chapter">
+      <segment>
+        <source>Chapter {0}</source>
+      </segment>
+    </unit>
+    <unit id="DurationHour">
+      <segment>
+        <source>{0} hour</source>
+      </segment>
+    </unit>
+    <unit id="DurationHours">
+      <segment>
+        <source>{0} hours</source>
+      </segment>
+    </unit>
+    <unit id="DurationMinute">
+      <segment>
+        <source>{0} minute</source>
+      </segment>
+    </unit>
+    <unit id="DurationMinutes">
+      <segment>
+        <source>{0} minutes</source>
+      </segment>
+    </unit>
+    <unit id="DurationSecond">
+      <segment>
+        <source>{0} second</source>
+      </segment>
+    </unit>
+    <unit id="DurationSeconds">
+      <segment>
+        <source>{0} seconds</source>
+      </segment>
+    </unit>
+    <unit id="EnteredFullScreen">
+      <segment>
+        <source>Full screen</source>
+      </segment>
+    </unit>
+    <unit id="ErrorAborted">
+      <segment>
+        <source>Loading was stopped.</source>
+      </segment>
+    </unit>
+    <unit id="ErrorBackend">
+      <segment>
+        <source>Video playback is not available in this app.</source>
+      </segment>
+    </unit>
+    <unit id="ErrorDecode">
+      <segment>
+        <source>The video could not be decoded.</source>
+      </segment>
+    </unit>
+    <unit id="ErrorNetwork">
+      <segment>
+        <source>The video could not be downloaded.</source>
+      </segment>
+    </unit>
+    <unit id="ErrorUnsupported">
+      <segment>
+        <source>This video format is not supported on this device.</source>
+      </segment>
+    </unit>
+    <unit id="ExitFullScreen">
+      <segment>
+        <source>Exit full screen</source>
+      </segment>
+    </unit>
+    <unit id="ExitedFullScreen">
+      <segment>
+        <source>Exited full screen</source>
+      </segment>
+    </unit>
+    <unit id="FullScreen">
+      <segment>
+        <source>Full screen</source>
+      </segment>
+    </unit>
+    <unit id="Loading">
+      <segment>
+        <source>Loading</source>
+      </segment>
+    </unit>
+    <unit id="Mute">
+      <segment>
+        <source>Mute</source>
+      </segment>
+    </unit>
+    <unit id="Muted">
+      <segment>
+        <source>Muted</source>
+      </segment>
+    </unit>
+    <unit id="Pause">
+      <segment>
+        <source>Pause</source>
+      </segment>
+    </unit>
+    <unit id="Play">
+      <segment>
+        <source>Play</source>
+      </segment>
+    </unit>
+    <unit id="Replay">
+      <segment>
+        <source>Replay</source>
+      </segment>
+    </unit>
+    <unit id="Retry">
+      <segment>
+        <source>Retry</source>
+      </segment>
+    </unit>
+    <unit id="Seek">
+      <segment>
+        <source>Seek</source>
+      </segment>
+    </unit>
+    <unit id="Shortcut">
+      <segment>
+        <source>{0} ({1})</source>
+      </segment>
+    </unit>
+    <unit id="SkipBack">
+      <segment>
+        <source>Back {0} seconds</source>
+      </segment>
+    </unit>
+    <unit id="SkipForward">
+      <segment>
+        <source>Forward {0} seconds</source>
+      </segment>
+    </unit>
+    <unit id="Speed">
+      <segment>
+        <source>Speed</source>
+      </segment>
+    </unit>
+    <unit id="SpeedAnnounce">
+      <segment>
+        <source>Speed {0}</source>
+      </segment>
+    </unit>
+    <unit id="SpeedNormal">
+      <segment>
+        <source>Normal</source>
+      </segment>
+    </unit>
+    <unit id="TimeOf">
+      <segment>
+        <source>{0} of {1}</source>
+      </segment>
+    </unit>
+    <unit id="Unmute">
+      <segment>
+        <source>Unmute</source>
+      </segment>
+    </unit>
+    <unit id="Video">
+      <segment>
+        <source>Video</source>
+      </segment>
+    </unit>
+    <unit id="VideoPlayer">
+      <segment>
+        <source>Video player</source>
+      </segment>
+    </unit>
+    <unit id="Volume">
+      <segment>
+        <source>Volume</source>
+      </segment>
+    </unit>
+    <unit id="VolumeValue">
+      <segment>
+        <source>Volume {0}%</source>
+      </segment>
+    </unit>
+  </file>
+</xliff>

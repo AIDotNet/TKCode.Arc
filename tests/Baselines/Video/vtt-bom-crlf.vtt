@@ -1,0 +1,8 @@
+﻿WEBVTT
+
+00:00.500 --> 00:01.500
+CRLF line one
+CRLF line two
+
+00:02.000 --> 00:03.000CR only00:04.000 --> 00:05.000
+Mixed

@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.VideoPlayerCaptionsDemo">
+    <!-- English captions are on from the start (IsDefault). The captions menu switches the language and the text size;
+         the sliders below set the same size and the box behind the text. -->
+    <StackPanel Spacing="16" MaxWidth="720">
+        <arc:VideoPlayer x:Name="Player"
+                         Title="Aurora"
+                         AspectRatio="1.7778"
+                         Source="{x:Static demos:VideoDemoMedia.Aurora}"
+                         Poster="{x:Static demos:VideoDemoMedia.AuroraPoster}"
+                         CaptionScale="{Binding #Scale.Value}"
+                         CaptionBackgroundOpacity="{Binding #Box.Value}">
+            <arc:VideoPlayer.TextTracks>
+                <arc:VideoTextTrack Kind="Captions" Language="en-US" Label="English" IsDefault="True" Source="avares://TKCode.Arc.Gallery/Media/Video/aurora.en-US.vtt" />
+                <arc:VideoTextTrack Kind="Captions" Language="zh-CN" Label="简体中文" Source="avares://TKCode.Arc.Gallery/Media/Video/aurora.zh-CN.vtt" />
+                <arc:VideoTextTrack Kind="Captions" Language="zh-TW" Label="繁體中文" Source="avares://TKCode.Arc.Gallery/Media/Video/aurora.zh-TW.vtt" />
+            </arc:VideoPlayer.TextTracks>
+        </arc:VideoPlayer>
+        <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" ColumnSpacing="16" RowSpacing="8">
+            <TextBlock VerticalAlignment="Center" Text="Text size" />
+            <arc:Slider x:Name="Scale" Grid.Column="1" Minimum="0.75" Maximum="2" Value="1" />
+            <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="Box opacity" />
+            <arc:Slider x:Name="Box" Grid.Row="1" Grid.Column="1" Minimum="0" Maximum="1" Value="0.8" />
+        </Grid>
+    </StackPanel>
+</UserControl>

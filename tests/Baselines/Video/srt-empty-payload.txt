@@ -1,0 +1,7 @@
+# warnings (0)
+# cues (2)
+00:00:01.000 --> 00:00:02.000 id="1"
+  text ""
+00:00:03.000 --> 00:00:04.000 id="2"
+  text "After an empty cue"
+  run  "After an empty cue"

@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>$(ArcTargetFrameworks)</TargetFrameworks>
+        <AssemblyName>TKCode.Arc.Video.Native</AssemblyName>
+        <RootNamespace>TKCode.Arc</RootNamespace>
+        <PackageId>TKCode.Arc.Video.Native</PackageId>
+        <Description>Desktop video backend for TKCode.Arc.Video: the system player on each platform (Media Foundation on Windows, AVFoundation on macOS, GStreamer on Linux), so no codecs ship with the app. Call ArcVideoNative.Use() at startup. The native shim ships in the package under runtimes/&lt;rid&gt;/native.</Description>
+        <PackageTags>$(PackageTags);video;media;mediafoundation;avfoundation;gstreamer</PackageTags>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="../TKCode.Arc.Video/TKCode.Arc.Video.csproj" />
+    </ItemGroup>
+    <!-- The tkcode_video shim per RID. Not committed: tools/video/build-native.sh builds it and tools/video/sync-native.sh copies it here.
+         Packed under runtimes/ for NuGet consumers, and copied next to the assembly for project references. -->
+    <ItemGroup>
+        <None Include="runtimes/**" Pack="true" PackagePath="runtimes/" Visible="false" CopyToOutputDirectory="PreserveNewest" />
+        <None Include="../../native/video/**" Pack="false" Visible="false" />
+    </ItemGroup>
+    <Target Name="WarnMissingVideoNative" BeforeTargets="Pack">
+        <ItemGroup>
+            <_VideoNative Include="$(MSBuildProjectDirectory)/runtimes/*/native/*" />
+        </ItemGroup>
+        <Warning Condition="'@(_VideoNative)' == ''" Text="No tkcode_video under runtimes/&lt;rid&gt;/native: the package would ship without the native library. Run tools/video/build-native.sh and tools/video/sync-native.sh." />
+    </Target>
+</Project>

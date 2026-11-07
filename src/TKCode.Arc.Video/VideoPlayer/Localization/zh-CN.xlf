@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="2.1" srcLang="en-US" trgLang="zh-CN" xmlns="urn:oasis:names:tc:xliff:document:2.0">
+  <file id="TKCode.Arc.Localization.VideoLangResourceKind">
+    <unit id="BackendHint">
+      <segment>
+        <source>No video backend is available. Showing a test picture.</source>
+        <target state="translated">没有可用的视频后端，正在显示测试画面。</target>
+      </segment>
+    </unit>
+    <unit id="Buffering">
+      <segment>
+        <source>Buffering</source>
+        <target state="translated">正在缓冲</target>
+      </segment>
+    </unit>
+    <unit id="CaptionSize">
+      <segment>
+        <source>Caption size</source>
+        <target state="translated">字幕大小</target>
+      </segment>
+    </unit>
+    <unit id="Captions">
+      <segment>
+        <source>Captions</source>
+        <target state="translated">字幕</target>
+      </segment>
+    </unit>
+    <unit id="CaptionsOff">
+      <segment>
+        <source>Off</source>
+        <target state="translated">关闭</target>
+      </segment>
+    </unit>
+    <unit id="CaptionsOffAnnounce">
+      <segment>
+        <source>Captions off</source>
+        <target state="translated">字幕已关闭</target>
+      </segment>
+    </unit>
+    <unit id="CaptionsOnAnnounce">
+      <segment>
+        <source>Captions on: {0}</source>
+        <target state="translated">字幕已开启：{0}</target>
+      </segment>
+    </unit>
+    <unit id="Chapter">
+      <segment>
+        <source>Chapter {0}</source>
+        <target state="translated">第 {0} 章</target>
+      </segment>
+    </unit>
+    <unit id="DurationHour">
+      <segment>
+        <source>{0} hour</source>
+        <target state="translated">{0} 小时</target>
+      </segment>
+    </unit>
+    <unit id="DurationHours">
+      <segment>
+        <source>{0} hours</source>
+        <target state="translated">{0} 小时</target>
+      </segment>
+    </unit>
+    <unit id="DurationMinute">
+      <segment>
+        <source>{0} minute</source>
+        <target state="translated">{0} 分</target>
+      </segment>
+    </unit>
+    <unit id="DurationMinutes">
+      <segment>
+        <source>{0} minutes</source>
+        <target state="translated">{0} 分</target>
+      </segment>
+    </unit>
+    <unit id="DurationSecond">
+      <segment>
+        <source>{0} second</source>
+        <target state="translated">{0} 秒</target>
+      </segment>
+    </unit>
+    <unit id="DurationSeconds">
+      <segment>
+        <source>{0} seconds</source>
+        <target state="translated">{0} 秒</target>
+      </segment>
+    </unit>
+    <unit id="EnteredFullScreen">
+      <segment>
+        <source>Full screen</source>
+        <target state="translated">已进入全屏</target>
+      </segment>
+    </unit>
+    <unit id="ErrorAborted">
+      <segment>
+        <source>Loading was stopped.</source>
+        <target state="translated">加载已停止。</target>
+      </segment>
+    </unit>
+    <unit id="ErrorBackend">
+      <segment>
+        <source>Video playback is not available in this app.</source>
+        <target state="translated">此应用中无法播放视频。</target>
+      </segment>
+    </unit>
+    <unit id="ErrorDecode">
+      <segment>
+        <source>The video could not be decoded.</source>
+        <target state="translated">视频无法解码。</target>
+      </segment>
+    </unit>
+    <unit id="ErrorNetwork">
+      <segment>
+        <source>The video could not be downloaded.</source>
+        <target state="translated">视频无法下载。</target>
+      </segment>
+    </unit>
+    <unit id="ErrorUnsupported">
+      <segment>
+        <source>This video format is not supported on this device.</source>
+        <target state="translated">此设备不支持这种视频格式。</target>
+      </segment>
+    </unit>
+    <unit id="ExitFullScreen">
+      <segment>
+        <source>Exit full screen</source>
+        <target state="translated">退出全屏</target>
+      </segment>
+    </unit>
+    <unit id="ExitedFullScreen">
+      <segment>
+        <source>Exited full screen</source>
+        <target state="translated">已退出全屏</target>
+      </segment>
+    </unit>
+    <unit id="FullScreen">
+      <segment>
+        <source>Full screen</source>
+        <target state="translated">全屏</target>
+      </segment>
+    </unit>
+    <unit id="Loading">
+      <segment>
+        <source>Loading</source>
+        <target state="translated">正在加载</target>
+      </segment>
+    </unit>
+    <unit id="Mute">
+      <segment>
+        <source>Mute</source>
+        <target state="translated">静音</target>
+      </segment>
+    </unit>
+    <unit id="Muted">
+      <segment>
+        <source>Muted</source>
+        <target state="translated">已静音</target>
+      </segment>
+    </unit>
+    <unit id="Pause">
+      <segment>
+        <source>Pause</source>
+        <target state="translated">暂停</target>
+      </segment>
+    </unit>
+    <unit id="Play">
+      <segment>
+        <source>Play</source>
+        <target state="translated">播放</target>
+      </segment>
+    </unit>
+    <unit id="Replay">
+      <segment>
+        <source>Replay</source>
+        <target state="translated">重播</target>
+      </segment>
+    </unit>
+    <unit id="Retry">
+      <segment>
+        <source>Retry</source>
+        <target state="translated">重试</target>
+      </segment>
+    </unit>
+    <unit id="Seek">
+      <segment>
+        <source>Seek</source>
+        <target state="translated">播放进度</target>
+      </segment>
+    </unit>
+    <unit id="Shortcut">
+      <segment>
+        <source>{0} ({1})</source>
+        <target state="translated">{0}（{1}）</target>
+      </segment>
+    </unit>
+    <unit id="SkipBack">
+      <segment>
+        <source>Back {0} seconds</source>
+        <target state="translated">后退 {0} 秒</target>
+      </segment>
+    </unit>
+    <unit id="SkipForward">
+      <segment>
+        <source>Forward {0} seconds</source>
+        <target state="translated">前进 {0} 秒</target>
+      </segment>
+    </unit>
+    <unit id="Speed">
+      <segment>
+        <source>Speed</source>
+        <target state="translated">倍速</target>
+      </segment>
+    </unit>
+    <unit id="SpeedAnnounce">
+      <segment>
+        <source>Speed {0}</source>
+        <target state="translated">倍速 {0}</target>
+      </segment>
+    </unit>
+    <unit id="SpeedNormal">
+      <segment>
+        <source>Normal</source>
+        <target state="translated">正常</target>
+      </segment>
+    </unit>
+    <unit id="TimeOf">
+      <segment>
+        <source>{0} of {1}</source>
+        <target state="translated">{0}，共 {1}</target>
+      </segment>
+    </unit>
+    <unit id="Unmute">
+      <segment>
+        <source>Unmute</source>
+        <target state="translated">取消静音</target>
+      </segment>
+    </unit>
+    <unit id="Video">
+      <segment>
+        <source>Video</source>
+        <target state="translated">视频</target>
+      </segment>
+    </unit>
+    <unit id="VideoPlayer">
+      <segment>
+        <source>Video player</source>
+        <target state="translated">视频播放器</target>
+      </segment>
+    </unit>
+    <unit id="Volume">
+      <segment>
+        <source>Volume</source>
+        <target state="translated">音量</target>
+      </segment>
+    </unit>
+    <unit id="VolumeValue">
+      <segment>
+        <source>Volume {0}%</source>
+        <target state="translated">音量 {0}%</target>
+      </segment>
+    </unit>
+  </file>
+</xliff>

@@ -1,0 +1,516 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.VideoPlayerTheme">
+
+    <!--
+        The video player (design/components/video/video.md sections 5 and 7). The frame keeps the aspect ratio; the root
+        (moved to the overlay in full screen) clips to RadiusStep12 (0 in full screen) on black and stacks: the picture,
+        captions, the state layer, the full-screen title, the control bar (the scrim inside it reaches 32 above it) and the
+        focus ring. Everything over the picture uses the dark appearance (ArcThemeScope), whatever the app's theme: the
+        picture is always video on black, so the accent fill, the time tip, the big play button and the menus take their
+        dark-theme values (a neutral light-theme accent would be black on black). The control bar fades in 160ms and rises 8px (opacity only under reduced motion).
+    -->
+    <ControlTheme x:Key="{x:Type arc:VideoPlayer}" TargetType="arc:VideoPlayer">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
+        <Setter Property="CompactWidth" Value="{arc:VideoPlayerTokenResource CompactWidth}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:VideoPlayer">
+                <arc:VideoPlayerFrame Name="PART_Frame">
+                    <Border Name="PART_Root"
+                            Focusable="True"
+                            IsTabStop="True"
+                            arc:ArcThemeScope.Appearance="Dark"
+                            ClipToBounds="True"
+                            Background="Black"
+                            FocusAdorner="{x:Null}"
+                            TextElement.FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                            TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}">
+                        <Panel>
+                            <arc:VideoSurface Name="PART_Surface" Stretch="{TemplateBinding Stretch}" />
+                            <arc:VideoCaptionLayer Name="PART_Captions" IsHitTestVisible="False" />
+                            <arc:VideoStateLayer Name="PART_State" />
+                            <arc:VideoScrim Name="PART_TitleBar" Classes="top" VerticalAlignment="Top" IsHitTestVisible="False" IsVisible="False">
+                                <TextBlock Name="PART_Title"
+                                           Text="{TemplateBinding Title}"
+                                           TextTrimming="CharacterEllipsis"
+                                           FontSize="{arc:ArcDesignTokenResource TypeLG}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           Foreground="{arc:VideoPlayerTokenResource OnVideoForeground}" />
+                            </arc:VideoScrim>
+                            <arc:VideoControlBar Name="PART_Controls" VerticalAlignment="Bottom">
+                                <Panel>
+                                    <arc:VideoScrim Name="PART_Scrim" IsHitTestVisible="False" />
+                                    <Grid Name="PART_Bar" RowDefinitions="Auto,Auto">
+                                        <arc:VideoSeekBar Name="PART_Seek" Minimum="0" Maximum="0" SmallChange="5" />
+                                        <Grid Name="PART_Buttons" Grid.Row="1" ColumnDefinitions="Auto,Auto,Auto,*,Auto,Auto,Auto">
+                                            <arc:VideoToggleButton Name="PART_Play">
+                                                <arc:VideoSwap Width="{arc:VideoPlayerTokenResource GlyphSize}"
+                                                               Height="{arc:VideoPlayerTokenResource GlyphSize}" />
+                                            </arc:VideoToggleButton>
+                                            <arc:VideoVolume Name="PART_Volume" Grid.Column="1" />
+                                            <TextBlock Name="PART_Time" Grid.Column="2" />
+                                            <arc:VideoMenuButton Name="PART_CaptionsButton" Grid.Column="4">
+                                                <arc:VideoGlyph Data="{x:Static arc:VideoGlyphs.Captions}" StrokeThickness="2" />
+                                            </arc:VideoMenuButton>
+                                            <arc:VideoMenuButton Name="PART_SpeedButton" Grid.Column="5">
+                                                <arc:VideoGlyph Data="{x:Static arc:VideoGlyphs.Speed}" StrokeThickness="2" />
+                                            </arc:VideoMenuButton>
+                                            <arc:VideoToggleButton Name="PART_FullScreenButton" Grid.Column="6">
+                                                <arc:VideoGlyph Data="{x:Static arc:VideoGlyphs.FullScreen}" StrokeThickness="2" />
+                                            </arc:VideoToggleButton>
+                                        </Grid>
+                                    </Grid>
+                                    <Canvas Name="PART_SeekTipHost" VerticalAlignment="Top" Height="0" IsHitTestVisible="False">
+                                        <Border Name="PART_SeekTip"
+                                                IsVisible="False"
+                                                Padding="8,4"
+                                                CornerRadius="{arc:ArcDesignTokenResource RadiusStep8}"
+                                                Background="{arc:ArcDesignTokenResource Foreground}"
+                                                BorderBrush="{arc:VideoPlayerTokenResource FeedbackPlateColor}"
+                                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}">
+                                            <TextBlock FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                       FontFeatures="tnum"
+                                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                       Foreground="{arc:ArcDesignTokenResource Background}" />
+                                        </Border>
+                                    </Canvas>
+                                </Panel>
+                            </arc:VideoControlBar>
+                            <Border Name="PART_RootFocusRing"
+                                    IsVisible="False"
+                                    IsHitTestVisible="False"
+                                    BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                                    BorderBrush="{arc:VideoPlayerTokenResource OnVideoForeground}" />
+                            <TextBlock Name="PART_Announcer"
+                                       Width="1"
+                                       Height="1"
+                                       Opacity="0"
+                                       IsHitTestVisible="False"
+                                       ClipToBounds="True"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Top"
+                                       AutomationProperties.LiveSetting="Polite" />
+                        </Panel>
+                    </Border>
+                </arc:VideoPlayerFrame>
+            </ControlTemplate>
+        </Setter>
+
+
+        <!-- The control bar: hidden (faded, 8 lower, not hit-testable) until shown. -->
+        <Style Selector="^ /template/ arc|VideoControlBar#PART_Controls">
+            <Setter Property="Padding" Value="{arc:VideoPlayerTokenResource ControlBarPadding}" />
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="RenderTransform" Value="translateY(8px)" />
+        </Style>
+        <Style Selector="^:controls-visible /template/ arc|VideoControlBar#PART_Controls">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="RenderTransform" Value="none" />
+        </Style>
+        <Style Selector="^:not(:motion-full) /template/ arc|VideoControlBar#PART_Controls">
+            <Setter Property="RenderTransform" Value="none" />
+        </Style>
+        <Style Selector="^ /template/ arc|VideoScrim#PART_Scrim">
+            <Setter Property="Margin" Value="{arc:VideoPlayerTokenResource ScrimMargin}" />
+        </Style>
+        <Style Selector="^ /template/ Grid#PART_Buttons">
+            <Setter Property="ColumnSpacing" Value="{arc:VideoPlayerTokenResource ControlBarGap}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Time">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="6,0,0,0" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="FontFeatures" Value="tnum" />
+            <Setter Property="Foreground" Value="{arc:VideoPlayerTokenResource OnVideoForeground}" />
+        </Style>
+
+        <!-- The title over the picture in full screen, shown and hidden with the control bar. -->
+        <Style Selector="^ /template/ arc|VideoScrim#PART_TitleBar">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:controls-visible /template/ arc|VideoScrim#PART_TitleBar">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+
+        <!-- Below 420 wide: tighter padding and gaps. -->
+        <Style Selector="^:compact /template/ arc|VideoControlBar#PART_Controls">
+            <Setter Property="Padding" Value="{arc:VideoPlayerTokenResource CompactControlBarPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|VideoScrim#PART_Scrim">
+            <Setter Property="Margin" Value="{arc:VideoPlayerTokenResource CompactScrimMargin}" />
+        </Style>
+        <Style Selector="^:compact /template/ Grid#PART_Buttons">
+            <Setter Property="ColumnSpacing" Value="{arc:VideoPlayerTokenResource CompactControlBarGap}" />
+        </Style>
+        <Style Selector="^:compact /template/ TextBlock#PART_Time">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="Margin" Value="2,0,0,0" />
+        </Style>
+
+        <Style Selector="^:motion-full /template/ arc|VideoControlBar#PART_Controls">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ arc|VideoControlBar#PART_Controls">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|VideoScrim#PART_TitleBar">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ arc|VideoScrim#PART_TitleBar">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- Control bar glyphs are 18 (GlyphSize) unless set. -->
+    <ControlTheme x:Key="{x:Type arc:VideoGlyph}" TargetType="arc:VideoGlyph">
+        <Setter Property="Size" Value="{arc:VideoPlayerTokenResource GlyphSize}" />
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:VideoControlBar}" TargetType="arc:VideoControlBar">
+        <Setter Property="ClipToBounds" Value="False" />
+    </ControlTheme>
+
+    <!-- The scrims: black 0 to 0.6 towards the bar (bottom), or from the top for the full-screen title. -->
+    <ControlTheme x:Key="{x:Type arc:VideoScrim}" TargetType="arc:VideoScrim">
+        <Setter Property="Background">
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                <GradientStop Offset="0" Color="Transparent" />
+                <GradientStop Offset="1" Color="{arc:VideoPlayerTokenResource ScrimColor}" />
+            </LinearGradientBrush>
+        </Setter>
+        <Style Selector="^.top">
+            <Setter Property="Padding" Value="16,12,16,32" />
+            <Setter Property="Background">
+                <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                    <GradientStop Offset="0" Color="{arc:VideoPlayerTokenResource ScrimColor}" />
+                    <GradientStop Offset="1" Color="Transparent" />
+                </LinearGradientBrush>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A control bar button: 32×32, transparent, glyphs white 0.92, a white 0.12 plate on hover (RadiusStep8), pressing
+        scales to 0.94. Class big: the 64 round big play / replay button, Surface at 0.9 with ShadowRaised and a 28
+        Foreground glyph. Class on (the captions button while captions show): a 2px accent bar under the glyph.
+    -->
+    <ControlTheme x:Key="{x:Type arc:VideoButton}" TargetType="Button">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Width" Value="{arc:VideoPlayerTokenResource ButtonSize}" />
+        <Setter Property="Height" Value="{arc:VideoPlayerTokenResource ButtonSize}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:VideoPlayerTokenResource OnVideoForeground}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep8}" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="RenderTransform" Value="none" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="Button">
+                <Panel>
+                    <Border Name="PART_Background"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    <Border Name="PART_Indicator"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Width="14"
+                            Height="2"
+                            Margin="0,0,0,3"
+                            VerticalAlignment="Bottom"
+                            HorizontalAlignment="Center"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Background="{arc:ArcDesignTokenResource Accent}" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep10}"
+                            BorderBrush="{arc:VideoPlayerTokenResource OnVideoForeground}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:VideoPlayerTokenResource OnVideoHover}" />
+        </Style>
+        <Style Selector="^.on /template/ Border#PART_Indicator">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^.big">
+            <Setter Property="Width" Value="{arc:VideoPlayerTokenResource BigPlaySize}" />
+            <Setter Property="Height" Value="{arc:VideoPlayerTokenResource BigPlaySize}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^.big /template/ Border#PART_Background">
+            <Setter Property="Opacity" Value="0.9" />
+            <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowRaised}" />
+        </Style>
+        <Style Selector="^.big:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        </Style>
+        <Style Selector="^.big:pointerover /template/ Border#PART_Background">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^.big /template/ Border#PART_FocusRing">
+            <Setter Property="Margin" Value="-4" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        </Style>
+        <Style Selector="^:motion-full:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.94)" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^.big:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:VideoToggleButton}" TargetType="arc:VideoToggleButton" BasedOn="{StaticResource {x:Type arc:VideoButton}}" />
+
+    <!--
+        The seek bar: track 4 (6 while hovered, dragged or focused, 120ms), white 0.24; buffered white 0.4; played and the
+        12px thumb Accent, the thumb only while hovered, dragged or focused.
+    -->
+    <ControlTheme x:Key="{x:Type arc:VideoSeekBar}" TargetType="arc:VideoSeekBar">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Height" Value="{arc:VideoPlayerTokenResource SeekBarHeight}" />
+        <Setter Property="Margin" Value="0,0,0,4" />
+        <Setter Property="TrackHeight" Value="{arc:VideoPlayerTokenResource SeekTrackHeight}" />
+        <Setter Property="ThumbSize" Value="{arc:VideoPlayerTokenResource SeekThumbSize}" />
+        <Setter Property="ThumbOpacity" Value="0" />
+        <Setter Property="ChapterGap" Value="{arc:VideoPlayerTokenResource ChapterGap}" />
+        <Setter Property="TrackBrush" Value="{arc:VideoPlayerTokenResource SeekTrackColor}" />
+        <Setter Property="BufferedBrush" Value="{arc:VideoPlayerTokenResource SeekBufferedColor}" />
+        <Setter Property="FillBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="ThumbBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="FocusBrush" Value="{arc:VideoPlayerTokenResource OnVideoForeground}" />
+        <Style Selector="^:pointerover, ^:dragging, ^:focus-visible">
+            <Setter Property="TrackHeight" Value="{arc:VideoPlayerTokenResource SeekTrackHeightActive}" />
+            <Setter Property="ThumbOpacity" Value="1" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="TrackHeight" Tween="Instant" />
+                    <arc:ArcDoubleTransition Property="ThumbOpacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The volume slider: 64 wide, track 4 white 0.24, fill and thumb white 0.92. -->
+    <ControlTheme x:Key="{x:Type arc:VideoRange}" TargetType="arc:VideoRange">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Width" Value="{arc:VideoPlayerTokenResource VolumeSliderWidth}" />
+        <Setter Property="Margin" Value="8,0" />
+        <Setter Property="TrackHeight" Value="{arc:VideoPlayerTokenResource SeekTrackHeight}" />
+        <Setter Property="ThumbSize" Value="{arc:VideoPlayerTokenResource SeekThumbSize}" />
+        <Setter Property="ThumbOpacity" Value="1" />
+        <Setter Property="TrackBrush" Value="{arc:VideoPlayerTokenResource SeekTrackColor}" />
+        <Setter Property="FillBrush" Value="{arc:VideoPlayerTokenResource OnVideoForeground}" />
+        <Setter Property="ThumbBrush" Value="{arc:VideoPlayerTokenResource OnVideoForeground}" />
+        <Setter Property="FocusBrush" Value="{arc:VideoPlayerTokenResource OnVideoForeground}" />
+    </ControlTheme>
+
+    <!-- The volume slider's frame: closed (0 wide) until the volume control is hovered or focused, then 80 wide. -->
+    <ControlTheme x:Key="{x:Type arc:VideoVolumeClip}" TargetType="arc:VideoVolumeClip">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="True" />
+        <Setter Property="Width" Value="0" />
+        <Setter Property="Height" Value="{arc:VideoPlayerTokenResource ButtonSize}" />
+        <Style Selector="^:expanded">
+            <Setter Property="Width" Value="{arc:VideoPlayerTokenResource VolumeOpenWidth}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Width" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The state layer: poster; the backend hint (top left, a black 0.45 plate, 12 white); the big play and replay buttons;
+        the spinner (white); the error (glyph, text, Retry); the centre feedback (a 64 black 0.45 disc with a 28 glyph); the
+        double-tap ripples (a third of the width each, a half disc of black 0.45 under full motion) with their text.
+    -->
+    <ControlTheme x:Key="{x:Type arc:VideoStateLayer}" TargetType="arc:VideoStateLayer">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:VideoStateLayer">
+                <Panel Background="{TemplateBinding Background}">
+                    <Image Name="PART_Poster"
+                           Source="{TemplateBinding Poster}"
+                           Stretch="{TemplateBinding PosterStretch}"
+                           IsVisible="{TemplateBinding ShowPoster}"
+                           IsHitTestVisible="False" />
+                    <Border Name="PART_Hint"
+                            IsVisible="{TemplateBinding HintText, Converter={x:Static ObjectConverters.IsNotNull}}"
+                            IsHitTestVisible="False"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Margin="12"
+                            Padding="10,5"
+                            MaxWidth="360"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep8}"
+                            Background="{arc:VideoPlayerTokenResource FeedbackPlateColor}">
+                        <TextBlock Text="{TemplateBinding HintText}"
+                                   TextWrapping="Wrap"
+                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                   Foreground="{arc:VideoPlayerTokenResource OnVideoForeground}" />
+                    </Border>
+                    <Panel Name="PART_SkipBack" Classes="skip" HorizontalAlignment="Left" Opacity="0" IsHitTestVisible="False">
+                        <Border Name="PART_SkipBackRipple" Classes="ripple" CornerRadius="0,9999,9999,0" />
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="4">
+                            <arc:VideoGlyph Data="{x:Static arc:VideoGlyphs.Rewind}" IsFilled="True" StrokeThickness="2" Size="24"
+                                            HorizontalAlignment="Center" Foreground="{arc:VideoPlayerTokenResource OnVideoForeground}" />
+                            <TextBlock Text="{TemplateBinding SkipBackText}" HorizontalAlignment="Center" FontFeatures="tnum"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       Foreground="{arc:VideoPlayerTokenResource OnVideoForeground}" />
+                        </StackPanel>
+                    </Panel>
+                    <Panel Name="PART_SkipForward" Classes="skip" HorizontalAlignment="Right" Opacity="0" IsHitTestVisible="False">
+                        <Border Name="PART_SkipForwardRipple" Classes="ripple" CornerRadius="9999,0,0,9999" />
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="4">
+                            <arc:VideoGlyph Data="{x:Static arc:VideoGlyphs.FastForward}" IsFilled="True" StrokeThickness="2" Size="24"
+                                            HorizontalAlignment="Center" Foreground="{arc:VideoPlayerTokenResource OnVideoForeground}" />
+                            <TextBlock Text="{TemplateBinding SkipForwardText}" HorizontalAlignment="Center" FontFeatures="tnum"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       Foreground="{arc:VideoPlayerTokenResource OnVideoForeground}" />
+                        </StackPanel>
+                    </Panel>
+                    <arc:VideoButton Name="PART_BigPlay"
+                                     Classes="big"
+                                     IsVisible="{TemplateBinding ShowBigPlay}"
+                                     AutomationProperties.Name="{TemplateBinding BigPlayText}">
+                        <arc:VideoGlyph Data="{x:Static arc:VideoGlyphs.Play}" IsFilled="True" StrokeThickness="2" Margin="3,0,0,0"
+                                        Size="{arc:VideoPlayerTokenResource BigPlayGlyphSize}" />
+                    </arc:VideoButton>
+                    <arc:VideoButton Name="PART_Replay"
+                                     Classes="big"
+                                     IsVisible="{TemplateBinding ShowReplay}"
+                                     AutomationProperties.Name="{TemplateBinding ReplayText}">
+                        <arc:VideoGlyph Data="{x:Static arc:VideoGlyphs.Replay}" StrokeThickness="2.25"
+                                        Size="{arc:VideoPlayerTokenResource BigPlayGlyphSize}" />
+                    </arc:VideoButton>
+                    <arc:ArcSpinner Name="PART_Spinner"
+                                    IsVisible="{TemplateBinding ShowSpinner}"
+                                    Width="40"
+                                    Height="40"
+                                    Thickness="3"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    IsHitTestVisible="False"
+                                    Foreground="{arc:VideoPlayerTokenResource OnVideoForeground}" />
+                    <StackPanel Name="PART_Error"
+                                IsVisible="{TemplateBinding ShowError}"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Margin="24"
+                                Spacing="12">
+                        <arc:VideoGlyph Data="{x:Static arc:VideoGlyphs.Error}" StrokeThickness="2" Size="32" HorizontalAlignment="Center"
+                                        Foreground="{arc:VideoPlayerTokenResource OnVideoForeground}" />
+                        <TextBlock Text="{TemplateBinding ErrorText}"
+                                   TextWrapping="Wrap"
+                                   TextAlignment="Center"
+                                   MaxWidth="320"
+                                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                   Foreground="{arc:VideoPlayerTokenResource OnVideoForeground}" />
+                        <arc:Button Name="PART_Retry"
+                                    HorizontalAlignment="Center"
+                                    Variant="Secondary"
+                                    Size="Small"
+                                    Content="{TemplateBinding RetryText}" />
+                    </StackPanel>
+                    <Border Name="PART_Feedback"
+                            Opacity="0"
+                            IsHitTestVisible="False"
+                            Width="{arc:VideoPlayerTokenResource BigPlaySize}"
+                            Height="{arc:VideoPlayerTokenResource BigPlaySize}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Background="{arc:VideoPlayerTokenResource FeedbackPlateColor}">
+                        <arc:VideoGlyph Name="PART_FeedbackGlyph"
+                                        Data="{x:Static arc:VideoGlyphs.Play}"
+                                        IsFilled="True"
+                                        StrokeThickness="2"
+                                        Size="{arc:VideoPlayerTokenResource BigPlayGlyphSize}"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Foreground="{arc:VideoPlayerTokenResource OnVideoForeground}" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Panel.skip.ripple > Border.ripple">
+            <Setter Property="Background" Value="{arc:VideoPlayerTokenResource FeedbackPlateColor}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

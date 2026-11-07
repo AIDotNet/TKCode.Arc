@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>$(ArcTargetFrameworks)</TargetFrameworks>
+        <AssemblyName>TKCode.Arc.Video.Browser</AssemblyName>
+        <RootNamespace>TKCode.Arc</RootNamespace>
+        <PackageId>TKCode.Arc.Video.Browser</PackageId>
+        <Description>WebAssembly video backend for TKCode.Arc.Video: one HTML video element per player through JavaScript interop, with frames drawn into the Avalonia canvas. Call await ArcVideoBrowser.UseAsync() at startup of a browser app.</Description>
+        <PackageTags>$(PackageTags);video;media;browser;wasm</PackageTags>
+        <!-- The JSImport source generator emits unsafe code. -->
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+    <!--
+        Native presentation (the video element itself on the page through NativeControlHost) needs Avalonia.Browser's
+        JSObjectControlHandle, and Avalonia.Browser ships for net10.0 only. On net8.0 the package has the Canvas mode alone.
+    -->
+    <PropertyGroup Condition="'$(TargetFramework)' != 'net8.0'">
+        <DefineConstants>$(DefineConstants);ARC_VIDEO_NATIVE</DefineConstants>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="../TKCode.Arc.Video/TKCode.Arc.Video.csproj" />
+    </ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)' != 'net8.0'">
+        <PackageReference Include="Avalonia.Browser" />
+    </ItemGroup>
+    <ItemGroup>
+        <!-- Imported from a data: URL by ArcVideoBrowser, so the package needs no static web asset path in the host. -->
+        <EmbeddedResource Include="arc-video.js" LogicalName="TKCode.Arc.Video.Browser.arc-video.js" />
+    </ItemGroup>
+</Project>

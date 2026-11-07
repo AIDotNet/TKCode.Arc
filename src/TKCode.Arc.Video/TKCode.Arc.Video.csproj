@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>$(ArcTargetFrameworks)</TargetFrameworks>
+        <AssemblyName>TKCode.Arc.Video</AssemblyName>
+        <RootNamespace>TKCode.Arc</RootNamespace>
+        <PackageId>TKCode.Arc.Video</PackageId>
+        <Description>Video playback for TKCode.Arc: VideoPlayer (video with Arc controls, captions and chapters) and VideoSurface (video only), rendered inside the Avalonia composition tree, over a pluggable playback backend (IVideoPlayer) with a silent simulated default. Platform backends ship separately: TKCode.Arc.Video.Native (Media Foundation, AVFoundation, GStreamer) and TKCode.Arc.Video.Browser (WebAssembly).</Description>
+        <PackageTags>$(PackageTags);video;media;player;captions</PackageTags>
+        <!-- TKCode.Arc and Core contain generated types with identical names. -->
+        <NoWarn>$(NoWarn);CS0436</NoWarn>
+        <ArcFoundationGenerator>true</ArcFoundationGenerator>
+        <!-- Not packed until M8 (design/components/video/video.md section 18). -->
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="../TKCode.Arc/TKCode.Arc.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="TKCode.Arc.Tests" />
+        <InternalsVisibleTo Include="TKCode.Arc.Video.Native" />
+        <InternalsVisibleTo Include="TKCode.Arc.Video.Browser" />
+    </ItemGroup>
+</Project>

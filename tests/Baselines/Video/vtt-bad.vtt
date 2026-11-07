@@ -1,0 +1,53 @@
+WEBVTT
+
+1
+00:01.000 -> 00:02.000
+Missing arrow
+
+2
+00:61.000 --> 00:62.000
+Seconds out of range
+
+3
+0:01.000 --> 00:02.000
+One-digit minutes
+
+4
+00:03.00 --> 00:04.000
+Two-digit fraction
+
+5
+00:05.000 --> 00:05.000
+Zero length
+
+6
+00:07.000 --> 00:06.000
+Ends before start
+
+7
+00:08.000 --> 00:09.000extra
+Junk after end time
+
+This line is outside any cue
+
+00:20.000 --> 00:22.000 vertical:rl region:bottom line:abc position:120% size:x align:top foo:bar loose
+Later cue first in file, bad settings
+
+00:10.000 --> 00:12.000 vertical:lr region:top
+Earlier cue second in file
+00:12.000 --> 00:13.000
+No blank line before this cue
+
+00:14.000 --> 00:15.000
+
+00:15.000 --> 00:16.000
+Overlap A
+
+00:15.500 --> 00:17.000
+Overlap B
+
+00:15.000 --> 00:15.800
+Overlap C same start as A
+
+00:18.000 --> 00:19.000 line:-1.5 line:50.5%,center position:0%
+Last line setting wins

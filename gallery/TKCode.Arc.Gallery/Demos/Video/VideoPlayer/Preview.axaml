@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.VideoPlayerPreviewDemo">
+    <!-- A 12 second clip in three chapters, with captions in three languages. Press Play, then move the pointer away:
+         the controls hide after two seconds. K, J, L, M, F and C work while the player has focus. -->
+    <arc:VideoPlayer MaxWidth="720"
+                     Title="Aurora"
+                     AspectRatio="1.7778"
+                     Source="{x:Static demos:VideoDemoMedia.Aurora}"
+                     Poster="{x:Static demos:VideoDemoMedia.AuroraPoster}">
+        <arc:VideoPlayer.TextTracks>
+            <arc:VideoTextTrack Kind="Captions" Language="en-US" Label="English" Source="avares://TKCode.Arc.Gallery/Media/Video/aurora.en-US.vtt" />
+            <arc:VideoTextTrack Kind="Captions" Language="zh-CN" Label="简体中文" Source="avares://TKCode.Arc.Gallery/Media/Video/aurora.zh-CN.vtt" />
+            <arc:VideoTextTrack Kind="Captions" Language="zh-TW" Label="繁體中文" Source="avares://TKCode.Arc.Gallery/Media/Video/aurora.zh-TW.vtt" />
+            <arc:VideoTextTrack Kind="Chapters" Language="en-US" Source="avares://TKCode.Arc.Gallery/Media/Video/aurora.chapters.vtt" />
+        </arc:VideoPlayer.TextTracks>
+    </arc:VideoPlayer>
+</UserControl>

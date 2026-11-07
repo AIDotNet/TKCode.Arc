@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.VideoPlayerControlsDemo">
+    <!-- ShowControls="Always" keeps the bar on screen, for people who need it to stay (W3C media requirement IC-4).
+         The clip loops and starts muted on its own: AutoPlay only works while muted. -->
+    <arc:VideoPlayer MaxWidth="720"
+                     Title="Aurora"
+                     AspectRatio="1.7778"
+                     Source="{x:Static demos:VideoDemoMedia.Aurora}"
+                     ShowControls="Always"
+                     IsLooping="True"
+                     IsMuted="True"
+                     AutoPlay="True" />
+</UserControl>

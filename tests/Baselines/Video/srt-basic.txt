@@ -1,0 +1,40 @@
+# warnings (3)
+line 23: cue ends at or before its start, skipped
+line 27: bad timing line, cue skipped
+line 30: expected a cue number or a timing line, block skipped
+# cues (9)
+00:00:01.000 --> 00:00:04.000 id="1"
+  text "Hello, world!"
+  run  "Hello, "
+  run  "world" bold
+  run  "!"
+00:00:04.000 --> 00:00:06.500 id="2"
+  text "Two lines,\nsecond italic line."
+  run  "Two lines,\nsecond "
+  run  "italic" italic
+  run  " line."
+00:00:06.500 --> 00:00:08.000 id="3"
+  text "Yellow upper-case tag"
+  run  "Yellow "
+  run  "upper-case tag" underline
+00:00:08.000 --> 00:00:10.000 id="4"
+  text "Top positioned (tag stripped) and more"
+  run  "Top positioned (tag stripped) and more"
+00:00:10.000 --> 00:00:12.000 id="5"
+  text "No blank line before this cue\n<3 and a < b, &amp; stays literal"
+  run  "No blank line before this cue\n<3 and a < b, &amp; stays literal"
+00:00:15.500 --> 00:00:16.250 id="9"
+  text "One-digit fields and short fractions"
+  run  "One-digit fields and short fractions"
+00:00:16.000 --> 00:00:17.000 id="10"
+  text "Missing hours"
+  run  "Missing hours"
+00:00:18.000 --> 00:00:19.000 id="11"
+  text "bold both italic? rest"
+  run  "bold " bold
+  run  "both" bold italic
+  run  " italic?" italic
+  run  " rest"
+00:00:20.000 --> 00:00:21.000
+  text "No index line"
+  run  "No index line"

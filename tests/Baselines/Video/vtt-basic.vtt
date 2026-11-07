@@ -1,0 +1,46 @@
+WEBVTT - Arc captions sample
+Kind: captions
+Language: en
+
+NOTE This is a comment
+spanning two lines
+
+STYLE
+::cue { color: yellow }
+
+REGION
+id:bottom
+width:40%
+
+intro
+00:01.000 --> 00:04.000
+Hello, <b>world</b>!
+
+00:00:04.000 --> 00:00:06.500 line:-2 position:30% size:40% align:start
+Two lines,
+second <i>italic</i> line.
+
+voice-1
+00:06.500 --> 00:08.000 line:10% align:end
+<v Esme>It's <u>underlined</u> &amp; voiced</v>
+
+00:08.000 --> 00:10.000 line:0 position:60%,line-left size:50% align:left
+<v.loud Fred>Shouting</v> then <c.yellow.bg_blue>class span</c>
+
+00:10.000 --> 00:12.000 align:right
+Nested <b>bold <i>bold-italic <u>all three</u></i> bold</b> plain
+
+01:00:12.000 --> 01:00:13.000 align:middle
+Entities: &lt;tag&gt; &nbsp;nbsp &lrm;lrm &rlm;rlm &#233; &#x4E2D; &bogus; & alone &amp
+
+00:13.000 --> 00:15.000
+<lang zh-Hans>漢字</lang> <ruby>漢<rt>kan</rt>字<rt>ji</rt></ruby> done
+
+00:15.000 --> 00:18.000
+Karaoke <00:15.500>one <00:16.000>two <00:16.500>three
+
+00:18.000 --> 00:19.000
+Unknown <span>tag</span> and <b unclosed
+
+00:19.000 --> 00:20.000
+<rt>ruby text alone

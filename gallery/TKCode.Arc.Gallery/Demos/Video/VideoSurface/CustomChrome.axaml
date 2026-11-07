@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.VideoSurfaceCustomChromeDemo">
+    <!-- Your own controls under the picture: VideoSurface shows the frames, the buttons drive the IVideoPlayer directly. -->
+    <StackPanel Spacing="12" MaxWidth="560">
+        <arc:VideoSurface x:Name="Surface" Height="300" CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <StackPanel Orientation="Horizontal" Spacing="8">
+            <arc:Button x:Name="PlayButton" Content="Play" Click="OnPlay" />
+            <arc:Button Content="Back 5 s" Click="OnBack" />
+            <arc:Button Content="Forward 5 s" Click="OnForward" />
+            <TextBlock x:Name="Time" VerticalAlignment="Center" Margin="8,0,0,0" FontFeatures="+tnum" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

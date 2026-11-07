@@ -1,0 +1,11 @@
+# warnings (0)
+# cues (3)
+00:00:00.500 --> 00:00:01.500
+  text "CRLF line one\nCRLF line two"
+  run  "CRLF line one\nCRLF line two"
+00:00:02.000 --> 00:00:03.000
+  text "CR only"
+  run  "CR only"
+00:00:04.000 --> 00:00:05.000
+  text "Mixed"
+  run  "Mixed"

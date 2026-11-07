@@ -1,0 +1,41 @@
+# warnings (16)
+line 3: text outside a cue skipped
+line 8: bad start time, cue skipped
+line 12: bad start time, cue skipped
+line 16: bad start time, cue skipped
+line 20: cue ends at or before its start, skipped
+line 24: cue ends at or before its start, skipped
+line 28: unexpected text after the end time, cue skipped
+line 31: text outside a cue skipped
+line 33: vertical text is not supported; cues are drawn horizontally
+line 33: regions are not supported; region blocks and cue region settings are ignored
+line 33: invalid line 'abc' ignored
+line 33: invalid position '120%' ignored
+line 33: invalid size 'x' ignored
+line 33: invalid align 'top' ignored
+line 33: unknown cue setting 'foo' ignored
+line 33: malformed cue setting 'loose' ignored
+# cues (8)
+00:00:10.000 --> 00:00:12.000
+  text "Earlier cue second in file"
+  run  "Earlier cue second in file"
+00:00:12.000 --> 00:00:13.000
+  text "No blank line before this cue"
+  run  "No blank line before this cue"
+00:00:14.000 --> 00:00:15.000
+  text ""
+00:00:15.000 --> 00:00:16.000
+  text "Overlap A"
+  run  "Overlap A"
+00:00:15.000 --> 00:00:15.800
+  text "Overlap C same start as A"
+  run  "Overlap C same start as A"
+00:00:15.500 --> 00:00:17.000
+  text "Overlap B"
+  run  "Overlap B"
+00:00:18.000 --> 00:00:19.000 line=50.5% position=0%
+  text "Last line setting wins"
+  run  "Last line setting wins"
+00:00:20.000 --> 00:00:22.000
+  text "Later cue first in file, bad settings"
+  run  "Later cue first in file, bad settings"

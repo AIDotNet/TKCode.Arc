@@ -1,0 +1,45 @@
+# warnings (1)
+line 11: regions are not supported; region blocks and cue region settings are ignored
+# cues (10)
+00:00:01.000 --> 00:00:04.000 id="intro"
+  text "Hello, world!"
+  run  "Hello, "
+  run  "world" bold
+  run  "!"
+00:00:04.000 --> 00:00:06.500 line=-2 position=30% size=40% align=Start
+  text "Two lines,\nsecond italic line."
+  run  "Two lines,\nsecond "
+  run  "italic" italic
+  run  " line."
+00:00:06.500 --> 00:00:08.000 id="voice-1" line=10% align=End
+  text "It's underlined & voiced"
+  run  "It's " voice="Esme"
+  run  "underlined" underline voice="Esme"
+  run  " & voiced" voice="Esme"
+00:00:08.000 --> 00:00:10.000 line=0 position=60% size=50% align=Left
+  text "Shouting then class span"
+  run  "Shouting" voice="Fred"
+  run  " then class span"
+00:00:10.000 --> 00:00:12.000 align=Right
+  text "Nested bold bold-italic all three bold plain"
+  run  "Nested "
+  run  "bold " bold
+  run  "bold-italic " bold italic
+  run  "all three" bold italic underline
+  run  " bold" bold
+  run  " plain"
+00:00:13.000 --> 00:00:15.000
+  text "漢字 漢(kan)字(ji) done"
+  run  "漢字 漢(kan)字(ji) done"
+00:00:15.000 --> 00:00:18.000
+  text "Karaoke one two three"
+  run  "Karaoke one two three"
+00:00:18.000 --> 00:00:19.000
+  text "Unknown tag and "
+  run  "Unknown tag and "
+00:00:19.000 --> 00:00:20.000
+  text "(ruby text alone)"
+  run  "(ruby text alone)"
+01:00:12.000 --> 01:00:13.000
+  text "Entities: <tag> \u00A0nbsp \u200Elrm \u200Frlm é 中 &bogus; & alone &amp"
+  run  "Entities: <tag> \u00A0nbsp \u200Elrm \u200Frlm é 中 &bogus; & alone &amp"
