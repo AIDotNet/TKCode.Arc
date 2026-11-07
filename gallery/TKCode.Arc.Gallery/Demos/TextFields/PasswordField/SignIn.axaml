@@ -7,8 +7,8 @@
                            Label="Password"
                            Placeholder="Your password"
                            Description="Use the reveal toggle to check what you typed."
-                           Width="360"
-                           HorizontalAlignment="Left" />
+                           MaxWidth="360"
+                           HorizontalAlignment="Stretch" />
         <TextBlock x:Name="State"
                    Text="Hidden"
                    FontSize="14"

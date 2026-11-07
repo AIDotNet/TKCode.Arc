@@ -18,6 +18,7 @@
             </Setter>
         </Style>
         <Style Selector="TextBlock.caption">
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
             <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
         </Style>
@@ -170,7 +171,7 @@
                                         <Grid ColumnDefinitions="Auto,*,Auto,72" ColumnSpacing="12">
                                             <arc:Avatar DisplayName="Tomas Rivera" Size="Small" VerticalAlignment="Center" />
                                             <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                                <TextBlock Text="Retouch the hero image" Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                                <TextBlock Text="Retouch the hero image" TextTrimming="CharacterEllipsis" Foreground="{arc:ArcDesignTokenResource Foreground}" />
                                                 <TextBlock Classes="caption" Text="Spring launch" />
                                             </StackPanel>
                                             <arc:Badge Grid.Column="2" Size="Small" Tone="Info" Content="In review" VerticalAlignment="Center" />
@@ -181,7 +182,7 @@
                                         <Grid ColumnDefinitions="Auto,*,Auto,72" ColumnSpacing="12">
                                             <arc:Avatar DisplayName="Mei Tanaka" Size="Small" VerticalAlignment="Center" />
                                             <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                                <TextBlock Text="Approve the partner one-pager" Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                                <TextBlock Text="Approve the partner one-pager" TextTrimming="CharacterEllipsis" Foreground="{arc:ArcDesignTokenResource Foreground}" />
                                                 <TextBlock Classes="caption" Text="Partner kit" />
                                             </StackPanel>
                                             <arc:Badge Grid.Column="2" Size="Small" Content="In progress" VerticalAlignment="Center" />
@@ -192,7 +193,7 @@
                                         <Grid ColumnDefinitions="Auto,*,Auto,72" ColumnSpacing="12">
                                             <arc:Avatar DisplayName="Jonas Berg" Size="Small" VerticalAlignment="Center" />
                                             <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                                <TextBlock Text="Resolve the carton print proof" Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                                <TextBlock Text="Resolve the carton print proof" TextTrimming="CharacterEllipsis" Foreground="{arc:ArcDesignTokenResource Foreground}" />
                                                 <TextBlock Classes="caption" Text="Packaging 2.0" />
                                             </StackPanel>
                                             <arc:Badge Grid.Column="2" Size="Small" Tone="Warning" Content="Blocked" VerticalAlignment="Center" />

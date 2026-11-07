@@ -45,6 +45,15 @@ public partial class TreeViewFileTreeDemo : UserControl
     public TreeViewFileTreeDemo()
     {
         InitializeComponent();
+        // On a narrow screen the file opens under the tree instead of beside it.
+        Layout.SizeChanged += (_, e) => Stack(e.NewSize.Width < 560);
+    }
+
+    private void Stack(bool narrow)
+    {
+        Layout.ColumnDefinitions = new ColumnDefinitions(narrow ? "*" : "280,*");
+        Grid.SetColumn(Viewer, narrow ? 0 : 1);
+        Grid.SetRow(Viewer, narrow ? 1 : 0);
     }
 
     private void OnItemInvoked(object? sender, TreeViewItemEventArgs e)

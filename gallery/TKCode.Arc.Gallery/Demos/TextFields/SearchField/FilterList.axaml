@@ -6,8 +6,8 @@
         <arc:SearchField x:Name="Search"
                          Label="Search people"
                          Placeholder="Filter by name"
-                         Width="360"
-                         HorizontalAlignment="Left"
+                         MaxWidth="360"
+                         HorizontalAlignment="Stretch"
                          TextChanged="OnTextChanged"
                          SearchSubmitted="OnSearchSubmitted" />
         <TextBlock x:Name="Submitted"

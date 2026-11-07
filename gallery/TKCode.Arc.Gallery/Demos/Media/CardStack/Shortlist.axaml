@@ -36,6 +36,8 @@
                    FontSize="13"
                    FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
                    HorizontalAlignment="Center"
+                   TextAlignment="Center"
+                   TextWrapping="Wrap"
                    Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
     </StackPanel>
 </UserControl>

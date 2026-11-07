@@ -2,5 +2,5 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
              x:Class="TKCode.Arc.Gallery.Demos.PhoneInputDefaultDemo">
-    <arc:PhoneInput Label="Phone number" Width="360" HorizontalAlignment="Left" />
+    <arc:PhoneInput Label="Phone number" MaxWidth="360" HorizontalAlignment="Stretch" />
 </UserControl>

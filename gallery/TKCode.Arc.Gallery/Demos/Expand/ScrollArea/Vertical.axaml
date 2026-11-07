@@ -8,7 +8,7 @@
                 CornerRadius="18"
                 ClipToBounds="True"
                 BorderBrush="{arc:ArcDesignTokenResource Border}">
-            <arc:ScrollArea Width="360"
+            <arc:ScrollArea MaxWidth="360"
                             Height="260"
                             CornerRadius="18"
                             Label="Release notes"

@@ -4,8 +4,8 @@
              x:Class="TKCode.Arc.Gallery.Demos.PasswordStrengthCreateDemo">
     <StackPanel Spacing="12">
         <arc:PasswordStrength Label="New password"
-                              Width="400"
-                              HorizontalAlignment="Left"
+                              MaxWidth="400"
+                              HorizontalAlignment="Stretch"
                               StrengthChanged="OnStrengthChanged" />
         <TextBlock x:Name="Result"
                    Text="Strength: none yet"

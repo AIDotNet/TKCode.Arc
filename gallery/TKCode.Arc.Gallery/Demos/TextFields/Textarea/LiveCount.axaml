@@ -7,7 +7,7 @@
                   Placeholder="A sentence or two about you"
                   Description="160 characters left"
                   MaxLength="160"
-                  Width="420"
-                  HorizontalAlignment="Left"
+                  MaxWidth="420"
+                  HorizontalAlignment="Stretch"
                   TextChanged="OnTextChanged" />
 </UserControl>

@@ -2,5 +2,5 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
              x:Class="TKCode.Arc.Gallery.Demos.MoneyInputDefaultDemo">
-    <arc:MoneyInput Label="Amount" Width="380" HorizontalAlignment="Left" />
+    <arc:MoneyInput Label="Amount" MaxWidth="380" HorizontalAlignment="Stretch" />
 </UserControl>

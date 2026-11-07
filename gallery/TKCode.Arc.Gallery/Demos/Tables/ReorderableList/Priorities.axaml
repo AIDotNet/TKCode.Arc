@@ -4,8 +4,8 @@
              x:Class="TKCode.Arc.Gallery.Demos.ReorderableListPrioritiesDemo">
     <StackPanel Spacing="14">
         <arc:ReorderableList x:Name="Priorities"
-                             Width="520"
-                             HorizontalAlignment="Left"
+                             MaxWidth="520"
+                             HorizontalAlignment="Stretch"
                              Reordered="OnReordered">
             <arc:ReorderableListEntry Id="pricing" Title="Ship pricing page" Detail="Marketing · due Friday" />
             <arc:ReorderableListEntry Id="onboarding" Title="Review onboarding flow" Detail="Design · 3 open comments" />

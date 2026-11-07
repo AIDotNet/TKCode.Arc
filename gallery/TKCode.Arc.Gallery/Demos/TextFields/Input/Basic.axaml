@@ -4,6 +4,6 @@
              x:Class="TKCode.Arc.Gallery.Demos.InputBasicDemo">
     <arc:Input Label="Email"
                Placeholder="you@example.com"
-               Width="360"
-               HorizontalAlignment="Left" />
+               MaxWidth="360"
+               HorizontalAlignment="Stretch" />
 </UserControl>

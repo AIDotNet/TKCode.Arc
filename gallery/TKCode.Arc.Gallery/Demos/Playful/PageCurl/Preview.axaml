@@ -34,7 +34,7 @@
     </UserControl.Styles>
 
     <!-- The margin leaves room for a page lifted past the top of the book. -->
-    <arc:PageCurl Label="Slow mornings" Width="520" HorizontalAlignment="Center" Margin="0,48,0,8">
+    <arc:PageCurl Label="Slow mornings" MaxWidth="520" HorizontalAlignment="Stretch" Margin="0,48,0,8">
         <!-- 1: the cover, alone on the right while the book is closed. -->
         <Viewbox>
             <Panel Width="288" Height="400" Background="#2B2622">

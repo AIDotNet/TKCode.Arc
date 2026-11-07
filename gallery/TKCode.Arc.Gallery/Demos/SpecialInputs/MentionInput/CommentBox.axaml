@@ -9,8 +9,8 @@
                           Placeholder="Leave a comment. Use @ to mention, # for a channel"
                           People="{x:Static demos:MentionDemoData.People}"
                           Channels="{x:Static demos:MentionDemoData.Channels}"
-                          Width="440"
-                          HorizontalAlignment="Center"
+                          MaxWidth="440"
+                          HorizontalAlignment="Stretch"
                           MentionAdded="OnMentionAdded" />
         <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
             <arc:Button Content="Mention someone" Variant="Secondary" Size="Small" Click="OnMentionClick" />

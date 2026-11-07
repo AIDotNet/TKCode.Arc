@@ -2,7 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
              x:Class="TKCode.Arc.Gallery.Demos.ArcWindowBasicDemo">
-    <StackPanel HorizontalAlignment="Center" Width="560" Spacing="12">
+    <StackPanel HorizontalAlignment="Stretch" MaxWidth="560" Spacing="12">
         <!-- A preview of the bar an ArcWindow draws; inside the gallery it moves and closes nothing. -->
         <Border BorderBrush="{arc:ArcDesignTokenResource Border}"
                 BorderThickness="1"

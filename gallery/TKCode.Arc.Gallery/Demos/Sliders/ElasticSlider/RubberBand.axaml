@@ -5,8 +5,8 @@
     <arc:ElasticSlider x:Name="Volume"
                        Label="Volume"
                        Value="40"
-                       Width="360"
-                       HorizontalAlignment="Center">
+                       MaxWidth="360"
+                       HorizontalAlignment="Stretch">
         <arc:ElasticSlider.StartIcon>
             <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Minus}"
                           Size="16"

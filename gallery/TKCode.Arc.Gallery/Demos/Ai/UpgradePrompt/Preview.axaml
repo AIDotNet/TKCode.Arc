@@ -8,7 +8,7 @@
          (UpgradePromptDemoData): an invented product's Pro plan and prices that include real models. Without a plan the
          prompt is empty. -->
     <WrapPanel ItemSpacing="20" LineSpacing="20" Margin="0,12">
-        <arc:UpgradePrompt Width="420" VerticalAlignment="Top" Used="50" Limit="50" ResetsOn="Nov 1" Plan="{x:Static demos:UpgradePromptDemoData.ProPlan}" />
-        <arc:UpgradePrompt x:Name="Upgraded" Width="420" VerticalAlignment="Top" Used="50" Limit="50" ResetsOn="Nov 1" Plan="{x:Static demos:UpgradePromptDemoData.ProPlan}" />
+        <arc:UpgradePrompt MaxWidth="420" VerticalAlignment="Top" Used="50" Limit="50" ResetsOn="Nov 1" Plan="{x:Static demos:UpgradePromptDemoData.ProPlan}" />
+        <arc:UpgradePrompt x:Name="Upgraded" MaxWidth="420" VerticalAlignment="Top" Used="50" Limit="50" ResetsOn="Nov 1" Plan="{x:Static demos:UpgradePromptDemoData.ProPlan}" />
     </WrapPanel>
 </UserControl>

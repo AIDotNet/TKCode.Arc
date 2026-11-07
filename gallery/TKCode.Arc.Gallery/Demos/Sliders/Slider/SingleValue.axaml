@@ -4,8 +4,8 @@
              x:Class="TKCode.Arc.Gallery.Demos.SliderSingleValueDemo">
     <arc:Slider Label="Volume"
                 Value="64"
-                Width="360"
-                HorizontalAlignment="Center">
+                MaxWidth="360"
+                HorizontalAlignment="Stretch">
         <arc:Slider.StartContent>
             <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Minus}"
                           Size="16"

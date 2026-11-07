@@ -3,7 +3,7 @@
              xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
              xmlns:generic="using:System.Collections.Generic"
              x:Class="TKCode.Arc.Gallery.Demos.TagInputDefaultDemo">
-    <arc:TagInput Label="Tags" Width="420" HorizontalAlignment="Left">
+    <arc:TagInput Label="Tags" MaxWidth="420" HorizontalAlignment="Stretch">
         <arc:TagInput.Value>
             <generic:List x:TypeArguments="x:String">
                 <x:String>design</x:String>
