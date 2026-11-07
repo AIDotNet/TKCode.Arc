@@ -1,0 +1,19 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.VoiceOrbTheme">
+
+    <!--
+        The orb draws itself every frame; the theme only hands it the accent (its tint when Tint is not set), the surface
+        (to tell light from dark) and the default size. All its motion is code-driven (see VoiceOrb), so no transitions.
+    -->
+    <ControlTheme x:Key="{x:Type arc:VoiceOrb}" TargetType="arc:VoiceOrb">
+        <Setter Property="Size" Value="{arc:VoiceOrbTokenResource DefaultSize}" />
+        <Setter Property="RingThickness" Value="{arc:VoiceOrbTokenResource RingThickness}" />
+        <Setter Property="AccentInk" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="SurfaceInk" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </ControlTheme>
+</ResourceDictionary>

@@ -1,0 +1,132 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.WalletStackTheme">
+
+    <!--
+        The wallet: at most 18.5rem (296) wide; a 32px header (title, then the count or the All cards pill) over the
+        stage, which overhangs the wallet by 12px on each side so shadows and the focus ring have room.
+    -->
+    <ControlTheme x:Key="{x:Type arc:WalletStack}" TargetType="arc:WalletStack">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="MaxWidth" Value="{arc:WalletStackTokenResource WalletMaxWidth}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:WalletStack">
+                <Grid RowDefinitions="Auto,Auto" ClipToBounds="False">
+                    <Grid Height="{arc:WalletStackTokenResource HeaderHeight}" ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                        <TextBlock Name="PART_Title"
+                                   VerticalAlignment="Center"
+                                   FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                   FontSize="{arc:WalletStackTokenResource TitleSize}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   LetterSpacing="-0.48"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                   TextTrimming="CharacterEllipsis" />
+                        <Panel Grid.Column="1">
+                            <arc:WalletStackCount Name="PART_Count"
+                                                  HorizontalAlignment="Right"
+                                                  VerticalAlignment="Center"
+                                                  RenderTransformOrigin="100%,50%"
+                                                  Ink="{arc:ArcDesignTokenResource TextMuted}"
+                                                  FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                                                  FontSize="{arc:ArcDesignTokenResource TypeSM}" />
+                            <arc:WalletStackHeaderButton Name="PART_AllCards"
+                                                         HorizontalAlignment="Right"
+                                                         VerticalAlignment="Center"
+                                                         RenderTransformOrigin="100%,50%"
+                                                         IsVisible="False"
+                                                         Opacity="0" />
+                        </Panel>
+                    </Grid>
+                    <arc:WalletStackStage Name="PART_Stage" Grid.Row="1" Margin="-12,0" />
+                    <arc:ExplainerAnnouncer Name="PART_Announcer" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- The stage's inks: text and surface colors for the activity panel, the focus ring, the shadow colors and type. -->
+    <ControlTheme x:Key="{x:Type arc:WalletStackStage}" TargetType="arc:WalletStackStage">
+        <Setter Property="ForegroundInk" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SecondaryInk" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="MutedInk" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="BorderInk" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="SurfaceMutedInk" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="SuccessInk" Value="{arc:ArcDesignTokenResource Success}" />
+        <Setter Property="FocusInk" Value="{arc:ArcDesignTokenResource FocusRing}" />
+        <Setter Property="BackgroundInk" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="ShadowInk" Value="{arc:WalletStackTokenResource CardShadowColor}" />
+        <Setter Property="ContactInk" Value="{arc:WalletStackTokenResource CardContactColor}" />
+        <Setter Property="DisplayFont" Value="{arc:ArcDesignTokenResource DisplayFontFamily}" />
+        <Setter Property="BodyFont" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="SmallSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="ExtraSmallSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="BalanceSize" Value="{arc:WalletStackTokenResource BalanceSize}" />
+    </ControlTheme>
+
+    <!-- The All cards pill: 32 high, 1px border, surface fill, muted fill on hover, a keyboard ring 2px outside. -->
+    <ControlTheme x:Key="{x:Type arc:WalletStackHeaderButton}" TargetType="arc:WalletStackHeaderButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Height" Value="{arc:WalletStackTokenResource HeaderHeight}" />
+        <Setter Property="Padding" Value="{arc:WalletStackTokenResource AllCardsPadding}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:WalletStackHeaderButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronLeft}"
+                                          Size="16"
+                                          StrokeThickness="1.75"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          VerticalAlignment="Center" />
+                            <ContentPresenter Name="PART_ContentPresenter"
+                                              Content="{TemplateBinding Content}"
+                                              Foreground="{TemplateBinding Foreground}"
+                                              VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+</ResourceDictionary>

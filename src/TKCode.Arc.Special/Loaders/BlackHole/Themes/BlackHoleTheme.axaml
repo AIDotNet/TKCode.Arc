@@ -1,0 +1,42 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.BlackHoleTheme">
+
+    <!--
+        The wrapper: the content as usual, and the stage over it that shows the effect's frames while a transition runs
+        (hidden otherwise; it takes no input). The lens, halo, photon ring and shockwave read the token; the core is black.
+    -->
+    <ControlTheme x:Key="{x:Type arc:BlackHole}" TargetType="arc:BlackHole">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Setter Property="CoreGrowth" Value="{arc:BlackHoleTokenResource CoreGrowth}" />
+        <Setter Property="EinsteinRatio" Value="{arc:BlackHoleTokenResource EinsteinRatio}" />
+        <Setter Property="HaloDecay" Value="{arc:BlackHoleTokenResource HaloDecay}" />
+        <Setter Property="HaloOpacity" Value="{arc:BlackHoleTokenResource HaloOpacity}" />
+        <Setter Property="PhotonRingWidth" Value="{arc:BlackHoleTokenResource PhotonRingWidth}" />
+        <Setter Property="PhotonRingBrush" Value="{arc:BlackHoleTokenResource PhotonRingColor}" />
+        <Setter Property="ShockWidth" Value="{arc:BlackHoleTokenResource ShockWidth}" />
+        <Setter Property="ShockOpacity" Value="{arc:BlackHoleTokenResource ShockOpacity}" />
+        <Setter Property="ShockBrush" Value="{arc:BlackHoleTokenResource ShockColor}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:BlackHole">
+                <Panel>
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Background="{TemplateBinding Background}"
+                                      BorderBrush="{TemplateBinding BorderBrush}"
+                                      BorderThickness="{TemplateBinding BorderThickness}"
+                                      CornerRadius="{TemplateBinding CornerRadius}"
+                                      Padding="{TemplateBinding Padding}"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    <arc:BlackHoleStage Name="PART_Stage" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

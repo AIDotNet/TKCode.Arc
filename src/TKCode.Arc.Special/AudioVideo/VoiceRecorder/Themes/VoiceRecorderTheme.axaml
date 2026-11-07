@@ -1,0 +1,223 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.VoiceRecorderTheme">
+
+    <!--
+        The voice recorder: an optional header over a hairline, the thread (bottom-aligned, scrolls without a visible bar)
+        and the composer over a hairline. The composer's parts are built in code and styled below by type and pseudo-class.
+    -->
+    <ControlTheme x:Key="{x:Type arc:VoiceRecorder}" TargetType="arc:VoiceRecorder">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
+        <Setter Property="Padding" Value="{arc:VoiceRecorderTokenResource CardPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="RecordingBackground" Value="{arc:VoiceRecorderTokenResource RecordingBackground}" />
+        <Setter Property="ReviewBackground" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="RecordInk" Value="{arc:VoiceRecorderTokenResource RecordColor}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:VoiceRecorder">
+                <Border Name="PART_Card"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Grid RowDefinitions="Auto,*,Auto">
+                        <Border Name="PART_HeaderHost"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}"
+                                Padding="0,0,0,12"
+                                Margin="0,0,0,12"
+                                IsVisible="{TemplateBinding Header, Converter={x:Static ObjectConverters.IsNotNull}}">
+                            <ContentPresenter Content="{TemplateBinding Header}"
+                                              ContentTemplate="{TemplateBinding HeaderTemplate}" />
+                        </Border>
+                        <ScrollViewer Name="PART_List"
+                                      Grid.Row="1"
+                                      HorizontalScrollBarVisibility="Disabled"
+                                      VerticalScrollBarVisibility="Hidden">
+                            <StackPanel Name="PART_Messages"
+                                        Spacing="{arc:VoiceRecorderTokenResource MessageGap}"
+                                        Margin="{arc:VoiceRecorderTokenResource ListPadding}"
+                                        VerticalAlignment="Bottom" />
+                        </ScrollViewer>
+                        <Border Grid.Row="2"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
+                                Margin="0,12,0,0"
+                                Padding="0,12,0,0">
+                            <Decorator Name="PART_ComposerHost" />
+                        </Border>
+                        <!-- The polite status region: read by screen readers, never seen. -->
+                        <arc:ExplainerAnnouncer Name="PART_Status" Grid.Row="2" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:plain">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="0" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The composer row: 48px, 8px gaps, a 40px trash. -->
+    <ControlTheme x:Key="{x:Type arc:VoiceRecorderComposer}" TargetType="arc:VoiceRecorderComposer">
+        <Setter Property="RowHeight" Value="{arc:VoiceRecorderTokenResource ComposerHeight}" />
+        <Setter Property="Gap" Value="{arc:VoiceRecorderTokenResource ComposerGap}" />
+        <Setter Property="DiscardSize" Value="{arc:VoiceRecorderTokenResource DiscardSize}" />
+    </ControlTheme>
+
+    <!-- A voice bubble: muted with a dark play button, or (your own) dark with a light one. -->
+    <ControlTheme x:Key="{x:Type arc:VoiceRecorderBubble}" TargetType="arc:VoiceRecorderBubble">
+        <Setter Property="Height" Value="{arc:VoiceRecorderTokenResource BubbleHeight}" />
+        <Setter Property="Padding" Value="{arc:VoiceRecorderTokenResource BubblePadding}" />
+        <Setter Property="Gap" Value="{arc:VoiceRecorderTokenResource BubbleGap}" />
+        <Setter Property="TimeOpacity" Value="{arc:VoiceRecorderTokenResource BubbleTimeOpacity}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="Ink" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Style Selector="^:own">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="Ink" Value="{arc:ArcDesignTokenResource Surface}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The recorder's round buttons. -->
+    <ControlTheme x:Key="{x:Type arc:VoiceRecorderButton}" TargetType="arc:VoiceRecorderButton">
+        <!-- Templated controls clip by default; keyboard focus rings sit outside the box. -->
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Width" Value="{arc:VoiceRecorderTokenResource PlaySize}" />
+        <Setter Property="Height" Value="{arc:VoiceRecorderTokenResource PlaySize}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:VoiceRecorderButton">
+                <Panel>
+                    <Border Name="PART_Background"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <arc:VoiceRecorderGlyph Name="PART_Glyph"
+                                            Foreground="{TemplateBinding Foreground}"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center" />
+                    <Border Name="PART_FocusRing"
+                            Margin="-4"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            IsVisible="False"
+                            IsHitTestVisible="False" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <!-- Play and pause: 14px, solid. -->
+        <Style Selector="^ /template/ arc|VoiceRecorderGlyph#PART_Glyph">
+            <Setter Property="Data" Value="{x:Static arc:ArcIcons.Play}" />
+            <Setter Property="Size" Value="14" />
+            <Setter Property="StrokeThickness" Value="2" />
+            <Setter Property="IsFilled" Value="True" />
+        </Style>
+        <Style Selector="^:playing /template/ arc|VoiceRecorderGlyph#PART_Glyph">
+            <Setter Property="Data" Value="{x:Static arc:ArcIcons.Pause}" />
+        </Style>
+        <Style Selector="^:play">
+            <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+            <Setter Property="RenderTransform" Value="scale(1)" />
+        </Style>
+        <Style Selector="^:play:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.92)" />
+        </Style>
+        <Style Selector="^:play:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:play-own">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+
+        <!-- The mic: 48px on the foreground; its glyph keeps a 14px inset from the left so it rides the left end of a morph. -->
+        <Style Selector="^:mic">
+            <Setter Property="Width" Value="NaN" />
+            <Setter Property="Height" Value="NaN" />
+        </Style>
+        <Style Selector="^:mic /template/ arc|VoiceRecorderGlyph#PART_Glyph">
+            <Setter Property="Data" Value="{x:Static arc:ArcIcons.Mic}" />
+            <Setter Property="Size" Value="20" />
+            <Setter Property="StrokeThickness" Value="1.75" />
+            <Setter Property="IsFilled" Value="False" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Margin" Value="14,0,0,0" />
+        </Style>
+
+        <!-- The trash: quiet, 40px; the muted surface and a rose glyph under the pointer. -->
+        <Style Selector="^:discard">
+            <Setter Property="Width" Value="NaN" />
+            <Setter Property="Height" Value="NaN" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:discard:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:VoiceRecorderTokenResource RecordColor}" />
+        </Style>
+        <Style Selector="^:discard /template/ arc|VoiceRecorderGlyph#PART_Glyph">
+            <Setter Property="Data" Value="{x:Static arc:ArcIcons.Trash2}" />
+            <Setter Property="Size" Value="18" />
+            <Setter Property="StrokeThickness" Value="1.75" />
+            <Setter Property="IsFilled" Value="False" />
+        </Style>
+
+        <!-- Stop and send: 48px on the accent, a darker accent under the pointer. -->
+        <Style Selector="^:stop, ^:send">
+            <Setter Property="Width" Value="NaN" />
+            <Setter Property="Height" Value="NaN" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        </Style>
+        <Style Selector="^:stop:pointerover, ^:send:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        </Style>
+        <Style Selector="^:stop /template/ arc|VoiceRecorderGlyph#PART_Glyph">
+            <Setter Property="Data" Value="{x:Static arc:ArcIcons.Square}" />
+            <Setter Property="Size" Value="14" />
+            <Setter Property="StrokeThickness" Value="2" />
+            <Setter Property="IsFilled" Value="True" />
+        </Style>
+        <Style Selector="^:send /template/ arc|VoiceRecorderGlyph#PART_Glyph">
+            <Setter Property="Data" Value="{x:Static arc:ArcIcons.ArrowUp}" />
+            <Setter Property="Size" Value="18" />
+            <Setter Property="StrokeThickness" Value="2" />
+            <Setter Property="IsFilled" Value="False" />
+        </Style>
+
+        <Style Selector="^:discard:motion-full, ^:stop:motion-full, ^:send:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

@@ -1013,6 +1013,17 @@
       "TrackInset": "3,3,3,3",
       "TrackInsetLG": "4,4,4,4"
     },
+    "BlackHole": {
+      "CoreGrowth": "0.4",
+      "EinsteinRatio": "4",
+      "HaloDecay": "10.5",
+      "HaloOpacity": "0.11",
+      "PhotonRingColor": "#ADB0B2B2",
+      "PhotonRingWidth": "2",
+      "ShockColor": "#FFBBBBBB",
+      "ShockOpacity": "0.6",
+      "ShockWidth": "6"
+    },
     "BottomSheet": {
       "ScrimColor": "#85000000"
     },
@@ -1258,6 +1269,35 @@
       "StampMargin": "16,16,16,16",
       "StampPadding": "10,0,12,0"
     },
+    "CardToArticle": {
+      "ArticleGap": "18",
+      "AvatarDiameter": "28",
+      "BackdropBlurRadius": "10",
+      "BackdropOpacity": "0.55",
+      "BodyPaddingBottom": "56",
+      "BodyPaddingTop": "28",
+      "BylineGap": "8",
+      "CardFocusRingMargin": "-4,-4,-4,-4",
+      "CardFocusRingRadius": "0,0,0,0",
+      "CloseDiameter": "36",
+      "CloseFillColor": "#CCFFFFFF",
+      "CloseFocusRingMargin": "-4,-4,-4,-4",
+      "CloseGlyphSize": "18",
+      "CloseGlyphStroke": "1.75",
+      "CloseMargin": "0,14,14,0",
+      "GridMaxWidth": "680",
+      "MetaInkColor": "#CCFFFFFF",
+      "OnPictureInkColor": "#FF161616",
+      "ParagraphLineHeight": "25.6",
+      "ProgressThickness": "3",
+      "QuoteLineHeight": "30.8",
+      "QuoteMargin": "0,6,0,6",
+      "QuotePadding": "16,0,0,0",
+      "QuoteRuleThickness": "2,0,0,0",
+      "ScrimShadeColor": "#9E000000",
+      "TagFillColor": "#D1FFFFFF",
+      "TitleInkColor": "#FFFCFCFC"
+    },
     "Carousel": {
       "CompactControlsGap": "4",
       "ControlsGap": "8",
@@ -1285,6 +1325,70 @@
       "OptionHeight": "36",
       "OptionPadding": "11,0,34,0",
       "TriggerPadding": "12,0,12,0"
+    },
+    "ChargeSession": {
+      "AxisLabelGap": "6",
+      "BeyondTint": "#0FFFFFFF",
+      "BodyLineHeight": "19.6",
+      "ButtonGap": "8",
+      "ButtonHeight": "44",
+      "ButtonIconSize": "14",
+      "ButtonPadding": "20,0,20,0",
+      "ButtonPressedScale": "0.97",
+      "CableFill": "#FF3E3E3E",
+      "CardMaxWidth": "880",
+      "CardPadding": "32,32,32,32",
+      "ChargeSize": "72",
+      "CompactCardPadding": "16,16,16,16",
+      "CompactChargeSize": "36",
+      "CompactHeroTopSpace": "32",
+      "CompactStatPadding": "12,12,12,12",
+      "CompactStatValueSize": "16",
+      "CurveBeyondTint": "#08FFFFFF",
+      "CurveColumnWeight": "1.55",
+      "CurveHeadGap": "8",
+      "FooterColumnGap": "16",
+      "FooterRowGap": "12",
+      "FooterTopSpace": "16",
+      "HandleHeight": "44",
+      "HandleWidth": "64",
+      "HeroTopSpace": "36",
+      "HintMinWidth": "220",
+      "LimitLineHeldOpacity": "0.9",
+      "LimitLineOpacity": "0.55",
+      "LowerGap": "24",
+      "MetalEdge": "#1FF2F2F2",
+      "MetalStop0": "#FF323232",
+      "MetalStop1": "#FF424242",
+      "MetalStop2": "#FF2F2F2F",
+      "MetalStop3": "#FF3C3C3C",
+      "MetalStop4": "#FF313131",
+      "PillHeight": "26",
+      "PillHeldScale": "1.08",
+      "PillLineHeight": "16.8",
+      "PillWidth": "48",
+      "PlotAspect": "0.4",
+      "RowGap": "24",
+      "ScreenFill": "#FF141414",
+      "SheenStroke": "#1FFFFFFF",
+      "ShellEdge": "#33FFFFFF",
+      "ShellFill": "#FF1F1F1F",
+      "SolidHoverFill": "#FFD4D4D4",
+      "StackedCardPadding": "24,24,24,24",
+      "StackedChargeSize": "52",
+      "StackedLowerGap": "16",
+      "StackedPlotAspect": "0.5",
+      "StackedRowGap": "16",
+      "StackedStatPadding": "16,12,16,12",
+      "StackedStatValueSize": "18",
+      "StatGap": "2",
+      "StatPadding": "16,16,16,16",
+      "StatValueSize": "22",
+      "StatusGap": "6",
+      "StatusIconSize": "16",
+      "TitleLetterSpacing": "-0.48",
+      "TitleLineHeight": "17.6",
+      "WellFill": "#FF2B2B2B"
     },
     "ChatComposer": {
       "AttachGlyphSize": "18",
@@ -1871,6 +1975,18 @@
       "SwatchRadius": "0,0,0,0",
       "SwatchSize": "10",
       "ThresholdRowHeight": "5"
+    },
+    "ControlCenter": {
+      "DialMajorTickColor": "#5CF2F2F2",
+      "DialMinorTickColor": "#5CF2F2F2",
+      "DialTrackColor": "#14F2F2F2",
+      "MeterTrackColor": "#1CF2F2F2",
+      "MutedFillColor": "#0FF2F2F2",
+      "PanelCornerRadius": "0,0,0,0",
+      "ScrimColor": "#8C1F1F1F",
+      "TileCornerRadius": "0,0,0,0",
+      "TileFocusRingRadius": "0,0,0,0",
+      "TileOnTint": "0.09"
     },
     "CookieConsent": {
       "ActionGap": "6",
@@ -2735,6 +2851,11 @@
       "HoverTintOpacity": "0.06",
       "InlinePadding": "20,0,20,0"
     },
+    "HoloCard": {
+      "CardCornerRadius": "0,0,0,0",
+      "CardEdgeLight": "#24FFFFFF",
+      "CardMaxWidth": "300"
+    },
     "HorizonChart": {
       "BandInset": "4",
       "BandRadius": "0",
@@ -3288,6 +3409,28 @@
       "SwatchWidth": "20",
       "TitleLineHeight": "24",
       "TransportGap": "16"
+    },
+    "LinkUnfurl": {
+      "CardCornerRadius": "0,0,0,0",
+      "CardGap": "10",
+      "CardMaxWidth": "440",
+      "CompactBreakpoint": "560",
+      "ComposerCornerRadius": "0,0,0,0",
+      "ComposerMaxWidth": "576",
+      "EditorLetterSpacing": "-0.16",
+      "EditorLineHeight": "26",
+      "EditorPadding": "22,18,22,14",
+      "EditorPaddingCompact": "18,16,18,12",
+      "LanePadding": "16,0,16,0",
+      "LanePaddingCompact": "12,0,12,0",
+      "LiftShadow": "0 18 40 -16 #E6141414 | 0 4 12 -6 #B2141414",
+      "LinkAccentFill": "0.2",
+      "LinkAccentRing": "0.48",
+      "MediaCornerRadius": "0,0,0,0",
+      "SweepColor": "#17F2F2F2",
+      "ToolbarPadding": "18,10,12,12",
+      "ToolbarPaddingCompact": "14,8,10,10",
+      "TryHideBreakpoint": "360"
     },
     "LiveVisitors": {
       "BarCornerRadius": "0,0,0,0",
@@ -3989,6 +4132,18 @@
       "ToolbarPadding": "0,12,0,0",
       "ToolbarRowGap": "8"
     },
+    "MorphBlock": {
+      "LastLineRatio": "0.62",
+      "LineBarInset": "6",
+      "LineBarMaxHeight": "12",
+      "RevealBlur": "4"
+    },
+    "MorphLoader": {
+      "BarWidth": "3",
+      "DefaultSize": "24",
+      "DefaultStrokeWidth": "2.5",
+      "DotWidth": "4"
+    },
     "MorphSelect": {
       "ChevronMargin": "0,0,12,0",
       "ControlFillColor": "#14F2F2F2",
@@ -4209,6 +4364,34 @@
       "ViewButtonRadius": "0,0,0,0",
       "ViewRingRadius": "0,0,0,0",
       "ViewportInset": "24"
+    },
+    "NowPlaying": {
+      "CollapseButtonSize": "34",
+      "CollapseFillColor": "#6B0B0B0B",
+      "CollapseGlyphColor": "#FFF8F8F8",
+      "CollapseHoverFillColor": "#8F0B0B0B",
+      "FullArtCornerRadius": "0,0,0,0",
+      "FullClipCornerRadius": "0,0,0,0",
+      "FullShellCornerRadius": "0,0,0,0",
+      "MiniArtCornerRadius": "0,0,0,0",
+      "MiniButtonSize": "40",
+      "MiniClipCornerRadius": "0,0,0,0",
+      "MiniGlyphSize": "18",
+      "MiniShellCornerRadius": "0,0,0,0",
+      "PlayButtonSize": "52",
+      "PlayGlyphSize": "24",
+      "PlayPressedColor": "#FFCFCFCF",
+      "ShellMaxWidth": "336",
+      "SkipButtonSize": "44",
+      "SkipGlyphSize": "20",
+      "WaveUnplayedColor": "#29F2F2F2"
+    },
+    "NowPlayingLevels": {
+      "BarGap": "2",
+      "BarHeight": "14",
+      "BarRadius": "0",
+      "BarWidth": "3",
+      "RestOpacity": "0.55"
     },
     "NumberField": {
       "HeadMargin": "0,0,0,8",
@@ -5564,6 +5747,39 @@
       "ContentMargin": "0,24,0,0",
       "DescriptionMargin": "0,4,0,0"
     },
+    "SheetStack": {
+      "DepthDimStep": "0.5",
+      "DepthScaleStep": "0.05",
+      "DialogPeek": "14",
+      "DialogVerticalInset": "40",
+      "DialogWidth": "440",
+      "ExitOvershoot": "24",
+      "ScrimColor": "#8F000000",
+      "SheetMaxWidth": "560",
+      "SheetPeek": "10",
+      "SheetTopInset": "20"
+    },
+    "SheetStackSheet": {
+      "BackButtonGap": "2",
+      "BackButtonHeight": "36",
+      "BackButtonPadding": "4,0,10,0",
+      "BodyPadding": "16,8,16,4",
+      "CloseButtonSize": "36",
+      "DescriptionPadding": "16,0,16,4",
+      "DimColor": "#57000000",
+      "FooterGap": "8",
+      "FooterPadding": "16,12,16,0",
+      "GrabberHeight": "5",
+      "GrabberMargin": "0,8,0,0",
+      "GrabberWidth": "36",
+      "HeaderFocusRadius": "0,0,0,0",
+      "HeaderGap": "8",
+      "HeaderGlyphSize": "18",
+      "HeaderPadding": "10,6,10,2",
+      "HeaderRowHeight": "44",
+      "SurfacePadding": "0,0,0,16",
+      "TitleLetterSpacing": "-0.48"
+    },
     "ShortcutRecorder": {
       "ActionButtonRadius": "0,0,0,0",
       "ActionButtonSize": "32",
@@ -5818,6 +6034,10 @@
       "BlockColor": "#FF2A2A2A",
       "BlockRadius": "0",
       "ContentRise": "4"
+    },
+    "SkeletonMorph": {
+      "CardPadding": "20,20,20,20",
+      "PulseMinOpacity": "0.55"
     },
     "SketchToImage": {
       "CanvasCornerRadius": "0,0,0,0",
@@ -6165,6 +6385,41 @@
       "AxisRowHeight": "26",
       "LegendGap": "16",
       "LegendMargin": "-8,0,-8,0"
+    },
+    "StretchRefresh": {
+      "AnchorHeight": "34",
+      "ButtonGlyphSize": "16",
+      "ButtonSize": "36",
+      "HeaderGap": "12",
+      "HeaderPadding": "20,16,16,12",
+      "IndicatorGap": "9",
+      "ListPadding": "0,4,0,12",
+      "MarkSize": "14",
+      "MeterThickness": "3",
+      "MeterWidth": "72",
+      "NarrowWidth": "475",
+      "RowPadding": "20,12,20,12",
+      "SheetShadow": "0 -10 24 -6 #1A000000",
+      "StatusGap": "6",
+      "StatusHeight": "16",
+      "SubtitleLineHeight": "16.8",
+      "TitleFontSize": "16",
+      "TitleLetterSpacing": "-0.48",
+      "TitleLineHeight": "17.6"
+    },
+    "StretchRefreshActivityRow": {
+      "BodyLineHeight": "19.6",
+      "ColumnGap": "12",
+      "DangerColor": "#FFF0738F",
+      "DotMargin": "0,7.2,0,0",
+      "DotSize": "8",
+      "GlyphSize": "20",
+      "GlyphStroke": "1.75",
+      "LeadSize": "32",
+      "MetaLineHeight": "16.8",
+      "PhotoMargin": "0,6,0,2",
+      "PhotoMaxWidth": "240",
+      "SuccessColor": "#FF55D69F"
     },
     "SwipeActions": {
       "ListInset": "0,0,0,-1"
@@ -7054,10 +7309,62 @@
     "VideoSurface": {
       "LetterboxColor": "#FF000000"
     },
+    "VoiceControls": {
+      "ClockPadding": "8,0,8,0",
+      "EndFillHoverOpacity": "0.24",
+      "EndFillOpacity": "0.16",
+      "FocusRingMargin": "-4,-4,-4,-4",
+      "FocusRingRadius": "0,0,0,0",
+      "GlyphSize": "18",
+      "LiveGap": "4",
+      "LivePadding": "4,0,4,0",
+      "PillInnerHeight": "48",
+      "RoundButtonSize": "40",
+      "StartFocusRingMargin": "2,2,2,2",
+      "StartGap": "8",
+      "StartPadding": "16,0,20,0"
+    },
+    "VoiceOrb": {
+      "DefaultSize": "208",
+      "RingThickness": "2.2"
+    },
+    "VoiceRecorder": {
+      "BubbleGap": "10",
+      "BubbleHeight": "44",
+      "BubblePadding": "6,6,14,6",
+      "BubbleTimeOpacity": "0.8",
+      "CardPadding": "14,14,14,12",
+      "ComposerGap": "8",
+      "ComposerHeight": "48",
+      "DiscardSize": "40",
+      "ListPadding": "2,4,2,4",
+      "MessageGap": "12",
+      "PlaySize": "32",
+      "RecordColor": "#FFF0738F",
+      "RecordingBackground": "#FF2D2D2D"
+    },
+    "VoiceTranscript": {
+      "CaptionFontSize": "16",
+      "CaptionLetterSpacing": "-0.16",
+      "CaptionLineHeight": "22.4",
+      "CaptionMaxWidth": "480",
+      "FadeStop": "0.4",
+      "SystemFontSize": "14",
+      "SystemLineHeight": "19.6"
+    },
     "WaffleChart": {
       "CellGap": "3",
       "GridMaxSize": "300",
       "SideLegendBreakpoint": "420"
+    },
+    "WalletStack": {
+      "AllCardsPadding": "10,0,12,0",
+      "BalanceSize": "22",
+      "CardContactColor": "#73000000",
+      "CardShadowColor": "#B2000000",
+      "HeaderHeight": "32",
+      "TitleSize": "16",
+      "WalletMaxWidth": "296"
     },
     "WebhookTester": {
       "ColumnGap": "20",

@@ -1,0 +1,21 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.MorphLoaderTheme">
+
+    <!-- The loader is drawn and animated in code (MorphLoaderEngine: every stroke parameter on its own spring, plus the
+         loop), so there are no transitions here; the theme only hands it its geometry and the result tones. -->
+    <ControlTheme x:Key="{x:Type arc:MorphLoader}" TargetType="arc:MorphLoader">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <!-- The footprint is the size: centered in whatever slot it gets, never stretched. -->
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Size" Value="{arc:MorphLoaderTokenResource DefaultSize}" />
+        <Setter Property="StrokeWidth" Value="{arc:MorphLoaderTokenResource DefaultStrokeWidth}" />
+        <Setter Property="DotWidth" Value="{arc:MorphLoaderTokenResource DotWidth}" />
+        <Setter Property="BarWidth" Value="{arc:MorphLoaderTokenResource BarWidth}" />
+        <Setter Property="SuccessInk" Value="{arc:ArcDesignTokenResource Success}" />
+        <Setter Property="DangerInk" Value="{arc:ArcDesignTokenResource Danger}" />
+    </ControlTheme>
+</ResourceDictionary>

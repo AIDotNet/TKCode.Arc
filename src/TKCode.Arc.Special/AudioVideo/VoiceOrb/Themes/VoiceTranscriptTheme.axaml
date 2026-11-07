@@ -1,0 +1,27 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.VoiceTranscriptTheme">
+
+    <!--
+        Captions: two 22.4px lines tall, at most 480 wide, centred, the top 40 % fading out. Assistant lines take the
+        foreground color, user lines the secondary text color (16/22.4); system lines are 14/19.6 in the muted text color.
+        The words and their motion are code-driven (see VoiceTranscript), so no transitions.
+    -->
+    <ControlTheme x:Key="{x:Type arc:VoiceTranscript}" TargetType="arc:VoiceTranscript">
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="MaxWidth" Value="{arc:VoiceTranscriptTokenResource CaptionMaxWidth}" />
+        <Setter Property="AssistantInk" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="UserInk" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="SystemInk" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="CaptionFontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="CaptionFontSize" Value="{arc:VoiceTranscriptTokenResource CaptionFontSize}" />
+        <Setter Property="SystemFontSize" Value="{arc:VoiceTranscriptTokenResource SystemFontSize}" />
+        <Setter Property="CaptionLineHeight" Value="{arc:VoiceTranscriptTokenResource CaptionLineHeight}" />
+        <Setter Property="SystemLineHeight" Value="{arc:VoiceTranscriptTokenResource SystemLineHeight}" />
+        <Setter Property="CaptionLetterSpacing" Value="{arc:VoiceTranscriptTokenResource CaptionLetterSpacing}" />
+        <Setter Property="FadeStop" Value="{arc:VoiceTranscriptTokenResource FadeStop}" />
+    </ControlTheme>
+</ResourceDictionary>

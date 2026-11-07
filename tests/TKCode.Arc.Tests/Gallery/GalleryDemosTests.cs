@@ -165,6 +165,9 @@ public class GalleryDemosTests
         try
         {
             var demo = Demos(page).Single(d => d.DemoId == "DateRangePicker.Booking");
+            // Below the first screen the demo waits until it is seen (GalleryPagePerformanceTests).
+            demo.Realize();
+            Dispatcher.UIThread.RunJobs();
             var picker = demo.GetVisualDescendants().OfType<DateRangePicker>().Single();
             demo.Code.ShouldBeEmpty();
 

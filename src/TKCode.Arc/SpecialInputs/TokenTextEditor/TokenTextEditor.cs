@@ -651,6 +651,63 @@ public class TokenTextEditor : TemplatedControl
         return null;
     }
 
+    /// <summary>
+    /// Finds where the token starting at <paramref name="tokenStart"/> sits on screen: its box spans the token's advance
+    /// (for an inline token, the width its <see cref="TokenRenderer"/> measured) and the full height of its line, in
+    /// <paramref name="relativeTo"/>'s coordinates with scrolling included. A token broken over two lines reports its
+    /// first line. Returns false when no token starts there or the text is not laid out yet.
+    /// </summary>
+    public bool TryGetTokenBounds(int tokenStart, Visual relativeTo, out Rect bounds)
+    {
+        ArgumentNullException.ThrowIfNull(relativeTo);
+        bounds = default;
+        if (_box?.Presenter is not { } presenter)
+        {
+            return false;
+        }
+        TokenSpan? found = null;
+        foreach (var token in _tokens)
+        {
+            if (token.Start == tokenStart)
+            {
+                found = token;
+                break;
+            }
+        }
+        if (found is null)
+        {
+            return false;
+        }
+        presenter.CombinedText(out var preeditStart, out var preeditLength);
+        var start = preeditLength > 0 && found.Start >= preeditStart ? found.Start + preeditLength : found.Start;
+        var layout = presenter.TextLayout;
+        var head = layout.HitTestTextPosition(start);
+        var tail = layout.HitTestTextPosition(start + found.Length);
+        Rect local;
+        if (Math.Abs(tail.Y - head.Y) < 0.5 && tail.X >= head.X)
+        {
+            local = new Rect(head.X, head.Y, tail.X - head.X, head.Height);
+        }
+        else
+        {
+            // The end is reported on the next line (the token closes its line): measure the range itself.
+            local = default;
+            foreach (var rect in layout.HitTestTextRange(start, found.Length))
+            {
+                local = rect;
+                break;
+            }
+            local = new Rect(local.X, head.Y, local.Width, head.Height);
+        }
+        if (presenter.TranslatePoint(local.Position, relativeTo) is not { } origin)
+        {
+            return false;
+        }
+        var height = local.Height > 0 ? local.Height : LineHeightOf(_box);
+        bounds = new Rect(origin.X, origin.Y, Math.Max(0, local.Width), height);
+        return true;
+    }
+
     #endregion
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)

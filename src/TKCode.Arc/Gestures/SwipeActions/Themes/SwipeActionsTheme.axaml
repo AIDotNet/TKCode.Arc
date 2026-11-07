@@ -10,16 +10,23 @@
         <Setter Property="FocusAdorner" Value="{x:Null}" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:SwipeActions">
-                <Border Name="PART_Frame"
-                        Background="{TemplateBinding Background}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}"
-                        CornerRadius="{TemplateBinding CornerRadius}"
-                        ClipToBounds="True">
-                    <ItemsPresenter Name="PART_ItemsPresenter"
-                                    ItemsPanel="{TemplateBinding ItemsPanel}"
-                                    Margin="{arc:SwipeActionsTokenResource ListInset}" />
-                </Border>
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            Padding="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            ClipToBounds="True">
+                        <ItemsPresenter Name="PART_ItemsPresenter"
+                                        ItemsPanel="{TemplateBinding ItemsPanel}"
+                                        Margin="{arc:SwipeActionsTokenResource ListInset}" />
+                    </Border>
+                    <!-- The outline is drawn over the clipped rows so their backgrounds never cover its rounded corners. -->
+                    <Border Name="PART_Outline"
+                            IsHitTestVisible="False"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                </Panel>
             </ControlTemplate>
         </Setter>
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
@@ -34,7 +41,7 @@
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderBrush" Value="Transparent" />
         </Style>
-        <Style Selector="^:empty /template/ Border#PART_Frame">
+        <Style Selector="^:empty /template/ Border#PART_Frame, ^:empty /template/ Border#PART_Outline">
             <Setter Property="IsVisible" Value="False" />
         </Style>
         <Style Selector="^:motion-full">

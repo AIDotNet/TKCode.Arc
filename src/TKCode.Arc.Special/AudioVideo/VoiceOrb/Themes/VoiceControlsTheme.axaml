@@ -1,0 +1,204 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.VoiceControlsTheme">
+
+    <!--
+        The call pill: Surface, 1px Border, fully round, a resting shadow, 50 tall. Before a session it holds "Start voice
+        chat" (mic glyph 18, 14/500, padding 16 / 20, gap 8); during one, the 40px mute toggle, the m:ss timer (14,
+        tabular, secondary text, padding 8) and the 40px end button (danger at 12 %, 18 % under the pointer). The pill's
+        width and the groups' swap are code-driven (VoiceControlsPill). The inner clip is a second border so the shadow
+        stays outside it.
+    -->
+    <ControlTheme x:Key="{x:Type arc:VoiceControls}" TargetType="arc:VoiceControls">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:VoiceControls">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        BoxShadow="{arc:ArcDesignTokenResource ShadowResting}">
+                    <Border Name="PART_Clip" CornerRadius="{TemplateBinding CornerRadius}" ClipToBounds="True">
+                        <arc:VoiceControlsPill Name="PART_Pill"
+                                               IsActive="{TemplateBinding IsActive}"
+                                               Height="{arc:VoiceControlsTokenResource PillInnerHeight}">
+                            <arc:VoiceControlsButton Name="PART_Start" Classes="start">
+                                <StackPanel Orientation="Horizontal" Spacing="{arc:VoiceControlsTokenResource StartGap}">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Mic}"
+                                                  Size="{arc:VoiceControlsTokenResource GlyphSize}"
+                                                  StrokeThickness="1.75"
+                                                  VerticalAlignment="Center" />
+                                    <TextBlock Text="{TemplateBinding StartText}"
+                                               FontWeight="Medium"
+                                               VerticalAlignment="Center" />
+                                </StackPanel>
+                            </arc:VoiceControlsButton>
+                            <StackPanel Name="PART_Live"
+                                        Orientation="Horizontal"
+                                        Spacing="{arc:VoiceControlsTokenResource LiveGap}"
+                                        Margin="{arc:VoiceControlsTokenResource LivePadding}">
+                                <arc:VoiceControlsMuteButton Name="PART_Mute" Classes="round">
+                                    <arc:ArcContentSwap Name="PART_MuteGlyph" Mode="Pop" />
+                                </arc:VoiceControlsMuteButton>
+                                <TextBlock Name="PART_Clock"
+                                           Text="{TemplateBinding ClockText}"
+                                           Padding="{arc:VoiceControlsTokenResource ClockPadding}"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                           VerticalAlignment="Center" />
+                                <arc:VoiceControlsButton Name="PART_End" Classes="round end">
+                                    <arc:ArcGlyph Data="{x:Static arc:VoiceControlsIcons.PhoneOff}"
+                                                  Size="{arc:VoiceControlsTokenResource GlyphSize}"
+                                                  StrokeThickness="1.75" />
+                                </arc:VoiceControlsButton>
+                            </StackPanel>
+                        </arc:VoiceControlsPill>
+                    </Border>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- A pill button: a borderless face over a fill layer, the content centred; the focus ring sits 2px inside. -->
+    <ControlTheme x:Key="{x:Type arc:VoiceControlsButton}" TargetType="arc:VoiceControlsButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:VoiceControlsButton">
+                <Panel Name="PART_Root">
+                    <Border Name="PART_Fill"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      Padding="{TemplateBinding Padding}"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^.start">
+            <Setter Property="Height" Value="{arc:VoiceControlsTokenResource PillInnerHeight}" />
+            <Setter Property="Padding" Value="{arc:VoiceControlsTokenResource StartPadding}" />
+        </Style>
+        <Style Selector="^.round">
+            <Setter Property="Width" Value="{arc:VoiceControlsTokenResource RoundButtonSize}" />
+            <Setter Property="Height" Value="{arc:VoiceControlsTokenResource RoundButtonSize}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="^:hover-fine">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^.end">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Danger}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^.end /template/ Border#PART_Fill">
+            <Setter Property="Opacity" Value="{arc:VoiceControlsTokenResource EndFillOpacity}" />
+        </Style>
+        <Style Selector="^.end:hover-fine">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^.end:hover-fine /template/ Border#PART_Fill">
+            <Setter Property="Opacity" Value="{arc:VoiceControlsTokenResource EndFillHoverOpacity}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Fill">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The mute toggle: the round pill button; pressed (muted) it fills with the foreground and the glyph turns Surface. -->
+    <ControlTheme x:Key="{x:Type arc:VoiceControlsMuteButton}" TargetType="arc:VoiceControlsMuteButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Width" Value="{arc:VoiceControlsTokenResource RoundButtonSize}" />
+        <Setter Property="Height" Value="{arc:VoiceControlsTokenResource RoundButtonSize}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:VoiceControlsMuteButton">
+                <Panel Name="PART_Root">
+                    <Border Name="PART_Fill"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      Padding="{TemplateBinding Padding}"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:hover-fine">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:checked">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Surface}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

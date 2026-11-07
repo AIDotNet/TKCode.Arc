@@ -1,0 +1,288 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.SheetStackTheme">
+
+    <!-- The host: the page content with the layer's slot over it. A contained layer is clipped to the corner radius. -->
+    <ControlTheme x:Key="{x:Type arc:SheetStack}" TargetType="arc:SheetStack">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ScrimBrush" Value="{arc:SheetStackTokenResource ScrimColor}" />
+        <Setter Property="SheetMaxWidth" Value="{arc:SheetStackTokenResource SheetMaxWidth}" />
+        <Setter Property="DialogWidth" Value="{arc:SheetStackTokenResource DialogWidth}" />
+        <Setter Property="SheetTopInset" Value="{arc:SheetStackTokenResource SheetTopInset}" />
+        <Setter Property="DialogVerticalInset" Value="{arc:SheetStackTokenResource DialogVerticalInset}" />
+        <Setter Property="SheetPeek" Value="{arc:SheetStackTokenResource SheetPeek}" />
+        <Setter Property="DialogPeek" Value="{arc:SheetStackTokenResource DialogPeek}" />
+        <Setter Property="DepthScaleStep" Value="{arc:SheetStackTokenResource DepthScaleStep}" />
+        <Setter Property="DepthDimStep" Value="{arc:SheetStackTokenResource DepthDimStep}" />
+        <Setter Property="ExitOvershoot" Value="{arc:SheetStackTokenResource ExitOvershoot}" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SheetStack">
+                <Panel>
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Background="{TemplateBinding Background}"
+                                      BorderBrush="{TemplateBinding BorderBrush}"
+                                      BorderThickness="{TemplateBinding BorderThickness}"
+                                      CornerRadius="{TemplateBinding CornerRadius}"
+                                      Padding="{TemplateBinding Padding}"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    <Border Name="PART_LayerHost"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            ClipToBounds="True" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- Back: a pill with a chevron and the label of the level it returns to. -->
+    <ControlTheme x:Key="ArcSheetStackBackButtonTheme" TargetType="Button">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="Button">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="{arc:SheetStackSheetTokenResource BackButtonGap}"
+                                    VerticalAlignment="Center">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronLeft}"
+                                          Size="{arc:SheetStackSheetTokenResource HeaderGlyphSize}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          VerticalAlignment="Center" />
+                            <TextBlock Text="{TemplateBinding Content}"
+                                       Foreground="{TemplateBinding Foreground}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                       VerticalAlignment="Center"
+                                       TextTrimming="CharacterEllipsis" />
+                        </StackPanel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:SheetStackSheetTokenResource HeaderFocusRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Height" Value="{arc:SheetStackSheetTokenResource BackButtonHeight}" />
+        <Setter Property="Padding" Value="{arc:SheetStackSheetTokenResource BackButtonPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="RenderTransform" Value="scale(1)" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.96)" />
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- Close: a 36 round button on the muted surface; it reads "Close all" while more than one level is open. -->
+    <ControlTheme x:Key="ArcSheetStackCloseButtonTheme" TargetType="Button">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="Button">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}"
+                                      Size="{arc:SheetStackSheetTokenResource HeaderGlyphSize}"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:SheetStackSheetTokenResource HeaderFocusRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Width" Value="{arc:SheetStackSheetTokenResource CloseButtonSize}" />
+        <Setter Property="Height" Value="{arc:SheetStackSheetTokenResource CloseButtonSize}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="HorizontalAlignment" Value="Right" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Style Selector="^:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="RenderTransform" Value="scale(1)" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.96)" />
+        </Style>
+    </ControlTheme>
+
+    <!-- A level: grabber (sheets), header, optional description, scrolling body, pinned footer; the 1px edge and the
+         depth dim are drawn over it. -->
+    <ControlTheme x:Key="{x:Type arc:SheetStackSheet}" TargetType="arc:SheetStackSheet">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="Padding" Value="{arc:SheetStackSheetTokenResource BodyPadding}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SheetStackSheet">
+                <Panel>
+                    <Border Name="PART_Surface"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding SurfaceCornerRadius}"
+                            BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}">
+                        <Border Name="PART_Clip"
+                                CornerRadius="{TemplateBinding SurfaceCornerRadius}"
+                                Padding="{arc:SheetStackSheetTokenResource SurfacePadding}"
+                                ClipToBounds="True">
+                            <!-- A dock panel, not a grid: a grid measured at infinite height keeps its star row at the content height, so
+                                 a level shorter than its content would not scroll. -->
+                            <DockPanel LastChildFill="True">
+                                <Border Name="PART_Grabber"
+                                        DockPanel.Dock="Top"
+                                        Width="{arc:SheetStackSheetTokenResource GrabberWidth}"
+                                        Height="{arc:SheetStackSheetTokenResource GrabberHeight}"
+                                        Margin="{arc:SheetStackSheetTokenResource GrabberMargin}"
+                                        HorizontalAlignment="Center"
+                                        CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                        Background="{arc:ArcDesignTokenResource BorderStrong}" />
+                                <Grid Name="PART_Header"
+                                      DockPanel.Dock="Top"
+                                      Height="{arc:SheetStackSheetTokenResource HeaderRowHeight}"
+                                      Margin="{arc:SheetStackSheetTokenResource HeaderPadding}"
+                                      Background="Transparent"
+                                      ColumnDefinitions="*,Auto,*"
+                                      ColumnSpacing="{arc:SheetStackSheetTokenResource HeaderGap}">
+                                    <Button Name="PART_BackButton"
+                                            Theme="{StaticResource ArcSheetStackBackButtonTheme}"
+                                            IsVisible="False"
+                                            Content="{TemplateBinding BackText}"
+                                            AutomationProperties.Name="{TemplateBinding BackName}" />
+                                    <TextBlock Name="PART_Title"
+                                               Grid.Column="1"
+                                               Text="{TemplateBinding Title}"
+                                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               LetterSpacing="{arc:SheetStackSheetTokenResource TitleLetterSpacing}"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                               TextTrimming="CharacterEllipsis"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center" />
+                                    <Button Name="PART_CloseButton"
+                                            Grid.Column="2"
+                                            Theme="{StaticResource ArcSheetStackCloseButtonTheme}"
+                                            AutomationProperties.Name="{TemplateBinding CloseName}" />
+                                </Grid>
+                                <TextBlock Name="PART_Description"
+                                           DockPanel.Dock="Top"
+                                           IsVisible="False"
+                                           Text="{TemplateBinding Description}"
+                                           Margin="{arc:SheetStackSheetTokenResource DescriptionPadding}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                           TextAlignment="Center"
+                                           TextWrapping="Wrap" />
+                                <ContentPresenter Name="PART_Footer"
+                                                  DockPanel.Dock="Bottom"
+                                                  IsVisible="False"
+                                                  Padding="{arc:SheetStackSheetTokenResource FooterPadding}"
+                                                  Content="{TemplateBinding Footer}"
+                                                  HorizontalContentAlignment="Right" />
+                                                            <ScrollViewer Name="PART_Body"
+                                              HorizontalScrollBarVisibility="Disabled"
+                                              VerticalScrollBarVisibility="Auto">
+                                    <ContentPresenter Name="PART_ContentPresenter"
+                                                      Padding="{TemplateBinding Padding}"
+                                                      Content="{TemplateBinding Content}"
+                                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                      HorizontalContentAlignment="Stretch" />
+                                </ScrollViewer>
+</DockPanel>
+                        </Border>
+                    </Border>
+                    <Border Name="PART_Edge"
+                            IsHitTestVisible="False"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding SurfaceCornerRadius}" />
+                    <Border Name="PART_Dim"
+                            IsHitTestVisible="False"
+                            Background="{arc:SheetStackSheetTokenResource DimColor}"
+                            CornerRadius="{TemplateBinding SurfaceCornerRadius}"
+                            Opacity="{TemplateBinding DimOpacity}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:dialog-mode /template/ Border#PART_Grabber">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:has-back /template/ Button#PART_BackButton">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:has-description /template/ TextBlock#PART_Description">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:has-footer /template/ ContentPresenter#PART_Footer">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

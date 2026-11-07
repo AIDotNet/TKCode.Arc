@@ -1,0 +1,17 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.NowPlayingLevelsTheme">
+
+    <!-- Three 3 × 14 bars, 2 apart, radius 1, in the text color; 55% opacity at rest. -->
+    <ControlTheme x:Key="{x:Type arc:NowPlayingLevels}" TargetType="arc:NowPlayingLevels">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="BarWidth" Value="{arc:NowPlayingLevelsTokenResource BarWidth}" />
+        <Setter Property="BarHeight" Value="{arc:NowPlayingLevelsTokenResource BarHeight}" />
+        <Setter Property="BarGap" Value="{arc:NowPlayingLevelsTokenResource BarGap}" />
+        <Setter Property="BarRadius" Value="{arc:NowPlayingLevelsTokenResource BarRadius}" />
+        <Setter Property="RestOpacity" Value="{arc:NowPlayingLevelsTokenResource RestOpacity}" />
+    </ControlTheme>
+</ResourceDictionary>

@@ -1,0 +1,80 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.SkeletonMorphTheme">
+
+    <!--
+        The region: an optional card (the "card" style class), a hidden live status that says the loading label, and the
+        shell whose height follows the content on the Smooth spring (critically damped, ω ≈ 13.1, measured), clipping
+        only while it moves. The region itself draws nothing unless it is a card.
+    -->
+    <ControlTheme x:Key="{x:Type arc:SkeletonMorph}" TargetType="arc:SkeletonMorph">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+        <!-- Its height is the content's, eased: stretching it would hide the ease (Arc: a block element, height auto). -->
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Top" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="PulseMinOpacity" Value="{arc:SkeletonMorphTokenResource PulseMinOpacity}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SkeletonMorph">
+                <Border Name="PART_Card"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Panel>
+                        <arc:ExplainerAnnouncer Name="PART_Status" />
+                        <arc:SpringSizeDecorator Name="PART_Shell"
+                                                 Axis="Height"
+                                                 Spring="Smooth"
+                                                 CrossClipOverflow="0">
+                            <ContentPresenter Name="PART_ContentPresenter"
+                                              Content="{TemplateBinding Content}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </arc:SpringSizeDecorator>
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^.card">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+            <Setter Property="Padding" Value="{arc:SkeletonMorphTokenResource CardPadding}" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A block: the content (mounted only once the block resolves) under the self-drawn skeleton. Neither clips, so the
+        skeleton can overflow the block while it stretches to the content's box.
+    -->
+    <ControlTheme x:Key="{x:Type arc:MorphBlock}" TargetType="arc:MorphBlock">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="RevealBlur" Value="{arc:MorphBlockTokenResource RevealBlur}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MorphBlock">
+                <Panel>
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      IsVisible="False"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    <arc:MorphBlockPlaceholder Name="PART_Placeholder"
+                                               Fill="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                               BarMaxHeight="{arc:MorphBlockTokenResource LineBarMaxHeight}"
+                                               BarInset="{arc:MorphBlockTokenResource LineBarInset}"
+                                               LastLineRatio="{arc:MorphBlockTokenResource LastLineRatio}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

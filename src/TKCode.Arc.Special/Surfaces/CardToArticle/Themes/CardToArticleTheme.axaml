@@ -1,0 +1,228 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.CardToArticleTheme">
+
+    <!--
+        Card to article (Arc, design reference): the grid of story cards, at most 680 wide. The article lives on the
+        window's overlay layer (CardToArticleArticle below); the backdrop behind it is the page background at 55% over
+        the page blurred by 10px.
+    -->
+    <ControlTheme x:Key="{x:Type arc:CardToArticle}" TargetType="arc:CardToArticle">
+        <Setter Property="MaxWidth" Value="{arc:CardToArticleTokenResource GridMaxWidth}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="BackdropOpacity" Value="{arc:CardToArticleTokenResource BackdropOpacity}" />
+        <Setter Property="BackdropBlurRadius" Value="{arc:CardToArticleTokenResource BackdropBlurRadius}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CardToArticle">
+                <arc:CardToArticleGrid Name="PART_Grid"
+                                       Margin="{TemplateBinding Padding}"
+                                       AspectRatio="{TemplateBinding AspectRatio}"
+                                       Breakpoint="{TemplateBinding ColumnBreakpoint}" />
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!--
+        A story card: the picture on the muted surface (seen only before a picture draws), RadiusPanel 26. A mouse lifts
+        it to 1.012 with the raised shadow, a press settles it to 0.985 (240ms, standard curve); a 2px ring 2px outside
+        shows keyboard focus. The surface is the "sheet" piece and the picture the "hero" piece of the morph.
+    -->
+    <ControlTheme x:Key="{x:Type arc:CardToArticleCard}" TargetType="arc:CardToArticleCard">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CardToArticleCard">
+                <Panel>
+                    <Border Name="PART_Surface"
+                            arc:SharedElement.Key="sheet"
+                            ClipToBounds="True"
+                            Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}">
+                        <arc:CardToArticleHero Name="PART_Hero"
+                                               arc:SharedElement.Key="hero"
+                                               Item="{TemplateBinding Item}"
+                                               AspectRatio="{TemplateBinding AspectRatio}" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:CardToArticleTokenResource CardFocusRingMargin}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:CardToArticleTokenResource CardFocusRingRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:hover /template/ Border#PART_Surface">
+            <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowRaised}" />
+        </Style>
+        <Style Selector="^:focus-visible:not(:away) /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="RenderTransform" Value="scale(1)" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Standard" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Border#PART_Surface">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBoxShadowsTransition Property="BoxShadow" Tween="Standard" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-full:hover">
+            <Setter Property="RenderTransform" Value="scale(1.012)" />
+        </Style>
+        <Style Selector="^:motion-full:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.985)" />
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Style Selector="^ /template/ Border#PART_Surface">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBoxShadowsTransition Property="BoxShadow" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- The picture: Geist for the title, Inter for the tag and the meta line; the inks on the picture stay the same in both themes. -->
+    <ControlTheme x:Key="{x:Type arc:CardToArticleHero}" TargetType="arc:CardToArticleHero">
+        <Setter Property="TitleFontFamily" Value="{arc:ArcDesignTokenResource DisplayFontFamily}" />
+        <Setter Property="LabelFontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="TagFill" Value="{arc:CardToArticleTokenResource TagFillColor}" />
+        <Setter Property="TagInk" Value="{arc:CardToArticleTokenResource OnPictureInkColor}" />
+        <Setter Property="TitleInk" Value="{arc:CardToArticleTokenResource TitleInkColor}" />
+        <Setter Property="MetaInk" Value="{arc:CardToArticleTokenResource MetaInkColor}" />
+        <Setter Property="ScrimShade" Value="{arc:CardToArticleTokenResource ScrimShadeColor}" />
+    </ControlTheme>
+
+    <!--
+        The open article: the sheet (SurfaceRaised, floating shadow) placed by CardToArticleSheetPanel, a scroller with the
+        hero and the text, the 3px accent progress bar on top (clipped by the corners) and the close button 14px inside
+        the top-right corner, outside the scroller so it does not scroll away.
+    -->
+    <ControlTheme x:Key="{x:Type arc:CardToArticleArticle}" TargetType="arc:CardToArticleArticle">
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="ArticleGap" Value="{arc:CardToArticleTokenResource ArticleGap}" />
+        <Setter Property="ParagraphLineHeight" Value="{arc:CardToArticleTokenResource ParagraphLineHeight}" />
+        <Setter Property="QuoteLineHeight" Value="{arc:CardToArticleTokenResource QuoteLineHeight}" />
+        <Setter Property="QuoteRuleThickness" Value="{arc:CardToArticleTokenResource QuoteRuleThickness}" />
+        <Setter Property="QuotePadding" Value="{arc:CardToArticleTokenResource QuotePadding}" />
+        <Setter Property="QuoteMargin" Value="{arc:CardToArticleTokenResource QuoteMargin}" />
+        <Setter Property="AvatarDiameter" Value="{arc:CardToArticleTokenResource AvatarDiameter}" />
+        <Setter Property="BylineGap" Value="{arc:CardToArticleTokenResource BylineGap}" />
+        <Setter Property="BodyPaddingTop" Value="{arc:CardToArticleTokenResource BodyPaddingTop}" />
+        <Setter Property="BodyPaddingBottom" Value="{arc:CardToArticleTokenResource BodyPaddingBottom}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CardToArticleArticle">
+                <arc:CardToArticleSheetPanel>
+                    <arc:SharedElementFrame Name="PART_Frame"
+                                            arc:SharedElement.Key="sheet"
+                                            Background="{arc:ArcDesignTokenResource SurfaceRaised}"
+                                            BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}"
+                                            CornerRadius="{arc:ArcDesignTokenResource RadiusSurface}">
+                        <Panel>
+                            <ScrollViewer Name="PART_Scroller"
+                                          Focusable="False"
+                                          HorizontalScrollBarVisibility="Disabled"
+                                          VerticalScrollBarVisibility="Auto"
+                                          AllowAutoHide="True">
+                                <!-- The scroll bar floats over the text (no gutter), so the hero spans the whole sheet. -->
+                                <ScrollViewer.Template>
+                                    <ControlTemplate TargetType="ScrollViewer">
+                                        <Panel>
+                                            <ScrollContentPresenter Name="PART_ContentPresenter"
+                                                                    Background="{TemplateBinding Background}"
+                                                                    Padding="{TemplateBinding Padding}">
+                                                <ScrollContentPresenter.GestureRecognizers>
+                                                    <ScrollGestureRecognizer CanHorizontallyScroll="{Binding CanHorizontallyScroll, ElementName=PART_ContentPresenter}"
+                                                                             CanVerticallyScroll="{Binding CanVerticallyScroll, ElementName=PART_ContentPresenter}" />
+                                                </ScrollContentPresenter.GestureRecognizers>
+                                            </ScrollContentPresenter>
+                                            <ScrollBar Name="PART_VerticalScrollBar"
+                                                       Orientation="Vertical"
+                                                       HorizontalAlignment="Right"
+                                                       Focusable="False" />
+                                        </Panel>
+                                    </ControlTemplate>
+                                </ScrollViewer.Template>
+                                <StackPanel>
+                                    <arc:CardToArticleHero Name="PART_Hero"
+                                                           arc:SharedElement.Key="hero"
+                                                           Cursor="Hand"
+                                                           Item="{TemplateBinding Item}"
+                                                           AspectRatio="{TemplateBinding AspectRatio}" />
+                                    <Border Name="PART_Body" />
+                                </StackPanel>
+                            </ScrollViewer>
+                            <Border Name="PART_Progress"
+                                    IsHitTestVisible="False"
+                                    VerticalAlignment="Top"
+                                    Height="{arc:CardToArticleTokenResource ProgressThickness}"
+                                    Background="{arc:ArcDesignTokenResource Accent}" />
+                            <arc:CardToArticleCloseButton Name="PART_Close"
+                                                          HorizontalAlignment="Right"
+                                                          VerticalAlignment="Top"
+                                                          Margin="{arc:CardToArticleTokenResource CloseMargin}"
+                                                          AutomationProperties.Name="{TemplateBinding CloseLabel}" />
+                        </Panel>
+                    </arc:SharedElementFrame>
+                </arc:CardToArticleSheetPanel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- Close article: a 36px circle of frosted white over the picture with the 18px Lucide x; no hover or press change. -->
+    <ControlTheme x:Key="{x:Type arc:CardToArticleCloseButton}" TargetType="arc:CardToArticleCloseButton">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Width" Value="{arc:CardToArticleTokenResource CloseDiameter}" />
+        <Setter Property="Height" Value="{arc:CardToArticleTokenResource CloseDiameter}" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Background" Value="{arc:CardToArticleTokenResource CloseFillColor}" />
+        <Setter Property="Foreground" Value="{arc:CardToArticleTokenResource OnPictureInkColor}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CardToArticleCloseButton">
+                <Panel>
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}">
+                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}"
+                                      Size="{arc:CardToArticleTokenResource CloseGlyphSize}"
+                                      StrokeThickness="{arc:CardToArticleTokenResource CloseGlyphStroke}"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:CardToArticleTokenResource CloseFocusRingMargin}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

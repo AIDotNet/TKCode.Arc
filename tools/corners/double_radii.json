@@ -50,5 +50,7 @@
   "SocialProofToast.CornerInset": "ignore",
   "SocialProofToast.CornerWidth": "ignore",
   "TrainingRun.HeadDotRadius": "dot",
-  "TrainingRun.SampleDotRadius": "dot"
+  "TrainingRun.SampleDotRadius": "dot",
+  "CardToArticle.BackdropBlurRadius": "ignore",
+  "NowPlayingLevels.BarRadius": "corner"
 }

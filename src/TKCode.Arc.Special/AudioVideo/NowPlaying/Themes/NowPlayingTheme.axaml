@@ -1,0 +1,154 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.NowPlayingTheme">
+
+    <!-- The control: a slot for the code-built shell (surface, clipped parts and the live region). -->
+    <ControlTheme x:Key="{x:Type arc:NowPlaying}" TargetType="arc:NowPlaying">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="MiniShellRadius" Value="{arc:NowPlayingTokenResource MiniShellCornerRadius}" />
+        <Setter Property="FullShellRadius" Value="{arc:NowPlayingTokenResource FullShellCornerRadius}" />
+        <Setter Property="MiniClipRadius" Value="{arc:NowPlayingTokenResource MiniClipCornerRadius}" />
+        <Setter Property="FullClipRadius" Value="{arc:NowPlayingTokenResource FullClipCornerRadius}" />
+        <Setter Property="MiniArtRadius" Value="{arc:NowPlayingTokenResource MiniArtCornerRadius}" />
+        <Setter Property="FullArtRadius" Value="{arc:NowPlayingTokenResource FullArtCornerRadius}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:NowPlaying">
+                <Border Name="PART_Slot" ClipToBounds="False" />
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- The shell: raised fill, 1px border, floating shadow (its radius follows the morph in code). -->
+    <ControlTheme x:Key="{x:Type arc:NowPlayingSurface}" TargetType="arc:NowPlayingSurface">
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowFloating}" />
+    </ControlTheme>
+
+    <!-- The artwork box: the muted surface shows until (or instead of) the image. -->
+    <ControlTheme x:Key="{x:Type arc:NowPlayingArtwork}" TargetType="arc:NowPlayingArtwork">
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+    </ControlTheme>
+
+    <!-- The waveform: unplayed bars at 16% of the text color, played bars in the text color, a square keyboard ring. -->
+    <ControlTheme x:Key="{x:Type arc:NowPlayingWaveform}" TargetType="arc:NowPlayingWaveform">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="PlayedInk" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="UnplayedInk" Value="{arc:NowPlayingTokenResource WaveUnplayedColor}" />
+        <Setter Property="FocusInk" Value="{arc:ArcDesignTokenResource FocusRing}" />
+    </ControlTheme>
+
+    <!--
+        The buttons, by class: main (the mini text area; no fill, square ring), play (muted 40 circle; text-colored 52 circle
+        in the full player, glyph in the background color; 240ms, 0.22 1 0.36 1), skip (transparent, muted on hover) and
+        collapse (34 dark glass on the artwork, 56% on hover, 160ms).
+    -->
+    <ControlTheme x:Key="{x:Type arc:NowPlayingButton}" TargetType="arc:NowPlayingButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:NowPlayingButton">
+                <Panel>
+                    <Border Name="PART_Back"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      Padding="{TemplateBinding Padding}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Border#PART_FocusRing">
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^.main">
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="Padding" Value="2,0" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        </Style>
+        <Style Selector="^.main /template/ Border#PART_FocusRing">
+            <Setter Property="CornerRadius" Value="0" />
+        </Style>
+
+        <Style Selector="^.play">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^.play:full">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
+        </Style>
+        <Style Selector="^.play:full:pressed">
+            <Setter Property="Background" Value="{arc:NowPlayingTokenResource PlayPressedColor}" />
+        </Style>
+
+        <Style Selector="^.skip:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+
+        <Style Selector="^.collapse">
+            <Setter Property="Background" Value="{arc:NowPlayingTokenResource CollapseFillColor}" />
+            <Setter Property="Foreground" Value="{arc:NowPlayingTokenResource CollapseGlyphColor}" />
+            <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+            <Setter Property="RenderTransform" Value="scale(1)" />
+        </Style>
+        <Style Selector="^.collapse:pointerover">
+            <Setter Property="Background" Value="{arc:NowPlayingTokenResource CollapseHoverFillColor}" />
+        </Style>
+        <Style Selector="^.collapse:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.94)" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^.collapse:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

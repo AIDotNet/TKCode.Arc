@@ -1,0 +1,540 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ChargeSessionTheme">
+
+    <!--
+        The limit marker: a 64 × 44 touch target holding a 48 × 26 pill (pill radius, 1px strong border, raised surface,
+        12/16.8 medium tabular text) and a 1.5px stem from the pill down to the pack's top edge at 0.55. Held: the pill
+        lifts to 1.08 on the CSS spring (580 ms) and inverts (foreground fill and border, background text); the stem goes
+        to 0.9; colors and opacity in 160 ms. Keyboard focus: a square 2px ring around the target, the pill on the muted
+        surface with a foreground border.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ChargeSessionLimitHandle}" TargetType="arc:ChargeSessionLimitHandle">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Width" Value="{arc:ChargeSessionTokenResource HandleWidth}" />
+        <Setter Property="Height" Value="{arc:ChargeSessionTokenResource HandleHeight}" />
+        <Setter Property="Cursor" Value="SizeWestEast" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ChargeSessionLimitHandle">
+                <Panel Background="{TemplateBinding Background}">
+                    <Border Name="PART_Stem"
+                            Width="1.5"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Top"
+                            IsHitTestVisible="False"
+                            Background="{arc:ArcDesignTokenResource Foreground}" />
+                    <Border Name="PART_Pill"
+                            Width="{arc:ChargeSessionTokenResource PillWidth}"
+                            Height="{arc:ChargeSessionTokenResource PillHeight}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Top"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            RenderTransformOrigin="50%,50%">
+                        <TextBlock Name="PART_PillText"
+                                   Text="{TemplateBinding Text}"
+                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                   LineHeight="{arc:ChargeSessionTokenResource PillLineHeight}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   FontFeatures="tnum"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ Border#PART_Stem">
+            <Setter Property="Opacity" Value="{arc:ChargeSessionTokenResource LimitLineOpacity}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Pill">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="RenderTransform" Value="scale(1)" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_PillText">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_Pill">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:held /template/ Border#PART_Pill">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="RenderTransform" Value="scale(1.08)" />
+        </Style>
+        <Style Selector="^:held /template/ TextBlock#PART_PillText">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
+        </Style>
+        <Style Selector="^:held /template/ Border#PART_Stem">
+            <Setter Property="Opacity" Value="{arc:ChargeSessionTokenResource LimitLineHeldOpacity}" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ Border#PART_Pill">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                        <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                        <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_PillText">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Stem">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The action button: 44 high, 20 side padding, RadiusControl, 14/19.6 medium; a 14px icon in a 16 slot, 8 before the
+        label. Outline while charging (surface, strong border; hover: muted surface); solid once stopped or complete
+        (foreground fill, surface text; hover a little lighter). The three labels share one cell and crossfade in 160 ms, so
+        the width never changes. Pressed: 0.97 on the CSS spring. Keyboard focus: a 2px ring 2px outside.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ChargeSessionActionButton}" TargetType="arc:ChargeSessionActionButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Height" Value="{arc:ChargeSessionTokenResource ButtonHeight}" />
+        <Setter Property="Padding" Value="{arc:ChargeSessionTokenResource ButtonPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="RenderTransform" Value="scale(1)" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ChargeSessionActionButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <Grid HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center">
+                            <StackPanel Name="PART_StopLayer" Classes="layer" Orientation="Horizontal"
+                                        Spacing="{arc:ChargeSessionTokenResource ButtonGap}" HorizontalAlignment="Center">
+                                <Panel Width="16" Height="16" VerticalAlignment="Center">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Square}" StrokeThickness="1.75"
+                                                  Size="{arc:ChargeSessionTokenResource ButtonIconSize}"
+                                                  Foreground="{TemplateBinding Foreground}" />
+                                </Panel>
+                                <TextBlock Text="{TemplateBinding StopText}" VerticalAlignment="Center"
+                                           LineHeight="{arc:ChargeSessionTokenResource BodyLineHeight}" />
+                            </StackPanel>
+                            <StackPanel Name="PART_ResumeLayer" Classes="layer" Orientation="Horizontal" Opacity="0"
+                                        Spacing="{arc:ChargeSessionTokenResource ButtonGap}" HorizontalAlignment="Center">
+                                <Panel Width="16" Height="16" VerticalAlignment="Center">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Zap}" StrokeThickness="1.75"
+                                                  Size="{arc:ChargeSessionTokenResource ButtonIconSize}"
+                                                  Foreground="{TemplateBinding Foreground}" />
+                                </Panel>
+                                <TextBlock Text="{TemplateBinding ResumeText}" VerticalAlignment="Center"
+                                           LineHeight="{arc:ChargeSessionTokenResource BodyLineHeight}" />
+                            </StackPanel>
+                            <StackPanel Name="PART_NewLayer" Classes="layer" Orientation="Horizontal" Opacity="0"
+                                        Spacing="{arc:ChargeSessionTokenResource ButtonGap}" HorizontalAlignment="Center">
+                                <Panel Width="16" Height="16" VerticalAlignment="Center">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.RotateCcw}" StrokeThickness="1.75"
+                                                  Size="{arc:ChargeSessionTokenResource ButtonIconSize}"
+                                                  Foreground="{TemplateBinding Foreground}" />
+                                </Panel>
+                                <TextBlock Text="{TemplateBinding NewSessionText}" VerticalAlignment="Center"
+                                           LineHeight="{arc:ChargeSessionTokenResource BodyLineHeight}" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep22}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:solid">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Surface}" />
+        </Style>
+        <Style Selector="^:solid:pointerover">
+            <Setter Property="Background" Value="{arc:ChargeSessionTokenResource SolidHoverFill}" />
+            <Setter Property="BorderBrush" Value="{arc:ChargeSessionTokenResource SolidHoverFill}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.97)" />
+        </Style>
+        <Style Selector="^:stopped /template/ StackPanel#PART_StopLayer">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:stopped /template/ StackPanel#PART_ResumeLayer">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:complete /template/ StackPanel#PART_StopLayer">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:complete /template/ StackPanel#PART_NewLayer">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ StackPanel.layer">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The card (max 880): 32 padding (24 stacked, 16 compact), radius 34, 1px border on the surface; rows header / hero /
+        lower / footer 24 apart (16 stacked). Header: title (display 16/17.6 medium, −0.48) over the location (14/19.6
+        secondary); on the right the charge (display 72, 52 stacked, 36 compact; −0.03em, tabular) over the status (a 16px
+        icon, 6, 14/19.6 secondary). Hero: 36 (32 compact) for the pill over the 0.24-aspect scene. Lower: the curve section
+        (14 medium heading, muted reading; the plot 0.40 of its width beside, 0.50 stacked; 12 muted labels) beside the
+        2 × 2 stats (radius 22, 1px border, BorderSubtle dividers; 12 muted names over 22/30.8 medium tabular values).
+        Footer: a BorderSubtle line, 16, then the muted hint and the button (full width when compact).
+    -->
+    <ControlTheme x:Key="{x:Type arc:ChargeSession}" TargetType="arc:ChargeSession">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="MaxWidth" Value="{arc:ChargeSessionTokenResource CardMaxWidth}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
+        <Setter Property="Padding" Value="{arc:ChargeSessionTokenResource CardPadding}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="AccentInk" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="MutedInk" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ChargeSession">
+                <Panel>
+                    <Border Name="PART_Card"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <Grid Name="PART_Rows" RowDefinitions="Auto,Auto,Auto,Auto">
+
+                            <!-- Header -->
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                                <StackPanel Spacing="2" VerticalAlignment="Top">
+                                    <TextBlock Name="PART_Title"
+                                               Text="{TemplateBinding Title}"
+                                               AutomationProperties.HeadingLevel="3"
+                                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               LineHeight="{arc:ChargeSessionTokenResource TitleLineHeight}"
+                                               LetterSpacing="{arc:ChargeSessionTokenResource TitleLetterSpacing}"
+                                               TextWrapping="Wrap" />
+                                    <TextBlock Name="PART_Location"
+                                               Text="{TemplateBinding Location}"
+                                               IsVisible="{TemplateBinding Location, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                               LineHeight="{arc:ChargeSessionTokenResource BodyLineHeight}"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                               TextWrapping="Wrap" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Spacing="2" HorizontalAlignment="Right" VerticalAlignment="Top">
+                                    <TextBlock Name="PART_ChargeText"
+                                               HorizontalAlignment="Right"
+                                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightRegular}"
+                                               FontFeatures="tnum" />
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
+                                                Spacing="{arc:ChargeSessionTokenResource StatusGap}">
+                                        <arc:ArcGlyph Name="PART_StatusIcon"
+                                                      Size="{arc:ChargeSessionTokenResource StatusIconSize}"
+                                                      StrokeThickness="1.75"
+                                                      VerticalAlignment="Center" />
+                                        <TextBlock Name="PART_StatusText"
+                                                   VerticalAlignment="Center"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                   LineHeight="{arc:ChargeSessionTokenResource BodyLineHeight}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Grid>
+
+                            <!-- Hero: scene and limit marker -->
+                            <arc:ChargeSessionHero Name="PART_Hero" Grid.Row="1" Background="Transparent" Cursor="SizeWestEast">
+                                <arc:ChargeSessionScene Name="PART_Scene"
+                                                        AccentInk="{TemplateBinding AccentInk}"
+                                                        ForegroundInk="{arc:ArcDesignTokenResource Foreground}"
+                                                        BackgroundInk="{arc:ArcDesignTokenResource Background}"
+                                                        MetalInk0="{arc:ChargeSessionTokenResource MetalStop0}"
+                                                        MetalInk1="{arc:ChargeSessionTokenResource MetalStop1}"
+                                                        MetalInk2="{arc:ChargeSessionTokenResource MetalStop2}"
+                                                        MetalInk3="{arc:ChargeSessionTokenResource MetalStop3}"
+                                                        MetalInk4="{arc:ChargeSessionTokenResource MetalStop4}"
+                                                        MetalEdgeInk="{arc:ChargeSessionTokenResource MetalEdge}"
+                                                        ScreenInk="{arc:ChargeSessionTokenResource ScreenFill}"
+                                                        CableInk="{arc:ChargeSessionTokenResource CableFill}"
+                                                        ShellInk="{arc:ChargeSessionTokenResource ShellFill}"
+                                                        ShellEdgeInk="{arc:ChargeSessionTokenResource ShellEdge}"
+                                                        WellInk="{arc:ChargeSessionTokenResource WellFill}"
+                                                        BeyondInk="{arc:ChargeSessionTokenResource BeyondTint}"
+                                                        SheenInk="{arc:ChargeSessionTokenResource SheenStroke}"
+                                                        LimitOpacity="{arc:ChargeSessionTokenResource LimitLineOpacity}"
+                                                        LimitHeldOpacity="{arc:ChargeSessionTokenResource LimitLineHeldOpacity}" />
+                                <arc:ChargeSessionLimitHandle Name="PART_Handle" />
+                            </arc:ChargeSessionHero>
+
+                            <!-- Lower: curve and stats -->
+                            <arc:ChargeSessionLower Name="PART_Lower" Grid.Row="2"
+                                                    CurveWeight="{arc:ChargeSessionTokenResource CurveColumnWeight}">
+                                <StackPanel Name="PART_CurveSection" Spacing="{arc:ChargeSessionTokenResource CurveHeadGap}">
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                        <TextBlock Name="PART_CurveTitle"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   LineHeight="{arc:ChargeSessionTokenResource BodyLineHeight}"
+                                                   TextTrimming="CharacterEllipsis" />
+                                        <TextBlock Name="PART_CurveReading" Grid.Column="1"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                   LineHeight="{arc:ChargeSessionTokenResource BodyLineHeight}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                   FontFeatures="tnum"
+                                                   AutomationProperties.AccessibilityView="Raw" />
+                                    </Grid>
+                                    <arc:ChargeSessionPlotFrame Name="PART_PlotFrame"
+                                                                LabelGap="{arc:ChargeSessionTokenResource AxisLabelGap}"
+                                                                AutomationProperties.AccessibilityView="Raw">
+                                        <arc:ChargeSessionPlot Name="PART_Plot"
+                                                               Cursor="SizeWestEast"
+                                                               AccentInk="{TemplateBinding AccentInk}"
+                                                               ForegroundInk="{arc:ArcDesignTokenResource Foreground}"
+                                                               SurfaceInk="{arc:ArcDesignTokenResource Surface}"
+                                                               GridInk="{arc:ArcDesignTokenResource BorderSubtle}"
+                                                               AxisInk="{arc:ArcDesignTokenResource Border}"
+                                                               CurveInk="{arc:ArcDesignTokenResource BorderStrong}"
+                                                               BeyondInk="{arc:ChargeSessionTokenResource CurveBeyondTint}" />
+                                        <TextBlock Name="PART_PowerAxis" Classes="axis" />
+                                        <TextBlock Name="PART_Axis0" Classes="axis" />
+                                        <TextBlock Name="PART_Axis50" Classes="axis" />
+                                        <TextBlock Name="PART_Axis100" Classes="axis" />
+                                    </arc:ChargeSessionPlotFrame>
+                                </StackPanel>
+                                <Border Name="PART_Stats"
+                                        BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                        BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                        CornerRadius="{arc:ArcDesignTokenResource RadiusStep22}"
+                                        ClipToBounds="True">
+                                    <Grid RowDefinitions="*,*" ColumnDefinitions="*,*">
+                                        <Border Classes="stat" BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessRightBottom}">
+                                            <StackPanel Classes="stat">
+                                                <TextBlock Name="PART_PowerName" Classes="stat-name" />
+                                                <TextBlock Name="PART_PowerValue" Classes="stat-value" />
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Classes="stat" Grid.Column="1" BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}">
+                                            <StackPanel Classes="stat">
+                                                <TextBlock Name="PART_EnergyName" Classes="stat-name" />
+                                                <TextBlock Name="PART_EnergyValue" Classes="stat-value" />
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Classes="stat" Grid.Row="1" BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessRight}">
+                                            <StackPanel Classes="stat">
+                                                <TextBlock Name="PART_TimeName" Classes="stat-name" />
+                                                <TextBlock Name="PART_TimeValue" Classes="stat-value" />
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Classes="stat" Grid.Row="1" Grid.Column="1" BorderThickness="0">
+                                            <StackPanel Classes="stat">
+                                                <TextBlock Name="PART_CostName" Classes="stat-name" />
+                                                <TextBlock Name="PART_CostValue" Classes="stat-value" />
+                                            </StackPanel>
+                                        </Border>
+                                    </Grid>
+                                </Border>
+                            </arc:ChargeSessionLower>
+
+                            <!-- Footer: hint and action -->
+                            <Border Grid.Row="3"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
+                                    BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                    Padding="0,16,0,0">
+                                <arc:ChargeSessionFooter Name="PART_Footer"
+                                                         HintMinWidth="{arc:ChargeSessionTokenResource HintMinWidth}"
+                                                         ColumnGap="{arc:ChargeSessionTokenResource FooterColumnGap}"
+                                                         RowGap="{arc:ChargeSessionTokenResource FooterRowGap}">
+                                    <TextBlock Name="PART_Hint"
+                                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                               LineHeight="{arc:ChargeSessionTokenResource BodyLineHeight}"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                               TextWrapping="Wrap" />
+                                    <arc:ChargeSessionActionButton Name="PART_Action" />
+                                </arc:ChargeSessionFooter>
+                            </Border>
+                        </Grid>
+                    </Border>
+                    <arc:ExplainerAnnouncer Name="PART_Announcer" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Parts whose values change with the breakpoints are set by styles, not on the elements. -->
+        <Style Selector="^ /template/ TextBlock#PART_ChargeText">
+            <Setter Property="FontSize" Value="{arc:ChargeSessionTokenResource ChargeSize}" />
+            <Setter Property="LineHeight" Value="{arc:ChargeSessionTokenResource ChargeSize}" />
+            <Setter Property="LetterSpacing" Value="-2.16" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.axis">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="16.8" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="FontFeatures" Value="tnum" />
+        </Style>
+        <Style Selector="^ /template/ Border.stat">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+            <Setter Property="Padding" Value="{arc:ChargeSessionTokenResource StatPadding}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel.stat">
+            <Setter Property="Spacing" Value="{arc:ChargeSessionTokenResource StatGap}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.stat-name">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="16.8" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.stat-value">
+            <Setter Property="FontSize" Value="{arc:ChargeSessionTokenResource StatValueSize}" />
+            <Setter Property="LineHeight" Value="30.8" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="FontFeatures" Value="tnum" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_StatusIcon">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ChargeSessionLower#PART_Lower">
+            <Setter Property="Gap" Value="{arc:ChargeSessionTokenResource LowerGap}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ChargeSessionHero#PART_Hero">
+            <Setter Property="TopSpace" Value="{arc:ChargeSessionTokenResource HeroTopSpace}" />
+        </Style>
+        <Style Selector="^ /template/ Grid#PART_Rows">
+            <Setter Property="RowSpacing" Value="{arc:ChargeSessionTokenResource RowGap}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ChargeSessionPlot#PART_Plot">
+            <Setter Property="Aspect" Value="{arc:ChargeSessionTokenResource PlotAspect}" />
+        </Style>
+
+        <!-- Stacked (under 640): curve over the stats. -->
+        <Style Selector="^:stacked">
+            <Setter Property="Padding" Value="{arc:ChargeSessionTokenResource StackedCardPadding}" />
+        </Style>
+        <Style Selector="^:stacked /template/ Grid#PART_Rows">
+            <Setter Property="RowSpacing" Value="{arc:ChargeSessionTokenResource StackedRowGap}" />
+        </Style>
+        <Style Selector="^:stacked /template/ TextBlock#PART_ChargeText">
+            <Setter Property="FontSize" Value="{arc:ChargeSessionTokenResource StackedChargeSize}" />
+            <Setter Property="LineHeight" Value="{arc:ChargeSessionTokenResource StackedChargeSize}" />
+            <Setter Property="LetterSpacing" Value="-1.56" />
+        </Style>
+        <Style Selector="^:stacked /template/ arc|ChargeSessionLower#PART_Lower">
+            <Setter Property="IsStacked" Value="True" />
+            <Setter Property="Gap" Value="{arc:ChargeSessionTokenResource StackedLowerGap}" />
+        </Style>
+        <Style Selector="^:stacked /template/ arc|ChargeSessionPlot#PART_Plot">
+            <Setter Property="Aspect" Value="{arc:ChargeSessionTokenResource StackedPlotAspect}" />
+        </Style>
+        <Style Selector="^:stacked /template/ Border.stat">
+            <Setter Property="Padding" Value="{arc:ChargeSessionTokenResource StackedStatPadding}" />
+        </Style>
+        <Style Selector="^:stacked /template/ TextBlock.stat-value">
+            <Setter Property="FontSize" Value="{arc:ChargeSessionTokenResource StackedStatValueSize}" />
+            <Setter Property="LineHeight" Value="25.2" />
+        </Style>
+
+        <!-- Compact (420 and under): tighter still, the button spans the card. -->
+        <Style Selector="^:compact">
+            <Setter Property="Padding" Value="{arc:ChargeSessionTokenResource CompactCardPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ TextBlock#PART_ChargeText">
+            <Setter Property="FontSize" Value="{arc:ChargeSessionTokenResource CompactChargeSize}" />
+            <Setter Property="LineHeight" Value="{arc:ChargeSessionTokenResource CompactChargeSize}" />
+            <Setter Property="LetterSpacing" Value="-1.08" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|ChargeSessionHero#PART_Hero">
+            <Setter Property="TopSpace" Value="{arc:ChargeSessionTokenResource CompactHeroTopSpace}" />
+        </Style>
+        <Style Selector="^:compact /template/ Border.stat">
+            <Setter Property="Padding" Value="{arc:ChargeSessionTokenResource CompactStatPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ TextBlock.stat-value">
+            <Setter Property="FontSize" Value="{arc:ChargeSessionTokenResource CompactStatValueSize}" />
+            <Setter Property="LineHeight" Value="22.4" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|ChargeSessionFooter#PART_Footer">
+            <Setter Property="IsButtonFull" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph#PART_StatusIcon">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

@@ -1,0 +1,331 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.StretchRefreshTheme">
+
+    <!--
+        The card: a header over a muted well; the sheet with the rows covers the well and moves down with a pull. The
+        indicator (line + status) sits in a 34 px slot at the top of the well, centred in the gap by code.
+    -->
+    <ControlTheme x:Key="{x:Type arc:StretchRefresh}" TargetType="arc:StretchRefresh">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="SuccessInk" Value="{arc:StretchRefreshActivityRowTokenResource SuccessColor}" />
+        <Setter Property="DangerInk" Value="{arc:StretchRefreshActivityRowTokenResource DangerColor}" />
+        <Setter Property="NarrowWidth" Value="{arc:StretchRefreshTokenResource NarrowWidth}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:StretchRefresh">
+                <Border Name="PART_Card"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="False">
+                    <Grid Name="PART_Content" RowDefinitions="Auto,*">
+                        <Border Name="PART_Header"
+                                Padding="{arc:StretchRefreshTokenResource HeaderPadding}"
+                                BorderThickness="0,0,0,1"
+                                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                Background="{arc:ArcDesignTokenResource Surface}">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{arc:StretchRefreshTokenResource HeaderGap}">
+                                <StackPanel Spacing="1" VerticalAlignment="Center">
+                                    <TextBlock Name="PART_Title"
+                                               Text="{TemplateBinding Title}"
+                                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                               FontSize="{arc:StretchRefreshTokenResource TitleFontSize}"
+                                               LineHeight="{arc:StretchRefreshTokenResource TitleLineHeight}"
+                                               LetterSpacing="{arc:StretchRefreshTokenResource TitleLetterSpacing}"
+                                               FontWeight="Medium"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                               TextTrimming="CharacterEllipsis" />
+                                    <arc:StretchRefreshSwap Name="PART_Subtitle"
+                                                            Mode="Text"
+                                                            HorizontalContentAlignment="Left"
+                                                            ClipToBounds="False"
+                                                            FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                            LineHeight="{arc:StretchRefreshTokenResource SubtitleLineHeight}"
+                                                            Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                </StackPanel>
+                                <Button Name="PART_RefreshButton"
+                                        Grid.Column="1"
+                                        Theme="{StaticResource ArcStretchRefreshButtonTheme}">
+                                    <arc:StretchRefreshSwap Name="PART_HeaderIcon"
+                                                            Mode="Icon"
+                                                            HorizontalContentAlignment="Center"
+                                                            Width="{arc:StretchRefreshTokenResource ButtonGlyphSize}"
+                                                            Height="{arc:StretchRefreshTokenResource ButtonGlyphSize}" />
+                                </Button>
+                            </Grid>
+                        </Border>
+                        <Border Name="PART_WellFill"
+                                Grid.Row="1"
+                                Background="{arc:ArcDesignTokenResource SurfaceMuted}" />
+                        <Panel Name="PART_Well"
+                               Grid.Row="1"
+                               ClipToBounds="True">
+                            <Panel Height="{arc:StretchRefreshTokenResource AnchorHeight}" VerticalAlignment="Top">
+                                <StackPanel Name="PART_Anchor"
+                                            Spacing="{arc:StretchRefreshTokenResource IndicatorGap}"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            IsHitTestVisible="False"
+                                            Opacity="0">
+                                    <arc:StretchRefreshMeter Name="PART_Meter"
+                                                             Width="{arc:StretchRefreshTokenResource MeterWidth}"
+                                                             Height="{arc:StretchRefreshTokenResource MeterThickness}"
+                                                             HorizontalAlignment="Center" />
+                                    <StackPanel Orientation="Horizontal"
+                                                Spacing="{arc:StretchRefreshTokenResource StatusGap}"
+                                                Height="{arc:StretchRefreshTokenResource StatusHeight}"
+                                                HorizontalAlignment="Center">
+                                        <Panel Name="PART_MarkHost"
+                                               Width="{arc:StretchRefreshTokenResource MarkSize}"
+                                               Height="{arc:StretchRefreshTokenResource MarkSize}"
+                                               VerticalAlignment="Center">
+                                            <arc:StrokeDrawGlyph Name="PART_Mark"
+                                                                 Size="{arc:StretchRefreshTokenResource MarkSize}"
+                                                                 StrokeThickness="2.4"
+                                                                 Progress="1" />
+                                        </Panel>
+                                        <arc:StretchRefreshSwap Name="PART_Status"
+                                                                Mode="Text"
+                                                                HorizontalContentAlignment="Center"
+                                                                VerticalAlignment="Center"
+                                                                ClipToBounds="False"
+                                                                FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                                FontWeight="Medium" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Panel>
+                            <Panel Name="PART_Sheet">
+                                <Border Name="PART_SheetSurface"
+                                        Margin="0,-1,0,0"
+                                        BorderThickness="0,1,0,0"
+                                        BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                        Background="{arc:ArcDesignTokenResource Surface}"
+                                        BoxShadow="{arc:StretchRefreshTokenResource SheetShadow}" />
+                                <Border Name="PART_SheetClip" ClipToBounds="True">
+                                    <ScrollViewer Name="PART_Scroller"
+                                                  Focusable="True"
+                                                  HorizontalScrollBarVisibility="Disabled"
+                                                  VerticalScrollBarVisibility="Auto">
+                                        <arc:StretchRefreshList Name="PART_List"
+                                                                Margin="{arc:StretchRefreshTokenResource ListPadding}" />
+                                    </ScrollViewer>
+                                </Border>
+                                <Border Name="PART_FeedRing"
+                                        IsVisible="False"
+                                        IsHitTestVisible="False"
+                                        BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                                        BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                            </Panel>
+                            <arc:ExplainerAnnouncer Name="PART_Announcer" />
+                        </Panel>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <!-- The status reads muted while it only invites a pull, in the foreground otherwise (160 ms standard). -->
+        <Style Selector="^ /template/ arc|StretchRefreshSwap#PART_Status">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:hint /template/ arc|StretchRefreshSwap#PART_Status">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|StretchRefreshSwap#PART_Status">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ arc|StretchRefreshSwap#PART_Status">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <!-- Narrow windows: the card loses its frame and its corners. -->
+        <Style Selector="^:narrow">
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The 36 px round refresh button: hover lifts the colours, a press scales to 0.94; busy keeps the rest look. -->
+    <ControlTheme x:Key="ArcStretchRefreshButtonTheme" TargetType="Button">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Width" Value="{arc:StretchRefreshTokenResource ButtonSize}" />
+        <Setter Property="Height" Value="{arc:StretchRefreshTokenResource ButtonSize}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="Button">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover:not(.busy)">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^.busy">
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="RenderTransform" Value="scale(1)" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full:pressed:not(.busy)">
+            <Setter Property="RenderTransform" Value="scale(0.94)" />
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:StretchRefreshMeter}" TargetType="arc:StretchRefreshMeter">
+        <Setter Property="TrackInk" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="FillInk" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="ArmedInk" Value="{arc:ArcDesignTokenResource Foreground}" />
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:StretchRefreshRowHost}" TargetType="arc:StretchRefreshRowHost">
+        <Setter Property="Padding" Value="{arc:StretchRefreshTokenResource RowPadding}" />
+        <Setter Property="SeparatorInk" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+    </ControlTheme>
+
+    <!-- The activity row: [32, 1fr, 8] with 12 px gaps; the dot fades (240 ms) and shrinks to 0.4 (580 ms spring curve) when read. -->
+    <ControlTheme x:Key="{x:Type arc:StretchRefreshActivityRow}" TargetType="arc:StretchRefreshActivityRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="EmphasisBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="SuccessInk" Value="{arc:StretchRefreshActivityRowTokenResource SuccessColor}" />
+        <Setter Property="DangerInk" Value="{arc:StretchRefreshActivityRowTokenResource DangerColor}" />
+        <Setter Property="NeutralInk" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:StretchRefreshActivityRow">
+                <Grid ColumnDefinitions="32,*,8" ColumnSpacing="{arc:StretchRefreshActivityRowTokenResource ColumnGap}">
+                    <Panel Width="{arc:StretchRefreshActivityRowTokenResource LeadSize}"
+                           Height="{arc:StretchRefreshActivityRowTokenResource LeadSize}"
+                           VerticalAlignment="Top">
+                        <arc:StretchRefreshAvatar Name="PART_Avatar" IsVisible="False" />
+                        <arc:ArcGlyph Name="PART_Glyph"
+                                      Data="{TemplateBinding Glyph}"
+                                      Foreground="{TemplateBinding GlyphInk}"
+                                      Size="{arc:StretchRefreshActivityRowTokenResource GlyphSize}"
+                                      StrokeThickness="{arc:StretchRefreshActivityRowTokenResource GlyphStroke}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                    </Panel>
+                    <StackPanel Grid.Column="1" Spacing="2">
+                        <TextBlock Name="PART_Sentence"
+                                   TextWrapping="Wrap"
+                                   LineHeight="{arc:StretchRefreshActivityRowTokenResource BodyLineHeight}" />
+                        <TextBlock Name="PART_Quote"
+                                   IsVisible="False"
+                                   TextWrapping="Wrap"
+                                   LineHeight="{arc:StretchRefreshActivityRowTokenResource BodyLineHeight}" />
+                        <arc:StretchRefreshPhoto Name="PART_Photo"
+                                                 HorizontalAlignment="Left"
+                                                 MaxWidth="{arc:StretchRefreshActivityRowTokenResource PhotoMaxWidth}"
+                                                 Margin="{arc:StretchRefreshActivityRowTokenResource PhotoMargin}"
+                                                 IsVisible="False"
+                                                 OutlineInk="{arc:ArcDesignTokenResource Foreground}" />
+                        <TextBlock Name="PART_Meta"
+                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                   LineHeight="{arc:StretchRefreshActivityRowTokenResource MetaLineHeight}"
+                                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                   FontFeatures="+tnum"
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+                    <Ellipse Name="PART_Dot"
+                             Grid.Column="2"
+                             Width="{arc:StretchRefreshActivityRowTokenResource DotSize}"
+                             Height="{arc:StretchRefreshActivityRowTokenResource DotSize}"
+                             Margin="{arc:StretchRefreshActivityRowTokenResource DotMargin}"
+                             VerticalAlignment="Top"
+                             Fill="{arc:ArcDesignTokenResource Accent}"
+                             RenderTransformOrigin="50%,50%" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:person /template/ arc|StretchRefreshAvatar#PART_Avatar">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^ /template/ Ellipse#PART_Dot">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="RenderTransform" Value="scale(0.4)" />
+        </Style>
+        <Style Selector="^:unread /template/ Ellipse#PART_Dot">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="RenderTransform" Value="scale(1)" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Ellipse#PART_Dot">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ Ellipse#PART_Dot">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

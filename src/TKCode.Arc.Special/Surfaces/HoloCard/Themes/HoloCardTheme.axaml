@@ -1,0 +1,62 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.HoloCardTheme">
+
+    <!--
+        The card: a floating shadow, the front and back faces (content, then the foil, glitter and glare blended over
+        it), and the keyboard focus ring. The control projects the shadow, faces and ring every frame; the faces take
+        the card's Background where their content is transparent.
+    -->
+    <ControlTheme x:Key="{x:Type arc:HoloCard}" TargetType="arc:HoloCard">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="MaxWidth" Value="{arc:HoloCardTokenResource CardMaxWidth}" />
+        <Setter Property="CornerRadius" Value="{arc:HoloCardTokenResource CardCornerRadius}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:HoloCard">
+                <Panel Name="PART_Root" Background="Transparent">
+                    <arc:HoloCardShadow Name="PART_Shadow" />
+                    <Border Name="PART_FrontFace" Background="{TemplateBinding Background}" IsHitTestVisible="False">
+                        <Panel>
+                            <ContentPresenter Name="PART_FrontPresenter"
+                                              Content="{TemplateBinding Front}"
+                                              ContentTemplate="{TemplateBinding FrontTemplate}"
+                                              HorizontalContentAlignment="Stretch"
+                                              VerticalContentAlignment="Stretch" />
+                            <arc:HoloCardSheen Name="PART_FrontSheen" EdgeLight="{arc:HoloCardTokenResource CardEdgeLight}" />
+                        </Panel>
+                    </Border>
+                    <Border Name="PART_BackFace" Background="{TemplateBinding Background}" IsHitTestVisible="False" IsVisible="False">
+                        <Panel>
+                            <ContentPresenter Name="PART_BackPresenter"
+                                              Content="{TemplateBinding Back}"
+                                              ContentTemplate="{TemplateBinding BackTemplate}"
+                                              HorizontalContentAlignment="Stretch"
+                                              VerticalContentAlignment="Stretch" />
+                            <arc:HoloCardSheen Name="PART_BackSheen" EdgeLight="{arc:HoloCardTokenResource CardEdgeLight}" />
+                        </Panel>
+                    </Border>
+                    <arc:HoloCardFocusRing Name="PART_FocusRing" IsVisible="False" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|HoloCardFocusRing#PART_FocusRing">
+            <Setter Property="Brush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ arc|HoloCardFocusRing#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:tilt-only">
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

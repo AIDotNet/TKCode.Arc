@@ -425,4 +425,33 @@ public class TokenTextEditorInlineTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void Token_Bounds_Span_The_Measured_Chip_On_Its_Line_In_The_Callers_Coordinates()
+    {
+        var renderer = new BoxRenderer();
+        var editor = Create("ab{{name}}cd", renderer);
+        var host = new Border { Padding = new Thickness(7, 11), Child = editor };
+        var window = Show(host);
+        try
+        {
+            editor.TryGetTokenBounds(2, host, out var bounds).ShouldBeTrue();
+            bounds.Width.ShouldBe(ChipWidth, 0.01);
+            var presenter = editor.Box!.Presenter!;
+            var origin = presenter.TranslatePoint(new Point(X(editor, 2), 0), host)!.Value;
+            bounds.X.ShouldBe(origin.X, 0.01);
+            bounds.Y.ShouldBe(origin.Y, 0.01);
+            bounds.Height.ShouldBe(presenter.TextLayout.HitTestTextPosition(2).Height, 0.01);
+            // The box follows a new measured width, and only a token's own start finds it.
+            renderer.Grow(48);
+            Dispatcher.UIThread.RunJobs();
+            editor.TryGetTokenBounds(2, host, out bounds).ShouldBeTrue();
+            bounds.Width.ShouldBe(48, 0.01);
+            editor.TryGetTokenBounds(3, host, out _).ShouldBeFalse();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

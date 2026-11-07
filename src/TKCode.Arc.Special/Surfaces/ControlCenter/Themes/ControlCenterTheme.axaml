@@ -1,0 +1,364 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ControlCenterTheme">
+
+    <!-- The control: a slot for the code-built panel (surface, tiles, meters, scrim and the detail frame). -->
+    <ControlTheme x:Key="{x:Type arc:ControlCenter}" TargetType="arc:ControlCenter">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ControlCenter">
+                <Border Name="PART_Slot" ClipToBounds="False" />
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- The panel surface: raised fill, 1px border, radius 30, floating shadow; flush drops all four. -->
+    <ControlTheme x:Key="{x:Type arc:ControlCenterSurface}" TargetType="arc:ControlCenterSurface">
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ControlCenterTokenResource PanelCornerRadius}" />
+        <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowFloating}" />
+        <Style Selector="^:flush">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="BoxShadow" Value="0 0 0 0 Transparent" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The scrim: the raised surface at 55% over the tiles (no blur); its opacity is driven in code. -->
+    <ControlTheme x:Key="{x:Type arc:ControlCenterScrim}" TargetType="arc:ControlCenterScrim">
+        <Setter Property="Background" Value="{arc:ControlCenterTokenResource ScrimColor}" />
+        <Setter Property="CornerRadius" Value="{arc:ControlCenterTokenResource PanelCornerRadius}" />
+        <Style Selector="^:flush">
+            <Setter Property="CornerRadius" Value="0" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The detail's surface: the muted surface with radius 22 (the frame keeps it constant while it morphs). -->
+    <ControlTheme x:Key="{x:Type arc:ControlCenterMorphFrame}" TargetType="arc:ControlCenterMorphFrame">
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="CornerRadius" Value="{arc:ControlCenterTokenResource TileCornerRadius}" />
+    </ControlTheme>
+
+    <!-- A tile: muted surface, radius 22; on mixes 9% accent in (240ms, 0.22 1 0.36 1); no hover change; keyboard ring 2px outside. -->
+    <ControlTheme x:Key="{x:Type arc:ControlCenterTile}" TargetType="arc:ControlCenterTile">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="CornerRadius" Value="{arc:ControlCenterTokenResource TileCornerRadius}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ControlCenterTile">
+                <Panel>
+                    <Border Name="PART_Back" Background="{TemplateBinding Background}" CornerRadius="{TemplateBinding CornerRadius}" />
+                    <Border Name="PART_Tint" IsHitTestVisible="False" CornerRadius="{TemplateBinding CornerRadius}" />
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      Padding="{TemplateBinding Padding}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:ControlCenterTokenResource TileFocusRingRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Border#PART_Tint">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:checked /template/ Border#PART_Tint">
+            <Setter Property="Opacity" Value="{arc:ControlCenterTokenResource TileOnTint}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Tint">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ Border#PART_Tint">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The 36px icon circle: raised surface, resting shadow, secondary icon; on: accent fill, accent-foreground icon (240ms). -->
+    <ControlTheme x:Key="{x:Type arc:ControlCenterBadge}" TargetType="arc:ControlCenterBadge">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Width" Value="36" />
+        <Setter Property="Height" Value="36" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="IsHitTestVisible" Value="False" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ControlCenterBadge">
+                <Panel>
+                    <Border Name="PART_Circle" Background="{TemplateBinding Background}" CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" />
+                    <ContentPresenter Name="PART_ContentPresenter" Content="{TemplateBinding Content}"
+                                      HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Border#PART_Circle">
+            <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowResting}" />
+        </Style>
+        <Style Selector="^:on">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        </Style>
+        <Style Selector="^:on /template/ Border#PART_Circle">
+            <Setter Property="BoxShadow" Value="0 0 0 0 Transparent" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Standard" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Border#PART_Circle">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBoxShadowsTransition Property="BoxShadow" Tween="Standard" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- Round and pill buttons: chevron, close, primary and secondary (160ms, 0.22 1 0.36 1). -->
+    <ControlTheme x:Key="{x:Type arc:ControlCenterButton}" TargetType="arc:ControlCenterButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="RenderTransform" Value="scale(1)" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ControlCenterButton">
+                <Panel>
+                    <Border Name="PART_Back"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      Padding="{TemplateBinding Padding}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^.chevron">
+            <Setter Property="Width" Value="32" />
+            <Setter Property="Height" Value="32" />
+        </Style>
+        <Style Selector="^.chevron:pointerover">
+            <Setter Property="Background" Value="{arc:ControlCenterTokenResource MutedFillColor}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+
+        <Style Selector="^.close">
+            <Setter Property="Width" Value="32" />
+            <Setter Property="Height" Value="32" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        </Style>
+        <Style Selector="^.close /template/ Border#PART_Back">
+            <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowResting}" />
+        </Style>
+        <Style Selector="^.close:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^.close:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.94)" />
+        </Style>
+
+        <Style Selector="^.primary">
+            <Setter Property="Height" Value="38" />
+            <Setter Property="Padding" Value="14,0" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
+        </Style>
+        <Style Selector="^.secondary">
+            <Setter Property="Height" Value="38" />
+            <Setter Property="Padding" Value="14,0" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^.primary:pressed, ^.secondary:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.97)" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A mode segment: 12/500, secondary until selected, then the text color (160ms); the pill behind it belongs to the bar. -->
+    <ControlTheme x:Key="{x:Type arc:ControlCenterModeButton}" TargetType="arc:ControlCenterModeButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="8,0" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ControlCenterModeButton">
+                <Panel Background="{TemplateBinding Background}">
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      Padding="{TemplateBinding Padding}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:checked">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The mode well (text at 6%) and the raised highlight pill. -->
+    <ControlTheme x:Key="{x:Type arc:ControlCenterModeBar}" TargetType="arc:ControlCenterModeBar">
+        <Setter Property="WellInk" Value="{arc:ControlCenterTokenResource MutedFillColor}" />
+        <Setter Property="PillInk" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="PillShadow" Value="{arc:ArcDesignTokenResource ShadowResting}" />
+    </ControlTheme>
+
+    <!-- The meters: segment track at 11% of the text color, fill in the text color, keyboard ring. -->
+    <ControlTheme x:Key="{x:Type arc:ControlCenterMeter}" TargetType="arc:ControlCenterMeter">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="TrackInk" Value="{arc:ControlCenterTokenResource MeterTrackColor}" />
+        <Setter Property="FillInk" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FocusInk" Value="{arc:ArcDesignTokenResource FocusRing}" />
+    </ControlTheme>
+
+    <!-- The dial: track 8%, long ticks 36%, short ticks 16% (dark 36%), accent arc and knob ring, surface knob, raised shadow. -->
+    <ControlTheme x:Key="{x:Type arc:ControlCenterDial}" TargetType="arc:ControlCenterDial">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="TrackInk" Value="{arc:ControlCenterTokenResource DialTrackColor}" />
+        <Setter Property="MajorTickInk" Value="{arc:ControlCenterTokenResource DialMajorTickColor}" />
+        <Setter Property="MinorTickInk" Value="{arc:ControlCenterTokenResource DialMinorTickColor}" />
+        <Setter Property="AccentInk" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="KnobInk" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="KnobShadow" Value="{arc:ArcDesignTokenResource ShadowRaised}" />
+        <Setter Property="FocusInk" Value="{arc:ArcDesignTokenResource FocusRing}" />
+        <Setter Property="SecondaryInk" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="NumberFontFamily" Value="{arc:ArcDesignTokenResource DisplayFontFamily}" />
+    </ControlTheme>
+
+    <!-- The avatars: ringed in the detail's surface, gradients from the series colors. -->
+    <ControlTheme x:Key="{x:Type arc:ControlCenterPeople}" TargetType="arc:ControlCenterPeople">
+        <Setter Property="RingInk" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="Series1Ink" Value="{arc:ArcDesignTokenResource Series1}" />
+        <Setter Property="Series2Ink" Value="{arc:ArcDesignTokenResource Series2}" />
+        <Setter Property="Series3Ink" Value="{arc:ArcDesignTokenResource Series3}" />
+        <Setter Property="Series4Ink" Value="{arc:ArcDesignTokenResource Series4}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+    </ControlTheme>
+
+    <!-- The channel switches dim to 0.45 while all notifications are off (240ms), and stay usable. -->
+    <ControlTheme x:Key="{x:Type arc:ControlCenterChannelList}" TargetType="arc:ControlCenterChannelList">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Style Selector="^:dimmed">
+            <Setter Property="Opacity" Value="0.45" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>
