@@ -8,7 +8,9 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native` and `TKCode.Arc.Audio.Browser`.
 
-## Unreleased
+## 0.4.0-preview.5 - 2026-11-08
+
+Fourteen new Special components: Surfaces, Audio and video, and Loaders; Gallery pages open faster.
 
 ### Added
 
@@ -909,6 +911,7 @@ ArcTheme.Apply(t => t
 
 First preview release.
 
+[0.4.0-preview.5]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.4.0-preview.4...v0.4.0-preview.5
 [0.4.0-preview.4]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.4.0-preview.3...v0.4.0-preview.4
 [0.4.0-preview.3]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.4.0-preview.2...v0.4.0-preview.3
 [0.4.0-preview.2]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.4.0-preview.1...v0.4.0-preview.2

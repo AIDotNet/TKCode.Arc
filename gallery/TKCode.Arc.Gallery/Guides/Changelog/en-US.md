@@ -11,6 +11,22 @@ keep the version pinned in your project. The same list is kept in `CHANGELOG.md`
 NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Foundation` (from 0.3.2), `TKCode.Arc.Fonts` and
 `TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special`, `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`, `TKCode.Arc.Audio.Native` and `TKCode.Arc.Audio.Browser`.
 
+## 0.4.0-preview.5 (2026-11-08)
+
+Fourteen new Special components: Surfaces, Audio and video, and Loaders; Gallery pages open faster.
+
+### Added
+
+- **Special components › Surfaces** (`TKCode.Arc.Special`): `SheetStack` (drill-down panels that rise over one another with depth, drag down to close and become stacked dialogs on wide screens), `WalletStack` (payment cards in brushed metal, guilloche black, frosted glass and color that fan, cycle with a flick and lift out into a balance and recent activity), `ControlCenter` (quick settings tiles that morph into their details, a focus-session dial and rubber-band volume and text-size meters), `HoloCard` (a card that tilts in perspective toward the pointer under a holographic foil, glitter and glare and turns over), `CardToArticle` (story cards that morph into a full article and shrink back when pulled down) and `LinkUnfurl` (a composer that turns a pasted address into a link, shows it loading and unrolls it into a preview card).
+- **Special components › Audio and video** (`TKCode.Arc.Special`): `VoiceOrb` (a voice-mode sphere that breathes, ripples, swirls and pulses, with `VoiceTranscript` live captions and `VoiceControls` call controls), `NowPlaying` (a mini player bar that morphs into a full player with a waveform scrubber, plus `NowPlayingLevels`) and `VoiceRecorder` (record into a live waveform, review and scrub, then send the take as a voice bubble). Audio is simulated and wired through properties and events, so the package takes no audio dependency.
+- **Special components › Loaders** (`TKCode.Arc.Special`): `StretchRefresh` (pull-to-refresh by mouse, touch or wheel), `MorphLoader` (four strokes that morph between dots, bars, a ring and a square and fold into a check or a cross), `SkeletonMorph` with `MorphBlock` (skeletons that stretch into the loaded content block by block), `BlackHole` (a delete transition that spirals items into a singularity and spins them back out on undo) and `ChargeSession` (a live charging card with a draggable charge limit and a tapering charge curve).
+- `TokenTextEditor.TryGetTokenBounds` returns a token chip's bounds in another visual's coordinates.
+
+### Fixed
+
+- Gallery: a docs page builds its demos when it first comes into view and screenshots are decoded when seen, so pages with many demos open in about half the time; the sidebar and top bar do less work while navigating.
+- Gallery in the browser: a logo asked for twice at once no longer shows as initials, and docs text and screenshots are fetched once per session.
+
 ## 0.4.0-preview.4 (2026-11-07)
 
 Lucide icons are compiled into each app on demand: an app ships only the icons it uses.

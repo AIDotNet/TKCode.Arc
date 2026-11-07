@@ -25,12 +25,12 @@ with Arc's visual language and spring motion.
 
 ## Install
 
-The latest preview is [`0.4.0-preview.4`](CHANGELOG.md) on [NuGet](https://www.nuget.org/packages/TKCode.Arc):
+The latest preview is [`0.4.0-preview.5`](CHANGELOG.md) on [NuGet](https://www.nuget.org/packages/TKCode.Arc):
 
 ```bash
-dotnet add package TKCode.Arc --version 0.4.0-preview.4
-dotnet add package TKCode.Arc.Fonts --version 0.4.0-preview.4           # optional: Geist and Geist Mono
-dotnet add package TKCode.Arc.Icons.Lucide --version 0.4.0-preview.4    # optional: the full Lucide set
+dotnet add package TKCode.Arc --version 0.4.0-preview.5
+dotnet add package TKCode.Arc.Fonts --version 0.4.0-preview.5           # optional: Geist and Geist Mono
+dotnet add package TKCode.Arc.Icons.Lucide --version 0.4.0-preview.5    # optional: the full Lucide set
 ```
 
 `TKCode.Arc` brings in `TKCode.Arc.Core` (and, from 0.3.2, `TKCode.Arc.Foundation`). `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts` and `TKCode.Arc.Special`

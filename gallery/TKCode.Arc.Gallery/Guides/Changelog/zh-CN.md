@@ -1,6 +1,6 @@
 ---
 title: 更新日志
-source-hash: 179379aeb4c5
+source-hash: c379edd07e5e
 ---
 
 # 更新日志
@@ -8,6 +8,22 @@ source-hash: 179379aeb4c5
 TKCode.Arc 的所有重要变更，最新的在前。版本遵循[语义化版本](https://semver.org/)。版本带有 `-preview` 后缀期间，API 在各发布版本之间仍可能变化；升级前请阅读说明，并在项目中固定版本号。同样的列表也保存在仓库的 `CHANGELOG.md` 中。
 
 每次发布附带的 NuGet 包：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Foundation`（0.3.2 起）、`TKCode.Arc.Fonts` `TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 、`TKCode.Arc.Special`、`TKCode.Arc.Workflow`、`TKCode.Arc.Dock`（0.4.0-preview.2 起）、`TKCode.Arc.Themes.Pixel`、`TKCode.Arc.Themes.Corners`、`TKCode.Arc.Mobile`、`TKCode.Arc.Terminal`、`TKCode.Arc.Audio`、`TKCode.Arc.Audio.Native` 和 `TKCode.Arc.Audio.Browser`。
+
+## 0.4.0-preview.5（2026-11-08）
+
+新增 14 个 Special 组件：界面（Surfaces）、音视频与加载器；Gallery 页面打开更快。
+
+### 新增
+
+- **Special 组件 › 界面**（`TKCode.Arc.Special`）：`SheetStack`（逐层升起、带景深的下钻面板，下拉关闭，宽屏上变为叠放对话框）、`WalletStack`（拉丝金属、扭索纹黑、磨砂玻璃与彩色的支付卡，可展开、轻扫切换并抽出查看余额与近期交易）、`ControlCenter`（快捷设置磁贴变形为详情，专注计时拨盘与橡皮筋式音量和字号滑条）、`HoloCard`（随指针透视倾斜、带全息箔片、闪粉与眩光并可翻面的卡片）、`CardToArticle`（故事卡片变形为完整文章，下拉缩回）和 `LinkUnfurl`（把粘贴的网址变成链接、显示加载并展开为预览卡片的输入框）。
+- **Special 组件 › 音视频**（`TKCode.Arc.Special`）：`VoiceOrb`（会呼吸、泛起涟漪、旋转与脉动的语音模式球体，附 `VoiceTranscript` 实时字幕与 `VoiceControls` 通话控件）、`NowPlaying`（迷你播放条变形为带波形拖动条的完整播放器，附 `NowPlayingLevels`）和 `VoiceRecorder`（录入实时波形、回放拖动，再以语音气泡发送）。音频为模拟数据，经属性与事件接入，包不依赖任何音频库。
+- **Special 组件 › 加载器**（`TKCode.Arc.Special`）：`StretchRefresh`（用鼠标、触摸或滚轮下拉刷新）、`MorphLoader`（四笔在圆点、柱条、圆环与方块间变形，并收成对勾或叉号）、`SkeletonMorph` 与 `MorphBlock`（骨架屏逐块伸展为加载完成的内容）、`BlackHole`（把条目卷入奇点的删除过渡，撤销时旋出复原）和 `ChargeSession`（实时充电卡片，可拖动充电上限并显示渐缓的充电曲线）。
+- `TokenTextEditor.TryGetTokenBounds` 返回标记块在另一个视觉元素坐标系中的边界。
+
+### 修复
+
+- Gallery：文档页在首次进入视野时才构建示例，截图在看到时才解码，示例多的页面打开时间约减半；导航时侧栏与顶栏的工作量更少。
+- 浏览器中的 Gallery：同时请求两次的标志不再显示为首字母，文档文本与截图每次会话只获取一次。
 
 ## 0.4.0-preview.4（2026-11-07）
 

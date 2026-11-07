@@ -23,9 +23,9 @@ warnings and, at run time, to missing styles or type load errors.
 ## 1. Add the packages
 
 ```bash
-dotnet add package TKCode.Arc --version 0.4.0-preview.4
-dotnet add package TKCode.Arc.Fonts --version 0.4.0-preview.4           # optional: Geist and Geist Mono
-dotnet add package TKCode.Arc.Icons.Lucide --version 0.4.0-preview.4    # optional: the full Lucide set
+dotnet add package TKCode.Arc --version 0.4.0-preview.5
+dotnet add package TKCode.Arc.Fonts --version 0.4.0-preview.5           # optional: Geist and Geist Mono
+dotnet add package TKCode.Arc.Icons.Lucide --version 0.4.0-preview.5    # optional: the full Lucide set
 dotnet add package Avalonia.Fonts.Inter --version 12.1.4                 # optional: Inter for body text
 ```
 
@@ -34,9 +34,9 @@ package management, add the versions to `Directory.Packages.props` once and keep
 
 ```xml
 <ItemGroup>
-    <PackageVersion Include="TKCode.Arc" Version="0.4.0-preview.4" />
-    <PackageVersion Include="TKCode.Arc.Fonts" Version="0.4.0-preview.4" />
-    <PackageVersion Include="TKCode.Arc.Icons.Lucide" Version="0.4.0-preview.4" />
+    <PackageVersion Include="TKCode.Arc" Version="0.4.0-preview.5" />
+    <PackageVersion Include="TKCode.Arc.Fonts" Version="0.4.0-preview.5" />
+    <PackageVersion Include="TKCode.Arc.Icons.Lucide" Version="0.4.0-preview.5" />
     <PackageVersion Include="Avalonia.Fonts.Inter" Version="12.1.4" />
 </ItemGroup>
 ```
@@ -176,14 +176,14 @@ icon that is not compiled in draws nothing and logs a warning naming the line to
 AI explainers) are separate packages. Add the ones you need and register them inside `UseArc(...)`:
 
 ```bash
-dotnet add package TKCode.Arc.Blocks --version 0.4.0-preview.4
-dotnet add package TKCode.Arc.AdvancedCharts --version 0.4.0-preview.4
-dotnet add package TKCode.Arc.Special --version 0.4.0-preview.4
-dotnet add package TKCode.Arc.Workflow --version 0.4.0-preview.4
-dotnet add package TKCode.Arc.Dock --version 0.4.0-preview.4    # optional: IDE-style dock layout (UseArcDock())
-dotnet add package TKCode.Arc.Themes.Pixel --version 0.4.0-preview.4    # optional: pixel-art theme (UseArcPixelTheme())
-dotnet add package TKCode.Arc.Themes.Corners --version 0.4.0-preview.4    # optional: global corner style (UseArcCorners())
-dotnet add package TKCode.Arc.Mobile --version 0.4.0-preview.4    # optional: touch-first controls, not yet verified on devices (UseArcMobile())
+dotnet add package TKCode.Arc.Blocks --version 0.4.0-preview.5
+dotnet add package TKCode.Arc.AdvancedCharts --version 0.4.0-preview.5
+dotnet add package TKCode.Arc.Special --version 0.4.0-preview.5
+dotnet add package TKCode.Arc.Workflow --version 0.4.0-preview.5
+dotnet add package TKCode.Arc.Dock --version 0.4.0-preview.5    # optional: IDE-style dock layout (UseArcDock())
+dotnet add package TKCode.Arc.Themes.Pixel --version 0.4.0-preview.5    # optional: pixel-art theme (UseArcPixelTheme())
+dotnet add package TKCode.Arc.Themes.Corners --version 0.4.0-preview.5    # optional: global corner style (UseArcCorners())
+dotnet add package TKCode.Arc.Mobile --version 0.4.0-preview.5    # optional: touch-first controls, not yet verified on devices (UseArcMobile())
 ```
 
 ```csharp
