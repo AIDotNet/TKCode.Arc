@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ControlCenterReducedMotionDemo">
+    <!-- Reduced motion: the detail appears in place with its content and the scrim fading in, swaps keep their fade and
+         blur without travel, the dial and meters jump to new values and the meters do not swell. -->
+    <Grid Height="460">
+        <arc:ControlCenter x:Name="Center" arc:ArcMotion.Level="Reduced"
+                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+    </Grid>
+</UserControl>

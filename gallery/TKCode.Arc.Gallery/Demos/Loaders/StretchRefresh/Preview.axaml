@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.StretchRefreshPreviewDemo">
+    <!-- A 376 × 368 activity card. Pull the feed down (mouse, touch, or the wheel at the top) or press the round button:
+         the simulated backend (StretchRefreshSampleFeed) answers after 1150 ms with 3, then 1, then 2 new entries, then
+         none. Reset brings back the first seven entries. -->
+    <Grid RowDefinitions="Auto,Auto" RowSpacing="12" MaxWidth="412" Margin="18,24" HorizontalAlignment="Center">
+        <arc:StretchRefresh x:Name="Feed"
+                            Height="368"
+                            MaxWidth="376" />
+        <arc:Button x:Name="ResetButton"
+                    Grid.Row="1"
+                    Content="Reset"
+                    Variant="Secondary"
+                    Size="Small"
+                    IsEnabled="False"
+                    HorizontalAlignment="Right"
+                    Click="OnReset" />
+    </Grid>
+</UserControl>

@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.VoiceOrbCallBarDemo">
+    <!-- The captions and the call bar on their own, wired by hand: Start, Mute and End raise events (logged below) and the
+         buttons under the bar feed the captions the way a recognizer would, word by word and turn by turn. -->
+    <StackPanel Spacing="16" MaxWidth="480">
+        <arc:VoiceTranscript x:Name="Transcript" Speaker="System" Text="Press Start, then add words." IsComplete="True" />
+        <arc:VoiceControls x:Name="Controls"
+                           StartRequested="OnStart"
+                           EndRequested="OnEnd"
+                           MuteChanged="OnMute" />
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="8" LineSpacing="8">
+            <arc:Button Content="Add a word" Variant="Secondary" Size="Small" Click="OnWord" />
+            <arc:Button Content="Next turn" Variant="Secondary" Size="Small" Click="OnTurn" />
+        </WrapPanel>
+        <TextBlock x:Name="Log"
+                   HorizontalAlignment="Center"
+                   TextAlignment="Center"
+                   TextWrapping="Wrap"
+                   FontSize="13"
+                   Text="Events appear here."
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

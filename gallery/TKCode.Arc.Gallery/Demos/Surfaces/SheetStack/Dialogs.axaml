@@ -1,0 +1,41 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SheetStackDialogsDemo">
+    <!-- Always dialogs, with a description line, custom close words and a confirmation level that a drag cannot dismiss.
+         The volume slider opts out of dragging with SheetStack.IsDragExcluded. -->
+    <Border Height="460"
+            MaxWidth="744"
+            Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+            BorderBrush="{arc:ArcDesignTokenResource Border}"
+            BorderThickness="1"
+            CornerRadius="{arc:ArcDesignTokenResource RadiusSurface}">
+        <arc:SheetStack x:Name="Stack"
+                        IsContained="True"
+                        Mode="Dialog"
+                        CornerRadius="{arc:ArcDesignTokenResource RadiusSurface}">
+            <arc:SheetStack.Labels>
+                <arc:SheetStackLabels Close="Done" CloseAll="Done with all" />
+            </arc:SheetStack.Labels>
+            <arc:SheetStack.Sheets>
+                <arc:SheetStackSheet Id="studio" Title="Studio B" Description="Booked until 4 p.m. by the podcast team.">
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="Monitor volume" FontWeight="Medium" />
+                        <arc:Slider Minimum="0" Maximum="100" Value="60" arc:SheetStack.IsDragExcluded="True" />
+                        <arc:Button Variant="Danger" Content="Release the room" HorizontalAlignment="Left" arc:SheetStack.OpenSheet="release" />
+                    </StackPanel>
+                </arc:SheetStackSheet>
+                <arc:SheetStackSheet Id="release" Title="Release Studio B?" IsDismissible="False"
+                                     Description="The remaining 90 minutes go back to the shared calendar.">
+                    <arc:SheetStackSheet.Footer>
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <arc:Button Variant="Ghost" Content="Keep it" Click="OnKeep" />
+                            <arc:Button Variant="Danger" Content="Release" Click="OnRelease" />
+                        </StackPanel>
+                    </arc:SheetStackSheet.Footer>
+                </arc:SheetStackSheet>
+            </arc:SheetStack.Sheets>
+            <arc:Button Content="Room settings" HorizontalAlignment="Center" VerticalAlignment="Center" arc:SheetStack.OpenSheet="studio" />
+        </arc:SheetStack>
+    </Border>
+</UserControl>

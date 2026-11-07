@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ChargeSessionAccentAndSpeedDemo">
+    <!-- A custom accent for the energy, the fill and the travelled curve; Speed multiplies simulated time (0 holds the
+         session while the packets keep flowing) and Paused freezes everything on the current frame. -->
+    <StackPanel Spacing="16" HorizontalAlignment="Center" MaxWidth="880">
+        <arc:ChargeSession x:Name="Card"
+                           Title="Courtyard post 2"
+                           Location="Orchard Row car park, 120 kW"
+                           Capacity="58"
+                           MaxPower="120"
+                           StartCharge="42"
+                           Limit="85"
+                           TaperAt="60"
+                           AccentBrush="#1F9E6E"
+                           Speed="{Binding #SpeedPicker.SelectedValue}" />
+        <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Center">
+            <arc:SegmentedControl x:Name="SpeedPicker" SelectedValue="1">
+                <arc:SegmentedOption Value="0" Label="Hold" />
+                <arc:SegmentedOption Value="1" Label="1×" />
+                <arc:SegmentedOption Value="3" Label="3×" />
+            </arc:SegmentedControl>
+            <arc:Switch IsChecked="{Binding #Card.IsPaused}" Content="Paused" VerticalAlignment="Center" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

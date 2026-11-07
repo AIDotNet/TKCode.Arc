@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.VoiceRecorderReducedMotionDemo">
+    <!-- Reduced motion: the mic becomes the bar at once and a sent bubble appears in place; buttons fade without scaling,
+         the live bars step left one place per sample, and the list jumps to its end. -->
+    <arc:VoiceRecorder x:Name="Recorder"
+                       arc:ArcMotion.Level="Reduced"
+                       MaxWidth="416"
+                       Height="360"
+                       Label="{x:Static arc:VoiceRecorderSamples.ThreadLabel}" />
+</UserControl>

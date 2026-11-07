@@ -1,0 +1,51 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SkeletonMorphShapesDemo">
+    <!--
+        Skeleton shapes: a rounded picture, a two-line heading with 24 px lines, a byline at 60 % of the width, three
+        lines of body text and a round avatar. Turn Loading on to compare each skeleton with what it stands for.
+    -->
+    <StackPanel Margin="16,32" Spacing="16" Width="320" HorizontalAlignment="Center">
+        <arc:Switch Content="Loading" IsChecked="{Binding #Story.IsLoading, Mode=TwoWay}" />
+        <arc:SkeletonMorph x:Name="Story" Classes="card" IsLoading="True" LoadingLabel="Loading story">
+            <StackPanel Spacing="14">
+                <arc:MorphBlock SkeletonHeight="140" SkeletonRadius="14">
+                    <Border Height="140" CornerRadius="14">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                                <GradientStop Color="#9FD8CB" Offset="0" />
+                                <GradientStop Color="#5E9BB8" Offset="0.6" />
+                                <GradientStop Color="#2F4B7C" Offset="1" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                    </Border>
+                </arc:MorphBlock>
+                <arc:MorphBlock Lines="2" LineHeight="24">
+                    <TextBlock FontSize="18" FontWeight="Medium" LineHeight="24" TextWrapping="Wrap"
+                               Text="A slow morning on the tidal flats, mapped by hand" />
+                </arc:MorphBlock>
+                <arc:MorphBlock SkeletonWidthRatio="0.6" Lines="1" LineHeight="16">
+                    <TextBlock FontSize="12" LineHeight="16" Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                               Text="Field notes · 6 min read" />
+                </arc:MorphBlock>
+                <arc:MorphBlock Lines="3" LineHeight="20">
+                    <TextBlock FontSize="14" LineHeight="20" TextWrapping="Wrap"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                               Text="Low water leaves a mile of sand and shallow channels. A pencil, a compass and an hour are enough to draw them before the tide turns." />
+                </arc:MorphBlock>
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <arc:MorphBlock IsCircle="True" SkeletonWidth="28" VerticalAlignment="Center">
+                        <Border Width="28" Height="28" CornerRadius="14" Background="#E8B04B">
+                            <TextBlock Text="RN" FontSize="11" FontWeight="Medium" Foreground="#3B2A08"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </arc:MorphBlock>
+                    <arc:MorphBlock SkeletonWidth="90" Lines="1" LineHeight="18" VerticalAlignment="Center">
+                        <TextBlock Text="Rosa Nakamura" FontSize="13" LineHeight="18" />
+                    </arc:MorphBlock>
+                </StackPanel>
+            </StackPanel>
+        </arc:SkeletonMorph>
+    </StackPanel>
+</UserControl>

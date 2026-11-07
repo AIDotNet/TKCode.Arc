@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LinkUnfurlNarrowDemo">
+    <!-- Under 560px the paddings step down; under 360px "Try" hides and the cards fill the lane. -->
+    <arc:LinkUnfurl Width="340"
+                    AutoPlay="False"
+                    Label="Message #trail-club"
+                    Placeholder="Message #trail-club"
+                    Samples="{x:Static arc:LinkUnfurlSamples.Previews}" />
+</UserControl>

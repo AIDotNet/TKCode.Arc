@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.VoiceRecorderEventsDemo">
+    <!-- A longer thread that scrolls, a 15 second limit, and the events: MessageSent and Cancelled carry the take (its
+         length and bars), the phase is a bindable property. Save sent takes in your own store; here they only reach the log. -->
+    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="20" MaxWidth="760">
+        <arc:VoiceRecorder x:Name="Recorder"
+                           Height="460"
+                           MaxDuration="0:0:15"
+                           Label="Voice messages with Ines Okafor" />
+        <StackPanel Grid.Column="1" Width="240" Spacing="8">
+            <TextBlock Text="Phase" FontWeight="Medium" />
+            <TextBlock Text="{Binding #Recorder.Phase}" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            <TextBlock Text="Events" FontWeight="Medium" Margin="0,8,0,0" />
+            <ItemsControl x:Name="Log" />
+        </StackPanel>
+    </Grid>
+</UserControl>

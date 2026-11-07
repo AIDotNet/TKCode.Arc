@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MorphLoaderSizesDemo">
+    <!-- The drawing is a 24 unit grid scaled to Size. 16 to 32px suit inline use, 48px and up empty states; at 16px a
+         3 unit stroke matches the weight of 1.75px icon strokes. -->
+    <StackPanel Orientation="Horizontal" Spacing="40" HorizontalAlignment="Center" Margin="0,32">
+        <StackPanel Spacing="12">
+            <arc:MorphLoader Variant="Ring" Size="16" StrokeWidth="3" Height="48" />
+            <TextBlock Text="16" HorizontalAlignment="Center" FontSize="{arc:ArcDesignTokenResource TypeXS}" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+        <StackPanel Spacing="12">
+            <arc:MorphLoader Variant="Ring" Size="24" Height="48" />
+            <TextBlock Text="24" HorizontalAlignment="Center" FontSize="{arc:ArcDesignTokenResource TypeXS}" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+        <StackPanel Spacing="12">
+            <arc:MorphLoader Variant="Ring" Size="32" Height="48" />
+            <TextBlock Text="32" HorizontalAlignment="Center" FontSize="{arc:ArcDesignTokenResource TypeXS}" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+        <StackPanel Spacing="12">
+            <arc:MorphLoader Variant="Ring" Size="48" Height="48" />
+            <TextBlock Text="48" HorizontalAlignment="Center" FontSize="{arc:ArcDesignTokenResource TypeXS}" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

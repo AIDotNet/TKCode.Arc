@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.WalletStackReducedMotionDemo">
+    <!-- Under reduced motion cards change places at once, nothing tilts and the light stays still; the activity still
+         fades in row by row, and every announcement and focus move stays. -->
+    <Grid Height="540">
+        <arc:WalletStack arc:ArcMotion.Level="Reduced"
+                         Label="{x:Static arc:WalletStackSamples.Label}"
+                         Cards="{x:Static arc:WalletStackSamples.Wallet}"
+                         HorizontalAlignment="Center"
+                         VerticalAlignment="Center" />
+    </Grid>
+</UserControl>

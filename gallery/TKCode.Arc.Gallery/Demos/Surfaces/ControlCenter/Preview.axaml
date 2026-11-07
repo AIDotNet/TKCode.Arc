@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ControlCenterPreviewDemo">
+    <!-- Three invented focus modes, three channels and three people; the volume starts at 64. Tap a tile to toggle it, use
+         a chevron to grow the tile into its detail, and drag the dial or the meters. -->
+    <Grid Height="460">
+        <arc:ControlCenter x:Name="Center" HorizontalAlignment="Center" VerticalAlignment="Center" />
+    </Grid>
+</UserControl>

@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.WalletStackPreviewDemo">
+    <!-- Hover to fan the cards, drag up or down (or use the arrow keys) to bring another card forward, and click a card
+         to see its balance and recent activity. Pull the open card down or press Escape to put it back. -->
+    <Grid Height="540">
+        <arc:WalletStack Label="{x:Static arc:WalletStackSamples.Label}"
+                         Cards="{x:Static arc:WalletStackSamples.Wallet}"
+                         HorizontalAlignment="Center"
+                         VerticalAlignment="Center" />
+    </Grid>
+</UserControl>

@@ -1,0 +1,28 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.WalletStackEventsDemo">
+    <!-- Drive the stack from code with Previous, Next, Open and Close; the log shows PositionChanged and
+         SelectedCardChanged as you use the buttons, the keyboard, a drag or a click. -->
+    <StackPanel Spacing="16" Width="420">
+        <arc:WalletStack x:Name="Wallet"
+                         Label="Shared household cards"
+                         Cards="{x:Static arc:WalletStackSamples.Wallet}"
+                         HorizontalAlignment="Center"
+                         PositionChanged="OnPositionChanged"
+                         SelectedCardChanged="OnSelectedCardChanged" />
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="8" LineSpacing="8">
+            <arc:Button Content="Previous" Variant="Secondary" Size="Small" Click="OnPrevious" />
+            <arc:Button Content="Next" Variant="Secondary" Size="Small" Click="OnNext" />
+            <arc:Button Content="Open front card" Variant="Secondary" Size="Small" Click="OnOpen" />
+            <arc:Button Content="Close" Variant="Secondary" Size="Small" Click="OnClose" />
+        </WrapPanel>
+        <TextBlock x:Name="Log"
+                   HorizontalAlignment="Center"
+                   TextAlignment="Center"
+                   TextWrapping="Wrap"
+                   FontSize="13"
+                   Text="Events appear here."
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

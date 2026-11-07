@@ -1,0 +1,8 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ChargeSessionPreviewDemo">
+    <!-- Every default: an invented rapid charger (82 kWh pack, 180 kW peak) that starts charging from 28% toward an 80%
+         limit as soon as it is shown. Drag on the pack or the curve to move the limit, or stop and resume charging. -->
+    <arc:ChargeSession HorizontalAlignment="Center" />
+</UserControl>

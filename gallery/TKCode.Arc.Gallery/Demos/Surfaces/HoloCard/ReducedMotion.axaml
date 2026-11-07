@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.HoloCardReducedMotionDemo">
+    <!-- Reduced motion: no tilt, lift or spin; the faces cross-fade when the card turns over. -->
+    <arc:HoloCard Width="220" Margin="16,40" arc:ArcMotion.Level="Reduced" Label="Gift card, 50 credits">
+        <arc:HoloCard.Front>
+            <Grid Background="#172A5A">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="6">
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Sparkles}" Size="40" StrokeThickness="2" Foreground="#AEBEDF" HorizontalAlignment="Center" />
+                    <TextBlock Text="A gift for you" HorizontalAlignment="Center" FontSize="20" FontWeight="Medium" Foreground="#F5F5F5" />
+                    <TextBlock Text="Turn it over" HorizontalAlignment="Center" FontSize="13" Foreground="#AEBEDF" />
+                </StackPanel>
+            </Grid>
+        </arc:HoloCard.Front>
+        <arc:HoloCard.Back>
+            <Grid Background="#172A5A">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="6">
+                    <TextBlock Text="50 credits" HorizontalAlignment="Center" FontSize="30" FontWeight="Medium" Foreground="#F5F5F5" />
+                    <TextBlock Text="Code GLOW-7Q4K" HorizontalAlignment="Center" FontSize="13" Foreground="#AEBEDF" />
+                </StackPanel>
+            </Grid>
+        </arc:HoloCard.Back>
+    </arc:HoloCard>
+</UserControl>

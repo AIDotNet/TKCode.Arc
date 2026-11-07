@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LinkUnfurlPreviewDemo">
+    <!-- The composer pastes its first sample on its own a moment after it comes into view. Replay belongs to the demo. -->
+    <StackPanel Spacing="16" MaxWidth="576" Margin="0,24">
+        <arc:LinkUnfurl x:Name="Composer"
+                        Label="{x:Static arc:LinkUnfurlSamples.Channel}"
+                        Placeholder="{x:Static arc:LinkUnfurlSamples.Channel}"
+                        Text="{x:Static arc:LinkUnfurlSamples.Message}"
+                        Samples="{x:Static arc:LinkUnfurlSamples.Previews}" />
+        <TextBlock HorizontalAlignment="Center"
+                   TextAlignment="Center"
+                   TextWrapping="Wrap"
+                   FontSize="12"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                   Text="A sandbox: messages stay on this page. Any address you paste unfurls the same way, and its card folds back when you click the link or pull the card upward." />
+        <arc:Button Variant="Secondary" Size="Small" HorizontalAlignment="Center" Click="OnReplay">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.RotateCcw}" Size="16" />
+                <TextBlock Text="Replay" />
+            </StackPanel>
+        </arc:Button>
+    </StackPanel>
+</UserControl>

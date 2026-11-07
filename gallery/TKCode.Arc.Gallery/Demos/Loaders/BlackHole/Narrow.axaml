@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.BlackHoleNarrowDemo">
+    <!-- 320px wide: the time column steps aside; the hole, its lens and the shockwave keep their sizes. -->
+    <demos:BlackHoleMailbox Width="320" Margin="0,24" />
+</UserControl>

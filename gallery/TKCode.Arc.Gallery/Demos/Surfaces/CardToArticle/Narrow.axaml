@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CardToArticleNarrowDemo">
+    <!-- At 360 wide the grid falls back to one column, 12 apart. The article still sizes itself to the window. -->
+    <arc:CardToArticle x:Name="Stories" Width="360" HorizontalAlignment="Center" />
+</UserControl>

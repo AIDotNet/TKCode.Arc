@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.VoiceOrbTintsDemo">
+    <!-- The orb takes the accent by default. Tint replaces it (the light veins are derived from it); Tint and Tint2 together
+         give a two-color marble. The halo and the ripples always use Tint. -->
+    <UserControl.Styles>
+        <Style Selector="TextBlock.caption">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+    </UserControl.Styles>
+    <WrapPanel HorizontalAlignment="Center" ItemSpacing="16" LineSpacing="16">
+        <StackPanel>
+            <arc:VoiceOrb Size="176" State="Listening" />
+            <TextBlock Classes="caption" Text="Accent" />
+        </StackPanel>
+        <StackPanel>
+            <arc:VoiceOrb Size="176" State="Listening" Tint="#2E6FE8" />
+            <TextBlock Classes="caption" Text="Tint" />
+        </StackPanel>
+        <StackPanel>
+            <arc:VoiceOrb Size="176" State="Speaking" Tint="#0F9D7A" Tint2="#7DB7FF" />
+            <TextBlock Classes="caption" Text="Tint and Tint2" />
+        </StackPanel>
+        <StackPanel>
+            <arc:VoiceOrb Size="176" State="Thinking" Tint="#E0533D" />
+            <TextBlock Classes="caption" Text="Warm tint" />
+        </StackPanel>
+    </WrapPanel>
+</UserControl>

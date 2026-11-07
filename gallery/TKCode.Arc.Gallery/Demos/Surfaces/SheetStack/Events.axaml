@@ -1,0 +1,53 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SheetStackEventsDemo">
+    <!-- A bike-rental filter flow, always as sheets. The log lists every StackChanged with its reason; the buttons on the
+         right drive the same stack through Push, PopTo and Close. -->
+    <Grid ColumnDefinitions="*,220" ColumnSpacing="16" MaxWidth="744">
+        <Border Height="460"
+                Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                BorderThickness="1"
+                CornerRadius="{arc:ArcDesignTokenResource RadiusSurface}">
+            <arc:SheetStack x:Name="Stack"
+                            IsContained="True"
+                            Mode="Sheet"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusSurface}"
+                            StackChanged="OnStackChanged">
+                <arc:SheetStack.Sheets>
+                    <arc:SheetStackSheet Id="filters" Title="Filters" BackLabel="Filters">
+                        <StackPanel Spacing="8">
+                            <arc:Button Variant="Secondary" Content="Frame size" HorizontalAlignment="Stretch" arc:SheetStack.OpenSheet="frame" />
+                            <arc:Button Variant="Secondary" Content="Pick-up dock" HorizontalAlignment="Stretch" arc:SheetStack.OpenSheet="dock" />
+                        </StackPanel>
+                    </arc:SheetStackSheet>
+                    <arc:SheetStackSheet Id="frame" Title="Frame size">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="Riders between 165 and 180 cm usually fit a medium frame." TextWrapping="Wrap"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            <arc:Button Variant="Ghost" Content="Size chart" HorizontalAlignment="Left" arc:SheetStack.OpenSheet="chart" />
+                        </StackPanel>
+                    </arc:SheetStackSheet>
+                    <arc:SheetStackSheet Id="chart" Title="Size chart">
+                        <TextBlock Text="S: under 165 cm · M: 165 to 180 cm · L: over 180 cm" TextWrapping="Wrap" />
+                    </arc:SheetStackSheet>
+                    <arc:SheetStackSheet Id="dock" Title="Pick-up dock">
+                        <TextBlock Text="Harbor Gate, Old Mill and Lantern Square have bikes right now." TextWrapping="Wrap" />
+                    </arc:SheetStackSheet>
+                </arc:SheetStack.Sheets>
+                <arc:Button Content="Filter bikes" HorizontalAlignment="Center" VerticalAlignment="Center" arc:SheetStack.OpenSheet="filters" />
+            </arc:SheetStack>
+        </Border>
+        <StackPanel Grid.Column="1" Spacing="8">
+            <arc:Button Variant="Secondary" Size="Small" Content="Push size chart" Click="OnPushChart" />
+            <arc:Button Variant="Secondary" Size="Small" Content="Pop to filters" Click="OnPopToFilters" />
+            <arc:Button Variant="Secondary" Size="Small" Content="Close all" Click="OnClose" />
+            <TextBlock Text="Events" FontWeight="Medium" Margin="0,8,0,0" />
+            <TextBlock x:Name="Log"
+                       TextWrapping="Wrap"
+                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        </StackPanel>
+    </Grid>
+</UserControl>

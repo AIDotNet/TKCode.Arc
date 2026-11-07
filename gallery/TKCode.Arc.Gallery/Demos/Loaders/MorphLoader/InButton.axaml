@@ -1,0 +1,30 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MorphLoaderInButtonDemo">
+    <!-- A decorative loader inside a button that announces its own state: the button's label and accessible name change,
+         the loader stays silent. Every other upload fails, so both results show. The log lists the loader's Settled
+         events. -->
+    <StackPanel Spacing="20" HorizontalAlignment="Center" Margin="0,32" Width="320">
+        <arc:Button x:Name="Upload" Variant="Secondary" HorizontalAlignment="Center" Click="OnUpload"
+                    AutomationProperties.Name="Upload report">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <Panel Width="18" Height="18">
+                    <arc:ArcGlyph x:Name="Glyph" Data="{x:Static arc:ArcIcons.Upload}" Size="16" />
+                    <arc:MorphLoader x:Name="Loader" Size="18" Variant="Ring" IsDecorative="True" IsVisible="False"
+                                     Settled="OnSettled" />
+                </Panel>
+                <TextBlock x:Name="Label" Text="Upload report" VerticalAlignment="Center" />
+            </StackPanel>
+        </arc:Button>
+        <Border BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                CornerRadius="{arc:ArcDesignTokenResource RadiusStep12}"
+                Padding="12,10" MinHeight="96">
+            <StackPanel x:Name="Log" Spacing="4">
+                <TextBlock Text="Settled events" FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+            </StackPanel>
+        </Border>
+    </StackPanel>
+</UserControl>

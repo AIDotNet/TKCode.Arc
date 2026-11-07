@@ -1,0 +1,8 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CardToArticleOwnStoriesDemo">
+    <!-- Your own items at 3:2, with labels reworded for a museum guide. Prose is plain text: a blank line starts a
+         paragraph and "> " makes a pull quote. -->
+    <arc:CardToArticle x:Name="Notes" AspectRatio="1.5" />
+</UserControl>

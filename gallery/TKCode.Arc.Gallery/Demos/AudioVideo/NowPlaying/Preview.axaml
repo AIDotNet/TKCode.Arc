@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.NowPlayingPreviewDemo">
+    <!-- The sample queue (five invented tracks with code-drawn covers), everything else at its defaults: paused, the mini
+         bar, the first track. Click the bar (or press Enter) to grow it into the full player; press Escape, the chevron or
+         pull the cover down to fold it back. The player is centred, so it grows both ways. -->
+    <Grid Height="416">
+        <arc:NowPlaying x:Name="Player" HorizontalAlignment="Center" VerticalAlignment="Center" />
+    </Grid>
+</UserControl>

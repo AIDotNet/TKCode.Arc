@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.VoiceRecorderCustomLabelsDemo">
+    <!-- Your own words and your own levels: Labels rewords every visible and spoken text, SentMeta the line under a sent
+         bubble, and LevelSource feeds the waveform (here a steady hum with a beat, standing in for a microphone). -->
+    <arc:VoiceRecorder x:Name="Recorder"
+                       MaxWidth="416"
+                       Height="360"
+                       SentMeta="Sent from the porch"
+                       Label="Voice notes for the build crew" />
+</UserControl>

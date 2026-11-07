@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ControlCenterStatesDemo">
+    <!-- Left: a session in the third mode and presenting on. Right: notifications paused, muted, largest text. -->
+    <WrapPanel HorizontalAlignment="Center" ItemSpacing="24" LineSpacing="24">
+        <arc:ControlCenter x:Name="Busy" IsPresenting="True" />
+        <arc:ControlCenter x:Name="Quiet" AreNotificationsOn="False" Volume="0" TextSize="130" />
+    </WrapPanel>
+</UserControl>

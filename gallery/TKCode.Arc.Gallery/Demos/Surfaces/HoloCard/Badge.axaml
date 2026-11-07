@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.HoloCardBadgeDemo">
+    <!-- No back: the badge only tilts. A light card stock takes half the light and a gentler tilt. -->
+    <arc:HoloCard Width="220" Margin="16,40" MaxTilt="8" Intensity="0.5"
+                  Label="Night owl achievement badge">
+        <arc:HoloCard.Front>
+            <Grid Background="#F5F1EA">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="10">
+                    <Border Width="104" Height="104" CornerRadius="52" Background="#DC855D" HorizontalAlignment="Center">
+                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Moon}" Size="48" StrokeThickness="2" Foreground="#F5F1EA" />
+                    </Border>
+                    <TextBlock Text="Night owl" HorizontalAlignment="Center" FontSize="22" FontWeight="Medium" Foreground="#262117" />
+                    <TextBlock Text="30 late-night deploys" HorizontalAlignment="Center" FontSize="13" Foreground="#686357" />
+                </StackPanel>
+            </Grid>
+        </arc:HoloCard.Front>
+    </arc:HoloCard>
+</UserControl>

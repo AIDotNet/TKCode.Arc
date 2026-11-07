@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.NowPlayingLevelsDemo">
+    <!-- NowPlayingLevels on its own: three bars that dance while IsPlaying is true and settle when it turns false. Here
+         they mark the row that is playing in a list of your own; the switch drives them. -->
+    <StackPanel Spacing="16" Width="320" HorizontalAlignment="Center">
+        <Border Padding="14,12" CornerRadius="{arc:ArcDesignTokenResource RadiusStep14}"
+                Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+            <Grid ColumnDefinitions="*,Auto">
+                <StackPanel Spacing="2">
+                    <TextBlock Text="Saltwind Road" FontWeight="Medium" FontSize="{arc:ArcDesignTokenResource TypeSM}" />
+                    <TextBlock Text="The Copper Fields" FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                </StackPanel>
+                <arc:NowPlayingLevels Grid.Column="1" VerticalAlignment="Center"
+                                      IsPlaying="{Binding #Playing.IsChecked}" />
+            </Grid>
+        </Border>
+        <arc:Switch x:Name="Playing" IsChecked="True" Content="Playing" HorizontalAlignment="Center" />
+    </StackPanel>
+</UserControl>

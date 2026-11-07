@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LinkUnfurlResolverDemo">
+    <!-- Your own resolver and send handler, with every event logged. Addresses with "missing" in them get no preview;
+         a message with "fail" in it is refused by the pretend server. -->
+    <Grid ColumnDefinitions="*,240" ColumnSpacing="24" MaxWidth="860">
+        <arc:LinkUnfurl x:Name="Composer"
+                        VerticalAlignment="Top"
+                        AutoPlay="False"
+                        Label="Comment on the release notes"
+                        Placeholder="Add a comment"
+                        Text="Changelog draft is up: " />
+        <StackPanel Grid.Column="1" Spacing="6">
+            <TextBlock Text="Events" FontWeight="SemiBold" />
+            <ItemsControl x:Name="Log" />
+        </StackPanel>
+    </Grid>
+</UserControl>

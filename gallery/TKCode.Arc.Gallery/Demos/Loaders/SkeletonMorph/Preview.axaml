@@ -1,0 +1,249 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SkeletonMorphPreviewDemo">
+    <!--
+        Two cards load once when the demo appears; Reload loads them again for 1.5 s. Press Reload while the blocks are
+        still resolving to see them snap back to their skeletons while each card eases to its new height.
+    -->
+    <UserControl.Styles>
+        <!-- The Follow toggle: an accent pill that turns quiet when followed, its two labels crossfading. -->
+        <Style Selector="ToggleButton.follow">
+            <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+            <Setter Property="Height" Value="36" />
+            <Setter Property="Padding" Value="14,0" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="ClipToBounds" Value="False" />
+            <Setter Property="FocusAdorner" Value="{x:Null}" />
+            <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+            <Setter Property="RenderTransform" Value="scale(1)" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Panel>
+                        <Border Name="Ring" Margin="-4" CornerRadius="22" IsVisible="False"
+                                BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                                BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                        <Border Name="Face" Background="{TemplateBinding Background}"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                Padding="{TemplateBinding Padding}">
+                            <Panel VerticalAlignment="Center">
+                                <TextBlock Name="Off" Text="Follow" HorizontalAlignment="Center" LineHeight="20" />
+                                <TextBlock Name="On" Text="Following" HorizontalAlignment="Center" LineHeight="20" Opacity="0" />
+                            </Panel>
+                        </Border>
+                    </Panel>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="ToggleButton.follow:checked">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="ToggleButton.follow:checked /template/ TextBlock#Off">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="ToggleButton.follow:checked /template/ TextBlock#On">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="ToggleButton.follow:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.97)" />
+        </Style>
+        <Style Selector="ToggleButton.follow:focus-visible /template/ Border#Ring">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="ToggleButton.follow:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="ToggleButton.follow:motion-full /template/ TextBlock">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <!-- Reload looks unavailable while the cards load; it keeps keyboard focus and ignores presses. -->
+        <Style Selector="Panel.busy">
+            <Setter Property="Opacity" Value="0.5" />
+        </Style>
+        <Style Selector="TextBlock.name">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="LineHeight" Value="18" />
+        </Style>
+        <Style Selector="TextBlock.note">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="LineHeight" Value="16" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="TextBlock.amount">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="LineHeight" Value="18" />
+            <Setter Property="FontFeatures" Value="+tnum" />
+        </Style>
+    </UserControl.Styles>
+
+    <StackPanel x:Name="Stage" Spacing="20" Margin="16,48" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid x:Name="Cards" ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="16" RowSpacing="16"
+              HorizontalAlignment="Center" Width="640">
+
+            <!-- Profile: six blocks in reading order. -->
+            <arc:SkeletonMorph x:Name="Profile" Classes="card" IsLoading="True" LoadingLabel="Loading profile">
+                <StackPanel Spacing="16">
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <arc:MorphBlock IsCircle="True" SkeletonWidth="52" VerticalAlignment="Center">
+                            <Ellipse Width="52" Height="52">
+                                <Ellipse.Fill>
+                                    <LinearGradientBrush StartPoint="10%,0%" EndPoint="90%,100%">
+                                        <GradientStop Color="#6FD3C4" Offset="0" />
+                                        <GradientStop Color="#8E8CF0" Offset="0.55" />
+                                        <GradientStop Color="#F08BC8" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Ellipse.Fill>
+                            </Ellipse>
+                        </arc:MorphBlock>
+                        <StackPanel Spacing="2" VerticalAlignment="Center">
+                            <arc:MorphBlock SkeletonWidth="124" Lines="1" LineHeight="20">
+                                <TextBlock Text="Lena Ortiz" FontSize="16" FontWeight="Medium" LineHeight="20" />
+                            </arc:MorphBlock>
+                            <arc:MorphBlock SkeletonWidth="164" Lines="1" LineHeight="18">
+                                <TextBlock Text="Product lead at Fieldnote" FontSize="14" LineHeight="18"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            </arc:MorphBlock>
+                        </StackPanel>
+                    </StackPanel>
+                    <arc:MorphBlock Lines="3" LineHeight="20">
+                        <TextBlock FontSize="14" LineHeight="20" TextWrapping="Wrap"
+                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                   Text="Builds quiet interfaces for field teams. Now redesigning the Fieldnote offline sync screens." />
+                    </arc:MorphBlock>
+                    <!-- The footer wraps the button under the stats when they no longer fit side by side. -->
+                    <Grid x:Name="Foot" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                        <arc:MorphBlock x:Name="Stats" SkeletonWidth="169" Lines="1" LineHeight="20" VerticalAlignment="Center">
+                            <TextBlock FontSize="14" LineHeight="20" FontFeatures="+tnum"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}">
+                                <Run Text="2.9k" Foreground="{arc:ArcDesignTokenResource Foreground}" /><Run Text=" followers · " /><Run Text="86" Foreground="{arc:ArcDesignTokenResource Foreground}" /><Run Text=" posts" />
+                            </TextBlock>
+                        </arc:MorphBlock>
+                        <arc:MorphBlock x:Name="FollowBlock" Grid.Column="1" SkeletonWidth="90" SkeletonHeight="36"
+                                        SkeletonRadius="18" VerticalAlignment="Center">
+                            <ToggleButton Classes="follow" AutomationProperties.Name="Follow Lena Ortiz" />
+                        </arc:MorphBlock>
+                    </Grid>
+                </StackPanel>
+            </arc:SkeletonMorph>
+
+            <!-- Transfers: a title, then avatar, name, note and amount per row (13 blocks). -->
+            <arc:SkeletonMorph x:Name="Transfers" Grid.Column="1" Classes="card" IsLoading="True"
+                               LoadingLabel="Loading transfers">
+                <StackPanel Spacing="16">
+                    <arc:MorphBlock SkeletonWidth="100" Lines="1" LineHeight="20">
+                        <TextBlock Text="Next transfers" FontSize="14" FontWeight="Medium" LineHeight="20" />
+                    </arc:MorphBlock>
+                    <StackPanel Spacing="14">
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12" Height="36">
+                            <arc:MorphBlock IsCircle="True" SkeletonWidth="36" VerticalAlignment="Center">
+                                <Ellipse Width="36" Height="36">
+                                    <Ellipse.Fill>
+                                        <LinearGradientBrush StartPoint="0%,20%" EndPoint="100%,80%">
+                                            <GradientStop Color="#F6B26B" Offset="0" />
+                                            <GradientStop Color="#EF6F8E" Offset="0.6" />
+                                            <GradientStop Color="#A77BE0" Offset="1" />
+                                        </LinearGradientBrush>
+                                    </Ellipse.Fill>
+                                </Ellipse>
+                            </arc:MorphBlock>
+                            <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                                <arc:MorphBlock SkeletonWidth="104" Lines="1" LineHeight="18">
+                                    <TextBlock Classes="name" Text="Priya Raman" />
+                                </arc:MorphBlock>
+                                <arc:MorphBlock SkeletonWidth="76" Lines="1" LineHeight="16">
+                                    <TextBlock Classes="note" Text="Sent today" />
+                                </arc:MorphBlock>
+                            </StackPanel>
+                            <arc:MorphBlock Grid.Column="2" SkeletonWidth="44" Lines="1" LineHeight="18"
+                                            HorizontalAlignment="Right" VerticalAlignment="Center">
+                                <TextBlock Classes="amount" Text="$1,480" />
+                            </arc:MorphBlock>
+                        </Grid>
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12" Height="36">
+                            <arc:MorphBlock IsCircle="True" SkeletonWidth="36" VerticalAlignment="Center">
+                                <Ellipse Width="36" Height="36">
+                                    <Ellipse.Fill>
+                                        <LinearGradientBrush StartPoint="100%,0%" EndPoint="0%,100%">
+                                            <GradientStop Color="#5BC0EB" Offset="0" />
+                                            <GradientStop Color="#9BE564" Offset="0.55" />
+                                            <GradientStop Color="#3E8E7E" Offset="1" />
+                                        </LinearGradientBrush>
+                                    </Ellipse.Fill>
+                                </Ellipse>
+                            </arc:MorphBlock>
+                            <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                                <arc:MorphBlock SkeletonWidth="104" Lines="1" LineHeight="18">
+                                    <TextBlock Classes="name" Text="Tomas Lind" />
+                                </arc:MorphBlock>
+                                <arc:MorphBlock SkeletonWidth="76" Lines="1" LineHeight="16">
+                                    <TextBlock Classes="note" Text="Sent Oct 3" />
+                                </arc:MorphBlock>
+                            </StackPanel>
+                            <arc:MorphBlock Grid.Column="2" SkeletonWidth="44" Lines="1" LineHeight="18"
+                                            HorizontalAlignment="Right" VerticalAlignment="Center">
+                                <TextBlock Classes="amount" Text="$720" />
+                            </arc:MorphBlock>
+                        </Grid>
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12" Height="36">
+                            <arc:MorphBlock IsCircle="True" SkeletonWidth="36" VerticalAlignment="Center">
+                                <Ellipse Width="36" Height="36">
+                                    <Ellipse.Fill>
+                                        <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                                            <GradientStop Color="#C3A6F2" Offset="0" />
+                                            <GradientStop Color="#56D6E0" Offset="0.5" />
+                                            <GradientStop Color="#F28C6B" Offset="1" />
+                                        </LinearGradientBrush>
+                                    </Ellipse.Fill>
+                                </Ellipse>
+                            </arc:MorphBlock>
+                            <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                                <arc:MorphBlock SkeletonWidth="104" Lines="1" LineHeight="18">
+                                    <TextBlock Classes="name" Text="Ava Mercer" />
+                                </arc:MorphBlock>
+                                <arc:MorphBlock SkeletonWidth="76" Lines="1" LineHeight="16">
+                                    <TextBlock Classes="note" Text="Scheduled Oct 12"
+                                               Foreground="{arc:ArcDesignTokenResource Accent}" />
+                                </arc:MorphBlock>
+                            </StackPanel>
+                            <arc:MorphBlock Grid.Column="2" SkeletonWidth="44" Lines="1" LineHeight="18"
+                                            HorizontalAlignment="Right" VerticalAlignment="Center">
+                                <TextBlock Classes="amount" Text="$2,350" />
+                            </arc:MorphBlock>
+                        </Grid>
+                    </StackPanel>
+                </StackPanel>
+            </arc:SkeletonMorph>
+        </Grid>
+
+        <Panel x:Name="ReloadHost" HorizontalAlignment="Center">
+            <Panel.Transitions>
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Panel.Transitions>
+            <arc:Button x:Name="Reload" Variant="Secondary" Size="Small" Click="OnReload">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.RotateCw}" Size="16" StrokeThickness="1.75"
+                                  VerticalAlignment="Center" />
+                    <TextBlock Text="Reload" VerticalAlignment="Center" />
+                </StackPanel>
+            </arc:Button>
+        </Panel>
+    </StackPanel>
+</UserControl>

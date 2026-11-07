@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ControlCenterEventsDemo">
+    <!-- StateChanged reports the whole state after every change; a dragged meter reports once per step. -->
+    <WrapPanel HorizontalAlignment="Center" ItemSpacing="24" LineSpacing="24">
+        <arc:ControlCenter x:Name="Center"
+                           StateChanged="OnStateChanged"
+                           DetailOpened="OnDetailOpened"
+                           DetailClosed="OnDetailClosed" />
+        <Border Width="300"
+                Padding="16"
+                Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}">
+            <StackPanel Spacing="8">
+                <TextBlock Text="Event log" FontWeight="Medium" />
+                <TextBlock x:Name="Log"
+                           FontSize="12"
+                           TextWrapping="Wrap"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                           Text="Change something in the panel." />
+            </StackPanel>
+        </Border>
+    </WrapPanel>
+</UserControl>

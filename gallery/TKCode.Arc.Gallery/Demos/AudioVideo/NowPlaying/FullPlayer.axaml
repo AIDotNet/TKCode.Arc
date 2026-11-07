@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.NowPlayingFullPlayerDemo">
+    <!-- IsExpanded="True" starts on the full player. Drag across the waveform to scrub (it stretches while held), or focus
+         it and use the arrow keys (5 s), Page Up / Page Down (30 s), Home and End. Previous restarts a track that has
+         played for more than 3 seconds. -->
+    <Grid Height="440">
+        <arc:NowPlaying x:Name="Player" IsExpanded="True" HorizontalAlignment="Center" VerticalAlignment="Center" />
+    </Grid>
+</UserControl>

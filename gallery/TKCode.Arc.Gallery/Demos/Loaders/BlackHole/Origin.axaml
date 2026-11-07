@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.BlackHoleOriginDemo">
+    <!-- The hole opens on the Delete button instead of the rows' centre, and the effect runs for 2 seconds. -->
+    <demos:BlackHoleMailbox x:Name="Mailbox" Margin="0,24" />
+</UserControl>

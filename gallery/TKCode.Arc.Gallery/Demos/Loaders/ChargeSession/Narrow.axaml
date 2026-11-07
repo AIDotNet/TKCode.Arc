@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ChargeSessionNarrowDemo">
+    <!-- The card follows its own width: side by side from 640, stacked below it, and compact at 420 and under (tighter
+         padding, smaller figures, a full-width button). The scene keeps its proportions at every width. -->
+    <WrapPanel HorizontalAlignment="Center" ItemSpacing="24" LineSpacing="24">
+        <arc:ChargeSession Width="520" Title="Kerbside unit 31" Location="Fenwick Street, 22 kW" Capacity="52"
+                           MaxPower="22" StartCharge="46" Limit="90" Rate="0.29" VerticalAlignment="Top" />
+        <arc:ChargeSession Width="340" Title="Scooter bay B" Location="Campus garage, 3 kW" Capacity="2.4"
+                           MaxPower="3" StartCharge="22" Limit="100" MinLimit="60" Rate="0.25" Currency="GBP"
+                           Locale="en-GB" VerticalAlignment="Top" />
+    </WrapPanel>
+</UserControl>

@@ -1,0 +1,8 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CardToArticleReducedMotionDemo">
+    <!-- Reduced motion: no hover lift, the article is in place at once and only fades in; closing removes it at once.
+         Pulling down still follows the pointer. -->
+    <arc:CardToArticle x:Name="Stories" arc:ArcMotion.Level="Reduced" />
+</UserControl>

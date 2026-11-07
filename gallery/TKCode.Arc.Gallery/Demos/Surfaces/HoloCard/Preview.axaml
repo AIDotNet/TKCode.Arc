@@ -1,0 +1,80 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.HoloCardPreviewDemo">
+    <!-- Move the pointer over the card, then click it (or press Enter) to turn it over. -->
+    <arc:HoloCard Width="290" Margin="16,48"
+                  Label="Mira Okafor, Lumen Society patron pass">
+        <arc:HoloCard.Front>
+            <Grid Background="#0D0D0D" RowDefinitions="66*,34*">
+                <!-- Generated art: a sunset over three ridges, fading into the card stock. -->
+                <Panel ClipToBounds="False">
+                    <Panel.Background>
+                        <LinearGradientBrush StartPoint="50%,0%" EndPoint="50%,100%">
+                            <GradientStop Color="#F8E5CB" Offset="0" />
+                            <GradientStop Color="#F1AA92" Offset="0.7" />
+                        </LinearGradientBrush>
+                    </Panel.Background>
+                    <Viewbox Stretch="UniformToFill" VerticalAlignment="Bottom">
+                        <Canvas Width="290" Height="268">
+                            <Ellipse Canvas.Left="160" Canvas.Top="52" Width="84" Height="84" Fill="#FFF1BC" />
+                            <Path Fill="#8C7DAB" Data="M0 170 L60 120 L110 150 L170 95 L230 140 L290 110 L290 268 L0 268 Z" />
+                            <Path Fill="#464873" Data="M0 205 L50 170 L120 200 L190 150 L250 185 L290 165 L290 268 L0 268 Z" />
+                            <Path Fill="#1F2742" Data="M0 240 L80 210 L150 232 L230 200 L290 222 L290 268 L0 268 Z" />
+                        </Canvas>
+                    </Viewbox>
+                    <Border Margin="0,0,0,-24">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="50%,0%" EndPoint="50%,100%">
+                                <GradientStop Color="#000D0D0D" Offset="0.505" />
+                                <GradientStop Color="#0D0D0D" Offset="0.918" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                    </Border>
+                </Panel>
+                <Grid Grid.RowSpan="2" Margin="20" Height="24" VerticalAlignment="Top">
+                    <!-- Lumen Society's mark: a north arrow in a ring, for the night sky. -->
+                    <Path HorizontalAlignment="Left" Width="24" Height="24" Stretch="Uniform"
+                          Stroke="White" StrokeThickness="2.2" StrokeLineCap="Round" StrokeJoin="Round"
+                          Data="M12 2.5 A9.5 9.5 0 1 1 11.99 2.5 Z M7.5 15 L12 6.5 L16.5 15 M12 6.5 L12 17.5" />
+                    <Border HorizontalAlignment="Right" VerticalAlignment="Center" Background="#EBEBEB"
+                            CornerRadius="999" Padding="10,2">
+                        <TextBlock Text="Patron" FontSize="12" LineHeight="16.8" FontWeight="Medium" Foreground="#0D0D0D" />
+                    </Border>
+                </Grid>
+                <StackPanel Grid.Row="1" Margin="20,0,20,20" Spacing="2">
+                    <TextBlock Text="Mira Okafor" FontSize="28" LineHeight="30.8" FontWeight="Medium"
+                               LetterSpacing="-0.28" Foreground="#F5F5F5" />
+                    <TextBlock Text="Night observer" FontSize="14" LineHeight="19.6" Foreground="#B7B7B7" Margin="0,0,0,12" />
+                    <Border BorderThickness="0,1,0,0" BorderBrush="#24FFFFFF" Padding="0,12,0,0">
+                        <Grid ColumnDefinitions="*,12,*">
+                            <StackPanel>
+                                <TextBlock Text="Hours logged" FontSize="12" LineHeight="16.8" Foreground="#9E9E9E" />
+                                <TextBlock Text="1184" FontSize="14" LineHeight="19.6" FontWeight="Medium" Foreground="#F5F5F5" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Sky photos" FontSize="12" LineHeight="16.8" Foreground="#9E9E9E" />
+                                <TextBlock Text="312" FontSize="14" LineHeight="19.6" FontWeight="Medium" Foreground="#F5F5F5" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </arc:HoloCard.Front>
+        <arc:HoloCard.Back>
+            <Grid Background="#0D0D0D">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="24" Spacing="8">
+                    <Path Width="72" Height="72" Margin="0,0,0,16" HorizontalAlignment="Center" Stretch="Uniform"
+                          Stroke="#EBEBEB" StrokeThickness="2" StrokeLineCap="Round" StrokeJoin="Round"
+                          Data="M12 2.5 A9.5 9.5 0 1 1 11.99 2.5 Z M7.5 15 L12 6.5 L16.5 15 M12 6.5 L12 17.5" />
+                    <TextBlock Text="Clear skies" HorizontalAlignment="Center" FontSize="28" LineHeight="30.8"
+                               FontWeight="Medium" Foreground="#F5F5F5" />
+                    <TextBlock Text="Telescope bay 4, Fridays at dusk" HorizontalAlignment="Center" FontSize="14"
+                               LineHeight="19.6" Foreground="#B1B1B1" />
+                </StackPanel>
+                <TextBlock Text="Pass LX-0417-MO" HorizontalAlignment="Center" VerticalAlignment="Bottom"
+                           Margin="0,0,0,20" FontSize="12" LineHeight="16.8" Foreground="#929292" />
+            </Grid>
+        </arc:HoloCard.Back>
+    </arc:HoloCard>
+</UserControl>

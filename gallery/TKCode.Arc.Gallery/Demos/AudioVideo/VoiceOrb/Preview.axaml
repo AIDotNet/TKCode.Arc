@@ -1,0 +1,75 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.VoiceOrbPreviewDemo">
+    <!-- A voice-mode screen: a status line, the orb inside a round button (tap it to start, send now, cancel the answer or
+         interrupt), live captions, the call bar and a note. A VoiceOrbSession plays a looping, invented conversation with
+         the preview's timing; nothing is recorded or spoken. The orb button and the status line belong to this demo. -->
+    <UserControl.Resources>
+        <ControlTheme x:Key="OrbButton" TargetType="Button">
+            <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="FocusAdorner" Value="{x:Null}" />
+            <Setter Property="ClipToBounds" Value="False" />
+            <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+            <Setter Property="Template">
+                <ControlTemplate TargetType="Button">
+                    <Panel>
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Content}"
+                                          Background="{TemplateBinding Background}"
+                                          CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" />
+                        <Border Name="Ring"
+                                Margin="-4"
+                                IsVisible="False"
+                                BorderThickness="2"
+                                BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" />
+                    </Panel>
+                </ControlTemplate>
+            </Setter>
+            <Style Selector="^:focus-visible /template/ Border#Ring">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^:pressed">
+                <Setter Property="RenderTransform" Value="scale(0.97)" />
+            </Style>
+            <Style Selector="^:motion-full">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Standard" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </ControlTheme>
+    </UserControl.Resources>
+
+    <StackPanel Spacing="14" MaxWidth="480" Margin="0,24,0,20">
+        <arc:ArcContentSwap x:Name="Status"
+                            Mode="BlurSwap"
+                            Content="Ready"
+                            HorizontalAlignment="Center"
+                            AutomationProperties.LiveSetting="Polite"
+                            TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                            TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Button x:Name="OrbButton"
+                Theme="{StaticResource OrbButton}"
+                Width="200"
+                Height="200"
+                HorizontalAlignment="Center"
+                AutomationProperties.Name="Start voice chat"
+                Click="OnOrbTap">
+            <arc:VoiceOrb x:Name="Orb" Size="200" />
+        </Button>
+        <arc:VoiceTranscript x:Name="Transcript" />
+        <arc:VoiceControls x:Name="Controls" />
+        <TextBlock Text="This preview simulates a voice. It never opens a microphone."
+                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                   HorizontalAlignment="Center"
+                   TextAlignment="Center"
+                   TextWrapping="Wrap" />
+    </StackPanel>
+</UserControl>

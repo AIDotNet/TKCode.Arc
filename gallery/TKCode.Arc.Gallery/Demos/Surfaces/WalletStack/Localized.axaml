@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.WalletStackLocalizedDemo">
+    <!-- Currency and Culture format every amount (euros in German here: 1.284,50 €); Labels carries the header, the card
+         names and the announcements in the same language. -->
+    <Grid Height="540">
+        <arc:WalletStack x:Name="Wallet"
+                         Label="Reisekarten"
+                         Cards="{x:Static arc:WalletStackSamples.Travel}"
+                         Currency="EUR"
+                         HorizontalAlignment="Center"
+                         VerticalAlignment="Center" />
+    </Grid>
+</UserControl>

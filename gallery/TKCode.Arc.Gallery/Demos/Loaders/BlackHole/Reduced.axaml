@@ -1,0 +1,8 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.BlackHoleReducedDemo">
+    <!-- With reduced motion the rows fade out in 200 ms and fade back in on undo; nothing spirals. -->
+    <demos:BlackHoleMailbox arc:ArcMotion.Level="Reduced" Margin="0,24" />
+</UserControl>

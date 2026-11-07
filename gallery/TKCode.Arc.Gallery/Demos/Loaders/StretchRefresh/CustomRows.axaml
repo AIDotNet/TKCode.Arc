@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.StretchRefreshCustomRowsDemo">
+    <!-- Your own items and row template: a deploy queue keyed by build number. The log shows what started each refresh
+         and what it returned. -->
+    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="24" Margin="0,12" HorizontalAlignment="Center">
+        <arc:StretchRefresh x:Name="Feed"
+                            Title="Deploy queue"
+                            Subtitle="3 builds waiting"
+                            Width="340"
+                            Height="340">
+            <arc:StretchRefresh.ItemTemplate>
+                <DataTemplate x:DataType="demos:StretchRefreshDemoBuild">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="{Binding Name}" FontWeight="Medium" />
+                            <TextBlock Text="{Binding Branch}" FontSize="12"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        </StackPanel>
+                        <arc:Badge Grid.Column="1" Content="{Binding Stage}" VerticalAlignment="Center" />
+                    </Grid>
+                </DataTemplate>
+            </arc:StretchRefresh.ItemTemplate>
+        </arc:StretchRefresh>
+        <StackPanel Grid.Column="1" Width="200" Spacing="6">
+            <TextBlock Text="Events" FontWeight="Medium" />
+            <ItemsControl x:Name="Log" />
+        </StackPanel>
+    </Grid>
+</UserControl>

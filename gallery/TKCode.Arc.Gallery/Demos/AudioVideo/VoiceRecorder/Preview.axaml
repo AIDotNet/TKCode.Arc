@@ -1,0 +1,55 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.VoiceRecorderPreviewDemo">
+    <!-- A thread with a neighbour (invented): theirs, yours, theirs. Tap the mic to record (the voice is simulated), stop to
+         review and scrub, then send it into the thread or throw it away; the reset button brings back the three messages.
+         The card is 416 × 408 like the reference preview and fills narrower containers. -->
+    <arc:VoiceRecorder x:Name="Recorder"
+                       MaxWidth="416"
+                       Height="408"
+                       Label="{x:Static arc:VoiceRecorderSamples.ThreadLabel}">
+        <arc:VoiceRecorder.Header>
+            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                <!-- A drawn avatar with initials: no photos of people. -->
+                <Border Width="36" Height="36" CornerRadius="18" ClipToBounds="True">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                            <GradientStop Offset="0" Color="#4FD1A5" />
+                            <GradientStop Offset="0.5" Color="#F6C453" />
+                            <GradientStop Offset="1" Color="#D9468F" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <TextBlock Text="TN"
+                               FontSize="13"
+                               FontWeight="SemiBold"
+                               Foreground="White"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center" />
+                </Border>
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <TextBlock Text="{x:Static arc:VoiceRecorderSamples.ContactName}"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               TextTrimming="CharacterEllipsis" />
+                    <TextBlock Text="{x:Static arc:VoiceRecorderSamples.Topic}"
+                               FontSize="12"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                               TextTrimming="CharacterEllipsis" />
+                </StackPanel>
+                <arc:Button Grid.Column="2"
+                            Variant="Ghost"
+                            Width="36"
+                            Height="36"
+                            Padding="0"
+                            CornerRadius="18"
+                            VerticalAlignment="Center"
+                            AutomationProperties.Name="Reset thread"
+                            arc:Tooltip.Tip="Reset thread"
+                            Click="OnReset">
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.RotateCcw}" Size="16" />
+                </arc:Button>
+            </Grid>
+        </arc:VoiceRecorder.Header>
+    </arc:VoiceRecorder>
+</UserControl>

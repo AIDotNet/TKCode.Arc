@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LinkUnfurlManualOpenDemo">
+    <!-- Links resolve to their favicon and title but stay folded until clicked; an unfurled link takes the second series color. -->
+    <arc:LinkUnfurl MaxWidth="576"
+                    AutoPlay="False"
+                    AutoExpand="False"
+                    LinkAccent="{arc:ArcDesignTokenResource Series2}"
+                    Label="Message #kitchen-crew"
+                    Placeholder="Message #kitchen-crew"
+                    Text="Tonight we cook this one "
+                    Samples="{x:Static arc:LinkUnfurlSamples.Previews}" />
+</UserControl>

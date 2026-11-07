@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ChargeSessionReducedMotionDemo">
+    <!-- Under reduced motion the session holds still at its start: the packets rest evenly along the path to show the
+         direction, the figures are current, and Stop, Resume and the limit all update at once. -->
+    <arc:ChargeSession arc:ArcMotion.Level="Reduced" HorizontalAlignment="Center"
+                       Title="Basement charger 1" Location="Harlow Court, 11 kW" Capacity="40" MaxPower="11"
+                       StartCharge="57" Limit="90" Rate="0.33" />
+</UserControl>

@@ -1,0 +1,28 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ChargeSessionFleetEventsDemo">
+    <!-- A depot van charging in euros with German number formats. The log below shows what a backend would receive:
+         every state change with its figures, and the limit once a drag or key press settles. -->
+    <StackPanel Spacing="12" HorizontalAlignment="Center" MaxWidth="880">
+        <arc:ChargeSession x:Name="Card"
+                           Title="Fleet van 14"
+                           Location="Westbrook yard, 50 kW"
+                           Capacity="64"
+                           MaxPower="50"
+                           StartCharge="15"
+                           Limit="90"
+                           Rate="0.31"
+                           Currency="EUR"
+                           Locale="de-DE"
+                           Speed="4"
+                           StateChanged="OnStateChanged"
+                           LimitChanged="OnLimitChanged" />
+        <TextBlock x:Name="Log"
+                   Text="Waiting for the first event…"
+                   TextWrapping="Wrap"
+                   FontFeatures="tnum"
+                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

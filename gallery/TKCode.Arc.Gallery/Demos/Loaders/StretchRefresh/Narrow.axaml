@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.StretchRefreshNarrowDemo">
+    <!-- A 280 px column with a lower threshold (56): the rows wrap, the line still fills exactly at the threshold. -->
+    <arc:StretchRefresh x:Name="Feed"
+                        Threshold="56"
+                        Width="280"
+                        Height="360"
+                        Margin="0,12"
+                        HorizontalAlignment="Center" />
+</UserControl>

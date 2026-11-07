@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.WalletStackNarrowDemo">
+    <!-- In a 240px column every detail of the cards scales with the card width; the stage stays 220px taller than a card. -->
+    <Grid Height="480">
+        <Border Width="240" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <arc:WalletStack Label="{x:Static arc:WalletStackSamples.Label}"
+                             Cards="{x:Static arc:WalletStackSamples.Wallet}"
+                             Position="2" />
+        </Border>
+    </Grid>
+</UserControl>

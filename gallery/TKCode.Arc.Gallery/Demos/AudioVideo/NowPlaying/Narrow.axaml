@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.NowPlayingNarrowDemo">
+    <!-- In a 280px column the shell is the column's width (it never grows past 336): the title ends with an ellipsis, the
+         full cover is narrower but just as tall, and the waveform bars get thinner. Below a 360px window the mini bar also
+         drops its next button. -->
+    <StackPanel Orientation="Horizontal" Spacing="24" HorizontalAlignment="Center" Height="440">
+        <arc:NowPlaying x:Name="Mini" Width="280" VerticalAlignment="Top" />
+        <arc:NowPlaying x:Name="Full" Width="280" IsExpanded="True" VerticalAlignment="Top" />
+    </StackPanel>
+</UserControl>

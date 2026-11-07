@@ -1,0 +1,48 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SkeletonMorphStaggerDemo">
+    <!-- The same list with Stagger 0 (every block at once) and 120 ms (a slower cascade). Reload replays both. -->
+    <UserControl.Styles>
+        <Style Selector="TextBlock.task">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="LineHeight" Value="20" />
+        </Style>
+        <Style Selector="TextBlock.when">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="LineHeight" Value="16" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+    </UserControl.Styles>
+    <StackPanel Margin="16,32" Spacing="20" HorizontalAlignment="Center">
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="16" LineSpacing="16">
+            <StackPanel Spacing="8" Width="240">
+                <TextBlock Text="Stagger 0" FontSize="12" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                <arc:SkeletonMorph x:Name="Together" Classes="card" Stagger="0" IsLoading="True">
+                    <StackPanel Spacing="12">
+                        <arc:MorphBlock SkeletonWidth="150" Lines="1" LineHeight="20"><TextBlock Classes="task" Text="Water the seedlings" /></arc:MorphBlock>
+                        <arc:MorphBlock SkeletonWidth="70" Lines="1" LineHeight="16"><TextBlock Classes="when" Text="Today, 8:00" /></arc:MorphBlock>
+                        <arc:MorphBlock SkeletonWidth="150" Lines="1" LineHeight="20"><TextBlock Classes="task" Text="Repot the fern" /></arc:MorphBlock>
+                        <arc:MorphBlock SkeletonWidth="70" Lines="1" LineHeight="16"><TextBlock Classes="when" Text="Saturday" /></arc:MorphBlock>
+                        <arc:MorphBlock SkeletonWidth="150" Lines="1" LineHeight="20"><TextBlock Classes="task" Text="Order bulb compost" /></arc:MorphBlock>
+                        <arc:MorphBlock SkeletonWidth="70" Lines="1" LineHeight="16"><TextBlock Classes="when" Text="Next week" /></arc:MorphBlock>
+                    </StackPanel>
+                </arc:SkeletonMorph>
+            </StackPanel>
+            <StackPanel Spacing="8" Width="240">
+                <TextBlock Text="Stagger 120 ms" FontSize="12" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                <arc:SkeletonMorph x:Name="Cascade" Classes="card" Stagger="0:0:0.12" IsLoading="True">
+                    <StackPanel Spacing="12">
+                        <arc:MorphBlock SkeletonWidth="150" Lines="1" LineHeight="20"><TextBlock Classes="task" Text="Water the seedlings" /></arc:MorphBlock>
+                        <arc:MorphBlock SkeletonWidth="70" Lines="1" LineHeight="16"><TextBlock Classes="when" Text="Today, 8:00" /></arc:MorphBlock>
+                        <arc:MorphBlock SkeletonWidth="150" Lines="1" LineHeight="20"><TextBlock Classes="task" Text="Repot the fern" /></arc:MorphBlock>
+                        <arc:MorphBlock SkeletonWidth="70" Lines="1" LineHeight="16"><TextBlock Classes="when" Text="Saturday" /></arc:MorphBlock>
+                        <arc:MorphBlock SkeletonWidth="150" Lines="1" LineHeight="20"><TextBlock Classes="task" Text="Order bulb compost" /></arc:MorphBlock>
+                        <arc:MorphBlock SkeletonWidth="70" Lines="1" LineHeight="16"><TextBlock Classes="when" Text="Next week" /></arc:MorphBlock>
+                    </StackPanel>
+                </arc:SkeletonMorph>
+            </StackPanel>
+        </WrapPanel>
+        <arc:Button Content="Reload" Variant="Secondary" Size="Small" HorizontalAlignment="Center" Click="OnReload" />
+    </StackPanel>
+</UserControl>

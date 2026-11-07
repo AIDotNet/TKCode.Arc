@@ -1,0 +1,33 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ControlCenterCustomDemo">
+    <!-- Everything in XAML: one focus mode, five channels and nobody in the footer (the row is hidden), with reworded
+         labels. A longer channel list scrolls inside the detail. -->
+    <Grid Height="460">
+        <arc:ControlCenter HorizontalAlignment="Center" VerticalAlignment="Center" Volume="35">
+            <arc:ControlCenter.Labels>
+                <arc:ControlCenterLabels PanelName="Night shift settings"
+                                         FocusTitle="Quiet hours"
+                                         PresentingTitle="Sharing"
+                                         PresentingOn="Desktop masked"
+                                         VolumeLabel="Chime volume"
+                                         StartSession="Begin"
+                                         UpdateSession="Apply"
+                                         EndSession="Stop"
+                                         AllNotifications="Every channel" />
+            </arc:ControlCenter.Labels>
+            <arc:ControlCenter.FocusModes>
+                <arc:ControlCenterFocusMode Id="night" Label="Night watch" Icon="{x:Static arc:ArcIcons.Moon}"
+                                            Description="Rota cover until the morning handover" DefaultMinutes="120" />
+            </arc:ControlCenter.FocusModes>
+            <arc:ControlCenter.Channels>
+                <arc:ControlCenterChannel Id="pager" Label="Pager" Description="Escalations for your rota" IsOn="True" />
+                <arc:ControlCenterChannel Id="deploys" Label="Deploys" Description="Releases leaving the queue" IsOn="True" />
+                <arc:ControlCenterChannel Id="tickets" Label="Tickets" Description="New items in your queue" />
+                <arc:ControlCenterChannel Id="digest" Label="Morning digest" />
+                <arc:ControlCenterChannel Id="social" Label="Team chatter" Description="Reactions and threads" />
+            </arc:ControlCenter.Channels>
+        </arc:ControlCenter>
+    </Grid>
+</UserControl>

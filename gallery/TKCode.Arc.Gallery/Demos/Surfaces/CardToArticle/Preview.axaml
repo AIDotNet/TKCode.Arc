@@ -1,0 +1,8 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CardToArticlePreviewDemo">
+    <!-- Four invented stories. Press a card (or Tab to it and press Enter) to open it; close it with the button, Escape,
+         or by pulling the picture down. -->
+    <arc:CardToArticle x:Name="Stories" Margin="0,8" />
+</UserControl>

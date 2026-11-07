@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.BlackHoleFilesDemo">
+    <!--
+        The whole API in one place: a grid of file tiles in a BlackHole. Click tiles to select them, then Delete:
+        SwallowAsync pulls them in, and the tiles leave the panel when it completes. Restore puts them back and calls
+        ReleaseAsync. The log lists the black hole's events.
+    -->
+    <StackPanel Spacing="16" MaxWidth="520">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+            <arc:Button x:Name="DeleteButton" Content="Delete selected" Variant="Secondary" Size="Small" Click="OnDelete" />
+            <arc:Button x:Name="RestoreButton" Content="Restore" Variant="Ghost" Size="Small" Click="OnRestore" />
+        </StackPanel>
+        <arc:BlackHole x:Name="Hole"
+                       Height="184"
+                       TransitionStarted="OnStarted"
+                       TransitionCompleted="OnCompleted">
+            <WrapPanel x:Name="Tiles" ItemSpacing="8" LineSpacing="8" />
+        </arc:BlackHole>
+        <TextBlock x:Name="Log"
+                   FontSize="12"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                   Text="Select tiles, then Delete selected." />
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,36 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.VoiceOrbStatesDemo">
+    <!-- Every look side by side at 144 (the size suggested for narrow screens). With no levels set, the listening orb
+         follows a simulated voice and the speaking orb a simulated answer. -->
+    <UserControl.Styles>
+        <Style Selector="TextBlock.caption">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+    </UserControl.Styles>
+    <WrapPanel HorizontalAlignment="Center" ItemSpacing="8" LineSpacing="16">
+        <StackPanel>
+            <arc:VoiceOrb Size="144" State="Idle" />
+            <TextBlock Classes="caption" Text="Idle" />
+        </StackPanel>
+        <StackPanel>
+            <arc:VoiceOrb Size="144" State="Listening" />
+            <TextBlock Classes="caption" Text="Listening" />
+        </StackPanel>
+        <StackPanel>
+            <arc:VoiceOrb Size="144" State="Listening" IsMuted="True" />
+            <TextBlock Classes="caption" Text="Muted" />
+        </StackPanel>
+        <StackPanel>
+            <arc:VoiceOrb Size="144" State="Thinking" />
+            <TextBlock Classes="caption" Text="Thinking" />
+        </StackPanel>
+        <StackPanel>
+            <arc:VoiceOrb Size="144" State="Speaking" />
+            <TextBlock Classes="caption" Text="Speaking" />
+        </StackPanel>
+    </WrapPanel>
+</UserControl>

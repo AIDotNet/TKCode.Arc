@@ -1,0 +1,34 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SheetStackReducedMotionDemo">
+    <!-- Reduced motion: levels fade in place and the ones below only darken (no shrinking, no peek). Dragging still works. -->
+    <Border arc:ArcMotion.Level="Reduced"
+            Width="360"
+            Height="560"
+            Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+            BorderBrush="{arc:ArcDesignTokenResource Border}"
+            BorderThickness="1"
+            CornerRadius="{arc:ArcDesignTokenResource RadiusSurface}">
+        <arc:SheetStack IsContained="True" CornerRadius="{arc:ArcDesignTokenResource RadiusSurface}">
+            <arc:SheetStack.Sheets>
+                <arc:SheetStackSheet Id="order" Title="Order 1042">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="2 × oat flat white, 1 × rye bun" />
+                        <arc:Button Variant="Secondary" Content="Pickup time" HorizontalAlignment="Stretch" arc:SheetStack.OpenSheet="time" />
+                    </StackPanel>
+                </arc:SheetStackSheet>
+                <arc:SheetStackSheet Id="time" Title="Pickup time" BackLabel="Time">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="Ready in about 12 minutes at the side counter." TextWrapping="Wrap" />
+                        <arc:Button Variant="Secondary" Content="Counter map" HorizontalAlignment="Stretch" arc:SheetStack.OpenSheet="map" />
+                    </StackPanel>
+                </arc:SheetStackSheet>
+                <arc:SheetStackSheet Id="map" Title="Counter map">
+                    <TextBlock Text="Enter by the bakery door; the counter is past the plants on your left." TextWrapping="Wrap" />
+                </arc:SheetStackSheet>
+            </arc:SheetStack.Sheets>
+            <arc:Button Content="View order" HorizontalAlignment="Center" VerticalAlignment="Center" arc:SheetStack.OpenSheet="order" />
+        </arc:SheetStack>
+    </Border>
+</UserControl>

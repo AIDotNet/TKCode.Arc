@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LinkUnfurlReducedMotionDemo">
+    <!-- Reduced motion: cards open and fold at once, a loading link keeps a still tint instead of the sweep. -->
+    <arc:LinkUnfurl MaxWidth="576"
+                    arc:ArcMotion.Level="Reduced"
+                    AutoPlay="False"
+                    Label="Message #trail-club"
+                    Placeholder="Message #trail-club"
+                    Samples="{x:Static arc:LinkUnfurlSamples.Previews}" />
+</UserControl>

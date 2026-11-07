@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.NowPlayingReducedMotionDemo">
+    <!-- Under reduced motion nothing flies: the parts sit in their final places at once and the shell opens in a short
+         160ms tween; covers crossfade instead of sliding, text fades without moving and the level bars hold still. Every
+         state, name, focus move and announcement stays. -->
+    <Grid Height="440">
+        <arc:NowPlaying x:Name="Player" arc:ArcMotion.Level="Reduced" HorizontalAlignment="Center" VerticalAlignment="Center" />
+    </Grid>
+</UserControl>
