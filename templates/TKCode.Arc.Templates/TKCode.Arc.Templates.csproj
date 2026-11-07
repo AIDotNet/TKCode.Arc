@@ -1,0 +1,59 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <!-- The `dotnet new` template package (short name tkcode-arc). It has no code of its own: the package carries the
+         templates under content/ as they are, except that the project files get the Arc and Avalonia versions of this
+         build (build/Versions.props) in place of __ARC_VERSION__ and __AVALONIA_VERSION__, so a template always
+         references the packages it was released with. -->
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <PackageId>TKCode.Arc.Templates</PackageId>
+        <PackageType>Template</PackageType>
+        <Title>TKCode.Arc project templates</Title>
+        <Description>dotnet new templates for TKCode.Arc: a desktop application with Arc's theme, fonts, Lucide icons and light/dark switching, in a blank or a sidebar layout (dotnet new tkcode-arc).</Description>
+        <PackageTags>$(PackageTags);dotnet-new;templates;template</PackageTags>
+        <IsPackable>true</IsPackable>
+        <IncludeBuildOutput>false</IncludeBuildOutput>
+        <IncludeSymbols>false</IncludeSymbols>
+        <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+        <EnableDefaultItems>false</EnableDefaultItems>
+        <NoDefaultExcludes>true</NoDefaultExcludes>
+        <!-- NU5128: a template package has no lib/ folder by design. -->
+        <NoWarn>$(NoWarn);NU5128</NoWarn>
+        <_ArcTemplateStage>$(MSBuildProjectDirectory)/$(BaseIntermediateOutputPath)template-content/</_ArcTemplateStage>
+    </PropertyGroup>
+
+    <!-- This package's own readme, not the repository's. -->
+    <ItemGroup>
+        <None Remove="$(ArcRepositoryRoot)README.md" />
+        <None Include="README.md" Pack="true" PackagePath="/" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <_ArcTemplateProjectFile Include="content/**/*.csproj" Exclude="content/**/bin/**;content/**/obj/**" />
+        <_ArcTemplatePlainFile Include="content/**/*" Exclude="content/**/*.csproj;content/**/bin/**;content/**/obj/**;content/**/.DS_Store" />
+    </ItemGroup>
+
+    <!-- One run per project file (target batching on Outputs). -->
+    <Target Name="_ArcStageTemplateProjects"
+            Inputs="%(_ArcTemplateProjectFile.FullPath);$(ArcRepositoryRoot)build/Versions.props"
+            Outputs="$(_ArcTemplateStage)%(_ArcTemplateProjectFile.RecursiveDir)%(_ArcTemplateProjectFile.Filename)%(_ArcTemplateProjectFile.Extension)">
+        <PropertyGroup>
+            <_ArcTemplateText>$([System.IO.File]::ReadAllText('%(_ArcTemplateProjectFile.FullPath)').Replace('__ARC_VERSION__', '$(ArcVersion)').Replace('__AVALONIA_VERSION__', '$(AvaloniaVersion)'))</_ArcTemplateText>
+        </PropertyGroup>
+        <MakeDir Directories="$(_ArcTemplateStage)%(_ArcTemplateProjectFile.RecursiveDir)" />
+        <WriteLinesToFile File="$(_ArcTemplateStage)%(_ArcTemplateProjectFile.RecursiveDir)%(_ArcTemplateProjectFile.Filename)%(_ArcTemplateProjectFile.Extension)"
+                          Lines="$([MSBuild]::Escape($(_ArcTemplateText)))"
+                          Overwrite="true"
+                          WriteOnlyWhenDifferent="true" />
+    </Target>
+
+    <!-- Runs before NuGet collects the package files (pack with or without a build). -->
+    <Target Name="_ArcAddTemplateContent" DependsOnTargets="_ArcStageTemplateProjects" BeforeTargets="_GetPackageFiles">
+        <ItemGroup>
+            <!-- NuGet appends an item's RecursiveDir to a folder PackagePath itself; the staged files have none. -->
+            <_ArcPackedTemplateFile Include="@(_ArcTemplatePlainFile)" PackagePath="content/" />
+            <_ArcPackedTemplateFile Include="@(_ArcTemplateProjectFile->'$(_ArcTemplateStage)%(RecursiveDir)%(Filename)%(Extension)')"
+                                    PackagePath="content/%(_ArcTemplateProjectFile.RecursiveDir)" />
+            <None Include="@(_ArcPackedTemplateFile)" Pack="true" />
+        </ItemGroup>
+    </Target>
+</Project>

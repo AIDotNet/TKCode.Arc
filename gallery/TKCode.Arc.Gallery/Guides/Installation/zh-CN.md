@@ -1,6 +1,6 @@
 ---
 title: 安装
-source-hash: 9d9d5e7e4a11
+source-hash: 5297dc695acd
 ---
 
 # 安装
@@ -17,6 +17,20 @@ source-hash: 9d9d5e7e4a11
 | 字体（可选） | `Avalonia.Fonts.Inter` | Arc 的正文使用 Inter；Geist 来自 `TKCode.Arc.Fonts`。 |
 
 TKCode.Arc 目前处于预览阶段，Avalonia 固定为确切版本。除 Avalonia 之外，每个 Arc 包只依赖 Arc 自己的 MIT 包。请在你的应用中使用相同的 Avalonia 版本；版本混用会导致还原警告，并在运行时出现样式缺失或类型加载错误。
+
+## 从模板开始
+
+新建应用时，`TKCode.Arc.Templates` 包可以创建一个开箱即可构建和运行的项目：包引用、字体、Lucide 图标、`UseArc(...)` 和明暗主题切换都已配置好。
+
+```bash
+dotnet new install TKCode.Arc.Templates
+dotnet new tkcode-arc -n MyApp                      # 顶栏加单个页面
+dotnet new tkcode-arc -n MyApp --layout sidebar     # 可收起的侧边栏和多个页面
+cd MyApp
+dotnet run
+```
+
+`--layout sidebar` 会加入 `TKCode.Arc.Blocks`，并用其中的 `Sidebar` 搭建窗口：图标、选中页面高亮、收起为图标栏、显示页面标题的顶栏，以及三个示例页面。`-f` 选择目标框架（默认 `net10.0`，也可以是 `net8.0` 或 `net11.0`），`--accent` 选择启动时的强调色。Visual Studio 和 Rider 中的模板名为 **TKCode.Arc App**。下面的步骤介绍如何把 Arc 添加到现有项目，也说明了模板配置了哪些内容。
 
 ## 1. 添加包
 

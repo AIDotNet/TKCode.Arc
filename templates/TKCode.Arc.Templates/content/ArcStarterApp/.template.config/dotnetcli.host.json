@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json.schemastore.org/dotnetcli.host",
+  "symbolInfo": {
+    "layout": {
+      "longName": "layout",
+      "shortName": ""
+    },
+    "framework": {
+      "longName": "framework",
+      "shortName": "f"
+    },
+    "accent": {
+      "longName": "accent",
+      "shortName": ""
+    },
+    "skipRestore": {
+      "longName": "no-restore",
+      "shortName": ""
+    }
+  }
+}

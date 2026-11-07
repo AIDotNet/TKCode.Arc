@@ -1,0 +1,70 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="ArcStarterApp.Pages.ProjectsPage">
+    <UserControl.Styles>
+        <Style Selector="TextBlock.caption">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="Border.row">
+            <Setter Property="Padding" Value="0,12" />
+            <Setter Property="BorderThickness" Value="0,0,0,1" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        </Style>
+    </UserControl.Styles>
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="28,24,28,28" Spacing="20" MaxWidth="880" HorizontalAlignment="Left">
+            <Grid ColumnDefinitions="*,Auto">
+                <StackPanel Spacing="4">
+                    <TextBlock Text="Projects"
+                               FontSize="{arc:ArcDesignTokenResource Type2XL}"
+                               FontWeight="Medium"
+                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                    <TextBlock Text="Sample data: bind this list to your own view model."
+                               TextWrapping="Wrap"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                </StackPanel>
+                <arc:Button Grid.Column="1" Content="New project" VerticalAlignment="Center" />
+            </Grid>
+
+            <Border BorderThickness="0,1,0,0" BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                <StackPanel>
+                    <Border Classes="row">
+                        <Grid ColumnDefinitions="Auto,*,Auto,80" ColumnSpacing="12">
+                            <arc:Avatar DisplayName="Ada Lovelace" Size="Small" VerticalAlignment="Center" />
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock Text="Website redesign" TextTrimming="CharacterEllipsis" Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <TextBlock Classes="caption" Text="Marketing" />
+                            </StackPanel>
+                            <arc:Badge Grid.Column="2" Size="Small" Tone="Info" Content="In review" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="3" Classes="caption" Text="Today" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                        </Grid>
+                    </Border>
+                    <Border Classes="row">
+                        <Grid ColumnDefinitions="Auto,*,Auto,80" ColumnSpacing="12">
+                            <arc:Avatar DisplayName="Alan Turing" Size="Small" VerticalAlignment="Center" />
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock Text="Mobile onboarding" TextTrimming="CharacterEllipsis" Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <TextBlock Classes="caption" Text="Product" />
+                            </StackPanel>
+                            <arc:Badge Grid.Column="2" Size="Small" Content="In progress" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="3" Classes="caption" Text="Wed" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                        </Grid>
+                    </Border>
+                    <Border Classes="row">
+                        <Grid ColumnDefinitions="Auto,*,Auto,80" ColumnSpacing="12">
+                            <arc:Avatar DisplayName="Grace Hopper" Size="Small" VerticalAlignment="Center" />
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock Text="Billing migration" TextTrimming="CharacterEllipsis" Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <TextBlock Classes="caption" Text="Platform" />
+                            </StackPanel>
+                            <arc:Badge Grid.Column="2" Size="Small" Tone="Success" Content="Done" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="3" Classes="caption" Text="Last week" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

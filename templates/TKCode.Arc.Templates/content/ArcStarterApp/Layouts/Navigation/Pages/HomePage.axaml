@@ -1,0 +1,69 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:lucide="https://github.com/AIDotNet/TKCode.Arc/lucide"
+             x:Class="ArcStarterApp.Pages.HomePage">
+    <UserControl.Styles>
+        <Style Selector="TextBlock.caption">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="TextBlock.stat">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXL}" />
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+    </UserControl.Styles>
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="28,24,28,28" Spacing="20" MaxWidth="880" HorizontalAlignment="Left">
+            <StackPanel Spacing="4">
+                <TextBlock Text="Welcome to ArcDisplayName"
+                           FontSize="{arc:ArcDesignTokenResource Type2XL}"
+                           FontWeight="Medium"
+                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                <TextBlock Text="A starting point built from TKCode.Arc controls. Replace these pages with your own."
+                           TextWrapping="Wrap"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            </StackPanel>
+
+            <Border CornerRadius="16"
+                    BorderThickness="1"
+                    ClipToBounds="True"
+                    BorderBrush="{arc:ArcDesignTokenResource Border}">
+                <Grid ColumnDefinitions="*,Auto,*,Auto,*">
+                    <StackPanel Margin="16,14" Spacing="6">
+                        <TextBlock Classes="caption" Text="Open projects" />
+                        <TextBlock Classes="stat" Text="3" />
+                    </StackPanel>
+                    <Border Grid.Column="1" Width="1" Background="{arc:ArcDesignTokenResource Border}" />
+                    <StackPanel Grid.Column="2" Margin="16,14" Spacing="6">
+                        <TextBlock Classes="caption" Text="Tasks due this week" />
+                        <TextBlock Classes="stat" Text="12" />
+                    </StackPanel>
+                    <Border Grid.Column="3" Width="1" Background="{arc:ArcDesignTokenResource Border}" />
+                    <StackPanel Grid.Column="4" Margin="16,14" Spacing="6">
+                        <TextBlock Classes="caption" Text="Completed" />
+                        <TextBlock Classes="stat" Text="48" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <arc:Card Title="Next steps" Description="Where to go from here.">
+                <StackPanel Spacing="12" Margin="0,12,0,0">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <lucide:LucideIcon Kind="FilePlus" Size="16" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        <TextBlock TextWrapping="Wrap" Text="Add a page: create it in Pages/, list it in Navigation/AppPages.cs and add a row with the same key to the navigation." />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <lucide:LucideIcon Kind="Palette" Size="16" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        <TextBlock TextWrapping="Wrap" Text="Change the start-up theme in Program.cs, or at run time with ArcTheme.Apply." />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <lucide:LucideIcon Kind="Shapes" Size="16" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        <TextBlock TextWrapping="Wrap" Text="Use any Lucide icon with lucide:LucideIcon; only the icons you use are compiled in." />
+                    </StackPanel>
+                </StackPanel>
+            </arc:Card>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

@@ -23,6 +23,9 @@
     <Project Path="src/TKCode.Arc.Themes.Corners/TKCode.Arc.Themes.Corners.csproj" />
     <Project Path="src/TKCode.Arc.Themes.Pixel/TKCode.Arc.Themes.Pixel.csproj" />
   </Folder>
+  <Folder Name="/templates/">
+    <Project Path="templates/TKCode.Arc.Templates/TKCode.Arc.Templates.csproj" />
+  </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/TKCode.Arc.Foundation.Tests/TKCode.Arc.Foundation.Tests.csproj" />
     <Project Path="tests/TKCode.Arc.Core.Tests/TKCode.Arc.Core.Tests.csproj" />

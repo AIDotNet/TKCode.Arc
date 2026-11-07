@@ -1,6 +1,6 @@
 ---
 title: 安裝
-source-hash: 9d9d5e7e4a11
+source-hash: 5297dc695acd
 ---
 
 # 安裝
@@ -17,6 +17,20 @@ source-hash: 9d9d5e7e4a11
 | 字型（選用） | `Avalonia.Fonts.Inter` | Arc 的內文使用 Inter；Geist 來自 `TKCode.Arc.Fonts`。 |
 
 TKCode.Arc 目前處於預覽階段，Avalonia 固定為確切版本。除 Avalonia 之外，每個 Arc 套件只依賴 Arc 自己的 MIT 套件。請在你的應用程式中使用相同的 Avalonia 版本；版本混用會導致還原警告，並在執行時出現樣式遺失或型別載入錯誤。
+
+## 從範本開始
+
+建立新的應用程式時，`TKCode.Arc.Templates` 套件可以建立一個開箱即可建置與執行的專案：套件參照、字型、Lucide 圖示、`UseArc(...)` 與明暗佈景主題切換都已設定好。
+
+```bash
+dotnet new install TKCode.Arc.Templates
+dotnet new tkcode-arc -n MyApp                      # 頂端列加單一頁面
+dotnet new tkcode-arc -n MyApp --layout sidebar     # 可收合的側邊欄與多個頁面
+cd MyApp
+dotnet run
+```
+
+`--layout sidebar` 會加入 `TKCode.Arc.Blocks`，並以其中的 `Sidebar` 組成視窗：圖示、選取頁面的醒目提示、收合為圖示列、顯示頁面標題的頂端列，以及三個範例頁面。`-f` 選擇目標框架（預設 `net10.0`，也可以是 `net8.0` 或 `net11.0`），`--accent` 選擇啟動時的強調色。Visual Studio 與 Rider 中的範本名稱為 **TKCode.Arc App**。以下步驟說明如何把 Arc 加入現有專案，也說明範本設定了哪些內容。
 
 ## 1. 加入套件
 

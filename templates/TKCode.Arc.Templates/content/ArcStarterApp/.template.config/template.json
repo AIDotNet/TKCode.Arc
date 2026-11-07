@@ -1,0 +1,130 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "TKCode.Arc contributors",
+  "classifications": [ "Desktop", "Avalonia", "Arc", "Windows", "macOS", "Linux" ],
+  "identity": "TKCode.Arc.Templates.App",
+  "groupIdentity": "TKCode.Arc.Templates.App",
+  "name": "TKCode.Arc App",
+  "description": "A desktop application built with TKCode.Arc (Avalonia): Arc's theme, fonts and Lucide icons, light/dark switching, and a blank or a sidebar layout.",
+  "shortName": "tkcode-arc",
+  "defaultName": "ArcApp",
+  "sourceName": "ArcStarterApp",
+  "preferNameDirectory": true,
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "symbols": {
+    "layout": {
+      "type": "parameter",
+      "datatype": "choice",
+      "description": "The window layout.",
+      "displayName": "Layout",
+      "defaultValue": "blank",
+      "choices": [
+        {
+          "choice": "blank",
+          "displayName": "Blank",
+          "description": "A top bar with the app name and a theme switch over one page."
+        },
+        {
+          "choice": "sidebar",
+          "displayName": "Sidebar",
+          "description": "A collapsible sidebar with icons (TKCode.Arc.Blocks), a top bar and page switching."
+        }
+      ]
+    },
+    "framework": {
+      "type": "parameter",
+      "datatype": "choice",
+      "description": "The target framework.",
+      "displayName": "Framework",
+      "defaultValue": "net10.0",
+      "replaces": "net10.0",
+      "choices": [
+        { "choice": "net10.0", "description": ".NET 10 (LTS)" },
+        { "choice": "net8.0", "description": ".NET 8 (LTS)" },
+        { "choice": "net11.0", "description": ".NET 11 (needs the .NET 11 SDK)" }
+      ]
+    },
+    "accent": {
+      "type": "parameter",
+      "datatype": "choice",
+      "description": "The accent color the app starts with (ArcAccentPreset).",
+      "displayName": "Accent",
+      "defaultValue": "Neutral",
+      "replaces": "Neutral",
+      "onlyIf": [ { "after": "ArcAccentPreset." } ],
+      "choices": [
+        { "choice": "Neutral" },
+        { "choice": "Violet" },
+        { "choice": "Blue" },
+        { "choice": "Green" },
+        { "choice": "Amber" },
+        { "choice": "Orange" },
+        { "choice": "Coral" },
+        { "choice": "Rose" }
+      ]
+    },
+    "skipRestore": {
+      "type": "parameter",
+      "datatype": "bool",
+      "description": "Skips the automatic restore of the project on create.",
+      "displayName": "Skip restore",
+      "defaultValue": "false"
+    },
+    "DisplayName": {
+      "type": "derived",
+      "valueSource": "name",
+      "valueTransform": "identity",
+      "replaces": "ArcDisplayName",
+      "description": "The project name as typed, for the window title and the app name in the UI."
+    },
+    "UsesBlocks": {
+      "type": "computed",
+      "value": "(layout == \"sidebar\")"
+    },
+    "HasNavigation": {
+      "type": "computed",
+      "value": "(layout != \"blank\")"
+    }
+  },
+  "forms": {
+    "identity": { "identifier": "identity" }
+  },
+  "sources": [
+    {
+      "source": "./",
+      "target": "./",
+      "exclude": [ ".template.config/**", "Layouts/**", "**/bin/**", "**/obj/**", "**/.DS_Store" ]
+    },
+    {
+      "condition": "(HasNavigation)",
+      "source": "./Layouts/Navigation/",
+      "target": "./"
+    },
+    {
+      "condition": "(layout == \"blank\")",
+      "source": "./Layouts/Blank/",
+      "target": "./"
+    },
+    {
+      "condition": "(layout == \"sidebar\")",
+      "source": "./Layouts/Sidebar/",
+      "target": "./"
+    }
+  ],
+  "primaryOutputs": [
+    { "path": "ArcStarterApp.csproj" }
+  ],
+  "postActions": [
+    {
+      "id": "restore",
+      "condition": "(!skipRestore)",
+      "description": "Restore NuGet packages required by this project.",
+      "manualInstructions": [ { "text": "Run 'dotnet restore'" } ],
+      "actionId": "210D431B-A78B-4D2F-B762-4ED3E3EA9025",
+      "continueOnError": true
+    }
+  ]
+}

@@ -20,6 +20,24 @@ TKCode.Arc is in preview, and Avalonia is pinned to an exact version. Besides Av
 on MIT packages of its own. Use the same Avalonia version in your application; mixing versions leads to restore
 warnings and, at run time, to missing styles or type load errors.
 
+## Start from a template
+
+For a new application, the `TKCode.Arc.Templates` package creates a project that builds and runs as it is: the package
+references, the fonts, Lucide icons, `UseArc(...)` and a light/dark switch are already in place.
+
+```bash
+dotnet new install TKCode.Arc.Templates
+dotnet new tkcode-arc -n MyApp                      # a top bar over one page
+dotnet new tkcode-arc -n MyApp --layout sidebar     # a collapsible sidebar with pages
+cd MyApp
+dotnet run
+```
+
+`--layout sidebar` adds `TKCode.Arc.Blocks` and builds the window from its `Sidebar`: icons, the selected page, a
+collapse to an icon rail, a top bar with the page title and three sample pages. `-f` picks the target framework
+(`net10.0` by default, or `net8.0` and `net11.0`) and `--accent` the start-up accent. Visual Studio and Rider list the
+template as **TKCode.Arc App**. The steps below add Arc to an existing project and explain what the template sets up.
+
 ## 1. Add the packages
 
 ```bash

@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+        <BuiltInComInteropSupport>false</BuiltInComInteropSupport>
+        <!-- The .NET 11 SDK's optimized AOT publish drops Avalonia's compiled XAML ("No precompiled XAML found" at start). -->
+        <UseOptimizedPublish>false</UseOptimizedPublish>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <!-- Arc is built against this exact Avalonia version; keep every Avalonia package on it. -->
+        <PackageReference Include="Avalonia.Desktop" Version="__AVALONIA_VERSION__" />
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="__AVALONIA_VERSION__" />
+        <PackageReference Include="TKCode.Arc" Version="__ARC_VERSION__" />
+<!--#if (UsesBlocks) -->
+        <PackageReference Include="TKCode.Arc.Blocks" Version="__ARC_VERSION__" />
+<!--#endif -->
+        <PackageReference Include="TKCode.Arc.Fonts" Version="__ARC_VERSION__" />
+        <!-- Only the Lucide icons the app uses are compiled in. Icons chosen at run time (bindings, data) are declared:
+             <LucideIcon Include="Bell;ArrowRight" />, or set <LucideIconsIncludeAll>true</LucideIconsIncludeAll>. -->
+        <PackageReference Include="TKCode.Arc.Icons.Lucide" Version="__ARC_VERSION__" />
+    </ItemGroup>
+</Project>
