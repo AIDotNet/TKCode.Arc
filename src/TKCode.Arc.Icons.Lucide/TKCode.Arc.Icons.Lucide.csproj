@@ -4,9 +4,18 @@
         <AssemblyName>TKCode.Arc.Icons.Lucide</AssemblyName>
         <RootNamespace>TKCode.Arc.Icons.Lucide</RootNamespace>
         <PackageId>TKCode.Arc.Icons.Lucide</PackageId>
-        <Description>The complete Lucide icon set (ISC) for TKCode.Arc: LucideIcon control and LucideGeometry markup extension.</Description>
+        <Description>The complete Lucide icon set (ISC) for TKCode.Arc: LucideIcon control and LucideGeometry markup extension. Its generator compiles only the icons an app uses.</Description>
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="../TKCode.Arc.Core/TKCode.Arc.Core.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <!-- The generator ships inside this package as an analyzer (consumers get it from analyzers/dotnet/cs) with the
+             path data of every icon; this assembly carries only the names (LucideIconKind) and the registry. -->
+        <ProjectReference Include="../TKCode.Arc.Icons.Lucide.Generators/TKCode.Arc.Icons.Lucide.Generators.csproj"
+                          ReferenceOutputAssembly="false" PrivateAssets="all" />
+        <None Include="../TKCode.Arc.Icons.Lucide.Generators/bin/$(Configuration)/netstandard2.0/TKCode.Arc.Icons.Lucide.Generators.dll"
+              Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+        <None Include="buildTransitive/TKCode.Arc.Icons.Lucide.targets" Pack="true" PackagePath="build/;buildTransitive/" />
     </ItemGroup>
 </Project>

@@ -23,6 +23,9 @@
         <!-- Runs on the sample tokens and themes of this project, and is referenced for the snapshot tests. -->
         <ProjectReference Include="../../src/TKCode.Arc.Foundation.Generators/TKCode.Arc.Foundation.Generators.csproj"
                           OutputItemType="Analyzer" ReferenceOutputAssembly="true" />
+        <!-- LucideGeneratorTests drive the Icons.Lucide generator in-process (not run on this project). -->
+        <ProjectReference Include="../../src/TKCode.Arc.Icons.Lucide.Generators/TKCode.Arc.Icons.Lucide.Generators.csproj"
+                          ReferenceOutputAssembly="true" />
     </ItemGroup>
     <ItemGroup>
         <None Update="Snapshots/**" CopyToOutputDirectory="Never" />

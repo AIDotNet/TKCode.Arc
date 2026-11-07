@@ -1,0 +1,18 @@
+<Project>
+    <!-- The Lucide generator (shipped in this package as an analyzer) compiles only the icons a project uses. It finds
+         them in C# and XAML; icons chosen at run time (bindings, data) are declared here:
+             <ItemGroup><LucideIcon Include="Bell;arrow-right" /></ItemGroup>      PascalCase or Lucide's own names
+             <PropertyGroup><LucideIconsIncludeAll>true</LucideIconsIncludeAll></PropertyGroup>   every icon
+         Projects that reference the package as a project import this file (build/Arc.Repository.targets). -->
+    <ItemGroup>
+        <CompilerVisibleProperty Include="LucideIconsIncludeAll" />
+        <CompilerVisibleProperty Include="_LucideIconsDeclared" />
+    </ItemGroup>
+    <!-- Item lists reach the generator as a property; set inside a target so items added late still count. Joined with
+         commas: the generated .editorconfig would cut a value at ';' (a comment there). -->
+    <Target Name="_LucideIconsCollect" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun">
+        <PropertyGroup>
+            <_LucideIconsDeclared>@(LucideIcon, ',')</_LucideIconsDeclared>
+        </PropertyGroup>
+    </Target>
+</Project>
