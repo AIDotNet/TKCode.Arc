@@ -31,6 +31,8 @@ public sealed class GalleryShell : Grid
     private GalleryRoute _route = GalleryRoute.Home;
     private GalleryEntry? _lastComponent;
     private GalleryEntry? _lastBlock;
+    // The entry of the last page the sidebar opened (not the page: one left for the home page must not stay in memory).
+    private GalleryEntry? _entryPageEntry;
 
     /// <param name="initial">The page to open on; the home page when null.</param>
     public GalleryShell(GalleryRoute? initial = null)
@@ -157,10 +159,21 @@ public sealed class GalleryShell : Grid
 
     private void OnEntrySelected(GalleryEntry entry)
     {
+        // A click on the open page's row (or a route back to it) keeps the page and its demos' state instead of building it again.
+        if (ReferenceEquals(entry, _entryPageEntry) && IsEntryPageShown)
+        {
+            SetRoute(GalleryRoute.To(entry));
+            return;
+        }
         ReleaseFocusFromPage();
+        _entryPageEntry = entry;
         _pageHost.Content = GalleryPages.Create(entry);
         SetRoute(GalleryRoute.To(entry));
     }
+
+    /// <summary>Whether the page host shows a sidebar page (not the home page, Friends or the dashboard demo).</summary>
+    private bool IsEntryPageShown => _pageHost.Content is { } content
+        && !ReferenceEquals(content, _home) && !ReferenceEquals(content, _friends) && !ReferenceEquals(content, _demo);
 
     /// <summary>
     /// The window remembers the last focused element of its focus scope, and Avalonia forgets it only when that element

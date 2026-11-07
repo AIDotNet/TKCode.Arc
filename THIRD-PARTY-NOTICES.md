@@ -11,7 +11,9 @@ styles, text and assets of Arc Pro components and blocks are not used, copied or
 counterparts (the data grid, the Sidebar and Search results blocks, the AI blocks, the Showpieces blocks, the Projects blocks and the
 five AI explainers and the five AI components (agent status, tool call, agent plan, agent timeline, context
 window) and the six surfaces (sheet stack, wallet stack, control center, holo card, card to article, link unfurl)
-and the three cursor components (dot grid, gravity well, ink fluid) in
+and the three cursor components (dot grid, gravity well, ink fluid)
+and the three audio components (voice orb, now playing, voice recorder)
+and the five loaders (stretch refresh, morph loader, skeleton morph, black hole, charge session) in
 `TKCode.Arc.Special`, and the Split and Immersive login blocks, Onboarding illustration and Multi-step form in
 `TKCode.Arc.Blocks`) are
 original TKCode designs that take the behavior and look Arc publishes as a design reference; their code, copy,

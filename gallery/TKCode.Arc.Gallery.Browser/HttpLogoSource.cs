@@ -15,21 +15,27 @@ namespace TKCode.Arc.Gallery.Browser;
 internal sealed partial class HttpLogoSource : IGalleryLogoSource
 {
     private readonly Uri _root;
-    private readonly Dictionary<string, byte[]> _cache = new();
+    // The fetch of each logo, shared by every view that asks for it: the page's take() hands the bytes over once, so two
+    // views that asked at the same time would otherwise leave the second with nothing (shown as initials all session).
+    private readonly Dictionary<string, Task<byte[]>> _cache = new();
 
-    /// <param name="root">The document's base address, such as <c>https://host/</c>.</param>
     public HttpLogoSource(Uri root) => _root = root;
 
     public async ValueTask<Stream?> OpenAsync(string name)
     {
-        if (!_cache.TryGetValue(name, out var bytes))
+        if (!_cache.TryGetValue(name, out var pending))
         {
-            var url = new Uri(_root, $"friends/{name}.png").AbsoluteUri;
-            await Load(url);
-            bytes = Take(url);
-            _cache[name] = bytes;
+            pending = Fetch(new Uri(_root, $"friends/{name}.png").AbsoluteUri);
+            _cache[name] = pending;
         }
-        return bytes.Length == 0 ? null : new MemoryStream(bytes);
+        var bytes = await pending;
+        return bytes.Length == 0 ? null : new MemoryStream(bytes, writable: false);
+    }
+
+    private static async Task<byte[]> Fetch(string url)
+    {
+        await Load(url);
+        return Take(url);
     }
 
     [JSImport("load", "arc-shots")]

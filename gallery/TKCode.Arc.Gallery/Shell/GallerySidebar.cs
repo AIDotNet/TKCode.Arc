@@ -12,6 +12,7 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Threading;
 
 namespace TKCode.Arc.Gallery.Shell;
 
@@ -475,8 +476,32 @@ public sealed class GallerySidebar : Border
 
     #region Selection
 
+    // Up / Down held down repeat at the keyboard's rate; the page follows once the selection rests for this long instead of
+    // being built and thrown away on every repeat.
+    private static readonly TimeSpan KeyboardSettle = TimeSpan.FromMilliseconds(160);
+    private DispatcherTimer? _settle;
+
     /// <summary>Selects <paramref name="entry"/>, opens its group and glides the rail bar to it.</summary>
-    public void Select(GalleryEntry entry)
+    public void Select(GalleryEntry entry) => Select(entry, settle: false);
+
+    /// <summary>Whether a selection made from the keyboard is waiting to open its page.</summary>
+    public bool IsSelectionSettling => _settle?.IsEnabled == true;
+
+    /// <summary>Opens the page of a selection made from the keyboard at once (what the settle timer does).</summary>
+    public void CompleteSelection()
+    {
+        if (_settle is not { IsEnabled: true } timer)
+        {
+            return;
+        }
+        timer.Stop();
+        if (_selected is { } item)
+        {
+            EntrySelected?.Invoke(item.Entry);
+        }
+    }
+
+    private void Select(GalleryEntry entry, bool settle)
     {
         if (!_byClass.TryGetValue(entry.ClassName, out var item))
         {
@@ -506,7 +531,28 @@ public sealed class GallerySidebar : Border
         // Reveal the row with room around it so it never lands under the fade at the bottom of the list.
         item.Row.BringIntoView(new Rect(0, -12, Math.Max(item.Row.Bounds.Width, 1), Math.Max(item.Row.Bounds.Height, 1) + 44));
         SyncIndicator(animate: true);
+        if (settle)
+        {
+            _settle ??= CreateSettleTimer();
+            _settle.Stop();
+            _settle.Start();
+            return;
+        }
+        _settle?.Stop();
         EntrySelected?.Invoke(entry);
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        _settle?.Stop();
+    }
+
+    private DispatcherTimer CreateSettleTimer()
+    {
+        var timer = new DispatcherTimer { Interval = KeyboardSettle };
+        timer.Tick += (_, _) => CompleteSelection();
+        return timer;
     }
 
     /// <summary>True while keyboard focus is in the search field.</summary>
@@ -678,7 +724,7 @@ public sealed class GallerySidebar : Border
         {
             return;
         }
-        Select(open[next].Entry);
+        Select(open[next].Entry, settle: true);
         if (focusItem)
         {
             open[next].Row.Focus(NavigationMethod.Directional);

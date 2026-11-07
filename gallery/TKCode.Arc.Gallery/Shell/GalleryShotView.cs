@@ -66,6 +66,8 @@ public sealed class GalleryShotView : StackPanel
     private bool? _isDarkShown;
     private bool? _isDarkRequested;
     private int _loadVersion;
+    // Whether the view has reached the viewport since it was attached.
+    private readonly GalleryFirstSight _sight;
 
     public GalleryShotView(string source, string caption)
     {
@@ -90,6 +92,8 @@ public sealed class GalleryShotView : StackPanel
             Children.Add(GalleryUi.Text(caption, ArcDesignTokenKind.TextMuted, 13));
         }
         ActualThemeVariantChanged += (_, _) => Load();
+        // A long page holds many captures: each is fetched and decoded when it first reaches the viewport, not with the page.
+        _sight = new GalleryFirstSight(this, Load);
     }
 
     /// <summary>The capture's path in the screenshots assembly, such as <c>Docs/&lt;Category&gt;/&lt;Component&gt;/images/&lt;Name&gt;</c>.</summary>
@@ -106,7 +110,12 @@ public sealed class GalleryShotView : StackPanel
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
-        Load();
+        // Attached again after it released its capture: wait to be seen again. (Not while detaching: the window still holds
+        // the view then, and a viewport listener added at that point would never be removed, keeping the page alive.)
+        if (_sight.IsSeen)
+        {
+            _sight.Reset();
+        }
     }
 
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
@@ -124,7 +133,7 @@ public sealed class GalleryShotView : StackPanel
 
     private void Load()
     {
-        if (VisualRoot is null)
+        if (VisualRoot is null || !_sight.IsSeen)
         {
             return;
         }

@@ -127,6 +127,12 @@
         <target state="translated">擴充</target>
       </segment>
     </unit>
+    <unit id="Category_Loaders">
+      <segment>
+        <source>Loaders</source>
+        <target state="translated">載入</target>
+      </segment>
+    </unit>
     <unit id="Category_Playful">
       <segment>
         <source>Playful</source>
@@ -143,6 +149,18 @@
       <segment>
         <source>Illustrations</source>
         <target state="translated">插圖</target>
+      </segment>
+    </unit>
+    <unit id="Category_AudioVideo">
+      <segment>
+        <source>Audio and video</source>
+        <target state="translated">音訊與視訊</target>
+      </segment>
+    </unit>
+    <unit id="Category_Surfaces">
+      <segment>
+        <source>Surfaces</source>
+        <target state="translated">表面</target>
       </segment>
     </unit>
     <unit id="Category_Cursor">

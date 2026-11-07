@@ -449,7 +449,34 @@ public sealed class GalleryPageView : Grid
     {
         if (index >= 0 && index < _anchors.Count)
         {
+            RealizeDemosAbove(_anchors[index]);
             ScrollTo(Math.Max(0, SectionTop(_anchors[index]) - 24));
+        }
+    }
+
+    /// <summary>
+    /// Builds the demos that are still waiting above <paramref name="anchor"/> (and the ones on the screen it lands on) and
+    /// lays the page out, so a jump lands where it aimed instead of moving as demos are built on its way.
+    /// </summary>
+    private void RealizeDemosAbove(Control anchor)
+    {
+        if (_docsView is null)
+        {
+            return;
+        }
+        var limit = SectionTop(anchor) + _scroll.Viewport.Height;
+        var built = false;
+        foreach (var demo in _docsView.GetVisualDescendants().OfType<GalleryDemoView>())
+        {
+            if (!demo.IsRealized && SectionTop(demo) < limit)
+            {
+                demo.Realize();
+                built = true;
+            }
+        }
+        if (built)
+        {
+            UpdateLayout();
         }
     }
 

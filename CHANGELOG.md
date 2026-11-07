@@ -8,6 +8,47 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native` and `TKCode.Arc.Audio.Browser`.
 
+## Unreleased
+
+### Added
+
+- **Special components › Surfaces** (`TKCode.Arc.Special`, original designs that take Arc's Pro behaviour and motion as
+  a reference): `SheetStack` (drill-down panels that rise over one another with depth, drag down to close and become
+  stacked dialogs on wide screens), `WalletStack` (payment cards in brushed metal, guilloche black, frosted glass and
+  color that fan, cycle with a flick and lift out into a balance and recent activity), `ControlCenter` (quick settings
+  tiles that morph into their details, a focus-session dial and rubber-band volume and text-size meters), `HoloCard`
+  (a card that tilts in perspective toward the pointer under a holographic foil, glitter and glare and turns over),
+  `CardToArticle` (story cards that morph into a full article and shrink back when pulled down) and `LinkUnfurl` (a
+  composer that turns a pasted address into a link, shows it loading and unrolls it into a preview card that folds back
+  or is removed). Docs and demos in English, 简体中文 and 繁體中文.
+- **Special components › Audio and video** (`TKCode.Arc.Special`, original designs that take Arc's Pro behaviour and
+  motion as a reference): `VoiceOrb` (a voice-mode sphere that breathes when idle, ripples while listening, swirls while
+  thinking and pulses while speaking, with `VoiceTranscript` live captions and `VoiceControls` call controls),
+  `NowPlaying` (a mini player bar that morphs into a full player with a waveform scrubber, directional artwork skips and
+  pull-down to close, plus `NowPlayingLevels`) and `VoiceRecorder` (record into a live waveform, review and scrub, then
+  send the take into the thread as a voice bubble). Audio levels, playback and recording are simulated and wired through
+  properties and events, so the package takes no audio dependency. Docs and demos in English, 简体中文 and 繁體中文.
+- **Special components › Loaders** (`TKCode.Arc.Special`, original designs that take Arc's Pro behaviour and motion as
+  a reference): `StretchRefresh` (a feed you pull down by mouse, touch or wheel: rows spread apart, a line stretches
+  until it is time to let go, then runs while new rows settle in), `MorphLoader` (four strokes that morph between dots,
+  bars, a ring and a square on springs and fold into a check or a cross), `SkeletonMorph` with `MorphBlock` (skeletons
+  that stretch into the loaded content block by block while the card eases to its new height), `BlackHole` (a delete
+  transition that spirals the chosen items into a singularity while the rest of the content is lensed around it, and
+  spins them back out on undo; drawn on the CPU from a snapshot of the content) and `ChargeSession` (a live charging
+  card with energy flowing along the cable into the battery, a draggable charge limit, a tapering charge curve and live
+  power, energy, time and cost). Docs and demos in English, 简体中文 and 繁體中文.
+- `TokenTextEditor.TryGetTokenBounds` returns a token chip's bounds in another visual's coordinates.
+
+### Fixed
+
+- Gallery: a docs page builds its preview with the page and every other demo when it first comes into view, and a
+  screenshot is fetched and decoded when it is seen (pages with many demos open in about half the time; the home
+  page's live cards and exploded view were built at once although they were meant to wait). Clicking the open page's
+  row keeps the page, Up / Down held down in the sidebar build only the page they stop on, and the top bar refits from
+  its current level instead of trying every level on each measure.
+- Gallery in the browser: a logo asked for twice at once no longer shows as initials for the rest of the session, and
+  docs text and screenshots are fetched once per session.
+
 ## 0.4.0-preview.4 - 2026-11-07
 
 Lucide icons are compiled into each app on demand: an app ships only the icons it uses.

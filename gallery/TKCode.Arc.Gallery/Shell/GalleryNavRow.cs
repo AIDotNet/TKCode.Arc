@@ -17,6 +17,11 @@ namespace TKCode.Arc.Gallery.Shell;
 /// </summary>
 public sealed class GalleryNavRow : Panel
 {
+    // One cursor for every row: the sidebar alone has several hundred, and each Cursor is a platform object.
+    private static Cursor? s_hand;
+
+    private static Cursor HandCursor => s_hand ??= new Cursor(StandardCursorType.Hand);
+
     private readonly Border _surface = new();
     private readonly Border _ring = new()
     {
@@ -66,7 +71,7 @@ public sealed class GalleryNavRow : Panel
         TextElement.SetFontSize(this, fontSize);
         ArcTokens.Bind(this, TextElement.FontFamilyProperty, ArcDesignTokenKind.BodyFontFamily);
         Focusable = true;
-        Cursor = new Cursor(StandardCursorType.Hand);
+        Cursor = HandCursor;
         AutomationProperties.SetControlTypeOverride(this, AutomationControlType.Button);
         if (name is not null)
         {

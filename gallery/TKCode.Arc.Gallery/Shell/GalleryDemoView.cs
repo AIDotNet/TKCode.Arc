@@ -78,6 +78,9 @@ internal sealed class GalleryDemoBlock : BlockView
 public sealed class GalleryDemoView : StackPanel
 {
     private const double HeroHeight = 420;
+    // The room a demo that is not built yet keeps on its stage (plus the stage's padding), so the page does not shrink to
+    // a column of empty frames before the visitor scrolls.
+    private const double PendingHeight = 140;
 
     private readonly GalleryDemo? _demo;
     private readonly Tabs _tabs;
@@ -88,8 +91,9 @@ public sealed class GalleryDemoView : StackPanel
     // The stage's child: the Fit content, the phone while it shows (or still fades away) and a fading snapshot.
     private readonly Grid _layers = new();
     private MotionValue<double>? _viewOpacity;
-    private readonly Control? _view;
-    private readonly Control _movable;
+    private Control? _view;
+    // Null until the demo is built (Realize).
+    private Control? _movable;
     private readonly GallerySegmented? _size;
     private readonly Button? _expand;
     private GalleryPreviewPhone? _phone;
@@ -117,9 +121,7 @@ public sealed class GalleryDemoView : StackPanel
         bar.Children.Add(_live);
 
         // The content keeps its own width rules (rows center, the rest stretches) and sits in the middle of a tall stage.
-        _view = _demo?.Create();
-        _movable = CreateContent();
-        _content = new Border { VerticalAlignment = VerticalAlignment.Center, Child = _movable };
+        _content = new Border { VerticalAlignment = VerticalAlignment.Center };
         _layers.Children.Add(_content);
         _stage = GalleryUi.Stage(_layers);
 
@@ -153,7 +155,35 @@ public sealed class GalleryDemoView : StackPanel
         {
             _tabs.Items.Cast<TabItem>().Last().IsEnabled = false;
         }
+
+        // The page's preview is built with the page; every other demo when its stage first reaches the viewport, so a page
+        // with many examples opens at the cost of its first screen, and examples below it do not run until they are seen.
+        if (hero || _demo is null)
+        {
+            Realize();
+        }
+        else
+        {
+            _content.Child = new Panel { MinHeight = PendingHeight };
+            _ = new GalleryFirstSight(_stage, Realize);
+        }
     }
+
+    /// <summary>Whether the running demo has been built (the page's preview at once, the others on first sight).</summary>
+    public bool IsRealized => _movable is not null;
+
+    /// <summary>Builds the running demo now if it has not been built yet (it is otherwise built when it first comes into view).</summary>
+    public void Realize()
+    {
+        if (_movable is not null)
+        {
+            return;
+        }
+        _view = _demo?.Create();
+        _movable = CreateContent();
+        _content.Child = _movable;
+    }
+
 
     /// <summary>The demo's <c>Component.Name</c>.</summary>
     public string DemoId { get; }
@@ -173,7 +203,7 @@ public sealed class GalleryDemoView : StackPanel
     /// <summary>The phone the Mobile size shows the demo on (null until Mobile was first chosen).</summary>
     public GalleryPreviewPhone? Phone => _phone;
 
-    /// <summary>The running demo (null when the demo is missing).</summary>
+    /// <summary>The running demo (null when the demo is missing, or until it is built: see <see cref="Realize"/>).</summary>
     public Control? View => _view;
 
     /// <summary>The Fullscreen button (null when this demo is not the page's Preview).</summary>
@@ -418,20 +448,20 @@ public sealed class GalleryDemoView : StackPanel
     /// </summary>
     public void OpenFullscreen()
     {
-        if (_expand is null || _fullscreen is not null || TopLevel.GetTopLevel(this) is not { } topLevel)
+        if (_expand is null || _fullscreen is not null || _movable is null || TopLevel.GetTopLevel(this) is not { } topLevel)
         {
             return;
         }
         var from = _stage.TransformToVisual(topLevel) is { } transform ? new Rect(_stage.Bounds.Size).TransformToAABB(transform) : default;
-        CloseOverlays(_movable);
-        var focused = GalleryPreviewTools.FocusedIn(this, _movable);
+        CloseOverlays(_movable!);
+        var focused = GalleryPreviewTools.FocusedIn(this, _movable!);
         if (_stage.Bounds.Height > 0)
         {
             _stage.Height = _stage.Bounds.Height;
         }
         TakeMovable();
         var title = GalleryCatalog.AllEntries.FirstOrDefault(e => e.ClassName == _demo!.Component)?.Title ?? _demo!.Component;
-        _fullscreen = new GalleryPreviewFullscreen(title, _movable, canMobile: _size is not null, IsMobile, _expand);
+        _fullscreen = new GalleryPreviewFullscreen(title, _movable!, canMobile: _size is not null, IsMobile, _expand);
         _fullscreen.Closed += OnFullscreenClosed;
         _fullscreen.Open(from);
         Refocus(focused);
@@ -444,7 +474,7 @@ public sealed class GalleryDemoView : StackPanel
             return;
         }
         fullscreen.Closed -= OnFullscreenClosed;
-        var focused = GalleryPreviewTools.FocusedIn(fullscreen, _movable);
+        var focused = GalleryPreviewTools.FocusedIn(fullscreen, _movable!);
         fullscreen.Release();
         _fullscreen = null;
         _stage.ClearValue(HeightProperty);

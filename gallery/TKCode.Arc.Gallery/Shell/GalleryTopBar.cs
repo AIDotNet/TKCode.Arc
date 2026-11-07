@@ -55,6 +55,9 @@ public sealed class GalleryTopBar : Border
     private ArcPopup? _popup;
     private DateTime _closedAt;
     private int _fitLevel = -1;
+    // The width and level of the last fit; a new language forgets them (its labels may be shorter).
+    private double _fittedInner = double.PositiveInfinity;
+    private int _fittedLevel = -1;
 
     public GalleryTopBar(GalleryTheme theme, GalleryShell shell)
     {
@@ -157,6 +160,7 @@ public sealed class GalleryTopBar : Border
                 _header.Items[i].Label = GalleryText.Get(_navLabels[i]);
             }
             SyncLanguage();
+            _fittedLevel = -1;
             Dispatcher.UIThread.Post(InvalidateMeasure);
         });
     }
@@ -182,19 +186,46 @@ public sealed class GalleryTopBar : Border
         return base.MeasureOverride(availableSize);
     }
 
-    /// <summary>Picks the fullest <see cref="FitLevel"/> whose parts fit in <paramref name="inner"/>, measuring each level in turn.</summary>
+    /// <summary>
+    /// Picks the fullest <see cref="FitLevel"/> whose parts fit in <paramref name="inner"/>. The bar is measured whenever
+    /// anything in it changes size (a button's width spring does so every frame), so the search starts at the current level
+    /// and only tries its neighbours: a level that still fits is checked against the next fuller one only when the bar
+    /// has grown or its labels may have become shorter (a new language); one that no longer fits gives way to more compact ones.
+    /// </summary>
     private void Fit(double inner)
     {
-        var level = 0;
-        for (; level < MostCompactLevel; level++)
+        var level = Math.Clamp(_fitLevel, 0, MostCompactLevel);
+        Apply(level);
+        if (Fits(inner))
         {
-            Apply(level);
-            if (Fits(inner))
+            if (inner > _fittedInner || _fitLevel != _fittedLevel)
             {
-                break;
+                while (level > 0)
+                {
+                    Apply(level - 1);
+                    if (!Fits(inner))
+                    {
+                        break;
+                    }
+                    level--;
+                }
+            }
+        }
+        else
+        {
+            while (level < MostCompactLevel)
+            {
+                level++;
+                Apply(level);
+                if (Fits(inner))
+                {
+                    break;
+                }
             }
         }
         Apply(level);
+        _fittedInner = inner;
+        _fittedLevel = level;
         // An Arc button springs its width to a new label. Measuring the buttons once under a constraint other than the row's
         // makes the change passive (SpringSizeDecorator), so they jump to the widths Fits counted on instead of overlapping
         // the menu on their way there.

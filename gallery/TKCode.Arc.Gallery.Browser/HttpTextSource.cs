@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices.JavaScript;
 using System.Threading.Tasks;
 using TKCode.Arc.Gallery.Docs;
@@ -18,10 +19,24 @@ internal sealed partial class HttpTextSource : IGalleryTextSource
     /// <param name="root">The document's base address, such as <c>https://host/</c>; <c>content/</c> is relative to it.</param>
     public HttpTextSource(Uri root) => _root = root;
 
+    // Each file once per session (the whole site's text is a few MB): a page opened again, a guide created twice or two views
+    // of the same page share one request. A file that could not be read is asked for again next time.
+    private readonly Dictionary<string, Task<string>> _cache = new(StringComparer.Ordinal);
+
     public async ValueTask<string?> ReadAsync(string path)
     {
-        var text = await Load(new Uri(_root, "content/" + path).AbsoluteUri);
-        return text.Length == 0 ? null : text;
+        if (!_cache.TryGetValue(path, out var pending))
+        {
+            pending = Load(new Uri(_root, "content/" + path).AbsoluteUri);
+            _cache[path] = pending;
+        }
+        var text = await pending;
+        if (text.Length == 0)
+        {
+            _cache.Remove(path);
+            return null;
+        }
+        return text;
     }
 
     /// <summary>The file's text, or an empty string when the server has none or cannot be reached.</summary>

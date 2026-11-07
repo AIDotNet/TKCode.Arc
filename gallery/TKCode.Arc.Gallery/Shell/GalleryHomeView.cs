@@ -256,13 +256,7 @@ public sealed class GalleryHomeView : UserControl
             ArcTokens.Bind(this, BackgroundProperty, ArcDesignTokenKind.SurfaceMuted);
             ArcTokens.Bind(this, BorderBrushProperty, ArcDesignTokenKind.BorderSubtle);
             // The demo is built when the card first reaches the viewport, not with the page.
-            EffectiveViewportChanged += (_, e) =>
-            {
-                if (e.EffectiveViewport.Height > 0)
-                {
-                    EnsureCreated();
-                }
-            };
+            _ = new GalleryFirstSight(this, EnsureCreated);
         }
 
         public GalleryEntry Entry { get; }
@@ -300,13 +294,7 @@ public sealed class GalleryHomeView : UserControl
 
         // The view is a tall track in this page's scroll viewer (ScrollMode.Page) and is built when it first comes into view.
         var host = ExplodeHost = new Border { MinHeight = 560 };
-        host.EffectiveViewportChanged += (_, e) =>
-        {
-            if (e.EffectiveViewport.Height > 0)
-            {
-                EnsureExplodeCreated();
-            }
-        };
+        _ = new GalleryFirstSight(host, EnsureExplodeCreated);
 
         var section = new StackPanel { Spacing = 20 };
         section.Children.Add(new StackPanel { Spacing = 6, Children = { title, subtitle } });
