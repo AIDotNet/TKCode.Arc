@@ -1,7 +1,7 @@
 ---
 title: 可調整大小的面板
 summary: 拖曳窗格之間的分隔線，在各窗格之間調配空間。
-source-hash: 30462512c202
+source-hash: a7c2cbcaf47c
 ---
 
 <Demo name="Default" />
@@ -206,91 +206,92 @@ public partial class MailViewModel : ObservableObject
 ![郵件工作區：資料夾窗格摺疊為還原標籤，並顯示郵件清單與閱讀窗格](images/MailWorkspace.png)
 
 ```xml
-<Border Width="720"
-        Height="340"
-        BorderThickness="1"
-        CornerRadius="18"
-        ClipToBounds="True"
-        BorderBrush="{arc:ArcDesignTokenResource Border}">
-    <arc:ResizablePanels Label="Mail workspace">
-        <arc:ResizablePanel Id="folders"
-                            Label="Folders"
-                            DefaultSize="22"
-                            MinSize="140"
-                            IsCollapsible="True"
-                            IsCollapsed="True">
-            <Border Padding="16" Background="{arc:ArcDesignTokenResource SurfaceMuted}">
-                <StackPanel Spacing="10">
-                    <TextBlock Text="Folders"
-                               FontSize="14"
-                               FontWeight="Medium"
-                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
-                    <TextBlock Text="Inbox  12"
-                               FontSize="13"
-                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
-                    <TextBlock Text="Drafts  2"
-                               FontSize="13"
-                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
-                </StackPanel>
-            </Border>
-        </arc:ResizablePanel>
-        <arc:ResizablePanel Id="messages"
-                            Label="Messages"
-                            DefaultSize="33"
-                            MinSize="200">
-            <StackPanel Background="{arc:ArcDesignTokenResource Surface}">
-                <Border Padding="36,12,16,12" BorderBrush="{arc:ArcDesignTokenResource Border}"
-                        BorderThickness="0,0,0,1">
-                    <StackPanel Spacing="4">
-                        <TextBlock Text="Priya Raman  ·  Oct 19"
-                                   FontSize="12"
-                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
-                        <TextBlock Text="Invoice INV-2026-0412 is overdue"
+<Panel Width="720" Height="340">
+    <Border CornerRadius="18" ClipToBounds="True">
+        <arc:ResizablePanels Label="Mail workspace">
+            <arc:ResizablePanel Id="folders"
+                                Label="Folders"
+                                DefaultSize="22"
+                                MinSize="140"
+                                IsCollapsible="True"
+                                IsCollapsed="True">
+                <Border Padding="16" Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="Folders"
                                    FontSize="14"
                                    FontWeight="Medium"
                                    Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        <TextBlock Text="Inbox  12"
+                                   FontSize="13"
+                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        <TextBlock Text="Drafts  2"
+                                   FontSize="13"
+                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
                     </StackPanel>
                 </Border>
-                <Border Padding="36,12,16,12">
-                    <StackPanel Spacing="4">
-                        <TextBlock Text="Marco Lind  ·  Oct 18"
-                                   FontSize="12"
-                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
-                        <TextBlock Text="Q3 seat count for Northwind"
-                                   FontSize="14"
-                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
-                    </StackPanel>
-                </Border>
-            </StackPanel>
-        </arc:ResizablePanel>
-        <arc:ResizablePanel Id="reading"
-                            Label="Reading pane"
-                            DefaultSize="45"
-                            MinSize="300">
-            <Border Padding="20" Background="{arc:ArcDesignTokenResource SurfaceMuted}">
-                <StackPanel Spacing="12">
-                    <TextBlock Text="Invoice INV-2026-0412 is overdue"
-                               FontSize="16"
-                               FontWeight="Medium"
-                               TextWrapping="Wrap"
-                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
-                    <TextBlock Text="From Priya Raman, Finance. Sent Oct 19, 2026."
-                               FontSize="12"
-                               TextWrapping="Wrap"
-                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
-                    <TextBlock Text="The March invoice is 14 days past due. Payment is due by Oct 31."
-                               FontSize="13"
-                               TextWrapping="Wrap"
-                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
-                    <StackPanel Orientation="Horizontal" Spacing="8">
-                        <arc:Button Content="Reply" Variant="Secondary" Size="Small" />
-                        <arc:Button Content="Archive" Variant="Ghost" Size="Small" />
-                    </StackPanel>
+            </arc:ResizablePanel>
+            <arc:ResizablePanel Id="messages"
+                                Label="Messages"
+                                DefaultSize="33"
+                                MinSize="200">
+                <StackPanel Background="{arc:ArcDesignTokenResource Surface}">
+                    <Border Padding="36,12,16,12" BorderBrush="{arc:ArcDesignTokenResource Border}"
+                            BorderThickness="0,0,0,1">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="Priya Raman  ·  Oct 19"
+                                       FontSize="12"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            <TextBlock Text="Invoice INV-2026-0412 is overdue"
+                                       FontSize="14"
+                                       FontWeight="Medium"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        </StackPanel>
+                    </Border>
+                    <Border Padding="36,12,16,12">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="Marco Lind  ·  Oct 18"
+                                       FontSize="12"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            <TextBlock Text="Q3 seat count for Northwind"
+                                       FontSize="14"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        </StackPanel>
+                    </Border>
                 </StackPanel>
-            </Border>
-        </arc:ResizablePanel>
-    </arc:ResizablePanels>
-</Border>
+            </arc:ResizablePanel>
+            <arc:ResizablePanel Id="reading"
+                                Label="Reading pane"
+                                DefaultSize="45"
+                                MinSize="300">
+                <Border Padding="20" Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="Invoice INV-2026-0412 is overdue"
+                                   FontSize="16"
+                                   FontWeight="Medium"
+                                   TextWrapping="Wrap"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        <TextBlock Text="From Priya Raman, Finance. Sent Oct 19, 2026."
+                                   FontSize="12"
+                                   TextWrapping="Wrap"
+                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        <TextBlock Text="The March invoice is 14 days past due. Payment is due by Oct 31."
+                                   FontSize="13"
+                                   TextWrapping="Wrap"
+                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <arc:Button Content="Reply" Variant="Secondary" Size="Small" />
+                            <arc:Button Content="Archive" Variant="Ghost" Size="Small" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </arc:ResizablePanel>
+        </arc:ResizablePanels>
+    </Border>
+    <Border IsHitTestVisible="False"
+            BorderThickness="1"
+            CornerRadius="18"
+            BorderBrush="{arc:ArcDesignTokenResource Border}" />
+</Panel>
 ```
 
 ### 文案規範

@@ -3964,6 +3964,54 @@
         <source>The value reported as `Value`.</source>
         <target>作為 `Value` 回報的值。</target>
       </trans-unit>
+      <trans-unit id="BlackHole">
+        <source>A delete transition around a list or grid. `SwallowAsync` pulls the chosen items into a tiny black hole along a logarithmic spiral while the rest of the content bends around it (gravitational lensing), then the hole collapses with one soft shockwave; `ReleaseAsync` plays the same path backwards to put items back. Calls queue, so a release asked for during a swallow waits its turn. The effect paints a snapshot of the content while it runs; the real content is back the moment it ends. With reduced motion the items fade in 200 ms instead.</source>
+        <target>包住清單或格線的刪除轉場。`SwallowAsync` 把選取的項目沿對數螺線吸進一個很小的黑洞，同時其餘內容繞著它彎曲（重力透鏡），接著洞塌縮並送出一圈柔和的震波；`ReleaseAsync` 沿同一條路徑倒著播放，把項目放回原處。呼叫會排隊，因此在吞噬過程中要求的釋放會等輪到它。效果執行時繪製的是內容的快照；效果一結束，真實內容就回來了。在減少動態效果下，項目改為在 200 ms 內淡化。</target>
+      </trans-unit>
+      <trans-unit id="BlackHole.Duration">
+        <source>Length of a swallow (default 1.3 s, as measured); a release runs `ReleaseSpeed` times as long.</source>
+        <target>吞噬的長度（預設 1.3 s，與實測一致）；釋放的長度是它的 `ReleaseSpeed` 倍。</target>
+      </trans-unit>
+      <trans-unit id="BlackHole.HoleRadius">
+        <source>Resting radius of the black core in DIP (default 5.5; it grows 40 % while it eats). The lens scales with it.</source>
+        <target>黑色核心的靜止半徑，單位 DIP（預設 5.5；吞噬時變大 40 %）。透鏡隨它縮放。</target>
+      </trans-unit>
+      <trans-unit id="BlackHole.IsRunning">
+        <source>True while a transition runs (or a reduced-motion fade) or another one is queued. Ignore your delete and undo triggers while it is set.</source>
+        <target>轉場正在執行（或減少動態效果下的淡化）或另有轉場在排隊時為 true。為 true 期間請忽略你的刪除與復原觸發器。</target>
+      </trans-unit>
+      <trans-unit id="BlackHole.ReleaseSpeed">
+        <source>Length of a release as a fraction of `Duration` (default 0.92: the reverse runs a little faster).</source>
+        <target>釋放長度佔 `Duration` 的比例（預設 0.92：倒著播放稍微快一點）。</target>
+      </trans-unit>
+      <trans-unit id="BlackHole.ShockwaveRadius">
+        <source>How far the shockwave ring travels after the hole collapses, in DIP (default 90).</source>
+        <target>洞塌縮後震波環往外擴展的距離，單位 DIP（預設 90）。</target>
+      </trans-unit>
+      <trans-unit id="BlackHole.TransitionCompleted">
+        <source>Raised when a transition has finished and the content is back in place.</source>
+        <target>轉場結束、內容回到原位時引發。</target>
+      </trans-unit>
+      <trans-unit id="BlackHole.TransitionStarted">
+        <source>Raised when a queued transition starts.</source>
+        <target>排隊的轉場開始時引發。</target>
+      </trans-unit>
+      <trans-unit id="BlackHoleOptions">
+        <source>Options for one `SwallowAsync` or `ReleaseAsync` call.</source>
+        <target>單次 `SwallowAsync` 或 `ReleaseAsync` 呼叫的選項。</target>
+      </trans-unit>
+      <trans-unit id="BlackHoleSampleMessage">
+        <source>An invented mailbox conversation for the `BlackHole` demos.</source>
+        <target>`BlackHole` 範例中的一則虛構信箱對話。</target>
+      </trans-unit>
+      <trans-unit id="BlackHoleSamples">
+        <source>Invented sample data for the `BlackHole` demos: a five-conversation mailbox (fictional senders and subjects, newest first), the two conversations the preview starts with selected, and the demo's own sentences.</source>
+        <target>`BlackHole` 範例的虛構範例資料：一個含五則對話的信箱（虛構的寄件者與主旨，最新的在前）、預覽開始時選取的兩則對話，以及範例自己的句子。</target>
+      </trans-unit>
+      <trans-unit id="BlackHoleTransitionEventArgs">
+        <source>Data of the `TransitionStarted` and `TransitionCompleted` events.</source>
+        <target>`TransitionStarted` 與 `TransitionCompleted` 事件的資料。</target>
+      </trans-unit>
       <trans-unit id="BottomSheet">
         <source>A modal sheet that rises from the bottom edge and rests at one or more heights (detents): trip details, share options, filters, map and media views where a peek is useful before the full view. One motion value drives the sheet: a drag follows the pointer 1:1, rubber-bands past the tallest detent, and on release projects 0.2s of its velocity to pick the nearest detent or close; a flick faster than 320px/s always moves at least one detent. The dim is a function of the sheet position. The grabber answers ArrowUp / ArrowDown / Home / End and toggles between the lowest and highest detent; reading keys on the sheet open it fully before scrolling; touch drags on the content move the sheet until it is fully open. Under reduced motion detents jump and the sheet fades. The sheet position is a `MotionValue`, not a ControlTheme transition: a drag writes it every move, a release hands the pointer velocity to the spring, and the scrim is computed from it each frame.</source>
         <target>從底部邊緣升起、停留在一個或多個高度（檔位）上的模態面板：適用於行程詳情、分享選項、篩選器、地圖和媒體檢視等需要先預覽、再檢視完整內容的情境。一個動作值驅動整個面板：拖曳時面板 1:1 跟隨指標，越過最高檔位時產生橡皮筋回彈；放開時，依 0.2s 內的速度投射位置，選擇最近的檔位或關閉；速度超過 320px/s 的快速輕掃至少會移動一個檔位。遮罩的暗度由面板位置決定。拖曳把手響應 ArrowUp / ArrowDown / Home / End，並在最低與最高檔位之間切換；面板上的閱讀鍵會先將其完全展開再捲動；在內容上進行觸控拖曳會移動面板，直到其完全展開。減少動態效果模式下，檔位直接跳轉，面板淡入淡出。面板位置是 `MotionValue`，而不是 ControlTheme 轉場：拖曳時每次移動都會寫入它，放開時將指標速度交給彈簧，遮罩則在每一影格由它計算。</target>
@@ -4504,6 +4552,174 @@
         <source>All cards were brought back.</source>
         <target>所有卡片已全部復原。</target>
       </trans-unit>
+      <trans-unit id="CardToArticle">
+        <source>An editorial grid of story cards that open into articles (Arc Card to article, design reference). Each card is a picture with its tag, title and reading time drawn over it; pressing it (or Enter / Space) grows that very card into a centred article sheet: the frame and its corners stretch on one spring, the picture scales as a whole into the article's hero, the text rises in behind it and the close button pops in last. The article scrolls with a reading progress bar along its top and closes with the close button, Escape, or by pulling it down (a mouse on the picture, a finger anywhere once the article is at its top, or the wheel scrolling up past the top); it lands back on the card's slot, measured again at that moment, and focus returns to the card. `OpenItemId` is the open article (two-way; set it to open or close with the morph); `OpenItemChanged` reports every change with its cause. The grid has two columns while the control is wider than `ColumnBreakpoint` and one below; the article sizes itself to the window.</source>
+        <target>編輯型故事卡片網格，卡片可展開為文章（Arc Card to article，設計參考）。每張卡片是一張圖片，標籤、標題和閱讀時間繪製在圖片上；按下卡片（或 Enter / Space）會讓這張卡片本身長成置中的文章面板：外框和圓角隨一根彈簧拉伸，圖片整體縮放為文章的主圖，內文隨後浮現，關閉按鈕最後彈出。文章可捲動，頂端有閱讀進度列；可用關閉按鈕、Escape 或下拉關閉（滑鼠在圖片上拖曳、手指在文章捲到頂端後任意位置拖曳，或在頂端繼續向上捲動滾輪）；關閉時落回當下重新測量的卡片位置，焦點回到卡片。`OpenItemId` 是開啟的文章（雙向；設定它即以形變開啟或關閉）；`OpenItemChanged` 回報每次變化及其原因。控制項寬於 `ColumnBreakpoint` 時網格為兩欄，否則為一欄；文章依視窗決定自身尺寸。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticle.AspectRatio">
+        <source>The width-to-height ratio of the cards and of the article's hero picture (default 4:3).</source>
+        <target>卡片和文章主圖的寬高比（預設 4:3）。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticle.BodyTemplate">
+        <source>The template that shows an item's `Body` when it is not a string or a control.</source>
+        <target>當項目的 `Body` 既不是字串也不是控制項時，用來顯示它的範本。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticle.Close">
+        <source>Closes the open article (it flies back onto its card).</source>
+        <target>關閉開啟的文章（它飛回自己的卡片）。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticle.ColumnBreakpoint">
+        <source>The grid has one column while the control is at most this wide, two above (default 520).</source>
+        <target>控制項寬度不超過此值時網格為一欄，超過則為兩欄（預設 520）。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticle.Items">
+        <source>The stories, in grid order.</source>
+        <target>故事清單，依網格順序排列。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticle.Labels">
+        <source>The words the control shows and reads out (English by default).</source>
+        <target>控制項顯示和朗讀的文字（預設英文）。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticle.Open">
+        <source>Opens the article of the story with `id` (growing out of its card).</source>
+        <target>開啟 id 為 `id` 的故事的文章（從它的卡片長出）。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticle.OpenItem">
+        <source>The story whose article is open (or opening); null when none is.</source>
+        <target>文章已開啟（或正在開啟）的故事；沒有時為 null。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticle.OpenItemChanged">
+        <source>Raised when the open article changes (opened, closed or switched), with the cause.</source>
+        <target>開啟的文章變化（開啟、關閉或切換）時引發，附帶原因。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticle.OpenItemId">
+        <source>The id of the open article; null when every card is closed. Two-way: opening and closing write it back.</source>
+        <target>開啟的文章的 id；沒有卡片開啟時為 null。雙向：開啟和關閉都會寫回。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticleChangeReason">
+        <source>What opened or closed a `CardToArticle` article.</source>
+        <target>開啟或關閉 `CardToArticle` 文章的原因。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticleChangeReason.Click">
+        <source>A pointer pressed a card.</source>
+        <target>指標按下了卡片。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticleChangeReason.CloseButton">
+        <source>The article's close button.</source>
+        <target>文章的關閉按鈕。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticleChangeReason.Drag">
+        <source>The article was pulled down and let go past the threshold (or flicked).</source>
+        <target>文章被下拉並在超過門檻後放開（或快速甩動）。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticleChangeReason.Escape">
+        <source>The Escape key.</source>
+        <target>Escape 鍵。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticleChangeReason.Keyboard">
+        <source>Enter or Space on a focused card.</source>
+        <target>在取得焦點的卡片上按 Enter 或 Space。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticleChangeReason.Programmatic">
+        <source>Code: `OpenItemId` was set, or `Open` / `Close` was called.</source>
+        <target>程式碼：設定了 `OpenItemId`，或呼叫了 `Open` / `Close`。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticleChangeReason.Wheel">
+        <source>The mouse wheel or touchpad scrolled up past the top of the article.</source>
+        <target>滑鼠滾輪或觸控板在文章頂端繼續向上捲動。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticleItem">
+        <source>One story of a `CardToArticle`: the card shows its `Image` with the `Tag`, the `Title` and the `Meta` line drawn over it; the article grows out of the card with the same picture as its hero and shows the byline (`Author`, `Published`) and the `Body`. Set the properties before the item is shown: the control reads them when the card is built and when the article opens.</source>
+        <target>`CardToArticle` 的一個故事：卡片顯示它的 `Image`，並在上面繪製 `Tag`、`Title` 和 `Meta` 列；文章從卡片長出，以同一張圖片作為主圖，並顯示署名列（`Author`、`Published`）和 `Body`。請在項目顯示之前設定屬性：控制項在建立卡片和開啟文章時讀取它們。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticleItem.Author">
+        <source>The author shown in the article's byline; null leaves the byline out.</source>
+        <target>文章署名列中顯示的作者；null 時不顯示署名列。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticleItem.Avatar">
+        <source>The author's picture in the byline; null shows the author's initials on a colored circle.</source>
+        <target>署名列中作者的圖片；null 時在彩色圓形上顯示作者姓名首字母。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticleItem.Body">
+        <source>The article text. A string is set as prose: paragraphs are separated by blank lines and a paragraph that starts with "&gt; " becomes a pull quote. Any other object is shown with `BodyTemplate` (or as a control when it is one).</source>
+        <target>文章內文。字串依文章排版：段落以空行分隔，以 "&gt; " 開頭的段落成為引文。其他物件用 `BodyTemplate` 顯示（是控制項時直接顯示）。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticleItem.Id">
+        <source>Identifies the story; `OpenItemId` holds the id of the open article.</source>
+        <target>識別故事；`OpenItemId` 保存開啟的文章的 id。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticleItem.Image">
+        <source>The picture: it covers the card and the article hero (cropped to `AspectRatio`).</source>
+        <target>圖片：填滿卡片和文章主圖（依 `AspectRatio` 裁切）。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticleItem.ImageAlt">
+        <source>The text alternative of the picture, read in the article (the card is named by its title).</source>
+        <target>圖片的替代文字，在文章中朗讀（卡片以標題命名）。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticleItem.Meta">
+        <source>A short line under the title, such as a reading time ("4 min read"); null shows none.</source>
+        <target>標題下方的一行簡短文字，例如閱讀時間（"4 min read"）；null 時不顯示。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticleItem.Published">
+        <source>The date (or any short text) shown after the author in the byline, already formatted.</source>
+        <target>署名列中作者之後顯示的日期（或任意簡短文字），已格式化。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticleItem.Tag">
+        <source>A short label in a pill at the top-left of the picture (a section or a kind of story); null shows none.</source>
+        <target>圖片左上角膠囊中的簡短標籤（欄目或故事類型）；null 時不顯示。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticleItem.Title">
+        <source>The headline, drawn over the picture on the card and in the article hero.</source>
+        <target>標題，繪製在卡片和文章主圖的圖片上。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticleLabels">
+        <source>Every word a `CardToArticle` shows or reads out, in English by default. Replace the instance to translate or reword; names built from a story are functions so that word order can change.</source>
+        <target>`CardToArticle` 顯示或朗讀的所有文字，預設英文。替換整個執行個體即可翻譯或改寫；由故事產生的名稱是函式，以便調整語序。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticleLabels.ArticleName">
+        <source>The accessible name of the open article dialog; the default is the story's title.</source>
+        <target>開啟的文章對話方塊的無障礙名稱；預設為故事標題。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticleLabels.CardName">
+        <source>The accessible name of a card; the default reads the title, then the meta line when there is one.</source>
+        <target>卡片的無障礙名稱；預設讀出標題，有資訊列時再讀出它。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticleLabels.Close">
+        <source>The accessible name of the article's close button.</source>
+        <target>文章關閉按鈕的無障礙名稱。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticleOpenChangedEventArgs">
+        <source>Raised when the open article of a `CardToArticle` changes.</source>
+        <target>`CardToArticle` 開啟的文章變化時引發。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticleOpenChangedEventArgs.NewId">
+        <source>The id of the article that is open now; null when the article closed.</source>
+        <target>現在開啟的文章的 id；文章關閉時為 null。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticleOpenChangedEventArgs.OldId">
+        <source>The id of the article that was open before; null when none was.</source>
+        <target>之前開啟的文章的 id；之前沒有開啟時為 null。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticleOpenChangedEventArgs.Reason">
+        <source>What caused the change.</source>
+        <target>引起變化的原因。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticleSamples">
+        <source>Invented sample stories for `CardToArticle` demos and tests: six short magazine pieces (a field guide, an interview, a recipe, a science note, a craft how-to and a sky-watching tip, all written for this library) with 4:3 pictures drawn in code as simple geometric scenes (no photos). Every call returns new items, so two controls never share an item.</source>
+        <target>供 `CardToArticle` 示範和測試使用的虛構範例故事：六篇簡短的雜誌文章（一篇野外指南、一篇訪談、一份食譜、一則科普、一篇手作教學和一則觀星提示，均為本函式庫自寫），配以程式碼繪製的簡單幾何場景 4:3 圖片（無照片）。每次呼叫都傳回新項目，因此兩個控制項不會共用同一項目。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticleSamples.AllStories">
+        <source>All six stories.</source>
+        <target>全部六個故事。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticleSamples.MoreStories">
+        <source>Two more stories (a craft how-to and a sky-watching tip) for demos that need a longer list.</source>
+        <target>另外兩個故事（一篇手作教學和一則觀星提示），供需要更長清單的示範使用。</target>
+      </trans-unit>
+      <trans-unit id="CardToArticleSamples.Stories">
+        <source>Four stories for the preview: a field guide, an interview, a recipe and a science note.</source>
+        <target>預覽用的四個故事：一篇野外指南、一篇訪談、一份食譜和一則科普。</target>
+      </trans-unit>
       <trans-unit id="Carousel">
         <source>A row of slides people browse by dragging, flicking, a trackpad swipe, the arrow keys, or the controls below it (Arc carousel). Use it for a short, ordered set of peers such as products or case studies, where the neighbours stay in view as a hint that there is more. The active slide sits in the center, its neighbours shrink and dim with distance, and the page indicator stretches into a pill that travels with the slides frame by frame. Slides come from `Items` / `ItemsSource` (with `ItemTemplate`); `SelectedIndex` is the active slide (two-way). Set `Interval` to add a play control that rotates through the slides; rotation pauses on hover, keyboard focus, drag, while the carousel is scrolled out of view or the window is minimized, and is unavailable with reduced motion. Only the slides near the current position are realized.</source>
         <target>一排投影片，使用者可透過拖曳、輕掃、觸控板滑動、方向鍵或其下方的控制項進行瀏覽（Arc 輪播）。適用於一組簡短、有序的同類內容，例如產品或案例研究，相鄰項目保持可見，以提示還有更多內容。目前投影片位於中央，相鄰投影片會隨距離縮小並變暗，頁面指示器會拉伸成一個膠囊，並隨投影片逐格移動。投影片來自 `Items` / `ItemsSource`（配合 `ItemTemplate`）；`SelectedIndex` 為目前投影片（雙向繫結）。設定 `Interval` 可新增一個播放控制項，使投影片循環輪播；指標停留、鍵盤焦點、拖曳、輪播捲出可視範圍或視窗最小化時輪播會暫停，減少動態效果時則不可用。只有目前位置附近的投影片會被實例化。</target>
@@ -4647,6 +4863,142 @@
       <trans-unit id="CascaderSelectionChangedEventArgs">
         <source>Data of `SelectionChanged`.</source>
         <target>`SelectionChanged` 的事件資料。</target>
+      </trans-unit>
+      <trans-unit id="ChargeSession">
+        <source>A live charging session card for an EV or any device (Arc Charge session, design reference). Energy packets travel from a brushed-metal charger along the cable and through the pack to the fill front, where each one lands and brightens it. The pack fills toward a draggable charge limit, the charge curve tapers near full with the live point riding on it, and power, energy added, time to the limit and cost update every frame. Stop charging drains the flow: the power falls away, the last packets land and the point drops to the baseline; Resume ramps it back up; at the limit the session completes and Start new session returns to `StartCharge`. The card runs its own simulation (one second on screen is forty seconds of charging at `Speed` 1): set the battery and price figures, read `State`, `Charge` and the other figures, and handle `StateChanged` and `LimitChanged` to mirror the session in your backend. Drag on the pack or the curve, or use the keys on the limit marker, to move `Limit`.</source>
+        <target>電動車或任何裝置的即時充電工作階段卡片（Arc Charge 工作階段，設計參考）。能量封包從拉絲金屬充電樁出發，沿纜線穿過電池組，抵達填充前緣，每一個落下時都會讓它變亮。電池組朝可拖曳的充電上限填充，充電曲線在接近充滿時收斂，即時點沿曲線移動，功率、已充入電量、距上限的時間與費用每影格更新。停止充電會讓能量流逐漸消退：功率隨之下降，最後的封包落下，點回落到基準線；繼續充電則讓它重新升起；達到上限時工作階段完成，按下開始新工作階段即返回 `StartCharge`。卡片執行自己的模擬（螢幕上一秒相當於 `Speed` 為 1 時的四十秒充電）：設定電池與價格數值，讀取 `State`、`Charge` 及其他數值，並處理 `StateChanged` 與 `LimitChanged`，以便在後端同步工作階段。拖曳電池組或曲線，或使用上限標記上的按鍵，即可移動 `Limit`。</target>
+      </trans-unit>
+      <trans-unit id="ChargeSession.AccentBrush">
+        <source>Color of the energy, the fill, the LED, the travelled curve and the live point; null uses the accent.</source>
+        <target>能量、填充、指示燈、已行經的曲線與即時點的顏色；null 時使用強調色。</target>
+      </trans-unit>
+      <trans-unit id="ChargeSession.AccessibleLabel">
+        <source>The card's accessible name; null uses the title.</source>
+        <target>卡片的無障礙名稱；null 時使用標題。</target>
+      </trans-unit>
+      <trans-unit id="ChargeSession.Capacity">
+        <source>Usable battery capacity in kWh: how fast the pack fills and what each percent is worth.</source>
+        <target>可用電池容量，單位 kWh：決定電池組填充的速度，以及每個百分比代表的電量。</target>
+      </trans-unit>
+      <trans-unit id="ChargeSession.Charge">
+        <source>State of charge in percent (to a tenth).</source>
+        <target>電量百分比（精確到十分之一）。</target>
+      </trans-unit>
+      <trans-unit id="ChargeSession.Cost">
+        <source>Cost of the energy added, rounded to the currency's digits.</source>
+        <target>已充入電量的費用，依貨幣的小數位數四捨五入。</target>
+      </trans-unit>
+      <trans-unit id="ChargeSession.Currency">
+        <source>ISO 4217 code of the cost's currency.</source>
+        <target>費用貨幣的 ISO 4217 代碼。</target>
+      </trans-unit>
+      <trans-unit id="ChargeSession.EnergyAdded">
+        <source>Energy added this session in kWh (to a tenth).</source>
+        <target>本次工作階段已充入的電量，單位 kWh（精確到十分之一）。</target>
+      </trans-unit>
+      <trans-unit id="ChargeSession.IsPaused">
+        <source>Holds the session and the flow on their current frame. The limit and the button still work.</source>
+        <target>在目前影格保持工作階段與能量流不變。上限與按鈕仍可使用。</target>
+      </trans-unit>
+      <trans-unit id="ChargeSession.Labels">
+        <source>The words and number formats; replace to translate or reword.</source>
+        <target>文字與數字格式；替換以翻譯或改寫。</target>
+      </trans-unit>
+      <trans-unit id="ChargeSession.Limit">
+        <source>The charge limit in whole percent, between `MinLimit` and 100. Two-way: drags and keys change it, and setting it moves the marker (and completes or resumes the session like a drag would).</source>
+        <target>充電上限，以整數百分比表示，介於 `MinLimit` 與 100 之間。雙向繫結：拖曳與按鍵會修改它，設定它會移動標記（並如同拖曳一般完成或繼續工作階段）。</target>
+      </trans-unit>
+      <trans-unit id="ChargeSession.LimitChanged">
+        <source>Raised with the new limit when a drag or key press settles (350 ms after the last change).</source>
+        <target>當拖曳或按鍵操作穩定下來（距上一次變更 350 毫秒後）時引發，並帶有新的上限。</target>
+      </trans-unit>
+      <trans-unit id="ChargeSession.Locale">
+        <source>Locale name used to format the cost and the numbers ("en-US", "de-DE"); empty uses the invariant culture.</source>
+        <target>用於格式化費用與數字的地區設定名稱（如 "en-US"、"de-DE"）；為空時使用固定區域性（invariant culture）。</target>
+      </trans-unit>
+      <trans-unit id="ChargeSession.Location">
+        <source>The line under the title; null or empty hides it.</source>
+        <target>標題下方的一行文字；為 null 或空字串時隱藏。</target>
+      </trans-unit>
+      <trans-unit id="ChargeSession.MaxPower">
+        <source>Peak charging power in kW, reached on the flat part of the curve.</source>
+        <target>峰值充電功率，單位 kW，在曲線的平坦段達到。</target>
+      </trans-unit>
+      <trans-unit id="ChargeSession.MinLimit">
+        <source>The lowest limit the marker can be set to, in percent.</source>
+        <target>標記可設定的最低上限，單位為百分比。</target>
+      </trans-unit>
+      <trans-unit id="ChargeSession.MinutesToLimit">
+        <source>Minutes of charging at full power to the limit (whole minutes; 0 under a minute); null while stopped or once the limit is reached.</source>
+        <target>以滿功率充電到上限所需的整分鐘數（不足一分鐘時為 0）；停止時或已達上限時為 null。</target>
+      </trans-unit>
+      <trans-unit id="ChargeSession.Power">
+        <source>Charging power in kW now (whole kW), falling to 0 as a stop drains.</source>
+        <target>目前充電功率，單位 kW（取整數）；停止時隨能量流消退而降至 0。</target>
+      </trans-unit>
+      <trans-unit id="ChargeSession.PowerCurve">
+        <source>A custom charge curve: state of charge (0..1) to the share of `MaxPower` the pack takes (0..1). Null uses the built-in curve (62% at empty, full from 10% to `TaperAt`, then an exponential taper).</source>
+        <target>自訂充電曲線：電量（0..1）對應電池組所取 `MaxPower` 比例（0..1）的對應關係。為 null 時使用內建曲線（電量為空時為 62%，從 10% 到 `TaperAt` 為滿功率，之後呈指數收斂）。</target>
+      </trans-unit>
+      <trans-unit id="ChargeSession.Rate">
+        <source>Price per kWh in the session currency.</source>
+        <target>每千瓦時的價格，以工作階段貨幣計。</target>
+      </trans-unit>
+      <trans-unit id="ChargeSession.Speed">
+        <source>Multiplies simulated time: at 1, one second on screen is forty seconds of charging. 0 holds the session still while the packets keep flowing.</source>
+        <target>乘上模擬時間：為 1 時，螢幕上一秒相當於四十秒充電。為 0 時工作階段保持靜止，而能量封包持續流動。</target>
+      </trans-unit>
+      <trans-unit id="ChargeSession.StartCharge">
+        <source>State of charge in percent when a session starts, and where Start new session returns to.</source>
+        <target>新工作階段開始時的電量百分比，也是開始新工作階段後返回的電量。</target>
+      </trans-unit>
+      <trans-unit id="ChargeSession.State">
+        <source>Charging, stopped or complete.</source>
+        <target>充電中、已停止或已完成。</target>
+      </trans-unit>
+      <trans-unit id="ChargeSession.StateChanged">
+        <source>Raised when charging stops, resumes, reaches the limit or a new session starts.</source>
+        <target>充電停止、繼續、到達上限或開始新工作階段時引發。</target>
+      </trans-unit>
+      <trans-unit id="ChargeSession.TaperAt">
+        <source>State of charge in percent where the power starts to taper toward full.</source>
+        <target>功率開始朝充滿方向收斂時的電量百分比。</target>
+      </trans-unit>
+      <trans-unit id="ChargeSession.TimeProvider">
+        <source>The clock for the 350 ms wait before a limit change counts as settled (the system clock; tests pass their own).</source>
+        <target>上限變更被視為穩定前等待 350 毫秒所用的時鐘（預設為系統時鐘；測試可傳入自己的時鐘）。</target>
+      </trans-unit>
+      <trans-unit id="ChargeSession.Title">
+        <source>The charger or device name, shown as the card's heading.</source>
+        <target>充電樁或裝置的名稱，作為卡片標題顯示。</target>
+      </trans-unit>
+      <trans-unit id="ChargeSessionDetail">
+        <source>The session's figures at one moment: what `StateChanged` reports.</source>
+        <target>某一時刻的工作階段數據：即 `StateChanged` 所回報的內容。</target>
+      </trans-unit>
+      <trans-unit id="ChargeSessionLabels">
+        <source>Every word a `ChargeSession` shows or announces, in English by default. Replace the instance (or set its properties) to translate or reword; texts with numbers are functions so that the word order can change. Numbers arrive already formatted for the card's `Locale` ("80%", "150 kW", "22.8 kWh", "$9.57") and durations in minutes of charging at full power.</source>
+        <target>`ChargeSession` 顯示或播報的所有文字，預設為英文。替換實例（或設定其屬性）即可翻譯或改寫；含數字的文字為函式，以便調整詞序。數字已依卡片的 `Locale` 預先格式化（"80%"、"150 kW"、"22.8 kWh"、"$9.57"），時長以滿功率充電的分鐘數表示。</target>
+      </trans-unit>
+      <trans-unit id="ChargeSessionLimitChangedEventArgs">
+        <source>Arguments of `LimitChanged`.</source>
+        <target>`LimitChanged` 的事件引數。</target>
+      </trans-unit>
+      <trans-unit id="ChargeSessionSample">
+        <source>One invented charging setup for `ChargeSession`: the names and the numbers a card is configured with. `ApplyTo` copies them onto a card.</source>
+        <target>為 `ChargeSession` 設計的一組虛構充電設定：卡片所設定的名稱與數值。`ApplyTo` 會將它們複製到卡片上。</target>
+      </trans-unit>
+      <trans-unit id="ChargeSessionSamples">
+        <source>Invented setups for the `ChargeSession` demos and tests (no real places or operators).</source>
+        <target>供 `ChargeSession` 示範與測試使用的虛構設定（不含真實地點或營運商）。</target>
+      </trans-unit>
+      <trans-unit id="ChargeSessionState">
+        <source>Where a `ChargeSession` is.</source>
+        <target>`ChargeSession` 所處的狀態。</target>
+      </trans-unit>
+      <trans-unit id="ChargeSessionStateChangedEventArgs">
+        <source>Arguments of `StateChanged`.</source>
+        <target>`StateChanged` 的事件引數。</target>
       </trans-unit>
       <trans-unit id="ChartBase.ActiveIndex">
         <source>The point being read (crosshair, scrubbed bar, hovered segment), or null at rest. Two-way.</source>
@@ -6607,6 +6959,106 @@
       <trans-unit id="ContextWindowTurn">
         <source>A turn that Send message adds (a message with the tool results and the reply it produced), or a file that Attach file adds. Send and Attach take them in order and start over after the last.</source>
         <target>「傳送訊息」新增的一輪（一則帶有工具結果及其所產生回覆的訊息），或「附加檔案」新增的一個檔案。傳送與附加會依序取用它們，用完後從頭開始。</target>
+      </trans-unit>
+      <trans-unit id="ControlCenter">
+        <source>A quick settings panel (Arc Control center, design reference): a 360 × 396 surface with a wide Focus tile, Notifications and Presenting tiles, and two segmented meters for the alert volume and the text size. A tile toggles in place, with its icon and state line trading places in a short blur; the chevron of the Focus and Notifications tiles grows the tile into a detail that fills the panel (a shared-element morph over a light scrim; the tiles stay put and become inert). The Focus detail picks a mode, sets the session length on a dial (one turn is two hours, 5-minute steps, resistance past 5 and 120) and starts, updates or ends the session; the Notifications detail has a master switch, one switch per channel and the people who are always let through. The meters follow a grab 1:1, jump on a tap, swell while held and stretch at their ends. Give it `FocusModes` (the first one is what a tap on the Focus tile starts), `Channels` and optionally `People`; read or bind `Volume`, `TextSize`, `AreNotificationsOn`, `IsPresenting` and `FocusSession`, or handle `StateChanged`, which reports the whole state after every change (once per step while a meter is dragged). The text size only scales the "Aa" sample: apply it to your app yourself. Edits in the Focus detail take effect only on Start or Update session; closing the detail discards them. Sessions do not end on their own when their time is up.</source>
+        <target>快速設定面板（Arc Control center，設計參考）：一塊 360 × 396 的表面，包含一個通欄 Focus 磚塊、Notifications 與 Presenting 磚塊，以及提示音量和文字大小兩條分段條。磚塊就地切換，圖示與狀態文字以短暫的模糊交換位置；Focus 與 Notifications 磚塊的箭頭按鈕會把磚塊長成佔滿面板的詳細面板（在淺色遮罩上的共用元素形變；磚塊保持原位並變為無法互動）。Focus 詳細面板選擇模式，在轉盤上設定時長（一圈為兩小時，以 5 分鐘為一步，越過 5 和 120 時有阻力），並開始、更新或結束專注時段；Notifications 詳細面板有總開關、每個頻道一個開關，以及一律放行的人。分段條以 1:1 跟隨拖曳，輕觸即跳到該值，按住時膨脹，在兩端拉伸。提供 `FocusModes`（按 Focus 磚塊時開始第一個模式）、`Channels`，以及選用的 `People`；讀取或繫結 `Volume`、`TextSize`、`AreNotificationsOn`、`IsPresenting` 和 `FocusSession`，或處理 `StateChanged`，它在每次變化後回報完整狀態（拖曳分段條時每一步回報一次）。文字大小只縮放 "Aa" 範例：請在應用程式中自行套用。Focus 詳細面板中的編輯只在 Start 或 Update session 時生效；關閉詳細面板會捨棄它們。專注時段到時不會自行結束。</target>
+      </trans-unit>
+      <trans-unit id="ControlCenter.ActiveDetail">
+        <source>Which detail is open (None). Two-way: the chevrons, Close, Escape and a press on the scrim change it; set it to open one from code.</source>
+        <target>目前開啟的詳細面板（None）。雙向：箭頭按鈕、Close、Escape 和按一下遮罩會改變它；在程式碼中設定它即可開啟一個詳細面板。</target>
+      </trans-unit>
+      <trans-unit id="ControlCenter.AreNotificationsOn">
+        <source>Whether notifications are on (true). Two-way: the Notifications tile and the master switch change it; the channels keep their own switches.</source>
+        <target>通知是否開啟（true）。雙向：Notifications 磚塊和總開關會改變它；各頻道保留各自的開關。</target>
+      </trans-unit>
+      <trans-unit id="ControlCenter.Channels">
+        <source>The notification channels, one switch each in the Notifications detail.</source>
+        <target>通知頻道，在 Notifications 詳細面板中每個頻道一個開關。</target>
+      </trans-unit>
+      <trans-unit id="ControlCenter.DetailClosed">
+        <source>Raised when a detail starts to close.</source>
+        <target>詳細面板開始關閉時觸發。</target>
+      </trans-unit>
+      <trans-unit id="ControlCenter.DetailOpened">
+        <source>Raised when a detail starts to open.</source>
+        <target>詳細面板開始開啟時觸發。</target>
+      </trans-unit>
+      <trans-unit id="ControlCenter.FocusModes">
+        <source>The focus modes, in the order of the mode switch; the first one is what a tap on the Focus tile starts.</source>
+        <target>專注模式，依模式切換的順序排列；按 Focus 磚塊時開始第一個模式。</target>
+      </trans-unit>
+      <trans-unit id="ControlCenter.FocusSession">
+        <source>The running focus session, or null (no session). Two-way: the Focus tile and the Focus detail's buttons change it.</source>
+        <target>進行中的專注時段，或 null（沒有專注時段）。雙向：Focus 磚塊和 Focus 詳細面板的按鈕會改變它。</target>
+      </trans-unit>
+      <trans-unit id="ControlCenter.IsPresenting">
+        <source>Whether presenting mode is on (false). Two-way: the Presenting tile changes it.</source>
+        <target>簡報模式是否開啟（false）。雙向：Presenting 磚塊會改變它。</target>
+      </trans-unit>
+      <trans-unit id="ControlCenter.Labels">
+        <source>The words, time format and accessible names; replace to translate or reword.</source>
+        <target>文字、時間格式和無障礙名稱；取代即可翻譯或改寫。</target>
+      </trans-unit>
+      <trans-unit id="ControlCenter.People">
+        <source>The people who are always let through, shown at the foot of the Notifications detail (none: the row is hidden).</source>
+        <target>一律放行的人，顯示在 Notifications 詳細面板底部（沒有時隱藏該列）。</target>
+      </trans-unit>
+      <trans-unit id="ControlCenter.StateChanged">
+        <source>Raised after every change with the whole state and what changed.</source>
+        <target>每次變化後觸發，附帶完整狀態和變化內容。</target>
+      </trans-unit>
+      <trans-unit id="ControlCenter.TextSize">
+        <source>The text size in percent, 85 to 130 in steps of 5 (100). Two-way: the text-size meter changes it.</source>
+        <target>文字大小的百分比，85 到 130，以 5 為一步（100）。雙向：文字大小分段條會改變它。</target>
+      </trans-unit>
+      <trans-unit id="ControlCenter.TimeProvider">
+        <source>The clock for session end times (the system clock by default; tests pass a manual one).</source>
+        <target>專注時段結束時間所用的時鐘（預設為系統時鐘；測試傳入手動時鐘）。</target>
+      </trans-unit>
+      <trans-unit id="ControlCenter.Volume">
+        <source>The alert volume, 0 to 100 (60). Two-way: the volume meter changes it.</source>
+        <target>提示音量，0 到 100（60）。雙向：音量分段條會改變它。</target>
+      </trans-unit>
+      <trans-unit id="ControlCenterChannel">
+        <source>A notification channel of a `ControlCenter`: a row with its own switch in the Notifications detail. Its `IsOn` state survives turning all notifications off and on again.</source>
+        <target>`ControlCenter` 的一個通知頻道：Notifications 詳細面板中帶有自己開關的一列。關閉再重新開啟全部通知後，它的 `IsOn` 狀態仍會保留。</target>
+      </trans-unit>
+      <trans-unit id="ControlCenterChannel.IsOn">
+        <source>Whether the channel delivers; the row's switch changes it, and so may your code.</source>
+        <target>該頻道是否推送；這一列的開關會改變它，你的程式碼也可以改變它。</target>
+      </trans-unit>
+      <trans-unit id="ControlCenterDetailEventArgs">
+        <source>Arguments of `DetailOpened` and `DetailClosed`.</source>
+        <target>`DetailOpened` 和 `DetailClosed` 的參數。</target>
+      </trans-unit>
+      <trans-unit id="ControlCenterFocusMode">
+        <source>A focus mode of a `ControlCenter`: one segment of the mode switch in the Focus detail, with the icon the Focus tile shows while a session in this mode runs, a one-line description under the switch and the session length the dial jumps to when the mode is picked.</source>
+        <target>`ControlCenter` 的一個專注模式：Focus 詳細面板中模式切換的一段，帶有在該模式的專注時段進行時 Focus 磚塊顯示的圖示、模式切換下方的一行說明，以及選取該模式時轉盤跳到的時長。</target>
+      </trans-unit>
+      <trans-unit id="ControlCenterFocusSession">
+        <source>A running focus session: the mode, its length and the moment it ends.</source>
+        <target>一個進行中的專注時段：模式、時長和結束時刻。</target>
+      </trans-unit>
+      <trans-unit id="ControlCenterLabels">
+        <source>The words and formats of a `ControlCenter`: tile titles and states, meter labels, detail titles, button names and the accessible names and value texts. Replace the object (or set its properties) to translate or reword; sentences with numbers or times are delegates.</source>
+        <target>`ControlCenter` 的文字與格式：磚塊標題與狀態、分段條標籤、詳細面板標題、按鈕名稱，以及無障礙名稱和值文字。取代該物件（或設定其屬性）即可翻譯或改寫；帶數字或時間的句子是委派。</target>
+      </trans-unit>
+      <trans-unit id="ControlCenterPerson">
+        <source>Someone whose messages are always let through during a focus session, shown as an avatar in the footer of the Notifications detail. Without an `Avatar` image the avatar shows the initials on a generated gradient.</source>
+        <target>在專注時段中訊息一律放行的人，以頭像顯示在 Notifications 詳細面板的底部。沒有 `Avatar` 圖片時，頭像在產生的漸層上顯示姓名縮寫。</target>
+      </trans-unit>
+      <trans-unit id="ControlCenterSamples">
+        <source>Invented sample content for `ControlCenter` demos and tests: three focus modes, three channels and three people, none of them real.</source>
+        <target>用於 `ControlCenter` 範例和測試的虛構範例內容：三個專注模式、三個頻道和三個人，皆非真實。</target>
+      </trans-unit>
+      <trans-unit id="ControlCenterState">
+        <source>Everything the panel controls, reported after every change.</source>
+        <target>面板控制的全部內容，在每次變化後回報。</target>
+      </trans-unit>
+      <trans-unit id="ControlCenterStateChangedEventArgs">
+        <source>Arguments of `StateChanged`.</source>
+        <target>`StateChanged` 的參數。</target>
       </trans-unit>
       <trans-unit id="CookieCategory">
         <source>One group of cookies a visitor can allow or refuse.</source>
@@ -10572,6 +11024,58 @@
         <source>Fill color: Accent (default), Danger for irreversible actions, or Neutral.</source>
         <target>填滿顏色：Accent（預設）、用於不可逆操作的 Danger，或 Neutral。</target>
       </trans-unit>
+      <trans-unit id="HoloCard">
+        <source>A holographic card, such as a member card, an event badge or a reward reveal (Arc Holo card, design reference). It leans toward the pointer in perspective while a rainbow foil, a sprinkle of glitter and a glare follow the light across its face, and a floating shadow leans the other way. With a `Back` it is a button: a click or tap spins it half a turn (to the right on the right half, back to the left on the left half), and Enter or Space spins it to the right. The card is always 5:7, at most 300 wide unless a width is set.</source>
+        <target>一張全像卡片，例如會員卡、活動識別證或獎勵揭曉卡（Arc Holo card，設計參考）。它以透視朝指標傾斜，彩虹箔、細碎的亮粉與高光隨光點在卡面上流動，一塊浮起的陰影則往反方向偏移。設定了 `Back` 時它是一個按鈕：按一下或輕觸讓它轉半圈（按在右半邊往右，按在左半邊往左轉回），Enter 或 Space 讓它往右轉。卡片永遠是 5:7，未設定寬度時最寬 300。</target>
+      </trans-unit>
+      <trans-unit id="HoloCard.Back">
+        <source>The back of the card. Without one the card only tilts: it does not flip, is not focusable and is not a button.</source>
+        <target>卡片的背面。沒有背面時卡片只會傾斜：不翻面、無法取得焦點，也不是按鈕。</target>
+      </trans-unit>
+      <trans-unit id="HoloCard.BackTemplate">
+        <source>The template for `Back` when it is data rather than a control.</source>
+        <target>當 `Back` 是資料而不是控制項時使用的範本。</target>
+      </trans-unit>
+      <trans-unit id="HoloCard.FlippedChanged">
+        <source>Raised when a click, a tap, the keyboard or `Flip` turns the card over.</source>
+        <target>當按一下、輕觸、鍵盤或 `Flip` 讓卡片翻面時觸發。</target>
+      </trans-unit>
+      <trans-unit id="HoloCard.Front">
+        <source>The front of the card: any content, stretched over the whole card and clipped to its corners.</source>
+        <target>卡片的正面：任意內容，鋪滿整張卡片並依圓角裁切。</target>
+      </trans-unit>
+      <trans-unit id="HoloCard.FrontTemplate">
+        <source>The template for `Front` when it is data rather than a control.</source>
+        <target>當 `Front` 是資料而不是控制項時使用的範本。</target>
+      </trans-unit>
+      <trans-unit id="HoloCard.Intensity">
+        <source>Strength of the foil, glitter and glare, 0..1; 0 leaves the content plain.</source>
+        <target>箔層、亮粉與高光的強度，0..1；為 0 時內容維持原樣。</target>
+      </trans-unit>
+      <trans-unit id="HoloCard.IsFlipped">
+        <source>Whether the back faces the viewer. Two-way: a click, a tap or Enter / Space turns it, and setting it turns the card (to the right). Setting it does not raise `FlippedChanged`.</source>
+        <target>背面是否朝向觀看者。雙向：按一下、輕觸或 Enter / Space 會翻轉它，設定它也會讓卡片翻面（往右）。設定它不會觸發 `FlippedChanged`。</target>
+      </trans-unit>
+      <trans-unit id="HoloCard.Label">
+        <source>The card's accessible name, such as "Mira Okafor, Lumen Society patron pass". When empty, the text of the visible face is used.</source>
+        <target>卡片的無障礙名稱，例如 "Mira Okafor, Lumen Society patron pass"。為空時使用目前可見那一面的文字。</target>
+      </trans-unit>
+      <trans-unit id="HoloCard.MaxTilt">
+        <source>The largest tilt in degrees, reached with the pointer at the card's edge; 0 turns tilting off.</source>
+        <target>最大傾斜角度（度），在指標位於卡片邊緣時達到；為 0 時關閉傾斜。</target>
+      </trans-unit>
+      <trans-unit id="HoloCard.RoleDescription">
+        <source>What assistive technology calls the card when it can flip ("flip card").</source>
+        <target>卡片可以翻面時，輔助科技對它的稱呼（"flip card"）。</target>
+      </trans-unit>
+      <trans-unit id="HoloCardFlipSide">
+        <source>What turned a `HoloCard` over, and so which way it spun.</source>
+        <target>是什麼讓 `HoloCard` 翻面，因此它往哪個方向轉。</target>
+      </trans-unit>
+      <trans-unit id="HoloCardFlippedEventArgs">
+        <source>Arguments of `FlippedChanged`.</source>
+        <target>`FlippedChanged` 的參數。</target>
+      </trans-unit>
       <trans-unit id="HorizonBandsChangedEventArgs">
         <source>Arguments of `BandsChanged`.</source>
         <target>`BandsChanged` 的引數。</target>
@@ -10863,6 +11367,10 @@
       <trans-unit id="IVideoPlayer.StateChanged">
         <source>Raised when `State` changes.</source>
         <target>`State` 變化時引發。</target>
+      </trans-unit>
+      <trans-unit id="IVoiceOrbLevelSource">
+        <source>A source of live levels for a `VoiceOrb` (a microphone meter, a speech synthesizer's envelope).</source>
+        <target>為 `VoiceOrb` 提供即時音量電平的來源（麥克風電平表、語音合成器的包絡）。</target>
       </trans-unit>
       <trans-unit id="IconMorph">
         <source>Icons that morph between two states instead of swapping: lines rotate and slide into place, outlines interpolate (P16 `PathMorph`), and a few carry a moment of their own (the bell rings, the heart bursts). Every morph rides an interruptible spring, so toggling quickly reverses from wherever the icon is. Drawn in one `Render` on the 24-unit grid. The icon is decorative: put it in a button that carries the name and the pressed or expanded state.</source>
@@ -13363,6 +13871,114 @@
       <trans-unit id="LinkRenderer">
         <source>Shows the cell as an accent-colored link with an underline that strengthens on hover. A click on the text raises `CellInvoked` with `Part`; the cell is not selected by that click.</source>
         <target>把儲存格顯示為強調色連結，底線在滑鼠移上時加深。點擊文字會以 `Part` 觸發 `CellInvoked`；該次點擊不會選取儲存格。</target>
+      </trans-unit>
+      <trans-unit id="LinkUnfurl">
+        <source>A message composer that unfurls links (Arc Link unfurl, design reference). Paste an address, or type one and a space, and it becomes an inline link that shows its address under a soft loading sweep; once the preview resolves the favicon and title roll in and the link unrolls into a card under the message (site, title, description and image) in one continuous morph: the card's corner grows out of the link, width first and height after, lifting on a shadow while it travels, and the toolbar glides down with it. Click the link, press the card's collapse button, press Alt+Enter after the link or drag the card up to fold it back into the text; the remove button takes the link out of the message. Give it a `Resolver` that asks your own unfurl endpoint (Open Graph, oEmbed) for a `LinkUnfurlPreview`; without one, `Samples` resolve by address and any other address gets a plain preview built from it after a simulated 1.15s fetch. Enter or the send button raises `SendRequested` (and calls `SendHandler`) with the text, links written out as addresses, and the resolved previews.</source>
+        <target>會展開連結的訊息輸入框（Arc Link unfurl，設計參考）。貼上一個網址，或輸入網址後再輸入一個空格，它就成為一個行內連結，在柔和的載入掃光下顯示網址；預覽解析完成後，網站圖示與標題捲入，連結在訊息下方展開為一張卡片（網站、標題、描述與圖片），整個過程是一次連續的形變：卡片的一角從連結中長出，先變寬、後變高，移動途中藉陰影抬起，工具列隨之下滑。點按連結、按下卡片的收合按鈕、在連結後按 Alt+Enter，或把卡片向上拖曳，即可把它收回文字中；移除按鈕會把連結從訊息中刪去。為它提供一個 `Resolver`，向你自己的展開端點（Open Graph、oEmbed）請求 `LinkUnfurlPreview`；沒有解析器時，`Samples` 依網址解析，其他網址在模擬的 1.15s 請求之後得到由網址產生的純文字預覽。Enter 或傳送按鈕會引發 `SendRequested`（並呼叫 `SendHandler`），帶上文字（連結寫為網址）與已解析的預覽。</target>
+      </trans-unit>
+      <trans-unit id="LinkUnfurl.AutoExpand">
+        <source>Unfurls a card as soon as its preview resolves (default). When false the link only gains its favicon and title, and opens on click.</source>
+        <target>預覽解析完成後立即展開卡片（預設）。為 false 時連結只取得網站圖示與標題，點按後才展開。</target>
+      </trans-unit>
+      <trans-unit id="LinkUnfurl.AutoPlay">
+        <source>Pastes the first sample 1.1s after the composer first scrolls into view, unless someone has already interacted with it.</source>
+        <target>輸入框首次捲入檢視 1.1s 後貼上第一個範例，除非已有人與它互動。</target>
+      </trans-unit>
+      <trans-unit id="LinkUnfurl.IsPaused">
+        <source>Opens and folds cards instantly without the morph, shows a still tint instead of the sweep and turns autoplay off.</source>
+        <target>不經形變立即展開與收合卡片，以靜止色塊取代掃光，並關閉自動播放。</target>
+      </trans-unit>
+      <trans-unit id="LinkUnfurl.IsSending">
+        <source>True while a send is pending: the message is read-only and the send button holds.</source>
+        <target>傳送進行中時為 true：訊息為唯讀，傳送按鈕保持等待。</target>
+      </trans-unit>
+      <trans-unit id="LinkUnfurl.Label">
+        <source>The message field's accessible name (Arc's `label`), such as "Message #trail-club".</source>
+        <target>訊息輸入區的無障礙名稱（Arc 的 `label`），例如 "Message #trail-club"。</target>
+      </trans-unit>
+      <trans-unit id="LinkUnfurl.Labels">
+        <source>Every word the composer shows or announces; replace to translate or reword.</source>
+        <target>輸入框顯示或播報的全部文字；替換它即可翻譯或改寫。</target>
+      </trans-unit>
+      <trans-unit id="LinkUnfurl.LinkAccent">
+        <source>The color of an unfurled link and its tie to its card; null uses the accent.</source>
+        <target>已展開連結及其與卡片之間聯繫的顏色；null 使用強調色。</target>
+      </trans-unit>
+      <trans-unit id="LinkUnfurl.LinkAdded">
+        <source>Raised when an address became a link (pasted, typed with a space after it, or from a sample).</source>
+        <target>網址變成連結時引發（貼上、輸入後加空格，或來自範例）。</target>
+      </trans-unit>
+      <trans-unit id="LinkUnfurl.LinkRemoved">
+        <source>Raised when a link left the message (the remove button, Backspace or Delete, a send or a clear).</source>
+        <target>連結離開訊息時引發（移除按鈕、Backspace 或 Delete、傳送或清除）。</target>
+      </trans-unit>
+      <trans-unit id="LinkUnfurl.LinkResolved">
+        <source>Raised when a link's fetch finished: its status is then ready (with a preview) or failed.</source>
+        <target>連結的請求完成時引發：其狀態隨後為 ready（帶預覽）或 failed。</target>
+      </trans-unit>
+      <trans-unit id="LinkUnfurl.Placeholder">
+        <source>The text shown while the message is empty.</source>
+        <target>訊息為空時顯示的文字。</target>
+      </trans-unit>
+      <trans-unit id="LinkUnfurl.PreviewToggled">
+        <source>Raised when a link's card opened or folded (`IsExpanded` says which).</source>
+        <target>連結的卡片展開或收合時引發（由 `IsExpanded` 說明是哪一種）。</target>
+      </trans-unit>
+      <trans-unit id="LinkUnfurl.Resolver">
+        <source>Fetches the preview of a pasted address (usually from your own unfurl endpoint); return null when there is none: the link then stays in the text without a card and is fetched again when clicked. The token is cancelled when the link is removed or the message is sent. Null uses the samples and plain previews after a simulated 1.15s fetch.</source>
+        <target>取得所貼上網址的預覽（通常來自你自己的展開端點）；沒有預覽時傳回 null：連結隨後留在文字中、沒有卡片，點按時會重新取得。連結被移除或訊息被傳送時，取消權杖會被觸發。為 null 時使用範例與純文字預覽，並模擬 1.15s 的請求。</target>
+      </trans-unit>
+      <trans-unit id="LinkUnfurl.Samples">
+        <source>Sample links offered as buttons under the message; the built-in resolver answers their addresses with them. Once a sample is in the message its button shows or folds its card. Null or empty hides the buttons.</source>
+        <target>以按鈕形式顯示在訊息下方的範例連結；內建解析器以它們回應對應的網址。範例進入訊息後，其按鈕用於展開或收合它的卡片。為 null 或空時隱藏這些按鈕。</target>
+      </trans-unit>
+      <trans-unit id="LinkUnfurl.SendError">
+        <source>The message of the last failed send, shown under the composer as an alert; null when there is none.</source>
+        <target>上一次傳送失敗的訊息，以警示形式顯示在輸入框下方；沒有時為 null。</target>
+      </trans-unit>
+      <trans-unit id="LinkUnfurl.SendHandler">
+        <source>Sends a message after `SendRequested`: the composer holds while the task runs, then clears and confirms; a failed task shows its message under the composer and keeps the message.</source>
+        <target>在 `SendRequested` 之後傳送訊息：工作執行期間輸入框保持等待，完成後清除並確認；工作失敗時在輸入框下方顯示其訊息並保留原訊息。</target>
+      </trans-unit>
+      <trans-unit id="LinkUnfurl.SendRequested">
+        <source>Raised on Enter or the send button with the message; set `Pending` to hold the composer.</source>
+        <target>按下 Enter 或傳送按鈕時引發，帶有訊息；設定 `Pending` 可讓輸入框保持等待。</target>
+      </trans-unit>
+      <trans-unit id="LinkUnfurl.Speed">
+        <source>Multiplier for the morph and the simulated fetch (1 = as measured; 0.1 to 10).</source>
+        <target>形變與模擬請求的速度倍率（1 = 實測速度；0.1 到 10）。</target>
+      </trans-unit>
+      <trans-unit id="LinkUnfurl.Text">
+        <source>The message text; links stand in it as their addresses. Two-way: typing writes it; setting it replaces the message.</source>
+        <target>訊息文字；連結在其中以網址形式出現。雙向：輸入會寫入它；設定它會取代訊息。</target>
+      </trans-unit>
+      <trans-unit id="LinkUnfurlLabels">
+        <source>Every word a `LinkUnfurl` shows or announces, in English by default. Replace the instance (or set its properties) to translate or reword; texts with names in them are functions so the word order can change. The message field's own name and placeholder are `Label` and `Placeholder`.</source>
+        <target>`LinkUnfurl` 顯示或播報的全部文字，預設為英文。替換執行個體（或設定其屬性）即可翻譯或改寫；含名稱的文字是函式，以便調整詞序。訊息輸入區本身的名稱與預留位置文字是 `Label` 與 `Placeholder`。</target>
+      </trans-unit>
+      <trans-unit id="LinkUnfurlLink">
+        <source>A link in the message of a `LinkUnfurl`: its address, its status and its preview.</source>
+        <target>`LinkUnfurl` 訊息中的一個連結：它的網址、狀態與預覽。</target>
+      </trans-unit>
+      <trans-unit id="LinkUnfurlLinkEventArgs">
+        <source>Arguments of the link events of `LinkUnfurl`.</source>
+        <target>`LinkUnfurl` 連結事件的引數。</target>
+      </trans-unit>
+      <trans-unit id="LinkUnfurlMessage">
+        <source>What a `LinkUnfurl` sends: the text, with every link written out as its address, and the previews.</source>
+        <target>`LinkUnfurl` 傳送的內容：文字（每個連結寫為其網址）與預覽。</target>
+      </trans-unit>
+      <trans-unit id="LinkUnfurlPreview">
+        <source>What a link in a `LinkUnfurl` points to, as an unfurl endpoint reports it (Open Graph, oEmbed): the site, a title, an optional description, image and favicon. A preview without an `Image` shows a card without a media area; one without a `Favicon` shows the site's initial on a small square.</source>
+        <target>`LinkUnfurl` 中連結所指向的內容，由展開端點回報（Open Graph、oEmbed）：網站、標題，以及選用的描述、圖片與網站圖示。沒有 `Image` 的預覽顯示不含媒體區的卡片；沒有 `Favicon` 的預覽在小方塊上顯示網站的首字母。</target>
+      </trans-unit>
+      <trans-unit id="LinkUnfurlSamples">
+        <source>Invented sample links for `LinkUnfurl` demos: three fictional sites (a trail guide, a recipe box, a history podcast) with code-drawn favicons and share images, plus the starting message. None of them is a real site.</source>
+        <target>供 `LinkUnfurl` 範例使用的虛構範例連結：三個虛構網站（步道指南、食譜合集、歷史 Podcast），網站圖示與分享圖片皆由程式碼繪製，另有起始訊息。它們都不是真實網站。</target>
+      </trans-unit>
+      <trans-unit id="LinkUnfurlSendRequestedEventArgs">
+        <source>Arguments of `SendRequested`. Set `Pending` to the task that sends the message: the composer holds until it completes, then clears and confirms; a failed task shows its message under the composer.</source>
+        <target>`SendRequested` 的引數。把 `Pending` 設為傳送訊息的工作：輸入框保持等待直到它完成，然後清除並確認；工作失敗時在輸入框下方顯示其訊息。</target>
       </trans-unit>
       <trans-unit id="LiveVisitors">
         <source>A realtime visitors card (Arc Live visitors, design reference): a pulsing live status, the number of people on the site rolling digit by digit, a dotted world map where new arrivals ping in and fade, the top pages right now with bars that reorder as counts change, and a ticker of signups and upgrades with the country and how long ago. A pause button holds the last snapshot. Feed it from your realtime source: set `Count`, `Pages`, `Visitors` and `Events` to new snapshots as they arrive (the card works out what moved from the ids), or push single arrivals and conversions with `PushVisitor` and `PushEvent`. Reflect the socket's state in `Connection`. Without `Count` the card plays its `Simulation`, a `LiveVisitorsSimulation` of a site you describe; with neither, it holds placeholders and says there is no data.</source>
@@ -15904,6 +16520,106 @@
         <source>Raised for every real change of `Value`: typing, paste, keys, chips, a currency choice, automation and programmatic sets (`ChangeSource` tells them apart). Never raised during template application.</source>
         <target>`Value` 每次實際變化時引發：輸入、貼上、按鍵、標籤、貨幣選取、自動化及程式設定均會觸發（`ChangeSource` 用於區分來源）。套用範本期間從不引發。</target>
       </trans-unit>
+      <trans-unit id="MorphBlock">
+        <source>One piece of a `SkeletonMorph` layout (Arc Skeleton morph, design reference). While its region loads it is a skeleton of the given size and its content is not shown; when the region resolves, the content mounts in place, the skeleton stretches from its own box to the content's measured box on a critically damped spring while it fades, and the content sharpens in out of a 4 px blur. Give text skeletons the text's line height and line count (`Lines`, `LineHeight`) and set `SkeletonWidth` near the typical text width. A block outside a `SkeletonMorph` simply shows its content.</source>
+        <target>`SkeletonMorph` 版面中的一個部分（Arc Skeleton morph，設計參考）。所在區域載入時它是指定尺寸的骨架，不顯示內容；區域解析時內容就地掛載，骨架在淡出的同時沿臨界阻尼彈簧從自身的方框伸展到內容量得的方框，內容則從 4 px 模糊中變清晰。為文字骨架提供文字的行高與行數（`Lines`、`LineHeight`），並把 `SkeletonWidth` 設為接近文字的典型寬度。不在 `SkeletonMorph` 中的區塊直接顯示其內容。</target>
+      </trans-unit>
+      <trans-unit id="MorphBlock.IsCircle">
+        <source>Makes the skeleton round (an avatar placeholder): its radius is half the short side.</source>
+        <target>讓骨架變為圓形（頭像佔位）：圓角為短邊的一半。</target>
+      </trans-unit>
+      <trans-unit id="MorphBlock.IsResolved">
+        <source>True once the content is shown (mounted); false while the block is a skeleton or waiting for its turn.</source>
+        <target>內容顯示（已掛載）後為 true；區塊是骨架或在等待輪到它時為 false。</target>
+      </trans-unit>
+      <trans-unit id="MorphBlock.LineHeight">
+        <source>Line height of the loaded text in pixels (20 by default), so the skeleton is exactly as tall as the text.</source>
+        <target>載入後文字的行高（像素，預設 20），使骨架與文字一樣高。</target>
+      </trans-unit>
+      <trans-unit id="MorphBlock.Lines">
+        <source>Shows a text skeleton with this many lines: one bar centred in each line box, the last of several shorter. 0 (default) shows a filled shape instead. Use 1 for single-line text.</source>
+        <target>顯示這麼多行的文字骨架：每個行框中一根置中的長條，多行時最後一根較短。0（預設）則顯示實心形狀。單行文字用 1。</target>
+      </trans-unit>
+      <trans-unit id="MorphBlock.SkeletonHeight">
+        <source>Skeleton height in pixels. NaN (default) is `Lines` × `LineHeight` for a text skeleton, the width for a circle with a set width, and 12 otherwise.</source>
+        <target>骨架高度（像素）。NaN（預設）時，文字骨架為 `Lines` × `LineHeight`，設定了寬度的圓為該寬度，其餘為 12。</target>
+      </trans-unit>
+      <trans-unit id="MorphBlock.SkeletonRadius">
+        <source>Corner radius of a shape skeleton in pixels (6 by default; clamped to half the short side).</source>
+        <target>形狀骨架的圓角（像素，預設 6；限制在短邊的一半以內）。</target>
+      </trans-unit>
+      <trans-unit id="MorphBlock.SkeletonWidth">
+        <source>Skeleton width in pixels. NaN (default) fills the available width (times `SkeletonWidthRatio`), and a filling block also takes the full width once loaded.</source>
+        <target>骨架寬度（像素）。NaN（預設）填滿可用寬度（乘以 `SkeletonWidthRatio`），填滿型區塊載入後也佔滿整個寬度。</target>
+      </trans-unit>
+      <trans-unit id="MorphBlock.SkeletonWidthRatio">
+        <source>The fraction of the available width a filling skeleton (`SkeletonWidth` NaN) covers; 1 by default.</source>
+        <target>填滿型骨架（`SkeletonWidth` 為 NaN）覆蓋可用寬度的比例；預設 1。</target>
+      </trans-unit>
+      <trans-unit id="MorphLoader">
+        <source>A tiny loader drawn from four strokes that morph between dots, bars, a ring and a square while loading, then fold into a check (success) or a cross (error) with a small pop (Arc morph loader, design reference). Drive it with `Status` from your request state and return it to Loading for the next request: the strokes gather back into the `Variant`. It inherits its color from `Foreground` like text, takes the success or danger tone for a result (`Tone`), never changes its footprint, and is announced as a polite status unless `IsDecorative` is set.</source>
+        <target>一個由四筆繪成的小型載入指示器：載入中在點、條、環與方塊之間變形，結束時折成勾號（成功）或叉號（失敗）並輕輕彈一下（Arc morph loader，設計參考）。用請求狀態驅動 `Status`，下一次請求時把它設回 Loading：筆畫會收攏回 `Variant`。它像文字一樣從 `Foreground` 繼承顏色，出現結果時採用成功或危險色調（`Tone`），從不改變佔位尺寸，除非設定了 `IsDecorative`，否則會以禮貌的狀態播報。</target>
+      </trans-unit>
+      <trans-unit id="MorphLoader.Foreground">
+        <source>The color of the strokes while loading (inherited like text color).</source>
+        <target>載入中筆畫的顏色（像文字顏色一樣繼承）。</target>
+      </trans-unit>
+      <trans-unit id="MorphLoader.IsDecorative">
+        <source>Drops the status announcement and hides the loader from assistive technology, for loaders inside a control that announces its own state.</source>
+        <target>移除狀態播報並對輔助技術隱藏載入器，用於本身會播報狀態的控制項中的載入器。</target>
+      </trans-unit>
+      <trans-unit id="MorphLoader.Labels">
+        <source>The accessible names for loading, success and error.</source>
+        <target>載入、成功與失敗時的無障礙名稱。</target>
+      </trans-unit>
+      <trans-unit id="MorphLoader.Settled">
+        <source>Raised once a result (Success or Error) has finished folding, popping and taking its tone.</source>
+        <target>結果（Success 或 Error）完成折疊、彈跳並換好色調後觸發一次。</target>
+      </trans-unit>
+      <trans-unit id="MorphLoader.Size">
+        <source>The rendered side in px (24 by default). The drawing uses a 24 unit grid scaled to this size.</source>
+        <target>繪製邊長，單位 px（預設 24）。繪圖使用依此尺寸縮放的 24 單位格線。</target>
+      </trans-unit>
+      <trans-unit id="MorphLoader.Status">
+        <source>Loading loops the variant, Success folds the strokes into a check, Error into a cross.</source>
+        <target>Loading 循環播放變體，Success 把筆畫折成勾號，Error 折成叉號。</target>
+      </trans-unit>
+      <trans-unit id="MorphLoader.StrokeWidth">
+        <source>The stroke thickness of the ring, square, check and cross in grid units (2.5 by default).</source>
+        <target>環、方塊、勾號與叉號的線寬，以格線單位計（預設 2.5）。</target>
+      </trans-unit>
+      <trans-unit id="MorphLoader.Tone">
+        <source>Colors the check with the success tone and the cross with the danger tone. Off keeps the foreground.</source>
+        <target>勾號使用成功色調，叉號使用危險色調。關閉時保持前景色。</target>
+      </trans-unit>
+      <trans-unit id="MorphLoader.Variant">
+        <source>The loading shape. Changing it while loading morphs the strokes into the new shape.</source>
+        <target>載入形狀。載入中修改它會讓筆畫變形為新形狀。</target>
+      </trans-unit>
+      <trans-unit id="MorphLoaderLabels">
+        <source>The words a `MorphLoader` gives assistive technology, one per status, in English by default. Replace the instance (or set its properties) to translate or reword them, for example "Saving", "Saved" and "Couldn't save".</source>
+        <target>`MorphLoader` 提供給輔助技術的文字，每種狀態一條，預設為英文。替換執行個體（或設定其屬性）即可翻譯或改寫，例如 "Saving"、"Saved" 和 "Couldn't save"。</target>
+      </trans-unit>
+      <trans-unit id="MorphLoaderLabels.Error">
+        <source>The accessible name once the work failed.</source>
+        <target>工作失敗後的無障礙名稱。</target>
+      </trans-unit>
+      <trans-unit id="MorphLoaderLabels.Loading">
+        <source>The accessible name while loading.</source>
+        <target>載入中的無障礙名稱。</target>
+      </trans-unit>
+      <trans-unit id="MorphLoaderLabels.Success">
+        <source>The accessible name once the work succeeded.</source>
+        <target>工作成功後的無障礙名稱。</target>
+      </trans-unit>
+      <trans-unit id="MorphLoaderSettledEventArgs">
+        <source>Arguments of `Settled`.</source>
+        <target>`Settled` 的參數。</target>
+      </trans-unit>
+      <trans-unit id="MorphLoaderSettledEventArgs.Status">
+        <source>The result the loader now shows at rest (Success or Error).</source>
+        <target>載入器現在靜止顯示的結果（Success 或 Error）。</target>
+      </trans-unit>
       <trans-unit id="MorphSelect">
         <source>Arc morph select: a select whose trigger is the list. Opening grows the trigger itself into the options surface (width, height and corners spring together, P9), a single highlight glides between options (P7), and the chosen label lifts out of the list and settles into the trigger (P8) while the trigger springs to its new width (P5). Supports groups (`Group`), icons and trailing meta, type-ahead, search for long lists and the full listbox keyboard model. Use it for property pickers and form fields with up to a few hundred options. Keyboard: Enter, Space and the arrows open on the selected option (Home / End open on the first or last); arrows, PageUp / PageDown (8 at a time) and Home / End move; Enter or Space picks; Alt+Up picks and closes; typing jumps (or searches when search is on); Escape closes and returns focus; Tab closes without picking.</source>
         <target>Arc 變形選擇框：觸發器本身即是清單。開啟時，觸發器會直接變形為選項面板（寬度、高度與圓角一同以彈簧變化，P9），單一反白在選項之間滑動（P7），所選標籤從清單中浮起並落入觸發器（P8），同時觸發器以彈簧變為新寬度（P5）。支援群組（`Group`）、圖示與尾隨中繼資料、輸入搜尋、長清單搜尋以及完整的清單方塊鍵盤操作模型。適用於屬性選擇器以及最多數百個選項的表單欄位。鍵盤：Enter、空白鍵與方向鍵會在所選選項上開啟（Home / End 在第一個或最後一個選項上開啟）；方向鍵、PageUp / PageDown（每次 8 項）與 Home / End 用於移動；Enter 或空白鍵用於選取；Alt+Up 選取並關閉；輸入字元會跳轉（開啟搜尋時則進行搜尋）；Escape 關閉並返回焦點；Tab 關閉且不選取。</target>
@@ -16847,6 +17563,110 @@
       <trans-unit id="NotificationItem.Tone">
         <source>The icon of an update without an actor: Info (default), Success or Warning.</source>
         <target>沒有發起人的更新所用的圖示：Info（預設）、Success 或 Warning。</target>
+      </trans-unit>
+      <trans-unit id="NowPlaying">
+        <source>A persistent "now playing" player (Arc Now playing, design reference): a 336 × 64 mini bar — cover thumbnail, title and artist, level bars, play and next — that grows in place, in one continuous morph, into the full player with a large cover, a 54-bar waveform scrubber, the elapsed and remaining time and previous / play / next. The cover, play and next buttons fly between the two layouts while the shell's height and radius follow the same spring; the other parts fade out and stagger in. Pull the full cover down (more than 70px, or flick it) or press Escape to fold it back. Give it `Tracks`. Playback runs on its own clock (one second per second, on to the next track at the end, wrapping at both ends), so it works without audio. To drive real audio, follow `IsPlaying` and `Index` (both two-way) or handle `PlayingChanged` and `IndexChanged`, report the audio position through `CurrentTime` (each value corrects the clock, which keeps the waveform moving between updates; ignored during a scrub), and set the audio position in `SeekRequested`.</source>
+        <target>一個常駐的 "now playing" 播放器（Arc Now playing，設計參考）：336 × 64 的迷你列——封面縮圖、標題與演出者、音量列、播放與下一首——以一次連續形變原地展開為完整播放器，帶大封面、54 根柱的波形拖曳定位列、已播放與剩餘時間，以及上一首 / 播放 / 下一首。封面、播放與下一首按鈕在兩種版面之間飛行，外殼的高度與圓角跟隨同一彈簧變化；其餘部分淡出，並依序淡入。向下拉完整封面（超過 70px 或快速甩動）或按 Escape 即可收合回去。請設定 `Tracks`。播放運行在自己的時鐘上（每秒走一秒，播完自動切到下一首，兩端都會回繞），因此沒有音訊也能運作。要驅動真實音訊，請跟隨 `IsPlaying` 與 `Index`（皆為雙向），或處理 `PlayingChanged` 與 `IndexChanged`，並透過 `CurrentTime` 回報音訊位置（每個值都會校正時鐘，使波形在兩次更新之間保持移動；波形拖曳期間忽略），在 `SeekRequested` 中設定音訊位置。</target>
+      </trans-unit>
+      <trans-unit id="NowPlaying.CurrentTime">
+        <source>The position reported by real audio (for example on each time update). Every new value corrects the built-in clock, which keeps moving between updates; ignored while the waveform is being dragged.</source>
+        <target>真實音訊回報的位置（例如每次時間更新時）。每個新值都會校正內建時鐘，時鐘在兩次更新之間持續前進；波形被拖曳時忽略。</target>
+      </trans-unit>
+      <trans-unit id="NowPlaying.ExpandedChanged">
+        <source>Raised when the full player starts to open or to fold back.</source>
+        <target>完整播放器開始展開或開始收合回去時引發。</target>
+      </trans-unit>
+      <trans-unit id="NowPlaying.Index">
+        <source>The current track's position in `Tracks` (0). Two-way: skips and the end of a track change it.</source>
+        <target>目前曲目在 `Tracks` 中的位置（0）。雙向：跳過曲目和曲目播完都會改變它。</target>
+      </trans-unit>
+      <trans-unit id="NowPlaying.IndexChanged">
+        <source>Raised when the track changes by a skip or because a track ended (not when `Index` is set from outside).</source>
+        <target>曲目因跳過或因曲目播完而改變時引發（從外部設定 `Index` 時不引發）。</target>
+      </trans-unit>
+      <trans-unit id="NowPlaying.IsExpanded">
+        <source>Whether the full player is open (false: the mini bar). Two-way: the mini bar, the collapse button, Escape and the pull change it.</source>
+        <target>完整播放器是否展開（false：迷你列）。雙向：迷你列、收合按鈕、Escape 與下拉都會改變它。</target>
+      </trans-unit>
+      <trans-unit id="NowPlaying.IsPlaying">
+        <source>Whether the track is playing (false). Two-way: the play button and Space / Enter on it change it.</source>
+        <target>曲目是否正在播放（false）。雙向：播放按鈕，以及其上的 Space / Enter 都會改變它。</target>
+      </trans-unit>
+      <trans-unit id="NowPlaying.Label">
+        <source>The accessible name of the player region ("Now playing").</source>
+        <target>播放器區域的無障礙名稱（"Now playing"）。</target>
+      </trans-unit>
+      <trans-unit id="NowPlaying.Labels">
+        <source>The words and accessible names; replace to translate or reword.</source>
+        <target>播放器顯示與朗讀的文字和無障礙名稱；取代即可翻譯或改寫。</target>
+      </trans-unit>
+      <trans-unit id="NowPlaying.PeakCount">
+        <source>The number of waveform bars (54).</source>
+        <target>波形柱的數量（54）。</target>
+      </trans-unit>
+      <trans-unit id="NowPlaying.PlayingChanged">
+        <source>Raised when playback starts or pauses.</source>
+        <target>播放開始或暫停時引發。</target>
+      </trans-unit>
+      <trans-unit id="NowPlaying.Position">
+        <source>The playback position now (read only): updated on every whole second, every seek and every track change.</source>
+        <target>目前的播放位置（唯讀）：每整秒、每次定位和每次曲目切換時更新。</target>
+      </trans-unit>
+      <trans-unit id="NowPlaying.RestartThreshold">
+        <source>How much must have played for Previous to restart the track instead of going back (3 seconds).</source>
+        <target>上一首需要已播放多久才會重新播放目前曲目而不是回到上一首（3 秒）。</target>
+      </trans-unit>
+      <trans-unit id="NowPlaying.SeekPageStep">
+        <source>The waveform's Page Up / Page Down step (30 seconds).</source>
+        <target>波形上 Page Up / Page Down 的步長（30 秒）。</target>
+      </trans-unit>
+      <trans-unit id="NowPlaying.SeekRequested">
+        <source>Raised with a new position when a waveform drag ends, on every keyboard seek, when Previous restarts the track (zero) and on `SeekTo`: set your audio position here.</source>
+        <target>波形拖曳結束時、每次鍵盤定位時、上一首重新播放（位置為零）時以及 `SeekTo` 時，以新位置引發：請在這裡設定音訊的位置。</target>
+      </trans-unit>
+      <trans-unit id="NowPlaying.SeekStep">
+        <source>The waveform's arrow-key step (5 seconds).</source>
+        <target>波形上方向鍵的步長（5 秒）。</target>
+      </trans-unit>
+      <trans-unit id="NowPlaying.Tracks">
+        <source>The queue. Each track needs a title, an artist and a length; artwork and peaks are optional.</source>
+        <target>佇列。每首曲目需要標題、演出者和長度；封面與波形峰值為選填。</target>
+      </trans-unit>
+      <trans-unit id="NowPlayingExpandedChangedEventArgs">
+        <source>Arguments of `ExpandedChanged`.</source>
+        <target>`ExpandedChanged` 的引數。</target>
+      </trans-unit>
+      <trans-unit id="NowPlayingIndexChangedEventArgs">
+        <source>Arguments of `IndexChanged`.</source>
+        <target>`IndexChanged` 的引數。</target>
+      </trans-unit>
+      <trans-unit id="NowPlayingLabels">
+        <source>Every word `NowPlaying` shows or says, with English defaults. Patterns use `{0}`, `{1}` ... as noted on each; replace the object (or set its properties before the player is shown) to translate or reword.</source>
+        <target>`NowPlaying` 顯示或朗讀的每個文字，皆附英文預設值。樣式使用 `{0}`、`{1}` ……，各處說明見對應項；取代整個物件（或在播放器顯示前設定其屬性）即可翻譯或改寫。</target>
+      </trans-unit>
+      <trans-unit id="NowPlayingLevels">
+        <source>Three small level bars that dance while a track plays and rest while paused (Arc Now playing's levels, design reference): 3 × 14 bars 2 apart, growing from the bottom. Playing, each bar swings between 25% and 100% of its height (ease-in-out, back and forth) with its own period — 900, 640 and 1100ms, started 0, 300 and 500ms in — at full opacity. Paused, they settle in 240ms to 30%, 60% and 42% at 55% opacity. Reduced motion holds them still while playing (70%, 100%, 70%). Decorative: hidden from assistive tech.</source>
+        <target>三根小音量列，播放時跳動，暫停時靜止（Arc Now playing 的音量列，設計參考）：3 × 14 根柱，間距 2，從底部向上生長。播放時，每根柱在其高度的 25% 與 100% 之間往復擺動（ease-in-out），各自有獨立的週期——900、640 和 1100ms，分別延遲 0、300 和 500ms 開始——且完全不透明。暫停時，它們在 240ms 內沉降到 30%、60% 和 42%，不透明度為 55%。減少動態效果時，播放中保持靜止（70%、100%、70%）。僅作裝飾：對輔助技術隱藏。</target>
+      </trans-unit>
+      <trans-unit id="NowPlayingLevels.Foreground">
+        <source>The bar color (inherited; the theme uses the text color).</source>
+        <target>柱的顏色（繼承；主題使用文字顏色）。</target>
+      </trans-unit>
+      <trans-unit id="NowPlayingLevels.IsPlaying">
+        <source>Whether a track is playing: the bars move only while true.</source>
+        <target>是否正在播放曲目：僅在為 true 時柱子才會移動。</target>
+      </trans-unit>
+      <trans-unit id="NowPlayingPlayingChangedEventArgs">
+        <source>Arguments of `PlayingChanged`.</source>
+        <target>`PlayingChanged` 的引數。</target>
+      </trans-unit>
+      <trans-unit id="NowPlayingSeekEventArgs">
+        <source>Arguments of `SeekRequested`: set your audio position here.</source>
+        <target>`SeekRequested` 的引數：請在這裡設定音訊的位置。</target>
+      </trans-unit>
+      <trans-unit id="NowPlayingTrack">
+        <source>One track of a `NowPlaying` queue: its id, title, artist, length, artwork and waveform peaks. Set the values before the track is shown; the player reads them when the track becomes current (replace the item in `Tracks` to change a track that is showing).</source>
+        <target>`NowPlaying` 佇列中的一首曲目：其 ID、標題、演出者、長度、封面與波形峰值。請在曲目顯示之前設定這些值；曲目成為目前曲目時播放器會讀取它們（要更改正在顯示的曲目，請取代 `Tracks` 中的該項）。</target>
       </trans-unit>
       <trans-unit id="NumberField">
         <source>Arc number field: a bounded number with clear increment controls. The value rolls like an odometer, the steppers and ArrowUp / ArrowDown repeat and speed up while held, Shift, PageUp and PageDown take large steps, Home and End jump to the limits, and `IsScrubEnabled` lets the label be dragged sideways. Typing edits a plain draft that applies live while valid and commits on Enter, blur or the next step (snapped to the step grid and clamped). A press past a limit strains the value toward it, shakes the refused stepper and names the limit beside the label (`"Max 10 seats"`).</source>
@@ -22028,6 +22848,274 @@
         <source>Whether the section has unsaved changes: the page shows its save bar while this section is selected.</source>
         <target>區段是否有未儲存的變更：選取此區段時，頁面會顯示其儲存列。</target>
       </trans-unit>
+      <trans-unit id="SheetStack">
+        <source>A stack of nested modal sheets for short drill-down flows (settings, filters, account details): each level opens on top of the last, and the levels below shrink by 5%, darken and keep a strip of their top edge in view. Below `Breakpoint` the levels are bottom sheets that can be dragged or flicked down to close; from it up they are centered dialogs. The page content is the control's `Content`; the levels are declared in `Sheets` and opened by id with `Push` or a button carrying `OpenSheetProperty`.</source>
+        <target>用於簡短逐層深入流程（設定、篩選、帳戶詳細資料）的巢狀強制回應面板堆疊：每一層在上一層之上開啟，下方各層縮小 5%、變暗，並保留一條頂邊可見。寬度低於 `Breakpoint` 時各層是可向下拖曳或甩動關閉的底部面板；達到或超過它時則是置中的對話方塊。頁面內容是控制項的 `Content`；各層在 `Sheets` 中宣告，並透過 `Push` 或帶有 `OpenSheetProperty` 的按鈕依 id 開啟。</target>
+      </trans-unit>
+      <trans-unit id="SheetStack.ActualMode">
+        <source>The presentation in use: `Sheet` or `Dialog`.</source>
+        <target>目前使用的呈現方式：`Sheet` 或 `Dialog`。</target>
+      </trans-unit>
+      <trans-unit id="SheetStack.Breakpoint">
+        <source>The width from which `Auto` shows dialogs (default 640): the control's own width when `IsContained`, otherwise the window's.</source>
+        <target>`Auto` 開始顯示對話方塊的寬度（預設 640）：`IsContained` 時為控制項本身寬度，否則為視窗寬度。</target>
+      </trans-unit>
+      <trans-unit id="SheetStack.Close">
+        <source>Closes every level at once (they leave together).</source>
+        <target>一次關閉所有層（它們一起離開）。</target>
+      </trans-unit>
+      <trans-unit id="SheetStack.GetIsDragExcluded">
+        <source>Gets `IsDragExcludedProperty`.</source>
+        <target>取得 `IsDragExcludedProperty`。</target>
+      </trans-unit>
+      <trans-unit id="SheetStack.GetOpenSheet">
+        <source>Gets `OpenSheetProperty`.</source>
+        <target>取得 `OpenSheetProperty`。</target>
+      </trans-unit>
+      <trans-unit id="SheetStack.IsContained">
+        <source>When true the levels and the scrim cover only this control (clipped to its corner radius) and the rest of the page stays usable; when false (default) they cover the whole window.</source>
+        <target>為 true 時，各層與遮罩只覆蓋此控制項（依其圓角裁切），頁面其餘部分仍可使用；為 false（預設）時覆蓋整個視窗。</target>
+      </trans-unit>
+      <trans-unit id="SheetStack.IsDragExcluded">
+        <source>Keeps a press on this element (and its descendants) from dragging the top sheet, for content with its own drag: sliders, maps, canvases. Text boxes are always excluded.</source>
+        <target>阻止在此元素（及其子系）上的按下拖曳頂層面板，用於自帶拖曳的內容：滑桿、地圖、畫布。文字方塊一律排除。</target>
+      </trans-unit>
+      <trans-unit id="SheetStack.IsOpen">
+        <source>True while at least one level is open.</source>
+        <target>至少有一層開啟時為 true。</target>
+      </trans-unit>
+      <trans-unit id="SheetStack.Labels">
+        <source>The words on the close button and the back button's accessible name; English by default.</source>
+        <target>關閉按鈕上的文字與返回按鈕的無障礙名稱；預設為英文。</target>
+      </trans-unit>
+      <trans-unit id="SheetStack.Mode">
+        <source>Sheets, dialogs, or by width (`Auto`, the default).</source>
+        <target>面板、對話方塊，或依寬度決定（`Auto`，預設）。</target>
+      </trans-unit>
+      <trans-unit id="SheetStack.OpenSheet">
+        <source>Makes any button a trigger: a click pushes the sheet with this id onto the nearest `SheetStack` it sits in (page content or a sheet), after `Pushing`. A sheet that is already open is popped back to.</source>
+        <target>讓任何按鈕成為觸發器：點擊後，在 `Pushing` 之後把具有此 id 的面板推入它所在最近的 `SheetStack`（頁面內容或某個面板中）。已開啟的面板則會退回到它。</target>
+      </trans-unit>
+      <trans-unit id="SheetStack.Pop">
+        <source>Closes the top level. Returns false when nothing is open.</source>
+        <target>關閉頂層。沒有任何層開啟時傳回 false。</target>
+      </trans-unit>
+      <trans-unit id="SheetStack.PopTo">
+        <source>Closes every level above `id`. Returns false when it is not open.</source>
+        <target>關閉 `id` 之上的所有層。它未開啟時傳回 false。</target>
+      </trans-unit>
+      <trans-unit id="SheetStack.Push">
+        <source>Opens the level `id` on top (after `Pushing`). If it is already open the levels above it close instead. Returns false when no level has that id or the push was cancelled.</source>
+        <target>在頂部開啟層 `id`（在 `Pushing` 之後）。如果它已開啟，則改為關閉它之上的各層。沒有該 id 的層或推入被取消時傳回 false。</target>
+      </trans-unit>
+      <trans-unit id="SheetStack.Pushing">
+        <source>A level is about to open (a trigger or `Push`); set Cancel to keep it closed.</source>
+        <target>某一層即將開啟（觸發器或 `Push`）；設定 Cancel 可保持其關閉。</target>
+      </trans-unit>
+      <trans-unit id="SheetStack.SetIsDragExcluded">
+        <source>Sets `IsDragExcludedProperty`.</source>
+        <target>設定 `IsDragExcludedProperty`。</target>
+      </trans-unit>
+      <trans-unit id="SheetStack.SetOpenSheet">
+        <source>Sets `OpenSheetProperty`.</source>
+        <target>設定 `OpenSheetProperty`。</target>
+      </trans-unit>
+      <trans-unit id="SheetStack.Sheets">
+        <source>Every level the stack can open, bottom to top in no particular order; each needs a unique `Id`.</source>
+        <target>堆疊可以開啟的所有層，由下而上，順序不拘；每層都需要唯一的 `Id`。</target>
+      </trans-unit>
+      <trans-unit id="SheetStack.Stack">
+        <source>The ids of the open levels, bottom first (two-way). Setting it opens and closes levels to match: the levels past the common part leave and the new ones rise. Unknown and repeated ids are ignored.</source>
+        <target>已開啟各層的 id，底層在前（雙向）。設定它會開啟和關閉各層以符合：共同部分之後的層離開，新的層升起。未知與重複的 id 會被忽略。</target>
+      </trans-unit>
+      <trans-unit id="SheetStack.StackChanged">
+        <source>The open levels changed (any cause; see `Reason`).</source>
+        <target>已開啟的層發生了變化（任何原因；請參閱 `Reason`）。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackChangeReason">
+        <source>What changed the open stack of a `SheetStack`.</source>
+        <target>是什麼改變了 `SheetStack` 的已開啟堆疊。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackChangeReason.Back">
+        <source>The top sheet's back button.</source>
+        <target>頂層面板的返回按鈕。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackChangeReason.Close">
+        <source>The close button while a single sheet is open.</source>
+        <target>只開啟一個面板時的關閉按鈕。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackChangeReason.CloseAll">
+        <source>The "Close all" button: every sheet left together.</source>
+        <target>"Close all" 按鈕：所有面板一起離開。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackChangeReason.Drag">
+        <source>The top sheet was dragged or flicked down.</source>
+        <target>頂層面板被向下拖曳或甩動。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackChangeReason.Escape">
+        <source>The Escape key closed the top sheet.</source>
+        <target>Escape 鍵關閉了頂層面板。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackChangeReason.Programmatic">
+        <source>`Pop`, `PopTo`, `Close` or a new `Stack` value.</source>
+        <target>`Pop`、`PopTo`、`Close` 或新的 `Stack` 值。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackChangeReason.Push">
+        <source>A sheet was pushed (a trigger, `Push`).</source>
+        <target>推入了一個面板（觸發器、`Push`）。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackChangeReason.ScrimPress">
+        <source>A press on the scrim (or on the edge of a sheet below) closed the top sheet.</source>
+        <target>在遮罩（或下方面板的邊緣）上的按下關閉了頂層面板。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackChangedEventArgs">
+        <source>Event data of `StackChanged`.</source>
+        <target>`StackChanged` 的事件資料。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackChangedEventArgs.NewStack">
+        <source>The open sheet ids after the change, bottom first.</source>
+        <target>變化後已開啟面板的 id，底層在前。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackChangedEventArgs.OldStack">
+        <source>The open sheet ids before the change, bottom first.</source>
+        <target>變化前已開啟面板的 id，底層在前。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackChangedEventArgs.Reason">
+        <source>What caused the change.</source>
+        <target>引起變化的原因。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackLabels">
+        <source>Every word a `SheetStack` shows or gives its buttons as an accessible name, in English by default. Replace the instance (or set its properties) to translate or reword.</source>
+        <target>`SheetStack` 顯示的或作為按鈕無障礙名稱的所有文字，預設為英文。取代該執行個體（或設定其屬性）即可翻譯或改寫。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackLabels.BackName">
+        <source>The back button's accessible name from the label it shows (the sheet below's `BackLabel` or title). The default is the label itself, so the button reads exactly what it says.</source>
+        <target>依返回按鈕顯示的標籤（下方面板的 `BackLabel` 或標題）得到其無障礙名稱。預設就是標籤本身，因此按鈕讀出的正是它顯示的內容。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackLabels.Close">
+        <source>The close button while one sheet is open.</source>
+        <target>只開啟一個面板時的關閉按鈕。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackLabels.CloseAll">
+        <source>The close button while more than one sheet is open: it closes them all.</source>
+        <target>開啟多個面板時的關閉按鈕：它會全部關閉。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackMode">
+        <source>How a `SheetStack` presents its sheets.</source>
+        <target>`SheetStack` 呈現其面板的方式。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackMode.Auto">
+        <source>Bottom sheets while the layer is narrower than `Breakpoint`, centered dialogs at or above it.</source>
+        <target>圖層窄於 `Breakpoint` 時為底部面板，達到或超過時為置中的對話方塊。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackMode.Dialog">
+        <source>Always centered dialogs, 440 wide.</source>
+        <target>一律為置中的對話方塊，寬 440。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackMode.Sheet">
+        <source>Always bottom sheets: anchored to the bottom edge, at most 560 wide, with a grabber.</source>
+        <target>一律為底部面板：貼齊底邊，最寬 560，帶拖曳條。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackPushingEventArgs">
+        <source>Event data of `Pushing`: set `Cancel` to keep the sheet closed.</source>
+        <target>`Pushing` 的事件資料：設定 `Cancel` 可保持面板關閉。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackPushingEventArgs.Id">
+        <source>The id of the sheet about to open.</source>
+        <target>即將開啟的面板的 id。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackPushingEventArgs.Trigger">
+        <source>The button that asked for it (a `OpenSheetProperty` trigger), or null for `Push`.</source>
+        <target>要求開啟它的按鈕（一個 `OpenSheetProperty` 觸發器），透過 `Push` 時為 null。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackSampleAvatar">
+        <source>A sample avatar choice for the `SheetStack` demos: initials on a color, or a drawn picture.</source>
+        <target>`SheetStack` 範例的一個範例頭像選項：彩色底上的首字母，或一幅繪製的圖片。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackSamples">
+        <source>Invented sample data for the `SheetStack` demos: the account settings of a fictional notes app, a person with initials avatars and four code-drawn pictures (no photos), and the status sentences the preview announces.</source>
+        <target>`SheetStack` 範例的虛構範例資料：一個虛構筆記應用程式的帳戶設定、一位帶首字母頭像和四幅程式碼繪製圖片（無照片）的人物，以及預覽會播報的狀態語句。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackSamples.Avatars">
+        <source>The six avatar choices of the preview, in grid order.</source>
+        <target>預覽的六個頭像選項，依網格順序。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackSamples.Cleared">
+        <source>Announced after the avatar was cleared.</source>
+        <target>頭像清除後播報。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackSamples.DefaultAvatar">
+        <source>The choice the preview starts with.</source>
+        <target>預覽開始時選取的選項。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackSamples.Initials">
+        <source>The first letters of the first two words, upper case ("MR").</source>
+        <target>前兩個詞的首字母，大寫（"MR"）。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackSamples.Intro">
+        <source>What the preview announces when it loads.</source>
+        <target>預覽載入時播報的內容。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackSamples.Name">
+        <source>The person's name.</source>
+        <target>人物的姓名。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackSamples.ResetDone">
+        <source>Announced after a reset.</source>
+        <target>重設後播報。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackSamples.Role">
+        <source>The person's role.</source>
+        <target>人物的職稱。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackSamples.Saved">
+        <source>Announced after the profile was saved.</source>
+        <target>資料儲存後播報。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackSamples.Team">
+        <source>The person's team.</source>
+        <target>人物的團隊。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackSamples.Toggled">
+        <source>The announcement for a settings switch: its name and state, "Spell check: off".</source>
+        <target>設定開關的播報：其名稱與狀態，"Spell check: off"。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackSheet">
+        <source>One level of a `SheetStack`: a modal panel with a header (back button, title, close button), a scrolling body (`Content`) and an optional footer pinned under it. Declare every level in `Sheets`; a level is shown only while its `Id` is in `Stack`.</source>
+        <target>`SheetStack` 的一層：一個強制回應面板，帶標題列（返回按鈕、標題、關閉按鈕）、可捲動的內文（`Content`）以及固定在其下方的選用底欄。在 `Sheets` 中宣告每一層；只有當它的 `Id` 位於 `Stack` 中時才會顯示。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackSheet.BackLabel">
+        <source>What the back button of a level opened from this one shows; null shows this level's `Title`.</source>
+        <target>從此層開啟的下一層的返回按鈕所顯示的文字；為 null 時顯示此層的 `Title`。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackSheet.Depth">
+        <source>How many open levels are above this one (0 for the top level and for a closed sheet).</source>
+        <target>此層之上有多少已開啟的層（頂層與已關閉的面板為 0）。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackSheet.Description">
+        <source>An optional line under the header that describes the panel (its accessible help text).</source>
+        <target>標題列下方描述面板的選用一行文字（其無障礙說明文字）。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackSheet.Footer">
+        <source>Optional content pinned under the scrolling body, right aligned (usually buttons).</source>
+        <target>固定在可捲動內文下方、靠右對齊的選用內容（通常是按鈕）。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackSheet.Id">
+        <source>The id `Push` and the stack's triggers open this level by. Required and unique in its stack.</source>
+        <target>`Push` 與堆疊的觸發器用來開啟此層的 id。必填，且在其堆疊中唯一。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackSheet.IsDismissible">
+        <source>Whether dragging or flicking the panel down closes it (default true). When false the panel still follows a drag with resistance and springs back; the back button, close button, Escape and the scrim still close it.</source>
+        <target>向下拖曳或甩動面板是否會關閉它（預設 true）。為 false 時面板仍會帶阻尼跟隨拖曳並彈回；返回按鈕、關閉按鈕、Escape 與遮罩仍可關閉它。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackSheet.IsTop">
+        <source>True while this level is the top of the stack (the only one that takes input).</source>
+        <target>此層為堆疊頂層（唯一接受輸入的層）時為 true。</target>
+      </trans-unit>
+      <trans-unit id="SheetStackSheet.Title">
+        <source>The heading, centered in the header; also the panel's accessible name and the next level's back label by default.</source>
+        <target>標題，置中顯示於標題列；也是面板的無障礙名稱，並預設作為下一層的返回標籤。</target>
+      </trans-unit>
       <trans-unit id="ShortcutRecorder">
         <source>Arc shortcut recorder: a field that records a keyboard shortcut. Press it (Enter, Space or a click), then press the combination: held modifiers light up as key caps while the chord is built, the finished shortcut settles into place (caps pop in with a 35ms stagger), and a combination that is already taken (`Bindings`, or one the browser or system keeps such as ⌘W and ⌘C) asks before it is used. Escape cancels, Backspace / Delete clears, Tab stops recording and moves on, and the reset button restores `ResetValue`. Caps follow the platform: ⌘ ⇧ glyphs on a Mac, Ctrl+Shift names elsewhere.</source>
         <target>Arc 快速鍵錄入框：記錄鍵盤快速鍵的欄位。按下它（Enter、Space 或按一下），再按下組合鍵：組合過程中，已按住的修飾鍵會以按鍵帽形式亮起；完成的快速鍵以 35ms 錯開的節奏彈出按鍵帽並定位。若組合鍵已被佔用（`Bindings` 中的，或瀏覽器、系統保留的如 ⌘W 與 ⌘C），使用前會先詢問。Escape 取消錄入，Backspace / Delete 清除，Tab 停止錄入並移到下一項，重設按鈕則還原 `ResetValue`。按鍵帽遵循平台慣例：Mac 上顯示 ⌘ ⇧ 符號，其他平台顯示 Ctrl+Shift 文字。</target>
@@ -23131,6 +24219,30 @@
       <trans-unit id="Skeleton.Lines">
         <source>Placeholder text lines (Arc clamps to 1–6). Defaults to 3.</source>
         <target>佔位文字行數（Arc 會限制在 1–6 之間）。預設為 3。</target>
+      </trans-unit>
+      <trans-unit id="SkeletonMorph">
+        <source>A loading region whose skeleton blocks grow into the real content, block by block, instead of swapping (Arc Skeleton morph, design reference). Wrap every visible piece of the loaded layout in a `MorphBlock`. While `IsLoading` is true the blocks show size-matched skeletons that breathe together and the region reports itself busy; when it turns false the blocks resolve in reading order, `Stagger` apart, each stretching from its skeleton to the content's measured box. The region eases to its new height and clips while it does, so its border never jumps; add the `card` style class to make the region the card. Going back to loading is immediate for the blocks while the height still eases.</source>
+        <target>載入區域，其骨架區塊逐塊長成真實內容，而不是直接替換（Arc Skeleton morph，設計參考）。把載入後版面中每個可見部分都包在一個 `MorphBlock` 裡。`IsLoading` 為 true 時，各區塊顯示與內容同尺寸、一起呼吸的骨架，區域回報自己忙碌中；轉為 false 時，各區塊依閱讀順序相隔 `Stagger` 依序解析，每塊從自己的骨架伸展到內容量得的方框。區域平滑調整到新高度並在期間裁切，因此邊框從不跳動；加上 `card` 樣式類別可讓區域本身成為卡片。回到載入時各區塊立即復原，高度仍會平滑調整。</target>
+      </trans-unit>
+      <trans-unit id="SkeletonMorph.IsLoading">
+        <source>While true, blocks show their skeletons and the region is busy. Turning it false resolves the blocks.</source>
+        <target>為 true 時各區塊顯示骨架，區域處於忙碌狀態。設為 false 會解析各區塊。</target>
+      </trans-unit>
+      <trans-unit id="SkeletonMorph.IsResolving">
+        <source>True from the moment loading ends until every block has resolved and its skeleton has faded.</source>
+        <target>從載入結束到每個區塊都已解析、骨架都已淡出之間為 true。</target>
+      </trans-unit>
+      <trans-unit id="SkeletonMorph.LoadingLabel">
+        <source>Status text screen readers say while the region loads ("Loading" by default).</source>
+        <target>區域載入時螢幕閱讀器讀出的狀態文字（預設 "Loading"）。</target>
+      </trans-unit>
+      <trans-unit id="SkeletonMorph.Resolved">
+        <source>Raised when the blocks have finished resolving after loading ended (also when there was nothing to animate).</source>
+        <target>載入結束後各區塊解析完成時觸發（沒有需要動畫的區塊時也會觸發）。</target>
+      </trans-unit>
+      <trans-unit id="SkeletonMorph.Stagger">
+        <source>Time between blocks as they resolve in reading order (40 ms by default; zero resolves them together).</source>
+        <target>各區塊依閱讀順序解析時相鄰兩塊的間隔（預設 40 ms；為零時一起解析）。</target>
       </trans-unit>
       <trans-unit id="SketchToImage">
         <source>An image generation visual that paints the way an artist does (Arc Sketch to image, design reference). Pencil lines sketch the scene stroke by stroke with a pen tip that lifts and travels between strokes, a round brush sweeps flat color blocks in region by region from back to front, two soft detail passes, film grain and a warm light refine it, and it resolves into the finished picture. Under the canvas a stage label with an icon crossfades above the prompt, beside a thin progress line, a percent and a Replay button. Give it a `Scene` (what gets drawn) and, optionally, the finished `Image`. With no `Status` it loops on its own over them; set `Status` (or `Progress`) to follow a real generation. Nothing is generated: it is a simulated preview over your scene. Without a scene or an image it rests on blank paper, waiting. One clock drives a single 0 → 1 timeline; a frame redraws the ink layer and sets layer opacities, and allocates nothing.</source>
@@ -24479,6 +25591,102 @@
       <trans-unit id="Streamgraph.ShowXAxis">
         <source>Shows the category (time) axis labels under the plot.</source>
         <target>在圖表下方顯示類別（時間）軸標籤。</target>
+      </trans-unit>
+      <trans-unit id="StretchRefresh">
+        <source>A feed that refreshes when it is pulled down past its top (Arc Stretch refresh, design reference). A header with the title, a short status and a round refresh button sits over a well; the rows lie on a sheet that covers the well. Pulling the sheet down at the top of the feed (mouse, pen, touch, or the wheel and trackpad scrolling up) moves it with growing resistance while the rows spread apart, and a line in the gap grows from its centre until it reaches full length exactly at `Threshold`. Letting go past it runs `RefreshHandler`: the sheet rests 60 px down, the line runs back and forth and the header glyph spins; when the work ends, the result shows with a check, new rows drop in from the top while the others slide down, and the sheet springs back. The refresh button (and `RefreshAsync`) does the same without a pull. The rows come from `ItemsSource`; give the new items to the collection before the handler returns (the list matches rows by `ItemKeySelector`, by `Id`, or by the item itself). Without an `ItemTemplate`, `StretchRefreshActivity` items show as `StretchRefreshActivityRow`s. Give the control a height (or a parent that sizes it): the feed scrolls inside.</source>
+        <target>下拉超過頂端即可重新整理的動態串流（Arc Stretch refresh，設計參考）。帶標題、簡短狀態和圓形重新整理按鈕的標頭位於底槽之上；列放在蓋住底槽的列表層上。在動態串流頂端向下拉列表層（滑鼠、筆、觸控，或向上捲動的滾輪和觸控板）時，它帶著越來越大的阻力下移，各列隨之拉開，缺口中的線從中間向兩側伸長，恰好在 `Threshold` 處達到滿長。超過該處放開即執行 `RefreshHandler`：列表層停在下方 60 px，線來回跑動，標頭圖示旋轉；工作結束後顯示帶勾號的結果，新列從頂端落入，其餘列向下滑動，隨後列表層彈回。重新整理按鈕（以及 `RefreshAsync`）不需下拉即可完成同樣的過程。列來自 `ItemsSource`；請在處理常式返回前把新項目放入集合（列表依 `ItemKeySelector`、`Id` 或項目本身比對列）。沒有 `ItemTemplate` 時，`StretchRefreshActivity` 項目顯示為 `StretchRefreshActivityRow`。請給控制項一個高度（或能決定其尺寸的父層）：動態串流在內部捲動。</target>
+      </trans-unit>
+      <trans-unit id="StretchRefresh.IsRefreshing">
+        <source>True while the refresh work runs (from the start of a refresh until its result shows).</source>
+        <target>重新整理工作執行期間為 true（從重新整理開始到顯示結果）。</target>
+      </trans-unit>
+      <trans-unit id="StretchRefresh.ItemKeySelector">
+        <source>A stable key for each item, so a row keeps its place and view across refreshes. Null: `Id`, else the item itself.</source>
+        <target>每個項目的穩定索引鍵，使列在多次重新整理之間保持位置與檢視。為 null 時：`Id`，否則為項目本身。</target>
+      </trans-unit>
+      <trans-unit id="StretchRefresh.ItemTemplate">
+        <source>Builds one row from an item. Null shows `StretchRefreshActivity` items as activity rows and other items as text.</source>
+        <target>從一個項目建立一列。為 null 時，`StretchRefreshActivity` 項目顯示為動態列，其他項目顯示為文字。</target>
+      </trans-unit>
+      <trans-unit id="StretchRefresh.ItemsSource">
+        <source>The rows, newest first. An observable collection animates its changes: new rows drop in, the others slide.</source>
+        <target>各列，最新的在前。可觀察集合的變化會帶動畫：新列落入，其他列滑動。</target>
+      </trans-unit>
+      <trans-unit id="StretchRefresh.Labels">
+        <source>Every word the control shows or announces (English by default).</source>
+        <target>控制項顯示或播報的所有文字（預設為英文）。</target>
+      </trans-unit>
+      <trans-unit id="StretchRefresh.RefreshCompleted">
+        <source>Raised when the refresh work has ended (the result is showing), with the result text or the error.</source>
+        <target>重新整理工作結束（正在顯示結果）時引發，帶有結果文字或錯誤。</target>
+      </trans-unit>
+      <trans-unit id="StretchRefresh.RefreshHandler">
+        <source>The refresh work, run after a pull past the threshold or a press of the refresh button. Update `ItemsSource` before it returns, and return a short result such as "3 new updates" (null or empty shows `Done`). If it throws, the result is `Error`. The token is cancelled when the control leaves the visual tree. Keep it at least about half a second, so the running line can be read.</source>
+        <target>重新整理工作，在下拉超過門檻或按下重新整理按鈕後執行。請在它返回前更新 `ItemsSource`，並返回簡短的結果，例如 "3 new updates"（null 或空白則顯示 `Done`）。若它擲回例外，結果為 `Error`。控制項離開視覺樹時取消該 token。請讓它至少持續約半秒，以便看清跑動的線。</target>
+      </trans-unit>
+      <trans-unit id="StretchRefresh.RefreshStarted">
+        <source>Raised when a refresh starts, before `RefreshHandler` runs.</source>
+        <target>重新整理開始時、`RefreshHandler` 執行之前引發。</target>
+      </trans-unit>
+      <trans-unit id="StretchRefresh.State">
+        <source>Where the control is in its pull and refresh cycle.</source>
+        <target>控制項在下拉與重新整理循環中所處的位置。</target>
+      </trans-unit>
+      <trans-unit id="StretchRefresh.Subtitle">
+        <source>A short status under the heading, such as "Updated 12 min ago". A change rises in.</source>
+        <target>標題下方的簡短狀態，例如 "Updated 12 min ago"。變化時會升起替換。</target>
+      </trans-unit>
+      <trans-unit id="StretchRefresh.Threshold">
+        <source>The pull, in px after resistance, that arms a refresh: 72. The line reaches full length exactly there.</source>
+        <target>經阻力換算後、能觸發重新整理的下拉距離（px）：72。線恰好在此處達到滿長。</target>
+      </trans-unit>
+      <trans-unit id="StretchRefresh.Title">
+        <source>The heading above the feed; it also names the feed region for screen readers.</source>
+        <target>動態串流上方的標題；它也為螢幕閱讀器命名動態串流區域。</target>
+      </trans-unit>
+      <trans-unit id="StretchRefreshActivity">
+        <source>One entry of an activity feed, shown by `StretchRefreshActivityRow` (the row `StretchRefresh` uses when it has no `ItemTemplate`): a sentence "Actor action Target", an optional quote and photo, a meta line ("Billing · 12 min ago") and an unread dot. `IsUnread` is a styled property, so marking an entry read fades its dot on screen.</source>
+        <target>動態串流中的一則，由 `StretchRefreshActivityRow` 顯示（`StretchRefresh` 沒有 `ItemTemplate` 時使用的列）：句子 "Actor action Target"、選用的引用和相片、meta 行（"Billing · 12 min ago"）以及未讀點。`IsUnread` 是樣式屬性，因此把一則標記為已讀會讓螢幕上的點淡出。</target>
+      </trans-unit>
+      <trans-unit id="StretchRefreshActivity.IsUnread">
+        <source>Whether the entry is new to the reader: the row shows an accent dot and reads "New." first.</source>
+        <target>該則對讀者是否為新：列顯示強調色圓點，並先讀出 "New."。</target>
+      </trans-unit>
+      <trans-unit id="StretchRefreshActivityRow">
+        <source>An activity feed row for `StretchRefresh` (its default row for `StretchRefreshActivity` items): a 32 px avatar or status glyph, the sentence with the actor and target in the emphasis weight, an optional quote and 4:3 photo, the meta line, and an 8 px accent dot while the entry is unread. Marking the entry read fades the dot (240 ms) while it shrinks to 0.4 (580 ms spring curve).</source>
+        <target>`StretchRefresh` 的動態列（它對 `StretchRefreshActivity` 項目的預設列）：32 px 頭像或狀態圖示、主詞和受詞以強調字重呈現的句子、選用的引用和 4:3 相片、meta 行，以及該則未讀時的 8 px 強調色圓點。標記為已讀時圓點淡出（240 ms）並縮小到 0.4（580 ms 彈簧曲線）。</target>
+      </trans-unit>
+      <trans-unit id="StretchRefreshActivityRow.Activity">
+        <source>The entry the row shows.</source>
+        <target>該列顯示的項目。</target>
+      </trans-unit>
+      <trans-unit id="StretchRefreshActivityRow.EmphasisBrush">
+        <source>The brush of the actor and target (Foreground by default; the rest of the sentence uses TextSecondary).</source>
+        <target>主詞和受詞的筆刷（預設 Foreground；句子其餘部分使用 TextSecondary）。</target>
+      </trans-unit>
+      <trans-unit id="StretchRefreshActivityRow.UnreadLabel">
+        <source>What a screen reader hears before an unread entry: "New.".</source>
+        <target>螢幕閱讀器在未讀項目前讀出的內容："New."。</target>
+      </trans-unit>
+      <trans-unit id="StretchRefreshCompletedEventArgs">
+        <source>Data of `RefreshCompleted`.</source>
+        <target>`RefreshCompleted` 的事件資料。</target>
+      </trans-unit>
+      <trans-unit id="StretchRefreshLabels">
+        <source>Every word a `StretchRefresh` shows or announces, in English by default. Replace the instance (or set its properties before the control is shown) to translate or reword.</source>
+        <target>`StretchRefresh` 顯示或播報的所有文字，預設為英文。替換該執行個體（或在控制項顯示前設定其屬性）即可翻譯或改寫。</target>
+      </trans-unit>
+      <trans-unit id="StretchRefreshSampleFeed">
+        <source>The simulated backend of the `StretchRefresh` samples, replaying the reference preview: every refresh takes `Latency` (1150 ms), marks the entries shown so far as read, puts the next batch of `CreateBatches` on top (3, 1, 2, then nothing), sets the subtitle to `RefreshedSubtitle` and returns the result line. Pass its `RefreshAsync` as `RefreshHandler`; replace it with real work in an app. Time comes from a `TimeProvider`, so tests can step it.</source>
+        <target>`StretchRefresh` 範例的模擬後端，重播參考預覽：每次重新整理耗時 `Latency`（1150 ms），把已顯示的項目標記為已讀，把 `CreateBatches` 的下一批放到頂端（3、1、2，之後沒有），把副標題設為 `RefreshedSubtitle` 並返回結果行。把它的 `RefreshAsync` 當作 `RefreshHandler` 傳入；在應用程式中換成真實的工作。時間來自 `TimeProvider`，因此測試可以逐步推進。</target>
+      </trans-unit>
+      <trans-unit id="StretchRefreshSampleFeed.PropertyChanged">
+        <source>Raised when `Subtitle` or `IsChanged` changes.</source>
+        <target>`Subtitle` 或 `IsChanged` 變化時引發。</target>
+      </trans-unit>
+      <trans-unit id="StretchRefreshStartedEventArgs">
+        <source>Data of `RefreshStarted`.</source>
+        <target>`RefreshStarted` 的事件資料。</target>
       </trans-unit>
       <trans-unit id="SwipeAction">
         <source>One action of a `SwipeActionsRow`: revealed under the row's edge by a swipe (icon over label), committed by a full swipe on the outermost action, a tap on the revealed action, or the row's More actions menu. An action that removes its item (the default) runs once the row has slid away and collapsed, so the handler can remove the item without a jump; set `KeepsRow` for actions such as Mark as unread, which run at once while the row springs home.</source>
@@ -27868,6 +29076,214 @@
         <source>Defines the `Text` property.</source>
         <target>定義 `Text` 屬性。</target>
       </trans-unit>
+      <trans-unit id="VoiceControls">
+        <source>The call bar of a voice conversation (Arc Voice orb, design reference): a pill that shows one "Start voice chat" button before a session and, during one, a mute toggle, the elapsed time and a red end button. The pill's width springs between the two and the groups cross with a short scale-and-blur swap.</source>
+        <target>語音對話的通話列（Arc Voice 光球，設計參考）：一個膠囊形控制項，工作階段開始前只顯示一個 "Start voice chat" 按鈕；工作階段期間則顯示靜音切換、已經過時間和一個紅色結束按鈕。膠囊寬度在兩種狀態之間以彈簧動畫過渡，兩組內容以短暫的縮放加模糊切換。</target>
+      </trans-unit>
+      <trans-unit id="VoiceControls.Elapsed">
+        <source>The session's elapsed time, shown as m:ss.</source>
+        <target>工作階段的已經過時間，以 m:ss 格式顯示。</target>
+      </trans-unit>
+      <trans-unit id="VoiceControls.EndRequested">
+        <source>Raised when the user presses End (or `End` is called); `IsActive` is already false.</source>
+        <target>使用者按下 End（或呼叫 `End`）時引發；此時 `IsActive` 已為 false。</target>
+      </trans-unit>
+      <trans-unit id="VoiceControls.IsActive">
+        <source>Whether a session is running: the bar shows mute, the timer and end instead of Start.</source>
+        <target>工作階段是否正在進行：通話列會顯示靜音、計時器和結束按鈕，而不是 Start 按鈕。</target>
+      </trans-unit>
+      <trans-unit id="VoiceControls.IsMuted">
+        <source>Whether the microphone is muted (the mute button shows pressed).</source>
+        <target>麥克風是否已靜音（靜音按鈕顯示為按下狀態）。</target>
+      </trans-unit>
+      <trans-unit id="VoiceControls.Labels">
+        <source>The bar's text and accessible names (English defaults when null).</source>
+        <target>通話列的文字與無障礙名稱（為 null 時使用英文預設值）。</target>
+      </trans-unit>
+      <trans-unit id="VoiceControls.MuteChanged">
+        <source>Raised when the user toggles the microphone (or `IsMuted` changes).</source>
+        <target>使用者切換麥克風時引發（或 `IsMuted` 變更時）。</target>
+      </trans-unit>
+      <trans-unit id="VoiceControls.StartRequested">
+        <source>Raised when the user presses Start (or `Start` is called); `IsActive` is already true.</source>
+        <target>使用者按下 Start（或呼叫 `Start`）時引發；此時 `IsActive` 已為 true。</target>
+      </trans-unit>
+      <trans-unit id="VoiceControlsLabels">
+        <source>The text of a `VoiceControls` bar (English defaults): button names, the start label and the timer's spoken name.</source>
+        <target>`VoiceControls` 通話列的文字（英文預設值）：按鈕名稱、開始標籤與計時器的朗讀名稱。</target>
+      </trans-unit>
+      <trans-unit id="VoiceControlsMuteChangedEventArgs">
+        <source>Arguments of `MuteChanged`.</source>
+        <target>`MuteChanged` 的參數。</target>
+      </trans-unit>
+      <trans-unit id="VoiceOrb">
+        <source>A glowing fluid sphere for a voice assistant (Arc Voice orb, design reference). It breathes slowly at rest, swells with the user's voice and sends out ripples while listening, draws in with a bright band running around its rim while thinking, and grows lumpier and pulses with the assistant's voice while speaking. Muted while listening it goes quiet and gray. Every change of state glides on springs that keep their speed when interrupted.</source>
+        <target>用於語音助理的發光流體球體（Arc Voice 光球，設計參考）。靜止時它緩慢呼吸；聆聽時隨使用者的聲音膨脹並發出漣漪；思考時一圈明亮的光帶環繞邊緣並向內收縮；說話時它變得更加凹凸不平，並隨助理的聲音脈動。靜音的聆聽狀態下，它會安靜下來並變為灰色。每次狀態變化都以彈簧滑動過渡，被打斷時仍保持原有速度。</target>
+      </trans-unit>
+      <trans-unit id="VoiceOrb.InputLevel">
+        <source>The user's voice level from 0 to 1, read every frame while listening (for example a microphone meter). Not a number (the default) uses `LevelSource` or the built-in simulated voice.</source>
+        <target>使用者聲音的音量電平，範圍 0 到 1，聆聽時每影格讀取一次（例如麥克風電平表）。非數值（預設值）時使用 `LevelSource` 或內建的模擬聲音。</target>
+      </trans-unit>
+      <trans-unit id="VoiceOrb.IsMuted">
+        <source>Whether the microphone is muted: while listening the orb shrinks a little, drops its ripples and turns gray.</source>
+        <target>麥克風是否已靜音：聆聽時光球會稍微縮小、停止發出漣漪並變為灰色。</target>
+      </trans-unit>
+      <trans-unit id="VoiceOrb.Label">
+        <source>A fixed accessible name. Null names the orb after its state from `Labels`.</source>
+        <target>固定的無障礙名稱。為 null 時，依 `Labels` 中該狀態的文字為光球命名。</target>
+      </trans-unit>
+      <trans-unit id="VoiceOrb.Labels">
+        <source>The accessible names per state (English defaults when null).</source>
+        <target>各狀態的無障礙名稱（為 null 時使用英文預設值）。</target>
+      </trans-unit>
+      <trans-unit id="VoiceOrb.LevelSource">
+        <source>Where levels come from when `InputLevel` or `OutputLevel` is not set. Null uses `Default`.</source>
+        <target>未設定 `InputLevel` 或 `OutputLevel` 時，音量電平的來源。為 null 時使用 `Default`。</target>
+      </trans-unit>
+      <trans-unit id="VoiceOrb.OutputLevel">
+        <source>The assistant's voice level from 0 to 1, read every frame while speaking. Not a number (the default) uses pulses from `PulseOutput`, then `LevelSource` or the built-in simulated voice.</source>
+        <target>助理聲音的音量電平，範圍 0 到 1，說話時每影格讀取一次。非數值（預設值）時依序使用 `PulseOutput` 的脈衝，然後是 `LevelSource` 或內建的模擬聲音。</target>
+      </trans-unit>
+      <trans-unit id="VoiceOrb.Size">
+        <source>The orb's width and height (208 by default); the body is about 60 % of it, the rest is halo and ripples.</source>
+        <target>光球的寬度與高度（預設 208）；球體約佔 60 %，其餘部分為光暈與漣漪。</target>
+      </trans-unit>
+      <trans-unit id="VoiceOrb.State">
+        <source>What the assistant is doing; the orb glides to the new state's look.</source>
+        <target>助理正在做什麼；光球會滑動至新狀態的外觀。</target>
+      </trans-unit>
+      <trans-unit id="VoiceOrb.Tint">
+        <source>The main color of the body, halo and ripples. Null uses the theme's accent.</source>
+        <target>球體、光暈與漣漪的主色調。為 null 時使用主題的強調色。</target>
+      </trans-unit>
+      <trans-unit id="VoiceOrb.Tint2">
+        <source>The second color of the marble's bright veins. Null derives a lighter, softer shade from the tint.</source>
+        <target>大理石紋明亮紋路的第二種顏色。為 null 時從色調衍生出較淺、較柔和的色澤。</target>
+      </trans-unit>
+      <trans-unit id="VoiceOrbLabels">
+        <source>The accessible names a `VoiceOrb` gives itself, one per state (English defaults). Replace the object, or set `Label` for one fixed name.</source>
+        <target>`VoiceOrb` 為自身指定的無障礙名稱，每種狀態一個（英文預設值）。可替換整個物件，或設定 `Label` 為一個固定名稱。</target>
+      </trans-unit>
+      <trans-unit id="VoiceOrbScript">
+        <source>The conversation a `VoiceOrbSession` plays: a hint shown before the session, the exchanges it loops through, and the line shown when the call ends.</source>
+        <target>`VoiceOrbSession` 播放的對話：工作階段開始前顯示的提示、循環播放的一問一答，以及通話結束時顯示的台詞。</target>
+      </trans-unit>
+      <trans-unit id="VoiceOrbScriptTurn">
+        <source>One exchange of a `VoiceOrbScript`: what the user says and what the assistant answers.</source>
+        <target>`VoiceOrbScript` 中的一組問答：使用者說的話與助理的回答。</target>
+      </trans-unit>
+      <trans-unit id="VoiceOrbSession">
+        <source>A simulated voice conversation that drives a `VoiceOrb`, a `VoiceTranscript` and a `VoiceControls` together, with the timing of the Arc Voice orb preview (design reference). It listens (the user's words appear 0.9 s in, then every 150 ms + 22 ms per character of the previous word), thinks 0.7 s after the last word for 1.5 s, speaks the answer word by word (pulsing the orb with each word), and listens again 1.3 s after the last word, looping through the `Script`. Muting pauses the conversation, not the call timer.</source>
+        <target>一個模擬的語音對話，同時驅動 `VoiceOrb`、`VoiceTranscript` 和 `VoiceControls`，時序與 Arc Voice 光球預覽（設計參考）一致。它先聆聽（使用者的話在 0.9 s 時出現，之後每個詞的間隔為 150 ms 加上上一個詞每個字元 22 ms），在最後一個詞之後 0.7 s 開始思考，持續 1.5 s，然後逐詞朗讀回答（每個詞都使光球脈動），並在最後一個詞之後 1.3 s 再次聆聽，循環通過 `Script`。靜音會暫停對話，但不會暫停通話計時器。</target>
+      </trans-unit>
+      <trans-unit id="VoiceOrbSession.AnswerWord">
+        <source>Raised with each word the assistant speaks (the orb pulses with it).</source>
+        <target>助理每說出一個詞時引發（光球隨之脈動）。</target>
+      </trans-unit>
+      <trans-unit id="VoiceOrbSession.Changed">
+        <source>Raised after any of the session's properties changed.</source>
+        <target>工作階段的任一屬性變更後引發。</target>
+      </trans-unit>
+      <trans-unit id="VoiceOrbSimulatedLevels">
+        <source>The levels a `VoiceOrb` shows when the host pushes none: a deterministic, speech-like envelope (a pulse per syllable every 150 to 350 ms with a breath between phrases) for the input, and a steadier one for the output. Both are pure functions of time, so a seed always gives the same voice. No microphone is opened.</source>
+        <target>宿主未推送音量電平時 `VoiceOrb` 顯示的音量電平：一種確定性的、類似語音的包絡（輸入每 150 到 350 ms 一個音節脈衝，片語之間有換氣停頓），輸出則是較平穩的包絡。兩者都只是時間的純函數，因此同一種子總是得到相同的聲音。不會開啟麥克風。</target>
+      </trans-unit>
+      <trans-unit id="VoiceRecorder">
+        <source>A voice note composer with its thread (Arc Voice recorder, design reference). The thread lists voice bubbles (theirs on the left with an avatar, yours on the right), each with play and pause and a waveform that fills in as it plays. Below it, the mic stretches into a recording bar with a breathing dot, a running timer and a live waveform; stop turns the bar into a review where the take plays back and can be scrubbed; send carries the bar up into the thread as your new bubble, and the trash (or Escape) folds it back into the mic. Recording is simulated: every take gets a deterministic voice (see `VoiceRecorderPeaks`) unless `LevelSource` supplies the levels. `MessageSent` and `Cancelled` carry the take (its length and bars); wire your own audio capture there. Sent takes are added to `Messages`.</source>
+        <target>附帶對話串的語音留言輸入區（Arc Voice recorder，設計參考）。對話串列出語音泡泡（對方的在左側並附頭像，你的在右側），每則泡泡都可播放和暫停，波形會隨播放逐漸填滿。下方的麥克風會展開成錄音列，附呼吸的圓點、持續走動的計時和即時波形；停止會把錄音列變成回聽，可重播並拖曳定位這段錄音；傳送會把錄音列帶進對話串成為你最新的泡泡，垃圾桶（或 Escape）則把它收回成麥克風。 錄音是模擬的：除非 `LevelSource` 提供音量，否則每段錄音都會得到一個確定的聲音（見 `VoiceRecorderPeaks`）。`MessageSent` 與 `Cancelled` 帶著這段錄音（長度與長條）；請在那裡接上你自己的音訊擷取。傳送的錄音會加入 `Messages`。</target>
+      </trans-unit>
+      <trans-unit id="VoiceRecorder.Cancelled">
+        <source>A take was discarded with the trash button, Escape or `Discard`. Bubbles.</source>
+        <target>一段錄音已透過垃圾桶按鈕、Escape 或 `Discard` 捨棄。會向上傳遞。</target>
+      </trans-unit>
+      <trans-unit id="VoiceRecorder.Header">
+        <source>Optional content above the thread, such as the other person's avatar, name and a reset button; it sits over a hairline.</source>
+        <target>對話串上方的選用內容，例如對方的頭像、姓名和一顆重設按鈕；它位於一條細線之上。</target>
+      </trans-unit>
+      <trans-unit id="VoiceRecorder.HeaderTemplate">
+        <source>The template for `Header`.</source>
+        <target>`Header` 的範本。</target>
+      </trans-unit>
+      <trans-unit id="VoiceRecorder.Label">
+        <source>The accessible name of the whole recorder, such as "Voice messages with Ada".</source>
+        <target>整個錄音器的無障礙名稱，例如 "Voice messages with Ada"。</target>
+      </trans-unit>
+      <trans-unit id="VoiceRecorder.Labels">
+        <source>Every word the recorder shows or says.</source>
+        <target>錄音器顯示或朗讀的所有文字。</target>
+      </trans-unit>
+      <trans-unit id="VoiceRecorder.LevelSource">
+        <source>Supplies the level of every 90ms sample while recording. Null: a simulated voice, the same for the same take number.</source>
+        <target>錄音時提供每個 90ms 樣本的音量。為 null 時使用模擬的聲音，相同錄音編號的聲音相同。</target>
+      </trans-unit>
+      <trans-unit id="VoiceRecorder.MaxDuration">
+        <source>The longest take: recording stops by itself and opens the review when it is reached.</source>
+        <target>最長錄音長度：到達時錄音會自動停止並開啟回聽。</target>
+      </trans-unit>
+      <trans-unit id="VoiceRecorder.MessageSent">
+        <source>A take was sent; it is already in the thread. Bubbles.</source>
+        <target>一段錄音已傳送；它已在對話串中。會向上傳遞。</target>
+      </trans-unit>
+      <trans-unit id="VoiceRecorder.Messages">
+        <source>The thread, oldest first. Sent takes are appended to it (a read-only list is replaced by a copy with the take).</source>
+        <target>對話串，最早的在前。傳送的錄音會附加到其中（唯讀清單會被替換為加上這段錄音的副本）。</target>
+      </trans-unit>
+      <trans-unit id="VoiceRecorder.Phase">
+        <source>Where the composer is: idle, recording or reviewing.</source>
+        <target>輸入區所處的階段：靜止、錄音或回聽。</target>
+      </trans-unit>
+      <trans-unit id="VoiceRecorder.SentMeta">
+        <source>The meta line under a bubble you send.</source>
+        <target>你傳送的泡泡下方的附註行。</target>
+      </trans-unit>
+      <trans-unit id="VoiceRecorder.Variant">
+        <source>A bordered card (the default) or plain, to sit inside a page.</source>
+        <target>附邊框的卡片（預設）或無邊框，以便放進頁面中。</target>
+      </trans-unit>
+      <trans-unit id="VoiceRecorderLabels">
+        <source>Every word `VoiceRecorder` shows or says, in English by default. Replace the whole object to localize or reword; sentences with a time or a name are format functions (times arrive as m:ss text).</source>
+        <target>`VoiceRecorder` 顯示或朗讀的所有文字，預設為英文。替換整個物件即可在地化或改寫；帶有時間或名字的句子是格式函式（時間以 m:ss 文字傳入）。</target>
+      </trans-unit>
+      <trans-unit id="VoiceRecorderMessage">
+        <source>One voice message in a `VoiceRecorder` thread: its length, its waveform and, for messages from someone else, who sent it. A message with a `From` name or an `Avatar` is incoming (left, muted bubble); one without is yours (right, dark bubble).</source>
+        <target>`VoiceRecorder` 對話串中的一則語音訊息：它的長度、波形，以及來自他人的訊息由誰傳送。帶有 `From` 名稱或 `Avatar` 的訊息是收到的（左側，柔和底色的泡泡）；兩者都沒有的是你的（右側，深色泡泡）。</target>
+      </trans-unit>
+      <trans-unit id="VoiceRecorderMessageEventArgs">
+        <source>Carries the take that was sent or discarded.</source>
+        <target>帶著已傳送或已捨棄的那段錄音。</target>
+      </trans-unit>
+      <trans-unit id="VoiceRecorderPeaks">
+        <source>Deterministic waveforms for voice messages. `Levels` simulates the 90ms input levels of someone talking (phrases of syllables between pauses, now and then a murmur), `Generate` turns a seed and a length into a message's bars, and `Resample` shrinks any level series to a bar count by taking the loudest sample of each stretch. The same seed always gives the same voice. Values run from 0.12 (silence) to 0.98 in steps of 0.01.</source>
+        <target>語音訊息的確定性波形。`Levels` 模擬一個人說話時每 90ms 的輸入音量（停頓之間是由音節組成的片語，偶爾有低語），`Generate` 把種子和長度變成一則訊息的長條，`Resample` 透過取每一段中最響的樣本，把任意音量序列縮減為指定的長條數。相同的種子永遠得到相同的聲音。值從 0.12（靜音）到 0.98，間距 0.01。</target>
+      </trans-unit>
+      <trans-unit id="VoiceRecorderSamples">
+        <source>Invented sample content for `VoiceRecorder`: a short thread with a neighbour about a garden fence (14, 6 and 9 second messages, as in the reference preview) and a longer one for scrolling. No real people.</source>
+        <target>`VoiceRecorder` 的虛構範例內容：與鄰居討論花園圍籬的簡短對話串（14、6 和 9 秒的訊息，與參考預覽一致），以及一個用於捲動的較長對話串。沒有真實人物。</target>
+      </trans-unit>
+      <trans-unit id="VoiceTranscript">
+        <source>Live captions for a voice conversation (Arc Voice orb, design reference): one centred line, two at most in view, where each new word rises out of a blur. Older lines slide up and fade under the top edge; a new turn fades the old line out upward and brings the new one in.</source>
+        <target>語音對話的即時字幕（Arc Voice 光球，設計參考）：置中的一行，最多同時可見兩行，每個新詞都從模糊中浮現。較舊的行向上滑動，並在頂部邊緣下方淡出；新的輪次會讓舊行向上淡出，再引入新行。</target>
+      </trans-unit>
+      <trans-unit id="VoiceTranscript.IsComplete">
+        <source>Whether the turn's text is final: screen readers then hear the whole sentence once.</source>
+        <target>本輪次的文字是否已定稿：此時螢幕閱讀器會完整朗讀整句一次。</target>
+      </trans-unit>
+      <trans-unit id="VoiceTranscript.MaxLines">
+        <source>How many lines stay in view (2 by default); older lines slide out under the top fade.</source>
+        <target>保持可見的行數（預設 2）；較舊的行會在頂部漸隱區域下方滑出。</target>
+      </trans-unit>
+      <trans-unit id="VoiceTranscript.Speaker">
+        <source>Who speaks this turn: the assistant (foreground), the user (secondary) or the system (smaller, muted).</source>
+        <target>本輪次由誰說話：助理（前景）、使用者（次要）或系統（較小、淡化顯示）。</target>
+      </trans-unit>
+      <trans-unit id="VoiceTranscript.Text">
+        <source>The words of the current turn, separated by spaces. Appending words animates only the new ones.</source>
+        <target>目前輪次的詞語，以空格分隔。追加詞語時只為新增的詞語加上動畫。</target>
+      </trans-unit>
+      <trans-unit id="VoiceTranscript.Turn">
+        <source>The turn number: a new value starts a new turn (the old line leaves, the new one enters).</source>
+        <target>輪次編號：新的值會開始一個新輪次（舊行離開，新行進入）。</target>
+      </trans-unit>
       <trans-unit id="WaffleCategory">
         <source>One category of a `WaffleChart`: a share of the whole drawn as countable cells.</source>
         <target>`WaffleChart` 的一個類別：整體中的一份佔比，以可計數的方格繪製。</target>
@@ -27935,6 +29351,82 @@
       <trans-unit id="WaffleChart.ValueSelector">
         <source>Defines the `ValueSelector` property.</source>
         <target>定義 `ValueSelector` 屬性。</target>
+      </trans-unit>
+      <trans-unit id="WalletStack">
+        <source>A wallet of payment cards, passes or memberships with real materials and depth (Arc Wallet stack, design reference): brushed metal, a black card with a guilloche rosette, frosted glass and deep color, each with an EMV chip, a contactless mark, an embossed number and a light that follows the pointer. Hover to fan the stack, drag or use the arrow keys to cycle cards, and choose a card to lift it into its balance and recent activity.</source>
+        <target>支付卡、通行證或會員卡組成的卡包，帶真實材質與縱深（Arc Wallet stack，設計參考）：拉絲金屬、帶扭索紋玫瑰花飾的黑卡、磨砂玻璃和深色卡面，每張都有 EMV 晶片、感應標記、壓印卡號和隨指標移動的光。懸停展開卡堆，拖曳或用方向鍵輪換卡片，選取一張即可抽出檢視餘額與近期交易。</target>
+      </trans-unit>
+      <trans-unit id="WalletStack.Cards">
+        <source>The cards in stack order, the first in front.</source>
+        <target>依疊放順序排列的卡片，第一張在最前。</target>
+      </trans-unit>
+      <trans-unit id="WalletStack.Culture">
+        <source>The culture that formats balances and amounts; en-US when null.</source>
+        <target>格式化餘額與金額所用的地區；為 null 時用 en-US。</target>
+      </trans-unit>
+      <trans-unit id="WalletStack.Currency">
+        <source>ISO 4217 code of the balances and amounts (USD by default).</source>
+        <target>餘額與金額的 ISO 4217 貨幣代碼（預設 USD）。</target>
+      </trans-unit>
+      <trans-unit id="WalletStack.IsFanEnabled">
+        <source>Whether hovering with a mouse fans the stack and lifts the hovered card.</source>
+        <target>滑鼠懸停時是否展開卡堆並抬起懸停的卡片。</target>
+      </trans-unit>
+      <trans-unit id="WalletStack.IsTiltEnabled">
+        <source>Whether the hovered card tilts toward the mouse and its light follows it.</source>
+        <target>懸停的卡片是否朝滑鼠傾斜，光隨之移動。</target>
+      </trans-unit>
+      <trans-unit id="WalletStack.Label">
+        <source>The heading above the stack, also the stack's accessible name.</source>
+        <target>卡堆上方的標題，也是卡堆的無障礙名稱。</target>
+      </trans-unit>
+      <trans-unit id="WalletStack.Labels">
+        <source>Every text the stack shows or speaks; replace it to translate.</source>
+        <target>卡包顯示或播報的全部文字；替換它即可翻譯。</target>
+      </trans-unit>
+      <trans-unit id="WalletStack.Position">
+        <source>The index of the card in front (two-way). Setting it cycles the stack there; while a card is open it switches the open card.</source>
+        <target>最前方卡片的索引（雙向）。設定後卡堆輪換到該位置；有卡片開啟時則切換開啟的卡片。</target>
+      </trans-unit>
+      <trans-unit id="WalletStack.PositionChanged">
+        <source>Raised when another card comes to the front (by drag, keys, a click or `Position`).</source>
+        <target>另一張卡片來到最前方時觸發（拖曳、按鍵、點擊或 `Position`）。</target>
+      </trans-unit>
+      <trans-unit id="WalletStack.SelectedCard">
+        <source>The open card, or null while all cards are in the stack (two-way).</source>
+        <target>開啟的卡片；所有卡片都在卡堆中時為 null（雙向）。</target>
+      </trans-unit>
+      <trans-unit id="WalletStack.SelectedCardChanged">
+        <source>Raised when a card opens, the open card switches, or the open card goes back into the stack.</source>
+        <target>卡片開啟、開啟的卡片切換或開啟的卡片放回卡堆時觸發。</target>
+      </trans-unit>
+      <trans-unit id="WalletStackCard">
+        <source>One card in a `WalletStack`: what is printed on its face, its balance and its recent activity. The stack reads a card when it is added (or when `Cards` is replaced), so to change a card on screen, replace it in the list.</source>
+        <target>`WalletStack` 中的一張卡：卡面印的內容、餘額和近期交易。卡堆在卡片加入（或替換 `Cards`）時讀取它，要變更螢幕上的卡片，請在清單中替換它。</target>
+      </trans-unit>
+      <trans-unit id="WalletStackIcons">
+        <source>Lucide icons (ISC) for wallet activity that the Core subset does not include, 24×24 stroke geometry. Each property names its Lucide icon. Use them for `Icon`, next to `ArcIcons`.</source>
+        <target>Core 子集未包含的卡包交易用 Lucide 圖示（ISC），24×24 描邊幾何。每個屬性以其 Lucide 圖示命名。可與 `ArcIcons` 一起用於 `Icon`。</target>
+      </trans-unit>
+      <trans-unit id="WalletStackLabels">
+        <source>Every text a `WalletStack` shows or speaks, with English defaults. Sentences that contain values are delegates so a translation can reorder them. Money arrives already formatted in the stack's currency and culture.</source>
+        <target>`WalletStack` 顯示或播報的全部文字，附英文預設值。含數值的句子是委派，翻譯可以調整語序。金額傳入時已依卡包的貨幣與地區格式化。</target>
+      </trans-unit>
+      <trans-unit id="WalletStackPositionChangedEventArgs">
+        <source>Data of `PositionChanged`.</source>
+        <target>`PositionChanged` 的事件資料。</target>
+      </trans-unit>
+      <trans-unit id="WalletStackSamples">
+        <source>Invented sample wallets for the gallery and tests. Every issuer, product, person and merchant is fictional.</source>
+        <target>供 Gallery 和測試使用的虛構範例卡包。所有發卡方、產品、人物和商戶都是虛構的。</target>
+      </trans-unit>
+      <trans-unit id="WalletStackSelectedCardChangedEventArgs">
+        <source>Data of `SelectedCardChanged`.</source>
+        <target>`SelectedCardChanged` 的事件資料。</target>
+      </trans-unit>
+      <trans-unit id="WalletStackTransaction">
+        <source>One line of a card's recent activity.</source>
+        <target>卡片近期交易中的一行。</target>
       </trans-unit>
       <trans-unit id="WebhookDelivery">
         <source>One attempt to deliver an event to an endpoint, with what was sent and what came back.</source>
