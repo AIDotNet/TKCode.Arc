@@ -75,6 +75,9 @@ ArcTheme.Apply(t => t.Appearance(ArcAppearance.Dark).Accent(ArcAccentPreset.Viol
 </Window>
 ```
 
+只有项目用到的图标会被编译进去（源生成器在 C# 和 XAML 中查找）；运行时才决定的图标在项目文件中用
+`<LucideIcon Include="Bell;ArrowRight" />` 声明。
+
 主题色、外观与动效级别：
 
 ```csharp

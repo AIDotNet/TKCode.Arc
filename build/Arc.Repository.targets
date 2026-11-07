@@ -13,4 +13,12 @@
     </ItemGroup>
     <Import Project="$(ArcRepositoryRoot)src/TKCode.Arc.Foundation/buildTransitive/TKCode.Arc.Foundation.targets"
             Condition="'$(ArcFoundationGenerator)' == 'true'" />
+    <!-- Projects that use TKCode.Arc.Icons.Lucide set ArcLucideGenerator=true: the Lucide generator compiles the icons
+         they use into them (a package consumer gets the generator and targets from the package). -->
+    <ItemGroup Condition="'$(ArcLucideGenerator)' == 'true'">
+        <ProjectReference Include="$(ArcRepositoryRoot)src/TKCode.Arc.Icons.Lucide.Generators/TKCode.Arc.Icons.Lucide.Generators.csproj"
+                          OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="all" />
+    </ItemGroup>
+    <Import Project="$(ArcRepositoryRoot)src/TKCode.Arc.Icons.Lucide/buildTransitive/TKCode.Arc.Icons.Lucide.targets"
+            Condition="'$(ArcLucideGenerator)' == 'true'" />
 </Project>

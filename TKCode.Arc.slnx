@@ -13,8 +13,12 @@
     <Project Path="src/TKCode.Arc.AdvancedCharts/TKCode.Arc.AdvancedCharts.csproj" />
     <Project Path="src/TKCode.Arc.Workflow/TKCode.Arc.Workflow.csproj" />
     <Project Path="src/TKCode.Arc.Dock/TKCode.Arc.Dock.csproj" />
+    <Project Path="src/TKCode.Arc.Video/TKCode.Arc.Video.csproj" />
+    <Project Path="src/TKCode.Arc.Video.Native/TKCode.Arc.Video.Native.csproj" />
+    <Project Path="src/TKCode.Arc.Video.Browser/TKCode.Arc.Video.Browser.csproj" />
     <Project Path="src/TKCode.Arc.Mobile/TKCode.Arc.Mobile.csproj" />
     <Project Path="src/TKCode.Arc.Icons.Lucide/TKCode.Arc.Icons.Lucide.csproj" />
+    <Project Path="src/TKCode.Arc.Icons.Lucide.Generators/TKCode.Arc.Icons.Lucide.Generators.csproj" />
     <Project Path="src/TKCode.Arc.Fonts/TKCode.Arc.Fonts.csproj" />
     <Project Path="src/TKCode.Arc.Themes.Corners/TKCode.Arc.Themes.Corners.csproj" />
     <Project Path="src/TKCode.Arc.Themes.Pixel/TKCode.Arc.Themes.Pixel.csproj" />
@@ -25,6 +29,7 @@
     <Project Path="tests/TKCode.Arc.BaseTheme.Tests/TKCode.Arc.BaseTheme.Tests.csproj" />
     <Project Path="tests/TKCode.Arc.Tests/TKCode.Arc.Tests.csproj" />
     <Project Path="tests/TKCode.Arc.Mobile.Tests/TKCode.Arc.Mobile.Tests.csproj" />
+    <Project Path="tests/TKCode.Arc.Video.Native.Tests/TKCode.Arc.Video.Native.Tests.csproj" />
   </Folder>
   <Folder Name="/gallery/">
     <Project Path="gallery/TKCode.Arc.Gallery/TKCode.Arc.Gallery.csproj" />

@@ -79,6 +79,9 @@ comes from the icons package:
 </Window>
 ```
 
+Only the icons a project uses are compiled into it (a source generator finds them in C# and XAML); declare icons chosen at
+run time with `<LucideIcon Include="Bell;ArrowRight" />` in the project file.
+
 Accent, appearance and motion level:
 
 ```csharp

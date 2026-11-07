@@ -21,6 +21,8 @@ internal static class Program
         GalleryLanguages.Store = new FileLanguageStore();
         // Media players make sound through miniaudio; without the native library for this platform they keep time silently.
         ArcAudioNative.Use();
+        // Video players decode with the system player (AVFoundation, Media Foundation, GStreamer); without it they show a test picture.
+        ArcVideoNative.Use();
         BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
     }
 

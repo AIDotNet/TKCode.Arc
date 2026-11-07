@@ -14,6 +14,7 @@
         <ProjectReference Include="../../src/TKCode.Arc.AdvancedCharts/TKCode.Arc.AdvancedCharts.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Workflow/TKCode.Arc.Workflow.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Dock/TKCode.Arc.Dock.csproj" />
+        <ProjectReference Include="../../src/TKCode.Arc.Video/TKCode.Arc.Video.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Themes.Corners/TKCode.Arc.Themes.Corners.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Themes.Pixel/TKCode.Arc.Themes.Pixel.csproj" />
         <ProjectReference Include="../TKCode.Arc.Gallery.Shots/TKCode.Arc.Gallery.Shots.csproj" />
@@ -27,6 +28,13 @@
     <!-- The brand logo (Shell/GalleryBrand.cs). -->
     <ItemGroup>
         <AvaloniaResource Include="Assets/*.png" />
+    </ItemGroup>
+
+    <!-- The video demos' poster and captions (Demos/Video, VideoDemoMedia). The clip itself is a resource of TKCode.Arc.Gallery.Shots
+         on desktop and a file under wwwroot/media in the WebAssembly host, so a browser downloads it only when a video page plays it. -->
+    <ItemGroup>
+        <AvaloniaResource Include="Media/Video/*.vtt" />
+        <AvaloniaResource Include="Media/Video/*.webp" />
     </ItemGroup>
 
 

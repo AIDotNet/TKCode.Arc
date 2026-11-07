@@ -17,4 +17,9 @@
         <AvaloniaResource Include="../TKCode.Arc.Gallery/Docs/**/images/*.webp" Link="Docs/%(RecursiveDir)%(Filename)%(Extension)" />
         <AvaloniaResource Include="../TKCode.Arc.Gallery/Guides/**/images/*.webp" Link="Guides/%(RecursiveDir)%(Filename)%(Extension)" />
     </ItemGroup>
+
+    <!-- The video demos' clip (VideoDemoMedia): here for desktop hosts, served as wwwroot/media/Video/ by the WebAssembly host. -->
+    <ItemGroup>
+        <AvaloniaResource Include="../TKCode.Arc.Gallery/Media/Video/*.mp4" Link="Media/Video/%(Filename)%(Extension)" />
+    </ItemGroup>
 </Project>

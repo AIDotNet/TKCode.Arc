@@ -35,6 +35,7 @@
         <ProjectReference Include="../TKCode.Arc.Gallery/TKCode.Arc.Gallery.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Fonts/TKCode.Arc.Fonts.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Audio.Browser/TKCode.Arc.Audio.Browser.csproj" />
+        <ProjectReference Include="../../src/TKCode.Arc.Video.Browser/TKCode.Arc.Video.Browser.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Icons.Lucide/TKCode.Arc.Icons.Lucide.csproj" />
     </ItemGroup>
     <!-- .NET 11 WebAssembly needs Skia and HarfBuzz compiled with a newer Emscripten than the SkiaSharp 3.119 that Avalonia 12.1 brings:
@@ -153,6 +154,8 @@
         <Content Include="../TKCode.Arc.Gallery/Guides/**/*.md" Link="wwwroot/content/Guides/%(RecursiveDir)%(Filename)%(Extension)" />
         <!-- The map outlines of the Choropleth explorer demos (HttpMapSource): wwwroot/content/Demos/Blocks/ChoroplethExplorer/Maps/map-*.txt. -->
         <Content Include="../TKCode.Arc.Gallery/Demos/Blocks/ChoroplethExplorer/Maps/*.txt" Link="wwwroot/content/Demos/Blocks/ChoroplethExplorer/Maps/%(Filename)%(Extension)" />
+        <!-- The video demos' clip (VideoDemoMedia.HttpRoot): wwwroot/media/Video/aurora.mp4, fetched by the video element when a page plays it. -->
+        <Content Include="../TKCode.Arc.Gallery/Media/Video/*.mp4" Link="wwwroot/media/Video/%(Filename)%(Extension)" />
     </ItemGroup>
 
     <Target Name="ArcCopyLazyAssemblies" AfterTargets="Publish" Condition="'$(WasmBuildingForNestedPublish)' != 'true' And '@(_ArcWasmLazyFile)' != ''">

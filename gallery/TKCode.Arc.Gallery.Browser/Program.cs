@@ -30,6 +30,8 @@ internal sealed partial class Program
         if (AppContext.TryGetSwitch("Arc.Gallery.ShotsOverHttp", out var shotsOverHttp) && shotsOverHttp && args.Length > 1)
         {
             GalleryShots.Source = new HttpShotSource(new Uri(args[1]));
+            // The video demos' clip is served next to the screenshots (wwwroot/media/Video/).
+            TKCode.Arc.Gallery.Demos.VideoDemoMedia.HttpRoot = new Uri(args[1]);
         }
         // Nor the pages' text (the content assembly): a page is fetched when it is shown, in the language it is shown in.
         if (AppContext.TryGetSwitch("Arc.Gallery.TextsOverHttp", out var textsOverHttp) && textsOverHttp && args.Length > 1)
@@ -47,6 +49,8 @@ internal sealed partial class Program
         GalleryLanguages.Store = new BrowserLanguageStore();
         // Media players make sound through an HTML audio element each; if the module cannot load they keep time silently.
         await ArcAudioBrowser.UseAsync();
+        // Video players draw the frames of one HTML video element each into the canvas; if the module cannot load they show a test picture.
+        await ArcVideoBrowser.UseAsync();
         await BuildAvaloniaApp().StartBrowserAppAsync("out");
     }
 

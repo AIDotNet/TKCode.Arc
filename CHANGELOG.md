@@ -8,6 +8,66 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native` and `TKCode.Arc.Audio.Browser`.
 
+## Unreleased
+
+Lucide icons are compiled into each app on demand: an app ships only the icons it uses.
+
+### Changed
+
+- **Lucide icons per app** (`TKCode.Arc.Icons.Lucide`): the package no longer carries the path data of all 2155 icons;
+  its assembly drops from 655 KB to 67 KB (gzip: 130 KB to 31 KB), and an app adds about 100 to 300 bytes per icon it
+  uses. A source generator shipped in the package finds the icons in C# (`LucideIconKind.Bell`) and XAML
+  (`Kind="Bell"`, `{lucide:LucideGeometry Bell}`, `{x:Static lucide:LucideIconKind.Bell}`, style setters) and compiles
+  only those into the project. Nothing changes for icons written like this.
+- **Icons chosen at run time must be declared** (breaking): an icon that comes from a binding, from data or from
+  XAML loaded at run time is declared in the project file with `<LucideIcon Include="Bell;arrow-right" />`
+  (PascalCase or Lucide's own names), or every icon is compiled in with
+  `<LucideIconsIncludeAll>true</LucideIconsIncludeAll>`. An icon that is not compiled in draws nothing and logs a
+  warning naming the line to add; `LucideIconData.Get` returns an empty string for it. New: `LucideIconData.IsRegistered`
+  and `TryGet`.
+
+### Added
+
+- **Video** (new packages `TKCode.Arc.Video`, `TKCode.Arc.Video.Native`, `TKCode.Arc.Video.Browser`; `UseArcVideo()`):
+  `VideoPlayer` plays a video with Arc controls over the picture (seek bar with buffered range, chapters and hover
+  time, volume, speed, captions menu, full screen, auto-hiding bar, keyboard shortcuts, screen-reader value texts) and
+  draws WebVTT / SRT captions itself; `VideoSurface` shows the picture alone. Frames are drawn inside the composition
+  tree, so controls, rounded corners and transforms work over the video; on macOS and Windows they arrive as GPU
+  images without a copy. Decoding uses the system player (Media Foundation, AVFoundation, GStreamer; `ArcVideoNative.Use()`)
+  or an HTML video element in the browser (`ArcVideoBrowser.UseAsync()`); no codecs ship with the app. Without a backend
+  the player shows a test picture. Built-in text in en-US, zh-CN and zh-TW. New gallery group "Video".
+- **Build warnings for Lucide icons**: `ARCL002` marks each place where XAML binds `LucideIcon.Kind` (attribute,
+  property element or style setter) while the project declares no icons, since the generator cannot see which icons a
+  binding shows; `ARCL001` reports a `<LucideIcon Include>` name that is not a Lucide icon. Declaring icons or setting
+  `LucideIconsIncludeAll` ends `ARCL002`; `<NoWarn>ARCL002</NoWarn>` silences it.
+- **Core: `ArcViewportHost` and the window-sized `ArcViewport`**: a region that acts as the window for what it holds, for
+  narrow-viewport previews (a phone outline in a docs page or a design tool). Modals opened inside mount on it (it is an
+  `ArcOverlayHost`), and anchored popups flip and slide to stay within it. `ArcViewport.GetSize`, `GetBounds`, `Observe`
+  and `IsCompact` report the nearest host's size, or the window's client size when there is none; `ArcViewport.CompactWidth`
+  (640 by default) is the width below which a viewport counts as compact.
+- **Gallery: Mobile preview and Fullscreen**: every component page's Preview has a Fit / Mobile switch. Mobile moves the
+  running demo onto a phone whose 390 × 844 viewport is its window, keeping its state and focus; the outline morphs from
+  the stage. The Fullscreen button grows the Preview over the whole window (Escape closes it), with the phone fitted to
+  the window's height in Mobile.
+
+- **Core: `ArcShrinkRow`**: a horizontal row like a horizontal `StackPanel` whose one marked child
+  (`ArcShrinkRow.IsShrinkable`) gets only the width left by the others, so its text can end with an ellipsis or wrap.
+
+### Fixed
+
+- **Controls inside a viewport host or a zoomed area**: menus, pickers, toasts, cookie banners, the user menu's sheet and
+  the AppShell and AI blocks now size and place themselves by their viewport (`ArcViewport`) instead of the window, so
+  a phone-sized `ArcViewportHost` gets the phone's behavior (the user menu becomes a sheet across it, toasts hang from
+  its bottom edge). Placement in a zoomed area (`ArcZoom.Scale`) compares window distances and panel sizes in the same
+  units: the color, date range, morph select and phone input panels no longer trim their shadow or shift too early.
+- **Text in rows at narrow widths**: titles, names and notes next to an icon or a badge in about 25 components
+  (DataGrid headers, Dock tabs, the title bar, Sidebar, Kanban, team and AI blocks) now end with an ellipsis or wrap
+  instead of being cut off; they sat in horizontal stacks, which never let their trimming or wrapping apply. The meeting
+  summary credit, the LLM cost note and the uptime summary wrap or trim as well. Budget variance moves its period switch
+  under the title when stacked, and segment switches no longer cut a label wider than an equal share.
+- **GanttTimeline follows the Corners presets**: its frame, zoom switch and pill radii come from the radius steps; the
+  `FrameRadius`, `SwitchRadius`, `SwitchButtonRadius` and `PillRadius` tokens are removed.
+
 ## 0.4.0-preview.3 - 2026-11-06
 
 GanttTimeline for planning projects, `Sidebar` rows built from your own data, and fixes for the markup extensions and the ArcWindow demos.
