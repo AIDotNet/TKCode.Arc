@@ -1,6 +1,6 @@
 ---
 title: 更新日志
-source-hash: 0f62f12adc25
+source-hash: 179379aeb4c5
 ---
 
 # 更新日志
@@ -9,7 +9,7 @@ TKCode.Arc 的所有重要变更，最新的在前。版本遵循[语义化版�
 
 每次发布附带的 NuGet 包：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Foundation`（0.3.2 起）、`TKCode.Arc.Fonts` `TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 、`TKCode.Arc.Special`、`TKCode.Arc.Workflow`、`TKCode.Arc.Dock`（0.4.0-preview.2 起）、`TKCode.Arc.Themes.Pixel`、`TKCode.Arc.Themes.Corners`、`TKCode.Arc.Mobile`、`TKCode.Arc.Terminal`、`TKCode.Arc.Audio`、`TKCode.Arc.Audio.Native` 和 `TKCode.Arc.Audio.Browser`。
 
-## 未发布
+## 0.4.0-preview.4（2026-11-07）
 
 Lucide 图标改为按需编译进应用：应用只携带自己用到的图标。
 
@@ -20,7 +20,7 @@ Lucide 图标改为按需编译进应用：应用只携带自己用到的图标�
 
 ### 新增
 
-- **视频**（新包 `TKCode.Arc.Video`、`TKCode.Arc.Video.Native`、`TKCode.Arc.Video.Browser`；`UseArcVideo()`）：`VideoPlayer` 在画面上叠加 Arc 风格的控制条播放视频（带缓冲范围、章节和悬停时间的进度条，音量、倍速、字幕菜单、全屏、自动隐藏的控制条、键盘快捷键、读屏值文本），并自己绘制 WebVTT / SRT 字幕；`VideoSurface` 只显示画面。帧在合成树内绘制，所以控制条、圆角和变换都能叠在视频上；macOS 与 Windows 上帧以 GPU 图像传递，不经拷贝。解码使用系统播放器（Media Foundation、AVFoundation、GStreamer；`ArcVideoNative.Use()`），浏览器中使用 HTML video 元素（`ArcVideoBrowser.UseAsync()`）；应用不附带任何解码器。没有后端时播放器显示测试画面。内置文案有 en-US、zh-CN、zh-TW。Gallery 新增“视频”分组。
+- **视频**（新包 `TKCode.Arc.Video`、`TKCode.Arc.Video.Native`、`TKCode.Arc.Video.Browser`，仓库内，尚未发布到 NuGet；`UseArcVideo()`）：`VideoPlayer` 在画面上叠加 Arc 风格的控制条播放视频（带缓冲范围、章节和悬停时间的进度条，音量、倍速、字幕菜单、全屏、自动隐藏的控制条、键盘快捷键、读屏值文本），并自己绘制 WebVTT / SRT 字幕；`VideoSurface` 只显示画面。帧在合成树内绘制，所以控制条、圆角和变换都能叠在视频上；macOS 与 Windows 上帧以 GPU 图像传递，不经拷贝。解码使用系统播放器（Media Foundation、AVFoundation、GStreamer；`ArcVideoNative.Use()`），浏览器中使用 HTML video 元素（`ArcVideoBrowser.UseAsync()`）；应用不附带任何解码器。没有后端时播放器显示测试画面。内置文案有 en-US、zh-CN、zh-TW。Gallery 新增“视频”分组。
 - **Lucide 图标的构建警告**：项目未声明任何图标时，XAML 中每处绑定 `LucideIcon.Kind`（特性、属性元素或样式 Setter）的位置都会报 `ARCL002`，因为生成器无法得知绑定会显示哪些图标；`ARCL001` 报告 `<LucideIcon Include>` 中不是 Lucide 图标的名称。声明图标或设置 `LucideIconsIncludeAll` 后 `ARCL002` 不再出现；`<NoWarn>ARCL002</NoWarn>` 也可关闭它。
 
 ## 0.4.0-preview.3（2026-11-06）

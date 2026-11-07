@@ -8,7 +8,7 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native` and `TKCode.Arc.Audio.Browser`.
 
-## Unreleased
+## 0.4.0-preview.4 - 2026-11-07
 
 Lucide icons are compiled into each app on demand: an app ships only the icons it uses.
 
@@ -28,7 +28,7 @@ Lucide icons are compiled into each app on demand: an app ships only the icons i
 
 ### Added
 
-- **Video** (new packages `TKCode.Arc.Video`, `TKCode.Arc.Video.Native`, `TKCode.Arc.Video.Browser`; `UseArcVideo()`):
+- **Video** (new packages `TKCode.Arc.Video`, `TKCode.Arc.Video.Native`, `TKCode.Arc.Video.Browser`, in the repository and not yet on NuGet; `UseArcVideo()`):
   `VideoPlayer` plays a video with Arc controls over the picture (seek bar with buffered range, chapters and hover
   time, volume, speed, captions menu, full screen, auto-hiding bar, keyboard shortcuts, screen-reader value texts) and
   draws WebVTT / SRT captions itself; `VideoSurface` shows the picture alone. Frames are drawn inside the composition
@@ -868,6 +868,7 @@ ArcTheme.Apply(t => t
 
 First preview release.
 
+[0.4.0-preview.4]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.4.0-preview.3...v0.4.0-preview.4
 [0.4.0-preview.3]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.4.0-preview.2...v0.4.0-preview.3
 [0.4.0-preview.2]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.4.0-preview.1...v0.4.0-preview.2
 [0.4.0-preview.1]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.2-preview.2...v0.4.0-preview.1

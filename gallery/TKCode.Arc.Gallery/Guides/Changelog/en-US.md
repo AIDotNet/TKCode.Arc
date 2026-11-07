@@ -11,7 +11,7 @@ keep the version pinned in your project. The same list is kept in `CHANGELOG.md`
 NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Foundation` (from 0.3.2), `TKCode.Arc.Fonts` and
 `TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special`, `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`, `TKCode.Arc.Audio.Native` and `TKCode.Arc.Audio.Browser`.
 
-## Unreleased
+## 0.4.0-preview.4 (2026-11-07)
 
 Lucide icons are compiled into each app on demand: an app ships only the icons it uses.
 
@@ -22,7 +22,7 @@ Lucide icons are compiled into each app on demand: an app ships only the icons i
 
 ### Added
 
-- **Video** (new packages `TKCode.Arc.Video`, `TKCode.Arc.Video.Native`, `TKCode.Arc.Video.Browser`; `UseArcVideo()`): `VideoPlayer` plays a video with Arc controls over the picture (seek bar with buffered range, chapters and hover time, volume, speed, captions menu, full screen, auto-hiding bar, keyboard shortcuts, screen-reader value texts) and draws WebVTT / SRT captions itself; `VideoSurface` shows the picture alone. Frames are drawn inside the composition tree, so controls, rounded corners and transforms work over the video; on macOS and Windows they arrive as GPU images without a copy. Decoding uses the system player (Media Foundation, AVFoundation, GStreamer; `ArcVideoNative.Use()`) or an HTML video element in the browser (`ArcVideoBrowser.UseAsync()`); no codecs ship with the app. Without a backend the player shows a test picture. Built-in text in en-US, zh-CN and zh-TW. New gallery group "Video".
+- **Video** (new packages `TKCode.Arc.Video`, `TKCode.Arc.Video.Native`, `TKCode.Arc.Video.Browser`, in the repository and not yet on NuGet; `UseArcVideo()`): `VideoPlayer` plays a video with Arc controls over the picture (seek bar with buffered range, chapters and hover time, volume, speed, captions menu, full screen, auto-hiding bar, keyboard shortcuts, screen-reader value texts) and draws WebVTT / SRT captions itself; `VideoSurface` shows the picture alone. Frames are drawn inside the composition tree, so controls, rounded corners and transforms work over the video; on macOS and Windows they arrive as GPU images without a copy. Decoding uses the system player (Media Foundation, AVFoundation, GStreamer; `ArcVideoNative.Use()`) or an HTML video element in the browser (`ArcVideoBrowser.UseAsync()`); no codecs ship with the app. Without a backend the player shows a test picture. Built-in text in en-US, zh-CN and zh-TW. New gallery group "Video".
 - **Build warnings for Lucide icons**: `ARCL002` marks each place where XAML binds `LucideIcon.Kind` (attribute, property element or style setter) while the project declares no icons, since the generator cannot see which icons a binding shows; `ARCL001` reports a `<LucideIcon Include>` name that is not a Lucide icon. Declaring icons or setting `LucideIconsIncludeAll` ends `ARCL002`; `<NoWarn>ARCL002</NoWarn>` silences it.
 
 ## 0.4.0-preview.3 (2026-11-06)
