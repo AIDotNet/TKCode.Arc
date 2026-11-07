@@ -7,6 +7,9 @@
         <IsPackable>false</IsPackable>
         <ArcIsLibrary>false</ArcIsLibrary>
         <NoWarn>$(NoWarn);CS0436</NoWarn>
+        <!-- Docs XAML is loaded at run time, so no generator sees its icons: compile every Lucide icon in. -->
+        <ArcLucideGenerator>true</ArcLucideGenerator>
+        <LucideIconsIncludeAll>true</LucideIconsIncludeAll>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Avalonia.Desktop" />

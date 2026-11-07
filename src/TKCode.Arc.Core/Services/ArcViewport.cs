@@ -8,8 +8,9 @@ namespace TKCode.Arc.Primitives;
 /// Avalonia uses for <see cref="Avalonia.Layout.Layoutable.EffectiveViewportChanged"/> (clipping ancestors intersect,
 /// bounds translate, render transforms invert). Avalonia only reports changes after a listener subscribes, so code
 /// that starts watching a control that is already laid out reads its first viewport here.
+/// The window-sized viewport (<see cref="GetSize"/>, <see cref="ArcViewportHost"/>) is in ArcViewport.Host.cs.
 /// </summary>
-public static class ArcViewport
+public static partial class ArcViewport
 {
     /// <summary>The effective viewport of <paramref name="target"/>, or an empty rect when it is not in a visual tree.</summary>
     public static Rect Calculate(Visual target)

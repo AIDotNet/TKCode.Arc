@@ -25,16 +25,26 @@ public sealed class GallerySegmented : Border
     private int _selectedIndex = -1;
 
     /// <summary>Segments with fixed labels (names that are the same in every language).</summary>
-    public GallerySegmented(params string[] labels) : this(labels.Length, i => labels[i], null)
+    public GallerySegmented(params string[] labels) : this(labels.Length, i => labels[i], null, null)
     {
     }
 
     /// <summary>Segments whose labels follow the language.</summary>
-    public GallerySegmented(params GalleryShellLangResourceKind[] labels) : this(labels.Length, null, i => labels[i])
+    public GallerySegmented(params GalleryShellLangResourceKind[] labels) : this(labels.Length, null, i => labels[i], null)
     {
     }
 
-    private GallerySegmented(int count, Func<int, string>? label, Func<int, GalleryShellLangResourceKind>? localized)
+    /// <summary>
+    /// Icon-only segments (Fit / Mobile): each shows its glyph, and its name (tooltip and automation name) follows the
+    /// language.
+    /// </summary>
+    public GallerySegmented(params (Geometry Glyph, GalleryShellLangResourceKind Name)[] icons)
+        : this(icons.Length, null, null, i => icons[i])
+    {
+    }
+
+    private GallerySegmented(int count, Func<int, string>? label, Func<int, GalleryShellLangResourceKind>? localized,
+                             Func<int, (Geometry Glyph, GalleryShellLangResourceKind Name)>? icon)
     {
         for (var i = 0; i < count; i++)
         {
@@ -55,6 +65,15 @@ public sealed class GallerySegmented : Border
             if (localized is not null)
             {
                 GalleryText.Bind(segment, ContentControl.ContentProperty, localized(i));
+            }
+            if (icon is not null)
+            {
+                var (glyph, name) = icon(i);
+                segment.Content = new ArcGlyph { Data = glyph, Size = 14 };
+                segment.Padding = new Thickness(9, 0);
+                segment.MinHeight = 26;
+                GalleryText.Bind(segment, Tooltip.TipProperty, name);
+                GalleryText.Bind(segment, Avalonia.Automation.AutomationProperties.NameProperty, name);
             }
             segment.Click += (_, _) => Select(index);
             _grid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Star));
@@ -81,6 +100,9 @@ public sealed class GallerySegmented : Border
         ArcTokens.Bind(this, BorderBrushProperty, ArcDesignTokenKind.BorderSubtle);
         Select(0, raise: false);
     }
+
+    /// <summary>The segment buttons, in order.</summary>
+    public IReadOnlyList<Button> Segments => _segments;
 
     public int SelectedIndex
     {

@@ -104,6 +104,7 @@ public static class GalleryText
             "AdvancedCharts" => GalleryShellLangResourceKind.Category_AdvancedCharts,
             "Workflow" => GalleryShellLangResourceKind.Category_Workflow,
             "Dock" => GalleryShellLangResourceKind.Category_Dock,
+            "Video" => GalleryShellLangResourceKind.Category_Video,
             "Tables" => GalleryShellLangResourceKind.Category_Tables,
             "Activity" => GalleryShellLangResourceKind.Category_Activity,
             "Media" => GalleryShellLangResourceKind.Category_Media,

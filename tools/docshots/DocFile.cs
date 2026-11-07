@@ -7,7 +7,7 @@ namespace TKCode.Arc.DocShots;
 internal sealed partial class DocFile
 {
     public static readonly string[] Sections =
-        ["## When to use", "## When not to use", "## Usage", "## API reference", "## Accessibility", "## Motion", "## Related"];
+        ["## When to use", "## When not to use", "## Usage", "## API reference", "## Accessibility", "## Motion", "## Responsive behavior", "## Related"];
 
     private DocFile(string path, string text)
     {

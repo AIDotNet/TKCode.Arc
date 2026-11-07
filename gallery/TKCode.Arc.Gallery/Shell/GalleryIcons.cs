@@ -23,4 +23,8 @@ internal static class GalleryIcons
     /// <summary>Lucide <c>pin-off</c>: the keep-on-top button while the window is pinned.</summary>
     public static Geometry PinOff { get; } = ArcIcons.Parse(
         "M12 17v5 M15 9.34V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H7.89 M2 2l20 20 M9 9v1.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h11");
+
+    /// <summary>Lucide <c>scan</c> (not in the Core subset): the preview's Fit size.</summary>
+    public static Geometry Scan { get; } = ArcIcons.Parse(
+        "M3 7V5a2 2 0 0 1 2-2h2 M17 3h2a2 2 0 0 1 2 2v2 M21 17v2a2 2 0 0 1-2 2h-2 M7 21H5a2 2 0 0 1-2-2v-2");
 }

@@ -115,6 +115,12 @@
         <target state="translated">停靠版面</target>
       </segment>
     </unit>
+    <unit id="Category_Video">
+      <segment>
+        <source>Video</source>
+        <target state="translated">影片</target>
+      </segment>
+    </unit>
     <unit id="Category_Content">
       <segment>
         <source>Extras</source>
@@ -371,6 +377,36 @@
       <segment>
         <source>Live preview</source>
         <target state="translated">即時預覽</target>
+      </segment>
+    </unit>
+    <unit id="PreviewSize">
+      <segment>
+        <source>Preview size</source>
+        <target state="translated">預覽尺寸</target>
+      </segment>
+    </unit>
+    <unit id="PreviewFit">
+      <segment>
+        <source>Fit</source>
+        <target state="translated">適應</target>
+      </segment>
+    </unit>
+    <unit id="PreviewMobile">
+      <segment>
+        <source>Mobile</source>
+        <target state="translated">行動裝置</target>
+      </segment>
+    </unit>
+    <unit id="PreviewFullscreen">
+      <segment>
+        <source>Fullscreen</source>
+        <target state="translated">全螢幕</target>
+      </segment>
+    </unit>
+    <unit id="PreviewCloseFullscreen">
+      <segment>
+        <source>Close fullscreen</source>
+        <target state="translated">結束全螢幕</target>
       </segment>
     </unit>
     <unit id="Mode">

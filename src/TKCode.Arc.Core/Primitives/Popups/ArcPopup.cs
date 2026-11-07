@@ -337,7 +337,7 @@ public class ArcPopup : Popup
         AdjustPlacementAnchor(placement);
         GrowAnchor(placement, requested, margin, isOverlayHost ? default : room);
         var surfaceSize = placement.PopupSize.Deflate(room);
-        var bounds = topLevel is null ? (Rect?)null : ConstraintBounds(topLevel, isOverlayHost);
+        var bounds = topLevel is null ? (Rect?)null : ConstraintBounds(topLevel, isOverlayHost, placement.Target);
         var (_, flipX, flipY) = bounds is { } predicted ? Resolve(placement, surfaceSize, predicted) : (default, false, false);
         OnPlacementResolved(placement, room, margin, isOverlayHost, flipX, flipY);
         if (bounds is { } final)
@@ -427,17 +427,35 @@ public class ArcPopup : Popup
     }
 
     /// <summary>The area the positioner keeps the surface in, in the window's client coordinates.</summary>
-    private static Rect ConstraintBounds(TopLevel topLevel, bool isOverlayHost)
+    /// <summary>
+    /// The rectangle the surface flips and slides within: the screen's working area for a native popup window, the
+    /// window's safe client area for the overlay layer, narrowed to the target's <see cref="ArcViewportHost"/> when it
+    /// has one (a narrow-viewport preview keeps its menus on its own screen).
+    /// </summary>
+    private static Rect ConstraintBounds(TopLevel topLevel, bool isOverlayHost, Visual? target)
     {
+        Rect bounds;
         if (!isOverlayHost && topLevel.Screens?.ScreenFromTopLevel(topLevel) is { } screen)
         {
             var area = screen.WorkingArea;
             var topLeft = topLevel.PointToClient(area.TopLeft);
             var bottomRight = topLevel.PointToClient(area.BottomRight);
-            return new Rect(topLeft, bottomRight);
+            bounds = new Rect(topLeft, bottomRight);
         }
-        var insets = topLevel.InsetsManager?.SafeAreaPadding ?? default;
-        return new Rect(topLevel.ClientSize).Deflate(insets);
+        else
+        {
+            var insets = topLevel.InsetsManager?.SafeAreaPadding ?? default;
+            bounds = new Rect(topLevel.ClientSize).Deflate(insets);
+        }
+        if (target is not null && ArcViewport.FindHost(target) is not null && ArcViewport.GetBounds(target) is { } viewport)
+        {
+            var inside = bounds.Intersect(viewport);
+            if (inside.Width > 0 && inside.Height > 0)
+            {
+                bounds = inside;
+            }
+        }
+        return bounds;
     }
 
     /// <summary>

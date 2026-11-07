@@ -12,8 +12,10 @@ using TKCode.Arc.Localization;
 namespace TKCode.Arc.DocShots;
 
 /// <summary>
-/// <c>page &lt;ClassName&gt; &lt;language&gt; &lt;out.png&gt; [dark] [corners=square|half] [scroll=&lt;y&gt;|find=&lt;text&gt;]</c>: the component's
-/// page in the gallery window as people see it, to review a page or how its screenshots sit in it.
+/// <c>page &lt;ClassName&gt; &lt;language&gt; &lt;out.png&gt; [dark] [mobile] [open] [fullscreen] [corners=square|half] [scroll=&lt;y&gt;|find=&lt;text&gt;]</c>: the
+/// component's page in the gallery window as people see it, to review a page or how its screenshots sit in it; <c>mobile</c>
+/// switches the page's Preview to its Mobile size first,
+/// <c>fullscreen</c> opens its Fullscreen view.
 /// </summary>
 internal static class PageShot
 {
@@ -21,7 +23,7 @@ internal static class PageShot
     {
         if (args.Length < 3)
         {
-            Console.Error.WriteLine("usage: DocShots page <ClassName> <language> <out.png> [dark] [corners=square|half] [scroll=<y>|find=<text>]");
+            Console.Error.WriteLine("usage: DocShots page <ClassName> <language> <out.png> [dark] [mobile] [open] [fullscreen] [corners=square|half] [scroll=<y>|find=<text>]");
             return 2;
         }
         var (className, language, output) = (args[0], args[1], Path.GetFullPath(args[2]));
@@ -55,6 +57,90 @@ internal static class PageShot
         Visual page = (Visual?)window.GetVisualDescendants().OfType<GalleryPageView>().FirstOrDefault()
                       ?? window.GetVisualDescendants().OfType<Markdown>().First().FindAncestorOfType<ScrollViewer>()!;
         var scroller = page as ScrollViewer ?? page.GetVisualDescendants().OfType<ScrollViewer>().First();
+        if (options.Contains("mobile"))
+        {
+            if (page.GetVisualDescendants().OfType<GalleryDemoView>().FirstOrDefault(v => v.SizeSwitch is not null) is not { } preview)
+            {
+                Console.Error.WriteLine($"{className}'s page has no Preview with a Mobile size");
+                return 1;
+            }
+            preview.ShowMobile(true);
+            Program.Pump(40);
+        }
+        if (options.FirstOrDefault(o => o.StartsWith("frames=", StringComparison.Ordinal)) is { } frames)
+        {
+            // frames=fit|mobile: switch the Preview's size and save the stage every few frames (out-0.png, out-1.png, ...),
+            // to review the switch's motion.
+            var preview = page.GetVisualDescendants().OfType<GalleryDemoView>().First(v => v.SizeSwitch is not null);
+            var toMobile = frames == "frames=mobile";
+            preview.ShowMobile(!toMobile);
+            Program.Pump(60);
+            var stage = preview.GetVisualDescendants().OfType<Border>().First(b => b.Child is Grid);
+            var clock = System.Diagnostics.Stopwatch.StartNew();
+            preview.ShowMobile(toMobile);
+            var shotAt = new[] { 1, 4, 8, 14, 22, 40 };
+            for (var i = 0; i <= 40; i++)
+            {
+                Program.Pump(1);
+                var phone = preview.Phone;
+                var phoneShown = phone is not null && phone.GetVisualParent() is not null;
+                Console.WriteLine($"{clock.ElapsedMilliseconds,5}ms outline={(phoneShown ? $"{phone!.CurrentSize.Width:0}x{phone.CurrentSize.Height:0} op={phone.GetVisualDescendants().OfType<Grid>().First().Opacity:0.00}" : "gone")} view={preview.View!.Opacity:0.00} stage={stage.Bounds.Height:0} ghost={preview.GetVisualDescendants().OfType<Image>().Count()}");
+                if (!shotAt.Contains(i))
+                {
+                    continue;
+                }
+                using var frame = window.CaptureRenderedFrame()!;
+                var rect = new Rect(stage.Bounds.Size).TransformToAABB(stage.TransformToVisual(window)!.Value);
+                var file = Path.ChangeExtension(output, null) + $"-{Array.IndexOf(shotAt, i)}.png";
+                var scale = frame.PixelSize.Width / frame.Size.Width;
+                var pixels = new PixelRect((int)(rect.X * scale), (int)(rect.Y * scale), (int)(rect.Width * scale), (int)(rect.Height * scale)).Intersect(new PixelRect(frame.PixelSize));
+                using var crop = new Avalonia.Media.Imaging.RenderTargetBitmap(pixels.Size, frame.Dpi);
+                using (var context = crop.CreateDrawingContext())
+                {
+                    context.DrawImage(frame, new Rect(pixels.X / scale, pixels.Y / scale, pixels.Width / scale, pixels.Height / scale),
+                                      new Rect(0, 0, pixels.Width / scale, pixels.Height / scale));
+                }
+                crop.Save(file);
+            }
+            Console.WriteLine($"saved frames {Path.ChangeExtension(output, null)}-0..11.png");
+            window.Close();
+            return 0;
+        }
+        if (options.Contains("open"))
+        {
+            // open: opens the first select, combobox, date or color picker in the Preview (after mobile, inside the phone).
+            var preview = page.GetVisualDescendants().OfType<GalleryDemoView>().First(v => v.View is not null);
+            var target = preview.View!.GetVisualDescendants().FirstOrDefault(v => v is Select or Combobox or DatePicker or ColorPicker);
+            switch (target)
+            {
+                case Select select:
+                    select.Open();
+                    break;
+                case Combobox combobox:
+                    combobox.IsOpen = true;
+                    break;
+                case DatePicker date:
+                    date.SetCurrentValue(DatePicker.IsDropDownOpenProperty, true);
+                    break;
+                case ColorPicker color:
+                    color.SetCurrentValue(ColorPicker.IsDropDownOpenProperty, true);
+                    break;
+                default:
+                    Console.Error.WriteLine("the Preview has no select, combobox, date or color picker");
+                    return 1;
+            }
+            Program.Pump(60);
+        }
+        if (options.Contains("fullscreen"))
+        {
+            if (page.GetVisualDescendants().OfType<GalleryDemoView>().FirstOrDefault(v => v.FullscreenButton is not null) is not { } preview)
+            {
+                Console.Error.WriteLine($"{className}'s page has no Preview with a Fullscreen button");
+                return 1;
+            }
+            preview.OpenFullscreen();
+            Program.Pump(60);
+        }
         var offset = 0.0;
         foreach (var option in options)
         {

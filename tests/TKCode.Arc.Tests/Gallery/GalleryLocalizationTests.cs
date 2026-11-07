@@ -165,7 +165,7 @@ public class GalleryLocalizationTests
             Dispatcher.UIThread.RunJobs();
             var search = window.Sidebar.GetVisualDescendants().OfType<TextBox>().First();
 
-            await Shown(window, "Preview", "Code", "On this page", "A single line field with clear labels and useful states.");
+            await Shown(window, "Preview", "Code", "On this page", "The text box for a short typed value, with its label, helper text and error row built in.");
             var english = Texts(window);
             english.ShouldContain("Components");
             english.ShouldContain("Search");
@@ -174,12 +174,12 @@ public class GalleryLocalizationTests
             english.ShouldContain("Preview");
             english.ShouldContain("Code");
             english.ShouldContain("On this page");
-            english.ShouldContain("A single line field with clear labels and useful states.");
+            english.ShouldContain("The text box for a short typed value, with its label, helper text and error row built in.");
             search.PlaceholderText.ShouldBe("Search components");
 
             GalleryText.SetLanguage("zh-CN");
             Dispatcher.UIThread.RunJobs();
-            await Shown(window, "预览", "代码", "本页内容", "标签清晰、状态实用的单行输入框。");
+            await Shown(window, "预览", "代码", "本页内容", "用于输入简短文本的文本框，自带标签、帮助文字与错误提示行。");
             var chinese = Texts(window);
             chinese.ShouldContain("组件");
             chinese.ShouldContain("搜索");
@@ -194,23 +194,23 @@ public class GalleryLocalizationTests
             // The sidebar footer counts the whole Components section: the Arc components and the extras, not Blocks.
             chinese.ShouldContain($"{GalleryCatalog.ComponentEntries.Count(e => GalleryPages.IsImplemented(e.ClassName))} / {GalleryCatalog.ComponentCount}");
             // The page summary comes from the translated docs page; component names stay in English.
-            chinese.ShouldContain("标签清晰、状态实用的单行输入框。");
-            chinese.ShouldNotContain("A single line field with clear labels and useful states.");
+            chinese.ShouldContain("用于输入简短文本的文本框，自带标签、帮助文字与错误提示行。");
+            chinese.ShouldNotContain("The text box for a short typed value, with its label, helper text and error row built in.");
             chinese.ShouldContain("Input");
             search.PlaceholderText.ShouldBe("搜索组件");
 
             GalleryText.SetLanguage("zh-TW");
             Dispatcher.UIThread.RunJobs();
-            await Shown(window, "文字輸入", "標籤清楚、狀態實用的單行輸入框。");
+            await Shown(window, "文字輸入", "用於輸入簡短文字的文字方塊，內建標籤、說明文字與錯誤提示列。");
             Texts(window).ShouldContain("文字輸入");
-            Texts(window).ShouldContain("標籤清楚、狀態實用的單行輸入框。");
+            Texts(window).ShouldContain("用於輸入簡短文字的文字方塊，內建標籤、說明文字與錯誤提示列。");
             search.PlaceholderText.ShouldBe("搜尋元件");
 
             GalleryText.SetLanguage("en-US");
             Dispatcher.UIThread.RunJobs();
-            await Shown(window, "Text fields", "A single line field with clear labels and useful states.");
+            await Shown(window, "Text fields", "The text box for a short typed value, with its label, helper text and error row built in.");
             Texts(window).ShouldContain("Text fields");
-            Texts(window).ShouldContain("A single line field with clear labels and useful states.");
+            Texts(window).ShouldContain("The text box for a short typed value, with its label, helper text and error row built in.");
             search.PlaceholderText.ShouldBe("Search components");
         }
         finally

@@ -96,6 +96,11 @@
         <source>Dock</source>
       </segment>
     </unit>
+    <unit id="Category_Video">
+      <segment>
+        <source>Video</source>
+      </segment>
+    </unit>
     <unit id="Category_Content">
       <segment>
         <source>Extras</source>
@@ -309,6 +314,31 @@
     <unit id="LivePreview">
       <segment>
         <source>Live preview</source>
+      </segment>
+    </unit>
+    <unit id="PreviewSize">
+      <segment>
+        <source>Preview size</source>
+      </segment>
+    </unit>
+    <unit id="PreviewFit">
+      <segment>
+        <source>Fit</source>
+      </segment>
+    </unit>
+    <unit id="PreviewMobile">
+      <segment>
+        <source>Mobile</source>
+      </segment>
+    </unit>
+    <unit id="PreviewFullscreen">
+      <segment>
+        <source>Fullscreen</source>
+      </segment>
+    </unit>
+    <unit id="PreviewCloseFullscreen">
+      <segment>
+        <source>Close fullscreen</source>
       </segment>
     </unit>
     <unit id="Mode">

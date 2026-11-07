@@ -108,7 +108,7 @@ public class GalleryDocsTests
     {
         // The rule for a new component: write Docs/<Category>/<Class>/en-US.md and its translations (design/engineering/gallery-app.md, 6).
         var entries = GalleryCatalog.Categories.SelectMany(c => c.Entries)
-            .Concat(GalleryCatalog.Extras.Where(c => c.Code is "Content" or "AdvancedCharts" or "Workflow" or "Dock").SelectMany(c => c.Entries))
+            .Concat(GalleryCatalog.Extras.Where(c => c.Code is "Content" or "AdvancedCharts" or "Workflow" or "Dock" or "Video").SelectMany(c => c.Entries))
             .Concat(GalleryCatalog.Special.SelectMany(c => c.Entries));
         foreach (var entry in entries)
         {
@@ -131,7 +131,7 @@ public class GalleryDocsTests
             var english = GalleryDocs.Get(className, GalleryDocs.SourceLanguage).ShouldNotBeNull().Markdown;
             english.ShouldContain($"### {className}", customMessage: $"{className}: the page has no <!-- api: {className} --> line");
             Headings(english).ShouldBe(
-                ["## When to use", "## When not to use", "## Usage", "## API reference", "## Accessibility", "## Motion", "## Related"],
+                ["## When to use", "## When not to use", "## Usage", "## API reference", "## Accessibility", "## Motion", "## Responsive behavior", "## Related"],
                 $"{className}: the sections of a page, in order");
         }
     }

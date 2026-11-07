@@ -186,8 +186,8 @@ public class GalleryShellTests
             }
             var toc = Find<GalleryToc>(wide);
             toc.IsVisible.ShouldBeTrue();
-            // "Preview" and the seven sections, plus the two links under the list.
-            toc.GetVisualDescendants().OfType<GalleryNavRow>().Count().ShouldBe(1 + 7 + 2);
+            // "Preview" and the eight sections, plus the two links under the list.
+            toc.GetVisualDescendants().OfType<GalleryNavRow>().Count().ShouldBe(1 + 8 + 2);
         }
         finally
         {

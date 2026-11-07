@@ -145,7 +145,7 @@ public class GalleryDemosTests
             demos.ShouldAllBe(d => d.Demo != null);
             demos[0].GetVisualDescendants().OfType<Button>().Select(b => b.Content).ShouldContain("Save changes");
 
-            page.SectionTitles.ShouldBe(["Preview", "When to use", "When not to use", "Usage", "API reference", "Accessibility", "Motion", "Related"]);
+            page.SectionTitles.ShouldBe(["Preview", "When to use", "When not to use", "Usage", "API reference", "Accessibility", "Motion", "Responsive behavior", "Related"]);
             var toc = page.GetVisualDescendants().OfType<GalleryToc>().Single();
             toc.IsVisible.ShouldBeTrue();
 

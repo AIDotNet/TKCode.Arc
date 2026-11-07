@@ -86,6 +86,15 @@ public static partial class GalleryCatalog
                 "An IDE-style layout of tabbed panes in nested, resizable splits around a document area, with commands to move and dock panes, keyboard control, and layouts saved to JSON.",
                 IsArc: false, AddedOn: "2026-11-05"),
         ], IsArc: false),
+        new("Video", "Video", "视频",
+        [
+            new("VideoPlayer", "Video player", "video-player", 0,
+                "Play a video with controls over the picture: seek with chapters, volume, speed, captions and full screen, drawn in Arc's style and decoded by the platform's own player.",
+                IsArc: false, AddedOn: "2026-11-07"),
+            new("VideoSurface", "Video surface", "video-surface", 0,
+                "Show a video's picture with nothing over it, as a background or under controls of your own; it clips, fades and transforms like any control.",
+                IsArc: false, AddedOn: "2026-11-07"),
+        ], IsArc: false),
         new("Content", "Extras", "扩展",
         [
             new("Markdown", "Markdown", "markdown", 0,
@@ -296,10 +305,13 @@ public static partial class GalleryCatalog
     /// <summary>The dock group (TKCode.Arc.Dock); listed after Workflow, not part of the 112 Arc components.</summary>
     public static GalleryCategory Dock => Extras[2];
 
-    /// <summary>The Components section of the sidebar: Arc's groups with Advanced charts, Workflow and Dock after Charts, then the other extras.</summary>
+    /// <summary>The video group (TKCode.Arc.Video); listed after Dock, not part of the 112 Arc components.</summary>
+    public static GalleryCategory Video => Extras[3];
+
+    /// <summary>The Components section of the sidebar: Arc's groups with Advanced charts, Workflow, Dock and Video after Charts, then the other extras.</summary>
     public static IEnumerable<GalleryCategory> AllCategories =>
-        Categories.SelectMany(c => c.Code == "Charts" ? new[] { c, AdvancedCharts, Workflow, Dock } : new[] { c })
-                  .Concat(Extras.Where(e => !ReferenceEquals(e, AdvancedCharts) && !ReferenceEquals(e, Workflow) && !ReferenceEquals(e, Dock)));
+        Categories.SelectMany(c => c.Code == "Charts" ? new[] { c, AdvancedCharts, Workflow, Dock, Video } : new[] { c })
+                  .Concat(Extras.Where(e => !ReferenceEquals(e, AdvancedCharts) && !ReferenceEquals(e, Workflow) && !ReferenceEquals(e, Dock) && !ReferenceEquals(e, Video)));
 
     /// <summary>Every entry the gallery lists: the Docs, Components, Blocks and Special components sections.</summary>
     public static IEnumerable<GalleryEntry> AllEntries =>
