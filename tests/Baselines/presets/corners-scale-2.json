@@ -149,6 +149,9 @@
     "CardStack": {
       "CardFocusRingRadius": "78"
     },
+    "CardToArticle": {
+      "CardFocusRingRadius": "60"
+    },
     "Carousel": {
       "ViewportRingRadius": "64"
     },
@@ -237,6 +240,11 @@
       "CellRadius": "6",
       "StackedCellRadius": "4",
       "SwatchRadius": "6"
+    },
+    "ControlCenter": {
+      "PanelCornerRadius": "60",
+      "TileCornerRadius": "44",
+      "TileFocusRingRadius": "52"
     },
     "CookieConsent": {
       "LinkFocusRingRadius": "12"
@@ -351,6 +359,9 @@
     "HoldToConfirm": {
       "FocusRingRadius": "44"
     },
+    "HoloCard": {
+      "CardCornerRadius": "44"
+    },
     "HorizonChart": {
       "BandRadius": "8",
       "RampCellRadius": "4"
@@ -414,6 +425,11 @@
     },
     "LineReplay": {
       "MomentRadius": "36"
+    },
+    "LinkUnfurl": {
+      "CardCornerRadius": "36",
+      "ComposerCornerRadius": "52",
+      "MediaCornerRadius": "20"
     },
     "LiveVisitors": {
       "BarCornerRadius": "12",
@@ -493,6 +509,17 @@
       "TriggerRingRadius": "32",
       "ViewButtonRadius": "18",
       "ViewRingRadius": "26"
+    },
+    "NowPlaying": {
+      "FullArtCornerRadius": "40",
+      "FullClipCornerRadius": "58",
+      "FullShellCornerRadius": "60",
+      "MiniArtCornerRadius": "24",
+      "MiniClipCornerRadius": "42",
+      "MiniShellCornerRadius": "44"
+    },
+    "NowPlayingLevels": {
+      "BarRadius": "2"
     },
     "NumberField": {
       "StepRadius": "28",
@@ -678,6 +705,9 @@
     "SettingsRow": {
       "IconTileRadius": "20"
     },
+    "SheetStackSheet": {
+      "HeaderFocusRadius": "44"
+    },
     "ShortcutRecorder": {
       "ActionButtonRadius": "26",
       "KeyCapRadius": "16",
@@ -843,6 +873,9 @@
     "UsageMeter": {
       "LegendFocusRingRadius": "32",
       "LegendItemRadius": "24"
+    },
+    "VoiceControls": {
+      "FocusRingRadius": "9999"
     },
     "WeekCalendar": {
       "CalendarRowFocusRadius": "28",
@@ -1022,6 +1055,9 @@
     "CardStack": {
       "CardFocusRingRadius": "78"
     },
+    "CardToArticle": {
+      "CardFocusRingRadius": "60"
+    },
     "Carousel": {
       "ViewportRingRadius": "64"
     },
@@ -1110,6 +1146,11 @@
       "CellRadius": "6",
       "StackedCellRadius": "4",
       "SwatchRadius": "6"
+    },
+    "ControlCenter": {
+      "PanelCornerRadius": "60",
+      "TileCornerRadius": "44",
+      "TileFocusRingRadius": "52"
     },
     "CookieConsent": {
       "LinkFocusRingRadius": "12"
@@ -1224,6 +1265,9 @@
     "HoldToConfirm": {
       "FocusRingRadius": "44"
     },
+    "HoloCard": {
+      "CardCornerRadius": "44"
+    },
     "HorizonChart": {
       "BandRadius": "8",
       "RampCellRadius": "4"
@@ -1287,6 +1331,11 @@
     },
     "LineReplay": {
       "MomentRadius": "36"
+    },
+    "LinkUnfurl": {
+      "CardCornerRadius": "36",
+      "ComposerCornerRadius": "52",
+      "MediaCornerRadius": "20"
     },
     "LiveVisitors": {
       "BarCornerRadius": "12",
@@ -1366,6 +1415,17 @@
       "TriggerRingRadius": "32",
       "ViewButtonRadius": "18",
       "ViewRingRadius": "26"
+    },
+    "NowPlaying": {
+      "FullArtCornerRadius": "40",
+      "FullClipCornerRadius": "58",
+      "FullShellCornerRadius": "60",
+      "MiniArtCornerRadius": "24",
+      "MiniClipCornerRadius": "42",
+      "MiniShellCornerRadius": "44"
+    },
+    "NowPlayingLevels": {
+      "BarRadius": "2"
     },
     "NumberField": {
       "StepRadius": "28",
@@ -1551,6 +1611,9 @@
     "SettingsRow": {
       "IconTileRadius": "20"
     },
+    "SheetStackSheet": {
+      "HeaderFocusRadius": "44"
+    },
     "ShortcutRecorder": {
       "ActionButtonRadius": "26",
       "KeyCapRadius": "16",
@@ -1716,6 +1779,9 @@
     "UsageMeter": {
       "LegendFocusRingRadius": "32",
       "LegendItemRadius": "24"
+    },
+    "VoiceControls": {
+      "FocusRingRadius": "9999"
     },
     "WeekCalendar": {
       "CalendarRowFocusRadius": "28",
