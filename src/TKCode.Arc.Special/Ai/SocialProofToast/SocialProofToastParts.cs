@@ -1,3 +1,4 @@
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Automation.Peers;
@@ -175,7 +176,7 @@ internal sealed class SocialProofToastCorner : Panel
         var size = _layer.Bounds.Size;
         if (size.Width <= 0 || size.Height <= 0)
         {
-            size = TopLevel.GetTopLevel(_layer)?.ClientSize ?? size;
+            size = ArcViewport.GetSize(_layer) ?? size;
         }
         Width = size.Width;
         Height = size.Height;

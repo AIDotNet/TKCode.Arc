@@ -1,3 +1,4 @@
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
@@ -462,27 +463,11 @@ public sealed partial class AgentStatus
         Dock();
     }
 
-    private static OverlayLayer? FindOverlay(Visual owner)
-    {
-        var top = TopLevel.GetTopLevel(owner);
-        if (top is null)
-        {
-            return null;
-        }
-        var overlay = OverlayLayer.GetOverlayLayer(owner) ?? OverlayLayer.GetOverlayLayer(top);
-        if (overlay is not null)
-        {
-            return overlay;
-        }
-        var manager = owner.FindAncestorOfType<VisualLayerManager>(includeSelf: true)
-                      ?? top.GetVisualDescendants().OfType<VisualLayerManager>().FirstOrDefault();
-        if (manager is null)
-        {
-            return null;
-        }
-        manager.EnableOverlayLayer = true;
-        return OverlayLayer.GetOverlayLayer(owner) ?? OverlayLayer.GetOverlayLayer(top);
-    }
+    /// <summary>
+    /// The layer the open panel floats on: the nearest <see cref="ArcOverlayHost"/>'s (a viewport host such as a phone
+    /// preview, so the panel stays on that screen), else the window's overlay layer.
+    /// </summary>
+    private static Panel? FindOverlay(Visual owner) => ArcOverlayLayer.Find(owner);
 
     private (Control? Element, NavigationMethod Method, KeyModifiers Modifiers) CaptureFocus()
     {
@@ -502,7 +487,7 @@ public sealed partial class AgentStatus
         }
     }
 
-    /// <summary>Moves the surface into the window's overlay layer so a header or a scroller cannot clip the open panel.</summary>
+    /// <summary>Moves the surface into an overlay layer (its viewport's, else the window's) so a header or a scroller cannot clip the open panel.</summary>
     private void Float()
     {
         if (_floating || _slot is null)

@@ -120,7 +120,12 @@ public partial class PhoneInput
         {
             return s_shadowRoom;
         }
-        var client = topLevel.ClientSize;
+        // Room is measured inside the viewport (the window, or the ArcViewportHost the input sits in), in the panel's own
+        // units: a zoomed panel (ArcZoom) lays out unscaled while window distances are scaled.
+        var frame = ArcViewport.GetBounds(this) ?? new Rect(topLevel.ClientSize);
+        var zoom = ArcZoom.GetScale(this);
+        origin = new Point((origin.X - frame.X) / zoom, (origin.Y - frame.Y) / zoom);
+        var client = frame.Size / zoom;
         static double Fit(double wanted, double space) => Math.Clamp(Math.Min(wanted, Math.Floor(space)), Math.Min(1, wanted), wanted);
         return new Thickness(
             Fit(s_shadowRoom.Left, origin.X),

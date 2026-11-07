@@ -17,8 +17,7 @@
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:AiRunMeta">
-                <StackPanel Name="PART_Line"
-                            Orientation="Horizontal"
+                <arc:ArcShrinkRow Name="PART_Line"
                             Spacing="7"
                             VerticalAlignment="Center"
                             AutomationProperties.AccessibilityView="Raw">
@@ -33,7 +32,7 @@
                                IsVisible="{TemplateBinding ShowsName}"
                                Foreground="{arc:ArcDesignTokenResource TextSecondary}"
                                TextTrimming="CharacterEllipsis"
-                               VerticalAlignment="Center" />
+                               VerticalAlignment="Center" arc:ArcShrinkRow.IsShrinkable="True" />
                     <Ellipse Name="PART_CostDot"
                              Classes="dot"
                              IsVisible="{TemplateBinding CostDot}" />
@@ -48,7 +47,7 @@
                                Classes="figure"
                                Text="{TemplateBinding ElapsedText}"
                                IsVisible="{TemplateBinding ShowsElapsed}" />
-                </StackPanel>
+                </arc:ArcShrinkRow>
             </ControlTemplate>
         </Setter>
 

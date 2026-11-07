@@ -671,7 +671,7 @@ public class ColorPicker : TemplatedControl, IPickerAutomation
         var generation = ++_generation;
         _draft = null;
         SetInvalid(false);
-        var viewport = TopLevel.GetTopLevel(this)?.ClientSize.Width ?? double.PositiveInfinity;
+        var viewport = ArcViewport.GetSize(this)?.Width ?? double.PositiveInfinity;
         _panel.Width = Math.Min(_panel.PreferredWidth, Math.Max(0, viewport - 32));
         _panel.SetNarrow(viewport <= 360);
         UpdateVisuals(animate: false);

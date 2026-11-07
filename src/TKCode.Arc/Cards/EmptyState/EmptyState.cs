@@ -1,3 +1,4 @@
+using TKCode.Arc.Primitives;
 using TKCode.Arc.Motion;
 using Avalonia;
 using Avalonia.Automation;
@@ -162,7 +163,7 @@ public class EmptyState : TemplatedControl
         base.OnAttachedToVisualTree(e);
         if (TopLevel.GetTopLevel(this) is { } topLevel)
         {
-            _clientSizeSubscription = topLevel.GetObservable(TopLevel.ClientSizeProperty).Subscribe(new ClientSizeObserver(this));
+            _clientSizeSubscription = ArcViewport.Observe(this, new ClientSizeObserver(this).OnNext);
         }
         if (!_settled && _iconBlock is not null && ArcMotion.IsFull(this))
         {

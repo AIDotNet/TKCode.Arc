@@ -350,6 +350,7 @@ public class UserMenu : TemplatedControl
     private UserMenuIdentity? _identity;
     private AvaloniaButton? _trigger;
     private TopLevel? _topLevel;
+    private IDisposable? _viewportWatch;
     private bool _keyboardActivation;
     private bool _compact;
 
@@ -425,21 +426,18 @@ public class UserMenu : TemplatedControl
     {
         base.OnAttachedToVisualTree(e);
         _topLevel = TopLevel.GetTopLevel(this);
-        if (_topLevel is not null)
-        {
-            _topLevel.SizeChanged += OnTopLevelSizeChanged;
-        }
+        // Compact follows the viewport: the window, or the ArcViewportHost the menu sits in (a phone preview).
+        _viewportWatch?.Dispose();
+        _viewportWatch = ArcViewport.Observe(this, _ => UpdateCompact());
         UpdateCompact();
     }
 
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
-        if (_topLevel is not null)
-        {
-            _topLevel.SizeChanged -= OnTopLevelSizeChanged;
-            _topLevel = null;
-        }
+        _viewportWatch?.Dispose();
+        _viewportWatch = null;
+        _topLevel = null;
     }
 
     protected override void OnLoaded(RoutedEventArgs e)
@@ -452,11 +450,9 @@ public class UserMenu : TemplatedControl
         }
     }
 
-    private void OnTopLevelSizeChanged(object? sender, SizeChangedEventArgs e) => UpdateCompact();
-
     private void UpdateCompact()
     {
-        var compact = _topLevel is { } topLevel && topLevel.ClientSize.Width > 0 && topLevel.ClientSize.Width < CompactBreakpoint;
+        var compact = _topLevel is not null && ArcViewport.GetSize(this) is { Width: > 0 } viewport && viewport.Width < CompactBreakpoint;
         if (compact == _compact)
         {
             return;

@@ -235,7 +235,9 @@ internal sealed class AiSuggestionPopup : IDisposable
         EnsureLogicalParent(anchor);
         Anchor = anchor;
         _caret = caretRect;
-        var result = AiSuggestionPlacement.Compute(anchor.Bounds.Width, caretRect, anchorOrigin.Y, topLevel.ClientSize.Height,
+        // Room above and below is measured inside the viewport: the window, or the ArcViewportHost the anchor sits in.
+        var frame = ArcViewport.GetBounds(anchor) ?? new Rect(topLevel.ClientSize);
+        var result = AiSuggestionPlacement.Compute(anchor.Bounds.Width, caretRect, anchorOrigin.Y - frame.Top, frame.Height,
             Pop.SurfaceWidth, Pop.NaturalHeight, HorizontalShift);
         Placement = result;
         Pop.Width = result.Width;

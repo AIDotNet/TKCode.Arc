@@ -623,17 +623,17 @@
                                                    RemoveWidth="{arc:TeamMembersTokenResource RemoveSize}">
                         <arc:Avatar Name="PART_Avatar" Size="Medium" />
                         <StackPanel Name="PART_Identity" Spacing="{arc:TeamMembersTokenResource IdentityGap}" VerticalAlignment="Center">
-                            <StackPanel Orientation="Horizontal" Spacing="{arc:TeamMembersTokenResource YouGap}">
+                            <arc:ArcShrinkRow Spacing="{arc:TeamMembersTokenResource YouGap}">
                                 <TextBlock Name="PART_Name"
                                            FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
                                            LineHeight="{arc:TeamMembersTokenResource CopyLineHeight}"
                                            LetterSpacing="{arc:TeamMembersTokenResource CopyLetterSpacing}"
                                            TextTrimming="CharacterEllipsis"
-                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" arc:ArcShrinkRow.IsShrinkable="True" />
                                 <TextBlock Name="PART_You"
                                            LineHeight="{arc:TeamMembersTokenResource CopyLineHeight}"
                                            Foreground="{arc:ArcDesignTokenResource TextMuted}" />
-                            </StackPanel>
+                            </arc:ArcShrinkRow>
                             <TextBlock Name="PART_Email" Classes="small muted" TextTrimming="CharacterEllipsis" />
                             <TextBlock Name="PART_ActiveInline" Classes="small muted" TextTrimming="CharacterEllipsis" IsVisible="False" />
                         </StackPanel>

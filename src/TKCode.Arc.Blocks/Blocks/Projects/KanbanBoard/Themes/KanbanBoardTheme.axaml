@@ -965,7 +965,7 @@
                                                      Margin="12,0,0,0"
                                                      VerticalAlignment="Center"
                                                      OptionHeight="{arc:KanbanBoardTokenResource SwitchOptionHeight}" />
-                                <StackPanel Orientation="Horizontal"
+                                <arc:ArcShrinkRow
                                             Spacing="{arc:KanbanBoardTokenResource ToolbarGap}"
                                             VerticalAlignment="Center">
                                     <TextBlock Name="PART_Title"
@@ -977,7 +977,7 @@
                                                Foreground="{arc:ArcDesignTokenResource Foreground}"
                                                TextTrimming="CharacterEllipsis"
                                                AutomationProperties.HeadingLevel="2"
-                                               VerticalAlignment="Bottom" />
+                                               VerticalAlignment="Bottom" arc:ArcShrinkRow.IsShrinkable="True" />
                                     <StackPanel Name="PART_Total"
                                                 Orientation="Horizontal"
                                                 Spacing="{arc:KanbanBoardTokenResource CountGap}"
@@ -993,7 +993,7 @@
                                                    Foreground="{arc:ArcDesignTokenResource TextMuted}"
                                                    VerticalAlignment="Center" />
                                     </StackPanel>
-                                </StackPanel>
+                                </arc:ArcShrinkRow>
                             </DockPanel>
                         </Border>
                         <arc:ScrollArea Name="PART_Scroller"

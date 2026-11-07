@@ -52,8 +52,7 @@
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:PromptVariableField">
                 <StackPanel Spacing="5" Background="Transparent">
-                    <StackPanel Name="PART_LabelRow"
-                                Orientation="Horizontal"
+                    <arc:ArcShrinkRow Name="PART_LabelRow"
                                 Spacing="6"
                                 Height="16.8"
                                 Margin="12,0,0,0">
@@ -70,8 +69,8 @@
                                    LetterSpacing="0"
                                    TextWrapping="NoWrap"
                                    TextTrimming="CharacterEllipsis"
-                                   VerticalAlignment="Center" />
-                    </StackPanel>
+                                   VerticalAlignment="Center" arc:ArcShrinkRow.IsShrinkable="True" />
+                    </arc:ArcShrinkRow>
                     <Border Name="PART_Frame"
                             Height="36"
                             Background="{TemplateBinding Background}"

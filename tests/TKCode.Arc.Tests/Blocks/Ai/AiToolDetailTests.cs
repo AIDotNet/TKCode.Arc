@@ -1,3 +1,4 @@
+using TKCode.Arc.Primitives;
 using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
 using Avalonia;
@@ -150,7 +151,7 @@ public class AiToolDetailTests
         TestHelpers.ColorOf(label.Foreground).ShouldBe(ArcTokens.GetColor(detail, ArcDesignTokenKind.TextMuted));
         var output = TestHelpers.Descendant<SelectableTextBlock>(detail, "PART_Output");
         output.Text.ShouldBe("restore 4.1 s, compile 19.6 min");
-        TestHelpers.Descendant<StackPanel>(detail, "PART_ResultRow").Spacing.ShouldBe(10);
+        TestHelpers.Descendant<ArcShrinkRow>(detail, "PART_ResultRow").Spacing.ShouldBe(10);
 
         tool.OutputLabel = "Averages";
         rig.Settle();

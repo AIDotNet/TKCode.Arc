@@ -124,7 +124,7 @@
                             Background="{TemplateBinding Background}"
                             CornerRadius="{TemplateBinding CornerRadius}"
                             Padding="{TemplateBinding Padding}">
-                        <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                        <arc:ArcShrinkRow Spacing="10" VerticalAlignment="Center">
                             <arc:ArcGlyph Name="PART_Icon"
                                           Data="{TemplateBinding Icon}"
                                           Size="16"
@@ -137,8 +137,8 @@
                                        LetterSpacing="-0.14"
                                        TextWrapping="NoWrap"
                                        TextTrimming="CharacterEllipsis"
-                                       VerticalAlignment="Center" />
-                        </StackPanel>
+                                       VerticalAlignment="Center" arc:ArcShrinkRow.IsShrinkable="True" />
+                        </arc:ArcShrinkRow>
                     </Border>
                     <Border Name="PART_FocusRing"
                             IsVisible="False"

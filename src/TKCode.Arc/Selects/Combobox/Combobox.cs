@@ -421,7 +421,7 @@ public class Combobox : SelectingItemsControl, ISelectOptionHost, ISelectFieldAu
         }
         if (_scroll is not null)
         {
-            var window = TopLevel.GetTopLevel(this)?.ClientSize.Height ?? double.PositiveInfinity;
+            var window = ArcViewport.GetSize(this)?.Height ?? double.PositiveInfinity;
             _scroll.MaxHeight = Math.Min(MaxDropDownHeight, window * 0.4);
         }
         Refilter();

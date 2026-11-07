@@ -934,9 +934,9 @@ public class ExpandingSearch : TemplatedControl
         }
         _lastHighlight = null;
         _highlight?.Hide(animate: false);
-        if (TopLevel.GetTopLevel(this) is { } top && _panelScroll is not null)
+        if (ArcViewport.GetSize(this) is { } viewport && _panelScroll is not null)
         {
-            _panelScroll.MaxHeight = Math.Min(352, top.ClientSize.Height * 0.6);
+            _panelScroll.MaxHeight = Math.Min(352, viewport.Height * 0.6);
         }
         // The panel unfolds from the field: its height opens from zero (full motion); reduced motion only fades.
         var unfold = IsLoaded && ArcMotion.IsFull(this);

@@ -150,17 +150,20 @@
                         <Grid Name="PART_Footer"
                               Margin="{arc:MeetingSummaryTokenResource FooterPadding}"
                               ColumnDefinitions="*,Auto,Auto">
-                            <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center" ClipToBounds="True">
+                            <!-- A grid, not a horizontal StackPanel: the credit gets the room left and ends with an ellipsis. -->
+                            <Grid ColumnDefinitions="Auto,*" VerticalAlignment="Center">
                                 <arc:ArcGlyph Name="PART_ModelMark"
                                               Size="14"
+                                              Margin="0,0,6,0"
                                               Foreground="{arc:ArcDesignTokenResource Accent}"
                                               VerticalAlignment="Center" />
                                 <TextBlock Name="PART_Credit"
+                                           Grid.Column="1"
                                            FontSize="{arc:MeetingSummaryTokenResource MetaFontSize}"
                                            Foreground="{arc:ArcDesignTokenResource TextMuted}"
                                            TextTrimming="CharacterEllipsis"
                                            VerticalAlignment="Center" />
-                            </StackPanel>
+                            </Grid>
                             <arc:CopyButton Name="PART_Copy"
                                             Grid.Column="1"
                                             IsIconOnly="True"

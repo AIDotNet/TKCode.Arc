@@ -20,26 +20,20 @@ internal sealed class GanttTimelineToken : AbstractControlDesignToken
 
     public double ToolbarGap { get; set; }
 
-    /// <summary>The chart frame: radius 20, 1px border.</summary>
-    public CornerRadius FrameRadius { get; set; }
-
-    /// <summary>The zoom switch track (padding 4, radius 16) and its buttons (height 32).</summary>
+    /// <summary>
+    /// The zoom switch track (padding 4) and its buttons (height 32). Radii come from ArcDesign's radius steps (frame 20,
+    /// track 16, buttons 12, pills 18), so the Corners presets reach them.
+    /// </summary>
     public Thickness SwitchPadding { get; set; }
-
-    public CornerRadius SwitchRadius { get; set; }
 
     public double SwitchButtonHeight { get; set; }
 
     public Thickness SwitchButtonPadding { get; set; }
 
-    public CornerRadius SwitchButtonRadius { get; set; }
-
-    /// <summary>Pill buttons (Today, Undo, Reset): height 36, radius 18, 14 of padding, 6 between glyph and label.</summary>
+    /// <summary>Pill buttons (Today, Undo, Reset): height 36, 14 of padding, 6 between glyph and label.</summary>
     public double PillHeight { get; set; }
 
     public Thickness PillPadding { get; set; }
-
-    public CornerRadius PillRadius { get; set; }
 
     public double PillGap { get; set; }
 
@@ -67,15 +61,11 @@ internal sealed class GanttTimelineToken : AbstractControlDesignToken
         NarrowRootPadding = new Thickness(12, 12, 12, 8);
         SectionGap = 12;
         ToolbarGap = 12;
-        FrameRadius = new CornerRadius(20);
         SwitchPadding = new Thickness(4);
-        SwitchRadius = new CornerRadius(16);
         SwitchButtonHeight = 32;
         SwitchButtonPadding = new Thickness(14, 0);
-        SwitchButtonRadius = new CornerRadius(12);
         PillHeight = 36;
         PillPadding = new Thickness(14, 0);
-        PillRadius = new CornerRadius(18);
         PillGap = 6;
         DisabledOpacity = 0.4;
         HeaderHeight = 56;

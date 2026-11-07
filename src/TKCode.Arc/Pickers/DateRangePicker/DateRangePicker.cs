@@ -502,12 +502,16 @@ public class DateRangePicker : TemplatedControl, IPickerAutomation
     private (bool Single, double Width, double Cell, double Left, double Right) MeasureLayout()
     {
         var top = TopLevel.GetTopLevel(this);
+        // The boundary starts as the viewport (the window, or the ArcViewportHost the picker sits in). Left and right are
+        // measured from the viewport's left edge in the panel's own units (a zoomed panel lays out unscaled, ArcZoom).
+        var frame = ArcViewport.GetBounds(this) ?? new Rect(top?.ClientSize ?? new Size(1024, 768));
+        var zoom = ArcZoom.GetScale(this);
         var left = 0.0;
-        var right = top?.ClientSize.Width ?? 1024;
+        var right = frame.Width / zoom;
         if (Boundary is { } boundary && top is not null && boundary.TranslatePoint(default, top) is { } origin)
         {
-            left = Math.Max(left, origin.X);
-            right = Math.Min(right, origin.X + boundary.Bounds.Width);
+            left = Math.Max(left, (origin.X - frame.Left) / zoom);
+            right = Math.Min(right, (origin.X - frame.Left) / zoom + boundary.Bounds.Width);
         }
         var available = Math.Max(0, right - left - Edge * 2);
         var single = MonthCount == DateRangePickerMonths.One || (MonthCount == DateRangePickerMonths.Auto && available < WideMin);
@@ -546,7 +550,9 @@ public class DateRangePicker : TemplatedControl, IPickerAutomation
         _surface.ExpectContentSize(size);
         var trigger = TriggerShape;
         var top = TopLevel.GetTopLevel(this);
-        var triggerLeft = top is not null && _trigger?.TranslatePoint(default, top) is { } p ? p.X : 0;
+        // In the units of MeasureLayout: from the viewport's left edge, divided by the zoom.
+        var viewportLeft = top is null ? 0 : (ArcViewport.GetBounds(this) ?? new Rect(top.ClientSize)).Left;
+        var triggerLeft = top is not null && _trigger?.TranslatePoint(default, top) is { } p ? (p.X - viewportLeft) / ArcZoom.GetScale(this) : 0;
         // Keep the panel EDGE px inside the boundary.
         var offset = Math.Min(0, layout.Right - Edge - (triggerLeft + size.Width));
         offset = Math.Max(offset, layout.Left + Edge - triggerLeft);

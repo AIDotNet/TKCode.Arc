@@ -154,12 +154,12 @@
                                     HorizontalContentAlignment="{TemplateBinding LabelAlignment}"
                                     VerticalContentAlignment="Center"
                                     Padding="12,0,4,0">
-                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                <arc:ArcShrinkRow Spacing="4">
                                     <TextBlock Name="PART_Label"
                                                Text="{TemplateBinding Header}"
                                                TextTrimming="CharacterEllipsis"
                                                VerticalAlignment="Center"
-                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}" arc:ArcShrinkRow.IsShrinkable="True" />
                                     <StackPanel Name="PART_SortIndicator"
                                                 Orientation="Horizontal"
                                                 Spacing="1"
@@ -178,7 +178,7 @@
                                                    VerticalAlignment="Center"
                                                    Foreground="{arc:ArcDesignTokenResource TextMuted}" />
                                     </StackPanel>
-                                </StackPanel>
+                                </arc:ArcShrinkRow>
                             </Button>
                             <Button Name="PART_Menu"
                                     Grid.Column="1"

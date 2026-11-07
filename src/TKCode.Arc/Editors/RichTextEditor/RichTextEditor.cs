@@ -1,3 +1,4 @@
+using TKCode.Arc.Primitives;
 using System.Collections.Immutable;
 using System.Windows.Input;
 using Avalonia;
@@ -1310,7 +1311,7 @@ public partial class RichTextEditor : TemplatedControl
                     {
                         var direction = e.Key == Key.PageUp ? -1 : 1;
                         var caret = surface.LineRect(selection.Focus);
-                        var page = Math.Max(caret.Height, (TopLevel.GetTopLevel(this)?.ClientSize.Height ?? 600) * 0.85);
+                        var page = Math.Max(caret.Height, (ArcViewport.GetSize(this)?.Height ?? 600) * 0.85);
                         var goal = surface.GoalX ?? caret.X;
                         surface.GoalX = goal;
                         keepGoal = true;

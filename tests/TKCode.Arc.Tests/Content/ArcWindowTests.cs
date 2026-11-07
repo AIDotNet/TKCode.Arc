@@ -1,3 +1,4 @@
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Chrome;
@@ -227,7 +228,7 @@ public class ArcWindowTests
             // A wide left side pushes the center right, never under the left side.
             left.Width = 600;
             Dispatcher.UIThread.RunJobs();
-            var leading = BoundsIn(Part<StackPanel>(bar, "PART_Leading"), panel);
+            var leading = BoundsIn(Part<ArcShrinkRow>(bar, "PART_Leading"), panel);
             var placed = BoundsIn(center, panel);
             placed.X.ShouldBeGreaterThanOrEqualTo(leading.Right + 12 - 0.5);
             placed.Width.ShouldBe(200);
@@ -257,7 +258,7 @@ public class ArcWindowTests
             closeBounds.Right.ShouldBeLessThanOrEqualTo(bar.Bounds.Width + 0.5);
             closeBounds.Width.ShouldBe(30);
             var minimize = BoundsIn(Button(bar, TitleBar.MinimizeButtonPart), bar);
-            var leading = BoundsIn(Part<StackPanel>(bar, "PART_Leading"), bar);
+            var leading = BoundsIn(Part<ArcShrinkRow>(bar, "PART_Leading"), bar);
             var centered = BoundsIn(Part<ContentPresenter>(bar, "PART_CenterPresenter"), bar);
             leading.Right.ShouldBeLessThanOrEqualTo(minimize.X + 0.5);
             centered.Right.ShouldBeLessThanOrEqualTo(minimize.X + 0.5);

@@ -53,15 +53,14 @@
                         CornerRadius="{TemplateBinding CornerRadius}">
                     <!-- The icon (before the title) and a document's close slot (after it) are added by the tab only when
                          it has them: most tabs have neither, and a strip of 200 tabs paid for hidden parts. -->
-                    <StackPanel Name="PART_Items"
-                                Orientation="Horizontal"
+                    <arc:ArcShrinkRow Name="PART_Items"
                                 Spacing="{arc:DockTabTokenResource ItemGap}"
                                 VerticalAlignment="Center">
                         <TextBlock Name="PART_Title"
                                    Text="{TemplateBinding Title}"
                                    VerticalAlignment="Center"
-                                   TextTrimming="CharacterEllipsis" />
-                    </StackPanel>
+                                   TextTrimming="CharacterEllipsis" arc:ArcShrinkRow.IsShrinkable="True" />
+                    </arc:ArcShrinkRow>
                 </Border>
             </ControlTemplate>
         </Setter>

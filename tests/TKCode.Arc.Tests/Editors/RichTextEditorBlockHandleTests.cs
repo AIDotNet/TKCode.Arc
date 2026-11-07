@@ -147,6 +147,36 @@ public class RichTextEditorBlockHandleTests
     }
 
     [AvaloniaFact]
+    public void With_Full_Motion_The_Handle_Glides_From_The_Block_It_Left_Not_From_The_Editor_Corner()
+    {
+        var editor = new RichTextEditor { Width = 480, Profile = RichTextEditorProfile.Docs, Html = "<p>one</p><p>two</p><p>three</p><p>four</p>" };
+        var window = TestHelpers.Show(new Border { Padding = new Thickness(20, 80, 20, 20), Child = editor }, Motion.ArcMotionLevel.Full);
+        window.Width = 540;
+        window.Height = 600;
+        Dispatcher.UIThread.RunJobs();
+        var surface = TestHelpers.Descendant<RichTextEditorSurface>(editor);
+        try
+        {
+            Hover(surface, window, 3);
+            var grip = editor.BlockHandle!.Grip;
+            var at = Center(grip, window);
+            Math.Abs(at.Y - InWindow(surface, window, new Point(0, surface.HandleY(3))).Y).ShouldBeLessThan(3);
+
+            // The glide to block 0 has not advanced yet (no frame has run): the chip is still beside block 3. Before the fix the
+            // button theme's RenderTransform transition started from the identity and put it at the overlay's top-left corner.
+            Hover(surface, window, 0);
+            editor.BlockHandle.Block.ShouldBe(0);
+            var during = Center(grip, window);
+            Math.Abs(during.Y - at.Y).ShouldBeLessThan(3);
+            Math.Abs(during.X - at.X).ShouldBeLessThan(3);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void The_Handle_Holds_While_The_Pointer_Heads_For_It_And_Sits_Beside_Nested_Items()
     {
         var (editor, window, surface) = Show("<p>one</p><p>two</p><p>three</p><ul><li>a<ul><li>b</li></ul></li></ul>");

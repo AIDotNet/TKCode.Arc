@@ -208,7 +208,7 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             CornerRadius="{TemplateBinding CornerRadius}" />
-                    <StackPanel Orientation="Horizontal"
+                    <arc:ArcShrinkRow
                                 Spacing="{arc:ToneTunerTokenResource ChipIconGap}"
                                 Margin="{TemplateBinding Padding}"
                                 HorizontalAlignment="Center"
@@ -222,8 +222,8 @@
                         <TextBlock Name="PART_Label"
                                    Text="{TemplateBinding Label}"
                                    TextTrimming="CharacterEllipsis"
-                                   VerticalAlignment="Center" />
-                    </StackPanel>
+                                   VerticalAlignment="Center" arc:ArcShrinkRow.IsShrinkable="True" />
+                    </arc:ArcShrinkRow>
                     <Border Name="PART_FocusRing"
                             Margin="-3"
                             CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"

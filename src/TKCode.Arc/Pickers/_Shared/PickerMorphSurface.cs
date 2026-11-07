@@ -1,3 +1,4 @@
+using TKCode.Arc.Primitives;
 using TKCode.Arc.Motion;
 using Avalonia;
 using Avalonia.Controls;
@@ -352,7 +353,12 @@ internal static class PickerMorphPlacement
         {
             return wanted;
         }
-        var client = top.ClientSize;
+        // Room is measured inside the viewport (the window, or the ArcViewportHost the picker sits in), in the surface's
+        // own units: a zoomed surface (ArcZoom) lays out unscaled while window distances are scaled.
+        var frame = ArcViewport.GetBounds(owner) ?? new Rect(top.ClientSize);
+        var zoom = ArcZoom.GetScale(owner);
+        origin = new Point((origin.X - frame.X) / zoom, (origin.Y - frame.Y) / zoom);
+        var client = frame.Size / zoom;
         var left = origin.X - surface.Lead;
         var upper = origin.Y - scroll - surface.Rise;
         var capacity = surface.Capacity;
@@ -375,8 +381,13 @@ internal static class PickerMorphPlacement
         {
             return 0;
         }
-        var shift = Math.Min(0, top.ClientSize.Width - edge - (origin.X + width));
-        return Math.Max(shift, Math.Min(0, edge - origin.X));
+        // In the surface's own units (see Room).
+        var frame = ArcViewport.GetBounds(owner) ?? new Rect(top.ClientSize);
+        var zoom = ArcZoom.GetScale(owner);
+        var fromLeft = (origin.X - frame.Left) / zoom;
+        var toRight = (frame.Right - origin.X) / zoom;
+        var shift = Math.Min(0, toRight - edge - width);
+        return Math.Max(shift, Math.Min(0, edge - fromLeft));
     }
 
     /// <summary>
@@ -392,8 +403,12 @@ internal static class PickerMorphPlacement
         {
             return default;
         }
-        var bottom = top.ClientSize.Height - edge;
-        var overflow = origin.Y + height - bottom;
+        // In the surface's own units (see Room): distances from the viewport's top, divided by the zoom.
+        var frame = ArcViewport.GetBounds(owner) ?? new Rect(top.ClientSize);
+        var zoom = ArcZoom.GetScale(owner);
+        var trigger = (origin.Y - frame.Top) / zoom;
+        var bottom = frame.Height / zoom - edge;
+        var overflow = trigger + height - bottom;
         if (overflow <= 0)
         {
             return default;
@@ -402,22 +417,27 @@ internal static class PickerMorphPlacement
         ScrollViewer? viewer = null;
         foreach (var candidate in anchor.GetVisualAncestors().OfType<ScrollViewer>())
         {
-            var room = candidate.Extent.Height - candidate.Viewport.Height - candidate.Offset.Y;
+            // The scroller counts in its own units; a scroller outside the zoomed area is scaled differently.
+            var ratio = ArcZoom.GetScale(candidate) / zoom;
+            var room = (candidate.Extent.Height - candidate.Viewport.Height - candidate.Offset.Y) * ratio;
             if (room < 0.5 || candidate.TranslatePoint(default, top) is not { } view)
             {
                 continue;
             }
-            scroll = Math.Max(0, Math.Min(Math.Min(overflow, room), origin.Y - Math.Max(0, view.Y) - edge));
+            var viewTop = Math.Max(0, (view.Y - frame.Top) / zoom);
+            scroll = Math.Max(0, Math.Min(Math.Min(overflow, room), trigger - viewTop - edge));
             viewer = scroll >= 0.5 ? candidate : null;
+            if (viewer is not null)
+            {
+                var rest = trigger - scroll + height - bottom;
+                var rise = rest > 0 ? -Math.Min(rest, Math.Max(0, trigger - scroll - edge)) : 0;
+                return new PickerMorphFit(rise, scroll / ratio, viewer);
+            }
             break;
         }
-        if (viewer is null)
-        {
-            scroll = 0;
-        }
-        var rest = origin.Y - scroll + height - bottom;
-        var rise = rest > 0 ? -Math.Min(rest, Math.Max(0, origin.Y - scroll - edge)) : 0;
-        return new PickerMorphFit(rise, scroll, viewer);
+        var remaining = trigger + height - bottom;
+        var lift = remaining > 0 ? -Math.Min(remaining, Math.Max(0, trigger - edge)) : 0;
+        return new PickerMorphFit(lift, 0, null);
     }
 }
 

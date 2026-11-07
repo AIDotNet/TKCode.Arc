@@ -225,7 +225,7 @@ public class MetricCard : TemplatedControl
         base.OnAttachedToVisualTree(e);
         if (TopLevel.GetTopLevel(this) is { } topLevel)
         {
-            _clientSizeSubscription = topLevel.GetObservable(TopLevel.ClientSizeProperty).Subscribe(new ClientSizeObserver(this));
+            _clientSizeSubscription = ArcViewport.Observe(this, new ClientSizeObserver(this).OnNext);
         }
     }
 

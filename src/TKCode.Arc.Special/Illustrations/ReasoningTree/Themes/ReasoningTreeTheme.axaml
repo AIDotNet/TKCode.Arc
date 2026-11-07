@@ -43,7 +43,7 @@
                         <Grid Name="PART_Header"
                               Height="{arc:ReasoningTreeTokenResource HeaderRowHeight}"
                               ColumnDefinitions="*,Auto">
-                            <StackPanel Orientation="Horizontal"
+                            <arc:ArcShrinkRow
                                         Spacing="{arc:ReasoningTreeTokenResource TitleGap}"
                                         VerticalAlignment="Center"
                                         ClipToBounds="True">
@@ -56,8 +56,8 @@
                                            FontSize="{arc:ArcDesignTokenResource TypeSM}"
                                            Foreground="{arc:ArcDesignTokenResource TextMuted}"
                                            TextTrimming="CharacterEllipsis"
-                                           VerticalAlignment="Center" />
-                            </StackPanel>
+                                           VerticalAlignment="Center" arc:ArcShrinkRow.IsShrinkable="True" />
+                            </arc:ArcShrinkRow>
                             <arc:ReasoningTreeStatus Name="PART_Status"
                                                      Grid.Column="1"
                                                      Margin="{arc:ReasoningTreeTokenResource StatusMargin}"

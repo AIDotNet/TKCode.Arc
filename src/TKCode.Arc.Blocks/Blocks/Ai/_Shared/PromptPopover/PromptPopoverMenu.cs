@@ -1,3 +1,4 @@
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Automation.Peers;
@@ -234,7 +235,7 @@ internal abstract class PromptPopoverMenu : Control
         }
         EnsurePresence();
         var surface = _surface!;
-        surface.Width = Math.Min(SurfaceWidth, Math.Max(0, topLevel.ClientSize.Width - 2 * CollisionPadding));
+        surface.Width = Math.Min(SurfaceWidth, Math.Max(0, (ArcViewport.GetSize(this) ?? topLevel.ClientSize).Width - 2 * CollisionPadding));
         AutomationProperties.SetName(surface, DialogName);
         OnOpening();
         var popup = _presence!.Popup;

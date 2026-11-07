@@ -38,7 +38,7 @@
             <ControlTemplate TargetType="ToggleButton">
                 <Border Name="PART_Frame"
                         Background="Transparent"
-                        CornerRadius="{arc:GanttTimelineTokenResource SwitchButtonRadius}"
+                        CornerRadius="{arc:ArcDesignTokenResource RadiusStep12}"
                         Padding="{TemplateBinding Padding}">
                     <ContentPresenter Content="{TemplateBinding Content}"
                                       Foreground="{TemplateBinding Foreground}"
@@ -75,7 +75,7 @@
                         Background="Transparent"
                         BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
                         BorderThickness="1"
-                        CornerRadius="{arc:GanttTimelineTokenResource PillRadius}"
+                        CornerRadius="{arc:ArcDesignTokenResource RadiusStep18}"
                         Padding="{TemplateBinding Padding}">
                     <ContentPresenter Content="{TemplateBinding Content}"
                                       Foreground="{TemplateBinding Foreground}"
@@ -118,7 +118,7 @@
                             </StackPanel>
                             <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="{arc:GanttTimelineTokenResource ToolbarGap}">
                                 <Border Background="{arc:ArcDesignTokenResource SurfaceMuted}"
-                                        CornerRadius="{arc:GanttTimelineTokenResource SwitchRadius}"
+                                        CornerRadius="{arc:ArcDesignTokenResource RadiusStep16}"
                                         Padding="{arc:GanttTimelineTokenResource SwitchPadding}">
                                     <StackPanel Orientation="Horizontal">
                                         <ToggleButton Name="PART_Day" Content="Day" Theme="{StaticResource GanttSwitchButtonTheme}" />
@@ -132,7 +132,7 @@
                         <Border Grid.Row="1"
                                 BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
                                 BorderThickness="1"
-                                CornerRadius="{arc:GanttTimelineTokenResource FrameRadius}"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusStep20}"
                                 ClipToBounds="True"
                                 MinHeight="{arc:GanttTimelineTokenResource DefaultChartHeight}">
                             <arc:GanttChart Name="PART_Chart" />

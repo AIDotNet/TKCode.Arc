@@ -76,8 +76,7 @@
                                    Foreground="{arc:ArcDesignTokenResource TextSecondary}"
                                    IsVisible="{TemplateBinding Snippet, Converter={x:Static ObjectConverters.IsNotNull}}" />
                         <!-- The answer's meta row: "domain · date", 12 / 16.8 muted, 2px further down; the dot is the model line's. -->
-                        <StackPanel Name="PART_Meta"
-                                    Orientation="Horizontal"
+                        <arc:ArcShrinkRow Name="PART_Meta"
                                     Spacing="6"
                                     Margin="0,2,0,0"
                                     IsVisible="{TemplateBinding HasMeta}">
@@ -88,7 +87,7 @@
                                        TextTrimming="CharacterEllipsis"
                                        Foreground="{arc:ArcDesignTokenResource TextMuted}"
                                        VerticalAlignment="Center"
-                                       IsVisible="{TemplateBinding Domain, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                                       IsVisible="{TemplateBinding Domain, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" arc:ArcShrinkRow.IsShrinkable="True" />
                             <Ellipse Name="PART_MetaDot"
                                      Width="3"
                                      Height="3"
@@ -103,7 +102,7 @@
                                        FontFeatures="tnum"
                                        Foreground="{arc:ArcDesignTokenResource TextMuted}"
                                        VerticalAlignment="Center" />
-                        </StackPanel>
+                        </arc:ArcShrinkRow>
                     </StackPanel>
                 </Border>
             </ControlTemplate>

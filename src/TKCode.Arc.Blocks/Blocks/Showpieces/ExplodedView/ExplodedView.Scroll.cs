@@ -1,3 +1,4 @@
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -89,7 +90,7 @@ public partial class ExplodedView
         {
             return available;
         }
-        var window = TopLevel.GetTopLevel(this)?.ClientSize.Height ?? 0;
+        var window = ArcViewport.GetSize(this)?.Height ?? 0;
         return window > 0 ? Math.Clamp(AutoHeightRatio * window, AutoHeightMin, AutoHeightMax) : AutoHeightMax;
     }
 
@@ -103,7 +104,7 @@ public partial class ExplodedView
         {
             return page.Viewport.Height;
         }
-        var window = TopLevel.GetTopLevel(this)?.ClientSize.Height ?? 0;
+        var window = ArcViewport.GetSize(this)?.Height ?? 0;
         return window > 0 ? window : AutoHeightMax;
     }
 

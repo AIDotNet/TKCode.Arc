@@ -281,13 +281,13 @@
                                                               Margin="12,0,0,0"
                                                               VerticalAlignment="Top" />
                                 <StackPanel>
-                                    <StackPanel Orientation="Horizontal" Spacing="{arc:NotificationCenterTokenResource HeadingGap}">
+                                    <arc:ArcShrinkRow Spacing="{arc:NotificationCenterTokenResource HeadingGap}">
                                         <TextBlock Name="PART_Heading"
                                                    Text="{TemplateBinding Heading}"
                                                    VerticalAlignment="Center"
                                                    TextTrimming="CharacterEllipsis"
                                                    FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
-                                                   AutomationProperties.HeadingLevel="2" />
+                                                   AutomationProperties.HeadingLevel="2" arc:ArcShrinkRow.IsShrinkable="True" />
                                         <Border Name="PART_CountChip"
                                                 VerticalAlignment="Center"
                                                 MinWidth="{arc:NotificationCenterTokenResource CountSize}"
@@ -305,7 +305,7 @@
                                                                 TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
                                                                 TextElement.FontFeatures="tnum" />
                                         </Border>
-                                    </StackPanel>
+                                    </arc:ArcShrinkRow>
                                     <arc:ArcContentSwap Name="PART_Summary"
                                                         Mode="BlurSwap"
                                                         Margin="{arc:NotificationCenterTokenResource SummaryMargin}"

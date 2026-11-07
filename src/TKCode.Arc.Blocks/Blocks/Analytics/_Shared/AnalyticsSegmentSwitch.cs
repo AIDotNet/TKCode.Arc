@@ -460,10 +460,21 @@ internal sealed class AnalyticsSegmentSwitch : Control
             var gap = owner.Look.Gap;
             var count = Children.Count;
             var equal = owner.IsStretched && count > 0 ? (finalSize.Width - gap * (count - 1)) / count : 0;
+            // Stretched segments are equal while every label fits its share; when one does not (a narrow card), each
+            // keeps its own width plus an equal part of the room left, so no label is cut.
+            var widest = 0.0;
+            var natural = 0.0;
+            foreach (var child in Children)
+            {
+                widest = Math.Max(widest, child.DesiredSize.Width);
+                natural += child.DesiredSize.Width;
+            }
+            var proportional = owner.IsStretched && widest > equal + 0.5;
+            var share = proportional && count > 0 ? Math.Max(0, finalSize.Width - gap * (count - 1) - natural) / count : 0;
             double x = 0;
             foreach (var child in Children)
             {
-                var w = owner.IsStretched ? equal : child.DesiredSize.Width;
+                var w = !owner.IsStretched ? child.DesiredSize.Width : proportional ? child.DesiredSize.Width + share : equal;
                 child.Arrange(new Rect(x, 0, w, finalSize.Height));
                 x += w + gap;
             }

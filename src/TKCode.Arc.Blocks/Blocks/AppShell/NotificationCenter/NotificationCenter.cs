@@ -630,8 +630,8 @@ public class NotificationCenter : TemplatedControl
         PseudoClasses.Set(OpenPseudoClass, true);
         _trigger.IsOn = true;
         _clientSizeSubscription?.Dispose();
-        _clientSizeSubscription = topLevel.GetObservable(TopLevel.ClientSizeProperty).Subscribe(new ClientSizeObserver(this));
-        FitPanel(topLevel.ClientSize);
+        _clientSizeSubscription = ArcViewport.Observe(this, new ClientSizeObserver(this).OnNext);
+        FitPanel(ArcViewport.GetSize(this) ?? topLevel.ClientSize);
         _presence!.Show(_trigger, PanelGap);
         _panel!.Sync(opening: true);
         // Radix moves focus to the first focusable element of the content: the close button.

@@ -1,3 +1,4 @@
+using TKCode.Arc.Primitives;
 using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
 using Avalonia;
@@ -35,6 +36,8 @@ internal sealed class MenuSurfaceSheet
     private double _velocity;
     private bool _active;
     private TopLevel? _topLevel;
+    private Control? _anchor;
+    private IDisposable? _viewportWatch;
 
     public MenuSurfaceSheet(MenuSurface surface)
     {
@@ -55,14 +58,13 @@ internal sealed class MenuSurfaceSheet
     public void Prepare(Control anchor, TopLevel topLevel)
     {
         _active = true;
-        if (!ReferenceEquals(_topLevel, topLevel))
+        _topLevel = topLevel;
+        if (!ReferenceEquals(_anchor, anchor) || _viewportWatch is null)
         {
-            if (_topLevel is not null)
-            {
-                _topLevel.SizeChanged -= OnWindowResized;
-            }
-            _topLevel = topLevel;
-            topLevel.SizeChanged += OnWindowResized;
+            _viewportWatch?.Dispose();
+            _anchor = anchor;
+            // The sheet spans the viewport (the window, or the ArcViewportHost the anchor sits in) and follows its size.
+            _viewportWatch = ArcViewport.Observe(anchor, _ => OnViewportResized());
         }
         Fit(topLevel);
         _surface.RenderTransform = _translate;
@@ -73,7 +75,7 @@ internal sealed class MenuSurfaceSheet
 
     private void Fit(TopLevel topLevel)
     {
-        var client = topLevel.ClientSize;
+        var client = (_anchor is null ? null : ArcViewport.GetSize(_anchor)) ?? topLevel.ClientSize;
         _surface.Width = client.Width;
         _surface.MaxHeight = Math.Max(0, client.Height * HeightRatio);
         if (_scrim is not null)
@@ -83,8 +85,8 @@ internal sealed class MenuSurfaceSheet
         }
     }
 
-    // The sheet is fixed to the window: it follows resizes instead of closing.
-    private void OnWindowResized(object? sender, SizeChangedEventArgs e)
+    // The sheet is fixed to the viewport: it follows resizes instead of closing.
+    private void OnViewportResized()
     {
         if (_active && _surface.IsOpen && _topLevel is { } topLevel)
         {
@@ -101,11 +103,7 @@ internal sealed class MenuSurfaceSheet
             _ = HideScrimAsync();
         }
         _active = false;
-        if (_topLevel is not null)
-        {
-            _topLevel.SizeChanged -= OnWindowResized;
-            _topLevel = null;
-        }
+        StopWatching();
         _surface.ClearValue(Layoutable.WidthProperty);
         _surface.ClearValue(Layoutable.MaxHeightProperty);
         if (ReferenceEquals(_surface.RenderTransform, _translate))
@@ -124,17 +122,22 @@ internal sealed class MenuSurfaceSheet
         _offset?.Jump(0);
         _translate.Y = 0;
         // A closed sheet does not need resizes, and the window would otherwise keep the menu (and its anchor's page) alive.
-        if (_topLevel is not null)
-        {
-            _topLevel.SizeChanged -= OnWindowResized;
-            _topLevel = null;
-        }
+        StopWatching();
+    }
+
+    private void StopWatching()
+    {
+        _viewportWatch?.Dispose();
+        _viewportWatch = null;
+        _anchor = null;
+        _topLevel = null;
     }
 
     private void ShowScrim(Control anchor, TopLevel topLevel)
     {
-        // The overlay layer when the window has one, else the adorner layer: both sit above the content and below popups.
-        var layer = (Panel?)OverlayLayer.GetOverlayLayer(anchor) ?? AdornerLayer.GetAdornerLayer(anchor);
+        // The viewport's overlay layer (an ArcViewportHost's own, else the window's), else the adorner layer: both sit above
+        // the content and below popups.
+        var layer = ArcOverlayLayer.Find(anchor) ?? AdornerLayer.GetAdornerLayer(anchor);
         if (layer is null)
         {
             return;
@@ -161,8 +164,9 @@ internal sealed class MenuSurfaceSheet
         {
             layer.Children.Add(_scrim);
         }
-        _scrim.Width = layer.Bounds.Width > 0 ? layer.Bounds.Width : topLevel.ClientSize.Width;
-        _scrim.Height = layer.Bounds.Height > 0 ? layer.Bounds.Height : topLevel.ClientSize.Height;
+        var viewport = ArcViewport.GetSize(anchor) ?? default;
+        _scrim.Width = layer.Bounds.Width > 0 ? layer.Bounds.Width : viewport.Width;
+        _scrim.Height = layer.Bounds.Height > 0 ? layer.Bounds.Height : viewport.Height;
         _scrim.Opacity = 0;
         _scrimOpacity!.Jump(0);
         var level = ArcMotion.GetEffectiveLevel(_surface.PlacementTarget ?? (AvaloniaObject)_surface);

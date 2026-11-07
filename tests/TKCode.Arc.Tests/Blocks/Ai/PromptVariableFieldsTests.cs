@@ -1,3 +1,4 @@
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Automation.Peers;
@@ -107,7 +108,7 @@ public class PromptVariableFieldsTests
         try
         {
             var field = fields.Fields[0];
-            var row = TestHelpers.Descendant<StackPanel>(field, "PART_LabelRow");
+            var row = TestHelpers.Descendant<ArcShrinkRow>(field, "PART_LabelRow");
             row.Bounds.Height.ShouldBe(16.8, 0.6);
             row.Margin.ShouldBe(new Thickness(12, 0, 0, 0));
             var dot = TestHelpers.Descendant<Ellipse>(field, "PART_Dot");

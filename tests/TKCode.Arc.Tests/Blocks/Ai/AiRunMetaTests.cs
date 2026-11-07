@@ -1,3 +1,4 @@
+using TKCode.Arc.Primitives;
 using TKCode.Arc.DesignTokens;
 using Avalonia;
 using Avalonia.Automation;
@@ -44,7 +45,7 @@ public class AiRunMetaTests
         TestHelpers.Descendant<TextBlock>(meta, "PART_Cost").Text.ShouldBe("$0.0003");
         TestHelpers.Descendant<TextBlock>(meta, "PART_Elapsed").Text.ShouldBe("3.2 s");
         TestHelpers.Descendant<ModelMark>(meta, "PART_Mark").Size.ShouldBe(14);
-        TestHelpers.Descendant<StackPanel>(meta, "PART_Line").Spacing.ShouldBe(7);
+        TestHelpers.Descendant<ArcShrinkRow>(meta, "PART_Line").Spacing.ShouldBe(7);
         var dot = TestHelpers.Descendant<Ellipse>(meta, "PART_CostDot");
         dot.Bounds.Width.ShouldBe(3);
         dot.Bounds.Height.ShouldBe(3);

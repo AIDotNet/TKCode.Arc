@@ -40,7 +40,7 @@
                                       ColumnDefinitions="*,Auto"
                                       RowDefinitions="Auto,Auto,Auto">
                                     <StackPanel VerticalAlignment="Top">
-                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <arc:ArcShrinkRow Spacing="8">
                                             <TextBlock Name="PART_TickerText"
                                                        VerticalAlignment="Bottom"
                                                        FontSize="{arc:ArcDesignTokenResource TypeLG}"
@@ -51,8 +51,8 @@
                                                        Margin="0,0,0,1"
                                                        TextTrimming="CharacterEllipsis"
                                                        FontSize="{arc:ArcDesignTokenResource TypeSM}"
-                                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
-                                        </StackPanel>
+                                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" arc:ArcShrinkRow.IsShrinkable="True" />
+                                        </arc:ArcShrinkRow>
                                         <TextBlock Name="PART_ExchangeText"
                                                    FontSize="{arc:ArcDesignTokenResource TypeXS}"
                                                    Foreground="{arc:ArcDesignTokenResource TextMuted}" />

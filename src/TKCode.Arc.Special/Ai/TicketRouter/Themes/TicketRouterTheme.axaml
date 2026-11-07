@@ -266,7 +266,7 @@
                 <Border Background="{arc:ArcDesignTokenResource SurfaceMuted}"
                         CornerRadius="{arc:ArcDesignTokenResource RadiusStep14}">
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="4" Margin="12,0">
-                        <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+                        <arc:ArcShrinkRow Spacing="8" HorizontalAlignment="Center">
                             <arc:ArcGlyph Data="{TemplateBinding Glyph}"
                                           Size="16"
                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}"
@@ -274,8 +274,8 @@
                             <TextBlock Text="{TemplateBinding Text}"
                                        FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
                                        TextTrimming="CharacterEllipsis"
-                                       VerticalAlignment="Center" />
-                        </StackPanel>
+                                       VerticalAlignment="Center" arc:ArcShrinkRow.IsShrinkable="True" />
+                        </arc:ArcShrinkRow>
                         <TextBlock Text="{TemplateBinding Hint}"
                                    HorizontalAlignment="Center"
                                    FontSize="{arc:TicketRouterTokenResource MetaFontSize}"
@@ -301,7 +301,7 @@
                 <Border Background="{TemplateBinding Background}"
                         CornerRadius="{TemplateBinding CornerRadius}"
                         Padding="{TemplateBinding Padding}">
-                    <StackPanel Orientation="Horizontal" Spacing="5" VerticalAlignment="Center">
+                    <arc:ArcShrinkRow Spacing="5" VerticalAlignment="Center">
                         <arc:ArcGlyph Name="PART_Glyph"
                                       Data="{TemplateBinding Glyph}"
                                       Size="{arc:TicketRouterTokenResource ChipGlyphSize}"
@@ -309,8 +309,8 @@
                         <TextBlock Text="{TemplateBinding Text}"
                                    Foreground="{TemplateBinding Foreground}"
                                    TextTrimming="CharacterEllipsis"
-                                   VerticalAlignment="Center" />
-                    </StackPanel>
+                                   VerticalAlignment="Center" arc:ArcShrinkRow.IsShrinkable="True" />
+                    </arc:ArcShrinkRow>
                 </Border>
             </ControlTemplate>
         </Setter>

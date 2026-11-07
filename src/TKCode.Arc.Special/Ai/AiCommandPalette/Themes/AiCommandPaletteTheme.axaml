@@ -80,8 +80,7 @@
                                     BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
                                     BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
                                 <Grid ColumnDefinitions="*,Auto">
-                                    <StackPanel Name="PART_Model"
-                                                Orientation="Horizontal"
+                                    <arc:ArcShrinkRow Name="PART_Model"
                                                 Spacing="6"
                                                 VerticalAlignment="Center">
                                         <arc:ArcGlyph Name="PART_ModelMark"
@@ -91,8 +90,8 @@
                                                    FontSize="{arc:ArcDesignTokenResource TypeXS}"
                                                    Foreground="{arc:ArcDesignTokenResource TextMuted}"
                                                    TextTrimming="CharacterEllipsis"
-                                                   VerticalAlignment="Center" />
-                                    </StackPanel>
+                                                   VerticalAlignment="Center" arc:ArcShrinkRow.IsShrinkable="True" />
+                                    </arc:ArcShrinkRow>
                                     <arc:ArcContentSwap Name="PART_Hints"
                                                         Grid.Column="1"
                                                         Mode="Crossfade"

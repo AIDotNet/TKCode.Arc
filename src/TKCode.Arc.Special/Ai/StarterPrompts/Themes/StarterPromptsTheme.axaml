@@ -82,8 +82,7 @@
                                     <Grid ColumnDefinitions="Auto,*,Auto"
                                           Height="{arc:StarterPromptsTokenResource FooterHeight}"
                                           Margin="{arc:StarterPromptsTokenResource FooterMargin}">
-                                        <StackPanel Name="PART_Model"
-                                                    Orientation="Horizontal"
+                                        <arc:ArcShrinkRow Name="PART_Model"
                                                     Spacing="6"
                                                     Margin="2,0,0,0"
                                                     VerticalAlignment="Center"
@@ -98,8 +97,8 @@
                                                        FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
                                                        Foreground="{arc:ArcDesignTokenResource TextSecondary}"
                                                        TextTrimming="CharacterEllipsis"
-                                                       VerticalAlignment="Center" />
-                                        </StackPanel>
+                                                       VerticalAlignment="Center" arc:ArcShrinkRow.IsShrinkable="True" />
+                                        </arc:ArcShrinkRow>
                                         <arc:ArcContentSwap Name="PART_Status"
                                                             Grid.Column="1"
                                                             Mode="Crossfade"
@@ -200,7 +199,7 @@
                             Padding="{TemplateBinding Padding}">
                         <Panel>
                             <StackPanel Name="PART_Content">
-                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                <arc:ArcShrinkRow Spacing="8">
                                     <Border Name="PART_Mark"
                                             Width="{arc:StarterPromptsTokenResource MarkSize}"
                                             Height="{arc:StarterPromptsTokenResource MarkSize}"
@@ -228,8 +227,8 @@
                                                Foreground="{arc:ArcDesignTokenResource TextMuted}"
                                                TextTrimming="CharacterEllipsis"
                                                VerticalAlignment="Center"
-                                               IsVisible="False" />
-                                </StackPanel>
+                                               IsVisible="False" arc:ArcShrinkRow.IsShrinkable="True" />
+                                </arc:ArcShrinkRow>
                                 <TextBlock Name="PART_Title"
                                            Text="{TemplateBinding Title}"
                                            Margin="{arc:StarterPromptsTokenResource TitleMargin}"

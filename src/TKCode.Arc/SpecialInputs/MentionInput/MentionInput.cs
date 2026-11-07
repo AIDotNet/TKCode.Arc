@@ -1,3 +1,4 @@
+using TKCode.Arc.Primitives;
 using TKCode.Arc.DesignTokens;
 using System.Windows.Input;
 using TKCode.Arc.Motion;
@@ -938,8 +939,11 @@ public class MentionInput : TemplatedControl, ITokenTextEditorHost
         if (SuggestionPlacement == MentionSuggestionPlacement.Auto && TopLevel.GetTopLevel(this) is { } topLevel &&
             this.TranslatePoint(default, topLevel) is { } rootTop)
         {
-            var roomBelow = topLevel.ClientSize.Height - (rootTop.Y + top + line);
-            var roomAbove = rootTop.Y + top;
+            var frame = ArcViewport.GetBounds(this) ?? new Rect(topLevel.ClientSize);
+            // In the panel's units: top and line are this control's (unscaled), window distances divide by the zoom.
+            var zoom = ArcZoom.GetScale(this);
+            var roomBelow = (frame.Bottom - rootTop.Y) / zoom - (top + line);
+            var roomAbove = (rootTop.Y - frame.Top) / zoom + top;
             above = roomBelow < 300 && roomAbove > roomBelow;
         }
         _popup.Place(above, new Rect(x, top, 1, Math.Max(1, line)));

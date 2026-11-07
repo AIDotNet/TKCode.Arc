@@ -518,8 +518,10 @@ public class MenuSurface : HeaderedItemsControl
         {
             return double.PositiveInfinity;
         }
-        var client = topLevel.ClientSize.Height;
-        var origin = target.TranslatePoint(_anchorPoint ?? default, topLevel) ?? default;
+        // Room is measured inside the viewport (the window, or the ArcViewportHost the anchor sits in).
+        var frame = ArcViewport.GetBounds(target) ?? new Rect(topLevel.ClientSize);
+        var client = frame.Height;
+        var origin = (target.TranslatePoint(_anchorPoint ?? default, topLevel) ?? default) - frame.Position;
         var anchor = _anchorPoint is null ? new Rect(origin, target.Bounds.Size) : new Rect(origin, new Size(0, 0));
         double room;
         if (_anchorPoint is null && Side is MenuSide.Left or MenuSide.Right)

@@ -598,11 +598,11 @@
                                 Background="{TemplateBinding Background}"
                                 CornerRadius="{arc:SidebarTokenResource RowRadius}" />
                         <arc:SidebarOpenWidthHost Margin="{arc:SidebarTokenResource RowInlinePadding}">
-                            <StackPanel Orientation="Horizontal" Spacing="4">
+                            <arc:ArcShrinkRow Spacing="4">
                                 <TextBlock Name="PART_Title"
                                            Text="{TemplateBinding Title}"
                                            TextTrimming="CharacterEllipsis"
-                                           VerticalAlignment="Center" />
+                                           VerticalAlignment="Center" arc:ArcShrinkRow.IsShrinkable="True" />
                                 <arc:ArcGlyph Name="PART_Chevron"
                                               Data="{x:Static arc:ArcIcons.ChevronDown}"
                                               Size="{arc:SidebarTokenResource SectionChevronSize}"
@@ -610,7 +610,7 @@
                                               IsVisible="{TemplateBinding IsCollapsible}"
                                               VerticalAlignment="Center"
                                               RenderTransformOrigin="50%,50%" />
-                            </StackPanel>
+                            </arc:ArcShrinkRow>
                         </arc:SidebarOpenWidthHost>
                         <Border Name="PART_FocusRing"
                                 IsVisible="False"

@@ -151,7 +151,7 @@
                                 CornerRadius="{arc:PiiRedactionTokenResource BoxCornerRadius}"
                                 Padding="{arc:PiiRedactionTokenResource BoxPadding}">
                             <StackPanel Spacing="6">
-                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                <arc:ArcShrinkRow Spacing="6">
                                     <arc:ArcGlyph Name="PART_ReplyMark"
                                                   Data="{Binding ModelMark, RelativeSource={RelativeSource TemplatedParent}}"
                                                   Size="{arc:PiiRedactionTokenResource ModelMarkSize}"
@@ -162,8 +162,8 @@
                                                FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
                                                Foreground="{arc:ArcDesignTokenResource TextSecondary}"
                                                TextTrimming="CharacterEllipsis"
-                                               VerticalAlignment="Center" />
-                                </StackPanel>
+                                               VerticalAlignment="Center" arc:ArcShrinkRow.IsShrinkable="True" />
+                                </arc:ArcShrinkRow>
                                 <Grid>
                                     <TextBlock Name="PART_ReplyReserve"
                                                TextWrapping="Wrap"
@@ -385,7 +385,7 @@
                             CornerRadius="{arc:PiiRedactionTokenResource CellCornerRadius}"
                             Background="{TemplateBinding TintBrush}" />
                     <StackPanel Margin="{arc:PiiRedactionTokenResource CellPadding}" VerticalAlignment="Center" Spacing="2">
-                        <StackPanel Orientation="Horizontal" Spacing="6">
+                        <arc:ArcShrinkRow Spacing="6">
                             <Ellipse Width="{arc:PiiRedactionTokenResource CellDotSize}"
                                      Height="{arc:PiiRedactionTokenResource CellDotSize}"
                                      Fill="{TemplateBinding TypeBrush}"
@@ -394,8 +394,8 @@
                                        FontSize="{arc:PiiRedactionTokenResource CellFontSize}"
                                        Foreground="{arc:ArcDesignTokenResource TextSecondary}"
                                        TextTrimming="CharacterEllipsis"
-                                       VerticalAlignment="Center" />
-                        </StackPanel>
+                                       VerticalAlignment="Center" arc:ArcShrinkRow.IsShrinkable="True" />
+                        </arc:ArcShrinkRow>
                         <arc:ToolCallText Name="PART_Value"
                                           Swap="Fade"
                                           Text="{TemplateBinding Value}"

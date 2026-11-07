@@ -572,7 +572,7 @@ public class DatePicker : FieldTextBox
         {
             return;
         }
-        var viewport = TopLevel.GetTopLevel(this)?.ClientSize.Width ?? double.PositiveInfinity;
+        var viewport = ArcViewport.GetSize(this)?.Width ?? double.PositiveInfinity;
         var narrow = viewport <= 360;
         _panel.IsCompact = narrow;
         _panel.Width = narrow && Frame is not null ? Frame.Bounds.Width : Math.Min(_panel.PreferredWidth, Math.Max(0, viewport - 32));

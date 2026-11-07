@@ -264,7 +264,7 @@
                                     Grid.Column="1"
                                     VerticalAlignment="Center"
                                     Spacing="{arc:IntegrationsTokenResource BodyGap}">
-                            <StackPanel Orientation="Horizontal" Spacing="{arc:IntegrationsTokenResource NameGap}">
+                            <arc:ArcShrinkRow Spacing="{arc:IntegrationsTokenResource NameGap}">
                                 <arc:IntegrationNameButton Name="PART_Name"
                                                            Content="{TemplateBinding AppName}"
                                                            VerticalAlignment="Bottom" />
@@ -275,8 +275,8 @@
                                            FontSize="{arc:ArcDesignTokenResource TypeXS}"
                                            LineHeight="{arc:IntegrationsTokenResource SmallLineHeight}"
                                            TextTrimming="CharacterEllipsis"
-                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
-                            </StackPanel>
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" arc:ArcShrinkRow.IsShrinkable="True" />
+                            </arc:ArcShrinkRow>
                             <TextBlock Name="PART_Description"
                                        Text="{TemplateBinding Description}"
                                        FontSize="{arc:ArcDesignTokenResource TypeXS}"

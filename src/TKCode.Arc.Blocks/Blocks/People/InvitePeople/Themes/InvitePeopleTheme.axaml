@@ -204,7 +204,7 @@
                                               ColumnDefinitions="*,Auto"
                                               Height="{arc:InvitePeopleTokenResource OverLineHeight}"
                                               Margin="0,8,0,0">
-                                            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                                            <arc:ArcShrinkRow Grid.Column="0" VerticalAlignment="Center">
                                                 <arc:ArcGlyph Size="16"
                                                               Data="{x:Static arc:ArcIcons.CircleAlert}"
                                                               Foreground="{arc:ArcDesignTokenResource Danger}"
@@ -219,8 +219,8 @@
                                                            VerticalAlignment="Center"
                                                            TextTrimming="CharacterEllipsis"
                                                            FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
-                                                           Foreground="{arc:ArcDesignTokenResource Danger}" />
-                                            </StackPanel>
+                                                           Foreground="{arc:ArcDesignTokenResource Danger}" arc:ArcShrinkRow.IsShrinkable="True" />
+                                            </arc:ArcShrinkRow>
                                             <arc:InvitePeopleButton Name="PART_Upgrade"
                                                                     Grid.Column="1"
                                                                     Classes="outline"

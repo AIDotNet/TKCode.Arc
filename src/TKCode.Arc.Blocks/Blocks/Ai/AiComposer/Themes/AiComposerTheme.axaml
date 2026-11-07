@@ -206,8 +206,7 @@
                                            Fill="{arc:AiComposerTokenResource DropCoverBackground}"
                                            RadiusX="{arc:AiComposerTokenResource InlineDropCoverRadius}"
                                            RadiusY="{arc:AiComposerTokenResource InlineDropCoverRadius}" />
-                                <StackPanel Name="PART_DropContent"
-                                            Orientation="Horizontal"
+                                <arc:ArcShrinkRow Name="PART_DropContent"
                                             Spacing="8"
                                             Margin="16,0"
                                             HorizontalAlignment="Center"
@@ -224,8 +223,8 @@
                                                LineHeight="19.6"
                                                LetterSpacing="-0.14"
                                                TextTrimming="CharacterEllipsis"
-                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
-                                </StackPanel>
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}" arc:ArcShrinkRow.IsShrinkable="True" />
+                                </arc:ArcShrinkRow>
                             </Panel>
                         </arc:PresenceHost>
                         <arc:AiAnnouncer Name="PART_Announcer" />

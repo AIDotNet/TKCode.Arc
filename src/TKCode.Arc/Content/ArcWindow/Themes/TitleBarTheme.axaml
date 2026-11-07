@@ -147,8 +147,7 @@
                         BorderThickness="{TemplateBinding BorderThickness}"
                         Padding="{TemplateBinding Padding}">
                     <arc:TitleBarPanel Name="PART_Panel" Spacing="{arc:TitleBarTokenResource SectionSpacing}">
-                        <StackPanel Name="PART_Leading"
-                                    Orientation="Horizontal"
+                        <arc:ArcShrinkRow Name="PART_Leading"
                                     Spacing="{arc:TitleBarTokenResource ItemSpacing}"
                                     VerticalAlignment="Center">
                             <!-- The macOS traffic lights; shown in System mode outside full screen (which hides them). -->
@@ -168,12 +167,12 @@
                                        IsHitTestVisible="False"
                                        FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
                                        TextTrimming="CharacterEllipsis"
-                                       VerticalAlignment="Center" />
+                                       VerticalAlignment="Center" arc:ArcShrinkRow.IsShrinkable="True" />
                             <ContentPresenter Name="PART_LeftPresenter"
                                               Content="{TemplateBinding LeftContent}"
                                               IsVisible="{TemplateBinding LeftContent, Converter={x:Static ObjectConverters.IsNotNull}}"
                                               VerticalAlignment="Center" />
-                        </StackPanel>
+                        </arc:ArcShrinkRow>
                         <ContentPresenter Name="PART_CenterPresenter"
                                           Content="{TemplateBinding CenterContent}"
                                           IsVisible="{TemplateBinding CenterContent, Converter={x:Static ObjectConverters.IsNotNull}}"

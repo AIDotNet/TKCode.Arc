@@ -196,7 +196,7 @@ public partial class ModelMenu
         main.IsSimple = IsSimple;
         if (TopLevel.GetTopLevel(main) is { } topLevel)
         {
-            FitMain(topLevel.ClientSize);
+            FitMain(ArcViewport.GetSize(this) ?? topLevel.ClientSize);
         }
         if (main.Page != ModelMenuPage.Main)
         {
@@ -263,7 +263,7 @@ public partial class ModelMenu
         }
         _pendingOpen = false;
         EnsureMain();
-        var paged = topLevel.ClientSize.Width <= PagedBelowWidth;
+        var paged = (ArcViewport.GetSize(this) ?? topLevel.ClientSize).Width <= PagedBelowWidth;
         if (paged != _paged)
         {
             _paged = paged;
@@ -278,7 +278,7 @@ public partial class ModelMenu
             scroll.Offset = default;
         }
         AutomationProperties.SetName(panel, Labels.Menu);
-        FitMain(topLevel.ClientSize);
+        FitMain(ArcViewport.GetSize(this) ?? topLevel.ClientSize);
         var popup = _main!.Popup;
         popup.PlacementTarget = anchor;
         // Presses on the anchor reach it (the trigger toggles the menu itself); outside presses are handled by Hook.
@@ -438,7 +438,7 @@ public partial class ModelMenu
         topLevel.AddHandler(PointerPressedEvent, OnTopLevelPointerPressed, RoutingStrategies.Tunnel, handledEventsToo: true);
         topLevel.AddHandler(PointerMovedEvent, OnTopLevelPointerMoved, RoutingStrategies.Tunnel, handledEventsToo: true);
         topLevel.AddHandler(KeyDownEvent, OnTopLevelKeyDown, RoutingStrategies.Bubble);
-        _clientSizeSubscription = topLevel.GetObservable(TopLevel.ClientSizeProperty).Subscribe(new ClientSizeObserver(this));
+        _clientSizeSubscription = ArcViewport.Observe(this, new ClientSizeObserver(this).OnNext);
     }
 
     /// <summary>
@@ -1112,12 +1112,12 @@ public partial class ModelMenu
         {
             return false;
         }
-        var client = topLevel.ClientSize.Width;
-        if (client - (surface.X + main.Bounds.Width) - SubmenuGap >= width)
+        var frame = ArcViewport.GetBounds(main) ?? new Rect(topLevel.ClientSize);
+        if (frame.Right - (surface.X + main.Bounds.Width) - SubmenuGap >= width)
         {
             return false;
         }
-        if (surface.X - SubmenuGap >= width)
+        if (surface.X - frame.Left - SubmenuGap >= width)
         {
             return true;
         }

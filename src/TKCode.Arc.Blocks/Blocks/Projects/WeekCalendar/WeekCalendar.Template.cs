@@ -36,6 +36,7 @@ public partial class WeekCalendar
     private WeekCalendarGridView? _gridView;
     private WeekCalendarAgendaView? _agendaView;
     private TopLevel? _topLevel;
+    private IDisposable? _viewportWatch;
     private bool _updatingViews;
     private bool _sidebarShown;
     private MotionValue<double>? _viewFade;
@@ -384,7 +385,7 @@ public partial class WeekCalendar
             {
                 return GridHeight;
             }
-            return WeekCalendarMetrics.GridHeightFor(_topLevel?.ClientSize.Height ?? double.NaN);
+            return WeekCalendarMetrics.GridHeightFor(_topLevel is null ? double.NaN : ArcViewport.GetSize(this)?.Height ?? double.NaN);
         }
     }
 
@@ -406,10 +407,9 @@ public partial class WeekCalendar
         base.OnAttachedToVisualTree(e);
         OnDataAttached();
         _topLevel = TopLevel.GetTopLevel(this);
-        if (_topLevel is not null)
-        {
-            _topLevel.PropertyChanged += OnTopLevelPropertyChanged;
-        }
+        // The grid's height follows the viewport: the window, or the ArcViewportHost the calendar sits in.
+        _viewportWatch?.Dispose();
+        _viewportWatch = ArcViewport.Observe(this, _ => UpdateGridHeight());
         UpdateGridHeight();
         UpdateMinuteTimer();
         ArcToday.Changed += OnTodayChanged;
@@ -419,24 +419,14 @@ public partial class WeekCalendar
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
-        if (_topLevel is not null)
-        {
-            _topLevel.PropertyChanged -= OnTopLevelPropertyChanged;
-            _topLevel = null;
-        }
+        _viewportWatch?.Dispose();
+        _viewportWatch = null;
+        _topLevel = null;
         _minuteTimer?.Stop();
         ArcToday.Changed -= OnTodayChanged;
         ActualThemeVariantChanged -= OnThemeChanged;
         OnEditingDetached();
         OnDataDetached();
-    }
-
-    private void OnTopLevelPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
-    {
-        if (e.Property == TopLevel.ClientSizeProperty)
-        {
-            UpdateGridHeight();
-        }
     }
 
     private void OnTodayChanged(object? sender, EventArgs e) => Dispatcher.UIThread.Post(OnNowTick);

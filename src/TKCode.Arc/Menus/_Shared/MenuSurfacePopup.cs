@@ -176,10 +176,10 @@ internal sealed class MenuSurfacePopup : ArcPopup
         if (_variant == MenuSurfaceVariant.Sheet && PlacementTarget is { } sheetTarget &&
             TopLevel.GetTopLevel(sheetTarget) is { } sheetTopLevel)
         {
-            // Full width along the bottom edge of the window; the shadow room hangs below the edge (the positioner
-            // places the surface without it).
-            var clientSize = sheetTopLevel.ClientSize;
-            placement.AnchorRectangle = new Rect(0, clientSize.Height, clientSize.Width, 1);
+            // Full width along the bottom edge of the viewport (the window, or the ArcViewportHost the menu opens in);
+            // the shadow room hangs below the edge (the positioner places the surface without it).
+            var frame = ArcViewport.GetBounds(sheetTarget) ?? new Rect(sheetTopLevel.ClientSize);
+            placement.AnchorRectangle = new Rect(frame.Left, frame.Bottom, frame.Width, 1);
             placement.Anchor = PopupAnchor.Top;
             placement.Gravity = PopupGravity.Top;
             placement.Offset = default;

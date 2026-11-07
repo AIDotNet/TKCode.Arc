@@ -92,7 +92,7 @@
                                 BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                 CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
                                 BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}">
-                            <StackPanel Orientation="Horizontal"
+                            <arc:ArcShrinkRow
                                         Spacing="{arc:AgentCursorTokenResource ReviewBarGap}"
                                         VerticalAlignment="Center">
                                 <TextBlock Name="PART_ReviewText"
@@ -100,7 +100,7 @@
                                            Margin="0,0,6,0"
                                            TextTrimming="CharacterEllipsis"
                                            FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
-                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" arc:ArcShrinkRow.IsShrinkable="True" />
                                 <arc:Button Name="PART_Undo"
                                             Classes="agent-cursor-action"
                                             Variant="Ghost"
@@ -109,7 +109,7 @@
                                             Classes="agent-cursor-action"
                                             Variant="Primary"
                                             Size="Small" />
-                            </StackPanel>
+                            </arc:ArcShrinkRow>
                         </Border>
                         <!-- The cursors, over the document and the review bar (the teammate reaches for Accept). -->
                         <Canvas Name="PART_Overlay"

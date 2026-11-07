@@ -98,7 +98,9 @@ internal sealed class ModelMenuPopup : ArcPopup
             return;
         }
         var width = placement.PopupSize.Width - shadow.Left - shadow.Right;
-        var client = topLevel.ClientSize.Width;
+        // Kept inside the viewport: the window, or the ArcViewportHost the anchor sits in.
+        var frame = ArcViewport.GetBounds(target) ?? new Rect(topLevel.ClientSize);
+        var client = frame.Width;
         if (width <= 0 || width + 2 * CollisionPadding > client + 0.5)
         {
             return;
@@ -111,7 +113,7 @@ internal sealed class ModelMenuPopup : ArcPopup
             > 0 => anchor.Right - width,
             _ => anchor.X + anchor.Width / 2 - width / 2
         } + placement.Offset.X;
-        var clamped = Math.Clamp(left, CollisionPadding, client - CollisionPadding - width);
+        var clamped = Math.Clamp(left, frame.Left + CollisionPadding, frame.Right - CollisionPadding - width);
         if (Math.Abs(clamped - left) > 0.01)
         {
             placement.Offset = placement.Offset.WithX(placement.Offset.X + clamped - left);

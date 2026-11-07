@@ -454,7 +454,7 @@ public class CommandPalette : TemplatedControl
         _view = ResultsView.None;
         _leaving = false;
         UpdateAutomation();
-        UpdateWidthClass(TopLevel.GetTopLevel(this)?.ClientSize.Width ?? 0);
+        UpdateWidthClass(ArcViewport.GetSize(this)?.Width ?? 0);
         Refresh(RefreshReason.Data);
     }
 
@@ -1429,8 +1429,8 @@ public class CommandPalette : TemplatedControl
         _clientSizeSubscription = null;
         if (TopLevel.GetTopLevel(this) is { } top)
         {
-            _clientSizeSubscription = top.GetObservable(TopLevel.ClientSizeProperty).Subscribe(new ClientSizeObserver(this));
-            UpdateWidthClass(top.ClientSize.Width);
+            _clientSizeSubscription = ArcViewport.Observe(this, new ClientSizeObserver(this).OnNext);
+            UpdateWidthClass((ArcViewport.GetSize(this) ?? top.ClientSize).Width);
         }
     }
 

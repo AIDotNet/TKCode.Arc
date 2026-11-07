@@ -32,7 +32,7 @@
                                                LetterSpacing="{arc:JourneyFlowTokenResource TitleTracking}"
                                                FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
                                                Foreground="{arc:ArcDesignTokenResource Foreground}" />
-                                    <StackPanel Name="PART_SubtitleRow" Orientation="Horizontal" Margin="0,2,0,0">
+                                    <arc:ArcShrinkRow Name="PART_SubtitleRow" Margin="0,2,0,0">
                                         <TextBlock Name="PART_SubtitleBefore"
                                                    Classes="subtitle"
                                                    VerticalAlignment="Center" />
@@ -43,8 +43,8 @@
                                         <TextBlock Name="PART_SubtitleAfter"
                                                    Classes="subtitle"
                                                    VerticalAlignment="Center"
-                                                   TextTrimming="CharacterEllipsis" />
-                                    </StackPanel>
+                                                   TextTrimming="CharacterEllipsis" arc:ArcShrinkRow.IsShrinkable="True" />
+                                    </arc:ArcShrinkRow>
                                 </StackPanel>
                                 <arc:AnalyticsSegmentSwitch Name="PART_Segments" />
                             </arc:JourneyFlowHeaderPanel>

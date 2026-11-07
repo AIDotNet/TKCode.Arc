@@ -39,7 +39,8 @@
                                                        FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
                                                        LineHeight="17.6"
                                                        Foreground="{arc:ArcDesignTokenResource Foreground}" />
-                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                <!-- Wraps on a narrow card: the summary moves under the page name instead of running past the edge. -->
+                                <WrapPanel ItemSpacing="8">
                                     <TextBlock Name="PART_PageName"
                                                VerticalAlignment="Center"
                                                LineHeight="19.6"
@@ -54,7 +55,7 @@
                                                            FontSize="{arc:ArcDesignTokenResource TypeSM}"
                                                            LineHeight="19.6"
                                                            Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
-                                </StackPanel>
+                                </WrapPanel>
                             </StackPanel>
                             <ContentPresenter Name="PART_Action"
                                               Grid.Column="2"

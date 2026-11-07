@@ -521,9 +521,9 @@ public partial class SiteHeader
         {
             return scroll.Viewport.Height;
         }
-        if (TopLevel.GetTopLevel(this) is { } top && top.ClientSize.Height > 0)
+        if (ArcViewport.GetSize(this) is { Height: > 0 } viewport)
         {
-            return top.ClientSize.Height;
+            return viewport.Height;
         }
         return 800;
     }

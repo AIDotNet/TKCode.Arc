@@ -4,7 +4,13 @@
         <OutputType>Exe</OutputType>
         <IsPackable>false</IsPackable>
         <NoWarn>$(NoWarn);CS0436</NoWarn>
+        <!-- The Lucide generator compiles in the icons the tests use (LucideIconTests) plus the declared ones below. -->
+        <ArcLucideGenerator>true</ArcLucideGenerator>
     </PropertyGroup>
+    <ItemGroup>
+        <!-- The Docs-section XAML examples, loaded at run time (GalleryGuidesTests), and a declared-only icon (LucideIconTests). -->
+        <LucideIcon Include="Sparkles;circle-dashed" />
+    </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.NET.Test.Sdk" />
         <PackageReference Include="xunit.v3" />
@@ -19,6 +25,7 @@
         <ProjectReference Include="../../src/TKCode.Arc.Special/TKCode.Arc.Special.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Workflow/TKCode.Arc.Workflow.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Dock/TKCode.Arc.Dock.csproj" />
+        <ProjectReference Include="../../src/TKCode.Arc.Video/TKCode.Arc.Video.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Themes.Corners/TKCode.Arc.Themes.Corners.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Themes.Pixel/TKCode.Arc.Themes.Pixel.csproj" />
         <ProjectReference Include="../../gallery/TKCode.Arc.Gallery/TKCode.Arc.Gallery.csproj" />

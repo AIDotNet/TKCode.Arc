@@ -70,7 +70,7 @@ public partial class SearchResults
         surface.IsSheet = sheet;
         surface.Title = KindLabelOf(item) is { Length: > 0 } kind ? kind : null;
         surface.CloseText = CloseText;
-        var client = TopLevel.GetTopLevel(this)?.ClientSize ?? new Size(800, 600);
+        var client = ArcViewport.GetSize(this) ?? new Size(800, 600);
         if (sheet)
         {
             surface.HorizontalAlignment = HorizontalAlignment.Stretch;

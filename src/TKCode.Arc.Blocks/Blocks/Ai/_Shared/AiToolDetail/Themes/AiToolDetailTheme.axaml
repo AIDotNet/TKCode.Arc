@@ -33,7 +33,7 @@
                                 </ItemsControl.ItemsPanel>
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate x:DataType="x:String">
-                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <arc:ArcShrinkRow Spacing="8">
                                             <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Search}"
                                                           Size="13"
                                                           StrokeThickness="1.75"
@@ -44,8 +44,8 @@
                                                        LineHeight="19.6"
                                                        LetterSpacing="-0.14"
                                                        TextTrimming="CharacterEllipsis"
-                                                       VerticalAlignment="Center" />
-                                        </StackPanel>
+                                                       VerticalAlignment="Center" arc:ArcShrinkRow.IsShrinkable="True" />
+                                        </arc:ArcShrinkRow>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
@@ -66,7 +66,7 @@
                                                      TextWrapping="NoWrap"
                                                      Foreground="{arc:ArcDesignTokenResource Foreground}" />
                             </arc:ScrollArea>
-                            <StackPanel Name="PART_ResultRow" Orientation="Horizontal" Spacing="10">
+                            <arc:ArcShrinkRow Name="PART_ResultRow" Spacing="10">
                                 <TextBlock Name="PART_ResultLabel"
                                            Text="{TemplateBinding ResultLabel}"
                                            FontSize="12"
@@ -80,8 +80,9 @@
                                                      FontFeatures="tnum"
                                                      TextWrapping="Wrap"
                                                      Foreground="{arc:ArcDesignTokenResource Foreground}"
-                                                     VerticalAlignment="Center" />
-                            </StackPanel>
+                                                     VerticalAlignment="Center"
+                                                     arc:ArcShrinkRow.IsShrinkable="True" />
+                            </arc:ArcShrinkRow>
                             <ContentPresenter Name="PART_Custom" IsVisible="False" />
                         </StackPanel>
                     </Border>

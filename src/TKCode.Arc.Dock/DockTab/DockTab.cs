@@ -21,7 +21,7 @@ namespace TKCode.Arc;
 /// for documents, a close button that shows on hover, selection or keyboard focus (a modified document shows a dot until
 /// hovered). The selected background is the strip's gliding pill, not the tab.
 /// </summary>
-[TemplatePart(ItemsPart, typeof(StackPanel))]
+[TemplatePart(ItemsPart, typeof(ArcShrinkRow))]
 [PseudoClasses(SelectedPseudoClass, PressedPseudoClass, ModifiedPseudoClass, DocumentPseudoClass, DraggingPseudoClass, GroupActivePseudoClass)]
 internal sealed class DockTab : TemplatedControl
 {
@@ -48,7 +48,7 @@ internal sealed class DockTab : TemplatedControl
         AvaloniaProperty.Register<DockTab, bool>(nameof(IsSelected));
 
     private readonly IDisposable[] _bindings;
-    private StackPanel? _items;
+    private ArcShrinkRow? _items;
     private ArcGlyph? _icon;
     private Panel? _closeSlot;
     private Ellipse? _dot;
@@ -175,7 +175,7 @@ internal sealed class DockTab : TemplatedControl
         _dot.IsVisible = modified && !hovered;
     }
 
-    private void BuildCloseSlot(StackPanel items)
+    private void BuildCloseSlot(ArcShrinkRow items)
     {
         _closeSlot = new Panel { VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center };
         _closeSlot.Bind(WidthProperty, _closeSlot.GetResourceObservable(DockTabTokens.Key(DockTabTokenKind.CloseSize)));
@@ -222,7 +222,7 @@ internal sealed class DockTab : TemplatedControl
         _closeSlot = null;
         _dot = null;
         _close = null;
-        _items = e.NameScope.Find<StackPanel>(ItemsPart);
+        _items = e.NameScope.Find<ArcShrinkRow>(ItemsPart);
         UpdateState();
         _focusRing ??= new LazyFocusRing(this, DockTabTokens.Key(DockTabTokenKind.FocusRingMargin),
             ArcDesignTokens.Key(ArcDesignTokenKind.RadiusStep8));

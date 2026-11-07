@@ -66,16 +66,15 @@
                                        FontSize="{arc:TldrToggleTokenResource TitleFontSize}"
                                        LineHeight="{arc:TldrToggleTokenResource TitleLineHeight}"
                                        Foreground="{arc:ArcDesignTokenResource Foreground}" />
-                            <StackPanel Name="PART_AuthorRow"
-                                        Orientation="Horizontal"
+                            <arc:ArcShrinkRow Name="PART_AuthorRow"
                                         Spacing="{arc:TldrToggleTokenResource AuthorGap}">
                                 <arc:Avatar Name="PART_Avatar" Size="Small" VerticalAlignment="Center" />
                                 <TextBlock Name="PART_Author"
                                            VerticalAlignment="Center"
                                            TextTrimming="CharacterEllipsis"
                                            FontSize="{arc:TldrToggleTokenResource MetaFontSize}"
-                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
-                            </StackPanel>
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" arc:ArcShrinkRow.IsShrinkable="True" />
+                            </arc:ArcShrinkRow>
                         </StackPanel>
 
                         <arc:TldrToggleControlsPanel Name="PART_Controls"

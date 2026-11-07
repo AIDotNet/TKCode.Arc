@@ -50,6 +50,10 @@ internal sealed class RichTextEditorBlockHandle
     private readonly RichTextEditorToolButton _grip;
     private readonly ArcGlyph _kind = new() { Data = ArcIcons.Type, Size = 16, StrokeThickness = 2 };
     private readonly Border _indicator;
+    // Positions "+" and the chip. The buttons' own RenderTransform belongs to their theme (the press scale and its transition);
+    // moving them through it made every move after a show run that transition from the identity, so the handle flashed at the
+    // overlay's top-left corner (above the text) before gliding down to the block.
+    private readonly Panel _host = new() { Width = GripWidth, Height = ButtonSize, HorizontalAlignment = HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Top };
     private MenuSurface? _menu;
     private int _block = -1;
     private bool _over;
@@ -64,6 +68,8 @@ internal sealed class RichTextEditorBlockHandle
     private Point _aimPending;
     // Code-driven: the target comes from block layout on every pointer move, which a ControlTheme transition cannot follow.
     private readonly MotionValue<Point> _position;
+    // Code-driven for the same reason: the fade starts only when the handle appears at a freshly computed place.
+    private readonly MotionValue<double> _opacity;
 
     public RichTextEditorBlockHandle(RichTextEditor owner, Panel overlay)
     {
@@ -80,9 +86,11 @@ internal sealed class RichTextEditorBlockHandle
         _indicator = new Border { Height = 2, CornerRadius = new CornerRadius(1), IsHitTestVisible = false, IsVisible = false };
         ArcTokens.Bind(_indicator, Border.BackgroundProperty, DesignTokens.ArcDesignTokenKind.Accent);
         ArcTokens.Bind(_kind, ArcGlyph.ForegroundProperty, DesignTokens.ArcDesignTokenKind.Accent, Avalonia.Data.BindingPriority.LocalValue);
+        _add.HorizontalAlignment = HorizontalAlignment.Right;
+        _host.Children.Add(_add);
+        _host.Children.Add(_grip);
         overlay.Children.Add(_indicator);
-        overlay.Children.Add(_add);
-        overlay.Children.Add(_grip);
+        overlay.Children.Add(_host);
         _add.Click += (_, _) => AddBelow();
         _grip.Click += (_, _) =>
         {
@@ -114,11 +122,9 @@ internal sealed class RichTextEditorBlockHandle
         }
         _position = new MotionValue<Point>(owner, default, MotionVectors.Point);
         // The value is the handle's right edge and top; "+" and the chip both end there.
-        _position.Changed += point =>
-        {
-            Move(_add, point.X - ButtonSize, point.Y);
-            Move(_grip, point.X - GripWidth, point.Y);
-        };
+        _position.Changed += point => Move(_host, point.X - GripWidth, point.Y);
+        _opacity = new MotionValue<double>(owner, 1, MotionVectors.Double);
+        _opacity.Changed += value => _host.Opacity = value;
         _aimTimer.Tick += (_, _) =>
         {
             _aimTimer.Stop();
@@ -288,12 +294,28 @@ internal sealed class RichTextEditorBlockHandle
         else
         {
             _position.Jump(target);
+            if (!shown)
+            {
+                FadeIn();
+            }
         }
         _block = block;
         var blank = IsBlank(Engine.Blocks[block]);
         _kind.Data = KindIcon(Engine.Blocks[block]);
         _add.IsVisible = blank;
         _grip.IsVisible = !blank;
+    }
+
+    /// <summary>Brings the handle in where it already stands: a quick fade, so it appears beside the block instead of popping in.</summary>
+    private void FadeIn()
+    {
+        if (ArcMotion.GetEffectiveLevel(_owner) == ArcMotionLevel.Off)
+        {
+            _opacity.Jump(1);
+            return;
+        }
+        _opacity.Jump(0);
+        _ = _opacity.AnimateTo(1, MotionSpec.Tween(ArcMotionPresets.Instant, ArcEasings.Enter));
     }
 
     private static void Move(Control control, double x, double y) => control.RenderTransform = new TranslateTransform(x, y);

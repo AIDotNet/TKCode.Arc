@@ -1,3 +1,4 @@
+using TKCode.Arc.Primitives;
 using System.Collections.Specialized;
 using Avalonia;
 using Avalonia.Automation;
@@ -524,7 +525,8 @@ internal sealed class AiRegenerateMenu : Control
                 _subPanel!.Measure(Size.Infinity);
                 var width = Math.Max(_subPanel.DesiredSize.Width, _subPanel.MinWidth);
                 var right = origin.X + _panel.Bounds.Width;
-                opensLeft = right + width > topLevel.ClientSize.Width && origin.X - width >= 0;
+                var frame = ArcViewport.GetBounds(row) ?? new Rect(topLevel.ClientSize);
+                opensLeft = right + width > frame.Right && origin.X - width >= frame.Left;
             }
             _subPopup.ConfigureSubmenu(row, opensLeft, SubmenuOffset);
             IsSubmenuOpen = true;

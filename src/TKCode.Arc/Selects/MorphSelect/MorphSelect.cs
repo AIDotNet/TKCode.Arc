@@ -682,7 +682,12 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
         {
             return s_shadowRoom;
         }
-        var client = topLevel.ClientSize;
+        // Room is measured inside the viewport (the window, or the ArcViewportHost the select sits in), in the panel's own
+        // units: a zoomed panel (ArcZoom) lays out unscaled while window distances are scaled.
+        var frame = ArcViewport.GetBounds(this) ?? new Rect(topLevel.ClientSize);
+        var zoom = ArcZoom.GetScale(this);
+        origin = new Point((origin.X - frame.X) / zoom, (origin.Y - frame.Y) / zoom);
+        var client = frame.Size / zoom;
         var left = PanelAlignment == MorphSelectAlignment.End ? origin.X + triggerWidth - capacity.Width : origin.X;
         static double Fit(double wanted, double space) => Math.Clamp(Math.Min(wanted, Math.Floor(space)), 0, wanted);
         return new Thickness(
@@ -713,7 +718,8 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
             return MaxListHeight;
         }
         // The face adds 6px of scroll inset above the list and 6px of padding under it.
-        var room = topLevel.ClientSize.Height - origin.Y - LidHeight - 12 - EdgeGap;
+        var frame = ArcViewport.GetBounds(this) ?? new Rect(topLevel.ClientSize);
+        var room = (frame.Bottom - origin.Y) / ArcZoom.GetScale(this) - LidHeight - 12 - EdgeGap;
         return Math.Min(MaxListHeight, Math.Max(MinListHeight, Math.Floor(room)));
     }
 
@@ -735,7 +741,7 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
 
     private double ListWidth()
     {
-        var viewport = TopLevel.GetTopLevel(this)?.ClientSize.Width ?? double.PositiveInfinity;
+        var viewport = ArcViewport.GetSize(this)?.Width ?? double.PositiveInfinity;
         return Math.Max(TriggerWidth, Math.Min(PanelWidth, viewport - 32));
     }
 

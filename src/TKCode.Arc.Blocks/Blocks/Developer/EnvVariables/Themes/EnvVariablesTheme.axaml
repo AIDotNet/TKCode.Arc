@@ -143,7 +143,7 @@
                             BorderThickness="{TemplateBinding BorderThickness}"
                             CornerRadius="{TemplateBinding CornerRadius}"
                             Padding="{TemplateBinding Padding}">
-                        <StackPanel Orientation="Horizontal"
+                        <arc:ArcShrinkRow
                                     Spacing="8"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center">
@@ -155,8 +155,8 @@
                                        TextTrimming="CharacterEllipsis"
                                        FontSize="{arc:ArcDesignTokenResource TypeXS}"
                                        LineHeight="16.8"
-                                       Foreground="{TemplateBinding Foreground}" />
-                        </StackPanel>
+                                       Foreground="{TemplateBinding Foreground}" arc:ArcShrinkRow.IsShrinkable="True" />
+                        </arc:ArcShrinkRow>
                     </Border>
                 </Panel>
             </ControlTemplate>

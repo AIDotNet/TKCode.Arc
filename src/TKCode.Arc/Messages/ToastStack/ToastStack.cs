@@ -1,3 +1,4 @@
+using TKCode.Arc.Primitives;
 using TKCode.Arc.Motion;
 using Avalonia;
 using Avalonia.Automation;
@@ -469,6 +470,9 @@ public class ToastStack : TemplatedControl, IToastService
             _pending.Clear();
         }
     }
+
+    /// <summary>The <see cref="ArcViewportHost"/> this stack serves while it sits in one (null: it serves its window).</summary>
+    internal ArcViewportHost? ViewportHost { get; set; }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {

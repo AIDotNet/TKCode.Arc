@@ -191,18 +191,20 @@
                                             TextElement.FontSize="{arc:LlmCostCalculatorTokenResource FinePrintFontSize}"
                                             TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
 
-                        <StackPanel Orientation="Horizontal" Spacing="6">
+                        <!-- A grid, not a horizontal StackPanel: the note gets the width left and wraps within it. -->
+                        <Grid ColumnDefinitions="Auto,*">
                             <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Info}"
                                           Size="13"
                                           VerticalAlignment="Top"
-                                          Margin="0,2,0,0"
+                                          Margin="0,2,6,0"
                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
                             <TextBlock Name="PART_Note"
+                                       Grid.Column="1"
                                        TextWrapping="Wrap"
                                        FontSize="{arc:LlmCostCalculatorTokenResource FinePrintFontSize}"
                                        LineHeight="{arc:LlmCostCalculatorTokenResource FinePrintLineHeight}"
                                        Foreground="{arc:ArcDesignTokenResource TextMuted}" />
-                        </StackPanel>
+                        </Grid>
 
                         <arc:ExplainerAnnouncer Name="PART_Announcer" />
                     </StackPanel>

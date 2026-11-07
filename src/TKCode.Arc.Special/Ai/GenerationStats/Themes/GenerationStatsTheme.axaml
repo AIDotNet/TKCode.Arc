@@ -110,7 +110,7 @@
                                        IsVisible="False"
                                        TextElement.FontSize="{arc:GenerationStatsTokenResource InlineFontSize}"
                                        TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}">
-                                <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                                <arc:ArcShrinkRow Spacing="6" VerticalAlignment="Center">
                                     <arc:GenerationStatsMark Name="PART_InlineMark"
                                                              Classes="gs-mark"
                                                              Width="16"
@@ -120,8 +120,8 @@
                                                VerticalAlignment="Center"
                                                TextTrimming="CharacterEllipsis"
                                                Foreground="{arc:ArcDesignTokenResource Foreground}"
-                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
-                                </StackPanel>
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}" arc:ArcShrinkRow.IsShrinkable="True" />
+                                </arc:ArcShrinkRow>
                                 <arc:ArcContentSwap Name="PART_InlineStatus"
                                                     Mode="Label"
                                                     VerticalAlignment="Center"

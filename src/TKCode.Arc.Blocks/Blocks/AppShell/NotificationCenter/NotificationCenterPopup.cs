@@ -31,7 +31,9 @@ internal sealed class NotificationCenterPopup : ArcPopup
             return;
         }
         var width = placement.PopupSize.Width - shadow.Left - shadow.Right;
-        var client = topLevel.ClientSize.Width;
+        // Kept inside the viewport: the window, or the ArcViewportHost the trigger sits in.
+        var frame = ArcViewport.GetBounds(target) ?? new Rect(topLevel.ClientSize);
+        var client = frame.Width;
         if (width <= 0 || width + 2 * CollisionPadding > client)
         {
             return;
@@ -39,7 +41,7 @@ internal sealed class NotificationCenterPopup : ArcPopup
         // Centered on the bell, then slid back inside the padded window.
         var anchor = placement.AnchorRectangle;
         var left = anchor.X + anchor.Width / 2 - width / 2 + placement.Offset.X;
-        var clamped = Math.Clamp(left, CollisionPadding, client - CollisionPadding - width);
+        var clamped = Math.Clamp(left, frame.Left + CollisionPadding, frame.Right - CollisionPadding - width);
         if (Math.Abs(clamped - left) > 0.01)
         {
             placement.Offset = placement.Offset.WithX(placement.Offset.X + clamped - left);
