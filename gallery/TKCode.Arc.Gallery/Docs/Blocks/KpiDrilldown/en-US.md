@@ -150,6 +150,17 @@ Every word besides the data comes from `Labels` (`KpiDrilldownLabels`): the Comp
 - Reduced motion shows the panel at its final size with a 160 ms fade; morphs, bars and numbers jump. Off applies everything
   at once.
 
+## Responsive behavior
+
+- `KpiDrilldown` reads its own width, not the window's: three columns from 760 px, two from 520 px, and below 520 px one
+  column in the `:compact` state (`IsCompact` on the cards and the breakdown reports it).
+- In the compact state a card's value drops to 22 px and its sparkline to 44 px, the Compare button shows only its icon
+  (`IsIconOnly`), and the breakdown hides its share column so the name, value and change fit.
+- Each card is one button, and a click or Enter opens its detail view. Hover only darkens the card's edge and lifts its
+  shadow, so nothing depends on it.
+- Give the block the full width of its row. A phone-width screen gets the single column; in a narrow panel, keep the
+  block under 520 px to get that layout, or make the panel at least 520 px wide to keep two columns.
+
 ## Related
 
 - `SegmentedControl` for the switches in other blocks.

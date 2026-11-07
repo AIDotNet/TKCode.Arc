@@ -142,6 +142,18 @@ readers is in `Labels`, a `MediaPlayerLabels` you can replace to translate it; t
 - Reduced motion changes covers, titles, the rail and the play glyph at once, keeps the bars still at 60% and the seek
   bar moves with each report. Off applies every change at once.
 
+## Responsive behavior
+
+- `MediaPlayer` measures its own width, not the window's. Below `CompactWidth` (420 px by default) it becomes
+  `:compact`: the padding tightens from 20 to 14, the cover is 1.7:1 instead of 2.2:1, the title drops from 28 to 22 px,
+  and the skip and play buttons shrink to `CompactSkipButtonSize` and `CompactPlayButtonSize`.
+- In the compact layout the volume slider shortens from 88 to 64 px. The player grows to at most 520 px wide, so a wider
+  container does not stretch it further.
+- Nothing depends on hover. Hover only fades a plate in behind a button, and every button and playlist row is a plain
+  control that a tap works the same way.
+- Give the player the width of its row and let it stretch up to its maximum. Under 420 px the compact layout applies on
+  its own, so a phone needs no setting.
+
 ## Related
 
 - File upload, the other Media block.

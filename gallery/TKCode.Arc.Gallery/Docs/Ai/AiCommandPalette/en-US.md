@@ -204,6 +204,19 @@ palette.Labels = new AiCommandPaletteLabels
 
 The palette never changes size: the results area keeps its height in every view.
 
+## Responsive behavior
+
+- `AiCommandPalette` changes at a width. Below `NarrowWidth` (540 px, a fixed constant rather than a theme token) it
+  sets `:narrow` and the footer drops the `↑ ↓` navigation hint.
+- The palette measures its own width (`Bounds.Width`), not the window's, and fills the space it is given up to
+  `PaletteMaxWidth` (680 px).
+- The results area keeps its height (`ResultsHeight`, 392 px by default) and scrolls vertically. It never scrolls
+  sideways (`HorizontalScrollBarVisibility` is `Disabled`). Long titles end in an ellipsis (`CharacterEllipsis`), and
+  source chips wrap onto new lines (`WrapPanel`).
+- Hover only tints a row (`:pointerover`), and keyboard focus draws a ring (`:focus-visible`).
+- Let the palette stretch to the screen width. It keeps `ResultsHeight` while typing, so lower that value on a short
+  screen instead of letting the palette change size.
+
 ## Related
 
 - `CommandPalette` (block) for a command menu without AI.

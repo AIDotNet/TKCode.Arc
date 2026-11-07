@@ -210,6 +210,19 @@ card.Labels = new TldrToggleLabels
 
 Only one shimmer runs at a time.
 
+## Responsive behavior
+
+- `TldrToggle` changes at its own card width, not the window's. It is capped at `CardMaxWidth` (680 px) and fills
+  narrower containers. Below 520 px the length slider moves under the switch at full width (`IsStacked`, `:narrow`);
+  below 440 px the padding steps from 24 px to 16 px (`CompactCardPadding`, `:compact`).
+- The title and body wrap onto as many lines as they need (`TextWrapping="Wrap"`), while the source line in the header
+  ends with an ellipsis (`CharacterEllipsis`). The card does not scroll its own body: the page does, and a key-point
+  link scrolls the nearest `ScrollViewer` to its paragraph.
+- Action buttons have a minimum height of 32 px (`ActionSize`) and key-point links 28 px (`LinkSize`), below a 44 px
+  touch target, so keep them apart from other tap targets.
+- Let the card stretch in its column (`HorizontalAlignment="Stretch"`) rather than setting a fixed `Width`, and expect
+  the slider to take a full row under the switch in a column narrower than 520 px.
+
 ## Related
 
 - `ReasoningBlock` for the thinking of an AI reply.

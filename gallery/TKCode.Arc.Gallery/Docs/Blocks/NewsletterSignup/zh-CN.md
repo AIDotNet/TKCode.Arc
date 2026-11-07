@@ -1,7 +1,7 @@
 ---
 title: Newsletter signup
 summary: 一个邮件订阅表单，旁边是一叠过往期刊；订阅后，寄给你的下一期会落在最上面。
-source-hash: f68abc0e5c81
+source-hash: 797bc29fe4d2
 ---
 
 <Demo name="Preview" />
@@ -141,6 +141,13 @@ signup.ReaderFaces.Add(faceBitmap);
 ### 响应式行为
 
 断点取决于区块的宽度：860、520、400 和 360 px，另外表单本身在 300 px 处设有断点。
+
+## 响应式
+
+- `NewsletterSignup` 按自身宽度分段变化，不随窗口宽度。宽度为 860 px 或以下（`:compact`）时变为一栏；520 px（`:narrow`）时间距与字号收紧；400 px（`:tiny`）时去掉阅读时长，已订阅的期刊只显示收件人；360 px（`:micro`）时读者行可能换行。
+- 表单是一个包住输入框与按钮的胶囊，高 58 px。宽度低于 300 px 时胶囊失去边框，输入框与按钮改为整行堆叠，分别高 52 px 与 48 px（`StackedInputHeight`、`StackedButtonHeight`）。
+- 悬停只改变胶囊边框与按钮底色（`SubmitHoverBackground`），仅靠点按即可完成订阅。
+- 让它拉伸到屏幕宽度（`HorizontalAlignment="Stretch"`），不要设置固定的 `Width`。放在窄栏中时，可将 `IsPublicationVisible` 设为 false，去掉期刊堆叠，只保留表单。
 
 ## 相关组件
 

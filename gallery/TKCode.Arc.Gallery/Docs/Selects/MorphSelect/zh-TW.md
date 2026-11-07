@@ -1,7 +1,7 @@
 ---
 title: 變形選擇
 summary: 觸發器展開為清單的選取器，帶有滑動反白與鍵入搜尋。
-source-hash: bef2d4fcda84
+source-hash: 33933eb5522d
 ---
 
 <Demo name="GroupedWithSearch" />
@@ -295,6 +295,14 @@ public partial class DeploymentSettingsViewModel : ObservableObject
 | 反白移動 | 滑動到下一個選項 | 直接跳到該選項 | 立即完成 |
 | 選取選項 | 標籤飛入觸發器，寬度調整到位 | 短暫淡入 | 立即完成 |
 | 搜尋接管觸發器 | 搜尋欄位以輕微模糊淡入 | 短暫淡入 | 立即完成 |
+
+## 響應式
+
+- `MorphSelect` 在任何寬度下形態都不變。觸發器寬度為標籤寬度加 50 px，最寬 `TriggerMaxWidth`（320 px）。面板寬 `PanelWidth`（272 px），不窄於觸發器，也不寬於視埠寬度減 32 px。
+- 它讀取 `ArcViewport`：清單最高為 `MaxListHeight`（296 px），並縮短到視埠內觸發器下方的可用空間。連最短的清單也放不下時，面板向上滑動，而不是翻到另一側。
+- 觸發器高 `ControlSizeMD`（44 px），選項為 36 px 的列。超過 `MaxListHeight` 時清單捲動。
+- 懸停只會高亮選項，點選或輕觸即可選取，觸控操作無需懸停。
+- 讓觸發器依標籤寬度自然排列。當它位於工具列右邊緣時，把 `PanelAlignment` 設為 `End`，讓面板朝空白的一側展開。
 
 ## 相關元件
 

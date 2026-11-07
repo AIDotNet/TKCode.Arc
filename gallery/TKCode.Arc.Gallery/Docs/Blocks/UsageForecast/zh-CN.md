@@ -1,7 +1,7 @@
 ---
 title: Usage forecast
 summary: 对照预算查看一个计费周期：已测得的用量和带可能范围的虚线预测，一条可拖动或用按键步进的预算线，标题、磁贴、红色超额部分和提醒标签都会随之变化，还有一个让所有路径变形的指标开关。
-source-hash: 64c726ac820f
+source-hash: 72e3887ed4fc
 ---
 
 <Demo name="Preview" />
@@ -129,6 +129,13 @@ forecast.BudgetChanged += (_, e) => { if (e.IsCommitted) Save(e.Metric.Key, e.Ne
 - **标签**：勾选标记在快速弹簧上打开它的槽位，宽度随之变化。
 - **查看卡片**：以较硬的弹簧跟随十字准线，淡入 160 ms。
 - 减弱动效会让每个弹簧立即到位，只保留短暂的淡入淡出（词为 120 ms）。关闭则立即应用所有变化。
+
+## 响应式
+
+- `UsageForecast` 在两个自身宽度断点上变化。低于 `CompactWidth`（560 px）时切换为 `:compact`：内边距为 16 px，指标切换器移到标题下方，图表高 232 px（`CompactChartHeight`），指标数值变小。低于 `NarrowWidth`（440 px）时再加上 `:narrow`：三个指标卡堆叠，提醒标签铺满各自的行。
+- 它测量的是自身宽度，因此放在侧面板或手机预览中也会以同样方式切换。标题字号随宽度缩小，从 22 px 降到 `HeadlineMinSize`（18 px）。
+- 预算线是 32 px 高的带（`HandleBandHeight`），手指可以拖动，方向键可以逐步调整。悬停只会高亮这个手柄，拖动不依赖悬停。
+- 尽量给 `UsageForecast` 页面的全宽。低于 `NarrowWidth` 时指标卡会自行堆叠，窄面板不需要额外布局。
 
 ## 相关
 

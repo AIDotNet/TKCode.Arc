@@ -1,6 +1,6 @@
 ---
 title: Metric card
-summary: A compact summary for a number that needs context.
+summary: A dashboard tile with one number, the label that names it, a comparison and an optional change chip.
 ---
 
 <Demo name="Default" />
@@ -341,6 +341,17 @@ To open a detail view, place the card in a control that your page owns and handl
 | Chip width | Springs to fit the new text | No motion | Immediate |
 | Trend line first shown | Draws in over 0.9 s | Shown at once | Immediate |
 | Trend line data changes | Cross-fades | No motion | Immediate |
+
+## Responsive behavior
+
+- `MetricCard` switches at a window width of 380 px or less. It sets the `:narrow` pseudo class, which cuts its padding
+  from 24 px to 16 px and moves the change chip under the label.
+- It reads `ArcViewport`, the window, or the `ArcViewportHost` of a phone preview, not its own width. Every card in that
+  window therefore switches together, and no code is needed.
+- In a row, give each card a `Width` (the examples use 236 to 280 px) and let a `WrapPanel` wrap the row. The label is
+  trimmed with `CharacterEllipsis` when it does not fit.
+- The card takes no focus and has no press behavior, so nothing on it needs a tap. To open a detail view, place the card
+  in a control that handles the press.
 
 ## Related
 

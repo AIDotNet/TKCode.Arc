@@ -126,6 +126,17 @@ With motion off the field is still.
 | Lens | Pushes and lights dots | Lights dots | None |
 | Ripples | Travel across the field | None | None |
 
+## Responsive behavior
+
+- `DotGrid` does not change at a width. Its field is at least 240 px high (`MinHeight` in the theme) and otherwise fills
+  the width it is given.
+- The dot count follows the area: a 720 by 420 field has about 660 dots at the default `Gap` of 22 px, so a narrow field
+  has fewer dots. Use a `Gap` of 26 to 32 for full-width heroes and slower devices.
+- Keep the content short and centered on a phone: a headline, a sentence and one or two actions. The field draws behind
+  the content and never takes the pointer from it, so buttons inside keep working.
+- On touch screens the lens shows only while a finger is down, and every tap sends a ripple.
+- Frames run only while something moves, and they pause while the field is scrolled out of view.
+
 ## Related
 
 - `GravityWell` bends a grid of tiles around the pointer instead of a field of dots.

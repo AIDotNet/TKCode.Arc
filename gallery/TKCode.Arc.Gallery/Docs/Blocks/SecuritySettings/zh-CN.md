@@ -1,7 +1,7 @@
 ---
 title: 安全设置
 summary: 安全检查、修改密码、两步验证和登录会话，均可原位处理。
-source-hash: 53dd97448a3c
+source-hash: 5afb02147935
 ---
 
 <Demo name="Overview" />
@@ -266,6 +266,13 @@ public partial class AccountSecurityViewModel : ObservableObject
 | 密码表单展开或收起 | 以弹簧展开或收起 | 以短促淡入淡出显示或隐藏 | 立即完成 |
 | 密码描述变化 | 模糊切换到新文字 | 短促淡入淡出 | 立即完成 |
 | 安全检查数量与进度条 | 数字滚动；段落淡入其颜色 | 颜色淡入 | 立即完成 |
+
+## 响应式
+
+- `SecuritySettings` 按父级给它的宽度判断。低于 `CompactWidth`（默认 560 px）时为 `:compact`：安全项仪表移到摘要文字下方，“退出其他会话”移到会话列表下方。
+- 密码表单最宽 400 px（`FormMaxWidth`）。当其设置行堆叠（`:rows-stacked`）时，表单占满整行。
+- 会话行的文字与操作在宽度小于 280 px 时堆叠（SessionRowStackWidth）。说明文字按需要换行（`TextWrapping`）。
+- 让它占满屏幕宽度。低于 560 px 时它已会移动仪表与退出操作，无需额外的手机布局；只有页面旁边还有其他内容时，才需要调大 `CompactWidth`。
 
 ## 相关组件
 

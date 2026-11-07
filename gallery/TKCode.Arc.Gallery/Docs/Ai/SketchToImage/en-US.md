@@ -186,6 +186,17 @@ One clock drives a single 0 to 1 timeline. A frame redraws the ink layer from ca
 it allocates nothing. The clock stops when the card is off screen and while nothing moves; the label changes only with
 the stage and the percent only when its rounded value does.
 
+## Responsive behavior
+
+- `SketchToImage` fills its container up to the maximum width that `Size` sets: 340 px for `Small`, 520 px for `Medium`
+  and 720 px for `Large`. The canvas keeps a 3:2 shape at every width.
+- The card sets `:compact` when its own width is below 400 px, or when its size is `Small`. The Replay label then hides
+  and only the icon stays.
+- The stage label and the prompt stay on one line. A long prompt ends in an ellipsis (`CharacterEllipsis`) and keeps its
+  full text in a tooltip, so put the key words first.
+- Replay is the only control, and it is an ordinary button, so nothing depends on hover.
+- In a composer use `Size="Small"` with `ShowsReplay="False"`; in a chat column give the card a full-width row.
+
 ## Related
 
 - `ToolCall` for the actions an agent takes while it works.

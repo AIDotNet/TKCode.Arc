@@ -1,7 +1,7 @@
 ---
 title: 提示词工作室
 summary: 一张用于编辑提示词模板的卡片：变量以彩色芯片显示，可以用保存的测试用例试运行，并可对比和上线版本。卡片包含版本与模型菜单、变量字段、运行按钮以及显示回复的输出面板。
-source-hash: da3db15ce44c
+source-hash: 48419b88ec4f
 ---
 
 <Demo name="Preview" />
@@ -172,6 +172,14 @@ studio.RunHandler = async IAsyncEnumerable<string> (request, cancellationToken) 
 | 回复文字 | 整词，150 毫秒淡入 | 相同的步骤，无淡入 | 相同的步骤，无淡入 |
 | 输出面板高度 | 弹簧，重新运行时保持 | 立即 | 立即 |
 | 芯片闪烁 | 短暂脉冲 | 无 | 无 |
+
+## 响应式
+
+- `PromptStudio` 按自身宽度变化，上限为 `MaxWidth`，不随窗口宽度。`TwoColumnWidth`（560 px）或以下时，变量字段排成两列（`:two-col`）；`OneColumnWidth`（340 px）或以下时排成一列（`:one-col`）。
+- `CompactWidth`（520 px，`:compact`）时，头部与编辑区的内边距变小。`NarrowWidth`（480 px，`:narrow`）时，测试用例与“运行”按钮改为堆叠，各占卡片全部宽度。
+- 头部会换行：标题与版本、模型标签并排放不下时，标签移到标题下方单独一行；超出行宽的标题会被卡片裁切。
+- 标签高 30 px（`TabHeight`），悬停样式只对鼠标或触控笔生效（`:hover`），触屏上没有任何功能缺失。在手机上请为标签留出空间，不要在旁边放其他小目标。
+- 将 `MaxWidth` 作为上限，让卡片占用分配给它的空间，而不是设置固定的 `Width`。
 
 ## 相关组件
 

@@ -375,6 +375,19 @@ been reached.
 | Key at an edge | Small kick outward | No kick | No kick |
 | Orientation change | Swings a quarter turn while the reveal follows | Jumps to the new orientation | Immediate |
 
+## Responsive behavior
+
+- `ImageCompare` has no breakpoint. The frame takes the width its container gives it, and its height follows
+  `AspectRatio` (width divided by height, 1.5 by default), so the proportions hold at every width.
+- The captions (`BeforeLabel` and `AfterLabel`) are corner chips that fade as the divider reaches them. On a narrow page
+  where they crowd the picture, set `ShowLabels` to `False`.
+- On touch, a press on the picture waits for a drag along the divider's axis, so the page still scrolls, and a tap moves
+  the divider. The handle is a 40 px circle with 8 px of extra hit area around it.
+- Nothing depends on hover. A drag or a tap moves the divider, and once the handle has focus the arrow keys move it 1%
+  at a time.
+- Give the frame its own full-width row with `HorizontalAlignment="Stretch"` rather than a fixed `Width`, and choose the
+  `AspectRatio` from the photographs so the picture is not cropped heavily.
+
 ## Related
 
 - `Carousel` for browsing a set of pictures or slides rather than comparing two.

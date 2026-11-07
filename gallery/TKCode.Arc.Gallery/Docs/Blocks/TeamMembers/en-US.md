@@ -222,6 +222,18 @@ functions so the word order can change in another language. Role names and descr
 - Reduced motion keeps the send button's spinner and short cross-fades; chips, rows, flights, counts and the bar jump.
   Off applies every change at once.
 
+## Responsive behavior
+
+- `TeamMembers` sets its layout from its own width. At 640 px or less it is `:narrow`: the last-active text moves under
+  the email, and the role and remove controls get less room.
+- At 420 px or less it is `:two-tier`: the identity sits on top, and the last-active text, role and remove controls
+  share a second line.
+- At 600 px or less the header and invite form stack (`:stacked`), and at 480 px or less the actions move below their
+  fields (`:actions-below`).
+- The remove button is 32 px (`RemoveSize`), below the 44 px touch size, so give it room.
+- On a phone, let the block fill the screen width. The two-tier layout already starts at 420 px, so the member list
+  needs no separate phone screen.
+
 ## Related
 
 - Invite people, Team directory and Roles and permissions, the other People blocks.

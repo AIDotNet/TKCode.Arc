@@ -330,6 +330,22 @@ its row.
 | The layout changes size | The ring moves to the new position at once | The ring moves at once | The ring moves at once |
 | Hover, press or focus on a card | The card background and border change color quickly | Immediate | Immediate |
 
+## Responsive behavior
+
+- `RadioCards` has no breakpoint. The default `Grid` layout places cards in columns at least `MinColumnWidth` wide (180
+  by default) with a 10 px gap, so it drops to one column below about 370 px. `Layout="List"` always stacks one
+  full-width card per row.
+- It lays out from its own width, not from the window, so a dialog or a side panel gets the same column count as a
+  phone.
+- The label stays on one line and ends in an ellipsis (`TextTrimming="CharacterEllipsis"`), while the description wraps
+  (`TextWrapping="Wrap"`). Cards in one row share the height of the tallest card, so prices line up.
+- A disabled card shows `DisabledReason` in place of its description, so the reason is on screen at phone width rather
+  than in a tooltip.
+- Cards have 16 by 14 px of padding (`CardInsetGrid`). Hover only strengthens the border (`:pointerover`), and a tap
+  selects the card, so nothing depends on hover.
+- On a phone, use `Layout="List"` for choices that read as a sentence with a time or a price. Keep the grid for
+  side-by-side comparison, and set `MinColumnWidth` lower if two columns should fit a narrower container.
+
 ## Related
 
 - `RadioGroup` for short options that are plain text, in a vertical list.

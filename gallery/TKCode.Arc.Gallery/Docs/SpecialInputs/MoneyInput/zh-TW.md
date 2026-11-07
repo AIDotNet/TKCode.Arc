@@ -1,7 +1,7 @@
 ---
 title: 金額輸入框
 summary: 帶有即時分組、寬度穩定、數字滾動與最小單位輸出的貨幣輸入框。
-source-hash: 464ecb4deb4f
+source-hash: e786765be98d
 ---
 
 <Demo name="Default" />
@@ -310,6 +310,13 @@ public partial class RefundViewModel : ObservableValidator
 | 被拒絕的修改（超過最大值） | 金額以彈簧效果橫向推動；範圍文字閃爍 | 無推動；範圍文字仍閃爍 | 無推動；範圍文字仍閃爍 |
 | 出現新的數位欄 | 欄寬以彈簧效果增長 | 寬度直接跳變 | 寬度直接跳變 |
 | 更改貨幣 | 符號滾動到新位置 | 符號直接變化，無滾動 | 符號直接變化，無滾動 |
+
+## 響應式
+
+- `MoneyInput` 沒有斷點。外殼在任何寬度下都保持 `ShellHeight`（76 px）的高度，過長的金額會縮小以適應空間，而不是捲動。
+- 快速加入的標籤會以 `ChipSpacing`（6 px）的間距換到新列；標籤與可選範圍放不進同一列時，範圍文字移到它們下方。
+- 幣別選單是與欄位右緣對齊的 `ArcPopup`，會翻轉或平移，以留在視埠（視窗或 `ArcViewportHost`）之內；清單超過 `MenuListMaxHeight`（288 px）時捲動，每個選項至少 `OptionMinHeight`（36 px）高。
+- 在窄表單中，讓欄位延展（`HorizontalAlignment="Stretch"`）而不是設定 `Width`。標籤與範圍會自動換到它下方，無需額外程式碼。
 
 ## 相關元件
 

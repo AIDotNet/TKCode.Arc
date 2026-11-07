@@ -217,6 +217,20 @@ starts with a brace needs `{}` in front.
 - Reduced motion and `AnimatesMoves="False"` apply moves, adds and filters in place at once and keep the color changes.
   Off applies everything at once. Nothing runs while the board is still.
 
+## Responsive behavior
+
+- `ProjectBoard` reads its own width, not the window's. Its columns share the width, each at least `MinColumnWidth` (200
+  px). Narrower than that the columns scroll sideways with the scroll bar hidden.
+- At 700 px or less (`:narrow`, `NarrowWidth`) each column is the width less 76 px, so the next one shows at the edge,
+  and the team row is hidden. The filter, Add and arrow buttons grow to 40 px touch targets (`NarrowMoveButtonSize`)
+  without making the cards taller. Wider, the card arrows are 26 px (`MoveButtonSize`).
+- At 400 px or less (`:compact`, `CompactWidth`) the actions take a row of their own, and Add shows only its icon with
+  its name kept as a tooltip.
+- A card is moved by its arrow buttons, not by a drag, so a finger can move it at any width. Hover styles follow a mouse
+  or pen only, so a touch never leaves a button looking hovered.
+- Let the board stretch to the page width (`HorizontalAlignment="Stretch"`). On a phone, use fewer stages: the columns
+  share the width down to `MinColumnWidth`, and past that the board scrolls sideways.
+
 ## Related
 
 - Release readiness, Kanban board, Week calendar and Availability picker, the other Projects blocks, share its people,

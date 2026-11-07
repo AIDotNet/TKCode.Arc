@@ -434,6 +434,18 @@ order, so the keyboard shortcuts are the reliable path.
 | The tree scrolls to the current row | Springs to where the row will sit once the rows settle | Jumps directly | Immediate |
 | The tree has more than 400 visible rows | Rows change at once | Rows change at once | Immediate |
 
+## Responsive behavior
+
+- `JsonViewer` switches to a compact layout when its own width is 420 px (`CompactWidth`) or less. It sets the
+  `:compact` pseudo-class and hides the type label in the path bar (PART_PathType).
+- The tree scrolls vertically inside `MaxTreeHeight` (420 px by default), and each row is 30 px high (`RowSlotHeight`).
+  It does not scroll sideways, so a long key or value is shortened with an ellipsis.
+- Row actions (copy value, copy path) appear on hover or on the current row, and they stay out of the tab order. On a
+  touch screen use the path bar's copy path button (with `IsPathVisible` and `IsCopyable` on), or move to a row with
+  `FocusPath`.
+- Give the viewer a full-width row. The compact layout follows its own width, so it also applies in a narrow side panel
+  with no code.
+
 ## Related
 
 - `CodeBlock` shows the whole JSON as copyable source, with one copy action.

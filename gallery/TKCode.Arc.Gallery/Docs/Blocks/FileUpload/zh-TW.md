@@ -1,7 +1,7 @@
 ---
 title: File upload
 summary: 完整的檔案選取流程，具備類型與大小限制、上傳進度與錯誤回饋。
-source-hash: f88aadb60fd9
+source-hash: 514d70a18532
 ---
 
 <Demo name="Preview" />
@@ -123,6 +123,13 @@ upload.FilesChanged += (_, e) => SaveButton.IsEnabled = e.Files.All(f => f.Statu
 ### 效能
 
 上傳透過你的 `Uploader` 進行，每個被接受的檔案呼叫一次，同時進行的上傳數量沒有限制：大量檔案請自行排隊。清單沒有虛擬化，檔案數量應保持在合理範圍內。
+
+## 響應式
+
+- `FileUpload` 在任何寬度下形態都不變。它沒有斷點：拖放區在各種尺寸下都佔滿寬度，且高度至少 92 px（`DropzoneMinHeight`）。
+- 拖放區的文字會換行。每個檔案名稱保持一行，並以省略號結尾（`TextTrimming="CharacterEllipsis"`）；狀態文字會換行。
+- 拖放區的懸停著色只對滑鼠或觸控筆生效。觸控從不設定 `:zonehover`，因此沒有任何功能依賴懸停。
+- 讓控制項拉伸到所在的欄，而不是設定固定的 `Width`；在窄表單中讓它單獨佔一列。
 
 ## 相關元件
 

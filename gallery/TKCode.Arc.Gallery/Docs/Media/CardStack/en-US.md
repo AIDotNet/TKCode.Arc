@@ -412,6 +412,20 @@ reaches the app.
 | Start over | Cards deal back one after another, deepest first | Fade in place | Shown at once |
 | Empty state appears | Settles in with a short move as the blur clears | Fades in | Shown at once |
 
+## Responsive behavior
+
+- `CardStack` changes form at its own width. Below 416 px (26rem) it sets `:compact`, which shortens the cards to
+  `CompactCardHeight` (280 px, from 304 px) and the stage to `CompactStageHeight` (304 px, from 328 px). Below 360 px it
+  sets `:narrow`, so the Undo button keeps only its icon and the three buttons stay on one row.
+- It measures its own width, not the window's, so a stack in a narrow column folds the same way as on a phone. The stage
+  is never wider than `StageMaxWidth` (320 px).
+- The card height is fixed by the theme, so keep each card face to a title, one or two lines of detail and one image or
+  icon. Compact cards are 24 px shorter, so check the face at phone width.
+- Nothing depends on a drag or on hover. The `LeftLabel` and `RightLabel` buttons decide the top card and Undo reverses
+  the last decision, so a touch user can work through the whole deck with the buttons alone.
+- Let the stack stretch in its column rather than setting a fixed `Width`, and let the compact layout take over when the
+  column narrows.
+
 ## Related
 
 - `Carousel` for browsing a row of items without deciding on each.

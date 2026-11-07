@@ -139,6 +139,17 @@ a `BudgetVarianceLabels`: replace it to localize the block, including the senten
 - Reduced motion jumps the bars and numbers to their values and opens the lines at full height. Off applies every change
   at once.
 
+## Responsive behavior
+
+- The block measures its own width. Below 760 px (`:stacked`) each department row stacks: the name, the actual and the
+  variance sit on top, and the bullet chart spans the full width under them. From 760 px it is a table with aligned
+  columns.
+- Long names wrap instead of being cut, and the description under the title wraps too.
+- The period switch sits beside the title on a wide block; once it is stacked the switch moves under the title, so the
+  title keeps the full width.
+- Let the block stretch to the full width of the phone. Each department row is a button, and a tap opens its budget lines; the pointer highlight only tints the
+  row.
+
 ## Related
 
 - `Market terminal`, the other Finance block.

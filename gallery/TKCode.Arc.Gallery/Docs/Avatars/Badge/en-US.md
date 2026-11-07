@@ -321,6 +321,17 @@ full motion the colors crossfade; with reduced motion the change is instant.
 | The pointer enters or leaves (fine pointers) | Background and border crossfade; `Info` fades its accent wash | Instant | Immediate |
 | A font or theme change re-sizes the badge | Happens at once | Happens at once | Immediate |
 
+## Responsive behavior
+
+- `Badge` does not change at any width. `Size` sets its minimum height: `Medium` is 26 px (the default) and `Small` is
+  22 px (`PillHeightMD`, `PillHeightSM`).
+- The label stays on one line, and the pill grows with its label. The theme sets no wrapping or trimming, so a long
+  label widens the pill; keep labels short in narrow rows.
+- `Badge` is not focusable and carries no action, so it is not a tap target. Hover tints the pill (`:pointerover`), and
+  nothing depends on it.
+- Use `Small` inside dense rows on phones and `Medium` next to a title. A badge never changes form, so the place it sits
+  in the layout decides how much room it needs.
+
 ## Related
 
 - `Alert` or `Toast` for a sentence of feedback.

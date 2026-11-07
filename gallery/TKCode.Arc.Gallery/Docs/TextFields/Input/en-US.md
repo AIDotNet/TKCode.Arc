@@ -1,6 +1,6 @@
 ---
 title: Input
-summary: A single line field with clear labels and useful states.
+summary: The text box for a short typed value, with its label, helper text and error row built in.
 ---
 
 <Demo name="Basic" />
@@ -329,6 +329,17 @@ spaces changes as one piece, which still animates but rewrites the whole line.
 | A message changes | Only the changed words rise in from below with a soft blur | Instant fade | Immediate |
 | A number in the copy changes | Only the changed digits roll, up when it grows, down when it shrinks | Instant fade | Immediate |
 | Hover, focus, invalid | The border color crossfades | The border color crossfades | Immediate |
+
+## Responsive behavior
+
+- `Input` does not change at a breakpoint. It stretches to the width of its column, and its frame height comes from
+  `Size`: 36 px for Small, 44 px for Medium (the default) and 50 px for Large.
+- The label wraps onto more lines in a narrow column. The text inside the frame does not wrap: a longer value scrolls
+  sideways (`NoWrap`).
+- Hover and focus darken the border, and no action is hidden behind hover.
+- On a touch screen keep the main field at `Medium` (44 px) or use `Large` (50 px).
+- Give the field the full width of its column rather than a fixed `Width`, and put one field on each row at phone width
+  when the labels are long.
 
 ## Related
 

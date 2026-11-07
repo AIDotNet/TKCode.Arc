@@ -360,6 +360,18 @@ focus.
 | Done and failed | Ring and check draw | Shown drawn, short fade | Shown drawn |
 | Timer and counts | Change in place | Change in place | Change in place |
 
+## Responsive behavior
+
+- `AgentStatus` changes with the width its parent offers. Below `CompactBreakpoint` (400 px by default, a theme token)
+  the pill sets `:compact`: its action buttons show only their icons, and the elapsed time drops out of the inline
+  label.
+- The pill reads the width offered to it, not its own final width, so a pill in a narrow toolbar turns compact too.
+- When open, the panel is at least 384 px wide (`PanelMinWidth`) and never wider than the space offered, so it stays
+  inside its container.
+- Hover tints the closed pill (`:pointerover`), and the open panel does not depend on hover.
+- Give the pill a slot at least 384 px wide when the panel should open at full size. In a narrower slot the panel opens
+  to the space offered instead.
+
 ## Related
 
 - `ToolCall` for a single call in a transcript, with its input and output.

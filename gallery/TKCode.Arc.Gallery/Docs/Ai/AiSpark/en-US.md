@@ -164,6 +164,17 @@ One frame loop per spark moves eight ray paths, the core and the transforms in p
 while the spark is off screen or hidden and stops entirely once a resting status has settled. The gather and the shake
 always finish smoothly, even if the status changes again.
 
+## Responsive behavior
+
+- `AiSpark` does not change at a width. It has no breakpoint and no width pseudo-class. Its mark is `Size` px, or the
+  default for its `Variant`: 24 px for the mark, 32 px for the avatar and 16 px for the pill (MarkDefaultSize,
+  AvatarDefaultSize, PillDefaultSize).
+- It does not read its container, so it looks the same at 390 px as on a desktop.
+- A pill's text (`Label`) sits beside the mark. Keep the label short so the pill stays on one row in a narrow list.
+- It is not focusable and takes no pointer input, so nothing about it depends on touch or hover.
+- Set `Size` from the row the spark sits in, for example a 32 px avatar in a list row, rather than from the window
+  width.
+
 ## Related
 
 - `AgentStatus` for the live status of a whole agent run.

@@ -1,7 +1,7 @@
 ---
 title: 密码框
-summary: 带有可见显示切换控件的敏感文本输入。
-source-hash: 1dbe8b8e16ad
+summary: 用于输入已有密码或密钥的掩码输入框，框内带显示切换按钮。
+source-hash: 6221685c538a
 ---
 
 <Demo name="SignIn" />
@@ -297,6 +297,14 @@ public partial class SignInViewModel : ObservableObject
 | 圆点与字符切换 | 文字从 35% 不透明度与 2 px 模糊过渡到清晰 | 无过渡效果 | 无过渡效果 |
 | 切换按钮按下 | 按住时缩放至 96% | 无缩放 | 无缩放 |
 | 辅助文字行与错误行 | 与 `Input` 相同：该行以平滑弹簧展开，变化的词向上浮现 | 与 `Input` 相同 | 与 `Input` 相同 |
+
+## 响应式
+
+- `PasswordField` 在断点处不改变形态。它拉伸到所在栏的宽度，框高由 `Size` 决定：Small 为 36 px，Medium（默认）为 44 px，Large 为 50 px。
+- 切换显示的按钮在 Medium 与 Large 下为 30 px（`RevealButtonSize`），在 Small 下为 26 px（`RevealButtonSizeSM`），因此在触屏上请使用 Medium 或 Large。
+- 窄栏中标签会换行到更多行。遮罩的文字不换行，而是在框内横向滚动（`NoWrap`）。
+- 显示或隐藏密码靠点按切换按钮完成，没有任何功能依赖悬停。
+- 在手机上，登录密码使用 `Size="Large"`，让框与文字都是该控件提供的最大尺寸。
 
 ## 相关组件
 

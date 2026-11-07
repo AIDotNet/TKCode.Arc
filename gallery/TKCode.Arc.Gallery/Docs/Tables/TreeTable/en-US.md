@@ -274,6 +274,16 @@ values on every load, the rows no longer match. Use ids that survive a reload.
 | Sorting | Rows spring to their new places | Rows jump | Immediate |
 | Chevron and sort arrow | Spring turn | Immediate | Immediate |
 
+## Responsive behavior
+
+- `TreeTable` measures its own width, not the window's. A column with `HideBelow` is removed from the header and every
+  row once the table is narrower than that value. The tree column always stays.
+- Columns default to `1*`, which shrinks and truncates. The table does not scroll sideways, so text that does not fit is
+  shortened with an ellipsis.
+- Rows are 44 px tall (`RowHeight`) and the header is 40 px (`HeaderHeight`). A touch tap toggles or activates a row
+  directly, and the hover fill is for a mouse only.
+- Set `HideBelow` on the columns that matter least, such as an owner or a modified date.
+
 ## Related
 
 - `TreeView` for navigation trees without columns.

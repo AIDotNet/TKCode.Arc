@@ -235,6 +235,18 @@ The summarizing pass waits until the card is on screen.
 | Send | Mark, spinner and sent chip crossfade while the slot springs to its width (0.25s, no bounce) | Short crossfade, size at once | At once |
 | Quote | Fades in over 160ms rising 3px after a short hover; switches between lines at once | Fades | At once |
 
+## Responsive behavior
+
+- `MeetingSummary` fills its container up to 640 px and holds down to about 360 px. Below 460 px the `:narrow` pseudo-
+  class moves the attendee stack under the date; below 520 px `:compact` shows owners by first name so the meta line
+  under each item stays on one line.
+- Quotes open on hover only for a fine pointer. On touch, a tap on a timestamp pins its quote, and a press elsewhere
+  closes it.
+- The checkbox is 16 px with a 32 px hit area, so each check is easy to tap, and the quote popup flips above its line
+  when there is no room below.
+- Let the card take the full width; its layout follows its own width. Set `AutoPlay` to `False` to open on the finished
+  notes instead of waiting for the summarizing pass.
+
 ## Related
 
 - `ToolCall` for the tool calls an agent makes.

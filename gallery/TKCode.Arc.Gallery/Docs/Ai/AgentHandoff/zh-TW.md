@@ -1,7 +1,7 @@
 ---
 title: Agent handoff
 summary: AI 助理把對話轉交給真人的客服聊天：一張卡片顯示它交給團隊的摘要與一般的等候時間，接著真人加入，左側一條細時間軸標出每一步。
-source-hash: a81b332d51fd
+source-hash: cd1bcc7a3716
 ---
 
 <Demo name="Preview" />
@@ -178,6 +178,14 @@ chat.Labels = new AgentHandoffLabels
 | 模擬對話 | 播放並重複 | 只播放一次 | 只播放一次 |
 
 離開畫面時循環會暫停。
+
+## 響應式
+
+- `AgentHandoff` 隨寬度變化。寬度低於 `CompactWidth`（主題權杖，預設 400 px）時設定 `:compact`：訊息氣泡佔討論串寬度的 92%（`BubbleFractionCompact`），而不是 80%（`BubbleFraction`）；頭部、討論串與輸入區使用更緊湊的內距（`HeaderPaddingCompact`、`ThreadPaddingCompact`、`ComposerPaddingCompact`）。
+- 卡片依自身寬度（`Bounds.Width`）而不是視窗寬度判斷。它會延展以佔滿分配給它的空間，最寬為 `CardMaxWidth`（560 px）。
+- 卡片保持固定高度（`CardHeight`，600 px）。討論串在卡片內縱向捲動，從不橫向捲動（`HorizontalScrollBarVisibility` 為 `Disabled`）。名稱與標籤以省略號結尾（`CharacterEllipsis`），訊息文字換行。
+- 懸停只改變控制項的顏色（`:pointerover`），聚焦時繪製焦點環（`:focus-visible`）。沒有任何控制項只在懸停時出現。
+- 不要設定固定的 `Width`；卡片會延展，並在低於 400 px 時自動收緊。在較矮的螢幕上，把 `Height` 設為合適的值，討論串會在卡片內捲動。
 
 ## 相關元件
 

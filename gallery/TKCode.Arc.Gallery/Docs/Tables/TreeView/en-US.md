@@ -423,6 +423,16 @@ The tree ignores key presses that use Control, Alt or Meta, so shortcuts of the 
 
 The selection highlight glides between rows at full motion only.
 
+## Responsive behavior
+
+- `TreeView` has no breakpoint. It fills the width it is given (`HorizontalAlignment="Stretch"` is the default), and its
+  rows keep their `RowSlotHeight` (38 px) at every width.
+- The tree does not scroll sideways. A label that does not fit is shortened with an ellipsis, and each level indents by
+  `IndentWidth` (18 px).
+- Nothing needs hover. The hover fill is visual only, and a click or tap selects a row the same way.
+- Give the tree a full-width row. When it shares a page with other content, bound its height with `MaxHeight` so the
+  tree is the scroll area.
+
 ## Related
 
 - `Accordion` for a few sections of content that open and close.

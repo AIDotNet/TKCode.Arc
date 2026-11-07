@@ -207,6 +207,16 @@ and nothing below it moves.
 
 Every end state is the same at every level; reduced motion only drops the roll, the rise and the height travel.
 
+## Responsive behavior
+
+- `ReferralCard` measures its own width. Below `NarrowWidth` (470 px) it sets `:narrow`: the share buttons take their
+  own full row, and the milestone line may run to two lines (`MaxLines`).
+- The card is fluid up to `CardMaxWidth` (560 px) and stops growing there, even in a wider column.
+- Long email addresses and names end with an ellipsis (`CharacterEllipsis`); the date and the stage stay visible.
+- The invite chips sit in a fixed-height field that scrolls sideways, and each chip has its own remove button, so
+  removing one does not depend on Backspace or hover.
+- Let `ReferralCard` fill its column rather than setting a fixed `Width`; below 470 px it switches itself.
+
 ## Related
 
 - `CopyButton` for copying a single value with confirmation.

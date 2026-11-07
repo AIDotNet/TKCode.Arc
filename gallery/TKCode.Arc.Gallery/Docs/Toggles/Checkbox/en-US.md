@@ -1,6 +1,6 @@
 ---
 title: Checkbox
-summary: A binary choice with a precise, legible state.
+summary: A labelled yes or no choice in a form, applied when the form is saved, with an indeterminate state for partly selected groups.
 ---
 
 <Demo name="LabelAndDescription" />
@@ -366,6 +366,19 @@ unchecked, checked and indeterminate. Store the value with `CheckedState` so the
 | Checked and indeterminate switch | The check morphs into the dash, or back | Applied at once | Applied at once |
 | The box is pressed | The square scales to 95% at once; release springs it back | No press scale | No press scale |
 | The border changes color (hover, invalid) | The border color eases quickly | Immediate | Immediate |
+
+## Responsive behavior
+
+- `Checkbox` looks the same at every width. It has no breakpoint and no narrow state: the box stays 18 px, and the label
+  and `Description` wrap onto as many lines as the space needs.
+- It has no width of its own to switch on. It takes the width its parent gives it, so a checkbox in a narrow panel wraps
+  the same way it does on a phone.
+- The label and `Description` both wrap (`TextWrapping="Wrap"`). The first line of the label stays level with the box,
+  so a long label does not get cut off.
+- The row is at least 44 px tall (`MinHeight` is `ControlSizeMD`, the Arc medium control size). Hover only darkens the
+  box border. A tap checks the box and reaches the same pressed and focused states as a click.
+- Give the checkbox its own row and let its label wrap, rather than squeezing it beside other controls. Keep
+  `Description` to one sentence.
 
 ## Related
 

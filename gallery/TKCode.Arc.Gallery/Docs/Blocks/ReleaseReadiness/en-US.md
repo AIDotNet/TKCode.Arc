@@ -170,6 +170,19 @@ notify switch's `NotifyText` or `NotifyFormat` ("Notify {0}") with `ChannelName`
 - Reduced motion places the bar, the colors and the status line at once and keeps only the button's short cross-fade.
   Off applies every change at once.
 
+## Responsive behavior
+
+- `ReleaseReadiness` reads its own width, not the window's. At `CompactWidth` (388 px) or less (`:compact`) its side
+  paddings tighten from 20 to 16 px.
+- The header stays on one line. When the subtitle does not fit, it is shortened with a `CharacterEllipsis`, and the
+  progress count stays in view.
+- The footer holds the switch and the release button in one row. When they do not fit beside each other, the button
+  moves under the switch, so the release action is never cut off.
+- Hover only tints a check row (`RowHoverBackground`). Ticking a check and pressing the release button work with a tap
+  alone, so nothing depends on hover.
+- Let the block stretch to the page width (`HorizontalAlignment="Stretch"`) rather than set a fixed `Width`. It tightens
+  and rewraps its footer by itself, so a narrow panel needs no extra code.
+
 ## Related
 
 - `Checkbox`, `Switch` and `Button`, the controls the block is made of.

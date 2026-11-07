@@ -1,6 +1,6 @@
 ---
 title: Animated counter
-summary: Give changing totals a clear sense of movement.
+summary: A large number whose changed digits roll to the new value, like an odometer, without changing its width.
 ---
 
 <Demo name="RollingDigits" />
@@ -307,6 +307,15 @@ needs the rounded number itself.
 | `Value` changes | Digit columns turn in the direction of the change | The new digits appear at once | Immediate |
 | Number of digits changes | The new column and separator slide in, the width eases to fit | Immediate | Immediate |
 | First view with `AnimateOnView` | Digits roll up from zero, with a slight stagger | The final value appears at once | Immediate |
+
+## Responsive behavior
+
+- `AnimatedCounter` looks the same at every width. It has no breakpoint and no fixed width: the label sits above the
+  number, and the number takes the width its digits need.
+- In a narrow row, keep `Decimals` fixed so the width changes only when the digit count does, and give a counter its own
+  row when two would not fit side by side.
+- `AnimateOnView` plays its roll once, when 60% of the counter is first visible, so scrolling back does not repeat it.
+- The counter takes no focus and no input, so nothing about it depends on a tap or a hover.
 
 ## Related
 

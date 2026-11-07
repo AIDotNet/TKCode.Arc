@@ -406,6 +406,19 @@ The field itself is not a focus target: the number editor takes focus, and the l
 | Unit changes | The unit rises in with a small blur | The unit fades in place | Immediate |
 | Track fill | Follows the pointer while dragging; glides to the new value when typed or stepped | Jumps to the new value | Immediate |
 
+## Responsive behavior
+
+- `ScrubInput` has no breakpoint and keeps the same layout at every width. It stretches to its column
+  (`HorizontalAlignment="Stretch"`), and `Size="Small"` gives a 30 px shell (`ShellHeightSM`) for a dense inspector
+  column.
+- The number stays on one line. A value wider than its editor scrolls sideways inside it with the scroll bar hidden. The
+  label keeps at least `HandleMinWidth` (30 px) and the unit at least `UnitMinWidth` (18 px).
+- On touch, a horizontal drag on the label scrubs the value, and a vertical touch drag scrolls the parent panel, so a
+  long inspector can still be scrolled with a finger.
+- The hover tint is set only for a mouse or pen (`:hover-fine`), so nothing essential waits on hover.
+- In a narrow panel let the field follow its column rather than setting a `Width`, and keep the label short so the
+  number has room.
+
 ## Related
 
 - `NumberField` for a form number with a stepper and a limit note.

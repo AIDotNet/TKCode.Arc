@@ -329,6 +329,17 @@ do not stack a second moving element beside a countdown, such as a shimmering ba
 countdown per screen region. Several countdowns in a long table each move every second, so keep a table to compact
 pills and a few rows.
 
+## Responsive behavior
+
+- `Countdown` keeps its form at every width. `Variant` sets the form: the default large variant scales its digits with
+  its own width, from 12.5% of the width, between 28 and 72 px, and its groups stay on one line. `Variant="Compact"`
+  draws one pill at least 32 px high and sets `:compact`.
+- It sizes from its own width, not the window's, so the same countdown is smaller in a side panel than in a full-width
+  hero.
+- Four groups need about 320 px. In a narrower slot, show fewer `Units` or use the compact variant.
+- It takes no focus and has no controls, so there is no touch target to size and nothing depends on hover.
+- Give the large variant a full column or card. In a table row or a narrow sidebar, use `Variant="Compact"`.
+
 ## Related
 
 - `AnnouncementBar` for a site banner with a countdown and an action button.

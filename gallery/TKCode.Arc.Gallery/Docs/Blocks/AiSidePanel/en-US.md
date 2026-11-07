@@ -189,6 +189,18 @@ Every word comes from `Labels` (`AiSidePanelLabels`): replace the instance to tr
 | New words | Steps of whole words, 150 ms fade | Same steps, no fade | Same steps, no fade |
 | Sheet | Slide and fade | Fade in place | Immediate |
 
+## Responsive behavior
+
+- Below `SheetBreakpoint` (640 px by default) the assistant leaves its docked column and becomes a bottom sheet over the
+  page. The sheet is `SheetHeightRatio` (0.74) of the block's height, and `IsSheetMode` and the `:sheet` pseudo-class
+  report it.
+- Docked, the assistant is `PanelWidth` (360 px) wide and the page column stays at most `PageMaxWidth` (680 px),
+  centred.
+- In sheet mode the page under the sheet is dimmed and inert while the sheet is open; pressing the dimmed page or the
+  close button closes it.
+- Suggestions wrap onto more rows, and the answer text wraps. On a phone give the block the height of the screen, so the
+  sheet has room for the answer.
+
 ## Related
 
 - `AiChat` for a conversation without a page.

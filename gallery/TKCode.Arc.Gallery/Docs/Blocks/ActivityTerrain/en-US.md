@@ -204,6 +204,20 @@ metric's own `SummaryTitle` replaces `SummaryTitleFormat` for that metric, and `
   not glide; the card only fades. With motion off nothing animates.
 - An idle plot draws nothing; frames run only while something moves and only while the plot is on screen.
 
+## Responsive behavior
+
+- `ActivityTerrain` changes at its own width, not the window's. Below 560 px (`NarrowWidth`, `:narrow`) the toolbar
+  stacks with the view switch on its own row, the padding is `NarrowBlockPadding` (16 px) and the summary stacks. From
+  880 px (WideWidth, `:wide`) the summary sits in a column beside the plot.
+- The plot is 280 px high below 560 px. Above that it is 44% of the block's width (PlotHeightRatio), kept between 280
+  and 460 px.
+- The legend and the hint wrap (`TextWrapping`), and the day names end with an ellipsis (`CharacterEllipsis`).
+- The hover card with an hour's numbers needs a mouse. A touch press switches the hint to `TouchHintText`, which asks
+  for a swipe to turn and a tap on a bar, and the busiest day and peak hours are text beside the plot. The reset button
+  is `ResetHeight` (32 px) high.
+- Let the block stretch (`HorizontalAlignment="Stretch"`) across its column rather than setting a fixed `Width`. Below
+  560 px the plot stays 280 px high, so give the block its own row in a narrow side panel.
+
 ## Related
 
 - `ActivityHeatmap`: a year of days as a calendar heat map.

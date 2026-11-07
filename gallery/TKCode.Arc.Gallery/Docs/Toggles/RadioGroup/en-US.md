@@ -346,6 +346,20 @@ Arrow keys skip disabled options, in both directions.
 | Row and label colors | Background and ring colors crossfade; the label color crossfades | Immediate | Immediate |
 | Group resizes | The highlight moves to the new row at once | Immediate | Immediate |
 
+## Responsive behavior
+
+- `RadioGroup` has no breakpoint and looks the same at every width. Its rows stack in a vertical `StackPanel` and
+  stretch to the width of the group.
+- Each row's label and `Description` wrap (`TextWrapping="Wrap"`), so a row grows with its text. A very narrow group
+  wraps every description onto many short lines, which makes the options harder to compare.
+- The group has no `ScrollViewer` of its own. Every row takes the height it needs, and the page around the group does
+  the scrolling.
+- Each row is a full-width tap target with 12 px of padding on every side (`RowInset`). Hover only tints the row
+  (`:pointerover`), and pressing shows a faint preview of the choice. A tap selects the row, so nothing depends on
+  hover.
+- Let the group fill its column and keep the descriptions short. For a list longer than six options, use `Select`, which
+  does not place every row on the page.
+
 ## Related
 
 - `RadioCards` for options that need a price, a meta text or an icon on a card.

@@ -1,7 +1,7 @@
 ---
 title: AI command
 summary: 带 AI 模式的 Cmd+K 命令面板：搜索页面与操作，或按 Tab 提问，回答就地流式呈现，附带编号来源，以及可直接在列表中执行的后续步骤。
-source-hash: 5fdd634d1cb1
+source-hash: f02dad32efab
 ---
 
 <Demo name="Preview" />
@@ -188,6 +188,14 @@ palette.Labels = new AiCommandPaletteLabels
 | 演示 | 可见时播放，不可见时暂停，回来后从干净状态重新开始 | 从不播放 | 从不播放 |
 
 面板的尺寸从不改变：结果区域在每个视图中都保持同样的高度。
+
+## 响应式
+
+- `AiCommandPalette` 随宽度变化。宽度低于 `NarrowWidth`（540 px，是固定常量而不是主题令牌）时设置 `:narrow`，页脚去掉 `↑ ↓` 导航提示。
+- 面板按自身宽度（`Bounds.Width`）而不是窗口宽度判断，会填满分配给它的空间，最宽为 `PaletteMaxWidth`（680 px）。
+- 结果区保持高度（`ResultsHeight`，默认 392 px）并纵向滚动，从不横向滚动（`HorizontalScrollBarVisibility` 为 `Disabled`）。较长的标题以省略号结尾（`CharacterEllipsis`），来源标签换行排列（`WrapPanel`）。
+- 悬停只会改变行的颜色（`:pointerover`），键盘聚焦时绘制焦点环（`:focus-visible`）。
+- 让面板拉伸至屏幕全宽。输入时它保持 `ResultsHeight`，因此在较矮的屏幕上请调小该值，而不是让面板改变大小。
 
 ## 相关组件
 

@@ -430,6 +430,17 @@ Typing any character clears the pick. Leaving the field commits the draft as a t
 | A refused add (limit) | The content kicks sideways and rings home on a bouncy spring | No shake | No shake |
 | The placeholder appears | Rises by 0.3 em with a soft blur | Fades in | Immediate |
 
+## Responsive behavior
+
+- `TagInput` has no breakpoint. Tags and the editor flow onto wrapping lines with a 6 px gap (`ItemGap`), so the field
+  grows taller as tags wrap.
+- The editor takes the rest of the last line, or moves to a line of its own with a basis of `EditorBasis` (100 px) and
+  at least `EditorMinWidth` (80 px).
+- A tag wider than the row is shortened with an ellipsis. Its remove button is 22 px across (`RemoveButtonDiameter`),
+  and its hover fill appears only for a mouse, so a touch user taps the same small button.
+- Let the field stretch with its form, and limit the number of tags with `MaxTags`, because a 22 px remove button is
+  small for a finger.
+
 ## Related
 
 - `MultiSelect` or `Combobox` when the values come from a list that already exists.

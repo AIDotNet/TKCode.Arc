@@ -172,6 +172,17 @@ prompts.Labels = new StarterPromptsLabels
 | Loading placeholders | Breathe once every 1.6s | Still | Still |
 | Tab selection | The pill glides on the tabs' spring | At once | At once |
 
+## Responsive behavior
+
+- `StarterPrompts` measures its own width and fills its container; its width never follows the cards or the text. From
+  `TwoColumnMinWidth` (560 px) the cards sit in two columns, and below it in one column.
+- Below `CompactWidth` (440 px) Shuffle becomes an icon (`:compact`). Below `NarrowWidth` (480 px) the padding, the
+  corner radius and the greeting step down (`:narrow`).
+- The category tabs scroll sideways inside their own row, with edge fades, so a long list of `Categories` never wraps or
+  pushes the cards down.
+- Card titles and descriptions that do not fit end with an ellipsis (`CharacterEllipsis`).
+- Give `StarterPrompts` the full width of the screen rather than a side column, and do not set a fixed `Width`.
+
 ## Related
 
 - `AgentStatus` for the live status of an agent once a run starts.

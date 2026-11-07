@@ -222,6 +222,19 @@ glyphs (mail, chat bubble, message square, life buoy), never brand marks.
 About two seconds per ticket at speed 1: arrive 220ms, classify, labels, the 240ms pulse, then the landing. The flow
 pauses off screen. The card's height never changes while tickets flow.
 
+## Responsive behavior
+
+- `TicketRouter` changes form at two breakpoints, measured on its content width (its own width less `Padding`), not the
+  window's. Below 600 px the lanes fold into a 2 by 2 grid and the connector hides. Below 400 px the confidence meter
+  and the model name hide, and the percentage stays. `:narrow` and `:compact` report the two states.
+- In the narrow form the labels stack above the route target, and the stage grows to `StageStackedHeight` to hold them.
+- Titles, previews and lane rows end with an ellipsis (`CharacterEllipsis`) instead of wrapping, so each row keeps its
+  height. Only the error row wraps, with its retry and send-to-review buttons.
+- On touch, ticket cards are 88 px high (`TicketHeight`) and lane rows 40 px (`RowHeight`). Hover only tints the review
+  rows (`:pointerover`); nothing depends on it.
+- Keep it in a content column of about 360 to 880 px, and let it stretch (`HorizontalAlignment="Stretch"`) instead of
+  setting a fixed `Width`. Below 400 px of content the meter hides, so a narrow column still reads.
+
 ## Related
 
 - `AgentStatus` for the live status of one running agent.

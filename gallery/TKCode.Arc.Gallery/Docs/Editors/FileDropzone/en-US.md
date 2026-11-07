@@ -1,6 +1,6 @@
 ---
 title: File dropzone
-summary: A generous target for dropping one or more files.
+summary: A file drop target with the system file picker, paste, and a list that shows each file's upload state.
 ---
 
 <Demo name="Upload" />
@@ -431,6 +431,18 @@ has no handler to call.
 | A row is removed | Height collapses in about 0.3 seconds | Short fade | Immediate |
 | Upload progress changes | Bar follows the value on a smooth spring | Immediate | Immediate |
 | A row fails, or a batch is refused | Target or row shakes once | No shake; color change only | Immediate |
+
+## Responsive behavior
+
+- The zone has no breakpoint and stretches to the width it is given. Rows change at their own width: below 440 px the
+  Retry button shows only its icon (`:narrow`), and below 300 px the type icon is hidden (`:tiny`).
+- `CompactAt` folds the prompt to a slim bar once that many rows are listed (`:compact`). It follows the row count, not
+  the width.
+- It measures its own width, not the window's. Long text in a row ends in an ellipsis, and the labels and the note wrap.
+- A row is at least 58 px high (`RowMinHeight`), Retry is 30 px tall and Remove is 32 px square. Hover only tints the
+  target for a mouse, so the row buttons do not depend on it.
+- On a phone let the zone take the full width, and use `CompactAt` on a crowded review step so the list does not push
+  the form down.
 
 ## Related
 

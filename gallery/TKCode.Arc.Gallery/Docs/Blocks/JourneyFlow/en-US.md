@@ -202,6 +202,20 @@ Changing a link's `Value` in the shown segment morphs the chart in place, like a
 - Reduced motion places the chart and the numbers at once and keeps only the short fades (tooltip, panel titles).
   Off applies every change at once. Nothing animates when the block first appears.
 
+## Responsive behavior
+
+- `JourneyFlow` measures its own width, not the window's. Below 860 px the side panel moves under the chart; below 560
+  px (`:compact`) the segment switch spans the full width, the paddings tighten and the panel's two groups stack; below
+  480 px (IsTight on the chart) the labels get smaller.
+- The chart never scrolls or rotates. It is laid out again at each width and gets shorter as it narrows, and under 600
+  px its labels drop the share. Below 440 px each stage shows its `ShortHeader`.
+- In a narrow column the labels shrink and the chart gets shorter, so give the block a row of its own and let it stretch
+  (`HorizontalAlignment="Stretch"`).
+- Nothing depends on hover. Hover only previews a trace; selecting a step is a click, and the side panel shows the
+  selected step, so a touch user gets the same detail. Nodes are stacked 44 px apart.
+- On a phone, where exact numbers matter more than shape, show the Flow table or a plain table instead of relying on the
+  chart alone.
+
 ## Related
 
 - `Cohort retention` and `Metrics dashboard`, the other Analytics blocks.

@@ -243,6 +243,21 @@ group is shown in the first group.
 | Undo ring | Drains over the window | Stays full | Stays full |
 | Filed or added row | Slot springs open; 1.6 s tint | No slot motion; tint stays | Immediate |
 
+## Responsive behavior
+
+- `AgentMemory` changes at its own width, not the window's. Below 440 px (`CompactWidth`, `:compact`) the header,
+  settings, toolbar and list paddings tighten. The card is capped at `CardMaxWidth` (640 px) and centred in a wider
+  container.
+- The toolbar (`ToolbarHeight`, 52 px) keeps the search at its right end. When the filter pills do not fit, they scroll
+  sideways inside their own bar.
+- The list scrolls inside the card above `ListMaxHeight` (380 px by default), so the add field stays below it at every
+  width. Memory text wraps (`TextWrapping`).
+- Row actions show on hover and keyboard focus. Touch has no hover, so once a touch is seen in the card every row shows
+  its source line and buttons at rest (`:reveal`). The row buttons are 28 px high.
+- Let the card stretch (`HorizontalAlignment="Stretch"`) rather than setting a fixed `Width`, and keep its column at 440
+  px or more. Below that the paddings tighten and the filters keep scrolling, so a narrow side panel gets the card to
+  itself.
+
 ## Related
 
 - `ModelPicker` for choosing the model that uses the memories.

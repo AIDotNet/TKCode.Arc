@@ -286,6 +286,18 @@ at once.
 | Title leaves the viewport with `IsReplayEnabled` | Quick fade with no stagger (about 180 ms) | Stays visible | Stays visible |
 | Title re-enters with `IsReplayEnabled` | Reveals again | Shown at once | Shown at once |
 
+## Responsive behavior
+
+- `InViewTitle` has no breakpoint and looks the same at every width. Its default variants wrap `Text` to the width the
+  layout gives it, so a narrow column takes more lines.
+- It sizes itself to its own width, but the reveal does not depend on the window width: it starts when 45% of the title
+  is inside the viewport, so the same title plays on a phone and on a desktop.
+- The `Line` variant does not reflow: `Lines` are drawn as given. Each line must fit on a narrow screen, so check the
+  longest line at 360 px.
+- The title has no pointer behavior of its own, so nothing about it is hover-only.
+- Keep the default `Blur` variant on phones, and give the title the full width of its column rather than a fixed
+  `Width`, so it wraps where the screen ends.
+
 ## Related
 
 - `TextReveal` for the headline that plays once when the page loads.

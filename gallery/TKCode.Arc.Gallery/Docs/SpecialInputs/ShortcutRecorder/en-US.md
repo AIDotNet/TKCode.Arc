@@ -365,6 +365,17 @@ gestures with the same rules:
 | Recording light | Pulses while recording | Steady; no pulse | Steady |
 | Message row changes | Opens and closes on a height spring; new text rises with a soft blur | Short fade | Immediate |
 
+## Responsive behavior
+
+- `ShortcutRecorder` has no breakpoint. The field keeps the medium control height (44 px) at every width, and its key
+  caps stay on one line, each at least `KeyCapMinWidth` (26 px) wide.
+- The message row under the field wraps its text. When the text and the Use anyway and Cancel links do not fit side by
+  side, the links move to a line of their own under the text.
+- The field fills the row it is given. Hover is set only for a mouse or pen (`:hover`), so a tap never leaves the border
+  darkened.
+- Recording needs a physical keyboard, because a tap cannot produce a chord. On a phone, show the saved shortcut as
+  text, or leave the field out.
+
 ## Related
 
 - `Input` for free text that is not a shortcut.

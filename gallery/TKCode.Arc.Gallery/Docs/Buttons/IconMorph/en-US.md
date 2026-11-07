@@ -341,6 +341,17 @@ icon from `ArcIcons` and change it in code.
 | Bell turned on | Rings once, the clapper lagging the bell slightly | No ring | No ring |
 | Heart liked | Pops with a ring and sparks | No burst | No burst |
 
+## Responsive behavior
+
+- `IconMorph` looks the same at every width. It has no breakpoint: its size is `IconSize` (24 px by default), and it
+  draws its 24-unit glyph scaled to fit the box it is given.
+- Match `IconSize` to the button that hosts it: 16 px in a 36 px button, 24 px in a 44 px button and 32 px in a 52 px
+  button.
+- On a touch screen the hosting button sets the tap area, because the icon is not hit-testable. Set the host's `Width`
+  and `Height` (the examples use 36 px) rather than enlarging the icon.
+- Nothing depends on hover. `IconMorph` has no hover state, and the state is carried by the shape and the button's
+  `AutomationProperties.Name`, so nothing is lost without a pointer.
+
 ## Related
 
 - `CopyButton` for a copy action with its own confirmation.

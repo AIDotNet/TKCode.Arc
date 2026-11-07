@@ -438,6 +438,18 @@ Enter never submits during IME composition.
 | Panel height when results change | Spring | Jumps | Immediate |
 | Border on focus | Border color crossfades | Short fade | Immediate |
 
+## Responsive behavior
+
+- `MentionInput` does not change at a breakpoint. The field takes the width its parent gives it. It grows from
+  `MinLines` toward `MaxLines` as the text wraps, in 24 px lines, then scrolls inside its frame.
+- The suggestion panel is 272 px wide, or as wide as the field when the field is narrower, and it stays within the
+  field's width. With `SuggestionPlacement` set to `Auto`, it opens above the line when the room below in the
+  `ArcViewport` is under 300 px and there is more room above.
+- Suggestion rows keep a 28 px avatar or icon, and a name that does not fit is cut with an ellipsis.
+- A click or tap on a row chooses it, and hover only moves the highlight, so no choice depends on hover.
+- Set `MaxLines` to the space free below the field. When the field sits at the bottom of the screen, set
+  `SuggestionPlacement` to `Top` so the list opens upward.
+
 ## Related
 
 | Component | Choose it when |

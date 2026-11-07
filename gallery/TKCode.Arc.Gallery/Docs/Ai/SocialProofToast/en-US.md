@@ -182,6 +182,19 @@ Toasts are always 64px high, so nothing resizes between states, and the inline s
 stack so hovering never moves the page. The cycle keeps running with reduced motion and with motion off: it is
 content, not decoration.
 
+## Responsive behavior
+
+- A corner stack measures the layer it sits in, and falls back to `ArcViewport` (the window, or an `ArcViewportHost`)
+  when that layer has no size. Below `CompactBreakpoint` (480 px) it spans the width with `CompactInset` (16 px)
+  gutters; wider, it is `CornerWidth` (360 px) wide and `CornerInset` (24 px) from the edges.
+- The sentence and the second line stay on one line and end in an ellipsis (`CharacterEllipsis`), so a long name or
+  action does not make a toast taller.
+- The dismiss button appears on hover or focus, and it is always shown on touch screens, so a visitor on a phone can
+  close a toast without hovering.
+- Keyboard focus in the stack pauses the cycle, as hovering does, so each toast can be read with the keyboard.
+- On a phone, set `Position` to `Inline` so the stack stays in the page flow above the footer instead of covering the
+  content.
+
 ## Related
 
 - `Toast` for a brief confirmation of the visitor's own action.

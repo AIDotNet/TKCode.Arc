@@ -1,7 +1,7 @@
 ---
 title: Site footer
 summary: 带链接列和订阅区的网站页脚，提供极简布局，以及一个大型渐隐的 Arc 标志。
-source-hash: 60817fc4175b
+source-hash: 9cb7cc5e078f
 ---
 
 <Demo name="Preview" />
@@ -121,6 +121,14 @@ footer.Subscribed += (_, e) => Console.WriteLine($"Subscribed {e.Email}");
 | 订阅行 | 从下方 4 px 处升起并经过模糊，在 240 ms 内出现；旧行在 120 ms 内向上淡出 | 仅淡入 | 立即 |
 | 订阅按钮 | 文字以模糊方式交叉淡化，宽度以弹簧变化，加载时显示旋转指示器 | 按钮的减少动效规则 | 立即 |
 | 标志拱形 | 仅一次，当 30% 出现在屏幕上时：在 900 ms 内淡入并上升 40 px | 立即显示 | 立即显示 |
+
+## 响应式
+
+- `SiteFooter` 按自身宽度而不是窗口宽度判断。宽度在 760 px 及以下（`StackedWidth`，即 `:stacked`）时，介绍区堆叠在链接栏上方；在 520 px
+  及以下（`:narrow`）时，链接栏分为两列，底部法律信息行堆叠。
+- 订阅区最宽 400 px（`NewsletterMaxWidth`），简介文字最宽 320 px（`TaglineMaxWidth`）。
+- 底部行中的链接组放在 `WrapPanel` 中，换到新的一行，而不是横向滚动。
+- 手机上无需为页脚单独设定宽度，让它占满屏幕宽度即可。低于 520 px 时它已分为两列，链接组仍然易读。
 
 ## 相关
 

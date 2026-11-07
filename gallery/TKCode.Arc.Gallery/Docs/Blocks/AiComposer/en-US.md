@@ -215,6 +215,18 @@ message if you need to restore it.
 | Chip enters or leaves | Scale and fade | 120 ms fade | Immediate |
 | Menus and the suggestion list | Grow from the anchor | 120 ms fade | Immediate |
 
+## Responsive behavior
+
+- `AiComposer` changes in three steps, measured from its own width. Below `CompactWidth` (680 px, `:compact`) the tool
+  toggles show only their icons. Below `NarrowWidth` (560 px, `:narrow`) the model pill drops its effort. Below
+  `TinyWidth` (400 px, `:tiny`) it drops its text and the toolbar groups tighten.
+- The text area grows line by line from `MinLines` to `MaxLines` (1 to 8) and then scrolls. Each breakpoint switches its
+  parts at once, with no width spring.
+- Hover only changes the border and button colours. Under `CompactWidth` the tool toggles are icons alone, so give your
+  tools icons that read on their own.
+- Put the composer at the bottom of the screen and give it the width of the thread. Leave `Width` unset so it stretches
+  on a phone.
+
 ## Related
 
 - `ModelPicker` for choosing a model on a settings page.

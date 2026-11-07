@@ -323,6 +323,18 @@ table or form that the group summarizes, where each person can be focused and ac
 | The pointer moves over the stack | People fan out 4 px per step, the hovered person rises 2 px and neighbours move 3 px | No fan; ring and name stay | Immediate |
 | The name above the hovered person | Shows after a 60 ms delay | Shows at once | Immediate |
 
+## Responsive behavior
+
+- `AvatarGroup` does not change at any width. It shows `MaxVisibleCount` faces (4 by default) at the diameter of its
+  `Size`: 28 px for `Small`, 36 px for `Medium` and 48 px for `Large` or `XLarge`. Faces overlap by 6 px
+  (`StackOverlap`), and the rest collapse into an overflow chip that shows the count.
+- The group is as wide as its faces and the chip. It does not wrap or scroll, so in a narrow container give it room or
+  lower `MaxVisibleCount` rather than letting it run out of space.
+- The name tip appears on mouse hover only; touch input shows no tip. When the group is used on a phone, put the names
+  in text beside it, such as the `Label` line or a list.
+- In a narrow row, lower `MaxVisibleCount` so the group and its chip fit beside the row's other controls, or give the
+  group a row of its own.
+
 ## Related
 
 - `Avatar` for one person.

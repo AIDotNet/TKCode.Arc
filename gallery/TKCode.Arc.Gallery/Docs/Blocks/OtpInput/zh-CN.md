@@ -1,7 +1,7 @@
 ---
 title: OTP input
 summary: 六位数字验证流程，支持粘贴和键盘导航。
-source-hash: f4f04a455025
+source-hash: d83d5b07133e
 ---
 
 <Demo name="Preview" />
@@ -151,6 +151,13 @@ Code.ValueChanged += (_, e) =>
 ### 响应式行为
 
 只有一个断点，依据字段所获得的宽度：328 px。格子宽 42 px，当一排放不下时会缩小。
+
+## 响应式
+
+- `OtpInput` 按所给的宽度变化，不随窗口宽度。宽度为 328 px 或以下（`:narrow`）时，格子间距由 8 px（`SlotGap`）变为 6 px（`SlotGapNarrow`），高度由 48 px（`SlotHeight`）变为 44 px（`SlotHeightNarrow`）。
+- 每个格子宽 42 px（`SlotWidth`）。所给宽度不足以放下整行时，所有格子按相同比例缩小，间距保持不变，整行始终留在所在的列内。
+- 悬停只对鼠标或触控笔生效（`:hover`），触屏上不会触发，没有任何功能依赖悬停。
+- 在手机上保持默认的 `InputMode="Numeric"`，触屏键盘会显示数字键盘，粘贴的内容也只保留数字。
 
 ## 相关组件
 

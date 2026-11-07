@@ -328,6 +328,20 @@ The enums:
 | Streamed suggestion | Chunks fade in | All words at once | All words at once |
 | Timeline of the simulation | Unchanged | Unchanged | Unchanged |
 
+## Responsive behavior
+
+- `AgentPlan` changes at a width. Below `NarrowWidth` (420 px, a fixed constant rather than a theme token) it sets
+  `:narrow`: the header, list and footer take tighter padding (`NarrowHeaderPadding`, `NarrowListPadding`,
+  `NarrowFooterPadding`), and the Keep and Approve buttons share the row at equal widths.
+- The card measures its own width (`Bounds.Width`), not the window's, and fills the space it is given up to
+  `CardMaxWidth` (560 px).
+- Step titles wrap onto as many lines as they need (`TextWrapping`), so no title is cut off. Short status lines stay on
+  one line and end in an ellipsis (`CharacterEllipsis`).
+- A step's remove button is shown on touch, on hover and while the step has keyboard focus (IsRemoveRevealed).
+  Otherwise it stays hidden, so a phone user can reach it by touch.
+- Let the card stretch to the page width and leave out a fixed `Width`. Below 420 px the two buttons split the row by
+  themselves, so the draft works on a phone without a separate layout.
+
 ## Related
 
 - `AgentStatus` for a compact live status of one running agent.

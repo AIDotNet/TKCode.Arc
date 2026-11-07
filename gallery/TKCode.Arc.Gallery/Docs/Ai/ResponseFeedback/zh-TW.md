@@ -1,7 +1,7 @@
 ---
 title: Response feedback
 summary: 針對 AI 回覆的意見回饋控制項：按倒讚會在行內展開一個附原因標籤與備註的面板，按讚會詢問哪裡做得好，送出後短暫顯示感謝，隨後收回到操作列中。
-source-hash: 7d49fffaded3
+source-hash: 342766c29d9b
 ---
 
 <Demo name="Preview" />
@@ -165,6 +165,14 @@ reply.Labels = new ResponseFeedbackLabels
 | 成功勾號 | 在 280ms 內繪製一次 | 立即顯示 | 立即顯示 |
 
 按鈕的尺寸從不改變，操作列隨容器延展，因此按鈕填滿或面板開啟時列寬不會變化。所有結束狀態與播報在每個動態效果等級下都相同。
+
+## 響應式
+
+- `ResponseFeedback` 寬度低於 `CompactWidth`（480 px）時設定 `:compact`：內距從 24 px 減為 `CompactCardPadding`（16 px）。
+- 單獨使用的 `FeedbackActions` 有第二個斷點：寬度低於 `NarrowWidth`（400 px）時設定 `:narrow` 並隱藏 `PrivacyNote`；設定了 SecondaryCollapses 時，取消按鈕讓位，使錯誤提示與重試按鈕保持在同一列。
+- 原因面板在讚與踩按鈕下方內嵌展開，不是彈出層。原因標籤會換行，因此在 360 px 寬時無需水平捲動即可完整顯示。
+- 讚與踩按鈕為 36 px 的圓形按鈕；觸控輕觸後，原因標籤從 28 px 增至 32 px。
+- 原因保持在一到兩個詞以內，例如 `NegativeReasons` 中的條目，使標籤在 360 px 寬時排成一列或兩列。
 
 ## 相關元件
 

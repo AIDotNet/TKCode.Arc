@@ -1,7 +1,7 @@
 ---
 title: 輪播
 summary: 透過拖曳、輕掃或方向鍵瀏覽一排投影片。
-source-hash: 6fd1e19ca14e
+source-hash: 585ee34a9428
 ---
 
 <Demo name="Slides" />
@@ -334,6 +334,14 @@ carousel.SlideLabelFormatter = (index, count) => $"檔案照片 {index + 1}，�
 | 相鄰項目的縮放與不透明度 | 每一影格跟隨軌道位置 | 隨軌道一起跳動 | 立即 |
 | 指示器膠囊 | 延展並跟隨作用中投影片 | 直接跳到作用中的圓點 | 立即 |
 | 自動播放 | 依間隔前進，並使膠囊耗盡 | 不可用 | 不可用 |
+
+## 響應式
+
+- `Carousel` 在自身寬度為 340 px 或更窄時進入 `:compact`（即 `CompactWidth` 常數）。控制列收緊為 `CompactControlsGap` 的 4 px 間距，指示點之間也更靠近。
+- 投影片寬度為自身寬度的 `SlideWidthRatio`（0.8），上限為 `MaxSlideWidth`（340 px），所以在窄欄中兩側會露出相鄰的投影片。
+- 指示器列高為 `TabHeight`（36 px）。投影片超過可顯示數量時，它可以橫向捲動，並讓目前的投影片保持在中間。
+- 瀏覽透過拖曳或快速滑動完成。自動播放在懸停和拖曳期間暫停；觸控螢幕沒有懸停，因此在妨礙閱讀的手機頁面上可以將 `IsAutoPlay` 設為 False。
+- 讓輪播在所在欄中延展，不要設定固定的 `Width`，投影片大小會隨欄變化。
 
 ## 相關元件
 

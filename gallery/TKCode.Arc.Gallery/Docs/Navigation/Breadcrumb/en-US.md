@@ -336,6 +336,17 @@ A pointer press and release on a crumb chooses it, when the release happens insi
 | Crumbs after a change | Glide to their new positions on the smooth spring | Jump to their new positions | Jump to their new positions |
 | Hover, focus, current | The label color crossfades | Immediate | Immediate |
 
+## Responsive behavior
+
+- `Breadcrumb` has no breakpoint. Its crumbs wrap onto a new line when the path is wider than the space (`CrumbGap`, 6
+  px between crumbs, and `LineGap`, 2 px between lines).
+- `MaxVisibleItems` is 0 by default, so nothing collapses. Set it to 3 or more to keep the root and the last crumbs, and
+  fold the middle into an overflow button named by `OverflowLabel`.
+- The overflow menu is an `ArcPopup` anchored to that button. It is at least `MenuMinWidth` (192 px) wide, and its items
+  are at least `MenuItemMinHeight` (36 px) tall.
+- Each crumb has 4 px of padding above and below its label (`CrumbPadding`), so crumbs are not 44 px touch targets. On a
+  touch screen, keep paths short and collapse long ones.
+
 ## Related
 
 - `Tabs` for sibling views of one object.

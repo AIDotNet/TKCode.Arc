@@ -221,6 +221,20 @@ comes back before the new language streams.
 | Status, picker and toggle labels | Crossfade in their reserved width (100ms out, 160ms in) | Short fade | At once |
 | Autoplay | Loops | Translates once and stops | Translates once and stops |
 
+## Responsive behavior
+
+- `AiTranslate` measures its own width, not the window's. Below 470 px (`:narrow`) the card pads 16 px and the status
+  line moves under the controls, in line with the text. Below 380 px (`:compact`) the language chip shows only the
+  language name.
+- The paragraph wraps to as many lines as the text needs, and the card grows with it up to `CardMaxWidth` (620 px).
+  Names and meta text trim with an ellipsis.
+- The controls (the Translate picker, Show original and Retry) sit in a `WrapPanel`, so they move to a new line instead
+  of overflowing when the card is narrow.
+- The language menu is a `Dropdown` `MenuSurface` anchored to the Translate picker with an `AnchorGap` of 6 px, at every
+  width.
+- Give the card its own row and let it stretch (`HorizontalAlignment="Stretch"`) rather than setting a fixed `Width`.
+  Its controls are 32 px tall, so on touch screens leave room around them.
+
 ## Related
 
 - `ToolCall` for the tool calls an agent makes in the same transcript.

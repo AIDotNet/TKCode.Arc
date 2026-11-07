@@ -343,6 +343,20 @@ Companion types used by a `CookieConsent`:
 | Surface changes shape (bar, panel, reopen button) | Moves, resizes and changes its corner. Growing uses a small overshoot, shrinking settles without one | Jumps to the new shape | Immediate |
 | Face changes | The new face rises about 10 px out of a short blur; the leaving face fades out and drops slightly | The new face fades in; the leaving face fades out quickly | Immediate |
 
+## Responsive behavior
+
+- The bar stacks its message above the buttons when it is narrower than 560 px (StackBelow). At 328 px or less, Reject
+  all and Accept all share a row above Customize, and `:bar-stacked` and `:bar-compact` report the two states.
+- It lays out from the width of its layer, the window or the `ArcViewportHost` it sits in, less 32 px. The bar is at
+  most BarMax (660 px) wide and the panel at most PanelMax (420 px). It follows `ArcViewport`, so a phone preview
+  changes it the same way.
+- While `IsPreferencesOpen` is `True`, the category list scrolls once it is taller than 46% of the available height, up
+  to a `MaxHeight` of 300 px.
+- The reopen button is 44 px round and the panel's close button is 32 px, so the close button is the smaller target to
+  hit with a finger.
+- Place it once at the window level rather than inside a narrow column, so the layout follows the full width of the
+  window.
+
 ## Related
 
 - `AnnouncementBar` for a site-wide notice that does not ask for a choice.

@@ -1,7 +1,7 @@
 ---
 title: Markdown
 summary: 以 Arc 的風格渲染 Markdown 文件與串流回覆，程式碼區塊使用 Arc 的語法配色高亮。
-source-hash: 3772d30a3cad
+source-hash: 79985ea6ceb9
 ---
 
 <Demo name="Document" />
@@ -255,6 +255,13 @@ StreamMark 服務決定文件如何解析以及程式碼區塊如何表現。控
 |---|---|---|---|
 | 串流回覆中的新文字 | 在文件末尾淡入，240 ms | 僅以不透明度淡入，160 ms | 立即顯示 |
 | 串流回覆的節奏 | 套用 | 套用 | 套用 |
+
+## 響應式
+
+- `Markdown` 沒有斷點。它佔滿給它的寬度（`HorizontalAlignment` 為 `Stretch`），文字、清單與程式碼都依該寬度換行。文件隨內容增高，自身沒有捲軸。
+- 正文為 16 px，行高隨字級變化（`LineHeight` 預設為字級的 1.65 倍），因此把 `FontSize` 調小即可讓窄訊息氣泡保持緊湊。
+- 超過 `CollapsedLines`（12 行）的程式碼區塊會摺疊，一段很長的程式碼不會把手機螢幕上的其餘文字擠出視野。
+- 長文件請放進 `ScrollViewer` 中，由它捲動整篇文件。輕觸連結會觸發 `LinkClicked`，文件內的錨點則自行捲動。
 
 ## 相關元件
 

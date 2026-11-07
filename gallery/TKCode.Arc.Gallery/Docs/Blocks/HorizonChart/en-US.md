@@ -169,6 +169,18 @@ reword it. `AboveColor` and `BelowColor` replace the Series1 and Series3 colours
 - Nothing plays when the block first appears. Reduced motion and Off land every fold, reorder, crosshair move and scale
   change at once.
 
+## Responsive behavior
+
+- `HorizonChart` changes density at its own width, not the window's. At 560 px or less (`:compact`) its rows are 34 px
+  high (`CompactRowHeight`), the name column narrows to 84 px (`CompactNameWidth`), and the legend takes the whole line.
+  At 900 px or less (`:medium`) it uses the medium values; wider than that it uses the wide values.
+- The title shrinks and wraps first, down to `TitleMinWidth`. The Sort and Bands switches then wrap onto a line of their
+  own rather than overlapping the title.
+- Reading a day needs no hover. A tap or drag on the bands sets the crosshair and it stays where the finger lifts, and
+  the Tab key with the arrow keys does the same.
+- Let the chart stretch to its column. Keep at least 560 px for the full row size, since in a narrower column the rows
+  shrink to 34 px.
+
 ## Related
 
 - `Metric explorer` and `Revenue explorer`, the other Analytics blocks with a crosshair across a time axis.

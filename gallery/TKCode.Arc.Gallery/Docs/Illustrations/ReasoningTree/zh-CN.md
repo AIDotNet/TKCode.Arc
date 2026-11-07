@@ -1,7 +1,7 @@
 ---
 title: Reasoning tree
 summary: 对候选思路进行搜索：为每个思路打分，剪除较弱的分支，最佳的分支继续展开，获胜路径随之绘出。
-source-hash: 84e6ead20817
+source-hash: 263bd0a8f5ee
 ---
 
 <Demo name="ArchiveMove" />
@@ -221,6 +221,14 @@ tree.Answered += (_, e) =>
 | 标签块 | 从节点侧边淡入并上移 3 px（160 ms） | 立即显示 |
 
 节拍遵循 `Speed`；淡入和填充保持其时长，即使演示暂停也会完成。
+
+## 响应式
+
+- `ReasoningTree` 按自身宽度而不是窗口宽度判断。宽度低于 520 px（`CompactWidth`，`:compact`）时，卡片隐藏 `Title`，使用更紧凑的 `CompactCardPadding`，并把页脚标签缩短为 Beam。
+- 舞台宽 620 px（`WideBreakpoint`）及以上时，树形图从左到右分为四列。更窄时，它变成一个大纲：每个思路占一行，每层缩进 16 px。搜索播放期间卡片高度保持不变，因为舞台会为每个思路预留一行。
+- 宽度低于 306 px（`TinyWidth`）时，页脚的两组内容纵向堆叠，束宽控件移到播放按钮下方。
+- 过长的思路标签以省略号截断（`CharacterEllipsis`）。完整文字只在思路被悬停或聚焦时以标签形式出现。触屏没有悬停，因此标签要短到能完整读完。
+- 让它拉伸到所在列的宽度，不要设置固定的 `Width`。手机上它显示大纲布局，应先在该布局下检查标签。
 
 ## 相关
 

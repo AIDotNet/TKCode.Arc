@@ -1,6 +1,6 @@
 ---
 title: Accordion
-summary: Progressively reveal supporting information in place.
+summary: A column of headed rows, such as questions in an FAQ, whose content opens in place one at a time or together.
 ---
 
 <Demo name="Default" />
@@ -415,6 +415,17 @@ arrow keys.
 | Answer settles | Moves 6 px into place out of a 2 px blur | Immediate | Immediate |
 | Chevron turns | Turns 180 degrees on a snappy spring | Immediate | Immediate |
 | Hover and focus | Question and chevron colors crossfade | Immediate | Immediate |
+
+## Responsive behavior
+
+- `Accordion` does not change at a width. Its rows take the width of the panel, and the question and answer text wraps
+  (`TextWrapping` is `Wrap`).
+- `Size` sets the row height: `Medium` rows are at least 50 px tall and `Large` rows at least 76 px. In `Large`, answers
+  stop at about 595 px (`AnswerMaxWidthLG`) and sit on the left, so a wide panel does not stretch them.
+- In a narrow side panel use `Medium`: a `Large` list there pushes the answers into a long column. The size also applies
+  to rows added later.
+- Touch: each question is a single button at least 50 px tall. Hover only changes the question and chevron colors,
+  nothing changes size, and the focus ring shows for keyboard focus only.
 
 ## Related
 

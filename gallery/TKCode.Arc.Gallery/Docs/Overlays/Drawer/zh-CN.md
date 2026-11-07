@@ -1,7 +1,7 @@
 ---
 title: 抽屉
-summary: 用于专注工作的临时侧边面板。
-source-hash: b42421ed7675
+summary: 从窗口边缘滑入的模态面板，用于围绕当前视图的专注工作，例如筛选或查看一条记录。
+source-hash: 3193854a7a8c
 ---
 
 <Demo name="Sides" />
@@ -269,6 +269,14 @@ public partial class ReceivablesViewModel : ObservableObject
 | 通过快速滑动关闭 | 保留松手速度的弹簧 | 短暂淡入 | 立即完成 |
 | 页头拖动 | 朝边缘跟随指针；反方向受阻 | 禁用拖动 | 禁用拖动 |
 | 标题或描述变化 | 新文案带着柔和模糊升起 | 瞬间淡入 | 立即完成 |
+
+## 响应式
+
+- `Drawer` 在 `NarrowBreakpoint`（默认 640 px）以下改变形态：面板进入 `:narrow` 状态，几乎占满整个宽度，圆角与分区内边距收紧。宽度在此以上时，它仍是同一个面板。
+- 面板依据它打开所在的模态层宽度切换，而不是依据其后页面的宽度。
+- 内容区垂直滚动，标题保持在原位。内容区不横向滚动（`HorizontalScrollBarVisibility` 为 `Disabled`），因此宽表格需要在抽屉内改用更窄的布局。
+- 窄窗口中的短面板使用 `Side="Bottom"`。需要停在几个高度上的面板应使用 `BottomSheet`。
+- 任何功能都不依赖悬停。触屏上，点按关闭按钮或把标题向边缘拖动即可关闭。
 
 ## 相关组件
 

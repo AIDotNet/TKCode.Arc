@@ -1,7 +1,7 @@
 ---
 title: 麵包屑
 summary: 顯示頁面在階層結構中的位置。
-source-hash: b4c233743e1b
+source-hash: 69c2a802ef41
 ---
 
 <Demo name="Default" />
@@ -265,6 +265,13 @@ breadcrumb.ItemClick += (_, e) => viewModel.NavigateTo(e.Index);
 | 移除麵包屑 | 向左移動 4 px，在 120 ms 內淡出並模糊消失 | 立即移除 | 立即移除 |
 | 變化之後的麵包屑 | 以平滑彈簧滑至新位置 | 跳至新位置 | 跳至新位置 |
 | 懸停、焦點、目前 | 標籤顏色漸變 | 立即完成 | 立即完成 |
+
+## 響應式
+
+- `Breadcrumb` 沒有斷點。路徑比可用空間寬時，麵包屑會換到新的一行（`CrumbGap` 為各項之間 6 px，`LineGap` 為行距 2 px）。
+- 長路徑：`MaxVisibleItems` 預設為 0，因此不會摺疊。設為 3 或更大，即可保留根項與最後幾項，並把中間部分收進以 `OverflowLabel` 命名的溢出按鈕。
+- 溢出選單是錨定在該按鈕上的 `ArcPopup`，最小寬度為 `MenuMinWidth`（192 px），選單項目的最小高度為 `MenuItemMinHeight`（36 px）。
+- 每個麵包屑的標籤上下各有 4 px 的內距（`CrumbPadding`），因此它們不是 44 px 的觸控目標。在觸控螢幕上請保持路徑簡短，並摺疊過長的路徑。
 
 ## 相關元件
 

@@ -177,6 +177,21 @@ status line.
 - The chart draws frames only while something moves. Reduced motion places the view, the prices and the panels at once,
   drops the momentum and the pulse, and shows the flash as a short still tint. Off applies every change at once.
 
+## Responsive behavior
+
+- `MarketTerminal` reads its own width, not the window's. From 1080 px (`:wide`) the watchlist and the ticket sit in a
+  `SideColumnWidth` column (340 px) beside the chart; from 720 px (`:medium`) they sit side by side under it; below that
+  (`:narrow`) every card stacks.
+- Under 640 px (`:compact`) the chart is `CompactChartHeight` high (340 px, against 420 px otherwise), the stats take a
+  row of four equal columns, the range switch takes the full width, and the toolbar buttons grow to `CompactToolHeight`
+  (44 px) for touch. The readout wraps onto a second line when it does not fit.
+- The chart thins its candles on narrow widths so they stay at least MinCandleSpacing (5 px) apart. Touch users pinch
+  to zoom and drag to pan; the zoom buttons in the toolbar do the same without a gesture.
+- The crosshair and the candle readout follow the pointer, but nothing needs hover: the range switch, the average
+  toggles and the zoom buttons all work by tap.
+- Give the block the full width of its row. A panel narrower than 720 px gets the stacked order, so widen it past 1080
+  px to keep the watchlist and the ticket beside the chart.
+
 ## Related
 
 - `Budget variance`, the other Finance block.

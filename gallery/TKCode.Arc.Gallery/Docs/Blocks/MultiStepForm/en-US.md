@@ -208,6 +208,17 @@ number of steps; only the `{0}` part of the count rolls when the step changes.
 - Reduced motion and Off change steps, heights, labels, markers and the success block at once and do not scale presses;
   the focus and the announcements are the same.
 
+## Responsive behavior
+
+- `MultiStepForm` changes at its own width, not the window's. The card is as wide as its container up to `CardWidth`
+  (540 px) and stays centered beyond that. At 388 px or less (`:narrow`) the step count moves above the progress list,
+  the body padding tightens to 16 px, and the step area is at least `NarrowViewportMinHeight` (240 px) tall.
+- The progress list scrolls sideways when the steps do not fit, with its scroll bar hidden, and keeps the current step
+  in view. Back and the submit button stay side by side at the bottom of the card at every width.
+- The buttons are 36 px tall (`ButtonHeight`). Hover only tints them, so nothing depends on it on a touch screen.
+- Give the form the full phone width (`HorizontalAlignment="Stretch"`). The narrow layout applies on its own. Keep a
+  flow to fewer than five steps; five or more deserve a page layout of their own.
+
 ## Related
 
 - `Stepper` for a progress indicator on its own.

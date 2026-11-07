@@ -243,6 +243,21 @@ When a pane closes while it has focus, focus moves to the tab of the pane that t
 - Panes moved by a command change place at once; nothing loops while the layout is at rest.
 - Reduced motion: the selected background, the tabs and the preview jump instead of gliding; the compass and the floating card only fade, and an auto-hidden pane fades in and out in 120ms instead of sliding.
 
+## Responsive behavior
+
+- `DockLayout` does not change at a width: it has no breakpoint and no compact layout. Its splits share the width they
+  are given. Each pane resists below its `MinSize` (120 px by default), and when the layout is narrower than all the
+  minimums together they scale down and the panes get narrow.
+- It measures its own width, not the window's, so a layout in a phone preview or a narrow side panel is squeezed the
+  same way as on a phone.
+- A floating window is at least 320 px wide and 240 px high, and an auto-hidden pane slides out over the content at most
+  70% of the layout's size.
+- When the tabs do not fit, the strip scrolls with the wheel and a chevron lists every tab. A document tab's close
+  button shows on hover and on the selected tab only, and the tab menu opens with a right click or Shift+F10, so do not
+  rely on closing an unselected tab by touch.
+- On a phone, show one view at a time with `Tabs`, which the docs recommend for switching between views at one level,
+  instead of a split layout.
+
 ## Related
 
 - `ResizablePanels`: a fixed row or column of resizable panes.

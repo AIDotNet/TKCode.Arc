@@ -60,6 +60,19 @@ Rows are buttons, at least 56 px high, so they are easy to hit and reachable wit
 
 The panel rises and leaves by the same code-driven motion value as `MobileSheet`: a drag writes the position on every move, a release hands the finger's speed to a spring (0.4 s smooth to open, 0.3 s to close), and the scrim follows the position each frame; a transition declared in the theme cannot follow a finger. Rows are rows, not buttons on a surface, so they do not scale: a finger on one shades it with a short fade of the background. With reduced motion the panel jumps and the shade changes at once.
 
+## Responsive behavior
+
+- `ActionSheet` has no breakpoint. It is a bottom sheet at every width, and its two cards span the page's width, inset 8
+  px from each side.
+- Each row is 56 px high (`RowHeight`), tall enough to tap. The Cancel row sits in its own card under the actions, and
+  an empty `CancelText` hides it.
+- A long title stays on one line and ends with an ellipsis (`CharacterEllipsis`), while the message wraps. The sheet
+  grows with its content up to 90% of the page by default; beyond that the action list scrolls vertically and never
+  sideways.
+- It is placed in `Page.Overlay`, so it covers the page's header and footer and stays inside the page. Nothing depends
+  on hover: a pressed row shades with `SurfaceMuted`, and a tap chooses the row. Keep the list to the actions that
+  matter, since a long list scrolls.
+
 ## Related
 
 - `MobileSheet`: the panel it is built on, for content that is not a list of actions.

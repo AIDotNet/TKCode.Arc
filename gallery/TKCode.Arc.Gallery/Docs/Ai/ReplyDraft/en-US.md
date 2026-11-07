@@ -228,6 +228,18 @@ model's sparkle.
 | Status | Crossfades (100ms out, 160ms in); working words shimmer | Crossfade without shimmer | At once |
 | Chip or option press | Scales to 0.97 | No scale | No scale |
 
+## Responsive behavior
+
+- `ReplyDraft` fills the width it is given, up to `MaxWidth` (600 px), and measures its own width, not the window's.
+- Below `CompactWidth` (480 px) it sets `:compact`: the padding drops to `CompactCardPadding` and the body loses its
+  avatar indent. Below `NarrowWidth` (460 px) it sets `:narrow`: the tone and length controls stack, so `Length` moves
+  to its own row.
+- Quick replies wrap onto more lines, and nothing scrolls sideways. Long names and addresses end with an ellipsis
+  (`CharacterEllipsis`).
+- After a touch press the options grow to 32 px and the quick replies to 36 px. Each of them is an ordinary button or
+  toggle, so a tap reaches it without hover.
+- On a phone, let `ReplyDraft` stretch in a full-width column rather than setting a fixed `Width`.
+
 ## Related
 
 - `Textarea` for a plain multiline field the person writes in themselves.

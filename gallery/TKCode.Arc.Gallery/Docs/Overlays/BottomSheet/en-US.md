@@ -365,6 +365,17 @@ Scroll steps are 48 px for the arrow keys and 85% of the visible height for the 
 | Dragging | Follows the pointer one to one; rubber band past the tallest detent | Drag disabled | Drag disabled |
 | Scrim | Follows the sheet position | Follows the sheet position | Immediate |
 
+## Responsive behavior
+
+- `BottomSheet` changes at `NarrowBreakpoint` (640 px by default). Below it the surface gets the `:narrow` pseudo-class,
+  and the header and body padding drops from 20 px to 16 px (`NarrowHeaderPadding`, `NarrowBodyPadding`).
+- The panel is as wide as the window, up to `PanelMaxWidth` (576 px). On a phone it spans the screen, and on a larger
+  window it stops at 576 px.
+- Its `Detents` are fractions of the window height, 0.45 and 0.92 by default. The content scrolls only at the tallest
+  detent, so a sheet with a form should open tall: set `InitialDetentIndex` to 1.
+- The grabber has a 56 by 20 px hit area (`GrabberHitWidth`, `GrabberHitHeight`) and answers the arrow keys, so nothing
+  depends on hover. Hover only changes the bar's color.
+
 ## Related
 
 - `Dialog` for a decision that must be answered before anything else.

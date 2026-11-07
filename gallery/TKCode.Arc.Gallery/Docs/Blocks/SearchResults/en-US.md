@@ -699,6 +699,19 @@ entries to `Recent` before the page shows.
 | Filters sheet opens | Slides up | Fade | Immediate |
 | Count line, empty state, loading rows | Crossfade | Fade | Immediate |
 
+## Responsive behavior
+
+- `SearchResults` changes form at its own width: below `NarrowWidth` (560 px by default) it is `:narrow`. It becomes one
+  column, the filters column is hidden behind a Filters button, and the sort control moves under the result count.
+- Details of a result open as a bottom sheet across the full width (IsSheet) when narrow. Otherwise they are centered,
+  at most 560 px wide with a 16 px margin. Both set `MaxHeight` from the viewport (`ArcViewport`, or 800 × 600 when
+  there is none), so the detail stays on screen.
+- Text that does not fit ends in an ellipsis. Snippets wrap to `SnippetMaxLines` lines and then end with `WordEllipsis`.
+- The search field is 50 px tall (`FieldMinHeight`), but filter rows and chips are 34 px (`FilterRowHeight`,
+  `ChipHeight`), below the 44 px touch size. Leave them room on a touch screen.
+- Let it stretch to the full screen width instead of setting `Width`. Below 560 px it already uses one column, and a
+  narrower slot gets the same layout.
+
 ## Related
 
 - `CommandPalette` for actions and navigation from anywhere in the app.

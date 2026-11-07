@@ -253,6 +253,18 @@ someone's hands. It also waits while the card is off screen.
 
 The step rows keep their height and the status slot its width in every state, so nothing shifts while a run plays.
 
+## Responsive behavior
+
+- `AiWorkflow` measures its own width, not the window's. Below 480 px (`:narrow`) each step row grows from 32 px to 44
+  px, its detail moves under the title, and the status slot narrows from 72 px to 64 px.
+- The card fills its container up to `CardMaxWidth` (640 px). Below 480 px the header actions drop onto a row under the
+  title, and the padding tightens.
+- Titles and detail lines trim with an ellipsis. Email and message previews wrap instead.
+- The add step menu lists up to `MaxListHeight` (288 px) of entries and scrolls vertically past that.
+- Remove buttons are 24 px. They show on hover with a mouse and always on touch screens, so no action depends on hover.
+  On a phone, a flow people only review can set `IsEditable="False"`, which hides Add step and the remove buttons; Test
+  run still works.
+
 ## Related
 
 - `AgentPlan` for the plan an agent writes before it acts.

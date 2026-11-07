@@ -255,6 +255,20 @@ The enums:
 | Texts | Crossfade with a 2px rise | Fade | Replaced |
 | Panels and footers | Fade with a 4px rise | Fade | Replaced |
 
+## Responsive behavior
+
+- `UpgradePrompt` changes at its own width, not the window's. It is capped at `CardMaxWidth` (440 px) and fills narrower
+  containers. Below 420 px (`NarrowWidth`, `:narrow`) the padding drops from 24 px to `NarrowCardPadding` (20 px).
+- The price row keeps the billing toggle at its right edge. When the price and the toggle no longer fit side by side,
+  the toggle moves under the price.
+- Text wraps when it runs to more than one line, and single-line labels such as feature and limit names end with an
+  ellipsis (`CharacterEllipsis`).
+- The footer buttons are Arc `Button` controls at their default size and fill their share of the row. Nothing in the
+  prompt is hover-only.
+- Let it stretch (`HorizontalAlignment="Stretch"`) rather than setting a fixed `Width`, so it uses the column up to 440
+  px. In a column under 420 px it trims its padding, and the price and toggle stack when the column is too narrow for
+  both.
+
 ## Related
 
 - `BillingToggle` and `BillingPrice` for a billing period switch on a pricing page.

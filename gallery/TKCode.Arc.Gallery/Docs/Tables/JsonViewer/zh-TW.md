@@ -1,7 +1,7 @@
 ---
 title: JSON 檢視器
 summary: 可摺疊的 JSON 樹狀結構，支援搜尋、長陣列分頁，以及複製值或路徑。
-source-hash: 99a6f9248630
+source-hash: 09e3233d8851
 ---
 
 <Demo name="WebhookPayload" />
@@ -347,6 +347,13 @@ viewer.Copied += (_, e) => vm.Status = $"已複製{(e.Kind == JsonViewerCopyKind
 | 目前列移動 | 反白在列之間滑動 | 反白直接移動 | 立即完成 |
 | 樹狀區域捲動到目前列 | 以彈簧方式捲動到列穩定後的位置 | 直接跳轉 | 立即完成 |
 | 樹狀區域中可見列超過 400 列 | 列立即變化 | 列立即變化 | 立即完成 |
+
+## 響應式
+
+- `JsonViewer` 自身寬度不大於 420 px（`CompactWidth`）時切換為緊湊版面：設定 `:compact` 虛擬類別，並隱藏路徑列中的類型標籤（PART_PathType）。
+- 樹狀區域在 `MaxTreeHeight`（預設 420 px）內縱向捲動，每列高 30 px（`RowSlotHeight`）。它不水平捲動，過長的鍵或值會以省略號縮短。
+- 列操作（複製值、複製路徑）在懸停或目前列上出現，並且不在 Tab 順序中。在觸控螢幕上請使用路徑列的複製路徑按鈕（需開啟 `IsPathVisible` 與 `IsCopyable`），或用 `FocusPath` 移動到目標列。
+- 讓檢視器佔滿整列。緊湊版面依據其自身寬度，因此在窄側欄中同樣生效，無需額外程式碼。
 
 ## 相關元件
 

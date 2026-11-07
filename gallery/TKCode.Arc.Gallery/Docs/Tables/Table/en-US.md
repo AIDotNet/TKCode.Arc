@@ -479,6 +479,15 @@ bind `SelectedItems` to the matching items. `ClearSelection()` clears the select
 | Sort changes | Rows slide to their new places on a smooth spring; the sort arrow flips | Rows reorder at once | Immediate |
 | Selection count changes | The count rolls to the new value | The count fades | Immediate |
 
+## Responsive behavior
+
+- Below 620 px of its own width the table switches to a compact layout: each row shows the first column as its title,
+  a numeric column on the right, and the other columns as a smaller details line; rows grow to 64 px.
+- In the compact layout the header becomes a row of sort pills that scrolls sideways.
+- The table measures its own width, not the window's, so a table in a narrow panel folds the same way as on a phone.
+- Mark the column that names the record first, and numeric columns with `IsNumeric="True"`, so the compact layout picks
+  the right title and value.
+
 ## Related
 
 - `TreeView` for records that nest, such as folders with children.

@@ -202,6 +202,18 @@ Every word comes from `Labels` (`AiAnswerLabels`): replace the instance to trans
 | Version switch | Crossfade; the height springs | 120 ms crossfade | Immediate |
 | Menus | Grow from the anchor | 120 ms fade | Immediate |
 
+## Responsive behavior
+
+- `AiAnswer` has no breakpoint that changes its form. It measures its own width: the side padding grows with the block
+  between `SideMin` (16 px) and `SideMax`, and the column is never wider than `ColumnMaxWidth` (768 px), so it stays
+  centred on a wide window.
+- At 576 px and below the sources row becomes one row that you scroll sideways instead of two columns of cards. The
+  answer text wraps; the question in the top bar is cut with an ellipsis.
+- Citation previews open on hover, so do not rely on them alone on a touch screen. A tap on a source card opens its
+  `Url`, unless you handle `SourceInvoked`.
+- Give the block a `Height` and let it stretch across the phone width. Do not set `Width`: the column already fits the
+  space, and `ColumnMaxWidth` caps it on large windows.
+
 ## Related
 
 - `AiChat` for a conversation.

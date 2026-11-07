@@ -366,6 +366,21 @@ a pointer.
 
 Reduced motion replaces the movement with an in-place change and turns transitions off. Off jumps to the final state.
 
+## Responsive behavior
+
+- `CommentThread` changes at a width. Below 420 px of its own width (a fixed value in the control, not a theme token) it
+  sets `:narrow` on the thread and its items: replies use a 12 px indent (`NarrowReplyIndent`), the composer hides its
+  avatar, and the reply banner takes `NarrowReplyingPadding`.
+- The thread measures its own width, not the window's, so a thread in a narrow side panel folds the same way as on a
+  phone.
+- Comment text wraps. Names and the thread title end in an ellipsis (`CharacterEllipsis`). The footer
+  (CommentThreadFooter) is a `WrapPanel`, so reactions and actions move to a new line when they run out of room.
+- Touch targets are 28 px for actions (`ActionHeight`) and reactions (`EmojiButtonSize`), and the send button is 38 px
+  (`SendHeight`). Hover only tints buttons (`:pointerover`) and focus adds a ring (`:focus-visible`); no action appears
+  only on hover.
+- Put the thread on its own page or sheet at phone width so the composer and reply rows keep the full width. Below 420
+  px a thread in a side panel switches to the narrow layout by itself, so no separate layout is needed there.
+
 ## Related
 
 - `ChatThread` for a live conversation between people who are online together.

@@ -356,6 +356,19 @@ arrive. The selection is matched by value, so keep the identifiers stable across
 | An option is picked | The label flies into the trigger and the width settles | A short fade | Immediate |
 | Search takes over the trigger | The search field fades in with a subtle blur | A short fade | Immediate |
 
+## Responsive behavior
+
+- `MorphSelect` does not change at a breakpoint. The trigger is as wide as its label plus 50 px, up to `TriggerMaxWidth`
+  (320 px). The panel is `PanelWidth` (272 px) wide, never narrower than the trigger, and never wider than the viewport
+  less 32 px.
+- It reads the `ArcViewport`: the list is at most `MaxListHeight` (296 px) tall and shrinks to the room under the
+  trigger inside the viewport. If even the shortest list does not fit, the panel slides up instead of flipping to the
+  other side.
+- The trigger is `ControlSizeMD` (44 px) tall, and options are 36 px rows. The list scrolls past `MaxListHeight`.
+- Hover only highlights an option, and a click or tap picks it, so touch needs no hover.
+- Let the trigger size to its label. When it sits at the right edge of a toolbar, set `PanelAlignment` to `End` so the
+  panel opens toward the open space.
+
 ## Related
 
 - `Select` for a plain labelled choice field with a fixed list.

@@ -1,7 +1,7 @@
 ---
 title: 時間軸
 summary: 依日期分組、最新在前，追蹤事件的發生經過。
-source-hash: 689d73e3bb87
+source-hash: 322a956703ef
 ---
 
 <Demo name="LiveStream" />
@@ -306,6 +306,14 @@ timeline.Expand("t2");
 | 新事件到達 | 從頂部滑入，下方的列下移 | 短暫淡入 | 立即完成 |
 | 詳細資料展開或收合 | 詳細資料以彈簧方式展開 | 高度立即變化 | 立即完成 |
 | 捲動時的日期標籤 | 固定在動態串流頂部 | 固定在頂部 | 固定在頂部 |
+
+## 響應式
+
+- `Timeline` 隨寬度變化。寬度低於 `NarrowWidth`（主題權杖，預設 420 px）時，它與每一列都會設定 `:narrow`：觸發區兩側內距減為 8 px（`TriggerPaddingNarrow`），時間更靠近標題（`TimeMarginNarrow`），詳細內容的內距收緊（`DetailPaddingNarrow`）。
+- 時間軸依自身寬度而不是視窗寬度判斷，所以放在側邊面板中與在手機上的收縮方式相同。
+- 標題與詳細內容換行（`TextWrapping`）。時間的最小寬度為 `TimeMinWidth`（44 px）。水平捲軸已停用，因此各列不會橫向捲動。
+- 懸停只會改變可互動列的顏色（`:pointerover`），聚焦時繪製焦點環（`:focus-visible`）。輕觸與點擊一樣會展開或收合可展開的列；箭頭只出現在可展開的列上（`:expandable`）。
+- 讓時間軸延展至頁面的全寬。低於 420 px 時緊湊內距會自動生效，因此不需要為手機另建版面。
 
 ## 相關元件
 

@@ -1,7 +1,7 @@
 ---
 title: 移动端列表
 summary: 分组的行，用于设置和菜单：图标、标题、副标题、行尾的值或控件，以及箭头。
-source-hash: 4ce9e55c4288
+source-hash: a8977ebd8868
 ---
 
 <Demo name="Basic" />
@@ -58,6 +58,13 @@ source-hash: 4ce9e55c4288
 ## 动效
 
 手指按在行上时，背景按快速曲线变暗；减弱动效时，立即变暗。
+
+## 响应式
+
+- `ListGroup` 没有断点。它是一张占满宽度的卡片，周围有 `GroupPadding`（16 x 8 px），`Header` 与 `Footer` 换行（`TextWrapping="Wrap"`），而不会被截断。
+- 每个 `ListItem` 行至少 48 px 高，副标题以省略号（`CharacterEllipsis`）截成一行。
+- 行末的内容占用标题之外剩下的空间，所以过长的行末值会把标题挤短。请保持简短。
+- 手指按下时以淡色底面标示该行，没有任何行依赖悬停。点按该行即可对它执行操作。
 
 ## 相关组件
 

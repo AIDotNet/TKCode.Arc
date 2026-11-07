@@ -436,6 +436,17 @@ or `Space` on the pinned level again removes the pin. `Escape` clears a preview 
 Keep the sweep for changes of range, such as a year switch. The wave runs once on first view, so a page that reloads
 the same year gains nothing from it.
 
+## Responsive behavior
+
+- The squares are sized from the width the control gets, between `CellMin` (9 px) and `CellMax` (15 px). At phone width
+  they sit at the minimum, and the grid scrolls sideways from the newest week.
+- The summary and `Actions` share one row when they fit. Otherwise the actions move to a row under the summary. The
+  legend caption shows only the count at 440 px or less.
+- Give the heatmap the full width of its panel, and keep it out of narrow columns: below that width the grid scrolls and
+  the legend shows only the count.
+- On a touch screen a single day is a small target at 9 px. Put a line of text beside the grid for the selected day,
+  filled from `DateSelected`.
+
 ## Related
 
 - `BarChart` for exact comparison between periods.

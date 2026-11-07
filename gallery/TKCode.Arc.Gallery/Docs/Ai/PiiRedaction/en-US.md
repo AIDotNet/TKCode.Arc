@@ -243,6 +243,15 @@ person's choice.
 | Reply | Streams in chunks, then crossfades | Shows whole, then crossfades | At once |
 | Autoplay | Loops while on screen | Off | Off |
 
+## Responsive behavior
+
+- `PiiRedaction` follows its own width and fills its container up to 640 px. Below 520 px `:narrow` puts the four type
+  cells in two rows of two; below 400 px `:compact` tightens the card padding and gaps and hides the Simulated tag,
+  which the status line still announces.
+- A long model name truncates with an ellipsis in the flow instead of widening the layout. The message and the reply
+  swap in one cell and the reply reserves its height, so the text does not jump at 360 px or 390 px.
+- On a phone let the card take a full-width row. The layout is set for widths from 360 px, so no `Width` is needed.
+
 ## Related
 
 - `ToolCall` for an arbitrary tool step in a transcript.

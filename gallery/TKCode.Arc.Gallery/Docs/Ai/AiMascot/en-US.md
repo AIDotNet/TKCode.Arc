@@ -166,6 +166,16 @@ The enums:
 - The clock runs only while the mascot is shown; off screen it stops and resumes on the same frame. Under reduced
   motion each state shows a still pose and nothing loops.
 
+## Responsive behavior
+
+- `AiMascot` does not reflow with the width. It is a square of `Size` px (96 by default, from 24 px inline to 160 px in
+  an empty state) and keeps that size in any container.
+- Below `CompactBelow` (56 px by default) it draws a compact frame and sets `:compact`, so a small mascot keeps every
+  status.
+- It pauses by itself when it is off screen, and reduced motion keeps a still pose for each state.
+- Hover only moves the eyes, and nothing is hidden behind hover.
+- Set `Size` to 56 px or more when the full drawing matters on a phone, and keep the 24 px inline size only beside text.
+
 ## Related
 
 - `AgentStatus` for the steps, tools and elapsed time of a running agent.

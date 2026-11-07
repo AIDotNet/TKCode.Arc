@@ -414,6 +414,21 @@ apply.
 The swipe itself is the only motion the person controls, so keep it direct and responsive on every motion level. Use
 the spring on release to show where the row will stop, and skip decorative movement on the list around it.
 
+## Responsive behavior
+
+- `SwipeActions` has no breakpoint, and its rows keep the same form at every width. Each `SwipeActionsRow` takes the
+  list's width and measures its own width, not the window's.
+- Each revealed action is 76 px wide (`ActionExtent`), and the row body is at least 64 px tall (`MinRowHeight`). A row
+  grows when its content is taller.
+- A full swipe commits once the drag passes the larger of the open width plus 48 px and 56% of the row's width
+  (FullSwipeRatio). On a wide row a full swipe needs a much longer drag than on a phone.
+- The More actions button is 32 px square, below the 44 px touch size, so leave room around it. It appears on every row
+  that has actions, so the same actions are reachable without a swipe, and its menu is at least 176 px wide
+  (`MenuMinWidth`), opening 6 px below the button.
+- Nothing depends on hover: hover and press only change the background of the More actions button. In a narrow list, let
+  it stretch to the screen width, keep two actions on each side and move the rest into the More actions menu, with any
+  `Danger` action outermost.
+
 ## Related
 
 - `ContextMenu` and `DropdownMenu` for row actions on desktop.

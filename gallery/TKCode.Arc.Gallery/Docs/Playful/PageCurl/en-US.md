@@ -135,6 +135,17 @@ horizontal drag turns a page.
 | Turning | Curls and follows the pointer | Swaps spreads | Swaps spreads |
 | Tease and hover lift | Run | Skipped | Skipped |
 
+## Responsive behavior
+
+- `PageCurl` has no breakpoint. Its width holds two pages side by side, and each page keeps its `PageAspect` (0.72 by
+  default, width to height), so a narrow book has smaller pages in the same layout.
+- Pages render into fixed slots, so keep each page simple. Wrap a page of a fixed design size in a `Viewbox` to scale it
+  with the book.
+- On touch, a tap on a page turns it and a horizontal drag turns it too, while a vertical swipe scrolls the page behind
+  the book.
+- Keep pages free of buttons and scrolling content, since a tap or drag on a page turns it. Use the controls under the
+  book to turn pages.
+
 ## Related
 
 - `Carousel` browses a row of slides by dragging or arrowing through them.

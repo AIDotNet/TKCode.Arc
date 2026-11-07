@@ -82,6 +82,17 @@ Escape closes a dismissible dialog. Opening moves the focus to the dialog. Give 
 
 The scrim fades in while the panel scales up from 0.94 and fades in on a snappy spring, one value driving both. Closing is faster, 0.16 s on an exit curve with no overshoot, and a dialog closed while it is still appearing reverses from where it is. It is driven from code because the dialog must keep catching touches until its exit has landed, which a theme transition cannot signal. With reduced motion the panel only fades, without scaling, in 0.12 s; with motion off it appears and disappears at once.
 
+## Responsive behavior
+
+- `Dialog` has no breakpoint. Its panel is at most `PanelMaxWidth` (320 px) wide, centered in the page and kept 24 px
+  (`PanelMargin`) from its edges, so on a narrow phone the panel is the page's width less those margins.
+- Two actions share a row only when each fits its half of the panel. Three actions, or one wider than its half, stack at
+  full width, one above the other (DialogActionsPanel).
+- It covers the `Page.Overlay` it is placed in, and its title and message wrap (`TextWrapping="Wrap"`) instead of being
+  cut off.
+- Tapping the scrim or pressing Escape closes it only when `IsDismissible` is on, which is off by default. Keep action
+  labels short so that two of them share a row.
+
 ## Related
 
 - `MobilePage`: the `Overlay` slot holds the dialog.

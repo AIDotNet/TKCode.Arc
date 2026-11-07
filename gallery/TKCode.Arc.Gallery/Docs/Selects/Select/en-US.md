@@ -1,6 +1,6 @@
 ---
 title: Select
-summary: A compact choice field with a keyboard friendly menu.
+summary: The dropdown field for one value from a short, fixed list, with a label and a keyboard friendly menu.
 ---
 
 <Demo name="Field" />
@@ -407,6 +407,17 @@ Page and typeahead keys.
 | The menu closes | Immediate | Fades out | Immediate |
 | The chevron turns | Rotates with a spring | Immediate | Immediate |
 | Hover, open, focus | The border and background colors crossfade | Immediate | Immediate |
+
+## Responsive behavior
+
+- The trigger takes the width it is given (at least 180 px). Let it stretch in a narrow form instead of setting a fixed
+  `Width`.
+- The menu opens as large as the trigger and stays an anchored menu on every screen size; it does not turn into a
+  bottom sheet.
+- The menu stays inside the viewport: it flips above the trigger when there is no room below and slides back from the
+  edges. Inside an `ArcViewportHost` (a phone preview) the host is the viewport.
+- The option list scrolls past `MaxDropDownHeight` (320 px by default); lower it for short screens.
+- Options are 36 px rows, tall enough to tap; a tap selects the option and closes the menu.
 
 ## Related
 

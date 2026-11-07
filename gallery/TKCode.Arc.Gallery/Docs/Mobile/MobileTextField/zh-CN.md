@@ -1,7 +1,7 @@
 ---
 title: 移动端文本框
 summary: 44 px 高的填充文本框，可带图标和清除按钮，获得焦点时边框变为强调色。
-source-hash: 1cfacade8182
+source-hash: b7378e7ee1ad
 ---
 
 <Demo name="Basic" />
@@ -53,6 +53,13 @@ source-hash: 1cfacade8182
 ## 动效
 
 文本框获得或失去焦点时，边框按快速曲线变色。清除按钮从 0.6 缩放加淡入弹出（P26，通过 `PresenceHost`），离开比出现更快。减弱动效时，边框立即变色，清除按钮也立即出现和消失。
+
+## 响应式
+
+- `TextField` 没有断点。它占满所给的宽度，高度至少 44 px（`FieldHeight`），因此让它拉伸，不要设置固定的 `Width`。
+- 文字不换行：`TextWrapping` 为 `NoWrap`，横向滚动条隐藏，过长的值会在输入框内横向滚动。
+- 清除按钮（`ShowClearButton`）仅在输入框获得焦点且有文字时出现，它是 44 px 的触控目标。
+- 为每个输入框在旁边放置可见的名称，因为 `PlaceholderText` 在用户开始输入后就会消失。
 
 ## 相关组件
 

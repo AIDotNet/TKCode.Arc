@@ -231,6 +231,15 @@ Keys.Labels = new ApiKeyLabels
 - Reduced motion places sizes and positions at once and keeps only short fades; the hold still fills over 1.2 s. Off
   applies every change at once.
 
+## Responsive behavior
+
+- The block measures its own width. Below 700 px (`:narrow`) each row drops the created date and keeps the last-used
+  date, aligned to the right; below 540 px (`:compact`) the header and the rows tighten their padding to 16 px.
+- A row is one button: a tap opens its details (scopes, dates and the revoke action) under it, so nothing depends on
+  hover.
+- The key mask and the name stay on one line each; give the block the full width of a phone rather than a side column.
+- The create form opens in place inside the block, so it follows the same width.
+
 ## Related
 
 - `HoldToConfirm`, `CopyButton`, `Input`, `SegmentedControl`, `Checkbox`, `Badge` and `Avatar`, the controls the block

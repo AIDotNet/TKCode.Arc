@@ -375,6 +375,17 @@ The plot takes focus with `Tab`. When focus arrives from the keyboard, the readi
 | Isolating a layer | The other layers fade on a short standard tween | The same short tween | Immediate |
 | Crosshair and tooltip | Slide to the new week on springs | Jump to the new week without a spring | Immediate |
 
+## Responsive behavior
+
+- `Streamgraph` has no breakpoint. Its plot is as wide as its container, and `PlotHeight` (260 by default) sets its
+  height.
+- It reads its own width (`Bounds.Width`), not the window's.
+- Direct labels appear only on layers thick enough to hold them (`ShowDirectLabels`), so on a narrow or busy plot the
+  legend is the reliable key.
+- With touch, the reading stays on the touched point until the contact ends. Hovering a layer isolates it only with a
+  mouse, and the legend entries are toggles that show or hide a layer. On a phone, fold the smallest layers into "Other"
+  as the page advises, so the legend has fewer entries.
+
 ## Related
 
 - `LineChart` when the exact value of each series matters, and `BarChart` for a few discrete periods.

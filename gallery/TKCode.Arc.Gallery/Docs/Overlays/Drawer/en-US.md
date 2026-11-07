@@ -1,6 +1,6 @@
 ---
 title: Drawer
-summary: A temporary side surface for focused work.
+summary: A modal panel that slides in from an edge of the window for focused work on the current view, such as filters or one record.
 ---
 
 <Demo name="Sides" />
@@ -335,6 +335,18 @@ Escape are the keyboard paths out.
 | Closing by flick | Spring that keeps the release velocity | Short fade | Immediate |
 | Header drag | Follows the pointer toward the edge; resists the other way | Drag disabled | Drag disabled |
 | Title or description changes | The new copy rises in with a soft blur | Instant fade | Immediate |
+
+## Responsive behavior
+
+- `Drawer` changes form below `NarrowBreakpoint` (640 px by default): the panel becomes `:narrow`, takes almost the full
+  width, and its corners and section padding tighten. Above that width it is the same panel.
+- The panel switches on the width of the modal layer it opens in, not on the width of the page behind it.
+- The body scrolls vertically while the header stays in place. It does not scroll sideways
+  (`HorizontalScrollBarVisibility` is `Disabled`), so a wide table needs a narrower layout inside the drawer.
+- For a short panel on a narrow window, use `Side="Bottom"`. A panel that should rest at several heights is a
+  `BottomSheet`.
+- Nothing depends on hover. On touch, the close button closes the drawer, and so does a drag of the header toward the
+  edge.
 
 ## Related
 

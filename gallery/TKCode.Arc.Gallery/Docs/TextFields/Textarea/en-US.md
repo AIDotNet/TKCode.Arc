@@ -341,6 +341,17 @@ choose a fixed layout that works at the minimum height.
 | A number in the count changes | Only the changed digits roll, up when it grows, down when it shrinks | Instant fade | Immediate |
 | Hover, focus, invalid | The border color crossfades | The border color crossfades | Immediate |
 
+## Responsive behavior
+
+- `Textarea` does not change at a breakpoint. It fills its column, and its text wraps to the column width (`Wrap`).
+- Its frame is never shorter than `FrameMinHeight` (110 px by default). It does not grow with its text: longer text
+  scrolls vertically inside the frame, and horizontal scrolling is off.
+- The corner grip (`IsResizable`) lets a person drag the frame taller, and the height chosen is kept in `FrameHeight`.
+- The grip is a small corner target. On a phone, set `IsResizable` to False and size the field with `FrameMinHeight`
+  instead of relying on the grip.
+- For a short note on a phone, lower `FrameMinHeight`, and give the field the full width of its column rather than a
+  fixed `Width`.
+
 ## Related
 
 - `Input` for a single line of text.

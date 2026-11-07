@@ -78,6 +78,16 @@ Keep the back button in the navbar visible with a name that says where it goes, 
 
 The slide is a code-driven motion value: the swipe writes it on every move, and on release the finger's speed goes into a smooth spring, which a transition declared in the theme cannot do. The dim and the shift of the page below follow the top page's position. With reduced motion the pages change at once.
 
+## Responsive behavior
+
+- `NavigationStack` has no breakpoint. It measures its own width (`Bounds`), not the window's, so it switches the same
+  way in a side panel or a phone preview.
+- The back swipe starts only within `EdgeWidth` (24 px) of the left edge, so a drag from the middle of a list scrolls
+  the list instead of leaving the page.
+- A page that is not on top keeps its state, so a list is still where the person left it after a push and a pop.
+- A swipe is a touch gesture. Also keep a back button bound to `BackCommand` on each page, so a mouse can leave the page
+  without an edge swipe.
+
 ## Related
 
 - `MobileNavbar`: its `BackCommand` binds to the stack's `BackCommand`.

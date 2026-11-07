@@ -1,7 +1,7 @@
 ---
 title: Markdown
 summary: 以 Arc 的风格渲染 Markdown 文档与流式回复，代码块使用 Arc 的语法配色高亮。
-source-hash: 3772d30a3cad
+source-hash: 79985ea6ceb9
 ---
 
 <Demo name="Document" />
@@ -255,6 +255,13 @@ StreamMark 服务决定文档如何解析以及代码块如何表现。控件按
 |---|---|---|---|
 | 流式回复中的新文字 | 在文档末尾淡入，240 ms | 仅以不透明度淡入，160 ms | 立即显示 |
 | 流式回复的节奏 | 应用 | 应用 | 应用 |
+
+## 响应式
+
+- `Markdown` 没有断点。它占满给它的宽度（`HorizontalAlignment` 为 `Stretch`），文字、列表与代码都按该宽度换行。文档随内容增高，自身没有滚动条。
+- 正文为 16 px，行高随字号变化（`LineHeight` 默认为字号的 1.65 倍），因此把 `FontSize` 调小即可让窄消息气泡保持紧凑。
+- 超过 `CollapsedLines`（12 行）的代码块会折叠，一段很长的代码不会把手机屏幕上的其余文字挤出视野。
+- 长文档请放进 `ScrollViewer` 中，由它滚动整篇文档。点按链接会触发 `LinkClicked`，文档内的锚点则自行滚动。
 
 ## 相关组件
 

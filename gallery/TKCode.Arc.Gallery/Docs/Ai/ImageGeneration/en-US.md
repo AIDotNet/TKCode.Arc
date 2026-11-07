@@ -227,6 +227,15 @@ light band, the upscale sweep, the hover zoom and the expand travel go. With mot
 | Footer status | Old line fades out over 100ms, the new one fades in over 160ms and rises 2px | Crossfade | At once |
 | Model chip | The chosen chip springs its name open by its measured width | At once | At once |
 
+## Responsive behavior
+
+- `ImageGeneration` fills its container up to 640 px and reads its own width. Below 420 px the `:narrow` pseudo-class
+  moves the aspect chips to a second row; below 520 px `:stacked` puts the footer status above three equal buttons.
+- The grid keeps the batch's shape and is capped at MaxGridHeight (420 px), so a portrait batch stays compact. Nothing
+  depends on hover: it only zooms a finished picture slightly, and a press or tap picks it.
+- Let the card stretch across the screen. On a phone, shorten the `Models` and `AspectRatios` lists so the chips take
+  one or two rows, and give the card its own row rather than a side column.
+
 ## Related
 
 - `ContextWindow` for how much of a model's window a session uses.

@@ -1,7 +1,7 @@
 ---
 title: 資料表格
 summary: 試算表式的表格：範圍選取、就地編輯、填滿控點、剪貼簿、復原、排序、篩選、分組、總計與匯出。
-source-hash: cc0f46d78e42
+source-hash: f81bf7556a40
 ---
 
 <Demo name="Renewals" />
@@ -570,6 +570,14 @@ public partial class RenewalsViewModel : ObservableObject
 | 工具列批次狀態與狀態訊息 | 模糊並上下切換 | 僅淡入 | 立即完成 |
 | 合計、選取統計與已勾選數量 | 數字滾動 | 依計數規則滾動數字 | 立即完成 |
 | 篩選列與分組箭頭 | 彈簧展開，箭頭旋轉 | 高度直接變化，不透明度淡入 | 立即完成 |
+
+## 響應式
+
+- `DataGrid` 依自身寬度分段變化。低於 640 px 時設定 `:toolbar-compact`（工具按鈕只顯示圖示，搜尋欄寬 150 px）。低於 460 px 時，`:toolbar-minimal` 還會隱藏列數與復原群組；低於 480 px 時狀態列換行（`:status-wrap`）。
+- 表格依自身寬度（`Bounds.Width`）而不是視窗寬度判斷，所以放在側邊面板或對話方塊中與在手機上的切換方式相同。
+- 表格不會摺疊為卡片版面。欄位保持寬度，表體水平捲動（`HorizontalScrollBarVisibility` 為 `Auto`）。欄寬至少 72 px（`MinWidth`），最多 560 px（`ColumnMaxWidth`）。固定欄（`IsPinned`）合計最多佔表格寬度的一半，且不會縮小到 `PinnedColumnMinWidth`（96 px）以下，因此可捲動的欄位仍保持可見。儲存格文字以省略號結尾。
+- 標準 `Density` 下列高為 40 px（`RowHeightStandard`），緊湊時為 32 px（`RowHeightCompact`）。在觸控螢幕上，欄選單按鈕（PART_Menu）在沒有懸停時也保持可見（`:touch`），長按會開啟右鍵選單。
+- 讓表格佔滿螢幕的全寬並水平捲動，只固定能識別紀錄的那一欄。在手機上瀏覽唯讀清單時，`Table` 不需要編輯機制，更適合這樣的空間。
 
 ## 相關元件
 

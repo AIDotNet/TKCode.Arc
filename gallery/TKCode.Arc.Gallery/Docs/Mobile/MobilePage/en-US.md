@@ -101,6 +101,18 @@ The background follows light and dark on the standard curve. With reduced motion
 
 The page follows the keyboard with a `MotionValue` on the bottom inset, because the inset is a layout input that a ControlTheme transition cannot express. It uses the platform's own keyboard duration when the platform reports one, otherwise a smooth spring on the way up and a snappy one on the way down. With reduced motion, or with motion off, the layout jumps to the keyboard. The focused input is scrolled into view when the keyboard arrives and again when it has settled.
 
+## Responsive behavior
+
+- `Page` has no breakpoint and no separate tablet or landscape layout. It fills the space it is given, and its safe area
+  (`SafeArea`) follows the platform when `UsePlatformSafeArea` is on, which is the default. On desktop the safe area is
+  zero unless you set it.
+- The content never scrolls sideways (`HorizontalScrollBarVisibility` is disabled), so it must fit the page's width. It
+  scrolls vertically only when `IsScrollable` is on.
+- With `AvoidKeyboard` on (the default), the content shrinks by the keyboard's height, so the focused field stays
+  visible.
+- Stretch forms to the page's width rather than setting fixed `Width` values, and turn `IsScrollable` on for any screen
+  that can be taller than the phone.
+
 ## Related
 
 - `MobileNavbar`: the page's top bar.

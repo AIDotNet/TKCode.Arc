@@ -429,6 +429,17 @@ they move through the days.
 | The limit editor opens or closes | Height springs | Takes its new height at once | Immediate |
 | The daily spend chart appears or changes | Bars grow in a wave, then morph | Changes at once | Immediate |
 
+## Responsive behavior
+
+- `UsageBilling` changes at one width of its own. Below 600 px the spending limit moves under the spend (`:narrow`), so
+  the spend, the projection and the limit read from top to bottom. The width is fixed at 600 px.
+- It measures its own width, not the window's, so a narrow settings panel gets the same stack as a phone.
+- The limit editor is at most 320 px wide (`EditorMaxWidth`) and opens in height when the limit is switched on, so it
+  never spans a wide row.
+- Labels and totals wrap onto another line instead of being trimmed.
+- Give `UsageBilling` the full width of the page. In a side panel, make the panel wider than 600 px to keep the limit
+  beside the spend.
+
 ## Related
 
 - The other Settings blocks: `SettingsPage`, `SettingsCommand`, `SecuritySettings`, `BillingOverview` and `CancelFlow`.

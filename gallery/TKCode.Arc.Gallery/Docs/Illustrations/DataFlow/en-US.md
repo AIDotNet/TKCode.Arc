@@ -352,6 +352,19 @@ The illustration takes focus with Tab. Once it has focus, these keys control the
 | Readouts (events/s, rows, updates) | Count up during the story | Show the poster values | Show the poster values |
 | Play button | Visible; toggles playback | Hidden | Hidden |
 
+## Responsive behavior
+
+- `DataFlow` has no breakpoint. Its scene is a fixed 844 by 264 units that scales down to the width it is given and
+  never above 1. The height follows, so the proportions hold at every width.
+- It measures its own width, not the window's, so it shrinks inside a side panel the same way it does on a phone.
+- At phone width the scene is drawn well under half its size, so the node titles and counters become small. The caption
+  (`IsCaptionVisible`) keeps the small text size and wraps onto several lines, so it carries the explanation.
+- The frame keeps `Padding` of 20 px on the sides and top and 14 px at the bottom, and the play button
+  (`IsPlaybackButtonVisible`) sits at the bottom right. Space and Enter play or pause the story, and nothing needs
+  hover.
+- Give it a row of its own at the full width of the screen, and keep `IsCaptionVisible` on, since the caption is what a
+  reader can still read when the diagram is small.
+
 ## Related
 
 - `PaymentFlow` for a single request that is approved or declined, with the same frame and playback controls.

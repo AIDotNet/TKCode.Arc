@@ -226,6 +226,16 @@ was there before it.
 No layout animates: values, badges and highlights change in place, so the card never jumps while it fills. The loop pauses
 when the card leaves the screen, and a read in flight is cancelled when the card is removed.
 
+## Responsive behavior
+
+- `SmartFormFill` lays out by the width of its content (its own width less the card padding), not the window's. Below
+  SideBySideWidth (720 px) the paste well stacks above the form (`:stacked`), and below SingleColumnWidth (440 px)
+  every field takes a full row (`:narrow`).
+- Below 440 px the footer puts the status above the actions. The card holds at 360 px without horizontal scrolling.
+- A field's source is highlighted when the field is focused as well as when it is hovered, and Review, Check and Undo
+  are buttons, so nothing depends on hover.
+- Give the card the full width of its column. On a phone it stacks by itself, so do not place side columns around it.
+
 ## Related
 
 - `Input` and `Textarea` for the fields the card is built from.

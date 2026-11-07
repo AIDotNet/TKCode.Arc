@@ -1007,6 +1007,21 @@ The page has no motion at rest: the picture is still, and timers run only for th
 - Reduced motion drops the offsets and blur: the new step and lines only fade in (120 ms), the old ones go at once, the
   height and the error row jump, and the check is drawn at once. With motion off everything changes at once.
 
+## Responsive behavior
+
+- `Login` has no breakpoint of its own. It shows one layout chosen by `Variant`, and that layout measures its own width,
+  not the window's.
+- The default `SignIn` card (`Variant` `EmailCode`) is at most 432 px wide and follows the width it is given. At 380 px
+  or less its steps pad 24 by 20 and the heading drops to 28 px; at 448 px or less its corners soften to the panel
+  radius.
+- The other layouts have their own breakpoints: `LoginCentered` tightens at 520 px and drops its title to 28 px at 400
+  px, `LoginSplit` hides its picture below 760 px, and `LoginImmersive` pads its header and footer 16 px at 520 px and
+  below.
+- Hover styles apply to a mouse or pen only, so touch users get the same actions without hovering. Every action is a
+  button or a field.
+- Give the block a container of its own and let it stretch. The `SignIn` card stops growing at 432 px, so a wider
+  container does not stretch it.
+
 ## Related
 
 ### Email code

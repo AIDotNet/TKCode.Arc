@@ -337,6 +337,15 @@ message in the same step that sets `IsActive` to `false`.
 | `IsActive` to `true` | The text returns to the resting base over 240 ms | Instant fade over 120 ms | Immediate |
 | `IsActive` to `false` | The band glides off over up to 420 ms, then the text is solid over 360 ms | Solid text over 120 ms | Immediate |
 
+## Responsive behavior
+
+- `TextShimmer` does not change at a breakpoint. It draws its status text on one line that does not wrap, and its width
+  is the width of that text, capped at the width its parent gives it.
+- It sweeps only while `IsActive` is true, and only while it is visible and within 64 px of the viewport
+  (`ViewportMargin`), so a status line that is off screen does not animate.
+- It has no pointer behavior of its own, so nothing about it depends on hover.
+- On a phone give the status line a row of its own and keep it to a few words, since a long label takes the whole row.
+
 ## Related
 
 - `Skeleton` for placeholder content while a page loads, and `Progress` for work with a measurable amount done.

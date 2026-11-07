@@ -232,6 +232,17 @@ fitted to the audio's length.
 The clock runs at every motion level: reading is content, not decoration. A resize re-measures the highlight without
 animating it.
 
+## Responsive behavior
+
+- `SpeechPlayer` changes form at its own width. Below `NarrowWidth` (440 px) the total time steps aside (`:narrow`), so
+  the progress bar keeps its room; the elapsed time, speed, voice and Stop reading stay.
+- The card fills its container up to `MaxCardWidth` (640 px), and the reply text wraps at every width.
+- The dock is `DockHeight` (32 px) high and `DockTouchHeight` (36 px) after a touch press, so the player keeps the
+  height of the action row it replaces.
+- Play, speed, voice and Stop reading are buttons, and the progress bar can be dragged, so nothing depends on hover.
+- On a phone, let `SpeechPlayer` fill the column rather than setting a fixed `Width`; in a transcript use
+  `Variant="Plain"`.
+
 ## Related
 
 - `AgentStatus` for the live status of an agent while it works on the reply.

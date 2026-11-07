@@ -332,6 +332,17 @@ constrain the block; the description already has its own 288 px measure.
 | Copy changes height | Springs to fit the new copy | Jumps to the new height | Immediate |
 | Icon block first appears | Settles in from 92% scale and fades in over 480 ms | No entry animation | Immediate |
 
+## Responsive behavior
+
+- `EmptyState` has no breakpoint and no fixed width. It fills the space its parent gives it, centers its copy and caps
+  the `Description` at `DescriptionMaxWidth` (288 px), so long copy wraps to a short measure.
+- Its vertical padding follows the viewport, not its own width: 8% of the `ArcViewport` width, kept between 32 and 48
+  px. Inside an `ArcViewportHost`, such as a phone preview, the host is the viewport.
+- Keep `Action` to one primary button, or two buttons side by side. The row has no breakpoint, so a longer row needs the
+  room.
+- Nothing depends on hover, and the block takes no focus. Tab goes to the buttons in `Action`, and each button keeps its
+  own tap target.
+
 ## Related
 
 - `Skeleton` while the content is still loading.

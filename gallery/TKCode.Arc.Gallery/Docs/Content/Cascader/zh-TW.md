@@ -1,7 +1,7 @@
 ---
 title: 級聯選擇器
 summary: 依層級逐級選擇一個節點，如省、市、區，欄位和選單與 Select 一致。
-source-hash: cf03d1ad0529
+source-hash: 0df81bb2204e
 ---
 
 <Demo name="Basic" />
@@ -119,6 +119,13 @@ cascader.ValueSelector = node => ((Region)node).Code;
 - 欄出現或消失時，選單寬度用彈簧過渡到新的寬度，進行中的彈簧會被改向，而不是等它結束。新的一欄淡入，同時從左側滑入 8 px。選單開啟時，已選路徑上的所有欄會一次擺好，不會逐欄播放動畫。
 - 醒目提示在列之間滑動，選取變更時欄位中的文字會捲動。
 - 減少動態效果時，寬度不做動畫，新欄只淡入；關閉動態效果時一切立即完成。
+
+## 響應式
+
+- `Cascader` 沒有斷點。觸發器佔用給它的寬度，且至少 180 px（`MinWidth`）；在窄表單中讓它延展，不要設定 `Width`。
+- 選單至少與觸發器同寬。每一級是一欄，寬 160 至 280 px（`MinColumnWidth`、`MaxColumnWidth`），出現或消失欄時選單寬度會以彈性動畫過渡到新的總寬。
+- 每欄在 `MaxDropDownHeight`（預設 320 px）內縱向捲動，欄不會橫向捲動。
+- 選單是 `ArcPopup`：下方放不下時翻到觸發器上方，並向內滑回視窗或螢幕之內。選項為 36 px 高的列（`OptionHeight`）。預設的 `ExpandTrigger` 為 `Click`，輕觸即可展開子級；`Hover` 需要主動設定。
 
 ## 相關元件
 

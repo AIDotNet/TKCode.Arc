@@ -213,6 +213,20 @@ Globe.Culture = CultureInfo.GetCultureInfo("de-DE");
   on a spring and fades out.
 - Under reduced motion none of this moves; see [Reduced motion](#reduced-motion).
 
+## Responsive behavior
+
+- `RevenueGlobe` changes form at its own width. From 880 px the panel sits beside the globe (`:wide`), from 600 px it
+  sits under the globe in two columns (`:stacked`), and below 600 px it is one column with a smaller revenue figure
+  (`:narrow`). Below 400 px the clock takes a row of its own (`:compact`).
+- It measures its own width, not the window's, so a side column or a dialog switches the same way. In one column the
+  globe is at most 440 px tall.
+- Labels that do not fit end in an ellipsis (`TextTrimming`), and the two figure columns are at most 202 px wide each
+  (`MaxWidth`).
+- The playback buttons are 32 px tall (`ButtonHeight`), below the 44 px touch size, so keep them clear of other tap
+  targets.
+- The breakpoints are fixed. On a phone, give the block the full screen width and a row of its own rather than a column
+  beside other content.
+
 ## Related
 
 - **Metric card** and **Animated counter**: one figure that counts toward its value, without the map.

@@ -1,6 +1,6 @@
 ---
 title: Popover
-summary: A small anchored surface for contextual information.
+summary: A small non-modal panel of interactive content anchored to the control that opens it, such as share settings or a filter form.
 ---
 
 <Demo name="Share" />
@@ -334,6 +334,16 @@ toggles the panel; for a control that is not a button, `Enter` and `Space` open 
 | Panel closes | Fades out with half the travel in about 160ms | Short fade only | Removed at once |
 | Open interrupted by a close | Reverses from the current position | Short fade | Immediate |
 | Trigger pressed | Color change only; no scale | Color change only | Color change only |
+
+## Responsive behavior
+
+- `Popover` looks the same at every width: its panel is at least `PanelMinWidth` (192 px) and at most `PanelMaxWidth`
+  (352 px) wide, sized by its content, and it has no phone layout of its own.
+- The panel flips to another side when the preferred `Placement` does not fit, and it stays attached to its trigger.
+- The panel sets no height limit and suits a small amount of content. A tall panel covers the page under it, so put a
+  long form in a `Drawer`.
+- A tap on the trigger opens the panel and the next tap closes it. Nothing needs hover.
+- On a narrow page, give a trigger at the right edge `Alignment="End"`, so the panel opens inside the window.
 
 ## Related
 

@@ -1,7 +1,7 @@
 ---
 title: Team switcher
 summary: 工作區切換器：觸發器顯示目前工作區的標誌與方案，選單可以搜尋你的工作區，為每個工作區顯示你的角色與 Cmd/Ctrl+數字快速鍵，並能就地建立或加入工作區。
-source-hash: e7beb3710fa5
+source-hash: a2a082bfe6d2
 ---
 
 <Demo name="Preview" />
@@ -201,6 +201,14 @@ switcher.Labels = new TeamSwitcherLabels
 | 開啟建立或加入 | 檢視交叉淡化（100ms 淡出，160ms 淡入），並沿前進方向平移 6px | 120ms 淡入淡出 | 立即 |
 
 沒有任何東西改變尺寸：觸發器在所有狀態下維持同樣的高度，選單面板在搜尋或開啟表單時也維持同樣的高度。
+
+## 響應式
+
+- 觸發器佔滿容器，最寬為 `MaxWidth`（360 px），高 52 px。選單與觸發器同寬，且不窄於 `MenuMinWidth`（288 px），因此在窄側欄中名稱仍然可讀。
+- 每列高 `RowHeight`（48 px），清單先顯示六列再捲動，因此每一列都是足夠大的輕觸目標。
+- 工作區名稱與方案列放不下時以省略號結尾（`CharacterEllipsis`）。
+- 輕觸一列與按下它的快捷鍵效果相同。Cmd 或 Ctrl 快捷鍵只在焦點位於切換器內時生效，除非 `UsesGlobalShortcuts` 將其擴展到整個視窗。
+- 把它放在寬度不少於 288 px 的側欄頂部，下方留出約 450 px 給選單，或放在選單可以超出視窗的位置。
 
 ## 相關元件
 

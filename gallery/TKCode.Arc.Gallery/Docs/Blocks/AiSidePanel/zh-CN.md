@@ -1,7 +1,7 @@
 ---
 title: AI 侧边面板
 summary: 位于人们阅读的页面旁边的助手：它读取整个页面，回答关于页面或关于选区的问题，并以文字差异的形式提出修改，由人们应用、放弃或撤销；应用时页面上会有扫过效果，并出现一个撤销胶囊。
-source-hash: fd63b95acc6a
+source-hash: 1cbf10f167c1
 ---
 
 <Demo name="Preview" />
@@ -183,6 +183,13 @@ public async ValueTask<AiPanelReply> RespondAsync(AiPanelRequest request, Cancel
 | 应用或撤销 | 扫过、交叉淡入、高度弹簧 | 整块着色淡入，无位移 | 立即 |
 | 新文字 | 整词的步进，150 毫秒淡入 | 相同的步进，无淡入 | 相同的步进，无淡入 |
 | 弹层 | 滑动和淡入 | 原地淡入 | 立即 |
+
+## 响应式
+
+- 宽度低于 `SheetBreakpoint`（默认 640 px）时，助手离开停靠列，变成覆盖在页面上的底部面板。面板高度为块高度的 `SheetHeightRatio`（0.74），`IsSheetMode` 与 `:sheet` 伪类反映这一状态。
+- 停靠时助手宽 `PanelWidth`（360 px），页面列至多为 `PageMaxWidth`（680 px）并居中。
+- 面板模式下，面板打开时页面下方变暗且不可操作；按下变暗的页面或关闭按钮即可关闭面板。
+- 建议项换到更多行，回答文字换行。在手机上为块设置屏幕高度，让面板有空间显示回答。
 
 ## 相关组件
 

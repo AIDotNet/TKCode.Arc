@@ -1,7 +1,7 @@
 ---
 title: 密碼欄位
-summary: 附有可見顯示切換控制項的敏感文字輸入。
-source-hash: 1dbe8b8e16ad
+summary: 用於輸入既有密碼或金鑰的遮罩輸入框，框內帶顯示切換按鈕。
+source-hash: 6221685c538a
 ---
 
 <Demo name="SignIn" />
@@ -297,6 +297,14 @@ public partial class SignInViewModel : ObservableObject
 | 圓點與字元切換 | 文字從 35% 不透明度與 2 px 模糊過渡到清晰 | 無過渡效果 | 無過渡效果 |
 | 切換按鈕按下 | 按住時縮放至 96% | 無縮放 | 無縮放 |
 | 說明列與錯誤列 | 與 `Input` 相同：該列以平滑彈簧展開，變化的詞向上浮現 | 與 `Input` 相同 | 與 `Input` 相同 |
+
+## 響應式
+
+- `PasswordField` 在斷點處不改變形態。它延展到所在欄的寬度，框高由 `Size` 決定：Small 為 36 px，Medium（預設）為 44 px，Large 為 50 px。
+- 切換顯示的按鈕在 Medium 與 Large 下為 30 px（`RevealButtonSize`），在 Small 下為 26 px（`RevealButtonSizeSM`），因此在觸控螢幕上請使用 Medium 或 Large。
+- 窄欄中標籤會換行到更多列。遮罩的文字不換行，而是在框內橫向捲動（`NoWrap`）。
+- 顯示或隱藏密碼靠輕觸切換按鈕完成，沒有任何功能依賴懸停。
+- 在手機上，登入密碼使用 `Size="Large"`，讓框與文字都是該控制項提供的最大尺寸。
 
 ## 相關元件
 

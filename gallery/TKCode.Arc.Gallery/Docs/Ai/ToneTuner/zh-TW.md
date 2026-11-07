@@ -1,7 +1,7 @@
 ---
 title: Tone tuner
 summary: 一張品牌語氣卡片：兩個滑桿（正式程度與詳略）和語氣標籤改寫一封客戶回覆，每個改動過的句子原地交叉淡化，新詞可以對照原稿醒目提示，「複製」取走目前版本。
-source-hash: 1659bebbd79f
+source-hash: 4c9088df96a2
 ---
 
 <Demo name="Preview" />
@@ -155,6 +155,13 @@ tuner.Labels = new ToneTunerLabels
 | 狀態 | 與輸入在同一個影格切換為 Rewriting，帶柔和的閃光，然後交叉淡化為 Rewritten | 無閃光，短暫淡化 | 立即 |
 | Changes 開關 | 醒目提示在 160ms 內淡入淡出 | 立即 | 立即 |
 | 自動輪播 | 在螢幕上時每 3.2s 換一種語氣，直到卡片內第一次按下或取得焦點 | 關閉 | 關閉 |
+
+## 響應式
+
+- `ToneTuner` 依自身卡片寬度而不是視窗寬度變化，寬度上限為 `MaxCardWidth`（640 px）。低於 520 px（`StackWidth`）時兩個滑桿改為佔滿寬度的上下排列，語氣標籤共用一列、等寬分欄。低於 400 px（`CompactWidth`）時隱藏標籤圖示與修改數量，複製按鈕只顯示圖示；`:stacked` 與 `:compact` 反映這兩種狀態。
+- 訊息依卡片寬度換行（`TextWrapping`），而聯絡人名稱與主旨以省略號結尾（`CharacterEllipsis`），不換行。
+- 觸控時，語氣標籤高 32 px（`ChipHeight`），操作按鈕高 28 px（`ActionHeight`），要與其他可輕觸的控制項保持距離。懸停只會為標籤上色（`:pointerover`）；已選取的標籤顯示為 `:checked`，輕觸可以達到同樣的狀態。
+- 讓卡片在所在欄中延展（`HorizontalAlignment="Stretch"`），而不是設定固定的 `Width`。低於 520 px 時標籤仍在一列，滑桿上下排列後卡片會變高，因此窄欄中要為它留出空間。
 
 ## 相關元件
 

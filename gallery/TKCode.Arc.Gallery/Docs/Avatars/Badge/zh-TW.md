@@ -1,7 +1,7 @@
 ---
 title: 徽章
 summary: 用於狀態、類別或中繼資料的小型標籤。
-source-hash: 56cf17fb22a3
+source-hash: 1b3ccd13a7dd
 ---
 
 <Demo name="Tones" />
@@ -265,6 +265,13 @@ public partial class DeploymentViewModel : ObservableObject
 | 色調變化 | 背景、邊框與文字依標準曲線交叉淡化 | 瞬間完成 | 立即完成 |
 | 指標進入或離開（精準指標） | 背景與邊框交叉淡化；`Info` 淡出其強調光暈 | 瞬間完成 | 立即完成 |
 | 字型或主題變動導致徽章尺寸改變 | 立即完成 | 立即完成 | 立即完成 |
+
+## 響應式
+
+- `Badge` 在任何寬度下都不會變化。`Size` 決定它的最小高度：`Medium` 為 26 px（預設），`Small` 為 22 px（`PillHeightMD`，`PillHeightSM`）。
+- 標籤保持一行，膠囊隨標籤增寬。主題沒有設定換行或截斷，因此很長的標籤會把膠囊撐寬；在窄列中請使用簡短的標籤。
+- `Badge` 不可取得焦點，也沒有任何操作，因此不是輕觸目標。懸停會為膠囊上色（`:pointerover`），沒有任何功能依賴懸停。
+- 在手機上，緊湊的列中使用 `Small`，標題旁使用 `Medium`。徽章的形態從不改變，因此它在版面中的位置決定了它需要多少空間。
 
 ## 相關元件
 

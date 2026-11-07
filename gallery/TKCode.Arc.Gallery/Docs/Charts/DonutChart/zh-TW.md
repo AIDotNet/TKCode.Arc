@@ -1,7 +1,7 @@
 ---
 title: 環圈圖
-summary: 一個環圈圖，扇形在資料集之間平滑變形，目前數值滾動顯示在中心。
-source-hash: 0b6a0d97b37b
+summary: 展示整體如何分成兩到六個部分的環形圖，帶圖例，中心顯示總數或指標所指部分。
+source-hash: 21d4a031da96
 ---
 
 <Demo name="ToggleSegments" />
@@ -263,6 +263,13 @@ public partial class SpendViewModel : ObservableObject
 | 新資料集或隱藏扇形 | 弧形從目前角度變形，保持速度 | 直接顯示最終狀態 | 直接顯示最終狀態 |
 | 作用中的扇形 | 向外移動並加粗，其餘扇形變暗 | 直接顯示最終狀態 | 直接顯示最終狀態 |
 | 中心讀數 | 像滾筒一樣滾動到新讀數 | 立即變化 | 立即變化 |
+
+## 響應式
+
+- 圖例在 460 px 處切換位置。`DonutChart` 依自身寬度判斷：達到 460 px 時圖例位於圓環旁邊，低於 460 px 時圖例堆疊在圓環下方。
+- 圓環會縮小以適應容器，從 `Diameter`（208 px）與 `RingThickness`（24 px）開始計算，中心文字隨之縮放。
+- 低於 460 px 時，圖例是一欄，每個可見區段佔一列。用 `GroupBelow` 與 `MaxSegments` 讓欄保持簡短，把小區段合併到 Other 中。
+- 在觸控螢幕上不會觸發懸停預覽。用 `LegendAction="Select"` 和 `ActiveKey` 固定一個區段，輕觸後中心會顯示其數值。
 
 ## 相關元件
 

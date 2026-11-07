@@ -1,7 +1,7 @@
 ---
 title: Project board
 summary: 精簡的衝刺看板：箭頭按鈕會把每張卡片推到下一個或上一個階段，卡片飛到它的新欄位；看板下方有衝刺進度線、團隊頭像，以及 All work / My work 切換。
-source-hash: 1eaac2413b0e
+source-hash: daaa062deda3
 ---
 
 <Demo name="Preview" />
@@ -158,6 +158,14 @@ Add task 會引發 `AddRequested`。把任務放入事件的 `Task` 即可新增
 - **新增**：新卡片淡入並從 98% 放大；衝刺進度線會彈到新的比例（任務抵達或離開已完成階段時也會如此）。
 - **懸停與按下**：顏色在 160 ms 內變化；箭頭按下時縮到 92%，Add 縮到 97%，滑鼠懸停時 Add 會淡化到 88%。
 - 減少動態效果與 `AnimatesMoves="False"` 會讓移動、新增與篩選立即在原位套用，但保留顏色變化。關閉動態效果則會立即套用所有變化。看板靜止時，不會執行任何動畫。
+
+## 響應式
+
+- `ProjectBoard` 依自身寬度變化，不隨視窗寬度。各欄平分寬度，每欄至少為 `MinColumnWidth`（200 px）；寬度不足時，欄水平捲動，捲軸隱藏。
+- 寬度為 700 px 或以下（`:narrow`，`NarrowWidth`）時，每欄寬為可用寬度減去 76 px，露出下一欄的邊緣；團隊列隱藏。篩選、新增與箭頭按鈕放大為 40 px 的觸控目標（`NarrowMoveButtonSize`），卡片高度不變。更寬時，卡片箭頭為 26 px（`MoveButtonSize`）。
+- 寬度為 400 px 或以下（`:compact`，`CompactWidth`）時，操作區獨佔一列，「新增」只顯示圖示，名稱保留為工具提示。
+- 卡片透過箭頭按鈕移動，而不是拖曳，因此任何寬度下手指都能操作。懸停樣式只對滑鼠或觸控筆生效，觸控螢幕上按鈕不會停留在懸停外觀。
+- 讓看板延展到頁面寬度（`HorizontalAlignment="Stretch"`）。在手機上請減少階段數：各欄平分寬度直到 `MinColumnWidth`，超過後看板水平捲動。
 
 ## 相關元件
 

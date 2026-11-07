@@ -1,7 +1,7 @@
 ---
 title: 拖动数值
 summary: Figma 风格的数字字段：拖动标签即可调整，也可以键入数值、单位与算术表达式。
-source-hash: d1376e8d8e40
+source-hash: 5cdb8b3dc9b0
 ---
 
 <Demo name="Inspector" />
@@ -331,6 +331,14 @@ public partial class WidgetLayoutViewModel : ObservableObject
 | 被拒绝的输入或处于限值的步进 | 字段抖动一次；边缘红色保持 900 ms | 不抖动；红色边缘仍显示 900 ms | 立即完成；红色边缘显示 900 ms |
 | 单位变化 | 单位带着轻微模糊升起 | 单位原地淡入 | 立即完成 |
 | 轨道填充 | 拖动时跟随指针；输入或步进时滑动到新值 | 跳到新值 | 立即完成 |
+
+## 响应式
+
+- `ScrubInput` 没有断点，在任何宽度下布局都相同。它会拉伸到所在列（`HorizontalAlignment="Stretch"`）；`Size="Small"` 提供 30 px 高的外壳（`ShellHeightSM`），适合紧凑的检查器列。
+- 数字保持单行。比编辑区更宽的值会在区域内横向滚动，滚动条隐藏。标签至少保留 `HandleMinWidth`（30 px）宽，单位至少保留 `UnitMinWidth`（18 px）宽。
+- 在触屏上，标签上的横向拖动会调整数值，纵向拖动则滚动父面板，因此长检查器仍可用手指滚动。
+- 悬停高亮只在鼠标或触控笔下出现（`:hover-fine`），没有任何操作必须依赖悬停。
+- 在窄面板中，让字段随列宽变化而不是设置 `Width`，并让标签保持简短，为数字留出空间。
 
 ## 相关组件
 

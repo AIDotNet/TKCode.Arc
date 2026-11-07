@@ -1,6 +1,6 @@
 ---
 title: Multi-select
-summary: Select several values while keeping the field readable.
+summary: A dropdown field for several values from a fixed list, shown as chips inside the field.
 ---
 
 <Demo name="Chips" />
@@ -401,6 +401,18 @@ trigger.
 | Menu opens or closes | Drops in from 6 px above with a slight scale | Short cross-fade | Immediate |
 | An option's check changes | The check draws in or out | Short cross-fade | Immediate |
 | Hover, press, open | The border and background colors crossfade | Immediate | Immediate |
+
+## Responsive behavior
+
+- `MultiSelect` does not change at a breakpoint. Picked values stay on one line: the chips shrink with the room left,
+  and the +N chip keeps its size, so the field keeps one height.
+- A chip is at most `ChipMaxWidth` (144 px) wide. `MaxVisibleChips` sets how many show before the rest fold into a +N
+  chip; the default is 2.
+- The menu has no height cap by default. Set `MaxDropDownHeight` so a long list scrolls and stays on screen.
+- Menu rows are `OptionHeight` (38 px) tall. A click or tap on an option toggles it and keeps the menu open. Hover only
+  changes the border and background, so picking works without hover.
+- In a narrow filter bar, set `MaxVisibleChips` to 1. For more than about a dozen options, set `MaxDropDownHeight` to
+  320.
 
 ## Related
 

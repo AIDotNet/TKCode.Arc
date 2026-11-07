@@ -170,6 +170,17 @@ nothing happens. Then `ExportRequested` is raised and the button confirms with a
 - Nothing animates when the block first appears. Reduced motion jumps the thumb and the underline, replaces numbers and
   the chart at once and drops the color transitions; Off applies every change at once.
 
+## Responsive behavior
+
+- `MetricsDashboard` reads its own width, not the window's. Below `MediumWidth` (640 px by default) (`:md`) the tabs go
+  two by two and the lists stack. Below `SmallWidth` (460 px) (`:sm`) the range switch spans the header, the tab values
+  drop to 18 px, the plot is 168 px high and the x axis shows at most four dates.
+- Below 460 px the actions move under the titles when the two do not fit on one line.
+- Nothing depends on hover. Hover only tints the Export button; the range switch, the tabs and Export are controls that
+  a tap works on.
+- Give the block its own row at the full width. It switches its layout itself, so a phone needs no setting; in a narrow
+  side panel, expect the smaller values and the four-date axis.
+
 ## Related
 
 - `KPI drilldown`, `Metric explorer` and `Revenue explorer`, the other Analytics blocks with metric cards and charts.

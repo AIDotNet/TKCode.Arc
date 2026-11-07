@@ -1,7 +1,7 @@
 ---
 title: Orbit logos
 summary: 集成轨道：你的产品标志在中央，标志排在两条缓慢转动的环上，选中的标志会长出一张详情卡片。
-source-hash: 98316a6d1296
+source-hash: e71c84fa8b54
 ---
 
 <Demo name="Preview" />
@@ -127,6 +127,13 @@ orbit.ConnectHandler = async logo => await api.ConnectAsync(logo.Id ?? logo.Name
 | 环与连线 | 弹簧到位 | 立即到位 | 立即到位 |
 | 卡片 | 从标志中长出 | 直接出现 | 直接出现 |
 | 上一个和下一个 | 滑动 | 直接切换 | 直接切换 |
+
+## 响应式
+
+- `OrbitLogos` 在 SideBySideWidth（760 px）处改变布局：从此宽度起，轨道占据最多 58% 的宽度，最大 460 px（`MaxSize`），分类标签与详情卡片并排放在它旁边；更窄时卡片位于轨道下方。
+- 分类标签放不下时横向滚动（`HorizontalScrollBarVisibility` 为 `Auto`），因此在手机上它们仍保持一行。
+- 名称标签只在悬停与键盘聚焦时出现，所以触屏用户在点选一个标识后，从卡片中了解它是什么。
+- 让轨道占满页面宽度，并保持约十几个标识。在手机上，较多的标识更适合用网格或列表。
 
 ## 相关组件
 

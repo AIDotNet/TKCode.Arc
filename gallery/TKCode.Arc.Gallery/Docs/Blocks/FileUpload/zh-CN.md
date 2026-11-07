@@ -1,7 +1,7 @@
 ---
 title: File upload
 summary: 完整的文件选择流程，带类型与大小限制、上传进度和错误反馈。
-source-hash: f88aadb60fd9
+source-hash: 514d70a18532
 ---
 
 <Demo name="Preview" />
@@ -123,6 +123,13 @@ upload.FilesChanged += (_, e) => SaveButton.IsEnabled = e.Files.All(f => f.Statu
 ### 性能
 
 上传通过你的 `Uploader` 进行，每个被接受的文件调用一次，同时进行的上传数量没有限制：大批量文件请自行排队。列表没有虚拟化，文件数量应保持在合理范围内。
+
+## 响应式
+
+- `FileUpload` 在任何宽度下形态都不变。它没有断点：拖放区在各种尺寸下都占满宽度，且高度至少 92 px（`DropzoneMinHeight`）。
+- 拖放区的文字会换行。每个文件名保持一行，并以省略号结尾（`TextTrimming="CharacterEllipsis"`）；状态文字会换行。
+- 拖放区的悬停着色只对鼠标或触控笔生效。触摸从不设置 `:zonehover`，因此没有任何功能依赖悬停。
+- 让控件拉伸到所在的栏，而不是设置固定的 `Width`；在窄表单中让它单独占一行。
 
 ## 相关组件
 

@@ -330,6 +330,17 @@ The `MarkdownHighlightPlugin` constructor takes the language names to prewarm, s
 | New text in a streamed reply | Fades in over 240 ms at the end of the document | Fades in over 160 ms, opacity only | Shown at once |
 | Pacing of a streamed reply | Applied | Applied | Applied |
 
+## Responsive behavior
+
+- `Markdown` has no breakpoint. It fills the width it is given (`HorizontalAlignment` is `Stretch`), and its text, lists
+  and code wrap to that width. The document grows with its content and has no scrollbar of its own.
+- Body text is 16 px with a line height that follows the font size (`LineHeight` defaults to the font size times 1.65),
+  so a smaller `FontSize` keeps narrow message bubbles compact.
+- Code blocks longer than `CollapsedLines` (12 lines) fold, so one long listing does not push the rest of the text off a
+  phone screen.
+- Put a long document in a `ScrollViewer`, which scrolls the whole document. Taps on links raise `LinkClicked`, while
+  anchors inside the document scroll on their own.
+
 ## Related
 
 - `CodeBlock` for a single code sample on its own.

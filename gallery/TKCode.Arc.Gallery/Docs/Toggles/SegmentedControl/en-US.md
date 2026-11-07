@@ -361,6 +361,21 @@ change come from the same movement.
 | Edge fade appears or disappears | Follows the scroll position | Follows the scroll position | Follows the scroll position |
 | First placement after load | Immediate | Immediate | Immediate |
 
+## Responsive behavior
+
+- `SegmentedControl` has no breakpoint. Segments are at least 36 px tall (`ControlSizeSM`), and the control sizes to its
+  segments unless you set `Width`.
+- When the options are wider than the control, the row scrolls inside its frame. The scroll bar is hidden, and a 20 px
+  fade (`EdgeFade`) marks each edge that has more to see. The selected segment is scrolled fully into view with
+  `ScrollRoom` of room beside it.
+- Segment labels never wrap (`TextWrapping="NoWrap"`), so each segment is as wide as its label. Short labels of one or
+  two words let more options fit before the row has to scroll.
+- With the default metrics the control is 44 px tall: a 36 px segment inside a 3 px track inset and a 1 px frame. Hover
+  only changes the label color, and a tap selects the segment. Touch does not raise `ItemIntent` on hover, so nothing
+  depends on hover.
+- On a phone, use the control for two to four views. With more options, the scrolling row is harder to scan, so use
+  `Select` instead.
+
 ## Related
 
 - `RadioGroup` for options that need descriptions or a vertical layout.

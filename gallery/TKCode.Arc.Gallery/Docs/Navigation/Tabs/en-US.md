@@ -1,6 +1,6 @@
 ---
 title: Tabs
-summary: Switch between related content in the same context.
+summary: A tab list that switches between peer views of one object, such as Overview, Activity and Settings, each with its own panel.
 ---
 
 <Demo name="Default" />
@@ -358,6 +358,15 @@ A disabled tab is skipped by the arrow keys, Home and End, and it cannot be sele
 | The panel area changes height | Springs from the old height to the new one, moving the content below | No height animation | Immediate |
 | The list scrolls to a tab | Scrolls on the smooth spring | Jumps | Jumps |
 | Hover and selected trigger | The label color crossfades | Immediate | Immediate |
+
+## Responsive behavior
+
+- `Tabs` has no breakpoint. When the triggers are wider than the list, the list scrolls sideways, edge buttons 33 px
+  wide (`ScrollButtonWidth`) appear on the sides with hidden tabs, and a 35 px fade marks the hidden part.
+- The selected or focused tab is scrolled into view, so a narrow screen still shows the current view.
+- Each trigger is at least 88 px wide (`TriggerMinWidth`) and 36 px tall (`ControlSizeSM`). Hover only tints it, and a
+  tap selects a tab as a click does.
+- For a few views of one piece of content, a `SegmentedControl` suits a narrow screen better than a long tab list.
 
 ## Related
 

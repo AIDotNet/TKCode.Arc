@@ -335,6 +335,18 @@ Every text has an English default and a property to change it. Formats use `{0}`
 | Tab pill | Glides on a snappy spring | Jumps | Immediate |
 | Gesture hint | Fades out over 480 ms | Fades quickly | Immediate |
 
+## Responsive behavior
+
+- `CustomerGalaxy` changes layout at its own width, not the window's. With the default `TotalsPlacement="Auto"` the
+  totals panel sits beside the stage from 880 px, 288 px wide (`SidePanelWidth`), and the control sets `:side`. Below
+  880 px the panel moves under the stage. `TotalsPlacement="End"` keeps it beside the stage at any width.
+- The stage height follows the width: 380 px under 620 px, otherwise the larger of 360 px and 52% of the width. Beside
+  the panel it is 16:9 of the stage's width, capped at 560 px.
+- Under 600 px (`TotalsSplitWidth`) the totals blocks stack in one column. The grouping tabs scroll sideways when they
+  are narrower than the tabs, and the legend moves under the tabs when they do not share one row.
+- The row highlight in the totals list ignores touch, so tapping a group row does not depend on hover. In a column
+  narrower than 880 px, set `ShowTotals="False"` if the panel is not needed, or let it stack under the stage.
+
 ## Related
 
 - `BarChart`, `DonutChart` and `Treemap` for a few exact values or parts of a whole.

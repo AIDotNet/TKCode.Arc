@@ -1,6 +1,6 @@
 ---
 title: Skeleton
-summary: Reserve space while content is still loading.
+summary: Placeholder shapes that hold the layout of a block of content, such as an avatar and lines of text, while its data loads.
 ---
 
 <Demo name="Profile" />
@@ -298,6 +298,17 @@ not add a second moving element beside a skeleton, such as a shimmering banner o
 two signs of loading that compete. A load that takes longer than the wave should show a status line that says what the
 page is waiting for, and the placeholder can stay as it is. Reduced motion needs no extra code: the pulse stops and the
 content swaps with a fade.
+
+## Responsive behavior
+
+- `Skeleton` does not change at a width. It stretches to the width of its slot, and its text lines are bars that take a
+  share of that width: the first is 48%, the last 72%, and the lines between are full width.
+- The avatar keeps its `AvatarDiameter` (44 px by default) at every width, and the lines beside it take the rest of the
+  row.
+- The placeholder is drawn with bars rather than text, so nothing wraps or truncates, and the bars stay inside the slot.
+- It takes no focus and no input, so there is no touch target and nothing depends on hover.
+- Give it the same slot as the content it replaces, with the same `Lines` count, so the layout does not jump when the
+  data arrives.
 
 ## Related
 

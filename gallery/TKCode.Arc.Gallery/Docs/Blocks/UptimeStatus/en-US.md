@@ -213,6 +213,20 @@ the announcements.
 - Reduced motion keeps the short fades (hover card, dimming, tick labels that leave) and lands springs, rolling numbers and the
   morph at once. Off applies everything at once.
 
+## Responsive behavior
+
+- `UptimeStatus` changes at two widths of its own. Below 860 px its response-time and incidents sections stack
+  (`:stacked`); below 560 px it switches to `:compact`, with smaller padding, the header action under the title, and the
+  service descriptions and uptime labels hidden. The breakpoints are fixed at these widths.
+- It measures its own width, not the window's, so a side panel or a phone preview switches the same way. Below 640 px
+  the legend moves under the hint, left aligned.
+- Long service descriptions and incident titles are trimmed with an ellipsis, and the incident meta line wraps. The day
+  bars share the row width, so they narrow with the block instead of scrolling.
+- The day bars are 34 px tall (`StripHeight`). A press and drag across them shows each day's card, as a mouse hover
+  does, and the latency chart works the same way, so nothing is hover-only.
+- Give `UptimeStatus` the full width of the page. Below 860 px the sections stack in one column, which suits a phone,
+  and a narrow side panel gets the same stack.
+
 ## Related
 
 - `Metrics dashboard`, `KPI drilldown` and `Metric explorer`, the other Analytics blocks.

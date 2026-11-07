@@ -226,6 +226,17 @@ Rows are a fixed 20px and folds move between known heights, so nothing is measur
 once per text, so streaming a new line never re-highlights the others. The simulation runs on single timers, starts only
 when the card is in view and waits while it is scrolled away.
 
+## Responsive behavior
+
+- `CodeSuggestion` measures its own width, not the window's. Below 520 px (`:compact`) the folder after the file name
+  hides. Below 440 px (`:narrow`) the gutter narrows, code drops to 12 px, hunk summaries hide, and the footer stacks
+  the status above full-width actions.
+- The card fills its container up to `CardMaxWidth` (720 px) and holds down to 320 px. Long lines scroll sideways inside
+  the code area, while the line numbers and review bars stay pinned to the visible width.
+- The code area has no height cap by default. Set `MaxCodeHeight` on a short screen, and longer files scroll inside it.
+- On a phone, give the card the full width of its row (`HorizontalAlignment="Stretch"`), so the stacked actions below
+  440 px get the whole width to tap.
+
 ## Related
 
 - `CodeBlock` for code without changes.

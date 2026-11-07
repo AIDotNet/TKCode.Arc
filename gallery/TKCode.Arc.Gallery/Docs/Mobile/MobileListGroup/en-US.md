@@ -58,6 +58,16 @@ A row is a button named by its title and subtitle. Give every row a title, so an
 
 A finger on a row shades its background on the fast curve; with reduced motion the shade appears at once.
 
+## Responsive behavior
+
+- `ListGroup` has no breakpoint. It is a full-width card with `GroupPadding` (16 by 8 px) around it, and its `Header`
+  and `Footer` wrap (`TextWrapping="Wrap"`) instead of being cut off.
+- Each `ListItem` row is at least 48 px high, and its subtitle is trimmed to one line with an ellipsis
+  (`CharacterEllipsis`).
+- The row's trailing content takes the space left after the title, so a long trailing value pushes the title shorter.
+  Keep it short.
+- A finger shades a row with a muted surface, and no row depends on hover. Tapping the row is the way to act on it.
+
 ## Related
 
 - `MobilePage`: a scrolling page holds the groups.

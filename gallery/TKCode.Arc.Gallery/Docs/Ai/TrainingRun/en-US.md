@@ -213,6 +213,19 @@ you inspect with the pointer or the arrow keys.
 The x axis spans the whole run and the y axis is fixed from the first samples, so nothing rescales mid-run. A
 simulation keeps running under reduced motion (it is content) but freezes while the card is off screen.
 
+## Responsive behavior
+
+- `TrainingRun` changes at its own width, not the window's, and fills its container up to `CardMaxWidth` (640 px). Below
+  440 px (`NarrowBreakpoint`, `:narrow`) the padding drops to `CardPaddingNarrow`, the stats and metrics go to two
+  columns, the validation label shortens and the footer stacks.
+- The chart keeps its `ChartHeight` (176 px) at every width. Epoch labels and the dataset name end with an ellipsis
+  (`CharacterEllipsis`), and the name gives way before the example count.
+- The recent events list shows three rows of `EventRowHeight` (28 px), each trimmed to one line. Actions are sized from
+  `ActionHeight` (32 px), below a 44 px touch target, and the card has no hover-only actions.
+- Let the card stretch (`HorizontalAlignment="Stretch"`) rather than setting a fixed `Width`. Keep the column at 440 px
+  or more to keep the four-column stats and the footer actions beside the dataset; below that the footer stacks and the
+  card grows taller.
+
 ## Related
 
 - `AgentStatus` for the live status of an agent run.

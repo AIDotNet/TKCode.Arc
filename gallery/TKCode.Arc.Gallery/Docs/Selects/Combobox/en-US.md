@@ -376,6 +376,18 @@ highlighted option and closes it, and `Tab` closes it and moves focus on.
 | The clear button appears | Pops in | Fades in | Immediate |
 | The empty status row appears | Rises 4 px and fades in | Fades in | Immediate |
 
+## Responsive behavior
+
+- `Combobox` does not change at a breakpoint. The field takes the width its parent gives it, and it never gets narrower
+  than 200 px (`MinWidth`).
+- The list is as wide as the field and reads the `ArcViewport`: its height is the smaller of `MaxDropDownHeight` (300
+  px) and 40% of the viewport height, so it stays on screen in a short window or a phone preview.
+- Options are rows `OptionHeight` (36 px) tall. The list scrolls vertically, and horizontal scrolling is off.
+- A click or tap on an option picks it and closes the list. Hover and focus only change colors, so nothing depends on
+  hover.
+- Let the field stretch instead of setting a fixed `Width`, and set `MaxDropDownHeight` only when the list should be
+  shorter than 300 px.
+
 ## Related
 
 - `Select` for short fixed lists that people choose from without typing.

@@ -1,7 +1,7 @@
 ---
 title: 權杖文字編輯器
 summary: 多行文字編輯區，其中的命令與提及等權杖作為單一單位運作，觸發符會開啟你自己清單的查詢。
-source-hash: f2eeb20780e2
+source-hash: c0feb94e5086
 ---
 
 <Demo name="Preview" />
@@ -121,6 +121,14 @@ source-hash: f2eeb20780e2
 |---|---|---|---|
 | 高度增加或減少 | 短暫緩動 | 立即 | 立即 |
 | 插入或移除權杖 | 立即 | 立即 | 立即 |
+
+## 響應式
+
+- `TokenTextEditor` 沒有斷點，寬度不會改變形態。它依給定的寬度換行（`TextWrapping` 為 `Wrap`），也從不水平捲動（`HorizontalScrollBarVisibility` 為 `Disabled`）。
+- 高度隨文字從 `MinLines`（預設 1 行）增長到 `MaxLines`（預設 8 行），之後文字捲動。在手機上調小 `MaxLines`，為螢幕其餘部分留出空間。
+- 它依自身寬度而不是視窗寬度量測，所以窄面板中的輸入框與手機上的換行方式相同。
+- 編輯器不自帶清單。請在自己的面板中顯示建議，並在清單開啟時設定 `SuggestionsExpanded`；輔助技術要求關閉時會觸發 `CollapseRequested`。
+- 沒有任何功能依賴懸停：指標只在標記上改變游標。行距為 `EditorLineHeight`（24 px）。
 
 ## 相關元件
 

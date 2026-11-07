@@ -1,7 +1,7 @@
 ---
 title: 分頁
-summary: 在有明確邊界的長集合中翻頁。
-source-hash: b2a74f41b993
+summary: 為按頁載入的集合提供上一頁、下一頁與頁碼按鈕。
+source-hash: 2f838dbedfab
 ---
 
 <Demo name="Default" />
@@ -281,6 +281,13 @@ pagination.GoToPage(int.MaxValue);
 | 數字離開視窗 | 滑入並在 120 ms 內淡出 | 立即移除 | 立即完成 |
 | 按下箭頭 | 按住時箭頭縮放至 96% | 沒有按下縮放 | 沒有按下縮放 |
 | 懸停、焦點 | 背景色與文字顏色漸變 | 立即完成 | 立即完成 |
+
+## 響應式
+
+- `Pagination` 沒有斷點。列寬不足時按鈕會換到新的一行，按鈕之間相距 `Spacing`（4 px）。
+- 它一律顯示五個頁碼按鈕（`WindowSize`）以及上一頁、下一頁按鈕，每個都是 36 px 見方（`ControlSizeSM`）。按鈕不會縮小，因此在窄空間裡整列會換行。
+- 頁數較多時開啟 `ShowBoundaryPages`，首頁與末頁就能透過 24 px 的省略號（`EllipsisWidth`）找到。預設不開啟。
+- 按鈕為 36 px，小於 44 px 的觸控目標，因此在手機上請讓分頁獨佔一列，或在動態串流中使用放在 `ScrollArea` 內的 `Timeline`。
 
 ## 相關元件
 

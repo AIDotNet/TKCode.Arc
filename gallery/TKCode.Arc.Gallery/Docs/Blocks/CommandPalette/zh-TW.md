@@ -1,7 +1,7 @@
 ---
 title: 指令面板
 summary: 完整的鍵盤操作面板，支援搜尋、分組結果與快速鍵。
-source-hash: fadb34de660a
+source-hash: 6cb463275dbf
 ---
 
 <Demo name="Preview" />
@@ -501,6 +501,13 @@ Palette.CloseRequested += (_, e) => Hide(e.Reason);
 | 結果外框改變高度 | 平滑彈簧 | 立即完成 | 立即完成 |
 | 結果與空狀態切換 | 結果淡出，然後空狀態升起出現 | 僅淡入 | 立即完成 |
 | 清除按鈕出現 | 從較小的縮放比例與柔和的模糊中彈出 | 僅淡入 | 立即完成 |
+
+## 響應式
+
+- 命令面板跟隨視窗寬度，透過 `ArcViewport` 讀取，而不是它自身的寬度。視窗寬 480 px 及以下（`:narrow`）時隱藏快捷鍵標記並收緊內距；340 px 及以下（`:narrowest`）時列的左右邊距也會收緊。
+- 在視窗中，`CommandPaletteDialog` 寬 `PanelWidth`（560 px），並以淺色遮罩覆蓋整個視窗。
+- 結果清單最高為 `ResultsMaxHeight`（342 px），超出後捲動。
+- 開啟快捷鍵需要鍵盤。在手機上，請用可見按鈕（`IsOpen`）開啟對話方塊，並保持 `ShowCloseButton` 開啟，讓觸控使用者能關閉它。輕觸某一列即執行該命令，與點擊相同。
 
 ## 相關元件
 

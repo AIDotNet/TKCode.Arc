@@ -138,6 +138,17 @@ opening the menu. `Clear()` does the same from code, and Delete or Backspace on 
 - The highlight glides between rows, and the field's text rolls when the choice changes.
 - With reduced motion the width does not animate and a new column only fades in; with motion off everything is immediate.
 
+## Responsive behavior
+
+- `Cascader` has no breakpoint. Its trigger takes the width it is given and is at least 180 px (`MinWidth`); let it
+  stretch in a narrow form instead of setting `Width`.
+- The menu is at least as wide as the trigger. Each level is one column of 160 to 280 px (`MinColumnWidth`,
+  `MaxColumnWidth`), and the menu's width springs to the new total when a column appears or goes.
+- Each column scrolls vertically within `MaxDropDownHeight` (320 px by default), and columns never scroll sideways.
+- The menu is an `ArcPopup`: it opens below the trigger, flips above it when there is no room and slides back inside the
+  window or the screen. Options are 36 px rows (`OptionHeight`), and with the default `ExpandTrigger` of `Click` a tap
+  opens a branch; `Hover` is opt-in.
+
 ## Related
 
 - `Select`: a single level of options.

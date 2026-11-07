@@ -1,7 +1,7 @@
 ---
 title: 轮播
 summary: 通过拖动、轻扫或方向键浏览一排幻灯片。
-source-hash: 6fd1e19ca14e
+source-hash: 585ee34a9428
 ---
 
 <Demo name="Slides" />
@@ -334,6 +334,14 @@ carousel.SlideLabelFormatter = (index, count) => $"档案照片 {index + 1}，�
 | 相邻项的缩放与不透明度 | 每一帧跟随轨道位置 | 随轨道一起跳动 | 立即 |
 | 指示器胶囊 | 拉伸并跟随当前幻灯片 | 直接跳到当前圆点 | 立即 |
 | 自动播放 | 按间隔前进，并使胶囊耗尽 | 不可用 | 不可用 |
+
+## 响应式
+
+- `Carousel` 在自身宽度为 340 px 或更窄时进入 `:compact`（即 `CompactWidth` 常量）。控件行收紧为 `CompactControlsGap` 的 4 px 间距，指示点之间也更靠近。
+- 滑块宽度为自身宽度的 `SlideWidthRatio`（0.8），上限为 `MaxSlideWidth`（340 px），所以在窄列中两侧会露出相邻的滑块。
+- 指示器行高为 `TabHeight`（36 px）。滑块超过可显示数量时，它可以横向滚动，并让当前滑块保持在中间。
+- 浏览通过拖动或快速滑动完成。自动播放在悬停和拖动期间暂停；触屏没有悬停，因此在妨碍阅读的手机页面上可以将 `IsAutoPlay` 设为 False。
+- 让轮播在所在列中拉伸，不要设置固定的 `Width`，滑块大小会随列变化。
 
 ## 相关组件
 

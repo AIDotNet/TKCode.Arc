@@ -1,7 +1,7 @@
 ---
 title: Referral card
 summary: 双向奖励的推荐卡片：复制或分享邀请链接，用标签形式按邮箱邀请好友，看着邀请从已邀请到已注册再到已赚取，奖励金额随之累加，里程碑奖励随之解锁。
-source-hash: c111993428ce
+source-hash: d14955399398
 ---
 
 <Demo name="Preview" />
@@ -178,6 +178,14 @@ card.Labels = new ReferralCardLabels
 | 模拟计划 | 进入屏幕 40% 时播放一次 | 以两倍速度播放 | 以两倍速度播放 |
 
 各个等级的最终状态都相同；减弱动效只去掉滚动、上升和高度变化。
+
+## 响应式
+
+- `ReferralCard` 按自身宽度判断。宽度低于 `NarrowWidth`（470 px）时设置 `:narrow`：分享按钮各占一整行，里程碑文字可以占到两行（`MaxLines`）。
+- 卡片在 `CardMaxWidth`（560 px）以内随宽度变化，超过后不再变宽，即使所在列更宽也是如此。
+- 过长的邮箱地址与姓名以省略号结尾（`CharacterEllipsis`），日期与状态始终可见。
+- 邀请的邮箱标签位于固定高度的输入区中，可横向滚动；每个标签都有自己的删除按钮，删除不依赖 Backspace 或悬停。
+- 让 `ReferralCard` 占满所在列的宽度，不要设置固定的 `Width`；宽度低于 470 px 时它会自动切换。
 
 ## 相关组件
 

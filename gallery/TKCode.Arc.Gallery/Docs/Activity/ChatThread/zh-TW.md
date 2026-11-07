@@ -1,7 +1,7 @@
 ---
 title: 聊天對話
 summary: 帶分組訊息、表情回應、已讀回執、輸入狀態以及附帶附件輸入區的聊天對話。
-source-hash: 52bcaa28f16a
+source-hash: 99f8ef4800d0
 ---
 
 <Demo name="SupportConversation" />
@@ -379,6 +379,14 @@ SaaS 產品帳單頁面上的一個支援面板。面板有固定高度，因此
 
 | 輸入中指示 | 可見時圓點循環 | 圓點停止 | 圓點停止 |
 | 跳至膠囊出現 | 從下方升起 | 短暫淡入 | 立即完成 |
+
+## 響應式
+
+- `ChatThread` 隨寬度變化。寬度低於 `NarrowWidth`（主題權杖，預設 420 px）時進入 `:narrow` 虛擬類別：左右內距從 16 px 減為 12 px（`ContentPaddingNarrow`），訊息堆疊最多佔列寬的 84%（`StackMaxRatioNarrow`），而不是 78%。544 px 的上限（`StackMaxWidth`）仍然有效。
+- 討論串依自身寬度而不是視窗寬度判斷，所以放在側邊面板或對話方塊中與在手機上的摺疊方式相同。
+- 訊息文字在氣泡內換行。附件檔名以省略號結尾（`CharacterEllipsis`）。輸入框會隨文字增高，直到 `FieldMaxHeight`。
+- 在觸控螢幕上不要只依賴新增回應按鈕（PART_React）。它在指標位於訊息上（`:pointerover`）或訊息取得焦點（`:focus-within`）之前透明度為 0，因此在手機上請提供其他回應方式。
+- 讓討論串延展填滿所在面板（`HorizontalAlignment` 與 `VerticalAlignment` 預設為 `Stretch`）。低於 420 px 時緊湊版面會自動啟用，所以側邊面板不需要另外的版面。
 
 ## 相關元件
 

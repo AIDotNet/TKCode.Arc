@@ -1,7 +1,7 @@
 ---
 title: 文件擷取
 summary: 將文件轉為具型別的資料，並顯示每個值的來源：安靜的文件檢視器旁邊是可編輯的表單，模型閱讀時欄位會逐一填入，並搭配著色的來源文字、曲線連線、低信心度覆核與具型別的 JSON 結果。
-source-hash: 9e50c2c8b02b
+source-hash: 2d72fd76dce8
 ---
 
 <Demo name="Preview" />
@@ -182,6 +182,14 @@ public sealed class MyExtractor : IDocumentExtractor
 | 落定的值 | 淡入並閃爍 | 淡入 | 立即 |
 | 縮放、列、長條 | 彈簧 | 立即 | 立即 |
 | "Accept all"（全部接受） | 交錯 35 ms | 同時完成，並交叉淡入淡出 | 立即 |
+
+## 響應式
+
+- `DocumentExtraction` 依自身寬度而不是視窗寬度改變版面。低於 760 px（`:stacked`）時，文件檢視器位於表單上方；低於 700 px（`:footer-wrap`）時，底部操作區換行；低於 520 px（`:narrow`）時，底部切換為窄版模式，隱藏模型名稱，列與表格也改為窄版版面。
+- 三個斷點是內部值，來自 DocumentExtractionToken，應用程式無法為單一實例設定它們。
+- 欄位、JSON 與 Schema 面板只做垂直捲動（`HorizontalScrollBarVisibility="Disabled"`），過長的值會換行或被截斷，而不會把面板推向一側。
+- 欄位與其原文之間的連線跟隨懸停的欄位；沒有懸停時跟隨已選取的欄位。因此觸控使用者無需依賴懸停也能看到連線。
+- 給它至少 760 px 寬的欄，讓檢視器與表單並排。在手機上讓它佔滿螢幕，此時檢視器位於表單上方。
 
 ## 相關元件
 

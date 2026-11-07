@@ -1,7 +1,7 @@
 ---
 title: 文字閃光
 summary: 用平緩的光帶掃過文字，表示正在進行的工作。
-source-hash: 23c614235a9b
+source-hash: c3b887d04b07
 ---
 
 <Demo name="StatusLine" />
@@ -263,6 +263,13 @@ public partial class ImportViewModel : ObservableObject
 | 文字變化後的寬度 | 在標籤變化的同時以彈簧調整到新寬度 | 立即跳到新寬度 | 立即 |
 | `IsActive` 設為 `true` | 文字在 240 ms 內回到靜止的基礎色 | 120 ms 內即時淡入 | 立即 |
 | `IsActive` 設為 `false` | 光帶最多在 420 ms 內滑出，隨後文字在 360 ms 內變為實色 | 120 ms 內實色文字 | 立即 |
+
+## 響應式
+
+- `TextShimmer` 不會在斷點處改變形態。狀態文字畫在不換行的一行上，寬度即文字本身的寬度，並以父層給它的寬度為上限。
+- 只有當 `IsActive` 為 true、可見且位於視埠 64 px（`ViewportMargin`）之內時才會掃光，因此移出螢幕的狀態列不會產生動畫。
+- 它沒有自己的指標行為，因此沒有任何內容依賴懸停。
+- 在手機上給狀態列單獨一列，並保持為幾個字：它不換行，較長的標籤會佔滿整列。
 
 ## 相關元件
 

@@ -182,6 +182,19 @@ Every word comes from `Labels` (`DocumentExtractionLabels`): replace the instanc
 | Zoom, rows, bars | Springs | Immediate | Immediate |
 | Accept all | Staggered 35 ms | All at once, with crossfade | Immediate |
 
+## Responsive behavior
+
+- `DocumentExtraction` changes layout at its own width, not the window's. Below 760 px (`:stacked`) the document viewer
+  sits above the form. Below 700 px (`:footer-wrap`) the footer's actions wrap. Below 520 px (`:narrow`) the footer
+  switches to its narrow mode, the model name is hidden, and the rows and tables take the narrow layout.
+- The three breakpoints are internal and come from DocumentExtractionToken, so an app cannot set them on an instance.
+- The fields, JSON and schema panes scroll vertically only (`HorizontalScrollBarVisibility="Disabled"`), so a long value
+  wraps or is cut rather than pushing the pane sideways.
+- The link between a field and its source text follows the hovered field, or the selected one when nothing is hovered. A
+  touch user therefore gets the link without relying on hover.
+- Give it a column at least 760 px wide to keep the viewer beside the form. On a phone let it fill the screen, where the
+  viewer stacks above the form.
+
 ## Related
 
 - `ModelArena` for judging two models by their answers.

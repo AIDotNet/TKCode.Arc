@@ -1,7 +1,7 @@
 ---
 title: LLM cost calculator
 summary: 針對 LLM 工作負載的價格試算器：設定每次請求的 token 數、每天的請求數與提示快取，各模型依月費重新排名，長條平滑滑動，價格滾動變化。
-source-hash: 6b4c782fba53
+source-hash: 8685b7808bf3
 ---
 
 <Demo name="Preview" />
@@ -148,6 +148,13 @@ calculator.Labels = new LlmCostCalculatorLabels
 | 載入 | 佔位列呼吸閃爍 | 靜止 | 靜止 |
 
 列、長條和數字在移動時是繪製出來的，不參與排版，所以一次讓八列重新排名的拖曳不會觸發排版。面板閒置時不執行任何動作。
+
+## 響應式
+
+- `LlmCostCalculator` 依自身寬度判斷，最寬 720 px。低於 `NarrowWidth`（600 px）時進入 `:narrow` 虛擬類別，三個滑桿上下堆疊；低於 `CompactWidth`（520 px）時進入 `:compact`，總價移到標題下方，每個條形佔一列，明細分為兩欄。
+- 每月費用達到 $100,000 起改用緊湊數字（$420K、$4.2M），成本欄在手機上不會溢出；總價仍顯示全部數位。
+- 模型列高 44 px，緊湊版面下增至 58 px，足夠輕觸。預設是一個分段控制項，放不下時會在自身內部橫向捲動。
+- 讓面板佔滿螢幕寬度，不要設定固定的 `Width`；兩個斷點已經涵蓋手機尺寸。
 
 ## 相關
 

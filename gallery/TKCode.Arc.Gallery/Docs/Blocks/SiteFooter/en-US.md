@@ -144,6 +144,16 @@ Keyboard focus draws a 2 px ring around a link; a pointer press focuses without 
 | Subscribe button | The label cross-fades with a blur, the width springs and a spinner shows while loading | The button's reduced rules | Immediate |
 | Logo arch | Once, when 30% is on screen: fades in and rises 40 px over 900 ms | Shown at once | Shown at once |
 
+## Responsive behavior
+
+- `SiteFooter` measures its own width, not the window's. At 760 px or less (`StackedWidth`, reported by `:stacked`) the
+  intro stacks above the link columns. At 520 px or less (`:narrow`) the link columns take two across and the legal row
+  stacks.
+- The newsletter is at most 400 px wide (`NewsletterMaxWidth`), and the tagline at most 320 px (`TaglineMaxWidth`).
+- Link groups in the bottom rows sit in a `WrapPanel`, so they wrap onto a new line rather than scroll sideways.
+- The footer does not need a width of its own on a phone. Give it the full screen width; below 520 px it already takes
+  two columns, so the link groups stay readable.
+
 ## Related
 
 - The Newsletter signup block for a full-width signup section.

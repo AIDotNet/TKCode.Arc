@@ -1,6 +1,6 @@
 ---
 title: Tooltip
-summary: Short supporting text for unfamiliar controls.
+summary: A short label shown on hover or keyboard focus for a control that does not explain itself, such as an icon-only button.
 ---
 
 <Demo name="Sides" />
@@ -292,6 +292,16 @@ The side of the trigger is set with `TooltipSide`, which has four members.
 | Next tooltip while warm | Opens at once with a fade only | Short fade only | Shown at once |
 | Text changes while open | New words rise in with a soft blur; the bubble springs to its new size | Short fade only | Shown at once |
 | Tooltip closes | Instant fade, the bubble shrinks to 0.98 | Short fade | Removed at once |
+
+## Responsive behavior
+
+- `Tooltip` looks the same at every width: its text wraps inside a bubble at most `BubbleMaxWidth` (240 px by default)
+  wide, with 16 px of padding on each side.
+- A tooltip opens on pointer hover and keyboard focus only, so a touch user may never see it. Put anything a touch user
+  must read on the page.
+- A long tip wraps onto several lines and is harder to scan, so keep tips to a few words.
+- A control in a page header against the top edge of the window opens its tip with `Tooltip.Side="Bottom"`. A control at
+  the edge of a vertical toolbar uses `Left` or `Right`.
 
 ## Related
 

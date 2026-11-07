@@ -375,6 +375,17 @@ source, in the order of the primary constructor.
 | The answers | The radius grows to the last answer and the neighbours light up in rank order | Final ring and answers | Final ring and answers |
 | The result rows | Rise into the list in rank order | Listed at once | Listed at once |
 
+## Responsive behavior
+
+- `VectorSearch` has no breakpoint. The diagram scales to the width it is given and never grows past its 844 px design
+  width, so the proportions hold at every size.
+- Below about 422 px (half the design width) the diagram stops drawing node titles and keeps only the icon tiles. Below
+  about 608 px it also drops the node subtitles, so the caption under the picture has to carry the meaning.
+- Nothing in the picture needs a touch. The only control is the play button (`IsPlaybackButtonVisible`), a 28 px circle
+  that is hidden under the still frame.
+- Give it a full-width column rather than a fixed `Width`. Below 422 px the labels are gone, so keep the copy around it
+  short enough to explain the picture on its own.
+
 ## Related
 
 - `SearchField` for the question input in an app, and for showing your own results.

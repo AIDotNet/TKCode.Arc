@@ -1,7 +1,7 @@
 ---
 title: Agent loop
 summary: 智能体收集上下文、调用工具并检查结果，沿循环反复进行，直到任务完成。
-source-hash: e5ae207d1603
+source-hash: 8c4c16bbc776
 ---
 
 <Demo name="SampleRun" />
@@ -260,6 +260,14 @@ public sealed class AgentDemoViewModel
 | token 总数 | 在 500 ms 内计数增长 | 直接跳到总数 | 直接跳到总数 |
 | 站点颜色与标签块边框 | 在 240 ms 内变化（新块为 480 ms） | 立即变化 | 立即变化 |
 | 完成时的环 | 在 760 ms 内画出 | 直接显示为已画出 | 直接显示为已画出 |
+
+## 响应式
+
+- `AgentLoop` 按自身宽度而不是窗口宽度判断。容器宽 640 px（`WideBreakpoint`）及以上时，上下文堆叠位于环形图旁边；宽 460 px（TwoColumnBreakpoint）及以上时，上下文块两两并排成两栏，更窄时单栏堆叠。卡片的 `MaxWidth` 为 744。
+- 在环形图的列内，宽度低于 360 px（`CompactBreakpoint`）时两条通道合并为一条，站点标签不再显示图标；低于 270 px（LowStationsBreakpoint）时，下方的站点移到 140° 和 220°。宽度低于 400 px（SpeedLabelBreakpoint）时隐藏 "Speed" 字样。
+- 标题超出时以省略号截断（`CharacterEllipsis`），单行标签不换行（`NoWrap`）。说明文字与占位文字会换行（`Wrap`）。
+- 在手机上，卡片内边距从 24 px 缩小到 16 px（`CardPadding`）。播放、单步、重新开始和速度控件都是普通按钮，点按与点击的效果相同。
+- 让卡片拉伸到所在列的宽度，不要设置固定的 `Width`。手机宽度下低于 460 px 时它会单栏堆叠，应先检查这种布局。
 
 ## 相关组件
 

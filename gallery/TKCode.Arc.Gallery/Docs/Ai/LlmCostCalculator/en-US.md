@@ -177,6 +177,18 @@ calculator.Labels = new LlmCostCalculatorLabels
 Rows, bars and numbers are drawn, not laid out, while they move, so a drag that re-ranks eight rows runs no layout pass.
 Nothing runs while the panel is idle.
 
+## Responsive behavior
+
+- `LlmCostCalculator` reads its own width and caps at 720 px. Below `NarrowWidth` (600 px) the `:narrow` pseudo-class
+  stacks the three sliders; below `CompactWidth` (520 px) `:compact` moves the total under the heading, puts each bar on
+  its own line and wraps the breakdown into two columns.
+- Monthly costs from $100,000 switch to compact figures ($420K, $4.2M), so the cost column does not overflow on a phone,
+  and the total keeps every digit.
+- Model rows are 44 px tall and grow to 58 px in the compact layout, which is tall enough to tap. The presets are a
+  segmented control that scrolls sideways inside itself when they do not fit.
+- Let the panel fill the screen width rather than setting a fixed `Width`; the two breakpoints already cover phone
+  sizes.
+
 ## Related
 
 - `ContextWindow` for the live token usage of one conversation.

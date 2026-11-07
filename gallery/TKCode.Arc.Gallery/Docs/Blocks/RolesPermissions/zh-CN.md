@@ -1,7 +1,7 @@
 ---
 title: Roles and permissions
 summary: 角色与权限矩阵，带有会产生涟漪的分组复选框、锁定的所有者权限、角色复制，以及一次性保存全部更改的审阅栏。
-source-hash: 88e5f5c8c024
+source-hash: e1472f3c8e0b
 ---
 
 <Demo name="Preview" />
@@ -138,6 +138,15 @@ matrix.Saved += (_, e) => Debug.WriteLine($"{e.Request.ChangeCount} access chang
 - **副本**在淡入的同时，其列以平滑弹簧从零宽度展开；被移除的角色会淡出并关闭。
 - **审阅栏**：它的空间在 240 ms 内展开，同时栏从 24 px 下方以平滑弹簧升起并淡入。计数会滚动，"change" 和 "changes" 逐字母变形，第二行则以短暂的模糊切换。Save 按钮在保存时旋转，然后随着宽度的弹簧变化变形为 "Saved"。
 - 减少动效和关闭动效时，所有更改立即生效，与 Arc 的减少模式一致。
+
+## 响应式
+
+- `RolesPermissions` 按自身内容宽度选择宽度档位，而不是窗口宽度。低于 760 px 时为 `:narrow`：标签列至少 200 px，角色列更窄。低于 540 px 时为 `:compact`：标签列 148
+  px，内边距更紧。
+- 角色列放不下时，矩阵在 `ScrollViewer`（`HorizontalScrollBarVisibility="Auto"`）中横向滚动。标签列保持固定，滚动角色列时仍能读到每一项权限名称。
+- 权限名称在标签列内换行；没有空间时，页眉中的成员头像换到标题下方（`WrapPanel`）。
+- 权限行高 40 px，分组行高 45 px，角色按钮高 44 px（`RoleButtonHeight`）。勾选单元格高 32 px（`CellHeight`），因此应点按单元格，而不是 16 px 的方框（`BoxSize`）。
+- 悬停只会改变方框的颜色（`BoxHoverFill`），点按的效果与点击相同。在手机上让它占满屏幕宽度，而不要设置 `Width`；低于 540 px 时会自动使用紧凑档位。
 
 ## 相关
 

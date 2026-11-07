@@ -192,6 +192,18 @@ evenly spaced ones.
 - Reduced motion skips the first run and the glides: playback jumps one month every 960 ms, keys and taps jump, a series
   switch replaces the points at once, and only short fades stay. Off applies everything at once.
 
+## Responsive behavior
+
+- The block reads its own width. Under 540 px (`:narrow`) the paddings are 16 and the corner radius follows the panel.
+  Under 480 px (`:compact`) the plot is 300 px high, notes, the target label and the zone label go, every second tick of
+  the horizontal axis is skipped, and the scrubber moves under the button.
+- Under 720 px the readouts form a 2 × 2 grid and the plot is 330 px high. Under 560 px the quarter labels shrink to the
+  first, the Januaries and the last month. Under 380 px the readout values are 18 px.
+- The hover card appears within 30 px of a month. On a touch screen, tap a point to move the head there; the card shows
+  while the finger is down. The play, pause and replay buttons work the same way.
+- Let the block fill the width of the phone. The readouts, the plot and the scrubber change at the breakpoints, so do
+  not set a fixed `Width`.
+
 ## Related
 
 - `Metrics dashboard`, `KPI drilldown` and `Revenue explorer`, the other Analytics blocks.

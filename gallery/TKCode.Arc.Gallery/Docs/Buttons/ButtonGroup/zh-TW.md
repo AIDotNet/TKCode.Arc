@@ -1,7 +1,7 @@
 ---
 title: 按鈕群組
 summary: 將相關操作合併到一個帶細分隔線的整體中：懸停高亮在各區段之間滑動，按下的區段就地回應，附加選單還可以收合整排按鈕。
-source-hash: a2540af58a90
+source-hash: d5a3a6a6fbec
 ---
 
 <Demo name="DocumentActions" />
@@ -323,6 +323,14 @@ public partial class DocumentViewModel : ObservableObject
 | 預留寬度的區段標籤變化 | 在固定的框內交叉淡化 | 交叉淡化 | 立即完成 |
 | 未預留寬度的區段標籤變化 | 區段寬度沿彈簧適配新標籤 | 交叉淡化 | 立即完成 |
 | 選單開啟 | 從按鈕群組的邊緣展開，伴隨短暫位移；雪佛龍翻轉 | 交叉淡化；雪佛龍不翻轉 | 立即完成 |
+
+## 響應式
+
+- `ButtonGroup` 在一個自身寬度斷點上變化。水平排列的列放不下所給寬度時，帶圖示的分段會隱藏標籤（`:compact`，由 `IsLabelCollapseEnabled` 控制）；列有足夠寬度時標籤恢復。只有帶圖示且沒有值的分段會摺疊，純文字分段保留標籤。
+- 分段高度在 `Medium` 下為 42 px（`SegmentExtentMD`），在 `Small` 下為 34 px（`SegmentExtentSM`）。
+- 垂直排列的按鈕群組從不摺疊標籤，因此在任何寬度下欄中都保留標籤。
+- 下拉選單按鈕打開的選單最窄為 208 px（`MenuMinWidth`）。
+- 觸控螢幕上請使用 `Medium`。若要保留全部標籤，把 `IsLabelCollapseEnabled` 設為 `False`，並給按鈕群組單獨一列。
 
 ## 相關元件
 

@@ -433,6 +433,20 @@ default. Assign a new instance to `NotificationCenter.Labels`.
 | Unread badge | Pops in and out; the number rolls | Short fade | Immediate |
 | View highlight | Glides between All and Unread | Short fade | Immediate |
 
+## Responsive behavior
+
+- The panel is sized by its viewport: the window, or an `ArcViewportHost` such as a phone preview. It is `PanelWidth`
+  (424 px) at most, and the viewport less `ViewportInset` (24 px) when that is narrower. It is `PanelMaxHeight` (590 px)
+  high at most.
+- At `NarrowBreakpoint` (380 px) or less the panel switches to its narrow layout (`:narrow`): tighter header and row
+  padding, a smaller heading, and "Mark all read" shows only its icon.
+- The popup stays inside the viewport. It is centered on the bell and slides back to keep CollisionPadding (12 px)
+  from the edges, and its height is capped to the room on the larger side of the bell.
+- The list scrolls vertically with its scroll bar hidden and never sideways. Tapping a row expands it, and its details
+  hold "Mark read" and "Dismiss", so no action needs hover. Hover only tints a row, and it is off for touch.
+- Keep the list to recent updates: the panel is at most 590 px high and has no list scroll bar to speak of. Send people
+  to a history page for the rest.
+
 ## Related
 
 - `Toast` for a short message that goes away by itself.

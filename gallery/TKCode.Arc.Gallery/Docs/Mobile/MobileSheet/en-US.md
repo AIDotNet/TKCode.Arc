@@ -91,6 +91,16 @@ Escape closes a dismissible sheet. Give the sheet a `Title`: it is the first tex
 
 The panel's position is a code-driven motion value: a drag writes it on every move, and on release the finger's speed goes into a spring (0.4 s smooth to open, 0.3 s to close), which a transition declared in the theme cannot do. The scrim's opacity follows the panel's position each frame: full at the tallest detent, a little lighter at the lowest of several, clear when closed. Moving between detents is one spring from wherever the panel is, so a new tap or drag interrupts it without a seam. With reduced motion the panel jumps to the detent instead of gliding.
 
+## Responsive behavior
+
+- `Sheet` has no width breakpoint: its panel spans the width of the page at every size and rises from the bottom edge.
+- Its height is at most `MaxHeightFraction` (0.9 by default) of the sheet's height, and the sheet fills its parent.
+  Taller content scrolls vertically inside the panel. Horizontal scrolling is off, so content has to fit the width.
+- The `Title` stays on one line and ends in an ellipsis when it is too long. When the sheet holds a form, keep a visible
+  close action inside it, since tapping the scrim is only a shortcut.
+- The handle (the grabber and the title) drags with any pointer; the content drags the sheet by touch only. Pass the
+  bottom safe area through `SafeAreaBottom` so the content clears the home indicator.
+
 ## Related
 
 - `MobilePage`: the `Overlay` slot holds the sheet.

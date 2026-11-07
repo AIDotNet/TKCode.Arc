@@ -1,7 +1,7 @@
 ---
 title: 按钮组
 summary: 将相关操作合并到一个带细分隔线的整体中：悬停高亮在各段之间滑动，按下的段就地响应，附加菜单还可以收起整排按钮。
-source-hash: a2540af58a90
+source-hash: d5a3a6a6fbec
 ---
 
 <Demo name="DocumentActions" />
@@ -323,6 +323,14 @@ public partial class DocumentViewModel : ObservableObject
 | 预留宽度的段标签变化 | 在固定的框内交叉淡化 | 交叉淡化 | 立即完成 |
 | 未预留宽度的段标签变化 | 段宽度沿弹簧适配新标签 | 交叉淡化 | 立即完成 |
 | 菜单打开 | 从按钮组的边缘展开，伴随短暂位移；雪佛龙翻转 | 交叉淡化；雪佛龙不翻转 | 立即完成 |
+
+## 响应式
+
+- `ButtonGroup` 在一个自身宽度断点上变化。水平排列的行放不下所给宽度时，带图标的分段会隐藏标签（`:compact`，由 `IsLabelCollapseEnabled` 控制）；行有足够宽度时标签恢复。只有带图标且没有值的分段会折叠，纯文字分段保留标签。
+- 分段高度在 `Medium` 下为 42 px（`SegmentExtentMD`），在 `Small` 下为 34 px（`SegmentExtentSM`）。
+- 垂直排列的按钮组从不折叠标签，因此在任何宽度下列中都保留标签。
+- 下拉菜单按钮打开的菜单最窄为 208 px（`MenuMinWidth`）。
+- 触屏上请使用 `Medium`。若要保留全部标签，把 `IsLabelCollapseEnabled` 设为 `False`，并给按钮组单独一行。
 
 ## 相关组件
 

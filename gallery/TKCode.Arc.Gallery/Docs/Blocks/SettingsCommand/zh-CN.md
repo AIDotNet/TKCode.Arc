@@ -1,7 +1,7 @@
 ---
 title: 设置命令面板
 summary: 用一个搜索框找到任意设置并原地修改：开关翻转、选项轮换、链接打开，全部可用键盘完成。
-source-hash: 1a7e720308b9
+source-hash: 642aeb3b8c33
 ---
 
 <Demo name="Inline" />
@@ -349,6 +349,14 @@ palette.Labels = new SettingsCommandLabels
 | 高亮在行之间移动 | 以灵敏的弹簧滑动 | 立即移动 | 立即移动 |
 | 选项的值变化 | 按变化方向上滚或下滚 | 淡入淡出 | 立即显示 |
 | 变化提示出现 | 伴随柔和模糊上升，2.5 秒后淡出 | 淡入淡出 | 立即显示 |
+
+## 响应式
+
+- `SettingsCommand` 在任何宽度下外观都一样，没有断点。面板宽度至少 320 px（`PanelMinWidth`）。
+- 结果列表最高 360 px（`ResultsMaxHeight`），超出后滚动。在任何宽度下，行高都保持 48 px（`RowHeight`），搜索行 56 px（`SearchRowHeight`），页脚 40
+  px（`FooterHeight`）。
+- 放不下的标题与说明以省略号结尾（`CharacterEllipsis`），页脚提示最宽 260 px（`NoticeMaxWidth`）。
+- 快捷键标记与页脚提示只描述键盘操作，每一行是 48 px 的点按目标。在手机上，应提供可见的按钮来打开面板，而不是只依赖键盘快捷键。
 
 ## 相关组件
 

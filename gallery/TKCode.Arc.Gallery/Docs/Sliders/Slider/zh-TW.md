@@ -1,7 +1,7 @@
 ---
 title: 滑桿
 summary: 在軌道上選取一個值或一個範圍，跟隨指標移動。
-source-hash: 8edf5e790ada
+source-hash: e254658996f6
 ---
 
 <Demo name="SingleValue" />
@@ -317,6 +317,14 @@ public partial class PriceFilterViewModel : ObservableObject
 | 拖曳中的滑桿把手 | 以靈敏的彈簧放大到 1.16 倍 | 立即放大 | 立即完成 |
 | 數值泡泡 | 從 0.6 倍彈出並伴隨柔和模糊；以 0.8 倍淡出 | 淡入淡出 | 立即完成 |
 | 讀數數字 | 數值變動時逐位滾動 | 立即切換 | 立即完成 |
+
+## 響應式
+
+- `Slider` 在任何寬度下形態都不變。它取父層給它的寬度，讀數顯示在標籤列上。寬度較小時標籤以省略號截斷，軌道佔據 `StartContent` 與 `EndContent` 之外的剩餘空間。
+- 它依自身寬度而不是視埠測量。
+- 軌道列高 44 px（`ControlSizeMD`），滑桿直徑為 `ThumbDiameter`（22 px）。數值氣泡位於滑桿上方 8 px；觸控或觸控筆按下時升至 18 px。
+- 懸停只改變刻度標籤的顏色，滑桿透過拖曳運作，因此沒有任何操作依賴懸停。
+- 讓滑桿佔滿整列。`StartContent` 與 `EndContent` 只放單一圖示或小圖示按鈕。
 
 ## 相關元件
 

@@ -116,6 +116,17 @@ The quality values:
 |---|---|---|---|
 | Ink | Live simulation | One still frame | One still frame |
 
+## Responsive behavior
+
+- `InkFluid` does not change at a width. Its field is at least 240 px high (`MinHeight` in the theme) and fills the
+  width it is given.
+- A resize rebuilds the simulation once the size has settled for 120 ms. Avoid placing it where its size changes all the
+  time, such as an animated panel.
+- `Quality` sets the simulation size: `Low`, `Medium` (the default) or `High`. Use `Low` for small areas and slower
+  devices.
+- On touch screens a finger stirs the ink while it is down, and vertical scrolling keeps working.
+- The simulation pauses while the control is scrolled out of view or hidden, and it resumes where it left off.
+
 ## Related
 
 - `DotGrid` is a lighter, geometric background that reacts to the pointer.

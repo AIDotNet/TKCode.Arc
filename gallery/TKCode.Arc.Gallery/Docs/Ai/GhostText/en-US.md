@@ -194,6 +194,15 @@ The simulation loops with full motion; with reduced motion or none it plays once
 Below 520px of width the word and Escape hints step aside and only the chip remains, and a footer note truncates with an
 ellipsis.
 
+## Responsive behavior
+
+- `GhostText` measures its own width, not the window's. Below 520 px the `:narrow` pseudo-class hides the word and
+  Escape hints, and only the chip remains.
+- Touch input hides the hints too; on touch screens the chip reads "Tap to accept" instead.
+- A single-line field is 44 px tall and clips its text instead of wrapping it. A multi-line field grows from `Rows` to
+  `MaxRows` lines and then scrolls. Let the field fill its row; when space runs short, the footer note truncates with an
+  ellipsis.
+
 ## Related
 
 - `Textarea` and `Input` for plain text fields.

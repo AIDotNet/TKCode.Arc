@@ -432,6 +432,17 @@ and drag, and releases when the finger lifts.
 | Crosshair moves | Glides between points on a spring | Jumps to the point | Jumps to the point |
 | Loading | Lines breathe, dimmed | Pulse stops | Pulse stops |
 
+## Responsive behavior
+
+- `LineChart` has no breakpoint. Its plot is as wide as its container, and `PlotHeight` (220 px by default) sets its
+  height. With `ShowYAxis` on, the value axis takes a 48 px gutter (`GutterWidth`) from that width; turn it off to give
+  the plot the whole width.
+- It measures its own width, not the window's, so a chart in a narrow card reads the same way as one on a phone.
+- Touch reads the nearest point on press, and the crosshair and tooltip follow the finger, so values are readable
+  without hover. The legend toggles are buttons that take a tap.
+- On a phone, let the chart stretch to the screen width and keep to three or four series; for a trend beside a single
+  number, use `Sparkline`.
+
 ## Related
 
 - `Sparkline` for a compact trend beside a value.

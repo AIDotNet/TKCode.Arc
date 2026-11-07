@@ -1,7 +1,7 @@
 ---
 title: Speech player
 summary: 为 AI 回复朗读的播放器：Read aloud 变成一个紧凑的播放器，带播放、可拖动的进度条、语速和音色选择，高亮随朗读的词在回复中移动。
-source-hash: 0f58f8c877f9
+source-hash: 3f1e8876dada
 ---
 
 <Demo name="Preview" />
@@ -214,6 +214,14 @@ player.Labels = new SpeechPlayerLabels
 | 模拟 | 在两个音色之间循环，直到有人操作 | 只读一遍 | 只读一遍 |
 
 时钟在所有动效等级下都运行：朗读是内容，不是装饰。尺寸变化时高亮重新测量，不播放动画。
+
+## 响应式
+
+- `SpeechPlayer` 按自身宽度改变形态。低于 `NarrowWidth`（440 px）时总时长退到一旁（`:narrow`），让进度条保有空间；已播放时间、速度、语音与停止朗读保持显示。
+- 卡片在 `MaxCardWidth`（640 px）以内占满容器，回复文字在任何宽度下都会换行。
+- 操作栏高度为 `DockHeight`（32 px），触屏点按后为 `DockTouchHeight`（36 px），因此播放器与被它替换的操作行保持相同高度。
+- 播放、速度、语音与停止朗读都是按钮，进度条可以拖动，没有任何操作依赖悬停。
+- 在手机上让 `SpeechPlayer` 占满一整列，不要设置固定的 `Width`；在对话记录中使用 `Variant="Plain"`。
 
 ## 相关组件
 

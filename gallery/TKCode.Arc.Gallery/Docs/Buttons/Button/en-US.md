@@ -1,6 +1,6 @@
 ---
 title: Button
-summary: A clear, responsive action with quiet secondary states.
+summary: The default button for one action, in primary, secondary, ghost and danger weights, three sizes and a loading state that keeps its width.
 ---
 
 <Demo name="Variants" />
@@ -356,6 +356,17 @@ Companion types used on this page:
 | Label changes | The new text rises from a soft blur, the old text fades up, the width springs to fit | Instant crossfade | Immediate |
 | Loading starts or ends | The label fades under the spinner, which turns every 0.7 seconds | Crossfade, and the spinner stops turning | Immediate |
 | Hover, press, disabled colours | The colours crossfade on a fast curve | Instant | Immediate |
+
+## Responsive behavior
+
+- `Button` looks the same at every width: `Size` sets its height and padding (36, 44 or 50 px), and its width follows
+  the label. It never changes form at a breakpoint.
+- The label stays on one line. In a narrow row, let the button fill the row (`HorizontalAlignment="Stretch"`) or give it
+  a row of its own rather than shortening the label.
+- On touch screens keep the main action at `Medium` (44 px, the default) or `Large`. `Small` suits dense toolbars used
+  with a mouse.
+- Nothing depends on hover: hover only tints the surface, and a tap reaches the pressed, focused and disabled states
+  the same way a click does.
 
 ## Related
 

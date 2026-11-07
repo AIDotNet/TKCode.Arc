@@ -1,7 +1,7 @@
 ---
 title: 圖示變形
 summary: 在不同狀態之間變形的圖示：選單變關閉、播放變暫停、複製變勾選等。
-source-hash: dd129b66808b
+source-hash: b2397d800a88
 ---
 
 <Demo name="EightPairs" />
@@ -292,6 +292,13 @@ public partial class LiveMetricsViewModel : ObservableObject
 | 複製變勾選 | 紙張折起，勾選繪出 | 立即完成 | 立即完成 |
 | 鈴鐺開啟 | 響一次，鈴舌略微落後於鈴身 | 不響 | 不響 |
 | 愛心被喜歡 | 以光環和火花迸發 | 無迸發 | 無迸發 |
+
+## 響應式
+
+- `IconMorph` 在任何寬度下外觀都一樣。它沒有斷點：尺寸由 `IconSize` 決定（預設 24 px），並把 24 單位的圖形縮放到所給的方框內。
+- 讓 `IconSize` 與所在的按鈕相配：36 px 的按鈕配 16 px 圖示，44 px 的按鈕配 24 px，52 px 的按鈕配 32 px。
+- 在觸控螢幕上，點按區域由所在的按鈕決定，因為圖示不參與命中測試。請設定宿主按鈕的 `Width` 與 `Height`（範例用 36 px），而不是放大圖示。
+- 沒有任何功能依賴懸停：`IconMorph` 沒有懸停狀態，狀態由圖形與按鈕的 `AutomationProperties.Name` 呈現，不用指標也不會遺失資訊。
 
 ## 相關元件
 

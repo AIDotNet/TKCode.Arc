@@ -1,7 +1,7 @@
 ---
 title: 移动端导航栏
 summary: 页面顶部 44 px 高的栏：起始槽、居中的标题和放操作的末端槽。
-source-hash: bd5a14d5e8d1
+source-hash: b5a5a82a9793
 ---
 
 <Demo name="Basic" />
@@ -87,6 +87,13 @@ source-hash: bd5a14d5e8d1
 ## 动效
 
 标题变化时，新标题从轻微模糊中升起，旧标题上移淡出（P2，`ArcContentSwap` 模糊交叉淡化）；第一个标题和减少动效时不播放。大标题一比一跟随滚动偏移，自身没有动画。槽里的按钮按下与松开的表现与 `MobileButton` 相同。
+
+## 响应式
+
+- `Navbar` 没有断点。顶栏在任何宽度下都是 `BarHeight`（44 px）高，两侧留有 `BarPadding`（8 px）的内边距。
+- 前导与尾随区域至少为 `SlotMinWidth`（44 px）宽，使其中的按钮可以点按。返回按钮与区域按钮都是至少 44 x 44 px 的移动端 `Button`。
+- 标题在两个区域之间居中，过长时以省略号截断（`CharacterEllipsis`）。尾随操作保持为一两个简短的文字，使标题有足够的空间。
+- 大标题（`LargeTitleExtent`，52 px）会随 `CollapseProgress` 增大而收进顶栏；可滚动的页面就是以此驱动它的。
 
 ## 相关组件
 

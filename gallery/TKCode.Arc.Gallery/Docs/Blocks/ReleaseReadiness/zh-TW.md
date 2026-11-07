@@ -1,7 +1,7 @@
 ---
 title: Release readiness
 summary: 發布閘門：一組簡短的檢查項目會解鎖唯一的一個動作，並附上進度條、負責人、通知開關，以及就地顯示的結果。
-source-hash: 93dc8b911186
+source-hash: 8851e6d0a04e
 ---
 
 <Demo name="Preview" />
@@ -122,6 +122,14 @@ gate.Released += (_, e) => log.Info($"Rollout started on attempt {e.Request.Atte
 - **懸停**：列會在 160 ms 內著色。
 - **發布中**：按鈕顯示載入動畫，接著其文字以短暫的模糊進行交叉淡化，同時寬度以彈簧調整為新文字的寬度。狀態列以平滑彈簧展開，並搭配另外 160 ms 的淡入；重設時以相同方式收合。
 - 減少動態效果時，進度條、顏色與狀態列會立即就位，只保留按鈕的短暫交叉淡化。關閉動態效果時，所有變化都會立即套用。
+
+## 響應式
+
+- `ReleaseReadiness` 依自身寬度變化，不隨視窗寬度。寬度為 `CompactWidth`（388 px）或以下（`:compact`）時，左右內距由 20 px 收緊為 16 px。
+- 標頭保持一列。副標題放不下時以 `CharacterEllipsis` 截斷，進度計數始終可見。
+- 底部區域並排放置開關與發布按鈕。兩者並排放不下時，按鈕移到開關下方，發布操作不會被截掉。
+- 懸停只改變檢查項的底色（`RowHoverBackground`）。勾選檢查項與輕觸發布按鈕即可，沒有任何功能依賴懸停。
+- 讓區塊延展到頁面寬度（`HorizontalAlignment="Stretch"`），不要設定固定的 `Width`。區塊會自行收緊並重新排布底部區域，窄面板中無需額外程式碼。
 
 ## 相關
 

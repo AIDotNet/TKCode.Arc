@@ -181,6 +181,18 @@ average row (and the average line).
 - Reduced motion lands the morph, the values and the colors at once and keeps only short fades (card, legend, change
   texts). Off applies everything at once.
 
+## Responsive behavior
+
+- The block reads its own width. Below `CompactPlotWidth` (600 px) the chart uses short cohort names (`ShortLabel`), no
+  size column, 24 px rows and the axis title "Month". A column narrower than `NumberMinWidth` (32 px) takes its numbers
+  out of the cells.
+- Below 560 px (`:narrow`) the paddings tighten to 16 and the segment switch moves under the titles. Below 440 px
+  (`:stacked`) the headline numbers stack, one per row, and the view switch moves above the legend.
+- The headline values scale with the block's width between 22 and 28.
+- A cell's exact rate appears in a card only while you point at it, so on a touch screen read exact values from the
+  headline numbers; the heatmap shows the pattern. In a narrow panel, set `ShowSizeColumn` to `False` to free room for
+  the months.
+
 ## Related
 
 - `Metrics dashboard`, `KPI drilldown` and `Journey flow`, the other Analytics blocks.

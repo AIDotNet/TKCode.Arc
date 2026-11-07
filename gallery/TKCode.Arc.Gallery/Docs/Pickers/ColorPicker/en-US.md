@@ -381,6 +381,14 @@ from the place the person pressed.
 | Invalid entry | The field shakes side to side once and the error appears | The error appears without the shake | The error appears at once |
 | Swatch saved or reordered | The swatch pops in, or settles into its new place | Appears or moves at once | Immediate |
 
+## Responsive behavior
+
+- `ColorPicker` measures the viewport it opens in (`ArcViewport`: the window, or an `ArcViewportHost`). The panel is
+  `PreferredWidth` (304 px) at most and never wider than the viewport minus 32 px.
+- At a viewport of 360 px or less the panel is `:narrow`, and the "against background" text beside the grade is hidden.
+- The colour input keeps one line (`NoWrap`) and scrolls sideways instead of wrapping.
+- Keep `MaxSwatches` at its default of 7: a longer swatch row is harder to scan in a narrow panel.
+
 ## Related
 
 - `SegmentedControl` or `RadioGroup` for a few fixed colors.

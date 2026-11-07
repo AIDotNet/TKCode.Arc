@@ -303,6 +303,18 @@ The enums:
 | Code and Preview | Crossfade | Short crossfade | At once |
 | Simulation loop | Loops | Plays once | Plays once |
 
+## Responsive behavior
+
+- `DesignToCode` measures its own width, not the window's. Below `SplitWidth` (640 px, `:stacked`) the design and output
+  panes stack, each 352 px tall, so the card keeps its size while code streams. From 640 px they sit side by side.
+- Below 520 px (`:compact`) the status drops the file name and Import design file shows only its icon, keeping its name
+  for screen readers. Below 440 px (`:narrow`) the model name hides and the mark stays.
+- Long code lines wrap with a hanging indent, so the code never scrolls sideways.
+- Pointing at a region's box or tag lights up its lines, and focusing the tag does the same, so the link does not depend
+  on hover.
+- Keep the card between 360 and 760 px wide, in a page or a dialog, and let it stretch rather than setting a fixed
+  `Width`.
+
 ## Related
 
 - `CodeBlock` for finished code with copy.

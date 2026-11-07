@@ -201,6 +201,20 @@ real editing.
 
 Playback pauses while the card is off screen. Cursors move by their render transform, so travel never lays anything out.
 
+## Responsive behavior
+
+- `AgentCursor` changes at a width. Below `CompactWidth` (480 px by default, a theme token) it sets `:compact`: the
+  document padding tightens to 20 px at the sides (`CompactDocumentPadding`), and the review bar names only the number
+  of changes, without the agent's name.
+- The card measures its own width, not the window's. It fills the space it is given up to `CardMaxWidth` (680 px), and
+  the document text wraps inside it.
+- The card does not change height when the review bar appears. The bottom padding of the document (`DocumentPadding`, 80
+  px; 76 px in compact) keeps room for the floating bar, so the last lines stay readable.
+- No control in the card is hidden until hover. The review text ends in an ellipsis (`CharacterEllipsis`) when the bar
+  is full.
+- Give the card the full width of the page and leave out a fixed `Width`. Below 480 px it tightens by itself, so no
+  separate phone layout is needed.
+
 ## Related
 
 - `AgentStatus` for the live status of a whole run.

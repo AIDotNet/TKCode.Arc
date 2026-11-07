@@ -1,7 +1,7 @@
 ---
 title: 令牌文本编辑器
 summary: 多行文本编辑器，其中的令牌（如命令和提及）作为单个单元处理，触发符会打开你自己列表的查询。
-source-hash: f2eeb20780e2
+source-hash: c0feb94e5086
 ---
 
 <Demo name="Preview" />
@@ -121,6 +121,14 @@ source-hash: f2eeb20780e2
 |---|---|---|---|
 | 高度增加或减少 | 短缓动 | 立即 | 立即 |
 | 插入或移除令牌 | 立即 | 立即 | 立即 |
+
+## 响应式
+
+- `TokenTextEditor` 没有断点，宽度不会改变形态。它按给定的宽度换行（`TextWrapping` 为 `Wrap`），并且从不横向滚动（`HorizontalScrollBarVisibility` 为 `Disabled`）。
+- 高度随文字从 `MinLines`（默认 1 行）增长到 `MaxLines`（默认 8 行），之后文字滚动。在手机上调小 `MaxLines`，为屏幕其余部分留出空间。
+- 它按自身宽度而不是窗口宽度测量，所以窄面板中的输入框与手机上的换行方式相同。
+- 编辑器不自带列表。请在自己的面板中显示建议，并在列表打开时设置 `SuggestionsExpanded`；辅助技术要求关闭时会触发 `CollapseRequested`。
+- 没有任何功能依赖悬停：指针只在标记上改变光标。行距为 `EditorLineHeight`（24 px）。
 
 ## 相关组件
 

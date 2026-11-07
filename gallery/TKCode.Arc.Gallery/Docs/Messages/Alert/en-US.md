@@ -1,6 +1,6 @@
 ---
 title: Alert
-summary: A persistent message that helps people recover or continue.
+summary: An inline notice that stays on the page next to what it concerns until its situation is resolved.
 ---
 
 <Demo name="Tones" />
@@ -340,6 +340,18 @@ Companion type `AlertTone`:
 | Alert dismissed or hidden | Height collapses on a smooth spring while the alert fades out, and the content below moves up | Immediate | Immediate |
 | Tone changes | The icon swaps with a scale and a short blur | The icon fades | Immediate |
 | Title or content changes | The new text rises in from a soft blur and the height springs to fit | The text fades | Immediate |
+
+## Responsive behavior
+
+- `Alert` has no breakpoint and no `Size`. It takes the width its container gives it and keeps the same form at every
+  width.
+- `Title` wraps and never truncates, and a string `Content` wraps beneath it, so a narrow alert grows taller instead of
+  cutting text.
+- The dismiss button (`IsDismissible`) is a 28 px round button in the top right corner. It sits in the padding, so the
+  text keeps the full width.
+- The dismiss button is 28 px, which is small for a finger. Nothing depends on hover, but on a touch-first page put the
+  important action in `Content` as a real button rather than relying on the dismiss button.
+- Give it a full-width column rather than a fixed `Width`, so the text wraps at the width of the screen.
 
 ## Related
 

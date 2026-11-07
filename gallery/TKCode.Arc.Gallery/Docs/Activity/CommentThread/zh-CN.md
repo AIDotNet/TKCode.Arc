@@ -1,7 +1,7 @@
 ---
 title: 评论线程
 summary: 支持回复、表情反应、提及、原位编辑与解决的嵌套评论。
-source-hash: d0215cd8a3c4
+source-hash: 5fdde2035ce7
 ---
 
 <Demo name="DesignReview" />
@@ -329,6 +329,14 @@ SaaS 营销页面中定价表的一次评审。第一条评论获得了当前用
 | 编辑表单、删除提示或选择器打开 | 滑入 8 px | 内容原位变化 | 立即完成 |
 
 减弱动效会用原位变化取代移动，并关闭过渡。关闭动效则直接跳到最终状态。
+
+## 响应式
+
+- `CommentThread` 随宽度变化。自身宽度低于 420 px（控件内的固定值，不是主题令牌）时，它会在线程及其条目上设置 `:narrow`：回复缩进为 12 px（`NarrowReplyIndent`），输入框隐藏头像，回复提示条使用 `NarrowReplyingPadding`。
+- 线程按自身宽度而不是窗口宽度判断，所以放在窄侧面板中时与手机上的折叠方式相同。
+- 评论文字换行。姓名与线程标题以省略号结尾（`CharacterEllipsis`）。页脚（CommentThreadFooter）是 `WrapPanel`，空间不足时回应与操作会移到新的一行。
+- 操作按钮（`ActionHeight`）与回应按钮（`EmojiButtonSize`）的触控尺寸为 28 px，发送按钮为 38 px（`SendHeight`）。悬停只改变按钮颜色（`:pointerover`），聚焦时显示焦点环（`:focus-visible`），没有任何操作只在悬停时出现。
+- 手机宽度下，把线程放在单独的页面或面板中，让输入框与回复行保持全宽。低于 420 px 时，侧面板中的线程会自动切换为紧凑布局，因此无需单独的布局。
 
 ## 相关组件
 

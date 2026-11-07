@@ -223,6 +223,18 @@ price (75% input by default).
 Every slot is reserved: two summary lines, seven chips, every spec and price cell, three benchmark rows and a readout
 that holds its lines, so the card keeps one size.
 
+## Responsive behavior
+
+- `ModelCard` reads its own width, up to 640 px. Below 480 px `:narrow` turns specs and prices into label and value
+  rows, moves the estimate under its slider and puts the footer buttons under the model id.
+- Below 420 px the summary reserves three lines, and below 360 px each benchmark bar moves under its name. From 520 px
+  the compare table has a label column and mini bars; narrower, each label sits above its two values. Chips wrap onto
+  more rows.
+- Hover is ignored for touch input, and the benchmark readout follows keyboard focus, so no value depends on hover.
+  Benchmark rows are 34 px tall, or 48 px when stacked.
+- Let the card fill its row rather than setting a fixed `Width`; it reflows by its own width, so it also reflows in a
+  side panel. On a phone, keep the compare view for a wider card, since below 520 px its labels sit above the values.
+
 ## Related
 
 - `ContextWindow` for how full a live conversation's context is.

@@ -1,7 +1,7 @@
 ---
 title: AI 對話
 summary: 會填滿其容器的助理對話：上方有標題選單、模型按鈕與新對話按鈕，對話串中有串流的 Markdown 回覆、可收合的推理、工具膠囊、編號引用與訊息動作，底部是訊息框。
-source-hash: 6a840f2320f1
+source-hash: 66b43bec959f
 ---
 
 <Demo name="Preview" />
@@ -214,6 +214,13 @@ public sealed class MyResponder : IAiChatResponder
 | 跟隨底部 | 追到末端 | 跳到末端 | 跳到末端 |
 | 會話切換 | 100 / 160 ms 交叉淡化 | 120 ms 交叉淡化 | 立即 |
 | 閃爍、轉圈 | 移動 | 靜止 | 靜止 |
+
+## 響應式
+
+- `AiChat` 有兩個斷點，都依自身寬度判斷。在 `NarrowWidth`（480 px，`:narrow`）及以下，氣泡變寬、來源網域隱藏；在 `CompactWidth`（360 px，`:compact`）及以下，按鈕收緊。
+- 對話區置中，寬度不超過 `ColumnWidth`（760 px）加兩側內距，停靠區跟隨同一寬度。工具標籤在 `WrapPanel` 中換到更多列。
+- 觸控後，訊息操作會在每一輪都顯示。使用滑鼠時它們在懸停與鍵盤聚焦時出現；引用預覽同樣需要懸停，所以在觸控螢幕上不要只依賴它們。
+- 為區塊設定 `Height`，讓它在手機寬度上延展，不要設定 `Width`。`ColumnWidth` 只用來在大視窗中限制欄寬。
 
 ## 相關元件
 

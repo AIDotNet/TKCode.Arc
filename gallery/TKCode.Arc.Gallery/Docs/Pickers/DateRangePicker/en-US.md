@@ -392,6 +392,17 @@ Keyboard focus never lands on a disabled day: the arrow and page keys stop at `M
 | The months change | The new months slide in from the direction of travel, 0.4 s | Content cross-fades over 0.08 to 0.12 s | Immediate |
 | The trigger value changes | The words roll in the direction of time | Content cross-fades over 0.08 to 0.12 s | Immediate |
 
+## Responsive behavior
+
+- `DateRangePicker` shows two months only when the space available to it is at least 712 px (`MonthCount` `Auto`, the
+  default). Below that it shows one month, and its presets become a horizontal row that scrolls sideways (`:compact`).
+- The picker measures the viewport it opens in (`ArcViewport`: the window, or an `ArcViewportHost`) and the `Boundary`
+  it sits in. The panel is at most 352 px wide.
+- `MonthCount="One"` keeps the panel narrow in side columns and mobile-width layouts. `Two` does not fall back to the
+  compact panel, so use it only where the page is known to be wide enough.
+- The trigger is 44 px tall, the `Medium` height. Give the picker a row of its own on a phone, so it is not squeezed
+  beside other controls.
+
 ## Related
 
 - `DatePicker` for one date in a form field.

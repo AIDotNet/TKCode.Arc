@@ -1,6 +1,6 @@
 ---
 title: Expandable card
-summary: Give a dense card more room when requested.
+summary: A summary card whose header opens a details panel below it, or grows sideways for wide details.
 ---
 
 <Demo name="Default" />
@@ -316,6 +316,18 @@ The header is a button, so the standard button keys apply. The card adds the Esc
 | Card closes | Details fade out in 100 ms; the card shrinks after a 60 ms hold | Closed at once | Immediate |
 | Summary changes | Changed words rise in and the old words lift away and fade | Replaced at once | Immediate |
 | Header hover and press | Background crossfades to the muted surface | Immediate | Immediate |
+
+## Responsive behavior
+
+- `ExpandableCard` does not change at a width. Closed, it fills the width it is given, or is capped by `CollapsedWidth`
+  and centered in its container. Open, it is capped by `ExpandedWidth` and never wider than the room it has.
+- It measures its own width, not the window's. A container resize applies at once without an animation, so a window
+  resize never starts a motion.
+- In a horizontal stack the width is unbounded, so set `CollapsedWidth` and `ExpandedWidth` on the cards there. Without
+  them each card sizes to its content.
+- The header is one button at least 64 px tall with 20 px of side padding. Hover and press only change its background,
+  so a tap opens the card the same way a click does.
+- In a column leave `CollapsedWidth` unset, so each card fills the width a phone gives it and the cards line up.
 
 ## Related
 

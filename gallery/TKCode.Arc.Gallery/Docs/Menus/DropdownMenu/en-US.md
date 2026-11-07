@@ -1,6 +1,6 @@
 ---
 title: Dropdown menu
-summary: A focused list of actions anchored to a trigger.
+summary: A menu of commands behind a labelled trigger button: choosing an item runs an action and closes the menu.
 ---
 
 <Demo name="Actions" />
@@ -409,6 +409,18 @@ search.
 | Submenu opens | 100 ms after the pointer rests on its row, the submenu grows from the side of the menu with a 5 px travel, on the menu's spring and fade | Quick fade | Immediate |
 | `Label` changes | The new label rises 0.3 em with a soft blur and the trigger width springs to fit | Instant fade | Immediate |
 | Chevron | Turns 180 degrees on the spring as the menu opens | Turns at once | Immediate |
+
+## Responsive behavior
+
+- `DropdownMenu` has no breakpoint. The trigger takes the width its container gives it, and its `Label` is truncated
+  with an ellipsis when it does not fit.
+- The menu panel is at least 192 px wide. It opens on the side set by `Side` (`Bottom` by default), 6 px from the
+  trigger (`MenuGap`), and flips to the other side when there is no room.
+- Long menus scroll past `MaxDropDownHeight`. Left unset, the limit is 384 px, and the menu never grows past the room
+  the window leaves beside the trigger.
+- The trigger and each row are 36 px tall, which is large enough to tap.
+- For a phone form, give the trigger its own row with `HorizontalAlignment="Stretch"` rather than a fixed `Width`, so
+  the label has room before it is truncated.
 
 ## Related
 

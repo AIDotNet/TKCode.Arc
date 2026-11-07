@@ -177,6 +177,16 @@ buttons, the empty panel and every announcement. Metrics bring their own `Label`
 - Reduced motion keeps only the text cross-fades: colours, camera, rows, bars and the hover card change at once. Off applies
   every change at once.
 
+## Responsive behavior
+
+- The block reads its own width. From 820 px (`:wide`) the ranked list stands beside the map and is as tall as the map
+  column; below that it goes under the map.
+- Below 560 px (`:compact`) the controls move under the title, the padding tightens, the headline shrinks and the legend
+  fills the width. The ranked list scrolls in an area 400 px high, or 360 px below 560.
+- Hover cards need a pointer. The ranked list shows every region's value, and choosing a row opens that region
+  (`OpenRegionKey`, `RegionOpened`), so a touch user can drill down from the list.
+- On a phone give the block its own row so it gets the full width. Below 820 px it stacks by itself.
+
 ## Related
 
 - `SegmentedControl` and `MorphSelect`, the switches in the header.

@@ -386,6 +386,17 @@ Companion type used on this page:
 | Label changes on an unreserved segment | The segment width springs to the new label | Crossfade | Immediate |
 | Menu opens | Grows from the group's edge with a short shift; the chevron turns | Crossfades; the chevron does not turn | Immediate |
 
+## Responsive behavior
+
+- `ButtonGroup` changes at one width of its own. When a horizontal row does not fit the width it is given, segments with
+  an icon drop their labels (`:compact`, `IsLabelCollapseEnabled`), and the labels come back once the full row fits
+  again. Only icon segments without a value collapse; text-only segments keep their labels.
+- Segments are 42 px high at `Medium` (`SegmentExtentMD`) and 34 px at `Small` (`SegmentExtentSM`).
+- A vertical group never collapses its labels, so a column keeps them at every width.
+- The chevron menu opens at least 208 px wide (`MenuMinWidth`).
+- On touch screens use `Medium`. To keep every label, set `IsLabelCollapseEnabled` to `False` and give the group a row
+  of its own.
+
 ## Related
 
 - `SegmentedControl` for a choice that stays selected.

@@ -433,6 +433,17 @@ rules:
 | Valid check appears | Pops in on a snappy spring | Short fade | Immediate |
 | Hover, focus, invalid | The border color crossfades | The border color crossfades | Immediate |
 
+## Responsive behavior
+
+- `PhoneInput` has no breakpoint. The country trigger and the number share one row at every width. The number stays on
+  one line (`TextWrapping` is `NoWrap`) and scrolls inside the field when it is longer than the room.
+- The country picker is at most 340 px wide (PanelMax) and no wider than the field, and it opens at least as wide as
+  the trigger. Its list is at most `ListMaxHeight` (280 px) tall with 36 px rows (`RowHeight`), and it scrolls past
+  that.
+- The picker is an `ArcPopup` that measures the room inside the viewport (the window, or an `ArcViewportHost`). It
+  slides into view but never flips above the field.
+- On a short screen keep the field clear of the bottom edge, because the picker does not flip above it.
+
 ## Related
 
 - `Input` for text that is not a phone number, and `Textarea` for several lines.

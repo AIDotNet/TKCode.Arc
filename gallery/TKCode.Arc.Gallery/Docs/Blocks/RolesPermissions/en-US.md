@@ -192,6 +192,21 @@ the screen reader names and every announcement. Replace it with an object initia
   button spins while saving, then morphs to "Saved" as its width springs.
 - Reduced motion and Off apply every change at once, as Arc's reduced mode does.
 
+## Responsive behavior
+
+- `RolesPermissions` picks its width tier from its own content width, not the window's. Below 760 px it is `:narrow`:
+  the label column is at least 200 px and the role columns are narrower. Below 540 px it is `:compact`: the label column
+  is 148 px and the insets are tighter.
+- When the role columns do not fit, the matrix scrolls sideways in a `ScrollViewer`
+  (`HorizontalScrollBarVisibility="Auto"`). The label column stays in place, so each permission name is still readable
+  while the roles scroll.
+- Permission names wrap inside the label column, and the header's member avatars wrap under the title when there is no
+  room (`WrapPanel`).
+- Permission rows are 40 px tall, group rows 45 px and role buttons 44 px (`RoleButtonHeight`). The check cells are 32
+  px tall (`CellHeight`), so tap the cell rather than the 16 px box (`BoxSize`).
+- Hover only tints a box (`BoxHoverFill`), and a tap works like a click. On a phone, let the component fill the screen
+  width instead of setting `Width`. Below 540 px the compact tier applies on its own.
+
 ## Related
 
 - `Team members`, `Invite people` and `Team directory`, the other People blocks.

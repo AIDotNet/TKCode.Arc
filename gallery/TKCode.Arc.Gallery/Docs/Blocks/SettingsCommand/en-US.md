@@ -436,6 +436,17 @@ A click on a row acts like Enter. Clicking a switch or a choice arrow changes th
 | A choice's value changes | Rolls up or down in the direction of the change | Fades | Shows at once |
 | The change notice appears | Rises in with a soft blur, then fades out after 2.5 seconds | Fades in and out | Shows at once |
 
+## Responsive behavior
+
+- `SettingsCommand` does not change form at any width: it has no breakpoint. Its panel is at least 320 px wide
+  (`PanelMinWidth`).
+- The results list is at most 360 px tall (`ResultsMaxHeight`) and scrolls past that. Rows stay 48 px (`RowHeight`) at
+  every width, the search row 56 px (`SearchRowHeight`) and the footer 40 px (`FooterHeight`).
+- Titles and descriptions that do not fit end in an ellipsis (`CharacterEllipsis`), and the footer notice is at most 260
+  px wide (`NoticeMaxWidth`).
+- The key caps and footer hints describe keyboard use, and each row is a 48 px tap target. On a phone, open the palette
+  from a visible button rather than only from a keyboard shortcut.
+
 ## Related
 
 - `SettingsPage` for a full settings page with section navigation and a save bar.

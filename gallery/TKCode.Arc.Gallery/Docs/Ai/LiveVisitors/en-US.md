@@ -198,6 +198,18 @@ leading digit (99 to 100) grows in.
 The card never changes height: the lists hold their rows' space and the map keeps its aspect ratio. The pulse, the
 clock and the simulation stop while the card is off screen or paused.
 
+## Responsive behavior
+
+- `LiveVisitors` measures its own width. It is at most 640 px wide and fills narrower containers; below `NarrowWidth`
+  (520 px) the `:narrow` pseudo-class cuts its padding to 16 px and stacks the two lists one above the other. The map
+  scales with the card.
+- Paths and cities end in an ellipsis, while counts and times keep fixed right-aligned columns, so the numbers stay in
+  their columns on a phone.
+- The pause toggle is 28 px square, and each list row is 32 px tall. Hover only tints the toggle, so a tap reaches it
+  the same way a click does.
+- Give the card its own full-width row. It stacks by its own width, so it also stacks in a narrow side panel, and phones
+  need no change to `NarrowWidth`.
+
 ## Related
 
 - `AgentStatus` for the live status of a running agent.

@@ -1,7 +1,7 @@
 ---
 title: 移動端導覽列
 summary: 頁面頂部 44 px 高的列：起始槽、置中的標題和放操作的末端槽。
-source-hash: bd5a14d5e8d1
+source-hash: b5a5a82a9793
 ---
 
 <Demo name="Basic" />
@@ -87,6 +87,13 @@ source-hash: bd5a14d5e8d1
 ## 動態效果
 
 標題變化時，新標題從輕微模糊中升起，舊標題上移淡出（P2，`ArcContentSwap` 模糊交叉淡化）；第一個標題和減少動效時不播放。大標題一比一跟隨捲動偏移，自身沒有動畫。槽裡的按鈕按下與放開的表現與 `MobileButton` 相同。
+
+## 響應式
+
+- `Navbar` 沒有斷點。頂欄在任何寬度下都是 `BarHeight`（44 px）高，兩側留有 `BarPadding`（8 px）的內距。
+- 前導與尾隨區域至少為 `SlotMinWidth`（44 px）寬，使其中的按鈕可以輕觸。返回按鈕與區域按鈕都是至少 44 x 44 px 的行動版 `Button`。
+- 標題在兩個區域之間置中，過長時以省略號截斷（`CharacterEllipsis`）。尾隨操作保持為一兩個簡短的文字，使標題有足夠的空間。
+- 大標題（`LargeTitleExtent`，52 px）會隨 `CollapseProgress` 增大而收進頂欄；可捲動的頁面就是以此驅動它的。
 
 ## 相關元件
 

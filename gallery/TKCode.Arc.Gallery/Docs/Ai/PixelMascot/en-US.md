@@ -156,6 +156,14 @@ The mascot is decorative status, not a control: it takes no focus and has no key
 | Status change | Morphs one pixel per step | Switches pose | Switches pose |
 | Built-in loop | Cycles | Cycles, one resting pose per step | Holds the current status |
 
+## Responsive behavior
+
+- `PixelMascot` has no breakpoint. It is a fixed square of 24 × `Scale` px sitting on a text line, so it never reflows
+  its parent.
+- `Scale` runs from 1 to 8 (24 to 192 px) and clamps outside that range. On a narrow layout pick a smaller scale: 2 (48
+  px) suits a message row, and the default 4 (96 px) is for a larger slot.
+- It is not focusable and takes no input, so it has no touch targets and nothing depends on hover.
+
 ## Related
 
 | Component | Choose it when |

@@ -1,7 +1,7 @@
 ---
 title: JSON 查看器
 summary: 可折叠的 JSON 树，支持搜索、长数组分页，以及复制值或路径。
-source-hash: 99a6f9248630
+source-hash: 09e3233d8851
 ---
 
 <Demo name="WebhookPayload" />
@@ -347,6 +347,13 @@ viewer.Copied += (_, e) => vm.Status = $"已复制{(e.Kind == JsonViewerCopyKind
 | 当前行移动 | 高亮在行之间滑动 | 高亮直接移动 | 立即完成 |
 | 树滚动到当前行 | 弹簧式滚动到行稳定后的位置 | 直接跳转 | 立即完成 |
 | 树中可见行超过 400 行 | 行立即变化 | 行立即变化 | 立即完成 |
+
+## 响应式
+
+- `JsonViewer` 自身宽度不大于 420 px（`CompactWidth`）时切换为紧凑布局：设置 `:compact` 伪类，并隐藏路径栏中的类型标签（PART_PathType）。
+- 树形区域在 `MaxTreeHeight`（默认 420 px）内纵向滚动，每行高 30 px（`RowSlotHeight`）。它不横向滚动，过长的键或值会以省略号缩短。
+- 行操作（复制值、复制路径）在悬停或当前行上出现，并且不在 Tab 顺序中。在触屏上请使用路径栏的复制路径按钮（需开启 `IsPathVisible` 与 `IsCopyable`），或用 `FocusPath` 移动到目标行。
+- 让查看器占满整行。紧凑布局依据其自身宽度，因此在窄侧栏中同样生效，无需额外代码。
 
 ## 相关组件
 

@@ -206,6 +206,19 @@ card.Labels = new ProviderStatusLabels
 The countdown pauses while the card is off screen or its window is hidden. Rows have fixed columns, so nothing reflows
 when a value changes.
 
+## Responsive behavior
+
+- `ProviderStatus` changes form at its own width, not the window's. Below `NarrowWidth` (560 px) each row takes two
+  lines: the name and health above, the latency under the name, and a full-width uptime bar with its percentage below.
+  The `:narrow` pseudo-class reports the state.
+- At 560 px and wider a row is one line (status, p50 latency, the 30 day bar and the percentage) and at least
+  `RowHeight` (60 px) high.
+- Long names and `Detail` lines end with an ellipsis (`CharacterEllipsis`) instead of wrapping.
+- One day tooltip serves the whole card. Tapping a tick, or dragging sideways across the bar, moves it, and an incident
+  row is a full-row button, so nothing depends on hover.
+- Give `ProviderStatus` the full width of its column and do not set a fixed `Width`: a narrow sidebar gets the two-line
+  rows by itself.
+
 ## Related
 
 - `AgentStatus` for the live status of one agent run.

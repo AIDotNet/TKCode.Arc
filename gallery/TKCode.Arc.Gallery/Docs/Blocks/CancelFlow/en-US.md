@@ -390,6 +390,16 @@ An Enter key still held from the previous step does not press the next step's bu
 | Back button appears or leaves | Fades while its space collapses | Fades in place | Immediate |
 | Result check on the last step | Draws in over about half a second | Drawn at once | Drawn at once |
 
+## Responsive behavior
+
+- The card is at most `PreferredWidth` (520 px) wide and reads its own width. Below `NarrowWidth` (440 px, `:narrow`)
+  its padding drops to 20 by 22 px and the action buttons stack: the primary button fills the row and the secondary
+  button moves under it.
+- The step header keeps "Step n of total" and the back button. Reason titles and their descriptions wrap inside each
+  row.
+- The hold button needs a press and hold, and its help text says so.
+- Leave `Width` unset so the card fills the phone; `PreferredWidth` caps it only on large windows.
+
 ## Related
 
 - The other Settings blocks: `SettingsPage`, `SettingsCommand`, `SecuritySettings`, `BillingOverview` (its "Cancel plan"

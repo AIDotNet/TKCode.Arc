@@ -1,7 +1,7 @@
 ---
 title: Tool call
 summary: 智能體逐字稿中的工具呼叫列，顯示工具、它做了什麼與結果如何；點開可看到呼叫的輸入與輸出，核准與重試也都在列中完成。
-source-hash: 545a5441aa1e
+source-hash: f3def726b388
 ---
 
 <Demo name="Preview" />
@@ -211,6 +211,13 @@ group.Simulation.Start();                       // Run again: plays from the top
 | 標頭中新增的工具標記 | 以彈簧展開寬度 | 立即 | 立即 |
 | 展開箭頭 | 以彈簧旋轉 | 立即 | 立即 |
 | 核准外框 | 在 240 ms 內淡入 | 立即 | 立即 |
+
+## 響應式
+
+- `ToolCall` 依自身寬度而不是視窗寬度變化。低於 440 px（`CompactWidth`，`:compact`）時，中繼資訊只保留耗時，說明文字換行，操作按鈕移到其下方。低於 370 px（`TightWidth`，`:tight`）時隱藏中繼資訊。
+- 文字會換行（`TextWrapping`）。非緊湊狀態下，說明文字保持一行並以省略號結尾（`CharacterEllipsis`）。表格與 JSON 輸出在各自的 `ScrollViewer` 中水平捲動，而不會把整列撐寬。
+- 觸控時，操作按鈕高度至少為 28 px（`ActionHeight`）。標題列的展開切換是按鈕，輕觸與點擊開啟呼叫的方式相同。懸停只會為箭頭上色（`:head-hover`），沒有任何功能依賴懸停。
+- 讓該列在對話紀錄欄中延展（`HorizontalAlignment="Stretch"`），而不是設定固定的 `Width`；該欄保持 440 px 或以上，中繼資訊與按鈕才能留在標題列上。
 
 ## 相關
 

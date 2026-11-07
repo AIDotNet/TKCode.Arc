@@ -324,6 +324,19 @@ The enums:
 | Automatic compaction | After 540ms or 600ms | At once | At once |
 | Legend hover | Fades in 160ms | At once | At once |
 
+## Responsive behavior
+
+- `ContextWindow` measures its content width, not the window's: the card's width less 24 px of padding on each side. At
+  640 px of content or less (`:stacked`) the legend moves under the grid, the cells tighten and the legend takes the
+  full width. At 420 px or less (`:compact-header`) the model pill moves under the readout.
+- The actions wrap. Compact now moves to a new line when it no longer fits beside the others, and the status line wraps.
+  The card is at most `CardMaxWidth` (744 px) wide.
+- The model menu opens from the model pill as a `Dropdown` `MenuSurface`, so the same menu serves every width.
+- Hovering a legend row highlights its cells. The tokens and shares stay visible without hover, so nothing depends on
+  it.
+- To keep the legend beside the grid, give the card at least 688 px (640 px of content plus 24 px of padding on each
+  side). Narrower panels get the stacked layout.
+
 ## Related
 
 - `Progress` for a single allowance with a label.

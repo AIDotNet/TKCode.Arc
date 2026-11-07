@@ -1,7 +1,7 @@
 ---
 title: 對話方塊
-summary: 為需要使用者關注的決定提供專注的浮層面板。
-source-hash: 1eb8d04fe87d
+summary: 置中的強制回應面板，用於必須先完成才能回到頁面的決定或簡短任務。
+source-hash: a83200aeca53
 ---
 
 <Demo name="ShortForm" />
@@ -291,6 +291,13 @@ public partial class ProjectSettingsViewModel : ObservableObject
 | 關閉 | 面板移動 4 px 並縮放到 0.98，兩者快速淡出 | 短暫的不透明度淡入 | 立即完成 |
 | 標題或說明變化 | 新文案帶著柔和的模糊升起 | 瞬時淡入 | 立即完成 |
 | 按下關閉按鈕 | 按鈕縮放到 0.96，放開後彈回 | 不縮放 | 不縮放 |
+
+## 響應式
+
+- `Dialog` 沒有寬度斷點。面板最寬為 `Size` 預設的寬度（`Small` 360 px、`Medium` 440 px、`Large` 560 px）；視窗更窄時，它會拉伸到視窗寬度減去 `ViewportMargin`（每側 16 px）。
+- 內容過高時捲動：面板高於視窗時垂直捲動，水平捲動已關閉，因此內文必須適應寬度。
+- `Actions` 排成右對齊的一列，控制項不會將其堆疊。在手機寬度下請保持標籤簡短，操作不超過兩個。在手機上可使用 TKCode.Arc.Mobile 套件中的 `Dialog`，它在窄寬度下會堆疊操作按鈕。
+- 關閉按鈕為 32 px（`CloseButtonSize`），小於 44 px 的觸控目標，因此決定性的操作應放在操作按鈕上，而不要只依賴關閉按鈕。
 
 ## 相關元件
 

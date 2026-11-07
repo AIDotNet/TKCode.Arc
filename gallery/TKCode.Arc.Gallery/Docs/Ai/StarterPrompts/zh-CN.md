@@ -1,7 +1,7 @@
 ---
 title: Starter prompts
 summary: AI 应用空状态里的问候语与起始卡片：带分类标签页、以交叉淡化切换卡片的“换一批”，以及由所选卡片填入的输入框。
-source-hash: 6969be5a1813
+source-hash: da4d59f2f034
 ---
 
 <Demo name="Preview" />
@@ -164,6 +164,14 @@ prompts.Labels = new StarterPromptsLabels
 | 发送与停止图标 | 在 160ms 内交叉淡化；没有移动或尺寸变化 | 立即 | 立即 |
 | 加载占位 | 每 1.6 秒呼吸一次 | 静止 | 静止 |
 | 标签页选择 | 选中块沿标签页的弹簧滑动 | 立即 | 立即 |
+
+## 响应式
+
+- `StarterPrompts` 按自身宽度判断并占满容器，宽度从不随卡片或文字变化。宽度为 `TwoColumnMinWidth`（560 px）或更宽时卡片排为两列，更窄时为一列。
+- 低于 `CompactWidth`（440 px）时，Shuffle 变为图标（`:compact`）；低于 `NarrowWidth`（480 px）时，内边距、圆角与问候语都会缩小（`:narrow`）。
+- 分类标签在各自的一行内横向滚动，边缘有渐隐，因此很长的 `Categories` 列表不会换行，也不会把卡片挤到下方。
+- 放不下的卡片标题与描述以省略号结尾（`CharacterEllipsis`）。
+- 让 `StarterPrompts` 占满屏幕宽度而不是放在侧栏中，并且不要设置固定的 `Width`。
 
 ## 相关组件
 

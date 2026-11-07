@@ -433,6 +433,21 @@ The add-reaction button is visible while the pointer is over a message or a cont
 
 
 
+## Responsive behavior
+
+- `ChatThread` changes at a width. Below `NarrowWidth` (420 px by default, a theme token) it sets the `:narrow`
+  pseudo-class: the side padding drops from 16 px to 12 px (`ContentPaddingNarrow`) and a message stack may take up to
+  84% of the row (`StackMaxRatioNarrow`) instead of 78%. The 544 px cap (`StackMaxWidth`) still applies.
+- The thread measures its own width, not the window's, so it narrows the same way in a side panel or a dialog as on a
+  phone.
+- Message text wraps inside its bubble. Attachment file names end in an ellipsis (`CharacterEllipsis`). The composer
+  field grows with its text up to `FieldMaxHeight`.
+- On touch screens do not rely on the add-reaction button (PART_React) alone. It stays at opacity 0 until the pointer
+  is over the message (`:pointerover`) or the message has focus (`:focus-within`), so offer reactions in another way on
+  phones.
+- Let the thread stretch to fill its panel (`HorizontalAlignment` and `VerticalAlignment` are `Stretch` by default). The
+  narrow layout switches on by itself below 420 px, so a side panel needs no separate layout.
+
 ## Related
 
 - `ChatComposer` for a composer with attachments on its own.

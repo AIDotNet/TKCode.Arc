@@ -419,6 +419,19 @@ Keys apply when `IsNavigable` is on. Otherwise the stepper takes no focus.
 A press on a completed step shrinks its marker to 0.92. Pointer hover on a completed step brightens its label to the
 foreground color.
 
+## Responsive behavior
+
+- A horizontal `Stepper` narrower than `CompactBelowWidth` (480 px) switches to compact mode by itself: the step labels
+  hide, the markers stay, and the caption under them names the current step. `IsCompact` asks for compact mode at any
+  width, and `:compact` reports the state.
+- It measures its own width, not the viewport, so a stepper in a narrow panel compacts the same way as one on a phone.
+  The rule does not apply to a vertical stepper.
+- For a flow with long step names, set `Orientation="Vertical"`: the labels stay beside the markers at every width.
+- Only steps that `IsNavigable` allows can be chosen. Hover brightens such a step, but a click or tap works without it,
+  so nothing depends on hover.
+- A full horizontal stepper needs at least 480 px. On a phone, use `Orientation="Vertical"` for a flow with labels, or
+  accept compact mode for a short wizard.
+
 ## Related
 
 - `Progress` when the work has a percentage rather than steps.

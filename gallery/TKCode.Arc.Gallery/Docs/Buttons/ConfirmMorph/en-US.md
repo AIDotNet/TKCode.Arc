@@ -434,6 +434,17 @@ case.
 | Pending | The spinner turns | The spinner turns more slowly | Immediate |
 | Hold fill | The fill reveals from the leading edge and springs back on early release | The fill still shows progress | Immediate |
 
+## Responsive behavior
+
+- `ConfirmMorph` looks the same at every width and has no breakpoint. Its pill grows to fit the question and its two
+  answers, and the width animates between the states.
+- The question is trimmed with an ellipsis once it reaches its maximum width of 256 px (`PromptMaxWidth`).
+- The answer buttons are 28 px high (`InnerButtonExtent`), under the 44 px touch size, so leave room around them on a
+  touch screen.
+- `Hold` mode is answered by pressing and holding, which touch can do.
+- In a narrow form, give the control a line of its own so the pill can widen without pushing its neighbors aside. Use
+  `Hold` for actions that delete something on a touch screen.
+
 ## Related
 
 - `Dialog` for a consequence that needs more explanation or a typed name.

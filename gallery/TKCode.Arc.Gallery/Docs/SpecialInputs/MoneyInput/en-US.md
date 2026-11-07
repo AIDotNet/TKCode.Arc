@@ -376,6 +376,18 @@ Enter settles the decimals but does not submit. The key still reaches the form, 
 | New digit column appears | The column grows in width on a spring | Width jumps | Width jumps |
 | Currency change | The symbol rolls to its new place | The symbol changes without the roll | The symbol changes without the roll |
 
+## Responsive behavior
+
+- `MoneyInput` has no breakpoint. The shell keeps its `ShellHeight` (76 px) at every width, and a long amount scales
+  down to fit the room instead of scrolling.
+- The quick add chips wrap onto new lines with a `ChipSpacing` of 6 px. The allowed range moves under them when the
+  chips and the range do not fit in one row.
+- The currency menu is an `ArcPopup` that lines up with the field's right edge. It flips and slides to stay inside the
+  viewport (the window, or an `ArcViewportHost`). Its list scrolls past `MenuListMaxHeight` (288 px), and each option is
+  at least `OptionMinHeight` (36 px) tall.
+- In a narrow form, let the field stretch (`HorizontalAlignment="Stretch"`) rather than set a `Width`. The chips and the
+  range wrap under it without any extra code.
+
 ## Related
 
 - `NumberField` for quantities and other numbers that have no currency.

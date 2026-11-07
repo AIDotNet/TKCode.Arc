@@ -51,6 +51,16 @@ It is a toggle button: it can be focused and toggled with the keyboard, and expo
 
 The thumb glides on a spring and the track fades to the on color. A finger stretches the thumb to 1.18 times its width toward where it will go on a snappy spring and releases on the same spring (P24). All of it is declared in the control theme; with reduced motion the thumb jumps, does not stretch, and the colors switch at once.
 
+## Responsive behavior
+
+- `Switch` has no breakpoint and no pseudo-class: the track stays 51 by 31 px (`TrackWidth`, `TrackHeight`) at every
+  width.
+- The hit area is at least 44 by 44 px (`TouchTarget`), set as `MinWidth` and `MinHeight`, so a finger has more to aim
+  at than the track.
+- Put the setting's name in a label beside the switch and keep the row at least 44 px tall. Let the label take the space
+  left in the row rather than shrinking the switch.
+- There is no hover state. A press stretches the thumb, and a disabled switch fades to `DisabledOpacity` (0.5).
+
 ## Related
 
 - `MobileButton`: for actions.

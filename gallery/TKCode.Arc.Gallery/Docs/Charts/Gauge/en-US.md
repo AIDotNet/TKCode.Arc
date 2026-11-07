@@ -1,6 +1,6 @@
 ---
 title: Gauge
-summary: Show a value against a known range.
+summary: A 270 degree ring that shows where a reading sits in a known range, with the percentage in the center and named bands.
 ---
 
 <Demo name="Thresholds" />
@@ -316,6 +316,16 @@ review commands.
 | New `Value` | The ring springs to the new length and the number counts | Changes at once | Changes at once |
 | Count crosses a band | The color and the state name switch with the count | Switch at once | Switch at once |
 | `Tone` changes | The ring color crossfades | Changes at once | Changes at once |
+
+## Responsive behavior
+
+- `Gauge` keeps one layout at every width. The ring is at most 176 px wide (`DialMaxWidth`) and 0.9 times as tall as it
+  is wide; a narrower container shrinks the ring, and the number and the labels keep their type size. It never changes
+  form at a breakpoint.
+- It measures its own width, not the window's, so it fits a tile, a side panel or a phone preview the same way.
+- The status line has a minimum width of 100 px, so a band name does not shift the number when it changes.
+- `Gauge` has no pointer behavior, so nothing depends on hover or touch. On a phone, give each gauge its own column in a
+  `Grid`; the ring centers in whatever width it gets.
 
 ## Related
 

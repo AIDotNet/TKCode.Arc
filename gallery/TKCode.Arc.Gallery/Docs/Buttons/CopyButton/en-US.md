@@ -294,6 +294,15 @@ in a `SizeChanged` handler. The label stays the accessible name, so keep it spec
 | Press | The content scales to 0.97 (0.96 when icon only) and springs back on release | No press scale | No press scale |
 | Hover | The frame crossfades to the muted surface and the strong border | Instant | Immediate |
 
+## Responsive behavior
+
+- `CopyButton` looks the same at every width. It is 36 px high (`ControlSizeSM`) with 12 px inline padding
+  (`InlinePadding`), and its icon-only form is 36 px square.
+- The copy, check and error states swap the icon in place, so the button keeps its size while it reports the result.
+- Copying runs on a click or a tap, and nothing depends on hover.
+- It has one height, 36 px, which is under the 44 px touch size. On touch screens give it room around it, or place it on
+  its own row next to the text it copies.
+
 ## Related
 
 - `SplitButton` when copying is one of several actions, such as Copy page with Copy link and Copy as Markdown.

@@ -1,7 +1,7 @@
 ---
 title: OTP input
 summary: 六位數驗證流程，支援貼上與鍵盤導覽。
-source-hash: f4f04a455025
+source-hash: d83d5b07133e
 ---
 
 <Demo name="Preview" />
@@ -151,6 +151,13 @@ Code.ValueChanged += (_, e) =>
 ### 回應式行為
 
 只有一個斷點，依欄位被給予的寬度判斷：328 px。格子寬 42 px，在這一排放不下時會縮小。
+
+## 響應式
+
+- `OtpInput` 依所給的寬度變化，不隨視窗寬度。寬度為 328 px 或以下（`:narrow`）時，格子間距由 8 px（`SlotGap`）變為 6 px（`SlotGapNarrow`），高度由 48 px（`SlotHeight`）變為 44 px（`SlotHeightNarrow`）。
+- 每個格子寬 42 px（`SlotWidth`）。所給寬度不足以放下整列時，所有格子按相同比例縮小，間距保持不變，整列始終留在所在的欄內。
+- 懸停只對滑鼠或觸控筆生效（`:hover`），觸控螢幕上不會觸發，沒有任何功能依賴懸停。
+- 在手機上保持預設的 `InputMode="Numeric"`，觸控鍵盤會顯示數字鍵盤，貼上的內容也只保留數字。
 
 ## 相關
 

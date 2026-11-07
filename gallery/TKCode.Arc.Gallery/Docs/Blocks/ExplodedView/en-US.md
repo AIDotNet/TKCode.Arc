@@ -187,6 +187,18 @@ progress timeline is fixed: the stack tips over 0.04 to 0.22, separates over 0.0
 | Stop changes | Caption crossfade, dimming and colors ease | Everything switches at once | Immediate |
 | Stop button | Glides to the stop | Jumps | Jumps |
 
+## Responsive behavior
+
+- `ExplodedView` changes layout at its own width, not the window's. Below 560 px (`:compact`) it is one column, with the
+  stop buttons above the caption and no notes on the labels. From 880 px (`:wide`) the caption takes a fixed 380 px
+  column (WideColumn); between the two it uses the medium layout.
+- The scroll region never scrolls sideways. In the default container mode its scroll bar is hidden, and the stage stays
+  in view while the frame scrolls.
+- The stop buttons are 36 by 44 px (StopWidth and StopHeight), and a click, Enter or Space scrolls to that stop.
+  Below 560 px the stop buttons sit above the caption, so they keep their own row.
+- Padding follows the width: 5% of it, held between 20 and 40 px. Leave `IsFramed` on in a fixed-height panel; on a page
+  that already scrolls, use `ScrollMode="Page"` so the page's own scroll drives the stage.
+
 ## Related
 
 - `Stepper` for progress through the steps of a task.

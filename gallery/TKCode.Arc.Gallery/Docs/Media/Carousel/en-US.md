@@ -405,6 +405,18 @@ box.
 | Indicator pill | Stretches and follows the active slide | Jumps to the active dot | Immediate |
 | Autoplay | Advances on the interval and drains the pill | Not available | Not available |
 
+## Responsive behavior
+
+- `Carousel` switches to `:compact` when its own width is 340 px or less (the `CompactWidth` constant). The control row
+  tightens to a `CompactControlsGap` of 4 px, and the indicators sit closer together.
+- The slide is `SlideWidthRatio` (0.8) of the carousel's own width, capped at `MaxSlideWidth` (340 px), so on a narrow
+  column the neighbouring slides show at its edges.
+- The indicator row is `TabHeight` (36 px) tall. When there are more slides than fit, it scrolls sideways and keeps the
+  active one in the middle.
+- Browsing works by drag or flick. Autoplay pauses on hover and during a drag, and a touch screen has no hover, so set
+  `IsAutoPlay` to False on a phone page where the rotation gets in the way.
+- Let the carousel stretch in its column rather than setting a fixed `Width`, so the slide size follows the column.
+
 ## Related
 
 - `CardStack` when each item needs a decision, not only a look.

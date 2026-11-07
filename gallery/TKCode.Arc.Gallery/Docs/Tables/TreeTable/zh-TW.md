@@ -1,7 +1,7 @@
 ---
 title: 樹狀表格
 summary: 帶巢狀列、三態選取、保持階層的排序，以及按需載入子列的表格。
-source-hash: acf39441d900
+source-hash: 8e029049bf15
 ---
 
 <Demo name="Budget" />
@@ -228,6 +228,13 @@ table.ChildrenLoader = async item => await api.GetChildrenAsync(((Account)item).
 | 一列展開或收合 | 高度彈簧、錯開與淡入 | 短暫淡入，沒有高度彈簧和錯開 | 立即完成 |
 | 排序 | 列在彈簧上移到新位置 | 列直接跳到新位置 | 立即完成 |
 | 箭頭與排序箭頭 | 彈簧轉動 | 立即完成 | 立即完成 |
+
+## 響應式
+
+- `TreeTable` 依據自身寬度而非視窗寬度調整。當表格窄於某欄的 `HideBelow` 時，該欄會從表頭與每一列中移除；樹狀欄始終保留。
+- 欄位預設為 `1*`，會收縮並截斷。表格不水平捲動，放不下的文字會以省略號縮短。
+- 列高為 44 px（`RowHeight`），表頭高為 40 px（`HeaderHeight`）。觸控螢幕輕觸會直接切換或啟用列；懸停填色只對滑鼠生效。
+- 請把 `HideBelow` 設在最不重要的欄位上，例如負責人或修改日期。
 
 ## 相關元件
 

@@ -140,6 +140,16 @@ frame. One frame loop per cube moves its paths in place and recolors its brushes
 loop runs only while the cube is on screen and visible, and its clock only advances then, so it resumes on the same
 frame. A settled error does not loop at all, and under reduced motion nothing loops.
 
+## Responsive behavior
+
+- `CubeMascot` does not respond to its container or the window. It is a square of `Size` px (96 by default), and the
+  square never changes size between states, so the layout around it stays put.
+- Below 56 px the compact drawing takes over: the cube fills more of the frame and its eyes are bolder, with no mouth,
+  contact shadow or printed lines, so it reads at 24 px.
+- The cube takes no input and no focus. Put controls such as Stop beside it at every size.
+- Pick the size for its place: 24 to 32 px inline in a message header, 40 to 64 px in a panel header, and 96 to 160 px
+  in an empty state.
+
 ## Related
 
 - `AgentStatus` for the steps, tools and elapsed time of a run.

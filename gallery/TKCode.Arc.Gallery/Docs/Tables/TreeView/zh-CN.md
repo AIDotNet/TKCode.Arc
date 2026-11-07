@@ -1,7 +1,7 @@
 ---
 title: 树视图
 summary: 浏览嵌套的文件夹与结构化内容。
-source-hash: a4b719513550
+source-hash: 238c2d67d116
 ---
 
 <Demo name="FileTree" />
@@ -366,6 +366,13 @@ tree.ItemExpanded += (_, e) => log.Text = $"已打开 {e.Item}";
 | 文件夹展开或收起 | 空间以弹簧增长或收拢；新行错落进入 | 行立即显示或隐藏 | 立即完成 |
 
 选中高亮仅在完整动效下于各行之间滑动。
+
+## 响应式
+
+- `TreeView` 没有断点。它填满所给的宽度（默认为 `HorizontalAlignment="Stretch"`），行在任何宽度下都保持 `RowSlotHeight`（38 px）高。
+- 树形区域不横向滚动。放不下的标签以省略号缩短，每一级缩进 `IndentWidth`（18 px）。
+- 不依赖悬停。悬停填充只是视觉效果，点击或轻触都会以同样的方式选中行。
+- 让树占满整行。如果它与其他内容同页，请用 `MaxHeight` 限制其高度，使树本身成为滚动区域。
 
 ## 相关组件
 

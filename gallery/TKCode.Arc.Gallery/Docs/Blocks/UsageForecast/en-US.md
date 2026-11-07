@@ -167,6 +167,18 @@ it should return a plain number. Every sentence, label and spoken text is a prop
 - **Inspect card**: follows the crosshair on a stiff spring, fades in 160 ms.
 - Reduced motion lands every spring at once and keeps only short fades (120 ms for words). Off applies everything at once.
 
+## Responsive behavior
+
+- `UsageForecast` changes at two widths of its own. Below `CompactWidth` (560 px) it switches to `:compact`: 16 px
+  padding, the metric switch under the titles, a 232 px chart (`CompactChartHeight`) and smaller tile values. Below
+  `NarrowWidth` (440 px) it also takes `:narrow`, where the three tiles stack and the alert chips fill their rows.
+- It measures its own width, so it switches the same way in a side panel or a phone preview. The headline shrinks with
+  the width, from 22 px down to `HeadlineMinSize` (18 px).
+- The budget line is a 32 px band (`HandleBandHeight`) that a finger can drag, and the arrow keys step it. Hover only
+  highlights the handle, so a drag works without it.
+- Give `UsageForecast` the full width of the page. Below `NarrowWidth` its tiles stack on their own, so a narrow panel
+  needs no extra layout.
+
 ## Related
 
 - `Metrics dashboard`, `KPI drilldown`, `Cohort retention`, the other Analytics blocks.

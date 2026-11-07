@@ -152,6 +152,18 @@ chosen or a card is open, so nothing moves while you aim.
 | Card | Morphs out of the chip | Appears | Appears |
 | Previous and next | Slide | Swap | Swap |
 
+## Responsive behavior
+
+- `OrbitLogos` changes layout at SideBySideWidth (760 px). From there the orbit takes up to 58% of the width, at most
+  460 px (`MaxSize`), and the category chips and the detail card sit beside it. Below that the card sits under the
+  orbit.
+- The category chips scroll sideways when they do not fit (`HorizontalScrollBarVisibility` is `Auto`), so they stay on
+  one line on a phone.
+- Name tags appear on hover and keyboard focus only, so a touch user reads what the logo is in the card after picking
+  it.
+- Give the orbit the full width of the page and keep to about a dozen logos. For a longer list on a phone, a grid or a
+  list suits better.
+
 ## Related
 
 - `HoverCard` previews a person or link on hover without leaving the page.

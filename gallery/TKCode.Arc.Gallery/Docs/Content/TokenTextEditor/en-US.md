@@ -143,6 +143,18 @@ composing. `InsertText`, `Select`, `Clear`, `Undo` and `Redo` do what they say.
 | Height grows or shrinks | Short ease | Immediate | Immediate |
 | Token inserted or removed | Immediate | Immediate | Immediate |
 
+## Responsive behavior
+
+- `TokenTextEditor` does not change at a width: it has no breakpoint. It wraps its text to the width it is given
+  (`TextWrapping` is `Wrap`) and never scrolls sideways (`HorizontalScrollBarVisibility` is `Disabled`).
+- The height follows the text from `MinLines` (1 by default) to `MaxLines` (8 by default), then the text scrolls. On a
+  phone, lower `MaxLines` so the editor leaves room for the rest of the screen.
+- It measures its own width, not the window's, so a composer in a narrow panel wraps the same way as one on a phone.
+- The editor opens no list. Show suggestions in your own panel and set `SuggestionsExpanded` while it is open;
+  `CollapseRequested` fires when assistive technology asks you to close it.
+- Nothing depends on hover: the pointer only changes the cursor over a token. Lines are `EditorLineHeight` (24 px)
+  apart.
+
 ## Related
 
 - `MentionInput` for @people and #channels with a built-in list.

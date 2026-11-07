@@ -1,7 +1,7 @@
 ---
 title: PII redaction
 summary: 一張防護卡片：提示詞送到模型之前，其中的個人資料會先被遮蔽；回覆傳回時，原始值再被放回。
-source-hash: f3818a4777ad
+source-hash: f6c7ebba3249
 ---
 
 <Demo name="Preview" />
@@ -196,6 +196,12 @@ var reply = PiiRedactor.Restore(await model.CompleteAsync(result.Prompt), result
 | 流程跳轉 | 圓點移動 460ms | 無 | 無 |
 | 回覆 | 分塊流入，然後交叉淡化 | 整段顯示，然後交叉淡化 | 立即 |
 | 自動播放 | 在畫面內時循環 | 關閉 | 關閉 |
+
+## 響應式
+
+- `PiiRedaction` 依自身寬度判斷，最寬填滿至 640 px。低於 520 px 時進入 `:narrow` 虛擬類別，四個類型儲存格排成兩列、每列兩個；低於 400 px 時進入 `:compact`，收緊卡片內距與間距，並隱藏「Simulated」標籤，狀態列仍會朗讀這一狀態。
+- 過長的模型名在流程中以省略號截斷，不會把版面撐寬。訊息與回覆在同一儲存格中切換，回覆預留高度，因此在 360 px 和 390 px 下文字不會跳動。
+- 在手機上讓卡片佔滿整列即可。版面已依 360 px 起的寬度設計，無需設定 `Width`。
 
 ## 相關元件
 

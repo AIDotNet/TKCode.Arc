@@ -126,6 +126,17 @@ move by their render transform, opacity and stacking order.
 | Well | Bends the grid | None | None |
 | Shockwave | Kicks the tiles and flashes the rings | Flashes the rings | None |
 
+## Responsive behavior
+
+- `GravityWell` changes its column count with the width it is given, not at a breakpoint. With `Columns` at 0 (the
+  default) it fits as many columns as keep every tile at least `MinTileSize` wide (56 px by default).
+- Tiles stay square and share the width left after the `Gap` (8 px by default). A narrow phone therefore gets fewer
+  columns with larger tiles; set `Columns` only when the grid must keep the same shape at every width.
+- The grid adds rows as its tiles need, so it is as tall as its content.
+- On touch screens a tap sends a shockwave and a drag pulls the well, and vertical scrolling keeps working.
+- Give the grid the full width of the phone and keep `MinTileSize` at 56 px or more, so each tile is large enough to
+  tap.
+
 ## Related
 
 - `DotGrid` bends a field of dots instead of content.

@@ -1,7 +1,7 @@
 ---
 title: Onboarding illustration
 summary: 精簡的首次執行卡片，線條插畫會隨人們逐步前進，從空白的盒子形變為檔案、團隊與徽章。
-source-hash: e287773de8c6
+source-hash: e0d7f71bb3e4
 ---
 
 <Demo name="Preview" />
@@ -228,6 +228,14 @@ card.GetStarted += async (_, _) =>
 | 滑鼠移過舞台 | 形狀朝指標飄移，水平最多 6 px、垂直向下最多 4 px，位於前方的形狀飄移更多 | 不飄移 | 不飄移 |
 
 卡片沒有進場動畫，靜止時也沒有動態效果：插圖只在操作之後或滑鼠移動時才會移動。
+
+## 響應式
+
+- `OnboardingIllustration` 依自身寬度變化，不隨視窗寬度。寬度低於 `CompactWidth`（410 px）時切換為緊湊版面（`:compact`）：內距收緊，「返回」只顯示箭頭，主按鈕收窄為 `CompactPrimaryWidth`（128 px）。卡片本身最寬為 `CardMaxWidth`（440 px）。
+- 緊湊版面下，文字區域至少為 `CompactCopyMinHeight`（88 px），足以容納三行，標題字級也更小。插圖隨卡片縮小並保持比例。
+- 步驟圓點的輕觸高度為 32 px（`DotHitHeight`），操作按鈕高 36 px（`ActionHeight`）。
+- 懸停樣式只對滑鼠或觸控筆生效（`:fine-hover`），視差效果也只跟隨滑鼠，因此觸控螢幕上沒有任何功能缺失。
+- 在卡片佔滿螢幕邊緣的手機上，請設定 `IsFramed="False"`，並讓它延展（`HorizontalAlignment="Stretch"`），不要設定固定的 `Width`。
 
 ## 相關元件
 

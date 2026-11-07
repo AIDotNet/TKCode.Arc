@@ -655,6 +655,16 @@ not the caret, so use Left and Right inside the field to move the caret.
 | Results and empty state swap | Results fade out, then the empty state rises in | Fade only | Immediate |
 | The clear button appears | Pops in from a smaller scale out of a soft blur | Fade only | Immediate |
 
+## Responsive behavior
+
+- The palette follows the window's width, read through `ArcViewport`, not its own width. At 480 px or less (`:narrow`)
+  it hides the shortcut caps and tightens its padding; at 340 px or less (`:narrowest`) the rows also tighten their
+  sides.
+- In a window, `CommandPaletteDialog` is `PanelWidth` (560 px) wide and covers the window with a light scrim.
+- The results list is at most `ResultsMaxHeight` (342 px) high and scrolls after that.
+- The open shortcut needs a keyboard. On a phone open the dialog from a visible button (`IsOpen`) and keep
+  `ShowCloseButton` on, so a touch user can close it. A tap runs the row under it, as a click does.
+
 ## Related
 
 - `SearchResults` for a full search page with filters and snippets.

@@ -187,6 +187,16 @@ seat line, the button names and every announcement. Texts with values are functi
 - Reduced motion places everything at once and keeps only the short fades and color changes; there are no flights, no
   shakes and no springs. Off applies every change at once.
 
+## Responsive behavior
+
+- `InvitePeople` changes at its own width, not the window's. At 480 px or less (`:compact`) the body padding drops from
+  20 to 16 px. When the content inside the card is narrower than 440 px (`NarrowContentWidth`, `:narrow`), each pending
+  row puts its status under the name and the field's note is not shown.
+- A framed card is at most 600 px wide (`CardMaxWidth`). The hint line wraps onto a second line when it is narrow.
+- Nothing depends on hover. Hover only applies a 6% tint (`HoverTint`), and the pending rows keep their actions visible.
+- Pending rows are at least 36 px high, below a comfortable touch target. On touch screens keep the pending list short,
+  and give the control the full width of the screen.
+
 ## Related
 
 - `Team members`, `Roles and permissions`, `Team directory` and `Profile page`, the other People blocks.

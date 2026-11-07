@@ -262,6 +262,15 @@ plays. Pick the states and the matching mode, and let the control do the rest.
 | Font, weight or size change | Jumps to the new size | Jumps | Jumps |
 | Text set before the control loads | Shown at once, no motion | Shown at once | Shown at once |
 
+## Responsive behavior
+
+- `TextMorph` has no breakpoint. It is one line that never wraps, so a long label takes its full width in the row.
+- At full motion its width follows the text on a spring (`ArcSpring.Morph`), so a longer label moves the content beside
+  it over a short animation.
+- It has no hover or focus behavior of its own, so nothing about it depends on hover.
+- On a phone keep labels to a few words, put it in a row that can grow (`HorizontalAlignment="Stretch"`), or give a long
+  label a row of its own.
+
 ## Related
 
 - `Button` for a control that is clicked and has states of its own.

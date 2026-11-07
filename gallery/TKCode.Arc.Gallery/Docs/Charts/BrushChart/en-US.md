@@ -345,6 +345,17 @@ Shift+Tab move between them.
 | Value axis top | Springs to the highest point in view | Moves at once | Moves at once |
 | Crosshair | Glides between points | Moves at once, keeps its place | Jumps to the point |
 
+## Responsive behavior
+
+- `BrushChart` has no breakpoint. Its plot is the width minus a `GutterWidth` of 44 px, and its date labels change with
+  the visible span: days, then weeks, months and years as the window covers more time.
+- The 28 by 44 px grips at the edges of the window resize it. `MinSpan` (7 days by default) stops the window shrinking
+  below that span at any width.
+- Event labels that would collide with another are skipped, so a narrow plot shows fewer of them. Keep `Annotations` to
+  the events that explain the series.
+- Set `Range` to the window the page opens on, and `MinSpan` to the shortest span the reader should inspect (14 days for
+  a weekly review).
+
 ## Related
 
 - `LineChart` for a few weeks of data, several series or a signed value axis.

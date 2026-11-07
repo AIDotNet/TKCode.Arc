@@ -253,6 +253,19 @@ The enums:
 | Chevron | Turns on a spring | At once | At once |
 | Approval outline | Fades over 240ms | At once | At once |
 
+## Responsive behavior
+
+- `ToolCall` changes at its own width, not the window's. Below 440 px (`CompactWidth`, `:compact`) the meta keeps only
+  the duration, the note wraps and the action buttons move under it. Below 370 px (`TightWidth`, `:tight`) the meta is
+  hidden.
+- Text wraps (`TextWrapping`). Outside compact the note stays on one line and ends with an ellipsis
+  (`CharacterEllipsis`). Tables and JSON output scroll sideways inside their own `ScrollViewer` instead of widening the
+  row.
+- On touch, action buttons are at least 28 px high (`ActionHeight`). The header toggle is a button, so a tap opens the
+  call the same way a click does. Hover only tints the chevron (`:head-hover`), so nothing depends on it.
+- Let the row stretch (`HorizontalAlignment="Stretch"`) in the transcript column rather than setting a fixed `Width`,
+  and keep that column at 440 px or more so the meta and the buttons stay on the header line.
+
 ## Related
 
 - `AgentStatus` for the live status of a whole run.

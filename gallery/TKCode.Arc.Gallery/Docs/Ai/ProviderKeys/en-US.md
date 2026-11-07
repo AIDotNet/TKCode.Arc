@@ -178,6 +178,18 @@ card.Labels = new ProviderKeysLabels
 Each text sits in a fixed cell and the status column has a fixed width, so nothing resizes when a status or a key
 changes. Relative times refresh every 30 seconds.
 
+## Responsive behavior
+
+- `ProviderKeys` reads its own width. Below `NarrowWidth` (560 px) `:narrow` moves each row's status beside the name,
+  gives the key its own line and shares the last-use line with the actions; the form stacks its input above Cancel and
+  Save.
+- The card holds down to 360 px with no horizontal scroll. The status column and the action buttons keep a fixed width,
+  so a status or key change does not resize the row.
+- The four icon buttons on each key are 32 px square and stay visible without hover. Hover only tints them, so a tap
+  reaches each one the same way a click does.
+- Let the card fill the row on phones. It changes layout by its own width, so no `Width` is needed, and a side panel
+  narrower than 560 px gets the narrow layout too.
+
 ## Related
 
 - `CopyButton` for copying a single value with confirmation.

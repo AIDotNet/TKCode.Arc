@@ -1,7 +1,7 @@
 ---
 title: 聊天会话
 summary: 带分组消息、表情回应、已读回执、输入状态以及带附件输入区的聊天会话。
-source-hash: 52bcaa28f16a
+source-hash: 99f8ef4800d0
 ---
 
 <Demo name="SupportConversation" />
@@ -379,6 +379,14 @@ SaaS 产品账单页面上的一个支持面板。面板有固定高度，因此
 
 | 输入状态指示 | 可见时圆点循环 | 圆点停止 | 圆点停止 |
 | 跳转胶囊出现 | 从下方升起 | 短暂淡入 | 立即完成 |
+
+## 响应式
+
+- `ChatThread` 随宽度变化。宽度低于 `NarrowWidth`（主题令牌，默认 420 px）时进入 `:narrow` 伪类：左右内边距从 16 px 减为 12 px（`ContentPaddingNarrow`），消息堆栈最多占行宽的 84%（`StackMaxRatioNarrow`），而不是 78%。544 px 的上限（`StackMaxWidth`）仍然有效。
+- 线程按自身宽度而不是窗口宽度判断，所以放在侧面板或对话框中与在手机上的折叠方式相同。
+- 消息文字在气泡内换行。附件文件名以省略号结尾（`CharacterEllipsis`）。输入框会随文字增高，直到 `FieldMaxHeight`。
+- 在触屏上不要只依赖添加回应按钮（PART_React）。它在指针位于消息上（`:pointerover`）或消息获得焦点（`:focus-within`）之前透明度为 0，因此在手机上请提供其他回应方式。
+- 让线程拉伸以填满所在面板（`HorizontalAlignment` 与 `VerticalAlignment` 默认为 `Stretch`）。低于 420 px 时紧凑布局会自动启用，因此侧面板不需要单独的布局。
 
 ## 相关组件
 

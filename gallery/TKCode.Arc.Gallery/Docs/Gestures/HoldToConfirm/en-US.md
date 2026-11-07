@@ -420,6 +420,19 @@ Use motion to show progress, not decoration. The fill is the only element that m
 button, so it stays on every motion level. Reduced motion removes the press scale and the spring, which move the
 button itself and can cause discomfort for some people.
 
+## Responsive behavior
+
+- `HoldToConfirm` has no breakpoint and keeps the same form at every width. Its height is at least `MinHeight` (44 px,
+  the medium control size), and its width follows the label plus `InlinePadding` (20 px on each side).
+- It measures its own width, not the window's. Above 220 px it sets `:wide`, which changes only the press depth while
+  the button is held. The layout does not change.
+- The label is not set to wrap, so a long `Label` makes the button wider instead of breaking onto a second line.
+- A hold starts with a press and completes after `HoldDuration` (1.2 s by default). A tap shorter than that does
+  nothing, and moving the pointer more than 24 px beyond the button cancels the hold. Hover only tints the surface, so
+  nothing depends on it, and a finger holds the button the same way a mouse does.
+- In a narrow row, let the button stretch (`HorizontalAlignment="Stretch"`) or give it a row of its own, rather than
+  shortening the label.
+
 ## Related
 
 - `Button` and `ActionButton` for actions that do not need a hold.

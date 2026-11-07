@@ -173,6 +173,18 @@ it holds the focus hands it to the next row.
   140ms after a connect and fades out after a disconnect. The drawer's settings open and close on a height spring.
 - Reduced motion keeps 120ms fades and drops travel, blur and springs (leaving rows are removed at once); Off jumps.
 
+## Responsive behavior
+
+- `Integrations` changes at its own width, not the window's. Below 720 px (`:narrow`) the search field drops under the
+  title at full width. At 520 px or less (`:tight`) the header, filters and rows use tighter padding. At 480 px or less
+  (`:compact`) rows top-align, take two description lines and hide the category.
+- In the compact layout the filter pills scroll sideways instead of wrapping, and the checked pill is brought into view.
+  Wider than that, the pills wrap.
+- The settings button is hidden in the compact layout, so a connected app opens its configuration from its name. Do not
+  rely on the settings button at phone width.
+- Rows are at least 60 px high (72.9 px in the compact layout, `CompactRowMinHeight`). Hover only tints a row's pill,
+  and nothing depends on it.
+
 ## Related
 
 - `Drawer` for the panel the settings open in.

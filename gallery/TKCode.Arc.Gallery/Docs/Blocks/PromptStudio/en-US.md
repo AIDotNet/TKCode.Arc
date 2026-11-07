@@ -176,6 +176,18 @@ Every word comes from `Labels` (`PromptStudioLabels`): replace the instance to t
 | Output panel height | Spring, held on re-run | Immediate | Immediate |
 | Chip flash | Short pulse | None | None |
 
+## Responsive behavior
+
+- `PromptStudio` measures its own width, up to `MaxWidth`, not the window's. At `TwoColumnWidth` (560 px) or less the
+  variable fields form two columns (`:two-col`), and at `OneColumnWidth` (340 px) or less they form one (`:one-col`).
+- At `CompactWidth` (520 px, `:compact`) the header and editor padding get smaller. At `NarrowWidth` (480 px, `:narrow`)
+  the test cases and the Run button stack, each the full width of the card.
+- The header wraps. When the title and the version and model pills do not fit side by side, the pills move to a row of
+  their own under the title, and a title wider than its row is clipped by the card.
+- The tabs are 30 px tall (`TabHeight`), and their hover tint applies to a mouse or pen only (`:hover`), so touch loses
+  nothing. Give the tabs room on a phone and do not put other small targets beside them.
+- Set `MaxWidth` as a ceiling and let the card take the space it is given, instead of fixing a `Width`.
+
 ## Related
 
 - `AiSidePanel` for an assistant beside a page.

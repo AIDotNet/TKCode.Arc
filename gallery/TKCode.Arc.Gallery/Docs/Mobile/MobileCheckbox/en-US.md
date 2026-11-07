@@ -50,6 +50,16 @@ The row is a toggle button named by its label, so always give it content; a box 
 
 A finger shrinks the box to 0.92 on a snappy spring and releases on the same spring (P1; the row and its label stay still). The check draws itself from start to end (P15, `StrokeDrawGlyph`, 240ms on the enter curve), and the dash morphs into the check and back on a snappy spring (P16, `MorphGlyph`). The box fill and border cross-fade on the fast curve. With reduced motion the marks and colors switch at once and the box does not shrink.
 
+## Responsive behavior
+
+- `Checkbox` has no breakpoint. The control is at least 44 by 44 px (`TouchTarget`), and the 22 px box (`BoxSize`) sits
+  at the start with the label beside it, so the whole row is the touch target.
+- In a narrow form, let the checkbox stretch with `HorizontalAlignment="Stretch"` so the label has the space beside the
+  box, rather than setting a fixed `Width`.
+- A press shrinks the box to 0.92 while the label stays put, and a disabled checkbox dims to `DisabledOpacity`.
+- Nothing depends on hover: the theme has no pointer-over style, so a tap toggles the box and reaches the same states a
+  click does.
+
 ## Related
 
 - `MobileSwitch`: for a setting that takes effect at once.

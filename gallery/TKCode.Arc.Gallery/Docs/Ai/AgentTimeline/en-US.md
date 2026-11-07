@@ -334,6 +334,19 @@ The enums and values:
 | Card fade and content crossfade | 160ms / 120ms, 100 / 160ms | Kept (short crossfade) | At once |
 | Status line and playhead | Crossfade, 240ms fade | At once | At once |
 
+## Responsive behavior
+
+- `AgentTimeline` changes at a width. Below `NarrowWidth` (520 px, a fixed constant in the layout rather than a theme
+  token) it sets `:narrow` and shortens the label column from 176 px to 132 px. The header, footer and plot take tighter
+  edge padding (`NarrowEdgePadding`, `NarrowTrackPadding`).
+- It takes the width its parent offers, up to `MaxWidth` (744 px by default), and measures its own width for the layout.
+- The plot never gets narrower than 300 px (MinPlotWidth). Below that it scrolls sideways in its own scroller
+  (`:scrollable`) while the agent labels stay in place, and a divider appears (`:scrolled`) once the plot has been
+  scrolled.
+- Agent names end in an ellipsis (`CharacterEllipsis`). Text in the span cards wraps (`TextWrapping`).
+- Let the timeline stretch to the page width. Below 520 px it narrows its label column by itself, and the plot scrolls
+  instead of shrinking under 300 px.
+
 ## Related
 
 - `AgentStatus` for one agent's live state in a compact pill.

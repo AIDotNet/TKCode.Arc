@@ -1,7 +1,7 @@
 ---
 title: 图标变形
 summary: 在不同状态之间变形的图标：菜单变关闭、播放变暂停、复制变勾选等。
-source-hash: dd129b66808b
+source-hash: b2397d800a88
 ---
 
 <Demo name="EightPairs" />
@@ -292,6 +292,13 @@ public partial class LiveMetricsViewModel : ObservableObject
 | 复制变勾选 | 纸张折起，勾选绘出 | 立即完成 | 立即完成 |
 | 铃铛开启 | 响一次，铃舌略微滞后于铃身 | 不响 | 不响 |
 | 心形被点赞 | 以光环和火花迸发 | 无迸发 | 无迸发 |
+
+## 响应式
+
+- `IconMorph` 在任何宽度下外观都一样。它没有断点：尺寸由 `IconSize` 决定（默认 24 px），并把 24 单位的图形缩放到所给的方框内。
+- 让 `IconSize` 与所在按钮相配：36 px 按钮配 16 px 图标，44 px 按钮配 24 px，52 px 按钮配 32 px。
+- 在触屏上，点按区域由所在的按钮决定，因为图标不参与命中测试。请设置宿主按钮的 `Width` 与 `Height`（示例用 36 px），而不是放大图标。
+- 没有任何功能依赖悬停：`IconMorph` 没有悬停状态，状态由图形与按钮的 `AutomationProperties.Name` 呈现，不用指针也不会丢失信息。
 
 ## 相关组件
 

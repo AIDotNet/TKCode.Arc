@@ -134,6 +134,17 @@ screen reader names (`SortLabel`, `ScaleLabel`, `PanelsLabel`, `KeyboardHint`) a
 - **Fading**: a flat panel's content fades over 240 ms and the grid lines are left alone.
 - With reduced motion, rescaling, reordering and crosshair moves happen at once. Off applies every change at once.
 
+## Responsive behavior
+
+- `SmallMultiples` measures its own width. Below 640 px it is `:compact`: two columns instead of four, and the legend
+  moves under the plot.
+- Below 480 px it is also `:phone`: each panel's value moves under its name, and the tick gutter is narrower.
+- The header's heading and controls share a row while they fit. When they do not, they stack, and the controls wrap onto
+  further rows (`WrapPanel`).
+- Titles and descriptions wrap (`TextWrapping`) instead of being cut.
+- On a phone, give the block the full screen width. The two-column and phone layouts start on their own, so narrow
+  screens need no extra code.
+
 ## Related
 
 - `LineChart` for a few series on one plot with a gliding crosshair.

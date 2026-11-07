@@ -329,6 +329,18 @@ the failure memory for the old one, so the new photo is loaded even if the previ
 | A status dot leaves | Shrinks out over 160 ms | Immediate | Immediate |
 | Online and offline change color | The dot color crossfades | Immediate | Immediate |
 
+## Responsive behavior
+
+- `Avatar` does not change at any width and does not measure its container. Its diameter comes only from `Size`: `Small`
+  28 px, `Medium` 36 px (the default), `Large` 48 px or `XLarge` 88 px.
+- Initials are at most two letters, taken from `DisplayName`, so a long name does not widen or wrap the avatar. A photo
+  that fails to load falls back to the initials.
+- The status dot is a colour cue, and the accessible name also carries the status. On a phone, use `Large` (48 px) or
+  bigger for an avatar that is a tap target, such as a profile button; `Small` suits dense lists where the row is
+  tapped.
+- Pick the size for the place it sits, not the screen. The size never changes at a breakpoint, so an avatar in a narrow
+  header keeps its size and the header has to make room for it.
+
 ## Related
 
 - `AvatarGroup` for a stack of people with an overflow count.

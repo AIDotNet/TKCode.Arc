@@ -1,7 +1,7 @@
 ---
 title: 拖曳數值
 summary: Figma 風格的數字欄位：拖曳標籤即可調整，也可以鍵入數值、單位與算術運算式。
-source-hash: d1376e8d8e40
+source-hash: 5cdb8b3dc9b0
 ---
 
 <Demo name="Inspector" />
@@ -331,6 +331,14 @@ public partial class WidgetLayoutViewModel : ObservableObject
 | 被拒絕的輸入或處於限值的步進 | 欄位抖動一次；邊緣紅色保持 900 ms | 不抖動；紅色邊緣仍顯示 900 ms | 立即完成；紅色邊緣顯示 900 ms |
 | 單位變更 | 單位帶著輕微模糊升起 | 單位原地淡入 | 立即完成 |
 | 軌道填滿 | 拖曳時跟隨指標；輸入或步進時滑動到新值 | 跳到新值 | 立即完成 |
+
+## 響應式
+
+- `ScrubInput` 沒有斷點，在任何寬度下佈局都相同。它會延展到所在欄（`HorizontalAlignment="Stretch"`），`Size="Small"` 則提供 30 px 高的外殼（`ShellHeightSM`），適合緊湊的檢視器欄。
+- 數字保持單行。比編輯區更寬的值會在區域內橫向捲動，捲軸隱藏。標籤至少保留 `HandleMinWidth`（30 px）寬，單位至少保留 `UnitMinWidth`（18 px）寬。
+- 在觸控螢幕上，標籤上的橫向拖曳會調整數值，縱向拖曳則捲動父面板，因此長檢視器仍可用手指捲動。
+- 懸停高亮只在滑鼠或觸控筆下出現（`:hover-fine`），沒有任何操作必須依賴懸停。
+- 在窄面板中，讓欄位隨欄寬變化而不是設定 `Width`，並讓標籤保持簡短，為數字留出空間。
 
 ## 相關元件
 

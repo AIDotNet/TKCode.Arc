@@ -1,7 +1,7 @@
 ---
 title: Training run
 summary: 微調任務卡片：訓練與驗證損失曲線沿著固定的步數軸即時繪製，這條軸同時也是訓練週期進度列；卡片還顯示學習率、已用時間、預估剩餘時間、最近事件、暫停與取消，以及附 Deploy 的結果。
-source-hash: c7fd2a8ac687
+source-hash: 56d6af3b1f6c
 ---
 
 <Demo name="Preview" />
@@ -187,6 +187,13 @@ run.Labels = new TrainingRunLabels
 | 載入圈與活動文字微光 | 旋轉、閃爍 | 靜止 | 靜止 |
 
 x 軸涵蓋整個執行，y 軸依最初的樣本固定，所以執行中途什麼都不會重新縮放。模擬在減弱動態效果下仍會繼續執行（它是內容），但卡片離開畫面時會暫停。
+
+## 響應式
+
+- `TrainingRun` 依自身寬度而不是視窗寬度變化，在容器中最寬為 `CardMaxWidth`（640 px）。低於 440 px（`NarrowBreakpoint`，`:narrow`）時，內距降為 `CardPaddingNarrow`，統計與指標改為兩欄，驗證標籤縮短，底部列上下堆疊。
+- 圖表在任何寬度下都保持 `ChartHeight`（176 px）。輪次標籤與資料集名稱以省略號結尾（`CharacterEllipsis`），名稱先於樣本數被截斷。
+- 最近事件清單顯示三列，每列高 `EventRowHeight`（28 px），並截斷為一行。操作按鈕的高度由 `ActionHeight`（32 px）決定，低於 44 px 的觸控目標；卡片上沒有僅靠懸停才能使用的操作。
+- 讓卡片延展（`HorizontalAlignment="Stretch"`），而不是設定固定的 `Width`。欄寬保持 440 px 或以上，四欄統計與底部操作才能與資料集並排；低於此寬度時底部列堆疊，卡片會變高。
 
 ## 相關元件
 

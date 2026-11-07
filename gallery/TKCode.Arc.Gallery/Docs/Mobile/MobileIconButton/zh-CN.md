@@ -1,7 +1,7 @@
 ---
 title: 移动端图标按钮
 summary: 44 乘 44 的纯图标按钮，有朴素、浅色、实心和悬浮几种变体，带弹簧按压状态。
-source-hash: 3e3134f8f834
+source-hash: 5676c89a9066
 ---
 
 <Demo name="Basic" />
@@ -57,6 +57,14 @@ source-hash: 3e3134f8f834
 ## 动效
 
 按下时按钮在快速弹簧上缩到 0.97（悬浮的缩到 0.92），向下没有延迟，并略微变暗；松手时弹回。半途松开的按压会保留速度。减少动效时按钮不缩放，只变暗。
+
+## 响应式
+
+- `IconButton` 没有断点。它在任何宽度下都是固定的 44 x 44 px（`TouchTarget`），图标为 22 px（`IconExtent`）。浮动的 `fab` 变体为 56 px（`FabSize`），图标为 24
+  px（`FabIconExtent`）。
+- 默认的 `HorizontalAlignment` 为 `Left`，所以当按钮位于拉伸的行中时，请自行设置它。
+- 按下时按钮缩放至 0.97（`fab` 为 0.92），并变暗至 `PressedOpacity`（0.85）；禁用的按钮变暗至 `DisabledOpacity`（0.5）。
+- 没有任何功能依赖悬停：主题没有悬停样式。把 `fab` 放在页面内容中，页面的安全区内边距会使它避开底部的 Home 指示条。
 
 ## 相关组件
 

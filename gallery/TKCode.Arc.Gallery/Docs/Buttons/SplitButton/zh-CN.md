@@ -1,7 +1,7 @@
 ---
 title: 分割按钮
 summary: 一个主操作，加上一组相近备选项的菜单。
-source-hash: d7310f68fd72
+source-hash: 0fc0c23db4f0
 ---
 
 <Demo name="MergeStrategies" />
@@ -311,6 +311,13 @@ invoice.ItemClicked += (_, e) => _ = viewModel.RunAsync((SendOption)e.Item!);
 | 图标变化 | 新图标从较小尺寸、带轻微模糊地渐长，旧图标缩小消失 | 短暂淡入 | 立即 |
 | 主区域按下 | 整个药丸轻微下压 | 无按下效果 | 立即 |
 | 菜单打开 | 在箭头下方 4 px 处打开，各行依次淡入 | 短暂淡入，无变换 | 立即 |
+
+## 响应式
+
+- `SplitButton` 没有断点，在任何宽度下两半都并排显示。主要样式至少与 `ControlSizeMD` 等高，箭头半边为 38 px（`TriggerExtentPrimary`）。次要样式高度为 `ControlSizeSM`，主半边至少 142 px 宽（`SecondaryActionMinWidth`），箭头半边为 32 px（`TriggerExtentSecondary`）。
+- 主按钮的 `Label` 应保持简短。主半边随文字变宽，长标签会撑宽整个控件。在狭窄的工具栏中，让该控件单独占一行，而不是缩短标签。
+- 菜单始终锚定在箭头上并与其末端对齐，`MenuEntry` 行由弹出层的翻转与滑动规则决定位置。箭头靠近边缘时，菜单仍留在屏幕内。
+- 没有任何功能依赖悬停。悬停只会为每一半着色，点按会执行主操作或打开菜单，与点击一样。
 
 ## 相关组件
 

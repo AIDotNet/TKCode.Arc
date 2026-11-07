@@ -56,6 +56,15 @@ Items are selectable list items with a label, so they are named by their content
 
 One accent pill glides between the items on a spring (P7, `GlidingIndicator`): it fades in where it lands the first time, snaps instead of gliding when the bar is resized, and jumps with reduced motion. The icon and label colors change on the fast curve. A finger dims the item and shrinks its content to 0.96 on a snappy spring (P1). With reduced motion nothing scales and everything switches at once.
 
+## Responsive behavior
+
+- `Tabbar` has no breakpoint: the bar is 49 px tall (`BarHeight`) at every width, and its `TabbarItem`s share the width
+  equally in one row (`UniformGrid`).
+- Each item is at least 44 px tall (`TouchTarget`), with its icon (`IconExtent`, 24 px) above a label.
+- Items get narrower as the width drops, so use two to five destinations with short labels.
+- Nothing depends on hover: a finger on an item dims it (`PressedOpacity`), and the selected item takes the foreground
+  color.
+
 ## Related
 
 - `MobilePage`: puts the tabbar in its `Footer`.

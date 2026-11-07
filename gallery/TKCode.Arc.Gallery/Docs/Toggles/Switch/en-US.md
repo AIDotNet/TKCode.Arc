@@ -331,6 +331,19 @@ reports as a toggle button in its checked or unchecked state.
 | Change from a key or code | One stretch to 116% and back, about 0.34 s | No stretch | No stretch |
 | Track fill and thumb color | Crossfade on the standard tween | Immediate | Immediate |
 
+## Responsive behavior
+
+- `Switch` has no breakpoint and is the same size at every width: a 42 by 24 px track (`TrackWidth`, `TrackHeight`) with
+  an 18 px thumb.
+- `Content` sits 12 px to the right of the track (`LabelMargin`). The template sets no wrapping, so a long label stays
+  on one line. Give the switch a row with room for its label, or shorten the label.
+- The control is at least 44 px tall (`MinHeight` is `ControlSizeMD`), which is taller than the track. The label is part
+  of the control, so a tap on the label toggles the switch as well.
+- Hover only tints the off track (`ControlTrackHover`), and pressing widens the thumb. A tap toggles the switch, so
+  nothing depends on hover.
+- In a phone-only app, use the Mobile package's switch from `TKCode.Arc.Mobile` (51 by 31 px, with a 44 px hit area) for
+  a larger target.
+
 ## Related
 
 - `Checkbox` for a choice that is confirmed with a submit button.

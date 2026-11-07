@@ -1,6 +1,6 @@
 ---
 title: Action button
-summary: A compact button for frequent toolbar actions.
+summary: A submit button that shows the work on itself: a pending word and a spinner while the task runs, then a success word with a check, then back to idle.
 ---
 
 <Demo name="Default" />
@@ -358,6 +358,17 @@ Companion types used on this page:
 | Label changes to pending or success | Changed letters rise from a soft blur, kept letters glide, the width springs | Instant crossfade | Immediate |
 | Success check | Draws itself in 240 ms | Appears without drawing | Immediate |
 | Press | Scales to 97 percent (98.5 percent when wide) on a snappy spring; never while pending | No press scale | No press scale |
+
+## Responsive behavior
+
+- `ActionButton` looks the same at every width. Its minimum height is 44 px (`ControlSizeMD`), and its width follows its
+  label and icon with 20 px inline padding (`InlinePadding`). It has no breakpoint.
+- `:wide` is set above 220 px of the button's own width and only changes the pressed scale; the layout does not change.
+- The pending and success words replace the idle label on the same button, so the button can change width while the work
+  runs.
+- 44 px is a comfortable touch target, and nothing is hover-only: the pending and success states come from the task, not
+  from the pointer.
+- In a narrow form, let the button stretch (`HorizontalAlignment="Stretch"`) so the submit spans the form at its end.
 
 ## Related
 

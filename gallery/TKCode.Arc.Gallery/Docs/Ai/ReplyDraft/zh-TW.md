@@ -1,7 +1,7 @@
 ---
 title: Reply draft
 summary: 收到的郵件下方的 AI 回覆起草器：快速回覆引導一份新的串流草稿，語氣與長度以一次交叉淡化改寫它，讀者在插入前可以編輯。
-source-hash: 19e28ee0c566
+source-hash: 7793aa83c42c
 ---
 
 <Demo name="Preview" />
@@ -200,6 +200,14 @@ draft.Labels = new ReplyDraftLabels
 | 語氣與長度的膠囊 | 以同樣的無回彈彈簧滑動 | 直接跳到位 | 直接跳到位 |
 | 狀態 | 交叉淡化（淡出 100ms，淡入 160ms）；運作中的詞會閃爍 | 交叉淡化，不閃爍 | 立即 |
 | 按下標籤或選項 | 縮小到 0.97 | 不縮放 | 不縮放 |
+
+## 響應式
+
+- `ReplyDraft` 佔滿給它的寬度，最寬到 `MaxWidth`（600 px），並依自身寬度而不是視窗寬度判斷。
+- 寬度低於 `CompactWidth`（480 px）時設定 `:compact`：內距減為 `CompactCardPadding`，正文不再縮排頭像位置。寬度低於 `NarrowWidth`（460 px）時設定 `:narrow`：語氣與長度選項堆疊，`Length` 移到單獨一列。
+- 快捷回覆會換到更多行，不會水平捲動。過長的名稱與地址以省略號結尾（`CharacterEllipsis`）。
+- 觸控輕觸後，選項增至 32 px，快捷回覆增至 36 px。每一項都是一般的按鈕或切換項，輕觸即可到達，無需懸停。
+- 在手機上讓 `ReplyDraft` 在整欄中延展，不要設定固定的 `Width`。
 
 ## 相關元件
 

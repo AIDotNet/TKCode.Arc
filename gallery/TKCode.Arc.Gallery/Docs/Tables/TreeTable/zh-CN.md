@@ -1,7 +1,7 @@
 ---
 title: 树表格
 summary: 带嵌套行、三态选择、保持层级的排序和按需加载子行的表格。
-source-hash: acf39441d900
+source-hash: 8e029049bf15
 ---
 
 <Demo name="Budget" />
@@ -228,6 +228,13 @@ table.ChildrenLoader = async item => await api.GetChildrenAsync(((Account)item).
 | 一行展开或收起 | 高度弹簧、错开与淡入 | 短暂淡入，没有高度弹簧和错开 | 立即完成 |
 | 排序 | 行在弹簧上移到新位置 | 行直接跳到新位置 | 立即完成 |
 | 箭头与排序箭头 | 弹簧转动 | 立即完成 | 立即完成 |
+
+## 响应式
+
+- `TreeTable` 依据自身宽度而非窗口宽度调整。当表格窄于某列的 `HideBelow` 时，该列会从表头和每一行中移除；树形列始终保留。
+- 列默认为 `1*`，会收缩并截断。表格不横向滚动，放不下的文字会以省略号缩短。
+- 行高为 44 px（`RowHeight`），表头高为 40 px（`HeaderHeight`）。触屏轻触会直接切换或激活行；悬停填充只对鼠标生效。
+- 请把 `HideBelow` 设在最不重要的列上，例如负责人或修改日期。
 
 ## 相关组件
 

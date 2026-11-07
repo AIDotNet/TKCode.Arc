@@ -1,7 +1,7 @@
 ---
 title: 單選卡片
 summary: 可選取的選項卡片，帶有滑動的選取光環、價格與說明插槽，並具有單選按鈕的鍵盤行為。
-source-hash: a439dd2259b6
+source-hash: d83deb93b014
 ---
 
 <Demo name="Grid" />
@@ -275,6 +275,15 @@ plans.SelectionChanged += (_, _) => Console.WriteLine(plans.SelectedValue);
 | 選取一張卡片 | 指示點以靈敏的彈簧彈出 | 圓點立即出現 | 圓點立即出現 |
 | 版面尺寸變化 | 光環立即移到新位置 | 光環立即移動 | 光環立即移動 |
 | 懸停、按下或聚焦卡片 | 卡片背景與邊框顏色快速變化 | 立即完成 | 立即完成 |
+
+## 響應式
+
+- `RadioCards` 沒有斷點。預設的 `Grid` 版面依 `MinColumnWidth`（預設 180）排成多欄，間距 10 px，寬度低於約 370 px 時變為一欄。`Layout="List"` 始終是每列一張、佔滿整列的卡片。
+- 它依自身寬度排列，而不是依視窗。對話方塊與側邊面板中的欄數判斷方式與手機上相同。
+- 標題只佔一行，超出部分以省略號結束（`TextTrimming="CharacterEllipsis"`），描述則會換行（`TextWrapping="Wrap"`）。同一列的卡片共用最高卡片的高度，因此價格在一列內對齊。
+- 停用的卡片會用 `DisabledReason` 取代描述文字，因此在手機寬度下原因仍直接可見，而不是放在工具提示裡。
+- 卡片內距為 16 × 14 px（`CardInsetGrid`）。懸停只會加深邊框（`:pointerover`），輕觸即可選取，沒有任何功能依賴懸停。
+- 在手機上，選項需要用一句話加時間或價格來比較時，使用 `Layout="List"`；需要並排比較時保留網格，並在更窄的容器中把 `MinColumnWidth` 調小，以便仍能放下兩欄。
 
 ## 相關元件
 

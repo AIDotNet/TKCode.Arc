@@ -1,7 +1,7 @@
 ---
 title: Tool call
 summary: 智能体对话记录中的一行工具调用：工具、它做了什么以及结果如何，点开即可看到调用的输入与输出，并在行内完成审批与重试。
-source-hash: 545a5441aa1e
+source-hash: f3def726b388
 ---
 
 <Demo name="Preview" />
@@ -211,6 +211,13 @@ group.Simulation.Start();                       // Run again: plays from the top
 | 标题中新增一个工具标记 | 以弹簧展开变宽 | 立即 | 立即 |
 | 箭头 | 以弹簧转动 | 立即 | 立即 |
 | 审批轮廓 | 在 240ms 内淡入淡出 | 立即 | 立即 |
+
+## 响应式
+
+- `ToolCall` 按自身宽度而不是窗口宽度变化。低于 440 px（`CompactWidth`，`:compact`）时，元信息只保留耗时，说明文字换行，操作按钮移到其下方。低于 370 px（`TightWidth`，`:tight`）时隐藏元信息。
+- 文字会换行（`TextWrapping`）。非紧凑状态下，说明文字保持一行并以省略号结尾（`CharacterEllipsis`）。表格与 JSON 输出在各自的 `ScrollViewer` 中横向滚动，而不会把整行撑宽。
+- 触控时，操作按钮高度至少为 28 px（`ActionHeight`）。标题栏的展开切换是按钮，点按与点击打开调用的方式相同。悬停只会为箭头着色（`:head-hover`），没有任何功能依赖悬停。
+- 让该行在对话记录列中拉伸（`HorizontalAlignment="Stretch"`），而不是设置固定的 `Width`；该列保持 440 px 或以上，元信息与按钮才能留在标题行上。
 
 ## 相关组件
 

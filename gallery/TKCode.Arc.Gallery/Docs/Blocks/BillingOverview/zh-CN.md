@@ -1,7 +1,7 @@
 ---
 title: 账单概览
 summary: 在一页中展示当前套餐、下次扣款、付款方式和发票记录，每项旁边都有对应的操作。
-source-hash: f2c9dc50b8bb
+source-hash: 7879b1f99d92
 ---
 
 <Demo name="Overview" />
@@ -351,6 +351,13 @@ billing.Labels = new BillingOverviewLabels
 | “显示全部发票”切换 | 箭头以灵敏的弹簧转动；文字以模糊切换 | 箭头直接跳变；文字淡入淡出 | 立即完成 |
 | 徽标或按钮文字变化 | 文字以短暂模糊切换 | 淡入淡出 | 立即完成 |
 | 到期信息行变为警告 | 文字平滑过渡到警告色 | 颜色淡入淡出 | 立即完成 |
+
+## 响应式
+
+- `BillingOverview` 按自身宽度判断。在 `NarrowWidth`（560 px，`:narrow`）以下，价格移到套餐名称之下，套餐页脚堆叠，Invoice 列隐藏。
+- 在 440 px 以下，卡片行把按钮移到文字之下；Status 列的间距由 28 px 缩为 14 px。
+- 发票行高 `InvoiceRowHeight`（48 px），表头高 `InvoiceHeaderHeight`（32 px），每一行都足够点按。
+- 让块占满手机宽度；低于 `NarrowWidth` 时它会自行改为一栏。只有块与其他内容并排时才调大 `NarrowWidth`，以免栏位被挤压。
 
 ## 相关组件
 

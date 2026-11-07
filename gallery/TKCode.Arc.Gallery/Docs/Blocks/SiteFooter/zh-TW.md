@@ -1,7 +1,7 @@
 ---
 title: Site footer
 summary: 網站頁尾，包含連結欄與電子報、極簡版型，以及一個大型、會淡出的 Arc 標記。
-source-hash: 60817fc4175b
+source-hash: 9cb7cc5e078f
 ---
 
 <Demo name="Preview" />
@@ -121,6 +121,14 @@ footer.Subscribed += (_, e) => Console.WriteLine($"Subscribed {e.Email}");
 | 電子報文字行 | 從下方 4 px 處上升並經過模糊，耗時 240 ms；舊文字行在 120 ms 內向上離開 | 僅淡入 | 立即 |
 | 訂閱按鈕 | 標籤以模糊方式交叉淡入，寬度以彈簧變化，載入時顯示旋轉指示器 | 按鈕的減少動態規則 | 立即 |
 | Logo 拱形 | 僅一次，當 30% 在畫面上時：淡入並在 900 ms 內上升 40 px | 立即顯示 | 立即顯示 |
+
+## 響應式
+
+- `SiteFooter` 依自身寬度而非視窗寬度判斷。寬度在 760 px 及以下（`StackedWidth`，即 `:stacked`）時，介紹區堆疊在連結欄上方；在 520 px
+  及以下（`:narrow`）時，連結欄分為兩欄，底部法律資訊列堆疊。
+- 訂閱區最寬 400 px（`NewsletterMaxWidth`），簡介文字最寬 320 px（`TaglineMaxWidth`）。
+- 底部列中的連結群組放在 `WrapPanel` 中，換到新的一列，而不是水平捲動。
+- 手機上不需要為頁尾另外設定寬度，讓它佔滿螢幕寬度即可。低於 520 px 時它已分為兩欄，連結群組仍然易讀。
 
 ## 相關元件
 

@@ -1,7 +1,7 @@
 ---
 title: 文字变形
 summary: 逐字母将标签变形为下一个状态。
-source-hash: e933d5b868e9
+source-hash: 9e30632d5876
 ---
 
 <Demo name="Status" />
@@ -215,6 +215,13 @@ public partial class DeploymentViewModel : ObservableObject
 | 标签宽度 | 以弹簧方式变为新宽度 | 跳变 | 跳变 |
 | 字体、字重或字号变化 | 直接跳到新字号 | 跳变 | 跳变 |
 | 控件加载前设置的文字 | 立即显示，无动效 | 立即显示 | 立即显示 |
+
+## 响应式
+
+- `TextMorph` 没有断点。它是一行且从不换行，因此长标签会占满它在行中的全部宽度。
+- 在完整动效下，它的宽度以弹簧（`ArcSpring.Morph`）跟随文字变化，因此较长的标签会在短暂的动画中推动旁边的内容。
+- 它没有自己的悬停或聚焦行为，因此没有任何内容依赖悬停。
+- 在手机上标签保持为几个字。把它放在可以拉伸的行中（`HorizontalAlignment="Stretch"`），或让较长的标签单独占一行。
 
 ## 相关组件
 

@@ -1,7 +1,7 @@
 ---
 title: 樹狀檢視
 summary: 瀏覽巢狀的資料夾與結構化內容。
-source-hash: a4b719513550
+source-hash: 238c2d67d116
 ---
 
 <Demo name="FileTree" />
@@ -366,6 +366,13 @@ tree.ItemExpanded += (_, e) => log.Text = $"已開啟 {e.Item}";
 | 資料夾展開或收合 | 空間以彈簧增長或收攏；新列錯落進入 | 列立即顯示或隱藏 | 立即完成 |
 
 選取高亮僅在完整動態效果下於各列之間滑動。
+
+## 響應式
+
+- `TreeView` 沒有斷點。它佔滿所給的寬度（預設為 `HorizontalAlignment="Stretch"`），列在任何寬度下都保持 `RowSlotHeight`（38 px）高。
+- 樹狀區域不水平捲動。放不下的標籤以省略號縮短，每一層縮排 `IndentWidth`（18 px）。
+- 不依賴懸停。懸停填色只是視覺效果，點擊或輕觸都會以同樣的方式選取列。
+- 讓樹佔滿整列。如果它與其他內容同頁，請用 `MaxHeight` 限制其高度，使樹本身成為捲動區域。
 
 ## 相關元件
 

@@ -217,6 +217,19 @@ stats.Labels = new GenerationStatsLabels
 The live clock runs only while waiting or streaming, and a simulation ticks in virtual time only while the strip is on
 screen.
 
+## Responsive behavior
+
+- `GenerationStats` measures its own width, not the window's. Below 600 px the four cells form a two by two grid, so the
+  speed cell keeps room for its sparkline.
+- Below 440 px (`:compact`) Details becomes an icon button that keeps its name, "Show details" or "Hide details", and
+  the table's Rate column hides.
+- `Variant="Inline"` is one quiet line under a chat message. On a phone it wraps onto a second line instead of
+  scrolling, and the breakdown opens as a panel below it.
+- Details is 28 px high, so on touch screens leave room around it. Hover only tints its background; the breakdown opens
+  by tap or with Enter.
+- Give the strip a row of its own and at least 600 px to keep the four cells in one row. In a narrower place, let the
+  grid form.
+
 ## Related
 
 - `ContextWindow` for how much of a model's context a conversation has used.

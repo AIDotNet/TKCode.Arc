@@ -1,7 +1,7 @@
 ---
 title: Agent plan
 summary: "代理的計畫是一份可編輯的檢查清單：草稿階段可以重新排序、改名與新增步驟，核准後則依序追蹤執行過程。"
-source-hash: 001769f62b45
+source-hash: d5a7c4d3c610
 ---
 
 <Demo name="Preview" />
@@ -253,6 +253,14 @@ plan.Simulation = new AgentPlanSimulation
 | 插入的步驟 | 滑入並帶底色 | 出現 | 出現 |
 | 串流的建議 | 各段淡入 | 所有文字同時出現 | 所有文字同時出現 |
 | 模擬的時間軸 | 不變 | 不變 | 不變 |
+
+## 響應式
+
+- `AgentPlan` 隨寬度變化。寬度低於 `NarrowWidth`（420 px，是固定常數而不是主題權杖）時設定 `:narrow`：頭部、清單與頁尾使用更緊湊的內距（`NarrowHeaderPadding`、`NarrowListPadding`、`NarrowFooterPadding`），兩個按鈕在同一列內等寬排列。
+- 卡片依自身寬度（`Bounds.Width`）而不是視窗寬度判斷，會填滿分配給它的空間，最寬為 `CardMaxWidth`（560 px）。
+- 步驟標題依需要換成多行（`TextWrapping`），不會被截斷。較短的狀態列保持一行，並以省略號結尾（`CharacterEllipsis`）。
+- 步驟的移除按鈕在觸控螢幕上、懸停時以及步驟取得鍵盤焦點時顯示（IsRemoveRevealed）。其餘時間保持隱藏，因此手機使用者可以透過觸控找到它。
+- 讓卡片佔滿頁面的全寬，不要設定固定的 `Width`。寬度低於 420 px 時兩個按鈕會自動分享一列，因此草稿在手機上無需另外的版面即可使用。
 
 ## 相關元件
 

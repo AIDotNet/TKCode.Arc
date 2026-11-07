@@ -387,6 +387,17 @@ closes, so the reader hears the normal trigger description after that.
 | Profile rows open | Each row rises 4px and fades in, 35ms after the previous one, on every opening | Rows shown at rest | Rows shown at rest |
 | Next card after a recent close | Opens after 80ms with a fade only | Fade only | Shown at once |
 
+## Responsive behavior
+
+- `HoverCard` looks the same at every width: the card is `CardWidth` wide (296 px by default) and does not grow with the
+  window.
+- The card stays within the space the window leaves, and it flips to another side when the preferred side does not fit.
+- The bio wraps inside the card, and the stats wrap onto new rows (`WrapPanel`). Two or three stats keep the card short.
+- On touch, a tap on the trigger opens the card and a second tap closes it. Touch enter and leave events do not open or
+  close it.
+- Put a person's full details on the page as well. The card is a preview, and a screen reader hears only the summary in
+  the trigger.
+
 ## Related
 
 - `Tooltip` for a short text label on hover or focus.

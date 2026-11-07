@@ -1,7 +1,7 @@
 ---
 title: 金额输入框
 summary: 带有实时分组、宽度稳定、数字滚动与最小单位输出的货币输入框。
-source-hash: 464ecb4deb4f
+source-hash: e786765be98d
 ---
 
 <Demo name="Default" />
@@ -310,6 +310,13 @@ public partial class RefundViewModel : ObservableValidator
 | 被拒绝的修改（超过最大值） | 金额以弹簧效果横向推动；范围文字闪烁 | 无推动；范围文字仍闪烁 | 无推动；范围文字仍闪烁 |
 | 出现新的数位列 | 列宽以弹簧效果增长 | 宽度直接跳变 | 宽度直接跳变 |
 | 更改货币 | 符号滚动到新位置 | 符号直接变化，无滚动 | 符号直接变化，无滚动 |
+
+## 响应式
+
+- `MoneyInput` 没有断点。外壳在任何宽度下都保持 `ShellHeight`（76 px）的高度，过长的金额会缩小以适应空间，而不是滚动。
+- 快捷添加标签会以 `ChipSpacing`（6 px）的间距换到新行；标签与可选范围放不进同一行时，范围文字移到它们下方。
+- 货币菜单是与字段右缘对齐的 `ArcPopup`，会翻转或平移，以留在视口（窗口或 `ArcViewportHost`）之内；列表超过 `MenuListMaxHeight`（288 px）时滚动，每个选项至少 `OptionMinHeight`（36 px）高。
+- 在窄表单中，让字段拉伸（`HorizontalAlignment="Stretch"`）而不是设置 `Width`。标签与范围会自动换到它下方，无需额外代码。
 
 ## 相关组件
 

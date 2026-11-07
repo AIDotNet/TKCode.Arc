@@ -364,6 +364,17 @@ The group takes one tab stop, and the arrow keys move between chips inside it.
 | Folded chips appear | Staggered entrance, with the group height easing | A short fade | Immediate |
 | Folded chips leave | They fade in place, faster than they came | A short fade | Immediate |
 
+## Responsive behavior
+
+- `ChipGroup` does not change form at a breakpoint. Its chips wrap onto new lines within the width it is given, and each
+  chip is `ControlSizeSM` tall (36 px).
+- It measures its own width, not the viewport. A chip whose label is wider than the row is cut with an ellipsis;
+  otherwise the label stays whole.
+- Long sets fold behind a "+N more" chip set by `MaxVisibleItems`. Tapping that chip toggles `IsExpanded`, and selected
+  chips stay in view when the set folds again.
+- Hover only tints a chip, and a tap or click toggles it, so no action depends on hover.
+- Let the group take the full width and fold long sets. In a narrow side panel, show fewer chips with `MaxVisibleItems`.
+
 ## Related
 
 - `MultiSelect` for the same choice inside a compact field, and `Checkbox` for form choices that each stand on their

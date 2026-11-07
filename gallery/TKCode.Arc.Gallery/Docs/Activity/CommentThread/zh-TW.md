@@ -1,7 +1,7 @@
 ---
 title: 留言串
 summary: 支援回覆、表情反應、提及、原地編輯與解決的巢狀留言。
-source-hash: d0215cd8a3c4
+source-hash: 5fdde2035ce7
 ---
 
 <Demo name="DesignReview" />
@@ -329,6 +329,14 @@ SaaS 行銷頁面中定價表的一次審閱。第一則留言獲得了目前使
 | 編輯表單、刪除提示或選擇器開啟 | 滑入 8 px | 內容原地變化 | 立即完成 |
 
 減少動態效果會以原地變化取代移動，並關閉過渡。關閉動態效果則直接跳到最終狀態。
+
+## 響應式
+
+- `CommentThread` 隨寬度變化。自身寬度低於 420 px（控制項內的固定值，不是主題權杖）時，它會在討論串及其項目上設定 `:narrow`：回覆縮排為 12 px（`NarrowReplyIndent`），輸入框隱藏大頭貼，回覆提示條使用 `NarrowReplyingPadding`。
+- 討論串依自身寬度而不是視窗寬度判斷，所以放在窄側邊面板中時與手機上的摺疊方式相同。
+- 留言文字換行。姓名與討論串標題以省略號結尾（`CharacterEllipsis`）。頁尾（CommentThreadFooter）是 `WrapPanel`，空間不足時回應與操作會移到新的一列。
+- 操作按鈕（`ActionHeight`）與回應按鈕（`EmojiButtonSize`）的觸控尺寸為 28 px，傳送按鈕為 38 px（`SendHeight`）。懸停只改變按鈕顏色（`:pointerover`），聚焦時顯示焦點環（`:focus-visible`），沒有任何操作只在懸停時出現。
+- 手機寬度下，把討論串放在獨立的頁面或面板中，讓輸入框與回覆列保持全寬。低於 420 px 時，側邊面板中的討論串會自動切換為緊湊版面，因此不需要另外的版面。
 
 ## 相關元件
 

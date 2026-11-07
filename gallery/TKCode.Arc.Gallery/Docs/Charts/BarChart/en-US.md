@@ -302,6 +302,17 @@ Motion here follows the data. A bar that keeps its key morphs, so the reader can
 the first-view wave for the chart that is the reason for the section; on a dashboard that updates often, the morphs on
 each refresh add up, so refresh the data on a schedule that matches how often the numbers change.
 
+## Responsive behavior
+
+- `BarChart` has no breakpoint. The plot takes the width its parent gives it and keeps the `PlotHeight` (176 px by
+  default) at every width.
+- Bars never grow thicker than `MaxBarWidth` (28 px). A bar fills 58% of its slot, so on a wide plot the extra width
+  becomes spacing between bars, and on a narrow plot the bars get thinner.
+- A week or a month of bars fits a phone width. For a longer series, group the data into weeks or use `LineChart`,
+  because the bars become too thin to scrub.
+- Give the chart a full-width row, so the plot gets the width. The headline and `Period` sit above the plot at any
+  width.
+
 ## Related
 
 - `LineChart` for a continuous trend over many points.

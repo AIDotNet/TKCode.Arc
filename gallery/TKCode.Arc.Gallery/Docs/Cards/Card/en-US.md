@@ -1,6 +1,6 @@
 ---
 title: Card
-summary: A contained group of related content and actions.
+summary: A tile for one item of a browsable grid, with a visual, title, owner and status, that can grow into a quick look.
 ---
 
 <Demo name="QuickLook" />
@@ -430,6 +430,17 @@ A card without `Details` takes no focus of its own; only its nested controls are
 | Quick look opens or closes | Surface, media and title fly on a spring (0.3 s open, 0.26 s close) | Fades in and out | Immediate |
 | Status changes | Old line lifts away, new words rise one after another | Swapped at once | Immediate |
 | Scrim behind the quick look | Fades in and out over the page | Fades in and out | Immediate |
+
+## Responsive behavior
+
+- `Card` looks the same at every width. It has no breakpoint, fills the width its parent gives it, and sets `MinWidth`
+  to 0 so a narrow cell can shrink it.
+- Text wraps instead of widening the card. `Title` and `Description` wrap, `Description` stops at about 34 digit widths,
+  and a `Status` line that is too long ends in an ellipsis.
+- Give each card its own `Width` (260 to 300 px is the usual range) and let a `WrapPanel` or a `UniformGrid` place the
+  cards. A card narrower than its longest word breaks that word across lines.
+- Touch and pen never lift the card. With `Details` set, a press on the card outside its buttons opens the quick look,
+  which is at most `QuickLookMaxWidth` (480 px) wide and keeps a 16 px gutter. Its close button is a 32 px circle.
 
 ## Related
 

@@ -136,6 +136,17 @@ so that word order can change.
 - **Rows**: the records fade in over 160 ms, each 40 ms after the one before. The fix hint opens on the smooth spring.
 - Reduced motion keeps every state, drops the stagger and only fades briefly. Off applies every change at once. A simulated flow only plays while the card is on screen.
 
+## Responsive behavior
+
+- `DomainVerify` changes layout at its own width, not the window's. Below `CompactWidth` (544 px by default) it sets
+  `:compact`, and `IsCompact` reports the state. The card is at most 680 px wide (`MaxWidth`) at every size.
+- In the compact layout each record stacks: the type and name sit on the first line, then the value, the purpose and the
+  fix each take a row of their own. The column header row is hidden.
+- Names, purposes and values are trimmed with an ellipsis, while the found-value and fix text wraps.
+- Touch: nothing depends on hover. The copy button is always visible, and the theme sets no hover-only styles.
+- Let the card fill its column. Raise `CompactWidth` to fold the records earlier in a side panel, or lower it to keep
+  the table layout in narrower space.
+
 ## Related
 
 - `CopyButton`, `Button`, `Input` and `TextShimmer`, the controls the card is made of.

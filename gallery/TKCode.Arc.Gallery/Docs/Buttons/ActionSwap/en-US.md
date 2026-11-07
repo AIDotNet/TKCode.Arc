@@ -1,6 +1,6 @@
 ---
 title: Action swap
-summary: Swap an action label while preserving its place and intent.
+summary: One pill that cycles through related states, such as Follow and Following, changing its width, tone, icon and letters in place.
 ---
 
 <Demo name="Preview" />
@@ -190,6 +190,17 @@ Set `IsEnabled` to `False` to dim the control to 60 percent and remove it from t
 | New label or icon | Letters rise from a blur, icons grow, width springs | A 120 ms crossfade, no width or fold animation | Immediate |
 | Working without a label | The pill folds into a circle around a spinner | Immediate fold, a still ring | Immediate |
 | Press | Scales to 97 percent on a snappy spring | No scale | No scale |
+
+## Responsive behavior
+
+- `ActionSwap` looks the same at every width. Its height comes from `Size`: 36 px at `Small`, 44 px at `Medium` (the
+  default) and 50 px at `Large`. Its width follows the label and icon of the current state and morphs when the state
+  changes; no breakpoint changes it.
+- Its minimum width equals its height (`MinHeight`), so an icon-only state stays round. `:wide` is set above 220 px and
+  only changes the pressed scale.
+- Each press moves to the next state, so a tap does the same as a click. Nothing depends on hover.
+- Give it a row of its own when its states differ a lot in width, or let it stretch with
+  `HorizontalAlignment="Stretch"`. On touch screens keep `Size` at `Medium` or `Large`.
 
 ## Related
 

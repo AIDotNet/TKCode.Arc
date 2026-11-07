@@ -159,6 +159,17 @@ After a successful send the focus moves to "Use a different email"; after `Reset
 
 Breakpoints use the width of the block: 860, 520, 400 and 360 px, plus 300 px for the form itself.
 
+## Responsive behavior
+
+- `NewsletterSignup` changes in steps at its own width, not the window's. At 860 px or less (`:compact`) it is one
+  column; at 520 px (`:narrow`) the spacing and type tighten; at 400 px (`:tiny`) the reading times go and an addressed
+  issue shows only its recipient; at 360 px (`:micro`) the readers line may wrap.
+- The form is a pill that holds the field and the button, 58 px tall. Below 300 px the pill loses its frame and the
+  field and button stack at full width, 52 px and 48 px tall (`StackedInputHeight`, `StackedButtonHeight`).
+- Hover only changes the pill border and the button fill (`SubmitHoverBackground`), so the form works with a tap alone.
+- Let it stretch to the screen width (`HorizontalAlignment="Stretch"`) rather than set a fixed `Width`. In a narrow
+  column, set `IsPublicationVisible` to false to drop the stack of issues and keep only the form.
+
 ## Related
 
 - The site footer block for a one-line newsletter field inside a footer.

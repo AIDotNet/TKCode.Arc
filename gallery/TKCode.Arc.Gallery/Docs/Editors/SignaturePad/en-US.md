@@ -327,6 +327,18 @@ stored strokes without replaying them.
 | Color or nib choice changes | The highlight glides to the chosen option | The highlight jumps to the option | Immediate |
 | Replay and stop icons | Icon scales and swaps | Icon swaps | Immediate |
 
+## Responsive behavior
+
+- `SignaturePad` does not change at a width. The pad keeps a 600 to 260 aspect ratio at every width, so a pad 560 px
+  wide is about 243 px high.
+- The toolbar stacks its two groups onto separate rows when they do not fit side by side. The export buttons are at
+  least 76 px wide (`ExportMinWidth`).
+- It measures its own width, not the window's. A narrow pad is hard to sign, so give it the full width of the form
+  rather than a narrow column.
+- Touch and pen draw on the pad without scrolling the page, and a pen's pressure sets the ink width when the device
+  reports it. Toolbar options and buttons are 36 px.
+- On a phone, give the pad a row of its own at full width. Its height follows its width, so a wider pad is also taller.
+
 ## Related
 
 - `Input` for a typed name next to or instead of a drawn signature.

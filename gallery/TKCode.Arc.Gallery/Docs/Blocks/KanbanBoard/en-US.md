@@ -202,6 +202,20 @@ board.Strings = new KanbanBoardLabels
 - Reduced motion keeps the slot, the counts and short fades but drops the tilt and every flight: cards land at once. Off
   applies every change at once.
 
+## Responsive behavior
+
+- `KanbanBoard` measures its own width, not the window's. At `CompactWidth` (560 px by default) and below it becomes
+  `:compact`: columns are a fixed `CompactColumnWidth` (235 px), the paddings tighten and the view switch moves under
+  the title below 360 px (`:wrap`). A wide board keeps each column at least `MinColumnWidth` (251 px).
+- A board that does not fit scrolls sideways. In the compact layout it snaps to the nearest column after a scroll, with
+  the first column flush against the left edge.
+- The details drawer is never wider than the board minus 16 px (`DrawerMaxWidth` caps it at 400 px), so it covers a
+  narrow board, and its status options wrap two by two.
+- Touch: a card lifts after a touch has rested for `TouchHoldDelay` (250 ms by default), and a quicker swipe scrolls the
+  board instead. Touch shows no hover border. Opening a card is a click or Enter, so nothing depends on hover.
+- Give the board the full width of its row and let it stretch. In a narrow panel, set `IsReadOnly="True"` to show the
+  board without dragging or quick add.
+
 ## Related
 
 - `ReorderableList` for reordering a single list.

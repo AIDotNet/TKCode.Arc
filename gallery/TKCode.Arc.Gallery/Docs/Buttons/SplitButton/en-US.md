@@ -375,6 +375,19 @@ item behind the row, or the entry itself for inline rows) and `Header` (the row'
 | Main half pressed | The whole pill presses in slightly | No press | Immediate |
 | Menu opens | Opens 4 px below the chevron, and its rows fade in one after another | A short fade without the transform | Immediate |
 
+## Responsive behavior
+
+- `SplitButton` has no breakpoint and keeps its two halves side by side at every width. The primary variant is at least
+  `ControlSizeMD` tall, with a 38 px chevron half (`TriggerExtentPrimary`). The secondary variant is `ControlSizeSM`
+  tall, with a main half at least 142 px wide (`SecondaryActionMinWidth`) and a 32 px chevron half
+  (`TriggerExtentSecondary`).
+- Keep the main `Label` short. The main half grows with its text, so a long label widens the whole control. In a narrow
+  toolbar, give the control a row of its own rather than cutting the label.
+- The menu stays anchored to the chevron, aligned to its end, and its `MenuEntry` rows are placed by the popup's flip
+  and slide rules. It stays on screen when the chevron is near an edge.
+- Nothing depends on hover. Hover only tints each half, and a tap runs the main action or opens the menu, the same as a
+  click.
+
 ## Related
 
 - `DropdownMenu` for a menu of equal options with no default action.

@@ -431,6 +431,16 @@ plan's `Currency`.
 | A badge or button label changes | The text swaps with a short blur | Crossfade | Immediate |
 | Expiry line becomes a warning | The text eases to the warning color | The color crossfades | Immediate |
 
+## Responsive behavior
+
+- `BillingOverview` measures its own width. Below `NarrowWidth` (560 px, `:narrow`) the price moves under the plan name,
+  the plan footer stacks and the Invoice column hides.
+- Under 440 px the card rows move their button under the text, and the Status column keeps a 14 px gap instead of 28 px.
+- Invoice rows are `InvoiceRowHeight` (48 px) tall and the header is `InvoiceHeaderHeight` (32 px), so each row is a
+  comfortable tap target.
+- Let the block fill the width of the phone. It switches to one column by itself below `NarrowWidth`; raise
+  `NarrowWidth` only when the block sits beside other content, so its columns do not get squeezed.
+
 ## Related
 
 - The other Settings blocks: `SettingsPage`, `SettingsCommand`, `SecuritySettings`, `UsageBilling` and `CancelFlow` (a

@@ -1,7 +1,7 @@
 ---
 title: 移动端按钮
 summary: 触控优先的按钮：用按压状态代替悬停状态，最小触控目标 44 px。
-source-hash: 19fcda420f7e
+source-hash: 2e0988df87cc
 ---
 
 <Demo name="Basic" />
@@ -60,6 +60,13 @@ source-hash: 19fcda420f7e
 ## 动效
 
 按压的缩放和变暗在控件主题中声明，减少动效时立即切换。
+
+## 响应式
+
+- `Button` 没有断点，在任何宽度下外观都一样。最小尺寸为 44 x 44 px（`TouchTarget`），宽度随标签加上 `ContentPadding`（16 x 10 px）而定。
+- 每个屏幕只保留一个 `Filled` 按钮。在窄行里，让主要操作用 `HorizontalAlignment="Stretch"` 占满整行，其他操作单独占一行。
+- 按下时按钮缩放至 `PressedScale`（0.97），并变暗至 `PressedOpacity`（0.85）；禁用的按钮变暗至 `DisabledOpacity`（0.5）。
+- 没有任何功能依赖悬停：主题没有悬停样式，点按与点击会进入同样的按下、聚焦与禁用状态。
 
 ## 相关组件
 

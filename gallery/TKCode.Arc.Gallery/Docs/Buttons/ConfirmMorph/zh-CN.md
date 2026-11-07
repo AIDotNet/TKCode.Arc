@@ -1,7 +1,7 @@
 ---
 title: 确认变形
 summary: 一个破坏性按钮，可变形为就地确认、加载指示与带撤销的结果。
-source-hash: b71b3d8e972f
+source-hash: 25e60fd3d959
 ---
 
 <Demo name="Press" />
@@ -351,6 +351,14 @@ public partial class ProjectDangerViewModel : ObservableObject
 | 倒计时 | 圆环消退，秒数滚动 | 圆环仍然消退 | 立即完成 |
 | 等待 | 指示器旋转 | 指示器放慢旋转 | 立即完成 |
 | `Hold` 填充 | 填充从前缘显露，提前松开时弹回 | 填充仍显示进度 | 立即完成 |
+
+## 响应式
+
+- `ConfirmMorph` 在任何宽度下外观都一样，没有断点。胶囊形会增长以容纳问题与两个回答，宽度在各状态之间以动画过渡。
+- 问题文字最宽为 256 px（`PromptMaxWidth`），超出部分以省略号截断。
+- 回答按钮高 28 px（`InnerButtonExtent`），低于 44 px 的触控尺寸，因此在触屏上要为它们留出空间。
+- `Hold` 模式通过按住来确认，触屏同样可以做到。
+- 在窄表单中，让该控件单独占一行，使胶囊形可以变宽而不挤压相邻控件。在触屏上，删除类操作请使用 `Hold`。
 
 ## 相关组件
 

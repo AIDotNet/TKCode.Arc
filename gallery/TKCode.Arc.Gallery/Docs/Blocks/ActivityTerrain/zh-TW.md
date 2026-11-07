@@ -1,7 +1,7 @@
 ---
 title: 活動地形
 summary: 把一週每小時的活動畫成三維地形：可以轉動與縮放，將指標移到某個小時看它的數字，飛到一根長條旁，或把它壓平成熱度圖；旁邊則讀得到總計、高峰時段與最忙的一天。
-source-hash: d106cd4feb20
+source-hash: 12695ecf204f
 ---
 
 <Demo name="Preview" />
@@ -150,6 +150,14 @@ terrain.FlyTo(new ActivityTerrainCell(Day: 2, Hour: 14));   // Wednesday 14:00
 - **懸停。** 長條約在四分之一秒內抬起，其餘的一週淡出；提示卡以 120 ms 淡入，之後隨相機移動，以彈簧跟隨長條。
 - **減少動態效果。** 沒有開場與波浪；相機移動、檢視切換與縮放立即完成；拖曳跟隨指標但不滑行；提示卡只淡入淡出。關閉動態效果時，什麼都不會動。
 - 靜止的繪圖區不繪製任何內容；只有在有東西移動、且繪圖區位於畫面上時，才會繪製影格。
+
+## 響應式
+
+- `ActivityTerrain` 依自身寬度而不是視窗寬度變化。低於 560 px（`NarrowWidth`，`:narrow`）時，工具列堆疊，檢視切換單獨佔一列，內距為 `NarrowBlockPadding`（16 px），摘要也改為堆疊。自 880 px（WideWidth，`:wide`）起，摘要以一欄的形式位於圖表旁邊。
+- 低於 560 px 時圖表高 280 px。在此之上，圖表高度為區塊寬度的 44%（PlotHeightRatio），並限制在 280 至 460 px 之間。
+- 圖例與提示會換行（`TextWrapping`），星期名稱以省略號結尾（`CharacterEllipsis`）。
+- 顯示某個小時數值的懸停卡片需要滑鼠。觸控按下時，提示會切換為 `TouchHintText` 所示的文字，即滑動翻轉、輕觸柱子查看；最忙的一天與尖峰時段以文字形式顯示在圖表旁邊。重設按鈕高 `ResetHeight`（32 px）。
+- 讓區塊在所在欄中延展（`HorizontalAlignment="Stretch"`），而不是設定固定的 `Width`。低於 560 px 時圖表仍為 280 px 高，因此在窄側邊面板中讓區塊單獨佔一列。
 
 ## 相關元件
 

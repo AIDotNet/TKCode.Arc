@@ -312,6 +312,20 @@ a pause. Pinning does pause it, and the play button then offers to resume.
 Packets run on the story clock, so they pause, hold and scale with `Speed`; the fades are short transitions that
 finish on their own. The clock stops while the card is off screen.
 
+## Responsive behavior
+
+- `MixtureOfExperts` measures its own width, not the window's. Below 568 px (`:narrow`) the stage runs top to bottom and
+  the expert tiles show only their icons. Below 480 px (`:compact`) the card uses the tighter `CompactCardPadding` (16
+  px) and the readout sits on its own line.
+- The footer puts the load balance beside the route text when it is at least 590 px wide (`TwoColumnMinWidth`), which is
+  a card of about 640 px. Narrower, the load balance moves under the text.
+- The notes under the stage wrap onto more lines, and an expert name is cut with an ellipsis when it still shows.
+- Hover previews a token or expert and holds the story while the pointer is on it. A tap pins it, so the story stays
+  held without the pointer, and `PinToken` and `PinExpert` do the same from code. A touch screen has no hover, so a tap
+  is how a finger inspects a part.
+- In the wide stage the tiles are 28 px high, below the 44 px touch size. Let the card stretch to its column with no
+  fixed `Width`, and check the top-to-bottom stage at phone width, where the tiles are 52 px.
+
 ## Related
 
 | Component | Choose it when |

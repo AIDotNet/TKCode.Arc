@@ -387,6 +387,17 @@ the grid; the arrow keys are handled by the calendar only when the focus is on a
 Motion never delays the keyboard. A second arrow press while the strip is still sliding retargets the same spring,
 so the calendar follows the newest position without queuing the earlier moves.
 
+## Responsive behavior
+
+- `Calendar` has no breakpoint. It is at most `MaxWidth` 328 px wide and stays left aligned, and its day cells scale
+  with the width it is given.
+- Its height comes from six rows, so every month takes the same space and nothing below it moves when the person changes
+  month.
+- The previous and next buttons are 32 px (`NavButtonSize`), smaller than the 44 px `Medium` control height, so leave
+  room around them on touch screens.
+- On a phone, let the calendar fill its column; it stops at 328 px. For a date field in a form, use `DatePicker`
+  instead, which opens the calendar in a popup.
+
 ## Related
 
 - `DatePicker` for a date field that opens the calendar in a popup, typically in a form.

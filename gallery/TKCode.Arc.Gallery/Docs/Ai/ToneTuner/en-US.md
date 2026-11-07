@@ -180,6 +180,20 @@ tuner.Labels = new ToneTunerLabels
 | Changes switch | Highlights fade over 160ms | At once | At once |
 | Self playing tour | A new voice every 3.2s while on screen, until the first press or focus inside | Off | Off |
 
+## Responsive behavior
+
+- `ToneTuner` changes at its own card width, not the window's, and is capped at `MaxCardWidth` (640 px). Below 520 px
+  (`StackWidth`) the two sliders stack at full width and the voice chips share one row of equal columns. Below 400 px
+  (`CompactWidth`) the chip icons and the changed count drop and Copy shows only its icon; `:stacked` and `:compact`
+  report the two states.
+- The message wraps to the card width (`TextWrapping`), while the contact name and subject end with an ellipsis
+  (`CharacterEllipsis`) instead of wrapping.
+- On touch, voice chips are 32 px high (`ChipHeight`) and the action buttons 28 px (`ActionHeight`), so keep them clear
+  of other tap targets. Hover only tints a chip (`:pointerover`); a selected chip shows as `:checked`, so a tap reaches
+  the same state.
+- Let the card stretch in its column (`HorizontalAlignment="Stretch"`) rather than setting a fixed `Width`. Below 520 px
+  the chips stay on one row, and the card gets taller as the sliders stack, so give it room in a narrow column.
+
 ## Related
 
 - `Slider` for the formality and detail dials on their own.

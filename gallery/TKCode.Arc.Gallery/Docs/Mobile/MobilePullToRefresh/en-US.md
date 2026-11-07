@@ -64,6 +64,17 @@ The refresh is a gesture, so give the person another way to reload (a menu item 
 
 The content follows the finger with a rubber-band curve: it keeps up at first and resists more the further it goes. On release, the finger's speed is handed to a spring, so the content settles smoothly on the indicator or back at the top. A new pull catches the content in flight. The arrow turns over as the pull reaches the threshold, and a spinner replaces it while refreshing. Under reduced motion the content does not stretch with the finger; the refresh still works, and the content jumps.
 
+## Responsive behavior
+
+- `PullToRefresh` has no breakpoint. It pulls on the vertical axis only (`DragAxis.Vertical`), and a pull starts only
+  when the content is at its top. Content that is scrolled down scrolls itself.
+- The indicator is 56 px tall (`IndicatorExtent`), and the content rests that far below the top while a refresh runs. A
+  release past `PullThreshold` (64 px by default) starts the refresh, and the drag has rubber-band resistance
+  (Resistance).
+- Wrap the scrolling list rather than the whole page when the page has a header or footer, so the header and footer stay
+  in place while the list pulls.
+- A pull is a touch gesture. For a screen that must refresh without a drag, set `IsRefreshing` from a visible button.
+
 ## Related
 
 - `MobileListGroup`: the usual content.

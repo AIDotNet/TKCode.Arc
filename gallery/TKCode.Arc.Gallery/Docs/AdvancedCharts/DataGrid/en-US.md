@@ -703,6 +703,23 @@ left, and Escape cancels. On a header, Alt+Left and Alt+Right narrow and widen t
 | Totals, selection statistics and checked count | Digits roll | Digits roll by the counter rules | Immediate |
 | Filter row and group chevrons | Spring open, chevron turns | Height jumps, opacity fades | Immediate |
 
+## Responsive behavior
+
+- `DataGrid` changes at its own width in steps. Below 640 px it sets `:toolbar-compact` (icon-only tool buttons and a
+  150 px search field). Below 460 px `:toolbar-minimal` also hides the row count and the undo group, and below 480 px
+  the status bar wraps (`:status-wrap`).
+- The grid measures its own width (`Bounds.Width`), not the window's, so it switches the same way in a side panel or a
+  dialog as on a phone.
+- The grid does not fold into a card layout. Columns keep their width and the body scrolls sideways
+  (`HorizontalScrollBarVisibility` is `Auto`). A column is at least 72 px wide (`MinWidth`) and at most 560 px
+  (`ColumnMaxWidth`). Pinned columns (`IsPinned`) share at most half the grid width and never shrink below
+  `PinnedColumnMinWidth` (96 px), so the columns that scroll stay in view. Cell text ends in an ellipsis.
+- Rows are 40 px high in the standard `Density` (`RowHeightStandard`) and 32 px in compact (`RowHeightCompact`). On
+  touch the column menu button (PART_Menu) stays visible without hover (`:touch`), and a long press opens the
+  right-click menu.
+- Give the grid the full width of the screen and let it scroll sideways, and pin only the column that names the record.
+  For a read-only list on a phone, `Table` needs no editing machinery and suits the space better.
+
 ## Related
 
 | Component | Choose it when |

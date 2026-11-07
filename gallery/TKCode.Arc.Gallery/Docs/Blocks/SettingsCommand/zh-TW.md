@@ -1,7 +1,7 @@
 ---
 title: 設定命令面板
 summary: 用一個搜尋欄找到任一設定並直接修改：開關翻轉、選項輪替、連結開啟，全程可用鍵盤操作。
-source-hash: 1a7e720308b9
+source-hash: 642aeb3b8c33
 ---
 
 <Demo name="Inline" />
@@ -349,6 +349,14 @@ palette.Labels = new SettingsCommandLabels
 | 反白在列之間移動 | 以反應靈敏的彈簧滑動 | 立即移動 | 立即移動 |
 | 選項的值變化 | 依變化方向向上或向下捲動 | 淡入淡出 | 立即顯示 |
 | 變更提示出現 | 伴隨柔和模糊上移，2.5 秒後淡出 | 淡入淡出 | 立即顯示 |
+
+## 響應式
+
+- `SettingsCommand` 在任何寬度下外觀都一樣，沒有斷點。面板寬度至少 320 px（`PanelMinWidth`）。
+- 結果清單最高 360 px（`ResultsMaxHeight`），超出後捲動。在任何寬度下，列高都保持 48 px（`RowHeight`），搜尋列 56 px（`SearchRowHeight`），頁尾 40
+  px（`FooterHeight`）。
+- 放不下的標題與說明以省略號結尾（`CharacterEllipsis`），頁尾提示最寬 260 px（`NoticeMaxWidth`）。
+- 快捷鍵標記與頁尾提示只描述鍵盤操作，每一列都是 48 px 的輕觸目標。在手機上，應提供可見的按鈕來開啟面板，而不是只依賴鍵盤快捷鍵。
 
 ## 相關元件
 

@@ -199,6 +199,21 @@ chat.Labels = new AgentHandoffLabels
 
 Loops pause off screen.
 
+## Responsive behavior
+
+- `AgentHandoff` changes at a width. Below `CompactWidth` (400 px by default, a theme token) it sets `:compact`: message
+  bubbles take 92% of the thread width (`BubbleFractionCompact`) instead of 80% (`BubbleFraction`), and the header,
+  thread and composer use tighter padding (`HeaderPaddingCompact`, `ThreadPaddingCompact`, `ComposerPaddingCompact`).
+- The card measures its own width (`Bounds.Width`), not the window's. It stretches to the space it is given, up to
+  `CardMaxWidth` (560 px).
+- The card keeps a fixed height (`CardHeight`, 600 px). The thread scrolls vertically inside it and never sideways
+  (`HorizontalScrollBarVisibility` is `Disabled`). Names and labels end in an ellipsis (`CharacterEllipsis`), and
+  message text wraps.
+- Hover only tints a control (`:pointerover`), and focus draws a ring (`:focus-visible`). No control appears only on
+  hover.
+- Do not set a fixed `Width`; the card stretches and tightens below 400 px by itself. On a short screen set `Height` to
+  what fits, and the thread scrolls inside the card.
+
 ## Related
 
 - `ChatThread` for a chat with one assistant or between people.

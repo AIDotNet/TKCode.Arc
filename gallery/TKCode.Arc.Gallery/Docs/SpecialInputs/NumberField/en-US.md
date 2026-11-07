@@ -388,6 +388,17 @@ the draft.
 | Press at a limit | The value stretches back, the stepper shakes, the limit note rises | The digits flash in the warning color | The digits flash in the warning color |
 | Typed draft past a limit | The shell takes the warning tint | The shell takes the warning tint | The shell takes the warning tint |
 
+## Responsive behavior
+
+- `NumberField` does not change at a breakpoint. Its shell width follows `Size`: 164 px for `Small`, 196 px for `Medium`
+  (the default) and 228 px for `Large`.
+- An explicit `Width` sets the `:sized` pseudo-class and stretches the shell and the label to that width, so the field
+  can fill a narrow form instead of keeping its fixed size.
+- The label is shortened with an ellipsis, and the limit note stays on one line. A description or error row can be as
+  wide as its own text, so a long message is not capped at the width of the shell.
+- Steppers are 28, 34 or 40 px with `Size`. On a touch screen use `Medium` or `Large`; a `Small` stepper is 28 px
+  across.
+
 ## Related
 
 - `Slider` when the position on a range matters more than the exact number.

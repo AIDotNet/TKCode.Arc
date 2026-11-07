@@ -1,7 +1,7 @@
 ---
 title: Response feedback
 summary: 面向 AI 回复的反馈控件：点踩会在行内展开一个带原因标签和备注的面板，点赞会询问哪里做得好，提交后短暂显示感谢，随后收回到操作行中。
-source-hash: 7d49fffaded3
+source-hash: 342766c29d9b
 ---
 
 <Demo name="Preview" />
@@ -165,6 +165,14 @@ reply.Labels = new ResponseFeedbackLabels
 | 成功对勾 | 在 280ms 内绘制一次 | 立即显示 | 立即显示 |
 
 按钮的尺寸从不改变，操作行随容器拉伸，因此按钮填充或面板打开时行宽不会变化。所有结束状态和播报在每个动效等级下都相同。
+
+## 响应式
+
+- `ResponseFeedback` 宽度低于 `CompactWidth`（480 px）时设置 `:compact`：内边距从 24 px 减为 `CompactCardPadding`（16 px）。
+- 单独使用的 `FeedbackActions` 有第二个断点：宽度低于 `NarrowWidth`（400 px）时设置 `:narrow` 并隐藏 `PrivacyNote`；设置了 SecondaryCollapses 时，取消按钮让位，使错误提示与重试按钮保持在同一行。
+- 原因面板在赞与踩按钮下方内嵌展开，不是弹出层。原因标签会换行，因此在 360 px 宽时无需横向滚动即可完整显示。
+- 赞与踩按钮为 36 px 的圆形按钮；触屏点按后，原因标签从 28 px 增至 32 px。
+- 原因保持在一到两个词以内，例如 `NegativeReasons` 中的条目，使标签在 360 px 宽时排成一行或两行。
 
 ## 相关组件
 

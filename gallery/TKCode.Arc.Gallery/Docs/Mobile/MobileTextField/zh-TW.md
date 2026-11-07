@@ -1,7 +1,7 @@
 ---
 title: 移動端文字方塊
 summary: 44 px 高的填充文字方塊，可帶圖示和清除按鈕，取得焦點時邊框變為強調色。
-source-hash: 1cfacade8182
+source-hash: b7378e7ee1ad
 ---
 
 <Demo name="Basic" />
@@ -53,6 +53,13 @@ source-hash: 1cfacade8182
 ## 動效
 
 文字方塊取得或失去焦點時，邊框按快速曲線變色。清除按鈕從 0.6 縮放加淡入彈出（P26，透過 `PresenceHost`），離開比出現更快。減弱動效時，邊框立即變色，清除按鈕也立即出現和消失。
+
+## 響應式
+
+- `TextField` 沒有斷點。它佔滿所給的寬度，高度至少 44 px（`FieldHeight`），因此讓它延展，不要設定固定的 `Width`。
+- 文字不換行：`TextWrapping` 為 `NoWrap`，水平捲軸隱藏，過長的值會在輸入框內水平捲動。
+- 清除按鈕（`ShowClearButton`）只在輸入框有焦點且有文字時出現，它是 44 px 的觸控目標。
+- 為每個輸入框在旁邊放置可見的名稱，因為 `PlaceholderText` 在使用者開始輸入後就會消失。
 
 ## 相關元件
 

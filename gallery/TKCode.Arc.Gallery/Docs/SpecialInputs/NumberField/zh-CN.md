@@ -1,7 +1,7 @@
 ---
 title: 数字输入框
 summary: 通过清晰的增减控件输入有范围限制的数字。
-source-hash: 16dfeb90daca
+source-hash: 77afb26be6d0
 ---
 
 <Demo name="Default" />
@@ -323,6 +323,13 @@ public partial class SeatPlanViewModel : ObservableObject
 | 步进器或方向键步进 | 数字沿变化方向滚动 | 数值立即变化 | 数值立即变化 |
 | 在限制处按压 | 数值弹回，步进器抖动，限制提示上升 | 数字以警告色闪烁 | 数字以警告色闪烁 |
 | 输入的草稿超出限制 | 外壳变为警告色调 | 外壳变为警告色调 | 外壳变为警告色调 |
+
+## 响应式
+
+- `NumberField` 不随断点改变。外壳宽度由 `Size` 决定：`Small` 为 164 px，`Medium`（默认）为 196 px，`Large` 为 228 px。
+- 显式设置 `Width` 会启用 `:sized` 伪类，使外壳与标签拉伸到该宽度，所以字段可以填满窄表单，而不是保持固定尺寸。
+- 标签会以省略号截断，限制提示保持在一行内。说明与错误信息行可以与自身文字一样宽，因此长消息不会被限制在外壳的宽度内。
+- 步进按钮的边长随 `Size` 为 28、34 或 40 px。在触屏上使用 `Medium` 或 `Large`；`Small` 的步进按钮只有 28 px。
 
 ## 相关组件
 

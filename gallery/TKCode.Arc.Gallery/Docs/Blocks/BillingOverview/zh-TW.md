@@ -1,7 +1,7 @@
 ---
 title: 帳單概覽
 summary: 在同一頁呈現目前方案、下次扣款、付款方式與發票紀錄，每一項旁邊都有對應的操作。
-source-hash: f2c9dc50b8bb
+source-hash: 7879b1f99d92
 ---
 
 <Demo name="Overview" />
@@ -351,6 +351,13 @@ billing.Labels = new BillingOverviewLabels
 | 「顯示全部發票」切換 | 箭頭以俐落的彈簧轉動；文字以模糊切換 | 箭頭直接跳變；文字淡入淡出 | 立即完成 |
 | 徽章或按鈕文字變化 | 文字以短暫模糊切換 | 淡入淡出 | 立即完成 |
 | 到期資訊列變為警告 | 文字平滑過渡到警告色 | 顏色淡入淡出 | 立即完成 |
+
+## 響應式
+
+- `BillingOverview` 依自身寬度判斷。在 `NarrowWidth`（560 px，`:narrow`）以下，價格移到方案名稱之下，方案頁尾堆疊，Invoice 欄隱藏。
+- 在 440 px 以下，卡片列把按鈕移到文字之下；Status 欄的間距由 28 px 縮為 14 px。
+- 帳單列高 `InvoiceRowHeight`（48 px），表頭高 `InvoiceHeaderHeight`（32 px），每一列都足夠輕觸。
+- 讓區塊佔滿手機寬度；低於 `NarrowWidth` 時它會自行改為一欄。只有區塊與其他內容並排時才調大 `NarrowWidth`，以免欄位被擠壓。
 
 ## 相關元件
 

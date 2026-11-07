@@ -1,6 +1,6 @@
 ---
 title: Time picker
-summary: Choose a time with sensible keyboard behavior.
+summary: A time-of-day field that picks from an evenly spaced list, every 15 minutes by default, shown in the person's culture.
 ---
 
 <Demo name="TimeField" />
@@ -356,6 +356,16 @@ The pointer does the same as the keyboard: moving over a row makes it active, an
 | The list opens | Grows from the trigger, 6 px up and 0.97 scale to full size, on a snappy spring with a fast fade | Fades in | Immediate |
 | The list closes | Lifts 4 px and scales to 0.98, then closes almost at once | Fades out | Immediate |
 | The active row moves with the keyboard | The list glides to keep the row in view on a smooth spring | Positioned at once | Immediate |
+
+## Responsive behavior
+
+- `TimePicker` has no breakpoint. Its trigger is at least 160 px wide (`MinWidth`) and stretches to the width it is
+  given, so let it fill a form column.
+- The list opens as wide as the trigger, is at most `MaxDropDownHeight` (250 px by default) tall and then scrolls
+  vertically. Its rows are 36 px tall (`OptionHeight`).
+- The list scrolls by itself, and opening it centres the chosen time, so the page does not move.
+- `Size` sets the trigger height: `Small` is 36 px, `Medium` 44 px and `Large` 50 px. On touch screens keep `Medium` or
+  `Large`.
 
 ## Related
 

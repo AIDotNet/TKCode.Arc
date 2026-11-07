@@ -1,6 +1,6 @@
 ---
 title: Donut chart
-summary: A donut whose arcs morph between datasets, with the active value rolling into the center.
+summary: A donut chart of how a whole divides into two to six parts, with a legend and the total or the pointed part in the center.
 ---
 
 <Demo name="ToggleSegments" />
@@ -334,6 +334,17 @@ away from the chart clears the preview.
 | New dataset or hidden segment | Arcs morph from their current angles, keeping their speed | Shown at the final state | Shown at the final state |
 | Active segment | Moves outward and thickens, the others dim | Shown at the final state | Shown at the final state |
 | Center reading | Rolls to the new reading like a drum | Changes at once | Changes at once |
+
+## Responsive behavior
+
+- The legend moves at a width of 460 px. `DonutChart` measures its own width: from 460 px it places the legend beside
+  the ring, and below 460 px it stacks the legend under the ring.
+- The ring scales down to fit the container, starting from `Diameter` (208 px) and `RingThickness` (24 px), and the
+  centre text scales with it.
+- Under 460 px the legend is a column with one row per visible segment. Keep it short with `GroupBelow` and
+  `MaxSegments`, so the small parts fold into Other.
+- On a touch screen a hover preview does not run. Pin a segment with `LegendAction="Select"` and `ActiveKey`, so the
+  centre shows its value after a tap.
 
 ## Related
 

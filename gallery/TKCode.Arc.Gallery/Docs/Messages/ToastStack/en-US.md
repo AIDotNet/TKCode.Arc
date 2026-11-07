@@ -1,6 +1,6 @@
 ---
 title: Toast stack
-summary: Stack short results at the edge until you reach for them.
+summary: An app-wide stack of toasts at the window edge that any control can add a result to, newest in front.
 ---
 
 <Demo name="Stack" />
@@ -406,6 +406,18 @@ expanded.
 | A toast is dismissed | Sinks 10 px and shrinks to 96% while it fades out | Fast fade | Immediate |
 | A toast is swiped away | Follows the pointer; fades to 25% over 280 px; a fast release fades out in 0.22 seconds | The swipe still dismisses; the fade is quick and nothing is thrown | Immediate |
 | A toast is updated | Icon, copy and card height morph; the action slot opens or closes; the loading ring turns | The loading ring stops; the new copy and height apply without a spring | Immediate |
+
+## Responsive behavior
+
+- The expanded list is at most `MaxListWidth` (360 px) wide, or the window width minus 32 px when that is narrower.
+- Below 480 px of width the stack centers at the bottom edge whatever `Position` is set. It reads the window, or the
+  `ArcViewportHost` a phone preview serves.
+- A toast switches to `:narrow` below 336 px of width (`NarrowWidth`), and its action button moves under the copy
+  instead of beside it.
+- A tap on the stack fans it out, the same as hover or focus, so a touch user reaches the list without a mouse. Swiping
+  right dismisses a toast.
+- When the stack sits inside a panel rather than the window, set `IsContained` to `True`, so it stays 16 px inside its
+  own bounds instead of 24 px from the window edge.
 
 ## Related
 

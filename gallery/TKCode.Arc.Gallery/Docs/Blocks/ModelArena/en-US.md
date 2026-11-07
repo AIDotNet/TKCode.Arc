@@ -168,6 +168,18 @@ Every word comes from `Labels` (`ModelArenaLabels`): replace the instance to tra
 | Standings replay | Rows slide, bars scale | Rows and bars change in place | Immediate |
 | Following the stream | Eased each frame | Jumps to the end | Jumps to the end |
 
+## Responsive behavior
+
+- `ModelArena` reads its own width, not the window's. Below 560 px (`:narrow`) the two answers become two tabs, each
+  showing the model name and its status. Below 480 px (`:compact`) the header, prompt row and vote strip are compacted:
+  the Leaderboard button becomes a 36 px icon, the keyboard hint hides and the vote buttons form a two-by-two grid.
+- The standings open as a popover on the Leaderboard button and show the top `LeaderboardSize` models. The popover is a
+  list, not a page, so it does not replace the arena.
+- Nothing depends on hover. The answers, the vote buttons and the Leaderboard button are all reached by tap, and hover
+  only tints them.
+- Give the block the full width of its row, up to its `MaxWidth`. In a column narrower than 560 px, each answer is one
+  tab, so a phone shows one answer at a time.
+
 ## Related
 
 - `AiChat` for a conversation with one assistant.

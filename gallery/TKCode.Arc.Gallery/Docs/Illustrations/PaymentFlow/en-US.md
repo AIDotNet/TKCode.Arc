@@ -408,6 +408,19 @@ The illustration does not offer a way to choose the decision for a payment. To s
 | Settlement and balance | Dashed line runs to the merchant; the readout moves to the new balance | Readout shows the opening balance plus the amount | Readout shows the opening balance plus the amount |
 | Play button | Visible; toggles playback | Hidden | Hidden |
 
+## Responsive behavior
+
+- `PaymentFlow` has no breakpoint. Its scene is a fixed 844 by 270 units, with nodes of 150 by 52 units. It scales down
+  to the width it is given and never above 1, and its height follows.
+- It measures its own width, not the window's, so the proportions hold in a narrow column.
+- At phone width the nodes and their badges are drawn well under half their size. The caption (`IsCaptionVisible`)
+  carries the explanation, one sentence per step, so keep it on.
+- The frame keeps `Padding` of 20 px on the sides and top and 14 px at the bottom. The play button
+  (`IsPlaybackButtonVisible`) is hidden in the still frame, and Space and Enter play or pause the story. Nothing needs
+  hover.
+- Give it a row of its own at the full width of the screen. On a page that explains one payment, stop the loop with
+  `IsPlaying` so the animation does not repeat under the text.
+
 ## Related
 
 - `DataFlow` for the pipeline that stores events after a payment is completed.

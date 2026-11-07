@@ -164,6 +164,20 @@ the currency symbol; under 48 the names use 10px type.
 - **Texts**: the subtitle, headline label, change text, panel heading and row details rise out and in (160 ms out, 240 ms in).
 - Reduced motion lands everything at once except that dropped ticks still fade for 160 ms. Off applies every change at once.
 
+## Responsive behavior
+
+- `MrrWaterfall` changes in steps at its own width. Below the `StackedWidth` token (800 px of content width) the account
+  panel moves under the chart (`:stacked`). Below `CompactSummaryWidth` (560 px) the headline drops from 28 to 22 px and
+  the statistics share one row (`:compact-summary`).
+- The chart reads its own width, not the window's. Bars narrower than 72 px get short category labels (`:compact-axis`),
+  and below 48 px the axis text shrinks (`:tiny-axis`). The chart is 44% of its width high, between 232 and 300 px.
+- Header switches wrap onto a new line under the titles when they do not fit, and account names in the panel stay on one
+  line with an ellipsis.
+- Tapping a bar selects it and lists the accounts behind it. Hover only previews a bar, so nothing depends on it. Each
+  tap target is the full column of one bar.
+- Let it stretch to the page width (`HorizontalAlignment="Stretch"`, the theme default). In a narrow side panel expect
+  the stacked layout, and check the summary at 560 px.
+
 ## Related
 
 - `Metrics dashboard`, `Cohort retention` and the other Analytics blocks.

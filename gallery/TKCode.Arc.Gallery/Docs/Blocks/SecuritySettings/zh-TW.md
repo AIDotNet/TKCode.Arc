@@ -1,7 +1,7 @@
 ---
 title: 安全性設定
 summary: 安全檢查、變更密碼、兩步驟驗證和登入工作階段，均可原地處理。
-source-hash: 53dd97448a3c
+source-hash: 5afb02147935
 ---
 
 <Demo name="Overview" />
@@ -266,6 +266,14 @@ public partial class AccountSecurityViewModel : ObservableObject
 | 密碼表單展開或收合 | 以彈簧展開或收合 | 以短促淡入淡出顯示或隱藏 | 立即完成 |
 | 密碼描述變化 | 模糊切換到新文字 | 短促淡入淡出 | 立即完成 |
 | 安全檢查數量與進度條 | 數字滾動；段落淡入其顏色 | 顏色淡入 | 立即完成 |
+
+## 響應式
+
+- `SecuritySettings` 依父層給它的寬度判斷。低於 `CompactWidth`（預設 560 px）時為 `:compact`：安全項儀表移到摘要文字下方，「Sign out other
+  sessions」移到工作階段清單下方。
+- 密碼表單最寬 400 px（`FormMaxWidth`）。當其設定列堆疊（`:rows-stacked`）時，表單佔滿整列。
+- 工作階段列的文字與操作在寬度小於 280 px 時堆疊（SessionRowStackWidth）。說明文字依需要換行（`TextWrapping`）。
+- 讓它佔滿螢幕寬度。低於 560 px 時它已會移動儀表與登出操作，不需要額外的手機版面；只有頁面旁邊還有其他內容時，才需要調大 `CompactWidth`。
 
 ## 相關元件
 

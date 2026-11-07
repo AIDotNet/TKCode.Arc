@@ -336,6 +336,21 @@ start from it and change one loop.
 | Station colors and chip borders | Change over 240ms (480ms for a new block) | Change at once | Change at once |
 | Done ring | Draws in over 760ms | Shown drawn | Shown drawn |
 
+## Responsive behavior
+
+- `AgentLoop` measures its own width, not the window's. From a 640 px container (`WideBreakpoint`) the context stack
+  sits beside the ring. From 460 px (TwoColumnBreakpoint) the context blocks pair up in two columns, and below that
+  they stack in one column. The card's `MaxWidth` is 744.
+- Inside the ring column, below 360 px (`CompactBreakpoint`) the two lanes merge into one and the station labels drop
+  their icons. Below 270 px (LowStationsBreakpoint) the lower stations move to 140° and 220°. The "Speed" words hide
+  below 400 px (SpeedLabelBreakpoint).
+- The title is cut with an ellipsis (`CharacterEllipsis`), and one-line labels do not wrap (`NoWrap`). The caption and
+  the placeholders wrap (`Wrap`).
+- The card's padding eases from 24 px to 16 px on a phone (`CardPadding`). The play, step, restart and speed controls
+  are ordinary buttons, so a tap reaches them the same way a click does.
+- Let the card stretch to its column without a fixed `Width`. Below 460 px it stacks in one column, so check that layout
+  first at phone width.
+
 ## Related
 
 - `ReasoningTree` for a search over candidate thoughts rather than a loop of tool calls.

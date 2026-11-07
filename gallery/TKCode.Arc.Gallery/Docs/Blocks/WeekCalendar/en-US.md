@@ -283,6 +283,20 @@ calendar.Labels = new WeekCalendarLabels
   springs of events (they move at once), and keeps only the fades of the popovers and the toast; Off applies every change at
   once.
 
+## Responsive behavior
+
+- `WeekCalendar` changes at four widths of its own. Below 640 px (`:compact`) the week and work-week views show three
+  days, and the view choice offers three days, a day and the agenda. The chosen `View` is kept, so the calendar returns
+  to it when it is wider.
+- Below 680 px (`:stacked`) the toolbar takes two rows. Below 760 px the Calendars button shows only its color swatches,
+  and below 900 px the header dates and title tighten. The sidebar with the month and the calendars list shows from 1100
+  px (`:wide`).
+- It measures its own width. The grid height follows the viewport instead (`ArcViewport`): 72% of the window's height,
+  between 480 and 760 px, or the height of the `ArcViewportHost` the calendar sits in. Set `GridHeight` to fix it.
+- Events are added, moved and resized by dragging, and a click edits one. A change shows an undo toast with an Undo
+  button for `UndoDuration`, so it can be reversed without a keyboard.
+- On a phone, set `View` to `Agenda` or `Day` rather than the week view.
+
 ## Related
 
 - `Calendar` and `DatePicker` for choosing a date.

@@ -1,6 +1,6 @@
 ---
 title: Text reveal
-summary: Reveal a short piece of content with restrained motion.
+summary: A headline or short paragraph whose words rise in once when it appears on screen.
 ---
 
 <Demo name="Hero" />
@@ -273,6 +273,16 @@ others, and a forced break is kept at every width. Check each piece fits the nar
 | `Text` changes on screen | The entrance plays again | The fast fade plays again | Final text at once |
 | `Replay()` | The entrance plays again | The fast fade plays again | Final text at once |
 | `Level` or `Delay` changes | No replay; the new size or delay applies to the next entrance | No replay | No replay |
+
+## Responsive behavior
+
+- `TextReveal` does not change form at a breakpoint. Its line length is capped at `MaxWidthInChars` (24 by default, in
+  widths of the digit 0), and the lines are balanced within whichever is narrower: that cap or the width it is given.
+- Long text is balanced: a paragraph breaks into lines of similar length rather than a full line and a short tail.
+- Use `\n` only where the wording needs a break, and check that break at a 360 px wide screen.
+- It has no pointer behavior of its own, so nothing about it is hover-only.
+- On a phone check whether the cap or the screen width sets the line length; set `MaxWidthInChars` to 0 to remove the
+  cap.
 
 ## Related
 

@@ -1,6 +1,6 @@
 ---
 title: Date picker
-summary: Choose a date without losing context.
+summary: A date field: type a date or pick it from a calendar popup, with the same label and error rows as the other fields.
 ---
 
 <Demo name="DateField" />
@@ -387,6 +387,17 @@ typed value. Inside the calendar, the grid keys work as documented on the `Calen
 | The description while the popup is open | Fades out quickly and returns when the popup closes | Fades out quickly | Immediate |
 | The footer status after a pick | Rises into place with a soft blur | Fades in | Immediate |
 | The chevron on the calendar button | Turns 180 degrees with a spring | Turns at once | Immediate |
+
+## Responsive behavior
+
+- `DatePicker` takes the width it is given, with a minimum of 200 px (`MinWidth`), so let it stretch across a form
+  column rather than setting a fixed `Width`.
+- The popup measures the viewport it opens in (`ArcViewport`). At 360 px or less it is `:compact`: it matches the width
+  of the field and insets its content by `PopupCompactInset` (12 px). Wider than that, it is 320 px at most and never
+  wider than the viewport minus 32 px.
+- `Size` sets the field height: `Small` is 36 px, `Medium` 44 px and `Large` 50 px. On touch screens keep `Medium` or
+  `Large`.
+- Let the field fill its form row so the popup has room. On a 360 px phone the popup is as wide as the field.
 
 ## Related
 

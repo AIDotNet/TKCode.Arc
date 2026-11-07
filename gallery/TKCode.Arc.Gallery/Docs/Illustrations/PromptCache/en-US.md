@@ -286,6 +286,20 @@ Every story animation runs on the explainer's clock, so pausing freezes all of i
 | Idle | The time to live drains in about 4.2s, then the cache expires | Expires after a pause |
 | Status and caption | Crossfade (160ms in, 100ms out) | Short crossfade |
 
+## Responsive behavior
+
+- `PromptCache` measures the content width of its own card, not the window's: the card width less 50 px for the 24 px
+  padding and the 1 px border on each side. Below 660 px (`:narrow`) the cache panel moves above the requests as a
+  strip, and the flight still runs from a request into the cache.
+- Below 480 px (`:compact`) each request takes three lines (the title and status, the bar, then the three numbers under
+  shared headings), the statistics stack, and the toggle spans the card. Below 260 px (`:tiny`) the playback buttons
+  move under the title.
+- The legend is a `WrapPanel`, so its keys wrap onto more lines, and the caption wraps as well.
+- Nothing on the card is hover-only. The playback buttons are ordinary buttons, and the card shows no extra content on
+  hover.
+- Let it stretch to its column with no fixed `Width`, and cap it with `MaxWidth` only when the column is wider than the
+  card needs. On a phone it uses the compact layout, so check the three-line requests there first.
+
 ## Related
 
 | Component | Choose it when |

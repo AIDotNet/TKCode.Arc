@@ -413,6 +413,16 @@ value.
 | The end dot while scrubbing | Grows to 10 units on a snappy spring | Immediate size change without a spring | Immediate |
 | New data | The line morphs to the new shape on a smooth spring | Jumps to the new shape | Immediate |
 
+## Responsive behavior
+
+- `Sparkline` has no breakpoint. Its height comes from the drawing ratio (`DrawingWidth` 160 to `DrawingHeight` 52 by
+  default), so the line keeps its shape at any width: a 320 px wide sparkline is about 104 px high.
+- It measures its own width. Leave `Height` unset so the drawing ratio sets the height; a fixed height stretches the
+  line when the card resizes.
+- It has no axes, legend or tooltip to crowd a narrow space: the readout is the value and the change beside the line.
+- With touch or pen, the readout stays on the touched point until the contact is released, so no hover is needed. In a
+  card, let it stretch rather than setting `Width`.
+
 ## Related
 
 - `BarChart` for discrete periods that need an axis, and `LineChart` for a trend with axes, several series or a legend.

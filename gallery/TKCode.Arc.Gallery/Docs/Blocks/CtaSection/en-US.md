@@ -226,6 +226,16 @@ Keyboard focus shows a 2 px ring around the focused action or dismiss button; po
 | The banner is dismissed | Fades in 160 ms, height springs to zero | Fades in 120 ms, then is removed | Removed at once |
 | The arrow leans | 160 ms | Jumps | Jumps |
 
+## Responsive behavior
+
+- `CtaSection` changes form at its own width, not the window's. At 860 px or less (`:stacked`) the `Split` shape becomes
+  one column; at 560 px or less (`:narrow`) it uses tighter padding and stacks its actions at full width.
+- The headline scales with the width: `TitleFontSize` is 16 px plus 3.4% of the width, held between 30 and 52 px.
+- Action labels stay on one line (`TextWrapping="NoWrap"`), and the description wraps inside `DescriptionMaxWidth`. In a
+  banner at `:narrow`, the text and the action stack in two rows.
+- Touch: at `:narrow` each action fills the row, which gives a wide target. The arrow leans only for a mouse or pen, so
+  a touch never depends on hover.
+
 ## Related
 
 - `Button` for a single action, `SegmentedControl` for the layout switch in the preview.

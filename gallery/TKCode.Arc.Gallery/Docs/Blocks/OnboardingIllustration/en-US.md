@@ -281,6 +281,19 @@ grow with the steps; past five or six the tour usually needs shortening rather t
 
 The card has no entrance animation and no motion at rest: the drawing only moves after an action or under the mouse.
 
+## Responsive behavior
+
+- `OnboardingIllustration` changes at its own width, not the window's. Below `CompactWidth` (410 px) it switches to a
+  compact layout (`:compact`): tighter padding, Back shows only its arrow, and the main button narrows to
+  `CompactPrimaryWidth` (128 px). The card itself is at most `CardMaxWidth` (440 px) wide.
+- In the compact layout the copy area is at least `CompactCopyMinHeight` (88 px), enough for three lines, and the title
+  is smaller. The drawing shrinks with the card and keeps its proportions.
+- The step dots have a 32 px tap height (`DotHitHeight`), and the action buttons are 36 px tall (`ActionHeight`).
+- Hover styles apply only to a mouse or pen (`:fine-hover`), and the parallax follows a mouse only, so a touch screen
+  loses nothing.
+- On a phone, where the card fills the screen edge to edge, set `IsFramed="False"` and let it stretch
+  (`HorizontalAlignment="Stretch"`) rather than set a fixed `Width`.
+
 ## Related
 
 - `EmptyStates` for an empty view whose drawing morphs between four situations.

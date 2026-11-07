@@ -150,6 +150,16 @@ on this page, draws the same bar and moves, maximizes and closes nothing.
 - With reduced motion or motion off the colors change at once.
 - Maximizing, restoring and snapping are the system's own animations.
 
+## Responsive behavior
+
+- `ArcWindow` is a desktop window, so it has no breakpoint. Its `MinWidth` is 360 px (from ArcWindowToken), the
+  narrowest a window can be while the title and the caption buttons still fit side by side.
+- When the title bar runs out of width, the right section with the caption buttons keeps its width, the left section
+  gives way first, and the center moves toward the wider side before it shrinks. Give the center a `Width` or
+  `MaxWidth`; the title is cut with an ellipsis.
+- Caption buttons are 30 px (`CaptionButtonSize`), so do not rely on them as touch targets.
+- Phones and browsers have no windows: show the content in a single view there, and keep `ArcWindow` for desktop apps.
+
 ## Related
 
 - `Dialog`, `Drawer` and `BottomSheet`: content that opens over the window.

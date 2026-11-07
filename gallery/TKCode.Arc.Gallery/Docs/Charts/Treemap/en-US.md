@@ -413,6 +413,17 @@ Enter on a leaf does nothing, because a leaf has no children to open. Escape at 
 | Breadcrumb change | The crumbs slide to their new places | Immediate | Immediate |
 | Tooltip | Follows the pointer on a snappy spring | Immediate | Immediate |
 
+## Responsive behavior
+
+- `Treemap` has no breakpoint. It is as wide as its container, and `PlotHeight` (420 px by default) sets the height of
+  the stage; the breadcrumb bar sits above it and the total at its right end.
+- Tile labels are cut to the room their tile has (Trimmed). A tile too small for its label keeps its name in the
+  tooltip and in the stage reading when it has focus.
+- It measures its own width, not the window's.
+- A tap on a region works the same as a click and zooms in; the breadcrumb zooms out again, while `Escape` and
+  `Backspace` need a keyboard. On a phone rely on the breadcrumb, and keep `PlotHeight` high enough that the regions you
+  need to tap are not too small.
+
 ## Related
 
 - `BarChart` for exact comparison of values that are close to each other.

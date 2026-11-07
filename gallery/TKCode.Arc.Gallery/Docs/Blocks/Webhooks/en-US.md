@@ -189,6 +189,20 @@ text is in `Labels`.
 - Reduced motion keeps only short fades: the plates, the bars, the rows and the panel move at once and the digits change
   in place. Off applies every change at once.
 
+## Responsive behavior
+
+- `Webhooks` changes at three widths of its own. At 880 px and below (`:stacked`) the recent deliveries and the
+  inspector stack, and the inspector is capped at 256 px high (`StackedPanelHeight`). At 760 px and below (`:narrow`)
+  each endpoint's delivery rate and health badge move into a column beside its name. At 540 px and below (`:compact`)
+  the gutters shrink and the health note under the endpoint count is hidden.
+- It measures its own width, not the window's. A change is applied with a 1 px margin, so a width that sits on a
+  threshold does not flip back and forth.
+- Endpoint names and URLs are trimmed with an ellipsis, and the event chips wrap onto another line.
+- Delivery rows are at least 40 px high (`DeliveryRowHeight`). A failed delivery shows its Retry button without hover,
+  so a touch screen reaches it directly.
+- Give `Webhooks` the full width of the page. In a side panel narrower than 880 px expect the stacked layout; widen the
+  panel to keep the list and the inspector side by side.
+
 ## Related
 
 - API keys, Integrations and Env variables, the other Developer blocks.

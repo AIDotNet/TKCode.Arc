@@ -221,6 +221,20 @@ Every text has an English default and a property: the view names (`GridLabel` â€
 - Reduced motion places every card at once and keeps only short fades (the detail's buttons, the tag). Off applies every
   change at once.
 
+## Responsive behavior
+
+- `LayoutMorph` reads its own width, not the window's. Below 720 px (`:narrow`) the view switch shows icons only,
+  stretched across the width, and the hint moves under it. Below 520 px (`:dense`) the cards use tighter spacing and the
+  masonry view uses four columns.
+- The stage height follows the width: 600 px, 540 px at 720 px and below, 500 px below 480 px and 460 px below 360 px.
+  Set `StageHeight` to fix it.
+- On a narrow block the open detail stacks its picture over the text, and each card's sheet drops its description and
+  shows two facts.
+- Nothing depends on hover. Hovering pulls a card out of the stack, but opening a card is a click or Enter, so touch
+  users reach the same detail.
+- Give the block the full width of its row and let it stretch. The stage shrinks with the width, so a phone gets the
+  compact layout without any setting.
+
 ## Related
 
 - `Carousel` for a single row of slides with pagination.

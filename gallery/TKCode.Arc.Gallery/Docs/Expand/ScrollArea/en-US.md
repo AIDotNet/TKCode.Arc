@@ -343,6 +343,21 @@ The keys apply when the area itself has focus. `Shift` changes the direction of 
 | Key, code or track scroll | Smooth spring toward the target | Jumps to the target | Jumps to the target |
 | Edge fades | Length follows the hidden content as the person scrolls | Same | Same |
 
+## Responsive behavior
+
+- `ScrollArea` has no breakpoint and keeps the same form at every width. It scrolls the space its parent gives it, and
+  `Orientation` sets the axes: `Vertical` by default, or `Horizontal` or `Both`.
+- It clips its content to its own bounds, so content wider or taller than the area never paints outside it. A fade of
+  `FadeLength` (28 px) shows on each edge where content continues, and disappears at the end.
+- On a touch screen the content scrolls with touch inertia. The overlay bars are 11 px hit areas around a 5 px pill. In
+  `Auto` mode they appear while the content scrolls and hide after `HideDelay`; hover shows them only for mouse input.
+  Set `OverlayScrollbarMode` to `Always` when the bar is the only cue that more content exists.
+- Nothing depends on the bars. They are visual only, so the wheel, the keyboard and touch scroll the area whether or not
+  they are visible.
+- Let the area stretch to the width of its parent instead of setting a fixed `Width`, and give it a `Height` that fits
+  the screen. For a strip of cards that must land on an edge, set `Horizontal` with `HorizontalSnapPointsType` set to
+  `Mandatory`.
+
 ## Related
 
 - `Carousel` pages through items one at a time, with position shown.

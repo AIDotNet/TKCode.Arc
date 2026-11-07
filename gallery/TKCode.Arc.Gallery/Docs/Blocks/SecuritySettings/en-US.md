@@ -342,6 +342,17 @@ phone number first". Set the number to enable it.
 | Password description changes | Blur swap to the new text | Short fade | Immediate |
 | Checkup count and meter | Count rolls; segments fade to their color | Color fades | Immediate |
 
+## Responsive behavior
+
+- `SecuritySettings` measures the width its parent gives it. Below `CompactWidth` (560 px by default) it is `:compact`:
+  the safeguards meter moves under the summary text, and "Sign out other sessions" moves under the sessions list.
+- The password form is at most 400 px wide (`FormMaxWidth`). Once its settings row stacks (`:rows-stacked`), it takes
+  the full width of the row.
+- Session rows stack their text and action when they are narrower than 280 px (SessionRowStackWidth). Descriptions
+  wrap onto as many lines as they need (`TextWrapping`).
+- Let it fill the screen width. Below 560 px it already moves the meter and the sign-out action, so no extra phone
+  layout is needed. Raise `CompactWidth` only when the page sits beside other content.
+
 ## Related
 
 - `SettingsGroup` and `SettingsRow` build the cards and rows. The other Settings blocks use them too: Settings page,

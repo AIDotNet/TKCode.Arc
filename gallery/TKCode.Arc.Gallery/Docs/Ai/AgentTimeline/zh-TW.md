@@ -1,7 +1,7 @@
 ---
 title: Agent timeline
 summary: 在同一條時間軸上重播多代理執行過程：每個代理的思考、工具呼叫與等待、代理之間的交接，以及時間、token 與成本。
-source-hash: 39b855da3a3d
+source-hash: d90644e0d7c3
 ---
 
 <Demo name="Preview" />
@@ -250,6 +250,14 @@ timeline.IsLive = false;
 | 卡片位置與高度 | 彈簧效果 | 直接跳動 | 直接跳動 |
 | 卡片淡入與內容交叉淡入淡出 | 160ms / 120ms，100 / 160ms | 保留（短暫的交叉淡入淡出） | 立即 |
 | 狀態列與播放頭 | 交叉淡入淡出，240ms 淡出 | 立即 | 立即 |
+
+## 響應式
+
+- `AgentTimeline` 隨寬度變化。寬度低於 `NarrowWidth`（520 px，是版面中的固定常數而不是主題權杖）時設定 `:narrow`，標籤欄從 176 px 收窄為 132 px。頭部、頁尾與繪圖區使用更緊湊的邊緣內距（`NarrowEdgePadding`、`NarrowTrackPadding`）。
+- 它取父層提供的寬度，最寬為 `MaxWidth`（預設 744 px），版面以其自身寬度為準。
+- 繪圖區不會窄於 300 px（MinPlotWidth）。低於該寬度時，它在自己的捲動區中水平捲動（`:scrollable`），而代理標籤保持不動；繪圖區捲動後會出現分隔線（`:scrolled`）。
+- 代理名稱以省略號結尾（`CharacterEllipsis`）。跨度卡片中的文字換行（`TextWrapping`）。
+- 讓時間軸延展至頁面的全寬。寬度低於 520 px 時它會自動收窄標籤欄，而繪圖區會捲動，而不是被壓縮到 300 px 以下。
 
 ## 相關元件
 

@@ -1,6 +1,6 @@
 ---
 title: Code block
-summary: Present code with legible hierarchy and copy access.
+summary: A read-only code viewer with a file-name header, syntax colors and a copy button.
 ---
 
 <Demo name="Default" />
@@ -344,6 +344,18 @@ the exact width matters, because the copy action copies the source as you set it
 | New `Code` | The text rises 4 px while it fades in | The text is replaced in place | Immediate |
 | Toggle label | The label blurs out and in, and the chevron turns 180 degrees on a snappy spring | The label is swapped in place and the chevron turns at once | Immediate |
 | New `FileName` | The name blurs out and in, and the language glides to its new position | The name is swapped in place | Immediate |
+
+## Responsive behavior
+
+- `CodeBlock` switches to a compact layout when its own width is below `CompactWidth` (420 px). The `:compact`
+  pseudo-class is set, the header and code padding shrink, the code uses the smaller `TypeXS` text, and the copy action
+  keeps only its icon (`IsIconOnly`).
+- Code never wraps. Long lines scroll sideways inside the block at every width, and a long file name in the header is
+  shortened with an ellipsis.
+- `IsCollapsible` and `MaxLines` (12 lines by default) fold a long source behind a full-width expand row, so one file
+  does not fill a phone screen. The row is at least 44 px tall.
+- The compact layout follows the block's own width, not the window's, so a narrow side panel gets it too. On a phone
+  give the block the full row width, and break long lines in the source when a reader must see them whole.
 
 ## Related
 

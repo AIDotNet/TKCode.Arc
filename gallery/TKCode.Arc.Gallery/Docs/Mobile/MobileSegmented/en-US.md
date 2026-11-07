@@ -54,6 +54,17 @@ Segments are selectable list items named by their labels. Keep the labels short 
 
 The selected block (a Surface fill with an outline) slides behind the labels on a spring (P7, `GlidingIndicator`): it fades in place the first time, snaps when the control is resized, and jumps with reduced motion. The label colors cross-fade on the fast curve, and switch at once with reduced motion.
 
+## Responsive behavior
+
+- `Segmented` looks the same at every width: it has no breakpoint and no pseudo-class. Its segments share the width
+  equally (a `UniformGrid` with one row), so a wider control gives each segment more room.
+- Each `SegmentedItem` is at least 36 px high (`ItemHeight`), so the control is 40 px tall with its `TrackPadding`. Keep
+  labels short: with four options each segment gets a quarter of the width.
+- Let it fill the row rather than setting a fixed `Width`. With more than four options or long labels, use a list or a
+  sheet instead.
+- Nothing depends on hover: a finger on an unselected segment dims it (`PressedOpacity`), and a tap selects the segment
+  as a click does.
+
 ## Related
 
 - `MobileTabbar`: for top-level areas.

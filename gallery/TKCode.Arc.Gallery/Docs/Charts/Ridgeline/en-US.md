@@ -383,6 +383,16 @@ within the same chart.
 | Dataset or domain changes | Each curve morphs on a 0.7 s spring; ridges swell, slide and split | Drawn at the end state at once | Same as Reduced |
 | First view | Rows roll in from the top, one after another | Drawn at the end state at once | Same as Reduced |
 
+## Responsive behavior
+
+- `Ridgeline` changes at one width: below 420 px its row-label gutter narrows from 52 px to 36 px, and a group name that
+  does not fit is cut with an ellipsis.
+- It measures its own width (`Bounds.Width`), so a ridgeline in a narrow panel switches the same way as one on a phone.
+- The tooltip is at least 170 px wide (`MinWidth`) and stays inside the chart.
+- A touch press lifts the ridge under the finger and reads its value; hover lifts a ridge only with a mouse. On a phone
+  keep group names short, since the gutter is 36 px below 420 px, and give the chart a `ScrollViewer` when the groups do
+  not fit the screen height.
+
 ## Related
 
 - `BarChart` for one summary value per group.

@@ -190,6 +190,17 @@ formatted with the current culture.
 - Reduced motion moves the highlight at once, drops the old list immediately and fades the new one in over 120 ms, and
   crossfades the texts in 120 ms; colors and the check change at once. Off applies every change at once.
 
+## Responsive behavior
+
+- The picker measures the width it is offered, not the window's. Below `CompactWidth` (520 px, `:compact`) the paddings
+  tighten, the day cards get smaller, the times take one column and the footer stacks over a full-width button.
+- At `NarrowWidth` (360 px, `:narrow`) and below, the legend and the day cards' counts are hidden. `IsLegendVisible`
+  hides the legend at any width.
+- Each time row is `SlotHeight` (48 px) tall, enough to tap. The time keeps at least `SlotTimeMinWidth` (42 px); the
+  note takes the rest of the row and is trimmed.
+- Let the picker stretch to the full width of the phone instead of setting `Width`. Below 520 px the times already form
+  one column.
+
 ## Related
 
 - `Calendar` and `DatePicker` for choosing a single date.

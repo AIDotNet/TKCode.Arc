@@ -1,7 +1,7 @@
 ---
 title: Agent plan
 summary: 将智能体的计划呈现为可编辑的清单：草稿阶段可以重排、改名和添加步骤，批准后则逐步跟随运行过程。
-source-hash: 001769f62b45
+source-hash: d5a7c4d3c610
 ---
 
 <Demo name="Preview" />
@@ -253,6 +253,14 @@ plan.Simulation = new AgentPlanSimulation
 | 插入的步骤 | 带底纹滑入 | 直接出现 | 直接出现 |
 | 流式输出的建议 | 词块淡入 | 所有词一次出现 | 所有词一次出现 |
 | 模拟的时间线 | 不变 | 不变 | 不变 |
+
+## 响应式
+
+- `AgentPlan` 随宽度变化。宽度低于 `NarrowWidth`（420 px，是固定常量而不是主题令牌）时设置 `:narrow`：头部、列表与页脚使用更紧凑的内边距（`NarrowHeaderPadding`、`NarrowListPadding`、`NarrowFooterPadding`），两个按钮在同一行内等宽排列。
+- 卡片按自身宽度（`Bounds.Width`）而不是窗口宽度判断，会填满分配给它的空间，最宽为 `CardMaxWidth`（560 px）。
+- 步骤标题按需要换成多行（`TextWrapping`），不会被截断。较短的状态行保持一行，并以省略号结尾（`CharacterEllipsis`）。
+- 步骤的移除按钮在触屏上、悬停时以及步骤获得键盘焦点时显示（IsRemoveRevealed）。其余时间保持隐藏，因此手机用户可以通过触摸找到它。
+- 让卡片占满页面的全宽，不要设置固定的 `Width`。宽度低于 420 px 时两个按钮会自动分享一行，因此草稿在手机上无需单独的布局即可使用。
 
 ## 相关组件
 

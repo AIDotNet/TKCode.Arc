@@ -220,6 +220,17 @@ and announces that nothing was sent.
 Nothing resizes: the trigger keeps its height through every state, and the menu's panel keeps its height when you search
 or open a form.
 
+## Responsive behavior
+
+- The trigger fills its container up to `MaxWidth` (360 px) and is 52 px high. Its menu is as wide as the trigger and
+  never narrower than `MenuMinWidth` (288 px), so names stay readable in a narrow sidebar.
+- Each row is `RowHeight` (48 px), and six rows show before the list scrolls, so every row is a comfortable tap target.
+- The workspace name and the plan line end with an ellipsis (`CharacterEllipsis`).
+- Picking a row by tap does what its shortcut does. The Cmd or Ctrl shortcuts work only while focus is in the switcher,
+  unless `UsesGlobalShortcuts` extends them to the whole window.
+- Put it at the top of a sidebar at least 288 px wide, with about 450 px below it for the menu, or where the menu can
+  overflow the window.
+
 ## Related
 
 - `DropdownMenu` for a focused list of actions anchored to a trigger.

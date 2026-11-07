@@ -359,6 +359,17 @@ is still on the item. A repeated action on the same item shows its done word aga
 | Label | Slides out from behind the icon with a blur: 240 ms with a short delay in, 120 ms out | Quick fade | Immediate |
 | Confirmation | The check draws in 240 ms; the old word moves up and out as the new word rises in | The check appears without drawing; the word fades | Immediate |
 
+## Responsive behavior
+
+- `ExpandingButtonGroup` looks the same at every width. Actions are 36 px high (`ActionExtentMD`) at the default
+  `Medium` size and 28 px (`ActionExtentSM`) at `Small`. It has no breakpoint.
+- The pill sizes to its actions, and the one open label takes space in the row, so give the row room for the widest
+  label.
+- On touch, the first tap opens an action's label and the second tap runs it. Hover opens labels for a mouse only, so a
+  touch user reaches every label with a tap.
+- On phones keep the default `Medium` size and no more than six actions, since the group is made for 3 to 6 related
+  actions.
+
 ## Related
 
 - `FloatingButtonGroup` for separate soft buttons whose labels stay visible in a tray.

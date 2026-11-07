@@ -350,6 +350,19 @@ so a keyboard user can read a message without it changing under them.
 | Countdown digit change | The new digit drops in and the old one falls away | The digit fades | Immediate |
 | Dismissal | The height collapses on a smooth spring and the page below moves up | The bar fades out without collapsing | Immediate |
 
+## Responsive behavior
+
+- `AnnouncementBar` switches to `:narrow` when its own width is 560 px or less. It drops the mirror column on the left,
+  reads from the start edge with a 14 px left padding, and IsCentered no longer centers the message, so the text gets
+  more room.
+- It measures its own width, not the window's, so a bar in a narrow column switches the same way as on a phone.
+- The message wraps inside the bar and the bar grows to show every line, which pushes the page down. Keep messages to
+  about 70 characters so they fit on one line on a phone.
+- A touch screen does not pause rotation on hover, and the previous, next and close buttons are 32 px round. Keep the
+  pause ring (`IsNavigationVisible`) on for users who need to stop the rotation.
+- Put the bar at the top of the window or in a full-width column rather than beside other content, so it has the width
+  to show its message.
+
 ## Related
 
 - `Alert` for a message inside a section or a form that stays until it is resolved.

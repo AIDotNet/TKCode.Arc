@@ -423,6 +423,18 @@ check that `Group` matches exactly, since groups compare the text as written.
 | Trigger pressed | Scales to 97% until released | No scale | Immediate |
 | Hover and focus colors | The border, background and glyph colors crossfade; the focus ring fades in | Immediate | Immediate |
 
+## Responsive behavior
+
+- `ExpandingSearch` does not change at a breakpoint. At rest it is a 44 px circle; when it opens, the field grows to
+  `ExpandedWidth` (360 by default) and never past the width it is given.
+- Its results open in a popup anchored to the field's `Anchor` edge (`End` by default). Inside a viewport
+  (`ArcViewport`) the result list stops at 352 px or 60% of the viewport height, whichever is smaller.
+- Each result is at least 48 px tall (`MinHeight`); its title and meta line end in an ellipsis (`CharacterEllipsis`)
+  instead of wrapping.
+- Results are tap targets, nothing depends on hover, and choosing one folds the field back.
+- In a crowded header, keep the circle at rest and give the open field a row with room, since it opens only as wide as
+  the space it gets.
+
 ## Related
 
 - `SearchField` for a field that filters content already on the page.

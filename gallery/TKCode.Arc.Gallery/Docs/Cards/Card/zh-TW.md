@@ -1,7 +1,7 @@
 ---
 title: 卡片
-summary: 承載一組相關內容與操作的封閉式容器。
-source-hash: 5bf71f07b70d
+summary: 可瀏覽網格中代表一個項目的卡片，包含圖像、標題、負責人與狀態，可以展開成快速預覽。
+source-hash: 88779c1bb8ff
 ---
 
 <Demo name="QuickLook" />
@@ -363,6 +363,13 @@ public partial class ProjectsViewModel : ObservableObject
 | 快速預覽開啟或關閉 | 表面、媒體與標題以彈簧飛入（開啟 0.3 s，關閉 0.26 s） | 淡入淡出 | 立即完成 |
 | 狀態變化 | 舊行推走，新詞依序升起 | 立即替換 | 立即完成 |
 | 快速預覽後方的遮罩 | 在頁面上淡入淡出 | 淡入淡出 | 立即完成 |
+
+## 響應式
+
+- `Card` 在任何寬度下外觀都一樣。它沒有斷點，填滿父層給它的寬度，並把 `MinWidth` 設為 0，讓狹窄的儲存格可以把它收窄。
+- 文字換行而不是把卡片撐寬。`Title` 與 `Description` 會換行，`Description` 最寬約 34 個數字寬度，過長的 `Status` 列以省略號結尾。
+- 為每張卡片設定各自的 `Width`（通常為 260 到 300 px），讓 `WrapPanel` 或 `UniformGrid` 排列它們。比最長單字還窄的卡片會把該單字斷開。
+- 觸控螢幕與觸控筆不會讓卡片抬起。設定 `Details` 後，在卡片上且不在其按鈕上按下，會開啟快速檢視；它最寬為 `QuickLookMaxWidth`（480 px），保留 16 px 邊距，關閉按鈕是 32 px 的圓形。
 
 ## 相關元件
 

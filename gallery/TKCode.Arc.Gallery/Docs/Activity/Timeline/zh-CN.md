@@ -1,7 +1,7 @@
 ---
 title: 时间线
 summary: 按日期分组、最新在前，跟进事件的发生经过。
-source-hash: 689d73e3bb87
+source-hash: 322a956703ef
 ---
 
 <Demo name="LiveStream" />
@@ -306,6 +306,14 @@ timeline.Expand("t2");
 | 新事件到达 | 从顶部滑入，下方的行下移 | 短暂淡入 | 立即完成 |
 | 详情展开或收起 | 详情以弹簧方式展开 | 高度立即变化 | 立即完成 |
 | 滚动时的日期标签 | 固定在动态流顶部 | 固定在顶部 | 固定在顶部 |
+
+## 响应式
+
+- `Timeline` 随宽度变化。宽度低于 `NarrowWidth`（主题令牌，默认 420 px）时，它与每一行都会设置 `:narrow`：触发区两侧内边距减为 8 px（`TriggerPaddingNarrow`），时间更靠近标题（`TimeMarginNarrow`），详情内容的内边距收紧（`DetailPaddingNarrow`）。
+- 时间线按自身宽度而不是窗口宽度判断，所以放在侧面板中与在手机上的收缩方式相同。
+- 标题与详情换行（`TextWrapping`）。时间的最小宽度为 `TimeMinWidth`（44 px）。水平滚动条已禁用，因此各行不会横向滚动。
+- 悬停只会改变可交互行的颜色（`:pointerover`），聚焦时绘制焦点环（`:focus-visible`）。点按与点击一样会展开或收起可展开的行；箭头仅出现在可展开的行上（`:expandable`）。
+- 让时间线拉伸至页面的全宽。低于 420 px 时紧凑内边距会自动生效，因此无需为手机另建布局。
 
 ## 相关组件
 

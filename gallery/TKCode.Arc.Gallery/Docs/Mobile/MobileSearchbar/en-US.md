@@ -52,6 +52,16 @@ Give the field a placeholder that says what is searched, such as "Search message
 
 The border changes color on the fast curve when the field gains or loses focus. The clear button pops in from scale 0.6 with a fade (P26 through `PresenceHost`) and leaves faster than it arrived. With reduced motion the border changes at once and the clear button appears and disappears at once.
 
+## Responsive behavior
+
+- `Searchbar` has no breakpoint. It is a pill-shaped field 44 px tall, and its width is the width its parent gives it,
+  so let it stretch in a row rather than setting a fixed `Width`.
+- The text stays on one line. A clear button shows while the field has focus and text, and is hidden when the field is
+  idle.
+- Enter and the keyboard's Search key raise `Submitted`. Run the search there rather than adding a separate button,
+  which a narrow screen has little room for.
+- The field has no hover state: a tap focuses it, and nothing is revealed by hovering.
+
 ## Related
 
 - `MobileTextField`: the field it is built on.

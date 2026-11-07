@@ -382,6 +382,18 @@ move between items.
 | Usage crosses the limit | The overage hatch and the limit marker fade in | Immediate | Immediate |
 | Status badge changes | Its width fits the new text on a morph spring; the color washes crossfade | The text swaps with a short fade | Immediate |
 
+## Responsive behavior
+
+- `UsageMeter` does not change at a breakpoint. Its legend changes its column count instead: each column is at least 108
+  px wide, so the columns fill the width and more categories add rows.
+- It measures its own width, not the viewport, so it lays out the same way in a side panel and on a phone.
+- The title (`Label`) wraps onto two lines when it has to. The status badge (BadgeText) and the caption do not wrap;
+  when space runs short, they are cut with an ellipsis.
+- Each legend item is a toggle. A tap pins a category to show its share of the plan; hover only previews it, so a tap
+  reaches the same state.
+- Give the meter a full-width card and keep legend labels short, since each item shows its whole label in a column at
+  least 108 px wide.
+
 ## Related
 
 - `Progress` when work moves toward completion and has no allowance.

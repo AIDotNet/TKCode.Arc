@@ -53,6 +53,15 @@ Give every field a visible name next to it or an icon plus a placeholder, so the
 
 The border changes color on the fast curve when the field gains or loses focus. The clear button pops in from scale 0.6 with a fade (P26 through `PresenceHost`) and leaves faster than it arrived. With reduced motion the border changes at once and the clear button appears and disappears at once.
 
+## Responsive behavior
+
+- `TextField` has no breakpoint. It fills the width it is given, and its height is at least 44 px (`FieldHeight`), so
+  let it stretch rather than setting a fixed `Width`.
+- Text does not wrap: `TextWrapping` is `NoWrap` and the horizontal scroll bar is hidden, so a long value scrolls
+  sideways inside the field.
+- The clear button (`ShowClearButton`) shows only while the field has focus and text, and it is a 44 px touch target.
+- Give each field a visible name next to it, since `PlaceholderText` disappears once the person starts typing.
+
 ## Related
 
 - `MobileSearchbar`: a text field made for search.

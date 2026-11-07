@@ -1,7 +1,7 @@
 ---
 title: 对话框
-summary: 为需要用户关注的决定提供专注的浮层面板。
-source-hash: 1eb8d04fe87d
+summary: 居中的模态面板，用于必须先完成才能回到页面的决定或简短任务。
+source-hash: a83200aeca53
 ---
 
 <Demo name="ShortForm" />
@@ -291,6 +291,13 @@ public partial class ProjectSettingsViewModel : ObservableObject
 | 关闭 | 面板移动 4 px 并缩放到 0.98，两者快速淡出 | 短暂的不透明度淡入 | 立即完成 |
 | 标题或说明变化 | 新文案带着柔和的模糊升起 | 瞬时淡入 | 立即完成 |
 | 按下关闭按钮 | 按钮缩放到 0.96，松开后弹回 | 不缩放 | 不缩放 |
+
+## 响应式
+
+- `Dialog` 没有宽度断点。面板最宽为 `Size` 预设的宽度（`Small` 360 px、`Medium` 440 px、`Large` 560 px）；窗口更窄时，它会拉伸到窗口宽度减去 `ViewportMargin`（每侧 16 px）。
+- 内容过高时滚动：面板高于窗口时纵向滚动，横向滚动已关闭，因此正文必须适应宽度。
+- `Actions` 排成右对齐的一行，控件不会将其堆叠。在手机宽度下请保持标签简短，操作不超过两个。在手机上可使用 TKCode.Arc.Mobile 包中的 `Dialog`，它在窄宽度下会堆叠操作按钮。
+- 关闭按钮为 32 px（`CloseButtonSize`），小于 44 px 的触控目标，因此决定性的操作应放在操作按钮上，而不要只依赖关闭按钮。
 
 ## 相关组件
 

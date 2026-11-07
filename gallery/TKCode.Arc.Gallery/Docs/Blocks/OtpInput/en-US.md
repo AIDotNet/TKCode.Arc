@@ -178,6 +178,17 @@ part, like Arc's centered preview.
 
 One breakpoint, on the width the field is given: 328 px. Slots are 42 px wide and shrink when the row does not fit.
 
+## Responsive behavior
+
+- `OtpInput` follows the width it is given, not the window's. At 328 px or less (`:narrow`) the slots sit 6 px apart
+  (`SlotGapNarrow`) and are 44 px high (`SlotHeightNarrow`), instead of 8 px apart (`SlotGap`) and 48 px high
+  (`SlotHeight`).
+- Each slot is 42 px wide (`SlotWidth`). When the width offered is less than the row needs, every slot shrinks by the
+  same amount and the gaps keep their size, so the row stays inside its column.
+- Hover tints a slot only for a mouse or pen (`:hover`, never touch), and nothing depends on it.
+- Keep the default `InputMode="Numeric"` on phones. The touch keyboard then offers the number pad, and a paste keeps
+  only the digits.
+
 ## Related
 
 - `Input` for a single line of text with a label and messages.

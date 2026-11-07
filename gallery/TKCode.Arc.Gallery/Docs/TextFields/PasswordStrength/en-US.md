@@ -416,6 +416,18 @@ A `PasswordRule` is built from an id, a label, a test and an optional count of w
 | Remaining count | The digits roll to the new value | Immediate | Immediate |
 | New error | The field shakes once and settles on a spring | No shake | No shake |
 
+## Responsive behavior
+
+- `PasswordStrength` does not change at a breakpoint. The meter takes the rest of the row, and the strength word on the
+  right keeps at least `WordWidth` (72 px).
+- Each rule is a row of its own with a `RulesSpacing` gap between rows, and a rule's label wraps inside its row, so the
+  checklist reads in a narrow column.
+- The reveal button is 34 px (`RevealButtonSize`), and the meter's four segments share the row width with a `SegmentGap`
+  between them.
+- Hover only hints at the frame's colour, and no rule or action depends on hover.
+- On a phone give the form one column and let the field and checklist fill it; set `Width` only when the field must keep
+  a fixed size.
+
 ## Related
 
 - `PasswordField` for signing in, where the password is checked rather than chosen.

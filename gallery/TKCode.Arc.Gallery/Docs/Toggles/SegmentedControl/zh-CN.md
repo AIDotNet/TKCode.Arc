@@ -1,7 +1,7 @@
 ---
 title: 分段控件
 summary: 在一组相关的视图之间切换。
-source-hash: 29d83a4e5cfa
+source-hash: ed8c51009f4d
 ---
 
 <Demo name="ViewSwitcher" />
@@ -300,6 +300,14 @@ segmented.SelectionChanged += (_, _) => ShowView(segmented.SelectedValue);
 | 溢出时滚动到选中分段 | 在首次布局之后沿标准缓动平滑滚动 | 直接跳转 | 直接跳转 |
 | 边缘渐隐出现或消失 | 跟随滚动位置 | 跟随滚动位置 | 跟随滚动位置 |
 | 加载后的首次定位 | 立即 | 立即 | 立即 |
+
+## 响应式
+
+- `SegmentedControl` 没有断点。分段至少 36 px 高（`ControlSizeSM`），除非设置了 `Width`，控件会按分段的总宽度确定自身宽度。
+- 选项宽于控件时，行会在它自己的边框内横向滚动：滚动条隐藏，每个仍有内容的边缘有 20 px 的淡出（`EdgeFade`）。选中的分段会完整滚动到可见位置，旁边保留 `ScrollRoom` 的余量。
+- 分段文字从不换行（`TextWrapping="NoWrap"`），因此每个分段与其文字等宽。使用一到两个字的短标签，可以在行需要滚动之前放下更多选项。
+- 默认尺寸下控件高 44 px：36 px 的分段，加上 3 px 的轨道内边距与 1 px 边框。悬停只会改变文字颜色，点按即选中该分段。触屏悬停不会触发 `ItemIntent`，因此没有任何功能依赖悬停。
+- 在手机上，控件适合两到四个视图。选项更多时，滚动的行不易浏览，请改用 `Select`。
 
 ## 相关组件
 

@@ -404,6 +404,19 @@ The thumb receives focus with `Tab`. The control itself does not take focus.
 | Readout | Fades out while the tag rides the thumb | Switches at once | Immediate |
 | Detent pop | The tick goes from 1 to 2.1 to 1 times its size over 0.34 s | No pop | No pop |
 
+## Responsive behavior
+
+- `ElasticSlider` does not change at a breakpoint. It stretches to the width its parent gives it. The readout sits
+  right-aligned on the label row, the label is cut with an ellipsis when the row is short, and the track row is 44 px
+  (`ControlSizeMD`). It measures its own width, not the viewport.
+- The track stretches past its ends under a drag and springs back on release. The value tag sits 10 px above the thumb,
+  10 px higher again after a touch or pen press, and is at least `TagMinHeight` (28 px) tall.
+- Put only a glyph or a small icon button in `StartIcon` and `EndIcon`. The stretch moves them outward with the
+  track, and the track takes the room left over, so text there needs room it may not have.
+- The thumb is `ThumbDiameter` (24 px) across, and a touch press lifts the value tag. Hover only changes the mark
+  labels' color, so dragging needs no hover.
+- Give it a row of its own at full width, and keep the content beside it to icons.
+
 ## Related
 
 - `Slider` for a quiet form control, a range with two thumbs, or a list of sliders where the motion would repeat.

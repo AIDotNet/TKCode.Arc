@@ -1,7 +1,7 @@
 ---
 title: Building blocks
 summary: 为 AI 应用生成器准备的加载画面：圆角积木无回弹地拼进一个小小的应用布局，填上内容并染上强调色，标签则从“正在布局”一步步走到“完成”。
-source-hash: 99c1dbd6aadf
+source-hash: 1fd8d6265aac
 ---
 
 <Demo name="Preview" />
@@ -152,6 +152,13 @@ blocks.Labels = new BuildingBlocksLabels
 | 循环 | 完成的布局原地在 320ms 内淡出，在看不见时复位，再在同样的虚线槽位上重新构建 | 只播放一次 | 只播放一次 |
 
 每次变化都从屏幕上的当前值开始，所以构建中途改变状态也不会生硬切换。框架离开屏幕或被隐藏时，日程和标记都会暂停。
+
+## 响应式
+
+- `BuildingBlocks` 不会随容器重新排版。画面采用 `Size`（`Small` 280 px、默认的 `Medium` 400 px、`Large` 560 px）或以像素计的 `StageWidth`，且永远不会超过容器宽度。
+- 画面内的所有元素都随宽度等比缩放，因此在 240 px 到 880 px 之间比例保持不变。画面宽度低于 `NarrowWidth`（320 px）时，阶段标签从 13 px 降为 12 px。判断依据的是画面自身的宽度，而不是窗口宽度。
+- 在窄栏中使用 `Size="Small"`（280 px）；只有容器至少为 560 px 宽时才使用 `Large`。
+- 唯一的控件是重放按钮：一个 `Button`，在完成状态且设置了 `AllowsReplay` 时显示。在触屏上请在它周围留出空间。
 
 ## 相关组件
 

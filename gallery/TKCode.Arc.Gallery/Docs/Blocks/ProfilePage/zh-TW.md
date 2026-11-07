@@ -1,7 +1,7 @@
 ---
 title: Profile page
 summary: 一個人的個人檔案頁：封面與頭像、附統計數據的簡介欄、Activity 與 Projects 分頁，以及儲存後欄位會亮一下的編輯面板。
-source-hash: b37b9dc41572
+source-hash: ced3201487e6
 ---
 
 <Demo name="Preview" />
@@ -169,6 +169,14 @@ page.SaveHandler = async profile =>
 - **星號**：加星號時，星號從 60% 開始在快速彈簧上彈出；數量立即變化。取消星號沒有動畫。
 - **標籤文字**："Share" 和 "Save" 以短促的淡入淡出、2px 模糊和 3px 上升切換標籤，寬度不變。
 - **減少動態效果**：底線和內容立即切換，面板改為淡入（160ms）和淡出而不是滑動，標籤文字立即切換，星號不彈出。儲存時的亮起效果保留（沒有任何東西移動）。**關閉**則立即套用每一次變化，並跳過亮起效果。
+
+## 響應式
+
+- `ProfilePage` 依自身寬度分段變化，不隨視窗寬度：寬度低於 `CoverBreakpoint`（1000 px，`:cover-medium`）時封面縮小；低於 `StackBreakpoint`（760 px，`:stacked`）時各欄堆疊；低於 `CompactBreakpoint`（640 px，`:compact`）時標頭收緊；低於 `SingleColumnBreakpoint`（560 px，`:single-column`）時專案卡片改為一欄。
+- 編輯面板寬 420 px（`SheetBreakpoint`）。比它窄時面板佔滿整個區塊，其中的「所在地」與「網站」欄位改為堆疊。
+- 區塊高度為 `PageHeight`（760 px）或在可用空間較小時取可用高度，內容在區塊內捲動。整視窗頁面請使用 `IsFramed="False"`。
+- 「分享」與「編輯資料」高 34 px（`PillHeight`），標籤高 38 px（`TabHeight`），都低於 44 px 的觸控尺寸。在手機上請為它們留出足夠空間，並讓其他小目標遠離它們。
+- 讓區塊延展到螢幕寬度（`HorizontalAlignment="Stretch"`），封面與頭像的版面保持不變。它在窄面板中同樣會自動調整。
 
 ## 相關元件
 

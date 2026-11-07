@@ -388,6 +388,18 @@ the reader is not left below the text they just collapsed. Under reduced motion 
 | Toggle label | "Read more" and "Show less" crossfade with a 4 px drift and a 2 px blur | Immediate | Immediate |
 | Toggle hover and press | Label color crossfades | Immediate | Immediate |
 
+## Responsive behavior
+
+- `ExpandableText` does not change at a width. It clamps its text to `Lines` lines (3 by default) measured against the
+  width it receives, so the same text shows more or fewer lines in a narrow card than in a wide column.
+- It recalculates the clamp when its width or font changes, so a resize needs no code. The toggle appears only when the
+  text overflows.
+- Check the clamp at the narrowest width the text appears in. On a phone, use `Lines` of 2 in dense lists where many
+  entries must fit on one screen.
+- The toggle is at least 28 px tall, so on touch screens leave room around it rather than packing it between other small
+  controls.
+- Hover only changes the toggle label color; a tap opens and closes the text the same way a click does.
+
 ## Related
 
 - `Accordion` for several titled sections that open in place.

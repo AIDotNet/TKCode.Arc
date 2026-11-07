@@ -229,6 +229,19 @@ percentages ("59%") come from `Formatter` (`ISemanticZoomFormatter`; `SemanticZo
 | Panel numbers and bar | Digits roll, bar eases (580 ms) | Change at once | Immediate |
 | Tour | Flies, 1.5 s at each stop | Jumps, 2.4 s at each stop | Jumps, 2.4 s at each stop |
 
+## Responsive behavior
+
+- `SemanticZoom` measures its own width. Below 600 px it is `:compact`: the stage is 420 px high (`CompactStageHeight`),
+  the tour button shows only its icon, and the minimap gets a smaller frame.
+- The details panel sits beside the map when the block is wider than 900 px, with `DetailPanelPlacement` at its `Auto`
+  default. Narrower than that, it sits under the map, and below 600 px its sections stack in one column.
+- In its grid layout the details panel is at most 768 px wide (`GridMaxWidth`), so it does not stretch across a wide
+  window.
+- The hint at the bottom left describes scrolling and dragging (PART_Hint) and disappears after the first interaction.
+  On a touch screen, zoom with the buttons in PART_Zoom.
+- Let the block fill the screen width and keep `DetailPanelPlacement` at `Auto`. A forced `Side` placement in a narrow
+  column leaves the map too little room.
+
 ## Related
 
 - `TreeView` for browsing any hierarchy as rows.

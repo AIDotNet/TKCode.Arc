@@ -1,7 +1,7 @@
 ---
 title: AI 側邊面板
 summary: 與人們閱讀的頁面並排的助手：它會讀取整個頁面，回答關於頁面或選取範圍的問題，並以文字差異提出修改，由人們套用、捨棄或復原；頁面上會有掃過的動畫，並出現一個 "Undo" 膠囊。
-source-hash: fd63b95acc6a
+source-hash: 1cbf10f167c1
 ---
 
 <Demo name="Preview" />
@@ -184,6 +184,13 @@ public async ValueTask<AiPanelReply> RespondAsync(AiPanelRequest request, Cancel
 | 套用或復原 | 掃過、交叉淡化、高度彈簧 | 整個區塊色彩淡入淡出，無位移 | 立即 |
 | 新的詞 | 以整個詞為一步，150 毫秒淡入 | 相同的步進，無淡入 | 相同的步進，無淡入 |
 | 底部面板 | 滑入並淡入 | 原地淡入 | 立即 |
+
+## 響應式
+
+- 寬度低於 `SheetBreakpoint`（預設 640 px）時，助手離開停靠欄，變成覆蓋在頁面上的底部面板。面板高度為區塊高度的 `SheetHeightRatio`（0.74），`IsSheetMode` 與 `:sheet` 虛擬類別反映這一狀態。
+- 停靠時助手寬 `PanelWidth`（360 px），頁面欄最多為 `PageMaxWidth`（680 px）並置中。
+- 面板模式下，面板開啟時頁面下方變暗且不可操作；按下變暗的頁面或關閉按鈕即可關閉面板。
+- 建議項換到更多列，回答文字換行。在手機上為區塊設定螢幕高度，讓面板有空間顯示回答。
 
 ## 相關元件
 

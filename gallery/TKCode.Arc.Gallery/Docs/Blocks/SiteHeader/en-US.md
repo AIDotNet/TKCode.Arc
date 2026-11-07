@@ -161,6 +161,17 @@ covers the page and closes the sheet when pressed, and the page does not scroll 
 | The menu icon | Menu and close swap with a quarter turn and a small scale | Fade | At once |
 | The sheet | Drops from the bar on a spring; rows rise in one after another; groups open on a spring | At once | At once |
 
+## Responsive behavior
+
+- `SiteHeader` measures its own width. Below `CollapseWidth` (760 px by default) it is `:narrow` and `IsCollapsed` is
+  true: the links move into a menu sheet behind a menu button, and the secondary action is hidden
+  (`IsSecondaryActionVisible`). Before the first layout it stays wide.
+- The menu sheet is capped at the viewport height minus 65 px (`MaxHeight`) and scrolls vertically. The viewport comes
+  from `ArcViewport`; when no size is known it assumes 800 px.
+- The menu button is 40 px square, a little under the 44 px touch size, so leave it room in the bar.
+- Let the header fill the screen width. Below 760 px the menu sheet already replaces the link row, so the bar keeps only
+  the primary action.
+
 ## Related
 
 - `PageHeader` for the title block of an application page.

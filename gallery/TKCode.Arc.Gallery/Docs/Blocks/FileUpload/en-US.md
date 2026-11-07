@@ -140,6 +140,17 @@ the browser host (Avalonia 12.1 turns a browser drop into files).
 Uploads run through your `Uploader`, one call per accepted file, with no limit on how many run at once: queue large
 batches yourself. The list is not virtualized, so keep it to a reasonable number of files.
 
+## Responsive behavior
+
+- `FileUpload` does not change form at a width. It has no breakpoint: the dropzone is full width at every size and at
+  least 92 px high (`DropzoneMinHeight`).
+- The dropzone's copy wraps. Each file name stays on one line and ends in an ellipsis
+  (`TextTrimming="CharacterEllipsis"`), and the status text wraps.
+- The hover tint on the dropzone applies only to a mouse or pen. A touch never sets `:zonehover`, so nothing depends on
+  hover.
+- Let the control stretch to its column rather than setting a fixed `Width`, and give it a row of its own in a narrow
+  form.
+
 ## Related
 
 - `FileDropzone` for picking files without upload state.

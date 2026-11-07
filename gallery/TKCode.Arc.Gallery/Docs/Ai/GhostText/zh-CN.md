@@ -1,7 +1,7 @@
 ---
 title: Ghost text
 summary: 行内 AI 自动补全：浅色的幽灵文字在光标处接着把句子写下去，Tab 原地接受，Cmd+Right 接受一个词，Escape 将其关闭，一个安静的标签显示背后的模型。
-source-hash: 90d90ae2b1e5
+source-hash: dfc378352bc8
 ---
 
 <Demo name="Preview" />
@@ -165,6 +165,12 @@ field.Labels = new GhostTextLabels
 完整动效下模拟会循环播放；减弱或关闭动效时只播放一次就停止。它在屏幕外时会暂停。
 
 宽度小于 520px 时，单词与 Escape 提示会让开，只保留标签，底栏备注以省略号截断。
+
+## 响应式
+
+- `GhostText` 按自身宽度判断，而不是窗口宽度。宽度低于 520 px 时，`:narrow` 伪类会隐藏单词与 Escape 提示，只保留标签。
+- 触控输入同样隐藏提示；在触屏上，标签改为显示 “Tap to accept”（点按接受）。
+- 单行输入框高 44 px，文字截断而不换行；多行输入框从 `Rows` 行增长到 `MaxRows` 行后滚动。让输入框占满整行；空间不足时，页脚说明文字以省略号截断。
 
 ## 相关组件
 

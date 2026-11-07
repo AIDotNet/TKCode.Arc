@@ -1,7 +1,7 @@
 ---
 title: 移動端清單
 summary: 分組的列，用於設定和選單：圖示、標題、副標題、列尾的值或控制項，以及箭頭。
-source-hash: 4ce9e55c4288
+source-hash: a8977ebd8868
 ---
 
 <Demo name="Basic" />
@@ -58,6 +58,13 @@ source-hash: 4ce9e55c4288
 ## 動效
 
 手指按在列上時，背景按快速曲線變暗；減弱動效時，立即變暗。
+
+## 響應式
+
+- `ListGroup` 沒有斷點。它是一張佔滿寬度的卡片，周圍有 `GroupPadding`（16 x 8 px），`Header` 與 `Footer` 換行（`TextWrapping="Wrap"`），而不會被截斷。
+- 每個 `ListItem` 列至少 48 px 高，副標題以省略號（`CharacterEllipsis`）截成一行。
+- 列末的內容佔用標題之外剩下的空間，所以過長的列末值會把標題擠短。請保持簡短。
+- 手指按下時以淡色底面標示該列，沒有任何列依賴懸停。輕觸該列即可對它執行操作。
 
 ## 相關元件
 

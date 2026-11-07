@@ -196,6 +196,16 @@ Screen readers:
   springs to fit.
 - Reduced motion and Off apply every change at once, without the glow.
 
+## Responsive behavior
+
+- `EnvVariables` changes layout at its own width, not the window's. Below `CompactWidth` (760 px by default) the rows
+  stack and each environment shows as a labelled pill. Below `NarrowWidth` (560 px) the header stacks, its actions share
+  the row equally, and the toolbar stacks its search field and view switch.
+- Rows are at least 64 px high (`RowMinHeight`) at every width, which gives a comfortable touch target.
+- Nothing depends on hover. The edit control is on every row unless the block is read-only, and hover only tints the
+  switches and icons.
+- Keep it at least 760 px wide to show the matrix of switches. In a narrower panel the rows stack, which suits a phone.
+
 ## Related
 
 - API keys, Webhooks and Integrations, the other Developer blocks.

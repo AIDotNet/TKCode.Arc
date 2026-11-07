@@ -180,6 +180,18 @@ headline numbers always follow `CurrencySymbol`: their digits roll, which needs 
 - **Reduced motion** lands every spring at once and keeps the short fades (readout, tick, text swaps as 120ms
   cross-fades). **Off** applies everything at once.
 
+## Responsive behavior
+
+- `RevenueExplorer` reads its own width, not the window's. Its chart plot is `CompactPlotHeight` (216 px) high while the
+  chart is narrower than 600 px (`:compact`), and `PlotHeight` (256 px) otherwise.
+- Below `NarrowWidth` (560 px, `:tight`) the paddings tighten and the headline numbers get less room. Below
+  `StackedWidth` (440 px, `:stacked`) the range buttons take a row of their own and share it equally, the header wraps,
+  and the series chips shrink (`IsCompact`).
+- When months are closer than 40 px the axis shows every other month, or every third, so the labels do not collide.
+- Pressing the chart selects the nearest month and shows its readout, so a tap reads a month without hover.
+- Let the block stretch to the page width (`HorizontalAlignment="Stretch"`) rather than set a fixed `Width`. On a phone,
+  prefer the range presets to dragging the overview handles, which are 16 px wide (`HandleWidth`).
+
 ## Related
 
 - `Metrics dashboard`, `KPI drilldown` and `Metric explorer`, the other Analytics blocks.

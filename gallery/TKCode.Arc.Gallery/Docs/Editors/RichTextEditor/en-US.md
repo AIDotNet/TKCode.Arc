@@ -561,6 +561,18 @@ Ctrl is Command on macOS and Control on other platforms. Word movement follows t
 | The block menu's highlight moves | Glides between rows | Moves in one step | Immediate |
 | The menu's list changes while filtering | Height changes on a smooth spring | Immediate | Immediate |
 
+## Responsive behavior
+
+- `RichTextEditor` changes at its own width, not the window's. Below 330 px the floating toolbar drops its block buttons
+  and keeps the inline marks; block types stay one `/` away.
+- The floating toolbar appears above the selection with 32 px buttons, and it is kept inside the editor's width. The
+  block menu is at most 240 px wide and never wider than the editor.
+- Images shrink to the editor's width and keep their proportions. Tables always fill the width, and their columns share
+  it, each at least 48 px.
+- Touch: toolbar buttons are 32 px and block-menu rows are 34 px. In the `Docs` profile the block grip appears on hover,
+  so on a touch screen use `/` to change a block type.
+- For a plain multi-line field in a form, use `Textarea` instead: it wraps without a toolbar or blocks.
+
 ## Related
 
 - `Textarea` for plain text without formatting.

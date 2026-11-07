@@ -87,6 +87,16 @@ The title is plain text; give every screen one. The slot buttons are normal butt
 
 A changed title rises out of a soft blur while the old one lifts away (P2, `ArcContentSwap` blur swap); the first title and reduced motion do not animate. The large title follows the scroll offset one to one and has no animation of its own. The buttons in the slots press and release as `MobileButton` does.
 
+## Responsive behavior
+
+- `Navbar` has no breakpoint. The bar is `BarHeight` (44 px) tall at every width, with `BarPadding` (8 px) at its sides.
+- The leading and trailing slots are at least `SlotMinWidth` (44 px) wide, so their buttons stay tappable. The back
+  button and slot buttons are mobile `Button`s, at least 44 by 44 px.
+- The title is centered between the slots and trimmed with an ellipsis (`CharacterEllipsis`) when it is too long. Keep
+  the trailing actions to one or two short labels so the title keeps its room.
+- A large title (`LargeTitleExtent`, 52 px) collapses into the bar as `CollapseProgress` rises, which is how a
+  scrollable page drives it.
+
 ## Related
 
 - `MobilePage`: puts the navbar in its `Header`.

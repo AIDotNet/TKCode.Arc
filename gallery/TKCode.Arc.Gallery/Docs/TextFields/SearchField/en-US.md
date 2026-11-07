@@ -1,6 +1,6 @@
 ---
 title: Search field
-summary: A recognizable search entry point with clear affordances.
+summary: A search box that narrows the items already on the view as people type, with a clear button that does not shift the toolbar.
 ---
 
 <Demo name="FilterList" />
@@ -334,6 +334,19 @@ queries in your handler if an empty submit should do nothing.
 | Clear button appears | Scales in from 0.8 on a snappy spring with a soft blur | Fades in | Immediate |
 | Clear button leaves | Animates out before it is removed | Fades out | Immediate |
 | Clear button pressed | Scales to 0.96 | No scale | No scale |
+
+## Responsive behavior
+
+- `SearchField` does not change at a breakpoint. It stretches to its column, and its leading search glass is 18 px
+  (`SearchIconSize`).
+- The clear button sits in a reserved 24 px slot (`ClearSlotSize`), so the field keeps its width when it appears. It
+  shows only while the field holds text and is not read-only.
+- Typed text does not wrap (`NoWrap`): a longer query scrolls sideways inside the field, while the label wraps in a
+  narrow column.
+- The 24 px clear button is a small target on a touch screen. A person can select the text and type over it, and Enter
+  submits the search.
+- On a phone give the field a row of its own and let it stretch (`HorizontalAlignment="Stretch"`) rather than setting a
+  fixed `Width`.
 
 ## Related
 

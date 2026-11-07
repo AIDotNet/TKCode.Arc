@@ -480,6 +480,20 @@ Each divider is a tab stop. The keys below apply while the divider has focus and
 | Restore tab leaves | Fades out and scales to 60% | Fades out | Immediate |
 | Grip forms on hover or focus | Scales from 60% on the CSS-style spring | Immediate | Immediate |
 
+## Responsive behavior
+
+- `ResizablePanels` does not change at a width: its panes never wrap to another row and it has no breakpoint. When the
+  group is narrower than the sum of the panes' `MinSize` values, the minimums scale down in proportion, and a pane below
+  its minimum fades as its content slides away.
+- It measures its own width, not the window's, so a group in a narrow panel is squeezed the same way as on a phone.
+- On a phone stack the panes with `Orientation="Vertical"`, or change the structure to `Tabs`, since side-by-side panes
+  do not fit.
+- Touch: the grab area of a divider is the gap plus 6 px on each side, 13 px in total with the default `Gap` of 1. A
+  touch user can drag a divider, but a flick to collapse is measured from pointer samples, so test it on the devices you
+  support.
+- Set each pane's `MinSize` to the narrowest width at which its content still reads, so the divider resists before a
+  pane gets too narrow to read.
+
 ## Related
 
 - `Drawer` for a pane that covers the page as an overlay.

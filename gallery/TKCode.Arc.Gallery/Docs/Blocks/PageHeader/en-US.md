@@ -415,6 +415,19 @@ new tab and keeps the compact bar. Choosing a tab does not expand the header.
 | Secondary actions fold | Width closes on a smooth spring, clipped at the right edge | Width changes at once | Immediate |
 | Tab changes | Body slides 12 px from the side of travel; the old body fades out | Body crossfades | Immediate |
 
+## Responsive behavior
+
+- `PageHeader` changes at its own width, not the window's. Below 560 px (`:narrow`) the padding gets smaller, the root
+  crumb and the compact badge hide, the title steps down a size, and the far edge of the tab row fades. Below 460 px
+  (`:tight`) the primary action shows only its icon.
+- When the breadcrumbs would get less than 240 px, the secondary actions fold into the "More actions" menu
+  (`:actions-folded`) and come back at 272 px. Until the header is measured once, a header narrower than
+  PreMeasureFoldWidth (720 px) starts with its actions folded.
+- The tab row scrolls sideways with its scroll bar hidden, so a long row of tabs stays reachable by touch.
+- Folded actions stay one tap away in the "More actions" menu, so nothing is lost at a narrow width.
+- Let the header stretch across the page (`HorizontalAlignment="Stretch"`) and keep its height fixed, or give it a row
+  with a height. The header condenses (`:condensed`) once the body scrolls past 16 px, so the body keeps room to scroll.
+
 ## Related
 
 - `Breadcrumb` for a path on its own.

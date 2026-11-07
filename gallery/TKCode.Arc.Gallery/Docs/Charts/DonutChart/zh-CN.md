@@ -1,7 +1,7 @@
 ---
 title: 环形图
-summary: 一个环形图，扇区在数据集之间平滑变形，当前数值滚动显示在中心。
-source-hash: 0b6a0d97b37b
+summary: 展示整体如何分成两到六个部分的环形图，带图例，中心显示总数或指针所指部分。
+source-hash: 21d4a031da96
 ---
 
 <Demo name="ToggleSegments" />
@@ -263,6 +263,13 @@ public partial class SpendViewModel : ObservableObject
 | 新数据集或隐藏扇区 | 弧形从当前角度变形，保持速度 | 直接显示最终状态 | 直接显示最终状态 |
 | 激活的扇区 | 向外移动并加粗，其余扇区变暗 | 直接显示最终状态 | 直接显示最终状态 |
 | 中心读数 | 像滚筒一样滚动到新读数 | 立即变化 | 立即变化 |
+
+## 响应式
+
+- 图例在 460 px 处切换位置。`DonutChart` 按自身宽度判断：达到 460 px 时图例位于圆环旁边，低于 460 px 时图例堆叠在圆环下方。
+- 圆环会缩小以适应容器，从 `Diameter`（208 px）与 `RingThickness`（24 px）开始计算，中心文字随之缩放。
+- 低于 460 px 时，图例是一列，每个可见分段占一行。用 `GroupBelow` 与 `MaxSegments` 让列保持简短，把小分段合并到 Other 中。
+- 在触屏上不会触发悬停预览。用 `LegendAction="Select"` 和 `ActiveKey` 固定一个分段，点按后中心会显示其数值。
 
 ## 相关组件
 

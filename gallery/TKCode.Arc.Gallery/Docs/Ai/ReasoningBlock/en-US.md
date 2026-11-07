@@ -184,6 +184,18 @@ short fade. With motion off everything changes at once. The seconds still count:
 The head is 44px high in every state and the preview is always two lines tall, so a Stop or Retry button appearing, or a
 line streaming in, never changes the block's height.
 
+## Responsive behavior
+
+- `ReasoningBlock` does not change form at a width. It takes the width it is given, and its headings, steps and preview
+  wrap (`TextWrapping` set to `Wrap`).
+- The head is one 44 px button across the whole row: the label, Stop or Retry when they apply, and the chevron. It stays
+  44 px high in every state, so a Stop button appearing does not move the answer.
+- While the model thinks, the preview is always two lines tall, so a line that wraps on a narrow screen does not change
+  the block's height.
+- Nothing depends on hover: the head opens and closes the steps, and Copy sits in the footer of the open block.
+- In a narrow message bubble, use `Variant="Plain"`, which drops the border and side padding so the block sits flush
+  inside the bubble.
+
 ## Related
 
 - `ToolCall` for the tool calls an agent makes.

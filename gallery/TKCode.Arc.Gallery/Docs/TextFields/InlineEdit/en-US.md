@@ -400,6 +400,19 @@ value is parsed before it reaches the view model.
 | Save fails | The old text drops back in from above; the frame washes with a danger tint that fades | The text cross-fades; the tint clears without a fade | Immediate |
 | Hover and keyboard focus | The pencil fades in and the frame takes the hover tint | Immediate | Immediate |
 
+## Responsive behavior
+
+- `InlineEdit` changes only with `IsMultiline`. A single-line value stays on one line (`NoWrap`); a multiline value
+  wraps to the width it is given and grows in height (`Wrap`).
+- While a single line is being edited, the editor is at least `TitleEditingMinWidth` (110 px) wide for a title and
+  `BodyEditingMinWidth` (70 px) for body text.
+- The text reserves room for the actions in every state: 66 px on the right of a single line (`LinePadding`) and 38 px
+  for multiline (`MultilineLinePadding`), so the text does not rewrap when they appear.
+- A tap on the text starts editing, and the hover hint follows fine pointers only. The save and cancel buttons are 28 px
+  (`ActionSize`), so on a phone a tap outside the field saves it, as Tab or a click does.
+- On a phone, use `IsMultiline` for long values so the text wraps instead of staying on one line, and give the field a
+  row of its own.
+
 ## Related
 
 - `Input` for a field that is always visible and saved with a form.

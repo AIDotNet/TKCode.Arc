@@ -190,6 +190,17 @@ snippet.Labels = new InstallSnippetLabels
 Every code block reserves the height of its step's longest snippet and every step line the height of its longest line,
 so switching frameworks moves nothing. Only opacity, clips and one measured width animate, and nothing runs when idle.
 
+## Responsive behavior
+
+- `InstallSnippet` measures its own width. Below `NarrowWidth` (460 px) the `:narrow` pseudo-class tightens the card
+  padding and shows the package manager tabs as marks only; below `CompactWidth` (380 px) `:compact` also drops the
+  framework tab marks and hides the version label.
+- Code lines never wrap: a long line scrolls sideways inside its own code block, so the page itself does not scroll
+  sideways.
+- The framework tabs stay in one row and do not wrap; with the compact marks they fit a phone-width card. Give the
+  card the full row rather than placing it beside other content on a phone.
+- Tabs are 30 px tall, and hover only tints a tab's text, so a tap selects a tab the same way a click does.
+
 ## Related
 
 - `CodeBlock` for a single code sample with copy.

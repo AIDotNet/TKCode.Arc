@@ -410,6 +410,17 @@ The reading is announced as the category name, its share and its value, such as 
 | Pinned or focused category | Other categories fade to 26% opacity over the standard duration | Change at once | Change at once |
 | Accent change | Cells change color on the same stagger as a data change | Changed at once | Changed at once |
 
+## Responsive behavior
+
+- Below `SideLegendBreakpoint` (420 px by default) the legend moves from beside the grid to below it. Beside the grid
+  the grid is at most 232 px wide with a 24 px gap; below it the grid is centered, at most `GridMaxSize` (300 px) wide,
+  with its legend under a 24 px gap.
+- It measures its own width, not the window's, so a `WaffleChart` in a narrow panel switches the same way as on a phone.
+- Each legend row is at least 36 px tall, and a long category name is shortened on screen; the full name stays in the
+  tooltip.
+- A tap on a legend row pins its category, so a finger can pin one without hovering; hover only previews it. Keep the
+  legend visible on a phone (`IsLegendVisible`), since it names each category and its share.
+
 ## Related
 
 - `DonutChart` for a share in one ring with a total in the center.

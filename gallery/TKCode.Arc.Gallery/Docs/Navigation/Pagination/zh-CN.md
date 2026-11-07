@@ -1,7 +1,7 @@
 ---
 title: 分页
-summary: 在有明确边界的长集合中翻页。
-source-hash: b2a74f41b993
+summary: 为按页加载的集合提供上一页、下一页与页码按钮。
+source-hash: 2f838dbedfab
 ---
 
 <Demo name="Default" />
@@ -281,6 +281,13 @@ pagination.GoToPage(int.MaxValue);
 | 数字离开窗口 | 滑入并在 120 ms 内淡出 | 立即移除 | 立即完成 |
 | 按下箭头 | 按住时箭头缩放至 96% | 无按下缩放 | 无按下缩放 |
 | 悬停、聚焦 | 背景色与文字颜色渐变 | 立即完成 | 立即完成 |
+
+## 响应式
+
+- `Pagination` 没有断点。行宽不够时按钮换到新的一行，按钮之间相距 `Spacing`（4 px）。
+- 它始终显示五个页码按钮（`WindowSize`）以及上一页、下一页按钮，每个都是 36 px 见方（`ControlSizeSM`）。按钮不会缩小，因此在窄空间里整行会换行。
+- 页数较多时打开 `ShowBoundaryPages`，首页和末页就能通过 24 px 的省略号（`EllipsisWidth`）找到。默认不开启。
+- 按钮为 36 px，小于 44 px 的触控目标，因此在手机上请让分页独占一行，或在信息流中使用放在 `ScrollArea` 内的 `Timeline`。
 
 ## 相关组件
 

@@ -1,7 +1,7 @@
 ---
 title: 电话输入框
 summary: 带国家/地区选择器、输入时即时格式化并输出 E.164 格式的电话字段。
-source-hash: 973601bc9177
+source-hash: 484ee280417c
 ---
 
 <Demo name="Default" />
@@ -347,6 +347,13 @@ public partial class ContactViewModel : ObservableObject
 | 消息行出现或变化 | 高度平滑展开；新文字带着柔和模糊从下方升起 | 完整高度，短淡入 | 立即完成 |
 | 有效标记出现 | 以灵敏的弹簧弹出 | 短淡入 | 立即完成 |
 | 悬停、聚焦、无效 | 边框颜色渐变 | 边框颜色渐变 | 立即完成 |
+
+## 响应式
+
+- `PhoneInput` 没有断点。国家触发器与号码在任何宽度下都在同一行。号码保持单行（`TextWrapping` 为 `NoWrap`），超出可用空间时在字段内部滚动。
+- 国家选择器最宽 340 px（PanelMax），且不超过字段宽度，打开时至少与触发器一样宽。列表最高 280 px（`ListMaxHeight`），选项行高 36 px（`RowHeight`），超出时滚动。
+- 选择器是 `ArcPopup`，在视口（窗口或 `ArcViewportHost`）内计算可用空间。它会滑入可见区域，但从不翻到字段上方。
+- 在较矮的屏幕上，让字段远离底部边缘，因为选择器不会翻到字段上方。
 
 ## 相关组件
 

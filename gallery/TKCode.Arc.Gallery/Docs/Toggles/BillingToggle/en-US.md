@@ -371,6 +371,17 @@ string key such as "yearly" and map it to your enum in the view model.
 | The option text changes color on hover or selection | Color eases over the fast tween | Immediate | Immediate |
 | The selected badge takes its accent | Background eases over the standard tween; the badge text swaps with a blur | Immediate | Immediate |
 
+## Responsive behavior
+
+- `BillingToggle` does not change at a breakpoint. Its options sit in a row, and the track is as wide as its options, so
+  it keeps the same shape in every column.
+- An option is 34 px tall at `Medium` (`OptionHeight`) and 42 px at `Large` (`OptionHeightLG`).
+- Option labels and badges do not wrap (`NoWrap`), so a long period name or badge widens its option. Check the longest
+  option at 360 px.
+- Each option is a whole-cell tap target, and hover only tints the unselected label, so nothing depends on hover.
+- On a phone use `Size="Large"` (42 px) for the billing switch, and put `BillingPrice` on its own row below it, because
+  the price row does not wrap.
+
 ## Related
 
 - `SegmentedControl` for views that switch content without a price.

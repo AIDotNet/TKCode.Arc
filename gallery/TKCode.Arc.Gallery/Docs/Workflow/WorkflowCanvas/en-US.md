@@ -318,6 +318,25 @@ A step reached with the keyboard is brought into view.
 - A connection being drawn follows the pointer without easing and jumps to the nearest input within 24px, which grows and takes the accent; the steps it cannot go to fade to 40% over the standard duration. Undo and redo glide moved cards back.
 - Reduced motion: no color easing, the marks swap with a short fade, the ring stands still, the data appears drawn at once, and the view and the cards jump to where they go. Nothing loops while a workflow is at rest.
 
+## Responsive behavior
+
+- `WorkflowCanvas` switches at a width. Below `NarrowBelowWidth` (520 by default; `0` never switches) it takes the
+  `:narrow` pseudo-class. One-row cards become 344 × 52 and `:compact` cards 108 × 72, and a workflow the canvas
+  arranged itself gets the tighter gaps `NarrowRankGap`, `NarrowFanOutRankGap` and `NarrowNodeGap` (26, 36 and 10 px).
+  Steps your code placed keep their places.
+- It measures its own width, the space its parent gives it, not the window. A canvas in a side panel or a phone preview
+  switches at the width it actually has.
+- Card titles and subtitles end in an ellipsis (`CharacterEllipsis`) rather than wrapping. By default (`AutoFit` is
+  `ShrinkToFit`) a workflow that is too large shrinks as a whole; the narrow layout tightens the spacing so it stays at
+  actual size.
+- The canvas raises `ContextRequested` on the focused card when Shift + F10 or the Menu key is pressed, so the app shows
+  its own menu for it.
+- A pinch zooms between `MinZoom` (0.25) and `MaxZoom` (2), and a drag pans. `IsPanZoomEnabled="False"` turns both off
+  for a fit-only preview. Ports show when a card is selected or focused as well as when pointed at, so the ports do not
+  depend on hover.
+- Give the canvas the full width of its row, and keep compact step titles to a word or two. They have little room under
+  `NarrowBelowWidth`.
+
 ## Related
 
 - `Stepper`: a straight sequence of steps a person works through.

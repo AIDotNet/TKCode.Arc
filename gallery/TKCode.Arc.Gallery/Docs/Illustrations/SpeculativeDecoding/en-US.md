@@ -329,6 +329,14 @@ Totals use the `DecodeStats` record, also the `Stats` property of `SpeculativeDe
 | Lanes and the target-only line | Grow and shrink on a spring | Jump to their size | Jump to their size |
 | Statistics | Roll digit by digit | Change at once | Change at once |
 
+## Responsive behavior
+
+- `SpeculativeDecoding` measures its own width, not the window's. Below 560 px (`NarrowWidth`, `:narrow`) it switches to a narrow layout with tighter padding (`NarrowCardInset`), the lane names as a legend above the columns, and each line's name above its text.
+- In the narrow layout the draft slider takes a row of its own across the full card width, with the compare switch under it. In the wide layout the slider's column is capped at `SliderMaxWidth` (320 px).
+- Draft columns that do not fit wrap onto a second row. The status line wraps and reserves two lines on a narrow card, so the lanes do not move.
+- Text in the lanes is cut with an ellipsis (`CharacterEllipsis`) rather than wrapped. The slider and the switch are ordinary controls, the arrow keys change `DraftLength`, and nothing is hover-only.
+- Let it stretch to its column with no fixed `Width`, and check the narrow layout at phone width first, where the slider sits on its own row.
+
 ## Related
 
 - `MixtureOfExperts` for what happens inside one forward pass: a router sends each token to its top experts.

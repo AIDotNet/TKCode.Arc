@@ -1,7 +1,7 @@
 ---
 title: 滑块
 summary: 在轨道上选取一个值或一个范围，跟随指针移动。
-source-hash: 8edf5e790ada
+source-hash: e254658996f6
 ---
 
 <Demo name="SingleValue" />
@@ -317,6 +317,14 @@ public partial class PriceFilterViewModel : ObservableObject
 | 拖动中的滑块手柄 | 以灵敏的弹簧放大到 1.16 倍 | 立即放大 | 立即完成 |
 | 数值气泡 | 从 0.6 倍弹出并伴随柔和模糊；以 0.8 倍淡出 | 淡入淡出 | 立即完成 |
 | 读数数字 | 数值变化时逐位滚动 | 立即切换 | 立即完成 |
+
+## 响应式
+
+- `Slider` 在任何宽度下形态都不变。它取父级给它的宽度，读数显示在标签行上。宽度较小时标签以省略号截断，轨道占据 `StartContent` 与 `EndContent` 之外的剩余空间。
+- 它按自身宽度而不是视口测量。
+- 轨道行高 44 px（`ControlSizeMD`），滑块直径为 `ThumbDiameter`（22 px）。数值气泡位于滑块上方 8 px；触控或触控笔按下时升至 18 px。
+- 悬停只改变刻度标签的颜色，滑块通过拖动工作，因此没有任何操作依赖悬停。
+- 让滑块占满整行。`StartContent` 与 `EndContent` 只放单个图标或小图标按钮。
 
 ## 相关组件
 

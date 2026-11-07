@@ -1,7 +1,7 @@
 ---
 title: Orbit logos
 summary: 整合軌道：你的產品標誌在中央，標誌排在兩條緩慢轉動的環上，選中的標誌會長出一張詳情卡片。
-source-hash: 98316a6d1296
+source-hash: e71c84fa8b54
 ---
 
 <Demo name="Preview" />
@@ -127,6 +127,13 @@ orbit.ConnectHandler = async logo => await api.ConnectAsync(logo.Id ?? logo.Name
 | 環與連線 | 彈簧到位 | 立即到位 | 立即到位 |
 | 卡片 | 從標誌中長出 | 直接出現 | 直接出現 |
 | 上一個和下一個 | 滑動 | 直接切換 | 直接切換 |
+
+## 響應式
+
+- `OrbitLogos` 在 SideBySideWidth（760 px）處改變版面：從此寬度起，軌道佔據最多 58% 的寬度，最大 460 px（`MaxSize`），分類標籤與詳情卡片並排放在它旁邊；更窄時卡片位於軌道下方。
+- 分類標籤放不下時水平捲動（`HorizontalScrollBarVisibility` 為 `Auto`），因此在手機上它們仍保持一列。
+- 名稱標籤只在懸停與鍵盤聚焦時出現，所以觸控使用者在點選一個標識後，從卡片中了解它是什麼。
+- 讓軌道佔滿頁面寬度，並保持約十幾個標識。在手機上，較多的標識更適合用網格或清單。
 
 ## 相關元件
 

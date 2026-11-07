@@ -124,6 +124,17 @@ values ("2,316"). The button texts and names (`PlayText`, `PauseText`, `ReplayTe
 - With reduced motion the replay still plays, but rewinds, jumps, markers and cards simply land, and `AutoPlay` does
   nothing.
 
+## Responsive behavior
+
+- `LineReplay` reads its own width, not the window's. Below 1000 px (`:stacked`) the key moments move under the chart.
+  Between 560 and 1000 px they sit in two columns; below 560 px (`:narrow`) they are one column, the chart is 300 px
+  high (380 px otherwise) and the scrubber spans the full width.
+- Everything the chart shows is also in the readout as text, so touch users get the values without hovering. The
+  scrubber is 44 px tall.
+- The moment callouts stay on the chart: near the right edge a callout moves to the left of its marker.
+- Give the block the full width of its row. Under 560 px it is a single column that suits a phone; in a side panel,
+  widen it past 560 px to keep the 380 px chart.
+
 ## Related
 
 - `LineChart` for several series on one plot.

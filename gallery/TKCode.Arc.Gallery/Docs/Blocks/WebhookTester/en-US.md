@@ -150,6 +150,20 @@ Tester.Labels = new WebhookTesterLabels
 - A new delivery joins the top of the list and is selected; the response text swaps at once.
 - Reduced motion keeps the end states and drops the dot and the fills' travel; Off applies every change at once.
 
+## Responsive behavior
+
+- `WebhookTester` changes at two widths of its own. From `SplitWidth` (680 px) the request and the response sit side by
+  side; below it they stack, and the response panel is capped at 260 px high. Below 420 px it also takes `:compact`,
+  with smaller section padding (`CompactSectionPadding`).
+- It measures its own width, so a narrow side panel stacks the same way as a phone. The card grows to `CardMaxWidth`
+  (760 px) and no wider.
+- The JSON payload does not wrap, so long lines scroll sideways. The title and the signing secret are trimmed with an
+  ellipsis.
+- The signing secret field is at least 36 px high (`ControlHeight`), and rows in the recent list are 40 px
+  (`RowHeight`). Each failed row shows its Retry button without hover.
+- Give `WebhookTester` the full width of the page. In a narrow pane, make it wider than 680 px to keep the request and
+  the response side by side, or accept the stacked layout.
+
 ## Related
 
 - `Webhooks`, the console for many endpoints, and `ApiKeys`, the other Developer blocks.

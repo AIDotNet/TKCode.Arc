@@ -236,6 +236,17 @@ Every word comes from `Labels` (`AiChatLabels`): replace the instance to transla
 | Conversation switch | 100 / 160 ms crossfade | 120 ms crossfade | Immediate |
 | Shimmer, spinner | Moving | Still | Still |
 
+## Responsive behavior
+
+- `AiChat` has two breakpoints, both read from its own width. At `NarrowWidth` (480 px, `:narrow`) the bubbles widen and
+  the source domains hide; at `CompactWidth` (360 px, `:compact`) the buttons tighten.
+- The thread is centred and never wider than `ColumnWidth` (760 px) plus its side paddings, and the dock follows the
+  same width. Tool chips wrap onto more lines in a `WrapPanel`.
+- After a touch, the message actions show on every turn. With a mouse they appear on hover and keyboard focus, and
+  citation previews also need a hover, so do not rely on them alone on a touch screen.
+- Give the block a `Height` and let it stretch across the phone width; do not set `Width`. Use `ColumnWidth` only to cap
+  the column on large windows.
+
 ## Related
 
 - `AiComposer` for a prompt box without a thread.

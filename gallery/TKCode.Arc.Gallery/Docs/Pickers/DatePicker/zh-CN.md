@@ -1,7 +1,7 @@
 ---
 title: 日期选择器
-summary: 选择日期，同时不丢失上下文。
-source-hash: a15b33e70908
+summary: 日期字段：可直接输入日期，也可从日历弹层中选择，标签与错误行与其他字段一致。
+source-hash: 50a443bb105e
 ---
 
 <Demo name="DateField" />
@@ -305,6 +305,13 @@ public partial class InvoiceViewModel : ObservableValidator
 | 弹层打开时的说明 | 快速淡出，弹层关闭时恢复 | 快速淡出 | 立即完成 |
 | 选择后页脚的状态 | 带着柔和的模糊升起到位 | 淡入 | 立即完成 |
 | 日历按钮上的箭头 | 以弹簧旋转 180 度 | 立即转向 | 立即完成 |
+
+## 响应式
+
+- `DatePicker` 占用给它的宽度，最小宽度为 `MinWidth`（200 px）；在表单列中让它拉伸，不要设置固定的 `Width`。
+- 弹出层依据它所在的视口（`ArcViewport`）决定宽度：视口宽度为 360 px 或更小时进入 `:compact` 状态，与字段同宽，内边距为 `PopupCompactInset`（12 px）；更宽时最宽为 320 px，且不超过视口宽度减 32 px。
+- `Size` 决定字段高度：`Small` 为 36 px，`Medium` 为 44 px，`Large` 为 50 px。触屏上请保持 `Medium` 或 `Large`。
+- 让字段占满表单的一行，使弹出层有足够空间；在 360 px 宽的手机上，弹出层与字段同宽。
 
 ## 相关组件
 

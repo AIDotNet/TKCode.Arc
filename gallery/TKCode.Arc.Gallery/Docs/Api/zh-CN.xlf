@@ -8108,9 +8108,21 @@
         <source>Raised when `ActivePane` changes.</source>
         <target>`ActivePane` 改变时触发。</target>
       </trans-unit>
+      <trans-unit id="DockLayout.DocumentTemplate">
+        <source>Builds a document item's pane. A template that produces a `DockPane` is used as it is; anything else is wrapped in a pane. The pane's `DataContext` is the item; without an `Id` or `Title` it takes them from `IDockItem` or the item's `ToString()`.</source>
+        <target>生成文档项的面板。模板产出 `DockPane` 时直接使用；产出其他内容时包进一个面板。面板的 `DataContext` 是该项；没有 `Id` 或 `Title` 时从 `IDockItem` 或该项的 `ToString()` 取值。</target>
+      </trans-unit>
+      <trans-unit id="DockLayout.DocumentsSource">
+        <source>Data items that each become a document pane in the document area. Adding an item opens its pane, removing it closes the pane; when the user closes a tab and the collection is a writable list, the item is removed from it.</source>
+        <target>每一项生成一个文档面板、放入文档区的数据集合。添加一项会打开它的面板，移除一项会关闭面板；用户关闭标签且集合是可写列表时，该项会从集合中移除。</target>
+      </trans-unit>
       <trans-unit id="DockLayout.EmptyDocumentContent">
         <source>What the document area shows while no document is open; by default an empty state that reads "No open documents".</source>
         <target>没有打开的文档时文档区显示的内容；默认是显示"No open documents"的空状态。</target>
+      </trans-unit>
+      <trans-unit id="DockLayout.FloatingMode">
+        <source>How panes float: `Auto` (the default) uses real windows in a desktop window of a classic desktop application and floating cards inside the layout anywhere else; `Window` and `Overlay` force one of them; `Disabled` keeps every pane docked (dragging out of the layout puts the pane back, and `CanFloat` counts as false).</source>
+        <target>面板如何浮动：`Auto`（默认）在经典桌面应用的桌面窗口中使用真正的窗口，在其他地方使用布局内的浮动卡片；`Window` 和 `Overlay` 强制使用其中一种；`Disabled` 让所有面板保持停靠（拖出布局会放回原处，`CanFloat` 视为 false）。</target>
       </trans-unit>
       <trans-unit id="DockLayout.IsLocked">
         <source>Locks the layout: panes cannot be moved, closed, floated or auto-hidden; the dividers still resize.</source>
@@ -8131,6 +8143,18 @@
       <trans-unit id="DockLayout.PaneResolver">
         <source>Supplies panes while a saved layout loads, for ids that no pane of this layout has had (declared in XAML or opened since). Return null to skip the id.</source>
         <target>读入保存的布局时，为本布局从未有过的面板 Id（XAML 中声明或之后打开的除外）提供面板。返回 null 则跳过该 Id。</target>
+      </trans-unit>
+      <trans-unit id="DockLayout.ShowDockIndicators">
+        <source>Whether a drag shows the compass and the edge buttons. Off, panes still dock by where the pointer is in a group (a quarter from an edge splits that side, the middle joins as a tab) and close to the layout's edge; only the preview shows.</source>
+        <target>拖拽时是否显示罗盘和边缘按钮。关闭后，面板仍按指针在组内的位置停靠（离边四分之一以内拆分那一侧，中间作为标签加入），靠近布局边缘时停靠到该边；只显示预览框。</target>
+      </trans-unit>
+      <trans-unit id="DockLayout.ToolTemplate">
+        <source>Builds a tool item's pane; same rules as `DocumentTemplate`.</source>
+        <target>生成工具项的面板；规则与 `DocumentTemplate` 相同。</target>
+      </trans-unit>
+      <trans-unit id="DockLayout.ToolsSource">
+        <source>Data items that each become a tool pane, placed by its `PreferredSide` (left when the template sets none). Same rules as `DocumentsSource`.</source>
+        <target>每一项生成一个工具面板的数据集合，按 `PreferredSide` 放置（模板未设置时放在左侧）。规则与 `DocumentsSource` 相同。</target>
       </trans-unit>
       <trans-unit id="DockLayout.Workspace">
         <source>The layout model. Replace it to show another layout; never null.</source>
@@ -10100,6 +10124,46 @@
         <source>The ArcDesign color of its dots, legend dot and bar segments (default `Neutral`).</source>
         <target>其圆点、图例圆点与柱段的 ArcDesign 颜色（默认 `Neutral`）。</target>
       </trans-unit>
+      <trans-unit id="GanttTimeline">
+        <source>A project timeline: tasks grouped by phase on a calendar, with a today line, dependency arrows and a summary bar per phase. Drag a bar to move it or its ends to change the dates (snapped to whole days, with a dashed snap target, a date label and a spring on release); arrows re-route as bars move and turn red when a task starts before one it depends on ends. Zoom glides between day, week and month around the middle of the view; folding a phase slides its rows into it. Everything works from the keyboard (arrows to move between bars, Alt and Alt + Shift with arrows to change dates). Sized for tens of tasks; each arrow is redrawn every frame while something moves.</source>
+        <target>项目时间线：任务按阶段分组排在日历上，带今天线、依赖箭头和每个阶段一条的汇总条。拖动条形可移动，拖动两端可改日期（吸附到整天，拖动时显示虚线吸附目标和日期标签，松手后弹簧归位）；箭头随条形移动重新走线，任务早于其依赖任务结束开始时变红。缩放在日、周、月之间围绕视图中心滑动；折叠阶段时其行滑入阶段行。全部功能都可用键盘操作（方向键在条形间移动，Alt 与 Alt + Shift 配合方向键改日期）。适合几十个任务；有物体移动时每个箭头每帧重画。</target>
+      </trans-unit>
+      <trans-unit id="GanttTimeline.CollapsedChanged">
+        <source>Raised when a phase is folded or unfolded.</source>
+        <target>阶段被折叠或展开时引发。</target>
+      </trans-unit>
+      <trans-unit id="GanttTimeline.CollapsedGroups">
+        <source>The ids of the folded phases.</source>
+        <target>已折叠阶段的 id。</target>
+      </trans-unit>
+      <trans-unit id="GanttTimeline.Groups">
+        <source>The phases in display order.</source>
+        <target>按显示顺序排列的阶段。</target>
+      </trans-unit>
+      <trans-unit id="GanttTimeline.Tasks">
+        <source>The tasks. Set once; the timeline keeps its own working copy and reports changes through `TasksChanged`.</source>
+        <target>任务。设置一次即可；时间线保留自己的工作副本，并通过 `TasksChanged` 报告变化。</target>
+      </trans-unit>
+      <trans-unit id="GanttTimeline.TasksChanged">
+        <source>Raised after a move, resize, undo or reset with every task and what changed.</source>
+        <target>移动、改长、撤销或重置之后引发，附带所有任务和发生的变化。</target>
+      </trans-unit>
+      <trans-unit id="GanttTimeline.Title">
+        <source>The heading in the toolbar.</source>
+        <target>工具栏中的标题。</target>
+      </trans-unit>
+      <trans-unit id="GanttTimeline.Today">
+        <source>The day that places the today line and the initial scroll (default: the current date).</source>
+        <target>决定今天线和初始滚动位置的日期（默认为当前日期）。</target>
+      </trans-unit>
+      <trans-unit id="GanttTimeline.Zoom">
+        <source>The scale: day, week or month.</source>
+        <target>缩放级别：日、周或月。</target>
+      </trans-unit>
+      <trans-unit id="GanttTimeline.ZoomChanged">
+        <source>Raised when the zoom changes.</source>
+        <target>缩放变化时引发。</target>
+      </trans-unit>
       <trans-unit id="Gauge">
         <source>A 270° ring gauge (Arc "Gauge"): one value against a known range, read as a percentage with an optional named state from `Thresholds`. The ring fills once when half of it scrolls into view, then springs to every new value while the percentage rolls (Core `RollingDigits`); the state color and label switch exactly when the moving count crosses a band. Reduced and Off motion land on the value at once.</source>
         <target>270° 环形仪表（Arc “Gauge”）：将一个值与已知范围进行对比，以百分比显示，并可选择来自 `Thresholds` 的命名状态。环形在其一半滚动进入视野时一次性填充，之后每个新值都会以弹簧过渡，百分比同时滚动（Core `RollingDigits`）；当滚动中的计数跨越某个区间时，状态颜色与标签会立即切换。Reduced 与 Off 动效直接跳到目标值。</target>
@@ -10767,6 +10831,38 @@
       <trans-unit id="ISpeechAudio">
         <source>The playback of fetched speech, supplied by the app (an audio element, a platform player, or an adapter over `IAudioPlayer`). The `SpeechPlayer` drives it and reads `Position` on every frame while it plays, so its position is the player's clock. All calls come from the UI thread.</source>
         <target>由应用提供的已获取语音的播放（音频元素、平台播放器，或基于 `IAudioPlayer` 的适配器）。`SpeechPlayer` 驱动它，并在播放时每一帧读取 `Position`，所以它的位置就是播放器的时钟。所有调用都来自 UI 线程。</target>
+      </trans-unit>
+      <trans-unit id="IVideoPlayer">
+        <source>One video stream that can be loaded, played, paused and sought, and that hands out its current frame on request. Implementations raise every event on the `SynchronizationContext` current when the player was created (the UI thread for controls), and report the position a few times a second while playing, like an HTML media element's `timeupdate`. The backend keeps the clock and outputs the audio; the caller never schedules frames.</source>
+        <target>一路可以加载、播放、暂停和定位的视频流，并可在请求时交出当前帧。实现会在创建播放器时的 `SynchronizationContext` 上引发所有事件（控件使用 UI 线程），播放时每秒约报告几次位置，类似 HTML 媒体元素的 `timeupdate`。时钟与音频输出由后端负责；调用方从不安排帧。</target>
+      </trans-unit>
+      <trans-unit id="IVideoPlayer.BufferedChanged">
+        <source>Raised when `Buffered` changes.</source>
+        <target>`Buffered` 变化时引发。</target>
+      </trans-unit>
+      <trans-unit id="IVideoPlayer.DurationChanged">
+        <source>Raised when `Duration` becomes known or changes.</source>
+        <target>`Duration` 变为已知或发生变化时引发。</target>
+      </trans-unit>
+      <trans-unit id="IVideoPlayer.Failed">
+        <source>Raised when loading or playback fails; `State` is then `Failed`.</source>
+        <target>加载或播放失败时引发；此时 `State` 为 `Failed`。</target>
+      </trans-unit>
+      <trans-unit id="IVideoPlayer.FrameAvailable">
+        <source>Raised when a new frame is ready while not playing (after a load or a seek); while playing, surfaces poll every frame instead.</source>
+        <target>未在播放时（加载或定位之后）有新帧就绪时引发；播放时，画面控件改为每帧轮询。</target>
+      </trans-unit>
+      <trans-unit id="IVideoPlayer.NaturalSizeChanged">
+        <source>Raised when `NaturalSize` becomes known or changes.</source>
+        <target>`NaturalSize` 变为已知或发生变化时引发。</target>
+      </trans-unit>
+      <trans-unit id="IVideoPlayer.PositionChanged">
+        <source>Raised while playing (about 4 times a second) and after a seek.</source>
+        <target>播放时（约每秒 4 次）以及定位之后引发。</target>
+      </trans-unit>
+      <trans-unit id="IVideoPlayer.StateChanged">
+        <source>Raised when `State` changes.</source>
+        <target>`State` 变化时引发。</target>
       </trans-unit>
       <trans-unit id="IconMorph">
         <source>Icons that morph between two states instead of swapping: lines rotate and slide into place, outlines interpolate (P16 `PathMorph`), and a few carry a moment of their own (the bell rings, the heart bursts). Every morph rides an interruptible spring, so toggling quickly reverses from wherever the icon is. Drawn in one `Render` on the 24-unit grid. The icon is decorative: put it in a button that carries the name and the pressed or expanded state.</source>
@@ -27572,6 +27668,206 @@
         <source>Every visible word of a `VectorSearch` (override for another language or domain).</source>
         <target>`VectorSearch` 中每一个可见的文字（如需其他语言或领域可覆盖）。</target>
       </trans-unit>
+      <trans-unit id="VideoPlayer">
+        <source>Plays a video with Arc controls over the picture: play, seek (buffered ranges, hover time, chapters), time, volume, speed, captions and full screen, hidden after two seconds of idle playback (design/components/video/video.md). The picture is drawn inside the composition tree by a `VideoSurface`, so captions, controls, rounded corners and motion work over it. Playback comes from `Backend`; without a platform backend the simulated one keeps time and draws a test picture.</source>
+        <target>用 Arc 控件在画面上叠加控制条播放视频：播放、定位（显示已缓冲范围、悬停时间和章节）、时间、音量、倍速、字幕和全屏；空闲播放两秒后隐藏（design/components/video/video.md）。画面由 `VideoSurface` 在合成树中绘制，因此字幕、控制条、圆角和动效都可以叠加其上。播放由 `Backend` 提供；没有平台后端时，模拟后端负责计时并绘制测试画面。</target>
+      </trans-unit>
+      <trans-unit id="VideoPlayer.AspectRatio">
+        <source>Defines the `AspectRatio` property.</source>
+        <target>定义 `AspectRatio` 属性。</target>
+      </trans-unit>
+      <trans-unit id="VideoPlayer.AutoPlay">
+        <source>Defines the `AutoPlay` property.</source>
+        <target>定义 `AutoPlay` 属性。</target>
+      </trans-unit>
+      <trans-unit id="VideoPlayer.BrowserPresentation">
+        <source>Defines the `BrowserPresentation` property.</source>
+        <target>定义 `BrowserPresentation` 属性。</target>
+      </trans-unit>
+      <trans-unit id="VideoPlayer.CaptionAnnouncements">
+        <source>Defines the `CaptionAnnouncements` property.</source>
+        <target>定义 `CaptionAnnouncements` 属性。</target>
+      </trans-unit>
+      <trans-unit id="VideoPlayer.CaptionBackgroundOpacity">
+        <source>Defines the `CaptionBackgroundOpacity` property.</source>
+        <target>定义 `CaptionBackgroundOpacity` 属性。</target>
+      </trans-unit>
+      <trans-unit id="VideoPlayer.CaptionScale">
+        <source>Defines the `CaptionScale` property.</source>
+        <target>定义 `CaptionScale` 属性。</target>
+      </trans-unit>
+      <trans-unit id="VideoPlayer.CompactWidth">
+        <source>Defines the `CompactWidth` property.</source>
+        <target>定义 `CompactWidth` 属性。</target>
+      </trans-unit>
+      <trans-unit id="VideoPlayer.ControlsHideDelay">
+        <source>Defines the `ControlsHideDelay` property.</source>
+        <target>定义 `ControlsHideDelay` 属性。</target>
+      </trans-unit>
+      <trans-unit id="VideoPlayer.CueChanged">
+        <source>Defines the `CueChanged` event.</source>
+        <target>定义 `CueChanged` 事件。</target>
+      </trans-unit>
+      <trans-unit id="VideoPlayer.Duration">
+        <source>Defines the `Duration` property.</source>
+        <target>定义 `Duration` 属性。</target>
+      </trans-unit>
+      <trans-unit id="VideoPlayer.Ended">
+        <source>Defines the `Ended` event.</source>
+        <target>定义 `Ended` 事件。</target>
+      </trans-unit>
+      <trans-unit id="VideoPlayer.ErrorMessage">
+        <source>Defines the `ErrorMessage` property.</source>
+        <target>定义 `ErrorMessage` 属性。</target>
+      </trans-unit>
+      <trans-unit id="VideoPlayer.Failed">
+        <source>Defines the `Failed` event.</source>
+        <target>定义 `Failed` 事件。</target>
+      </trans-unit>
+      <trans-unit id="VideoPlayer.FullScreenChanged">
+        <source>Defines the `FullScreenChanged` event.</source>
+        <target>定义 `FullScreenChanged` 事件。</target>
+      </trans-unit>
+      <trans-unit id="VideoPlayer.FullScreenMode">
+        <source>Defines the `FullScreenMode` property.</source>
+        <target>定义 `FullScreenMode` 属性。</target>
+      </trans-unit>
+      <trans-unit id="VideoPlayer.IsFullScreen">
+        <source>Defines the `IsFullScreen` property.</source>
+        <target>定义 `IsFullScreen` 属性。</target>
+      </trans-unit>
+      <trans-unit id="VideoPlayer.IsLooping">
+        <source>Defines the `IsLooping` property.</source>
+        <target>定义 `IsLooping` 属性。</target>
+      </trans-unit>
+      <trans-unit id="VideoPlayer.IsMuted">
+        <source>Defines the `IsMuted` property.</source>
+        <target>定义 `IsMuted` 属性。</target>
+      </trans-unit>
+      <trans-unit id="VideoPlayer.IsPlaying">
+        <source>Defines the `IsPlaying` property.</source>
+        <target>定义 `IsPlaying` 属性。</target>
+      </trans-unit>
+      <trans-unit id="VideoPlayer.PlaybackRate">
+        <source>Defines the `PlaybackRate` property.</source>
+        <target>定义 `PlaybackRate` 属性。</target>
+      </trans-unit>
+      <trans-unit id="VideoPlayer.PlaybackRates">
+        <source>Defines the `PlaybackRates` property.</source>
+        <target>定义 `PlaybackRates` 属性。</target>
+      </trans-unit>
+      <trans-unit id="VideoPlayer.Player">
+        <source>Defines the `Player` property.</source>
+        <target>定义 `Player` 属性。</target>
+      </trans-unit>
+      <trans-unit id="VideoPlayer.Position">
+        <source>Defines the `Position` property.</source>
+        <target>定义 `Position` 属性。</target>
+      </trans-unit>
+      <trans-unit id="VideoPlayer.Poster">
+        <source>Defines the `Poster` property.</source>
+        <target>定义 `Poster` 属性。</target>
+      </trans-unit>
+      <trans-unit id="VideoPlayer.SeekStep">
+        <source>Defines the `SeekStep` property.</source>
+        <target>定义 `SeekStep` 属性。</target>
+      </trans-unit>
+      <trans-unit id="VideoPlayer.SelectedTextTrack">
+        <source>Defines the `SelectedTextTrack` property.</source>
+        <target>定义 `SelectedTextTrack` 属性。</target>
+      </trans-unit>
+      <trans-unit id="VideoPlayer.ShowControls">
+        <source>Defines the `ShowControls` property.</source>
+        <target>定义 `ShowControls` 属性。</target>
+      </trans-unit>
+      <trans-unit id="VideoPlayer.Source">
+        <source>Defines the `Source` property.</source>
+        <target>定义 `Source` 属性。</target>
+      </trans-unit>
+      <trans-unit id="VideoPlayer.State">
+        <source>Defines the `State` property.</source>
+        <target>定义 `State` 属性。</target>
+      </trans-unit>
+      <trans-unit id="VideoPlayer.StateChanged">
+        <source>Defines the `StateChanged` event.</source>
+        <target>定义 `StateChanged` 事件。</target>
+      </trans-unit>
+      <trans-unit id="VideoPlayer.Stretch">
+        <source>Defines the `Stretch` property.</source>
+        <target>定义 `Stretch` 属性。</target>
+      </trans-unit>
+      <trans-unit id="VideoPlayer.Title">
+        <source>Defines the `Title` property.</source>
+        <target>定义 `Title` 属性。</target>
+      </trans-unit>
+      <trans-unit id="VideoPlayer.Volume">
+        <source>Defines the `Volume` property.</source>
+        <target>定义 `Volume` 属性。</target>
+      </trans-unit>
+      <trans-unit id="VideoSource">
+        <source>Video to load: an address (http, https, file or avares), a local file, encoded bytes in memory, a stream, or a simulated clip.</source>
+        <target>要加载的视频：地址（http、https、file 或 avares）、本地文件、内存中已编码的字节、流，或模拟片段。</target>
+      </trans-unit>
+      <trans-unit id="VideoSurface">
+        <source>Shows the frames of an `IVideoPlayer` inside the Avalonia composition tree, so other controls can be drawn over it, and it can be clipped, transformed and faded. Has no controls of its own; `VideoPlayer` adds them.</source>
+        <target>在 Avalonia 合成树中显示 `IVideoPlayer` 的帧，因此其他控件可以叠加在它上面，并且它可以被裁剪、变换和淡化。它本身没有控制条；`VideoPlayer` 会添加控制条。</target>
+      </trans-unit>
+      <trans-unit id="VideoSurface.CornerRadius">
+        <source>Defines the `CornerRadius` property.</source>
+        <target>定义 `CornerRadius` 属性。</target>
+      </trans-unit>
+      <trans-unit id="VideoSurface.LetterboxBrush">
+        <source>Defines the `LetterboxBrush` property.</source>
+        <target>定义 `LetterboxBrush` 属性。</target>
+      </trans-unit>
+      <trans-unit id="VideoSurface.Player">
+        <source>Defines the `Player` property.</source>
+        <target>定义 `Player` 属性。</target>
+      </trans-unit>
+      <trans-unit id="VideoSurface.PreferBitmapPath">
+        <source>Defines the `PreferBitmapPath` property.</source>
+        <target>定义 `PreferBitmapPath` 属性。</target>
+      </trans-unit>
+      <trans-unit id="VideoSurface.RenderPath">
+        <source>Defines the `RenderPath` property.</source>
+        <target>定义 `RenderPath` 属性。</target>
+      </trans-unit>
+      <trans-unit id="VideoSurface.Stretch">
+        <source>Defines the `Stretch` property.</source>
+        <target>定义 `Stretch` 属性。</target>
+      </trans-unit>
+      <trans-unit id="VideoTextTrack">
+        <source>A captions, subtitles, chapters or descriptions track for `VideoPlayer`: WebVTT or SRT text from `Source` (avares, file, http(s)) or `Text`.</source>
+        <target>用于 `VideoPlayer` 的字幕、隐藏式字幕、章节或描述轨道：来自 `Source`（avares、file、http(s)）或 `Text` 的 WebVTT 或 SRT 文本。</target>
+      </trans-unit>
+      <trans-unit id="VideoTextTrack.CuesChanged">
+        <source>Raised on the UI thread when `Cues` changes.</source>
+        <target>`Cues` 变化时在 UI 线程上引发。</target>
+      </trans-unit>
+      <trans-unit id="VideoTextTrack.IsDefault">
+        <source>Defines the `IsDefault` property.</source>
+        <target>定义 `IsDefault` 属性。</target>
+      </trans-unit>
+      <trans-unit id="VideoTextTrack.Kind">
+        <source>Defines the `Kind` property.</source>
+        <target>定义 `Kind` 属性。</target>
+      </trans-unit>
+      <trans-unit id="VideoTextTrack.Label">
+        <source>Defines the `Label` property.</source>
+        <target>定义 `Label` 属性。</target>
+      </trans-unit>
+      <trans-unit id="VideoTextTrack.Language">
+        <source>Defines the `Language` property.</source>
+        <target>定义 `Language` 属性。</target>
+      </trans-unit>
+      <trans-unit id="VideoTextTrack.Source">
+        <source>Defines the `Source` property.</source>
+        <target>定义 `Source` 属性。</target>
+      </trans-unit>
+      <trans-unit id="VideoTextTrack.Text">
+        <source>Defines the `Text` property.</source>
+        <target>定义 `Text` 属性。</target>
+      </trans-unit>
       <trans-unit id="WaffleCategory">
         <source>One category of a `WaffleChart`: a share of the whole drawn as countable cells.</source>
         <target>`WaffleChart` 的一个类别：整体中的一份占比，以可计数的方格绘制。</target>
@@ -28499,70 +28795,6 @@
       <trans-unit id="WorkflowZoomControls.Target">
         <source>The canvas the buttons zoom.</source>
         <target>按钮所缩放的画布。</target>
-      </trans-unit>
-      <trans-unit id="DockLayout.DocumentsSource">
-        <source>Data items that each become a document pane in the document area. Adding an item opens its pane, removing it closes the pane; when the user closes a tab and the collection is a writable list, the item is removed from it.</source>
-        <target>每一项生成一个文档面板、放入文档区的数据集合。添加一项会打开它的面板，移除一项会关闭面板；用户关闭标签且集合是可写列表时，该项会从集合中移除。</target>
-      </trans-unit>
-      <trans-unit id="DockLayout.DocumentTemplate">
-        <source>Builds a document item's pane. A template that produces a `DockPane` is used as it is; anything else is wrapped in a pane. The pane's `DataContext` is the item; without an `Id` or `Title` it takes them from `IDockItem` or the item's `ToString()`.</source>
-        <target>生成文档项的面板。模板产出 `DockPane` 时直接使用；产出其他内容时包进一个面板。面板的 `DataContext` 是该项；没有 `Id` 或 `Title` 时从 `IDockItem` 或该项的 `ToString()` 取值。</target>
-      </trans-unit>
-      <trans-unit id="DockLayout.ToolsSource">
-        <source>Data items that each become a tool pane, placed by its `PreferredSide` (left when the template sets none). Same rules as `DocumentsSource`.</source>
-        <target>每一项生成一个工具面板的数据集合，按 `PreferredSide` 放置（模板未设置时放在左侧）。规则与 `DocumentsSource` 相同。</target>
-      </trans-unit>
-      <trans-unit id="DockLayout.ToolTemplate">
-        <source>Builds a tool item's pane; same rules as `DocumentTemplate`.</source>
-        <target>生成工具项的面板；规则与 `DocumentTemplate` 相同。</target>
-      </trans-unit>
-      <trans-unit id="DockLayout.FloatingMode">
-        <source>How panes float: `Auto` (the default) uses real windows in a desktop window of a classic desktop application and floating cards inside the layout anywhere else; `Window` and `Overlay` force one of them; `Disabled` keeps every pane docked (dragging out of the layout puts the pane back, and `CanFloat` counts as false).</source>
-        <target>面板如何浮动：`Auto`（默认）在经典桌面应用的桌面窗口中使用真正的窗口，在其他地方使用布局内的浮动卡片；`Window` 和 `Overlay` 强制使用其中一种；`Disabled` 让所有面板保持停靠（拖出布局会放回原处，`CanFloat` 视为 false）。</target>
-      </trans-unit>
-      <trans-unit id="DockLayout.ShowDockIndicators">
-        <source>Whether a drag shows the compass and the edge buttons. Off, panes still dock by where the pointer is in a group (a quarter from an edge splits that side, the middle joins as a tab) and close to the layout's edge; only the preview shows.</source>
-        <target>拖拽时是否显示罗盘和边缘按钮。关闭后，面板仍按指针在组内的位置停靠（离边四分之一以内拆分那一侧，中间作为标签加入），靠近布局边缘时停靠到该边；只显示预览框。</target>
-      </trans-unit>
-      <trans-unit id="GanttTimeline">
-        <source>A project timeline: tasks grouped by phase on a calendar, with a today line, dependency arrows and a summary bar per phase. Drag a bar to move it or its ends to change the dates (snapped to whole days, with a dashed snap target, a date label and a spring on release); arrows re-route as bars move and turn red when a task starts before one it depends on ends. Zoom glides between day, week and month around the middle of the view; folding a phase slides its rows into it. Everything works from the keyboard (arrows to move between bars, Alt and Alt + Shift with arrows to change dates). Sized for tens of tasks; each arrow is redrawn every frame while something moves.</source>
-        <target>项目时间线：任务按阶段分组排在日历上，带今天线、依赖箭头和每个阶段一条的汇总条。拖动条形可移动，拖动两端可改日期（吸附到整天，拖动时显示虚线吸附目标和日期标签，松手后弹簧归位）；箭头随条形移动重新走线，任务早于其依赖任务结束开始时变红。缩放在日、周、月之间围绕视图中心滑动；折叠阶段时其行滑入阶段行。全部功能都可用键盘操作（方向键在条形间移动，Alt 与 Alt + Shift 配合方向键改日期）。适合几十个任务；有物体移动时每个箭头每帧重画。</target>
-      </trans-unit>
-      <trans-unit id="GanttTimeline.CollapsedChanged">
-        <source>Raised when a phase is folded or unfolded.</source>
-        <target>阶段被折叠或展开时引发。</target>
-      </trans-unit>
-      <trans-unit id="GanttTimeline.CollapsedGroups">
-        <source>The ids of the folded phases.</source>
-        <target>已折叠阶段的 id。</target>
-      </trans-unit>
-      <trans-unit id="GanttTimeline.Groups">
-        <source>The phases in display order.</source>
-        <target>按显示顺序排列的阶段。</target>
-      </trans-unit>
-      <trans-unit id="GanttTimeline.Tasks">
-        <source>The tasks. Set once; the timeline keeps its own working copy and reports changes through `TasksChanged`.</source>
-        <target>任务。设置一次即可；时间线保留自己的工作副本，并通过 `TasksChanged` 报告变化。</target>
-      </trans-unit>
-      <trans-unit id="GanttTimeline.TasksChanged">
-        <source>Raised after a move, resize, undo or reset with every task and what changed.</source>
-        <target>移动、改长、撤销或重置之后引发，附带所有任务和发生的变化。</target>
-      </trans-unit>
-      <trans-unit id="GanttTimeline.Title">
-        <source>The heading in the toolbar.</source>
-        <target>工具栏中的标题。</target>
-      </trans-unit>
-      <trans-unit id="GanttTimeline.Today">
-        <source>The day that places the today line and the initial scroll (default: the current date).</source>
-        <target>决定今天线和初始滚动位置的日期（默认为当前日期）。</target>
-      </trans-unit>
-      <trans-unit id="GanttTimeline.Zoom">
-        <source>The scale: day, week or month.</source>
-        <target>缩放级别：日、周或月。</target>
-      </trans-unit>
-      <trans-unit id="GanttTimeline.ZoomChanged">
-        <source>Raised when the zoom changes.</source>
-        <target>缩放变化时引发。</target>
       </trans-unit>
     </body>
   </file>

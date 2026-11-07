@@ -404,6 +404,17 @@ apply to the thumb that has focus.
 | Value bubble | Pops up from 0.6 times with a soft blur; fades out at 0.8 times | Fades in and out | Immediate |
 | Readout digits | Roll digit by digit as the value changes | Switch at once | Immediate |
 
+## Responsive behavior
+
+- `Slider` does not change at a breakpoint. It takes the width its parent gives it, and the readout sits on the label
+  row. The label is cut with an ellipsis when the width is short, and the track takes the room left by `StartContent`
+  and `EndContent`.
+- It measures its own width, not the viewport.
+- The track row is 44 px (`ControlSizeMD`) and the thumb is `ThumbDiameter` (22 px). The value bubble sits 8 px above
+  the thumb, and 18 px above it on a touch or pen press.
+- Hover only changes the color of a mark label, and the thumb works by drag, so nothing depends on hover.
+- Give the slider a full-width row. Keep `StartContent` and `EndContent` to a single glyph or a small icon button.
+
 ## Related
 
 - `ElasticSlider` for a single setting that stretches past its ends and clicks into detents.

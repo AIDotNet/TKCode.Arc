@@ -1,7 +1,7 @@
 ---
 title: Release readiness
 summary: 一个发布闸口：一组简短的检查项解锁唯一的操作，并附带进度条、负责人、通知开关以及原地显示的结果。
-source-hash: 93dc8b911186
+source-hash: 8851e6d0a04e
 ---
 
 <Demo name="Preview" />
@@ -122,6 +122,14 @@ gate.Released += (_, e) => log.Info($"Rollout started on attempt {e.Request.Atte
 - **悬停**：该行在 160 ms 内着色。
 - **发布中**：按钮显示加载指示，随后标签配合短暂的模糊进行交叉淡化，同时按钮宽度以弹簧过渡到新文字的宽度。状态行以平滑弹簧展开，并配合单独的 160 ms 淡入；重置时以同样的方式收起。
 - 减少动效会让进度条、颜色和状态行立即就位，只保留按钮的短促交叉淡化。关闭动效则会立即应用每一次变化。
+
+## 响应式
+
+- `ReleaseReadiness` 按自身宽度变化，不随窗口宽度。宽度为 `CompactWidth`（388 px）或以下（`:compact`）时，左右内边距由 20 px 收紧为 16 px。
+- 头部保持一行。副标题放不下时以 `CharacterEllipsis` 截断，进度计数始终可见。
+- 底部区域并排放置开关与发布按钮。两者并排放不下时，按钮移到开关下方，发布操作不会被截掉。
+- 悬停只改变检查项的底色（`RowHoverBackground`）。勾选检查项与点按发布按钮只需轻触，没有任何功能依赖悬停。
+- 让区块拉伸到页面宽度（`HorizontalAlignment="Stretch"`），不要设置固定的 `Width`。区块会自行收紧并重新排布底部区域，窄面板中无需额外代码。
 
 ## 相关组件
 

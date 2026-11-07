@@ -1,7 +1,7 @@
 ---
 title: Building blocks
 summary: 為 AI 應用程式產生器準備的載入畫面：圓角積木無回彈地拼進一個小小的應用程式版面，填上內容並染上強調色，標籤則從「正在配置版面」一步步走到「完成」。
-source-hash: 99c1dbd6aadf
+source-hash: 1fd8d6265aac
 ---
 
 <Demo name="Preview" />
@@ -152,6 +152,13 @@ blocks.Labels = new BuildingBlocksLabels
 | 循環 | 完成的版面原地在 320ms 內淡出，在看不見時重設，再於同樣的虛線槽位上重新建置 | 只播放一次 | 只播放一次 |
 
 每次變化都從畫面上的目前值開始，所以建置途中改變狀態也不會生硬切換。框架離開畫面或被隱藏時，排程和標記都會暫停。
+
+## 響應式
+
+- `BuildingBlocks` 不會隨容器重新排版。畫面採用 `Size`（`Small` 280 px、預設的 `Medium` 400 px、`Large` 560 px）或以像素計的 `StageWidth`，且永遠不會超過容器寬度。
+- 畫面內的所有元素都依寬度等比縮放，因此在 240 px 到 880 px 之間比例保持不變。畫面寬度低於 `NarrowWidth`（320 px）時，階段標籤從 13 px 降為 12 px。判斷依據的是畫面自身的寬度，而不是視窗寬度。
+- 在窄欄中使用 `Size="Small"`（280 px）；只有容器至少為 560 px 寬時才使用 `Large`。
+- 唯一的控制項是重播按鈕：一個 `Button`，在完成狀態且設定了 `AllowsReplay` 時顯示。在觸控螢幕上請在它周圍留出空間。
 
 ## 相關元件
 

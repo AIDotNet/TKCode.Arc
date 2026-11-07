@@ -173,6 +173,16 @@ properties.PropertyValueChanged += (_, e) =>
 - The editors keep their own motion (the number field's digits, the select's menu, the color picker's panel).
 - With reduced motion the chevrons turn without the spring; with motion off nothing animates.
 
+## Responsive behavior
+
+- `PropertyGrid` has no breakpoint. Its label column is `LabelWidth` (140 px by default) and the editor takes the rest;
+  the label column never leaves the editor less than 96 px, and it never gets narrower than 64 px.
+- It measures its own width (`Bounds.Width`), not the window's, and its `MinWidth` is 240 px.
+- Labels and values are cut with an ellipsis (`CharacterEllipsis`), horizontal scrolling is off, and the description
+  panel shows at most two lines (`MaxLines`), so a long value never pushes the grid sideways.
+- Rows are 40 px tall (`RowHeight`), and nothing needs hover, but the add and remove buttons on a collection row are 28
+  px squares (`ActionSize`). On a phone, lower `LabelWidth` (down to 64 px) to give the editor more room.
+
 ## Related
 
 - `Input`, `NumberField`, `Switch`, `Select`, `ColorPicker` and `DatePicker`: the built-in editors.

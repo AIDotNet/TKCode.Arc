@@ -657,6 +657,17 @@ page, or on the first page when none is selected.
 | The header, the filter box and the search button on the rail | Fade quickly (fast) | Fade quickly (fast) | Immediate |
 | Row hover and press | Background and text color crossfade (fast) | Change at once | Immediate |
 
+## Responsive behavior
+
+- `Sidebar` has no breakpoint of its own. It is `ExpandedWidth` wide (240 px) and becomes the 64 px icon rail
+  (`RailWidth`) when `IsCollapsed` is true, so the app decides when to collapse it.
+- Rows keep their open layout while the sidebar narrows, and the content is clipped (ClipsWhenNarrow) instead of
+  wrapping. `ResizeMode` (default `Overlay`) decides how the width change reaches the page beside it.
+- Rows are 32 px tall (`RowHeight`), below the 44 px touch size. In the rail, row names show as tooltips (`Tooltip`),
+  which need a hover, so a touch screen gets only the icons.
+- On a phone, do not keep the 240 px sidebar beside the content. Collapse it to the rail or move the navigation into a
+  menu, and set `IsCollapsed` from the window width.
+
 ## Related
 
 - `Drawer` hosts the sidebar on narrow windows, where a fixed sidebar would take too much room.

@@ -78,6 +78,17 @@ The message is announced politely, without taking the focus. Because a toast lea
 
 A toast rises 16 px and fades in on a snappy spring, and leaves faster, in 0.16 s with no overshoot, so the next toast never waits for the last one. Presence and the swipe offset are code-driven motion values, because a swipe writes the offset on every move and a release hands the finger's velocity to a spring that brings an unfinished swipe back. The countdown is a pausable timeline, so it ends on time even while no frames are drawn. With reduced motion a toast only fades, in 0.12 s, and a swipe decides on release instead of following the finger; with motion off it appears and disappears at once.
 
+## Responsive behavior
+
+- `Toast` has no breakpoint. A message is at most `BodyMaxWidth` (360 px) wide and keeps `SideInset` (16 px) from each
+  edge, so on a 390 px phone it is 358 px wide.
+- Text wraps (`TextWrapping` is `Wrap`), so a longer message grows taller from `BodyMinHeight` (44 px) rather than
+  running off the edge.
+- Toasts stack above the page's footer and bottom safe area, plus `BottomOffset` (16 px). The rest of the overlay does
+  not catch touches, so the page stays usable while one shows.
+- A toast leaves after `DefaultDuration` (3 s) unless `Show` gets a duration, and a swipe past 72 px sends it away. Keep
+  messages to a sentence or two, and use a dialog for anything the person must act on.
+
 ## Related
 
 - `MobilePage`: the `Overlay` slot holds the toast, and its footer and safe area decide where the toast sits.

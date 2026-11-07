@@ -1,7 +1,7 @@
 ---
 title: Upgrade prompt
 summary: 在使用者用完額度的那一刻出現的升級提示：用量條、可在月繳與年繳之間切換並滾動變化的價格、三項具體的解鎖內容和成功狀態，卡片尺寸始終不變。
-source-hash: 4c42633c3bda
+source-hash: 4257427bfd71
 ---
 
 <Demo name="Preview" />
@@ -225,6 +225,14 @@ prompt.Labels = new UpgradePromptLabels
 | 價格 | 以 0.28 秒彈簧滾動 | 直接跳轉 | 直接跳轉 |
 | 文字 | 交叉淡化並上升 2px | 淡入淡出 | 直接取代 |
 | 面板與底部 | 淡化並上升 4px | 淡入淡出 | 直接取代 |
+
+## 響應式
+
+- `UpgradePrompt` 依自身寬度而不是視窗寬度變化。寬度上限為 `CardMaxWidth`（440 px），在更窄的容器中填滿可用寬度。低於 420 px（`NarrowWidth`，`:narrow`）時，內距從 24 px 降為 `NarrowCardPadding`（20 px）。
+- 價格列的計費切換始終位於右側邊緣。價格與切換無法並排放下時，切換移到價格下方。
+- 文字超過一行時換行；單行標籤，如功能與額度名稱，以省略號結尾（`CharacterEllipsis`）。
+- 底部按鈕是預設尺寸的 Arc `Button` 控制項，並佔滿其所在列的份額。提示中沒有任何功能僅靠懸停才能使用。
+- 讓它延展（`HorizontalAlignment="Stretch"`），而不是設定固定的 `Width`，這樣它能佔滿至 440 px 的欄寬。在低於 420 px 的欄中，它會收窄內距；欄寬不足以並排放下價格與切換時，兩者上下堆疊。
 
 ## 相關元件
 

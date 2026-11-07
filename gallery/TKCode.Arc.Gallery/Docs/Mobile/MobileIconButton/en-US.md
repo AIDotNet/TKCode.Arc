@@ -57,6 +57,16 @@ An icon has no text, so always set `AutomationProperties.Name` to say what the b
 
 Pressing scales the button to 0.97 (the floating one to 0.92) on a snappy spring, with no delay on the way down, and dims it a little; letting go springs back. A press that is released half-way keeps its speed. With reduced motion the button does not scale, it only dims.
 
+## Responsive behavior
+
+- `IconButton` has no breakpoint. It is a fixed 44 by 44 px (`TouchTarget`) at every width, with a 22 px icon
+  (`IconExtent`). The floating `fab` variant is 56 px (`FabSize`) with a 24 px icon (`FabIconExtent`).
+- Its default `HorizontalAlignment` is `Left`, so set it yourself when the button sits in a stretched row.
+- A press scales the button to 0.97 (0.92 for `fab`) and dims it to `PressedOpacity` (0.85). A disabled button dims to
+  `DisabledOpacity` (0.5).
+- Nothing depends on hover: the theme has no pointer-over style. Put a `fab` inside the page's content, where the page's
+  safe-area padding keeps it clear of the home indicator.
+
 ## Related
 
 - `MobileButton`: a button with text.

@@ -348,6 +348,19 @@ Rows with a detail take focus in the Tab order; rows without one do not. Arrow k
 | Detail opens or closes | The detail opens on a spring | Height changes at once | Immediate |
 | Day label while scrolling | Stays pinned at the top of the feed | Stays pinned | Stays pinned |
 
+## Responsive behavior
+
+- `Timeline` changes at a width. Below `NarrowWidth` (420 px by default, a theme token) it sets `:narrow` on itself and
+  on each row: the trigger padding drops to 8 px at the sides (`TriggerPaddingNarrow`), the time moves closer to the
+  title (`TimeMarginNarrow`) and the detail body tightens (`DetailPaddingNarrow`).
+- The timeline measures its own width, not the window's, so it narrows the same way in a side panel as on a phone.
+- Titles and details wrap (`TextWrapping`). The time has a minimum width of `TimeMinWidth` (44 px). The horizontal
+  scroll bar is disabled, so the rows never scroll sideways.
+- Hover only tints an interactive row (`:pointerover`), and focus draws a ring (`:focus-visible`). A tap expands or
+  collapses an expandable row the same way a click does; the chevron shows only on expandable rows (`:expandable`).
+- Let the timeline stretch to the full width of its page. The narrow padding applies on its own below 420 px, so there
+  is no separate phone layout to build.
+
 ## Related
 
 - `CommentThread` for replies on one object, and `ChatThread` for a live two-way conversation.

@@ -164,6 +164,16 @@ page or in a pane. `IsSearchVisible` and `IsFilterVisible` hide the search box a
 An interrupted glide continues from where it is drawn with its speed; an interrupted profile fades out from where it
 reached, so a quick run of picks never jumps.
 
+## Responsive behavior
+
+- `TeamDirectory` sets its breakpoints from its own width. At 640 px or less it is `:narrow`: the profile tightens and
+  the copy button shows only its icon (IsCopyIconOnly).
+- At 500 px or less it is `:stacked`: one column, with the list above the profile, and the copy button shows its label
+  again.
+- At 400 px or less it is `:compact`: the search box moves under the title and the team counts are hidden.
+- On a phone, let it fill the screen width. Below 500 px it is already one column, so do not set `Width` or place it in
+  a narrow column beside other content.
+
 ## Related
 
 - `Avatar`: the portraits with initials and the availability dot.

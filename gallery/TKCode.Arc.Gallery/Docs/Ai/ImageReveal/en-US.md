@@ -208,6 +208,17 @@ generator) and the preview fades in.
 
 The frame loop pauses off screen and when the window is hidden, and draws nothing once the image has resolved.
 
+## Responsive behavior
+
+- `ImageReveal` does not change form at a breakpoint. Its canvas fills the container and keeps `AspectRatio`, up to 560
+  px wide by default (`MaxWidth`), so it scales with the width it is given.
+- The status pill is 28 px high, or 24 px and 32 px for the small and large `Size`, and it sits in the top-left corner.
+  Its step count keeps a reserved width, so the pill does not jump as the number changes.
+- The error message is capped at `ErrorMaxWidth` (260 px) and wraps, and its Retry button sits in the middle of the
+  canvas, so a failure stays readable on a phone.
+- On a phone let it stretch across the row (`HorizontalAlignment="Stretch"`). The 560 px cap mostly affects tablets and
+  desktops, so raise `MaxWidth` there only if the image should grow.
+
 ## Related
 
 - `AgentStatus` for the live status of an agent run.

@@ -191,6 +191,19 @@ thumb clears it. Every press is sent.
 The thumbs never change size and the row stretches to its container, so the row's width does not move as a thumb fills or
 the panel opens. Every end state and announcement is the same at every motion level.
 
+## Responsive behavior
+
+- `ResponseFeedback` sets `:compact` when its own width is below `CompactWidth` (480 px): the padding steps down to
+  `CompactCardPadding`, from 24 px to 16 px.
+- `FeedbackActions` used on its own has a second breakpoint. Below `NarrowWidth` (400 px) it sets `:narrow` and hides
+  the `PrivacyNote`; when SecondaryCollapses is set, Cancel gives way, so the error line and Try again stay on one
+  row.
+- The reason panel opens inline under the thumbs, not in a popup. Its chips wrap, so it holds at 360 px without
+  scrolling sideways.
+- The thumbs are 36 px round buttons, and the reason chips grow from 28 to 32 px after a touch press.
+- Keep reasons to one or two words, such as the entries of `NegativeReasons`, so the chips fit on one or two lines at
+  360 px.
+
 ## Related
 
 - `ReasoningBlock` for the model's thinking above the reply.

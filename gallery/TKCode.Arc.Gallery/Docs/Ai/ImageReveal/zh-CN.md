@@ -1,7 +1,7 @@
 ---
 title: Image reveal
 summary: 图像生成画布：由图像自身颜色生成的柔和模糊预览，在一条边缘柔和的光带后方自上而下逐渐变清晰，带有细腻的胶片颗粒、半透明的进度胶囊，以及安静的排队与错误状态。
-source-hash: 11bcd64820da
+source-hash: ea435cae6b53
 ---
 
 <Demo name="Preview" />
@@ -178,6 +178,13 @@ reveal.Labels = new ImageRevealLabels
 | 胶囊标签 | 旧文字在 100ms 内淡出，间隔 60ms 后新文字在 160ms 内淡入；胶囊宽度以无回弹的弹簧变化 | 120ms 交叉淡化，宽度立即变化 | 立即 |
 
 帧循环在画布滚出屏幕或窗口隐藏时暂停，图片显现完成后不再绘制。
+
+## 响应式
+
+- `ImageReveal` 不会在某个断点改变形态。画布填满容器并保持 `AspectRatio`，默认最宽 560 px（`MaxWidth`），因此随所给的宽度缩放。
+- 状态胶囊高 28 px，`Size` 为小号时 24 px，大号时 32 px，位于左上角。步数使用预留宽度，数字变化时胶囊不会跳动。
+- 错误信息最宽 `ErrorMaxWidth`（260 px）并会换行，重试按钮位于画布中央，失败时仍可阅读。
+- 在手机上让它拉伸至整行（`HorizontalAlignment="Stretch"`）。560 px 的上限主要影响平板与桌面，只有需要图像更大时才在那里调高 `MaxWidth`。
 
 ## 相关组件
 

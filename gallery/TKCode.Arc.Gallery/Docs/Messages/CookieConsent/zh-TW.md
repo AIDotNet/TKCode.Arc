@@ -1,7 +1,7 @@
 ---
 title: Cookie 同意
 summary: 同意列可展開為偏好設定，並收合為重新開啟按鈕。
-source-hash: 71df8065065e
+source-hash: aa9be12fe5f4
 ---
 
 <Demo name="ConsentBar" />
@@ -282,6 +282,16 @@ settingsLink.Click += (_, _) => consent.OpenPreferences();
 | 同意列進入 | 以輕微縮放從底邊升起並淡入 | 淡入 | 立即 |
 | 表面改變形態（同意列、面板、重新開啟按鈕） | 移動、改變寬高與圓角。放大時帶有輕微過衝，縮小時則直接穩定，沒有過衝 | 直接跳轉到新形態 | 立即 |
 | 內容切換 | 新內容從約 10 px 的模糊中上升；離場內容淡出並略微下沉 | 新內容淡入；離場內容快速淡出 | 立即 |
+
+## 響應式
+
+- 列的寬度低於 560 px（StackBelow）時，訊息會堆疊在按鈕上方。列更窄（328 px 及以下）時，Reject all 與 Accept all 兩個按鈕並排在 Customize 上方一列。`:bar-stacked`
+  與 `:bar-compact` 反映這兩種狀態。
+- 它取所在圖層的寬度（視窗，或所在的 `ArcViewportHost`）減去 32 px。列最寬為 BarMax（660 px），面板最寬為 PanelMax（420 px）。它透過 `ArcViewport`
+  跟隨視埠，因此手機預覽中同樣會切換。
+- `IsPreferencesOpen` 為 `True` 時，分類清單高度超過可用高度的 46% 即捲動，上限為 `MaxHeight` 300 px。
+- 重新開啟按鈕為 44 px 的圓形按鈕，面板的關閉按鈕為 32 px，因此對手指來說關閉按鈕是較小的點按目標。
+- 把它放在視窗層級只放一次，而不是放在窄欄中，這樣版面才會跟隨視窗的完整寬度。
 
 ## 相關元件
 

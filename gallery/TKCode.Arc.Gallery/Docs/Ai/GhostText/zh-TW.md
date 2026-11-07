@@ -1,7 +1,7 @@
 ---
 title: Ghost text
 summary: 行內 AI 自動完成：淡色的幽靈文字在游標處接著把句子寫下去，Tab 原地接受，Cmd+Right 接受一個字詞，Escape 將其關閉，一個安靜的標籤顯示背後的模型。
-source-hash: 90d90ae2b1e5
+source-hash: dfc378352bc8
 ---
 
 <Demo name="Preview" />
@@ -165,6 +165,12 @@ field.Labels = new GhostTextLabels
 完整動效下模擬會循環播放；減少或關閉動效時只播放一次就停止。它在螢幕外時會暫停。
 
 寬度小於 520px 時，字詞與 Escape 提示會讓開，只保留標籤，頁尾備註以刪節號截斷。
+
+## 響應式
+
+- `GhostText` 依自身寬度判斷，而不是視窗寬度。寬度低於 520 px 時，`:narrow` 虛擬類別會隱藏單字與 Escape 提示，只保留標籤。
+- 觸控輸入同樣隱藏提示；在觸控螢幕上，標籤改為顯示「Tap to accept」（點按接受）。
+- 單行欄位高 44 px，文字截斷而不換行；多行欄位從 `Rows` 行增長到 `MaxRows` 行後捲動。讓欄位佔滿整列；空間不足時，頁腳說明文字以省略號截斷。
 
 ## 相關
 

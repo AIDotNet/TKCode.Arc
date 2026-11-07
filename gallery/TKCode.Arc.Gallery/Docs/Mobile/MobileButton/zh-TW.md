@@ -1,7 +1,7 @@
 ---
 title: 移動端按鈕
 summary: 觸控優先的按鈕：用按壓狀態取代懸停狀態，最小觸控目標 44 px。
-source-hash: 19fcda420f7e
+source-hash: 2e0988df87cc
 ---
 
 <Demo name="Basic" />
@@ -60,6 +60,13 @@ source-hash: 19fcda420f7e
 ## 動態效果
 
 按壓的縮放和變暗在控制項主題中宣告，減少動態效果時立即切換。
+
+## 響應式
+
+- `Button` 沒有斷點，在任何寬度下外觀都一樣。最小尺寸為 44 x 44 px（`TouchTarget`），寬度隨標籤加上 `ContentPadding`（16 x 10 px）而定。
+- 每個畫面只保留一個 `Filled` 按鈕。在窄列裡，讓主要操作用 `HorizontalAlignment="Stretch"` 佔滿整列，其他操作單獨佔一列。
+- 按下時按鈕縮放至 `PressedScale`（0.97），並變暗至 `PressedOpacity`（0.85）；停用的按鈕變暗至 `DisabledOpacity`（0.5）。
+- 沒有任何功能依賴懸停：主題沒有懸停樣式，輕觸與點擊會進入同樣的按下、聚焦與停用狀態。
 
 ## 相關元件
 

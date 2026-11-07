@@ -223,6 +223,21 @@ Screen readers:
   labels swap at once and the star does not pop. The save glow is kept (nothing moves). **Off** applies every change at
   once and skips the glow.
 
+## Responsive behavior
+
+- `ProfilePage` changes at its own width, not the window's, in steps: the cover shrinks below `CoverBreakpoint` (1000
+  px, `:cover-medium`), the columns stack below `StackBreakpoint` (760 px, `:stacked`), the header tightens below
+  `CompactBreakpoint` (640 px, `:compact`), and the project cards go to one column below `SingleColumnBreakpoint` (560
+  px, `:single-column`).
+- The edit sheet is 420 px wide (`SheetBreakpoint`). Narrower than that it spans the block, and its Location and Website
+  fields stack.
+- The block is `PageHeight` (760 px) tall or less when less space is offered, and it scrolls inside. Use
+  `IsFramed="False"` for a full-window page.
+- Share and Edit profile are 34 px tall (`PillHeight`) and the tabs are 38 px (`TabHeight`), both under the 44 px touch
+  size. Give them room and keep other small targets away from them on a phone.
+- Let the block stretch to the screen width (`HorizontalAlignment="Stretch"`) and keep the cover and avatar layout as it
+  is. It adapts to a narrow panel as well as to a phone.
+
 ## Related
 
 - `SettingsPage` and `SecuritySettings` for account settings.

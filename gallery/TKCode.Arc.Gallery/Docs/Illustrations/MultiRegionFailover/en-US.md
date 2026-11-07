@@ -336,6 +336,19 @@ way as the rest of the page.
 | A region recovers | Frame returns to success after the catch-up burst | Not shown | Not shown |
 | Play button | Visible; toggles playback | Hidden | Hidden |
 
+## Responsive behavior
+
+- `MultiRegionFailover` has no breakpoint. Its scene is a fixed 844 by 356 units that scales down to the width it is
+  given and never above 1. The height follows, so the proportions hold in a narrow column.
+- It measures its own width, not the window's. The region frames share the scene width evenly, so two regions give wider
+  frames than three.
+- At phone width the scene is drawn well under half its size, and the node labels become small. The caption
+  (`IsCaptionVisible`) is then the only explanation a reader gets, so keep it on.
+- The frame keeps `Padding` of 20 px on the sides and top and 14 px at the bottom, and the play button
+  (`IsPlaybackButtonVisible`) sits at the bottom right. Space and Enter play or pause the story, and nothing needs
+  hover.
+- Give it a row of its own at the full width of the screen, so its frames get as much of the width as they can.
+
 ## Related
 
 - `PaymentFlow` for a single request that depends on the payment service being available.

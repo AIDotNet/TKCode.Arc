@@ -1,7 +1,7 @@
 ---
 title: Training run
 summary: 微调任务卡片：训练与验证损失曲线沿着固定的步数轴实时绘制，这条轴同时也是轮次进度条；卡片还显示学习率、已用时间、预计剩余时间、最近事件、暂停与取消，以及带 Deploy 的结果。
-source-hash: c7fd2a8ac687
+source-hash: 56d6af3b1f6c
 ---
 
 <Demo name="Preview" />
@@ -187,6 +187,13 @@ run.Labels = new TrainingRunLabels
 | 加载圈与活动文字微光 | 旋转、闪烁 | 静止 | 静止 |
 
 x 轴覆盖整个运行，y 轴根据最初的样本固定，所以运行中途什么都不会重新缩放。模拟在减弱动效下继续运行（它是内容），但卡片离开屏幕时会暂停。
+
+## 响应式
+
+- `TrainingRun` 按自身宽度而不是窗口宽度变化，在容器中最宽为 `CardMaxWidth`（640 px）。低于 440 px（`NarrowBreakpoint`，`:narrow`）时，内边距降为 `CardPaddingNarrow`，统计与指标改为两列，验证标签缩短，底部栏上下堆叠。
+- 图表在任何宽度下都保持 `ChartHeight`（176 px）。轮次标签与数据集名称以省略号结尾（`CharacterEllipsis`），名称先于样本数被截断。
+- 最近事件列表显示三行，每行高 `EventRowHeight`（28 px），并截断为一行。操作按钮的高度由 `ActionHeight`（32 px）决定，低于 44 px 的触控目标；卡片上没有仅靠悬停才能使用的操作。
+- 让卡片拉伸（`HorizontalAlignment="Stretch"`），而不是设置固定的 `Width`。列宽保持 440 px 或以上，四列统计与底部操作才能与数据集并排；低于此宽度时底部栏堆叠，卡片会变高。
 
 ## 相关组件
 

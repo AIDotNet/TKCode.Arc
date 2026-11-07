@@ -1,7 +1,7 @@
 ---
 title: 移動端圖示按鈕
 summary: 44 乘 44 的純圖示按鈕，有樸素、淺色、實心和懸浮幾種變體，帶彈簧按壓狀態。
-source-hash: 3e3134f8f834
+source-hash: 5676c89a9066
 ---
 
 <Demo name="Basic" />
@@ -57,6 +57,14 @@ source-hash: 3e3134f8f834
 ## 動效
 
 按下時按鈕在快速彈簧上縮到 0.97（懸浮的縮到 0.92），向下沒有延遲，並略微變暗；放開時彈回。半途放開的按壓會保留速度。減少動效時按鈕不縮放，只變暗。
+
+## 響應式
+
+- `IconButton` 沒有斷點。它在任何寬度下都是固定的 44 x 44 px（`TouchTarget`），圖示為 22 px（`IconExtent`）。浮動的 `fab` 變體為 56 px（`FabSize`），圖示為 24
+  px（`FabIconExtent`）。
+- 預設的 `HorizontalAlignment` 為 `Left`，所以當按鈕位於延展的列中時，請自行設定它。
+- 按下時按鈕縮放至 0.97（`fab` 為 0.92），並變暗至 `PressedOpacity`（0.85）；停用的按鈕變暗至 `DisabledOpacity`（0.5）。
+- 沒有任何功能依賴懸停：主題沒有懸停樣式。把 `fab` 放在頁面內容中，頁面的安全區內距會使它避開底部的 Home 指示條。
 
 ## 相關元件
 

@@ -1,6 +1,6 @@
 ---
 title: Dialog
-summary: A focused surface for decisions that need attention.
+summary: A centred modal panel for a decision or a short task that must be finished before the person returns to the page.
 ---
 
 <Demo name="ShortForm" />
@@ -358,6 +358,17 @@ window. The dialog finds the window through that owner and joins the logical tre
 | Closing | Panel moves 4 px and scales to 0.98 while both fade out quickly | Short opacity fade | Immediate |
 | Title or description changes | The new copy rises in with a soft blur | Instant fade | Immediate |
 | Close button press | The button scales to 0.96 and springs back on release | No scale | No scale |
+
+## Responsive behavior
+
+- `Dialog` has no width breakpoint. Its panel is at most the `Size` preset wide (`Small` 360 px, `Medium` 440 px,
+  `Large` 560 px). In a narrower window it stretches to the window minus `ViewportMargin` (16 px on each side).
+- Tall content scrolls: the panel scrolls vertically when it is taller than the window, and horizontal scrolling is off,
+  so the body has to fit the width.
+- The `Actions` sit in one right-aligned row, and the control does not stack them. At phone widths, keep the labels short
+  and use two actions at most. On a phone, the `Dialog` in the TKCode.Arc.Mobile package stacks its actions at narrow widths.
+- The close button is 32 px (`CloseButtonSize`), below the 44 px touch target, so the decision belongs on an action
+  button rather than on the close button.
 
 ## Related
 

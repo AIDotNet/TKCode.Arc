@@ -348,6 +348,17 @@ holds the text you need. The other texts keep their defaults unless you set them
 | The shown section changes | The new section rises 6px and fades in; the old one fades out in place | The sections crossfade in place | The new section shows at once |
 | The save bar appears or goes | Rises into view and drops away | Fades in and out | Shows or hides at once |
 
+## Responsive behavior
+
+- Below `CompactWidth` (720 px by default) the page becomes one column: the section list turns into a row of pills
+  above the content that scrolls sideways, and the selected pill scrolls into view. `IsCompact` and the `:compact`
+  pseudo-class report the state.
+- The page measures its own width, not the window's, so it switches the same way in a side panel, a dialog or a phone
+  preview.
+- Only the navigation changes: the sections keep their own layout, so a section with fields side by side keeps them
+  side by side. Check those sections at phone width and give them one column there if they get too tight.
+- Raise `CompactWidth` when the page sits next to other content, so the section list does not squeeze the fields.
+
 ## Related
 
 - `SettingsCommand`, `SecuritySettings`, `BillingOverview`, `UsageBilling` and `CancelFlow`: the other settings blocks,

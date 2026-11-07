@@ -315,6 +315,16 @@ press moves the same row again. Tab leaves the list as it does for any other con
 | Drag | The row follows the pointer and the rows it passes slide aside on springs | The row follows the pointer and lands at once | The row follows the pointer and lands at once |
 | Drop | The row settles on a quick spring that keeps the release velocity | The row lands at once | The row lands at once |
 
+## Responsive behavior
+
+- `ReorderableList` has no breakpoint. Its rows fill the list's width at every size, and each row is at least
+  `RowMinHeight` (56 px) tall with `RowGap` (8 px) between rows.
+- Only the grip (`HandleExtent`, a 40 px square) starts a drag, so a press on the row's text does not start one. On
+  touch, drag the grip itself.
+- The title and the detail line are shortened with an ellipsis rather than wrapped, and the position number stays at the
+  right edge.
+- On a phone keep titles short, and put the owner, date or status in `Detail` so the title keeps its room.
+
 ## Related
 
 - `Table` when the order comes from column values, not from a person's choice.

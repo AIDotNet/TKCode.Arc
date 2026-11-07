@@ -93,6 +93,16 @@ Each action is a normal button with a 44 px touch target; give icon-only actions
 
 Closing slides the bar down by its own height while it fades out, in a short tween; opening slides it back up on a snappy spring. Toggling `IsOpen` again while it moves turns it around from where it is. The first frame has no motion, and under reduced motion the bar jumps. The buttons press and release as `MobileButton` does.
 
+## Responsive behavior
+
+- `Toolbar` has no breakpoint: it is 44 px tall (`BarHeight`, hairline included) at every width.
+- Items share the width equally (`UniformGrid`, one row). `Leading` and `Trailing` take only the width their action
+  needs (`Auto` columns), and `Center` sits in the middle column.
+- Each action is a 44 px touch target. With many items each gets less width, so keep to three or four short actions, and
+  move the rest into a list or a sheet.
+- Put the bar in the page's `Footer`, where the page's safe area keeps it clear of the home indicator. A closed bar
+  (`IsOpen` set to `False`) slides away and stops catching touches.
+
 ## Related
 
 - `MobilePage`: puts the toolbar in its `Footer`.

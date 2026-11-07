@@ -1,7 +1,7 @@
 ---
 title: 单选卡片
 summary: 可选择的选项卡片，带有滑动的选中光环、价格与描述插槽，并具有单选按钮的键盘行为。
-source-hash: a439dd2259b6
+source-hash: d83deb93b014
 ---
 
 <Demo name="Grid" />
@@ -275,6 +275,15 @@ plans.SelectionChanged += (_, _) => Console.WriteLine(plans.SelectedValue);
 | 选中一张卡片 | 指示点以灵敏的弹簧弹出 | 圆点立即出现 | 圆点立即出现 |
 | 布局尺寸变化 | 光环立即移动到新位置 | 光环立即移动 | 光环立即移动 |
 | 悬停、按下或聚焦卡片 | 卡片背景与边框颜色快速变化 | 立即完成 | 立即完成 |
+
+## 响应式
+
+- `RadioCards` 没有断点。默认的 `Grid` 布局按 `MinColumnWidth`（默认 180）排成多列，间距 10 px，宽度低于约 370 px 时变为一列。`Layout="List"` 始终是每行一张、占满整行的卡片。
+- 它按自身宽度排列，而不是按窗口。对话框与侧面板中的列数判断方式与手机上相同。
+- 标题只占一行，超出部分以省略号结束（`TextTrimming="CharacterEllipsis"`），描述则会换行（`TextWrapping="Wrap"`）。同一行的卡片共享最高卡片的高度，因此价格在一行内对齐。
+- 禁用的卡片会用 `DisabledReason` 代替描述文字，因此在手机宽度下原因依然直接可见，而不是放在工具提示里。
+- 卡片内边距为 16 × 14 px（`CardInsetGrid`）。悬停只会加深边框（`:pointerover`），点按即可选中，没有任何功能依赖悬停。
+- 在手机上，选项需要用一句话加时间或价格来比较时，使用 `Layout="List"`；需要并排对比时保留网格，并在更窄的容器中把 `MinColumnWidth` 调小，以便仍能放下两列。
 
 ## 相关组件
 

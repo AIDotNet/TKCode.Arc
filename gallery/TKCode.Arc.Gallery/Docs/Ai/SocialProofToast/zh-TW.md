@@ -1,7 +1,7 @@
 ---
 title: Social proof toast
 summary: 用於到達頁與定價頁的社會認同通知堆疊：來自個人與公司的最新試用、升級與已驗證購買每隔幾秒出現一則；滑鼠懸停時暫停並展開，訪客可以關閉任何一則通知。
-source-hash: ff6c35ef997f
+source-hash: 747f7722643b
 ---
 
 <Demo name="Preview" />
@@ -155,6 +155,14 @@ stack.Labels = new SocialProofToastLabels
 | 超出數量 | 最後面的通知在 160ms 內淡出 | 同樣淡出 | 立即 |
 
 通知一律是 64px 高，因此各狀態之間沒有尺寸變化；內嵌堆疊預留了展開後的高度，懸停時頁面不會移動。動態效果減弱或關閉時輪播仍會繼續：它是內容，而不是裝飾。
+
+## 響應式
+
+- 角落堆疊區測量它所在的圖層，圖層沒有尺寸時回退到 `ArcViewport`（視窗，或 `ArcViewportHost`）。寬度低於 `CompactBreakpoint`（480 px）時，它以 `CompactInset`（16 px）的邊距佔滿寬度；更寬時寬度為 `CornerWidth`（360 px），距邊緣 `CornerInset`（24 px）。
+- 語句與第二行保持一行，超出以省略號結尾（`CharacterEllipsis`），過長的名稱或操作不會讓提示變高。
+- 關閉按鈕在懸停或聚焦時出現，在觸控螢幕上始終顯示，因此手機訪客無需懸停即可關閉提示。
+- 鍵盤焦點進入堆疊區時與懸停一樣會暫停輪換，因此可以用鍵盤逐條閱讀。
+- 在手機上，把 `Position` 設為 `Inline`，讓它留在頁面流中、位於頁尾上方，而不是覆蓋內容。
 
 ## 相關
 

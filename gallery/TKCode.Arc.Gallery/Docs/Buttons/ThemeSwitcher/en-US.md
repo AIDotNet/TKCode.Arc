@@ -1,6 +1,6 @@
 ---
 title: Theme switcher
-summary: Four smooth ways to move between light and dark appearance.
+summary: A button that flips the whole window between light and dark, with four styles of page transition.
 ---
 
 <Demo name="Variants" />
@@ -406,6 +406,17 @@ falls back to a plain apply under reduced motion.
 | Theme change | The page transition plays for the variant | No transition; the theme switches at once | Immediate |
 | Sun and moon swap | The icons turn and scale into each other | The icon fades in at once | Immediate |
 | Dark-mode icon nudge | The icon moves by its variant | No nudge | Immediate |
+
+## Responsive behavior
+
+- `ThemeSwitcher` looks the same at every width and has no breakpoint. Its text form is a pill that grows with `Text`,
+  and `IsIconOnly="True"` gives a fixed square of `IconOnlyExtent` (38 px).
+- In a narrow header, use `IsIconOnly="True"` with `Variant="Rise"`: the square keeps its 38 px size, the text drops
+  out, and the accessible name stays.
+- The page transition covers the whole window that holds the switcher, not a panel, and its reveal starts at the
+  button's centre (`Origin`). On a large window keep the variant quiet, because its cost grows with the window size.
+- Nothing depends on hover. Hover only changes the surface colour, and a tap switches the appearance the same way a
+  click does.
 
 ## Related
 

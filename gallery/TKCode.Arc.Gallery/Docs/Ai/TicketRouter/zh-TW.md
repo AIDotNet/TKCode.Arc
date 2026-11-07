@@ -1,7 +1,7 @@
 ---
 title: Ticket router
 summary: 支援訊息逐則送達，AI 分類器標註意圖、情緒與信賴度，每張工單都會移入有負責人的團隊泳道，或在複核泳道中等待一次點擊。
-source-hash: 7fc5577c3e60
+source-hash: 8ea7a4edd2f3
 ---
 
 <Demo name="Preview" />
@@ -180,6 +180,14 @@ router.Labels = new TicketRouterLabels
 | 泳道計數 | 在預留的等寬位置中滾動 | 立即 | 立即 |
 
 速度為 1 時每張工單約兩秒：送達 220ms、分類、標籤、240ms 的脈衝，然後落地。卡片不在畫面上時流程暫停。工單流動時卡片高度從不改變。
+
+## 響應式
+
+- `TicketRouter` 依內容寬度（自身寬度減去 `Padding`）而不是視窗寬度切換形態，共兩個斷點。低於 600 px 時泳道摺成 2 × 2 網格，連接線隱藏；低於 400 px 時隱藏信心度進度條與模型名稱，只保留百分比。`:narrow` 與 `:compact` 虛擬類別反映這兩種狀態。
+- 窄形態下標籤疊放在路由目標上方，舞台隨之增高到 `StageStackedHeight`，以容納疊放的標籤。
+- 標題、預覽文字與泳道列超出寬度時以省略號結尾（`CharacterEllipsis`），而不是換行，因此每一列的高度保持不變。只有錯誤列會換行，其中包含重試與轉交審核按鈕。
+- 觸控時，工單卡片高 88 px（`TicketHeight`），泳道列高 40 px（`RowHeight`）。懸停只會為審核列上色（`:pointerover`），沒有任何功能依賴懸停。
+- 把它放在約 360 至 880 px 的內容欄中，並讓它延展（`HorizontalAlignment="Stretch"`），而不是設定固定的 `Width`。內容寬度低於 400 px 時進度條隱藏，窄欄中仍然易讀。
 
 ## 相關元件
 

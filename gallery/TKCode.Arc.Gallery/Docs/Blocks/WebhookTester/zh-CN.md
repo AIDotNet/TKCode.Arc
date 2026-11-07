@@ -1,7 +1,7 @@
 ---
 title: Webhook tester
 summary: Webhook 测试器：选择事件、编辑 JSON 负载并发送带签名的测试事件，观察它从已签名、已发送到端点作出应答的全过程，查看响应，并在最近投递列表中重试失败的投递。
-source-hash: b80e9fc5bad2
+source-hash: acdae711a185
 ---
 
 <Demo name="Preview" />
@@ -124,6 +124,14 @@ Tester.Labels = new WebhookTesterLabels
 - 时间线的圆圈以短促的淡变切换；两步之间的线从左向右填充，请求在途时，最后一段线上有一个圆点循环移动，直到收到应答。
 - 新的投递出现在列表顶部并被选中；响应文本立即替换。
 - 减弱动效保留终态，去掉圆点和填充的行进过程；关闭动效则所有变化立即生效。
+
+## 响应式
+
+- `WebhookTester` 在两个自身宽度断点上变化。自 `SplitWidth`（680 px）起，请求与响应并排显示；低于该宽度则上下堆叠，响应面板高度上限为 260 px。低于 420 px 时它还会进入 `:compact`，分区内边距变小（`CompactSectionPadding`）。
+- 它测量的是自身宽度，因此窄侧面板与手机的堆叠方式一致。卡片最宽增至 `CardMaxWidth`（760 px），不再继续变宽。
+- JSON 负载不换行，长行横向滚动。标题与签名密钥以省略号截断。
+- 签名密钥输入框高度至少 36 px（`ControlHeight`），最近投递列表的行高为 40 px（`RowHeight`）。失败的投递行始终显示重试按钮，无需悬停。
+- 尽量给 `WebhookTester` 页面的全宽。在窄面板中，把它加宽到 680 px 以上可以让请求与响应保持并排；否则接受堆叠布局。
 
 ## 相关
 

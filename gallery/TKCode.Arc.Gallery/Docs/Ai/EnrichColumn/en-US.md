@@ -242,6 +242,19 @@ its previous value, or a dash.
 
 Nothing changes size while cells work: rows have a fixed height and a cell's content trades places in the same slot.
 
+## Responsive behavior
+
+- `EnrichColumn` measures its own width, not the window's. Below 560 px (`:compact`) the domain, the source text and the
+  model detail fold away, and each source keeps its arrow link. Below 440 px (`:narrow`) the gutters tighten to 16 px
+  and each row is 60 px tall (`NarrowRowHeight`) instead of 44 px.
+- In the narrow layout a value wraps to two lines, and a failure's reason is hidden behind its label. Hover or focus the
+  label to read the reason.
+- Give the column at least 440 px if failure reasons matter. Where the reason is hidden, such as a phone, repeat it in
+  your own UI, for example in a list under the table.
+- A row's run or retry control shows under the pointer, on focus and on touch screens, so it does not depend on hover.
+- The card is designed for widths up to 760 px. For long tables, give the card a height or a `MaxHeight`, so only the
+  rows on screen are built.
+
 ## Related
 
 - `ToolCall` for the tool calls an agent makes.

@@ -1,7 +1,7 @@
 ---
 title: 面包屑
 summary: 显示页面在层级结构中的位置。
-source-hash: b4c233743e1b
+source-hash: 69c2a802ef41
 ---
 
 <Demo name="Default" />
@@ -265,6 +265,13 @@ breadcrumb.ItemClick += (_, e) => viewModel.NavigateTo(e.Index);
 | 移除面包屑 | 向左移动 4 px，在 120 ms 内淡出并模糊消失 | 立即移除 | 立即移除 |
 | 变化之后的面包屑 | 以平滑弹簧滑至新位置 | 跳至新位置 | 跳至新位置 |
 | 悬停、焦点、当前 | 标签颜色渐变 | 立即完成 | 立即完成 |
+
+## 响应式
+
+- `Breadcrumb` 没有断点。路径比可用空间宽时，面包屑会换到新的一行（`CrumbGap` 为各项之间 6 px，`LineGap` 为行间 2 px）。
+- 长路径：`MaxVisibleItems` 默认为 0，因此不会折叠。设为 3 或更大，即可保留根项和最后几项，把中间部分收进以 `OverflowLabel` 命名的溢出按钮。
+- 溢出菜单是锚定在该按钮上的 `ArcPopup`，最小宽度为 `MenuMinWidth`（192 px），菜单项的最小高度为 `MenuItemMinHeight`（36 px）。
+- 每个面包屑的标签上下各有 4 px 的内边距（`CrumbPadding`），因此它们不是 44 px 的触控目标。在触屏上请保持路径简短，并折叠过长的路径。
 
 ## 相关组件
 

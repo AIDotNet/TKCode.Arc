@@ -228,6 +228,17 @@ card.Labels = new AskYourDataLabels
 | Insight | Four words a tick with its two lines reserved | Whole at once | Whole at once |
 | Spinner and skeleton | Turn and breathe; pause off screen | Still | Still |
 
+## Responsive behavior
+
+- `AskYourData` measures its own width, not the window's. Below 520 px (`:compact`) the source keeps only its icon, and
+  the chart switch (a `SegmentedControl`) moves into the result above the legend, at full width.
+- The legend and the insight wrap onto more lines, and the stage grows to fit them. Wide SQL lines and tables scroll
+  sideways inside their own wells, each with its own `ScrollViewer`.
+- Let the card stretch to the width its row gives it (`HorizontalAlignment="Stretch"`) rather than setting a fixed
+  `Width`.
+- Where you can, give the card at least 520 px so the source keeps its name. In a narrower place, expect the stacked
+  layout.
+
 ## Related
 
 - `BarChart` and `LineChart` for a fixed query with no question to ask.

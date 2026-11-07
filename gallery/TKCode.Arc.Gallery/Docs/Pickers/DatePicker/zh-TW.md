@@ -1,7 +1,7 @@
 ---
 title: 日期選擇器
-summary: 選取日期，同時不遺失上下文。
-source-hash: a15b33e70908
+summary: 日期欄位：可直接輸入日期，也可從日曆彈出層中選擇，標籤與錯誤列與其他欄位一致。
+source-hash: 50a443bb105e
 ---
 
 <Demo name="DateField" />
@@ -305,6 +305,13 @@ public partial class InvoiceViewModel : ObservableValidator
 | 彈出視窗開啟時的說明 | 快速淡出，彈出視窗關閉時恢復 | 快速淡出 | 立即完成 |
 | 選取後頁尾的狀態 | 帶著柔和的模糊升起到位 | 淡入 | 立即完成 |
 | 行事曆按鈕上的箭頭 | 以彈簧旋轉 180 度 | 立即轉向 | 立即完成 |
+
+## 響應式
+
+- `DatePicker` 佔用給它的寬度，最小寬度為 `MinWidth`（200 px）；在表單欄中讓它延展，不要設定固定的 `Width`。
+- 彈出層依它所在的視口（`ArcViewport`）決定寬度：視口寬度為 360 px 或更小時進入 `:compact` 狀態，與欄位同寬，內距為 `PopupCompactInset`（12 px）；更寬時最寬為 320 px，且不超過視口寬度減 32 px。
+- `Size` 決定欄位高度：`Small` 為 36 px，`Medium` 為 44 px，`Large` 為 50 px。觸控螢幕上請保持 `Medium` 或 `Large`。
+- 讓欄位佔滿表單的一列，使彈出層有足夠空間；在 360 px 寬的手機上，彈出層與欄位同寬。
 
 ## 相關元件
 

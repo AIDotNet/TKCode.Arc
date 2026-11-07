@@ -1,7 +1,7 @@
 ---
 title: 日期範圍選擇器
 summary: 從觸發器展開為兩個月份面板的範圍選擇器，附帶預設選項與可延伸的範圍高亮。
-source-hash: 07b0d1fff7fc
+source-hash: 9afa3ae89e9f
 ---
 
 <Demo name="Report" />
@@ -311,6 +311,13 @@ public partial class ReportFilterViewModel : ObservableObject
 | 套用後面板關閉 | 面板在 0.38 s 內縮回觸發器，標籤飛回原位 | 尺寸直接跳變；摘要淡出 | 立即完成 |
 | 月份變化 | 新月份從行進方向滑入，耗時 0.4 s | 內容在 0.08 到 0.12 秒內交叉淡化 | 立即完成 |
 | 觸發器的值變化 | 文字朝時間的方向捲動 | 內容在 0.08 到 0.12 秒內交叉淡化 | 立即完成 |
+
+## 響應式
+
+- `DateRangePicker` 只有在可用空間至少為 712 px 時才顯示兩個月（`MonthCount` 為 `Auto`，即預設值）。更窄時只顯示一個月，預設項變為可水平捲動的一列（`:compact`）。
+- 面板依它所在的視口（`ArcViewport`，即視窗或 `ArcViewportHost`）及其所在的 `Boundary` 量測可用空間；面板最寬為 352 px。
+- `MonthCount="One"` 讓面板在側邊欄與手機寬度的版面中保持窄幅。`Two` 不會回退到緊湊面板，因此只在確知頁面足夠寬時使用。
+- 觸發器高 44 px，即 `Medium` 的高度。在手機上讓它單獨佔一列，不要與其他控制項擠在一起。
 
 ## 相關元件
 

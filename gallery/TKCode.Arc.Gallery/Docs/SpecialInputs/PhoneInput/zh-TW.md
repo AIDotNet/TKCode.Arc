@@ -1,7 +1,7 @@
 ---
 title: 電話輸入框
 summary: 帶國家或地區選擇器、輸入時即時格式化並輸出 E.164 格式的電話欄位。
-source-hash: 973601bc9177
+source-hash: 484ee280417c
 ---
 
 <Demo name="Default" />
@@ -347,6 +347,13 @@ public partial class ContactViewModel : ObservableObject
 | 訊息列出現或變化 | 高度平滑展開；新文字帶著柔和模糊從下方升起 | 完整高度，短淡入 | 立即完成 |
 | 有效標記出現 | 以靈敏的彈簧彈出 | 短淡入 | 立即完成 |
 | 懸停、焦點、無效 | 邊框顏色漸變 | 邊框顏色漸變 | 立即完成 |
+
+## 響應式
+
+- `PhoneInput` 沒有斷點。國家觸發器與號碼在任何寬度下都在同一列。號碼保持單行（`TextWrapping` 為 `NoWrap`），超出可用空間時在欄位內部捲動。
+- 國家選擇器最寬 340 px（PanelMax），且不超過欄位寬度，開啟時至少與觸發器一樣寬。清單最高 280 px（`ListMaxHeight`），選項列高 36 px（`RowHeight`），超出時捲動。
+- 選擇器是 `ArcPopup`，在視埠（視窗或 `ArcViewportHost`）內計算可用空間。它會滑入可見區域，但從不翻到欄位上方。
+- 在較矮的螢幕上，讓欄位遠離底部邊緣，因為選擇器不會翻到欄位上方。
 
 ## 相關元件
 

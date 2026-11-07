@@ -397,6 +397,20 @@ the reaction's `ReactedBy` names with the post, and load them into `Value` the n
 | Rows change | The bar height springs and the pills glide | No size spring | Immediate |
 | The picker opens | Grows from the add button; options appear 40 ms later, 35 ms apart | Short fade | Immediate |
 
+## Responsive behavior
+
+- `Reactions` has no breakpoint. When the pills do not fit, the bar wraps them into rows, with 6 px between pills and 8
+  px between rows, so every pill stays visible and no horizontal scroll bar appears.
+- The bar takes the width its parent gives it unless you set `Width`, and it measures its own width. Pills are 32 px
+  high (`PillHeight`), and the add button is 38 px wide (`AddButtonWidth`).
+- Pills and the add button are below the 44 px touch size, so keep the bar out of tight toolbars. The picker opens as a
+  popover from the add button, 8 px away (`PickerOffset`), and its options are 40 px round targets.
+- The names of the people who reacted (`ReactedBy`) appear only in the tip, which opens on hover or focus after
+  `TipDelay` (450 ms by default). The counts and the viewer's own highlight do not need the tip, so on touch screens do
+  not rely on the names.
+- In a narrow column, leave `Width` unset so the bar wraps, and put it on its own row beneath the content with
+  `HorizontalAlignment="Left"`.
+
 ## Related
 
 - `Badge` for a fixed count that the viewer cannot change.

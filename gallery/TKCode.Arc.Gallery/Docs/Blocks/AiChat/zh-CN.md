@@ -1,7 +1,7 @@
 ---
 title: AI 对话
 summary: 一个填满容器的 AI 对话界面：顶部是标题菜单、模型按钮和新建对话按钮，线程中有流式输出的 Markdown 回复、可折叠的推理、工具胶囊、编号引用和消息操作，底部是消息输入框。
-source-hash: 6a840f2320f1
+source-hash: 66b43bec959f
 ---
 
 <Demo name="Preview" />
@@ -214,6 +214,13 @@ public sealed class MyResponder : IAiChatResponder
 | 跟随底部 | 追赶末尾 | 直接跳到末尾 | 直接跳到末尾 |
 | 切换会话 | 100 / 160 毫秒交叉淡入淡出 | 120 毫秒交叉淡入淡出 | 立即 |
 | 闪烁、旋转指示器 | 移动 | 静止 | 静止 |
+
+## 响应式
+
+- `AiChat` 有两个断点，都按自身宽度判断。在 `NarrowWidth`（480 px，`:narrow`）及以下，气泡变宽、来源域名隐藏；在 `CompactWidth`（360 px，`:compact`）及以下，按钮收紧。
+- 对话区居中，宽度不超过 `ColumnWidth`（760 px）加两侧内边距，停靠区跟随同一宽度。工具标签在 `WrapPanel` 中换到更多行。
+- 触屏操作后，消息操作会在每一轮都显示。用鼠标时它们在悬停和键盘聚焦时出现；引用预览同样需要悬停，所以在触屏上不要只依赖它们。
+- 为块设置 `Height`，让它在手机宽度上拉伸，不要设置 `Width`。`ColumnWidth` 只用来在大窗口中限制列宽。
 
 ## 相关组件
 

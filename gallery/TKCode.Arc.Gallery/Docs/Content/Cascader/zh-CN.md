@@ -1,7 +1,7 @@
 ---
 title: 级联选择器
 summary: 按层级逐级选择一个节点，如省、市、区，字段和菜单与 Select 一致。
-source-hash: cf03d1ad0529
+source-hash: 0df81bb2204e
 ---
 
 <Demo name="Basic" />
@@ -119,6 +119,13 @@ cascader.ValueSelector = node => ((Region)node).Code;
 - 列出现或消失时，菜单宽度用弹簧过渡到新的宽度，正在进行的弹簧会被改向，而不是等它结束。新的一列淡入，同时从左侧滑入 8 px。菜单打开时，已选路径上的所有列会一次摆好，不会逐列播放动画。
 - 高亮在行之间滑动，选择变化时字段中的文本会滚动。
 - 减少动效时，宽度不做动画，新列只淡入；关闭动效时一切立即完成。
+
+## 响应式
+
+- `Cascader` 没有断点。触发器占用给它的宽度，且至少 180 px（`MinWidth`）；在窄表单中让它拉伸，不要设置 `Width`。
+- 菜单至少与触发器同宽。每一级是一列，宽 160 至 280 px（`MinColumnWidth`、`MaxColumnWidth`），出现或消失列时菜单宽度会以弹性动画过渡到新的总宽。
+- 每列在 `MaxDropDownHeight`（默认 320 px）内纵向滚动，列不会横向滚动。
+- 菜单是 `ArcPopup`：下方放不下时翻到触发器上方，并向内滑回窗口或屏幕之内。选项为 36 px 高的行（`OptionHeight`）。默认的 `ExpandTrigger` 为 `Click`，轻点即可展开子级；`Hover` 需要主动设置。
 
 ## 相关组件
 

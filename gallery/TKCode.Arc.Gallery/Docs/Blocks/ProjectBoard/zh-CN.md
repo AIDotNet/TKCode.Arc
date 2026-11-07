@@ -1,7 +1,7 @@
 ---
 title: Project board
 summary: 紧凑的迭代看板：箭头按钮把每张卡片推进到下一个或上一个阶段，卡片飞入它的新列；看板下方有迭代线、团队头像，以及 All work / My work 切换。
-source-hash: 1eaac2413b0e
+source-hash: daaa062deda3
 ---
 
 <Demo name="Preview" />
@@ -158,6 +158,14 @@ void SaveStage(string taskKey, string stageKey, int position)
 - **添加**：新卡片淡入并从 98% 放大；迭代线以弹簧过渡到新的比例（任务到达或离开已完成阶段时也是如此）。
 - **悬停和按下**：颜色在 160 ms 内变化；箭头按下时缩至 92%，添加按钮缩至 97%，鼠标下的添加按钮会变暗至 88%。
 - 减少动效和 `AnimatesMoves="False"` 会让移动、添加和筛选立即就位，但保留颜色变化。关闭动效时，所有变化都会立即应用。看板静止时，不会运行任何动画。
+
+## 响应式
+
+- `ProjectBoard` 按自身宽度变化，不随窗口宽度。各列平分宽度，每列至少为 `MinColumnWidth`（200 px）；宽度不足时，列横向滚动，滚动条隐藏。
+- 宽度为 700 px 或以下（`:narrow`，`NarrowWidth`）时，每列宽为可用宽度减去 76 px，露出下一列的边缘；团队行隐藏。筛选、添加与箭头按钮放大为 40 px 的触控目标（`NarrowMoveButtonSize`），卡片高度不变。更宽时，卡片箭头为 26 px（`MoveButtonSize`）。
+- 宽度为 400 px 或以下（`:compact`，`CompactWidth`）时，操作区独占一行，“添加”只显示图标，名称保留为工具提示。
+- 卡片通过箭头按钮移动，而不是拖动，因此任何宽度下手指都能操作。悬停样式只对鼠标或触控笔生效，触屏上按钮不会停留在悬停外观。
+- 让看板拉伸到页面宽度（`HorizontalAlignment="Stretch"`）。在手机上请减少阶段数：各列平分宽度直到 `MinColumnWidth`，超过后看板横向滚动。
 
 ## 相关
 

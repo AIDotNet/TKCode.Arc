@@ -1,7 +1,7 @@
 ---
 title: 圖片比較
 summary: 拖曳分隔線橫跨兩張圖片，查看變化之處。
-source-hash: 6180b170d57e
+source-hash: 2485e203171c
 ---
 
 <Demo name="BeforeAndAfter" />
@@ -313,6 +313,14 @@ public partial class ListingPhotoViewModel : ObservableObject
 | 由程式碼或繫結設定位置 | 以彈簧方式移動到新位置 | 直接放置 | 立即完成 |
 | 按鍵推過邊緣 | 向外產生小幅彈動 | 無彈動 | 無彈動 |
 | 方向變化 | 旋轉四分之一圈，揭示區域隨之移動 | 直接跳到新方向 | 立即完成 |
+
+## 響應式
+
+- `ImageCompare` 沒有斷點。畫框取容器給它的寬度，高度由 `AspectRatio`（寬度除以高度，預設 1.5）決定，因此在任何寬度下比例都不變。
+- 標題（`BeforeLabel` 與 `AfterLabel`）是角落的小標籤，分隔線靠近時會淡出。頁面較窄、標籤遮住圖片時，可將 `ShowLabels` 設為 `False`。
+- 觸控螢幕上，按在圖片上時會先等待沿分隔線方向的拖曳，以便頁面仍可捲動；輕觸則直接移動分隔線。把手是直徑 40 px 的圓，外圍另有 8 px 的點擊範圍。
+- 沒有任何操作依賴懸停：拖曳或輕觸即可移動分隔線；把手取得焦點後，方向鍵每次移動 1%。
+- 讓畫框獨佔一整列，使用 `HorizontalAlignment="Stretch"` 而不是固定的 `Width`，並依照照片選擇 `AspectRatio`，避免畫面被大幅裁切。
 
 ## 相關元件
 

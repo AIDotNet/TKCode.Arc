@@ -370,6 +370,20 @@ The two choice types that the menu reports:
 | Sheet drag | Follows a downward drag; closes past 80 px or on a fast flick | Drag disabled | Immediate |
 | Chevron | Turns 180 degrees on the spring as the menu opens | Turns at once | Immediate |
 
+## Responsive behavior
+
+- `UserMenu` changes form at a viewport width of 640 px (`CompactBreakpoint`). Below it the `:compact` pseudo-class
+  hides the name and the chevron, and the menu opens as a bottom sheet.
+- It measures the viewport, not its own width: the window, or the `ArcViewportHost` a phone preview sits in, read
+  through `ArcViewport`.
+- At 640 px and wider the name (`IsNameVisible`) sits beside the avatar, truncated with an ellipsis at `NameMaxWidth`
+  (176 px). If the window crosses the breakpoint while the menu is open, the menu closes and the person reopens it in
+  the new form.
+- The sheet rows are at least 52 px tall and the panel rows 36 px. A downward drag on the sheet follows the finger and
+  closes it when dragged far enough.
+- On a phone the trigger is the avatar alone, so do not rely on the name or chevron as the only cue. Show the account
+  name elsewhere on the page.
+
 ## Related
 
 - `DropdownMenu` for a general command list behind a labelled trigger.

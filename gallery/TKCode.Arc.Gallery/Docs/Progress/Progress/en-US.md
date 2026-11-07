@@ -1,6 +1,6 @@
 ---
 title: Progress
-summary: Show how much of a known task is complete.
+summary: A progress bar for a task with a known total, such as an upload or an import, with an optional count and a completion check.
 ---
 
 <Demo name="CountedValue" />
@@ -284,6 +284,16 @@ The fill and the count are the only moving parts that matter in a progress bar, 
 moves. Do not loop a pulse or a shimmer on a running bar, because the motion then suggests activity that the job does not
 have. A bar that is paused or waiting should stop changing, and the label should say why. Reduced motion needs no extra
 work: the control jumps the values and fades the check.
+
+## Responsive behavior
+
+- `Progress` does not change at a width. Its bar fills the width it is given, with a `TrackHeight` of 7 px, and the
+  label and the readout stay on the row above it.
+- It measures its own width, not the viewport, so it works the same in a panel, a dialog or a phone screen.
+- A long `Label` shares its row with the readout. When the row runs short, the label is cut with an ellipsis and the
+  readout keeps its place.
+- It takes no input, so no part of it depends on hover and no touch target is needed.
+- Give it a full-width row. Keep `Label` short on phones, so the cut does not hide the meaning.
 
 ## Related
 

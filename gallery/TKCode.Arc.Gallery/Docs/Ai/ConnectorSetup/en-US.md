@@ -208,6 +208,19 @@ rest.
 Reduced motion keeps every state and announcement. The row is 60px tall in every state, so nothing below it moves while
 an app connects.
 
+## Responsive behavior
+
+- `ConnectorSetup` has no breakpoint. It fills the width its container gives it, up to `CardMaxWidth` (520 px), and
+  keeps the same layout down to 360 px.
+- Every row is 60 px tall in every state, with its mark, name, one status line and one action button of `ActionHeight`
+  (32 px). Nothing below a row moves while an app connects.
+- Status lines trim with an ellipsis. In a connected row's access details, the scopes wrap onto as many lines as they
+  need.
+- The Disconnect confirmation appears inline in the row, under the access details, so it does not open a dialog over a
+  small screen.
+- Keep it as one card in a settings column and let it stretch (`HorizontalAlignment="Stretch"`) rather than setting a
+  fixed `Width`.
+
 ## Related
 
 - `ToolCall` for a tool the agent is calling right now, with approval in place.

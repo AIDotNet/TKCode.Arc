@@ -1,6 +1,6 @@
 ---
 title: Password field
-summary: Capture sensitive text with a visible reveal control.
+summary: A masked Input for a password or secret that already exists, with a reveal toggle inside the field.
 ---
 
 <Demo name="SignIn" />
@@ -356,6 +356,18 @@ already exists.
 | Dots and characters switch | The text resolves from 35% opacity and a 2 px blur to sharp | No resolve effect | No resolve effect |
 | Toggle pressed | Scales to 96% while held | No scale | No scale |
 | Helper and error row | As `Input`: the row opens on a smooth spring, and changed words rise in | As `Input` | As `Input` |
+
+## Responsive behavior
+
+- `PasswordField` does not change at a breakpoint. It stretches to its column, and its frame height comes from `Size`:
+  36 px for Small, 44 px for Medium (the default) and 50 px for Large.
+- The reveal button is 30 px (`RevealButtonSize`) at Medium and Large and 26 px (`RevealButtonSizeSM`) at Small, so on a
+  touch screen use Medium or Large.
+- The label wraps onto more lines in a narrow column. The masked text does not wrap: it scrolls sideways inside the
+  frame (`NoWrap`).
+- Showing or hiding the password is a tap on the reveal button, and nothing depends on hover.
+- On a phone use `Size="Large"` for the sign-in password, so the frame and its text are the largest size the field
+  offers.
 
 ## Related
 

@@ -1,7 +1,7 @@
 ---
 title: 变形选择
 summary: 触发器展开为列表的选择器，带有滑动高亮和键入查找。
-source-hash: bef2d4fcda84
+source-hash: 33933eb5522d
 ---
 
 <Demo name="GroupedWithSearch" />
@@ -295,6 +295,14 @@ public partial class DeploymentSettingsViewModel : ObservableObject
 | 高亮移动 | 滑动到下一个选项 | 直接跳到该选项 | 立即完成 |
 | 选中选项 | 标签飞入触发器，宽度调整到位 | 短暂淡入 | 立即完成 |
 | 搜索接管触发器 | 搜索框以轻微模糊淡入 | 短暂淡入 | 立即完成 |
+
+## 响应式
+
+- `MorphSelect` 在任何宽度下形态都不变。触发器宽度为标签宽度加 50 px，最宽 `TriggerMaxWidth`（320 px）。面板宽 `PanelWidth`（272 px），不窄于触发器，也不宽于视口宽度减 32 px。
+- 它读取 `ArcViewport`：列表最高为 `MaxListHeight`（296 px），并缩短到视口内触发器下方的可用空间。连最短的列表也放不下时，面板向上滑动，而不是翻到另一侧。
+- 触发器高 `ControlSizeMD`（44 px），选项为 36 px 的行。超过 `MaxListHeight` 时列表滚动。
+- 悬停只高亮选项，点击或点按即可选中，触控操作无需悬停。
+- 让触发器按标签宽度自然排列。当它位于工具栏右边缘时，把 `PanelAlignment` 设为 `End`，让面板朝空白一侧展开。
 
 ## 相关组件
 

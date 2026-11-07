@@ -162,6 +162,16 @@ or in a hidden window, and resume where they were.
 Every change starts from what is on screen, so a status change mid-build never cuts. The schedule and the mark pause
 while the frame is off screen or hidden.
 
+## Responsive behavior
+
+- `BuildingBlocks` does not reflow with its container. The frame takes its `Size` (`Small` 280 px, `Medium` 400 px by
+  default, `Large` 560 px) or a `StageWidth` in pixels, and it never grows past its container.
+- Everything inside the frame scales with its width, so the layout stays in proportion from 240 px to 880 px. Below
+  `NarrowWidth` (320 px) the phase label drops from 13 px to 12 px. The check uses the frame's width, not the window's.
+- In a narrow column, use `Size="Small"` (280 px). Use `Large` only where the container is at least 560 px wide.
+- The only control is Replay, an Arc `Button` that shows on Ready when `AllowsReplay` is set. On touch screens, leave
+  room around it.
+
 ## Related
 
 - `AgentStatus` for the live status of an agent run with real steps.

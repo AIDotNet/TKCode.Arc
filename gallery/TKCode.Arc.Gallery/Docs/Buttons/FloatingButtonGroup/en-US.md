@@ -1,6 +1,6 @@
 ---
 title: Floating button group
-summary: Separate soft buttons in a quiet tray, with one shared highlight that morphs from button to button as you move, and a pressed state that settles in place.
+summary: A small tray of actions that floats over a canvas, document, chart or map, with one highlight that morphs from button to button.
 ---
 
 <Demo name="MutedTray" />
@@ -430,6 +430,16 @@ The tray is one stop in the Tab order. Arrow keys move the highlight between the
 | Highlight appears on the first target | Grows from 94% to 100% on a snappy spring | Immediate | Immediate |
 | Button is pressed | The highlight darkens and contracts to 96.5% on a snappy spring | Immediate | Immediate |
 | Label changes | Crossfades in place with a short upward move and a soft blur | Crossfades without a shift | Immediate |
+
+## Responsive behavior
+
+- `FloatingButtonGroup` looks the same at every width. It has no breakpoint, and its buttons sit in one horizontal
+  `StackPanel` that neither wraps nor scrolls. Give the tray room for every item, or use `Orientation="Vertical"` in a
+  narrow column.
+- A tray with more than six or seven actions belongs on a row of its own. Move the rare actions into a `DropdownMenu`.
+- On a touch screen use `Size="Medium"`: its buttons are 36 px high, against 30 px for `Small`.
+- An icon-only item shows its name in a tooltip, which opens on hover. On a touch screen keep `IsIconOnly` off for
+  actions people must recognize, so each `Label` stays visible.
 
 ## Related
 

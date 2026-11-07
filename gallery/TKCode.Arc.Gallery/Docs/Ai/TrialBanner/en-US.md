@@ -156,6 +156,20 @@ banner.Labels = new TrialBannerLabels
 No timers or loops run while the banner is idle: only the simulated billing call and the short simulated note use a
 timeout.
 
+## Responsive behavior
+
+- `TrialBanner` changes at the width of its own banner row, not the window's. Below 600 px (`CompactBelow`, `:compact`)
+  the actions move under the copy on their own line, and the detail line may wrap to two lines, with the space reserved
+  so nothing shifts.
+- In the full layout the copy takes the width left after the ring, the actions and the tools, and stays on one line. The
+  card face is capped at `CardMaxWidth` (340 px) and stretches narrower; the pill is `PillHeight` (30 px) high at every
+  width.
+- On touch, action buttons are `ActionHeight` (30 px) high and the pill is 30 px, below a 44 px touch target, so keep
+  them clear of other tap targets. Hover only tints the pill (`:pointerover`, `HoverOpacity`), and a tap opens it the
+  same way.
+- Let the banner stretch across its column (`HorizontalAlignment="Stretch"`) rather than setting a fixed `Width`. Below
+  600 px expect the actions to sit under the copy, so leave room for a second row of height.
+
 ## Related
 
 - `ContextWindow` for showing how much of a budget is used.

@@ -341,6 +341,20 @@ picks the level a model offers.
 | Summary changes | Description and changed facts crossfade | 120 ms crossfade | Immediate |
 | Confirmation | Fades in, stays 2.6 s, fades out | 120 ms fades | Immediate |
 
+## Responsive behavior
+
+- `ModelPicker` is a 40 px pill that opens a menu. The menu is 304 px wide, or the window's width less 24 px when the
+  window is narrower, and it opens 8 px below the pill.
+- When the window is at most `PagedMenuWidth` wide (640 px by default), the Effort and More models rows open pages
+  inside the menu instead of flyouts. The menu's height follows the page. Lower `PagedMenuWidth` to keep flyouts in a
+  narrow window.
+- The summary's four facts fold into two rows of two at 400 px or narrower, and a long description makes the summary
+  taller without moving the pill.
+- Nothing depends on hover. The pill opens on a press, as a menu button does, so a tap opens the menu; hover only
+  changes the pill's surface. Featured rows are 54 px high and the effort row 40 px.
+- Give the picker its own row. It stretches up to `StageMaxWidth` (440 px), which fills a phone row, and its menu opens
+  from the pill at any width.
+
 ## Related
 
 - `Select` and `Combobox` for choosing one item from a list that is not about models.

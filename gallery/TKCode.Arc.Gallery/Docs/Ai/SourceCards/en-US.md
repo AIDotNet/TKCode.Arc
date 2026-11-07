@@ -182,6 +182,17 @@ cards.Labels = new SourceCardsLabels
 
 Nothing bounces. The simulation pauses when it is scrolled off screen.
 
+## Responsive behavior
+
+- `SourceCards` lays its cards out by the width it is given. From `NarrowWidth` (540 px) it shows `Max` + 1 equal
+  columns; narrower than that it shows two columns, with the stack as the last tile.
+- Every row is `CardHeight` high, so reserved slots, cards and the stack take the same room and the grid does not shift
+  as results arrive.
+- Titles and snippets that do not fit end with an ellipsis (`CharacterEllipsis`).
+- Pressing a card opens its page, and pressing a citation highlights its card. The passage preview that appears on hover
+  or focus is extra; a source can be read and opened without it.
+- On a phone, give `SourceCards` a full-width row. The grid uses the width it is given, so do not set a fixed `Width`.
+
 ## Related
 
 - `ToolCall` for the tool calls an agent makes.

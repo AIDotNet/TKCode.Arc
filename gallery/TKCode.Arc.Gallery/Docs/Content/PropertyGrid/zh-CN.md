@@ -1,7 +1,7 @@
 ---
 title: 属性面板
 summary: 以"标签 + 编辑器"的行编辑一个或多个对象的属性，按分类分组，支持搜索、嵌套值和列表。
-source-hash: 2b7511e3aadf
+source-hash: 6491735f049a
 ---
 
 <Demo name="Basic" />
@@ -141,6 +141,13 @@ properties.PropertyValueChanged += (_, e) =>
 - 行和分类的箭头在展开或收起时以 Arc 的弹簧转动；悬停和选中的底色在 120 ms 内淡入。
 - 编辑器保留各自的动效（数字输入框的数字、选择器的菜单、取色器的面板）。
 - 减弱动效时箭头直接转动、不用弹簧；关闭动效时没有任何动画。
+
+## 响应式
+
+- `PropertyGrid` 没有断点。标签列宽为 `LabelWidth`（默认 140 px），编辑器占用其余宽度；标签列不会把编辑器压到 96 px 以下，标签列本身也不会窄于 64 px。
+- 它按自身宽度（`Bounds.Width`）计算，而不是窗口宽度；`MinWidth` 为 240 px。
+- 标签与值以省略号截断（`CharacterEllipsis`），关闭横向滚动，说明区最多两行（`MaxLines`），因此很长的值不会把表格横向推开。
+- 行高为 40 px（`RowHeight`）。没有任何功能依赖悬停，但集合行上的添加与删除按钮是 28 px 见方（`ActionSize`）。在手机上请调低 `LabelWidth`（最低 64 px），为编辑器留出更多空间。
 
 ## 相关组件
 

@@ -1,7 +1,7 @@
 ---
 title: 数据表格
 summary: 电子表格式的表格：范围选择、就地编辑、填充柄、剪贴板、撤销、排序、筛选、分组、合计与导出。
-source-hash: cc0f46d78e42
+source-hash: f81bf7556a40
 ---
 
 <Demo name="Renewals" />
@@ -570,6 +570,14 @@ public partial class RenewalsViewModel : ObservableObject
 | 工具栏批量状态与状态消息 | 模糊并上下切换 | 仅淡入 | 立即完成 |
 | 合计、选区统计与已勾选数量 | 数字滚动 | 按计数规则滚动数字 | 立即完成 |
 | 筛选行与分组箭头 | 弹簧展开，箭头旋转 | 高度直接变化，不透明度淡入 | 立即完成 |
+
+## 响应式
+
+- `DataGrid` 按自身宽度分段变化。低于 640 px 时设置 `:toolbar-compact`（工具按钮只显示图标，搜索框宽 150 px）。低于 460 px 时，`:toolbar-minimal` 还会隐藏行数与撤销组；低于 480 px 时状态栏换行（`:status-wrap`）。
+- 表格按自身宽度（`Bounds.Width`）而不是窗口宽度判断，所以放在侧面板或对话框中与在手机上的切换方式相同。
+- 表格不会折叠为卡片布局。列保持宽度，表体横向滚动（`HorizontalScrollBarVisibility` 为 `Auto`）。列宽至少 72 px（`MinWidth`），最多 560 px（`ColumnMaxWidth`）。固定列（`IsPinned`）合计最多占表格宽度的一半，且不会缩小到 `PinnedColumnMinWidth`（96 px）以下，因此可滚动的列仍保持可见。单元格文字以省略号结尾。
+- 标准 `Density` 下行高为 40 px（`RowHeightStandard`），紧凑下为 32 px（`RowHeightCompact`）。在触屏上，列菜单按钮（PART_Menu）在没有悬停时也保持可见（`:touch`），长按会打开右键菜单。
+- 让表格占满屏幕的全宽并横向滚动，只固定能标识记录的那一列。在手机上浏览只读列表时，`Table` 不需要编辑机制，更适合这样的空间。
 
 ## 相关组件
 

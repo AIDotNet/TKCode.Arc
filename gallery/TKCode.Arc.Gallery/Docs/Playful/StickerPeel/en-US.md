@@ -146,6 +146,19 @@ sticker up directly and it follows the pointer 1:1.
 | Peel | Folds the corner back | None; pressing picks the sticker up | None; pressing picks the sticker up |
 | Carry | Rises and casts a shadow, trailing the hand | Follows the pointer 1:1 | Follows the pointer 1:1 |
 
+## Responsive behavior
+
+- `StickerPeel` has no breakpoint. Its surface is at least 280 px high (`SurfaceMinHeight`), and sticker positions are
+  fractions of the surface, so the arrangement scales with its width.
+- Each sticker keeps its printed size, so on a narrow surface the same stickers sit closer together. Keep to about a
+  dozen stickers.
+- On touch, a drag on a sticker peels it the same way a mouse does, and a swipe that starts outside a sticker still
+  scrolls the page.
+- Hover lifts a corner with a mouse only, and peeling does not depend on it. The keyboard path is `Tab` to a sticker,
+  `Enter` or `Space` to pick it up, then the arrow keys; with `Shift` an arrow key moves it 40 px.
+- Let the surface stretch across the screen and set its `Height`. Keep it to one playful spot on a screen, not a busy
+  form.
+
 ## Related
 
 - `DotGrid` and `GravityWell` are other playful pointer surfaces.

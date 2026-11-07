@@ -221,6 +221,18 @@ composer.Labels = new DictationButtonLabels
 The waveform's frame loop stops once the bars have settled and pauses while the card is off screen or hidden. Frames
 allocate nothing: the levels live in a fixed ring buffer and the bars are drawn by one control.
 
+## Responsive behavior
+
+- `DictationButton` measures its own width, not the window's. Below 460 px (`NarrowWidth`) the keyboard hints in the
+  toolbar hide, and below 400 px (`CompactWidth`) the error copy shortens.
+- At 360 px (`TinyWidth`) or less, the toolbar label gives way while recording. The recording pill keeps its 216 px, so
+  nothing reflows while the person speaks.
+- The field grows from one line to six, then scrolls and keeps the newest words in view.
+- The pill's cancel and Insert buttons are 28 px, and the toolbar is 36 px tall, so on touch screens leave room around
+  the composer. Hover only changes the border of the field; every action works by tap.
+- Let the composer stretch across its column (`HorizontalAlignment="Stretch"`) rather than setting a fixed `Width`, so
+  the width it gets decides which breakpoint applies.
+
 ## Related
 
 - `AiComposer` for a full prompt box with attachments, tools and a model menu.

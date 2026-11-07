@@ -1,7 +1,7 @@
 ---
 title: TL;DR toggle
 summary: 一張文章卡片，可在原文位置串流呈現 AI 摘要或重點，附有長度滑桿，每則重點都能跳回其出處段落。
-source-hash: 036af066c83d
+source-hash: 1d41ee7fc3e9
 ---
 
 <Demo name="Preview" />
@@ -178,6 +178,13 @@ card.Labels = new TldrToggleLabels
 | 跳轉 | 等待高度穩定，平滑捲動，醒目提示 160ms 淡入、600ms 淡出 | 直接跳到，醒目提示淡入淡出 | 直接跳到，醒目提示直接顯示 |
 
 同一時間只有一處閃爍。
+
+## 響應式
+
+- `TldrToggle` 依自身卡片寬度而不是視窗寬度變化。它的寬度上限為 `CardMaxWidth`（680 px），在更窄的容器中填滿可用寬度。低於 520 px 時，長度滑桿移到切換開關下方並佔滿寬度（`IsStacked`，`:narrow`）；低於 440 px 時，內距從 24 px 降為 16 px（`CompactCardPadding`，`:compact`）。
+- 標題與內文會依需要換成多行（`TextWrapping="Wrap"`），而標頭的來源列以省略號結尾（`CharacterEllipsis`）。卡片本身不捲動內文：由頁面捲動，重點連結會把最近的 `ScrollViewer` 捲到對應段落。
+- 操作按鈕的最小高度為 32 px（`ActionSize`），重點連結為 28 px（`LinkSize`），都低於 44 px 的觸控目標，因此要與其他可輕觸的控制項保持距離。
+- 讓卡片在所在欄中延展（`HorizontalAlignment="Stretch"`），而不是設定固定的 `Width`。在低於 520 px 的欄中，滑桿會在切換開關下方單獨佔一列。
 
 ## 相關元件
 

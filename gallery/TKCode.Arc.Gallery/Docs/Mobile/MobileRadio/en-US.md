@@ -51,6 +51,16 @@ The row is a radio button named by its label, so always give it content; a radio
 
 The dot springs in from a small scale with a fade and goes out the same way; because it is a spring, a choice that flips half-way keeps its speed. The outline changes color on the fast curve. With reduced motion, the dot and the outline change at once.
 
+## Responsive behavior
+
+- `Radio` has no breakpoint. Its row is at least 44 by 44 px (`TouchTarget`), with the 22 px circle (`CircleSize`) and
+  the label beside it, so the whole row is the touch target.
+- Arrow keys move the choice through the group (OnKeyDown), so a keyboard can reach every option.
+- A press dims the radio to `PressedOpacity`, and a disabled one dims to `DisabledOpacity`. The theme has no
+  pointer-over style, so nothing depends on hover.
+- Stack the options one per row rather than side by side. Each option needs a 44 px tall row, and side-by-side labels
+  get less room.
+
 ## Related
 
 - `MobileCheckbox`: for any number of choices.

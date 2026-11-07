@@ -1,7 +1,7 @@
 ---
 title: Agent timeline
 summary: 在同一时间轴上回放一次多智能体运行：每个智能体的思考、工具调用与等待，它们之间的交接，以及时间、token 与费用。
-source-hash: 39b855da3a3d
+source-hash: d90644e0d7c3
 ---
 
 <Demo name="Preview" />
@@ -250,6 +250,14 @@ timeline.IsLive = false;
 | 卡片位置与高度 | 弹簧 | 直接跳到位 | 直接跳到位 |
 | 卡片淡入与内容交叉淡化 | 160ms / 120ms，100 / 160ms | 保留（短暂的交叉淡化） | 立即 |
 | 状态行与播放头 | 交叉淡化，240ms 淡出 | 立即 | 立即 |
+
+## 响应式
+
+- `AgentTimeline` 随宽度变化。宽度低于 `NarrowWidth`（520 px，是布局中的固定常量而不是主题令牌）时设置 `:narrow`，标签列从 176 px 收窄为 132 px。头部、页脚与绘图区使用更紧凑的边缘内边距（`NarrowEdgePadding`、`NarrowTrackPadding`）。
+- 它取父级提供的宽度，最宽为 `MaxWidth`（默认 744 px），布局以其自身宽度为准。
+- 绘图区不会窄于 300 px（MinPlotWidth）。低于该宽度时，它在自己的滚动区中横向滚动（`:scrollable`），而代理标签保持不动；绘图区滚动后会出现分隔线（`:scrolled`）。
+- 代理名称以省略号结尾（`CharacterEllipsis`）。跨度卡片中的文字换行（`TextWrapping`）。
+- 让时间线拉伸至页面的全宽。宽度低于 520 px 时它会自动收窄标签列，而绘图区会滚动，而不是被压缩到 300 px 以下。
 
 ## 相关组件
 

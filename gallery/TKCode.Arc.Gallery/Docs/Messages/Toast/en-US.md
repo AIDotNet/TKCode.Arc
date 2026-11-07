@@ -1,6 +1,6 @@
 ---
 title: Toast
-summary: Brief confirmation for a completed background action.
+summary: A short message a page shows for a few seconds after something it started has finished, such as a saved form.
 ---
 
 <Demo name="LocalToast" />
@@ -323,6 +323,17 @@ A pointer drag is the only way to swipe. A press that starts on the close button
 | The toast closes (button, timer or `Close()`) | Sinks 8 px, shrinks to 97% and fades out over the exit duration | Fades out with the instant preset | Removed at once |
 | Swipe away | Follows the pointer, then is thrown with the release velocity and fades out | Not available: swiping is off | Not available: swiping is off |
 | Title or description changes | The old text lifts away, the new text rises in and the height springs to fit | Instant fade | Immediate |
+
+## Responsive behavior
+
+- `Toast` has no breakpoint. Its width is the width its container gives it, up to `MaxToastWidth` (416 px), and a
+  narrower container shrinks it. It does not read the viewport.
+- `Title` stays on one line and ends with an ellipsis, while `Description` wraps. A long title is cut, so keep it short
+  enough to fit one line at phone width.
+- A swipe by pointer or touch that passes 80 px or 480 px/s dismisses the toast as `Swiped`. The close button reaches
+  the same result from the keyboard.
+- The timer does not pause on hover or focus, so a touch reader cannot hold a toast open. Keep the copy short.
+- For a longer message, set a longer `Duration`, or use `Alert` on the page, which stays until the person dismisses it.
 
 ## Related
 

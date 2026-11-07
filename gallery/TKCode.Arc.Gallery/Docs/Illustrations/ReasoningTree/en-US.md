@@ -297,6 +297,19 @@ When a restart hides the focused thought, focus moves to the question.
 
 The beats follow `Speed`; fades and fills keep their durations and finish even while the story is paused.
 
+## Responsive behavior
+
+- `ReasoningTree` measures its own width, not the window's. Below 520 px (`CompactWidth`, `:compact`) the card drops its
+  `Title`, uses the tighter `CompactCardPadding`, and shortens the footer label to Beam.
+- From a 620 px stage (`WideBreakpoint`) the tree reads left to right in four columns. Narrower, it becomes an outline
+  with one row per thought, indented 16 px per depth. The card keeps its height while the search plays, because the
+  stage reserves a row for each thought.
+- Below 306 px (`TinyWidth`) the footer stacks its two groups, so the beam control moves under the playback buttons.
+- Long thought labels are cut with an ellipsis (`CharacterEllipsis`). The full text appears in a tag only when a thought
+  is hovered or focused. A touch screen has no hover, so keep labels short enough to read in full.
+- Let it stretch to its column with no fixed `Width`. On a phone it shows the outline layout, so check the labels in
+  that layout first.
+
 ## Related
 
 - `DataFlow` and `VectorSearch` in this group for systems rather than reasoning.

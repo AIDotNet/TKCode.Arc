@@ -1,6 +1,6 @@
 ---
 title: Filter toolbar
-summary: Keep collection filters close and easy to reset.
+summary: The strip above a table or list with the applied filters as removable chips, an Add filter menu, search and a reset.
 ---
 
 <Demo name="Filters" />
@@ -420,6 +420,17 @@ call that matches what your handlers need.
 | Clear all shows or goes | Its slot opens or closes | A short fade of about 160 ms | Immediate |
 | The menu opens | The trigger grows into the panel, with a slight overshoot on open and a smooth close | A short fade of about 160 ms | Immediate |
 | Field to value list | The panel slides 8 px in the direction of travel | A short fade of about 160 ms | Immediate |
+
+## Responsive behavior
+
+- `FilterToolbar` stacks below 520 px (`StackBreakpoint`), measured from its own width. The chips take the first row and
+  the actions move to a second row aligned to the end.
+- The chips wrap onto more lines with an 8 px gap, and the toolbar grows to hold them. The search box keeps its
+  `SearchWidth` (200 px) in both layouts.
+- The Add filter menu is 256 px wide (`PanelWidth`), and its value list scrolls past 320 px. It flips to the other side
+  of its trigger when there is no room.
+- Give the toolbar the full width of a phone screen so that it stacks, and expect the search box to keep its 200 px
+  width on the second row.
 
 ## Related
 

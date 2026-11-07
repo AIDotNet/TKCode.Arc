@@ -1,7 +1,7 @@
 ---
 title: 徽标
 summary: 用于状态、类别或元数据的小型标签。
-source-hash: 56cf17fb22a3
+source-hash: 1b3ccd13a7dd
 ---
 
 <Demo name="Tones" />
@@ -265,6 +265,13 @@ public partial class DeploymentViewModel : ObservableObject
 | 色调变化 | 背景、边框和文字按标准曲线交叉淡化 | 瞬间完成 | 立即完成 |
 | 指针进入或离开（精确指针） | 背景与边框交叉淡化；`Info` 淡出其强调光晕 | 瞬间完成 | 立即完成 |
 | 字体或主题变化导致徽标尺寸改变 | 立即完成 | 立即完成 | 立即完成 |
+
+## 响应式
+
+- `Badge` 在任何宽度下都不会变化。`Size` 决定它的最小高度：`Medium` 为 26 px（默认），`Small` 为 22 px（`PillHeightMD`，`PillHeightSM`）。
+- 标签保持一行，胶囊随标签增宽。主题没有设置换行或截断，因此很长的标签会把胶囊撑宽；在窄行中请使用简短的标签。
+- `Badge` 不可获得焦点，也没有任何操作，因此不是点按目标。悬停会为胶囊着色（`:pointerover`），没有任何功能依赖悬停。
+- 在手机上，紧凑的行中使用 `Small`，标题旁使用 `Medium`。徽章的形态从不改变，因此它在布局中的位置决定了它需要多少空间。
 
 ## 相关组件
 

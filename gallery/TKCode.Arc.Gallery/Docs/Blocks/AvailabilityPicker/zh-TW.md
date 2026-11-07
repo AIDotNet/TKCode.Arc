@@ -1,7 +1,7 @@
 ---
 title: Availability picker
 summary: 在多位人員的行事曆中找出會議時間，查看每個時段誰有空，並預約合適的那一個。
-source-hash: 5ab1af858d62
+source-hash: 41cb5a546fd3
 ---
 
 <Demo name="Preview" />
@@ -143,6 +143,13 @@ static void SendInvites(DateTime start, DateTime end, IReadOnlyList<ProjectPerso
 - **文字**：標題與頁尾的兩行只在內容改變時才替換。舊文字會上升 4 px 並加上 2 px 的模糊同時淡出，新文字則從下方 4 px 處上升，並由模糊中浮現，兩者皆在 160 ms 內完成。
 - **按鈕**：其文字與寬度會隨按鈕本身的模糊替換與寬度彈簧而變化。
 - 減少動態效果時，醒目標示會立即移動，舊清單立即移除，新清單則在 120 ms 內淡入，文字以 120 ms 交叉淡化；顏色與勾號會立即變化。關閉動態效果時，所有變化都會立即套用。
+
+## 響應式
+
+- 可用時間選擇器依它被分配到的寬度判斷，而不是視窗寬度。在 `CompactWidth`（520 px，`:compact`）以下，內距收緊，日期卡片變小，時間改為一欄，頁尾堆疊在全寬按鈕之上。
+- 在 `NarrowWidth`（360 px，`:narrow`）及以下，隱藏圖例和日期卡片上的計數。`IsLegendVisible` 可在任何寬度下隱藏圖例。
+- 每個時間列高 `SlotHeight`（48 px），足夠輕觸。時間至少佔 `SlotTimeMinWidth`（42 px），備註佔用列內其餘空間並被截斷。
+- 讓選擇器在手機上延展到整個寬度，不要設定 `Width`。低於 520 px 時，時間本身已經是一欄。
 
 ## 相關元件
 

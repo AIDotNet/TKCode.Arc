@@ -312,6 +312,16 @@ it leaves the chart.
 | First view | Lines draw from start to end with a short stagger; dots and labels land with each line | Every line is drawn at once | Final state |
 | Dataset change | Lines, dots, labels and leaders move on a shared spring; rank numbers roll | Moves at once | Final state |
 
+## Responsive behavior
+
+- Below `NarrowBreakpoint` (440 px by default, from the token) the label columns narrow, the names step down to the
+  smaller type size and the gaps shrink. The full names stay in the tooltip and the data table.
+- It measures its own width (`Bounds.Width`), not the window's. Under 300 px the left label column is narrower still.
+- The plot takes 44 px per item and is at least 200 px tall unless `PlotHeight` is set. The tooltip is at least 168 px
+  wide (`MinWidth`).
+- A touch press and drag reads the nearest item, so no hover is needed. On a phone let the chart stretch to the screen
+  width and keep labels short, since they are cut to fit the label columns.
+
 ## Related
 
 - `LineChart` for three or more moments in time.

@@ -160,6 +160,15 @@ blend by integrating into those phases, so speed changes never jump and nothing 
 the sheet's path points in place with cached brushes and pens; it pauses off screen and when hidden. Under reduced motion
 the ghost repaints only when the status changes.
 
+## Responsive behavior
+
+- `GhostMascot` does not change form at a breakpoint. Below 56 px of `Size` it switches to a compact drawing with bigger
+  eyes, heavier marks and no shadow, and the `:compact` pseudo-class reports the state.
+- It measures nothing: `Size` sets a fixed square (96 px by default), so it never reflows its parent. On a phone, size
+  it for the space beside the text, 24 to 32 px in a reply header, rather than the 96 px empty-state size.
+- There is nothing to wrap, scroll or hide. The ghost takes no input and has no touch targets, so keep the controls that
+  act on what it shows (such as Stop) as real buttons.
+
 ## Related
 
 - `AgentStatus` for the steps, tools and elapsed time of an agent run.

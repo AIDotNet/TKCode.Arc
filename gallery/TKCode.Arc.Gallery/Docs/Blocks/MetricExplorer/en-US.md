@@ -173,6 +173,19 @@ the close button, the tab and range labels, the card name (`CardNameFormat`), th
 - Reduced motion lands the surface, the lines and the highlights at once and keeps only 120 ms fades; Off applies
   everything at once.
 
+## Responsive behavior
+
+- `MetricExplorer` reads its own width, not the window's. Under 760 px the cards take two columns. Below 640 px
+  (`:narrow`) the open chart tightens its paddings to 16 px, drops the values from the tabs and moves the range switch
+  under the readout. At 440 px and below (`:compact`) the cards get a two-line label and a smaller number, and the tabs
+  share a full row.
+- The chart is a quarter of the block's width high, kept between 180 and 240 px, so it shrinks with the block rather
+  than filling the screen.
+- Nothing depends on hover. Hover only darkens a card's edge; a tap or Enter opens the card, and touching or pressing
+  the plot moves the crosshair to the nearest day.
+- Give the block the full width of its row. On a phone it shows two columns in the compact layout; in a panel narrower
+  than 640 px, check that the range switch under the readout still fits.
+
 ## Related
 
 - `Metrics dashboard`, `KPI drilldown` and `Revenue explorer`, the other Analytics blocks around KPIs.

@@ -1,6 +1,6 @@
 ---
 title: Context menu
-summary: Secondary actions kept close to the selected object.
+summary: A right-click or long-press menu of the actions for one object, opened at the pointer or under the target.
 ---
 
 <Demo name="FileTile" />
@@ -406,6 +406,16 @@ A focused target opens the menu from the keyboard. Once the menu is open, the ro
 | Rows appear | Each row fades in over 240 ms, staggered 35 ms apart up to the fifth row | Quick fade | Immediate |
 | Submenu opens | 100 ms after the pointer rests on its row, the submenu grows from the side of the menu on the same snappy spring | Quick fade | Immediate |
 | Row pressed | The row tints; it does not scale | The row tints | Immediate |
+
+## Responsive behavior
+
+- `ContextMenu` has no breakpoint. It opens anchored to its target, in the same form at every width.
+- It closes on any scroll, resize or outside press (`ClosesOnViewportChange` is `True` by default) instead of following
+  the target, so a menu never hangs on a target that has moved.
+- Near a window edge Avalonia's placement flips the menu to the other side, so it stays on screen.
+- It opens from a right-click, a tap on the target, the `ContextRequested` event or Shift+F10. Those gestures are not
+  discoverable, so a touch or keyboard user needs a labelled way in, such as a visible `DropdownMenu` beside the
+  content.
 
 ## Related
 

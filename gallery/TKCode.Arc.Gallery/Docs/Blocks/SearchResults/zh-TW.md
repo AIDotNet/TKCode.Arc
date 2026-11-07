@@ -1,7 +1,7 @@
 ---
 title: 搜尋結果
 summary: 工作區搜尋頁：附建議彈出視窗的搜尋欄位、數量隨查詢變化的篩選器、日期範圍、排序、可移除的篩選標籤、醒目提示的結果，以及結果詳情面板。
-source-hash: d29f53165daa
+source-hash: 6676bc78e57e
 ---
 
 <Demo name="Preview" />
@@ -546,6 +546,15 @@ search.DetailActionInvoked += (_, e) =>
 | 詳情開啟 | 升起到位（窄螢幕時從底部滑入） | 淡入淡出 | 立即完成 |
 | 篩選器面板開啟 | 從底部滑入 | 淡入淡出 | 立即完成 |
 | 數量列、空狀態、載入列 | 交叉淡化 | 淡入淡出 | 立即完成 |
+
+## 響應式
+
+- `SearchResults` 依自身寬度改變形態：低於 `NarrowWidth`（預設 560 px）時為 `:narrow`，改為一欄，篩選欄隱藏並改由「Filters」按鈕開啟，排序控制項移到結果數量下方。
+- 結果詳情在窄寬度下以全寬底部面板（IsSheet）開啟；否則置中顯示，最寬 560 px，外距 16 px。兩者都透過 `MaxHeight` 依視埠（`ArcViewport`，沒有時為 800 ×
+  600）限制高度，因此詳情會留在螢幕內。
+- 放不下的文字以省略號結尾。摘要最多換行到 `SnippetMaxLines` 行，然後以 `WordEllipsis` 截斷。
+- 搜尋欄高 50 px（`FieldMinHeight`），但篩選列與標籤高 34 px（`FilterRowHeight`、`ChipHeight`），低於 44 px 的觸控尺寸，在觸控螢幕上應為它們留出空間。
+- 讓它拉伸到螢幕全寬，而不要設定 `Width`。寬度低於 560 px 時已是一欄，更窄的位置也使用同樣的版面。
 
 ## 相關元件
 

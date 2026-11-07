@@ -1,7 +1,7 @@
 ---
 title: 抽屜
-summary: 用於專注工作的暫時側邊面板。
-source-hash: b42421ed7675
+summary: 從視窗邊緣滑入的強制回應面板，用於圍繞目前檢視的專注工作，例如篩選或查看一筆記錄。
+source-hash: 3193854a7a8c
 ---
 
 <Demo name="Sides" />
@@ -269,6 +269,14 @@ public partial class ReceivablesViewModel : ObservableObject
 | 透過快速滑動關閉 | 保留放開速度的彈簧 | 短暫淡入 | 立即完成 |
 | 頁首拖曳 | 朝邊緣跟隨指標；反方向受阻 | 停用拖曳 | 停用拖曳 |
 | 標題或描述變化 | 新文案帶著柔和模糊升起 | 瞬間淡入 | 立即完成 |
+
+## 響應式
+
+- `Drawer` 在 `NarrowBreakpoint`（預設 640 px）以下改變形態：面板進入 `:narrow` 狀態，幾乎佔滿整個寬度，圓角與分區內距收緊。寬度在此以上時，它仍是同一個面板。
+- 面板依據它開啟所在的模態層寬度切換，而不是依據其後頁面的寬度。
+- 內容區垂直捲動，標題保持在原位。內容區不水平捲動（`HorizontalScrollBarVisibility` 為 `Disabled`），因此寬表格需要在抽屜內改用更窄的版面。
+- 窄視窗中的短面板使用 `Side="Bottom"`。需要停在幾個高度上的面板應使用 `BottomSheet`。
+- 任何功能都不依賴懸停。觸控螢幕上，輕觸關閉按鈕或把標題向邊緣拖動即可關閉。
 
 ## 相關元件
 

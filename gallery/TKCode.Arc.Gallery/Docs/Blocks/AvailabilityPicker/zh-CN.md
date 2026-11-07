@@ -1,7 +1,7 @@
 ---
 title: Availability picker
 summary: 在多人的日历中找出会议时间，查看每个时段谁有空，并预订合适的那一个。
-source-hash: 5ab1af858d62
+source-hash: 41cb5a546fd3
 ---
 
 <Demo name="Preview" />
@@ -143,6 +143,13 @@ static void SendInvites(DateTime start, DateTime end, IReadOnlyList<ProjectPerso
 - **文字**：标题和页脚的两行仅在内容改变时切换：旧文字在 160 ms 内上升 4 px、模糊到 2 px 并淡出，新文字从下方 4 px 处上升，并从模糊中清晰显现。
 - **按钮**：其文字和宽度随按钮自身的模糊切换和宽度弹簧而变化。
 - 减少动效会立即移动高亮，立即移除旧列表并在 120 ms 内淡入新列表，并以 120 ms 交叉淡化文字；颜色和对勾立即改变。关闭动效则立即应用每一次改变。
+
+## 响应式
+
+- 可用时间选择器按它被分配到的宽度判断，而不是窗口宽度。在 `CompactWidth`（520 px，`:compact`）以下，内边距收紧，日期卡片变小，时间改为一列，页脚堆叠在全宽按钮之上。
+- 在 `NarrowWidth`（360 px，`:narrow`）及以下，隐藏图例和日期卡片上的计数。`IsLegendVisible` 可在任何宽度下隐藏图例。
+- 每个时间行高 `SlotHeight`（48 px），足够点按。时间至少占 `SlotTimeMinWidth`（42 px），备注占用行内其余空间并被截断。
+- 让选择器在手机上拉伸到整个宽度，不要设置 `Width`。低于 520 px 时，时间本身已经是一列。
 
 ## 相关组件
 

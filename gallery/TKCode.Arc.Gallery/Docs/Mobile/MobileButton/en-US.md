@@ -60,6 +60,17 @@ It is a normal Avalonia button: it can be focused and invoked from the keyboard 
 
 The press scale and dim are declared in the control theme and switch at once with reduced motion.
 
+## Responsive behavior
+
+- `Button` has no breakpoint and looks the same at every width. Its minimum size is 44 by 44 px (`TouchTarget`), and its
+  width follows the label plus `ContentPadding` (16 by 10 px).
+- Keep one `Filled` button per screen. In a narrow row, let the main action fill the row with
+  `HorizontalAlignment="Stretch"`, and give the other actions a row of their own.
+- A press scales the button to `PressedScale` (0.97) and dims it to `PressedOpacity` (0.85). A disabled button dims to
+  `DisabledOpacity` (0.5).
+- Nothing depends on hover: the theme has no pointer-over style, so a tap reaches the same pressed, focused and disabled
+  states a click does.
+
 ## Related
 
 - `MobileSwitch`: a toggle for settings.

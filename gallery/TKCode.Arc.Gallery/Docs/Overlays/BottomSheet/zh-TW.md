@@ -1,7 +1,7 @@
 ---
 title: 底部面板
 summary: 停駐在預覽高度或完整高度的面板，跟隨手指移動。
-source-hash: c4dc8fc6229b
+source-hash: 843e085f33d8
 ---
 
 <Demo name="Detents" />
@@ -278,6 +278,13 @@ delivery.DetentChanged += (_, e) => viewModel.RestingDetent = e.Index;
 | 在停駐點之間移動 | 以平滑彈簧移動到新的停駐點 | 直接跳到新的停駐點 | 立即完成 |
 | 拖曳 | 與指標一對一跟隨；超過最高的停駐點後出現橡皮筋效果 | 停用拖曳 | 停用拖曳 |
 | 遮罩 | 跟隨面板位置 | 跟隨面板位置 | 立即完成 |
+
+## 響應式
+
+- `BottomSheet` 在 `NarrowBreakpoint`（預設 640 px）處變化：低於它時，面板取得 `:narrow` 虛擬類別，標題與內容的內距從 20 px 減為 16 px（`NarrowHeaderPadding`、`NarrowBodyPadding`）。
+- 面板寬度與視窗相同，但最寬為 `PanelMaxWidth`（576 px）：在手機上橫跨全寬，在較寬的視窗中於 576 px 處停止。
+- `Detents` 是視窗高度的比例，預設為 0.45 與 0.92。內容只在最高檔位捲動，因此帶表單的面板應一開始就展開到較高的檔位：把 `InitialDetentIndex` 設為 1。
+- 抓取點的點按區域為 56 × 20 px（`GrabberHitWidth`、`GrabberHitHeight`），並回應方向鍵，因此沒有任何功能依賴懸停；懸停只會改變抓取點的顏色。
 
 ## 相關元件
 

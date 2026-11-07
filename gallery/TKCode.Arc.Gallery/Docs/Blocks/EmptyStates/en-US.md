@@ -351,6 +351,21 @@ and the selection is kept on the same item or moved to a valid index when the se
 | The copy changes | The old copy lifts up and blurs out; the new copy rises from below through a blur; the height springs to fit | The copy fades | Immediate |
 | The pointer moves over the drawing | The layers tilt slightly toward the pointer | No tilt | No tilt |
 
+## Responsive behavior
+
+- `EmptyStates` changes density at its own width, not the window's. At 420 px or less (`:narrow`) the tab labels drop to
+  `TypeXS` and the tab padding to 6 px. From 560 px (`:wide`) the title uses a larger size. The card padding grows with
+  the width, from 16 to 40 px at the sides and 16 to 48 px at the top and bottom.
+- The tab row is at most 460 px wide (`TabsMaxWidth`) and shares that width equally when the labels fit. When they do
+  not, the row clips and slides so the selected tab stays in view. The illustration is at most 360 px wide
+  (`StageMaxWidth`).
+- Tabs are 30 px high (`TabHeight`), below a comfortable touch target. On touch screens keep the row to the tabs that
+  matter.
+- Nothing depends on hover. Hover only changes a tab's foreground, and selection and the focus ring work the same by tap
+  and keyboard.
+- Let the block fill its column. In a column narrower than 420 px the labels shrink, so use fewer tabs there to keep the
+  row from sliding.
+
 ## Related
 
 - `EmptyState` for a single empty list with an icon, a message and an action.

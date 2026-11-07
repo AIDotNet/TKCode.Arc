@@ -1,7 +1,7 @@
 ---
 title: 分段控制項
 summary: 在一組相關的檢視之間切換。
-source-hash: 29d83a4e5cfa
+source-hash: ed8c51009f4d
 ---
 
 <Demo name="ViewSwitcher" />
@@ -300,6 +300,14 @@ segmented.SelectionChanged += (_, _) => ShowView(segmented.SelectedValue);
 | 溢出時捲動到選取的分段 | 在首次版面配置之後沿標準緩動平滑捲動 | 直接跳轉 | 直接跳轉 |
 | 邊緣淡出出現或消失 | 跟隨捲動位置 | 跟隨捲動位置 | 跟隨捲動位置 |
 | 載入後的首次定位 | 立即 | 立即 | 立即 |
+
+## 響應式
+
+- `SegmentedControl` 沒有斷點。分段至少 36 px 高（`ControlSizeSM`），除非設定了 `Width`，控制項會依分段的總寬度決定自身寬度。
+- 選項寬於控制項時，列會在它自己的邊框內水平捲動：捲軸隱藏，每個仍有內容的邊緣有 20 px 的淡出（`EdgeFade`）。選取的分段會完整捲動到可見位置，旁邊保留 `ScrollRoom` 的餘裕。
+- 分段文字從不換行（`TextWrapping="NoWrap"`），因此每個分段與其文字等寬。使用一到兩個字的短標籤，可以在列需要捲動之前放下更多選項。
+- 預設尺寸下控制項高 44 px：36 px 的分段，加上 3 px 的軌道內距與 1 px 邊框。懸停只會改變文字顏色，輕觸即選取該分段。觸控懸停不會觸發 `ItemIntent`，因此沒有任何功能依賴懸停。
+- 在手機上，控制項適合兩到四個檢視。選項更多時，捲動的列不易瀏覽，請改用 `Select`。
 
 ## 相關元件
 

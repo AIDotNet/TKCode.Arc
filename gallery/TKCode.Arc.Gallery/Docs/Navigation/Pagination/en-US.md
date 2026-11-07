@@ -1,6 +1,6 @@
 ---
 title: Pagination
-summary: Move through a long collection with clear bounds.
+summary: Previous, next and page number buttons for a collection the app loads one page at a time.
 ---
 
 <Demo name="Default" />
@@ -345,6 +345,17 @@ scrolling.
 | A number leaves the window | Slides on and fades out in 120 ms | Removed at once | Immediate |
 | Press on an arrow | The arrow scales to 96% while held | No press scale | No press scale |
 | Hover, focus | The background and text colors crossfade | Immediate | Immediate |
+
+## Responsive behavior
+
+- `Pagination` has no breakpoint. Its buttons wrap onto a new line when the row is wider than the space, with `Spacing`
+  (4 px) between them.
+- It always shows a window of five page buttons (`WindowSize`) plus the previous and next buttons, each 36 px square
+  (`ControlSizeSM`). The buttons do not shrink, so in a narrow space the row wraps instead.
+- For a long set, turn on `ShowBoundaryPages` so the first and last pages stay reachable behind a 24 px ellipsis
+  (`EllipsisWidth`). It is off by default.
+- The buttons are 36 px, below the 44 px touch target, so on a phone give pagination a row of its own, or use `Timeline`
+  inside a `ScrollArea` for a feed.
 
 ## Related
 
