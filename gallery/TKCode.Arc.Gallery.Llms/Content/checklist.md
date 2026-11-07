@@ -57,4 +57,5 @@ passes. Each line names what to look for in the code.
 ## Build
 
 - [ ] The project builds without new warnings: a XAML property that does not exist fails at build time.
+- [ ] Every Lucide icon chosen at run time (a bound `Kind`, an icon from data) is declared with `<LucideIcon Include="..." />`; no `ARCL002` warning is left.
 - [ ] `InvariantGlobalization` is off, so numbers, money and dates format with culture data.

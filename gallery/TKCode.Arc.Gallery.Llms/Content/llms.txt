@@ -2,9 +2,11 @@
 
 > TKCode.Arc brings Arc (uiarc.dev) to Avalonia: {{arc-count}} components in Arc's 22 groups, {{block-count}} page-level blocks, a spreadsheet-style data grid and a streaming Markdown renderer, as native Avalonia {{avalonia}} controls with no other UI framework dependency. Every control derives from an Avalonia base type and reads one set of design tokens, with light and dark appearances, eight accents and spring motion that respects reduced motion. MIT licensed, trimming and NativeAOT compatible.
 
-Version {{version}} (preview: pin the exact version). Each link below is a page as Markdown: when to use the component, when not to and what to use instead, usage in XAML and C#, the source of every live example, the API reference generated from the library (every property with its type and default, events, pseudo-classes), accessibility and motion.
+Agent skill entry point: [skills.md]({{base}}/skills.md), the workflow, rules and index of every component in one file.
 
-Any page of {{base}} is available as Markdown at its address plus `.md`, for example {{base}}/components/button.md for {{base}}/components/button. The site itself is an Avalonia WebAssembly app that draws to a canvas, so its HTML carries no text: read the Markdown. Simplified and Traditional Chinese pages are under {{base}}/zh-CN/ and {{base}}/zh-TW/, for example {{base}}/zh-CN/components/button.md.
+Version {{version}} (preview: pin the exact version). Each link below is a page as Markdown: when to use the component, when not to and what to use instead, usage in XAML and C#, the source of every live example, the API reference generated from the library (every property with its type and default, events, pseudo-classes), accessibility and motion. "Also called" gives the names other libraries use; "Covers" lists the page's usage sections beyond the ones every page has.
+
+Any page of {{base}} is available as Markdown at its address plus `.md`, for example {{base}}/components/button.md for {{base}}/components/button. The site itself is an Avalonia WebAssembly app that draws to a canvas, so its HTML carries no text: read the Markdown. Each component and block page also comes as a short reference at its address plus `.api.md`, for example {{base}}/components/button.api.md: the first example, the components to choose instead and the API reference, about a quarter of the full page. Simplified and Traditional Chinese pages are under {{base}}/zh-CN/ and {{base}}/zh-TW/, for example {{base}}/zh-CN/components/button.md.
 
 ## Install
 
@@ -28,7 +30,7 @@ AppBuilder.Configure<App>()
 ArcTheme.Apply(t => t.Appearance(ArcAppearance.Dark).Accent(ArcAccentPreset.Violet));   // switch the theme at run time
 ```
 
-Controls, token resources and markup extensions share one XAML namespace: `xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"`, as in `<arc:Button Content="Save changes" />`. Other packages register inside the same callback: `TKCode.Arc.Blocks` (`UseArcBlocks()`), `TKCode.Arc.AdvancedCharts` (`UseArcAdvancedCharts()`, the DataGrid), `TKCode.Arc.Special` (`UseArcSpecial()`), `TKCode.Arc.Workflow` (`UseArcWorkflow()`).
+Controls, token resources and markup extensions share one XAML namespace: `xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"`, as in `<arc:Button Content="Save changes" />`. Other packages register inside the same callback: `TKCode.Arc.Blocks` (`UseArcBlocks()`), `TKCode.Arc.Special` (`UseArcSpecial()`, the AI components, illustrations and effects), `TKCode.Arc.Mobile` (`UseArcMobile()`, phone controls in their own XAML namespace `xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"`: `<arcm:Button>`, `<arcm:Page>`), `TKCode.Arc.AdvancedCharts` (`UseArcAdvancedCharts()`, the DataGrid), `TKCode.Arc.Workflow` (`UseArcWorkflow()`), `TKCode.Arc.Dock` (`UseArcDock()`). Below, a component is in `TKCode.Arc` unless its group or line names another package.
 
 ## Rules for agents
 
@@ -38,12 +40,15 @@ Controls, token resources and markup extensions share one XAML namespace: `xmlns
 - Colors, radii, spacing and fonts come from tokens: `{arc:ArcDesignTokenResource Surface}` in XAML, `ArcTokens.Bind(...)` in code. A hard-coded hex color breaks dark mode and the accents.
 - Arc controls animate themselves. A custom control declares its transitions in its ControlTheme under `^:motion-full` and `^:motion-reduced` with `arc:ArcMotion.Tracks="True"`; the levels are Full, Reduced and Off (`ArcMotion.Level`).
 - Fields are named by `Label`, explained by `Description`, and show errors through `ErrorMessage` or data validation on the bound property.
+- Icons: `{x:Static arc:ArcIcons.Check}` for Arc's built-in glyphs; any other Lucide icon through `TKCode.Arc.Icons.Lucide` (`<lucide:LucideIcon Kind="Bell" />`, `xmlns:lucide="https://github.com/AIDotNet/TKCode.Arc/lucide"`). Its generator compiles in only the icons written in C# or XAML: an icon from a binding or from data must also be declared in the project file, `<LucideIcon Include="Bell;ArrowRight" />` (or `<LucideIconsIncludeAll>true</LucideIconsIncludeAll>`), or it draws nothing. Build warning `ARCL002` marks such bindings.
 - One `Primary` button per surface. Copy is sentence case, and a button says what it does: "Save changes", not "OK" or "Submit".
 
 ## Agent skill
 
-- [SKILL.md]({{skill}}/SKILL.md): the TKCode.Arc skill for coding agents: workflow, rules and quick component decisions. Save it with the two files below in a `{{skill-name}}` folder of your agent's skills directory, such as `.claude/skills/{{skill-name}}/`.
-- [components.md]({{skill}}/components.md): every component and block by group, with its class and purpose.
+- [skills.md]({{base}}/skills.md): the entry point in one file: the skill below with the index of every component and block. Fetch this one when you read rather than install the skill.
+- [SKILL.md]({{skill}}/SKILL.md): the TKCode.Arc skill for coding agents: workflow, rules and quick component decisions. Save it with the three files below in a `{{skill-name}}` folder of your agent's skills directory, such as `.claude/skills/{{skill-name}}/`.
+- [components.md]({{skill}}/components.md): every component and block by group, with its class, package, purpose and other names.
+- [choosing.md]({{skill}}/choosing.md): for each component, the nearby components to choose instead and when.
 - [checklist.md]({{skill}}/checklist.md): the review checklist to run before finishing a screen.
 
 ## Docs
@@ -56,7 +61,7 @@ Controls, token resources and markup extensions share one XAML namespace: `xmlns
 
 ## Blocks
 
-Blocks are complete screens and page regions built from the components, in `TKCode.Arc.Blocks` (not on NuGet yet).
+Blocks are complete screens and page regions built from the components, in `TKCode.Arc.Blocks` (`UseArcBlocks()`).
 
 {{blocks}}
 

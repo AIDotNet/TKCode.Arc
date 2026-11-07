@@ -1,6 +1,6 @@
 ---
 title: 更新日志
-source-hash: 9ec115b4538b
+source-hash: 0f62f12adc25
 ---
 
 # 更新日志
@@ -8,6 +8,20 @@ source-hash: 9ec115b4538b
 TKCode.Arc 的所有重要变更，最新的在前。版本遵循[语义化版本](https://semver.org/)。版本带有 `-preview` 后缀期间，API 在各发布版本之间仍可能变化；升级前请阅读说明，并在项目中固定版本号。同样的列表也保存在仓库的 `CHANGELOG.md` 中。
 
 每次发布附带的 NuGet 包：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Foundation`（0.3.2 起）、`TKCode.Arc.Fonts` `TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 、`TKCode.Arc.Special`、`TKCode.Arc.Workflow`、`TKCode.Arc.Dock`（0.4.0-preview.2 起）、`TKCode.Arc.Themes.Pixel`、`TKCode.Arc.Themes.Corners`、`TKCode.Arc.Mobile`、`TKCode.Arc.Terminal`、`TKCode.Arc.Audio`、`TKCode.Arc.Audio.Native` 和 `TKCode.Arc.Audio.Browser`。
+
+## 未发布
+
+Lucide 图标改为按需编译进应用：应用只携带自己用到的图标。
+
+### 变更
+
+- **Lucide 图标按应用编译**（`TKCode.Arc.Icons.Lucide`）：包不再携带全部 2155 个图标的路径数据，程序集从 655 KB 降到 67 KB（gzip：130 KB 降到 31 KB），应用每用到一个图标约增加 100 到 300 字节。包中附带的源生成器会在 C#（`LucideIconKind.Bell`）和 XAML（`Kind="Bell"`、`{lucide:LucideGeometry Bell}`、`{x:Static lucide:LucideIconKind.Bell}`、样式 Setter）中找到用到的图标，只把它们编译进项目。这样写的图标无需任何改动。
+- **运行时才决定的图标需要声明**（破坏性变更）：来自绑定、数据或运行时加载的 XAML 的图标，需要在项目文件中用 `<LucideIcon Include="Bell;arrow-right" />` 声明（PascalCase 或 Lucide 原名均可），或用 `<LucideIconsIncludeAll>true</LucideIconsIncludeAll>` 编译全部图标。未编译进来的图标不绘制任何内容，并记录一条警告，指出需要添加的那一行；`LucideIconData.Get` 对它返回空字符串。新增 `LucideIconData.IsRegistered` 和 `TryGet`。
+
+### 新增
+
+- **视频**（新包 `TKCode.Arc.Video`、`TKCode.Arc.Video.Native`、`TKCode.Arc.Video.Browser`；`UseArcVideo()`）：`VideoPlayer` 在画面上叠加 Arc 风格的控制条播放视频（带缓冲范围、章节和悬停时间的进度条，音量、倍速、字幕菜单、全屏、自动隐藏的控制条、键盘快捷键、读屏值文本），并自己绘制 WebVTT / SRT 字幕；`VideoSurface` 只显示画面。帧在合成树内绘制，所以控制条、圆角和变换都能叠在视频上；macOS 与 Windows 上帧以 GPU 图像传递，不经拷贝。解码使用系统播放器（Media Foundation、AVFoundation、GStreamer；`ArcVideoNative.Use()`），浏览器中使用 HTML video 元素（`ArcVideoBrowser.UseAsync()`）；应用不附带任何解码器。没有后端时播放器显示测试画面。内置文案有 en-US、zh-CN、zh-TW。Gallery 新增“视频”分组。
+- **Lucide 图标的构建警告**：项目未声明任何图标时，XAML 中每处绑定 `LucideIcon.Kind`（特性、属性元素或样式 Setter）的位置都会报 `ARCL002`，因为生成器无法得知绑定会显示哪些图标；`ARCL001` 报告 `<LucideIcon Include>` 中不是 Lucide 图标的名称。声明图标或设置 `LucideIconsIncludeAll` 后 `ARCL002` 不再出现；`<NoWarn>ARCL002</NoWarn>` 也可关闭它。
 
 ## 0.4.0-preview.3（2026-11-06）
 

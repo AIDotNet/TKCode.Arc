@@ -20,7 +20,7 @@ Copy this checklist and tick it off:
 
 ```
 Arc task:
-- [ ] 1. Find: an Arc component or block for each region of the screen (components.md)
+- [ ] 1. Find: an Arc component or block for each region of the screen (components.md, then choosing.md)
 - [ ] 2. Read: the page of every component you use, including "When not to use"
 - [ ] 3. Install: packages added, UseArc(arc => arc.UseArcControls()) registered
 - [ ] 4. Wire: documented properties and events only, bound to a view model
@@ -28,11 +28,20 @@ Arc task:
 - [ ] 6. Review: run checklist.md, fix, and run it again until every line passes
 ```
 
-**Find.** Start from [components.md](components.md) and pick by purpose; prefer a block when one covers the whole
-region (a sidebar, a settings page, a command palette). Compose screens from Arc controls and Avalonia layout panels
+**Find.** Start from [components.md](components.md) and shortlist by purpose; each line also gives the names other
+libraries use (modal, snackbar, autocomplete, ...), so search it for the word in the request. Then read the shortlisted
+classes in [choosing.md](choosing.md): for each component it lists the nearby ones to choose instead and when, so you
+settle on one before fetching its page. Prefer a block when one covers the whole region (a sidebar, a settings page, a
+command palette). Note the package of each pick: components outside `TKCode.Arc` (the AI components in
+`TKCode.Arc.Special`, the phone controls in `TKCode.Arc.Mobile`, the DataGrid) need their package and registration
+call. The phone controls have their own XAML namespace,
+`xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"`, and drop the prefix of their page name: `MobileButton`
+is `<arcm:Button>`. Skip the groups marked decorative (text effects, cursor effects, showpieces) unless the brief asks for the effect. Compose screens from Arc controls and Avalonia layout panels
 (`Grid`, `StackPanel`, `WrapPanel`, `DockPanel`); do not rebuild a control Arc already has.
 
-**Read.** Fetch each component's page: `{{base}}/components/<slug>.md` (blocks: `{{base}}/blocks/<slug>.md`). The
+**Read.** Fetch each component's short reference first: `{{base}}/components/<slug>.api.md` (blocks:
+`{{base}}/blocks/<slug>.api.md`), with the first example, the alternatives and the API reference. Fetch the full page,
+the same address without `.api`, when you need its usage sections, more examples or the accessibility notes. The full
 page says when to use the component and when not to, with the better choice for each nearby case; shows usage in XAML
 and C# and the source of every live example; and ends with the API reference, the complete list of properties (type
 and default), events and pseudo-classes. A name that is not in the API reference does not exist.
@@ -58,9 +67,21 @@ ArcTheme.Apply(t => t.Appearance(ArcAppearance.Dark).Accent(ArcAccentPreset.Viol
 ```
 
 XAML uses `xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"` for controls, token resources and markup
-extensions. Blocks (`TKCode.Arc.Blocks`, `UseArcBlocks()`) and the DataGrid (`TKCode.Arc.AdvancedCharts`,
-`UseArcAdvancedCharts()`) are separate packages, registered in the same `UseArc` callback. Full steps:
+extensions. Blocks (`TKCode.Arc.Blocks`, `UseArcBlocks()`), the AI components, illustrations and effects
+(`TKCode.Arc.Special`, `UseArcSpecial()`), phone controls (`TKCode.Arc.Mobile`, `UseArcMobile()`), the DataGrid
+(`TKCode.Arc.AdvancedCharts`, `UseArcAdvancedCharts()`), the workflow canvas (`TKCode.Arc.Workflow`, `UseArcWorkflow()`)
+and the dock layout (`TKCode.Arc.Dock`, `UseArcDock()`) are separate packages, registered in the same `UseArc` callback. Full steps:
 {{base}}/docs/installation.md.
+
+Icons: Arc's built-in glyphs are `{x:Static arc:ArcIcons.Name}`. Any other Lucide icon comes from
+`TKCode.Arc.Icons.Lucide` (`<lucide:LucideIcon Kind="Bell" />`), whose generator compiles in only the icons written in
+C# or XAML. An icon that comes from a binding or from data is declared in the project file, or it draws nothing:
+
+```xml
+<ItemGroup>
+    <LucideIcon Include="Bell;ArrowRight" />    <!-- or <LucideIconsIncludeAll>true</LucideIconsIncludeAll> -->
+</ItemGroup>
+```
 
 **Wire.** Bind two-way properties (`Text`, `IsChecked`, `SelectedItem`, `Value`) to settable view model properties and
 only read the read-only ones. Fields are named by `Label`, explained by `Description` when there is a constraint, and
@@ -108,6 +129,7 @@ declares transitions under `^:motion-full` and `^:motion-reduced` with `arc:ArcM
 - A property, event or enum value that the API reference does not list.
 - A hex color, a fixed corner radius or a font size in a view, or `#FFFFFF` for text on the accent (`AccentForeground`).
 - `TextMuted` for information people must read.
+- A bound `LucideIcon.Kind` (or a `LucideIconKind` from data) without declaring its icons with `<LucideIcon Include="..." />`.
 - Hand-written animations, or `DispatcherTimer` loops, for a change an Arc control already animates.
 - Status shown by color alone, or bounce on money, progress and errors.
 - Title Case labels, "OK" or "Submit" buttons, exclamation marks in confirmations.
@@ -144,12 +166,19 @@ declares transitions under `^:motion-full` and `^:motion-reduced` with `arc:ArcM
 | A settings screen | `SettingsPage` block; find any setting `SettingsCommand` |
 | Search and run any action from the keyboard | `CommandPalette` block |
 | Rendered Markdown or streamed AI replies | `Markdown`; source code `CodeBlock` |
+| A whole AI chat screen | `AiChat` block; its input alone `AiComposer`; a message list in your own layout `ChatThread` |
+| What an agent is doing | `AgentStatus` (live pill), `ToolCall` (one tool run), `AgentPlan` (steps), `ReasoningBlock` (thinking) |
+| Values over time, categories, a share | `LineChart`, `BarChart`, `DonutChart`; a whole analytics page `MetricsDashboard` block |
+| Tasks on a board, a schedule | `KanbanBoard`, `GanttTimeline`, `WeekCalendar` blocks |
+| A node graph or pipeline | `WorkflowCanvas` (`TKCode.Arc.Workflow`); IDE-style panes `DockLayout` (`TKCode.Arc.Dock`) |
+| A phone app | `arcm:Page` with `arcm:Navbar` and `arcm:Tabbar`, pages in `arcm:NavigationStack` (`TKCode.Arc.Mobile`, `xmlns:arcm`) |
 
 ## Reference files
 
 | File | Read it when |
 |---|---|
-| [components.md](components.md) | Choosing components: every component and block by group, with its class and purpose |
+| [components.md](components.md) | Finding components: every component and block by group, with its class, package, purpose and other names |
+| [choosing.md](choosing.md) | Deciding between close candidates: for each component, what to choose instead and when |
 | [checklist.md](checklist.md) | Before you finish: the review checklist |
 | {{base}}/docs/installation.md | Setting up a project, publishing, troubleshooting |
 | {{base}}/docs/theming.md | Light and dark, accents, every design token, overriding tokens |

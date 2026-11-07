@@ -157,6 +157,19 @@ Lucide icon, add `TKCode.Arc.Icons.Lucide` and use its namespace:
 </UserControl>
 ```
 
+Only the icons your project uses are compiled into it: the package's source generator finds them in C# (`LucideIconKind.Bell`)
+and XAML (`Kind="Bell"`, `{lucide:LucideGeometry Bell}`). An icon picked at run time, from a binding or from data, is
+declared in the project file:
+
+```xml
+<ItemGroup>
+    <LucideIcon Include="Bell;ArrowRight" />    <!-- or set <LucideIconsIncludeAll>true</LucideIconsIncludeAll> -->
+</ItemGroup>
+```
+
+While the project declares no icons, the build warns (`ARCL002`) at each place where XAML binds `LucideIcon.Kind`. An
+icon that is not compiled in draws nothing and logs a warning naming the line to add.
+
 ### Blocks and the data grid
 
 `TKCode.Arc.Blocks` (page-level blocks), `TKCode.Arc.AdvancedCharts` (the `DataGrid`) and `TKCode.Arc.Special` (animated

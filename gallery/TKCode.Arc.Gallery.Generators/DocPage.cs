@@ -167,10 +167,7 @@ internal sealed class DocPage
             {
                 value = value.Substring(1, value.Length - 2);
             }
-            else if (value.IndexOf(" #", System.StringComparison.Ordinal) is var comment and >= 0)
-            {
-                value = value.Substring(0, comment).TrimEnd();
-            }
+            // No inline comments: a summary may mention "#channel", and a whole-line "# ..." is the only comment form.
             switch (key)
             {
                 case "title":

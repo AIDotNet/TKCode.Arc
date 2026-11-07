@@ -1,6 +1,6 @@
 ---
 title: 安装
-source-hash: 661b65af7456
+source-hash: 6aed88f61455
 ---
 
 # 安装
@@ -143,6 +143,16 @@ Arc 自有的图标字形（`{x:Static arc:ArcIcons.Check}` 以及另外 186 个
     <lucide:LucideIcon Kind="Sparkles" Size="20" />
 </UserControl>
 ```
+
+只有项目用到的图标会被编译进去：包里的源生成器会在 C#（`LucideIconKind.Bell`）和 XAML（`Kind="Bell"`、`{lucide:LucideGeometry Bell}`）中找到它们。运行时才决定的图标（来自绑定或数据）需要在项目文件中声明：
+
+```xml
+<ItemGroup>
+    <LucideIcon Include="Bell;ArrowRight" />    <!-- 或设置 <LucideIconsIncludeAll>true</LucideIconsIncludeAll> -->
+</ItemGroup>
+```
+
+项目还没有声明任何图标时，XAML 中每处绑定 `LucideIcon.Kind` 的位置都会产生构建警告（`ARCL002`）。未编译进来的图标不绘制任何内容，并记录一条警告，指出需要添加的那一行。
 
 ### 区块与数据表格
 
