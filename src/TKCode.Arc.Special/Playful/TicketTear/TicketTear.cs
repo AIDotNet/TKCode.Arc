@@ -20,18 +20,20 @@ namespace TKCode.Arc;
 /// free the stub falls, spins and fades. Enter or Space, or setting <see cref="IsTorn"/>, finishes the tear on its own.
 /// </summary>
 /// <remarks>
-/// <see cref="ContentControl.Content"/> is the ticket's body and <see cref="Stub"/> what is printed on the stub. Set
-/// <see cref="TemplatedControl.Background"/> to change the paper. Under reduced motion the stub does not bend or fall, and
+/// <see cref="ContentControl.Content"/> is the ticket's body and <see cref="Stub"/> what is printed on the stub.
+/// <see cref="TemplatedControl.Background"/> is the body's paper and <see cref="StubBackground"/> the stub's. Under reduced motion the stub does not bend or fall, and
 /// has no fibers: it only fades out.
 /// </remarks>
 [TemplatePart(BodyPart, typeof(TicketTearPiece))]
 [TemplatePart(StubPart, typeof(TicketTearStub))]
+[TemplatePart(StubShadowPart, typeof(Border))]
 [TemplatePart(FlapPart, typeof(TicketTearFlap))]
 [TemplatePart(StatusPart, typeof(TextBlock))]
 public class TicketTear : ContentControl
 {
     public const string BodyPart = "PART_Body";
     public const string StubPart = "PART_Stub";
+    public const string StubShadowPart = "PART_StubShadow";
     public const string FlapPart = "PART_Flap";
     public const string StatusPart = "PART_Status";
 
@@ -42,6 +44,14 @@ public class TicketTear : ContentControl
     /// <summary>Template for <see cref="Stub"/>.</summary>
     public static readonly StyledProperty<IDataTemplate?> StubTemplateProperty =
         AvaloniaProperty.Register<TicketTear, IDataTemplate?>(nameof(StubTemplate));
+
+    /// <summary>Paper of the stub. By default it stands out from the body: light on a dark theme, dark on a light one.</summary>
+    public static readonly StyledProperty<IBrush?> StubBackgroundProperty =
+        AvaloniaProperty.Register<TicketTear, IBrush?>(nameof(StubBackground));
+
+    /// <summary>Text on the stub.</summary>
+    public static readonly StyledProperty<IBrush?> StubForegroundProperty =
+        AvaloniaProperty.Register<TicketTear, IBrush?>(nameof(StubForeground));
 
     /// <summary>Whether the stub is off. Setting true tears it off; setting false puts a fresh stub on. A ticket that starts true shows no tear.</summary>
     public static readonly StyledProperty<bool> IsTornProperty =
@@ -59,17 +69,23 @@ public class TicketTear : ContentControl
     public static readonly RoutedEvent<RoutedEventArgs> TornEvent =
         RoutedEvent.Register<TicketTear, RoutedEventArgs>(nameof(Torn), RoutingStrategies.Bubble);
 
+    /// <summary>How far past the stub its shadow may reach.</summary>
+    private const double ShadowReach = 80;
+
     private readonly TicketTearMotion _motion = new();
     private readonly LiveLoop _loop;
     private readonly List<Point> _points = [];
     private TicketTearPiece? _body;
     private TicketTearStub? _stub;
     private TicketTearFlap? _flap;
+    private Border? _stubShadow;
     private TextBlock? _status;
     private TicketTearGeometry? _geometry;
     private RenderTargetBitmap? _snapshot;
     private double _shapedFront = double.NaN;
     private bool _shapedFull;
+    private bool _bodyShaped;
+    private bool _shapedBodyFibers;
     private bool _syncing;
     private bool _statusFlip;
 
@@ -99,6 +115,20 @@ public class TicketTear : ContentControl
     {
         get => GetValue(StubTemplateProperty);
         set => SetValue(StubTemplateProperty, value);
+    }
+
+    /// <inheritdoc cref="StubBackgroundProperty"/>
+    public IBrush? StubBackground
+    {
+        get => GetValue(StubBackgroundProperty);
+        set => SetValue(StubBackgroundProperty, value);
+    }
+
+    /// <inheritdoc cref="StubForegroundProperty"/>
+    public IBrush? StubForeground
+    {
+        get => GetValue(StubForegroundProperty);
+        set => SetValue(StubForegroundProperty, value);
     }
 
     /// <inheritdoc cref="IsTornProperty"/>
@@ -157,6 +187,7 @@ public class TicketTear : ContentControl
         _body = e.NameScope.Find<TicketTearPiece>(BodyPart);
         _stub = e.NameScope.Find<TicketTearStub>(StubPart);
         _flap = e.NameScope.Find<TicketTearFlap>(FlapPart);
+        _stubShadow = e.NameScope.Find<Border>(StubShadowPart);
         _status = e.NameScope.Find<TextBlock>(StatusPart);
         if (_body is not null)
         {
@@ -195,6 +226,7 @@ public class TicketTear : ContentControl
         if (_stub?.Piece is { } piece)
         {
             piece.Owner = this;
+            piece.IsStub = true;
         }
         InvalidateShapes();
     }
@@ -213,7 +245,7 @@ public class TicketTear : ContentControl
         {
             InvalidateShapes();
         }
-        else if (change.Property == BackgroundProperty || change.Property == BorderBrushProperty || change.Property == BorderThicknessProperty)
+        else if (change.Property == BackgroundProperty || change.Property == StubBackgroundProperty || change.Property == BorderBrushProperty || change.Property == BorderThicknessProperty)
         {
             UpdateEdgePen();
             InvalidatePaper();
@@ -373,13 +405,14 @@ public class TicketTear : ContentControl
         }
         var stubWidth = Math.Min(StubWidth, size.Width);
         _geometry = new TicketTearGeometry(size.Width - stubWidth, stubWidth, size.Height, CornerRadius.TopLeft,
-            stub.NotchRadius, stub.HoleRadius, stub.HolePitch);
+            stub.NotchRadius, stub.PerforationInset, stub.HoleRadius, stub.HolePitch);
         _motion.Configure(_geometry.Height, _geometry.Notch, _geometry.Holes);
         if (IsTorn && _motion.Phase is TicketTearPhase.Attached && _motion.Progress <= 0)
         {
             _motion.JumpGone();
         }
         _shapedFront = double.NaN;
+        _bodyShaped = false;
         ApplyPose();
     }
 
@@ -401,8 +434,14 @@ public class TicketTear : ContentControl
 
         var phase = _motion.Phase;
         // With full motion the flap carries a free stub; otherwise the stub itself fades where it is.
-        _stub.IsVisible = phase is not TicketTearPhase.Gone && (phase is not TicketTearPhase.Falling || !full);
+        var stubShown = phase is not TicketTearPhase.Gone && (phase is not TicketTearPhase.Falling || !full);
+        _stub.IsVisible = stubShown;
         _stub.Opacity = phase is TicketTearPhase.Falling ? _motion.FallOpacity : _motion.FreshOpacity;
+        if (_stubShadow is { } shadow)
+        {
+            // Only ever faded: it keeps the stub's column, so the ticket does not change size when the stub leaves.
+            shadow.Opacity = stubShown ? _stub.Opacity : 0;
+        }
         if (_flap is { } flap)
         {
             flap.IsVisible = ShowsFlap;
@@ -413,28 +452,42 @@ public class TicketTear : ContentControl
     private void UpdateShapes(TicketTearGeometry geometry, double front, bool full)
     {
         var torn = _motion.Progress > 0;
-        geometry.BuildBody(_points, torn ? front : 0, full && torn);
-        var bodyFill = TicketTearGeometry.ToGeometry(_points);
-        geometry.BuildBody(_points, torn ? front : 0, false);
-        _body!.SetShape(bodyFill, TicketTearGeometry.ToGeometry(_points));
+        if (!_bodyShaped || full != _shapedBodyFibers)
+        {
+            _bodyShaped = true;
+            _shapedBodyFibers = full;
+            geometry.BuildBody(_points, full);
+            var bodyFill = TicketTearGeometry.ToGeometry(_points);
+            geometry.BuildBody(_points, false);
+            _body!.SetShape(bodyFill, TicketTearGeometry.ToGeometry(_points));
+        }
 
         if (_stub?.Piece is not { } piece)
         {
             return;
         }
+        var hinge = 0.0;
         if (full && torn && front < geometry.Height)
         {
             // The torn part is the flap's; the real stub is what is still on the ticket.
-            geometry.BuildAttachedStub(_points, front);
-            var attached = TicketTearGeometry.ToGeometry(_points);
-            piece.SetShape(attached, attached);
+            hinge = geometry.SnapHinge(front);
+            geometry.BuildAttachedStub(_points, hinge);
         }
         else
         {
-            // Without motion a tear shows as a crack in the whole stub.
-            geometry.BuildStub(_points, torn ? front : 0, false);
-            var whole = TicketTearGeometry.ToGeometry(_points);
-            piece.SetShape(whole, whole);
+            // Without motion a tear shows as the line itself, down the whole stub.
+            hinge = torn ? (front >= geometry.Height ? geometry.Height : geometry.SnapHinge(front)) : 0;
+            geometry.BuildStub(_points, hinge, false);
+        }
+        var shape = geometry.ToGeometryWithHoles(_points, hinge);
+        piece.SetShape(shape, shape);
+        if (_stubShadow is { } shadow)
+        {
+            // Only the part still on the ticket casts the ticket's shadow.
+            shadow.Clip = hinge > 0
+                ? new RectangleGeometry(new Rect(-ShadowReach, hinge, geometry.StubWidth + 2 * ShadowReach, geometry.Height - hinge + ShadowReach))
+                : null;
+            shadow.InvalidateVisual();
         }
     }
 

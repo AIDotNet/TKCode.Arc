@@ -2,31 +2,54 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
              x:Class="TKCode.Arc.Gallery.Demos.TicketTearPreviewDemo">
-    <!-- Pull the stub down or away, or focus it and press Enter. The button puts a fresh stub on. -->
-    <StackPanel Spacing="14" MaxWidth="460" HorizontalAlignment="Center">
-        <arc:TicketTear x:Name="Ticket" Label="Tear off stub to check in">
-            <StackPanel Spacing="10">
-                <TextBlock Text="LANTERN FESTIVAL" FontSize="11" FontWeight="SemiBold" LetterSpacing="1.4"
-                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
-                <TextBlock Text="Night of Paper Boats" FontSize="22" FontWeight="SemiBold" TextWrapping="Wrap"
+    <!-- Pull the stub down or away, or focus it and press Enter. "New ticket" puts a fresh stub on. -->
+    <Grid RowDefinitions="Auto,Auto" RowSpacing="26" MaxWidth="416" HorizontalAlignment="Center">
+        <arc:TicketTear x:Name="Ticket" Label="Tear off stub to check in" Torn="OnTorn">
+            <StackPanel Spacing="0">
+                <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,18">
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Sparkles}"
+                                  Width="20" Height="20"
+                                  HorizontalAlignment="Left"
+                                  Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                    <TextBlock Grid.Column="1" Text="Nov 21, 2026" FontSize="13"
+                               VerticalAlignment="Center"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                </Grid>
+                <TextBlock Text="Harbor Nights" FontSize="36" FontWeight="Medium" LetterSpacing="-0.8" TextWrapping="Wrap"
                            FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}" />
-                <TextBlock Text="Willow Pier, East Landing" Foreground="{arc:ArcDesignTokenResource TextSecondary}"
-                           TextWrapping="Wrap" />
-                <TextBlock Text="Sat 14 Nov, gates at 18:30" FontSize="13"
-                           Foreground="{arc:ArcDesignTokenResource TextMuted}" TextWrapping="Wrap" />
+                <TextBlock Text="Old Customs Hall, Porto" Margin="0,2,0,0" TextWrapping="Wrap"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                <Rectangle Height="1" Margin="0,18,0,16"
+                           Stroke="{arc:ArcDesignTokenResource BorderStrong}"
+                           StrokeThickness="1"
+                           StrokeDashArray="1,2" />
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="26">
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="Guest" FontSize="13" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        <TextBlock Text="Noa Lindqvist" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Spacing="2">
+                        <TextBlock Text="Doors" FontSize="13" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        <TextBlock Text="19:00" />
+                    </StackPanel>
+                </Grid>
             </StackPanel>
             <arc:TicketTear.Stub>
-                <StackPanel Spacing="2" HorizontalAlignment="Center">
-                    <TextBlock Text="BENCH" FontSize="10" FontWeight="SemiBold" LetterSpacing="1.2"
-                               HorizontalAlignment="Center"
-                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
-                    <TextBlock Text="7C" FontSize="30" FontWeight="SemiBold" HorizontalAlignment="Center"
-                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}" />
-                    <TextBlock Text="Pull to enter" FontSize="10" HorizontalAlignment="Center" TextAlignment="Center"
-                               TextWrapping="Wrap" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                <StackPanel Spacing="10" HorizontalAlignment="Center">
+                    <TextBlock Text="One entry" FontSize="13" Opacity="0.72" TextAlignment="Center" />
+                    <TextBlock Text="Row C&#10;Seat 8" FontSize="20" FontWeight="Medium" TextAlignment="Center"
+                               LineHeight="27" />
                 </StackPanel>
             </arc:TicketTear.Stub>
         </arc:TicketTear>
-        <arc:Button Variant="Ghost" Size="Small" Content="New stub" HorizontalAlignment="Center" Click="OnNewStub" />
-    </StackPanel>
+        <Grid Grid.Row="1" ColumnDefinitions="*,Auto">
+            <StackPanel x:Name="Status" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center" IsVisible="False">
+                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Check}" Width="16" Height="16"
+                              Foreground="{arc:ArcDesignTokenResource Success}" />
+                <TextBlock Text="Checked in" Foreground="{arc:ArcDesignTokenResource Success}" />
+            </StackPanel>
+            <arc:Button x:Name="NewTicket" Grid.Column="1" Variant="Ghost" Size="Small" Content="New ticket"
+                        IsEnabled="False" Click="OnNewTicket" />
+        </Grid>
+    </Grid>
 </UserControl>

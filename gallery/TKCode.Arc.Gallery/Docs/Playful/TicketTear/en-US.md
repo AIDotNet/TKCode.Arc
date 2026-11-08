@@ -49,8 +49,9 @@ on. A ticket that is already true when it first appears simply has no stub, with
 
 ### Paper and size
 
-`Background` is the paper and `BorderBrush` its edge. The holes and notches are real gaps, so whatever is behind the
-ticket shows through them. `StubWidth` sets the width of the stub.
+`Background` is the body's paper, and `StubBackground` and `StubForeground` are the stub's paper and text. By default
+the stub stands out from the body: light on a dark theme and dark on a light one. The holes and notches are real gaps, so
+whatever is behind the ticket shows through them. `StubWidth` sets the width of the stub.
 
 <Demo name="Coupon" />
 

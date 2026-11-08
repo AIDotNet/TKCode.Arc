@@ -7117,6 +7117,21 @@
       "TicketPadding": "12,10,12,10",
       "TitleFontSize": "14"
     },
+    "TicketTear": {
+      "BodyPadding": "25,24,25,24",
+      "FlapShadowColor": "#30000000",
+      "FocusRingMargin": "-3,-3,-3,-3",
+      "FocusRingRadius": "4,4,4,4",
+      "HolePitch": "10",
+      "HoleRadius": "2",
+      "NotchRadius": "8",
+      "PaperRadius": "0,0,0,0",
+      "PerforationInset": "4.5",
+      "StubPadding": "14,12,10,12",
+      "StubPaperColor": "#FFB6B6B6",
+      "StubTextColor": "#FF141414",
+      "TicketMinHeight": "148"
+    },
     "TilePanel": {
       "MinCellSize": "96",
       "Spacing": "8"
@@ -7950,17 +7965,6 @@
       "FocusRingRadius": "12,12,12,12",
       "ItemGap": "2",
       "ReadoutWidth": "46"
-    },
-    "TicketTear": {
-      "BodyPadding": "20,18,20,18",
-      "FlapShadowColor": "#4A000000",
-      "FocusRingMargin": "-3,-3,-3,-3",
-      "FocusRingRadius": "16,16,16,16",
-      "HolePitch": "13",
-      "HoleRadius": "2.5",
-      "NotchRadius": "9",
-      "StubPadding": "14,12,12,12",
-      "TicketMinHeight": "148"
     }
   }
 }

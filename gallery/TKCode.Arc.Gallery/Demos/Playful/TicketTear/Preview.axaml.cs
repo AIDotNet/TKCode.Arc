@@ -10,5 +10,16 @@ public partial class TicketTearPreviewDemo : UserControl
         InitializeComponent();
     }
 
-    private void OnNewStub(object? sender, RoutedEventArgs e) => Ticket.Reset();
+    private void OnTorn(object? sender, RoutedEventArgs e)
+    {
+        Status.IsVisible = true;
+        NewTicket.IsEnabled = true;
+    }
+
+    private void OnNewTicket(object? sender, RoutedEventArgs e)
+    {
+        Ticket.Reset();
+        Status.IsVisible = false;
+        NewTicket.IsEnabled = false;
+    }
 }

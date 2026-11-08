@@ -1,7 +1,7 @@
 ---
 title: Ticket tear
 summary: 一张可以撕下票根的活动门票。票根会随着你的手沿齿孔一孔一孔地撕开，撕下后飘落消失。
-source-hash: 36ba844a4696
+source-hash: 00e841280032
 ---
 
 <Demo name="Preview" />
@@ -44,7 +44,7 @@ source-hash: 36ba844a4696
 
 ### 纸张与尺寸
 
-`Background` 是纸张，`BorderBrush` 是纸边。孔和缺口是真实的空隙，所以能透过它们看到门票后面的内容。`StubWidth` 设置票根宽度。
+`Background` 是票身的纸张，`StubBackground` 和 `StubForeground` 是票根的纸张和文字。默认情况下票根与票身形成反差：深色主题下为浅色，浅色主题下为深色。孔和缺口是真实的空隙，所以能透过它们看到门票后面的内容。`StubWidth` 设置票根宽度。
 
 <Demo name="Coupon" />
 

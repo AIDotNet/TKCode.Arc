@@ -36,6 +36,10 @@ internal sealed class TicketTearStub : ContentControl
     public static readonly StyledProperty<double> HolePitchProperty =
         AvaloniaProperty.Register<TicketTearStub, double>(nameof(HolePitch), 13);
 
+    /// <summary>How far inside the stub the perforation runs, set by the theme.</summary>
+    public static readonly StyledProperty<double> PerforationInsetProperty =
+        AvaloniaProperty.Register<TicketTearStub, double>(nameof(PerforationInset), 4.5);
+
     private readonly VelocityTracker _velocity = new();
     private LazyFocusRing? _focusRing;
     private Point _pressedAt;
@@ -64,6 +68,12 @@ internal sealed class TicketTearStub : ContentControl
         set => SetValue(HolePitchProperty, value);
     }
 
+    public double PerforationInset
+    {
+        get => GetValue(PerforationInsetProperty);
+        set => SetValue(PerforationInsetProperty, value);
+    }
+
     internal TicketTear? Owner { get; set; }
 
     internal TicketTearPiece? Piece { get; private set; }
@@ -81,7 +91,7 @@ internal sealed class TicketTearStub : ContentControl
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-        if (change.Property == NotchRadiusProperty || change.Property == HoleRadiusProperty || change.Property == HolePitchProperty)
+        if (change.Property == NotchRadiusProperty || change.Property == HoleRadiusProperty || change.Property == HolePitchProperty || change.Property == PerforationInsetProperty)
         {
             Owner?.InvalidateShapes();
         }

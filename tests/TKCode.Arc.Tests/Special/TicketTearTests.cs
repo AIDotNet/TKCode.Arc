@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
+using Avalonia.Media;
 using Avalonia.Threading;
 using TKCode.Arc.Motion;
 
@@ -13,10 +14,12 @@ namespace TKCode.Arc.Tests.Special;
 /// <summary>The ticket tear: the paper's geometry, the states of a stub, and the control's input, events and automation.</summary>
 public class TicketTearTests
 {
-    private const double Notch = 9;
+    private const double Notch = 8;
     private const double Height = 180;
 
-    private static TicketTearGeometry Paper() => new(300, 104, Height, 18, Notch, 2.5, 13);
+    private const double Inset = 4.5;
+
+    private static TicketTearGeometry Paper(double corner = 0) => new(300, 104, Height, corner, Notch, Inset, 2, 10);
 
     private static TicketTearMotion Stub()
     {
@@ -61,23 +64,38 @@ public class TicketTearTests
         var geometry = Paper();
         var body = new List<Point>();
         var stub = new List<Point>();
-        geometry.BuildBody(body, Height, false);
+        geometry.BuildBody(body, false);
         geometry.BuildStub(stub, Height, false);
+        var line = geometry.BodyWidth + Inset;
         foreach (var hole in geometry.Holes)
         {
             // Half a hole bites into each piece, from a centre on the line.
-            body.Min(p => Math.Abs(p.X - (geometry.BodyWidth - geometry.HoleRadius)) + Math.Abs(p.Y - hole)).ShouldBeLessThan(1e-6);
-            stub.Min(p => Math.Abs(p.X - geometry.HoleRadius) + Math.Abs(p.Y - hole)).ShouldBeLessThan(1e-6);
+            body.Min(p => Math.Abs(p.X - (line - geometry.HoleRadius)) + Math.Abs(p.Y - hole)).ShouldBeLessThan(1e-6);
+            stub.Min(p => Math.Abs(p.X - (Inset + geometry.HoleRadius)) + Math.Abs(p.Y - hole)).ShouldBeLessThan(1e-6);
         }
         // Between the holes the line wanders, and the same way on both sides.
-        var wander = body.Where(p => p.Y > Notch && p.Y < Height - Notch).Max(p => Math.Abs(p.X - geometry.BodyWidth));
-        wander.ShouldBeGreaterThan(geometry.HoleRadius - 1e-6);
-        var left = body.Where(p => p.X > geometry.BodyWidth + 0.01).Select(p => new Point(p.X - geometry.BodyWidth, p.Y)).ToArray();
-        left.Length.ShouldBeGreaterThan(0);
-        foreach (var point in left)
+        var past = body.Where(p => p.X > line + 0.01).ToArray();
+        past.Length.ShouldBeGreaterThan(0);
+        foreach (var point in past)
         {
-            stub.Min(p => Math.Abs(p.X - point.X) + Math.Abs(p.Y - point.Y)).ShouldBeLessThan(1e-6);
+            var onStub = new Point(point.X - geometry.BodyWidth, point.Y);
+            stub.Min(p => Math.Abs(p.X - onStub.X) + Math.Abs(p.Y - onStub.Y)).ShouldBeLessThan(1e-6);
         }
+    }
+
+    [Fact]
+    public void The_perforation_runs_inside_the_stub_and_its_paper_reaches_the_left_edge()
+    {
+        var geometry = Paper();
+        var whole = new List<Point>();
+        geometry.BuildStub(whole, 0, false);
+        whole.Min(p => p.X).ShouldBe(0, 1e-9);
+        whole.Max(p => p.X).ShouldBe(geometry.StubWidth, 1e-9);
+        // Above the front that strip has gone with the tear.
+        var torn = new List<Point>();
+        geometry.BuildStub(torn, Height / 2, false);
+        torn.Where(p => p.Y < Height / 2 - 1).Min(p => p.X).ShouldBeGreaterThan(0);
+        torn.Where(p => p.Y > Height / 2 + 1).Min(p => p.X).ShouldBe(0, 1e-9);
     }
 
     [Fact]
@@ -85,8 +103,8 @@ public class TicketTearTests
     {
         var a = new List<Point>();
         var b = new List<Point>();
-        Paper().BuildBody(a, Height, true);
-        Paper().BuildBody(b, Height, true);
+        Paper().BuildBody(a, true);
+        Paper().BuildBody(b, true);
         a.ShouldBe(b);
     }
 
@@ -96,8 +114,8 @@ public class TicketTearTests
         var geometry = Paper();
         var plain = new List<Point>();
         var fibers = new List<Point>();
-        geometry.BuildBody(plain, Height, false);
-        geometry.BuildBody(fibers, Height, true);
+        geometry.BuildBody(plain, false);
+        geometry.BuildBody(fibers, true);
         fibers.Max(p => p.X).ShouldBeGreaterThan(plain.Max(p => p.X));
         TicketTearGeometry.Area(fibers).ShouldBeGreaterThan(TicketTearGeometry.Area(plain));
 
@@ -108,12 +126,13 @@ public class TicketTearTests
     }
 
     [Fact]
-    public void Every_edge_of_a_piece_goes_one_way_so_a_front_can_split_it()
+    public void The_torn_edge_goes_one_way_so_a_front_can_split_it()
     {
         var geometry = Paper();
         var body = new List<Point>();
-        geometry.BuildBody(body, Height / 2, true);
-        var edge = body.Where(p => p.Y >= Notch && p.Y <= Height - Notch && p.X > geometry.BodyWidth - 4).ToArray();
+        geometry.BuildBody(body, true);
+        var line = geometry.BodyWidth + Inset;
+        var edge = body.Where(p => p.Y >= Notch && p.Y <= Height - Notch && p.X > line - 8).ToArray();
         for (var i = 1; i < edge.Length; i++)
         {
             edge[i].Y.ShouldBeGreaterThanOrEqualTo(edge[i - 1].Y);
@@ -135,21 +154,31 @@ public class TicketTearTests
     }
 
     [Fact]
-    public void The_flap_and_the_attached_stub_add_up_to_the_stub()
+    public void The_hinge_never_runs_through_a_hole()
     {
         var geometry = Paper();
-        var whole = new List<Point>();
-        var flap = new List<Point>();
-        var attached = new List<Point>();
-        // A height between two holes, where the torn and the intact edge are at most a wander apart.
-        var hinge = (geometry.Holes[5] + geometry.Holes[6]) / 2;
-        geometry.BuildStub(whole, Height, false);
-        geometry.BuildFlap(flap, hinge, false);
-        geometry.BuildAttachedStub(attached, hinge);
-        flap.Max(p => p.Y).ShouldBe(hinge, 1e-9);
-        (TicketTearGeometry.Area(flap) + TicketTearGeometry.Area(attached)).ShouldBe(TicketTearGeometry.Area(whole), Height);
+        var hole = geometry.Holes[3];
+        geometry.SnapHinge(hole).ShouldBe(hole - geometry.HoleRadius, 1e-9);
+        geometry.SnapHinge(hole + geometry.HoleRadius * 0.9).ShouldBe(hole - geometry.HoleRadius, 1e-9);
+        var between = (hole + geometry.Holes[4]) / 2;
+        geometry.SnapHinge(between).ShouldBe(between, 1e-9);
+    }
 
-        // Free of the ticket, the flap is the whole stub.
+    [Fact]
+    public void The_flap_is_what_is_above_the_hinge_and_the_whole_stub_once_free()
+    {
+        var geometry = Paper();
+        var hinge = (geometry.Holes[5] + geometry.Holes[6]) / 2;
+        var flap = new List<Point>();
+        geometry.BuildFlap(flap, hinge, false);
+        flap.Max(p => p.Y).ShouldBe(hinge, 1e-9);
+        flap.Min(p => p.Y).ShouldBe(0, 1e-9);
+
+        // A flap starts at the torn line: the strip left of it stays with the ticket.
+        flap.Min(p => p.X).ShouldBeGreaterThan(0);
+
+        var whole = new List<Point>();
+        geometry.BuildStub(whole, Height, false);
         geometry.BuildFlap(flap, Height, false);
         TicketTearGeometry.Area(flap).ShouldBe(TicketTearGeometry.Area(whole), 1e-6);
     }
@@ -157,7 +186,7 @@ public class TicketTearTests
     [Fact]
     public void The_attached_stub_stays_inside_a_rounded_corner()
     {
-        var geometry = new TicketTearGeometry(300, 104, Height, 40, Notch, 2.5, 13);
+        var geometry = Paper(40);
         var attached = new List<Point>();
         geometry.BuildAttachedStub(attached, 12);
         // 12 px down a 40 px corner, the paper's edge is well short of the full width.
@@ -171,9 +200,9 @@ public class TicketTearTests
     [InlineData(1, 1)]
     public void Tiny_tickets_still_make_closed_shapes(double height, double stubWidth)
     {
-        var geometry = new TicketTearGeometry(0, stubWidth, height, 18, Notch, 2.5, 13);
+        var geometry = new TicketTearGeometry(0, stubWidth, height, 18, Notch, Inset, 2, 10);
         var points = new List<Point>();
-        geometry.BuildBody(points, height, true);
+        geometry.BuildBody(points, true);
         TicketTearGeometry.Area(points).ShouldBeGreaterThanOrEqualTo(0);
         geometry.BuildStub(points, height, true);
         TicketTearGeometry.Area(points).ShouldBeGreaterThan(0);
@@ -374,7 +403,7 @@ public class TicketTearTests
         var share = motion.Progress;
         var angle = motion.Angle;
 
-        var taller = new TicketTearGeometry(300, 104, Height * 2, 18, Notch, 2.5, 13);
+        var taller = new TicketTearGeometry(300, 104, Height * 2, 0, Notch, Inset, 2, 10);
         motion.Configure(taller.Height, taller.Notch, taller.Holes);
         motion.Progress.ShouldBe(share);
         motion.Front.ShouldBe(Notch + share * (taller.Height - 2 * Notch), 1e-9);
@@ -422,6 +451,20 @@ public class TicketTearTests
             // The focus does not fall out of the ticket, and there is no stop left to tab to.
             ticket.IsFocused.ShouldBeTrue();
         }
+    }
+
+    [AvaloniaFact]
+    public void The_stub_has_its_own_paper_and_text_and_neither_has_a_border_by_default()
+    {
+        var ticket = Ticket();
+        TestHelpers.Show(ticket);
+        Dispatcher.UIThread.RunJobs();
+        ticket.StubBackground.ShouldNotBeNull();
+        ticket.Background.ShouldNotBeNull();
+        ((ISolidColorBrush)ticket.StubBackground!).Color.ShouldNotBe(((ISolidColorBrush)ticket.Background!).Color);
+        ticket.StubPiece!.Foreground.ShouldBe(ticket.StubForeground);
+        ticket.EdgePen.ShouldBeNull();
+        ticket.CornerRadius.TopLeft.ShouldBe(0);
     }
 
     [AvaloniaFact]

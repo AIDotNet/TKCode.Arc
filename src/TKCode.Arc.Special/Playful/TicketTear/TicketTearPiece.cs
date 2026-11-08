@@ -17,6 +17,9 @@ internal sealed class TicketTearPiece : Decorator
 
     internal TicketTear? Owner { get; set; }
 
+    /// <summary>Whether this is the stub's paper rather than the body's.</summary>
+    internal bool IsStub { get; set; }
+
     /// <summary>Sets the paper's shape. <paramref name="fill"/> includes the fibers; <paramref name="outline"/> does not.</summary>
     public void SetShape(Geometry fill, Geometry outline)
     {
@@ -31,17 +34,21 @@ internal sealed class TicketTearPiece : Decorator
     {
         if (Owner is { } owner && _fill is not null && _outline is not null)
         {
-            context.DrawGeometry(owner.Background, null, _fill);
-            context.DrawGeometry(null, owner.EdgePen, _outline);
+            context.DrawGeometry(IsStub ? owner.StubBackground : owner.Background, null, _fill);
+            if (owner.EdgePen is { } pen)
+            {
+                context.DrawGeometry(null, pen, _outline);
+            }
         }
     }
 }
 
 /// <summary>
-/// The torn part of the stub, curling from the tear's front. The paper bends evenly along its height: each height has a
-/// point on the perforated edge and a direction across the stub, the direction turns a little more the further it is from
-/// the front, and the edge follows it. The outline goes through that bend point by point; the picture of the stub goes
-/// through a mesh of triangles, each an exact affine map of its corners, so the print stays continuous over the curve.
+/// The torn part of the stub, lifting from a crease at the tear's front. Most of the turn happens at the crease and the
+/// rest bends gently along the flap: each height has a point on the torn edge and a direction across the stub, the
+/// direction turns a little more the further it is from the crease, and the edge follows it. The outline goes through
+/// that bend point by point; the picture of the stub goes through a mesh of triangles, each an exact affine map of its
+/// corners, so the print stays continuous.
 /// Once free it is the whole stub, and it falls. It draws only: assistive technology reads the real stub.
 /// </summary>
 internal sealed class TicketTearFlap : Control
@@ -51,20 +58,20 @@ internal sealed class TicketTearFlap : Control
         AvaloniaProperty.Register<TicketTearFlap, IBrush?>(nameof(ShadowBrush));
 
     private const int Bands = 10;
-    private const double MaxShade = 0.13;
-    private const int ShadeLevels = 24;
-    private const double ShadowX = 1.5;
-    private const double ShadowY = 3.5;
+    private const double MaxShade = 0.07;
+
+    /// <summary>The share of the flap's turn taken at the crease.</summary>
+    private const double CreaseShare = 0.72;
+
+    private const int ShadeLevels = 16;
+    private const double ShadowX = 1;
+    private const double ShadowY = 2;
 
     private static readonly IBrush[] s_shades = CreateShades();
 
-    // One band is the unit square split in two. The print's triangles reach slightly over their neighbours so no seam
-    // shows; the shade's meet exactly, or the overlap would draw a darker line.
+    // One band is the unit square split in two. The triangles reach slightly over their neighbours so no seam shows.
     private static readonly Geometry s_printA = Triangle(new Point(-0.02, -0.02), new Point(1.04, -0.02), new Point(-0.02, 1.04));
     private static readonly Geometry s_printB = Triangle(new Point(1.02, -0.04), new Point(1.02, 1.02), new Point(-0.04, 1.02));
-    private static readonly Geometry s_shadeA = Triangle(new Point(0, 0), new Point(1, 0), new Point(0, 1));
-    private static readonly Geometry s_shadeB = Triangle(new Point(1, 0), new Point(1, 1), new Point(0, 1));
-    private static readonly Rect s_unit = new(0, 0, 1, 1);
 
     private readonly Point[] _edge = new Point[Bands + 1];
     private readonly Vector[] _across = new Vector[Bands + 1];
@@ -72,6 +79,7 @@ internal sealed class TicketTearFlap : Control
     private double _bandHeight;
     private double _hinge;
     private double _angle;
+    private double _inset;
 
     static TicketTearFlap()
     {
@@ -114,12 +122,12 @@ internal sealed class TicketTearFlap : Control
             return;
         }
         var motion = owner.Motion;
-        var hinge = motion.Front;
+        var hinge = motion.Front >= geometry.Height ? geometry.Height : geometry.SnapHinge(motion.Front);
         if (hinge <= 0)
         {
             return;
         }
-        Bend(hinge, motion.Angle);
+        Bend(geometry, hinge, motion.Angle);
 
         // The fall: the stub spins about its centre and drops.
         var centre = new Vector(geometry.StubWidth / 2, geometry.Height / 2);
@@ -143,29 +151,45 @@ internal sealed class TicketTearFlap : Control
         }
         using (context.PushGeometryClip(shape))
         {
-            context.DrawGeometry(owner.Background, null, shape);
-            DrawBands(context, owner, geometry, motion.Angle / TicketTearMotion.MaxAngle);
-            context.DrawGeometry(null, owner.EdgePen, outline);
+            context.DrawGeometry(owner.StubBackground, null, shape);
+            if (owner.StubSnapshot is { } snapshot)
+            {
+                DrawPrint(context, snapshot, geometry);
+            }
+            // A flap held at an angle catches less light. One shade for all of it: per band it would show their seams.
+            var level = (int)Math.Round(ShadeLevels * motion.Angle / TicketTearMotion.MaxAngle);
+            if (level > 0)
+            {
+                context.DrawGeometry(s_shades[Math.Min(level, ShadeLevels)], null, shape);
+            }
+            if (owner.EdgePen is { } pen)
+            {
+                context.DrawGeometry(null, pen, outline);
+            }
         }
     }
 
-    /// <summary>Works out the bend: where the perforated edge goes, and which way the paper runs from it, at each band's border.</summary>
-    private void Bend(double hinge, double angle)
+    /// <summary>Works out the bend: where the torn edge goes, and which way the paper runs from it, at each band's border.</summary>
+    private void Bend(TicketTearGeometry geometry, double hinge, double angle)
     {
         _hinge = hinge;
         _angle = angle;
+        _inset = geometry.Inset;
         _bandHeight = hinge / Bands;
-        var edge = new Point(0, hinge);
+        var edge = new Point(_inset, hinge);
         for (var i = 0; i <= Bands; i++)
         {
-            var (sin, cos) = Math.SinCos(angle * i / Bands);
+            var (sin, cos) = Math.SinCos(TurnAt(i));
             _edge[i] = edge;
             _across[i] = new Vector(cos, sin);
             // Up the paper is at right angles to across it, so a turning paper moves its edge away from the body.
-            var (midSin, midCos) = Math.SinCos(angle * (i + 0.5) / Bands);
+            var (midSin, midCos) = Math.SinCos(TurnAt(i + 0.5));
             edge += new Vector(_bandHeight * midSin, -_bandHeight * midCos);
         }
     }
+
+    /// <summary>How far the paper has turned at a height, counted in bands from the crease.</summary>
+    private double TurnAt(double band) => _angle * (CreaseShare + (1 - CreaseShare) * band / Bands);
 
     /// <summary>Where a point of the flat stub goes.</summary>
     private Point Map(Point point)
@@ -174,8 +198,8 @@ internal sealed class TicketTearFlap : Control
         var band = Math.Min((int)at, Bands - 1);
         var share = at - band;
         var edge = _edge[band] + (_edge[band + 1] - _edge[band]) * share;
-        var (sin, cos) = Math.SinCos(_angle * at / Bands);
-        return edge + new Vector(cos, sin) * point.X;
+        var (sin, cos) = Math.SinCos(TurnAt(at));
+        return edge + new Vector(cos, sin) * (point.X - _inset);
     }
 
     private StreamGeometry MapToGeometry()
@@ -194,57 +218,42 @@ internal sealed class TicketTearFlap : Control
         return geometry;
     }
 
-    private void DrawBands(DrawingContext context, TicketTear owner, TicketTearGeometry geometry, double bendShare)
+    private void DrawPrint(DrawingContext context, IImage image, TicketTearGeometry geometry)
     {
         var width = geometry.StubWidth;
+        var source = new Rect(image.Size);
+        if (image is Avalonia.Media.Imaging.Bitmap bitmap)
+        {
+            // A bitmap's source rectangle is in pixels.
+            source = new Rect(0, 0, bitmap.PixelSize.Width, bitmap.PixelSize.Height);
+        }
         for (var i = 0; i < Bands; i++)
         {
             // Unit square: x runs across the stub, y from the band's top border down to its bottom one.
-            var topLeft = _edge[i + 1];
+            var topLeft = _edge[i + 1] - _across[i + 1] * _inset;
             var topRight = topLeft + _across[i + 1] * width;
-            var bottomLeft = _edge[i];
+            var bottomLeft = _edge[i] - _across[i] * _inset;
             var bottomRight = bottomLeft + _across[i] * width;
             var upper = FromUnit(topRight - topLeft, bottomLeft - topLeft, topLeft);
             var lowerAcross = bottomRight - bottomLeft;
             var lower = FromUnit(lowerAcross, bottomRight - topRight, topRight - lowerAcross);
 
-            if (owner.StubSnapshot is { } snapshot)
-            {
-                // The whole picture, placed so that this band's slice of it lands on the unit square.
-                var top = _hinge - _bandHeight * (i + 1);
-                var source = new Rect(0, 0, snapshot.PixelSize.Width, snapshot.PixelSize.Height);
-                var target = new Rect(0, -top / _bandHeight, 1, geometry.Height / _bandHeight);
-                DrawPrint(context, snapshot, source, target, upper, s_printA);
-                DrawPrint(context, snapshot, source, target, lower, s_printB);
-            }
-
-            // The sharper the bend, the darker the paper near the tear.
-            var level = (int)Math.Round(ShadeLevels * bendShare * (1 - (i + 0.5) / Bands));
-            if (level > 0)
-            {
-                var shade = s_shades[Math.Min(level, ShadeLevels)];
-                DrawShade(context, shade, upper, s_shadeA);
-                DrawShade(context, shade, lower, s_shadeB);
-            }
+            // The whole picture, placed so that this band's slice of it lands on the unit square.
+            var top = _hinge - _bandHeight * (i + 1);
+            var target = new Rect(0, -top / _bandHeight, 1, geometry.Height / _bandHeight);
+            DrawTriangle(context, image, source, target, upper, s_printA);
+            DrawTriangle(context, image, source, target, lower, s_printB);
         }
     }
 
     private static Matrix FromUnit(Vector x, Vector y, Point origin) => new(x.X, x.Y, y.X, y.Y, origin.X, origin.Y);
 
-    private static void DrawPrint(DrawingContext context, IImage image, Rect source, Rect target, Matrix map, Geometry triangle)
+    private static void DrawTriangle(DrawingContext context, IImage image, Rect source, Rect target, Matrix map, Geometry triangle)
     {
         using (context.PushTransform(map))
         using (context.PushGeometryClip(triangle))
         {
             context.DrawImage(image, source, target);
-        }
-    }
-
-    private static void DrawShade(DrawingContext context, IBrush shade, Matrix map, Geometry triangle)
-    {
-        using (context.PushTransform(map))
-        {
-            context.DrawGeometry(shade, null, triangle);
         }
     }
 }

@@ -28672,6 +28672,14 @@
         <source>What is printed on the stub. Keep it short: a seat, a gate or a code.</source>
         <target>印在票根上的內容。要簡短：一個座位、一個登機門或一個代碼。</target>
       </trans-unit>
+      <trans-unit id="TicketTear.StubBackground">
+        <source>Paper of the stub. By default it stands out from the body: light on a dark theme, dark on a light one.</source>
+        <target>票根的紙張。預設與票身形成反差：深色主題下為淺色，淺色主題下為深色。</target>
+      </trans-unit>
+      <trans-unit id="TicketTear.StubForeground">
+        <source>Text on the stub.</source>
+        <target>票根上的文字。</target>
+      </trans-unit>
       <trans-unit id="TicketTear.StubTemplate">
         <source>Template for `Stub`.</source>
         <target>`Stub` 的範本。</target>

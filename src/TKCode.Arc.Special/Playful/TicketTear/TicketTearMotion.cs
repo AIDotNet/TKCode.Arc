@@ -29,7 +29,7 @@ internal enum TicketTearPhase
 internal sealed class TicketTearMotion
 {
     /// <summary>The most a flap bends, in radians.</summary>
-    public const double MaxAngle = 38 * Math.PI / 180;
+    public const double MaxAngle = 24 * Math.PI / 180;
 
     /// <summary>A release faster than this, in px/s down or away, finishes the tear.</summary>
     public const double FlickSpeed = 700;
