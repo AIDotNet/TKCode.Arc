@@ -4,7 +4,6 @@ using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
-using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
@@ -43,8 +42,7 @@ internal sealed class GallerySearchBox : TextBox
                 VerticalAlignment = VerticalAlignment.Center,
                 TextTrimming = TextTrimming.CharacterEllipsis,
                 IsHitTestVisible = false,
-                [!TextBlock.TextProperty] = box[!PlaceholderTextProperty],
-                [!IsVisibleProperty] = new TemplateBinding(TextProperty) { Converter = StringConverters.IsNullOrEmpty }
+                [!TextBlock.TextProperty] = box[!PlaceholderTextProperty]
             }.RegisterInNameScope(scope);
             ArcTokens.Bind(placeholder, TextBlock.ForegroundProperty, ArcDesignTokenKind.TextMuted);
             var presenter = new TextPresenter
@@ -61,6 +59,14 @@ internal sealed class GallerySearchBox : TextBox
                 [!TextPresenter.SelectionForegroundBrushProperty] = box[!SelectionForegroundBrushProperty],
                 [!TextPresenter.CaretBrushProperty] = box[!CaretBrushProperty]
             }.RegisterInNameScope(scope);
+            // The text an input method is composing is not in Text yet, and must not be drawn over the placeholder.
+            presenter.PropertyChanged += (_, e) =>
+            {
+                if (e.Property == TextPresenter.TextProperty || e.Property == TextPresenter.PreeditTextProperty)
+                {
+                    placeholder.IsVisible = string.IsNullOrEmpty(presenter.Text) && string.IsNullOrEmpty(presenter.PreeditText);
+                }
+            };
             return new Panel
             {
                 Background = Brushes.Transparent,
