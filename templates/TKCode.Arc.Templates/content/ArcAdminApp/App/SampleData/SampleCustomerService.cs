@@ -40,10 +40,10 @@ public sealed class SampleCustomerService : ICustomerService
         var mrr = (double)_customers.Where(c => c.Status != CustomerStatus.Churned).Sum(c => c.MonthlyRevenue);
         Kpi[] kpis =
         [
-            new("Monthly revenue", mrr, "$", null, 0, "+8.2%", [41, 43, 42, 46, 48, 47, 51, 53]),
-            new("Active customers", active, null, null, 0, "+12", [88, 90, 91, 91, 94, 96, 97, 99]),
-            new("Trials", _customers.Count(c => c.Status == CustomerStatus.Trial), null, null, 0, "+3", [9, 11, 10, 12, 14, 13, 15, 16]),
-            new("Churn", 2.4, null, "%", 1, "-0.3%", [3.1, 3.0, 2.9, 2.9, 2.7, 2.6, 2.5, 2.4]),
+            new("Monthly revenue", mrr, "$", null, 0, "+8.2%"),
+            new("Active customers", active, null, null, 0, "+12"),
+            new("Trials", _customers.Count(c => c.Status == CustomerStatus.Trial), null, null, 0, "+3"),
+            new("Net retention", 104.2, null, "%", 1, "+1.2%"),
         ];
         return new DashboardSummary(kpis, days, revenue, previous);
     }

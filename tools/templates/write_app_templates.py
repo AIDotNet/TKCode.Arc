@@ -192,7 +192,7 @@ def scenario(folder, identity, name, short, desc, size, flags, navigation, extra
 scenarios=[
     scenario("ArcAdminApp","TKCode.Arc.Templates.Admin","TKCode.Arc Admin App","tkcode-arc-admin",
         "A SaaS admin app built with TKCode.Arc: sign-in, a dashboard with metrics and a chart, a customer table with search, filters, paging and a detail drawer, team members and roles, billing and settings, a command palette and notifications. Sample data behind service interfaces; MVVM and dependency injection.",
-        ("1280","800","960","600"),{"UsesSidebar":True},True,[("Layouts/Navigation/Models/","Models/",["Project.cs"])]),
+        ("1280","800","1100","600"),{"UsesSidebar":True},True,[("Layouts/Navigation/Models/","Models/",["Project.cs"])]),
     scenario("ArcAiChatApp","TKCode.Arc.Templates.AiChat","TKCode.Arc AI Chat App","tkcode-arc-ai-chat",
         "An AI chat client built with TKCode.Arc: a conversation list, a streaming Markdown chat with reasoning, attachments and a model picker, conversations saved between runs. A local sample responder streams the replies; plug in any model client (no vendor SDK included). MVVM and dependency injection.",
         ("1200","780","800","520"),{"UsesSidebar":True,"IsAiChat":True},False),

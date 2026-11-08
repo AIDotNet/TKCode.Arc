@@ -37,15 +37,15 @@
                                        VerticalAlignment="Center"
                                        Foreground="{arc:ArcDesignTokenResource Background}" />
                 </Border>
-                <arc:InlineEdit Grid.Column="1" Value="{Binding Name, Mode=TwoWay}" VerticalAlignment="Center" AutomationProperties.Name="Workflow name" />
+                <arc:InlineEdit Grid.Column="1" Variant="Body" Value="{Binding Name, Mode=TwoWay}" VerticalAlignment="Center" AutomationProperties.Name="Workflow name" />
                 <TextBlock Grid.Column="2" Classes="muted" Text="{Binding Status}" VerticalAlignment="Center" Margin="8,0" />
-                <arc:Button Grid.Column="3" Variant="Ghost" Size="Small" Content="Undo" Command="{Binding #Canvas.UndoCommand}" />
-                <arc:Button Grid.Column="4" Variant="Ghost" Size="Small" Content="Redo" Command="{Binding #Canvas.RedoCommand}" />
-                <arc:Button Grid.Column="5" Variant="Ghost" Size="Small" Content="Arrange" Click="OnArrange" />
-                <arc:Button Grid.Column="6" Variant="Secondary" Size="Small" Content="Import" Click="OnImport" />
-                <arc:Button Grid.Column="7" Variant="Secondary" Size="Small" Content="Export" Click="OnExport" />
+                <arc:Button Grid.Column="3" VerticalAlignment="Center" Variant="Ghost" Size="Small" Content="Undo" Command="{Binding #Canvas.UndoCommand}" />
+                <arc:Button Grid.Column="4" VerticalAlignment="Center" Variant="Ghost" Size="Small" Content="Redo" Command="{Binding #Canvas.RedoCommand}" />
+                <arc:Button Grid.Column="5" VerticalAlignment="Center" Variant="Ghost" Size="Small" Content="Arrange" Click="OnArrange" />
+                <arc:Button Grid.Column="6" VerticalAlignment="Center" Variant="Secondary" Size="Small" Content="Import" Click="OnImport" />
+                <arc:Button Grid.Column="7" VerticalAlignment="Center" Variant="Secondary" Size="Small" Content="Export" Click="OnExport" />
                 <StackPanel Grid.Column="8" Orientation="Horizontal" Spacing="8">
-                    <arc:Button Size="Small" Command="{Binding RunCommand}">
+                    <arc:Button Size="Small" VerticalAlignment="Center" Command="{Binding RunCommand}">
                         <StackPanel Orientation="Horizontal" Spacing="6">
                             <lucide:LucideIcon Kind="Play" Size="13" />
                             <TextBlock Text="Run" />
@@ -71,7 +71,7 @@
                                             Command="{Binding $parent[UserControl].((vm:MainViewModel)DataContext).AddStepCommand}"
                                             CommandParameter="{Binding}">
                                     <StackPanel Orientation="Horizontal" Spacing="10">
-                                        <PathIcon Data="{Binding Icon}" Width="14" Height="14" />
+                                        <arc:ArcGlyph Data="{Binding Icon}" Size="14" VerticalAlignment="Center" />
                                         <TextBlock Text="{Binding Title}" />
                                     </StackPanel>
                                 </arc:Button>
@@ -91,7 +91,7 @@
                         <TextBlock Classes="heading" Text="Step" />
                         <arc:Input Label="Title" Text="{Binding Title}" />
                         <arc:Input Label="Description" Text="{Binding Description}" />
-                        <arc:Switch Content="Locked (cannot be moved or deleted)" IsChecked="{Binding IsLocked}" />
+                        <arc:Switch Content="Locked" IsChecked="{Binding IsLocked}" />
                     </StackPanel>
                 </Panel>
             </Panel>
@@ -99,9 +99,9 @@
 
         <!-- The canvas, with its zoom controls and minimap on top. -->
         <Panel>
-            <arc:WorkflowCanvas x:Name="Canvas" Graph="{Binding Graph}" IsEditable="True" AutoFit="Fit" MaxZoom="1.25" />
+            <arc:WorkflowCanvas x:Name="Canvas" Graph="{Binding Graph}" IsEditable="True" AutoFit="Fit" MaxZoom="1" />
             <arc:WorkflowZoomControls Target="{Binding #Canvas}" Margin="12" HorizontalAlignment="Left" VerticalAlignment="Bottom" />
-            <arc:WorkflowMinimap Target="{Binding #Canvas}" Margin="12" HorizontalAlignment="Right" VerticalAlignment="Bottom" />
+            <arc:WorkflowMinimap Target="{Binding #Canvas}" Margin="12,12,12,60" HorizontalAlignment="Left" VerticalAlignment="Bottom" />
         </Panel>
     </DockPanel>
 </UserControl>

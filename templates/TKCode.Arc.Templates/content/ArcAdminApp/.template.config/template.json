@@ -140,7 +140,7 @@
       "generator": "constant",
       "replaces": "ArcWindowMinWidth",
       "parameters": {
-        "value": "960"
+        "value": "1100"
       }
     },
     "WindowMinHeight": {

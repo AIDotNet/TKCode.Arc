@@ -1,7 +1,6 @@
 using System.Collections.ObjectModel;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Interactivity;
 using ArcStarterApp.Settings;
 using ArcStarterApp.ViewModels;
 using TKCode.Arc;
@@ -88,8 +87,6 @@ public partial class MainView : UserControl
         }
         Nav.SelectedKey = Chat.CurrentConversation?.Id;
     }
-
-    private void OnNewChat(object? sender, RoutedEventArgs e) => Chat.CurrentConversation = null;
 
     private void OnNavPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
     {
