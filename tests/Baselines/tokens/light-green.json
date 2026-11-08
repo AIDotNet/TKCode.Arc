@@ -7079,6 +7079,27 @@
       "SubtitleFontSize": "13",
       "TitleFontSize": "15"
     },
+    "TransferBox": {
+      "ActionsGap": "8",
+      "ActionsMargin": "12,0,12,0",
+      "CheckGlyphSize": "16",
+      "DefaultHeight": "320",
+      "DisabledOpacity": "0.5",
+      "EmptyPadding": "16,16,16,16",
+      "HeaderMinHeight": "48",
+      "HeaderPadding": "4,0,14,0",
+      "HeaderTitleMargin": "8,0,8,0",
+      "ListPadding": "6,6,6,6",
+      "MoveButtonExtent": "36",
+      "MoveGlyphSize": "16",
+      "PanelMinWidth": "180",
+      "RowCheckMargin": "8,0,0,0",
+      "RowFocusRingMargin": "0,0,0,0",
+      "RowMargin": "0,0,0,2",
+      "RowMinHeight": "36",
+      "RowPadding": "12,6,10,6",
+      "SearchMargin": "8,8,8,0"
+    },
     "TreeTable": {
       "BodyPadding": "0,0,0,6",
       "CellInlinePadding": "12",

@@ -28076,6 +28076,114 @@
         <source>Where a `TrainingRun` job is.</source>
         <target>`TrainingRun` 任务所处的阶段。</target>
       </trans-unit>
+      <trans-unit id="TransferBox">
+        <source>A transfer list (shuttle box): two lists side by side and the actions that move items between them. Moving edits the bound `SourceItems` and `TargetItems` collections themselves (the same object references leave one and join the other), so a view model reads the result directly. Each list selects like a list box (click, Ctrl and Shift, Ctrl+A), has a select-all box and an optional search filter; Enter or a double click moves the selection, and the move commands are public for buttons of your own.</source>
+        <target>穿梭框：两个并排的列表，以及在它们之间移动项目的操作。移动会直接修改绑定的 `SourceItems` 和 `TargetItems` 集合（同一个对象引用离开一个集合、加入另一个集合），因此视图模型可以直接读取结果。每个列表的选择方式与列表框相同（单击、Ctrl 和 Shift、Ctrl+A），带有全选框和可选的搜索筛选；按 Enter 或双击会移动选择，移动命令是公开的，可供你自己的按钮使用。</target>
+      </trans-unit>
+      <trans-unit id="TransferBox.CanMoveToSource">
+        <source>True when the right list has a selection and both collections can be modified.</source>
+        <target>右侧列表有选择且两个集合都可修改时为 true。</target>
+      </trans-unit>
+      <trans-unit id="TransferBox.CanMoveToTarget">
+        <source>True when the left list has a selection and both collections can be modified.</source>
+        <target>左侧列表有选择且两个集合都可修改时为 true。</target>
+      </trans-unit>
+      <trans-unit id="TransferBox.IsMoveAllVisible">
+        <source>Shows the "move all" buttons above and below the move buttons.</source>
+        <target>在移动按钮的上方和下方显示“全部移动”按钮。</target>
+      </trans-unit>
+      <trans-unit id="TransferBox.IsSearchable">
+        <source>Shows a search field under each list header; it filters the rows by `ItemTextSelector`.</source>
+        <target>在每个列表标题下显示搜索框，按 `ItemTextSelector` 筛选行。</target>
+      </trans-unit>
+      <trans-unit id="TransferBox.IsSelectAllVisible">
+        <source>Shows a select-all box in each list header (only with multiple selection).</source>
+        <target>在每个列表标题中显示全选框（仅多选时）。</target>
+      </trans-unit>
+      <trans-unit id="TransferBox.ItemTemplate">
+        <source>Template of a row in both lists. Without one a row shows `ItemTextSelector` or the item's text.</source>
+        <target>两个列表中行的模板。未设置时，行显示 `ItemTextSelector` 的结果或项目的文本。</target>
+      </trans-unit>
+      <trans-unit id="TransferBox.ItemTextSelector">
+        <source>Text of an item, used by the default row, the search filter and the row's accessible name. Typed as a delegate, so it needs no reflection; null uses `ToString()`.</source>
+        <target>项目的文本，用于默认行、搜索筛选和行的无障碍名称。类型为委托，因此不需要反射；为 null 时使用 `ToString()`。</target>
+      </trans-unit>
+      <trans-unit id="TransferBox.ItemsTransferred">
+        <source>Raised after items moved, once per move with all the moved items.</source>
+        <target>项目移动之后触发，每次移动触发一次，包含所有移动的项目。</target>
+      </trans-unit>
+      <trans-unit id="TransferBox.MoveAllToSourceLabel">
+        <source>Accessible name and tooltip of the button that moves every shown item back to the left list.</source>
+        <target>把所有显示的项目移回左侧列表的按钮的无障碍名称和工具提示。</target>
+      </trans-unit>
+      <trans-unit id="TransferBox.MoveAllToTargetLabel">
+        <source>Accessible name and tooltip of the button that moves every shown item to the right list.</source>
+        <target>把所有显示的项目移到右侧列表的按钮的无障碍名称和工具提示。</target>
+      </trans-unit>
+      <trans-unit id="TransferBox.MoveToSourceLabel">
+        <source>Accessible name and tooltip of the button that moves the selection back to the left list.</source>
+        <target>把选择移回左侧列表的按钮的无障碍名称和工具提示。</target>
+      </trans-unit>
+      <trans-unit id="TransferBox.MoveToTargetLabel">
+        <source>Accessible name and tooltip of the button that moves the selection to the right list.</source>
+        <target>把选择移到右侧列表的按钮的无障碍名称和工具提示。</target>
+      </trans-unit>
+      <trans-unit id="TransferBox.NoMatchesText">
+        <source>Shown in a list whose items are all hidden by its search text.</source>
+        <target>列表中的项目全部被搜索文字隐藏时显示的文字。</target>
+      </trans-unit>
+      <trans-unit id="TransferBox.SearchPlaceholder">
+        <source>Placeholder and accessible name of the search fields.</source>
+        <target>搜索框的占位文字和无障碍名称。</target>
+      </trans-unit>
+      <trans-unit id="TransferBox.SelectAllLabel">
+        <source>Accessible name of the select-all boxes (followed by the list title).</source>
+        <target>全选框的无障碍名称（后接列表标题）。</target>
+      </trans-unit>
+      <trans-unit id="TransferBox.SelectionMode">
+        <source>How rows are selected in both lists: `Multiple` (default; Ctrl and Shift extend the selection, Ctrl+A selects all) or `Single`.</source>
+        <target>两个列表中行的选择方式：`Multiple`（默认；Ctrl 和 Shift 扩展选择，Ctrl+A 全选）或 `Single`。</target>
+      </trans-unit>
+      <trans-unit id="TransferBox.SourceEmptyContent">
+        <source>Shown in the left list when it has no items: text or any content.</source>
+        <target>左侧列表没有项目时显示的内容：文字或任意内容。</target>
+      </trans-unit>
+      <trans-unit id="TransferBox.SourceHeader">
+        <source>Title of the left list: text or any content.</source>
+        <target>左侧列表的标题：文字或任意内容。</target>
+      </trans-unit>
+      <trans-unit id="TransferBox.SourceItems">
+        <source>The items of the left list. Moving removes items from it and adds items to it, so it must be a modifiable `IList` (for example an `ObservableCollection&lt;T&gt;`); a read-only or fixed-size list disables moving.</source>
+        <target>左侧列表的项目。移动会从中移除项目并向其中添加项目，因此它必须是可修改的 `IList`（例如 `ObservableCollection&lt;T&gt;`）；只读或固定大小的列表会禁用移动。</target>
+      </trans-unit>
+      <trans-unit id="TransferBox.SourceSearchText">
+        <source>Search text of the left list (case-insensitive, matches anywhere in the item text).</source>
+        <target>左侧列表的搜索文字（忽略大小写，匹配项目文本中的任意位置）。</target>
+      </trans-unit>
+      <trans-unit id="TransferBox.SourceSelectionCount">
+        <source>Number of selected rows in the left list.</source>
+        <target>左侧列表中选中的行数。</target>
+      </trans-unit>
+      <trans-unit id="TransferBox.TargetEmptyContent">
+        <source>Shown in the right list when it has no items: text or any content.</source>
+        <target>右侧列表没有项目时显示的内容：文字或任意内容。</target>
+      </trans-unit>
+      <trans-unit id="TransferBox.TargetHeader">
+        <source>Title of the right list: text or any content.</source>
+        <target>右侧列表的标题：文字或任意内容。</target>
+      </trans-unit>
+      <trans-unit id="TransferBox.TargetItems">
+        <source>The items of the right list; the same rules as `SourceItems`. Moved items are added at its end.</source>
+        <target>右侧列表的项目；规则与 `SourceItems` 相同。移入的项目加在其末尾。</target>
+      </trans-unit>
+      <trans-unit id="TransferBox.TargetSearchText">
+        <source>Search text of the right list (case-insensitive, matches anywhere in the item text).</source>
+        <target>右侧列表的搜索文字（忽略大小写，匹配项目文本中的任意位置）。</target>
+      </trans-unit>
+      <trans-unit id="TransferBox.TargetSelectionCount">
+        <source>Number of selected rows in the right list.</source>
+        <target>右侧列表中选中的行数。</target>
+      </trans-unit>
       <trans-unit id="TreeTable">
         <source>A table whose rows nest. Rows expand and collapse on a spring with indent guides, parents carry tri-state checkboxes (`IsSelectable`), sorting reorders siblings without breaking the hierarchy, and children can load on first expand (`ChildrenLoader`). The first column shown holds the tree. Keyboard follows the treegrid pattern: ↑/↓ move, → opens or enters, ← closes or goes to the parent, Home/End, PageUp/PageDown move ten rows, `*` opens all siblings, Space selects, Enter toggles a parent or activates a leaf, Ctrl/Cmd+A selects all. Rows come from `ItemsSource` and `ChildrenSelector`; each row is identified by `KeySelector` (the item itself when not set), which is what `ExpandedKeys` and `SelectedKeys` hold. Like Arc, rows are not virtualized: every visible row exists and animates, so keep an expanded tree to a few hundred rows and load deeper levels on demand.</source>
         <target>行可以嵌套的表格。行在弹簧上展开和收起并带有缩进引导线，父行带有三态复选框（`IsSelectable`），排序会重排同级行而不破坏层级，子行可以在第一次展开时加载（`ChildrenLoader`）。显示出来的第一列承载树。键盘遵循树状网格模式：↑/↓ 移动，→ 展开或进入，← 收起或转到父级，Home/End，PageUp/PageDown 移动十行，`*` 展开所有同级行，Space 选择，Enter 切换父行或激活叶子，Ctrl/Cmd+A 全选。行来自 `ItemsSource` 和 `ChildrenSelector`；每一行由 `KeySelector` 标识（未设置时为行项本身），`ExpandedKeys` 和 `SelectedKeys` 保存的就是这些键。与 Arc 一样，行不做虚拟化：每个可见行都存在并带有动画，因此展开的树请保持在几百行以内，更深的层级按需加载。</target>

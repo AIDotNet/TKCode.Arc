@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.TransferBoxItemTemplateDemo">
+    <arc:TransferBox x:Name="Box"
+                     SourceHeader="Available permissions"
+                     TargetHeader="Granted to editors"
+                     MaxWidth="680"
+                     Height="380">
+        <arc:TransferBox.ItemTemplate>
+            <DataTemplate x:DataType="demos:TransferBoxPermission">
+                <StackPanel Spacing="2">
+                    <TextBlock Text="{Binding Name}" FontWeight="Medium" TextTrimming="CharacterEllipsis" />
+                    <TextBlock Text="{Binding Description}"
+                               FontSize="12"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                               TextTrimming="CharacterEllipsis" />
+                </StackPanel>
+            </DataTemplate>
+        </arc:TransferBox.ItemTemplate>
+    </arc:TransferBox>
+</UserControl>
