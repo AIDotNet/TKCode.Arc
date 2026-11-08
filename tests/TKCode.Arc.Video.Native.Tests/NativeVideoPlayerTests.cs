@@ -130,11 +130,6 @@ public sealed class NativeVideoPlayerTests
         var request = new VideoFrameRequest(TimeSpan.Zero, default, VideoFrameKinds.Gpu | VideoFrameKinds.CpuBgra);
         var got = await WaitForFrameAsync(player, request, lease =>
         {
-            if (OperatingSystem.IsWindows() && lease.Kind == VideoFrameKinds.CpuBgra)
-            {
-                // A device without video support (a VM) plays in software and hands out CPU frames only.
-                return true;
-            }
             lease.Kind.ShouldBe(VideoFrameKinds.Gpu);
             lease.GpuImage.ShouldNotBeNull();
             lease.GpuImage.Handle.ShouldNotBe(0);

@@ -33,7 +33,6 @@
 #include <mfapi.h>
 #include <mfidl.h>
 #include <mfmediaengine.h>
-#include <wincodec.h>
 
 #include <math.h>
 #include <stdarg.h>
@@ -124,6 +123,15 @@ struct tkv_player {
     char error[TKV_ERROR_CAPACITY];
 
     LONG volatile force_frame; /* transfer the current frame on the next acquire even without a new tick */
+    LONG volatile first_frame_ready; /* the engine has a picture for the current load; transferring earlier yields nothing */
+
+    /* The engine's clock only moves while OnVideoStreamTick is being called, so a thread keeps calling it: playback must not
+       stop (sound included) when nothing is pulling frames, such as a minimized window or a control scrolled out of view. */
+    HANDLE pump_thread;
+    HANDLE pump_stop;
+    CRITICAL_SECTION tick_lock; /* guards the two below and serializes OnVideoStreamTick */
+    int tick_pending;           /* a tick found a new frame that no acquire has taken yet */
+    LONGLONG tick_pts;
 
     /* UI thread only. */
     char error_out[TKV_ERROR_CAPACITY];
@@ -136,12 +144,6 @@ struct tkv_player {
     int pool_height;
     int pool_next;
     int gpu_failed;          /* creating the shared pool failed once; GPU frames are not offered again */
-    int software;            /* the device has no video support: the engine runs without it, frames go through WIC */
-
-    IWICImagingFactory* wic;
-    IWICBitmap* wic_bitmap;
-    int wic_width;
-    int wic_height;
 
     ID3D11Texture2D* cpu_texture;
     ID3D11Texture2D* cpu_staging;
@@ -566,6 +568,7 @@ static void handle_event(tkv_player* p, DWORD event, DWORD_PTR param1, DWORD par
     case MF_MEDIA_ENGINE_EVENT_FIRSTFRAMEREADY:
         announce_loaded(p);
         if (event == MF_MEDIA_ENGINE_EVENT_FIRSTFRAMEREADY) {
+            InterlockedExchange(&p->first_frame_ready, 1);
             InterlockedExchange(&p->force_frame, 1);
             if (IMFMediaEngine_IsPaused(p->engine)) {
                 emit(p, TKV_EVENT_FRAME, 0, 0);
@@ -823,6 +826,35 @@ TKV_API int32_t tkv_can_play(const char* media_type)
 /* ------------------------------------------------------------------------------------------------------------------ */
 /* Player lifetime.                                                                                                     */
 
+static HRESULT tick_engine(tkv_player* p)
+{
+    LONGLONG pts = -1;
+    EnterCriticalSection(&p->tick_lock);
+    HRESULT hr = IMFMediaEngine_OnVideoStreamTick(p->engine, &pts);
+    if (hr == S_OK) {
+        p->tick_pending = 1;
+        p->tick_pts = pts;
+    }
+    LeaveCriticalSection(&p->tick_lock);
+    return hr;
+}
+
+static DWORD WINAPI pump_main(void* parameter)
+{
+    tkv_player* p = (tkv_player*)parameter;
+    HRESULT com = CoInitializeEx(NULL, COINIT_MULTITHREADED);
+    while (WaitForSingleObject(p->pump_stop, 15) == WAIT_TIMEOUT) {
+        /* Idle while paused, except that a load has to reach its first picture. */
+        if (!IMFMediaEngine_IsPaused(p->engine) || InterlockedCompareExchange(&p->first_frame_ready, 0, 0) == 0) {
+            tick_engine(p);
+        }
+    }
+    if (SUCCEEDED(com)) {
+        CoUninitialize();
+    }
+    return 0;
+}
+
 static IDXGIAdapter1* find_adapter(const uint8_t* luid)
 {
     if (luid == NULL) {
@@ -921,18 +953,6 @@ static void release_cpu(tkv_player* p)
     p->cpu_height = 0;
 }
 
-/* A device without video support (Microsoft Basic Render Driver, as in many VMs) stalls the engine at position 0 with no
-   error when it is handed over, so such a machine plays in software and hands out CPU frames only. */
-static int has_video_support(ID3D11Device* device)
-{
-    ID3D11VideoDevice* video = NULL;
-    if (FAILED(ID3D11Device_QueryInterface(device, &IID_ID3D11VideoDevice, (void**)&video))) {
-        return 0;
-    }
-    ID3D11VideoDevice_Release(video);
-    return 1;
-}
-
 TKV_API int32_t tkv_player_create(tkv_event_callback callback, void* context, const uint8_t* adapter_luid,
                                   tkv_player** player)
 {
@@ -954,20 +974,37 @@ TKV_API int32_t tkv_player_create(tkv_event_callback callback, void* context, co
     p->out_slot = -1;
     p->next_token = 1;
     InitializeCriticalSection(&p->lock);
+    InitializeCriticalSection(&p->tick_lock);
 
     IDXGIAdapter1* adapter = find_adapter(adapter_luid);
     HRESULT hr = create_device(adapter, &p->device, &p->immediate);
     if (adapter != NULL) {
         IDXGIAdapter1_Release(adapter);
     }
+    if (SUCCEEDED(hr) && trace_enabled()) {
+        ID3D11VideoDevice* video = NULL;
+        IDXGIDevice* dxgi = NULL;
+        IDXGIAdapter* dxgi_adapter = NULL;
+        DXGI_ADAPTER_DESC desc;
+        memset(&desc, 0, sizeof desc);
+        HRESULT video_hr = ID3D11Device_QueryInterface(p->device, &IID_ID3D11VideoDevice, (void**)&video);
+        if (SUCCEEDED(ID3D11Device_QueryInterface(p->device, &IID_IDXGIDevice, (void**)&dxgi))) {
+            if (SUCCEEDED(IDXGIDevice_GetAdapter(dxgi, &dxgi_adapter))) {
+                IDXGIAdapter_GetDesc(dxgi_adapter, &desc);
+                IDXGIAdapter_Release(dxgi_adapter);
+            }
+            IDXGIDevice_Release(dxgi);
+        }
+        TKV_TRACE("device adapter='%ls' feature_level=0x%x video_device=0x%08lX", desc.Description,
+                  (unsigned)ID3D11Device_GetFeatureLevel(p->device), (unsigned long)video_hr);
+        if (video != NULL) {
+            ID3D11VideoDevice_Release(video);
+        }
+    }
     if (SUCCEEDED(hr)) {
         hr = ID3D11Device_QueryInterface(p->device, &IID_ID3D10Multithread, (void**)&p->multithread);
     }
     if (SUCCEEDED(hr)) {
-        p->software = !has_video_support(p->device);
-        TKV_TRACE("device feature_level=0x%x software=%d", (unsigned)ID3D11Device_GetFeatureLevel(p->device), p->software);
-    }
-    if (SUCCEEDED(hr) && !p->software) {
         /* The engine decodes and converts on its own threads with this device. */
         ID3D10Multithread_SetMultithreadProtected(p->multithread, TRUE);
         UINT token = 0;
@@ -993,6 +1030,12 @@ TKV_API int32_t tkv_player_create(tkv_event_callback callback, void* context, co
     }
     IMFMediaEngine_SetPreload(p->engine, MF_MEDIA_ENGINE_PRELOAD_AUTOMATIC);
     IMFMediaEngine_SetAutoPlay(p->engine, FALSE);
+    p->pump_stop = CreateEventW(NULL, TRUE, FALSE, NULL);
+    p->pump_thread = p->pump_stop != NULL ? CreateThread(NULL, 0, pump_main, p, 0, NULL) : NULL;
+    if (p->pump_thread == NULL) {
+        tkv_player_destroy(p);
+        return TKV_E_FAIL;
+    }
     *player = p;
     return TKV_OK;
 }
@@ -1001,6 +1044,17 @@ TKV_API void tkv_player_destroy(tkv_player* p)
 {
     if (p == NULL) {
         return;
+    }
+    /* 0. The pump uses the engine; stop it first. */
+    if (p->pump_stop != NULL) {
+        SetEvent(p->pump_stop);
+    }
+    if (p->pump_thread != NULL) {
+        WaitForSingleObject(p->pump_thread, INFINITE);
+        CloseHandle(p->pump_thread);
+    }
+    if (p->pump_stop != NULL) {
+        CloseHandle(p->pump_stop);
     }
     /* 1. No more events: detach the callback and wait for those in flight. */
     if (p->notify != NULL) {
@@ -1020,12 +1074,6 @@ TKV_API void tkv_player_destroy(tkv_player* p)
     release_pool(p);
     release_cpu(p);
     free(p->cpu_pixels);
-    if (p->wic_bitmap != NULL) {
-        IWICBitmap_Release(p->wic_bitmap);
-    }
-    if (p->wic != NULL) {
-        IWICImagingFactory_Release(p->wic);
-    }
     if (p->manager != NULL) {
         IMFDXGIDeviceManager_Release(p->manager);
     }
@@ -1043,6 +1091,7 @@ TKV_API void tkv_player_destroy(tkv_player* p)
     if (p->notify != NULL) {
         IMFMediaEngineNotify_Release(&p->notify->iface);
     }
+    DeleteCriticalSection(&p->tick_lock);
     DeleteCriticalSection(&p->lock);
     free(p);
 }
@@ -1067,6 +1116,10 @@ TKV_API int32_t tkv_player_open(tkv_player* p, const char* url)
        handles the event. Every failure sets its own text before it is reported, so a stale one is never shown. */
     LeaveCriticalSection(&p->lock);
     InterlockedExchange(&p->force_frame, 0);
+    InterlockedExchange(&p->first_frame_ready, 0);
+    EnterCriticalSection(&p->tick_lock);
+    p->tick_pending = 0;
+    LeaveCriticalSection(&p->tick_lock);
     /* A frame still out stays valid until its release; the pool is rebuilt on the next acquire if the size changes. */
 
     emit_state(p, TKV_STATE_LOADING, 1);
@@ -1424,70 +1477,13 @@ static void fit_size(int width, int height, int target_width, int target_height,
     *out_height = h < 1 ? 1 : h;
 }
 
-/* The software engine's frames: it can only transfer to a WIC bitmap without a DXGI manager. */
-static int32_t read_wic_frame(tkv_player* p, int w, int h, uint8_t* pixels)
-{
-    HRESULT hr = S_OK;
-    if (p->wic == NULL) {
-        hr = CoCreateInstance(&CLSID_WICImagingFactory, NULL, CLSCTX_INPROC_SERVER, &IID_IWICImagingFactory,
-                              (void**)&p->wic);
-    }
-    if (SUCCEEDED(hr) && (p->wic_bitmap == NULL || p->wic_width != w || p->wic_height != h)) {
-        if (p->wic_bitmap != NULL) {
-            IWICBitmap_Release(p->wic_bitmap);
-            p->wic_bitmap = NULL;
-        }
-        hr = IWICImagingFactory_CreateBitmap(p->wic, (UINT)w, (UINT)h, &GUID_WICPixelFormat32bppBGRA, WICBitmapCacheOnLoad,
-                                             &p->wic_bitmap);
-        p->wic_width = w;
-        p->wic_height = h;
-    }
-    if (FAILED(hr)) {
-        set_error_hr(p, "Creating the frame bitmap failed", hr);
-        return TKV_E_FAIL;
-    }
-    RECT dst = { 0, 0, w, h };
-    MFARGB border = { 0, 0, 0, 255 };
-    hr = IMFMediaEngine_TransferVideoFrame(p->engine, (IUnknown*)p->wic_bitmap, NULL, &dst, &border);
-    if (FAILED(hr)) {
-        set_error_hr(p, "TransferVideoFrame failed", hr);
-        return TKV_E_NO_FRAME;
-    }
-    WICRect area = { 0, 0, w, h };
-    IWICBitmapLock* lock = NULL;
-    hr = IWICBitmap_Lock(p->wic_bitmap, &area, WICBitmapLockRead, &lock);
-    UINT stride = 0;
-    UINT size = 0;
-    BYTE* data = NULL;
-    if (SUCCEEDED(hr)) {
-        hr = IWICBitmapLock_GetStride(lock, &stride);
-    }
-    if (SUCCEEDED(hr)) {
-        hr = IWICBitmapLock_GetDataPointer(lock, &size, &data);
-    }
-    if (SUCCEEDED(hr)) {
-        size_t row_bytes = (size_t)w * 4;
-        for (int y = 0; y < h; y++) {
-            memcpy(pixels + (size_t)y * row_bytes, data + (size_t)y * stride, row_bytes);
-        }
-    }
-    if (lock != NULL) {
-        IWICBitmapLock_Release(lock);
-    }
-    if (FAILED(hr)) {
-        set_error_hr(p, "Reading the frame bitmap failed", hr);
-        return TKV_E_FAIL;
-    }
-    return TKV_OK;
-}
-
 static int32_t acquire_cpu(tkv_player* p, int width, int height, const tkv_frame_request* request, double time,
                            tkv_frame* frame)
 {
     int w;
     int h;
     fit_size(width, height, request->target_width, request->target_height, &w, &h);
-    if (!p->software && (p->cpu_width != w || p->cpu_height != h || p->cpu_texture == NULL)) {
+    if (p->cpu_width != w || p->cpu_height != h || p->cpu_texture == NULL) {
         release_cpu(p);
         D3D11_TEXTURE2D_DESC desc;
         memset(&desc, 0, sizeof desc);
@@ -1528,13 +1524,6 @@ static int32_t acquire_cpu(tkv_player* p, int width, int height, const tkv_frame
 
     /* The engine scales to the destination rectangle and keeps the picture's aspect inside it; fit_size kept the
        aspect, so nothing is letterboxed here. */
-    if (p->software) {
-        int32_t read = read_wic_frame(p, w, h, p->cpu_pixels);
-        if (read != TKV_OK) {
-            return read;
-        }
-        goto done;
-    }
     RECT dst = { 0, 0, w, h };
     MFARGB border = { 0, 0, 0, 255 };
     HRESULT hr = IMFMediaEngine_TransferVideoFrame(p->engine, (IUnknown*)p->cpu_texture, NULL, &dst, &border);
@@ -1558,7 +1547,6 @@ static int32_t acquire_cpu(tkv_player* p, int width, int height, const tkv_frame
         set_error_hr(p, "Reading the frame back failed", hr);
         return TKV_E_FAIL;
     }
-done:
     /* BGRA from the engine carries alpha 255 for video; the ABI promises opaque pixels either way. */
     p->out_slot = -1;
     p->out_token = p->next_token++;
@@ -1582,7 +1570,7 @@ TKV_API int32_t tkv_player_acquire_frame(tkv_player* p, const tkv_frame_request*
         return TKV_E_INVALID_ARG;
     }
     int want_gpu = (request->accept & TKV_FRAME_GPU) != 0 && request->gpu_handle_type == TKV_GPU_D3D11_NT_HANDLE &&
-                   !p->gpu_failed && !p->software;
+                   !p->gpu_failed;
     int want_cpu = (request->accept & TKV_FRAME_CPU_BGRA) != 0;
     if (!want_gpu && !want_cpu) {
         return (request->accept & TKV_FRAME_GPU) != 0 ? TKV_E_UNSUPPORTED : TKV_E_INVALID_ARG;
@@ -1592,20 +1580,25 @@ TKV_API int32_t tkv_player_acquire_frame(tkv_player* p, const tkv_frame_request*
         tkv_player_release_frame(p, p->out_token);
     }
 
-    LONGLONG pts = -1;
     int force = InterlockedExchange(&p->force_frame, 0) != 0;
-    HRESULT hr = IMFMediaEngine_OnVideoStreamTick(p->engine, &pts);
-    TKV_TRACE("tick hr=0x%08lX pts=%lld force=%d", (unsigned long)hr, (long long)pts, force);
-    if (hr != S_OK) {
-        if (!force || FAILED(hr)) {
-            if (force) {
-                InterlockedExchange(&p->force_frame, 1);
-            }
-            return TKV_E_NO_FRAME;
-        }
-        /* S_FALSE while paused: no newer frame, but the one on screen (after load or seek) has not been shown. */
-        pts = -1;
+    HRESULT hr = tick_engine(p);
+    LONGLONG pts = -1;
+    int fresh;
+    EnterCriticalSection(&p->tick_lock);
+    fresh = p->tick_pending;
+    if (fresh) {
+        pts = p->tick_pts;
+        p->tick_pending = 0;
     }
+    LeaveCriticalSection(&p->tick_lock);
+    TKV_TRACE("tick hr=0x%08lX fresh=%d pts=%lld force=%d", (unsigned long)hr, fresh, (long long)pts, force);
+    if (!fresh && (FAILED(hr) || !force || InterlockedCompareExchange(&p->first_frame_ready, 0, 0) == 0)) {
+        if (force) {
+            InterlockedExchange(&p->force_frame, 1);
+        }
+        return TKV_E_NO_FRAME;
+    }
+    /* With no newer frame, force shows the one on screen after a load or seek, which has not been shown yet. */
     DWORD cx = 0;
     DWORD cy = 0;
     if (FAILED(IMFMediaEngine_GetNativeVideoSize(p->engine, &cx, &cy)) || cx == 0 || cy == 0) {
