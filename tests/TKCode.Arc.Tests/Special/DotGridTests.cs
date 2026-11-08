@@ -86,6 +86,25 @@ public class DotGridTests
     }
 
     [Fact]
+    public void Field_settles_under_a_resting_pointer_and_stays_lit()
+    {
+        // Regression: a pointer resting inside kept the loop drawing every frame forever.
+        var field = Field();
+        field.PointerMoved(360, 210);
+        var moving = true;
+        for (var i = 0; i < 600 && moving; i++)
+        {
+            moving = field.Step(1.0 / 60);
+        }
+        moving.ShouldBeFalse();
+        field.LensPower.ShouldBe(1);
+        field.Glow(Nearest(field, 360, 210)).ShouldBeGreaterThan(0.5);
+
+        field.PointerMoved(380, 210);
+        field.Step(1.0 / 60).ShouldBeTrue();
+    }
+
+    [Fact]
     public void Field_settles_after_the_pointer_leaves()
     {
         var field = Field();

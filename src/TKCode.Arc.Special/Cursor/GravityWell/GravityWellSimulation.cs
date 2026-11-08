@@ -27,6 +27,9 @@ internal sealed class GravityWellSimulation
     private const double Shrink = 0.44;
     private const double Dim = 0.36;
 
+    // Below this depth a tile dims by less than half of one 8-bit level.
+    private const double OpaqueDepth = 0.005;
+
     private const double PresenceRate = 7;
 
     // A shockwave's kick at its origin: outward speed in px/s, a dip in scale, and how bright the ring flashes.
@@ -96,7 +99,11 @@ internal sealed class GravityWellSimulation
     public double Depth(int index) => _depth[index];
 
     /// <summary>The tile's opacity: 1 outside the well, lower toward its bottom.</summary>
-    public double Opacity(int index) => 1 - Dim * _depth[index];
+    /// <remarks>
+    /// Exactly 1 for tiles the well barely reaches: anything below 1 makes the tile draw through its own layer, and the
+    /// field's long tail would put nearly every tile on one for a dimming nobody can see.
+    /// </remarks>
+    public double Opacity(int index) => _depth[index] < OpaqueDepth ? 1 : 1 - Dim * _depth[index];
 
     /// <summary>
     /// The tile's stacking order: 10 outside the well and down to 1 at its bottom, so deeper tiles slide under their

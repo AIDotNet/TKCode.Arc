@@ -9,7 +9,10 @@ using Avalonia.Media;
 
 namespace TKCode.Arc;
 
-/// <summary>The size of an <see cref="InkFluid"/> simulation.</summary>
+/// <summary>
+/// The size of an <see cref="InkFluid"/> simulation. A field wider or taller than 2.5:1 uses fewer cells on its short side,
+/// so it costs no more than a 2.5:1 field.
+/// </summary>
 public enum InkFluidQuality
 {
     /// <summary>96 velocity cells and 192 ink cells on the short side.</summary>

@@ -120,6 +120,11 @@ internal sealed class DotGridField : Control
     {
         _simulation.Build(Bounds.Width, Bounds.Height, _gap);
         InvalidateVisual();
+        // A lens resting over the field lights the new dots, though the loop has settled.
+        if (_simulation.LensPower > 0 && _simulation.Count > 0)
+        {
+            Wake();
+        }
     }
 
     private bool Step(double dt)

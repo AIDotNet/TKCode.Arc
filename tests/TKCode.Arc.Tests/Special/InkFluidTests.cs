@@ -46,6 +46,133 @@ public class InkFluidTests
         tall.Rows.ShouldBe(cells * 2);
     }
 
+    [Theory]
+    [InlineData(6.4)]
+    [InlineData(1 / 6.4)]
+    public void A_very_wide_field_costs_no_more_than_the_aspect_limit(double aspect)
+    {
+        var limit = Solver(2.5);
+        var field = Solver(aspect);
+        (field.Columns * field.Rows).ShouldBeLessThanOrEqualTo((int)(limit.Columns * limit.Rows * 1.05));
+        (field.InkColumns * field.InkRows).ShouldBeLessThanOrEqualTo((int)(limit.InkColumns * limit.InkRows * 1.05));
+        // The cells stay square.
+        ((double)field.Columns / field.Rows).ShouldBe(aspect, 0.1 * Math.Max(aspect, 1));
+    }
+
+    [Fact]
+    public void Faded_ink_reaches_exactly_zero()
+    {
+        // Fading alone never gets there: the field would stay live and sink into denormals.
+        var solver = Solver();
+        solver.Splat(0.5, 0.5, 100, 50, 1, 1, 0.08);
+        Run(solver, 15);
+        solver.TotalInk().ShouldBe(0);
+    }
+
+    [Fact]
+    public void A_fast_jet_carries_ink_outside_the_rows_it_started_in()
+    {
+        var solver = Solver();
+        solver.Splat(0.5, 0.2, 0, 900, 1, 0, 0.03);
+        BandInk(solver, 0.6, 1).ShouldBe(0);
+        for (var i = 0; i < 12; i++)
+        {
+            solver.Splat(0.5, 0.2, 0, 900, 1, 0, 0.03);
+            solver.Step(1.0 / 60);
+        }
+        Run(solver, 0.3);
+        BandInk(solver, 0.6, 1).ShouldBeGreaterThan(0);
+    }
+
+    private static int BandInk(InkFluidSolver solver, double from, double to)
+    {
+        var pixels = new int[solver.InkColumns * solver.InkRows];
+        solver.Compose(pixels, Colors.Black, Colors.Black, 1);
+        var sum = 0;
+        for (var j = (int)(from * solver.InkRows); j < (int)(to * solver.InkRows); j++)
+        {
+            for (var i = 0; i < solver.InkColumns; i++)
+            {
+                sum += (pixels[j * solver.InkColumns + i] >> 24) & 0xFF;
+            }
+        }
+        return sum;
+    }
+
+    [Theory]
+    [InlineData(0.0, 0.0)]
+    [InlineData(1.0, 0.0)]
+    [InlineData(0.0, 1.0)]
+    [InlineData(1.0, 1.0)]
+    public void Ink_in_a_corner_is_composed(double x, double y)
+    {
+        var solver = Solver();
+        solver.Splat(x, y, 0, 0, 5, 5, 0.05);
+        var pixels = new int[solver.InkColumns * solver.InkRows];
+        solver.Compose(pixels, Colors.Black, Colors.Red, 1);
+        var column = x > 0 ? solver.InkColumns - 1 : 0;
+        var row = y > 0 ? solver.InkRows - 1 : 0;
+        ((pixels[row * solver.InkColumns + column] >> 24) & 0xFF).ShouldBeGreaterThan(0);
+    }
+
+    [Fact]
+    public void Clearing_leaves_a_clear_picture()
+    {
+        var solver = Solver();
+        solver.Splat(0.5, 0.5, 100, 0, 1, 1, 0.05);
+        Run(solver, 0.2);
+        solver.Clear();
+        var pixels = new int[solver.InkColumns * solver.InkRows];
+        Array.Fill(pixels, -1);
+        solver.Compose(pixels, Colors.Black, Colors.Black, 1);
+        pixels.ShouldAllBe(p => p == 0);
+    }
+
+    private static int Steps(InkFluidPacer pacer, double frame, double cost, int frames)
+    {
+        var steps = 0;
+        for (var i = 0; i < frames; i++)
+        {
+            if (pacer.TryStep(frame, out _))
+            {
+                pacer.Stepped(cost);
+                steps++;
+            }
+        }
+        return steps;
+    }
+
+    [Theory]
+    [InlineData(0.0055, 60)] // Regression: any step cost used to skip the next frame, so a cheap step still ran at 30 Hz.
+    [InlineData(0.012, 30)]
+    [InlineData(0.030, 15)]
+    public void Steps_at_60Hz_follow_their_cost(double cost, int perSecond)
+    {
+        Steps(new InkFluidPacer(), 1.0 / 60, cost, 60).ShouldBeInRange(perSecond - 1, perSecond + 1);
+    }
+
+    [Fact]
+    public void A_fast_display_steps_at_most_near_60Hz()
+    {
+        Steps(new InkFluidPacer(), 1.0 / 120, 0.001, 120).ShouldBeInRange(59, 61);
+    }
+
+    [Fact]
+    public void The_steps_simulate_the_time_that_went_by()
+    {
+        var pacer = new InkFluidPacer();
+        var simulated = 0.0;
+        for (var i = 0; i < 120; i++)
+        {
+            if (pacer.TryStep(1.0 / 120, out var dt))
+            {
+                simulated += dt;
+                pacer.Stepped(0.001);
+            }
+        }
+        simulated.ShouldBe(1, 0.02);
+    }
+
     [Fact]
     public void Ink_fades_over_a_couple_of_seconds()
     {
@@ -262,6 +389,27 @@ public class InkFluidTests
         canvas.Loop.IsRunning.ShouldBeFalse();
         canvas.Picture.ShouldNotBeNull();
         canvas.Solver.TotalInk().ShouldBeGreaterThan(0);
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void Reduced_motion_reuses_the_still_frame_until_its_shape_changes()
+    {
+        var ink = new InkFluid { Width = 400, Height = 300 };
+        var window = TestHelpers.Show(ink, ArcMotionLevel.Reduced);
+        Dispatcher.UIThread.RunJobs();
+        var canvas = ink.Canvas!;
+        var builds = canvas.StillBuilds;
+        builds.ShouldBeGreaterThan(0);
+
+        // A theme change sets both brushes; the intensity only changes the picture.
+        ink.InkBrush = Brushes.Red;
+        ink.AccentInkBrush = Brushes.Blue;
+        ink.Intensity = 0.9;
+        canvas.StillBuilds.ShouldBe(builds);
+
+        ink.Tint = 0.1;
+        canvas.StillBuilds.ShouldBe(builds + 1);
         window.Close();
     }
 

@@ -28,6 +28,16 @@ internal sealed class GravityWellTile : ContentControl
     private Border? _ring;
     private double _ringOpacity;
 
+    // The pose on screen. Most tiles barely move in a frame, and each transform or opacity write repaints the tile.
+    private double _shownX;
+    private double _shownY;
+    private double _shownScale = 1;
+
+    // Moves smaller than these cannot be seen; a tile coming to rest always lands exactly.
+    private const double OffsetDeadband = 0.02;
+    private const double ScaleDeadband = 0.0005;
+    private const double OpacityDeadband = 0.002;
+
     public GravityWellTile()
     {
         RenderTransform = _transform;
@@ -43,8 +53,20 @@ internal sealed class GravityWellTile : ContentControl
     /// <summary>Writes the tile's pose for this frame: offset, scale, opacity and stacking order.</summary>
     internal void Pose(double offsetX, double offsetY, double scale, double opacity, int zIndex, double ring)
     {
-        _transform.Matrix = Matrix.CreateScale(scale, scale) * Matrix.CreateTranslation(offsetX, offsetY);
-        Opacity = opacity;
+        var atRest = offsetX == 0 && offsetY == 0 && scale == 1;
+        if (atRest || Math.Abs(offsetX - _shownX) >= OffsetDeadband || Math.Abs(offsetY - _shownY) >= OffsetDeadband ||
+            Math.Abs(scale - _shownScale) >= ScaleDeadband)
+        {
+            _shownX = offsetX;
+            _shownY = offsetY;
+            _shownScale = scale;
+            _transform.Matrix = Matrix.CreateScale(scale, scale) * Matrix.CreateTranslation(offsetX, offsetY);
+        }
+        var shownOpacity = Opacity;
+        if (opacity != shownOpacity && (opacity == 1 || Math.Abs(opacity - shownOpacity) >= OpacityDeadband))
+        {
+            Opacity = opacity;
+        }
         if (ZIndex != zIndex)
         {
             ZIndex = zIndex;
@@ -57,11 +79,20 @@ internal sealed class GravityWellTile : ContentControl
 
     private void SetRing(double value)
     {
+        if (value == _ringOpacity)
+        {
+            return;
+        }
         _ringOpacity = value;
+        ApplyRing();
+    }
+
+    private void ApplyRing()
+    {
         if (_ring is not null)
         {
-            _ring.Opacity = value;
-            _ring.IsVisible = value > 0;
+            _ring.Opacity = _ringOpacity;
+            _ring.IsVisible = _ringOpacity > 0;
         }
     }
 
@@ -69,7 +100,7 @@ internal sealed class GravityWellTile : ContentControl
     {
         base.OnApplyTemplate(e);
         _ring = e.NameScope.Find<Border>(RingPart);
-        SetRing(_ringOpacity);
+        ApplyRing();
         UpdateRingRadius();
     }
 

@@ -34,6 +34,9 @@ internal sealed class DotGridSimulation
     private const double LensPowerRate = 7.5;
     private const double GlowRate = 15;
 
+    // The lens counts as under the pointer within this many px.
+    private const double LensSettled = 0.05;
+
     // The lens profile u·(1 − u)² peaks at u = 1/3 with 4/27; scaling by 27/4 makes that peak equal the strength.
     private const double LensPeakScale = 27.0 / 4.0;
 
@@ -190,8 +193,9 @@ internal sealed class DotGridSimulation
     }
 
     /// <summary>
-    /// Advances the field by <paramref name="dt"/> seconds. Returns true while anything still moves: the lens is
-    /// fading or the pointer is inside, a ripple is alive, or a dot has not settled.
+    /// Advances the field by <paramref name="dt"/> seconds. Returns true while anything still moves: the lens is fading
+    /// or still catching up with the pointer, a ripple is alive, or a dot has not settled. A pointer resting inside moves
+    /// nothing, so the field settles under it and the next pointer move starts it again.
     /// </summary>
     public bool Step(double dt)
     {
@@ -218,8 +222,10 @@ internal sealed class DotGridSimulation
         }
         _rippleCount = kept;
 
-        var moving = _pointerInside || _rippleCount > 0 || (_lensPower > 0 && _lensPower < 1);
+        var moving = _rippleCount > 0 || (_lensPower > 0 && _lensPower < 1) ||
+                     (_pointerInside && (Math.Abs(_pointerX - _lensX) > LensSettled || Math.Abs(_pointerY - _lensY) > LensSettled));
         var radius = Math.Max(1, Radius);
+        var radiusSquared = radius * radius;
         var strength = Strength;
         var glowEase = (float)(1 - Math.Exp(-GlowRate * dt));
         var stiffness = (float)(SpringStiffness * dt);
@@ -236,9 +242,11 @@ internal sealed class DotGridSimulation
             {
                 var dx = homeX - _lensX;
                 var dy = homeY - _lensY;
-                var distance = Math.Sqrt(dx * dx + dy * dy);
-                if (distance < radius && distance > 0.001)
+                var distanceSquared = dx * dx + dy * dy;
+                // Most dots are outside the lens: only the ones inside pay for the root.
+                if (distanceSquared < radiusSquared && distanceSquared > 1e-6)
                 {
+                    var distance = Math.Sqrt(distanceSquared);
                     var u = distance / radius;
                     var falloff = (1 - u) * (1 - u);
                     var push = LensPeakScale * u * falloff * strength * _lensPower;

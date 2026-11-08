@@ -55,7 +55,8 @@ starts 1.2 seconds after the last pointer move. `IsInteractive` lets the pointer
 
 `Quality` picks the size of the simulation. The velocity grid has 96, 128 or 192 cells on the short side for `Low`,
 `Medium` (the default) and `High`, and the ink is drawn at twice that resolution and scaled up smoothly. Larger grids
-show finer curls and cost more; `Low` suits small areas and slower devices.
+show finer curls and cost more; `Low` suits small areas and slower devices. A field wider or taller than 2.5:1 uses
+fewer cells on its short side, so a banner costs no more than a 2.5:1 card.
 
 ### A waiting screen
 

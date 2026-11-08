@@ -237,6 +237,41 @@ public class GravityWellTests
         window.Close();
     }
 
+    [Fact]
+    public void Tiles_the_well_barely_reaches_stay_fully_opaque()
+    {
+        // Anything below 1 would make the tile draw through its own layer.
+        var field = Field();
+        field.Aim(32, 32, snap: true);
+        for (var i = 0; i < 60; i++)
+        {
+            field.Step(1.0 / 60);
+        }
+        field.Opacity(0).ShouldBeLessThan(0.8);
+        field.Opacity(41).ShouldBe(1);
+    }
+
+    [AvaloniaFact]
+    public void A_tile_skips_invisible_moves_and_lands_exactly_at_rest()
+    {
+        var tile = new GravityWellTile();
+        tile.Pose(0.01, 0, 1, 0.999, 0, 0);
+        tile.Placement.ShouldBe(Matrix.Identity);
+        tile.Opacity.ShouldBe(1);
+
+        tile.Pose(5, 0, 1, 0.9, 0, 0);
+        tile.Placement.M31.ShouldBe(5);
+        tile.Opacity.ShouldBe(0.9);
+
+        tile.Pose(5.01, 0, 1, 0.899, 0, 0);
+        tile.Placement.M31.ShouldBe(5);
+        tile.Opacity.ShouldBe(0.9);
+
+        tile.Pose(0, 0, 1, 1, 0, 0);
+        tile.Placement.ShouldBe(Matrix.Identity);
+        tile.Opacity.ShouldBe(1);
+    }
+
     [AvaloniaFact]
     public void Moving_the_pointer_bends_the_tiles()
     {
