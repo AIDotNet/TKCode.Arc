@@ -1,0 +1,9 @@
+App.cs
+AppSetup.cs
+BlankMvvm.csproj
+Program.cs
+ViewModels/MainViewModel.cs
+Views/MainView.axaml
+Views/MainView.axaml.cs
+Views/MainWindow.axaml
+Views/MainWindow.axaml.cs

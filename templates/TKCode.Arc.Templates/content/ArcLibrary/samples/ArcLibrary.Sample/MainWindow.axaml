@@ -1,0 +1,24 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+        xmlns:lib="using:ArcLibrary"
+        x:Class="ArcLibrary.Sample.MainWindow"
+        Title="ArcLibraryDisplayName"
+        Width="840"
+        Height="520"
+        WindowStartupLocation="CenterScreen">
+    <DockPanel>
+        <Border DockPanel.Dock="Top" Height="52" Padding="16,0" BorderThickness="0,0,0,1" BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+            <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Text="ArcLibraryDisplayName" VerticalAlignment="Center" FontWeight="Medium" Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                <arc:ThemeSwitcher Grid.Column="1" IsIconOnly="True" />
+            </Grid>
+        </Border>
+        <!-- Every control of the library, in the states worth looking at. Switch the theme to check both appearances. -->
+        <WrapPanel Margin="24" ItemSpacing="16" LineSpacing="16">
+            <lib:StatTile Title="Revenue" Value="$48,210" Caption="+8.2% vs. last month" />
+            <lib:StatTile Title="Active users" Value="3,904" Caption="Last 30 days" />
+            <lib:StatTile Title="Uptime" Value="99.98%" />
+        </WrapPanel>
+    </DockPanel>
+</Window>

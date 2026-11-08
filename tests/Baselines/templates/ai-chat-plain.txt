@@ -1,0 +1,17 @@
+App.cs
+AppSetup.cs
+ChatPlain.csproj
+Models/ChatArchive.cs
+Program.cs
+SampleData/SampleModels.cs
+SampleData/SampleResponder.cs
+Services/AppServices.cs
+Services/ConversationStore.cs
+Services/IConversationStore.cs
+Settings/AppSettings.cs
+Settings/SettingsStore.cs
+ViewModels/MainViewModel.cs
+Views/MainView.axaml
+Views/MainView.axaml.cs
+Views/MainWindow.axaml
+Views/MainWindow.axaml.cs

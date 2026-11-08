@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <!-- The app itself: views, view models and the Arc setup (AppSetup.cs). The hosts beside it (ArcStarterApp.Desktop,
+         ArcStarterApp.Browser) only start it on their platform, so everything you write goes here. -->
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <!-- Arc is built against this exact Avalonia version; keep every Avalonia package on it. -->
+        <PackageReference Include="Avalonia" Version="__AVALONIA_VERSION__" />
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="__AVALONIA_VERSION__" />
+        <PackageReference Include="TKCode.Arc" Version="__ARC_VERSION__" />
+<!--#if (UsesMvvm) -->
+        <!-- View models: [ObservableProperty] and [RelayCommand] are source-generated, so there is no reflection. -->
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="__MVVM_VERSION__" />
+<!--#endif -->
+<!--#if (UsesDi) -->
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="__DI_VERSION__" />
+<!--#endif -->
+<!--#if (UsesBlocks) -->
+        <PackageReference Include="TKCode.Arc.Blocks" Version="__ARC_VERSION__" />
+<!--#endif -->
+<!--#if (UsesDock) -->
+        <PackageReference Include="TKCode.Arc.Dock" Version="__ARC_VERSION__" />
+<!--#endif -->
+        <PackageReference Include="TKCode.Arc.Fonts" Version="__ARC_VERSION__" />
+        <!-- Only the Lucide icons the app uses are compiled in. Icons chosen at run time (bindings, data) are declared:
+             <LucideIcon Include="Bell;ArrowRight" />, or set <LucideIconsIncludeAll>true</LucideIconsIncludeAll>. -->
+        <PackageReference Include="TKCode.Arc.Icons.Lucide" Version="__ARC_VERSION__" />
+    </ItemGroup>
+</Project>

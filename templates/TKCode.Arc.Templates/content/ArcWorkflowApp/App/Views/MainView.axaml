@@ -1,0 +1,107 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:lucide="https://github.com/AIDotNet/TKCode.Arc/lucide"
+             xmlns:m="using:ArcStarterApp.Models"
+             xmlns:vm="using:ArcStarterApp.ViewModels"
+             x:Class="ArcStarterApp.Views.MainView"
+             x:DataType="vm:MainViewModel">
+    <UserControl.Styles>
+        <Style Selector="TextBlock.heading">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="Margin" Value="4,0,0,4" />
+        </Style>
+        <Style Selector="TextBlock.muted">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+        <Style Selector="Border.panel">
+            <Setter Property="Padding" Value="12" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        </Style>
+    </UserControl.Styles>
+    <DockPanel>
+        <!-- The top bar: the workflow's name, the edit commands of the canvas, run, import and export. -->
+        <Border DockPanel.Dock="Top"
+                Height="52"
+                Padding="14,0"
+                BorderThickness="0,0,0,1"
+                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+            <Grid ColumnDefinitions="Auto,Auto,*,Auto,Auto,Auto,Auto,Auto,Auto" ColumnSpacing="8">
+                <Border Width="26" Height="26" CornerRadius="8" VerticalAlignment="Center" Background="{arc:ArcDesignTokenResource Foreground}">
+                    <lucide:LucideIcon Kind="Workflow"
+                                       Size="13"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Foreground="{arc:ArcDesignTokenResource Background}" />
+                </Border>
+                <arc:InlineEdit Grid.Column="1" Value="{Binding Name, Mode=TwoWay}" VerticalAlignment="Center" AutomationProperties.Name="Workflow name" />
+                <TextBlock Grid.Column="2" Classes="muted" Text="{Binding Status}" VerticalAlignment="Center" Margin="8,0" />
+                <arc:Button Grid.Column="3" Variant="Ghost" Size="Small" Content="Undo" Command="{Binding #Canvas.UndoCommand}" />
+                <arc:Button Grid.Column="4" Variant="Ghost" Size="Small" Content="Redo" Command="{Binding #Canvas.RedoCommand}" />
+                <arc:Button Grid.Column="5" Variant="Ghost" Size="Small" Content="Arrange" Click="OnArrange" />
+                <arc:Button Grid.Column="6" Variant="Secondary" Size="Small" Content="Import" Click="OnImport" />
+                <arc:Button Grid.Column="7" Variant="Secondary" Size="Small" Content="Export" Click="OnExport" />
+                <StackPanel Grid.Column="8" Orientation="Horizontal" Spacing="8">
+                    <arc:Button Size="Small" Command="{Binding RunCommand}">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <lucide:LucideIcon Kind="Play" Size="13" />
+                            <TextBlock Text="Run" />
+                        </StackPanel>
+                    </arc:Button>
+                    <arc:ThemeSwitcher IsIconOnly="True" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- The palette: a click adds the step after the selected one. -->
+        <Border DockPanel.Dock="Left" Classes="panel" Width="220" BorderThickness="0,0,1,0">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" Classes="heading" Text="Add a step" />
+                <arc:Button DockPanel.Dock="Bottom" Variant="Ghost" Size="Small" Content="Start over" Command="{Binding ResetCommand}" HorizontalAlignment="Left" />
+                <ScrollViewer>
+                    <ItemsControl ItemsSource="{Binding StepKinds}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="m:StepKind">
+                                <arc:Button Variant="Ghost"
+                                            HorizontalAlignment="Stretch"
+                                            HorizontalContentAlignment="Left"
+                                            Command="{Binding $parent[UserControl].((vm:MainViewModel)DataContext).AddStepCommand}"
+                                            CommandParameter="{Binding}">
+                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                        <PathIcon Data="{Binding Icon}" Width="14" Height="14" />
+                                        <TextBlock Text="{Binding Title}" />
+                                    </StackPanel>
+                                </arc:Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </DockPanel>
+        </Border>
+
+        <!-- The inspector: the selected step's text. The canvas shows the changes as they are typed. -->
+        <Border DockPanel.Dock="Right" Classes="panel" Width="260" BorderThickness="1,0,0,0">
+            <Panel>
+                <TextBlock Classes="muted" Text="Select a step to edit it. Drag from a step's edge to connect it; Delete removes the selection." IsVisible="{Binding !HasSelection}" />
+                <Panel IsVisible="{Binding HasSelection}">
+                    <StackPanel Spacing="14" DataContext="{Binding Selected}" x:DataType="arc:WorkflowNode">
+                        <TextBlock Classes="heading" Text="Step" />
+                        <arc:Input Label="Title" Text="{Binding Title}" />
+                        <arc:Input Label="Description" Text="{Binding Description}" />
+                        <arc:Switch Content="Locked (cannot be moved or deleted)" IsChecked="{Binding IsLocked}" />
+                    </StackPanel>
+                </Panel>
+            </Panel>
+        </Border>
+
+        <!-- The canvas, with its zoom controls and minimap on top. -->
+        <Panel>
+            <arc:WorkflowCanvas x:Name="Canvas" Graph="{Binding Graph}" IsEditable="True" AutoFit="Fit" MaxZoom="1.25" />
+            <arc:WorkflowZoomControls Target="{Binding #Canvas}" Margin="12" HorizontalAlignment="Left" VerticalAlignment="Bottom" />
+            <arc:WorkflowMinimap Target="{Binding #Canvas}" Margin="12" HorizontalAlignment="Right" VerticalAlignment="Bottom" />
+        </Panel>
+    </DockPanel>
+</UserControl>

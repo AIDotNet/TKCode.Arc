@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:vm="using:ArcStarterApp.ViewModels"
+             x:Class="ArcStarterApp.Pages.BillingPage"
+             x:DataType="vm:BillingPageViewModel">
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="28,24,28,28" Spacing="16" MaxWidth="820" HorizontalAlignment="Left">
+            <StackPanel Spacing="4">
+                <TextBlock Text="Billing"
+                           FontSize="{arc:ArcDesignTokenResource Type2XL}"
+                           FontWeight="Medium"
+                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                <TextBlock Text="The plan, the card on file and past invoices."
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            </StackPanel>
+            <!-- The block raises ChangePlanRequested, UpdatePaymentMethodRequested, InvoiceDownloadRequested ...: handle
+                 them to open your checkout or download the invoice. -->
+            <arc:BillingOverview Plan="{Binding Plan}"
+                                 PaymentMethod="{Binding PaymentMethod}"
+                                 Invoices="{Binding Invoices}"
+                                 BillingEmail="{Binding BillingEmail}" />
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

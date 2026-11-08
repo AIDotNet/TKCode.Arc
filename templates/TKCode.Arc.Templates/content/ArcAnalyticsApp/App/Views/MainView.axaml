@@ -1,0 +1,46 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:lucide="https://github.com/AIDotNet/TKCode.Arc/lucide"
+             xmlns:nav="using:ArcStarterApp.Navigation"
+             xmlns:vm="using:ArcStarterApp.ViewModels"
+             x:Class="ArcStarterApp.Views.MainView"
+             x:DataType="vm:MainViewModel">
+    <DockPanel>
+        <!-- The top bar: the app name, the page switch (each option's Value is a page key in Navigation/AppPages.cs) and
+             the light/dark switch. -->
+        <Border DockPanel.Dock="Top"
+                Height="56"
+                Padding="16,0"
+                BorderThickness="0,0,0,1"
+                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+            <Grid ColumnDefinitions="Auto,Auto,*,Auto" ColumnSpacing="10">
+                <Border Width="28" Height="28" CornerRadius="8" VerticalAlignment="Center" Background="{arc:ArcDesignTokenResource Foreground}">
+                    <lucide:LucideIcon Kind="ChartNoAxesCombined"
+                                       Size="14"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Foreground="{arc:ArcDesignTokenResource Background}" />
+                </Border>
+                <TextBlock Grid.Column="1"
+                           Text="ArcDisplayName"
+                           VerticalAlignment="Center"
+                           FontWeight="Medium"
+                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                <arc:SegmentedControl Grid.Column="2"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"
+                                      SelectedValue="{Binding SelectedKey}"
+                                      AutomationProperties.Name="Pages">
+                    <arc:SegmentedOption Value="overview" Label="Overview" />
+                    <arc:SegmentedOption Value="revenue" Label="Revenue" />
+                    <arc:SegmentedOption Value="retention" Label="Retention" />
+                    <arc:SegmentedOption Value="usage" Label="Usage" />
+                    <arc:SegmentedOption Value="status" Label="Status" />
+                </arc:SegmentedControl>
+                <arc:ThemeSwitcher Grid.Column="3" IsIconOnly="True" />
+            </Grid>
+        </Border>
+        <nav:PageHost x:Name="PageView" Page="{Binding CurrentPage}" />
+    </DockPanel>
+</UserControl>

@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:m="using:ArcStarterApp.Models"
+             x:Class="ArcStarterApp.Views.EditorView"
+             x:DataType="m:EditorDocument">
+    <!-- The editor of one file. Arc has no code editor; for syntax highlighting and folding, put a code editor control
+         here (AvaloniaEdit, for example) and bind it to Text the same way. -->
+    <arc:Textarea Margin="8"
+                  Text="{Binding Text}"
+                  TextWrapping="{Binding Wrapping}"
+                  IsReadOnly="{Binding IsReadOnly}"
+                  AcceptsReturn="True"
+                  AcceptsTab="True"
+                  IsResizable="False"
+                  FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                  FontSize="{arc:ArcDesignTokenResource TypeSM}" />
+</UserControl>

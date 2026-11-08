@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:vm="using:ArcStarterApp.ViewModels"
+             x:Class="ArcStarterApp.Pages.ReleasePage"
+             x:DataType="vm:ReleasePageViewModel">
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+        <!-- Tick the checks; the release starts once every required one is done. -->
+        <arc:ReleaseReadiness Margin="28,24"
+                              MaxWidth="640"
+                              HorizontalAlignment="Left"
+                              Title="Version 5.3"
+                              Subtitle="Field app · goes live Tuesday"
+                              ChannelName="#launches"
+                              ChecksSource="{Binding Checks}"
+                              OwnersSource="{Binding Owners}"
+                              ReleaseAction="{Binding Release}" />
+    </ScrollViewer>
+</UserControl>

@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:vm="using:ArcStarterApp.ViewModels"
+             x:Class="ArcStarterApp.Pages.OverviewPage"
+             x:DataType="vm:OverviewPageViewModel">
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+        <!-- Pick a metric for its chart and its breakdowns; 7, 30 or 90 days, against the period before. -->
+        <arc:KpiDrilldown x:Name="Kpis" Margin="24" Title="Studio pulse" EndDate="{Binding EndDate}" MetricsSource="{Binding Metrics}" />
+    </ScrollViewer>
+</UserControl>

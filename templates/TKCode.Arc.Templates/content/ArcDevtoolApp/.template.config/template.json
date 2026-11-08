@@ -1,0 +1,347 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "TKCode.Arc contributors",
+  "classifications": [
+    "Desktop",
+    "Avalonia",
+    "Arc",
+    "Starter",
+    "Windows",
+    "macOS",
+    "Linux"
+  ],
+  "identity": "TKCode.Arc.Templates.Devtool",
+  "groupIdentity": "TKCode.Arc.Templates.Devtool",
+  "name": "TKCode.Arc Developer Tool",
+  "description": "An IDE-style developer tool built with TKCode.Arc: a dock layout with a file explorer, editor tabs, a property grid, build output and problems, a command palette and a saved layout that reopens the files. MVVM and dependency injection.",
+  "shortName": "tkcode-arc-devtool",
+  "defaultName": "ArcApp",
+  "sourceName": "ArcStarterApp",
+  "preferNameDirectory": true,
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "symbols": {
+    "tests": {
+      "type": "parameter",
+      "datatype": "bool",
+      "description": "Adds a headless test project (xunit.v3, Avalonia.Headless.XUnit) and a solution: the app goes to <name>/, the tests to <name>.Tests/.",
+      "displayName": "Tests",
+      "defaultValue": "false"
+    },
+    "customTitlebar": {
+      "type": "parameter",
+      "datatype": "bool",
+      "description": "Draws Arc's title bar (ArcWindow) instead of the system's.",
+      "displayName": "Arc title bar",
+      "defaultValue": "false"
+    },
+    "framework": {
+      "type": "parameter",
+      "datatype": "choice",
+      "description": "The target framework.",
+      "displayName": "Framework",
+      "defaultValue": "net10.0",
+      "replaces": "net10.0",
+      "choices": [
+        {
+          "choice": "net10.0",
+          "description": ".NET 10 (LTS)"
+        },
+        {
+          "choice": "net8.0",
+          "description": ".NET 8 (LTS)"
+        },
+        {
+          "choice": "net11.0",
+          "description": ".NET 11 (needs the .NET 11 SDK)"
+        }
+      ]
+    },
+    "accent": {
+      "type": "parameter",
+      "datatype": "choice",
+      "description": "The accent color the app starts with (ArcAccentPreset).",
+      "displayName": "Accent",
+      "defaultValue": "Neutral",
+      "replaces": "Neutral",
+      "onlyIf": [
+        {
+          "after": "ArcAccentPreset."
+        }
+      ],
+      "choices": [
+        {
+          "choice": "Neutral"
+        },
+        {
+          "choice": "Violet"
+        },
+        {
+          "choice": "Blue"
+        },
+        {
+          "choice": "Green"
+        },
+        {
+          "choice": "Amber"
+        },
+        {
+          "choice": "Orange"
+        },
+        {
+          "choice": "Coral"
+        },
+        {
+          "choice": "Rose"
+        }
+      ]
+    },
+    "skipRestore": {
+      "type": "parameter",
+      "datatype": "bool",
+      "description": "Skips the automatic restore of the project on create.",
+      "displayName": "Skip restore",
+      "defaultValue": "false"
+    },
+    "DisplayName": {
+      "type": "derived",
+      "valueSource": "name",
+      "valueTransform": "identity",
+      "replaces": "ArcDisplayName",
+      "description": "The project name as typed, for the window title and the app name in the UI."
+    },
+    "AssemblyIdentifier": {
+      "type": "derived",
+      "valueSource": "name",
+      "valueTransform": "identifierOnly",
+      "replaces": "ArcStarterAppIdentifier",
+      "description": "The project name without the characters an identifier cannot hold: the namespace of the Arc assets generated for the app."
+    },
+    "WindowWidth": {
+      "type": "generated",
+      "generator": "constant",
+      "replaces": "ArcWindowWidth",
+      "parameters": {
+        "value": "1280"
+      }
+    },
+    "WindowHeight": {
+      "type": "generated",
+      "generator": "constant",
+      "replaces": "ArcWindowHeight",
+      "parameters": {
+        "value": "800"
+      }
+    },
+    "WindowMinWidth": {
+      "type": "generated",
+      "generator": "constant",
+      "replaces": "ArcWindowMinWidth",
+      "parameters": {
+        "value": "900"
+      }
+    },
+    "WindowMinHeight": {
+      "type": "generated",
+      "generator": "constant",
+      "replaces": "ArcWindowMinHeight",
+      "parameters": {
+        "value": "560"
+      }
+    },
+    "UsesMvvm": {
+      "type": "computed",
+      "value": "(true)"
+    },
+    "UsesDi": {
+      "type": "computed",
+      "value": "(true)"
+    },
+    "UsesSettings": {
+      "type": "computed",
+      "value": "(true)"
+    },
+    "UsesI18n": {
+      "type": "computed",
+      "value": "(false)"
+    },
+    "UsesBlocks": {
+      "type": "computed",
+      "value": "(true)"
+    },
+    "UsesDock": {
+      "type": "computed",
+      "value": "(true)"
+    },
+    "UsesSidebar": {
+      "type": "computed",
+      "value": "(false)"
+    },
+    "HasNavigation": {
+      "type": "computed",
+      "value": "(false)"
+    },
+    "NeedsCjkFont": {
+      "type": "computed",
+      "value": "(false)"
+    },
+    "IsXplat": {
+      "type": "computed",
+      "value": "(false)"
+    },
+    "IsScenario": {
+      "type": "computed",
+      "value": "(true)"
+    },
+    "IsAiChat": {
+      "type": "computed",
+      "value": "(false)"
+    },
+    "IsWorkflow": {
+      "type": "computed",
+      "value": "(false)"
+    },
+    "UsesWorkflow": {
+      "type": "computed",
+      "value": "(false)"
+    },
+    "UsesTests": {
+      "type": "computed",
+      "value": "(tests)"
+    },
+    "UsesArcWindow": {
+      "type": "computed",
+      "value": "(customTitlebar)"
+    },
+    "HasSolution": {
+      "type": "computed",
+      "value": "(tests)"
+    }
+  },
+  "forms": {
+    "identifierOnly": {
+      "identifier": "replace",
+      "pattern": "[^A-Za-z0-9_]",
+      "replacement": ""
+    }
+  },
+  "sources": [
+    {
+      "condition": "(!tests)",
+      "source": "../ArcStarterApp/",
+      "target": "./",
+      "exclude": [
+        ".template.config/**",
+        "**/bin/**",
+        "**/obj/**",
+        "**/.DS_Store"
+      ]
+    },
+    {
+      "condition": "(!tests)",
+      "source": "../_shared/App/",
+      "target": "./",
+      "exclude": [
+        "Layouts/**",
+        "Features/**",
+        "Common/**"
+      ]
+    },
+    {
+      "condition": "(!tests)",
+      "source": "../_shared/App/Common/",
+      "target": "./"
+    },
+    {
+      "condition": "(!tests)",
+      "source": "../_shared/App/Features/Settings/",
+      "target": "./"
+    },
+    {
+      "condition": "(!tests)",
+      "source": "./App/",
+      "target": "./"
+    },
+    {
+      "condition": "(tests)",
+      "source": "../ArcStarterApp/",
+      "target": "./ArcStarterApp/",
+      "exclude": [
+        ".template.config/**",
+        "**/bin/**",
+        "**/obj/**",
+        "**/.DS_Store"
+      ]
+    },
+    {
+      "condition": "(tests)",
+      "source": "../_shared/App/",
+      "target": "./ArcStarterApp/",
+      "exclude": [
+        "Layouts/**",
+        "Features/**",
+        "Common/**"
+      ]
+    },
+    {
+      "condition": "(tests)",
+      "source": "../_shared/App/Common/",
+      "target": "./ArcStarterApp/"
+    },
+    {
+      "condition": "(tests)",
+      "source": "../_shared/App/Features/Settings/",
+      "target": "./ArcStarterApp/"
+    },
+    {
+      "condition": "(tests)",
+      "source": "./App/",
+      "target": "./ArcStarterApp/"
+    },
+    {
+      "condition": "(UsesTests)",
+      "source": "../_shared/Tests/",
+      "target": "./"
+    },
+    {
+      "condition": "(UsesTests)",
+      "source": "./Tests/",
+      "target": "./"
+    },
+    {
+      "condition": "(HasSolution)",
+      "source": "../_shared/Solution/",
+      "target": "./"
+    }
+  ],
+  "primaryOutputs": [
+    {
+      "condition": "(!tests)",
+      "path": "ArcStarterApp.csproj"
+    },
+    {
+      "condition": "(tests)",
+      "path": "ArcStarterApp/ArcStarterApp.csproj"
+    },
+    {
+      "condition": "(tests)",
+      "path": "ArcStarterApp.Tests/ArcStarterApp.Tests.csproj"
+    }
+  ],
+  "postActions": [
+    {
+      "id": "restore",
+      "condition": "(!skipRestore)",
+      "description": "Restore NuGet packages required by this project.",
+      "manualInstructions": [
+        {
+          "text": "Run 'dotnet restore'"
+        }
+      ],
+      "actionId": "210D431B-A78B-4D2F-B762-4ED3E3EA9025",
+      "continueOnError": true
+    }
+  ]
+}

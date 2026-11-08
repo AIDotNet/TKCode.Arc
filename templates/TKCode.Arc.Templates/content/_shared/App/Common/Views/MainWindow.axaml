@@ -1,0 +1,43 @@
+<!--#if (UsesArcWindow) -->
+<arc:ArcWindow xmlns="https://github.com/avaloniaui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+               xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+               xmlns:lucide="https://github.com/AIDotNet/TKCode.Arc/lucide"
+               xmlns:views="using:ArcStarterApp.Views"
+               x:Class="ArcStarterApp.Views.MainWindow"
+               Title="ArcDisplayName"
+               Width="ArcWindowWidth"
+               Height="ArcWindowHeight"
+               MinWidth="ArcWindowMinWidth"
+               MinHeight="ArcWindowMinHeight"
+               WindowStartupLocation="CenterScreen">
+    <!-- Arc's title bar replaces the system one: the app's icon and title, the window buttons (on macOS the system's
+         traffic lights) and three areas for your own controls: TitleBar.LeftContent, CenterContent and RightContent.
+         Its empty part moves the window; a double click maximizes it. -->
+    <arc:ArcWindow.TitleBar>
+        <arc:TitleBar>
+            <arc:TitleBar.Icon>
+                <lucide:LucideIcon Kind="Sparkles" Size="14" VerticalAlignment="Center" />
+            </arc:TitleBar.Icon>
+        </arc:TitleBar>
+    </arc:ArcWindow.TitleBar>
+    <!-- The desktop window. Everything inside it is MainView (Views/MainView.axaml), so a browser or a phone can show the
+         same content without a window. It inherits this window's DataContext. -->
+    <views:MainView />
+</arc:ArcWindow>
+<!--#else -->
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:views="using:ArcStarterApp.Views"
+        x:Class="ArcStarterApp.Views.MainWindow"
+        Title="ArcDisplayName"
+        Width="ArcWindowWidth"
+        Height="ArcWindowHeight"
+        MinWidth="ArcWindowMinWidth"
+        MinHeight="ArcWindowMinHeight"
+        WindowStartupLocation="CenterScreen">
+    <!-- The desktop window. Everything inside it is MainView (Views/MainView.axaml), so a browser or a phone can show the
+         same content without a window. It inherits this window's DataContext. -->
+    <views:MainView />
+</Window>
+<!--#endif -->

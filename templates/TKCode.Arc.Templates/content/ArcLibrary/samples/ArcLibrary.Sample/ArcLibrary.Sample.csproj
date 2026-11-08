@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <!-- An app that shows the library's controls while you work on them (README.md says how to start it). -->
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia.Desktop" Version="__AVALONIA_VERSION__" />
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="__AVALONIA_VERSION__" />
+        <PackageReference Include="TKCode.Arc.Fonts" Version="__ARC_VERSION__" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="../../src/ArcLibrary/ArcLibrary.csproj" />
+    </ItemGroup>
+</Project>

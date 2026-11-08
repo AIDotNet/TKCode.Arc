@@ -1,35 +1,85 @@
+<!--#if (UsesMvvm) -->
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+<!--#if (UsesI18n) -->
+             xmlns:l="using:ArcStarterApp.Localization"
+             xmlns:views="using:ArcStarterApp.Views"
+<!--#endif -->
+             xmlns:vm="using:ArcStarterApp.ViewModels"
+             x:Class="ArcStarterApp.Pages.SettingsPage"
+             x:DataType="vm:SettingsPageViewModel">
+<!--#else -->
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+<!--#if (UsesI18n) -->
+             xmlns:l="using:ArcStarterApp.Localization"
+             xmlns:views="using:ArcStarterApp.Views"
+<!--#endif -->
              x:Class="ArcStarterApp.Pages.SettingsPage">
+<!--#endif -->
     <ScrollViewer HorizontalScrollBarVisibility="Disabled">
         <StackPanel Margin="28,24,28,28" Spacing="20" MaxWidth="640" HorizontalAlignment="Left">
             <StackPanel Spacing="4">
-                <TextBlock Text="Settings"
+                <TextBlock Text="@@Settings@@"
                            FontSize="{arc:ArcDesignTokenResource Type2XL}"
                            FontWeight="Medium"
                            Foreground="{arc:ArcDesignTokenResource Foreground}" />
-                <TextBlock Text="Preferences for this app."
+<!--#if (UsesSettings) -->
+                <TextBlock Text="@@SettingsIntroSaved@@"
                            TextWrapping="Wrap"
                            Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+<!--#else -->
+                <TextBlock Text="@@SettingsIntro@@"
+                           TextWrapping="Wrap"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+<!--#endif -->
             </StackPanel>
 
-            <arc:Card Title="Appearance" Description="Light, dark, or follow the system setting. The switch in the top bar changes it too.">
-                <arc:SegmentedControl x:Name="AppearanceChoice"
-                                      Margin="0,12,0,0"
-                                      HorizontalAlignment="Left"
-                                      AutomationProperties.Name="Appearance">
-                    <arc:SegmentedOption Value="System" Label="System" />
-                    <arc:SegmentedOption Value="Light" Label="Light" />
-                    <arc:SegmentedOption Value="Dark" Label="Dark" />
-                </arc:SegmentedControl>
+            <arc:Card Title="@@Appearance@@" Description="@@AppearanceDescription@@">
+                <StackPanel Spacing="16" Margin="0,12,0,0">
+<!--#if (UsesMvvm) -->
+                    <arc:SegmentedControl SelectedValue="{Binding Appearance, Mode=TwoWay}"
+                                          HorizontalAlignment="Left"
+                                          AutomationProperties.Name="@@Appearance@@">
+<!--#else -->
+                    <arc:SegmentedControl x:Name="AppearanceChoice"
+                                          HorizontalAlignment="Left"
+                                          AutomationProperties.Name="@@Appearance@@">
+<!--#endif -->
+                        <arc:SegmentedOption Value="System" Label="@@AppearanceSystem@@" />
+                        <arc:SegmentedOption Value="Light" Label="@@AppearanceLight@@" />
+                        <arc:SegmentedOption Value="Dark" Label="@@AppearanceDark@@" />
+                    </arc:SegmentedControl>
+<!--#if (UsesMvvm) -->
+                    <arc:Select Label="@@Accent@@" Width="220" HorizontalAlignment="Left" SelectedValue="{Binding Accent, Mode=TwoWay}">
+<!--#else -->
+                    <arc:Select x:Name="AccentChoice" Label="@@Accent@@" Width="220" HorizontalAlignment="Left">
+<!--#endif -->
+                        <arc:SelectItem Content="@@AccentNeutral@@" Value="Neutral" />
+                        <arc:SelectItem Content="@@AccentViolet@@" Value="Violet" />
+                        <arc:SelectItem Content="@@AccentBlue@@" Value="Blue" />
+                        <arc:SelectItem Content="@@AccentGreen@@" Value="Green" />
+                        <arc:SelectItem Content="@@AccentAmber@@" Value="Amber" />
+                        <arc:SelectItem Content="@@AccentOrange@@" Value="Orange" />
+                        <arc:SelectItem Content="@@AccentCoral@@" Value="Coral" />
+                        <arc:SelectItem Content="@@AccentRose@@" Value="Rose" />
+                    </arc:Select>
+                </StackPanel>
             </arc:Card>
 
-            <arc:Card Title="Notifications" Description="Choose what this app tells you about.">
+<!--#if (UsesI18n) -->
+            <arc:Card Title="@@Language@@">
+                <views:LanguagePicker Margin="0,12,0,0" Width="220" HorizontalAlignment="Left" />
+            </arc:Card>
+
+<!--#endif -->
+            <arc:Card Title="@@Notifications@@" Description="@@NotificationsDescription@@">
                 <StackPanel Spacing="14" Margin="0,12,0,0">
-                    <arc:Switch Content="Weekly summary" IsChecked="True" />
-                    <arc:Switch Content="Mentions and replies" IsChecked="True" />
-                    <arc:Switch Content="Product announcements" />
+                    <arc:Switch Content="@@WeeklySummary@@" IsChecked="True" />
+                    <arc:Switch Content="@@Mentions@@" IsChecked="True" />
+                    <arc:Switch Content="@@Announcements@@" />
                 </StackPanel>
             </arc:Card>
         </StackPanel>

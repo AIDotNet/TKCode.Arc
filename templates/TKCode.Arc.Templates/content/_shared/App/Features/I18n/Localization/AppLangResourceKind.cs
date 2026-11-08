@@ -1,0 +1,78 @@
+using TKCode.Arc.Localization;
+
+namespace ArcStarterApp.Localization;
+
+/// <summary>
+/// The app's text, one member per string. The Foundation generator turns this enum and the .xlf files next to it into
+/// AppLangResources (C#: AppLangResources.Get(AppLangResourceKind.Home)) and the {l:AppLangResource Home} XAML
+/// extension, which follows the language when ArcLanguage.Set changes it. To add a string, add a member here and a unit
+/// with the same id to every .xlf file; the build reports a missing one (ARCF021).
+/// </summary>
+[LanguageCatalog]
+public enum AppLangResourceKind
+{
+    Home,
+    Projects,
+    Settings,
+    ToggleSidebar,
+    Owner,
+    WelcomeTo,
+    WelcomeDescription,
+    YourName,
+    NameDescription,
+    ProductUpdates,
+    ReadDocs,
+    GetStarted,
+    GreetingPrompt,
+    GreetingWelcome,
+    GreetingWelcomeUpdates,
+    HomeIntro,
+    OpenProjects,
+    TasksDue,
+    Completed,
+    NextSteps,
+    NextStepsDescription,
+    TipAddPage,
+    TipTheme,
+    TipIcons,
+    ProjectsIntro,
+    NewProject,
+    SettingsIntroSaved,
+    SettingsIntro,
+    Appearance,
+    AppearanceDescription,
+    AppearanceSystem,
+    AppearanceLight,
+    AppearanceDark,
+    Accent,
+    AccentNeutral,
+    AccentViolet,
+    AccentBlue,
+    AccentGreen,
+    AccentAmber,
+    AccentOrange,
+    AccentCoral,
+    AccentRose,
+    Language,
+    Notifications,
+    NotificationsDescription,
+    WeeklySummary,
+    Mentions,
+    Announcements,
+    Explorer,
+    Outline,
+    Properties,
+    Output,
+    Problems,
+    Welcome,
+    Notes,
+    DockWelcome,
+    DockLayoutSaved,
+    ResetLayout,
+    NotesPlaceholder,
+    NoProblems,
+    OutputReady,
+    Name,
+    Type,
+    Modified,
+}

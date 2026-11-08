@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:vm="using:ArcStarterApp.ViewModels"
+             x:Class="ArcStarterApp.Pages.RevenuePage"
+             x:DataType="vm:RevenuePageViewModel">
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+        <!-- Drag over the chart to choose the months; the series switch on and off in the legend. -->
+        <arc:RevenueExplorer Margin="24" Title="Subscription revenue" OpeningMrr="{Binding OpeningMrr}" MonthsSource="{Binding Months}" />
+    </ScrollViewer>
+</UserControl>

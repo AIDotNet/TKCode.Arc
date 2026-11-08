@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "TKCode.Arc contributors",
+  "classifications": [
+    "Desktop",
+    "Avalonia",
+    "Arc",
+    "Control"
+  ],
+  "identity": "TKCode.Arc.Templates.Control",
+  "name": "TKCode.Arc Control",
+  "description": "A templated control in Arc's style (Controls/<Name>/): the control, its design token class and its theme file (x:Class, motion-full and motion-reduced transitions), following the rules Arc's own controls follow.",
+  "shortName": "tkcode-arc-control",
+  "defaultName": "New",
+  "sourceName": "ArcItemSource",
+  "preferNameDirectory": false,
+  "tags": {
+    "language": "C#",
+    "type": "item"
+  },
+  "symbols": {
+    "namespace": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "The root namespace; the project's RootNamespace when left out (the project must have been restored).",
+      "displayName": "Namespace",
+      "defaultValue": ""
+    },
+    "projectNamespace": {
+      "type": "bind",
+      "binding": "msbuild:RootNamespace",
+      "defaultValue": "ArcApp"
+    },
+    "rootNamespace": {
+      "type": "generated",
+      "generator": "coalesce",
+      "parameters": {
+        "sourceVariableName": "namespace",
+        "fallbackVariableName": "projectNamespace"
+      },
+      "replaces": "ArcItemNamespace"
+    },
+    "controlName": {
+      "type": "derived",
+      "valueSource": "name",
+      "valueTransform": "identity",
+      "replaces": "ArcItemControl",
+      "fileRename": "ArcItemControl"
+    },
+    "assemblyName": {
+      "type": "bind",
+      "binding": "msbuild:AssemblyName",
+      "defaultValue": "ArcApp"
+    },
+    "assemblyIdentifier": {
+      "type": "derived",
+      "valueSource": "assemblyName",
+      "valueTransform": "identifierOnly",
+      "replaces": "ArcItemAssemblyIdentifier"
+    },
+    "assemblyNameText": {
+      "type": "derived",
+      "valueSource": "assemblyName",
+      "valueTransform": "identity",
+      "replaces": "ArcItemAssemblyName"
+    }
+  },
+  "forms": {
+    "identifierOnly": {
+      "identifier": "replace",
+      "pattern": "[^A-Za-z0-9_]",
+      "replacement": ""
+    }
+  },
+  "sources": [
+    {
+      "exclude": [
+        ".template.config/**"
+      ]
+    }
+  ],
+  "postActions": [
+    {
+      "description": "How to register the app's own controls.",
+      "manualInstructions": [
+        {
+          "text": "Arc finds a control's theme and tokens only once the app's assembly is registered with UseArc(...). Do it once, for all of the app's controls: the comment at the top of the control's .cs file has the line to add in Program.cs."
+        }
+      ],
+      "actionId": "AC1156F7-BB77-4DB8-B28F-24EEBCCA1E5C",
+      "continueOnError": true
+    }
+  ]
+}

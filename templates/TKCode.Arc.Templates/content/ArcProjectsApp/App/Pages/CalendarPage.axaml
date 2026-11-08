@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:vm="using:ArcStarterApp.ViewModels"
+             x:Class="ArcStarterApp.Pages.CalendarPage"
+             x:DataType="vm:CalendarPageViewModel">
+    <!-- Week, work week, day, three days or agenda; drag in the grid to add an event. -->
+    <arc:WeekCalendar Margin="20"
+                      Date="{Binding Date}"
+                      Calendars="{Binding Calendars}"
+                      Events="{Binding Events}" />
+</UserControl>

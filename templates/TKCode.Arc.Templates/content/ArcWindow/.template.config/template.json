@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "TKCode.Arc contributors",
+  "classifications": [
+    "Desktop",
+    "Avalonia",
+    "Arc",
+    "Window"
+  ],
+  "identity": "TKCode.Arc.Templates.Window",
+  "name": "TKCode.Arc Window",
+  "description": "A secondary window for a TKCode.Arc app (Views/<Name>Window.axaml): Arc's surface, a heading, content and a footer with buttons; opens as a dialog over its owner.",
+  "shortName": "tkcode-arc-window",
+  "defaultName": "New",
+  "sourceName": "ArcItemSource",
+  "preferNameDirectory": false,
+  "tags": {
+    "language": "C#",
+    "type": "item"
+  },
+  "symbols": {
+    "namespace": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "The root namespace; the project's RootNamespace when left out (the project must have been restored).",
+      "displayName": "Namespace",
+      "defaultValue": ""
+    },
+    "projectNamespace": {
+      "type": "bind",
+      "binding": "msbuild:RootNamespace",
+      "defaultValue": "ArcApp"
+    },
+    "rootNamespace": {
+      "type": "generated",
+      "generator": "coalesce",
+      "parameters": {
+        "sourceVariableName": "namespace",
+        "fallbackVariableName": "projectNamespace"
+      },
+      "replaces": "ArcItemNamespace"
+    },
+    "className": {
+      "type": "derived",
+      "valueSource": "name",
+      "valueTransform": "withSuffix",
+      "replaces": "ArcItemWindow",
+      "fileRename": "ArcItemWindow"
+    },
+    "title": {
+      "type": "derived",
+      "valueSource": "name",
+      "valueTransform": "withoutSuffix",
+      "replaces": "ArcItemTitle"
+    }
+  },
+  "forms": {
+    "withSuffix": {
+      "identifier": "replace",
+      "pattern": "^(.*?)(Window)?$",
+      "replacement": "$1Window"
+    },
+    "withoutSuffix": {
+      "identifier": "replace",
+      "pattern": "^(.*?)(Window)?$",
+      "replacement": "$1"
+    }
+  },
+  "sources": [
+    {
+      "exclude": [
+        ".template.config/**"
+      ]
+    }
+  ]
+}

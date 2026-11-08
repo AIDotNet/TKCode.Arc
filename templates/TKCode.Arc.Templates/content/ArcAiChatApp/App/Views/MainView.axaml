@@ -1,0 +1,73 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:lucide="https://github.com/AIDotNet/TKCode.Arc/lucide"
+             xmlns:vm="using:ArcStarterApp.ViewModels"
+             x:Class="ArcStarterApp.Views.MainView"
+             x:DataType="vm:MainViewModel">
+    <UserControl.Styles>
+        <Style Selector="arc|Sidebar :is(Control).rail-fade">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="arc|Sidebar:collapsed :is(Control).rail-fade">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="arc|Sidebar:motion-full :is(Control).rail-fade">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.16" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="arc|Button.icon">
+            <Setter Property="Width" Value="32" />
+            <Setter Property="Height" Value="32" />
+            <Setter Property="MinHeight" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="CornerRadius" Value="10" />
+        </Style>
+    </UserControl.Styles>
+
+    <DockPanel ClipToBounds="True">
+        <!-- The conversations, newest first; MainView.axaml.cs keeps the rows in step with the chat. Cmd+B / Ctrl+B
+             folds the sidebar to its icon rail. -->
+        <arc:Sidebar x:Name="Nav" DockPanel.Dock="Left" ResizeMode="Overlay" IsFilterVisible="True">
+            <arc:Sidebar.Header>
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10" Margin="6,0,0,0">
+                    <Border Width="28" Height="28" CornerRadius="8" Background="{arc:ArcDesignTokenResource Foreground}">
+                        <lucide:LucideIcon Kind="MessageCircle"
+                                           Size="14"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           Foreground="{arc:ArcDesignTokenResource Background}" />
+                    </Border>
+                    <TextBlock Grid.Column="1"
+                               Classes="rail-fade"
+                               Text="ArcDisplayName"
+                               VerticalAlignment="Center"
+                               FontWeight="Medium"
+                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                    <arc:Button Grid.Column="2"
+                                Classes="icon rail-fade"
+                                Variant="Ghost"
+                                AutomationProperties.Name="New chat"
+                                ToolTip.Tip="New chat"
+                                Click="OnNewChat">
+                        <lucide:LucideIcon Kind="SquarePen" Size="15" />
+                    </arc:Button>
+                </Grid>
+            </arc:Sidebar.Header>
+            <arc:Sidebar.Footer>
+                <arc:ThemeSwitcher Classes="rail-fade" HorizontalAlignment="Left" Margin="4,0,0,0" />
+            </arc:Sidebar.Footer>
+        </arc:Sidebar>
+
+        <!-- Arc's chat block: the thread with streamed Markdown, reasoning and sources, the message box with
+             attachments, the model menu and the conversation menu. The page glides with the sidebar's edge. -->
+        <arc:AiChat x:Name="Chat"
+                    RenderTransform="{Binding #Nav.PageShift}"
+                    Responder="{Binding Responder}"
+                    GreetingText="What are we working on?"
+                    PlaceholderText="Message ArcDisplayName" />
+    </DockPanel>
+</UserControl>

@@ -1,0 +1,91 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:lucide="https://github.com/AIDotNet/TKCode.Arc/lucide"
+             xmlns:m="using:ArcStarterApp.Models"
+             xmlns:vm="using:ArcStarterApp.ViewModels"
+             x:Class="ArcStarterApp.Pages.CustomersPage"
+             x:DataType="vm:CustomersPageViewModel">
+    <UserControl.Styles>
+        <Style Selector="TextBlock.label">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+    </UserControl.Styles>
+    <Panel>
+        <DockPanel Margin="28,24,28,20">
+            <StackPanel DockPanel.Dock="Top" Spacing="4" Margin="0,0,0,16">
+                <TextBlock Text="Customers"
+                           FontSize="{arc:ArcDesignTokenResource Type2XL}"
+                           FontWeight="Medium"
+                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                <TextBlock Text="{Binding Summary}" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            </StackPanel>
+
+            <!-- Search and filter: both narrow the rows at once (CustomersPageViewModel.Refresh). -->
+            <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8" Margin="0,0,0,12">
+                <arc:SearchField x:Name="Search"
+                                 MaxWidth="360"
+                                 HorizontalAlignment="Left"
+                                 Placeholder="Search by name, email or company"
+                                 Text="{Binding Search}" />
+                <arc:Select Grid.Column="1" Width="160" SelectedValue="{Binding Status}" AutomationProperties.Name="Status">
+                    <arc:SelectItem Content="All statuses" Value="all" />
+                    <arc:SelectItem Content="Active" Value="Active" />
+                    <arc:SelectItem Content="Trial" Value="Trial" />
+                    <arc:SelectItem Content="Past due" Value="PastDue" />
+                    <arc:SelectItem Content="Churned" Value="Churned" />
+                </arc:Select>
+                <arc:Button Grid.Column="2" Content="Clear" Variant="Ghost" Command="{Binding ClearFiltersCommand}" />
+            </Grid>
+
+            <arc:Pagination DockPanel.Dock="Bottom"
+                            Margin="0,12,0,0"
+                            HorizontalAlignment="Center"
+                            CurrentPage="{Binding Page}"
+                            PageCount="{Binding PageCount}" />
+
+            <!-- The columns are set in CustomersPage.axaml.cs: each reads a field of Customer through a typed delegate. -->
+            <arc:Table x:Name="Table"
+                       Caption="Customers"
+                       ItemNameOne="customer"
+                       ItemNameOther="customers"
+                       EmptyMessage="No customer matches the search."
+                       ItemsSource="{Binding Rows}"
+                       IsLoading="{Binding IsLoading}" />
+        </DockPanel>
+
+        <!-- The selected customer. Closing it (Esc, the close button, a click outside) clears the selection. -->
+        <arc:Drawer Title="{Binding SelectedName}"
+                    Description="{Binding SelectedCompany}"
+                    IsOpen="{Binding IsDetailOpen}">
+            <Grid DataContext="{Binding Selected}"
+                  x:DataType="m:Customer"
+                  ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" ColumnSpacing="24" RowSpacing="12" MinWidth="320">
+                <TextBlock Classes="label" Text="Email" />
+                <TextBlock Grid.Column="1" Text="{Binding Email}" />
+                <TextBlock Grid.Row="1" Classes="label" Text="Plan" />
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Plan}" />
+                <TextBlock Grid.Row="2" Classes="label" Text="Status" />
+                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Status}" />
+                <TextBlock Grid.Row="3" Classes="label" Text="Monthly revenue" />
+                <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding MonthlyRevenue, StringFormat='{}{0:C0}'}" />
+                <TextBlock Grid.Row="4" Classes="label" Text="Customer since" />
+                <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding Joined, StringFormat='{}{0:MMM d, yyyy}'}" />
+                <TextBlock Grid.Row="5" Classes="label" Text="Country" />
+                <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding Country}" />
+            </Grid>
+            <arc:Drawer.Actions>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <arc:Button Content="Close" Variant="Secondary" arc:Dialog.Result="{x:False}" />
+                    <arc:Button arc:Dialog.Result="{x:True}">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <lucide:LucideIcon Kind="Mail" Size="14" />
+                            <TextBlock Text="Send email" />
+                        </StackPanel>
+                    </arc:Button>
+                </StackPanel>
+            </arc:Drawer.Actions>
+        </arc:Drawer>
+    </Panel>
+</UserControl>

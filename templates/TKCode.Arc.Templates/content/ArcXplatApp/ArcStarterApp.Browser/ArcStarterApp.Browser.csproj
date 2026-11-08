@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk.WebAssembly">
+    <!-- The browser host (WebAssembly). Start it from the solution folder (dotnet run with the project option set to
+         ArcStarterApp.Browser), then open the address it prints.
+         Building it needs the WebAssembly build tools once: dotnet workload install wasm-tools-net10 with the .NET 11 SDK,
+         or wasm-tools with the .NET 10 SDK. -->
+    <PropertyGroup>
+        <TargetFramework>net10.0-browser</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <!-- Skia's WebAssembly code is linked into the app only with a native build (the workload above). -->
+        <WasmBuildNative>true</WasmBuildNative>
+        <!-- wwwroot/index.html names main.js through the fingerprint placeholders the SDK fills in. -->
+        <OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
+<!--#if (UsesSettings) -->
+        <!-- BrowserSettingsStore calls the page's local storage through [JSImport], whose generated code needs this. -->
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+<!--#endif -->
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia.Browser" Version="__AVALONIA_VERSION__" />
+        <ProjectReference Include="../ArcStarterApp/ArcStarterApp.csproj" />
+    </ItemGroup>
+<!--#if (NeedsCjkFont) -->
+
+    <ItemGroup>
+        <!-- Noto Sans SC (a subset: GB2312 level 1 plus the app's text; SIL Open Font License, OFL.txt): a browser has no
+             system fonts for the canvas, so Chinese text needs one. CjkFont.cs registers it. -->
+        <AvaloniaResource Include="Assets/Fonts/NotoSansSC-Subset.otf" />
+    </ItemGroup>
+<!--#endif -->
+</Project>

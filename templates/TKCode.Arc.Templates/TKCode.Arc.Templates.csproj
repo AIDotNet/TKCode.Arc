@@ -1,14 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <!-- The `dotnet new` template package (short name tkcode-arc). It has no code of its own: the package carries the
-         templates under content/ as they are, except that the project files get the Arc and Avalonia versions of this
-         build (build/Versions.props) in place of __ARC_VERSION__ and __AVALONIA_VERSION__, so a template always
-         references the packages it was released with. -->
+    <!-- The `dotnet new` template package: the app templates (tkcode-arc, tkcode-arc-xplat) and the item templates
+         (tkcode-arc-page, -window, -dialog, -control). It has no code of its own: the package carries the templates under content/ as they
+         are, except that the project files get the Arc and Avalonia versions of this build (build/Versions.props) in place
+         of __ARC_VERSION__ and __AVALONIA_VERSION__, so a template always references the packages it was released with,
+         and __MVVM_VERSION__ becomes ArcTemplateMvvmVersion below. tools/templates/verify_templates.py creates, builds and
+         starts every template (design/engineering/project-templates.md). -->
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
         <PackageId>TKCode.Arc.Templates</PackageId>
         <PackageType>Template</PackageType>
         <Title>TKCode.Arc project templates</Title>
-        <Description>dotnet new templates for TKCode.Arc: a desktop application with Arc's theme, fonts, Lucide icons and light/dark switching, in a blank or a sidebar layout (dotnet new tkcode-arc).</Description>
+        <Description>dotnet new templates for TKCode.Arc: desktop and cross-platform (desktop + WebAssembly) apps with Arc's theme, fonts, Lucide icons, light/dark switching and saved preferences, in a blank, sidebar, header or dock layout, with optional MVVM, dependency injection, localization and tests (dotnet new tkcode-arc, tkcode-arc-xplat); finished sample apps for an admin back office, an AI chat client, a developer tool, a workflow editor, a project planner and an analytics dashboard (tkcode-arc-admin, -ai-chat, -devtool, -workflow, -projects, -analytics); a control library with tests and a sample (tkcode-arc-lib); and item templates for pages, windows, dialogs and Arc-style controls.</Description>
         <PackageTags>$(PackageTags);dotnet-new;templates;template</PackageTags>
         <IsPackable>true</IsPackable>
         <IncludeBuildOutput>false</IncludeBuildOutput>
@@ -18,6 +20,14 @@
         <NoDefaultExcludes>true</NoDefaultExcludes>
         <!-- NU5128: a template package has no lib/ folder by design. -->
         <NoWarn>$(NoWarn);NU5128</NoWarn>
+        <!-- The versions of the other packages created projects reference: CommunityToolkit.Mvvm (-mvvm toolkit),
+             Microsoft.Extensions.DependencyInjection (-di) and the test packages (-tests), the last ones as the
+             repository's own tests use them (Directory.Packages.props). -->
+        <ArcTemplateMvvmVersion>8.4.2</ArcTemplateMvvmVersion>
+        <ArcTemplateDiVersion>10.0.14</ArcTemplateDiVersion>
+        <ArcTemplateTestSdkVersion>18.11.0</ArcTemplateTestSdkVersion>
+        <ArcTemplateXunitVersion>3.2.2</ArcTemplateXunitVersion>
+        <ArcTemplateXunitRunnerVersion>3.1.5</ArcTemplateXunitRunnerVersion>
         <_ArcTemplateStage>$(MSBuildProjectDirectory)/$(BaseIntermediateOutputPath)template-content/</_ArcTemplateStage>
     </PropertyGroup>
 
@@ -34,10 +44,10 @@
 
     <!-- One run per project file (target batching on Outputs). -->
     <Target Name="_ArcStageTemplateProjects"
-            Inputs="%(_ArcTemplateProjectFile.FullPath);$(ArcRepositoryRoot)build/Versions.props"
+            Inputs="%(_ArcTemplateProjectFile.FullPath);$(ArcRepositoryRoot)build/Versions.props;$(MSBuildProjectFullPath)"
             Outputs="$(_ArcTemplateStage)%(_ArcTemplateProjectFile.RecursiveDir)%(_ArcTemplateProjectFile.Filename)%(_ArcTemplateProjectFile.Extension)">
         <PropertyGroup>
-            <_ArcTemplateText>$([System.IO.File]::ReadAllText('%(_ArcTemplateProjectFile.FullPath)').Replace('__ARC_VERSION__', '$(ArcVersion)').Replace('__AVALONIA_VERSION__', '$(AvaloniaVersion)'))</_ArcTemplateText>
+            <_ArcTemplateText>$([System.IO.File]::ReadAllText('%(_ArcTemplateProjectFile.FullPath)').Replace('__ARC_VERSION__', '$(ArcVersion)').Replace('__AVALONIA_VERSION__', '$(AvaloniaVersion)').Replace('__MVVM_VERSION__', '$(ArcTemplateMvvmVersion)').Replace('__DI_VERSION__', '$(ArcTemplateDiVersion)').Replace('__TEST_SDK_VERSION__', '$(ArcTemplateTestSdkVersion)').Replace('__XUNIT_VERSION__', '$(ArcTemplateXunitVersion)').Replace('__XUNIT_RUNNER_VERSION__', '$(ArcTemplateXunitRunnerVersion)'))</_ArcTemplateText>
         </PropertyGroup>
         <MakeDir Directories="$(_ArcTemplateStage)%(_ArcTemplateProjectFile.RecursiveDir)" />
         <WriteLinesToFile File="$(_ArcTemplateStage)%(_ArcTemplateProjectFile.RecursiveDir)%(_ArcTemplateProjectFile.Filename)%(_ArcTemplateProjectFile.Extension)"

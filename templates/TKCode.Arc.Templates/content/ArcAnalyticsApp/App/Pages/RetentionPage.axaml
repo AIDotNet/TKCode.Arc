@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:vm="using:ArcStarterApp.ViewModels"
+             x:Class="ArcStarterApp.Pages.RetentionPage"
+             x:DataType="vm:RetentionPageViewModel">
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+        <arc:CohortRetention Margin="24"
+                             Title="Space retention"
+                             Subtitle="Team spaces still editing each month after they were created."
+                             FirstMetricLabel="First-month retention"
+                             SecondMetricLabel="Half-year retention"
+                             TotalLabel="Spaces created"
+                             SegmentsSource="{Binding Segments}" />
+    </ScrollViewer>
+</UserControl>

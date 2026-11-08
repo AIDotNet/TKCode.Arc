@@ -1,0 +1,154 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:lucide="https://github.com/AIDotNet/TKCode.Arc/lucide"
+             xmlns:nav="using:ArcStarterApp.Navigation"
+             xmlns:vm="using:ArcStarterApp.ViewModels"
+             x:Class="ArcStarterApp.Views.MainView"
+             x:DataType="vm:MainViewModel">
+    <UserControl.Styles>
+        <!-- On the icon rail the header and footer keep only their leading part (logo, avatar); the rest fades. -->
+        <Style Selector="arc|Sidebar :is(Control).rail-fade">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="arc|Sidebar:collapsed :is(Control).rail-fade">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="arc|Sidebar:motion-full :is(Control).rail-fade">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.16" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="arc|Button.icon">
+            <Setter Property="Width" Value="32" />
+            <Setter Property="Height" Value="32" />
+            <Setter Property="MinHeight" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="CornerRadius" Value="10" />
+        </Style>
+    </UserControl.Styles>
+
+    <Panel>
+        <!-- Signed out: Arc's split sign-in screen. Views/MainView.axaml.cs connects its steps to IAuthService. -->
+        <arc:LoginSplit x:Name="Login"
+                        IsFullScreen="True"
+                        BrandName="ArcDisplayName"
+                        IsVisible="{Binding !IsSignedIn}" />
+
+        <!-- Signed in: the sidebar and the pages. -->
+        <DockPanel ClipToBounds="True" IsVisible="{Binding IsSignedIn}">
+            <!-- Every row's Key names a page in Navigation/AppPages.cs. The rail toggle lives in the top bar; Cmd+B /
+                 Ctrl+B inside the sidebar toggles it as well. -->
+            <arc:Sidebar x:Name="Nav"
+                         DockPanel.Dock="Left"
+                         IsCollapseButtonVisible="False"
+                         ResizeMode="Overlay"
+                         SelectedKey="{Binding SelectedKey}">
+                <arc:Sidebar.Header>
+                    <StackPanel Orientation="Horizontal" Spacing="10" Margin="6,0,0,0">
+                        <Border Width="28" Height="28" CornerRadius="8" Background="{arc:ArcDesignTokenResource Foreground}">
+                            <lucide:LucideIcon Kind="LayoutDashboard"
+                                               Size="14"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               Foreground="{arc:ArcDesignTokenResource Background}" />
+                        </Border>
+                        <TextBlock Classes="rail-fade"
+                                   Text="ArcDisplayName"
+                                   VerticalAlignment="Center"
+                                   FontWeight="Medium"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                    </StackPanel>
+                </arc:Sidebar.Header>
+
+                <arc:SidebarSection>
+                    <arc:SidebarItem Key="dashboard" Label="Dashboard" Icon="{lucide:LucideGeometry LayoutDashboard}" />
+                    <arc:SidebarItem Key="customers" Label="Customers" Icon="{lucide:LucideGeometry Users}" />
+                </arc:SidebarSection>
+                <arc:SidebarSection Header="Workspace">
+                    <arc:SidebarItem Key="team" Label="Team" Icon="{lucide:LucideGeometry UserCog}" />
+                    <arc:SidebarItem Key="billing" Label="Billing" Icon="{lucide:LucideGeometry CreditCard}" />
+                    <arc:SidebarItem Key="settings" Label="Settings" Icon="{lucide:LucideGeometry Settings}" />
+                </arc:SidebarSection>
+
+                <arc:Sidebar.Footer>
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10" Margin="6,0,0,0">
+                        <arc:Avatar DisplayName="{Binding AccountName}" Size="Small" Status="Online" />
+                        <StackPanel Grid.Column="1" Classes="rail-fade" VerticalAlignment="Center">
+                            <TextBlock Text="{Binding AccountName}"
+                                       TextTrimming="CharacterEllipsis"
+                                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            <TextBlock Text="{Binding AccountRole}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        </StackPanel>
+                        <arc:Button Grid.Column="2"
+                                    Classes="icon rail-fade"
+                                    Variant="Ghost"
+                                    AutomationProperties.Name="Sign out"
+                                    ToolTip.Tip="Sign out"
+                                    Command="{Binding SignOutCommand}">
+                            <lucide:LucideIcon Kind="LogOut" Size="15" />
+                        </arc:Button>
+                    </Grid>
+                </arc:Sidebar.Footer>
+            </arc:Sidebar>
+
+            <!-- The page side. PageShift lets it glide with the sidebar's edge while the sidebar opens or folds. -->
+            <Grid RowDefinitions="Auto,*" RenderTransform="{Binding #Nav.PageShift}">
+                <Border Height="52"
+                        Padding="14,0"
+                        BorderThickness="0,0,0,1"
+                        BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                    <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto" ColumnSpacing="8">
+                        <arc:Button Classes="icon"
+                                    Variant="Ghost"
+                                    AutomationProperties.Name="Toggle sidebar"
+                                    Click="OnToggleSidebar">
+                            <lucide:LucideIcon Kind="PanelLeft" Size="16" />
+                        </arc:Button>
+                        <TextBlock Grid.Column="1"
+                                   Text="{Binding Title}"
+                                   VerticalAlignment="Center"
+                                   FontWeight="Medium"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        <!-- Opens the command palette; Cmd+K / Ctrl+K does too. -->
+                        <arc:Button Grid.Column="2"
+                                    Variant="Secondary"
+                                    Size="Small"
+                                    ToolTip.Tip="Search pages and actions (Cmd+K / Ctrl+K)"
+                                    arc:CommandPaletteDialog.Opens="{Binding #Palette}">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <lucide:LucideIcon Kind="Search" Size="14" />
+                                <TextBlock Text="Search" />
+                            </StackPanel>
+                        </arc:Button>
+                        <arc:NotificationCenter x:Name="Notifications" Grid.Column="3">
+                            <arc:NotificationItem Id="trial" Title="Copperleaf started a trial" Description="Team plan, 14 days." Time="12m" ActorName="Mara Lind" />
+                            <arc:NotificationItem Id="payment" Title="Payment failed for Quartz" Description="The card on file was declined." Time="1h" Tone="Warning" />
+                            <arc:NotificationItem Id="export" Title="Your customer export is ready" Time="3h" Tone="Success" IsRead="True" />
+                        </arc:NotificationCenter>
+                        <arc:ThemeSwitcher Grid.Column="4" IsIconOnly="True" />
+                    </Grid>
+                </Border>
+                <nav:PageHost x:Name="PageView" Grid.Row="1" Page="{Binding CurrentPage}" />
+            </Grid>
+        </DockPanel>
+
+        <!-- The command palette: jump to a page or run an action. Each item's Id is a page key or an action of
+             MainViewModel.RunCommand. -->
+        <arc:CommandPaletteDialog x:Name="Palette" PlaceholderText="Search pages and actions" ItemSelected="OnCommandSelected">
+            <arc:CommandPaletteItem Id="dashboard" Label="Dashboard" Group="Go to" Icon="{lucide:LucideGeometry LayoutDashboard}" />
+            <arc:CommandPaletteItem Id="customers" Label="Customers" Group="Go to" Icon="{x:Static arc:ArcIcons.Users}" />
+            <arc:CommandPaletteItem Id="team" Label="Team" Group="Go to" Icon="{lucide:LucideGeometry UserCog}" />
+            <arc:CommandPaletteItem Id="billing" Label="Billing" Group="Go to" Icon="{x:Static arc:ArcIcons.CreditCard}" />
+            <arc:CommandPaletteItem Id="settings" Label="Settings" Group="Go to" Icon="{x:Static arc:ArcIcons.Settings}" />
+            <arc:CommandPaletteItem Id="theme-light" Label="Light appearance" Group="Actions" Icon="{x:Static arc:ArcIcons.Sun}" />
+            <arc:CommandPaletteItem Id="theme-dark" Label="Dark appearance" Group="Actions" Icon="{x:Static arc:ArcIcons.Moon}" />
+            <arc:CommandPaletteItem Id="sign-out" Label="Sign out" Group="Actions" Icon="{x:Static arc:ArcIcons.LogOut}" />
+        </arc:CommandPaletteDialog>
+    </Panel>
+</UserControl>

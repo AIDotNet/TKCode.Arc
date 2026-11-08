@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:vm="using:ArcStarterApp.ViewModels"
+             x:Class="ArcStarterApp.Pages.UsagePage"
+             x:DataType="vm:UsagePageViewModel">
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+        <!-- Drag the budget line; the forecast says when this period crosses it. -->
+        <arc:UsageForecast Margin="24"
+                           Title="Usage outlook"
+                           Subtitle="Growth plan · renews on the 1st"
+                           PeriodStart="{Binding PeriodStart}"
+                           MetricsSource="{Binding Metrics}" />
+    </ScrollViewer>
+</UserControl>

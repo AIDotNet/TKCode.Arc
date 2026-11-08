@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "TKCode.Arc contributors",
+  "classifications": ["Library", "Avalonia", "Arc"],
+  "identity": "TKCode.Arc.Templates.Library",
+  "groupIdentity": "TKCode.Arc.Templates.Library",
+  "name": "TKCode.Arc Component Library",
+  "description": "A control library built on TKCode.Arc: an example control with its design tokens and theme (checked by the Foundation generator, no reflection), the UseArc registration, headless tests and a sample app, ready for dotnet pack.",
+  "shortName": "tkcode-arc-lib",
+  "defaultName": "ArcControls",
+  "sourceName": "ArcLibrary",
+  "preferNameDirectory": true,
+  "tags": { "language": "C#", "type": "solution" },
+  "symbols": {
+    "tests": {
+      "type": "parameter",
+      "datatype": "bool",
+      "description": "Adds the headless test project (xunit.v3, Avalonia.Headless.XUnit), tests/<name>.Tests/.",
+      "displayName": "Tests",
+      "defaultValue": "true"
+    },
+    "sample": {
+      "type": "parameter",
+      "datatype": "bool",
+      "description": "Adds a desktop app that shows the controls, samples/<name>.Sample/.",
+      "displayName": "Sample app",
+      "defaultValue": "true"
+    },
+    "framework": {
+      "type": "parameter",
+      "datatype": "choice",
+      "description": "The target framework.",
+      "displayName": "Framework",
+      "defaultValue": "net10.0",
+      "replaces": "net10.0",
+      "choices": [
+        { "choice": "net10.0", "description": ".NET 10 (LTS)" },
+        { "choice": "net8.0", "description": ".NET 8 (LTS)" },
+        { "choice": "net11.0", "description": ".NET 11 (needs the .NET 11 SDK)" }
+      ]
+    },
+    "skipRestore": {
+      "type": "parameter",
+      "datatype": "bool",
+      "description": "Skips the automatic restore of the projects on create.",
+      "displayName": "Skip restore",
+      "defaultValue": "false"
+    },
+    "DisplayName": {
+      "type": "derived",
+      "valueSource": "name",
+      "valueTransform": "identity",
+      "replaces": "ArcLibraryDisplayName",
+      "description": "The name as typed, for the README and the sample's window title."
+    },
+    "Identifier": {
+      "type": "derived",
+      "valueSource": "name",
+      "valueTransform": "identifierOnly",
+      "replaces": "ArcLibraryIdentifier",
+      "fileRename": "ArcLibraryIdentifier",
+      "description": "The name without the characters an identifier cannot hold: the registration method (Use<Identifier>), the token identity prefix and the generated assets' namespace."
+    },
+    "UsesTests": { "type": "computed", "value": "(tests)" },
+    "UsesSample": { "type": "computed", "value": "(sample)" }
+  },
+  "forms": {
+    "identifierOnly": { "identifier": "replace", "pattern": "[^A-Za-z0-9_]", "replacement": "" }
+  },
+  "sources": [
+    {
+      "exclude": [".template.config/**", "**/bin/**", "**/obj/**", "**/.DS_Store"],
+      "modifiers": [
+        { "condition": "(!tests)", "exclude": ["tests/**"] },
+        { "condition": "(!sample)", "exclude": ["samples/**"] }
+      ]
+    }
+  ],
+  "primaryOutputs": [
+    { "path": "src/ArcLibrary/ArcLibrary.csproj" },
+    { "condition": "(tests)", "path": "tests/ArcLibrary.Tests/ArcLibrary.Tests.csproj" },
+    { "condition": "(sample)", "path": "samples/ArcLibrary.Sample/ArcLibrary.Sample.csproj" }
+  ],
+  "postActions": [
+    {
+      "id": "restore",
+      "condition": "(!skipRestore)",
+      "description": "Restore NuGet packages required by this project.",
+      "manualInstructions": [{ "text": "Run 'dotnet restore'" }],
+      "actionId": "210D431B-A78B-4D2F-B762-4ED3E3EA9025",
+      "continueOnError": true
+    }
+  ]
+}

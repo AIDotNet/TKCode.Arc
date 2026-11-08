@@ -1,0 +1,142 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+<!--#if (UsesI18n) -->
+             xmlns:l="using:ArcStarterApp.Localization"
+             xmlns:views="using:ArcStarterApp.Views"
+<!--#endif -->
+             xmlns:lucide="https://github.com/AIDotNet/TKCode.Arc/lucide"
+<!--#if (UsesMvvm) -->
+             xmlns:vm="using:ArcStarterApp.ViewModels"
+             x:DataType="vm:MainViewModel"
+<!--#endif -->
+             x:Class="ArcStarterApp.Views.MainView">
+    <UserControl.Styles>
+        <Style Selector="TextBlock.muted">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+        <Style Selector="StackPanel.file">
+            <Setter Property="Orientation" Value="Horizontal" />
+            <Setter Property="Spacing" Value="8" />
+        </Style>
+    </UserControl.Styles>
+    <DockPanel>
+        <!-- The top bar: the app name, the layout reset and the light/dark switch. -->
+        <Border DockPanel.Dock="Top"
+                Height="48"
+                Padding="14,0"
+                BorderThickness="0,0,0,1"
+                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+            <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto" ColumnSpacing="8">
+                <Border Width="26"
+                        Height="26"
+                        CornerRadius="8"
+                        VerticalAlignment="Center"
+                        Background="{arc:ArcDesignTokenResource Foreground}">
+                    <lucide:LucideIcon Kind="Sparkles"
+                                       Size="13"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Foreground="{arc:ArcDesignTokenResource Background}" />
+                </Border>
+                <TextBlock Grid.Column="1"
+                           Text="ArcDisplayName"
+                           VerticalAlignment="Center"
+                           FontWeight="Medium"
+                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                <arc:Button Grid.Column="2"
+                            Content="@@ResetLayout@@"
+                            Variant="Ghost"
+                            Size="Small"
+                            VerticalAlignment="Center"
+                            Click="OnResetLayout" />
+<!--#if (UsesI18n) -->
+                <views:LanguagePicker Grid.Column="3" Width="140" VerticalAlignment="Center" />
+<!--#endif -->
+                <arc:ThemeSwitcher Grid.Column="4" IsIconOnly="True" />
+            </Grid>
+        </Border>
+
+        <!-- The panes. Every pane has a stable Id: the saved layout (DockLayout.SaveLayout) records only the ids and where
+             they are, and the panes declared here supply the content when it is loaded again. Size is a share of the
+             parent split. -->
+        <arc:DockLayout x:Name="Dock" Margin="8">
+            <arc:DockSplit Orientation="Horizontal">
+                <arc:DockGroup Size="22">
+                    <arc:DockPane Id="explorer" Title="@@Explorer@@" Icon="{x:Static arc:ArcIcons.Folder}" PreferredSide="Left">
+                        <StackPanel Margin="12" Spacing="10">
+                            <StackPanel Classes="file">
+                                <lucide:LucideIcon Kind="FileText" Size="14" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                <TextBlock Text="README.md" />
+                            </StackPanel>
+                            <StackPanel Classes="file">
+                                <lucide:LucideIcon Kind="FileCode" Size="14" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                <TextBlock Text="AppSetup.cs" />
+                            </StackPanel>
+                            <StackPanel Classes="file">
+                                <lucide:LucideIcon Kind="FileCode" Size="14" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                <TextBlock Text="MainView.axaml" />
+                            </StackPanel>
+                        </StackPanel>
+                    </arc:DockPane>
+                    <arc:DockPane Id="outline" Title="@@Outline@@" Icon="{x:Static arc:ArcIcons.List}" PreferredSide="Left">
+                        <TextBlock Classes="muted" Margin="12" Text="@@Welcome@@" />
+                    </arc:DockPane>
+                </arc:DockGroup>
+
+                <arc:DockSplit Orientation="Vertical" Size="56">
+                    <arc:DockDocumentArea Size="70">
+                        <arc:DockGroup>
+                            <arc:DockPane Id="doc:welcome" Title="@@Welcome@@" Icon="{x:Static arc:ArcIcons.FileText}">
+                                <StackPanel Margin="20" Spacing="8" MaxWidth="560" HorizontalAlignment="Left">
+                                    <TextBlock FontSize="{arc:ArcDesignTokenResource TypeXL}"
+                                               FontWeight="Medium"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}">
+                                        <Run Text="@@WelcomeTo@@" /><Run Text=" ArcDisplayName" />
+                                    </TextBlock>
+                                    <TextBlock Classes="muted" Text="@@DockWelcome@@" />
+<!--#if (UsesSettings) -->
+                                    <TextBlock Classes="muted" Text="@@DockLayoutSaved@@" />
+<!--#endif -->
+                                </StackPanel>
+                            </arc:DockPane>
+                            <arc:DockPane Id="doc:notes" Title="@@Notes@@" Icon="{x:Static arc:ArcIcons.File}">
+<!--#if (UsesMvvm) -->
+                                <arc:Textarea Margin="16" PlaceholderText="@@NotesPlaceholder@@" Text="{Binding Notes}" />
+<!--#else -->
+                                <arc:Textarea Margin="16" PlaceholderText="@@NotesPlaceholder@@" />
+<!--#endif -->
+                            </arc:DockPane>
+                        </arc:DockGroup>
+                    </arc:DockDocumentArea>
+                    <arc:DockGroup Size="30">
+                        <arc:DockPane Id="output" Title="@@Output@@" Icon="{x:Static arc:ArcIcons.Terminal}" PreferredSide="Bottom">
+                            <TextBlock Margin="12"
+                                       Text="@@OutputReady@@"
+                                       FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeSM}" />
+                        </arc:DockPane>
+                        <arc:DockPane Id="problems" Title="@@Problems@@" Icon="{x:Static arc:ArcIcons.TriangleAlert}" PreferredSide="Bottom">
+                            <TextBlock Classes="muted" Margin="12" Text="@@NoProblems@@" />
+                        </arc:DockPane>
+                    </arc:DockGroup>
+                </arc:DockSplit>
+
+                <arc:DockGroup Size="22">
+                    <arc:DockPane Id="properties" Title="@@Properties@@" Icon="{x:Static arc:ArcIcons.SlidersHorizontal}" PreferredSide="Right">
+                        <Grid Margin="12" ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="12" RowSpacing="8">
+                            <TextBlock Classes="muted" Text="@@Name@@" />
+                            <TextBlock Grid.Column="1" Text="README.md" />
+                            <TextBlock Grid.Row="1" Classes="muted" Text="@@Type@@" />
+                            <TextBlock Grid.Row="1" Grid.Column="1" Text="Markdown" />
+                            <TextBlock Grid.Row="2" Classes="muted" Text="@@Modified@@" />
+                            <TextBlock Grid.Row="2" Grid.Column="1" Text="2026-11-08" />
+                        </Grid>
+                    </arc:DockPane>
+                </arc:DockGroup>
+            </arc:DockSplit>
+        </arc:DockLayout>
+    </DockPanel>
+</UserControl>

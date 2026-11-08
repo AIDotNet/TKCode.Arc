@@ -15,8 +15,21 @@
         <PackageReference Include="Avalonia.Desktop" Version="__AVALONIA_VERSION__" />
         <PackageReference Include="Avalonia.Fonts.Inter" Version="__AVALONIA_VERSION__" />
         <PackageReference Include="TKCode.Arc" Version="__ARC_VERSION__" />
+<!--#if (UsesMvvm) -->
+        <!-- View models: [ObservableProperty] and [RelayCommand] are source-generated, so there is no reflection. -->
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="__MVVM_VERSION__" />
+<!--#endif -->
+<!--#if (UsesDi) -->
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="__DI_VERSION__" />
+<!--#endif -->
 <!--#if (UsesBlocks) -->
         <PackageReference Include="TKCode.Arc.Blocks" Version="__ARC_VERSION__" />
+<!--#endif -->
+<!--#if (UsesDock) -->
+        <PackageReference Include="TKCode.Arc.Dock" Version="__ARC_VERSION__" />
+<!--#endif -->
+<!--#if (UsesWorkflow) -->
+        <PackageReference Include="TKCode.Arc.Workflow" Version="__ARC_VERSION__" />
 <!--#endif -->
         <PackageReference Include="TKCode.Arc.Fonts" Version="__ARC_VERSION__" />
         <!-- Only the Lucide icons the app uses are compiled in. Icons chosen at run time (bindings, data) are declared:

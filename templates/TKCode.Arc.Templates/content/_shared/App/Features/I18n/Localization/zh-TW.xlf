@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The app's text in zh-TW: each unit's target translates its source; a missing unit fails the build (ARCF021). -->
+<xliff version="2.1" srcLang="en-US" trgLang="zh-TW" xmlns="urn:oasis:names:tc:xliff:document:2.0">
+  <file id="ArcStarterApp.Localization.AppLangResourceKind">
+    <unit id="Home"><segment><source>Home</source><target state="translated">首頁</target></segment></unit>
+    <unit id="Projects"><segment><source>Projects</source><target state="translated">專案</target></segment></unit>
+    <unit id="Settings"><segment><source>Settings</source><target state="translated">設定</target></segment></unit>
+    <unit id="ToggleSidebar"><segment><source>Toggle sidebar</source><target state="translated">切換側邊欄</target></segment></unit>
+    <unit id="Owner"><segment><source>Owner</source><target state="translated">擁有者</target></segment></unit>
+    <unit id="WelcomeTo"><segment><source>Welcome to</source><target state="translated">歡迎使用</target></segment></unit>
+    <unit id="WelcomeDescription"><segment><source>This window is built from TKCode.Arc controls. Edit Views/MainView.axaml to make it yours.</source><target state="translated">這個視窗由 TKCode.Arc 控制項組成。編輯 Views/MainView.axaml，把它變成你自己的應用程式。</target></segment></unit>
+    <unit id="YourName"><segment><source>Your name</source><target state="translated">你的名字</target></segment></unit>
+    <unit id="NameDescription"><segment><source>Controls bind, validate and style like the Avalonia controls they derive from.</source><target state="translated">控制項的繫結、驗證與樣式和它們衍生自的 Avalonia 控制項相同。</target></segment></unit>
+    <unit id="ProductUpdates"><segment><source>Send me product updates</source><target state="translated">寄送產品動態給我</target></segment></unit>
+    <unit id="ReadDocs"><segment><source>Read the docs</source><target state="translated">閱讀文件</target></segment></unit>
+    <unit id="GetStarted"><segment><source>Get started</source><target state="translated">開始使用</target></segment></unit>
+    <unit id="GreetingPrompt"><segment><source>Type your name to get started.</source><target state="translated">輸入你的名字即可開始。</target></segment></unit>
+    <unit id="GreetingWelcome"><segment><source>Welcome, {0}.</source><target state="translated">歡迎，{0}。</target></segment></unit>
+    <unit id="GreetingWelcomeUpdates"><segment><source>Welcome, {0}. We will keep you posted.</source><target state="translated">歡迎，{0}。我們會隨時通知你。</target></segment></unit>
+    <unit id="HomeIntro"><segment><source>A starting point built from TKCode.Arc controls. Replace these pages with your own.</source><target state="translated">一個以 TKCode.Arc 控制項搭建的起點。把這些頁面換成你自己的內容。</target></segment></unit>
+    <unit id="OpenProjects"><segment><source>Open projects</source><target state="translated">進行中的專案</target></segment></unit>
+    <unit id="TasksDue"><segment><source>Tasks due this week</source><target state="translated">本週到期的工作</target></segment></unit>
+    <unit id="Completed"><segment><source>Completed</source><target state="translated">已完成</target></segment></unit>
+    <unit id="NextSteps"><segment><source>Next steps</source><target state="translated">下一步</target></segment></unit>
+    <unit id="NextStepsDescription"><segment><source>Where to go from here.</source><target state="translated">接下來可以做什麼。</target></segment></unit>
+    <unit id="TipAddPage"><segment><source>Add a page: dotnet new tkcode-arc-page, then list it in Navigation/AppPages.cs and give the navigation an entry with the same key.</source><target state="translated">新增頁面：執行 dotnet new tkcode-arc-page，再把它加入 Navigation/AppPages.cs，並在導覽中新增一個索引鍵相同的項目。</target></segment></unit>
+    <unit id="TipTheme"><segment><source>Change the start-up theme in AppSetup.cs, or at run time with ArcTheme.Apply.</source><target state="translated">在 AppSetup.cs 中修改啟動佈景主題，或在執行時呼叫 ArcTheme.Apply。</target></segment></unit>
+    <unit id="TipIcons"><segment><source>Use any Lucide icon with lucide:LucideIcon; only the icons you use are compiled in.</source><target state="translated">用 lucide:LucideIcon 使用任何 Lucide 圖示；只有用到的圖示會編譯進應用程式。</target></segment></unit>
+    <unit id="ProjectsIntro"><segment><source>Sample data (Models/Project.cs): replace it with your own source.</source><target state="translated">範例資料（Models/Project.cs）：換成你自己的資料來源。</target></segment></unit>
+    <unit id="NewProject"><segment><source>New project</source><target state="translated">新增專案</target></segment></unit>
+    <unit id="SettingsIntroSaved"><segment><source>Preferences for this app. They are saved and come back the next time it starts.</source><target state="translated">這個應用程式的偏好設定。它們會被儲存，下次啟動時還原。</target></segment></unit>
+    <unit id="SettingsIntro"><segment><source>Preferences for this app.</source><target state="translated">這個應用程式的偏好設定。</target></segment></unit>
+    <unit id="Appearance"><segment><source>Appearance</source><target state="translated">外觀</target></segment></unit>
+    <unit id="AppearanceDescription"><segment><source>Light, dark, or follow the system setting. The switch in the top bar changes it too.</source><target state="translated">淺色、深色或跟隨系統設定。頂端列中的切換按鈕也可以變更。</target></segment></unit>
+    <unit id="AppearanceSystem"><segment><source>System</source><target state="translated">跟隨系統</target></segment></unit>
+    <unit id="AppearanceLight"><segment><source>Light</source><target state="translated">淺色</target></segment></unit>
+    <unit id="AppearanceDark"><segment><source>Dark</source><target state="translated">深色</target></segment></unit>
+    <unit id="Accent"><segment><source>Accent</source><target state="translated">強調色</target></segment></unit>
+    <unit id="AccentNeutral"><segment><source>Neutral</source><target state="translated">中性</target></segment></unit>
+    <unit id="AccentViolet"><segment><source>Violet</source><target state="translated">紫羅蘭</target></segment></unit>
+    <unit id="AccentBlue"><segment><source>Blue</source><target state="translated">藍色</target></segment></unit>
+    <unit id="AccentGreen"><segment><source>Green</source><target state="translated">綠色</target></segment></unit>
+    <unit id="AccentAmber"><segment><source>Amber</source><target state="translated">琥珀色</target></segment></unit>
+    <unit id="AccentOrange"><segment><source>Orange</source><target state="translated">橘色</target></segment></unit>
+    <unit id="AccentCoral"><segment><source>Coral</source><target state="translated">珊瑚色</target></segment></unit>
+    <unit id="AccentRose"><segment><source>Rose</source><target state="translated">玫瑰色</target></segment></unit>
+    <unit id="Language"><segment><source>Language</source><target state="translated">語言</target></segment></unit>
+    <unit id="Notifications"><segment><source>Notifications</source><target state="translated">通知</target></segment></unit>
+    <unit id="NotificationsDescription"><segment><source>Choose what this app tells you about.</source><target state="translated">選擇這個應用程式要通知你的內容。</target></segment></unit>
+    <unit id="WeeklySummary"><segment><source>Weekly summary</source><target state="translated">每週摘要</target></segment></unit>
+    <unit id="Mentions"><segment><source>Mentions and replies</source><target state="translated">提及與回覆</target></segment></unit>
+    <unit id="Announcements"><segment><source>Product announcements</source><target state="translated">產品公告</target></segment></unit>
+    <unit id="Explorer"><segment><source>Explorer</source><target state="translated">檔案總管</target></segment></unit>
+    <unit id="Outline"><segment><source>Outline</source><target state="translated">大綱</target></segment></unit>
+    <unit id="Properties"><segment><source>Properties</source><target state="translated">屬性</target></segment></unit>
+    <unit id="Output"><segment><source>Output</source><target state="translated">輸出</target></segment></unit>
+    <unit id="Problems"><segment><source>Problems</source><target state="translated">問題</target></segment></unit>
+    <unit id="Welcome"><segment><source>Welcome</source><target state="translated">歡迎</target></segment></unit>
+    <unit id="Notes"><segment><source>Notes</source><target state="translated">筆記</target></segment></unit>
+    <unit id="DockWelcome"><segment><source>Drag a tab to move its pane: drop it on an edge to dock it there, or outside the window to float it.</source><target state="translated">拖曳索引標籤可以移動窗格：放到邊緣即停靠在該處，拖出視窗則成為浮動視窗。</target></segment></unit>
+    <unit id="DockLayoutSaved"><segment><source>The layout is saved when the app closes and comes back on the next start.</source><target state="translated">版面配置會在應用程式關閉時儲存，並在下次啟動時還原。</target></segment></unit>
+    <unit id="ResetLayout"><segment><source>Reset layout</source><target state="translated">重設版面配置</target></segment></unit>
+    <unit id="NotesPlaceholder"><segment><source>Write something…</source><target state="translated">寫點什麼…</target></segment></unit>
+    <unit id="NoProblems"><segment><source>No problems found.</source><target state="translated">未發現問題。</target></segment></unit>
+    <unit id="OutputReady"><segment><source>Ready.</source><target state="translated">就緒。</target></segment></unit>
+    <unit id="Name"><segment><source>Name</source><target state="translated">名稱</target></segment></unit>
+    <unit id="Type"><segment><source>Type</source><target state="translated">類型</target></segment></unit>
+    <unit id="Modified"><segment><source>Modified</source><target state="translated">修改時間</target></segment></unit>
+  </file>
+</xliff>

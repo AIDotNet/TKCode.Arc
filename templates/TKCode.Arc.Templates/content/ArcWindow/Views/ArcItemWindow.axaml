@@ -1,0 +1,36 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+        x:Class="ArcItemNamespace.Views.ArcItemWindow"
+        Title="ArcItemTitle"
+        Width="480"
+        Height="360"
+        MinWidth="360"
+        MinHeight="240"
+        CanMinimize="False"
+        WindowStartupLocation="CenterOwner">
+    <!-- Show it over the main window with: await new ArcItemWindow().ShowDialog(mainWindow); -->
+    <DockPanel>
+        <!-- The footer: the window's actions, right-aligned. -->
+        <Border DockPanel.Dock="Bottom"
+                Padding="20,12"
+                BorderThickness="0,1,0,0"
+                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+            <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
+                <arc:Button Content="Close" Variant="Secondary" Click="OnClose" />
+            </StackPanel>
+        </Border>
+
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+            <StackPanel Margin="24,20" Spacing="8">
+                <TextBlock Text="ArcItemTitle"
+                           FontSize="{arc:ArcDesignTokenResource TypeXL}"
+                           FontWeight="Medium"
+                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                <TextBlock Text="Replace this text with the window's content."
+                           TextWrapping="Wrap"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            </StackPanel>
+        </ScrollViewer>
+    </DockPanel>
+</Window>

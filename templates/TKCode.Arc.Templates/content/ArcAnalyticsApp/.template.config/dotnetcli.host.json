@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json.schemastore.org/dotnetcli.host",
+  "symbolInfo": {
+    "tests": {
+      "longName": "tests",
+      "shortName": ""
+    },
+    "customTitlebar": {
+      "longName": "custom-titlebar",
+      "shortName": ""
+    },
+    "framework": {
+      "longName": "framework",
+      "shortName": "f"
+    },
+    "accent": {
+      "longName": "accent",
+      "shortName": ""
+    },
+    "skipRestore": {
+      "longName": "no-restore",
+      "shortName": ""
+    }
+  }
+}

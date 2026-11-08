@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "TKCode.Arc contributors",
+  "classifications": [
+    "Desktop",
+    "Avalonia",
+    "Arc",
+    "Dialog"
+  ],
+  "identity": "TKCode.Arc.Templates.Dialog",
+  "name": "TKCode.Arc Dialog",
+  "description": "A modal dialog for a TKCode.Arc app (Dialogs/<Name>Dialog.axaml): a form shown in an Arc Dialog over the window, with an awaitable ShowAsync that returns what was entered.",
+  "shortName": "tkcode-arc-dialog",
+  "defaultName": "New",
+  "sourceName": "ArcItemSource",
+  "preferNameDirectory": false,
+  "tags": {
+    "language": "C#",
+    "type": "item"
+  },
+  "symbols": {
+    "namespace": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "The root namespace; the project's RootNamespace when left out (the project must have been restored).",
+      "displayName": "Namespace",
+      "defaultValue": ""
+    },
+    "projectNamespace": {
+      "type": "bind",
+      "binding": "msbuild:RootNamespace",
+      "defaultValue": "ArcApp"
+    },
+    "rootNamespace": {
+      "type": "generated",
+      "generator": "coalesce",
+      "parameters": {
+        "sourceVariableName": "namespace",
+        "fallbackVariableName": "projectNamespace"
+      },
+      "replaces": "ArcItemNamespace"
+    },
+    "className": {
+      "type": "derived",
+      "valueSource": "name",
+      "valueTransform": "withSuffix",
+      "replaces": "ArcItemDialog",
+      "fileRename": "ArcItemDialog"
+    },
+    "title": {
+      "type": "derived",
+      "valueSource": "name",
+      "valueTransform": "withoutSuffix",
+      "replaces": "ArcItemTitle"
+    }
+  },
+  "forms": {
+    "withSuffix": {
+      "identifier": "replace",
+      "pattern": "^(.*?)(Dialog)?$",
+      "replacement": "$1Dialog"
+    },
+    "withoutSuffix": {
+      "identifier": "replace",
+      "pattern": "^(.*?)(Dialog)?$",
+      "replacement": "$1"
+    }
+  },
+  "sources": [
+    {
+      "exclude": [
+        ".template.config/**"
+      ]
+    }
+  ]
+}

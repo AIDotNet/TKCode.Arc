@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ArcDisplayName</title>
+    <meta charset="UTF-8">
+    <base href="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preload" id="webassembly" />
+    <script type="importmap"></script>
+    <script type='module' src="main#[.{fingerprint}].js"></script>
+    <style>
+        /* Shown while .NET and the app download; Avalonia adds splash-close once the first frame is drawn. */
+        .avalonia-splash {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+            color: #737373;
+            background: #ffffff;
+        }
+
+        .avalonia-splash.splash-close {
+            display: none;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .avalonia-splash {
+                color: #a3a3a3;
+                background: #0a0a0a;
+            }
+        }
+    </style>
+</head>
+<body style="margin: 0; overflow: hidden">
+<div id="out">
+    <div class="avalonia-splash">ArcDisplayName</div>
+</div>
+</body>
+</html>

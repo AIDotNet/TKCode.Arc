@@ -1,0 +1,340 @@
+{
+  "Home": {
+    "en-US": "Home",
+    "zh-CN": "首页",
+    "zh-TW": "首頁",
+    "forms": [
+      "kind"
+    ]
+  },
+  "Projects": {
+    "en-US": "Projects",
+    "zh-CN": "项目",
+    "zh-TW": "專案",
+    "forms": [
+      "kind"
+    ]
+  },
+  "Settings": {
+    "en-US": "Settings",
+    "zh-CN": "设置",
+    "zh-TW": "設定",
+    "forms": [
+      "kind"
+    ]
+  },
+  "ToggleSidebar": {
+    "en-US": "Toggle sidebar",
+    "zh-CN": "切换侧边栏",
+    "zh-TW": "切換側邊欄"
+  },
+  "Owner": {
+    "en-US": "Owner",
+    "zh-CN": "所有者",
+    "zh-TW": "擁有者"
+  },
+  "WelcomeTo": {
+    "en-US": "Welcome to",
+    "zh-CN": "欢迎使用",
+    "zh-TW": "歡迎使用"
+  },
+  "WelcomeDescription": {
+    "en-US": "This window is built from TKCode.Arc controls. Edit Views/MainView.axaml to make it yours.",
+    "zh-CN": "这个窗口由 TKCode.Arc 控件组成。编辑 Views/MainView.axaml，把它变成你自己的应用。",
+    "zh-TW": "這個視窗由 TKCode.Arc 控制項組成。編輯 Views/MainView.axaml，把它變成你自己的應用程式。"
+  },
+  "YourName": {
+    "en-US": "Your name",
+    "zh-CN": "你的名字",
+    "zh-TW": "你的名字"
+  },
+  "NameDescription": {
+    "en-US": "Controls bind, validate and style like the Avalonia controls they derive from.",
+    "zh-CN": "控件的绑定、验证和样式与它们派生自的 Avalonia 控件相同。",
+    "zh-TW": "控制項的繫結、驗證與樣式和它們衍生自的 Avalonia 控制項相同。"
+  },
+  "ProductUpdates": {
+    "en-US": "Send me product updates",
+    "zh-CN": "向我发送产品动态",
+    "zh-TW": "寄送產品動態給我"
+  },
+  "ReadDocs": {
+    "en-US": "Read the docs",
+    "zh-CN": "阅读文档",
+    "zh-TW": "閱讀文件"
+  },
+  "GetStarted": {
+    "en-US": "Get started",
+    "zh-CN": "开始使用",
+    "zh-TW": "開始使用"
+  },
+  "GreetingPrompt": {
+    "en-US": "Type your name to get started.",
+    "zh-CN": "输入你的名字即可开始。",
+    "zh-TW": "輸入你的名字即可開始。",
+    "forms": [
+      "cs"
+    ]
+  },
+  "GreetingWelcome": {
+    "en-US": "Welcome, {0}.",
+    "zh-CN": "欢迎，{0}。",
+    "zh-TW": "歡迎，{0}。",
+    "forms": [
+      "cs"
+    ]
+  },
+  "GreetingWelcomeUpdates": {
+    "en-US": "Welcome, {0}. We will keep you posted.",
+    "zh-CN": "欢迎，{0}。我们会及时通知你。",
+    "zh-TW": "歡迎，{0}。我們會隨時通知你。",
+    "forms": [
+      "cs"
+    ]
+  },
+  "HomeIntro": {
+    "en-US": "A starting point built from TKCode.Arc controls. Replace these pages with your own.",
+    "zh-CN": "一个由 TKCode.Arc 控件搭建的起点。把这些页面换成你自己的内容。",
+    "zh-TW": "一個以 TKCode.Arc 控制項搭建的起點。把這些頁面換成你自己的內容。"
+  },
+  "OpenProjects": {
+    "en-US": "Open projects",
+    "zh-CN": "进行中的项目",
+    "zh-TW": "進行中的專案"
+  },
+  "TasksDue": {
+    "en-US": "Tasks due this week",
+    "zh-CN": "本周到期的任务",
+    "zh-TW": "本週到期的工作"
+  },
+  "Completed": {
+    "en-US": "Completed",
+    "zh-CN": "已完成",
+    "zh-TW": "已完成"
+  },
+  "NextSteps": {
+    "en-US": "Next steps",
+    "zh-CN": "下一步",
+    "zh-TW": "下一步"
+  },
+  "NextStepsDescription": {
+    "en-US": "Where to go from here.",
+    "zh-CN": "接下来可以做什么。",
+    "zh-TW": "接下來可以做什麼。"
+  },
+  "TipAddPage": {
+    "en-US": "Add a page: dotnet new tkcode-arc-page, then list it in Navigation/AppPages.cs and give the navigation an entry with the same key.",
+    "zh-CN": "添加页面：运行 dotnet new tkcode-arc-page，再把它加入 Navigation/AppPages.cs，并在导航中添加一个键相同的条目。",
+    "zh-TW": "新增頁面：執行 dotnet new tkcode-arc-page，再把它加入 Navigation/AppPages.cs，並在導覽中新增一個索引鍵相同的項目。"
+  },
+  "TipTheme": {
+    "en-US": "Change the start-up theme in AppSetup.cs, or at run time with ArcTheme.Apply.",
+    "zh-CN": "在 AppSetup.cs 中修改启动主题，或在运行时调用 ArcTheme.Apply。",
+    "zh-TW": "在 AppSetup.cs 中修改啟動佈景主題，或在執行時呼叫 ArcTheme.Apply。"
+  },
+  "TipIcons": {
+    "en-US": "Use any Lucide icon with lucide:LucideIcon; only the icons you use are compiled in.",
+    "zh-CN": "用 lucide:LucideIcon 使用任意 Lucide 图标；只有用到的图标会被编译进应用。",
+    "zh-TW": "用 lucide:LucideIcon 使用任何 Lucide 圖示；只有用到的圖示會編譯進應用程式。"
+  },
+  "ProjectsIntro": {
+    "en-US": "Sample data (Models/Project.cs): replace it with your own source.",
+    "zh-CN": "示例数据（Models/Project.cs）：换成你自己的数据源。",
+    "zh-TW": "範例資料（Models/Project.cs）：換成你自己的資料來源。"
+  },
+  "NewProject": {
+    "en-US": "New project",
+    "zh-CN": "新建项目",
+    "zh-TW": "新增專案"
+  },
+  "SettingsIntroSaved": {
+    "en-US": "Preferences for this app. They are saved and come back the next time it starts.",
+    "zh-CN": "这个应用的偏好设置。它们会被保存，下次启动时恢复。",
+    "zh-TW": "這個應用程式的偏好設定。它們會被儲存，下次啟動時還原。"
+  },
+  "SettingsIntro": {
+    "en-US": "Preferences for this app.",
+    "zh-CN": "这个应用的偏好设置。",
+    "zh-TW": "這個應用程式的偏好設定。"
+  },
+  "Appearance": {
+    "en-US": "Appearance",
+    "zh-CN": "外观",
+    "zh-TW": "外觀"
+  },
+  "AppearanceDescription": {
+    "en-US": "Light, dark, or follow the system setting. The switch in the top bar changes it too.",
+    "zh-CN": "浅色、深色或跟随系统设置。顶栏中的开关也可以切换。",
+    "zh-TW": "淺色、深色或跟隨系統設定。頂端列中的切換按鈕也可以變更。"
+  },
+  "AppearanceSystem": {
+    "en-US": "System",
+    "zh-CN": "跟随系统",
+    "zh-TW": "跟隨系統"
+  },
+  "AppearanceLight": {
+    "en-US": "Light",
+    "zh-CN": "浅色",
+    "zh-TW": "淺色"
+  },
+  "AppearanceDark": {
+    "en-US": "Dark",
+    "zh-CN": "深色",
+    "zh-TW": "深色"
+  },
+  "Accent": {
+    "en-US": "Accent",
+    "zh-CN": "强调色",
+    "zh-TW": "強調色"
+  },
+  "AccentNeutral": {
+    "en-US": "Neutral",
+    "zh-CN": "中性",
+    "zh-TW": "中性"
+  },
+  "AccentViolet": {
+    "en-US": "Violet",
+    "zh-CN": "紫罗兰",
+    "zh-TW": "紫羅蘭"
+  },
+  "AccentBlue": {
+    "en-US": "Blue",
+    "zh-CN": "蓝色",
+    "zh-TW": "藍色"
+  },
+  "AccentGreen": {
+    "en-US": "Green",
+    "zh-CN": "绿色",
+    "zh-TW": "綠色"
+  },
+  "AccentAmber": {
+    "en-US": "Amber",
+    "zh-CN": "琥珀色",
+    "zh-TW": "琥珀色"
+  },
+  "AccentOrange": {
+    "en-US": "Orange",
+    "zh-CN": "橙色",
+    "zh-TW": "橘色"
+  },
+  "AccentCoral": {
+    "en-US": "Coral",
+    "zh-CN": "珊瑚色",
+    "zh-TW": "珊瑚色"
+  },
+  "AccentRose": {
+    "en-US": "Rose",
+    "zh-CN": "玫瑰色",
+    "zh-TW": "玫瑰色"
+  },
+  "Language": {
+    "en-US": "Language",
+    "zh-CN": "语言",
+    "zh-TW": "語言"
+  },
+  "Notifications": {
+    "en-US": "Notifications",
+    "zh-CN": "通知",
+    "zh-TW": "通知"
+  },
+  "NotificationsDescription": {
+    "en-US": "Choose what this app tells you about.",
+    "zh-CN": "选择这个应用要通知你的内容。",
+    "zh-TW": "選擇這個應用程式要通知你的內容。"
+  },
+  "WeeklySummary": {
+    "en-US": "Weekly summary",
+    "zh-CN": "每周摘要",
+    "zh-TW": "每週摘要"
+  },
+  "Mentions": {
+    "en-US": "Mentions and replies",
+    "zh-CN": "提及与回复",
+    "zh-TW": "提及與回覆"
+  },
+  "Announcements": {
+    "en-US": "Product announcements",
+    "zh-CN": "产品公告",
+    "zh-TW": "產品公告"
+  },
+  "Explorer": {
+    "en-US": "Explorer",
+    "zh-CN": "资源管理器",
+    "zh-TW": "檔案總管"
+  },
+  "Outline": {
+    "en-US": "Outline",
+    "zh-CN": "大纲",
+    "zh-TW": "大綱"
+  },
+  "Properties": {
+    "en-US": "Properties",
+    "zh-CN": "属性",
+    "zh-TW": "屬性"
+  },
+  "Output": {
+    "en-US": "Output",
+    "zh-CN": "输出",
+    "zh-TW": "輸出"
+  },
+  "Problems": {
+    "en-US": "Problems",
+    "zh-CN": "问题",
+    "zh-TW": "問題"
+  },
+  "Welcome": {
+    "en-US": "Welcome",
+    "zh-CN": "欢迎",
+    "zh-TW": "歡迎"
+  },
+  "Notes": {
+    "en-US": "Notes",
+    "zh-CN": "笔记",
+    "zh-TW": "筆記"
+  },
+  "DockWelcome": {
+    "en-US": "Drag a tab to move its pane: drop it on an edge to dock it there, or outside the window to float it.",
+    "zh-CN": "拖动标签可以移动面板：放到边缘即停靠在那里，拖出窗口则成为浮动窗口。",
+    "zh-TW": "拖曳索引標籤可以移動窗格：放到邊緣即停靠在該處，拖出視窗則成為浮動視窗。"
+  },
+  "DockLayoutSaved": {
+    "en-US": "The layout is saved when the app closes and comes back on the next start.",
+    "zh-CN": "布局会在应用关闭时保存，并在下次启动时恢复。",
+    "zh-TW": "版面配置會在應用程式關閉時儲存，並在下次啟動時還原。"
+  },
+  "ResetLayout": {
+    "en-US": "Reset layout",
+    "zh-CN": "重置布局",
+    "zh-TW": "重設版面配置"
+  },
+  "NotesPlaceholder": {
+    "en-US": "Write something…",
+    "zh-CN": "写点什么…",
+    "zh-TW": "寫點什麼…"
+  },
+  "NoProblems": {
+    "en-US": "No problems found.",
+    "zh-CN": "未发现问题。",
+    "zh-TW": "未發現問題。"
+  },
+  "OutputReady": {
+    "en-US": "Ready.",
+    "zh-CN": "就绪。",
+    "zh-TW": "就緒。"
+  },
+  "Name": {
+    "en-US": "Name",
+    "zh-CN": "名称",
+    "zh-TW": "名稱"
+  },
+  "Type": {
+    "en-US": "Type",
+    "zh-CN": "类型",
+    "zh-TW": "類型"
+  },
+  "Modified": {
+    "en-US": "Modified",
+    "zh-CN": "修改时间",
+    "zh-TW": "修改時間"
+  }
+}
