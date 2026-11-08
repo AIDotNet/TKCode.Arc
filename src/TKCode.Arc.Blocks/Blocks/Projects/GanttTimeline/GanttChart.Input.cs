@@ -163,6 +163,7 @@ internal sealed partial class GanttChart
             mode = cx <= x0 + EdgeGrab ? DragMode.ResizeStart : cx >= x1 - EdgeGrab ? DragMode.ResizeEnd : DragMode.Move;
         }
         _focusId = task.Id;
+        _scrollMotion.Stop();
         _drag = new DragState { Task = task, Mode = mode, PressX = pos.X, LastX = pos.X };
         _pointerX = pos.X;
         _release.Jump(0);
@@ -262,21 +263,46 @@ internal sealed partial class GanttChart
     private void UpdateCursor(Point pos)
     {
         var cursor = StandardCursorType.Arrow;
-        var i = RowAt(pos.Y);
-        if (i >= 0 && pos.X >= ColumnWidth && _model.Rows[i].Task is { IsMilestone: false } t)
+        string? hover = null;
+        var i = pos.Y >= HeaderHeight ? RowAt(pos.Y) : -1;
+        if (i >= 0 && pos.X < ColumnWidth)
+        {
+            cursor = StandardCursorType.Hand;
+            hover = _model.Rows[i].Task?.Id;
+        }
+        else if (i >= 0 && _model.Rows[i].Task is { } t)
         {
             var cx = pos.X - ColumnWidth + _scrollX;
             var (x0, x1) = BarX(t, _model.Rows[i]);
+            if (t.IsMilestone)
+            {
+                var c = (x0 + x1) / 2;
+                x0 = c - MilestoneRadius;
+                x1 = c + MilestoneRadius;
+            }
             if (cx >= x0 - 2 && cx <= x1 + 2)
             {
-                cursor = (cx <= x0 + EdgeGrab || cx >= x1 - EdgeGrab) && x1 - x0 > EdgeGrab * 3 ? StandardCursorType.SizeWestEast : StandardCursorType.Hand;
+                hover = t.Id;
+                cursor = !t.IsMilestone && (cx <= x0 + EdgeGrab || cx >= x1 - EdgeGrab) && x1 - x0 > EdgeGrab * 3 ? StandardCursorType.SizeWestEast : StandardCursorType.Hand;
             }
         }
-        else if (i >= 0 && pos.X < ColumnWidth)
-        {
-            cursor = StandardCursorType.Hand;
-        }
         Cursor = new Cursor(cursor);
+        SetHover(hover);
+    }
+
+    private void SetHover(string? id)
+    {
+        if (_hoverId != id)
+        {
+            _hoverId = id;
+            InvalidateVisual();
+        }
+    }
+
+    protected override void OnPointerExited(PointerEventArgs e)
+    {
+        base.OnPointerExited(e);
+        SetHover(null);
     }
 
     private void EnsureAutoScroll()
@@ -301,7 +327,8 @@ internal sealed partial class GanttChart
                 return;
             }
             var before = _scrollX;
-            _scrollX = Math.Clamp(_scrollX + dx, 0, Math.Max(0, ContentWidth - ViewWidth));
+            _scrollX += dx;
+            ClampScroll();
             _drag.Delta += _scrollX - before;
             InvalidateVisual();
         });
@@ -324,6 +351,7 @@ internal sealed partial class GanttChart
             dx = dy;
             dy = 0;
         }
+        _scrollMotion.Stop();
         _scrollX += -dx;
         _scrollY += -dy;
         ClampScroll();
@@ -344,12 +372,12 @@ internal sealed partial class GanttChart
 
     internal string Describe(GanttTask t)
     {
-        var dates = t.IsMilestone ? t.Start.ToString("MMM d", CultureInfo.CurrentUICulture)
-            : t.Start.ToString("MMM d", CultureInfo.CurrentUICulture) + " – " + t.End.ToString("MMM d", CultureInfo.CurrentUICulture);
+        var dates = t.IsMilestone ? t.Start.ToString("MMM d", CultureInfo.InvariantCulture)
+            : t.Start.ToString("MMM d", CultureInfo.InvariantCulture) + " – " + t.End.ToString("MMM d", CultureInfo.InvariantCulture);
         var s = t.Name + ", " + dates;
         if (!t.IsMilestone)
         {
-            s += ", " + GanttModel.Span(t).ToString(CultureInfo.CurrentUICulture) + " days, " + ((int)Math.Round(t.Progress * 100)).ToString(CultureInfo.CurrentUICulture) + "% done";
+            s += ", " + GanttModel.Span(t).ToString(CultureInfo.InvariantCulture) + " days, " + ((int)Math.Round(t.Progress * 100)).ToString(CultureInfo.InvariantCulture) + "% done";
         }
         if (_model.HasConflict(t))
         {
@@ -438,6 +466,7 @@ internal sealed partial class GanttChart
         {
             return;
         }
+        _scrollMotion.Stop();
         var top = i * GanttModel.RowHeight;
         var viewH = Bounds.Height - HeaderHeight;
         if (top < _scrollY)

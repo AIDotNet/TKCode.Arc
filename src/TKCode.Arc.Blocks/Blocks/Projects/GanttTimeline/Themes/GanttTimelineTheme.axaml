@@ -11,17 +11,22 @@
         <Setter Property="BarRadius" Value="{arc:GanttTimelineTokenResource BarRadius}" />
         <Setter Property="TaskColumnWidth" Value="{arc:GanttTimelineTokenResource TaskColumnWidth}" />
         <Setter Property="NarrowTaskColumnWidth" Value="{arc:GanttTimelineTokenResource NarrowTaskColumnWidth}" />
+        <Setter Property="DefaultHeight" Value="{arc:GanttTimelineTokenResource DefaultChartHeight}" />
         <Setter Property="SurfaceBrush" Value="{arc:ArcDesignTokenResource Surface}" />
         <Setter Property="TextBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="MutedBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="SecondaryBrush" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="RowHotBrush" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
         <Setter Property="GridBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
         <Setter Property="WeekendBrush" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
-        <Setter Property="BarBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BarBrush" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="BarEdgeBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="SummaryTrackBrush" Value="{arc:ArcDesignTokenResource Border}" />
         <Setter Property="BarFillBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
-        <Setter Property="SummaryBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SummaryBrush" Value="{arc:ArcDesignTokenResource TextSecondary}" />
         <Setter Property="ArrowBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
         <Setter Property="ConflictBrush" Value="{arc:ArcDesignTokenResource Danger}" />
-        <Setter Property="TodayBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="TodayBrush" Value="{arc:ArcDesignTokenResource TextSecondary}" />
         <Setter Property="TodayTextBrush" Value="{arc:ArcDesignTokenResource Background}" />
         <Setter Property="FocusBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
     </ControlTheme>
@@ -104,12 +109,14 @@
         <Setter Property="Padding" Value="{arc:GanttTimelineTokenResource RootPadding}" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:GanttTimeline">
-                <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                <Border Background="{TemplateBinding Background}"
+                        CornerRadius="{arc:ArcDesignTokenResource RadiusStep25}"
+                        Padding="{TemplateBinding Padding}">
                     <Grid RowDefinitions="Auto,*,Auto" RowSpacing="{arc:GanttTimelineTokenResource SectionGap}">
                         <Grid ColumnDefinitions="*,Auto">
                             <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
                                 <TextBlock Text="{TemplateBinding Title}"
-                                           FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeLG}"
                                            FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
                                            VerticalAlignment="Center" />
                                 <TextBlock Name="PART_Subtitle"
@@ -126,16 +133,36 @@
                                         <ToggleButton Name="PART_Month" Content="Month" Theme="{StaticResource GanttSwitchButtonTheme}" />
                                     </StackPanel>
                                 </Border>
-                                <Button Name="PART_Today" Content="Today" Theme="{StaticResource GanttPillButtonTheme}" />
+                                <Button Name="PART_Today" Theme="{StaticResource GanttPillButtonTheme}">
+                                    <StackPanel Orientation="Horizontal" Spacing="{arc:GanttTimelineTokenResource PillGap}">
+                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.CircleDot}" Size="16" VerticalAlignment="Center" />
+                                        <TextBlock Text="Today" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </Button>
                             </StackPanel>
                         </Grid>
+                        <!-- The frame sits 4 outside the heading and the footer's text, so their text lines up with its rows. -->
                         <Border Grid.Row="1"
+                                Margin="-4,0"
+                                Background="{arc:ArcDesignTokenResource Surface}"
                                 BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
                                 BorderThickness="1"
                                 CornerRadius="{arc:ArcDesignTokenResource RadiusStep20}"
-                                ClipToBounds="True"
-                                MinHeight="{arc:GanttTimelineTokenResource DefaultChartHeight}">
-                            <arc:GanttChart Name="PART_Chart" />
+                                ClipToBounds="True">
+                            <Grid ColumnDefinitions="*,Auto" RowDefinitions="*,Auto">
+                                <arc:GanttChart Name="PART_Chart" />
+                                <ScrollBar Name="PART_VerticalScroll"
+                                           Grid.Column="1"
+                                           Orientation="Vertical"
+                                           Visibility="Auto"
+                                           Background="{arc:ArcDesignTokenResource SurfaceMuted}" />
+                                <ScrollBar Name="PART_HorizontalScroll"
+                                           Grid.Row="1"
+                                           Grid.ColumnSpan="2"
+                                           Orientation="Horizontal"
+                                           Visibility="Auto"
+                                           Background="{arc:ArcDesignTokenResource SurfaceMuted}" />
+                            </Grid>
                         </Border>
                         <Grid Grid.Row="2" ColumnDefinitions="*,Auto">
                             <TextBlock Name="PART_Status"
@@ -145,13 +172,26 @@
                                        TextTrimming="CharacterEllipsis"
                                        AutomationProperties.LiveSetting="Polite" />
                             <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
-                                <Button Name="PART_Undo" Content="Undo" IsEnabled="False" Theme="{StaticResource GanttPillButtonTheme}" />
-                                <Button Name="PART_Reset" Content="Reset" IsEnabled="False" Theme="{StaticResource GanttPillButtonTheme}" />
+                                <Button Name="PART_Undo" IsEnabled="False" Theme="{StaticResource GanttPillButtonTheme}">
+                                    <StackPanel Orientation="Horizontal" Spacing="{arc:GanttTimelineTokenResource PillGap}">
+                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Undo2}" Size="16" VerticalAlignment="Center" />
+                                        <TextBlock Text="Undo" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </Button>
+                                <Button Name="PART_Reset" IsEnabled="False" Theme="{StaticResource GanttPillButtonTheme}">
+                                    <StackPanel Orientation="Horizontal" Spacing="{arc:GanttTimelineTokenResource PillGap}">
+                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.RotateCcw}" Size="16" VerticalAlignment="Center" />
+                                        <TextBlock Text="Reset" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </Button>
                             </StackPanel>
                         </Grid>
                     </Grid>
                 </Border>
             </ControlTemplate>
         </Setter>
+        <Style Selector="^:narrow">
+            <Setter Property="Padding" Value="{arc:GanttTimelineTokenResource NarrowRootPadding}" />
+        </Style>
     </ControlTheme>
 </ResourceDictionary>
