@@ -166,6 +166,118 @@ jobs:
           done
           exit $failed
 
+  # The video shim of TKCode.Arc.Video.Native (native/video, ABI in tkcode_video.h): built for every RID on every push and
+  # pull request with the Zig in native/toolchain.json (Linux and Windows, cross-compiled on Linux) and Xcode clang (macOS),
+  # then tested for real on each OS by the test executable of tests/TKCode.Arc.Video.Native.Tests (its Main services the
+  # macOS main run loop that AVPlayer needs). design/components/video/completion-plan.md A5.
+  video-native-build:
+    name: Video shim (${{ matrix.host }})
+    if: github.event_name != 'workflow_dispatch' && !startsWith(github.ref, 'refs/tags/')
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - host: linux
+            os: ubuntu-24.04
+          - host: macos
+            os: macos-15
+    env:
+      ZIG_GLOBAL_CACHE_DIR: ${{ github.workspace }}/.zig-cache-global
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/cache@v6
+        if: matrix.host == 'linux'
+        with:
+          path: |
+            ~/.cache/tkcode/zig
+            ${{ github.workspace }}/.zig-cache-global
+          key: zig-video-${{ hashFiles('native/toolchain.json') }}
+
+      - name: Test the frame scaler
+        run: cc -std=c11 -Wall -Wextra -Werror -O2 native/video/test/scale_test.c -o scale_test && ./scale_test
+
+      - name: Build (Linux and Windows)
+        if: matrix.host == 'linux'
+        run: |
+          tools/video/build-linux.sh linux-x64 linux-arm64
+          tools/video/build-win.sh win-x64
+          tools/video/build-win.sh win-arm64
+
+      - name: Build (macOS)
+        if: matrix.host == 'macos'
+        run: |
+          tools/video/build-mac.sh osx-arm64
+          tools/video/build-mac.sh osx-x64
+
+      - name: Check the glibc floor (2.28)
+        if: matrix.host == 'linux'
+        run: |
+          for f in artifacts/native/linux-*/libtkcode_video.so; do
+            max=$(objdump -T "$f" | grep -o 'GLIBC_[0-9.]*' | sort -uV | tail -1)
+            echo "$f requires $max"
+            [ "$(printf '%s\nGLIBC_2.28\n' "$max" | sort -V | tail -1)" = "GLIBC_2.28" ]
+          done
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: video-native-${{ matrix.host }}
+          path: artifacts/native/*/*tkcode_video.*
+          if-no-files-found: error
+          retention-days: 7
+
+  video-native-test:
+    name: Video shim tests (${{ matrix.os }})
+    needs: video-native-build
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-15, windows-latest]
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+          dotnet-version: 10.0.x
+
+      - uses: actions/cache@v6
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', 'Directory.Packages.props', 'build/Versions.props', 'global.json') }}
+          restore-keys: nuget-${{ runner.os }}-
+
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: video-native-*
+          path: artifacts/native
+          merge-multiple: true
+
+      # The packages the Linux backend needs for MP4 (H.264 / AAC): video.md section 15.
+      - name: Install GStreamer
+        if: runner.os == 'Linux'
+        run: >
+          sudo apt-get update -q && sudo apt-get install -y -q --no-install-recommends
+          gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-libav
+
+      # Windows Server ships Media Foundation as an optional feature; without it the tests skip (ArcVideoNative.Use() is false).
+      - name: Install Media Foundation
+        if: runner.os == 'Windows'
+        shell: pwsh
+        continue-on-error: true
+        run: Install-WindowsFeature Server-Media-Foundation
+
+      - name: Stage the shim
+        run: tools/video/sync-native.sh
+
+      # The test project is an executable: on macOS its Main must own the main thread (AVPlayer), so it runs directly.
+      - name: Test
+        run: dotnet run --project tests/TKCode.Arc.Video.Native.Tests -c Release
+
   # libghostty-vt for every RID, built from the commit pinned in native/ghostty/ghostty-upstream.json (+ overlays) with
   # the Zig in native/toolchain.json. Linux cross-compiles the Linux and Windows targets; the macOS targets need the
   # Apple SDK. TKCode.Arc.Terminal ships the results under runtimes/<rid>/native. The same job builds the miniaudio shim of
@@ -209,6 +321,16 @@ jobs:
       - name: Build the miniaudio shim
         run: for rid in ${{ matrix.rids }}; do tools/audio/build-miniaudio.sh "$rid"; done
 
+      - name: Build the video shim
+        run: |
+          for rid in ${{ matrix.rids }}; do
+            case "$rid" in
+              linux-*) tools/video/build-linux.sh "$rid";;
+              win-*) tools/video/build-win.sh "$rid";;
+              osx-*) tools/video/build-mac.sh "$rid";;
+            esac
+          done
+
       # The Linux libraries must load on glibc 2.28 and newer.
       - name: Check the glibc floor (2.28)
         if: matrix.host == 'linux'
@@ -227,6 +349,7 @@ jobs:
             artifacts/native/*/ghostty-commit.txt
             artifacts/native/*/*tkcode_audio.*
             artifacts/native/*/miniaudio-version.txt
+            artifacts/native/*/*tkcode_video.*
           if-no-files-found: error
           retention-days: 7
 
@@ -285,11 +408,12 @@ jobs:
           path: artifacts/native
           merge-multiple: true
 
-      # artifacts/native/<rid>/ -> src/TKCode.Arc.Terminal/runtimes/<rid>/native/ and src/TKCode.Arc.Audio.Native/runtimes/<rid>/native/
+      # artifacts/native/<rid>/ -> runtimes/<rid>/native/ of TKCode.Arc.Terminal, TKCode.Arc.Audio.Native and TKCode.Arc.Video.Native
       - name: Stage the native libraries
         run: |
           tools/terminal/sync-native.sh
           tools/audio/sync-native.sh
+          tools/video/sync-native.sh
 
       # Build the whole solution once, then pack without rebuilding.
       - name: Build

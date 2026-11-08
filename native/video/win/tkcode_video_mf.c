@@ -1189,6 +1189,38 @@ TKV_API int32_t tkv_player_redeliver_frame(tkv_player* p)
     return TKV_OK;
 }
 
+/* Embedded text tracks: not read yet on Windows (IMFTimedText needs checking on a real machine first), so the player
+   reports none and accepts only "no track". */
+TKV_API int32_t tkv_player_set_text_callback(tkv_player* p, tkv_text_callback callback, void* context)
+{
+    (void)callback;
+    (void)context;
+    return p ? TKV_OK : TKV_E_INVALID_ARG;
+}
+
+TKV_API int32_t tkv_player_text_track_count(tkv_player* p)
+{
+    return p ? 0 : TKV_E_INVALID_ARG;
+}
+
+TKV_API int32_t tkv_player_text_track_info(tkv_player* p, int32_t index, char* language, int32_t language_size,
+                                           char* label, int32_t label_size, int32_t* kind)
+{
+    (void)p;
+    (void)index;
+    (void)language;
+    (void)language_size;
+    (void)label;
+    (void)label_size;
+    (void)kind;
+    return TKV_E_INVALID_ARG;
+}
+
+TKV_API int32_t tkv_player_select_text_track(tkv_player* p, int32_t index)
+{
+    return p && index == -1 ? TKV_OK : TKV_E_INVALID_ARG;
+}
+
 TKV_API const char* tkv_player_last_error(tkv_player* p)
 {
     if (p == NULL) {

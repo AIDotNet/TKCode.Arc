@@ -5,8 +5,9 @@ using System.Runtime.InteropServices;
 namespace TKCode.Arc;
 
 /// <summary>
-/// Turns on the desktop video backend: the system player on each platform (Media Foundation on Windows, AVFoundation on
-/// macOS, GStreamer on Linux) through the tkcode_video shim (design/components/video/video.md section 5.2).
+/// Turns on the system video backend: the system player on each platform (Media Foundation on Windows, AVFoundation on
+/// macOS and iOS, GStreamer on Linux) through the tkcode_video shim (design/components/video/video.md section 5.2), and
+/// Android's MediaPlayer on Android (<c>AndroidVideoBackend</c>).
 /// </summary>
 public static class ArcVideoNative
 {
@@ -24,6 +25,16 @@ public static class ArcVideoNative
     /// whose main thread never runs a run loop sees every load fail with <see cref="VideoErrorKind.Aborted"/> after a few seconds.
     /// </remarks>
     public static bool Use()
+    {
+#if ANDROID
+        ArcVideo.Backend = AndroidVideoBackend.Instance;
+        return true;
+#else
+        return UseShim();
+#endif
+    }
+
+    private static bool UseShim()
     {
         lock (s_gate)
         {
@@ -64,9 +75,11 @@ public static class ArcVideoNative
         }
     }
 
-    private static string BackendName => OperatingSystem.IsWindows() ? "mediafoundation" : OperatingSystem.IsMacOS() ? "avfoundation" : "gstreamer";
+    private static bool IsApple => OperatingSystem.IsMacOS() || OperatingSystem.IsIOS() || OperatingSystem.IsMacCatalyst();
 
-    private static string FrameworkName => OperatingSystem.IsWindows() ? "Media Foundation" : OperatingSystem.IsMacOS() ? "AVFoundation" : "GStreamer 1.0";
+    private static string BackendName => OperatingSystem.IsWindows() ? "mediafoundation" : IsApple ? "avfoundation" : "gstreamer";
+
+    private static string FrameworkName => OperatingSystem.IsWindows() ? "Media Foundation" : IsApple ? "AVFoundation" : "GStreamer 1.0";
 
     /// <summary>
     /// NuGet consumers get the library from the deps.json probe paths; a project reference copies it to
@@ -98,6 +111,12 @@ public static class ArcVideoNative
         if (NativeLibrary.TryLoad(name, assembly, searchPath, out var handle))
         {
             return handle;
+        }
+        if (OperatingSystem.IsIOS() || OperatingSystem.IsMacCatalyst())
+        {
+            // The xcframework from the package is embedded as a dynamic framework in the app bundle.
+            var framework = Path.Combine(AppContext.BaseDirectory, "Frameworks", "tkcode_video.framework", "tkcode_video");
+            return NativeLibrary.TryLoad(framework, out handle) ? handle : 0;
         }
         var file = OperatingSystem.IsWindows() ? "tkcode_video.dll" : OperatingSystem.IsMacOS() ? "libtkcode_video.dylib" : "libtkcode_video.so";
         var path = Path.Combine(AppContext.BaseDirectory, "runtimes", CurrentRid(), "native", file);

@@ -128,8 +128,7 @@ public static class VideoSourceFiles
             }
             case BytesVideoSource bytes:
             {
-                using var stream = new MemoryStream(bytes.Data.ToArray(), writable: false);
-                return await WriteAsync(stream, ExtensionOf(bytes.MediaType), cancellationToken).ConfigureAwait(false);
+                return await WriteAsync(bytes.Data, ExtensionOf(bytes.MediaType), cancellationToken).ConfigureAwait(false);
             }
             case StreamVideoSource streamSource:
             {
@@ -159,36 +158,106 @@ public static class VideoSourceFiles
         };
     }
 
+    private const int CopyBufferSize = 81920;
+
     private static async Task<Uri> WriteAsync(Stream content, string extension, CancellationToken cancellationToken)
     {
-        // Hash while copying into memory: assets and demo clips are small; very large streams belong in a real file.
-        using var buffer = new MemoryStream();
-        await content.CopyToAsync(buffer, cancellationToken).ConfigureAwait(false);
-        var hash = Convert.ToHexString(SHA256.HashData(buffer.GetBuffer().AsSpan(0, (int)buffer.Length)))[..32].ToLowerInvariant();
-        var path = Path.Combine(s_directory, hash + (string.IsNullOrEmpty(extension) ? ".bin" : extension));
+        // Streamed into a temporary file while hashing, so a large stream never sits in memory; the file then takes the name of
+        // its hash, or is dropped when a file with that content is already there.
+        var temporary = Path.Combine(PrepareDirectory(), Guid.NewGuid().ToString("N") + ".part");
+        string hash;
+        try
+        {
+            using var hasher = IncrementalHash.CreateHash(HashAlgorithmName.SHA256);
+            var buffer = new byte[CopyBufferSize];
+            await using (var file = new FileStream(temporary, FileMode.CreateNew, FileAccess.Write, FileShare.None, CopyBufferSize, useAsync: true))
+            {
+                int read;
+                while ((read = await content.ReadAsync(buffer, cancellationToken).ConfigureAwait(false)) > 0)
+                {
+                    hasher.AppendData(buffer, 0, read);
+                    await file.WriteAsync(buffer.AsMemory(0, read), cancellationToken).ConfigureAwait(false);
+                }
+            }
+            hash = HashName(hasher.GetHashAndReset());
+        }
+        catch
+        {
+            TryDelete(temporary);
+            throw;
+        }
+        var path = PathFor(hash, extension);
+        if (File.Exists(path))
+        {
+            TryDelete(temporary);
+            return new Uri(path);
+        }
+        try
+        {
+            File.Move(temporary, path);
+        }
+        catch (IOException) when (File.Exists(path))
+        {
+            TryDelete(temporary);
+        }
+        return new Uri(path);
+    }
+
+    private static async Task<Uri> WriteAsync(ReadOnlyMemory<byte> content, string extension, CancellationToken cancellationToken)
+    {
+        var path = PathFor(HashName(SHA256.HashData(content.Span)), extension);
+        if (File.Exists(path))
+        {
+            return new Uri(path);
+        }
+        var temporary = Path.Combine(PrepareDirectory(), Guid.NewGuid().ToString("N") + ".part");
+        try
+        {
+            await using (var file = new FileStream(temporary, FileMode.CreateNew, FileAccess.Write, FileShare.None, CopyBufferSize, useAsync: true))
+            {
+                await file.WriteAsync(content, cancellationToken).ConfigureAwait(false);
+            }
+            File.Move(temporary, path);
+        }
+        catch (IOException) when (File.Exists(path))
+        {
+            TryDelete(temporary);
+        }
+        catch
+        {
+            TryDelete(temporary);
+            throw;
+        }
+        return new Uri(path);
+    }
+
+    private static string HashName(byte[] hash) => Convert.ToHexString(hash)[..32].ToLowerInvariant();
+
+    private static string PathFor(string hash, string extension) =>
+        Path.Combine(PrepareDirectory(), hash + (string.IsNullOrEmpty(extension) ? ".bin" : extension));
+
+    private static string PrepareDirectory()
+    {
         lock (s_gate)
         {
             Directory.CreateDirectory(s_directory);
             HookCleanup();
         }
-        if (!File.Exists(path))
+        return s_directory;
+    }
+
+    private static void TryDelete(string path)
+    {
+        try
         {
-            var temporary = path + "." + Guid.NewGuid().ToString("N") + ".part";
-            await using (var file = new FileStream(temporary, FileMode.CreateNew, FileAccess.Write, FileShare.None, 81920, useAsync: true))
-            {
-                buffer.Position = 0;
-                await buffer.CopyToAsync(file, cancellationToken).ConfigureAwait(false);
-            }
-            try
-            {
-                File.Move(temporary, path);
-            }
-            catch (IOException) when (File.Exists(path))
-            {
-                File.Delete(temporary);
-            }
+            File.Delete(path);
         }
-        return new Uri(path);
+        catch (IOException)
+        {
+        }
+        catch (UnauthorizedAccessException)
+        {
+        }
     }
 
     private static void HookCleanup()

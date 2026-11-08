@@ -1,7 +1,7 @@
 ---
 title: 视频播放器
 summary: "在画面上叠加控制条播放视频：可用章节跳转、调节音量、倍速、字幕和全屏，外观与 Arc 风格一致，由平台自带的播放器解码。"
-source-hash: 40b842b9f1e2
+source-hash: a73f2874046b
 ---
 
 <Demo name="Preview" />
@@ -40,11 +40,19 @@ await ArcVideoBrowser.UseAsync();  // browser: TKCode.Arc.Video.Browser
                  AspectRatio="1.7778" />
 ```
 
-`IsPlaying`、`Position`、`Volume`、`IsMuted`、`IsLooping` 和 `PlaybackRate` 都是双向绑定。`Play()`、`Pause()`、`Seek()` 以及 `PlayPauseCommand`、`ToggleMuteCommand`、`ToggleFullScreenCommand` 命令可以从外部控制播放器。`Failed` 会报告视频无法播放的原因。
+`IsPlaying`、`Position`、`Volume`、`IsMuted`、`IsLooping` 和 `PlaybackRate` 都是双向绑定。`Play()`、`Pause()`、`Stop()`、`Seek()` 以及 `PlayPauseCommand`、`StopCommand`、`SkipForwardCommand`、`SkipBackwardCommand`、`ToggleMuteCommand`、`ToggleFullScreenCommand` 命令可以从外部控制播放器。`Stop()` 会暂停、回到开头并重新显示海报；视频保持已加载，所以下次播放会立即开始。`Failed` 会报告视频无法播放的原因。
+
+### 动画影片
+
+改变 `Source` 会在同一个播放器里加载另一个视频。这里是 Blender 基金会两部开放电影的预告片，© Blender Foundation，采用 [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) 许可。
+
+<Demo name="Films" />
 
 ### 字幕与章节
 
 把 WebVTT 或 SRT 文件添加为 `TextTracks`。字幕菜单会列出所有字幕轨道，设置文字大小，并可以关闭字幕。`Chapters` 轨道会把进度条分成若干段，并在指针下方显示章节名称。
+
+视频文件本身带的字幕（MP4 定时文本、Matroska 文本轨）在视频加载后会加入 `TextTracks`，排在你自己的轨道之后，`IsEmbedded` 为 true，换源时移除。macOS 和 iOS 读取 MP4 中的字幕，Android 读取 MP4 中的字幕（纯文本，逐条显示），Linux 读取 MP4 和 Matroska 中的字幕（Linux 的 MP4 解复用器会丢掉粗体和斜体）；Windows 和浏览器暂时不列出内嵌字幕。
 
 <Demo name="Captions" />
 
@@ -57,6 +65,8 @@ await ArcVideoBrowser.UseAsync();  // browser: TKCode.Arc.Video.Browser
 ### 播放后端
 
 播放器用 `ArcVideo.Backend` 中的后端解码，并把画面绘制在窗口内，因此控制条、字幕和圆角都绘制在画面之上。平台允许时（macOS 和 Windows），画面会在 GPU 上从解码器直接送到屏幕，不做复制；其他情况下会复制到位图中。
+
+在 iOS 和 Android 上同样调用 `ArcVideoNative.Use()`：iOS 通过 AVFoundation 播放，Android 通过系统的 MediaPlayer 播放，画面都复制到位图中。在 `net11.0-ios` 或 `net11.0-android` 应用中引用 `TKCode.Arc.Video.Native` 即可（iOS 15、Android API 24 或更高）。
 
 在浏览器中，`BrowserPresentation="Native"` 改为显示浏览器自己的视频元素：不复制画面，浏览器能播放的格式都能播放（例如 Safari 中的 HLS）。这个元素上面不能绘制任何内容，所以控制条放在画面下方并始终显示，字幕由浏览器绘制，也没有圆角；显示海报、错误、重播按钮或菜单时，这个元素会暂时隐藏。没有这种元素时（桌面平台，或 net8.0 版本），播放器仍使用画布。
 

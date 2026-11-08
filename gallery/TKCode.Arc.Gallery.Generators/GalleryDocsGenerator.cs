@@ -286,24 +286,20 @@ public sealed class GalleryDocsGenerator : IIncrementalGenerator
         code.AppendLine("internal static class GalleryDocData");
         code.AppendLine("{");
 
-        code.AppendLine("    public static readonly GalleryDocPage[] Pages =");
-        code.AppendLine("    [");
-        foreach (var page in pages)
+        // Each array is built from chunks, one method per chunk: one static constructor holding every entry exceeds the
+        // WebAssembly (Mono) interpreter's limit on a method's locals ("locals size too big") once the gallery has enough pages.
+        AppendChunked(code, "GalleryDocPage", "Pages", pages, 32, page =>
         {
             code.Append("        new(").Append(Literal(page.ClassName)).Append(", ").Append(Literal(page.Language)).Append(", ")
                 .Append(Literal(page.Folder)).Append(", ").Append(Literal(page.Title)).Append(", ").Append(Literal(page.Summary)).Append(", ")
                 .Append(outdated.Contains(page) ? "true" : "false").Append(",").AppendLine();
             code.Append("            [").Append(string.Join(", ", page.Demos.Select(d => Literal(d.Id)))).Append("],").AppendLine();
             code.Append("            [").Append(string.Join(", ", page.Screenshots.Select(s => $"({Literal(s.Name)}, {Literal(s.Caption)})"))).AppendLine("]),");
-        }
-        code.AppendLine("    ];");
-        code.AppendLine();
+        });
 
-        code.AppendLine("    public static readonly GalleryApiType[] Types =");
-        code.AppendLine("    [");
         // The type and its property fields are only named inside a lambda per type: reading the page list at startup must not load
         // the assembly of every documented control or run its static constructor (a host may load an assembly on demand).
-        foreach (var type in types.Values.OrderBy(t => t.Name, System.StringComparer.Ordinal))
+        AppendChunked(code, "GalleryApiType", "Types", types.Values.OrderBy(t => t.Name, System.StringComparer.Ordinal).ToList(), 16, type =>
         {
             code.Append("        new(").Append(Literal(type.Name)).Append(", ").Append(Literal(type.Package)).Append(", ")
                 .Append(Literal(type.Summary)).Append(", ").Append(Literal(type.BaseName)).AppendLine(",");
@@ -321,20 +317,52 @@ public sealed class GalleryDocsGenerator : IIncrementalGenerator
             code.AppendLine("            ],");
             code.Append("            static () => new(typeof(").Append(type.TypeExpression).Append("), [")
                 .Append(string.Join(", ", type.Members.Select(m => m.FieldExpression ?? "null"))).AppendLine("])),");
-        }
-        code.AppendLine("    ];");
-        code.AppendLine();
+        });
 
-        code.AppendLine("    public static readonly GalleryApiTranslation[] Translations =");
-        code.AppendLine("    [");
-        foreach (var (language, unit) in translations)
+        AppendChunked(code, "GalleryApiTranslation", "Translations", translations, 256, entry =>
         {
-            code.Append("        new(").Append(Literal(language)).Append(", ").Append(Literal(unit.Key)).Append(", ")
-                .Append(Literal(unit.Target)).AppendLine("),");
-        }
-        code.AppendLine("    ];");
+            code.Append("        new(").Append(Literal(entry.Language)).Append(", ").Append(Literal(entry.Unit.Key)).Append(", ")
+                .Append(Literal(entry.Unit.Target)).AppendLine("),");
+        });
+
+        code.AppendLine("    private static T[] Join<T>(params T[][] parts)");
+        code.AppendLine("    {");
+        code.AppendLine("        var length = 0;");
+        code.AppendLine("        foreach (var part in parts)");
+        code.AppendLine("        {");
+        code.AppendLine("            length += part.Length;");
+        code.AppendLine("        }");
+        code.AppendLine("        var all = new T[length];");
+        code.AppendLine("        var at = 0;");
+        code.AppendLine("        foreach (var part in parts)");
+        code.AppendLine("        {");
+        code.AppendLine("            part.CopyTo(all, at);");
+        code.AppendLine("            at += part.Length;");
+        code.AppendLine("        }");
+        code.AppendLine("        return all;");
+        code.AppendLine("    }");
         code.AppendLine("}");
         return code.ToString();
+    }
+
+    /// <summary>Writes <c>public static readonly T[] name = Join(name0(), name1(), ...);</c> and one method per <paramref name="size"/> entries.</summary>
+    private static void AppendChunked<T>(StringBuilder code, string type, string name, IReadOnlyList<T> items, int size, System.Action<T> writeEntry)
+    {
+        var chunks = (items.Count + size - 1) / size;
+        code.Append("    public static readonly ").Append(type).Append("[] ").Append(name).Append(" = Join<").Append(type).Append(">(")
+            .Append(string.Join(", ", Enumerable.Range(0, chunks).Select(i => $"{name}{i}()"))).AppendLine(");");
+        code.AppendLine();
+        for (var chunk = 0; chunk < chunks; chunk++)
+        {
+            code.Append("    private static ").Append(type).Append("[] ").Append(name).Append(chunk).AppendLine("() =>");
+            code.AppendLine("    [");
+            for (var i = chunk * size; i < System.Math.Min(items.Count, (chunk + 1) * size); i++)
+            {
+                writeEntry(items[i]);
+            }
+            code.AppendLine("    ];");
+            code.AppendLine();
+        }
     }
 
     private static string Literal(string? value) => value is null ? "null" : SymbolDisplay.FormatLiteral(value, quote: true);

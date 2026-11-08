@@ -17,6 +17,6 @@
         <ProjectReference Include="../../src/TKCode.Arc.Video.Native/TKCode.Arc.Video.Native.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <None Include="../Video/Media/red-blue-2s.mp4" Link="Media/red-blue-2s.mp4" CopyToOutputDirectory="PreserveNewest" />
+        <None Include="../Video/Media/*.mp4;../Video/Media/*.mkv" LinkBase="Media" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 </Project>

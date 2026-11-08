@@ -383,6 +383,42 @@ public sealed class NativeVideoPlayerTests
         return reload;
     }
 
+    [Fact]
+    public async Task Cpu_frames_scale_down_to_the_target_size()
+    {
+        var backend = RequireBackend();
+        using var player = backend.CreatePlayer();
+        await LoadClipAsync(player);
+        var natural = await AcquireCenterPixelAsync(player, VideoFrameKinds.CpuBgra, 0);
+
+        // 320×240 fitted into 160×160 keeps the aspect: 160×120. The test clip's first frame is a solid block, so the
+        // centre pixel survives the scaling. A paused player hands out a frame once; a new frame target asks for it again.
+        player.FrameTarget = new VideoFrameTarget();
+        (byte B, byte G, byte R, byte A) scaled = default;
+        var got = await WaitForFrameAsync(player, new VideoFrameRequest(TimeSpan.Zero, new PixelSize(160, 160), VideoFrameKinds.CpuBgra), lease =>
+        {
+            lease.Size.ShouldBe(new PixelSize(160, 120));
+            lease.RowBytes.ShouldBeGreaterThanOrEqualTo(160 * 4);
+            var offset = 60 * lease.RowBytes + 80 * 4;
+            var pixels = lease.Pixels;
+            scaled = (pixels[offset], pixels[offset + 1], pixels[offset + 2], pixels[offset + 3]);
+            return true;
+        });
+        got.ShouldBeTrue("no scaled frame");
+        Math.Abs(scaled.B - natural.B).ShouldBeLessThanOrEqualTo(6);
+        Math.Abs(scaled.G - natural.G).ShouldBeLessThanOrEqualTo(6);
+        Math.Abs(scaled.R - natural.R).ShouldBeLessThanOrEqualTo(6);
+
+        // A target larger than the picture never scales up. (The target is a record: an equal one is no change.)
+        player.FrameTarget = null;
+        got = await WaitForFrameAsync(player, new VideoFrameRequest(TimeSpan.Zero, new PixelSize(1920, 1080), VideoFrameKinds.CpuBgra), lease =>
+        {
+            lease.Size.ShouldBe(new PixelSize(320, 240));
+            return true;
+        });
+        got.ShouldBeTrue("no frame at the natural size");
+    }
+
     // ---- Helpers.
 
     private static NativeVideoBackend RequireBackend(bool needsMainLoop = true)

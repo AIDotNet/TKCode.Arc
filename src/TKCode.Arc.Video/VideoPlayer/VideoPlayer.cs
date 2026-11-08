@@ -276,6 +276,9 @@ public partial class VideoPlayer : TemplatedControl
         PlayPauseCommand = new VideoCommand(TogglePlay);
         ToggleMuteCommand = new VideoCommand(() => SetCurrentValue(IsMutedProperty, !IsMuted));
         ToggleFullScreenCommand = new VideoCommand(ToggleFullScreen);
+        StopCommand = new VideoCommand(Stop);
+        SkipForwardCommand = new VideoCommand(() => SeekBy(SeekStep));
+        SkipBackwardCommand = new VideoCommand(() => SeekBy(-SeekStep));
     }
 
     /// <summary>The video to play; changing it loads the new one (cancelling a load in progress). A string in XAML is an http(s), avares or file address.</summary>
@@ -485,6 +488,15 @@ public partial class VideoPlayer : TemplatedControl
 
     /// <summary>Enters or leaves full screen (for an external button).</summary>
     public ICommand ToggleFullScreenCommand { get; }
+
+    /// <summary>Stops: pauses and returns to the start with the poster shown (for an external button; see <see cref="Stop"/>).</summary>
+    public ICommand StopCommand { get; }
+
+    /// <summary>Moves forward by <see cref="SeekStep"/> (for an external button).</summary>
+    public ICommand SkipForwardCommand { get; }
+
+    /// <summary>Moves back by <see cref="SeekStep"/> (for an external button).</summary>
+    public ICommand SkipBackwardCommand { get; }
 
     /// <summary>Raised when <see cref="State"/> changes.</summary>
     public event EventHandler<RoutedEventArgs>? StateChanged

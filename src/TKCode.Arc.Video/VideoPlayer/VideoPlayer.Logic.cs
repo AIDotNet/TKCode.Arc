@@ -159,6 +159,25 @@ public partial class VideoPlayer
         SetCurrentValue(IsPlayingProperty, !IsPlaying);
     }
 
+    /// <summary>
+    /// Stops: pauses, returns to the start and shows the poster and the big play button again, as before the first play.
+    /// The media stays loaded, so <see cref="Play"/> starts at once.
+    /// </summary>
+    public void Stop()
+    {
+        _resumePosition = null;
+        SetCurrentValue(IsPlayingProperty, false);
+        if (_player is not null && _isLoaded)
+        {
+            // Not through Position: a written position counts as starting (it hides the poster).
+            _player.Seek(TimeSpan.Zero);
+            Report(TimeSpan.Zero);
+        }
+        _hasStarted = false;
+        UpdateStateLayer();
+        UpdateControls();
+    }
+
     /// <summary>Moves to <paramref name="position"/>, clamped to the length.</summary>
     public void Seek(TimeSpan position)
     {
@@ -460,6 +479,7 @@ public partial class VideoPlayer
         else if (property == SelectedTextTrackProperty)
         {
             UpdateCaptions();
+            SelectEmbeddedText(SelectedTextTrack);
             if (_attached)
             {
                 Announce(SelectedTextTrack is { } track
@@ -518,6 +538,8 @@ public partial class VideoPlayer
         _resumePosition = null;
         _hasStarted = false;
         _captionsChosen = false;
+        // The new media brings its own embedded tracks (the backend reports them once it has read the media).
+        RemoveEmbeddedTracks();
         if (Source is null)
         {
             ReleasePlayer();
@@ -554,6 +576,7 @@ public partial class VideoPlayer
                 _surface.Player = player;
             }
             UpdateNativePresentation();
+            AttachEmbeddedText(player);
         }
         _ = LoadAsync();
     }
@@ -573,6 +596,7 @@ public partial class VideoPlayer
             player.Failed -= OnPlayerFailed;
             // The platform view belongs to the player: take it out before the player goes.
             RemoveNativeView();
+            DetachEmbeddedText();
             if (_surface is not null)
             {
                 _surface.Player = null;

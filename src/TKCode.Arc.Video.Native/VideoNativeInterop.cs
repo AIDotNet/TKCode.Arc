@@ -26,6 +26,10 @@ internal static unsafe partial class VideoNativeInterop
     public const int EventError = 7;
     public const int EventEnded = 8;
     public const int EventSeekable = 9;
+    public const int EventTextTracks = 10;
+
+    public const int TextPlain = 0;
+    public const int TextMarkup = 1;
 
     public const int FrameCpuBgra = 1;
     public const int FrameGpu = 2;
@@ -99,6 +103,22 @@ internal static unsafe partial class VideoNativeInterop
     /// <summary>ABI 2, optional export (EntryPointNotFoundException when the shim leaves it out).</summary>
     [LibraryImport(Library, EntryPoint = "tkv_player_redeliver_frame")]
     public static partial int PlayerRedeliverFrame(nint player);
+
+    /// <summary>Optional export (embedded text tracks; EntryPointNotFoundException when the shim leaves it out).</summary>
+    [LibraryImport(Library, EntryPoint = "tkv_player_set_text_callback")]
+    public static partial int PlayerSetTextCallback(nint player, delegate* unmanaged[Cdecl]<nint, int, double, double, int, byte*, void> callback, nint context);
+
+    /// <summary>Optional export (embedded text tracks).</summary>
+    [LibraryImport(Library, EntryPoint = "tkv_player_text_track_count")]
+    public static partial int PlayerTextTrackCount(nint player);
+
+    /// <summary>Optional export (embedded text tracks).</summary>
+    [LibraryImport(Library, EntryPoint = "tkv_player_text_track_info")]
+    public static partial int PlayerTextTrackInfo(nint player, int index, byte* language, int languageSize, byte* label, int labelSize, out int kind);
+
+    /// <summary>Optional export (embedded text tracks).</summary>
+    [LibraryImport(Library, EntryPoint = "tkv_player_select_text_track")]
+    public static partial int PlayerSelectTextTrack(nint player, int index);
 
     [LibraryImport(Library, EntryPoint = "tkv_player_last_error")]
     public static partial nint PlayerLastError(nint player);

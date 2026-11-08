@@ -154,7 +154,7 @@
         <Content Include="../TKCode.Arc.Gallery/Guides/**/*.md" Link="wwwroot/content/Guides/%(RecursiveDir)%(Filename)%(Extension)" />
         <!-- The map outlines of the Choropleth explorer demos (HttpMapSource): wwwroot/content/Demos/Blocks/ChoroplethExplorer/Maps/map-*.txt. -->
         <Content Include="../TKCode.Arc.Gallery/Demos/Blocks/ChoroplethExplorer/Maps/*.txt" Link="wwwroot/content/Demos/Blocks/ChoroplethExplorer/Maps/%(Filename)%(Extension)" />
-        <!-- The video demos' clip (VideoDemoMedia.HttpRoot): wwwroot/media/Video/aurora.mp4, fetched by the video element when a page plays it. -->
+        <!-- The video demos' clips (VideoDemoMedia.HttpRoot): wwwroot/media/Video/*.mp4, fetched by the video element when a page plays one. -->
         <Content Include="../TKCode.Arc.Gallery/Media/Video/*.mp4" Link="wwwroot/media/Video/%(Filename)%(Extension)" />
     </ItemGroup>
 

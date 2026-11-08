@@ -17,4 +17,12 @@ for dir in "$src"/*/; do
     found=1
   done
 done
+# iOS: the xcframework from tools/video/build-ios.sh.
+if [ -d "$src/ios/tkcode_video.xcframework" ]; then
+  rm -rf "$dst/ios/native/tkcode_video.xcframework"
+  mkdir -p "$dst/ios/native"
+  cp -R "$src/ios/tkcode_video.xcframework" "$dst/ios/native/"
+  echo "ios: tkcode_video.xcframework"
+  found=1
+fi
 [ "$found" = 1 ] || { echo "no tkcode_video under $src" >&2; exit 1; }

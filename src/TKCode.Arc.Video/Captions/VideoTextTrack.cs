@@ -85,7 +85,8 @@ public sealed record VideoCue
 
 /// <summary>
 /// A captions, subtitles, chapters or descriptions track for <see cref="VideoPlayer"/>: WebVTT or SRT text from
-/// <see cref="Source"/> (avares, file, http(s)) or <see cref="Text"/>.
+/// <see cref="Source"/> (avares, file, http(s)) or <see cref="Text"/>, or a track stored in the media
+/// (<see cref="IsEmbedded"/>), which <see cref="VideoPlayer"/> adds to its <see cref="VideoPlayer.TextTracks"/> itself.
 /// </summary>
 public sealed class VideoTextTrack : AvaloniaObject
 {
@@ -116,6 +117,30 @@ public sealed class VideoTextTrack : AvaloniaObject
     private IReadOnlyList<VideoCue> _cues = [];
     private IReadOnlyList<string> _warnings = [];
     private Task? _loading;
+    private VideoCue? _openCue;
+    private const double SameCueToleranceMilliseconds = 300;
+
+    /// <summary>Creates a track (set <see cref="Source"/> or <see cref="Text"/>, or call <see cref="SetCues"/>).</summary>
+    public VideoTextTrack()
+    {
+    }
+
+    internal VideoTextTrack(int embeddedIndex)
+    {
+        IsEmbedded = true;
+        EmbeddedIndex = embeddedIndex;
+        SetCues([]);
+    }
+
+    /// <summary>
+    /// Whether the track is stored in the media (MP4 timed text, Matroska text). <see cref="VideoPlayer"/> adds such tracks to
+    /// <see cref="VideoPlayer.TextTracks"/> once the media is loaded, fills <see cref="Cues"/> as playback reaches them and
+    /// removes the tracks when the source changes.
+    /// </summary>
+    public bool IsEmbedded { get; }
+
+    /// <summary>The track's index in the player's <see cref="IVideoEmbeddedTextTracks.EmbeddedTextTracks"/>, or -1.</summary>
+    internal int EmbeddedIndex { get; } = -1;
 
     /// <summary>What the track holds.</summary>
     public VideoTextTrackKind Kind
@@ -178,6 +203,47 @@ public sealed class VideoTextTrack : AvaloniaObject
         _cues = cues.OrderBy(static c => c.Start).ToArray();
         _warnings = [];
         _loading = Task.CompletedTask;
+        CuesChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <summary>
+    /// Adds a cue of an embedded track (UI thread). A cue with no <paramref name="end"/> shows until the next call, which
+    /// ends it; an empty <paramref name="markup"/> only ends it. A cue with the same text as one already there and a start
+    /// within 300 ms of it (after a seek back or a loop the backend sends it again) replaces it.
+    /// </summary>
+    internal void AddEmbeddedCue(TimeSpan start, TimeSpan? end, string markup)
+    {
+        var cues = new List<VideoCue>(_cues);
+        if (_openCue is { } open)
+        {
+            var index = cues.IndexOf(open);
+            if (index >= 0)
+            {
+                if (start > open.Start)
+                {
+                    cues[index] = open with { End = start };
+                }
+                else
+                {
+                    // A seek back: the cue comes again when playback reaches it.
+                    cues.RemoveAt(index);
+                }
+            }
+            _openCue = null;
+        }
+        if (markup.Length > 0)
+        {
+            var (text, runs) = CaptionCueText.Parse(markup.Replace("\r\n", "\n", StringComparison.Ordinal), srt: false);
+            var cue = new VideoCue { Start = start, End = end is { } e && e > start ? e : TimeSpan.MaxValue, Text = text, Runs = runs };
+            // Backends that time a cue by the playhead (Android) are off by a few tens of milliseconds each time round.
+            cues.RemoveAll(c => Math.Abs((c.Start - start).TotalMilliseconds) < SameCueToleranceMilliseconds && c.Text == text);
+            cues.Add(cue);
+            if (end is null)
+            {
+                _openCue = cue;
+            }
+        }
+        _cues = cues.OrderBy(static c => c.Start).ToArray();
         CuesChanged?.Invoke(this, EventArgs.Empty);
     }
 

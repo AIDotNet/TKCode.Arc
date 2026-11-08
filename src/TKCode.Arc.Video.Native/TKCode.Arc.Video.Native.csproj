@@ -1,6 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFrameworks>$(ArcTargetFrameworks)</TargetFrameworks>
+        <!-- iOS and Android need the .NET ios / android workloads, which the default build does not assume: opt in with
+             -p:ArcVideoMobile=true (tools/video/build-ios.sh first for iOS). -->
+        <TargetFrameworks Condition="'$(ArcVideoMobile)' == 'true'">$(TargetFrameworks);net11.0-ios;net11.0-android</TargetFrameworks>
         <AssemblyName>TKCode.Arc.Video.Native</AssemblyName>
         <RootNamespace>TKCode.Arc</RootNamespace>
         <PackageId>TKCode.Arc.Video.Native</PackageId>
@@ -14,8 +17,34 @@
     </ItemGroup>
     <!-- The tkcode_video shim per RID. Not committed: tools/video/build-native.sh builds it and tools/video/sync-native.sh copies it here.
          Packed under runtimes/ for NuGet consumers, and copied next to the assembly for project references. -->
+    <PropertyGroup Condition="$(TargetFramework.Contains('-ios'))">
+        <SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(TargetFramework.Contains('-android'))">
+        <SupportedOSPlatformVersion>24</SupportedOSPlatformVersion>
+    </PropertyGroup>
+    <!-- Android plays through the platform's MediaPlayer (Android/); the C shim is not used there. -->
+    <ItemGroup Condition="!$(TargetFramework.Contains('-android'))">
+        <Compile Remove="Android/**" />
+    </ItemGroup>
+    <!-- .NET for Android takes every *.so under the project as an Android native library by default; the desktop Linux shims
+         under runtimes/ are not. -->
+    <ItemGroup Condition="$(TargetFramework.Contains('-android'))">
+        <AndroidNativeLibrary Remove="runtimes/**" />
+    </ItemGroup>
+    <!-- iOS: the shim as a dynamic framework (tools/video/build-ios.sh, tools/video/sync-native.sh), packed under runtimes/ios
+         and embedded by the app through buildTransitive/TKCode.Arc.Video.Native.targets (a class library's own
+         NativeReference does not reach the app). -->
     <ItemGroup>
-        <None Include="runtimes/**" Pack="true" PackagePath="runtimes/" Visible="false" CopyToOutputDirectory="PreserveNewest" />
+        <None Include="runtimes/ios/**" Pack="true" PackagePath="runtimes/ios/" Visible="false" />
+        <None Include="buildTransitive/TKCode.Arc.Video.Native.targets" Pack="true" PackagePath="buildTransitive/" Visible="false" />
+    </ItemGroup>
+    <!-- Desktop shims only for the desktop targets (and for packing, which runs without a target framework): a mobile
+         app must not get Linux or Windows binaries. -->
+    <ItemGroup Condition="!$(TargetFramework.Contains('-ios')) And !$(TargetFramework.Contains('-android'))">
+        <None Include="runtimes/**" Exclude="runtimes/ios/**" Pack="true" PackagePath="runtimes/" Visible="false" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+    <ItemGroup>
         <None Include="../../native/video/**" Pack="false" Visible="false" />
     </ItemGroup>
     <Target Name="WarnMissingVideoNative" BeforeTargets="Pack">

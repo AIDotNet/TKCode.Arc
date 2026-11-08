@@ -225,6 +225,103 @@ public class VideoPlayerTests
     }
 
     [AvaloniaFact]
+    public void The_Scrim_Darkens_Towards_The_Control_Bar()
+    {
+        using var scope = new VideoTestScope();
+        var player = new VideoPlayer { Source = VideoTestScope.Clip(60) };
+        scope.Show(player);
+        var scrim = player.GetVisualDescendants().OfType<VideoScrim>().Single(s => s.Name == "PART_Scrim");
+        var brush = scrim.Background.ShouldBeAssignableTo<Avalonia.Media.ILinearGradientBrush>().ShouldNotBeNull();
+        // Black 0 to 0.6 (spec section 7): white controls stay readable on a white picture.
+        brush.GradientStops[0].Color.A.ShouldBe((byte)0);
+        brush.GradientStops[^1].Color.ShouldBe(Avalonia.Media.Color.FromArgb(153, 0, 0, 0));
+
+        var title = player.GetVisualDescendants().OfType<VideoScrim>().Single(s => s.Name == "PART_TitleBar");
+        var titleBrush = title.Background.ShouldBeAssignableTo<Avalonia.Media.ILinearGradientBrush>().ShouldNotBeNull();
+        titleBrush.GradientStops[0].Color.ShouldBe(Avalonia.Media.Color.FromArgb(153, 0, 0, 0));
+        titleBrush.GradientStops[^1].Color.A.ShouldBe((byte)0);
+    }
+
+    [AvaloniaFact]
+    public void Stop_Pauses_Returns_To_The_Start_And_Shows_The_Poster_Again()
+    {
+        using var scope = new VideoTestScope();
+        var poster = new Avalonia.Media.Imaging.WriteableBitmap(new PixelSize(16, 9), new Vector(96, 96));
+        var player = new VideoPlayer { Source = VideoTestScope.Clip(60), Poster = poster };
+        scope.Show(player);
+        player.Play();
+        scope.Advance(player, TimeSpan.FromSeconds(12));
+        player.Position.TotalSeconds.ShouldBe(12, 0.5);
+
+        player.StopCommand.CanExecute(null).ShouldBeTrue();
+        player.StopCommand.Execute(null);
+        VideoTestScope.Pump();
+        player.IsPlaying.ShouldBeFalse();
+        player.State.ShouldBe(VideoPlaybackState.Paused);
+        player.Position.ShouldBe(TimeSpan.Zero);
+        VideoTestScope.Sim(player).Position.ShouldBe(TimeSpan.Zero);
+        player.StateLayer!.ShowPoster.ShouldBeTrue();
+        player.StateLayer.ShowBigPlay.ShouldBeTrue();
+        player.AreControlsVisible.ShouldBeFalse();
+
+        // Still loaded: playing again starts at once, from the start.
+        player.Play();
+        scope.Advance(player, TimeSpan.FromSeconds(2));
+        player.State.ShouldBe(VideoPlaybackState.Playing);
+        player.Position.TotalSeconds.ShouldBe(2, 0.5);
+        player.StateLayer.ShowPoster.ShouldBeFalse();
+    }
+
+    [AvaloniaFact]
+    public void Stop_After_The_End_Offers_Play_Instead_Of_Replay()
+    {
+        using var scope = new VideoTestScope();
+        var player = new VideoPlayer { Source = VideoTestScope.Clip(5) };
+        scope.Show(player);
+        player.Play();
+        scope.Advance(player, TimeSpan.FromSeconds(6));
+        player.State.ShouldBe(VideoPlaybackState.Ended);
+
+        player.Stop();
+        VideoTestScope.Pump();
+        player.State.ShouldNotBe(VideoPlaybackState.Ended);
+        player.Position.ShouldBe(TimeSpan.Zero);
+        player.StateLayer!.ShowReplay.ShouldBeFalse();
+        player.StateLayer.ShowBigPlay.ShouldBeTrue();
+    }
+
+    [AvaloniaFact]
+    public void Stop_Without_A_Source_Does_Nothing()
+    {
+        using var scope = new VideoTestScope();
+        var player = new VideoPlayer();
+        scope.Show(player);
+        player.Stop();
+        player.State.ShouldBe(VideoPlaybackState.Idle);
+        player.IsPlaying.ShouldBeFalse();
+    }
+
+    [AvaloniaFact]
+    public void Skip_Commands_Move_By_The_Seek_Step()
+    {
+        using var scope = new VideoTestScope();
+        var player = new VideoPlayer { Source = VideoTestScope.Clip(60), SeekStep = TimeSpan.FromSeconds(7) };
+        scope.Show(player);
+        player.Play();
+        scope.Advance(player, TimeSpan.FromSeconds(10));
+        player.Pause();
+        VideoTestScope.Pump();
+        var start = player.Position;
+        player.SkipForwardCommand.Execute(null);
+        VideoTestScope.Pump();
+        player.Position.TotalSeconds.ShouldBe(start.TotalSeconds + 7, 0.3);
+        player.SkipBackwardCommand.Execute(null);
+        player.SkipBackwardCommand.Execute(null);
+        VideoTestScope.Pump();
+        player.Position.TotalSeconds.ShouldBe(start.TotalSeconds - 7, 0.3);
+    }
+
+    [AvaloniaFact]
     public void The_Spinner_Waits_300ms_And_Buffering_Is_Announced_After_2s()
     {
         using var scope = new VideoTestScope();
@@ -453,9 +550,31 @@ internal sealed class RecordingVideoBackend(SimulatedVideoBackend inner) : IVide
     }
 }
 
-internal sealed class RecordingVideoPlayer(RecordingVideoBackend backend, SimulatedVideoPlayer inner) : IVideoPlayer, IVideoNativePresentation
+internal sealed class RecordingVideoPlayer(RecordingVideoBackend backend, SimulatedVideoPlayer inner) : IVideoPlayer, IVideoNativePresentation, IVideoEmbeddedTextTracks
 {
     public SimulatedVideoPlayer Inner { get; } = inner;
+
+    // ---- Embedded text tracks (the tests set the media's tracks and send cues).
+
+    public IReadOnlyList<VideoEmbeddedTextTrackInfo> EmbeddedTextTracks { get; private set; } = [];
+
+    public event EventHandler? EmbeddedTextTracksChanged;
+
+    public event EventHandler<VideoEmbeddedCueEventArgs>? EmbeddedCue;
+
+    /// <summary>The indexes given to <see cref="SelectEmbeddedTextTrack"/>, in order.</summary>
+    public List<int> EmbeddedSelections { get; } = [];
+
+    public void SelectEmbeddedTextTrack(int index) => EmbeddedSelections.Add(index);
+
+    public void SimulateEmbeddedTracks(params VideoEmbeddedTextTrackInfo[] tracks)
+    {
+        EmbeddedTextTracks = tracks;
+        EmbeddedTextTracksChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void SimulateEmbeddedCue(int track, double start, double? end, string text) =>
+        EmbeddedCue?.Invoke(this, new VideoEmbeddedCueEventArgs(track, TimeSpan.FromSeconds(start), end is { } e ? TimeSpan.FromSeconds(e) : null, text));
 
     /// <summary>The platform views handed out (plain borders standing in for the browser's video element).</summary>
     public List<Control> NativeViews { get; } = [];
