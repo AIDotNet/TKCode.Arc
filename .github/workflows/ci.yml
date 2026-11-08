@@ -1,6 +1,7 @@
 name: CI
 
 # verify:  build and test on pushes to main and on pull requests.
+# templates: creates, builds and starts every dotnet new template case (pushes to main, pull requests).
 # pack:    packs every TKCode.Arc package (the id lists below) (v* tag, or a manual run).
 # nuget:   pushes them to nuget.org (v* tag, or a manual run with "publish" on).
 #
@@ -79,6 +80,35 @@ jobs:
 
       - name: Test (controls, headless Avalonia)
         run: dotnet test tests/TKCode.Arc.Tests --no-build
+
+  # Creates every dotnet new template case from freshly packed packages, builds it with warnings as errors and starts it
+  # headless (tools/templates/verify_templates.py; design/engineering/project-templates.md section 6.3).
+  templates:
+    name: Templates
+    if: github.event_name != 'workflow_dispatch' && !startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          # The net8.0 case runs on the newer runtimes (DOTNET_ROLL_FORWARD=Major); net11.0 comes with the pinned SDK.
+          global-json-file: global.json
+          dotnet-version: 10.0.x
+
+      - uses: actions/cache@v6
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', 'Directory.Packages.props', 'build/Versions.props', 'global.json') }}
+          restore-keys: nuget-${{ runner.os }}-
+
+      # The cross-platform cases build a WebAssembly host: net10.0-browser under the pinned .NET 11 SDK.
+      - name: Install the WebAssembly build tools
+        run: dotnet workload install wasm-tools-net10
+
+      - name: Create, build and start every template case
+        run: python3 tools/templates/verify_templates.py
 
   # Windows paths use '\', which once switched the library defaults off there without a build error (#31). Build only:
   # check that every project under src/ still counts as a library, then that it wrote its XML documentation.
