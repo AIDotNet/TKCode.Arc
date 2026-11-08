@@ -1,0 +1,33 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.WaterfallPanelHorizontalDemo">
+    <UserControl.Styles>
+        <Style Selector="Border.card">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
+            <Setter Property="Padding" Value="12,0" />
+        </Style>
+        <Style Selector="Border.card > TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        </Style>
+    </UserControl.Styles>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" MaxWidth="560" Height="168">
+        <arc:WaterfallPanel Orientation="Horizontal" Rows="3" Spacing="8">
+            <Border Classes="card"><TextBlock Text="Design" /></Border>
+            <Border Classes="card"><TextBlock Text="Engineering handbook" /></Border>
+            <Border Classes="card"><TextBlock Text="Q3" /></Border>
+            <Border Classes="card"><TextBlock Text="Release notes" /></Border>
+            <Border Classes="card"><TextBlock Text="Onboarding checklist" /></Border>
+            <Border Classes="card"><TextBlock Text="Brand" /></Border>
+            <Border Classes="card"><TextBlock Text="Incident reviews" /></Border>
+            <Border Classes="card"><TextBlock Text="API" /></Border>
+            <Border Classes="card"><TextBlock Text="Customer interviews" /></Border>
+            <Border Classes="card"><TextBlock Text="Roadmap" /></Border>
+            <Border Classes="card"><TextBlock Text="Hiring plan for next year" /></Border>
+            <Border Classes="card"><TextBlock Text="Ops" /></Border>
+        </arc:WaterfallPanel>
+    </ScrollViewer>
+</UserControl>

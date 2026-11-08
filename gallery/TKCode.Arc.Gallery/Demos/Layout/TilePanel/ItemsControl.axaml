@@ -1,0 +1,43 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.TilePanelItemsControlDemo">
+    <UserControl.Styles>
+        <!-- The panel's children are the item containers, so the spans go on them, read from the item. -->
+        <Style Selector="arc|TilePanel > ContentPresenter" x:DataType="demos:DashboardTile">
+            <Setter Property="arc:TilePanel.RowSpan" Value="{Binding RowSpan}" />
+            <Setter Property="arc:TilePanel.ColumnSpan" Value="{Binding ColumnSpan}" />
+        </Style>
+    </UserControl.Styles>
+    <StackPanel Spacing="12" MaxWidth="560">
+        <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+            <arc:Button x:Name="Add" Content="Add tile" Variant="Secondary" Size="Small" />
+            <arc:Button x:Name="Grow" Content="Grow first" Variant="Secondary" Size="Small" />
+            <arc:Button x:Name="Remove" Content="Remove last" Variant="Secondary" Size="Small" />
+        </StackPanel>
+        <ItemsControl x:Name="Tiles">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <arc:TilePanel Columns="4" MaxRowSpan="2" MaxColumnSpan="2" Spacing="8" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="demos:DashboardTile">
+                    <Border Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep12}"
+                            Padding="12">
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="{Binding Title}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            <TextBlock Text="{Binding Value}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXL}"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </StackPanel>
+</UserControl>

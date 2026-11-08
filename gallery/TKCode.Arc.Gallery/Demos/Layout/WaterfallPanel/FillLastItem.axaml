@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.WaterfallPanelFillLastItemDemo">
+    <UserControl.Styles>
+        <Style Selector="arc|WaterfallPanel > Border">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
+        </Style>
+    </UserControl.Styles>
+    <StackPanel Spacing="16" MaxWidth="560">
+        <arc:Switch x:Name="Fill" Content="FillLastItem" HorizontalAlignment="Center" IsChecked="True" />
+        <arc:WaterfallPanel Columns="3" Spacing="8"
+                            FillLastItem="{Binding #Fill.IsChecked}">
+            <Border MinHeight="120" />
+            <Border MinHeight="70" />
+            <Border MinHeight="160" />
+            <Border MinHeight="90" />
+            <Border MinHeight="60" />
+            <Border MinHeight="50" />
+            <Border MinHeight="80" />
+        </arc:WaterfallPanel>
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,30 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.WaterfallPanelColumnsDemo">
+    <UserControl.Styles>
+        <Style Selector="arc|WaterfallPanel > Border">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
+        </Style>
+    </UserControl.Styles>
+    <StackPanel Spacing="16" MaxWidth="560">
+        <arc:SegmentedControl x:Name="Count" HorizontalAlignment="Center" SelectedIndex="1">
+            <arc:SegmentedOption Value="2" Label="2 columns" />
+            <arc:SegmentedOption Value="3" Label="3 columns" />
+            <arc:SegmentedOption Value="4" Label="4 columns" />
+            <arc:SegmentedOption Value="0" Label="Auto (min 120)" />
+        </arc:SegmentedControl>
+        <arc:WaterfallPanel x:Name="Wall" Columns="3" MinLaneSize="120" Spacing="8">
+            <Border Height="90" />
+            <Border Height="140" />
+            <Border Height="60" />
+            <Border Height="120" />
+            <Border Height="80" />
+            <Border Height="150" />
+            <Border Height="70" />
+            <Border Height="110" />
+            <Border Height="95" />
+        </arc:WaterfallPanel>
+    </StackPanel>
+</UserControl>

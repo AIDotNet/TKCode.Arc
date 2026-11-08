@@ -101,6 +101,11 @@
         <source>Video</source>
       </segment>
     </unit>
+    <unit id="Category_Layout">
+      <segment>
+        <source>Layout</source>
+      </segment>
+    </unit>
     <unit id="Category_Content">
       <segment>
         <source>Extras</source>

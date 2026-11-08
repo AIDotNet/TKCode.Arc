@@ -121,6 +121,12 @@
         <target state="translated">视频</target>
       </segment>
     </unit>
+    <unit id="Category_Layout">
+      <segment>
+        <source>Layout</source>
+        <target state="translated">布局</target>
+      </segment>
+    </unit>
     <unit id="Category_Content">
       <segment>
         <source>Extras</source>

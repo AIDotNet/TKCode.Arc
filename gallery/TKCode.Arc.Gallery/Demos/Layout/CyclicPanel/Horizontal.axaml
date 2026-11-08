@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CyclicPanelHorizontalDemo">
+    <UserControl.Styles>
+        <Style Selector="arc|CyclicPanel > Border">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
+        </Style>
+        <Style Selector="arc|CyclicPanel > Border > TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+    </UserControl.Styles>
+    <!-- Scroll sideways with a touchpad, or with the wheel (vertical wheel turns move it too). -->
+    <arc:CyclicPanel Orientation="Horizontal" VisibleItemCount="4" Spacing="8" Height="96" MaxWidth="520">
+        <Border><TextBlock Text="Mon" /></Border>
+        <Border><TextBlock Text="Tue" /></Border>
+        <Border><TextBlock Text="Wed" /></Border>
+        <Border><TextBlock Text="Thu" /></Border>
+        <Border><TextBlock Text="Fri" /></Border>
+        <Border><TextBlock Text="Sat" /></Border>
+        <Border><TextBlock Text="Sun" /></Border>
+    </arc:CyclicPanel>
+</UserControl>

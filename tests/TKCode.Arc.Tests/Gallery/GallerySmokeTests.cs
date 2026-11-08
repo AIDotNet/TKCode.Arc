@@ -29,6 +29,9 @@ public class GallerySmokeTests
         // The sidebar footer counts the whole Components section, extras included: 112 + 11 = 123.
         GalleryCatalog.ComponentCount.ShouldBe(123);
         GalleryCatalog.ComponentEntries.Count().ShouldBe(123);
+        // The sidebar footer counts the whole Components section, extras included: 112 + 13 = 125.
+        GalleryCatalog.ComponentCount.ShouldBe(125);
+        GalleryCatalog.ComponentEntries.Count().ShouldBe(125);
     }
 
     [AvaloniaFact]
