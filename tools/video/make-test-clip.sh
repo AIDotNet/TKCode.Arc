@@ -15,4 +15,7 @@ ffmpeg -hide_banner -loglevel error -y \
   -c:v h264_videotoolbox -profile:v main -b:v 400k -g 30 \
   -c:a aac_at -b:a 96k \
   -movflags +faststart "$out"
-shasum -a 256 "$out"
+# The same pictures without a sound track: shows whether a stall comes from the audio output.
+silent="${out%.mp4}-no-audio.mp4"
+ffmpeg -hide_banner -loglevel error -y -i "$out" -an -c:v copy -movflags +faststart "$silent"
+shasum -a 256 "$out" "$silent"

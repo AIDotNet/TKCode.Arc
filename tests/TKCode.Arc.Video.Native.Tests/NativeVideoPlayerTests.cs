@@ -17,6 +17,11 @@ public sealed class NativeVideoPlayerTests
     private static readonly TimeSpan s_timeout = TimeSpan.FromSeconds(10);
     private static string ClipPath => Path.Combine(AppContext.BaseDirectory, "Media", "red-blue-2s.mp4");
 
+    // What the player last did, for failure messages: a timeout alone does not say whether playback stalled or failed.
+    // The tests in this collection run one at a time.
+    private static IVideoPlayer? s_watched;
+    private static string? s_lastFailure;
+
     [Fact]
     public void Use_selects_the_platform_backend()
     {
@@ -224,6 +229,41 @@ public sealed class NativeVideoPlayerTests
         var advanced = (player.Position - start).TotalSeconds / clock.Elapsed.TotalSeconds;
         player.Pause();
         advanced.ShouldBe(2.0, 0.5);
+    }
+
+    // VideoSurface pulls a frame for every composition tick; these do the same while playing.
+    [Theory]
+    [InlineData("red-blue-2s.mp4")]
+    [InlineData("red-blue-2s-no-audio.mp4")]
+    public async Task A_clip_plays_while_its_frames_are_pulled(string file)
+    {
+        var backend = RequireBackend();
+        using var player = backend.CreatePlayer();
+        await LoadClipAsync(player, file);
+        player.Play();
+        var request = new VideoFrameRequest(TimeSpan.Zero, default, VideoFrameKinds.CpuBgra);
+        var clock = Stopwatch.StartNew();
+        while (player.Position <= TimeSpan.FromSeconds(0.3) && clock.Elapsed < s_timeout)
+        {
+            if (player.TryAcquireFrame(request, out var lease))
+            {
+                lease.Dispose();
+            }
+            await Task.Delay(16);
+        }
+        player.Position.ShouldBeGreaterThan(TimeSpan.FromSeconds(0.3), DescribeWatched());
+        player.Pause();
+    }
+
+    [Fact]
+    public async Task A_clip_without_sound_plays()
+    {
+        var backend = RequireBackend();
+        using var player = backend.CreatePlayer();
+        await LoadClipAsync(player, "red-blue-2s-no-audio.mp4");
+        player.Play();
+        await WaitUntilAsync(() => player.Position > TimeSpan.FromSeconds(0.3), "a clip without sound to play");
+        player.Pause();
     }
 
     [Fact]
@@ -438,10 +478,14 @@ public sealed class NativeVideoPlayerTests
         return (NativeVideoBackend)ArcVideo.Backend;
     }
 
-    private static async Task LoadClipAsync(IVideoPlayer player)
+    private static async Task LoadClipAsync(IVideoPlayer player, string? file = null)
     {
-        File.Exists(ClipPath).ShouldBeTrue(ClipPath);
-        await player.LoadAsync(VideoSource.FromFile(ClipPath)).WaitAsync(s_timeout);
+        var path = file is null ? ClipPath : Path.Combine(AppContext.BaseDirectory, "Media", file);
+        File.Exists(path).ShouldBeTrue(path);
+        s_watched = player;
+        s_lastFailure = null;
+        player.Failed += (_, e) => s_lastFailure = $"{e.Kind}: {e.Message}";
+        await player.LoadAsync(VideoSource.FromFile(path)).WaitAsync(s_timeout);
         player.State.ShouldBe(VideoPlaybackState.Paused, $"load ended in {player.State}");
     }
 
@@ -499,9 +543,9 @@ public sealed class NativeVideoPlayerTests
     {
         // H.264 (BT.601/709 limited range) shifts solid colours a little.
         const int tolerance = 24;
-        Math.Abs(pixel.B - b).ShouldBeLessThanOrEqualTo(tolerance, $"B of {pixel}");
-        Math.Abs(pixel.G - g).ShouldBeLessThanOrEqualTo(tolerance, $"G of {pixel}");
-        Math.Abs(pixel.R - r).ShouldBeLessThanOrEqualTo(tolerance, $"R of {pixel}");
+        Math.Abs(pixel.B - b).ShouldBeLessThanOrEqualTo(tolerance, $"B of {pixel}; {DescribeWatched()}");
+        Math.Abs(pixel.G - g).ShouldBeLessThanOrEqualTo(tolerance, $"G of {pixel}; {DescribeWatched()}");
+        Math.Abs(pixel.R - r).ShouldBeLessThanOrEqualTo(tolerance, $"R of {pixel}; {DescribeWatched()}");
         pixel.A.ShouldBe((byte)255);
     }
 
@@ -513,11 +557,16 @@ public sealed class NativeVideoPlayerTests
         {
             if (deadline.Elapsed > limit)
             {
-                throw new TimeoutException($"Timed out waiting for {what}.");
+                throw new TimeoutException($"Timed out waiting for {what}; {DescribeWatched()}.");
             }
             await Task.Delay(20);
         }
     }
+
+    private static string DescribeWatched() =>
+        s_watched is { } player
+            ? $"state {player.State}, position {player.Position.TotalSeconds:0.000}s, buffered ranges {player.Buffered.Count}, failure {s_lastFailure ?? "none"}"
+            : "no player";
 }
 
 /// <summary>Native players share AVFoundation / Media Foundation state; run these tests one at a time.</summary>

@@ -143,7 +143,8 @@ jobs:
               failed=1
             fi
             # The analyzer project switches packing and documentation off itself; it ships inside TKCode.Arc.Foundation.
-            if [[ "$name" != *.Generators ]] && ! echo "$values" | grep -q '"IsPackable": "true"'; then
+            # The video packages are switched off until Windows and real devices are verified, so a release leaves them out.
+            if [[ "$name" != *.Generators && "$name" != TKCode.Arc.Video* ]] && ! echo "$values" | grep -q '"IsPackable": "true"'; then
               echo "::error::$name is not packable"
               failed=1
             fi
@@ -271,11 +272,21 @@ jobs:
         continue-on-error: true
         run: Install-WindowsFeature Server-Media-Foundation
 
+      # Media Foundation needs these to play: what the runner has explains a stalled test.
+      - name: List the sound and display devices
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          Get-CimInstance Win32_SoundDevice | Format-List Name, Status
+          Get-CimInstance Win32_VideoController | Format-List Name, Status
+
       - name: Stage the shim
         run: tools/video/sync-native.sh
 
       # The test project is an executable: on macOS its Main must own the main thread (AVPlayer), so it runs directly.
       - name: Test
+        env:
+          TKV_TRACE: ${{ runner.os == 'Windows' && '1' || '' }}
         run: dotnet run --project tests/TKCode.Arc.Video.Native.Tests -c Release
 
   # libghostty-vt for every RID, built from the commit pinned in native/ghostty/ghostty-upstream.json (+ overlays) with
