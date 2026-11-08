@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CreditTopUpPreviewDemo">
+    <!-- No properties: the sample workspace at 1,260 credits, three packs, two saved cards and a simulated 1.2s charge. -->
+    <arc:CreditTopUp Margin="0,12" HorizontalAlignment="Stretch" />
+</UserControl>

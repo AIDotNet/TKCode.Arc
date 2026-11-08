@@ -292,10 +292,12 @@ public partial class VideoPlayer
         UpdateStateLayer();
         UpdateControls();
         UpdateCompact();
+        UpdateNativePresentation();
     }
 
     private void Unhook()
     {
+        RemoveNativeView();
         if (_root is not null)
         {
             _root.RemoveHandler(PointerMovedEvent, OnRootPointerMoved);
@@ -500,7 +502,7 @@ public partial class VideoPlayer
         }
         else if (property == BrowserPresentationProperty)
         {
-            PseudoClasses.Set(NativePresentationPseudoClass, BrowserPresentation == VideoBrowserPresentation.Native && OperatingSystem.IsBrowser());
+            UpdateNativePresentation();
         }
         else if (property == SeekStepProperty)
         {
@@ -551,6 +553,7 @@ public partial class VideoPlayer
             {
                 _surface.Player = player;
             }
+            UpdateNativePresentation();
         }
         _ = LoadAsync();
     }
@@ -568,6 +571,8 @@ public partial class VideoPlayer
             player.NaturalSizeChanged -= OnPlayerNaturalSizeChanged;
             player.BufferedChanged -= OnPlayerBufferedChanged;
             player.Failed -= OnPlayerFailed;
+            // The platform view belongs to the player: take it out before the player goes.
+            RemoveNativeView();
             if (_surface is not null)
             {
                 _surface.Player = null;
@@ -1062,6 +1067,7 @@ public partial class VideoPlayer
             _captions.CaptionScale = CaptionScale;
             _captions.BackgroundOpacity = CaptionBackgroundOpacity;
         }
+        _nativeOwner?.SetNativeCaptions(track);
         if (!ReferenceEquals(_observedCaptions, track))
         {
             _observedCaptions = track;
@@ -1327,6 +1333,7 @@ public partial class VideoPlayer
         _stateLayer.HintText = _player is { Backend.IsReal: false } && Source is not null and not SimulatedVideoSource && state != VideoPlaybackState.Failed
             ? VideoText.Get(VideoLangResourceKind.BackendHint)
             : null;
+        UpdateNativeLayout();
     }
 
     private void UpdateVolume()
@@ -1478,6 +1485,11 @@ public partial class VideoPlayer
             case VideoControlsVisibility.Always:
                 return true;
         }
+        if (_nativeView is not null)
+        {
+            // Below the picture: nothing to uncover, and hiding it would make the frame jump.
+            return true;
+        }
         if (IsMenuOpen || _seek is { IsDragging: true } || _volume?.Slider.IsDragging == true || IsKeyboardFocusInBar())
         {
             return true;
@@ -1524,6 +1536,7 @@ public partial class VideoPlayer
         {
             HideSeekTip();
         }
+        UpdateNativeLayout();
         if (_root is not null)
         {
             var hideCursor = !visible && ShowControls != VideoControlsVisibility.Always && State == VideoPlaybackState.Playing;

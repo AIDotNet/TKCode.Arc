@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PricingCalculatorNarrowDemo">
+    <!-- In a 420px column the cards stack and the ones not selected fold to their name, price and button. -->
+    <Border MaxWidth="420" HorizontalAlignment="Center" Margin="0,12">
+        <arc:PricingCalculator IsHeaderVisible="False" Billing="Monthly" />
+    </Border>
+</UserControl>

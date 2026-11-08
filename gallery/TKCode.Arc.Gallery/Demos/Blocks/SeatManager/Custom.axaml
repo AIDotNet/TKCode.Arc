@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SeatManagerCustomDemo">
+    <!--
+        A yearly plan in euros, formatted for Ireland, with "licences" instead of "seats", no card on file and a larger
+        team whose avatars are a sample of 14 members. The switch turns motion down to Reduced. Data: SeatManagerDemoData.
+    -->
+    <StackPanel Spacing="12" Margin="0,12">
+        <arc:SeatManager x:Name="Card" IsAutoPlayEnabled="False" />
+        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Spacing="8">
+            <arc:Switch x:Name="Reduced" />
+            <TextBlock VerticalAlignment="Center" Text="Reduced motion" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

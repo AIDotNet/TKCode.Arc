@@ -1,0 +1,8 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LiveCheckoutReducedMotionDemo">
+    <!-- Reduced motion: amounts change without rolling, rows appear and leave at once, and the receipt replaces the form
+         in one frame. Payments still take their time and every message and focus move is the same. -->
+    <arc:LiveCheckout Margin="0,24" MaxWidth="1040" arc:ArcMotion.Level="Reduced" />
+</UserControl>

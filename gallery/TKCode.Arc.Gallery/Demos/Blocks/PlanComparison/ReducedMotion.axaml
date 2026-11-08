@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PlanComparisonReducedMotionDemo">
+    <!-- Under reduced motion prices, the count and rows jump to their new state and the rail moves without gliding. -->
+    <arc:PlanComparison arc:ArcMotion.Level="Reduced" />
+</UserControl>

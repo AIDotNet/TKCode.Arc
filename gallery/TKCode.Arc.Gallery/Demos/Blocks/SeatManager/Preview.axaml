@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SeatManagerPreviewDemo">
+    <!--
+        The Tidewater team on the Team plan, every seat taken. No handlers are set, so the card simulates its backend and
+        plays its loop: three seats added, paid, an invite resent, another revoked, then back to the start (12.7 s,
+        paused off screen). Press anything inside the card to take over. Data: SeatManagerSamples.
+    -->
+    <arc:SeatManager x:Name="Card" Margin="0,12" />
+</UserControl>

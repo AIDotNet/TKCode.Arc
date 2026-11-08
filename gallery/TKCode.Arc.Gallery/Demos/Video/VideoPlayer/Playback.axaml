@@ -11,6 +11,8 @@
                          AspectRatio="1.7778"
                          Source="{x:Static demos:VideoDemoMedia.Aurora}"
                          Poster="{x:Static demos:VideoDemoMedia.AuroraPoster}" />
+        <!-- In a browser: draw frames in the canvas (Canvas) or show the browser's own video element (Native). -->
+        <arc:Switch x:Name="NativeSwitch" Content="Native presentation (browser)" IsVisible="False" />
         <SelectableTextBlock x:Name="Info" FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}" TextWrapping="Wrap" />
     </StackPanel>
 </UserControl>

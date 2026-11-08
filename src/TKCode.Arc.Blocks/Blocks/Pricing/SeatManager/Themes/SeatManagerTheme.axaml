@@ -1,0 +1,469 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.SeatManagerTheme">
+
+    <!--
+        The seats card (Arc Seat manager, design reference; notes 3): at most 560 wide, Surface, a 1px Border, radius
+        RadiusPanel, no shadow, clipped. Four sections, the last three with a 1px Border line on top: the overview (header,
+        avatars and usage, meter, legend, notice), the quote (stepper row and the two amounts), the pending invites and the
+        64px footer. Below 460 (:narrow) the paddings go from 24 to 20 and the quote notes and the legend's change entry hide.
+    -->
+    <ControlTheme x:Key="{x:Type arc:SeatManager}" TargetType="arc:SeatManager">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="MaxWidth" Value="{arc:SeatManagerTokenResource CardMaxWidth}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="NarrowWidth" Value="{arc:SeatManagerTokenResource NarrowWidth}" />
+        <Setter Property="SuccessBrush" Value="{arc:SeatManagerTokenResource SuccessInk}" />
+        <Setter Property="WarningBrush" Value="{arc:SeatManagerTokenResource WarningInk}" />
+        <Setter Property="InviteRowHeight" Value="{arc:SeatManagerTokenResource InviteRowHeight}" />
+        <Setter Property="InviteActionsMargin" Value="{arc:SeatManagerTokenResource InviteActionsMargin}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SeatManager">
+                <Border Name="PART_Card"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <Panel>
+                        <StackPanel>
+                            <!-- Overview -->
+                            <Border Name="PART_Overview">
+                                <StackPanel>
+                                    <StackPanel Spacing="{arc:SeatManagerTokenResource HeaderGap}">
+                                        <arc:ArcShrinkRow Spacing="8">
+                                            <TextBlock Name="PART_Title"
+                                                       arc:ArcShrinkRow.IsShrinkable="True"
+                                                       VerticalAlignment="Center"
+                                                       FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                                       FontSize="{arc:SeatManagerTokenResource TitleSize}"
+                                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                       LetterSpacing="{arc:SeatManagerTokenResource TitleLetterSpacing}"
+                                                       TextTrimming="CharacterEllipsis"
+                                                       AutomationProperties.HeadingLevel="2"
+                                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                            <Border Name="PART_Badge"
+                                                    VerticalAlignment="Center"
+                                                    Height="{arc:SeatManagerTokenResource BadgeHeight}"
+                                                    Padding="{arc:SeatManagerTokenResource BadgePadding}"
+                                                    CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                                    Background="{arc:ArcDesignTokenResource AccentSubtle}">
+                                                <TextBlock Name="PART_PlanName"
+                                                           VerticalAlignment="Center"
+                                                           FontSize="{arc:SeatManagerTokenResource SmallSize}"
+                                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                           Foreground="{arc:ArcDesignTokenResource Accent}" />
+                                            </Border>
+                                        </arc:ArcShrinkRow>
+                                        <TextBlock Name="PART_Subtitle"
+                                                   FontSize="{arc:SeatManagerTokenResource SmallSize}"
+                                                   LineHeight="{arc:SeatManagerTokenResource CopyLineHeight}"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    </StackPanel>
+                                    <StackPanel Margin="0,16,0,0" Spacing="{arc:SeatManagerTokenResource RowGap}">
+                                        <Grid ColumnDefinitions="Auto,*" Height="{arc:SeatManagerTokenResource AvatarDiameter}">
+                                            <arc:SeatManagerAvatars Name="PART_Avatars"
+                                                                    VerticalAlignment="Center"
+                                                                    Diameter="{arc:SeatManagerTokenResource AvatarDiameter}"
+                                                                    Overlap="{arc:SeatManagerTokenResource AvatarOverlap}"
+                                                                    Ring="{arc:SeatManagerTokenResource AvatarRing}"
+                                                                    RingBrush="{arc:ArcDesignTokenResource Surface}"
+                                                                    EdgeBrush="{arc:ArcDesignTokenResource Border}"
+                                                                    FillBrush="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                                                    CountBrush="{arc:ArcDesignTokenResource TextSecondary}" />
+                                            <arc:SeatManagerRollText Name="PART_Used"
+                                                                     Grid.Column="1"
+                                                                     Margin="12,0,0,0"
+                                                                     HorizontalAlignment="Right"
+                                                                     VerticalAlignment="Center"
+                                                                     TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                                     NumberBrush="{arc:ArcDesignTokenResource Foreground}"
+                                                                     NumberWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                        </Grid>
+                                        <arc:SeatManagerMeter Name="PART_Meter"
+                                                              CellHeight="{arc:SeatManagerTokenResource CellHeight}"
+                                                              CellRadius="{arc:SeatManagerTokenResource CellRadius}"
+                                                              CellGap="{arc:SeatManagerTokenResource CellGap}"
+                                                              AccentBrush="{arc:ArcDesignTokenResource Accent}"
+                                                              SurfaceBrush="{arc:ArcDesignTokenResource Surface}"
+                                                              MutedBrush="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                                              StrongEdgeBrush="{arc:ArcDesignTokenResource BorderStrong}"
+                                                              EdgeBrush="{arc:ArcDesignTokenResource Border}" />
+                                        <Grid ColumnDefinitions="*,Auto"
+                                              TextElement.FontSize="{arc:SeatManagerTokenResource SmallSize}"
+                                              TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                              AutomationProperties.AccessibilityView="Raw">
+                                            <StackPanel Orientation="Horizontal" Spacing="{arc:SeatManagerTokenResource LegendGap}" ClipToBounds="True">
+                                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                                    <arc:SeatManagerLegendDot Name="PART_DotMembers" />
+                                                    <arc:SeatManagerRollText Name="PART_LegendMembers" />
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                                    <arc:SeatManagerLegendDot Name="PART_DotInvited" />
+                                                    <arc:SeatManagerRollText Name="PART_LegendInvited" />
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                                    <arc:SeatManagerLegendDot Name="PART_DotOpen" />
+                                                    <arc:SeatManagerRollText Name="PART_LegendOpen" />
+                                                </StackPanel>
+                                            </StackPanel>
+                                            <arc:ArcContentSwap Name="PART_LegendDelta"
+                                                                Grid.Column="1"
+                                                                Margin="12,0,0,0"
+                                                                Mode="Crossfade"
+                                                                EnterOffset="2"
+                                                                HorizontalContentAlignment="Right" />
+                                        </Grid>
+                                        <arc:ArcContentSwap Name="PART_Notice"
+                                                            Height="20"
+                                                            Mode="Crossfade"
+                                                            EnterOffset="2"
+                                                            HorizontalContentAlignment="Stretch"
+                                                            VerticalContentAlignment="Center" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Quote -->
+                            <Border Name="PART_Quote"
+                                    BorderThickness="0,1,0,0"
+                                    BorderBrush="{arc:ArcDesignTokenResource Border}">
+                                <StackPanel Spacing="{arc:SeatManagerTokenResource QuoteGap}">
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <StackPanel VerticalAlignment="Center">
+                                            <TextBlock Name="PART_StepperTitle"
+                                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                       LineHeight="{arc:SeatManagerTokenResource CopyLineHeight}"
+                                                       TextTrimming="CharacterEllipsis"
+                                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                            <arc:SeatManagerRollText Name="PART_Purchased"
+                                                                     TextElement.FontSize="{arc:SeatManagerTokenResource SmallSize}"
+                                                                     TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                        </StackPanel>
+                                        <Border Name="PART_Stepper"
+                                                Grid.Column="1"
+                                                Width="{arc:SeatManagerTokenResource StepperWidth}"
+                                                Height="{arc:SeatManagerTokenResource StepperHeight}"
+                                                Padding="3"
+                                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                                CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
+                                                Background="{arc:ArcDesignTokenResource Surface}">
+                                            <Grid ColumnDefinitions="Auto,*,Auto">
+                                                <arc:SeatManagerStepButton Name="PART_Minus" />
+                                                <arc:SeatManagerSpinValue Name="PART_Spin" Grid.Column="1" HorizontalAlignment="Center" />
+                                                <arc:SeatManagerStepButton Name="PART_Plus" Grid.Column="2" />
+                                            </Grid>
+                                        </Border>
+                                    </Grid>
+                                    <StackPanel Spacing="{arc:SeatManagerTokenResource QuoteLineGap}">
+                                        <Grid ColumnDefinitions="*,Auto">
+                                            <arc:ArcShrinkRow Spacing="8" VerticalAlignment="Center">
+                                                <TextBlock Name="PART_DueLabel"
+                                                           VerticalAlignment="Center"
+                                                           LineHeight="{arc:SeatManagerTokenResource CopyLineHeight}"
+                                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                                <arc:ArcContentSwap Name="PART_DueNote"
+                                                                    arc:ArcShrinkRow.IsShrinkable="True"
+                                                                    VerticalAlignment="Center"
+                                                                    Mode="Crossfade"
+                                                                    EnterOffset="2" />
+                                            </arc:ArcShrinkRow>
+                                            <arc:SeatManagerRoll Name="PART_Due"
+                                                                 Grid.Column="1"
+                                                                 Margin="12,0,0,0"
+                                                                 VerticalAlignment="Center"
+                                                                 FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                                 Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                        </Grid>
+                                        <Grid ColumnDefinitions="*,Auto">
+                                            <arc:ArcShrinkRow Spacing="8" VerticalAlignment="Center">
+                                                <TextBlock Name="PART_FromLabel"
+                                                           VerticalAlignment="Center"
+                                                           LineHeight="{arc:SeatManagerTokenResource CopyLineHeight}"
+                                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                                <arc:ArcContentSwap Name="PART_FromNote"
+                                                                    arc:ArcShrinkRow.IsShrinkable="True"
+                                                                    VerticalAlignment="Center"
+                                                                    Mode="Crossfade"
+                                                                    EnterOffset="2" />
+                                            </arc:ArcShrinkRow>
+                                            <arc:SeatManagerRoll Name="PART_Next"
+                                                                 Grid.Column="1"
+                                                                 Margin="12,0,0,0"
+                                                                 VerticalAlignment="Center"
+                                                                 FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                                 Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                        </Grid>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Pending invites -->
+                            <Border Name="PART_Invites"
+                                    BorderThickness="0,1,0,0"
+                                    BorderBrush="{arc:ArcDesignTokenResource Border}">
+                                <StackPanel Spacing="16">
+                                    <arc:ArcShrinkRow Spacing="8">
+                                        <TextBlock Name="PART_InvitesTitle"
+                                                   VerticalAlignment="Center"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   LineHeight="{arc:SeatManagerTokenResource CopyLineHeight}"
+                                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                        <arc:SeatManagerRoll Name="PART_InviteCount"
+                                                             VerticalAlignment="Center"
+                                                             FontSize="{arc:SeatManagerTokenResource SmallSize}"
+                                                             Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    </arc:ArcShrinkRow>
+                                    <Panel Margin="{arc:SeatManagerTokenResource InviteListMargin}">
+                                        <StackPanel Name="PART_InviteList" />
+                                        <Grid Name="PART_InvitesEmpty"
+                                              ColumnDefinitions="Auto,*"
+                                              Height="{arc:SeatManagerTokenResource InviteRowHeight}">
+                                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Mail}"
+                                                          Size="16"
+                                                          StrokeThickness="1.75"
+                                                          VerticalAlignment="Center"
+                                                          Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                            <TextBlock Name="PART_InvitesEmptyText"
+                                                       Grid.Column="1"
+                                                       Margin="12,0,0,0"
+                                                       VerticalAlignment="Center"
+                                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                        </Grid>
+                                    </Panel>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Footer -->
+                            <Border Name="PART_Footer"
+                                    Height="{arc:SeatManagerTokenResource FooterHeight}"
+                                    BorderThickness="0,1,0,0"
+                                    BorderBrush="{arc:ArcDesignTokenResource Border}">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <arc:ArcContentSwap Name="PART_FooterText"
+                                                        VerticalAlignment="Center"
+                                                        Mode="Crossfade"
+                                                        EnterOffset="2"
+                                                        HorizontalContentAlignment="Left"
+                                                        TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    <arc:ArcContentSwap Name="PART_FooterActions"
+                                                        Grid.Column="1"
+                                                        Margin="12,0,0,0"
+                                                        VerticalAlignment="Center"
+                                                        Mode="Crossfade"
+                                                        EnterOffset="2"
+                                                        HorizontalContentAlignment="Right" />
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+                        <arc:SeatManagerAnnouncer Name="PART_Announcer" Width="0" Height="0" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ Border#PART_Overview">
+            <Setter Property="Padding" Value="{arc:SeatManagerTokenResource SectionPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Quote">
+            <Setter Property="Padding" Value="{arc:SeatManagerTokenResource SectionPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Invites">
+            <Setter Property="Padding" Value="{arc:SeatManagerTokenResource SectionPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Footer">
+            <Setter Property="Padding" Value="{arc:SeatManagerTokenResource FooterPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Stepper">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Stepper:focus-within">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+
+        <Style Selector="^:narrow /template/ Border#PART_Overview">
+            <Setter Property="Padding" Value="{arc:SeatManagerTokenResource NarrowSectionPadding}" />
+        </Style>
+        <Style Selector="^:narrow /template/ Border#PART_Quote">
+            <Setter Property="Padding" Value="{arc:SeatManagerTokenResource NarrowSectionPadding}" />
+        </Style>
+        <Style Selector="^:narrow /template/ Border#PART_Invites">
+            <Setter Property="Padding" Value="{arc:SeatManagerTokenResource NarrowSectionPadding}" />
+        </Style>
+        <Style Selector="^:narrow /template/ Border#PART_Footer">
+            <Setter Property="Padding" Value="{arc:SeatManagerTokenResource NarrowFooterPadding}" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|ArcContentSwap#PART_DueNote">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|ArcContentSwap#PART_FromNote">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|ArcContentSwap#PART_LegendDelta">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+
+        <Style Selector="^:motion-full /template/ Border#PART_Stepper">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A stepper button: a 32px ghost circle (radius 14) with a 16px Lucide glyph in TextSecondary; hover fills SurfaceMuted
+        and the glyph turns Foreground (160 ms). At a limit, or while the block confirms, it sits at half opacity.
+    -->
+    <ControlTheme x:Key="{x:Type arc:SeatManagerStepButton}" TargetType="arc:SeatManagerStepButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Width" Value="{arc:SeatManagerTokenResource StepButtonSize}" />
+        <Setter Property="Height" Value="{arc:SeatManagerTokenResource StepButtonSize}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SeatManagerStepButton">
+                <Panel>
+                    <Border Name="PART_Fill"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep14}" />
+                    <arc:ArcGlyph Data="{TemplateBinding Glyph}"
+                                  Size="{arc:SeatManagerTokenResource GlyphSize}"
+                                  StrokeThickness="{arc:SeatManagerTokenResource GlyphStroke}"
+                                  Foreground="{TemplateBinding Foreground}"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep18}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:soft-disabled">
+            <Setter Property="Opacity" Value="0.5" />
+        </Style>
+        <Style Selector="^:locked">
+            <Setter Property="Opacity" Value="0.5" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:locked:pointerover">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The seat count: 44×32 (radius 8), 16/20 medium tabular Foreground; a 2px ring on keyboard focus. -->
+    <ControlTheme x:Key="{x:Type arc:SeatManagerSpinValue}" TargetType="arc:SeatManagerSpinValue">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Width" Value="{arc:SeatManagerTokenResource SpinWidth}" />
+        <Setter Property="Height" Value="{arc:SeatManagerTokenResource StepButtonSize}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SeatManagerSpinValue">
+                <Panel Background="{TemplateBinding Background}">
+                    <arc:SeatManagerRoll Text="{TemplateBinding Text}"
+                                         HorizontalAlignment="Center"
+                                         VerticalAlignment="Center"
+                                         FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                         FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                         Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                         AutomationProperties.AccessibilityView="Raw" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep12}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The notice's text action ("Add a seat"): 13/20 medium in the accent, padding 2 0, a ring on keyboard focus. -->
+    <ControlTheme x:Key="{x:Type arc:SeatManagerTextButton}" TargetType="arc:SeatManagerTextButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="0,2" />
+        <Setter Property="FontSize" Value="{arc:SeatManagerTokenResource SmallSize}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SeatManagerTextButton">
+                <Panel Background="{TemplateBinding Background}">
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Padding="{TemplateBinding Padding}"
+                                      Content="{TemplateBinding Content}"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      FontSize="{TemplateBinding FontSize}"
+                                      FontWeight="{TemplateBinding FontWeight}"
+                                      VerticalAlignment="Center" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4,-2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep6}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

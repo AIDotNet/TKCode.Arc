@@ -14,33 +14,41 @@ internal sealed class VideoPlayerFrame : Panel
     public static readonly StyledProperty<double> AspectProperty =
         AvaloniaProperty.Register<VideoPlayerFrame, double>(nameof(Aspect), 16.0 / 9.0);
 
+    /// <summary>Height added below the picture (the control bar in the browser's Native presentation); 0 by default.</summary>
+    public static readonly StyledProperty<double> ExtraHeightProperty =
+        AvaloniaProperty.Register<VideoPlayerFrame, double>(nameof(ExtraHeight));
+
     static VideoPlayerFrame()
     {
-        AffectsMeasure<VideoPlayerFrame>(AspectProperty);
+        AffectsMeasure<VideoPlayerFrame>(AspectProperty, ExtraHeightProperty);
     }
 
     /// <inheritdoc cref="AspectProperty"/>
     public double Aspect { get => GetValue(AspectProperty); set => SetValue(AspectProperty, value); }
 
+    /// <inheritdoc cref="ExtraHeightProperty"/>
+    public double ExtraHeight { get => GetValue(ExtraHeightProperty); set => SetValue(ExtraHeightProperty, value); }
+
     protected override Size MeasureOverride(Size availableSize)
     {
         var aspect = double.IsFinite(Aspect) && Aspect > 0.05 ? Aspect : 16.0 / 9.0;
+        var extra = double.IsFinite(ExtraHeight) && ExtraHeight > 0 ? ExtraHeight : 0;
         double width;
         double height;
         if (!double.IsInfinity(availableSize.Width))
         {
             width = availableSize.Width;
-            height = width / aspect;
+            height = width / aspect + extra;
         }
         else if (!double.IsInfinity(availableSize.Height))
         {
             height = availableSize.Height;
-            width = height * aspect;
+            width = Math.Max(0, height - extra) * aspect;
         }
         else
         {
             width = 640;
-            height = width / aspect;
+            height = width / aspect + extra;
         }
         var size = new Size(width, height);
         foreach (var child in Children)

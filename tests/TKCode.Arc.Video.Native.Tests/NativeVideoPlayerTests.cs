@@ -349,6 +349,40 @@ public sealed class NativeVideoPlayerTests
         throw new TimeoutException("no frame");
     }
 
+    [Fact]
+    public async Task Load_on_another_thread_waits_for_a_leased_frame()
+    {
+        var backend = RequireBackend();
+        using var player = backend.CreatePlayer();
+        await LoadClipAsync(player);
+        var request = new VideoFrameRequest(TimeSpan.Zero, default, VideoFrameKinds.CpuBgra);
+        Task? reload = null;
+        await WaitUntilAsync(() => (reload = ReloadWhileLeased(player, request)) is not null, "a frame to lease");
+        await reload!.WaitAsync(s_timeout);
+        player.State.ShouldBe(VideoPlaybackState.Paused);
+    }
+
+    // Holds a CPU lease, starts a load on the thread pool and checks that it does not reset the media (which releases the
+    // native frame) until the lease is returned. Null when no frame could be leased yet.
+    private static Task? ReloadWhileLeased(IVideoPlayer player, in VideoFrameRequest request)
+    {
+        if (!player.TryAcquireFrame(request, out var lease))
+        {
+            return null;
+        }
+        Task reload;
+        using (lease)
+        {
+            var first = lease.Pixels[0];
+            reload = Task.Run(() => player.LoadAsync(VideoSource.FromFile(ClipPath)));
+            Thread.Sleep(300);
+            // The load clears the duration only once it holds the media, after the lease is back.
+            player.Duration.TotalSeconds.ShouldBe(2.0, 0.1);
+            lease.Pixels[0].ShouldBe(first);
+        }
+        return reload;
+    }
+
     // ---- Helpers.
 
     private static NativeVideoBackend RequireBackend(bool needsMainLoop = true)

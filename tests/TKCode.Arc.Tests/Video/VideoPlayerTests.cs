@@ -317,6 +317,24 @@ public class VideoPlayerTests
     }
 
     [AvaloniaFact]
+    public void Leaving_System_Full_Screen_Through_The_Window_Leaves_The_Players_Too()
+    {
+        using var scope = new VideoTestScope();
+        var player = new VideoPlayer { Source = VideoTestScope.Clip(60), FullScreenMode = VideoFullScreenMode.System };
+        var window = scope.Show(player);
+        player.IsFullScreen = true;
+        VideoTestScope.Pump();
+        window.WindowState.ShouldBe(WindowState.FullScreen);
+
+        // The window manager takes the window out of full screen (macOS green button, a shortcut).
+        window.WindowState = WindowState.Maximized;
+        VideoTestScope.Pump();
+        player.IsFullScreen.ShouldBeFalse();
+        player.FullScreenHost.ShouldBeNull();
+        window.WindowState.ShouldBe(WindowState.Maximized);
+    }
+
+    [AvaloniaFact]
     public void Leaving_The_Tree_In_Full_Screen_Exits_It_First()
     {
         using var scope = new VideoTestScope();
@@ -414,6 +432,9 @@ internal sealed class RecordingVideoBackend(SimulatedVideoBackend inner) : IVide
 
     public RecordingVideoPlayer Last => Created[^1];
 
+    /// <summary>Whether its players offer a platform view (<see cref="IVideoNativePresentation"/>), like the browser backend.</summary>
+    public bool OffersNativeView { get; set; }
+
     public string Name => inner.Name;
 
     public bool IsReal => inner.IsReal;
@@ -432,9 +453,30 @@ internal sealed class RecordingVideoBackend(SimulatedVideoBackend inner) : IVide
     }
 }
 
-internal sealed class RecordingVideoPlayer(IVideoBackend backend, SimulatedVideoPlayer inner) : IVideoPlayer
+internal sealed class RecordingVideoPlayer(RecordingVideoBackend backend, SimulatedVideoPlayer inner) : IVideoPlayer, IVideoNativePresentation
 {
     public SimulatedVideoPlayer Inner { get; } = inner;
+
+    /// <summary>The platform views handed out (plain borders standing in for the browser's video element).</summary>
+    public List<Control> NativeViews { get; } = [];
+
+    /// <summary>The track last given to <see cref="SetNativeCaptions"/>.</summary>
+    public VideoTextTrack? NativeCaptions { get; private set; }
+
+    public bool CanPresentNatively => backend.OffersNativeView && !IsDisposed;
+
+    public Control CreateNativeView()
+    {
+        if (!CanPresentNatively)
+        {
+            throw new NotSupportedException();
+        }
+        var view = new Border { Background = Avalonia.Media.Brushes.DarkSlateBlue };
+        NativeViews.Add(view);
+        return view;
+    }
+
+    public void SetNativeCaptions(VideoTextTrack? track) => NativeCaptions = track;
 
     public List<(TimeSpan Position, VideoSeekMode Mode)> Seeks { get; } = [];
 

@@ -1,0 +1,28 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CheckoutSummaryPreviewDemo">
+    <!--
+        One yearly plan with an automatic discount and sales tax. Try HELLO15 (15% off) or FRIEND5 (5 off); any other
+        code is refused. Checking a code takes 700 ms and paying 1400 ms (simulated in the code-behind); the switch makes
+        the next payment fail so you can see "Try again".
+    -->
+    <StackPanel Spacing="16" Margin="0,24">
+        <arc:CheckoutSummary x:Name="Summary" HorizontalAlignment="Center" Width="440">
+            <arc:CheckoutSummary.Item>
+                <arc:CheckoutSummaryItem Name="Sketchbook Pro, annual"
+                                         Description="Infinite canvases and backups for one maker"
+                                         Price="120"
+                                         Period="billed yearly" />
+            </arc:CheckoutSummary.Item>
+            <arc:CheckoutSummaryLine Id="annual" Label="Annual plan" Note="Three months free" Amount="-30" />
+            <arc:CheckoutSummary.Tax>
+                <arc:CheckoutSummaryTax Label="Sales tax" Rate="0.075" />
+            </arc:CheckoutSummary.Tax>
+        </arc:CheckoutSummary>
+        <StackPanel Orientation="Horizontal" Spacing="16" HorizontalAlignment="Center">
+            <arc:Switch x:Name="FailNext" Content="Simulate failure" VerticalAlignment="Center" />
+            <arc:Button x:Name="Reset" Variant="Ghost" Size="Small" Content="Reset" VerticalAlignment="Center" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

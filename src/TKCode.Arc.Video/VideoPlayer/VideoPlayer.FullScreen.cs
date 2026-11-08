@@ -13,6 +13,8 @@ public partial class VideoPlayer
     private VideoFullScreenHost? _fullScreenHost;
     private Panel? _fullScreenLayer;
     private WindowState? _savedWindowState;
+    private Window? _systemWindow;
+    private bool _platformFullScreen;
     private bool _changingFullScreen;
 
     /// <summary>The host of the root in the overlay while in full screen (for tests).</summary>
@@ -73,10 +75,9 @@ public partial class VideoPlayer
         SizeHost();
         layer.PropertyChanged += OnFullScreenLayerChanged;
         layer.Children.Add(host);
-        if (FullScreenMode == VideoFullScreenMode.System && TopLevel.GetTopLevel(this) is Window window)
+        if (FullScreenMode == VideoFullScreenMode.System)
         {
-            _savedWindowState = window.WindowState;
-            window.WindowState = WindowState.FullScreen;
+            EnterSystemFullScreen();
         }
         if (hadFocus || _root.Focusable)
         {
@@ -111,11 +112,7 @@ public partial class VideoPlayer
                 _root.Focus(NavigationMethod.Unspecified);
             }
         }
-        if (_savedWindowState is { } state && TopLevel.GetTopLevel(this) is Window window)
-        {
-            window.WindowState = state;
-        }
-        _savedWindowState = null;
+        LeaveSystemFullScreen();
         if (IsFullScreen)
         {
             _changingFullScreen = true;
@@ -129,6 +126,67 @@ public partial class VideoPlayer
             }
         }
         return true;
+    }
+
+    /// <summary>Also makes the window (desktop) or the page (browser) full screen; watches for the system leaving it on its own.</summary>
+    private void EnterSystemFullScreen()
+    {
+        if (TopLevel.GetTopLevel(this) is Window window)
+        {
+            _savedWindowState = window.WindowState;
+            _systemWindow = window;
+            window.WindowState = WindowState.FullScreen;
+            window.PropertyChanged += OnSystemWindowChanged;
+        }
+        else if (VideoSystemFullScreen.IsAvailable)
+        {
+            _platformFullScreen = true;
+            VideoSystemFullScreen.Exited += OnPlatformFullScreenExited;
+            VideoSystemFullScreen.Enter();
+        }
+    }
+
+    private void LeaveSystemFullScreen()
+    {
+        if (_systemWindow is { } window)
+        {
+            window.PropertyChanged -= OnSystemWindowChanged;
+            if (_savedWindowState is { } state && window.WindowState == WindowState.FullScreen)
+            {
+                window.WindowState = state;
+            }
+        }
+        _systemWindow = null;
+        _savedWindowState = null;
+        if (_platformFullScreen)
+        {
+            _platformFullScreen = false;
+            VideoSystemFullScreen.Exited -= OnPlatformFullScreenExited;
+            VideoSystemFullScreen.Exit();
+        }
+    }
+
+    // The user left system full screen through the window manager (macOS green button, a shortcut): leave ours too, so
+    // IsFullScreen stays truthful.
+    private void OnSystemWindowChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+    {
+        if (e.Property == Window.WindowStateProperty && e.GetNewValue<WindowState>() != WindowState.FullScreen)
+        {
+            if (sender is Window window)
+            {
+                window.PropertyChanged -= OnSystemWindowChanged;
+            }
+            _systemWindow = null;
+            _savedWindowState = null;
+            ExitFullScreen();
+        }
+    }
+
+    private void OnPlatformFullScreenExited(object? sender, EventArgs e)
+    {
+        VideoSystemFullScreen.Exited -= OnPlatformFullScreenExited;
+        _platformFullScreen = false;
+        ExitFullScreen();
     }
 
     private void OnFullScreenLayerChanged(object? sender, AvaloniaPropertyChangedEventArgs e)

@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CreditTopUpEuroDemo">
+    <!-- Euros in a German culture ("48,00 €", "6.600"), other packs, tiers and thresholds, one card, and reworded labels. -->
+    <arc:CreditTopUp x:Name="Card"
+                     Margin="0,12"
+                     CultureName="de-DE"
+                     Balance="3480"
+                     SelectedCredits="10000"
+                     AutoTopUpThreshold="2000" />
+</UserControl>

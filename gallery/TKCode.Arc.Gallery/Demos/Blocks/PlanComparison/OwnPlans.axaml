@@ -1,0 +1,52 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PlanComparisonOwnPlansDemo">
+    <!-- Three plans of a fictional field-notes app priced in euros, with an event log under the block. -->
+    <StackPanel Spacing="16">
+        <arc:PlanComparison x:Name="Comparison" Currency="EUR" IsDifferencesOnly="True">
+            <arc:PlanComparison.Plans>
+                <arc:PlanComparisonPlan Name="Notebook" Description="For one field researcher" MonthlyPrice="8" YearlyPrice="6" />
+                <arc:PlanComparisonPlan Name="Station" Description="For a survey crew" MonthlyPrice="19" YearlyPrice="15" />
+                <arc:PlanComparisonPlan Name="Network" Description="For several sites at once" MonthlyPrice="42" YearlyPrice="33" />
+            </arc:PlanComparison.Plans>
+            <arc:PlanComparison.Features>
+                <arc:PlanComparisonFeature Label="Offline maps" IsShared="True">
+                    <x:String>Included</x:String>
+                    <x:String>Included</x:String>
+                    <x:String>Included</x:String>
+                </arc:PlanComparisonFeature>
+                <arc:PlanComparisonFeature Label="Observers">
+                    <x:String>1 person</x:String>
+                    <x:String>Up to 12</x:String>
+                    <x:String>Unlimited</x:String>
+                </arc:PlanComparisonFeature>
+                <arc:PlanComparisonFeature Label="Photo storage">
+                    <x:String>20 GB</x:String>
+                    <x:String>500 GB</x:String>
+                    <x:String>5 TB</x:String>
+                </arc:PlanComparisonFeature>
+                <arc:PlanComparisonFeature Label="Shared species lists">
+                    <x:String>Not included</x:String>
+                    <x:String>Included</x:String>
+                    <x:String>Included</x:String>
+                </arc:PlanComparisonFeature>
+                <arc:PlanComparisonFeature Label="Site dashboards">
+                    <x:String>Not included</x:String>
+                    <x:String>Not included</x:String>
+                    <x:String>Included</x:String>
+                </arc:PlanComparisonFeature>
+                <arc:PlanComparisonFeature Label="CSV and GPX export" IsShared="True">
+                    <x:String>Included</x:String>
+                    <x:String>Included</x:String>
+                    <x:String>Included</x:String>
+                </arc:PlanComparisonFeature>
+            </arc:PlanComparison.Features>
+        </arc:PlanComparison>
+        <TextBlock x:Name="Log"
+                   TextWrapping="Wrap"
+                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                   Text="Pick a plan or switch the billing period." />
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.UsagePricingNarrowDemo">
+    <!-- A 380px column, as on a phone: the heading shrinks, the card sits between the controls and the breakdown. -->
+    <Border Width="380" HorizontalAlignment="Center" Margin="0,12">
+        <arc:UsagePricing SeatIndex="15" UsageIndex="16" />
+    </Border>
+</UserControl>

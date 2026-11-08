@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PricingCalculatorLocalizedDemo">
+    <!-- Euros in German number format, a 15% yearly discount and custom wording, set through Labels in code. -->
+    <arc:PricingCalculator x:Name="Calculator"
+                           Margin="0,12"
+                           Currency="EUR"
+                           YearlyDiscount="0.15"
+                           Title="Choose your seats"
+                           Description="One price per seat. Switch plans whenever you like." />
+</UserControl>

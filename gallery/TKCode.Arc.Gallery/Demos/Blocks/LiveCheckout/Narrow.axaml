@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LiveCheckoutNarrowDemo">
+    <!-- A phone-wide container (390 px): the summary folds into a bar with the total on top, plans, wallets and billing
+         fields stack, and the receipt takes the full width. -->
+    <Border Width="390" HorizontalAlignment="Center" Margin="0,24">
+        <arc:LiveCheckout />
+    </Border>
+</UserControl>

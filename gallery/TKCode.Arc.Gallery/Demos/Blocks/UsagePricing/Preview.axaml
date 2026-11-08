@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.UsagePricingPreviewDemo">
+    <!-- The reference preview: the sample plans (Spark, Studio, Fleet), 16 seats and 12M calls a month, billed monthly.
+         Drag either slider or switch to annual; the trial is local and resets when the plan changes. Below 780px the
+         card stacks between the controls and the breakdown. -->
+    <arc:UsagePricing Margin="0,12" />
+</UserControl>

@@ -1,0 +1,433 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.CreditTopUpTheme">
+
+    <!--
+        The credit top-up card (Arc Credit top-up, design reference): fluid up to 480 wide, 1px Border, RadiusPanel,
+        Surface, Inter 14 / 19.6, letter spacing -0.16. Five sections split by 1px lines: the balance (figure, health,
+        days left, 14 bars), the packs and the custom amount slider, auto top-up with the threshold choices, the saved
+        card, and the checkout (total, bonus, price, buy button, status line). At 448 wide or less (:narrow) the chart
+        moves under the balance and stretches; at 416 or less (:compact) the side paddings tighten from 24 to 16.
+    -->
+    <ControlTheme x:Key="{x:Type arc:CreditTopUp}" TargetType="arc:CreditTopUp">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="NarrowWidth" Value="{arc:CreditTopUpTokenResource NarrowWidth}" />
+        <Setter Property="CompactWidth" Value="{arc:CreditTopUpTokenResource CompactWidth}" />
+        <Setter Property="NoticeDwell" Value="{arc:CreditTopUpTokenResource NoticeDwell}" />
+        <Setter Property="DoneDwell" Value="{arc:CreditTopUpTokenResource DoneDwell}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CreditTopUp">
+                <Border Name="PART_Card"
+                        MaxWidth="{arc:CreditTopUpTokenResource MaxCardWidth}"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        TextElement.FontSize="{TemplateBinding FontSize}"
+                        TextElement.Foreground="{TemplateBinding Foreground}"
+                        AutomationProperties.LandmarkType="Region">
+                    <StackPanel>
+                        <!-- Balance -->
+                        <Border Name="PART_HeadBox">
+                            <Grid Name="PART_Head" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                                <StackPanel Name="PART_BalanceColumn"
+                                            VerticalAlignment="Bottom"
+                                            Spacing="{arc:CreditTopUpTokenResource BalanceLineGap}">
+                                    <arc:ArcShrinkRow Spacing="8">
+                                        <TextBlock Name="PART_BalanceTitle"
+                                                   VerticalAlignment="Center"
+                                                   FontSize="{arc:CreditTopUpTokenResource SmallSize}"
+                                                   LineHeight="{arc:CreditTopUpTokenResource SmallLineHeight}"
+                                                   LetterSpacing="{arc:CreditTopUpTokenResource CopyLetterSpacing}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                        <arc:ArcContentSwap Name="PART_Health"
+                                                            Mode="Label"
+                                                            VerticalAlignment="Center"
+                                                            arc:ArcShrinkRow.IsShrinkable="True" />
+                                    </arc:ArcShrinkRow>
+                                    <arc:CreditTopUpOdometer Name="PART_Balance"
+                                                             HorizontalAlignment="Left"
+                                                             Laps="True"
+                                                             RollDuration="0:0:0.9"
+                                                             FontFamily="{TemplateBinding FontFamily}"
+                                                             FontSize="{arc:CreditTopUpTokenResource BalanceSize}"
+                                                             FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                             LineHeight="{arc:CreditTopUpTokenResource BalanceLineHeight}"
+                                                             LetterSpacing="{arc:CreditTopUpTokenResource BalanceLetterSpacing}"
+                                                             Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                             UnitFontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                             UnitForeground="{arc:ArcDesignTokenResource TextMuted}"
+                                                             UnitGap="8" />
+                                    <arc:ArcContentSwap Name="PART_DaysLeft" Mode="Label" HorizontalContentAlignment="Left" />
+                                </StackPanel>
+                                <Grid Name="PART_ChartBox"
+                                      Grid.Column="1"
+                                      VerticalAlignment="Bottom"
+                                      ColumnDefinitions="*,Auto"
+                                      RowDefinitions="Auto,Auto">
+                                    <arc:CreditTopUpUsageChart Name="PART_Chart"
+                                                               Grid.ColumnSpan="2"
+                                                               BarWidth="{arc:CreditTopUpTokenResource BarWidth}"
+                                                               SlotWidth="{arc:CreditTopUpTokenResource BarSlot}"
+                                                               BarRadius="{arc:CreditTopUpTokenResource BarRadius}"
+                                                               DimOpacity="{arc:CreditTopUpTokenResource BarDimOpacity}"
+                                                               BarBrush="{arc:CreditTopUpTokenResource BarColor}"
+                                                               TodayBrush="{arc:ArcDesignTokenResource Accent}"
+                                                               HoverBrush="{arc:ArcDesignTokenResource Foreground}" />
+                                    <arc:ArcContentSwap Name="PART_ChartLabel"
+                                                        Grid.Row="1"
+                                                        Grid.ColumnSpan="2"
+                                                        Mode="Label"
+                                                        HorizontalContentAlignment="Right"
+                                                        AutomationProperties.AccessibilityView="Raw" />
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                        <!-- Packs and custom amount -->
+                        <Border Name="PART_AddBox" Classes="section">
+                            <StackPanel Spacing="{arc:CreditTopUpTokenResource SectionGap}">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <TextBlock Name="PART_AddTitle"
+                                               VerticalAlignment="Bottom"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               LineHeight="{arc:CreditTopUpTokenResource BodyLineHeight}"
+                                               LetterSpacing="{arc:CreditTopUpTokenResource CopyLetterSpacing}"
+                                               TextTrimming="CharacterEllipsis"
+                                               AutomationProperties.HeadingLevel="3" />
+                                    <TextBlock Name="PART_Rate"
+                                               Grid.Column="1"
+                                               Margin="12,0,0,1"
+                                               VerticalAlignment="Bottom"
+                                               FontSize="{arc:CreditTopUpTokenResource SmallSize}"
+                                               LineHeight="{arc:CreditTopUpTokenResource SmallLineHeight}"
+                                               LetterSpacing="{arc:CreditTopUpTokenResource CopyLetterSpacing}"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                </Grid>
+                                <arc:CreditTopUpChoiceGroup Name="PART_Packs"
+                                                            IsUniform="True"
+                                                            IsIndicatorOnTop="True"
+                                                            Gap="{arc:CreditTopUpTokenResource PackGap}"
+                                                            IndicatorFill="{arc:ArcDesignTokenResource Accent}"
+                                                            IndicatorFillAlpha="0.06"
+                                                            IndicatorStroke="{arc:ArcDesignTokenResource Accent}"
+                                                            IndicatorThickness="{arc:CreditTopUpTokenResource PackRingThickness}"
+                                                            IndicatorRadius="{arc:ArcDesignTokenResource RadiusStep14}"
+                                                            IndicatorInflate="0.25"
+                                                            KeyboardNavigation.TabNavigation="Once" />
+                                <!-- The slider leaves 8px of room under its rail that the reference does not have. -->
+                                <arc:Slider Name="PART_Slider" Margin="0,0,0,-8" />
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Auto top-up -->
+                        <Border Name="PART_AutoBox" Classes="section">
+                            <StackPanel Spacing="{arc:CreditTopUpTokenResource SectionGap}">
+                                <Grid ColumnDefinitions="*,Auto" MinHeight="{arc:CreditTopUpTokenResource AutoRowHeight}">
+                                    <StackPanel VerticalAlignment="Center">
+                                        <TextBlock Name="PART_AutoTitle"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   LineHeight="{arc:CreditTopUpTokenResource BodyLineHeight}"
+                                                   LetterSpacing="{arc:CreditTopUpTokenResource CopyLetterSpacing}"
+                                                   TextTrimming="CharacterEllipsis" />
+                                        <TextBlock Name="PART_AutoSubtitle"
+                                                   FontSize="{arc:CreditTopUpTokenResource SmallSize}"
+                                                   LineHeight="{arc:CreditTopUpTokenResource SmallLineHeight}"
+                                                   LetterSpacing="{arc:CreditTopUpTokenResource CopyLetterSpacing}"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    </StackPanel>
+                                    <arc:Switch Name="PART_AutoSwitch" Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center" />
+                                </Grid>
+                                <Grid ColumnDefinitions="*,Auto" MinHeight="{arc:CreditTopUpTokenResource ThresholdRowHeight}">
+                                    <TextBlock Name="PART_ThresholdTitle"
+                                               VerticalAlignment="Center"
+                                               FontSize="{arc:CreditTopUpTokenResource SmallSize}"
+                                               LineHeight="{arc:CreditTopUpTokenResource SmallLineHeight}"
+                                               LetterSpacing="{arc:CreditTopUpTokenResource CopyLetterSpacing}"
+                                               TextTrimming="CharacterEllipsis"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    <Border Name="PART_ThresholdTrack"
+                                            Grid.Column="1"
+                                            Margin="12,0,0,0"
+                                            VerticalAlignment="Center"
+                                            Padding="{arc:CreditTopUpTokenResource ThresholdTrackPadding}"
+                                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                            Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+                                        <arc:CreditTopUpChoiceGroup Name="PART_Thresholds"
+                                                                    IndicatorFill="{arc:ArcDesignTokenResource SurfaceRaised}"
+                                                                    IndicatorStroke="{arc:ArcDesignTokenResource Border}"
+                                                                    IndicatorThickness="1"
+                                                                    IndicatorRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                                                    IndicatorInflate="0.5"
+                                                                    KeyboardNavigation.TabNavigation="Once" />
+                                    </Border>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Saved card -->
+                        <Border Name="PART_CardBox" Classes="section">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <arc:ArcContentSwap Name="PART_CardInfo" Mode="Label" HorizontalContentAlignment="Left" VerticalAlignment="Center" />
+                                <arc:Button Name="PART_Change"
+                                            Grid.Column="1"
+                                            Variant="Ghost"
+                                            Size="Small"
+                                            Margin="{arc:CreditTopUpTokenResource ChangeMargin}"
+                                            VerticalAlignment="Center" />
+                            </Grid>
+                        </Border>
+
+                        <!-- Checkout -->
+                        <Border Name="PART_CheckoutBox" Classes="section">
+                            <StackPanel Spacing="{arc:CreditTopUpTokenResource SectionGap}">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <StackPanel>
+                                        <arc:CreditTopUpOdometer Name="PART_Total"
+                                                                 HorizontalAlignment="Left"
+                                                                 RollDuration="0:0:0.24"
+                                                                 FontFamily="{TemplateBinding FontFamily}"
+                                                                 FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                                 LineHeight="{arc:CreditTopUpTokenResource BodyLineHeight}"
+                                                                 Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                        <arc:ArcContentSwap Name="PART_BonusLine" Mode="Label" HorizontalContentAlignment="Left" />
+                                    </StackPanel>
+                                    <arc:CreditTopUpOdometer Name="PART_Price"
+                                                             Grid.Column="1"
+                                                             Margin="12,0,0,0"
+                                                             VerticalAlignment="Top"
+                                                             RollDuration="0:0:0.24"
+                                                             FontFamily="{TemplateBinding FontFamily}"
+                                                             FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                             FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                             LineHeight="{arc:CreditTopUpTokenResource BodyLineHeight}"
+                                                             Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                </Grid>
+                                <arc:Button Name="PART_Buy"
+                                            HorizontalAlignment="Stretch"
+                                            LabelSwapMode="Label"
+                                            LabelSpring="Quick" />
+                                <arc:ArcContentSwap Name="PART_Status"
+                                                    Mode="Label"
+                                                    MinHeight="{arc:CreditTopUpTokenResource StatusHeight}"
+                                                    HorizontalContentAlignment="Center"
+                                                    VerticalContentAlignment="Center"
+                                                    AutomationProperties.LiveSetting="Polite" />
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ Border#PART_HeadBox">
+            <Setter Property="Padding" Value="{arc:CreditTopUpTokenResource HeadPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border.section">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="BorderThickness" Value="0,1,0,0" />
+            <Setter Property="Padding" Value="{arc:CreditTopUpTokenResource SectionPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_AddBox">
+            <Setter Property="Padding" Value="{arc:CreditTopUpTokenResource AddPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_CheckoutBox">
+            <Setter Property="Padding" Value="{arc:CreditTopUpTokenResource CheckoutPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Grid#PART_ChartBox">
+            <Setter Property="Margin" Value="16,0,0,0" />
+        </Style>
+        <Style Selector="^ /template/ arc|CreditTopUpUsageChart#PART_Chart">
+            <Setter Property="Width" Value="{arc:CreditTopUpTokenResource ChartWidth}" />
+            <Setter Property="Height" Value="{arc:CreditTopUpTokenResource ChartHeight}" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcContentSwap#PART_ChartLabel">
+            <Setter Property="Margin" Value="0,8,0,0" />
+        </Style>
+
+        <Style Selector="^:narrow">
+            <Style Selector="^ /template/ Grid#PART_ChartBox">
+                <Setter Property="Margin" Value="0,16,0,0" />
+            </Style>
+            <Style Selector="^ /template/ arc|CreditTopUpUsageChart#PART_Chart">
+                <Setter Property="Width" Value="NaN" />
+                <Setter Property="Height" Value="{arc:CreditTopUpTokenResource ChartHeightNarrow}" />
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcContentSwap#PART_ChartLabel">
+                <Setter Property="Margin" Value="12,0,0,0" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:compact">
+            <Style Selector="^ /template/ Border#PART_HeadBox">
+                <Setter Property="Padding" Value="{arc:CreditTopUpTokenResource HeadPaddingCompact}" />
+            </Style>
+            <Style Selector="^ /template/ Border.section">
+                <Setter Property="Padding" Value="{arc:CreditTopUpTokenResource SectionPaddingCompact}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_AddBox">
+                <Setter Property="Padding" Value="{arc:CreditTopUpTokenResource AddPaddingCompact}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_CheckoutBox">
+                <Setter Property="Padding" Value="{arc:CreditTopUpTokenResource CheckoutPaddingCompact}" />
+            </Style>
+        </Style>
+
+        <!-- Auto top-up off: the threshold row stays in place, dimmed and out of reach. -->
+        <Style Selector="^:auto-off">
+            <Style Selector="^ /template/ TextBlock#PART_ThresholdTitle">
+                <Setter Property="Opacity" Value="{arc:CreditTopUpTokenResource ThresholdLabelDisabledOpacity}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_ThresholdTrack">
+                <Setter Property="Opacity" Value="{arc:CreditTopUpTokenResource ThresholdOptionsDisabledOpacity}" />
+            </Style>
+        </Style>
+
+        <!-- The Change button reads as secondary text; hover takes the foreground (ghost fill from the button). -->
+        <Style Selector="^ /template/ arc|Button#PART_Change">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button#PART_Change:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ TextBlock#PART_ThresholdTitle">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Border#PART_ThresholdTrack">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A pack or a threshold choice. Packs: 12px padding, radius 14, 1px Border on Surface; hover (precise pointer,
+        unselected) BorderStrong-ish with SurfaceMuted; pressed scales to 0.98 over 120ms; selected clears its own
+        border (the ring covers it). Thresholds: 56 × 28, pill, TextSecondary turning Foreground when selected. Colors
+        fade over 160ms on Arc's standard curve; the keyboard ring is 2px FocusRing, 2px outside.
+    -->
+    <ControlTheme x:Key="{x:Type arc:CreditTopUpChoiceButton}" TargetType="arc:CreditTopUpChoiceButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CreditTopUpChoiceButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Content}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^.pack">
+            <Setter Property="Padding" Value="{arc:CreditTopUpTokenResource PackPadding}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep14}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+            <Style Selector="^ /template/ Border#PART_FocusRing">
+                <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep18}" />
+            </Style>
+            <Style Selector="^:hover:not(:selected)">
+                <Setter Property="BorderBrush" Value="{arc:CreditTopUpTokenResource PackHoverBorder}" />
+                <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            </Style>
+            <Style Selector="^:pressed">
+                <Setter Property="RenderTransform" Value="scale(0.98)" />
+            </Style>
+            <Style Selector="^:selected">
+                <Setter Property="BorderBrush" Value="Transparent" />
+            </Style>
+        </Style>
+
+        <Style Selector="^.threshold">
+            <Setter Property="MinWidth" Value="{arc:CreditTopUpTokenResource ThresholdOptionWidth}" />
+            <Setter Property="Height" Value="{arc:CreditTopUpTokenResource ThresholdOptionHeight}" />
+            <Setter Property="Padding" Value="10,0" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="FontSize" Value="{arc:CreditTopUpTokenResource SmallSize}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Style Selector="^ /template/ Border#PART_FocusRing">
+                <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            </Style>
+            <Style Selector="^:selected">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            </Style>
+            <Style Selector="^:disabled">
+                <Setter Property="Cursor" Value="No" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

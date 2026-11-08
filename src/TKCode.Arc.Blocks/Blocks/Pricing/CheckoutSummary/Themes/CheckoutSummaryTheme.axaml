@@ -1,0 +1,552 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.CheckoutSummaryTheme">
+    <!--
+        Checkout summary (Arc CheckoutSummary, design reference): a 440 px card (padding clamp(20, 5vw, 28), radius 34,
+        1 px Border, no shadow) holding, 20 px apart: the title, the item row, the promo code field, the breakdown with
+        its total, and the pay button with the secure note 12 px under it. The parts are internal controls with their
+        own themes below so they can move to a shared Pricing folder later.
+    -->
+    <ControlTheme x:Key="{x:Type arc:CheckoutSummary}" TargetType="arc:CheckoutSummary">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="MaxWidth" Value="{arc:CheckoutSummaryTokenResource PreferredWidth}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CheckoutSummary">
+                <arc:CheckoutSummaryCard Name="PART_Card"
+                                         Background="{TemplateBinding Background}"
+                                         BorderBrush="{TemplateBinding BorderBrush}"
+                                         BorderThickness="{TemplateBinding BorderThickness}"
+                                         CornerRadius="{TemplateBinding CornerRadius}"
+                                         PaddingMin="{arc:CheckoutSummaryTokenResource PaddingMin}"
+                                         PaddingMax="{arc:CheckoutSummaryTokenResource PaddingMax}"
+                                         PaddingFactor="{arc:CheckoutSummaryTokenResource PaddingViewportFactor}">
+                    <StackPanel Spacing="{arc:CheckoutSummaryTokenResource SectionGap}">
+                        <TextBlock Name="PART_Title"
+                                   Text="{TemplateBinding Title}"
+                                   FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                   FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   LineHeight="{arc:CheckoutSummaryTokenResource TitleLineHeight}"
+                                   LetterSpacing="{arc:CheckoutSummaryTokenResource TitleLetterSpacing}"
+                                   TextTrimming="CharacterEllipsis" />
+
+                        <Grid Name="PART_Item" ColumnDefinitions="Auto,*,Auto">
+                            <ContentControl Name="PART_Media"
+                                            Width="{arc:CheckoutSummaryTokenResource MediaSize}"
+                                            Height="{arc:CheckoutSummaryTokenResource MediaSize}"
+                                            VerticalAlignment="Center"
+                                            IsVisible="False"
+                                            Focusable="False"
+                                            Margin="{arc:CheckoutSummaryTokenResource MediaMargin}"
+                                            HorizontalContentAlignment="Stretch"
+                                            VerticalContentAlignment="Stretch" />
+                            <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                                <TextBlock Name="PART_ItemName"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           LineHeight="{arc:CheckoutSummaryTokenResource BodyLineHeight}"
+                                           LetterSpacing="{arc:CheckoutSummaryTokenResource BodyLetterSpacing}"
+                                           TextTrimming="CharacterEllipsis" />
+                                <TextBlock Name="PART_ItemDescription"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           LineHeight="{arc:CheckoutSummaryTokenResource SmallLineHeight}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                           TextWrapping="Wrap" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" VerticalAlignment="Center" Margin="{arc:CheckoutSummaryTokenResource PriceMargin}">
+                                <TextBlock Name="PART_ItemPrice"
+                                           HorizontalAlignment="Right"
+                                           FontFeatures="tnum"
+                                           LineHeight="{arc:CheckoutSummaryTokenResource BodyLineHeight}"
+                                           LetterSpacing="{arc:CheckoutSummaryTokenResource BodyLetterSpacing}" />
+                                <TextBlock Name="PART_ItemPeriod"
+                                           HorizontalAlignment="Right"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           LineHeight="{arc:CheckoutSummaryTokenResource SmallLineHeight}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </StackPanel>
+                        </Grid>
+
+                        <arc:CheckoutSummaryCouponField Name="PART_Coupon" />
+
+                        <arc:CheckoutSummaryLines Name="PART_Lines" />
+
+                        <StackPanel Name="PART_PayArea">
+                            <arc:CheckoutSummaryPayButton Name="PART_Pay" />
+                            <arc:CheckoutSummaryCollapse Name="PART_PayErrorHost">
+                                <TextBlock Name="PART_PayError"
+                                           Margin="{arc:CheckoutSummaryTokenResource ErrorPadding}"
+                                           TextAlignment="Center"
+                                           AutomationProperties.LiveSetting="Assertive" />
+                            </arc:CheckoutSummaryCollapse>
+                            <StackPanel Name="PART_SecureNote"
+                                        Orientation="Horizontal"
+                                        HorizontalAlignment="Center"
+                                        Margin="0,12,0,0"
+                                        Spacing="{arc:CheckoutSummaryTokenResource SecureGap}"
+                                        IsVisible="{TemplateBinding IsSecureNoteVisible}">
+                                <arc:ArcGlyph Data="{x:Static arc:CheckoutSummaryGlyphs.LockKeyhole}"
+                                              Size="14"
+                                              VerticalAlignment="Center"
+                                              Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                <TextBlock Text="{TemplateBinding SecureNote}"
+                                           VerticalAlignment="Center"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           LineHeight="{arc:CheckoutSummaryTokenResource SmallLineHeight}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </StackPanel>
+                            <ContentPresenter Name="PART_Footnote"
+                                              Content="{TemplateBinding Footnote}"
+                                              IsVisible="{TemplateBinding Footnote, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                              Margin="0,8,0,0"
+                                              HorizontalContentAlignment="Center"
+                                              FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                              Foreground="{arc:ArcDesignTokenResource TextMuted}">
+                                <ContentPresenter.Styles>
+                                    <Style Selector="TextBlock">
+                                        <Setter Property="TextWrapping" Value="Wrap" />
+                                        <Setter Property="TextAlignment" Value="Center" />
+                                    </Style>
+                                </ContentPresenter.Styles>
+                            </ContentPresenter>
+                        </StackPanel>
+                    </StackPanel>
+                </arc:CheckoutSummaryCard>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ TextBlock#PART_PayError">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="{arc:CheckoutSummaryTokenResource SmallLineHeight}" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Foreground" Value="{arc:CheckoutSummaryTokenResource ErrorText}" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        Promo code field: form (44 high, padding 4 4 4 14, radius 18, 1 px Border; BorderStrong while focused inside, the
+        error mix after a refusal) and the applied chip (44 high, muted surface) share one cell; the error line opens
+        under them. The whole area shakes after a refusal.
+    -->
+    <ControlTheme x:Key="{x:Type arc:CheckoutSummaryCouponField}" TargetType="arc:CheckoutSummaryCouponField">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="ShakeAmplitude" Value="{arc:CheckoutSummaryTokenResource ShakeAmplitude}" />
+        <Setter Property="ChipEnterScale" Value="{arc:CheckoutSummaryTokenResource ChipEnterScale}" />
+        <Setter Property="FormEnterScale" Value="{arc:CheckoutSummaryTokenResource FormEnterScale}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CheckoutSummaryCouponField">
+                <StackPanel Name="PART_Shake">
+                    <Grid Height="{arc:CheckoutSummaryTokenResource CouponHeight}">
+                        <Border Name="PART_Form"
+                                Background="{arc:ArcDesignTokenResource Surface}"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
+                                Padding="{arc:CheckoutSummaryTokenResource CouponPadding}">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{arc:CheckoutSummaryTokenResource CouponGap}">
+                                <arc:CheckoutSummaryCouponInput Name="PART_Input" />
+                                <arc:CheckoutSummaryButton Name="PART_Apply" Grid.Column="1" Classes="apply">
+                                    <Panel>
+                                        <TextBlock Name="PART_ApplyText" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        <Panel Name="PART_ApplySpinnerHost" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Panel>
+                                </arc:CheckoutSummaryButton>
+                            </Grid>
+                        </Border>
+                        <Border Name="PART_Chip"
+                                IsVisible="False"
+                                Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
+                                Padding="{arc:CheckoutSummaryTokenResource ChipPadding}">
+                            <Grid ColumnDefinitions="Auto,Auto,*,Auto" ColumnSpacing="{arc:CheckoutSummaryTokenResource ChipGap}">
+                                <arc:ArcGlyph Data="{x:Static arc:CheckoutSummaryGlyphs.TicketPercent}"
+                                              Size="16"
+                                              VerticalAlignment="Center"
+                                              Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <TextBlock Name="PART_ChipCode"
+                                           Grid.Column="1"
+                                           VerticalAlignment="Center"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           LetterSpacing="{arc:CheckoutSummaryTokenResource ChipCodeLetterSpacing}"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <TextBlock Name="PART_ChipApplied"
+                                           Grid.Column="2"
+                                           VerticalAlignment="Center"
+                                           TextTrimming="CharacterEllipsis"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                <arc:CheckoutSummaryButton Name="PART_Remove" Grid.Column="3" Classes="remove">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}" Size="14" />
+                                </arc:CheckoutSummaryButton>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                    <arc:CheckoutSummaryCollapse Name="PART_ErrorHost">
+                        <TextBlock Name="PART_Error"
+                                   Classes="checkoutsummary-error"
+                                   Margin="{arc:CheckoutSummaryTokenResource ErrorPadding}"
+                                   AutomationProperties.LiveSetting="Assertive" />
+                    </arc:CheckoutSummaryCollapse>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Style Selector="^ /template/ Border#PART_Form">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Form:focus-within">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:invalid /template/ Border#PART_Form">
+            <Setter Property="BorderBrush" Value="{arc:CheckoutSummaryTokenResource ErrorBorder}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.checkoutsummary-error">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="{arc:CheckoutSummaryTokenResource SmallLineHeight}" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Foreground" Value="{arc:CheckoutSummaryTokenResource ErrorText}" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Form">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ Border#PART_Form">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:CheckoutSummaryCouponInput}" TargetType="arc:CheckoutSummaryCouponInput">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="SelectionForegroundBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="AcceptsReturn" Value="False" />
+        <Setter Property="TextWrapping" Value="NoWrap" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Cursor" Value="IBeam" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CheckoutSummaryCouponInput">
+                <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                    <Panel>
+                        <TextBlock Name="PART_Placeholder"
+                                   Text="{TemplateBinding PlaceholderText}"
+                                   VerticalAlignment="Center"
+                                   TextTrimming="CharacterEllipsis"
+                                   IsHitTestVisible="False"
+                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        <ScrollViewer Name="PART_ScrollViewer"
+                                      HorizontalScrollBarVisibility="Hidden"
+                                      VerticalScrollBarVisibility="Disabled"
+                                      VerticalContentAlignment="Center">
+                            <TextPresenter Name="PART_TextPresenter"
+                                           Text="{TemplateBinding Text, Mode=TwoWay}"
+                                           CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                           CaretIndex="{TemplateBinding CaretIndex}"
+                                           SelectionStart="{TemplateBinding SelectionStart}"
+                                           SelectionEnd="{TemplateBinding SelectionEnd}"
+                                           TextWrapping="NoWrap"
+                                           SelectionBrush="{TemplateBinding SelectionBrush}"
+                                           SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                           CaretBrush="{TemplateBinding CaretBrush}"
+                                           VerticalAlignment="Center" />
+                        </ScrollViewer>
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:has-text /template/ TextBlock#PART_Placeholder">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        Apply (34 high, min 64, radius 14, muted surface, 14/500; darker under the pointer; 0.97 when pressed) and the
+        chip's remove button (32 square, radius 12, x in TextSecondary that turns Foreground under the pointer).
+        Keyboard focus shows a 2 px ring 2 px outside.
+    -->
+    <ControlTheme x:Key="{x:Type arc:CheckoutSummaryButton}" TargetType="arc:CheckoutSummaryButton">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="RenderTransform" Value="scale(1)" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CheckoutSummaryButton">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            Margin="-4"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            IsVisible="False" />
+                    <Border Name="PART_Back"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      Padding="{TemplateBinding Padding}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^.apply">
+            <Setter Property="Height" Value="{arc:CheckoutSummaryTokenResource ApplyHeight}" />
+            <Setter Property="MinWidth" Value="{arc:CheckoutSummaryTokenResource ApplyMinWidth}" />
+            <Setter Property="Padding" Value="{arc:CheckoutSummaryTokenResource ApplyPadding}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep14}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        </Style>
+        <Style Selector="^.apply /template/ Border#PART_FocusRing">
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep18}" />
+        </Style>
+        <Style Selector="^.apply:pointerover">
+            <Setter Property="Background" Value="{arc:CheckoutSummaryTokenResource ApplyHover}" />
+        </Style>
+        <Style Selector="^.apply:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.97)" />
+        </Style>
+        <Style Selector="^.apply:busy">
+            <Setter Property="Cursor" Value="AppStarting" />
+        </Style>
+        <Style Selector="^.remove">
+            <Setter Property="Width" Value="{arc:CheckoutSummaryTokenResource RemoveSize}" />
+            <Setter Property="Height" Value="{arc:CheckoutSummaryTokenResource RemoveSize}" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^.remove /template/ Border#PART_FocusRing">
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep16}" />
+        </Style>
+        <Style Selector="^.remove:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        Pay button: 52 high, radius 18, Accent with AccentForeground, label 16/500 with a 16 px lock; spinner while
+        processing; a check on the positive green once paid (160 ms color change). Pointer hover shades it (brightness
+        0.97), pressing scales it to 0.98.
+    -->
+    <ControlTheme x:Key="{x:Type arc:CheckoutSummaryPayButton}" TargetType="arc:CheckoutSummaryPayButton">
+        <Setter Property="Height" Value="{arc:CheckoutSummaryTokenResource PayHeight}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Gap" Value="{arc:CheckoutSummaryTokenResource PayGap}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="RenderTransform" Value="scale(1)" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CheckoutSummaryPayButton">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            Margin="-4"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep22}"
+                            IsVisible="False" />
+                    <Border Name="PART_Back"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            ClipToBounds="True">
+                        <Panel>
+                            <Border Name="PART_Shade" Opacity="0" Background="{arc:CheckoutSummaryTokenResource PayHoverShade}" />
+                            <ContentPresenter Name="PART_ContentPresenter"
+                                              Content="{TemplateBinding Content}"
+                                              Padding="{TemplateBinding Padding}"
+                                              HorizontalContentAlignment="Stretch"
+                                              VerticalContentAlignment="Stretch" />
+                        </Panel>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:pointerover /template/ Border#PART_Shade">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:disabled /template/ Border#PART_Shade">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.98)" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:processing">
+            <Setter Property="Cursor" Value="AppStarting" />
+        </Style>
+        <Style Selector="^:paid">
+            <Setter Property="Background" Value="{arc:CheckoutSummaryTokenResource Positive}" />
+            <Setter Property="Foreground" Value="{arc:CheckoutSummaryTokenResource PositiveForeground}" />
+        </Style>
+        <Style Selector="^:unavailable">
+            <Setter Property="Opacity" Value="0.5" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        Breakdown: a BorderSubtle divider with 16 px under it, lines (padding 5 0; label in TextSecondary with an optional
+        12 px note; amount right-aligned, tabular, green when negative), then the total row (8 px above its own divider,
+        padding 14 0 5): "Total" 14/500 and the rolling total (display face 28/500).
+    -->
+    <ControlTheme x:Key="{x:Type arc:CheckoutSummaryLines}" TargetType="arc:CheckoutSummaryLines">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CheckoutSummaryLines">
+                <Border BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                        BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
+                        Padding="{arc:CheckoutSummaryTokenResource LinesPadding}">
+                    <StackPanel>
+                        <StackPanel Name="PART_Rows" />
+                        <Border Margin="{arc:CheckoutSummaryTokenResource TotalMargin}"
+                                Padding="{arc:CheckoutSummaryTokenResource TotalPadding}"
+                                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                <TextBlock Name="PART_TotalLabel"
+                                           VerticalAlignment="Center"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           LetterSpacing="{arc:CheckoutSummaryTokenResource BodyLetterSpacing}"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <!-- Columns clip like the reference's overflow: hidden with 0.16em of room above and below. -->
+                                <Border Grid.Column="1"
+                                        VerticalAlignment="Center"
+                                        ClipToBounds="True"
+                                        Padding="{arc:CheckoutSummaryTokenResource TotalClipPadding}"
+                                        Margin="{arc:CheckoutSummaryTokenResource TotalClipMargin}">
+                                    <arc:RollingDigits Name="PART_Total"
+                                                       VerticalAlignment="Center"
+                                                       Falloff="Linear"
+                                                       FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                                       FontSize="{arc:CheckoutSummaryTokenResource TotalFontSize}"
+                                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:CheckoutSummaryLineRow}" TargetType="arc:CheckoutSummaryLineRow">
+        <Setter Property="Padding" Value="{arc:CheckoutSummaryTokenResource LinePadding}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CheckoutSummaryLineRow">
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12" Margin="{TemplateBinding Padding}">
+                    <StackPanel VerticalAlignment="Top">
+                        <TextBlock Name="PART_Label"
+                                   Text="{TemplateBinding Label}"
+                                   LineHeight="{arc:CheckoutSummaryTokenResource BodyLineHeight}"
+                                   LetterSpacing="{arc:CheckoutSummaryTokenResource BodyLetterSpacing}"
+                                   TextWrapping="Wrap"
+                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        <TextBlock Name="PART_Note"
+                                   Text="{TemplateBinding Note}"
+                                   IsVisible="{TemplateBinding HasNote}"
+                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                   LineHeight="{arc:CheckoutSummaryTokenResource SmallLineHeight}"
+                                   TextWrapping="Wrap"
+                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                    </StackPanel>
+                    <TextBlock Name="PART_Amount"
+                               Grid.Column="1"
+                               VerticalAlignment="Top"
+                               Text="{TemplateBinding Amount}"
+                               FontFeatures="tnum"
+                               LineHeight="{arc:CheckoutSummaryTokenResource BodyLineHeight}"
+                               LetterSpacing="{arc:CheckoutSummaryTokenResource BodyLetterSpacing}" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ TextBlock#PART_Amount">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:discount /template/ TextBlock#PART_Amount">
+            <Setter Property="Foreground" Value="{arc:CheckoutSummaryTokenResource Positive}" />
+        </Style>
+        <Style Selector="^:pending /template/ TextBlock#PART_Amount">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

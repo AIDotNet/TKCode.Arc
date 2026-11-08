@@ -12,6 +12,12 @@ public partial class VideoPlayerPlaybackDemo : UserControl
     public VideoPlayerPlaybackDemo()
     {
         InitializeComponent();
+        NativeSwitch.IsVisible = OperatingSystem.IsBrowser();
+        NativeSwitch.IsCheckedChanged += (_, _) =>
+        {
+            Player.BrowserPresentation = NativeSwitch.IsChecked == true ? VideoBrowserPresentation.Native : VideoBrowserPresentation.Canvas;
+            Update();
+        };
         _timer.Tick += (_, _) => Update();
         AttachedToVisualTree += (_, _) =>
         {
@@ -28,7 +34,7 @@ public partial class VideoPlayerPlaybackDemo : UserControl
         Info.Text =
             $"Backend      {backend.Name}{(backend.IsReal ? "" : " (simulated: no platform backend)")}\n" +
             $"Frames       {backend.FrameKinds}{(backend.GpuHandleTypes.Count > 0 ? " · " + string.Join(", ", backend.GpuHandleTypes) : "")}\n" +
-            $"Render path  {surface?.RenderPath.ToString() ?? "-"}\n" +
+            $"Render path  {(Player.BrowserPresentation == VideoBrowserPresentation.Native && surface?.IsVisible == false ? "Native (browser video element)" : surface?.RenderPath.ToString() ?? "-")}\n" +
             $"State        {Player.State}\n" +
             $"video/mp4    {backend.CanPlay("video/mp4; codecs=\"avc1.4d401f, mp4a.40.2\"")}\n" +
             $"video/webm   {backend.CanPlay("video/webm; codecs=\"vp9, opus\"")}\n" +

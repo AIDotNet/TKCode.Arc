@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PricingCalculatorReducedMotionDemo">
+    <!-- Reduced motion: numbers, the frame, the badge and the thumb jump; text changes keep a short fade. -->
+    <arc:PricingCalculator Margin="0,12" IsHeaderVisible="False" arc:ArcMotion.Level="Reduced" />
+</UserControl>

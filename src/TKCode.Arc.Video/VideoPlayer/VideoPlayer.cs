@@ -39,7 +39,12 @@ public enum VideoBrowserPresentation
     /// <summary>Frames are copied into the composition tree: controls, captions, corners and motion as on desktop.</summary>
     Canvas,
 
-    /// <summary>A native video element sits in the player area: zero-copy decoding, controls below the picture.</summary>
+    /// <summary>
+    /// The browser's own video element sits in the picture area: no frame copies, and every format the browser plays (HLS in
+    /// Safari, for example). Nothing can be drawn over it: the control bar sits below the picture and always shows, captions
+    /// are the browser's, and rounded corners do not apply. Falls back to <see cref="Canvas"/> where the backend has no such
+    /// element (desktop, or the net8.0 build of the browser backend).
+    /// </summary>
     Native,
 }
 
@@ -451,7 +456,7 @@ public partial class VideoPlayer : TemplatedControl
         private set => SetAndRaise(ErrorMessageProperty, ref _errorMessage, value);
     }
 
-    /// <summary>How a browser backend presents the video (ADR 0036 decision 4); ignored elsewhere.</summary>
+    /// <summary>How a browser backend presents the video (ADR 0036 decision 4): frames drawn by Arc (<see cref="VideoBrowserPresentation.Canvas"/>, the default) or the browser's own video element (<see cref="VideoBrowserPresentation.Native"/>); ignored elsewhere.</summary>
     public VideoBrowserPresentation BrowserPresentation
     {
         get => GetValue(BrowserPresentationProperty);

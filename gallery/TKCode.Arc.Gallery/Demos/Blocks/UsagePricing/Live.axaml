@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.UsagePricingLiveDemo">
+    <!-- Own plans, stops and wording for a storage product; the trial goes through a simulated sign-up that takes
+         0.9 seconds and refuses the largest plan. Every event lands in the log. Data: UsagePricingDemoData. -->
+    <StackPanel Spacing="16" Margin="0,12">
+        <arc:UsagePricing x:Name="Pricing" />
+        <Border Padding="14,10"
+                CornerRadius="{arc:ArcDesignTokenResource RadiusStep12}"
+                Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+            <TextBlock x:Name="Log"
+                       FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                       FontSize="12"
+                       LineHeight="18"
+                       TextWrapping="Wrap"
+                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Border>
+    </StackPanel>
+</UserControl>

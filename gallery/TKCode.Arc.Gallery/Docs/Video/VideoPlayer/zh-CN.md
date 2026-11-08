@@ -1,7 +1,7 @@
 ---
 title: 视频播放器
 summary: "在画面上叠加控制条播放视频：可用章节跳转、调节音量、倍速、字幕和全屏，外观与 Arc 风格一致，由平台自带的播放器解码。"
-source-hash: e4fef62c63a7
+source-hash: 40b842b9f1e2
 ---
 
 <Demo name="Preview" />
@@ -57,6 +57,8 @@ await ArcVideoBrowser.UseAsync();  // browser: TKCode.Arc.Video.Browser
 ### 播放后端
 
 播放器用 `ArcVideo.Backend` 中的后端解码，并把画面绘制在窗口内，因此控制条、字幕和圆角都绘制在画面之上。平台允许时（macOS 和 Windows），画面会在 GPU 上从解码器直接送到屏幕，不做复制；其他情况下会复制到位图中。
+
+在浏览器中，`BrowserPresentation="Native"` 改为显示浏览器自己的视频元素：不复制画面，浏览器能播放的格式都能播放（例如 Safari 中的 HLS）。这个元素上面不能绘制任何内容，所以控制条放在画面下方并始终显示，字幕由浏览器绘制，也没有圆角；显示海报、错误、重播按钮或菜单时，这个元素会暂时隐藏。没有这种元素时（桌面平台，或 net8.0 版本），播放器仍使用画布。
 
 <Demo name="Playback" />
 
