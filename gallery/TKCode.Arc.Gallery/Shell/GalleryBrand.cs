@@ -12,6 +12,13 @@ internal static class GalleryBrand
 {
     private static readonly Uri s_logo = new("avares://TKCode.Arc.Gallery/Assets/icon.png");
 
+    /// <summary>The QR code of the community's QQ group, for the home page.</summary>
+    public static Bitmap CreateCommunityCode()
+    {
+        using var stream = AssetLoader.Open(new Uri("avares://TKCode.Arc.Gallery/Assets/community-qq.jpg"));
+        return new Bitmap(stream);
+    }
+
     /// <summary>The logo as an image for the top bar.</summary>
     public static Bitmap CreateLogo()
     {

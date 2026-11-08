@@ -106,6 +106,12 @@ import.
 
 Project rules and conventions are in [AGENTS.md](https://github.com/AIDotNet/TKCode.Arc/blob/main/AGENTS.md).
 
+## Community
+
+Ask questions and talk about Avalonia in the QQ group **Avalonia入门交流群** (group number `922379598`). Scan the code or search for the number.
+
+<img src="https://raw.githubusercontent.com/AIDotNet/TKCode.Arc/main/images/qq.jpg" alt="QQ group QR code" width="260">
+
 ## Sponsors
 
 TKCode.Arc is mainly sponsored by [nextco.work](https://nextco.work/), which provides affordable, easy-to-use access to

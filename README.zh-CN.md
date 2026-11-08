@@ -102,6 +102,12 @@ PDF 示例会显示模拟文档，浏览器构建也没有 pdf.js 可导入。
 
 项目规则和约定见 [AGENTS.md](https://github.com/AIDotNet/TKCode.Arc/blob/main/AGENTS.md)。
 
+## 社区
+
+欢迎加入 QQ 群 **Avalonia入门交流群**（群号 `922379598`）提问和交流。扫描二维码或搜索群号即可加入。
+
+<img src="https://raw.githubusercontent.com/AIDotNet/TKCode.Arc/main/images/qq.jpg" alt="QQ 群二维码" width="260">
+
 ## 赞助
 
 TKCode.Arc 主要由 [nextco.work](https://nextco.work/) 赞助，其提供低价、好用的 Claude、OpenAI 和 DeepSeek 模型服务。

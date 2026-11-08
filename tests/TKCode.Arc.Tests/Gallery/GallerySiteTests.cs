@@ -254,6 +254,18 @@ public class GallerySiteTests
     }
 
     [AvaloniaFact]
+    public void The_Home_Page_Has_The_Community_Code_And_Its_Asset_Loads()
+    {
+        WithShell(GalleryHostKind.Web, 1280, (_, window) =>
+        {
+            Home(window).CommunityCode.ShouldNotBeNull();
+            using var code = GalleryBrand.CreateCommunityCode();
+            code.PixelSize.Width.ShouldBeGreaterThan(300);
+            GalleryHomeView.CommunityGroupNumber.ShouldBe("922379598");
+        });
+    }
+
+    [AvaloniaFact]
     public void Open_Source_Lists_The_Projects_With_Their_Licenses()
     {
         GalleryRoute.Parse("/projects").ShouldBe(GalleryRoute.Projects);
