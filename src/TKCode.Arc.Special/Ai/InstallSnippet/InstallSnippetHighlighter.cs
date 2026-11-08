@@ -78,7 +78,9 @@ internal static class InstallSnippetHighlighter
         try
         {
             using var session = s_highlighter.CreateSession(language, dark ? HighlightThemeKind.Dark : HighlightThemeKind.Light);
-            tokens = await Task.Run(() => session.Update(code));
+            // Not back on the caller's dispatcher: this entry must leave s_running whatever happens to that dispatcher, or
+            // every later request for this snippet waits on a task that never ends.
+            tokens = await Task.Run(() => session.Update(code)).ConfigureAwait(false);
         }
         catch (Exception)
         {

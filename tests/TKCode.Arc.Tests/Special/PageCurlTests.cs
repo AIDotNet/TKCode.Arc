@@ -202,9 +202,10 @@ public class PageCurlTests
         return book;
     }
 
-    private static (Window Window, PageCurl Book, PageCurlSurface Surface) Show(ArcMotionLevel level = ArcMotionLevel.Off, int pages = 8)
+    private static (Window Window, PageCurl Book, PageCurlSurface Surface) Show(ArcMotionLevel level = ArcMotionLevel.Off, int pages = 8, bool tease = true)
     {
         var book = Book(pages);
+        book.Tease = tease;
         var window = TestHelpers.Show(book, level);
         window.Width = 700;
         window.Height = 700;
@@ -526,7 +527,8 @@ public class PageCurlTests
     [AvaloniaFact]
     public void The_book_slides_to_the_centre_while_the_cover_turns()
     {
-        var (window, book, surface) = Show(ArcMotionLevel.Full);
+        // No tease: lifting the corner on coming into view adds sheets while the cover is measured here.
+        var (window, book, surface) = Show(ArcMotionLevel.Full, tease: false);
         var w = surface.PageSize.Width;
         // Closed: the cover is centred, half a page left of the open book's right page.
         var cover = surface.Sheets.Single();
