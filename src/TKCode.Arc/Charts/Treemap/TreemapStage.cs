@@ -485,17 +485,17 @@ internal sealed class TreemapStage : Avalonia.Controls.Control, Avalonia.Renderi
             var title = node.Path.Length > 1 ? string.Join(" / ", node.Path.Take(node.Path.Length - 1)) : _owner.RootFlat.Label;
             var rows = new List<ChartsBTipRow>
             {
-                new() { Left = ChartsBText.Make(title, p, p.TypeXS, p.TextMuted), MinHeight = p.TypeXS * 1.5 },
+                new() { Left = ChartsBText.Run(title, p, p.TypeXS, p.TextMuted), MinHeight = p.TypeXS * 1.5 },
                 new()
                 {
                     MinHeight = p.TypeSM * 1.35,
-                    Left = ChartsBText.Make(node.Label, p, p.TypeSM, p.Foreground),
-                    Right = ChartsBText.Make(_owner.Format(node.Value), p, p.TypeSM, p.Foreground, FontWeight.Medium)
+                    Left = ChartsBText.Run(node.Label, p, p.TypeSM, p.Foreground),
+                    Right = ChartsBText.Run(_owner.Format(node.Value), p, p.TypeSM, p.Foreground, FontWeight.Medium)
                 },
                 new()
                 {
                     MinHeight = p.TypeXS * 1.5,
-                    Left = ChartsBText.Make($"{ChartsBMath.Percent(Treemap.ShareOf(node, parent), 1)} of {parent.Label}", p, p.TypeXS, p.TextMuted)
+                    Left = ChartsBText.Run($"{ChartsBMath.Percent(Treemap.ShareOf(node, parent), 1)} of {parent.Label}", p, p.TypeXS, p.TextMuted)
                 }
             };
             if (_owner.IsColored && node.Color is { } color)
@@ -503,7 +503,7 @@ internal sealed class TreemapStage : Avalonia.Controls.Control, Avalonia.Renderi
                 rows.Add(new ChartsBTipRow
                 {
                     MinHeight = p.TypeXS * 1.5,
-                    Left = ChartsBText.Make($"{_owner.ColorLabel} {_owner.FormatColor(color)}", p, p.TypeXS, p.TextMuted)
+                    Left = ChartsBText.Run($"{_owner.ColorLabel} {_owner.FormatColor(color)}", p, p.TypeXS, p.TextMuted)
                 });
             }
             _tooltip.SetRows(rows);

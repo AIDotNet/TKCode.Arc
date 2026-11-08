@@ -29,6 +29,7 @@
                                         Spacing="4"
                                         AutomationProperties.AccessibilityView="Content">
                                 <arc:RollingDigits Name="PART_Value"
+                                                   ClipToBounds="True"
                                                    VerticalAlignment="Bottom"
                                                    FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
                                                    FontSize="{arc:ArcDesignTokenResource Type2XL}"

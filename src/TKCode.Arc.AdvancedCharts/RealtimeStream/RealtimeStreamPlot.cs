@@ -390,12 +390,12 @@ internal sealed class RealtimeStreamPlot : Control, IChartsBAccessible, ICustomH
             _tipStamp = _textStamp;
             var rows = new List<ChartsBTipRow>(3)
             {
-                new() { Left = ChartsBText.Make(owner.FormatTime(buffer.TicksAt(index)), p, xs, p.TextSecondary), MinHeight = xs * 1.5 },
+                new() { Left = ChartsBText.Run(owner.FormatTime(buffer.TicksAt(index)), p, xs, p.TextSecondary), MinHeight = xs * 1.5 },
                 new()
                 {
                     MarginTop = 2, MinHeight = p.TypeSM * 1.4,
-                    Left = ChartsBText.Make(string.IsNullOrEmpty(owner.Label) ? "Value" : owner.Label, p, xs, p.TextMuted),
-                    Right = ChartsBText.Make(owner.Format(buffer.ValueAt(index)), p, p.TypeSM, p.Foreground, FontWeight.Medium)
+                    Left = ChartsBText.Run(string.IsNullOrEmpty(owner.Label) ? "Value" : owner.Label, p, xs, p.TextMuted),
+                    Right = ChartsBText.Run(owner.Format(buffer.ValueAt(index)), p, p.TypeSM, p.Foreground, FontWeight.Medium)
                 }
             };
             if (buffer.TagAt(index) is { } tag)
@@ -403,7 +403,7 @@ internal sealed class RealtimeStreamPlot : Control, IChartsBAccessible, ICustomH
                 rows.Add(new ChartsBTipRow
                 {
                     MarginTop = 4, MinHeight = xs * 1.5, Swatch = p.Danger, Shape = ChartsBSwatchShape.Round,
-                    Left = ChartsBText.Make(tag, p, xs, p.Foreground)
+                    Left = ChartsBText.Run(tag, p, xs, p.Foreground)
                 });
             }
             _tooltip.SetRows(rows);

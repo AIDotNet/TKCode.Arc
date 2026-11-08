@@ -448,20 +448,20 @@ internal sealed class RaceBarStage : Control, IChartsBAccessible, Avalonia.Rende
             {
                 new()
                 {
-                    Left = ChartsBText.Make(engine.Items[item].Label, p, xs, p.TextSecondary), Swatch = ColorOf(item),
+                    Left = ChartsBText.Run(engine.Items[item].Label, p, xs, p.TextSecondary), Swatch = ColorOf(item),
                     Shape = ChartsBSwatchShape.Square, MinHeight = xs * 1.5
                 },
                 new()
                 {
                     MarginTop = 2, MinHeight = p.TypeSM * 1.4,
-                    Left = ChartsBText.Make(chart.CurrentPeriod, p, xs, p.TextMuted),
-                    Right = ChartsBText.Make(row.ValueString ?? string.Empty, p, p.TypeSM, p.Foreground, FontWeight.Medium)
+                    Left = ChartsBText.Run(chart.CurrentPeriod, p, xs, p.TextMuted),
+                    Right = ChartsBText.Run(row.ValueString ?? string.Empty, p, p.TypeSM, p.Foreground, FontWeight.Medium)
                 },
                 new()
                 {
                     MinHeight = xs * 1.5,
-                    Left = ChartsBText.Make("Rank", p, xs, p.TextMuted),
-                    Right = ChartsBText.Make($"{rank + 1} of {engine.ItemCount}", p, xs, p.Foreground)
+                    Left = ChartsBText.Run("Rank", p, xs, p.TextMuted),
+                    Right = ChartsBText.Run($"{rank + 1} of {engine.ItemCount}", p, xs, p.Foreground)
                 }
             };
             tooltip.SetRows(rows);

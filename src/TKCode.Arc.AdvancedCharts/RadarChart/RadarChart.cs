@@ -752,7 +752,7 @@ public partial class RadarChart : Control, IChartsBAccessible, Avalonia.Renderin
         _tipRows.Clear();
         _tipPens.Clear();
         _tipLines.Clear();
-        _tipRows.Add(new ChartsBTipRow { Left = ChartsBText.Make(axis.Label, p, xs, p.TextSecondary), MinHeight = xs * 1.5 });
+        _tipRows.Add(new ChartsBTipRow { Left = ChartsBText.Run(axis.Label, p, xs, p.TextSecondary), MinHeight = xs * 1.5 });
         _tipPens.Add(null);
         _tipLines.Add(axis.Label);
         foreach (var shape in _shapes)
@@ -764,8 +764,8 @@ public partial class RadarChart : Control, IChartsBAccessible, Avalonia.Renderin
                 Indent = LineKeyWidth + 7,
                 MarginTop = 2,
                 MinHeight = xs * 1.5,
-                Left = ChartsBText.Make(shape.Series.Label, p, xs, p.TextSecondary),
-                Right = ChartsBText.Make(text, p, p.TypeSM, p.Foreground, FontWeight.Medium)
+                Left = ChartsBText.Run(shape.Series.Label, p, xs, p.TextSecondary),
+                Right = ChartsBText.Run(text, p, p.TypeSM, p.Foreground, FontWeight.Medium)
             });
             _tipPens.Add(shape.Pen);
             _tipLines.Add($"{shape.Series.Label} {text}");
