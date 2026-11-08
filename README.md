@@ -1,138 +1,113 @@
 # TKCode.Arc
 
-English | [简体中文](README.zh-CN.md)
+English | [简体中文](https://github.com/AIDotNet/TKCode.Arc/blob/main/README.zh-CN.md)
 
-Arc-style components for Avalonia.
-TKCode.Arc ports the free components of [Arc](https://uiarc.dev) — 112 components in 22 groups —
-with Arc's visual language and spring motion.
+[![NuGet](https://img.shields.io/nuget/vpre/TKCode.Arc?label=NuGet)](https://www.nuget.org/packages/TKCode.Arc)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](https://github.com/AIDotNet/TKCode.Arc/blob/main/LICENSE)
 
-- Targets `net10.0` and `net11.0`; desktop (Windows, macOS, Linux).
-- Depends on Avalonia 12.1.4 (exact version), on `TKCode.Arc.Foundation` (its own MIT theme, token and language
-  runtime) and on [StreamMark](https://www.nuget.org/packages/TKCode.StreamMark.Highlighting.TextMate) for Markdown and
-  code highlighting. Every package in the chain is MIT licensed; there is no AtomUI dependency since 0.3.2.
-- Design documents: [design/overview.md](design/overview.md).
-- Live demo: <https://docs.tkcode.si/> (the gallery of every component, in the browser).
+**The visual language and spring motion of [Arc](https://uiarc.dev), as native Avalonia controls.**
 
-## Packages
+TKCode.Arc is a UI kit for .NET applications on Avalonia 12. It ports Arc's 112 free components and adds what a full
+product needs around them: page-level blocks, a spreadsheet-style data grid, a workflow canvas, IDE-style docking, a
+terminal, and audio and video playback.
+
+**[Live gallery and documentation](https://docs.tkcode.si/)** · [Changelog](https://github.com/AIDotNet/TKCode.Arc/blob/main/CHANGELOG.md)
+## Why Arc
+
+- **Native controls.** Every control derives from Avalonia base types and uses public Avalonia APIs only.
+- **One token system.** Colors, radii, shadows and fonts come from design tokens, so light and dark, the eight accent
+  presets and whole-theme packages apply across every control.
+- **Motion built in.** A spring engine drives the components, with Full, Reduced and Off levels for the whole app.
+- **Ready for NativeAOT.** The libraries are built as trimming and AOT compatible.
+- **Documented in three languages.** Each of the 300+ component and block pages has live examples and a generated API
+  table, in English, 简体中文 and 繁體中文.
+- **Readable by AI assistants.** The site publishes [`llms.txt`](https://docs.tkcode.si/llms.txt), every page as
+  Markdown and an [agent skill](https://docs.tkcode.si/skills/tkcode-arc/SKILL.md).
+
+## What's inside
+
+### Components
 
 | Package | Contents |
 |---|---|
-| `TKCode.Arc` | The components (`UseArcControls()`), organized like Arc's sidebar, plus a streaming `Markdown` control. |
-| `TKCode.Arc.Core` | ArcDesign tokens and palette, the spring motion engine, shared primitives, 187 built-in Lucide glyphs. |
-| `TKCode.Arc.Foundation` | The theme, token, language and package runtime (`UseArc(...)`, `ArcTheme`, `ArcLanguage`); from 0.3.2. |
-| `TKCode.Arc.Icons.Lucide` | The full Lucide set (2155 icons): `LucideIcon` control and `LucideGeometry` markup extension. |
-| `TKCode.Arc.Fonts` | Geist and Geist Mono (`WithArcFonts()`); body text uses Inter from `Avalonia.Fonts.Inter`. |
+| `TKCode.Arc` | The 112 components in 22 groups, organized like Arc's sidebar, plus layout panels and extras such as `Markdown` (with streaming), `PropertyGrid`, `Cascader` and `TransferBox`. |
+| `TKCode.Arc.Blocks` | Page-level compositions: AI chat, pricing and checkout, billing, dashboards, settings, team management and more. |
+| `TKCode.Arc.AdvancedCharts` | `DataGrid` (range selection, inline editing, fill handle, clipboard, grouping, export), `Sunburst`, `SankeyFlow`, `FunnelChart`, `RadarChart`, `RealtimeStream` and `RaceBarChart`. |
+| `TKCode.Arc.Special` | Animated AI explainers, pointer effects, loaders, surfaces and illustrations. |
+| `TKCode.Arc.Mobile` | Touch-first controls with 44px touch targets. |
 
-## Install
+### Application features
 
-The latest preview is [`0.4.0-preview.6`](CHANGELOG.md) on [NuGet](https://www.nuget.org/packages/TKCode.Arc):
+| Package | Contents |
+|---|---|
+| `TKCode.Arc.Workflow` | A canvas for showing, editing and running graphs of steps, with pan, zoom, auto-arrange and undo. |
+| `TKCode.Arc.Dock` | IDE-style tab groups and resizable splits, with keyboard navigation and layouts saved as JSON. |
+| `TKCode.Arc.Terminal` | `TerminalView` over libghostty-vt, with the native libraries bundled. |
+| `TKCode.Arc.Audio`, `.Audio.Native`, `.Audio.Browser` | The `IAudioPlayer` abstraction, with miniaudio on desktop and HTML audio on WebAssembly. |
+| `TKCode.Arc.Video`, `.Video.Native`, `.Video.Browser` | `VideoPlayer` and `VideoSurface` over each platform's own player. In this repository, not published to NuGet yet. |
 
-```bash
-dotnet add package TKCode.Arc --version 0.4.0-preview.6
-dotnet add package TKCode.Arc.Fonts --version 0.4.0-preview.6           # optional: Geist and Geist Mono
-dotnet add package TKCode.Arc.Icons.Lucide --version 0.4.0-preview.6    # optional: the full Lucide set
-```
+### Theming and assets
 
-`TKCode.Arc` brings in `TKCode.Arc.Core` (and, from 0.3.2, `TKCode.Arc.Foundation`). `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts` and `TKCode.Arc.Special`
-(the animated AI explainers of the Special components section) are separate packages on NuGet; `TKCode.Arc.Workflow`
-(the workflow canvas, `UseArcWorkflow()`) ships with them too. `TKCode.Arc.Themes.Pixel` (a pixel-art theme, `UseArcPixelTheme()`) and
-`TKCode.Arc.Mobile` (the first touch-first controls, `UseArcMobile()`, not yet verified on devices) are new in 0.3.1-preview.1; `TKCode.Arc.Themes.Corners` (global corner style, `UseArcCorners()`) is new in 0.3.1-preview.2. `TKCode.Arc.Terminal` (`TerminalView` over libghostty-vt, native libraries bundled) is new in 0.3.1-preview.4. `TKCode.Arc.Audio` (the `IAudioPlayer` abstraction behind the media blocks, silent by default) with its backends `TKCode.Arc.Audio.Native` (desktop, miniaudio, `ArcAudioNative.Use()`) and `TKCode.Arc.Audio.Browser` (WebAssembly, `ArcAudioBrowser.UseAsync()`) is new in 0.3.2-preview.1. Versions carry a `-preview` suffix, so the API may still change between
-releases.
+| Package | Contents |
+|---|---|
+| `TKCode.Arc.Themes.Pixel` | A pixel-art theme, in token overrides only. |
+| `TKCode.Arc.Themes.Corners` | A global corner style: square or scaled corners for every control. |
+| `TKCode.Arc.Icons.Lucide` | The full Lucide set. A source generator compiles in only the icons a project uses. |
+| `TKCode.Arc.Fonts` | Geist and Geist Mono, plus optional pixel fonts for the pixel theme. |
 
-## Getting started
+### Foundation and tooling
 
-The code below is the API from 0.3.2-preview.1 on. Apps on 0.3.1 and earlier register Arc inside `UseAtomUI(...)`;
-[CHANGELOG.md](CHANGELOG.md) has the migration notes.
+| Package | Contents |
+|---|---|
+| `TKCode.Arc.Foundation` | The token, theme, language and package registration runtime. Depends on Avalonia only. |
+| `TKCode.Arc.Core` | ArcDesign tokens and palette, the motion engine, shared primitives and built-in Lucide glyphs. |
+| `TKCode.Arc.Templates` | `dotnet new` templates: a starter app, a cross-platform app, six finished apps, a control library, and item templates for a page, window, dialog and control. |
 
-```csharp
-AppBuilder.Configure<App>()
-    .UsePlatformDetect()
-    .WithInterFont()
-    .WithArcFonts()          // optional: Geist display type and Geist Mono code type
-    .UseArc(arc => arc
-        .UseArcControls()
-        .WithTheme(t => t.Appearance(ArcAppearance.System)));
+## Status and compatibility
 
-// Later, for example from a settings page:
-ArcTheme.Apply(t => t.Appearance(ArcAppearance.Dark).Accent(ArcAccentPreset.Violet));
-```
+Arc is in preview, so the API may still change between releases. [CHANGELOG.md](https://github.com/AIDotNet/TKCode.Arc/blob/main/CHANGELOG.md)
+lists each release and its migration notes.
 
-```xml
-<Window xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
-  <StackPanel Spacing="12">
-    <arc:Button Content="Save changes" />
-    <arc:Button Content="Cancel" Variant="Secondary" />
-    <arc:Switch Content="Email notifications" IsChecked="True" />
-    <arc:CopyButton Value="npx arc add copy-button" />
-    <arc:Button Content="Share" arc:Tooltip.Tip="Copy link" />
-    <arc:Calendar ShowToday="True" />
-  </StackPanel>
-</Window>
-```
+| | |
+|---|---|
+| **.NET** | `net8.0`, `net10.0` and `net11.0`. `TKCode.Arc.Terminal` targets `net10.0` and `net11.0`. |
+| **Avalonia** | Avalonia 12, pinned to an exact version in [`build/Versions.props`](https://github.com/AIDotNet/TKCode.Arc/blob/main/build/Versions.props). |
+| **Desktop** | Windows, macOS and Linux. |
+| **Browser** | The gallery itself runs on WebAssembly, and audio and video have browser backends. |
+| **Mobile** | `TKCode.Arc.Mobile` is previewed in a desktop phone frame and is not yet verified on Android or iOS devices. |
 
-Icons: Arc's built-in glyphs (`{x:Static arc:ArcIcons.Check}`) cover every icon the components use; any other Lucide icon
-comes from the icons package:
+## Repository
 
-```xml
-<Window xmlns:lucide="https://github.com/AIDotNet/TKCode.Arc/lucide">
-  <lucide:LucideIcon Kind="Sparkles" Size="20" />
-</Window>
-```
+| Path | Contents |
+|---|---|
+| `src/` | The libraries above and their source generators. |
+| `gallery/` | The gallery and documentation site, with desktop and browser hosts. |
+| `tests/` | Unit, headless Avalonia and generator snapshot tests, with token and preset baselines. |
+| `templates/` | The source of `TKCode.Arc.Templates`. |
+| `native/` | Native shims and libraries for the terminal, audio and video. |
+| `tools/` | Generators and scripts for icons, fonts, docs screenshots, native libraries and packaging. |
 
-Only the icons a project uses are compiled into it (a source generator finds them in C# and XAML); declare icons chosen at
-run time with `<LucideIcon Include="Bell;ArrowRight" />` in the project file.
+## Working on the library
 
-Accent, appearance and motion level:
-
-```csharp
-var config = new ThemeConfigBuilder()
-    .WithAlgorithms(ThemeAlgorithm.Default, ThemeAlgorithm.Dark)
-    .WithArc(arc => arc.Accent(ArcAccentPreset.Violet))
-    .Build();
-await Application.Current!.GetThemeManager()!.ApplyThemeAsync(
-    new ThemeRequest(IThemeManager.DEFAULT_THEME_ID, config, ThemeTransitionReason.UserRequest));
-
-ArcMotion.SetLevel(window, ArcMotionLevel.Reduced);   // Full, Reduced or Off
-```
-
-Markdown and code: `CodeBlock` highlights out of the box (TextMate grammars painted in Arc's palette), and `Markdown`
-renders a document or a streamed reply with the same styling:
-
-```csharp
-var reply = new Markdown();
-reply.Append("Here is the **fix**:\n\n```csharp\n");
-reply.Append("var total = items.Sum(i => i.Price);\n```\n");
-reply.Complete();
-```
-
-Notes for applications:
-
-- Do not enable `InvariantGlobalization` (number and date formatting needs culture data).
-- NativeAOT with the .NET 11 SDK: set `<UseOptimizedPublish>false</UseOptimizedPublish>`, otherwise the compiled XAML
-  is left out of the published app.
-- Anchored popups (menus, selects, tooltips, popovers) are drawn in the window's overlay layer, so they sit exactly
-  `sideOffset` away from their trigger and never cover it.
-- `Button`, `Calendar`, `Carousel`, `ContextMenu`, `DatePicker`, `Slider`, `SplitButton`, `TabItem`, `TimePicker`,
-  `TreeView` and `TreeViewItem` share names with `Avalonia.Controls`; alias one namespace when a file imports both.
-
-## Building
-
-Requires the .NET 11 SDK (see `global.json`) and the .NET 10 runtime (the tests and the gallery run on `net10.0`).
+Building needs the .NET 11 SDK (see `global.json`) and the .NET 10 runtime, which the tests and the gallery run on.
 
 ```bash
 dotnet build TKCode.Arc.slnx
 dotnet test tests/TKCode.Arc.Core.Tests
+dotnet test tests/TKCode.Arc.Foundation.Tests
 dotnet test tests/TKCode.Arc.Tests
 dotnet run --project gallery/TKCode.Arc.Gallery.Desktop -f net10.0
 ```
 
+Project rules and conventions are in [AGENTS.md](https://github.com/AIDotNet/TKCode.Arc/blob/main/AGENTS.md).
+
 ## Sponsors
 
-TKCode.Arc is mainly sponsored by [nextco.work](https://nextco.work/), which provides affordable, easy-to-use
-access to Claude, OpenAI and DeepSeek models. Thank you for supporting the project.
+TKCode.Arc is mainly sponsored by [nextco.work](https://nextco.work/), which provides affordable, easy-to-use access to
+Claude, OpenAI and DeepSeek models. Thank you for supporting the project.
 
 ## License
 
 MIT. Arc depends only on Avalonia (MIT) and MIT packages of its own, so closed-source applications can ship it in a
-single file or a NativeAOT build. See [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) for Arc (MIT), Lucide (ISC),
-fonts (OFL), StreamMark, TextMateSharp, Oniguruma and Markdig.
+single file or a NativeAOT build. [THIRD-PARTY-NOTICES.md](https://github.com/AIDotNet/TKCode.Arc/blob/main/THIRD-PARTY-NOTICES.md)
+covers Arc (MIT), Lucide (ISC), fonts (OFL), StreamMark, TextMateSharp, Oniguruma and Markdig.
