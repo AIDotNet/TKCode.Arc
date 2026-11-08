@@ -260,7 +260,9 @@ public class GallerySiteTests
         {
             Home(window).CommunityCode.ShouldNotBeNull();
             using var code = GalleryBrand.CreateCommunityCode();
-            code.PixelSize.Width.ShouldBeGreaterThan(300);
+            // The headless platform decodes every bitmap to 1x1, so the real size can only be checked on the asset itself.
+            using var asset = Avalonia.Platform.AssetLoader.Open(new Uri("avares://TKCode.Arc.Gallery/Assets/community-qq.jpg"));
+            asset.Length.ShouldBeGreaterThan(10_000);
             GalleryHomeView.CommunityGroupNumber.ShouldBe("922379598");
         });
     }
