@@ -1,6 +1,6 @@
 ---
 title: 更新日誌
-source-hash: 7dc94b98c4bb
+source-hash: aea3d0387eb8
 ---
 
 # 更新日誌
@@ -21,8 +21,13 @@ TKCode.Arc 的所有重要變更，最新的在前。版本遵循[語意化版�
 - **`PageViewer`**（`TKCode.Arc`，媒體；issue #51）：縮放、平移並翻閱圖片（`ItemsSource`）或按需繪製的頁面（`IPageSource`），可連續或單頁顯示，帶適應模式、工具列，以及讓你在頁面上自行繪製和接收指標輸入的 `PageLayer`。一個自繪表面只繪製可見頁面。文件和範例提供英文、簡體中文和繁體中文。
 - **範本**（新套件 `TKCode.Arc.Templates`）：`dotnet new install TKCode.Arc.Templates` 後，以 `dotnet new tkcode-arc` 建立桌面應用程式，或以 `dotnet new tkcode-arc-xplat` 建立同時面向桌面與瀏覽器（WebAssembly）的應用程式。提供四種版面配置（`--layout blank|sidebar|header|dock`），以及這些選項：使用 CommunityToolkit.Mvvm 的 MVVM（`--mvvm toolkit`）、相依性插入（`--di`）、儲存偏好設定（`--settings`，預設開啟：外觀、強調色、視窗位置與版面配置狀態會在下次啟動時還原）、本地化（`--i18n`：English、简体中文與繁體中文的 `.xlf` 檔案加上語言切換；`--ui-language` 選擇介面文字的語言）、Headless 測試專案（`--tests`）、Arc 標題列（`--custom-titlebar`）、`--framework` 與 `--accent`。項目範本可加入頁面（`tkcode-arc-page`）、視窗（`tkcode-arc-window`）、可等待結果的對話方塊（`tkcode-arc-dialog`），以及附 Token 類別與佈景主題檔的 Arc 風格控制項（`tkcode-arc-control`）。另有三個範本從完整的應用程式開始，由 Arc 的 Block 組成，範例資料放在服務介面後面，附 MVVM 與相依性插入：`tkcode-arc-admin`（登入、儀表板、附搜尋、篩選、分頁與詳細資料抽屜的客戶表格、團隊與角色、帳單、設定、命令面板）、`tkcode-arc-ai-chat`（對話清單加上 `AiChat`，回覆由範例 responder 串流產生，可換成你的模型用戶端；對話在兩次執行之間保存）與 `tkcode-arc-devtool`（停靠版面配置：檔案總管、編輯器索引標籤、屬性表格、建置輸出與問題清單，開啟的檔案隨版面配置還原）。此外還有 `tkcode-arc-workflow`（步驟面板、可復原的流程畫布、小地圖與屬性檢查器、模擬執行、JSON 匯入匯出）、`tkcode-arc-projects`（看板、甘特時間軸、週行事曆、發行檢查清單）與 `tkcode-arc-analytics`（KPI 下鑽、營收、留存分群、用量預測、服務狀態）。`tkcode-arc-lib` 用於開始撰寫自己的控制項程式庫：範例控制項及其設計 Token 與佈景主題、`Use<Name>()` 註冊、Headless 測試與範例應用程式，可直接 `dotnet pack`。新增的 **範本** 指南列出了全部內容；安裝指南新增「從範本開始」一節。
 
+### 變更
+
+- 相依套件升級為 Avalonia 12.1.5 與 StreamMark 0.1.2。
+
 ### 修正
 
+- `TextFilterBox` 與 `NumberFilterBox` 的輸入框不再重疊或被裁切：過長的標籤或說明會換行，空間較窄時標籤移到輸入框上方。運算子選單在符號旁顯示名稱。
 - **`TKCode.Arc.Templates` 0.4.0-preview.6 無法安裝**：該套件發行時範本檔案已移動，但指向它們的 `template.json` 沒有更新，`dotnet new install` 回報錯誤（`MV012: Source ... does not exist`）。請使用此版本或更新版本。
 - **Lucide 圖示**：路徑以移動命令緊接直線開頭的 32 個圖示（`UserCog`、`FileCog`、`ServerCog`、`Coins`、`Watch`、`ZapOff` 等）首次顯示時擲回 “Invalid double value”：產生器把 `16.53.923` 讀成了一個數。現在有測試剖析每個圖示的路徑。
 

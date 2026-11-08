@@ -326,6 +326,94 @@ public class FilterBoxTests
         }
     }
 
+    private const string LongDescription = "Products whose name contains this text, in any of the catalog's languages.";
+
+    private static void AssertNothingOverlapsOrOverflows(TextFilterBox box)
+    {
+        var select = Part<Select>(box, FilterBox.OperatorPart);
+        var input = Part<Input>(box, TextFilterBox.InputPart);
+        var toggle = Part<Checkbox>(box, FilterBox.TogglePart);
+        var inputRect = input.Bounds;
+        var selectRect = select.Bounds;
+        selectRect.Right.ShouldBeLessThanOrEqualTo(inputRect.Left - 12 + 0.5, "The operator and the text need their gap.");
+        inputRect.Right.ShouldBeLessThanOrEqualTo(box.Bounds.Width + 0.5, "The text field must not be cut off.");
+        if (box.ExtraContent is null)
+        {
+            inputRect.Right.ShouldBe(box.Bounds.Width, 0.5, "With no extra content the text field reaches the edge.");
+        }
+        if (!box.Classes.Contains(FilterBox.StackedPseudoClass))
+        {
+            toggle.Bounds.Right.ShouldBeLessThanOrEqualTo(selectRect.Left + 0.5, "The label must not run under the operator.");
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Long_Description_Wraps_Instead_Of_Pushing_The_Fields_Out()
+    {
+        var box = new TextFilterBox { Label = "Product name", Description = LongDescription, Width = 520 };
+        var window = TestHelpers.Show(box);
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            box.Classes.Contains(FilterBox.StackedPseudoClass).ShouldBeFalse();
+            AssertNothingOverlapsOrOverflows(box);
+            // It wrapped: taller than the one line it would be with room to spare.
+            Part<Input>(box, TextFilterBox.InputPart).Bounds.Width.ShouldBeGreaterThanOrEqualTo(160 - 0.5);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Too_Narrow_For_A_Row_The_Label_Moves_Above_The_Fields_And_Comes_Back()
+    {
+        var box = new TextFilterBox { Label = "Product name", Description = LongDescription, Width = 320 };
+        var window = TestHelpers.Show(box);
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            var toggle = Part<Checkbox>(box, FilterBox.TogglePart);
+            var select = Part<Select>(box, FilterBox.OperatorPart);
+            box.Classes.Contains(FilterBox.StackedPseudoClass).ShouldBeTrue();
+            select.Bounds.Top.ShouldBeGreaterThanOrEqualTo(toggle.Bounds.Bottom);
+            select.Bounds.Left.ShouldBe(0, 0.5);
+            AssertNothingOverlapsOrOverflows(box);
+
+            box.Width = 800;
+            Dispatcher.UIThread.RunJobs();
+            box.Classes.Contains(FilterBox.StackedPseudoClass).ShouldBeFalse();
+            select.Bounds.Top.ShouldBeLessThan(toggle.Bounds.Bottom);
+            select.Bounds.Left.ShouldBeGreaterThan(0);
+            AssertNothingOverlapsOrOverflows(box);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void The_Menu_Names_The_Operators_And_The_Field_Keeps_The_Symbol()
+    {
+        var box = new TextFilterBox { Label = "Name", Operator = TextOperator.Contains, Width = 520 };
+        var window = TestHelpers.Show(box);
+        try
+        {
+            var select = Part<Select>(box, FilterBox.OperatorPart);
+            select.SelectedText.ShouldBe("∋");
+            select.TextSelector!(TextOperator.Contains).ShouldBe("∋   Contains");
+            box.Operator = TextOperator.StartsWith;
+            Dispatcher.UIThread.RunJobs();
+            select.SelectedText.ShouldBe("^");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     [AvaloniaFact]
     public void Extra_Content_Collapses_When_Null()
     {

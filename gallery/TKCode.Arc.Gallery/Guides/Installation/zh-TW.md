@@ -1,6 +1,6 @@
 ---
 title: 安裝
-source-hash: f3048c518906
+source-hash: f04c1a6d351f
 ---
 
 # 安裝
@@ -12,7 +12,7 @@ source-hash: f3048c518906
 | 項目 | 版本 | 說明 |
 |---|---|---|
 | .NET | `net10.0` 或 `net11.0` | 這些套件同時以兩個目標框架為對象。 |
-| Avalonia | `12.1.4` | 固定為函式庫建置時所用的確切版本。 |
+| Avalonia | `12.1.5` | 固定為函式庫建置時所用的確切版本。 |
 | TKCode.Arc.Foundation | 與 Arc 相同 | MIT；佈景主題、權杖、語言與套件註冊的執行階段，隨 `TKCode.Arc` 一起引入。 |
 | 字型（選用） | `Avalonia.Fonts.Inter` | Arc 的內文使用 Inter；Geist 來自 `TKCode.Arc.Fonts`。 |
 
@@ -38,7 +38,7 @@ dotnet run
 dotnet add package TKCode.Arc --version 0.4.0-preview.6
 dotnet add package TKCode.Arc.Fonts --version 0.4.0-preview.6           # 選用：Geist 與 Geist Mono
 dotnet add package TKCode.Arc.Icons.Lucide --version 0.4.0-preview.6    # 選用：完整的 Lucide 圖示集
-dotnet add package Avalonia.Fonts.Inter --version 12.1.4                 # 選用：內文使用的 Inter
+dotnet add package Avalonia.Fonts.Inter --version 12.1.5                 # 選用：內文使用的 Inter
 ```
 
 `TKCode.Arc` 會引入 `TKCode.Arc.Core`、`TKCode.Arc.Foundation` 與 StreamMark。如果你的方案使用集中式套件管理，請將版本號一次加入 `Directory.Packages.props`，並讓專案檔不含版本號：
@@ -48,7 +48,7 @@ dotnet add package Avalonia.Fonts.Inter --version 12.1.4                 # 選�
     <PackageVersion Include="TKCode.Arc" Version="0.4.0-preview.6" />
     <PackageVersion Include="TKCode.Arc.Fonts" Version="0.4.0-preview.6" />
     <PackageVersion Include="TKCode.Arc.Icons.Lucide" Version="0.4.0-preview.6" />
-    <PackageVersion Include="Avalonia.Fonts.Inter" Version="12.1.4" />
+    <PackageVersion Include="Avalonia.Fonts.Inter" Version="12.1.5" />
 </ItemGroup>
 ```
 
@@ -264,7 +264,7 @@ PDF 範例需要 PDFium 和 pdf.js，它們沒有提交到存放庫。請執行�
 | 標題與程式碼使用系統字型 | 未註冊字型 | 在 `AppBuilder` 上呼叫 `WithInterFont()` 與 `WithArcFonts()`。 |
 | 數字或日期格式錯誤，或格式化時擲出例外 | 啟用了 `InvariantGlobalization` | 從專案檔中移除它。 |
 | `'Button' is an ambiguous reference` | `TKCode.Arc` 與 `Avalonia.Controls` 同時被匯入 | 為其中一個設定別名，如上所示。 |
-| 關於 Avalonia 版本的還原警告 | 其他套件引入了不同版本的 Avalonia | 在應用程式中明確參照 Avalonia `12.1.4`。 |
+| 關於 Avalonia 版本的還原警告 | 其他套件引入了不同版本的 Avalonia | 在應用程式中明確參照 Avalonia `12.1.5`。 |
 | 找不到 Blocks、`DataGrid` 或 Special 型別 | 未參照該套件或未註冊 | 加入 `TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 或 `TKCode.Arc.Special`，並在 `UseArc(...)` 中呼叫 `UseArcBlocks()`、`UseArcAdvancedCharts()` 或 `UseArcSpecial()`。 |
 
 ## 下一步

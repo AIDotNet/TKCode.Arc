@@ -22,7 +22,7 @@ internal static class GallerySite
     public const double PhoneWidth = 640;
 
     /// <summary>The package version of TKCode.StreamMark.* (<c>StreamMarkVersion</c> in Directory.Packages.props).</summary>
-    public const string StreamMarkVersion = "0.1.1";
+    public const string StreamMarkVersion = "0.1.2";
 
     /// <summary>A label that follows the language.</summary>
     public static TextBlock Text(GalleryShellLangResourceKind kind, ArcDesignTokenKind color = ArcDesignTokenKind.Foreground, double size = 14,

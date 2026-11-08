@@ -1,6 +1,6 @@
 ---
 title: 安装
-source-hash: f3048c518906
+source-hash: f04c1a6d351f
 ---
 
 # 安装
@@ -12,7 +12,7 @@ source-hash: f3048c518906
 | 项目 | 版本 | 说明 |
 |---|---|---|
 | .NET | `net10.0` 或 `net11.0` | 这些包同时面向两个目标框架。 |
-| Avalonia | `12.1.4` | 固定为库构建时所用的确切版本。 |
+| Avalonia | `12.1.5` | 固定为库构建时所用的确切版本。 |
 | TKCode.Arc.Foundation | 与 Arc 相同 | MIT；主题、令牌、语言与包注册的运行时，随 `TKCode.Arc` 一起引入。 |
 | 字体（可选） | `Avalonia.Fonts.Inter` | Arc 的正文使用 Inter；Geist 来自 `TKCode.Arc.Fonts`。 |
 
@@ -38,7 +38,7 @@ dotnet run
 dotnet add package TKCode.Arc --version 0.4.0-preview.6
 dotnet add package TKCode.Arc.Fonts --version 0.4.0-preview.6           # 可选：Geist 与 Geist Mono
 dotnet add package TKCode.Arc.Icons.Lucide --version 0.4.0-preview.6    # 可选：完整的 Lucide 图标集
-dotnet add package Avalonia.Fonts.Inter --version 12.1.4                 # 可选：正文使用的 Inter
+dotnet add package Avalonia.Fonts.Inter --version 12.1.5                 # 可选：正文使用的 Inter
 ```
 
 `TKCode.Arc` 会引入 `TKCode.Arc.Core`、`TKCode.Arc.Foundation` 和 StreamMark。如果你的解决方案使用集中式包管理，请把版本号一次性添加到 `Directory.Packages.props` 中，并让项目文件不包含版本号：
@@ -48,7 +48,7 @@ dotnet add package Avalonia.Fonts.Inter --version 12.1.4                 # 可�
     <PackageVersion Include="TKCode.Arc" Version="0.4.0-preview.6" />
     <PackageVersion Include="TKCode.Arc.Fonts" Version="0.4.0-preview.6" />
     <PackageVersion Include="TKCode.Arc.Icons.Lucide" Version="0.4.0-preview.6" />
-    <PackageVersion Include="Avalonia.Fonts.Inter" Version="12.1.4" />
+    <PackageVersion Include="Avalonia.Fonts.Inter" Version="12.1.5" />
 </ItemGroup>
 ```
 
@@ -264,7 +264,7 @@ PDF 示例需要 PDFium 和 pdf.js，它们没有提交到仓库。请运行一�
 | 标题与代码使用系统字体 | 没有注册字体 | 在 `AppBuilder` 上调用 `WithInterFont()` 和 `WithArcFonts()`。 |
 | 数字或日期格式错误，或格式化时抛出异常 | 启用了 `InvariantGlobalization` | 从项目文件中移除它。 |
 | `'Button' is an ambiguous reference` | `TKCode.Arc` 与 `Avalonia.Controls` 同时被导入 | 为其中一个设置别名，如上所示。 |
-| 关于 Avalonia 版本的还原警告 | 其他包引入了不同版本的 Avalonia | 在应用中显式引用 Avalonia `12.1.4`。 |
+| 关于 Avalonia 版本的还原警告 | 其他包引入了不同版本的 Avalonia | 在应用中显式引用 Avalonia `12.1.5`。 |
 | 找不到 Blocks、`DataGrid` 或 Special 类型 | 没有引用该包或没有注册 | 添加 `TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 或 `TKCode.Arc.Special`，并在 `UseArc(...)` 中调用 `UseArcBlocks()`、`UseArcAdvancedCharts()` 或 `UseArcSpecial()`。 |
 
 ## 下一步

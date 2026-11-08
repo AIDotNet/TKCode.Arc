@@ -1,7 +1,7 @@
 ---
 title: 數字篩選框
 summary: 一個數字篩選條件：以核取方塊啟用，運算子以符號顯示，再填一個值，可設比較容差。
-source-hash: 89a81c71b544
+source-hash: d8035c1b0666
 ---
 
 <Demo name="Basic" />
@@ -123,8 +123,8 @@ var visible = products.Where(p => !PriceActive || price.Matches(p.Price));
 
 ## 響應式
 
-- 篩選框只有一列：標籤欄與標籤同寬（或取 `LabelWidth`，或取其尺寸群組的寬度），運算子 84 px，值 168 px。它不會換行；面板較窄時把篩選框放進 `ScrollViewer`，或縮短標籤。
-- 只有在標籤欄設了固定的 `LabelWidth` 時，過長的標籤才會在欄內換行。
+- 運算子 84 px，值 168 px。標籤欄與標籤同寬（或取 `LabelWidth`，或取其尺寸群組的寬度），過長的標籤或說明會換行，為輸入框留出空間。
+- 連 120 px 的標籤都放不下時（約 400 px 以下），標籤移到輸入框上方單獨一行，此時該篩選框不再使用共用的 `LabelSizeGroup`。固定的 `LabelWidth` 放不下時同樣如此。
 - 所有輸入框至少 36 px 高（`Size="Small"`），核取方塊在任何尺寸下都保留 44 px 的點擊區域。
 
 ## 相關元件

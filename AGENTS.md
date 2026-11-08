@@ -1,6 +1,6 @@
 # TKCode.Arc agent guide
 
-TKCode.Arc is an Arc-style (uiarc.dev) component library for Avalonia 12.1.4. Every package depends only on Avalonia and the in-house MIT `TKCode.Arc.Foundation` (token runtime, theme manager, package registration, localization; design/architecture/foundation.md).
+TKCode.Arc is an Arc-style (uiarc.dev) component library for Avalonia 12.1.5. Every package depends only on Avalonia and the in-house MIT `TKCode.Arc.Foundation` (token runtime, theme manager, package registration, localization; design/architecture/foundation.md).
 Design source of truth: `design/` (start at `design/overview.md`).
 
 ## Layout

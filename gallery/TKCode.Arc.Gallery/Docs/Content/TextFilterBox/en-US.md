@@ -118,8 +118,10 @@ filters share one label column, so the operators line up. `LabelWidth` sets a fi
 
 ## Responsive behavior
 
-- The box stretches to the width it is given: the label column and the 84 px operator keep their width and the text
-  field takes the rest, down to 160 px. Below that the row is clipped, so give the box at least about 400 px.
+- The box stretches to the width it is given. The 84 px operator keeps its width and the text field takes the rest, down
+  to 160 px. A long label or description wraps to leave them that room.
+- When even a 120 px label would not fit (below about 390 px), the label moves onto its own row above the fields, and a
+  shared `LabelSizeGroup` no longer applies to that box. A fixed `LabelWidth` stacks the same way when it does not fit.
 - `ExtraContent` takes its own width at the end of the row.
 - All fields are at least 36 px tall (`Size="Small"`), and the checkbox keeps its 44 px hit area at every size.
 

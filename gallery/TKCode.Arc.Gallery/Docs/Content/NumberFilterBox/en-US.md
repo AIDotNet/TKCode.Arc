@@ -140,9 +140,10 @@ height of the operator and value fields (Small 36, Medium 44, Large 50).
 
 ## Responsive behavior
 
-- The box is one row: the label column is as wide as the label (or `LabelWidth`, or its size group), the operator is
-  84 px and the value 168 px. It does not wrap; in a narrow panel put the boxes in a `ScrollViewer`, or shorten the labels.
-- A long label wraps under itself inside its column only when the column has a fixed `LabelWidth`.
+- The operator is 84 px and the value 168 px. The label column is as wide as the label (or `LabelWidth`, or its size group),
+  and a long label or description wraps to leave the fields their room.
+- When even a 120 px label would not fit (below about 400 px), the label moves onto its own row above the fields, and a
+  shared `LabelSizeGroup` no longer applies to that box. A fixed `LabelWidth` stacks the same way when it does not fit.
 - All fields are at least 36 px tall (`Size="Small"`), and the checkbox keeps its 44 px hit area at every size.
 
 ## Related

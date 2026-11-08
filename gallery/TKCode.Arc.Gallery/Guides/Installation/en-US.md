@@ -12,7 +12,7 @@ takes about five minutes on a new project and does not change how the rest of yo
 | Item | Version | Notes |
 |---|---|---|
 | .NET | `net10.0` or `net11.0` | The packages target both. |
-| Avalonia | `12.1.4` | Pinned to the exact version the library is built against. |
+| Avalonia | `12.1.5` | Pinned to the exact version the library is built against. |
 | TKCode.Arc.Foundation | same as Arc | MIT; the theme, token, language and package runtime. Comes with `TKCode.Arc`. |
 | Fonts (optional) | `Avalonia.Fonts.Inter` | Arc's body text uses Inter; Geist comes from `TKCode.Arc.Fonts`. |
 
@@ -44,7 +44,7 @@ them all. The steps below add Arc to an existing project and explain what the te
 dotnet add package TKCode.Arc --version 0.4.0-preview.6
 dotnet add package TKCode.Arc.Fonts --version 0.4.0-preview.6           # optional: Geist and Geist Mono
 dotnet add package TKCode.Arc.Icons.Lucide --version 0.4.0-preview.6    # optional: the full Lucide set
-dotnet add package Avalonia.Fonts.Inter --version 12.1.4                 # optional: Inter for body text
+dotnet add package Avalonia.Fonts.Inter --version 12.1.5                 # optional: Inter for body text
 ```
 
 `TKCode.Arc` brings in `TKCode.Arc.Core`, `TKCode.Arc.Foundation` and StreamMark. If your solution uses central
@@ -55,7 +55,7 @@ package management, add the versions to `Directory.Packages.props` once and keep
     <PackageVersion Include="TKCode.Arc" Version="0.4.0-preview.6" />
     <PackageVersion Include="TKCode.Arc.Fonts" Version="0.4.0-preview.6" />
     <PackageVersion Include="TKCode.Arc.Icons.Lucide" Version="0.4.0-preview.6" />
-    <PackageVersion Include="Avalonia.Fonts.Inter" Version="12.1.4" />
+    <PackageVersion Include="Avalonia.Fonts.Inter" Version="12.1.5" />
 </ItemGroup>
 ```
 
@@ -303,7 +303,7 @@ build has no pdf.js to import.
 | Headings and code use the system font | The fonts are not registered | Call `WithInterFont()` and `WithArcFonts()` on the `AppBuilder`. |
 | Wrong number or date formats, or exceptions while formatting | `InvariantGlobalization` is enabled | Remove it from the project file. |
 | `'Button' is an ambiguous reference` | `TKCode.Arc` and `Avalonia.Controls` are both imported | Alias one of them, as shown above. |
-| Restore warnings about Avalonia versions | Another package pulls a different Avalonia | Reference Avalonia `12.1.4` explicitly in the application. |
+| Restore warnings about Avalonia versions | Another package pulls a different Avalonia | Reference Avalonia `12.1.5` explicitly in the application. |
 | Blocks, `DataGrid` or Special types are not found | The package is not referenced or not registered | Add `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts` or `TKCode.Arc.Special` and call `UseArcBlocks()`, `UseArcAdvancedCharts()` or `UseArcSpecial()` in `UseArc(...)`. |
 
 ## Next steps

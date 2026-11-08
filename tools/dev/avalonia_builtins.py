@@ -17,7 +17,7 @@ Scans <repo-root>/<dir> (default src/; pass --dir several times, e.g. --dir src 
   * hosts and template parts that need a theme whenever an app runs (Window, PopupRoot, OverlayPopupHost, ...).
 
 Writes a Markdown report to stdout (or JSON with --json). The Avalonia type catalog below is a snapshot of
-Avalonia 12.1.4 (Avalonia.Controls + Avalonia.Base exported types deriving from Control); "templated" means it
+Avalonia 12.1.5 (Avalonia.Controls + Avalonia.Base exported types deriving from Control); "templated" means it
 derives from TemplatedControl and therefore renders nothing without a ControlTheme that sets Template.
 """
 import argparse
@@ -30,7 +30,7 @@ import xml.parsers.expat
 
 AVALONIA_XMLNS = "https://github.com/avaloniaui"
 
-# name -> (namespace, templated). Snapshot of Avalonia 12.1.4; abstract types are left out (never instantiated).
+# name -> (namespace, templated). Snapshot of Avalonia 12.1.5; abstract types are left out (never instantiated).
 _CATALOG = """
 Avalonia.Controls: T AutoCompleteBox Button ButtonSpinner Calendar CalendarDatePicker Carousel CarouselPage CheckBox
   ComboBox ComboBoxItem CommandBar CommandBarButton CommandBarSeparator CommandBarToggleButton ContentControl ContentPage
