@@ -1,7 +1,11 @@
 namespace TKCode.Arc;
 
 /// <summary>One visible row of the chart: a phase row or a task row.</summary>
-internal readonly record struct GanttRow(GanttGroup? Group, GanttTask? Task, int GroupTaskCount, bool IsCollapsed);
+internal readonly record struct GanttRow(GanttGroup? Group, GanttTask? Task, int GroupTaskCount, bool IsCollapsed)
+{
+    /// <summary>The row's identity across models, made once: it is looked up for every row of every frame.</summary>
+    public string Key { get; } = Task is { } task ? "t:" + task.Id : "g:" + Group!.Id;
+}
 
 /// <summary>
 /// One dependency arrow. A task inside a folded phase has no bar, so its end of the arrow sits on the phase's summary bar;
@@ -40,8 +44,25 @@ internal sealed class GanttModel
             }
         }
         Rows = rows;
+        var taskRows = new Dictionary<string, int>();
+        var groupRows = new Dictionary<string, int>();
+        for (var i = 0; i < rows.Count; i++)
+        {
+            if (rows[i].Task is { } task)
+            {
+                taskRows[task.Id] = i;
+            }
+            else
+            {
+                groupRows[rows[i].Group!.Id] = i;
+            }
+        }
+        TaskRows = taskRows;
+        GroupRows = groupRows;
         Links = BuildLinks();
     }
+
+    private readonly Dictionary<string, (DateOnly Start, DateOnly End, double Progress)?> _summaries = [];
 
     public IReadOnlyList<GanttGroup> Groups { get; }
 
@@ -52,6 +73,12 @@ internal sealed class GanttModel
     public IReadOnlyDictionary<string, GanttTask> ById { get; }
 
     public IReadOnlyList<GanttRow> Rows { get; }
+
+    /// <summary>The row of each visible task, by task id.</summary>
+    public IReadOnlyDictionary<string, int> TaskRows { get; }
+
+    /// <summary>The row of each phase, by group id.</summary>
+    public IReadOnlyDictionary<string, int> GroupRows { get; }
 
     /// <summary>The dependency arrows to draw; a dependency between two tasks folded into the same phase has none.</summary>
     public IReadOnlyList<GanttLink> Links { get; }
@@ -134,6 +161,17 @@ internal sealed class GanttModel
 
     /// <summary>The span and progress of a phase: earliest start, latest end, average progress weighted by days.</summary>
     public (DateOnly Start, DateOnly End, double Progress)? Summary(GanttGroup group)
+    {
+        // A model's tasks do not change (an edit makes a new model), and each phase row asks every frame.
+        if (!_summaries.TryGetValue(group.Id, out var summary))
+        {
+            summary = ComputeSummary(group);
+            _summaries[group.Id] = summary;
+        }
+        return summary;
+    }
+
+    private (DateOnly Start, DateOnly End, double Progress)? ComputeSummary(GanttGroup group)
     {
         var members = Tasks.Where(t => t.GroupId == group.Id).ToList();
         if (members.Count == 0)

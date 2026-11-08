@@ -15,20 +15,72 @@ internal sealed partial class GanttChart
     private const double MilestoneRadius = 8;
     private const double BarTextInset = 10;
     private const double BarFillOpacity = 0.7;
+    private const double TextFitStep = 4;
+    private const double ViewMargin = 24;
     private const double TierOneY = 10;
     private const double TierTwoY = 30;
+
+    private static readonly string[] s_dayText = Enumerable.Range(0, 32).Select(d => d.ToString(CultureInfo.InvariantCulture)).ToArray();
+    private static readonly string[] s_percentText = Enumerable.Range(0, 101).Select(d => d.ToString(CultureInfo.InvariantCulture) + "%").ToArray();
+    private static readonly string[] s_monthText = CultureInfo.InvariantCulture.DateTimeFormat.MonthNames;
+    private static readonly string[] s_monthShortText = CultureInfo.InvariantCulture.DateTimeFormat.AbbreviatedMonthNames;
+
+    // Everything below is asked for many times in every frame of a zoom or a drag, so none of it is made twice.
+    private readonly Dictionary<(IBrush? Brush, double Thickness, bool Round), IPen> _pens = [];
+    private readonly Dictionary<int, string> _numberText = [];
+    private readonly Dictionary<double, StreamGeometry> _diamonds = [];
+    private readonly Dictionary<(string Task, string Dependency), ArrowShape> _arrows = [];
+    private StreamGeometry? _chevronOpen;
+    private StreamGeometry? _chevronClosed;
+
+    private sealed record ArrowShape(double X1, double Y1, double X2, double Y2, StreamGeometry Geometry);
+
+    private IPen PenOf(IBrush? brush, double thickness, bool round = false)
+    {
+        var key = (brush, thickness, round);
+        if (!_pens.TryGetValue(key, out var pen))
+        {
+            if (_pens.Count > 32)
+            {
+                _pens.Clear();
+            }
+            pen = round ? new Pen(brush, thickness, null, PenLineCap.Round, PenLineJoin.Round) : new Pen(brush, thickness);
+            _pens[key] = pen;
+        }
+        return pen;
+    }
+
+    private string NumberText(int value)
+    {
+        if (!_numberText.TryGetValue(value, out var text))
+        {
+            text = value.ToString(CultureInfo.InvariantCulture);
+            _numberText[value] = text;
+        }
+        return text;
+    }
+
+    /// <summary>The text whole when it fits; otherwise trimmed to a width on a coarse step, so a bar that changes width every frame does not lay its name out every frame.</summary>
+    private FormattedText TextFit(string text, double size, IBrush? brush, FontWeight weight, double room)
+    {
+        var whole = Text(text, size, brush, weight);
+        return whole.Width <= room ? whole : Text(text, size, brush, weight, Math.Max(1, Math.Floor(room / TextFitStep) * TextFitStep));
+    }
 
     private double RowY(int index, GanttRow row)
     {
         var target = index * GanttModel.RowHeight;
+        if (_layoutT.Value >= 1)
+        {
+            return target;
+        }
         if (_before.TryGetValue(RowId(row), out var s))
         {
             return s.Y + (target - s.Y) * _layoutT.Value;
         }
         if (row.Task is { } task)
         {
-            var g = _model.Rows.ToList().FindIndex(r => r.Group?.Id == task.GroupId);
-            var from = g >= 0 ? g * GanttModel.RowHeight : target;
+            var from = _model.GroupRows.TryGetValue(task.GroupId, out var g) ? g * GanttModel.RowHeight : target;
             return from + (target - from) * _layoutT.Value;
         }
         return target;
@@ -128,7 +180,7 @@ internal sealed partial class GanttChart
             var next = big ? cursor.AddYears(1) : cursor.AddMonths(1);
             var x0 = XOf(cursor);
             var x1 = XOf(next);
-            var label = big ? cursor.Year.ToString(CultureInfo.InvariantCulture) : cursor.ToString("MMMM", CultureInfo.InvariantCulture);
+            var label = big ? NumberText(cursor.Year) : s_monthText[cursor.Month - 1];
             var ft = Text(label, 12, SecondaryBrush);
             var lx = Math.Max(x0, _scrollX) + 8;
             lx = Math.Min(lx, x1 - ft.Width - 8);
@@ -148,15 +200,15 @@ internal sealed partial class GanttChart
             string? label = null;
             if (_zoom == GanttZoom.Day)
             {
-                label = d.Day.ToString(CultureInfo.InvariantCulture);
+                label = s_dayText[d.Day];
             }
             else if (_zoom == GanttZoom.Week && d.DayOfWeek == DayOfWeek.Monday)
             {
-                label = d.Day.ToString(CultureInfo.InvariantCulture);
+                label = s_dayText[d.Day];
             }
             else if (big && d.Day == 1)
             {
-                label = d.ToString("MMM", CultureInfo.InvariantCulture);
+                label = s_monthShortText[d.Month - 1];
             }
             if (label is null)
             {
@@ -185,7 +237,7 @@ internal sealed partial class GanttChart
                 }
             }
         }
-        var gridPen = new Pen(GridBrush, 1);
+        var gridPen = PenOf(GridBrush, 1);
         for (var i = a; i <= b; i++)
         {
             var d = _first.AddDays(i);
@@ -199,19 +251,27 @@ internal sealed partial class GanttChart
         for (var i = 0; i < rows.Count; i++)
         {
             var y = RowY(i, rows[i]);
+            if (!RowInView(y))
+            {
+                continue;
+            }
             ctx.DrawLine(gridPen, new Point(a * dw, y + GanttModel.RowHeight - 0.5), new Point((b + 1) * dw, y + GanttModel.RowHeight - 0.5));
         }
         // The today line runs behind the arrows and the bars, so it never cuts through a bar's label.
         var todayX = TodayContentX();
         if (todayX >= 0)
         {
-            ctx.DrawLine(new Pen(TodayBrush, 1), new Point(todayX, 0), new Point(todayX, bodyH));
+            ctx.DrawLine(PenOf(TodayBrush, 1), new Point(todayX, 0), new Point(todayX, bodyH));
         }
         DrawArrows(ctx);
         for (var i = 0; i < rows.Count; i++)
         {
             var row = rows[i];
             var y = RowY(i, row);
+            if (!RowInView(y))
+            {
+                continue;
+            }
             var opacity = RowOpacity(row);
             using (ctx.PushOpacity(opacity))
             {
@@ -231,6 +291,11 @@ internal sealed partial class GanttChart
         }
     }
 
+    /// <summary>Whether a row at <paramref name="y"/> shows, with room for the date tag a dragged bar raises above itself.</summary>
+    private bool RowInView(double y) => y + GanttModel.RowHeight + ViewMargin >= _scrollY && y - ViewMargin <= _scrollY + ViewHeight;
+
+    private bool ColumnInView(double x0, double x1) => x1 + ViewMargin >= _scrollX && x0 - ViewMargin <= _scrollX + ViewWidth;
+
     private void DrawSummary(DrawingContext ctx, GanttGroup g, double y)
     {
         if (_model.Summary(g) is not { } s)
@@ -239,6 +304,10 @@ internal sealed partial class GanttChart
         }
         var x0 = XOf(s.Start);
         var x1 = XOf(s.End.AddDays(1));
+        if (!ColumnInView(x0, x1))
+        {
+            return;
+        }
         var rect = new Rect(x0, y + (GanttModel.RowHeight - 6) / 2, Math.Max(2, x1 - x0), 6);
         ctx.DrawRectangle(SummaryTrackBrush, null, new RoundedRect(rect, 3));
         var fill = rect.Width * Math.Clamp(s.Progress, 0, 1);
@@ -251,10 +320,14 @@ internal sealed partial class GanttChart
     private void DrawBar(DrawingContext ctx, GanttTask t, GanttRow row, double y)
     {
         var (x0, x1) = BarX(t, row);
+        if (!ColumnInView(x0 - MilestoneRadius, x1 + MilestoneRadius))
+        {
+            return;
+        }
         var cy = y + BarTop + BarHeight / 2;
         var conflict = _model.HasConflict(t);
         var hot = IsHot(t.Id);
-        var pen = new Pen(conflict ? ConflictBrush : hot ? TextBrush : BarEdgeBrush, hot || conflict ? 1.5 : 1);
+        var pen = PenOf(conflict ? ConflictBrush : hot ? TextBrush : BarEdgeBrush, hot || conflict ? 1.5 : 1);
         if (t.IsMilestone)
         {
             var c = new Point((x0 + x1) / 2, cy);
@@ -276,18 +349,18 @@ internal sealed partial class GanttChart
                     ctx.DrawRectangle(BarFillBrush, null, new Rect(rect.X, rect.Y, rect.Width * p, rect.Height));
                 }
             }
-            var percent = ((int)Math.Round(p * 100)).ToString(CultureInfo.InvariantCulture) + "%";
+            var percent = s_percentText[(int)Math.Round(p * 100)];
             if (rect.Width >= 96)
             {
                 var pct = Text(percent, 13, SecondaryBrush);
                 var room = rect.Width - BarTextInset * 2 - pct.Width - 8;
-                var ft = Text(t.Name, 13, TextBrush, FontWeight.Medium, room);
+                var ft = TextFit(t.Name, 13, TextBrush, FontWeight.Medium, room);
                 ctx.DrawText(ft, new Point(rect.X + BarTextInset, cy - ft.Height / 2));
                 ctx.DrawText(pct, new Point(rect.Right - BarTextInset - pct.Width, cy - pct.Height / 2));
             }
             else if (rect.Width >= 36)
             {
-                var pct = Text(percent, 12, SecondaryBrush, FontWeight.Normal, rect.Width - 8);
+                var pct = TextFit(percent, 12, SecondaryBrush, FontWeight.Normal, rect.Width - 8);
                 ctx.DrawText(pct, new Point(rect.X + (rect.Width - pct.Width) / 2, cy - pct.Height / 2));
             }
         }
@@ -304,7 +377,7 @@ internal sealed partial class GanttChart
     {
         if (_keyboardFocus && IsFocused && _focusId == t.Id)
         {
-            ctx.DrawRectangle(null, new Pen(FocusBrush, 2), new RoundedRect(rect, radius));
+            ctx.DrawRectangle(null, PenOf(FocusBrush, 2), new RoundedRect(rect, radius));
         }
     }
 
@@ -367,7 +440,7 @@ internal sealed partial class GanttChart
         {
             return;
         }
-        ctx.DrawLine(new Pen(TodayBrush, 1), new Point(x, 22), new Point(x, hh));
+        ctx.DrawLine(PenOf(TodayBrush, 1), new Point(x, 22), new Point(x, hh));
         var ft = Text("Today", 12, TodayTextBrush, FontWeight.Medium);
         var pill = TodayPill(x);
         ctx.DrawRectangle(TodayBrush, null, new RoundedRect(pill, 9));
@@ -376,16 +449,21 @@ internal sealed partial class GanttChart
 
     private void DrawArrows(DrawingContext ctx)
     {
-        var rows = _model.Rows;
-        var index = new Dictionary<string, int>();
-        for (var i = 0; i < rows.Count; i++)
+        if (_arrows.Count > _model.Links.Count * 2 + 16)
         {
-            index[RowId(rows[i])] = i;
+            _arrows.Clear();
         }
         foreach (var link in _model.Links)
         {
-            if (!TryArrowEnd(link.Dependency, link.FoldedDependency, index, out _, out var fromX, out var fromY)
-                || !TryArrowEnd(link.Task, link.FoldedTask, index, out var toX, out _, out var toY))
+            if (!TryArrowEnd(link.Dependency, link.FoldedDependency, out _, out var fromX, out var fromY)
+                || !TryArrowEnd(link.Task, link.FoldedTask, out var toX, out _, out var toY))
+            {
+                continue;
+            }
+            // An arrow's box: its trunk stays between its ends, and a tight one steps back by a little more than the margin covers.
+            if (!ColumnInView(Math.Min(fromX, toX), Math.Max(fromX, toX) + ArrowOut)
+                || Math.Max(fromY, toY) + ViewMargin < _scrollY
+                || Math.Min(fromY, toY) - ViewMargin > _scrollY + ViewHeight)
             {
                 continue;
             }
@@ -393,18 +471,33 @@ internal sealed partial class GanttChart
             var conflict = link.Task.Start <= (dep.IsMilestone ? dep.Start : dep.End);
             var hot = IsHot(link.Task.Id) || IsHot(dep.Id);
             var brush = conflict ? ConflictBrush : hot ? TextBrush : ArrowBrush;
-            DrawArrow(ctx, new Pen(brush, hot || conflict ? 1.5 : 1), fromX, fromY, toX, toY);
+            ctx.DrawGeometry(null, PenOf(brush, hot || conflict ? 1.5 : 1, round: true), ArrowGeometry(link, fromX, fromY, toX, toY));
         }
     }
 
+    /// <summary>
+    /// The arrow as one figure pair, kept until an end moves: hovering, scrolling or dragging another bar leaves it alone.
+    /// </summary>
+    private StreamGeometry ArrowGeometry(in GanttLink link, double x1, double y1, double x2, double y2)
+    {
+        var key = (link.Task.Id, link.Dependency.Id);
+        if (_arrows.TryGetValue(key, out var shape) && shape.X1 == x1 && shape.Y1 == y1 && shape.X2 == x2 && shape.Y2 == y2)
+        {
+            return shape.Geometry;
+        }
+        var geometry = BuildArrow(x1, y1, x2, y2);
+        _arrows[key] = new ArrowShape(x1, y1, x2, y2, geometry);
+        return geometry;
+    }
+
     /// <summary>The left and right tips an arrow can attach to: the task's bar or diamond, or the summary bar of its folded phase.</summary>
-    private bool TryArrowEnd(GanttTask task, GanttGroup? folded, Dictionary<string, int> index, out double x0, out double x1, out double y)
+    private bool TryArrowEnd(GanttTask task, GanttGroup? folded, out double x0, out double x1, out double y)
     {
         x0 = x1 = y = 0;
         var rows = _model.Rows;
         if (folded is not null)
         {
-            if (!index.TryGetValue("g:" + folded.Id, out var g) || _model.Summary(folded) is not { } s)
+            if (!_model.GroupRows.TryGetValue(folded.Id, out var g) || _model.Summary(folded) is not { } s)
             {
                 return false;
             }
@@ -413,7 +506,7 @@ internal sealed partial class GanttChart
             y = RowY(g, rows[g]) + GanttModel.RowHeight / 2;
             return true;
         }
-        if (!index.TryGetValue("t:" + task.Id, out var i))
+        if (!_model.TaskRows.TryGetValue(task.Id, out var i))
         {
             return false;
         }
@@ -428,23 +521,31 @@ internal sealed partial class GanttChart
         return true;
     }
 
-    private static void DrawDiamond(DrawingContext ctx, IBrush? brush, IPen? pen, Point c, double r)
+    /// <summary>A diamond around the origin, drawn in place by a transform, so each size is built once.</summary>
+    private void DrawDiamond(DrawingContext ctx, IBrush? brush, IPen? pen, Point c, double r)
     {
-        var g = new StreamGeometry();
-        using (var gc = g.Open())
+        if (!_diamonds.TryGetValue(r, out var g))
         {
-            gc.BeginFigure(new Point(c.X, c.Y - r), true);
-            gc.LineTo(new Point(c.X + r, c.Y));
-            gc.LineTo(new Point(c.X, c.Y + r));
-            gc.LineTo(new Point(c.X - r, c.Y));
-            gc.EndFigure(true);
+            g = new StreamGeometry();
+            using (var gc = g.Open())
+            {
+                gc.BeginFigure(new Point(0, -r), true);
+                gc.LineTo(new Point(r, 0));
+                gc.LineTo(new Point(0, r));
+                gc.LineTo(new Point(-r, 0));
+                gc.EndFigure(true);
+            }
+            _diamonds[r] = g;
         }
-        ctx.DrawGeometry(brush, pen, g);
+        using (ctx.PushTransform(Matrix.CreateTranslation(c.X, c.Y)))
+        {
+            ctx.DrawGeometry(brush, pen, g);
+        }
     }
 
-    private static void DrawArrow(DrawingContext ctx, Pen pen, double x1, double y1, double x2, double y2)
+    private static StreamGeometry BuildArrow(double x1, double y1, double x2, double y2)
     {
-        var pts = new List<Point> { new(x1, y1) };
+        var pts = new List<Point>(6) { new(x1, y1) };
         var gap = x2 - x1;
         if (gap >= ArrowHead + ArrowMinOut + 2)
         {
@@ -487,17 +588,12 @@ internal sealed partial class GanttChart
             }
             gc.LineTo(pts[^1]);
             gc.EndFigure(false);
+            gc.BeginFigure(new Point(x2 - ArrowHead, y2 - ArrowHeadHalf), false);
+            gc.LineTo(new Point(x2, y2));
+            gc.LineTo(new Point(x2 - ArrowHead, y2 + ArrowHeadHalf));
+            gc.EndFigure(false);
         }
-        ctx.DrawGeometry(null, pen, g);
-        var head = new StreamGeometry();
-        using (var hc = head.Open())
-        {
-            hc.BeginFigure(new Point(x2 - ArrowHead, y2 - ArrowHeadHalf), false);
-            hc.LineTo(new Point(x2, y2));
-            hc.LineTo(new Point(x2 - ArrowHead, y2 + ArrowHeadHalf));
-            hc.EndFigure(false);
-        }
-        ctx.DrawGeometry(null, new Pen(pen.Brush, pen.Thickness, null, PenLineCap.Round, PenLineJoin.Round), head);
+        return g;
     }
 
     private static double Dist(Point a, Point b) => Math.Sqrt((a.X - b.X) * (a.X - b.X) + (a.Y - b.Y) * (a.Y - b.Y));
@@ -514,7 +610,7 @@ internal sealed partial class GanttChart
         var tasks = Text("Tasks", 13, MutedBrush);
         using (ctx.PushClip(new Rect(0, hh, colW - 1, Math.Max(0, h - hh))))
         {
-            var gridPen = new Pen(GridBrush, 1);
+            var gridPen = PenOf(GridBrush, 1);
             var rows = _model.Rows;
             for (var i = 0; i < rows.Count; i++)
             {
@@ -534,7 +630,7 @@ internal sealed partial class GanttChart
                     if (row.Group is { } g)
                     {
                         DrawChevron(ctx, 19, cy, row.IsCollapsed);
-                        var count = Text(row.GroupTaskCount.ToString(CultureInfo.InvariantCulture), 12, MutedBrush);
+                        var count = Text(NumberText(row.GroupTaskCount), 12, MutedBrush);
                         var name = Text(g.Name, 14, TextBrush, FontWeight.Medium, colW - 36 - count.Width - 30);
                         ctx.DrawText(name, new Point(36, cy - name.Height / 2));
                         ctx.DrawText(count, new Point(colW - 16 - count.Width, cy - count.Height / 2));
@@ -565,23 +661,38 @@ internal sealed partial class GanttChart
 
     private void DrawChevron(DrawingContext ctx, double cx, double cy, bool collapsed)
     {
-        var g = new StreamGeometry();
-        using (var gc = g.Open())
+        var g = collapsed ? _chevronClosed : _chevronOpen;
+        if (g is null)
         {
+            g = new StreamGeometry();
+            using (var gc = g.Open())
+            {
+                if (collapsed)
+                {
+                    gc.BeginFigure(new Point(-2, -4), false);
+                    gc.LineTo(new Point(2, 0));
+                    gc.LineTo(new Point(-2, 4));
+                }
+                else
+                {
+                    gc.BeginFigure(new Point(-4, -2), false);
+                    gc.LineTo(new Point(0, 2));
+                    gc.LineTo(new Point(4, -2));
+                }
+                gc.EndFigure(false);
+            }
             if (collapsed)
             {
-                gc.BeginFigure(new Point(cx - 2, cy - 4), false);
-                gc.LineTo(new Point(cx + 2, cy));
-                gc.LineTo(new Point(cx - 2, cy + 4));
+                _chevronClosed = g;
             }
             else
             {
-                gc.BeginFigure(new Point(cx - 4, cy - 2), false);
-                gc.LineTo(new Point(cx, cy + 2));
-                gc.LineTo(new Point(cx + 4, cy - 2));
+                _chevronOpen = g;
             }
-            gc.EndFigure(false);
         }
-        ctx.DrawGeometry(null, new Pen(MutedBrush, 1.5, null, PenLineCap.Round, PenLineJoin.Round), g);
+        using (ctx.PushTransform(Matrix.CreateTranslation(cx, cy)))
+        {
+            ctx.DrawGeometry(null, PenOf(MutedBrush, 1.5, round: true), g);
+        }
     }
 }
