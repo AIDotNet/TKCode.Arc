@@ -613,12 +613,12 @@
     </unit>
     <unit id="HomeTitle">
       <segment>
-        <source>Change one value. The whole page follows.</source>
+        <source>Great .NET software starts with great foundations.</source>
       </segment>
     </unit>
     <unit id="HomeSubtitle">
       <segment>
-        <source>TKCode is an open source line of native UI products for .NET. Arc brings {0} components, spring motion and themes; StreamMark streams Markdown for AI chat.</source>
+        <source>TKCode builds open source foundations: interfaces, text rendering, scripting and debugging. Native, with no WebView, and written with AOT in mind.</source>
       </segment>
     </unit>
     <unit id="HomeExplore">
@@ -629,31 +629,6 @@
     <unit id="HomeReadDocs">
       <segment>
         <source>Read the docs</source>
-      </segment>
-    </unit>
-    <unit id="HomeDemo">
-      <segment>
-        <source>Live demo</source>
-      </segment>
-    </unit>
-    <unit id="HomeLiveTitle">
-      <segment>
-        <source>Every example is live</source>
-      </segment>
-    </unit>
-    <unit id="HomeLiveSubtitle">
-      <segment>
-        <source>Press, drag and type in the cards. Each one opens its full page.</source>
-      </segment>
-    </unit>
-    <unit id="HomeBrowseAll">
-      <segment>
-        <source>Browse all {0} components</source>
-      </segment>
-    </unit>
-    <unit id="HomeOpen">
-      <segment>
-        <source>Open</source>
       </segment>
     </unit>
     <unit id="NavFriends">
@@ -668,27 +643,7 @@
     </unit>
     <unit id="HomeBadge">
       <segment>
-        <source>Open source · Preview</source>
-      </segment>
-    </unit>
-    <unit id="HomeWallTitle">
-      <segment>
-        <source>Every example is live</source>
-      </segment>
-    </unit>
-    <unit id="HomeWallSubtitle">
-      <segment>
-        <source>Real controls, not screenshots. Click, drag and type.</source>
-      </segment>
-    </unit>
-    <unit id="HomeExplodeTitle">
-      <segment>
-        <source>Take a screen apart</source>
-      </segment>
-    </unit>
-    <unit id="HomeExplodeSubtitle">
-      <segment>
-        <source>Scroll on. A week page of an app lifts into layers, one Arc part at a time.</source>
+        <source>Open source · for .NET and Avalonia</source>
       </segment>
     </unit>
     <unit id="HomeFriendsTitle">
@@ -871,29 +826,14 @@
         <source>Stop keeping on top</source>
       </segment>
     </unit>
-    <unit id="NavProducts">
-      <segment>
-        <source>Products</source>
-      </segment>
-    </unit>
     <unit id="NavDownload">
       <segment>
         <source>Download desktop app</source>
       </segment>
     </unit>
-    <unit id="ProductArc">
-      <segment>
-        <source>Arc components</source>
-      </segment>
-    </unit>
     <unit id="ProductArcNav">
       <segment>
         <source>Components, motion and themes for Avalonia</source>
-      </segment>
-    </unit>
-    <unit id="ProductStreamMarkNav">
-      <segment>
-        <source>Streaming Markdown for AI chat clients</source>
       </segment>
     </unit>
     <unit id="ProductBlocksNav">
@@ -929,26 +869,6 @@
     <unit id="ProductTemplatesNav">
       <segment>
         <source>Start an app with dotnet new</source>
-      </segment>
-    </unit>
-    <unit id="ProductFeatureWebTitle">
-      <segment>
-        <source>Try the desktop app</source>
-      </segment>
-    </unit>
-    <unit id="ProductFeatureWebText">
-      <segment>
-        <source>This site runs in WebAssembly. The app shows how Arc really performs.</source>
-      </segment>
-    </unit>
-    <unit id="ProductFeatureDesktopTitle">
-      <segment>
-        <source>About this app</source>
-      </segment>
-    </unit>
-    <unit id="ProductFeatureDesktopText">
-      <segment>
-        <source>Version, updates and the open source project.</source>
       </segment>
     </unit>
     <unit id="Settings">
@@ -1146,114 +1066,14 @@
         <source>Desktop app · native rendering</source>
       </segment>
     </unit>
-    <unit id="HomeDesktopTitle">
-      <segment>
-        <source>Tune it here, take it with you</source>
-      </segment>
-    </unit>
-    <unit id="HomeDesktopSubtitle">
-      <segment>
-        <source>This window draws Arc and StreamMark natively, so scrolling, dragging and motion here are a fair measure. Copy the theme code when you like the result.</source>
-      </segment>
-    </unit>
     <unit id="HomeUpdateTitle">
       <segment>
-        <source>App version</source>
-      </segment>
-    </unit>
-    <unit id="HomePreviewNote">
-      <segment>
-        <source>Sample app built from Arc components. The figures are examples.</source>
-      </segment>
-    </unit>
-    <unit id="HomePreviewProjects">
-      <segment>
-        <source>Active projects</source>
-      </segment>
-    </unit>
-    <unit id="HomePreviewOnTime">
-      <segment>
-        <source>On time</source>
-      </segment>
-    </unit>
-    <unit id="HomePreviewReview">
-      <segment>
-        <source>Awaiting review</source>
-      </segment>
-    </unit>
-    <unit id="HomePreviewWeek">
-      <segment>
-        <source>This week</source>
-      </segment>
-    </unit>
-    <unit id="HomePreviewNew">
-      <segment>
-        <source>New project</source>
-      </segment>
-    </unit>
-    <unit id="HomePreviewChart">
-      <segment>
-        <source>Deploys</source>
-      </segment>
-    </unit>
-    <unit id="HomeTunerTitle">
-      <segment>
-        <source>Theme</source>
-      </segment>
-    </unit>
-    <unit id="HomeTunerCode">
-      <segment>
-        <source>Theme code</source>
-      </segment>
-    </unit>
-    <unit id="HomeWebNoteTitle">
-      <segment>
-        <source>You are on the web version</source>
+        <source>Desktop app</source>
       </segment>
     </unit>
     <unit id="HomeWebNoteText">
       <segment>
         <source>Avalonia renders this page in WebAssembly and the .NET code is interpreted, so startup and motion here do not represent the desktop app.</source>
-      </segment>
-    </unit>
-    <unit id="HomeWebNoteAction">
-      <segment>
-        <source>About the desktop app</source>
-      </segment>
-    </unit>
-    <unit id="HomeProductsEyebrow">
-      <segment>
-        <source>Two products</source>
-      </segment>
-    </unit>
-    <unit id="HomeProductsTitle">
-      <segment>
-        <source>Arc for the interface, StreamMark for the words</source>
-      </segment>
-    </unit>
-    <unit id="HomeProductsSubtitle">
-      <segment>
-        <source>Use them together or on their own. Arc's Markdown control is built on StreamMark.</source>
-      </segment>
-    </unit>
-    <unit id="HomeArcText">
-      <segment>
-        <source>The component library for Avalonia. Spring motion, design tokens and themes are built in, ready for AOT and trimming.</source>
-      </segment>
-    </unit>
-    <unit id="HomeArcPoint1">
-      <segment>
-        <source>{0} components, {1} page blocks, {2} effects</source>
-      </segment>
-    </unit>
-    <unit id="HomeArcPoint2">
-      <segment>
-        <source>8 accents; corner and Pixel styles switch at run time</source>
-      </segment>
-    </unit>
-    <unit id="HomeArcPoint3">
-      <segment>
-        <source>dotnet new templates to start from</source>
       </segment>
     </unit>
     <unit id="HomeStreamMarkText">
@@ -1279,21 +1099,6 @@
     <unit id="StreamMarkLearn">
       <segment>
         <source>Explore StreamMark</source>
-      </segment>
-    </unit>
-    <unit id="HomeStreamEyebrow">
-      <segment>
-        <source>StreamMark, live</source>
-      </segment>
-    </unit>
-    <unit id="HomeStreamTitle">
-      <segment>
-        <source>Words that arrive without flicker</source>
-      </segment>
-    </unit>
-    <unit id="HomeStreamText">
-      <segment>
-        <source>This reply is pushed in chunks to a real Markdown control. Watch the raw tail beside it: a marker that is not closed yet already renders as if it were.</source>
       </segment>
     </unit>
     <unit id="StreamReplay">
@@ -1366,99 +1171,9 @@
         <source>Selection works across messages, and a long transcript stays [virtualized](https://github.com/AtomUICommunity/StreamMark).</source>
       </segment>
     </unit>
-    <unit id="HomeAtlasEyebrow">
-      <segment>
-        <source>Every Arc component</source>
-      </segment>
-    </unit>
-    <unit id="HomeAtlasTitle">
-      <segment>
-        <source>{0} components on one page</source>
-      </segment>
-    </unit>
-    <unit id="HomeAtlasSubtitle">
-      <segment>
-        <source>Point at a component to read about it. Open it for docs and live examples.</source>
-      </segment>
-    </unit>
     <unit id="HomeAtlasFilter">
       <segment>
         <source>Filter components</source>
-      </segment>
-    </unit>
-    <unit id="HomeExtrasEyebrow">
-      <segment>
-        <source>Arc add-on packages</source>
-      </segment>
-    </unit>
-    <unit id="HomeExtrasTitle">
-      <segment>
-        <source>Reference what you use</source>
-      </segment>
-    </unit>
-    <unit id="ExtraBlocksText">
-      <segment>
-        <source>{0} page-level compositions</source>
-      </segment>
-    </unit>
-    <unit id="ExtraSpecialText">
-      <segment>
-        <source>{0} animated explainers and pointer effects</source>
-      </segment>
-    </unit>
-    <unit id="ExtraMobileText">
-      <segment>
-        <source>{0} touch-first controls, not yet verified on devices</source>
-      </segment>
-    </unit>
-    <unit id="ExtraWorkflow">
-      <segment>
-        <source>Workflow</source>
-      </segment>
-    </unit>
-    <unit id="ExtraWorkflowText">
-      <segment>
-        <source>A node canvas</source>
-      </segment>
-    </unit>
-    <unit id="ExtraDock">
-      <segment>
-        <source>Docking</source>
-      </segment>
-    </unit>
-    <unit id="ExtraDockText">
-      <segment>
-        <source>IDE-style docking layouts</source>
-      </segment>
-    </unit>
-    <unit id="ExtraTerminal">
-      <segment>
-        <source>Terminal</source>
-      </segment>
-    </unit>
-    <unit id="ExtraTerminalText">
-      <segment>
-        <source>A TerminalView on libghostty-vt</source>
-      </segment>
-    </unit>
-    <unit id="ExtraMedia">
-      <segment>
-        <source>Audio and video</source>
-      </segment>
-    </unit>
-    <unit id="ExtraMediaText">
-      <segment>
-        <source>VideoPlayer and audio playback</source>
-      </segment>
-    </unit>
-    <unit id="ExtraCharts">
-      <segment>
-        <source>Advanced charts</source>
-      </segment>
-    </unit>
-    <unit id="ExtraChartsText">
-      <segment>
-        <source>A spreadsheet-style DataGrid</source>
       </segment>
     </unit>
     <unit id="DownloadEyebrow">
@@ -1616,29 +1331,9 @@
         <source>Open source native UI for .NET and Avalonia.</source>
       </segment>
     </unit>
-    <unit id="FooterProducts">
-      <segment>
-        <source>Products</source>
-      </segment>
-    </unit>
-    <unit id="FooterDevelopers">
-      <segment>
-        <source>Developers</source>
-      </segment>
-    </unit>
-    <unit id="FooterCommunity">
-      <segment>
-        <source>Community</source>
-      </segment>
-    </unit>
     <unit id="FooterSponsor">
       <segment>
         <source>Sponsor</source>
-      </segment>
-    </unit>
-    <unit id="FooterStreamMarkRepo">
-      <segment>
-        <source>StreamMark on GitHub</source>
       </segment>
     </unit>
     <unit id="FooterLicense">
@@ -1756,14 +1451,379 @@
         <source>Browse</source>
       </segment>
     </unit>
-    <unit id="StreamMarkName">
+    <unit id="NavProjects">
       <segment>
-        <source>StreamMark</source>
+        <source>Open source</source>
       </segment>
     </unit>
-    <unit id="HomePreviewAverage">
+    <unit id="ProductAllComponents">
       <segment>
-        <source>Weekly average</source>
+        <source>All components</source>
+      </segment>
+    </unit>
+    <unit id="ProductDemoNav">
+      <segment>
+        <source>Northstar, a sample app you can use</source>
+      </segment>
+    </unit>
+    <unit id="HomePointNative">
+      <segment>
+        <source>Native</source>
+      </segment>
+    </unit>
+    <unit id="HomePointNativeText">
+      <segment>
+        <source>Interfaces are drawn by Avalonia, on Windows, macOS and Linux.</source>
+      </segment>
+    </unit>
+    <unit id="HomePointLight">
+      <segment>
+        <source>Light</source>
+      </segment>
+    </unit>
+    <unit id="HomePointLightText">
+      <segment>
+        <source>Reference only what you use. Trimming and AOT are considered from the start.</source>
+      </segment>
+    </unit>
+    <unit id="HomePointOpen">
+      <segment>
+        <source>In the open</source>
+      </segment>
+    </unit>
+    <unit id="HomePointOpenText">
+      <segment>
+        <source>Code and design documents are on GitHub, so you can see how each decision was made.</source>
+      </segment>
+    </unit>
+    <unit id="HomeWebTitle">
+      <segment>
+        <source>To see real performance, download the desktop app</source>
+      </segment>
+    </unit>
+    <unit id="ComponentsText">
+      <segment>
+        <source>The Arc component library for Avalonia. Point at one to read about it; open it for docs and live examples.</source>
+      </segment>
+    </unit>
+    <unit id="ProjectsText">
+      <segment>
+        <source>Independent projects beside the components. Each has its own repository and releases.</source>
+      </segment>
+    </unit>
+    <unit id="ProjectKindMarkdown">
+      <segment>
+        <source>Streaming Markdown</source>
+      </segment>
+    </unit>
+    <unit id="ProjectKindScript">
+      <segment>
+        <source>JavaScript engine</source>
+      </segment>
+    </unit>
+    <unit id="ProjectKindDebug">
+      <segment>
+        <source>Debugging tool</source>
+      </segment>
+    </unit>
+    <unit id="ProjectJauntText">
+      <segment>
+        <source>A fully managed, NativeAOT-compatible JavaScript engine for .NET, built for embedded scripts, rules and plugins.</source>
+      </segment>
+    </unit>
+    <unit id="ProjectJauntPoint1">
+      <segment>
+        <source>Low host-boundary cost; compiled code can be shared</source>
+      </segment>
+    </unit>
+    <unit id="ProjectJauntPoint2">
+      <segment>
+        <source>Isolated realms with limits on time, work, memory and output</source>
+      </segment>
+    </unit>
+    <unit id="ProjectJauntPoint3">
+      <segment>
+        <source>Reflection-free data mapping, with a source generator</source>
+      </segment>
+    </unit>
+    <unit id="ProjectJauntPoint4">
+      <segment>
+        <source>JavaScript written after publishing also runs in NativeAOT programs</source>
+      </segment>
+    </unit>
+    <unit id="ProjectSpyglassText">
+      <segment>
+        <source>An open source, out-of-process debugging tool for Avalonia apps, like browser DevTools, with a free MCP server for AI coding agents.</source>
+      </segment>
+    </unit>
+    <unit id="ProjectSpyglassPoint1">
+      <segment>
+        <source>Element tree, element picking and live property editing, down to the XAML source</source>
+      </segment>
+    </unit>
+    <unit id="ProjectSpyglassPoint2">
+      <segment>
+        <source>Style cascade, binding errors, resources and themes</source>
+      </segment>
+    </unit>
+    <unit id="ProjectSpyglassPoint3">
+      <segment>
+        <source>A network request list with HAR import and export</source>
+      </segment>
+    </unit>
+    <unit id="ProjectSpyglassPoint4">
+      <segment>
+        <source>Frame rate, layout and render timings, with in-app overlays</source>
+      </segment>
+    </unit>
+    <unit id="HomeNumberComponents">
+      <segment>
+        <source>components</source>
+      </segment>
+    </unit>
+    <unit id="HomeNumberBlocks">
+      <segment>
+        <source>page blocks</source>
+      </segment>
+    </unit>
+    <unit id="HomeNumberEffects">
+      <segment>
+        <source>effects</source>
+      </segment>
+    </unit>
+    <unit id="HomeNumberIcons">
+      <segment>
+        <source>Lucide icons</source>
+      </segment>
+    </unit>
+    <unit id="HomeNumberTemplates">
+      <segment>
+        <source>project templates</source>
+      </segment>
+    </unit>
+    <unit id="HomeNumberLanguages">
+      <segment>
+        <source>docs languages</source>
+      </segment>
+    </unit>
+    <unit id="HomeAreasEyebrow">
+      <segment>
+        <source>What TKCode does</source>
+      </segment>
+    </unit>
+    <unit id="HomeAreasTitle">
+      <segment>
+        <source>Four hard parts of a .NET app</source>
+      </segment>
+    </unit>
+    <unit id="HomeAreaInterface">
+      <segment>
+        <source>Interfaces</source>
+      </segment>
+    </unit>
+    <unit id="HomeAreaInterfaceText">
+      <segment>
+        <source>Components, spring motion, design tokens and themes for product-grade desktop apps.</source>
+      </segment>
+    </unit>
+    <unit id="HomeAreaText">
+      <segment>
+        <source>Text</source>
+      </segment>
+    </unit>
+    <unit id="HomeAreaTextText">
+      <segment>
+        <source>Streaming Markdown drawn natively, so AI replies arrive without flicker.</source>
+      </segment>
+    </unit>
+    <unit id="HomeAreaScript">
+      <segment>
+        <source>Scripting</source>
+      </segment>
+    </unit>
+    <unit id="HomeAreaScriptText">
+      <segment>
+        <source>Run JavaScript plugins and rules inside a .NET app, with budgets and isolation.</source>
+      </segment>
+    </unit>
+    <unit id="HomeAreaDebug">
+      <segment>
+        <source>Debugging</source>
+      </segment>
+    </unit>
+    <unit id="HomeAreaDebugText">
+      <segment>
+        <source>Inspect a running Avalonia app the way browser DevTools inspect a page.</source>
+      </segment>
+    </unit>
+    <unit id="HomeUsesEyebrow">
+      <segment>
+        <source>What you can build</source>
+      </segment>
+    </unit>
+    <unit id="HomeUsesTitle">
+      <segment>
+        <source>Start from a finished app</source>
+      </segment>
+    </unit>
+    <unit id="HomeUsesText">
+      <segment>
+        <source>Each template creates an app that builds and runs right away.</source>
+      </segment>
+    </unit>
+    <unit id="HomeUseDesktop">
+      <segment>
+        <source>Desktop apps</source>
+      </segment>
+    </unit>
+    <unit id="HomeUseDesktopText">
+      <segment>
+        <source>Windows, macOS and Linux, with your choice of layout.</source>
+      </segment>
+    </unit>
+    <unit id="HomeUseChat">
+      <segment>
+        <source>AI chat clients</source>
+      </segment>
+    </unit>
+    <unit id="HomeUseChatText">
+      <segment>
+        <source>Conversations, streaming replies, models and attachments.</source>
+      </segment>
+    </unit>
+    <unit id="HomeUseAdmin">
+      <segment>
+        <source>Admin apps</source>
+      </segment>
+    </unit>
+    <unit id="HomeUseAdminText">
+      <segment>
+        <source>Sign-in, dashboard, customers, team, billing and settings.</source>
+      </segment>
+    </unit>
+    <unit id="HomeUseDevTool">
+      <segment>
+        <source>Developer tools</source>
+      </segment>
+    </unit>
+    <unit id="HomeUseDevToolText">
+      <segment>
+        <source>IDE-style explorer, editor tabs, properties and build output.</source>
+      </segment>
+    </unit>
+    <unit id="HomeUseWorkflow">
+      <segment>
+        <source>Workflow editors</source>
+      </segment>
+    </unit>
+    <unit id="HomeUseWorkflowText">
+      <segment>
+        <source>Step palette, editable canvas, inspector, run and JSON import.</source>
+      </segment>
+    </unit>
+    <unit id="HomeUseAnalytics">
+      <segment>
+        <source>Analytics dashboards</source>
+      </segment>
+    </unit>
+    <unit id="HomeUseAnalyticsText">
+      <segment>
+        <source>KPI drill-down, revenue, cohort retention and usage forecast.</source>
+      </segment>
+    </unit>
+    <unit id="HomePrinciplesEyebrow">
+      <segment>
+        <source>How we work</source>
+      </segment>
+    </unit>
+    <unit id="HomePrinciplesTitle">
+      <segment>
+        <source>Three things we hold to</source>
+      </segment>
+    </unit>
+    <unit id="HomeStartEyebrow">
+      <segment>
+        <source>Get started</source>
+      </segment>
+    </unit>
+    <unit id="HomeStartTitle">
+      <segment>
+        <source>Three commands to a running app</source>
+      </segment>
+    </unit>
+    <unit id="HomeStepInstall">
+      <segment>
+        <source>Install the templates</source>
+      </segment>
+    </unit>
+    <unit id="HomeStepCreate">
+      <segment>
+        <source>Create an app</source>
+      </segment>
+    </unit>
+    <unit id="HomeStepRun">
+      <segment>
+        <source>Run it</source>
+      </segment>
+    </unit>
+    <unit id="HomeRunsTitle">
+      <segment>
+        <source>Where it runs</source>
+      </segment>
+    </unit>
+    <unit id="HomeRunsSystems">
+      <segment>
+        <source>Systems</source>
+      </segment>
+    </unit>
+    <unit id="HomeRunsSystemsValue">
+      <segment>
+        <source>Windows, macOS, Linux, and browsers through WebAssembly</source>
+      </segment>
+    </unit>
+    <unit id="HomeRunsDotNet">
+      <segment>
+        <source>.NET</source>
+      </segment>
+    </unit>
+    <unit id="HomeRunsAvalonia">
+      <segment>
+        <source>UI framework</source>
+      </segment>
+    </unit>
+    <unit id="HomeRunsLicense">
+      <segment>
+        <source>License</source>
+      </segment>
+    </unit>
+    <unit id="HomeAiTitle">
+      <segment>
+        <source>Ready for AI assistants</source>
+      </segment>
+    </unit>
+    <unit id="HomeAiText">
+      <segment>
+        <source>Coding assistants can read the docs directly and work from the same rules as you.</source>
+      </segment>
+    </unit>
+    <unit id="HomeAiLlms">
+      <segment>
+        <source>llms.txt, with every page as Markdown</source>
+      </segment>
+    </unit>
+    <unit id="HomeAiSkill">
+      <segment>
+        <source>An agent skill for coding agents</source>
+      </segment>
+    </unit>
+    <unit id="HomeAiMcp">
+      <segment>
+        <source>An MCP server in Spyglass for debugging live apps</source>
+      </segment>
+    </unit>
+    <unit id="HomeAiOpen">
+      <segment>
+        <source>AI and MCP guide</source>
       </segment>
     </unit>
   </file>

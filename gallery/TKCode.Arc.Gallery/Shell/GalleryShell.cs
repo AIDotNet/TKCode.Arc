@@ -35,6 +35,8 @@ public sealed class GalleryShell : Grid
     private readonly TextBlock _browseTitle = GalleryUi.Text(string.Empty, ArcDesignTokenKind.TextSecondary, 13);
     private bool _isNarrow;
     private GalleryStreamMarkView? _streamMark;
+    private GalleryProjectsView? _projects;
+    private GalleryComponentsView? _components;
     private GallerySettingsView? _settings;
     private GalleryHomeView? _home;
     private GalleryFriendsView? _friends;
@@ -117,8 +119,24 @@ public sealed class GalleryShell : Grid
         {
             _sidebar.IsVisible = false;
             ReleaseFocusFromPage();
-            _pageHost.Content = _streamMark ??= new GalleryStreamMarkView(this, GalleryHost.IsWeb ? ShowDownload : null);
+            _pageHost.Content = _streamMark ??= new GalleryStreamMarkView(this);
             SetRoute(GalleryRoute.StreamMark);
+            return;
+        }
+        if (route.Kind == GalleryRouteKind.Projects)
+        {
+            _sidebar.IsVisible = false;
+            ReleaseFocusFromPage();
+            _pageHost.Content = _projects ??= new GalleryProjectsView(this);
+            SetRoute(GalleryRoute.Projects);
+            return;
+        }
+        if (route.Kind == GalleryRouteKind.ComponentsIndex)
+        {
+            _sidebar.IsVisible = false;
+            ReleaseFocusFromPage();
+            _pageHost.Content = _components ??= new GalleryComponentsView(this);
+            SetRoute(GalleryRoute.ComponentsIndex);
             return;
         }
         if (route.Kind == GalleryRouteKind.Settings)
@@ -311,7 +329,8 @@ public sealed class GalleryShell : Grid
     /// <summary>Whether the page host shows a sidebar page (not the home page, Friends or the dashboard demo).</summary>
     private bool IsEntryPageShown => _pageHost.Content is { } content
         && !ReferenceEquals(content, _home) && !ReferenceEquals(content, _friends) && !ReferenceEquals(content, _demo)
-        && !ReferenceEquals(content, _streamMark) && !ReferenceEquals(content, _settings);
+        && !ReferenceEquals(content, _streamMark) && !ReferenceEquals(content, _projects) && !ReferenceEquals(content, _components)
+        && !ReferenceEquals(content, _settings);
 
     /// <summary>
     /// The window remembers the last focused element of its focus scope, and Avalonia forgets it only when that element

@@ -99,7 +99,7 @@ public class GalleryTopBarTests
             }
             GalleryText.SetLanguage("en-US");
             levels.ShouldBe(levels.Order().ToList(), $"{language}: {string.Join(", ", levels)}");
-            levels[^1].ShouldBeLessThan(6, $"{language}: the narrowest window still has the GitHub button");
+            levels[^1].ShouldBeLessThan(3, $"{language}: the narrowest window still has the GitHub button");
         }
     }
 
@@ -107,6 +107,8 @@ public class GalleryTopBarTests
     public void A_Phone_Wide_Page_Keeps_The_Brand_And_The_Toggles()
     {
         // The web host has no minimum width.
+        var host = GalleryHost.Kind;
+        GalleryHost.Kind = GalleryHostKind.Web;
         var shell = new GalleryShell(null);
         var window = TestHelpers.Show(shell);
         try
@@ -114,46 +116,61 @@ public class GalleryTopBarTests
             window.Width = 390;
             window.Height = 700;
             SettleLayout();
-            shell.TopBar.FitLevel.ShouldBeGreaterThanOrEqualTo(6);
+            shell.TopBar.FitLevel.ShouldBeGreaterThanOrEqualTo(2);
             ShouldFit(shell.TopBar, "at 390 px");
             shell.TopBar.LanguageButton.IsEffectivelyVisible.ShouldBeTrue();
 
             // Widening the page gives the room back.
             window.Width = 1920;
             SettleLayout();
-            shell.TopBar.FitLevel.ShouldBeLessThan(4);
+            shell.TopBar.FitLevel.ShouldBeLessThan(2);
             ShouldFit(shell.TopBar, "at 1920 px");
         }
         finally
         {
             window.Close();
+            GalleryHost.Kind = host;
         }
     }
 
     [AvaloniaFact]
     public void Icon_Only_Buttons_Keep_Their_Names_As_Tooltips()
     {
+        var host = GalleryHost.Kind;
+        GalleryHost.Kind = GalleryHostKind.Web;
         var shell = new GalleryShell(null);
         var window = TestHelpers.Show(shell);
         try
         {
-            window.Width = 390;
-            window.Height = 700;
-            SettleLayout();
-            var right = shell.TopBar.Buttons;
-            var named = right.Children.OfType<Button>().Where(b => b.IsVisible)
-                             .Select(b => Tooltip.GetTip(b) as string).ToList();
-            named.ShouldContain("Search");
-            named.ShouldContain("Language");
-            named.ShouldContain("Appearance");
+            foreach (var width in new double[] { 390, 1920 })
+            {
+                window.Width = width;
+                window.Height = 700;
+                SettleLayout();
+                var named = shell.TopBar.Buttons.Children.OfType<Button>().Where(b => b.IsVisible)
+                                 .Select(b => Tooltip.GetTip(b) as string).ToList();
+                named.ShouldContain("Search");
+                named.ShouldContain("Language");
+                named.ShouldContain("Appearance");
+            }
+        }
+        finally
+        {
+            window.Close();
+            GalleryHost.Kind = host;
+        }
+    }
 
-            window.Width = 1920;
-            SettleLayout();
-            // A labelled button has no tooltip that repeats its label; the language button keeps "Language".
-            var wide = right.Children.OfType<Button>().Select(b => Tooltip.GetTip(b) as string).ToList();
-            wide.Contains("Appearance").ShouldBe(shell.TopBar.FitLevel >= 1);
-            wide.Contains("Search").ShouldBe(shell.TopBar.FitLevel >= 5);
-            wide.ShouldContain("Language");
+    [AvaloniaFact]
+    public void The_Desktop_App_Keeps_Language_And_Appearance_In_Its_Settings()
+    {
+        var shell = new GalleryShell(null);
+        var window = TestHelpers.Show(shell);
+        try
+        {
+            GalleryHost.IsDesktop.ShouldBeTrue();
+            shell.TopBar.LanguageButton.IsVisible.ShouldBeFalse();
+            shell.TopBar.SettingsButton!.IsVisible.ShouldBeTrue();
         }
         finally
         {

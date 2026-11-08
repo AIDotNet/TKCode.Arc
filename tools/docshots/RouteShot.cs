@@ -12,7 +12,7 @@ namespace TKCode.Arc.DocShots;
 /// <c>route &lt;address&gt; &lt;out.png&gt; [dark] [width=&lt;px&gt;] [height=&lt;px&gt;] [scroll=&lt;y&gt;] [signedout] [web] [phone] [drawer] [menu] [lang=&lt;tag&gt;]</c>: the gallery at an address,
 /// such as <c>/demo/overview</c> or <c>/friends</c>, as people see it; <c>scroll</c> moves the open demo page down and
 /// <c>signedout</c> signs out of the demo first (its sign-in page). <c>web</c> shows it as the site does (the desktop app is
-/// the default), <c>phone</c> as the site does on a phone, <c>drawer</c> opens the narrow page's sidebar, <c>menu</c> the Products menu.
+/// the default), <c>phone</c> as the site does on a phone, <c>drawer</c> opens the narrow page's sidebar, <c>menu</c> the Components menu.
 /// </summary>
 internal static class RouteShot
 {
@@ -80,7 +80,7 @@ internal static class RouteShot
             }
             else
             {
-                window.TopBar.Header.OpenPanel("products");
+                window.TopBar.Header.OpenPanel("components");
             }
             Program.Pump(30);
         }

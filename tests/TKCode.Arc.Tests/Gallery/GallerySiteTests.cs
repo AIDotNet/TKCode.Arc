@@ -59,7 +59,7 @@ public class GallerySiteTests
         WithShell(GalleryHostKind.Web, 1280, (shell, window) =>
         {
             var home = Home(window);
-            home.WebNote.ShouldNotBeNull();
+            home.WebStrip.ShouldNotBeNull();
             home.Download.ShouldNotBeNull();
             shell.TopBar.DownloadButton.ShouldNotBeNull();
             shell.TopBar.SettingsButton.ShouldBeNull();
@@ -73,7 +73,7 @@ public class GallerySiteTests
         WithShell(GalleryHostKind.Desktop, 1280, (shell, window) =>
         {
             var home = Home(window);
-            home.WebNote.ShouldBeNull();
+            home.WebStrip.ShouldBeNull();
             home.Download.ShouldBeNull();
             shell.TopBar.DownloadButton.ShouldBeNull();
             shell.TopBar.SettingsButton.ShouldNotBeNull();
@@ -108,11 +108,14 @@ public class GallerySiteTests
     {
         WithShell(GalleryHostKind.Web, 1280, (_, window) =>
         {
-            var section = Home(window).Download!;
+            var home = Home(window);
+            var section = home.Download!;
+            section.IsVisible.ShouldBeFalse("the home page stays short until the visitor asks");
+            home.ShowDownload();
+            section.IsVisible.ShouldBeTrue();
             section.OfferedRuntimes.First().ShouldBe("win-x64");
             // Until the list is read, every button opens the page of all releases.
             section.UrlOf("win-x64").ShouldBe(GalleryReleases.AllUrl);
-            section.BringIntoView();
             for (var i = 0; i < 6; i++)
             {
                 Dispatcher.UIThread.RunJobs();
@@ -239,46 +242,54 @@ public class GallerySiteTests
     }
 
     [AvaloniaFact]
-    public void The_Theme_Panel_Writes_The_Code_For_The_Theme_It_Sets()
+    public void The_Home_Page_Shows_No_Components_Or_Projects()
     {
-        WithShell(GalleryHostKind.Web, 1280, (shell, window) =>
+        WithShell(GalleryHostKind.Web, 1280, (_, window) =>
         {
-            var tuner = Home(window).Tuner;
-            try
-            {
-                _ = shell.Appearance.SetAccentAsync(ArcAccentPreset.Violet);
-                _ = shell.Appearance.SetCornersAsync(2);
-                tuner.ThemeCode.ShouldContain(".Accent(ArcAccentPreset.Violet)");
-                tuner.ThemeCode.ShouldContain(".Corners(ArcCornerStyle.Square)");
-                _ = shell.Appearance.SetPixelAsync(true);
-                tuner.ThemeCode.ShouldContain(".Pixel()");
-                tuner.ThemeCode.ShouldNotContain(".Accent(");
-            }
-            finally
-            {
-                _ = shell.Appearance.SetPixelAsync(false);
-                _ = shell.Appearance.SetCornersAsync(0);
-                _ = shell.Appearance.SetAccentAsync(ArcAccentPreset.Neutral);
-            }
+            var home = Home(window);
+            home.GetVisualDescendants().OfType<GalleryAtlas>().ShouldBeEmpty();
+            home.GetVisualDescendants().OfType<GalleryStreamStage>().ShouldBeEmpty();
+            home.GetVisualDescendants().OfType<GalleryDemoView>().ShouldBeEmpty();
         });
     }
 
     [AvaloniaFact]
-    public void The_Atlas_Lists_Every_Component_And_Filters()
+    public void Open_Source_Lists_The_Projects_With_Their_Licenses()
     {
-        WithShell(GalleryHostKind.Web, 1280, (_, window) =>
+        GalleryRoute.Parse("/projects").ShouldBe(GalleryRoute.Projects);
+        GalleryProjectsView.Projects.Select(p => p.Name).ShouldBe(["StreamMark", "Jaunt", "Spyglass"]);
+        GalleryProjectsView.Projects.ShouldAllBe(p => p.License == "MIT");
+        WithShell(GalleryHostKind.Web, 1280, (shell, window) =>
         {
-            var atlas = Home(window).Atlas;
-            atlas.Build();
-            atlas.VisibleEntries.Count().ShouldBe(TKCode.Arc.Gallery.Catalog.GalleryCatalog.Count);
-            atlas.FilterBox.Text = "chart";
+            window.GetVisualDescendants().OfType<GalleryProjectsView>().ShouldHaveSingleItem();
+            shell.TopBar.MarkedNavIndex.ShouldBe(1);
+        }, GalleryRoute.Projects);
+    }
+
+    [AvaloniaFact]
+    public void The_Components_Page_Lists_Every_Part_By_Tab_And_Filters()
+    {
+        GalleryRoute.Parse("/components").ShouldBe(GalleryRoute.ComponentsIndex);
+        WithShell(GalleryHostKind.Web, 1280, (shell, window) =>
+        {
+            shell.TopBar.MarkedNavIndex.ShouldBe(0);
+            var page = window.GetVisualDescendants().OfType<GalleryComponentsView>().Single();
+            page.Current.Build();
+            var all = page.Current.VisibleEntries.Count();
+            all.ShouldBeGreaterThanOrEqualTo(TKCode.Arc.Gallery.Catalog.GalleryCatalog.Count);
+            page.FilterBox.Text = "chart";
             Dispatcher.UIThread.RunJobs();
-            atlas.VisibleEntries.ShouldNotBeEmpty();
-            atlas.VisibleEntries.ShouldAllBe(entry => entry.Title.Contains("chart", StringComparison.OrdinalIgnoreCase) || entry.ClassName.Contains("chart", StringComparison.OrdinalIgnoreCase));
-            atlas.FilterBox.Text = string.Empty;
+            page.Current.VisibleEntries.ShouldNotBeEmpty();
+            page.Current.VisibleEntries.ShouldAllBe(entry => entry.Title.Contains("chart", StringComparison.OrdinalIgnoreCase) || entry.ClassName.Contains("chart", StringComparison.OrdinalIgnoreCase));
+            page.FilterBox.Text = string.Empty;
             Dispatcher.UIThread.RunJobs();
-            atlas.VisibleEntries.Count().ShouldBe(TKCode.Arc.Gallery.Catalog.GalleryCatalog.Count);
-        });
+            page.Current.VisibleEntries.Count().ShouldBe(all);
+
+            page.Show(3);
+            Dispatcher.UIThread.RunJobs();
+            page.Current.Build();
+            page.Current.VisibleEntries.Count().ShouldBe(TKCode.Arc.Gallery.Catalog.GalleryCatalog.Mobile.Entries.Length);
+        }, GalleryRoute.ComponentsIndex);
     }
 
     [AvaloniaFact]
@@ -317,8 +328,6 @@ public class GallerySiteTests
         {
             shell.TopBar.DownloadButton!.IsVisible.ShouldBeFalse("a phone has nothing to install");
             var home = Home(window);
-            home.Tuner.IsStacked.ShouldBeTrue();
-            home.Download!.IsStacked.ShouldBeTrue();
             foreach (var panel in home.GetVisualDescendants().OfType<GalleryGrid>().Where(g => g.IsEffectivelyVisible))
             {
                 panel.Bounds.Width.ShouldBeLessThanOrEqualTo(390, $"{panel.Name}");

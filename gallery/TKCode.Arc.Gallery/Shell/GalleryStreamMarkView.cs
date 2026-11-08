@@ -33,7 +33,7 @@ internal sealed class GalleryStreamMarkView : UserControl
         (ArcIcons.Cpu, GalleryShellLangResourceKind.StreamMarkFeatureAot, GalleryShellLangResourceKind.StreamMarkFeatureAotText)
     ];
 
-    public GalleryStreamMarkView(GalleryShell shell, Action? download)
+    public GalleryStreamMarkView(GalleryShell shell)
     {
         var column = new StackPanel();
         column.Children.Add(BuildHero(shell));
@@ -41,7 +41,7 @@ internal sealed class GalleryStreamMarkView : UserControl
         column.Children.Add(Section(GallerySite.Heading(null, GallerySite.Reveal(GalleryShellLangResourceKind.StreamMarkLiveTitle)), Stage));
         column.Children.Add(Section(GallerySite.Heading(null, GallerySite.Reveal(GalleryShellLangResourceKind.StreamMarkFeaturesTitle)), BuildFeatures()));
         column.Children.Add(Section(GallerySite.Heading(null, GallerySite.Reveal(GalleryShellLangResourceKind.StreamMarkPackagesTitle)), BuildPackages()));
-        column.Children.Add(GallerySiteFooter.Create(shell, download));
+        column.Children.Add(GallerySiteFooter.Create(shell));
         Content = GallerySite.Page(column, out _);
     }
 
@@ -70,7 +70,8 @@ internal sealed class GalleryStreamMarkView : UserControl
         content.Children.Add(GallerySite.Actions(
             GallerySite.Action(GalleryShellLangResourceKind.StreamMarkGitHub, ButtonVariant.Primary, () => GallerySite.Open(this, RepositoryUrl), ArcIcons.ArrowUpRight),
             GallerySite.Action(GalleryShellLangResourceKind.StreamMarkInArc, ButtonVariant.Secondary,
-                               () => shell.Navigate(GalleryRoute.To(GalleryCatalog.AllEntries.First(entry => entry.ClassName == "Markdown"))), ArcIcons.ArrowRight)));
+                               () => shell.Navigate(GalleryRoute.To(GalleryCatalog.AllEntries.First(entry => entry.ClassName == "Markdown"))), ArcIcons.ArrowRight),
+            GallerySite.Action(GalleryShellLangResourceKind.NavProjects, ButtonVariant.Ghost, () => shell.Navigate(GalleryRoute.Projects))));
         return GalleryHomeView.HeroCard(content);
     }
 
