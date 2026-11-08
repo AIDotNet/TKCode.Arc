@@ -1,6 +1,6 @@
 ---
 title: 更新日志
-source-hash: 8d74f32403b2
+source-hash: 189e1a918174
 ---
 
 # 更新日志
@@ -21,8 +21,13 @@ TKCode.Arc 的所有重要变更，最新的在前。版本遵循[语义化版�
 - **`PageViewer`**（`TKCode.Arc`，媒体；issue #51）：缩放、平移并翻阅图片（`ItemsSource`）或按需渲染的页面（`IPageSource`），可连续或单页显示，带适应模式、工具栏，以及让你在页面上自行绘制和接收指针输入的 `PageLayer`。一个自绘表面只绘制可见页。文档和示例提供英文、简体中文和繁体中文。
 - **模板**（新包 `TKCode.Arc.Templates`）：`dotnet new install TKCode.Arc.Templates` 后，用 `dotnet new tkcode-arc` 创建桌面应用，或用 `dotnet new tkcode-arc-xplat` 创建同时面向桌面和浏览器（WebAssembly）的应用。提供四种布局（`--layout blank|sidebar|header|dock`），以及这些选项：用 CommunityToolkit.Mvvm 的 MVVM（`--mvvm toolkit`）、依赖注入（`--di`）、保存偏好设置（`--settings`，默认开启：外观、强调色、窗口位置和布局状态在下次启动时恢复）、本地化（`--i18n`：English、简体中文和繁體中文的 `.xlf` 文件加语言切换；`--ui-language` 选择界面文字的语言）、Headless 测试项目（`--tests`）、Arc 标题栏（`--custom-titlebar`）、`--framework` 与 `--accent`。项模板可添加页面（`tkcode-arc-page`）、窗口（`tkcode-arc-window`）、可等待结果的对话框（`tkcode-arc-dialog`），以及带 Token 类和主题文件的 Arc 风格控件（`tkcode-arc-control`）。另有三个模板从完整的应用开始，由 Arc 的 Block 组成，示例数据放在服务接口后面，带 MVVM 和依赖注入：`tkcode-arc-admin`（登录、仪表盘、带搜索、筛选、分页和详情抽屉的客户表格、团队与角色、账单、设置、命令面板）、`tkcode-arc-ai-chat`（对话列表加 `AiChat`，回复由示例 responder 流式生成，可换成你的模型客户端；对话在两次运行之间保存）和 `tkcode-arc-devtool`（停靠布局：文件浏览、编辑器标签、属性表格、构建输出和问题列表，打开的文件随布局恢复）。此外还有 `tkcode-arc-workflow`（步骤面板、可撤销的流程画布、小地图和属性检查器、模拟运行、JSON 导入导出）、`tkcode-arc-projects`（看板、甘特时间线、周日历、发布检查清单）和 `tkcode-arc-analytics`（KPI 下钻、收入、留存分组、用量预测、服务状态）。`tkcode-arc-lib` 用于开始编写自己的控件库：示例控件及其设计 Token 和主题、`Use<Name>()` 注册、Headless 测试和示例应用，可直接 `dotnet pack`。新增的 **模板** 指南列出了全部内容；安装指南新增“从模板开始”一节。
 
+### 变更
+
+- 依赖升级为 Avalonia 12.1.5 与 StreamMark 0.1.2。
+
 ### 修复
 
+- `TextFilterBox` 与 `NumberFilterBox` 的输入框不再重叠或被裁切：过长的标签或说明会换行，空间较窄时标签移到输入框上方。操作符菜单在符号旁显示名称。
 - **`TextReveal`、`InViewTitle`**：中文、日文和韩文可以在字符之间换行。之前没有空格的标题在窄栏中会被裁切。
 - **`TKCode.Arc.Templates` 0.4.0-preview.6 无法安装**：该包发布时模板文件已移动，但指向它们的 `template.json` 没有更新，`dotnet new install` 报错（`MV012: Source ... does not exist`）。请使用此版本或更高版本。
 - **Lucide 图标**：路径以移动命令紧接直线开头的 32 个图标（`UserCog`、`FileCog`、`ServerCog`、`Coins`、`Watch`、`ZapOff` 等）首次显示时抛出 “Invalid double value”：生成器把 `16.53.923` 读成了一个数。现在有测试解析每个图标的路径。

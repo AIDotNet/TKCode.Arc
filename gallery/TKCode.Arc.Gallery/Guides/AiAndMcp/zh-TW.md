@@ -1,6 +1,6 @@
 ---
 title: AI 與 MCP
-source-hash: ef197b997de4
+source-hash: 2c34b5625421
 ---
 
 # AI 與 MCP
@@ -85,7 +85,7 @@ Claude Code、Cursor 與 GitHub Copilot 等助理會讀取儲存庫中的指示�
 ```text
 ## UI 函式庫：TKCode.Arc
 
-- 介面使用 Avalonia 12.1.4 + TKCode.Arc。不要使用 WPF 或 WinUI 的 API。
+- 介面使用 Avalonia 12.1.5 + TKCode.Arc。不要使用 WPF 或 WinUI 的 API。
 - 啟動：AppBuilder.UseArc(arc => arc.UseArcControls())；切換主題：ArcTheme.Apply(t => t.Appearance(...))。
 - Arc 控制項使用 xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"（arc:Button、arc:Input 等）。
 - 只使用元件文件頁面或 API 表格中列出的屬性、事件與列舉值。

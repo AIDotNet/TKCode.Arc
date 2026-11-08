@@ -101,7 +101,7 @@ most of the mistakes above:
 ```text
 ## UI library: TKCode.Arc
 
-- UI is Avalonia 12.1.4 + TKCode.Arc. Do not use WPF or WinUI APIs.
+- UI is Avalonia 12.1.5 + TKCode.Arc. Do not use WPF or WinUI APIs.
 - Setup: AppBuilder.UseArc(arc => arc.UseArcControls()); theme changes: ArcTheme.Apply(t => t.Appearance(...)).
 - Arc controls use xmlns:arc="https://github.com/AIDotNet/TKCode.Arc" (arc:Button, arc:Input, ...).
 - Only use properties, events and enum values that the component's docs page or API table lists.

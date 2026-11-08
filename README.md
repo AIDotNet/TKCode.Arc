@@ -7,7 +7,7 @@ TKCode.Arc ports the free components of [Arc](https://uiarc.dev) — 112 compone
 with Arc's visual language and spring motion.
 
 - Targets `net10.0` and `net11.0`; desktop (Windows, macOS, Linux).
-- Depends on Avalonia 12.1.4 (exact version), on `TKCode.Arc.Foundation` (its own MIT theme, token and language
+- Depends on Avalonia 12.1.5 (exact version), on `TKCode.Arc.Foundation` (its own MIT theme, token and language
   runtime) and on [StreamMark](https://www.nuget.org/packages/TKCode.StreamMark.Highlighting.TextMate) for Markdown and
   code highlighting. Every package in the chain is MIT licensed; there is no AtomUI dependency since 0.3.2.
 - Design documents: [design/overview.md](design/overview.md).

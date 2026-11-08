@@ -7,7 +7,7 @@ TKCode.Arc 移植了 [Arc](https://uiarc.dev) 的免费组件（22 个分组共 
 保留 Arc 的视觉语言和弹簧动效。
 
 - 目标框架 `net10.0` 和 `net11.0`；支持桌面平台（Windows、macOS、Linux）。
-- 依赖 Avalonia 12.1.4（精确版本）、自有的 MIT 主题 / 令牌 / 语言运行时 `TKCode.Arc.Foundation`，Markdown 与代码高亮依赖
+- 依赖 Avalonia 12.1.5（精确版本）、自有的 MIT 主题 / 令牌 / 语言运行时 `TKCode.Arc.Foundation`，Markdown 与代码高亮依赖
   [StreamMark](https://www.nuget.org/packages/TKCode.StreamMark.Highlighting.TextMate)。整条依赖链都是 MIT 许可；自 0.3.2 起不再依赖 AtomUI。
 - 设计文档：[design/overview.md](design/overview.md)。
 - 在线体验站点：<https://docs.tkcode.si/>，在浏览器里查看全部组件。
