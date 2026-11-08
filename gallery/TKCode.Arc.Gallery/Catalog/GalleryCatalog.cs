@@ -31,7 +31,7 @@ public sealed record GalleryCategory(string Code, string Title, string ChineseTi
 public static partial class GalleryCatalog
 {
     /// <summary>How many days after <see cref="GalleryEntry.AddedOn"/> an entry keeps its "New" badge.</summary>
-    public const int NewWindowDays = 60;
+    public const int NewWindowDays = 15;
 
     /// <summary>
     /// The dates the Blocks and Mobile entries joined the gallery (<see cref="GalleryEntry.AddedOn"/>): their catalogs
@@ -178,6 +178,9 @@ public static partial class GalleryCatalog
             new("OrbitLogos", "Orbit logos", "orbit-logos", 0,
                 "An integrations orbit: your mark at the center, logos on two slowly turning rings, and a detail card that morphs out of the chosen logo.",
                 IsArc: false, AddedOn: "2026-10-29"),
+            new("TicketTear", "Ticket tear", "ticket-tear", 0,
+                "An event ticket with a stub you tear off: it rips along the perforation hole by hole, following your hand, then falls away.",
+                IsArc: false, AddedOn: "2026-11-08"),
         ], IsArc: false),
         new("AudioVideo", "Audio and video", "音频与视频",
         [

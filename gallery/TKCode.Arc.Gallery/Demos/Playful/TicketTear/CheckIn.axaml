@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TicketTearCheckInDemo">
+    <!-- Torn tells the app the stub came off. The scanner button stands in for a server event: it sets IsTorn. -->
+    <StackPanel Spacing="12" MaxWidth="460" HorizontalAlignment="Center">
+        <arc:TicketTear x:Name="Ticket" Label="Tear off stub to board" Torn="OnTorn">
+            <StackPanel Spacing="6">
+                <TextBlock Text="Ferry to Saltmarsh" FontSize="18" FontWeight="SemiBold" TextWrapping="Wrap" />
+                <TextBlock Text="Boards 09:40, quay 3" Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                           TextWrapping="Wrap" />
+            </StackPanel>
+            <arc:TicketTear.Stub>
+                <TextBlock Text="Deck B" FontWeight="SemiBold" HorizontalAlignment="Center" />
+            </arc:TicketTear.Stub>
+        </arc:TicketTear>
+        <WrapPanel HorizontalAlignment="Center">
+            <arc:Button Variant="Secondary" Size="Small" Margin="4" Content="Scanned at the gate" Click="OnScanned" />
+            <arc:Button Variant="Ghost" Size="Small" Margin="4" Content="New stub" Click="OnNewStub" />
+        </WrapPanel>
+        <TextBlock x:Name="Readout"
+                   Text="Not boarded yet."
+                   FontSize="12"
+                   HorizontalAlignment="Center"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

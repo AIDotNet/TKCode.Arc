@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TicketTearPreviewDemo">
+    <!-- Pull the stub down or away, or focus it and press Enter. The button puts a fresh stub on. -->
+    <StackPanel Spacing="14" MaxWidth="460" HorizontalAlignment="Center">
+        <arc:TicketTear x:Name="Ticket" Label="Tear off stub to check in">
+            <StackPanel Spacing="10">
+                <TextBlock Text="LANTERN FESTIVAL" FontSize="11" FontWeight="SemiBold" LetterSpacing="1.4"
+                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                <TextBlock Text="Night of Paper Boats" FontSize="22" FontWeight="SemiBold" TextWrapping="Wrap"
+                           FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}" />
+                <TextBlock Text="Willow Pier, East Landing" Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                           TextWrapping="Wrap" />
+                <TextBlock Text="Sat 14 Nov, gates at 18:30" FontSize="13"
+                           Foreground="{arc:ArcDesignTokenResource TextMuted}" TextWrapping="Wrap" />
+            </StackPanel>
+            <arc:TicketTear.Stub>
+                <StackPanel Spacing="2" HorizontalAlignment="Center">
+                    <TextBlock Text="BENCH" FontSize="10" FontWeight="SemiBold" LetterSpacing="1.2"
+                               HorizontalAlignment="Center"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                    <TextBlock Text="7C" FontSize="30" FontWeight="SemiBold" HorizontalAlignment="Center"
+                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}" />
+                    <TextBlock Text="Pull to enter" FontSize="10" HorizontalAlignment="Center" TextAlignment="Center"
+                               TextWrapping="Wrap" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                </StackPanel>
+            </arc:TicketTear.Stub>
+        </arc:TicketTear>
+        <arc:Button Variant="Ghost" Size="Small" Content="New stub" HorizontalAlignment="Center" Click="OnNewStub" />
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TicketTearCouponDemo">
+    <!-- Background is the paper, and StubWidth sets the stub. The holes show whatever is behind the ticket. -->
+    <arc:TicketTear MaxWidth="400"
+                    HorizontalAlignment="Center"
+                    Label="Tear off coupon"
+                    StubWidth="84"
+                    Background="#f6e7c1"
+                    BorderBrush="#d9c48f"
+                    Foreground="#3b2f16">
+        <StackPanel Spacing="4">
+            <TextBlock Text="One free refill" FontSize="20" FontWeight="SemiBold" TextWrapping="Wrap" />
+            <TextBlock Text="Copper Kettle Coffee, valid until the end of the month" FontSize="13" TextWrapping="Wrap" />
+        </StackPanel>
+        <arc:TicketTear.Stub>
+            <TextBlock Text="K-204" FontWeight="SemiBold" HorizontalAlignment="Center" />
+        </arc:TicketTear.Stub>
+    </arc:TicketTear>
+</UserControl>

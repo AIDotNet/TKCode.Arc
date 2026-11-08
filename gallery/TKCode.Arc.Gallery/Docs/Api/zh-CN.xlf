@@ -28656,6 +28656,34 @@
         <source>An inbox a `TicketRouter` plays on its own while the app sets no `Tickets`: the classifier model's name, the lanes, the stream of messages with the answer the simulated classifier gives for each (`Sample`) and the tickets already in the lanes. The router reads, labels and routes one message at a time, sends the ones below the review threshold to the review lane, and loops when the stream runs out; it pauses off screen and with `IsPaused`. Nothing is sent. Set the data before handing the simulation to the router; to play another inbox, give the router a new simulation.</source>
         <target>应用没有设置 `Tickets` 时 `TicketRouter` 自行播放的收件箱：分类器模型的名称、泳道、消息流（每条附带模拟分类器给出的答案 `Sample`）以及已在泳道中的工单。路由器一次读取、标注并路由一条消息，把低于复核阈值的消息送入复核泳道，消息流用完时循环；离开屏幕时以及 `IsPaused` 时暂停。不会发送任何内容。请在把模拟交给路由器之前设置好数据；要播放另一个收件箱，就给路由器一个新的模拟。</target>
       </trans-unit>
+      <trans-unit id="TicketTear">
+        <source>An event ticket with a stub you tear off (Arc Ticket tear, design reference). Pulling the stub down or away tears the perforation hole by hole, following the hand; letting go early springs the loose flap most of the way back, and once free the stub falls, spins and fades. Enter or Space, or setting `IsTorn`, finishes the tear on its own.</source>
+        <target>一张可以撕下票根的活动门票（Arc Ticket tear，设计参考）。向下或向远离票身的方向拉动票根，齿孔会随手一孔一孔撕开；提前松手时松开的纸片回弹大部分距离，脱落后票根下落、旋转并淡出。Enter 或 Space，或设置 `IsTorn`，都会自动撕完。</target>
+      </trans-unit>
+      <trans-unit id="TicketTear.IsTorn">
+        <source>Whether the stub is off. Setting true tears it off; setting false puts a fresh stub on. A ticket that starts true shows no tear.</source>
+        <target>票根是否已撕下。设为 true 会撕下票根；设为 false 会换上新票根。初始即为 true 的门票不显示撕开过程。</target>
+      </trans-unit>
+      <trans-unit id="TicketTear.Label">
+        <source>Accessible name of the stub.</source>
+        <target>票根的无障碍名称。</target>
+      </trans-unit>
+      <trans-unit id="TicketTear.Stub">
+        <source>What is printed on the stub. Keep it short: a seat, a gate or a code.</source>
+        <target>印在票根上的内容。要简短：一个座位、一个登机口或一个代码。</target>
+      </trans-unit>
+      <trans-unit id="TicketTear.StubTemplate">
+        <source>Template for `Stub`.</source>
+        <target>`Stub` 的模板。</target>
+      </trans-unit>
+      <trans-unit id="TicketTear.StubWidth">
+        <source>Width of the stub in px. The body takes the rest of the ticket.</source>
+        <target>票根宽度（px）。票身占据门票的其余部分。</target>
+      </trans-unit>
+      <trans-unit id="TicketTear.Torn">
+        <source>Raised once the stub comes off the ticket.</source>
+        <target>票根从门票上脱落时触发一次。</target>
+      </trans-unit>
       <trans-unit id="TilePanel">
         <source>A tile grid like a start screen: the panel is divided into equal cells, each child covers RowSpan × ColumnSpan of them, and children go, in order, to the first place where they fit without overlapping. Usable on its own or as an `ItemsPanel`.</source>
         <target>类似开始屏幕的磁贴网格：面板被分成相等的单元格，每个子元素覆盖 RowSpan × ColumnSpan 个单元格，子元素按顺序放到第一个能放下且不重叠的位置。可单独使用，也可作为 `ItemsPanel`。</target>
