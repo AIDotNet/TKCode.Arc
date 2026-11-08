@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
@@ -15,6 +16,13 @@ namespace TKCode.Arc;
 /// draws the composed ink stretched over its bounds with smooth filtering. Under reduced motion it composes one still
 /// frame instead.
 /// </summary>
+/// <remarks>
+/// The simulation runs on the UI thread, and a step can cost more than a frame (a slow device, a debug build, the High
+/// grid). Stepping on every frame would then start each frame as soon as the last one ended and leave the thread no idle
+/// time at all, so the canvas keeps the simulation to about <see cref="ThreadShare"/> of the UI thread: after a step it
+/// skips frames until the step's cost has been repaid, and the next step simulates the skipped time (the solver takes at
+/// most 1/30s per step, so on a device too slow for the grid the ink moves in slow motion instead of freezing the UI).
+/// </remarks>
 internal sealed class InkFluidCanvas : Control
 {
     /// <summary>The ambient stir starts this long after the last pointer move.</summary>
@@ -38,6 +46,12 @@ internal sealed class InkFluidCanvas : Control
     private const double AmbientInkRate = 2.4;
     private const double AmbientForce = 48;
     private const double AmbientPace = 0.18;
+
+    /// <summary>The largest share of the UI thread's time the simulation takes while it runs.</summary>
+    internal const double ThreadShare = 0.5;
+
+    // The most time one step simulates after skipped frames; a longer gap (the loop resumed) is not caught up.
+    private const double MaxCatchUp = 0.1;
 
     // The still frame for reduced motion: 140 steps of the ambient stir from a fixed phase.
     private const int StillSteps = 140;
@@ -63,12 +77,15 @@ internal sealed class InkFluidCanvas : Control
     private double _strokeX;
     private double _strokeY;
     private bool _stroked;
+    private double _owed;
+    private double _unsimulated;
 
     public InkFluidCanvas()
     {
         IsHitTestVisible = false;
         RenderOptions.SetBitmapInterpolationMode(this, BitmapInterpolationMode.HighQuality);
         _loop = new LiveLoop(this, Step) { MinimumLevel = ArcMotionLevel.Full };
+        _loop.RunningChanged += _ => ResetPacing();
         _resize = new DispatcherTimer { Interval = ResizeDebounce };
         _resize.Tick += (_, _) =>
         {
@@ -217,6 +234,7 @@ internal sealed class InkFluidCanvas : Control
         _front = null;
         _back = null;
         _hasPointer = false;
+        ResetPacing();
         if (ArcMotion.IsFull(this))
         {
             Publish();
@@ -257,12 +275,36 @@ internal sealed class InkFluidCanvas : Control
         Publish();
     }
 
-    private bool Step(double dt)
+    private void ResetPacing()
+    {
+        _owed = 0;
+        _unsimulated = 0;
+    }
+
+    private bool Step(double frameDt)
     {
         if (_solver.Columns == 0)
         {
             return true;
         }
+        // Pacing: frames go by without a step until the last step's cost is repaid (see the remarks).
+        _unsimulated += frameDt;
+        if (_owed > 0)
+        {
+            _owed -= frameDt;
+            return true;
+        }
+        var dt = Math.Min(_unsimulated, MaxCatchUp);
+        _unsimulated = 0;
+        var started = Stopwatch.GetTimestamp();
+        var running = Simulate(dt);
+        // The frames that follow repay the step at the thread share; they include the frame the step itself delayed.
+        _owed = Stopwatch.GetElapsedTime(started).TotalSeconds / ThreadShare;
+        return running;
+    }
+
+    private bool Simulate(double dt)
+    {
         _clock += dt;
         if (_stroked)
         {
