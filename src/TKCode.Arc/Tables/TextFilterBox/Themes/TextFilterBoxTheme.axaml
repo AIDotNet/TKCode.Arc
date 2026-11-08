@@ -1,0 +1,73 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.TextFilterBoxTheme">
+    <ControlTheme x:Key="{x:Type arc:TextFilterBox}" TargetType="arc:TextFilterBox">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TextFilterBox">
+                <!-- Label column (shared through LabelSizeGroup), operator, text (takes the rest), extra content. -->
+                <Grid Name="PART_Layout"
+                      ColumnDefinitions="Auto,Auto,*,Auto"
+                      ColumnSpacing="{arc:TextFilterBoxTokenResource ColumnGap}"
+                      Background="{TemplateBinding Background}">
+                    <arc:Checkbox Name="PART_Toggle"
+                                  Content="{TemplateBinding Label}"
+                                  Description="{TemplateBinding Description}"
+                                  VerticalAlignment="Top" />
+                    <arc:Select Name="PART_Operator"
+                                Grid.Column="1"
+                                Size="{TemplateBinding Size}"
+                                Width="{arc:TextFilterBoxTokenResource OperatorWidth}"
+                                MinWidth="0"
+                                VerticalAlignment="Top"
+                                IsEnabled="{TemplateBinding IsActive}" />
+                    <arc:Input Name="PART_Input"
+                               Grid.Column="2"
+                               Size="{TemplateBinding Size}"
+                               IsLabelVisible="False"
+                               MinWidth="{arc:TextFilterBoxTokenResource InputMinWidth}"
+                               VerticalAlignment="Top"
+                               Text="{TemplateBinding Text, Mode=TwoWay}"
+                               Placeholder="{TemplateBinding Placeholder}"
+                               MaxLength="{TemplateBinding MaxLength}"
+                               ErrorMessage="{TemplateBinding PatternError}"
+                               IsEnabled="{TemplateBinding IsActive}" />
+                    <ContentPresenter Name="PART_Extra"
+                                      Grid.Column="3"
+                                      VerticalAlignment="Top"
+                                      VerticalContentAlignment="Center"
+                                      Content="{TemplateBinding ExtraContent}"
+                                      IsVisible="{TemplateBinding ExtraContent, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                      IsEnabled="{TemplateBinding IsActive}" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+
+        <!-- The 44px checkbox row centers on the fields: a small field is 8px shorter, a large one 6px taller. -->
+        <Style Selector="^ /template/ ContentPresenter#PART_Extra">
+            <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeMD}" />
+        </Style>
+        <Style Selector="^[Size=Small]">
+            <Style Selector="^ /template/ arc|Checkbox#PART_Toggle">
+                <Setter Property="Margin" Value="0,-4,0,0" />
+            </Style>
+            <Style Selector="^ /template/ ContentPresenter#PART_Extra">
+                <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+            </Style>
+        </Style>
+        <Style Selector="^[Size=Large]">
+            <Style Selector="^ /template/ arc|Checkbox#PART_Toggle">
+                <Setter Property="Margin" Value="0,3,0,0" />
+            </Style>
+            <Style Selector="^ /template/ ContentPresenter#PART_Extra">
+                <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeLG}" />
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

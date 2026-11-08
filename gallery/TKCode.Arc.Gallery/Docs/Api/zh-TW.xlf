@@ -10376,6 +10376,46 @@
         <source>Where a `FileUploadItem`'s upload stands.</source>
         <target>`FileUploadItem` 的上傳所處的狀態。</target>
       </trans-unit>
+      <trans-unit id="FilterBox">
+        <source>Base of the filter boxes (`NumberFilterBox`, `TextFilterBox`): one filter condition laid out as an enable checkbox with the label, an operator `Select` that shows symbols, the value editor and an optional `ExtraContent`. The box only holds the condition; it never filters data. Your view model reads `IsActive`, the operator and the value (or calls the derived `Matches`) and filters on its own terms. Unchecking the box disables the operator, the value and the extra content but keeps them, so checking it again restores the condition.</source>
+        <target>篩選框的基底類別（`NumberFilterBox`、`TextFilterBox`）：一個篩選條件排成一列，依序是帶標籤的啟用核取方塊、以符號顯示運算子的 `Select`、值編輯器和選用的 `ExtraContent`。篩選框只保存條件，從不過濾資料。檢視模型讀取 `IsActive`、運算子和值（或呼叫衍生類別的 `Matches`），依自己的方式過濾。取消勾選會停用運算子、值和附加內容但保留它們，再次勾選即恢復原條件。</target>
+      </trans-unit>
+      <trans-unit id="FilterBox.Description">
+        <source>Muted hint under the label; collapses when empty.</source>
+        <target>標籤下方的淡化提示；為空時收合。</target>
+      </trans-unit>
+      <trans-unit id="FilterBox.ExtraContent">
+        <source>Content placed after the value editor (a checkbox, a button); disabled with the filter, collapsed when null.</source>
+        <target>放在值編輯器之後的內容（核取方塊、按鈕）；隨篩選一起停用，為 null 時收合。</target>
+      </trans-unit>
+      <trans-unit id="FilterBox.FilterChanged">
+        <source>Raised after the condition changes: `IsActive`, the operator, the value or an option that changes matching.</source>
+        <target>條件變化後引發：`IsActive`、運算子、值或影響比對的選項。</target>
+      </trans-unit>
+      <trans-unit id="FilterBox.IsActive">
+        <source>Whether the condition takes part in filtering (two-way, default true). Off keeps the operator and the value.</source>
+        <target>條件是否參與篩選（雙向，預設 true）。關閉時保留運算子和值。</target>
+      </trans-unit>
+      <trans-unit id="FilterBox.Label">
+        <source>The field name shown beside the checkbox (text or any content); clicking it toggles `IsActive`.</source>
+        <target>顯示在核取方塊旁的欄位名稱（文字或任意內容）；點選它會切換 `IsActive`。</target>
+      </trans-unit>
+      <trans-unit id="FilterBox.LabelSizeGroup">
+        <source>Shares the width of the label column with every box (or `Grid` column) of the same group name inside an element with `Grid.IsSharedSizeScope="True"`, so stacked filters line up. A name is letters, digits and underscores and does not start with a digit.</source>
+        <target>在設定了 `Grid.IsSharedSizeScope="True"` 的元素內，與同群組名稱的每個篩選框（或 `Grid` 欄）共用標籤欄寬度，使疊放的篩選框對齊。群組名稱由字母、數字和底線組成，且不以數字開頭。</target>
+      </trans-unit>
+      <trans-unit id="FilterBox.LabelWidth">
+        <source>A fixed width for the label column (default NaN: as wide as the label, or the shared width of `LabelSizeGroup`).</source>
+        <target>標籤欄的固定寬度（預設 NaN：與標籤同寬，或取 `LabelSizeGroup` 的共用寬度）。</target>
+      </trans-unit>
+      <trans-unit id="FilterBox.OperatorText">
+        <source>Accessible name of the operator field (default "Operator"; read as "Price operator").</source>
+        <target>運算子欄位的協助工具名稱（預設 "Operator"；讀作 "Price operator"）。</target>
+      </trans-unit>
+      <trans-unit id="FilterBox.Size">
+        <source>Height of the operator and value fields: Small 36, Medium 44 (default), Large 50.</source>
+        <target>運算子與值輸入框的高度：Small 36、Medium 44（預設）、Large 50。</target>
+      </trans-unit>
       <trans-unit id="FilterChip">
         <source>An applied filter shown as a chip: "Label · Value". The id is the field id, so one chip per field.</source>
         <target>已套用的篩選條件，以標籤形式顯示：「標籤 · 值」。ID 為欄位 ID，因此每個欄位對應一個標籤。</target>
@@ -10395,6 +10435,10 @@
       <trans-unit id="FilterField.Label">
         <source>The field's name in the menu and on its chip ("Status").</source>
         <target>欄位在選單和篩選標籤上的名稱（「狀態」）。</target>
+      </trans-unit>
+      <trans-unit id="FilterOperators">
+        <source>The symbols and spoken names of the filter operators, as a plain lookup (no attributes are reflected, so it is safe for AOT and trimming). The filter boxes show the symbols; use the names for tooltips, summaries or screen readers.</source>
+        <target>篩選運算子的符號與朗讀名稱，是一張一般的對照表（不反射任何屬性標記，因此相容 AOT 與裁剪）。篩選框顯示符號；名稱可用於工具提示、摘要或螢幕閱讀器。</target>
       </trans-unit>
       <trans-unit id="FilterToolbar">
         <source>Arc's filter toolbar: keep collection filters close and easy to reset. Applied filters are removable chips ("Status · Open") whose slots open and close on a spring so neighbors slide along, a changed value morphs in place, Clear all appears while any filter is applied, and the Add filter menu picks a field, then a value (one chip per field). An optional search field sits with the actions. `ActiveFilters` is two-way and a mutable list is updated in place; `FiltersChanged` reports every change, and changes are announced.</source>
@@ -17739,6 +17783,70 @@
       <trans-unit id="NumberField.ValueChanged">
         <source>Raised after every real change of `Value` (never during template application).</source>
         <target>每次 `Value` 實際變更後觸發（套用範本期間不會觸發）。</target>
+      </trans-unit>
+      <trans-unit id="NumberFilterBox">
+        <source>A number filter condition: an enable checkbox with the label, an operator (= ≠ &lt; ≤ &gt; ≥) and a `NumberField` for the target. It holds the condition (`IsActive`, `Operator`, `Value`, `Tolerance`) and never filters data itself; read the properties in your view model, or test values with `Matches` or `Condition`. Typed values snap to multiples of `SmallChange` counted from `Minimum`; by default that is 1 in `Integer` mode and one unit of the last decimal place in `Decimal` mode.</source>
+        <target>數字篩選條件：帶標籤的啟用核取方塊、運算子（= ≠ &lt; ≤ &gt; ≥）和輸入目標值的 `NumberField`。它保存條件（`IsActive`、`Operator`、`Value`、`Tolerance`），本身從不過濾資料；請在檢視模型中讀取這些屬性，或用 `Matches` 或 `Condition` 判斷值。輸入的值會對齊到從 `Minimum` 起算的 `SmallChange` 的倍數；預設在 `Integer` 模式下為 1，在 `Decimal` 模式下為最後一位小數的一個單位。</target>
+      </trans-unit>
+      <trans-unit id="NumberFilterBox.Condition">
+        <source>The current condition (operator, value and tolerance) as plain data.</source>
+        <target>目前的條件（運算子、值和容差），以純資料表示。</target>
+      </trans-unit>
+      <trans-unit id="NumberFilterBox.DecimalPlaces">
+        <source>Fraction digits shown and typed in `Decimal` mode (default 2, at most 10).</source>
+        <target>`Decimal` 模式下顯示和輸入的小數位數（預設 2，最多 10）。</target>
+      </trans-unit>
+      <trans-unit id="NumberFilterBox.LargeChange">
+        <source>The step of PageUp, PageDown and Shift with an arrow (default null: 10 in Integer mode, 1 in Decimal mode).</source>
+        <target>PageUp、PageDown 和 Shift+方向鍵的步長（預設 null：Integer 模式為 10，Decimal 模式為 1）。</target>
+      </trans-unit>
+      <trans-unit id="NumberFilterBox.Maximum">
+        <source>Highest value that can be entered (default 9007199254740991).</source>
+        <target>可輸入的最大值（預設 9007199254740991）。</target>
+      </trans-unit>
+      <trans-unit id="NumberFilterBox.Minimum">
+        <source>Lowest value that can be entered, and origin of the step grid (default 0).</source>
+        <target>可輸入的最小值，也是步進格線的原點（預設 0）。</target>
+      </trans-unit>
+      <trans-unit id="NumberFilterBox.NumberMode">
+        <source>Whole numbers or decimals (default `Decimal`).</source>
+        <target>整數或小數（預設 `Decimal`）。</target>
+      </trans-unit>
+      <trans-unit id="NumberFilterBox.Operator">
+        <source>The comparison (two-way, default `Equal`).</source>
+        <target>比較方式（雙向，預設 `Equal`）。</target>
+      </trans-unit>
+      <trans-unit id="NumberFilterBox.Operators">
+        <source>The operators the menu offers (default null: all six).</source>
+        <target>選單提供的運算子（預設 null：全部六個）。</target>
+      </trans-unit>
+      <trans-unit id="NumberFilterBox.SmallChange">
+        <source>One step of the arrows and the steppers, and the grid typed values snap to (default null: 1, or one unit of the last decimal place).</source>
+        <target>方向鍵和步進按鈕的一步，也是輸入值對齊的格線（預設 null：1，或最後一位小數的一個單位）。</target>
+      </trans-unit>
+      <trans-unit id="NumberFilterBox.Tolerance">
+        <source>How far apart two values may be and still count as equal (default 0); see `NumberFilterCondition`.</source>
+        <target>兩個值相差多少以內仍視為相等（預設 0）；請參閱 `NumberFilterCondition`。</target>
+      </trans-unit>
+      <trans-unit id="NumberFilterBox.UseGrouping">
+        <source>Group separators in the value (default true).</source>
+        <target>值中顯示分組分隔符號（預設 true）。</target>
+      </trans-unit>
+      <trans-unit id="NumberFilterBox.Value">
+        <source>The target value (two-way, default 0).</source>
+        <target>目標值（雙向，預設 0）。</target>
+      </trans-unit>
+      <trans-unit id="NumberFilterCondition">
+        <source>A number condition as plain data: operator, target and tolerance. It has no UI, so a view model can build one from its own state and test values with `Matches`. The tolerance widens equality: `Equal` accepts values within it, `NotEqual` those outside it, the strict comparisons need to clear it and the inclusive ones may fall short by it. A negative tolerance counts as zero.</source>
+        <target>以純資料表示的數字條件：運算子、目標值和容差。它不含介面，檢視模型可以用自己的狀態建構一個，再用 `Matches` 判斷值。容差放寬了相等：`Equal` 接受容差以內的值，`NotEqual` 接受容差以外的值，嚴格比較必須超出容差，包含等號的比較允許差一個容差。負的容差視為零。</target>
+      </trans-unit>
+      <trans-unit id="NumberFilterMode">
+        <source>Whether `NumberFilterBox` takes whole numbers or decimals.</source>
+        <target>`NumberFilterBox` 接受整數還是小數。</target>
+      </trans-unit>
+      <trans-unit id="NumberOperator">
+        <source>How `NumberFilterBox` compares a value with its target.</source>
+        <target>`NumberFilterBox` 如何把值與目標值比較。</target>
       </trans-unit>
       <trans-unit id="OnboardingIllustration">
         <source>A compact first-run card: a line drawing on top whose shapes morph from scene to scene (an empty box, files dropping in, a team around a board, a badge), and below it the step's title and sentence, a row of step dots, Back and a main button. The main button says Next, then Get started on the last step, then Replay intro once the onboarding is complete; Skip in the drawing's corner jumps to the last step. The Left and Right arrow keys step back and forth anywhere in the card. With no `Steps` the card shows four sample steps, one per scene.</source>
@@ -26524,6 +26632,54 @@
         <source>Arguments of `WorkspaceAdded`: a workspace someone created or joined from the menu. Add it to your own list as well; the switcher de-duplicates by id.</source>
         <target>`WorkspaceAdded` 的引數：有人從選單建立或加入的工作區。也請把它加入你自己的清單；切換器依 id 去除重複。</target>
       </trans-unit>
+      <trans-unit id="TextFilterBox">
+        <source>A text filter condition: an enable checkbox with the label, an operator (∋ ∌ = ≠ ^ $ .*) and an `Input` for the filter text. It holds the condition (`IsActive`, `Operator`, `Text`, `IsCaseSensitive`) and never filters data itself; read the properties in your view model, or test texts with `Matches` or `Condition`. With `Regex` the text is a regular expression: a pattern that does not parse shows its error under the field, sets `IsPatternValid` to false and the `:invalid` pseudo-class.</source>
+        <target>文字篩選條件：帶標籤的啟用核取方塊、運算子（∋ ∌ = ≠ ^ $ .*）和輸入篩選文字的 `Input`。它保存條件（`IsActive`、`Operator`、`Text`、`IsCaseSensitive`），本身從不過濾資料；請在檢視模型中讀取這些屬性，或用 `Matches` 或 `Condition` 判斷文字。使用 `Regex` 時文字是規則運算式：無法剖析的模式會在輸入框下方顯示錯誤，把 `IsPatternValid` 設為 false 並加上 `:invalid` 虛擬類別。</target>
+      </trans-unit>
+      <trans-unit id="TextFilterBox.Condition">
+        <source>The current condition as plain data; a new instance after every change.</source>
+        <target>目前的條件，以純資料表示；每次變化後都是一個新執行個體。</target>
+      </trans-unit>
+      <trans-unit id="TextFilterBox.IsCaseSensitive">
+        <source>Whether letter case matters (two-way, default false).</source>
+        <target>是否區分大小寫（雙向，預設 false）。</target>
+      </trans-unit>
+      <trans-unit id="TextFilterBox.IsPatternValid">
+        <source>False while `Operator` is `Regex` and `Text` does not parse.</source>
+        <target>當 `Operator` 為 `Regex` 且 `Text` 無法剖析時為 false。</target>
+      </trans-unit>
+      <trans-unit id="TextFilterBox.MatchTimeout">
+        <source>How long one regular expression match may run before it counts as no match (default 200 ms).</source>
+        <target>一次規則運算式比對最多可執行多久，逾時即視為不符合（預設 200 ms）。</target>
+      </trans-unit>
+      <trans-unit id="TextFilterBox.MaxLength">
+        <source>Most characters the field accepts (default 0: no limit).</source>
+        <target>輸入框接受的最多字元數（預設 0：不限）。</target>
+      </trans-unit>
+      <trans-unit id="TextFilterBox.Operator">
+        <source>The comparison (two-way, default `Contains`).</source>
+        <target>比較方式（雙向，預設 `Contains`）。</target>
+      </trans-unit>
+      <trans-unit id="TextFilterBox.Operators">
+        <source>The operators the menu offers (default null: all seven).</source>
+        <target>選單提供的運算子（預設 null：全部七個）。</target>
+      </trans-unit>
+      <trans-unit id="TextFilterBox.PatternError">
+        <source>Why the pattern does not parse (shown under the field), or null.</source>
+        <target>模式無法剖析的原因（顯示在輸入框下方），或 null。</target>
+      </trans-unit>
+      <trans-unit id="TextFilterBox.Placeholder">
+        <source>Muted text shown while the field is empty.</source>
+        <target>輸入框為空時顯示的淡化文字。</target>
+      </trans-unit>
+      <trans-unit id="TextFilterBox.Text">
+        <source>The filter text, or the pattern with `Regex` (two-way, default empty: matches everything).</source>
+        <target>篩選文字，使用 `Regex` 時為模式（雙向，預設為空：符合所有內容）。</target>
+      </trans-unit>
+      <trans-unit id="TextFilterCondition">
+        <source>A text condition as plain data: operator, filter text and case sensitivity. It has no UI, so a view model can build one from its own state and test texts with `Matches`; build it once per change, not once per item, so a pattern is parsed once. An empty filter text constrains nothing: every text matches. With `Regex` the filter text is a .NET regular expression run by the interpreter (no code is generated, so it is safe for AOT); an invalid pattern sets `IsValid` to false and `Error` to the parser's message, and then constrains nothing either. A match that runs past `MatchTimeout` counts as no match.</source>
+        <target>以純資料表示的文字條件：運算子、篩選文字和是否區分大小寫。它不含介面，檢視模型可以用自己的狀態建構一個，再用 `Matches` 判斷文字；每次變化建構一次，而不是每項建構一次，這樣模式只剖析一次。空的篩選文字不構成任何限制：所有文字都符合。使用 `Regex` 時篩選文字是由直譯器執行的 .NET 規則運算式（不產生程式碼，因此相容 AOT）；無效的模式會把 `IsValid` 設為 false、`Error` 設為剖析器的訊息，此時同樣不構成限制。比對超過 `MatchTimeout` 即視為不符合。</target>
+      </trans-unit>
       <trans-unit id="TextMorph">
         <source>Morphs one short label into the next in place (P4): letters both strings share glide to their new positions, new letters sharpen in with a short stagger, removed letters blur away, and the width follows on a spring. Single line; assistive technology reads the plain text. Rendered directly: no control per letter.</source>
         <target>將一個短標籤原地變形為下一個標籤（P4）：兩個字串共有的字母滑動到新位置，新字母以短暫錯開的節奏清晰浮現，被移除的字母模糊消失，寬度隨彈簧調整。單行；輔助技術讀取純文字。直接渲染：不為每個字母建立控制項。</target>
@@ -26551,6 +26707,10 @@
       <trans-unit id="TextMorph.Text">
         <source>The label to show; a change morphs the letters from the old text to the new one.</source>
         <target>要顯示的標籤；變更時字母會從舊文字變形為新文字。</target>
+      </trans-unit>
+      <trans-unit id="TextOperator">
+        <source>How `TextFilterBox` compares a text with its filter text.</source>
+        <target>`TextFilterBox` 如何把文字與篩選文字比較。</target>
       </trans-unit>
       <trans-unit id="TextReveal">
         <source>A headline that reveals itself once as it appears (Arc TextReveal): each word rises out of its own feathered clip while it sharpens from a soft blur and fades in, word after word (P20, P29). A title that mounts on screen starts with the first frame like Arc; one that mounts below the fold waits until it enters the viewport (S6, once). Whenever the animation cannot run (motion off, detached), the text shows at rest. Use `\n` for a deliberate line break; lines are at most `MaxWidthInChars` wide and balanced. Drawn as one control: no per-word controls.</source>
