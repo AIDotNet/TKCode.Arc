@@ -197,20 +197,10 @@
 
     <!-- The scrims: black 0 to 0.6 towards the bar (bottom), or from the top for the full-screen title. -->
     <ControlTheme x:Key="{x:Type arc:VideoScrim}" TargetType="arc:VideoScrim">
-        <Setter Property="Background">
-            <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
-                <GradientStop Offset="0" Color="Transparent" />
-                <GradientStop Offset="1" Color="{arc:VideoPlayerTokenResource ScrimColor}" />
-            </LinearGradientBrush>
-        </Setter>
+        <Setter Property="Tint" Value="{arc:VideoPlayerTokenResource ScrimColor}" />
         <Style Selector="^.top">
             <Setter Property="Padding" Value="16,12,16,32" />
-            <Setter Property="Background">
-                <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
-                    <GradientStop Offset="0" Color="{arc:VideoPlayerTokenResource ScrimColor}" />
-                    <GradientStop Offset="1" Color="Transparent" />
-                </LinearGradientBrush>
-            </Setter>
+            <Setter Property="FromTop" Value="True" />
         </Style>
     </ControlTheme>
 

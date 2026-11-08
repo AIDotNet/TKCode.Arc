@@ -1,3 +1,4 @@
+using Avalonia.Media;
 using Avalonia;
 using Avalonia.Controls;
 
@@ -77,7 +78,51 @@ internal sealed class VideoControlBar : Border
 /// <summary>The gradient behind the control bar and the full-screen title; fades with them.</summary>
 internal sealed class VideoScrim : Border
 {
+    /// <summary>Defines the <see cref="Tint"/> property.</summary>
+    public static readonly StyledProperty<IBrush?> TintProperty =
+        AvaloniaProperty.Register<VideoScrim, IBrush?>(nameof(Tint));
+
+    /// <summary>Defines the <see cref="FromTop"/> property.</summary>
+    public static readonly StyledProperty<bool> FromTopProperty =
+        AvaloniaProperty.Register<VideoScrim, bool>(nameof(FromTop));
+
+    /// <summary>The color at the dark end (color tokens resolve to solid brushes).</summary>
+    public IBrush? Tint
+    {
+        get => GetValue(TintProperty);
+        set => SetValue(TintProperty, value);
+    }
+
+    /// <summary>Whether the dark end is at the top (the full-screen title) instead of the bottom (the control bar).</summary>
+    public bool FromTop
+    {
+        get => GetValue(FromTopProperty);
+        set => SetValue(FromTopProperty, value);
+    }
+
     protected override Type StyleKeyOverride => typeof(VideoScrim);
+
+    // The brush is made here: a token resource on a GradientStop in the theme does not resolve (a stop is not a control, so it
+    // stayed transparent), while one on a property of the control does.
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == TintProperty || change.Property == FromTopProperty)
+        {
+            var dark = (Tint as ISolidColorBrush)?.Color ?? default;
+            var clear = Color.FromArgb(0, dark.R, dark.G, dark.B);
+            Background = new LinearGradientBrush
+            {
+                StartPoint = new RelativePoint(0, 0, RelativeUnit.Relative),
+                EndPoint = new RelativePoint(0, 1, RelativeUnit.Relative),
+                GradientStops =
+                {
+                    new GradientStop(FromTop ? dark : clear, 0),
+                    new GradientStop(FromTop ? clear : dark, 1),
+                },
+            };
+        }
+    }
 }
 
 /// <summary>Hosts the player's root in the full-screen overlay, filling the overlay (spec section 10).</summary>

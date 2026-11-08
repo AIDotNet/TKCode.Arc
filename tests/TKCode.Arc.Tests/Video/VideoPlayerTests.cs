@@ -225,6 +225,24 @@ public class VideoPlayerTests
     }
 
     [AvaloniaFact]
+    public void The_Scrim_Darkens_Towards_The_Control_Bar()
+    {
+        using var scope = new VideoTestScope();
+        var player = new VideoPlayer { Source = VideoTestScope.Clip(60) };
+        scope.Show(player);
+        var scrim = player.GetVisualDescendants().OfType<VideoScrim>().Single(s => s.Name == "PART_Scrim");
+        var brush = scrim.Background.ShouldBeAssignableTo<Avalonia.Media.ILinearGradientBrush>().ShouldNotBeNull();
+        // Black 0 to 0.6 (spec section 7): white controls stay readable on a white picture.
+        brush.GradientStops[0].Color.A.ShouldBe((byte)0);
+        brush.GradientStops[^1].Color.ShouldBe(Avalonia.Media.Color.FromArgb(153, 0, 0, 0));
+
+        var title = player.GetVisualDescendants().OfType<VideoScrim>().Single(s => s.Name == "PART_TitleBar");
+        var titleBrush = title.Background.ShouldBeAssignableTo<Avalonia.Media.ILinearGradientBrush>().ShouldNotBeNull();
+        titleBrush.GradientStops[0].Color.ShouldBe(Avalonia.Media.Color.FromArgb(153, 0, 0, 0));
+        titleBrush.GradientStops[^1].Color.A.ShouldBe((byte)0);
+    }
+
+    [AvaloniaFact]
     public void Stop_Pauses_Returns_To_The_Start_And_Shows_The_Poster_Again()
     {
         using var scope = new VideoTestScope();
