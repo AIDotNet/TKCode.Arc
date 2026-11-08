@@ -4760,6 +4760,194 @@
         <source>Share of the carousel width one slide takes (Arc default `min(80cqw, 340px)`: 0.8).</source>
         <target>单张幻灯片占轮播宽度的比例（Arc 默认 `min(80cqw, 340px)`：0.8）。</target>
       </trans-unit>
+      <trans-unit id="CartDrawer">
+        <source>A small store on one block: a product grid whose pictures fly into the cart button when added, a count that rolls, and a cart drawer that slides in inside the block with quantity steppers, swipe-to-remove rows, a free-shipping progress bar, a promo code, rolling totals and a checkout that turns into a confirmation and a receipt.</source>
+        <target>单个区块上的小型商店：商品网格（加入时商品图片会飞入购物车按钮）、滚动变化的数量，以及在区块内滑入的购物车抽屉，抽屉内含数量步进器、可滑动移除的行、免运费进度条、优惠码、滚动更新的总计，以及会变为确认与收据的结账。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawer.AmountDecimals">
+        <source>Decimal places amounts are shown with and the discount is rounded to (default 0: whole currency units, halves away from zero).</source>
+        <target>显示金额及折扣舍入所用的小数位数（默认 0：整数货币单位，0.5 远离零舍入）。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawer.AppliedPromo">
+        <source>The promo code in effect (null for none).</source>
+        <target>当前生效的优惠码（无则为 null）。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawer.Currency">
+        <source>ISO 4217 code of every amount ("USD" by default).</source>
+        <target>所有金额的 ISO 4217 货币代码（默认 "USD"）。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawer.Discount">
+        <source>What the applied promo takes off the subtotal.</source>
+        <target>已应用的优惠码从小计中减去的金额。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawer.FreeShippingThreshold">
+        <source>Subtotal (before the discount) from which shipping is free (default 240). 0 or less hides the free-shipping card and ships everything free.</source>
+        <target>享受免运费的小计（折扣前）起点（默认 240）。小于或等于 0 时隐藏免运费卡片，所有订单均免运费。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawer.IsFlightEnabled">
+        <source>Whether added products fly from their picture to the cart button (default true; Full motion only).</source>
+        <target>加入的商品是否从其图片飞向购物车按钮（默认 true；仅限完整动效）。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawer.IsOpen">
+        <source>Whether the cart drawer is open. Two-way; it cannot close while an order is being placed.</source>
+        <target>购物车抽屉是否打开。双向绑定；下单过程中无法关闭。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawer.IsPromoVisible">
+        <source>Whether the drawer offers a promo code field (default true).</source>
+        <target>抽屉是否提供优惠码输入框（默认 true）。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawer.IsSwipeToRemoveEnabled">
+        <source>Whether cart rows can be swiped left to remove them (default true; Full motion only, × always works).</source>
+        <target>是否可以向左滑动购物车行将其移除（默认 true；仅限完整动效，× 始终可用）。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawer.ItemAdded">
+        <source>Raised when a product is added from the grid or with `Add` (also when it raises a row's quantity).</source>
+        <target>从网格或通过 `Add` 加入商品时触发（使某行数量增加时也会触发）。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawer.ItemCount">
+        <source>How many items the cart holds (the sum of the quantities).</source>
+        <target>购物车中的商品件数（各数量之和）。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawer.ItemRemoved">
+        <source>Raised when a row is removed (×, the stepper's bin, a swipe or `Remove`).</source>
+        <target>移除某行时触发（×、步进器的删除按钮、滑动或 `Remove`）。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawer.Labels">
+        <source>The built-in text and its culture; replace the object to localize the block.</source>
+        <target>内置文本及其区域性；替换该对象即可本地化区块。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawer.Lines">
+        <source>The cart's rows, in the order they were added.</source>
+        <target>购物车的各行，按加入顺序排列。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawer.OrderPlaced">
+        <source>Raised when an order goes through, with the order and its receipt.</source>
+        <target>订单成功提交时触发，附带订单及其收据。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawer.PlaceOrderAsync">
+        <source>Places the order and returns the receipt to show; throwing returns the drawer to the cart. Defaults to the sample order desk (`PlaceOrderAsync`, 1.3 s).</source>
+        <target>提交订单并返回要显示的收据；抛出异常时抽屉回到购物车。默认使用示例下单服务（`PlaceOrderAsync`，1.3 s）。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawer.Products">
+        <source>The products on the grid, in order. Products written inline in XAML land here.</source>
+        <target>网格上的商品，按顺序排列。在 XAML 中内联编写的商品会放在这里。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawer.ProductsSource">
+        <source>A product source that replaces `Products` when set (observed when it raises collection changes).</source>
+        <target>设置后取代 `Products` 的商品来源（若其触发集合变更通知则会被监听）。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawer.PromoApplied">
+        <source>Raised when a promo code is accepted.</source>
+        <target>优惠码被接受时触发。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawer.PromoRejected">
+        <source>Raised when a promo code is refused.</source>
+        <target>优惠码被拒绝时触发。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawer.PromoRemoved">
+        <source>Raised when the applied promo code is removed.</source>
+        <target>已应用的优惠码被移除时触发。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawer.QuantityChanged">
+        <source>Raised when a row's quantity changes with its stepper or `SetQuantity`.</source>
+        <target>某行数量通过步进器或 `SetQuantity` 改变时触发。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawer.Receipt">
+        <source>The receipt of the order just placed (null until then and again after the drawer closes).</source>
+        <target>刚提交订单的收据（在此之前以及抽屉关闭之后为 null）。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawer.Shipping">
+        <source>The shipping charge: 0 from the free-shipping threshold (measured on the subtotal before the discount).</source>
+        <target>运费：达到免运费门槛时为 0（按折扣前的小计计算）。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawer.ShippingFee">
+        <source>Shipping charged below the threshold (default 9).</source>
+        <target>低于门槛时收取的运费（默认 9）。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawer.State">
+        <source>Where the checkout is: shopping, placing the order, or showing its receipt.</source>
+        <target>结账所处的阶段：购物中、正在下单或正在显示收据。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawer.Subtotal">
+        <source>Sum of the line totals.</source>
+        <target>各行合计之和。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawer.Title">
+        <source>The grid's heading ("Fresh from the workshop").</source>
+        <target>网格的标题（"Fresh from the workshop"）。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawer.Total">
+        <source>Subtotal − discount + shipping.</source>
+        <target>小计 − 折扣 + 运费。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawer.ValidatePromoAsync">
+        <source>Checks a promo code: return the promo to apply, or null to refuse it. Defaults to the sample check (`ValidatePromoAsync`, WORKSHOP10 is 10% off).</source>
+        <target>检查优惠码：返回要应用的优惠，或返回 null 表示拒绝。默认使用示例检查（`ValidatePromoAsync`，WORKSHOP10 为 10% 折扣）。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawerItemEventArgs">
+        <source>A product was added to, changed in or removed from the `CartDrawer`'s cart.</source>
+        <target>某件商品被加入 `CartDrawer` 的购物车、在其中被修改或从中被移除。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawerLine">
+        <source>One row of the cart: a product, how many, and what they cost together.</source>
+        <target>购物车中的一行：一件商品、数量以及它们的合计价格。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawerOrder">
+        <source>What a `CartDrawer` sends to its place-order handler.</source>
+        <target>`CartDrawer` 发送给其下单处理程序的内容。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawerOrderPlacedEventArgs">
+        <source>A `CartDrawer`'s order went through.</source>
+        <target>`CartDrawer` 的订单已成功提交。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawerProduct">
+        <source>A product on the `CartDrawer`'s grid. Changes to the name, detail, price or image reach the grid and the cart rows at once.</source>
+        <target>`CartDrawer` 网格上的商品。对名称、说明、价格或图片的更改会立即反映到网格和购物车行。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawerProduct.Detail">
+        <source>The secondary line under the name: material, size or set ("Steam-bent ash, wool").</source>
+        <target>名称下方的次要行：材质、尺寸或套装（"Steam-bent ash, wool"）。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawerProduct.Id">
+        <source>Stable identifier (used in orders and events); defaults to the name when empty.</source>
+        <target>稳定标识符（用于订单和事件）；为空时默认使用名称。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawerProduct.Image">
+        <source>The product picture, shown at 4:5 on the grid, as a square thumbnail in the cart and in the flight.</source>
+        <target>商品图片，在网格上以 4:5 显示，在购物车和飞行动画中显示为方形缩略图。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawerProduct.InitialQuantity">
+        <source>How many are already in the cart when the block first shows its products (default 0).</source>
+        <target>区块首次显示其商品时购物车中已有的数量（默认 0）。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawerProduct.MaxQuantity">
+        <source>Most of this product one cart row may hold (default 9, at least 1).</source>
+        <target>购物车单行最多可容纳的该商品数量（默认 9，至少为 1）。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawerProduct.Name">
+        <source>The product name ("Ash reading chair"), on one line.</source>
+        <target>商品名称（"Ash reading chair"），单行显示。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawerProduct.Price">
+        <source>Unit price in the block's currency.</source>
+        <target>以区块货币计的单价。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawerPromo">
+        <source>An accepted promo code.</source>
+        <target>已被接受的优惠码。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawerPromoEventArgs">
+        <source>A promo code was applied, refused or removed in a `CartDrawer`.</source>
+        <target>`CartDrawer` 中的优惠码已被应用、拒绝或移除。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawerReceipt">
+        <source>What the drawer shows once an order is placed.</source>
+        <target>订单提交后抽屉显示的内容。</target>
+      </trans-unit>
+      <trans-unit id="CartDrawerState">
+        <source>Where a `CartDrawer` is in the checkout.</source>
+        <target>`CartDrawer` 在结账流程中所处的阶段。</target>
+      </trans-unit>
       <trans-unit id="Cascader">
         <source>Arc cascader: a select field that picks one node of a hierarchy, level by level (province, city, district). Opening the menu shows the first level; choosing a parent opens its children in a column to the right, and the menu grows with a spring. Look and motion follow `Select`: the same trigger, menu surface, gliding highlight and clear button. Nodes are any objects: `ChildrenSelector` gives the children, `TextSelector` the label and `ValueSelector` the value, which must be unique across the whole tree. Everything goes through delegates, so nothing is reflected. `SelectedItem`, `SelectedValue` and `SelectedPath` always agree; a value written before the data arrives is kept and resolved when it does. Keyboard: Enter, Space and the arrows open; Up and Down move in the column, Right opens the highlighted parent, Left goes back a column; Enter picks a leaf (or opens a parent); Escape closes without a change; typing jumps to the next matching node; Delete clears.</source>
         <target>Arc 级联选择器：在层级数据中逐级选择一个节点的选择字段（省、市、区）。打开菜单先显示第一级；选中一个父节点，它的子级会在右侧的一列中展开，菜单宽度随弹簧变化。外观和动效与 `Select` 一致：相同的触发器、菜单表面、滑动高亮和清除按钮。节点可以是任意对象：`ChildrenSelector` 给出子级，`TextSelector` 给出标签，`ValueSelector` 给出值，值必须在整棵树中唯一。一切都通过委托完成，不使用反射。`SelectedItem`、`SelectedValue` 和 `SelectedPath` 始终保持一致；数据到达之前写入的值会被保留，数据到达后再解析。键盘：Enter、Space 和方向键打开；Up、Down 在当前列移动，Right 展开高亮的父节点，Left 回到上一列；Enter 选中叶子（或展开父节点）；Escape 关闭且不改变值；输入字母跳到下一个匹配的节点；Delete 清除。</target>
@@ -5251,6 +5439,414 @@
       <trans-unit id="CheckboxRenderer">
         <source>Draws a yes or no value as a checkbox in the middle of the cell; a click on it flips the value (one undo step, and `CellEditEnding` can refuse it). Boolean columns use it without setting `Renderer`; set it on a column of another type to show a 0 or 1 that way. Values that are not a `Boolean` draw as text.</source>
         <target>在单元格中间把是或否的值画成复选框；点击它会翻转值（是一步撤销，`CellEditEnding` 可以拒绝）。Boolean 列无需设置 `Renderer` 就会使用它；设置在其他类型的列上，可以用这种方式显示 0 或 1。不是 `Boolean` 的值会画成文字。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummary">
+        <source>The last step before paying for one product: a title, the item with its price, a promo code field that turns an accepted code into a removable chip, a breakdown (subtotal, automatic lines, the code, tax) whose lines slide in and out, a rolling total and a pay button that walks through processing to paid (or to an error with "Try again"). The code check (`CouponValidator`) and the payment (`PayAsync`) are delegates so a host can call its backend; `CheckoutSummarySamples` has simulated ones.</source>
+        <target>为一件商品付款前的最后一步：包含标题、带价格的商品项、优惠码输入框（通过验证的优惠码会变成可移除的标签块）、明细（小计、自动调整行、优惠码、税费，各行会滑入滑出）、滚动更新的总计，以及付款按钮（依次经过处理中，直至已付款，或出错并显示 "Try again"）。优惠码校验（`CouponValidator`）和付款（`PayAsync`）都是委托，宿主可借此调用自己的后端；`CheckoutSummarySamples` 提供模拟实现。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummary.Adjustments">
+        <source>Automatic lines between the subtotal and the tax (negative amounts are discounts); lines that come or go slide in and out.</source>
+        <target>位于小计与税费之间的自动调整行（负数为折扣）；新增或移除的行会滑入或滑出。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummary.AppliedCoupon">
+        <source>The promo code in use, or null.</source>
+        <target>正在使用的优惠码，无则为 null。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummary.ApplyCouponAsync">
+        <source>Checks and applies `code` as if typed; returns true when it was accepted.</source>
+        <target>像输入一样检查并应用 `code`；被接受时返回 true。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummary.CouponApplied">
+        <source>Raised when a promo code was accepted.</source>
+        <target>优惠码被接受时引发。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummary.CouponDiscount">
+        <source>What the promo code takes off (positive), zero without a code.</source>
+        <target>优惠码抵扣的金额（正数）；未使用优惠码时为零。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummary.CouponRejected">
+        <source>Raised when a promo code was refused.</source>
+        <target>优惠码被拒绝时引发。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummary.CouponRemoved">
+        <source>Raised when the applied promo code was removed.</source>
+        <target>已应用的优惠码被移除时引发。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummary.CouponValidator">
+        <source>Checks a promo code (trimmed, as typed) and answers with `Valid`, `ValidPercent` or `Invalid`; an exception counts as a refusal. Null hides the promo code field.</source>
+        <target>校验优惠码（已去除首尾空格，按输入原样传入），并返回 `Valid`、`ValidPercent` 或 `Invalid`；抛出异常视为拒绝。为 null 时隐藏优惠码输入框。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummary.CultureName">
+        <source>Culture used to format amounts (default en-US).</source>
+        <target>用于格式化金额的区域性名称（默认 en-US）。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummary.Currency">
+        <source>ISO 4217 code of the amounts (default USD).</source>
+        <target>金额所用的 ISO 4217 货币代码（默认 USD）。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummary.Footnote">
+        <source>Optional small print at the bottom of the card (text or any control).</source>
+        <target>卡片底部的可选小字注释（可以是文本或任意控件）。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummary.FormattedTotal">
+        <source>The total as shown, such as "$96.75".</source>
+        <target>显示的总计，例如 "$96.75"。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummary.IsCouponLocked">
+        <source>True while paying and after: the promo code can no longer change.</source>
+        <target>付款过程中及付款后为 true：优惠码不能再变更。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummary.IsCouponVisible">
+        <source>False hides the promo code field. It also stays hidden while `CouponValidator` is null.</source>
+        <target>为 false 时隐藏优惠码输入框；`CouponValidator` 为 null 时同样保持隐藏。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummary.IsPayEnabled">
+        <source>False shows the pay button but does not allow paying.</source>
+        <target>为 false 时付款按钮仍会显示，但不允许付款。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummary.IsSecureNoteVisible">
+        <source>False hides the secure note.</source>
+        <target>为 false 时隐藏安全说明。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummary.Item">
+        <source>The product being paid for; null hides the item row.</source>
+        <target>所付款的商品；为 null 时隐藏商品行。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummary.Labels">
+        <source>The block's built-in text; replace the whole object to localize it.</source>
+        <target>此区块的内置文本；如需本地化，请整体替换此对象。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummary.PayAsync">
+        <source>Runs the payment: completing moves to `Paid`, throwing to `Error`. When null, Pay only raises `PayRequested`, moves to Processing and leaves the outcome to the host through `PayState`.</source>
+        <target>执行付款：完成则进入 `Paid`，抛出异常则进入 `Error`。为 null 时，按下付款仅引发 `PayRequested`、进入处理中状态，并通过 `PayState` 把结果交由宿主处理。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummary.PayErrorMessage">
+        <source>Text of the error line after a failed payment; the labels' generic message when null.</source>
+        <target>付款失败后错误提示行的文本；为 null 时使用标签中的通用消息。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummary.PayRequested">
+        <source>Raised when Pay is pressed, before the payment starts; set `Cancel` to stop it.</source>
+        <target>按下付款时、付款开始之前引发；设置 `Cancel` 可阻止付款。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummary.PayState">
+        <source>Where the pay button is: idle, processing, paid or error. Two-way; a host may drive it directly.</source>
+        <target>付款按钮当前所处的状态：空闲、处理中、已付款或出错。双向绑定；宿主可直接设置。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummary.PayStateChanged">
+        <source>Raised whenever `PayState` changes.</source>
+        <target>每当 `PayState` 变化时引发。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummary.RemoveCoupon">
+        <source>Removes the applied promo code (does nothing while paying or after).</source>
+        <target>移除已应用的优惠码（付款中及付款后不执行任何操作）。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummary.ResetPayState">
+        <source>Cancels a running payment and returns the button to idle (for a new order, or after a host-side form returned).</source>
+        <target>取消正在进行的付款，并将按钮恢复为空闲（用于新订单，或宿主端表单返回之后）。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummary.SecureNote">
+        <source>Small line under the pay button next to a lock (default "Encrypted payment").</source>
+        <target>付款按钮下方、锁图标旁的小字说明（默认 "Encrypted payment"）。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummary.StartPaymentAsync">
+        <source>Starts a payment as if Pay was pressed; returns once it ended (or at once without `PayAsync`).</source>
+        <target>如同按下付款一样开始付款；付款结束后返回（若没有 `PayAsync`，则立即返回）。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummary.Subtotal">
+        <source>The item price.</source>
+        <target>商品价格。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummary.Tax">
+        <source>The tax line; null shows no tax.</source>
+        <target>税费行；为 null 时不显示税费。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummary.TaxAmount">
+        <source>The tax amount (zero without a rate).</source>
+        <target>税费金额（无税率时为零）。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummary.Title">
+        <source>Heading of the card, also its accessible name (default "Order summary").</source>
+        <target>卡片标题，同时也是其无障碍名称（默认 "Order summary"）。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummary.Total">
+        <source>The amount to pay.</source>
+        <target>应付金额。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummary.UppercaseCoupon">
+        <source>True turns typed letters into capitals as they are typed (default true).</source>
+        <target>为 true 时，输入的字母会在键入时自动转为大写（默认 true）。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryCouponEventArgs">
+        <source>Arguments of the promo code events of `CheckoutSummary`.</source>
+        <target>`CheckoutSummary` 优惠码事件的参数。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryCouponEventArgs.Code">
+        <source>The code: as typed for a refused code, as shown on the chip for an applied or removed one.</source>
+        <target>优惠码：被拒绝的优惠码为输入的原文，已应用或已移除的优惠码为标签块上显示的内容。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryCouponEventArgs.Message">
+        <source>The refusal message, when the code was refused.</source>
+        <target>优惠码被拒绝时的原因说明。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryCouponEventArgs.Result">
+        <source>The check's answer (null for `CouponRemovedEvent`).</source>
+        <target>检查的结果（`CouponRemovedEvent` 时为 null）。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryCouponResult">
+        <source>What a promo code check answered: a valid code with its discount, or a message saying why not.</source>
+        <target>优惠码检查的结果：一个有效的优惠码及其折扣，或说明不被接受原因的消息。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryCouponResult.Amount">
+        <source>Fixed discount (positive, subtracted) when `Percent` is not set.</source>
+        <target>固定折扣金额（正数，将被减去），在未设置 `Percent` 时使用。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryCouponResult.Code">
+        <source>The code as it should be shown on the chip (normally upper case).</source>
+        <target>应在标签块上显示的优惠码（通常为大写）。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryCouponResult.Invalid">
+        <source>A refused code with the `message` to show.</source>
+        <target>被拒绝的优惠码，并附带要显示的 `message`。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryCouponResult.IsValid">
+        <source>True when the code was accepted.</source>
+        <target>优惠码被接受时为 true。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryCouponResult.Label">
+        <source>Label of the discount line, such as "Hello, 15% off"; the code itself when empty.</source>
+        <target>折扣行的名称，例如 "Hello, 15% off"；为空时使用优惠码本身。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryCouponResult.Message">
+        <source>Why the code was refused; shown under the field.</source>
+        <target>优惠码被拒绝的原因；显示在输入框下方。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryCouponResult.Percent">
+        <source>Discount as a fraction of the adjusted subtotal (0.15 = 15%), recomputed when the lines change.</source>
+        <target>按调整后小计计算的折扣比例（0.15 = 15%），在行变化时重新计算。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryCouponResult.Valid">
+        <source>A valid code that takes a fixed `amount` off.</source>
+        <target>有效的优惠码，减去固定的 `amount`。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryCouponResult.ValidPercent">
+        <source>A valid code that takes `percent` (0.15 = 15%) of the adjusted subtotal off.</source>
+        <target>有效的优惠码，减去调整后小计的 `percent`（0.15 = 15%）。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryItem">
+        <source>The product a `CheckoutSummary` is for: name, description, price and billing period.</source>
+        <target>`CheckoutSummary` 所付款的商品：包含名称、描述、价格和计费周期。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryItem.Description">
+        <source>One short sentence under the name; wraps on narrow cards.</source>
+        <target>名称下方的一句简短说明；在窄卡片上会换行。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryItem.Media">
+        <source>Optional 44 px thumbnail before the name: an image, a glyph or any control.</source>
+        <target>名称前可选的 44 px 缩略图：可以是图片、图标或任意控件。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryItem.Name">
+        <source>Product name, kept on one line (cut with an ellipsis when it does not fit).</source>
+        <target>商品名称，保持单行显示（放不下时以省略号截断）。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryItem.Period">
+        <source>Small text under the price, such as "billed yearly".</source>
+        <target>价格下方的小字，例如 "billed yearly"。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryItem.Price">
+        <source>Price before adjustments, codes and tax; it is also the subtotal.</source>
+        <target>调整、优惠码与税费之前的价格；同时也是小计。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryLabels">
+        <source>The built-in text of `CheckoutSummary`. Replace the whole object to localize the block; entries with a number receive the already formatted amount.</source>
+        <target>`CheckoutSummary` 的内置文本。如需本地化此区块，请整体替换此对象；带数字的条目会接收已格式化的金额。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryLabels.Applied">
+        <source>Word after the code on the applied chip: "applied".</source>
+        <target>已应用的标签块上，优惠码之后的文字："applied"。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryLabels.Apply">
+        <source>The button that checks a code: "Apply".</source>
+        <target>用于检查优惠码的按钮："Apply"。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryLabels.CheckingCode">
+        <source>Accessible name of the spinner while a code is checked: "Checking code".</source>
+        <target>检查优惠码时加载指示器的无障碍名称："Checking code"。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryLabels.CouponFailed">
+        <source>Shown when a code check fails without a message of its own: "That code could not be applied."</source>
+        <target>优惠码检查失败且没有自身消息时显示："That code could not be applied."</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryLabels.CouponFieldName">
+        <source>Accessible name of the promo code field: "Promo code".</source>
+        <target>优惠码输入框的无障碍名称："Promo code"。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryLabels.CouponPlaceholder">
+        <source>Placeholder of the promo code field: "Promo code" (set it to a hint such as "Try HELLO15").</source>
+        <target>优惠码输入框的占位文字："Promo code"（可设为 "Try HELLO15" 之类的提示）。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryLabels.Paid">
+        <source>Pay button after the payment went through: "Paid".</source>
+        <target>付款成功后的付款按钮文字："Paid"。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryLabels.Pay">
+        <source>Pay button label: amount ⇒ "Pay $96.75".</source>
+        <target>付款按钮的标签：amount ⇒ "Pay $96.75"。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryLabels.PayFailed">
+        <source>Shown under the button when a payment fails without a message of its own: "The payment did not go through. Nothing was charged."</source>
+        <target>付款失败且没有自身消息时显示在按钮下方："The payment did not go through. Nothing was charged."</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryLabels.Processing">
+        <source>Pay button while the payment runs: "Processing".</source>
+        <target>付款进行中时的付款按钮文字："Processing"。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryLabels.RemoveCode">
+        <source>Accessible name of the chip's remove button: code ⇒ "Remove code HELLO15".</source>
+        <target>标签块上移除按钮的无障碍名称：code ⇒ "Remove code HELLO15"。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryLabels.Subtotal">
+        <source>First line of the breakdown: "Subtotal".</source>
+        <target>明细的第一行："Subtotal"。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryLabels.TaxPending">
+        <source>Shown in place of the tax amount when there is no rate: "Calculated at checkout".</source>
+        <target>没有税率时代替税费金额显示："Calculated at checkout"。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryLabels.TaxWithRate">
+        <source>Tax label with its rate: (label, rate) ⇒ "Sales tax (7.5%)".</source>
+        <target>带税率的税费标签：(label, rate) ⇒ "Sales tax (7.5%)"。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryLabels.Total">
+        <source>Label of the total: "Total".</source>
+        <target>总计的标签："Total"。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryLabels.TotalAnnouncement">
+        <source>What a screen reader hears for the total: amount ⇒ "Total $96.75".</source>
+        <target>屏幕阅读器为总计播报的内容：amount ⇒ "Total $96.75"。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryLabels.TryAgain">
+        <source>Pay button after a failed payment: "Try again".</source>
+        <target>付款失败后的付款按钮文字："Try again"。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryLine">
+        <source>An automatic line of a `CheckoutSummary` between the subtotal and the tax (a plan discount, a credit, a fee). Negative amounts are discounts and show in green.</source>
+        <target>`CheckoutSummary` 中位于小计与税费之间的自动行（如套餐折扣、抵免或费用）。负数为折扣，并以绿色显示。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryLine.Amount">
+        <source>Signed amount added to the subtotal; negative is a discount.</source>
+        <target>加到小计上的带符号金额；负数为折扣。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryLine.Id">
+        <source>Stable key of the line, so a changed list animates only the lines that came or went ("coupon" is reserved).</source>
+        <target>行的稳定键，因此列表变化时只为新增或移除的行做动画（"coupon" 为保留值）。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryLine.Label">
+        <source>What the line is, such as "Annual plan".</source>
+        <target>该行的名称，例如 "Annual plan"。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryLine.Note">
+        <source>Optional small text under the label, such as "Three months free".</source>
+        <target>名称下方的可选小字，例如 "Three months free"。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryPayRequestedEventArgs">
+        <source>Arguments of `PayRequestedEvent`; set `Cancel` to stop the payment.</source>
+        <target>`PayRequestedEvent` 的参数；设置 `Cancel` 可阻止付款。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryPayRequestedEventArgs.Cancel">
+        <source>Set to true to keep the button idle and not start the payment.</source>
+        <target>设为 true 时，按钮保持空闲，且不开始付款。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryPayRequestedEventArgs.FormattedTotal">
+        <source>The amount as shown on the button, such as "$96.75".</source>
+        <target>按钮上显示的金额，例如 "$96.75"。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryPayRequestedEventArgs.Total">
+        <source>The amount to charge.</source>
+        <target>要收取的金额。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryPayState">
+        <source>Where the pay button of a `CheckoutSummary` is in its life.</source>
+        <target>`CheckoutSummary` 付款按钮所处的生命周期阶段。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryPayState.Error">
+        <source>The payment failed: an error line under the button and "Try again", which starts a new attempt.</source>
+        <target>付款失败：按钮下方显示错误提示行，以及 "Try again"，点击后开始新的尝试。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryPayState.Idle">
+        <source>Ready to pay: the lock glyph and the pay label with the total.</source>
+        <target>可以付款：显示锁图标，以及带总计的付款文字。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryPayState.Paid">
+        <source>The payment went through: a check and "Paid" on a green button. This state is final until reset.</source>
+        <target>付款成功：绿色按钮上显示勾选图标和 "Paid"。此状态为最终状态，直到重置。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryPayState.Processing">
+        <source>The payment is running: a spinner and "Processing"; the button and the promo code are locked.</source>
+        <target>付款进行中：显示加载指示器和 "Processing"；付款按钮与优惠码均被锁定。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryPayStateChangedEventArgs">
+        <source>Arguments of `PayStateChangedEvent`.</source>
+        <target>`PayStateChangedEvent` 的参数。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryPayStateChangedEventArgs.Error">
+        <source>The exception thrown by `PayAsync`, when the new state is `Error` because of it.</source>
+        <target>当新状态为 `Error` 且由此引起时，`PayAsync` 抛出的异常。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryPayStateChangedEventArgs.NewState">
+        <source>The state now.</source>
+        <target>变化后的状态。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryPayStateChangedEventArgs.OldState">
+        <source>The state before the change.</source>
+        <target>变化前的状态。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummarySamples">
+        <source>Invented sample content and a simulated backend for `CheckoutSummary`: a yearly drawing app, a plan discount, sales tax, two promo codes (HELLO15 takes 15% off, FRIEND5 takes 5 off) checked in 700 ms, and a payment that takes 1400 ms. Each simulation takes an optional delay function so tests can step time.</source>
+        <target>`CheckoutSummary` 的虚构示例内容与模拟后端：一个年度绘图应用、一个套餐折扣、销售税，以及两个优惠码（HELLO15 享受 15% 折扣，FRIEND5 减 5），检查耗时 700 ms，付款耗时 1400 ms。每个模拟都接受可选的延迟函数，便于测试时逐步推进时间。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummarySamples.Check">
+        <source>The sample rule without the wait.</source>
+        <target>不含等待的示例规则。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummarySamples.CreateAdjustment">
+        <source>A new sample automatic discount: "Annual plan", three months free, −30.</source>
+        <target>新建的示例自动折扣："Annual plan"，免费三个月，−30。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummarySamples.CreateCouponValidator">
+        <source>The sample code check: after `CouponCheckDelay`, HELLO15 (any case, spaces around ignored) is 15% off, FRIEND5 is 5 off, anything else is refused with a hint.</source>
+        <target>示例的优惠码检查：在 `CouponCheckDelay` 之后，HELLO15（忽略大小写，忽略首尾空格）享 15% 折扣，FRIEND5 减 5，其他一律拒绝并附提示。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummarySamples.CreateItem">
+        <source>A new sample product: "Sketchbook Pro, annual", 120, billed yearly.</source>
+        <target>新建的示例商品："Sketchbook Pro, annual"，120，按年计费。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummarySamples.CreatePayHandler">
+        <source>The sample payment: waits `PaymentDelay`, then succeeds, or throws when `shouldFail` answers true at that moment.</source>
+        <target>示例付款：等待 `PaymentDelay` 后成功；若 `shouldFail` 在当时返回 true，则抛出异常。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummarySamples.CreateTax">
+        <source>A new sample tax: "Sales tax" at 7.5%.</source>
+        <target>新建的示例税费："Sales tax"，税率 7.5%。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummarySamples.Labels">
+        <source>The sample labels: the promo field hints at `PercentCode`.</source>
+        <target>示例标签：优惠码输入框的提示指向 `PercentCode`。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryTax">
+        <source>The tax line of a `CheckoutSummary`.</source>
+        <target>`CheckoutSummary` 的税费行。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryTax.Label">
+        <source>Name of the tax; the rate is added in brackets when it is known: "Sales tax (7.5%)".</source>
+        <target>税费名称；已知税率时在括号中附加税率，例如 "Sales tax (7.5%)"。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryTax.Note">
+        <source>Text shown in place of the amount when there is no rate (the labels' "Calculated at checkout" when empty).</source>
+        <target>没有税率时代替金额显示的文字（为空时使用标签中的 "Calculated at checkout"）。</target>
+      </trans-unit>
+      <trans-unit id="CheckoutSummaryTax.Rate">
+        <source>Rate as a fraction (0.075 = 7.5%). Without a rate the line shows `Note` and no amount, and the total leaves tax out.</source>
+        <target>以小数表示的税率（0.075 = 7.5%）。没有税率时，该行显示 `Note` 而不显示金额，且总计不计入税费。</target>
       </trans-unit>
       <trans-unit id="ChipGroup">
         <source>Arc chip group: toggle chips for facets people switch often (topics, statuses, tags). Picking a chip morphs it: a check grows in, the label slides over and the chip's edge follows on a spring while the neighbours glide to their new places, even across lines. Long sets fold behind a "+N more" chip (selected chips always stay in view); expanding staggers the revealed chips in and the group height springs. With `IsMultiple` false it is a single choice that can still be cleared. Keyboard: one tab stop; arrows move between chips and wrap, Home / End jump to the ends; Enter or Space toggles the focused chip or expands the folded ones.</source>
@@ -7203,6 +7799,130 @@
       <trans-unit id="Countdown.Variant">
         <source>Large display digits with unit names (default) or one compact pill.</source>
         <target>带单位名称的大号显示数字（默认），或紧凑的单个胶囊。</target>
+      </trans-unit>
+      <trans-unit id="CreditTopUp">
+        <source>A card for buying usage credits: the balance with a two-week usage chart and how many days it lasts, preset packs with bonus badges, a custom amount slider, auto top-up with a threshold, the saved card, and a checkout whose new balance rolls in like an odometer. Every price, badge and total derives from `Pricing`. Without a `PurchaseHandler` the card simulates a 1.2 second charge and adds the credits to its own `Balance`; with one, it charges through your backend and shows the error with a retry when the handler throws.</source>
+        <target>一张用于购买用量额度的卡片：余额及两周用量图表和可用天数，带赠送标签的预设套餐，自定义金额滑块，带阈值的自动充值，已保存的卡，以及新余额像里程表一样滚动的结算区。每个价格、标签和总额都来自 `Pricing`。未设置 `PurchaseHandler` 时，卡片模拟 1.2 秒的扣款，并把额度加到自己的 `Balance`；设置后，它通过你的后端扣款，并在处理程序抛出异常时显示错误和重试。</target>
+      </trans-unit>
+      <trans-unit id="CreditTopUp.AutoTopUpChanged">
+        <source>Raised when auto top-up is switched or its threshold changes.</source>
+        <target>切换自动充值或其阈值改变时触发。</target>
+      </trans-unit>
+      <trans-unit id="CreditTopUp.AutoTopUpThreshold">
+        <source>The auto top-up threshold in credits (two-way: the threshold choices edit it). The balance reads as running low below it, even while auto top-up is off. Default 1,500.</source>
+        <target>自动充值阈值，以额度计（双向：阈值选项会修改它）。余额低于它时显示为即将用完，即使自动充值已关闭。默认 1,500。</target>
+      </trans-unit>
+      <trans-unit id="CreditTopUp.AverageDailyUsage">
+        <source>The average daily usage over the full days of `Usage` (today left out); null without a full day.</source>
+        <target>`Usage` 中完整天数的平均每日用量（不含今天）；没有完整的一天时为 null。</target>
+      </trans-unit>
+      <trans-unit id="CreditTopUp.Balance">
+        <source>The balance in credits. Two-way: a purchase adds its total (bonus included). Any change, from a purchase or from outside, rolls the figure.</source>
+        <target>余额，以额度计。双向：一次购买会加上其总额（含赠送）。任何变化，无论来自购买还是外部，都会让数字滚动。</target>
+      </trans-unit>
+      <trans-unit id="CreditTopUp.CultureName">
+        <source>Culture of every count, amount and date (default "en-US").</source>
+        <target>所有数量、金额和日期使用的区域性（默认 "en-US"）。</target>
+      </trans-unit>
+      <trans-unit id="CreditTopUp.CurrentQuote">
+        <source>The price of `SelectedCredits` under `Pricing`.</source>
+        <target>按 `Pricing` 计算的 `SelectedCredits` 的价格。</target>
+      </trans-unit>
+      <trans-unit id="CreditTopUp.DaysLeft">
+        <source>Whole days the balance lasts at `AverageDailyUsage` (rounded down); null without a burn rate.</source>
+        <target>按 `AverageDailyUsage` 计算余额可用的整天数（向下取整）；没有消耗速率时为 null。</target>
+      </trans-unit>
+      <trans-unit id="CreditTopUp.ErrorMessage">
+        <source>The message of the last failed charge while `Phase` is `Error`.</source>
+        <target>`Phase` 为 `Error` 时，最近一次失败扣款的消息。</target>
+      </trans-unit>
+      <trans-unit id="CreditTopUp.Health">
+        <source>Running low when `Balance` is below `AutoTopUpThreshold`, otherwise healthy.</source>
+        <target>`Balance` 低于 `AutoTopUpThreshold` 时为即将用完，否则为健康。</target>
+      </trans-unit>
+      <trans-unit id="CreditTopUp.IsAutoTopUpEnabled">
+        <source>Whether auto top-up is on (two-way: the switch edits it).</source>
+        <target>自动充值是否开启（双向：开关会修改它）。</target>
+      </trans-unit>
+      <trans-unit id="CreditTopUp.Labels">
+        <source>The built-in text; replace the object to reword or localize the card.</source>
+        <target>内置文本；替换该对象即可改写或本地化卡片。</target>
+      </trans-unit>
+      <trans-unit id="CreditTopUp.Packs">
+        <source>The preset pack sizes in credits (keep it to three for the layout). Default: 1,500, 6,000 and 24,000.</source>
+        <target>预设套餐的额度数量（为了布局请保持三个）。默认：1,500、6,000 和 24,000。</target>
+      </trans-unit>
+      <trans-unit id="CreditTopUp.PaymentMethodChanged">
+        <source>Raised when Change selects another saved card.</source>
+        <target>Change 选择另一张已保存的卡时触发。</target>
+      </trans-unit>
+      <trans-unit id="CreditTopUp.PaymentMethods">
+        <source>The saved cards; Change cycles through them. Empty shows "No saved card" and the purchase goes without a card id.</source>
+        <target>已保存的卡；Change 在它们之间轮换。为空时显示 "No saved card"，购买时不带卡 ID。</target>
+      </trans-unit>
+      <trans-unit id="CreditTopUp.Phase">
+        <source>Where the purchase stands: idle, processing, done or error.</source>
+        <target>购买所处的阶段：空闲、处理中、完成或错误。</target>
+      </trans-unit>
+      <trans-unit id="CreditTopUp.Pricing">
+        <source>The price per credit, currency and bonus tiers every price, badge and total derive from.</source>
+        <target>每额度价格、货币和赠送档位，所有价格、标签和总额都由它得出。</target>
+      </trans-unit>
+      <trans-unit id="CreditTopUp.PurchaseFailed">
+        <source>Raised when the purchase handler threw, with the order and the message shown.</source>
+        <target>购买处理程序抛出异常时触发，附带订单和显示的消息。</target>
+      </trans-unit>
+      <trans-unit id="CreditTopUp.Purchased">
+        <source>Raised after a purchase went through, with the order and the new balance.</source>
+        <target>购买成功后触发，附带订单和新余额。</target>
+      </trans-unit>
+      <trans-unit id="CreditTopUp.Range">
+        <source>The custom amount slider's range and step. An amount equal to a pack selects that pack.</source>
+        <target>自定义金额滑块的范围和步长。与某个套餐相等的金额会选中该套餐。</target>
+      </trans-unit>
+      <trans-unit id="CreditTopUp.SelectedCredits">
+        <source>The amount to buy, in credits (two-way; kept inside `Range` on its step). Default 6,000, the second sample pack.</source>
+        <target>要购买的数量，以额度计（双向；保持在 `Range` 之内并按其步长取值）。默认 6,000，即第二个示例套餐。</target>
+      </trans-unit>
+      <trans-unit id="CreditTopUp.SelectedPaymentMethodId">
+        <source>The `Id` of the card to charge (two-way); null or unknown uses the first card.</source>
+        <target>要扣款的卡的 `Id`（双向）；为 null 或未知时使用第一张卡。</target>
+      </trans-unit>
+      <trans-unit id="CreditTopUp.Thresholds">
+        <source>The auto top-up threshold choices. Default: 750, 1,500 and 3,000.</source>
+        <target>自动充值的阈值选项。默认：750、1,500 和 3,000。</target>
+      </trans-unit>
+      <trans-unit id="CreditTopUp.Usage">
+        <source>Daily usage, oldest first; the last day is today (a partial day). Drives the bars, their readout and the days-left line (the average of the full days). Null or empty hides the chart and the days-left line. Default: 14 sample days.</source>
+        <target>每日用量，最早的在前；最后一天是今天（不完整的一天）。它驱动柱、柱的读数和可用天数行（完整天数的平均值）。为 null 或空时隐藏图表和可用天数行。默认：14 个示例日。</target>
+      </trans-unit>
+      <trans-unit id="CreditTopUpCardBrand">
+        <source>The fictional card networks `CreditTopUpPaymentMethod` can show a mark for.</source>
+        <target>`CreditTopUpPaymentMethod` 可以显示标志的虚构卡组织。</target>
+      </trans-unit>
+      <trans-unit id="CreditTopUpHealth">
+        <source>How the balance reads against the auto top-up threshold.</source>
+        <target>余额相对于自动充值阈值的状态。</target>
+      </trans-unit>
+      <trans-unit id="CreditTopUpLabels">
+        <source>The built-in text of `CreditTopUp`. Replace the whole object to reword or localize the card. Entries with `{0}` / `{1}` / `{2}` receive already formatted counts and amounts (the culture is `CultureName`); where a number rolls, the text around `{0}` stays still.</source>
+        <target>`CreditTopUp` 的内置文本。替换整个对象即可改写或本地化卡片。带 `{0}` / `{1}` / `{2}` 的条目接收已格式化的数量和金额（区域性为 `CultureName`）；数字滚动的地方，`{0}` 周围的文本保持不动。</target>
+      </trans-unit>
+      <trans-unit id="CreditTopUpPaymentMethod">
+        <source>A saved card of `PaymentMethods`.</source>
+        <target>`PaymentMethods` 中一张已保存的卡。</target>
+      </trans-unit>
+      <trans-unit id="CreditTopUpPhase">
+        <source>Where a purchase stands.</source>
+        <target>购买所处的阶段。</target>
+      </trans-unit>
+      <trans-unit id="CreditTopUpPricing">
+        <source>What credits cost: a price per credit in an ISO 4217 currency and the volume bonuses. Every price, badge, total and the per 1,000 rate of `CreditTopUp` derive from it; use the same object with `Quote` on a server to price the same order.</source>
+        <target>额度的价格：以 ISO 4217 货币计的每额度价格和批量赠送。`CreditTopUp` 的每个价格、标签、总额和每 1,000 单价都由它得出；在服务器上用同一个对象调用 `Quote`，即可为同一订单定价。</target>
+      </trans-unit>
+      <trans-unit id="CreditTopUpRange">
+        <source>The custom amount slider's range in credits.</source>
+        <target>自定义金额滑块的范围，以额度计。</target>
       </trans-unit>
       <trans-unit id="CtaAction">
         <source>One action of a `CtaSection` (Arc's `CtaAction`). With `Href` it is a link-style action: pressing it raises `ActionInvoked` and, when nobody handles the event, opens an absolute http, https or mailto address. With a `Command`, or when a handler marks the event handled, it only runs. With none of these it confirms in place (a check and `ConfirmedLabel`; pressing again restores it), so a preview always answers a press.</source>
@@ -13980,6 +14700,202 @@
         <source>Arguments of `SendRequested`. Set `Pending` to the task that sends the message: the composer holds until it completes, then clears and confirms; a failed task shows its message under the composer.</source>
         <target>`SendRequested` 的参数。把 `Pending` 设为发送消息的任务：输入框保持等待直到它完成，然后清空并确认；任务失败时在输入框下方显示其消息。</target>
       </trans-unit>
+      <trans-unit id="LiveCheckout">
+        <source>A subscription checkout on one page: express wallets, a plan radio group with a billing switch, a seat stepper, add-ons, billing details and a card form on the left, and an order summary on the right that recalculates every line, the coupon, the tax by country and the total with each change, with every amount rolling digit by digit. A successful payment fades the form aside while the summary glides to the centre and unfolds into a receipt. Below 760 px of its own width the summary sits on top as a total you can expand; below 520 px plans and fields stack.</source>
+        <target>单页完成的订阅结账：左侧是快捷钱包、带计费周期切换的套餐单选组、席位步进器、附加项、账单信息和卡片表单，右侧是订单摘要，每次改动都会重新计算每一行、优惠码、按国家计算的税和合计，所有金额逐位滚动。支付成功后表单淡出到一侧，摘要滑到中央并展开成收据。自身宽度小于 760 px 时摘要位于顶部，显示为可展开的合计；小于 520 px 时套餐和字段堆叠成一列。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckout.Addons">
+        <source>The optional add-ons, in display order (summary rows follow this order).</source>
+        <target>可选附加项，按显示顺序排列（摘要行遵循此顺序）。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckout.Address">
+        <source>The street address. Two-way.</source>
+        <target>街道地址。双向。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckout.Billing">
+        <source>The billing period (yearly by default). Two-way: the billing switch edits it.</source>
+        <target>计费周期（默认按年）。双向：计费周期切换会修改它。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckout.CardholderName">
+        <source>The name on the card. Two-way.</source>
+        <target>卡上的姓名。双向。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckout.City">
+        <source>The city. Two-way.</source>
+        <target>城市。双向。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckout.Clock">
+        <source>Where "today" comes from (receipt date, card expiry); the system clock by default.</source>
+        <target>"今天"的来源（收据日期、卡片有效期）；默认为系统时钟。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckout.Countries">
+        <source>The billing countries with their tax rates and postal code rules.</source>
+        <target>账单国家及其税率和邮编规则。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckout.CountryCode">
+        <source>Code of the billing country (the first country when unknown). Two-way: the country list edits it.</source>
+        <target>账单国家的代码（未知时为第一个国家）。双向：国家列表会修改它。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckout.CouponApplied">
+        <source>Raised when a coupon is accepted.</source>
+        <target>优惠码被接受时引发。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckout.CouponCode">
+        <source>The applied coupon code, or null.</source>
+        <target>已应用的优惠码，或 null。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckout.CouponRemoved">
+        <source>Raised when the applied coupon is removed.</source>
+        <target>移除已应用的优惠码时引发。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckout.Currency">
+        <source>ISO 4217 code of every amount ("USD" by default).</source>
+        <target>所有金额的 ISO 4217 代码（默认 "USD"）。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckout.Email">
+        <source>The receipt email. Two-way.</source>
+        <target>收据邮箱。双向。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckout.IsPaid">
+        <source>True while the receipt is shown.</source>
+        <target>显示收据时为 true。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckout.IsProcessing">
+        <source>True while a payment runs.</source>
+        <target>支付进行中时为 true。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckout.IsSummaryOpen">
+        <source>Whether the narrow summary is expanded. Two-way: its bar toggles it.</source>
+        <target>窄布局下摘要是否展开。双向：摘要条会切换它。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckout.Labels">
+        <source>The built-in text and the culture amounts and dates use; replace the object to localize the block.</source>
+        <target>内置文字，以及金额和日期使用的区域性；替换该对象即可本地化区块。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckout.MaxSeats">
+        <source>The most seats (500 by default).</source>
+        <target>最多席位数（默认 500）。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckout.MinSeats">
+        <source>The fewest seats (1 by default).</source>
+        <target>最少席位数（默认 1）。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckout.Paid">
+        <source>Raised after a successful payment, as the receipt appears.</source>
+        <target>支付成功后、收据出现时引发。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckout.PaymentFailed">
+        <source>Raised when a payment fails; its message is shown above the pay button.</source>
+        <target>支付失败时引发；其消息显示在支付按钮上方。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckout.Plans">
+        <source>The plans to choose from, in display order.</source>
+        <target>可供选择的套餐，按显示顺序排列。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckout.PostalCode">
+        <source>The postal code, checked against the country's pattern. Two-way.</source>
+        <target>邮编，按国家的格式检查。双向。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckout.Receipt">
+        <source>The receipt of the last successful payment, or null.</source>
+        <target>最近一次成功支付的收据，或 null。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckout.ReceiptRequested">
+        <source>Raised when "Receipt PDF" is pressed: produce or download the receipt here.</source>
+        <target>按下 "Receipt PDF" 时引发：在此生成或下载收据。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckout.Restarted">
+        <source>Raised after "Start over" (or `Reset`) put everything back.</source>
+        <target>"Start over"（或 `Reset`）将一切复原后引发。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckout.Seats">
+        <source>Seats to buy, kept between `MinSeats` and `MaxSeats` (8 by default). Two-way.</source>
+        <target>要购买的席位数，保持在 `MinSeats` 与 `MaxSeats` 之间（默认 8）。双向。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckout.SelectedAddonIds">
+        <source>Ids of the ticked add-ons. Two-way: the check boxes edit it.</source>
+        <target>已勾选附加项的 Id。双向：复选框会修改它。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckout.SelectedPlanId">
+        <source>Id of the chosen plan ("crew" by default; an unknown id falls back to the first plan). Two-way.</source>
+        <target>所选套餐的 Id（默认 "crew"；未知 Id 回退到第一个套餐）。双向。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckout.TestCard">
+        <source>The card "Use test card" fills in; null hides the button.</source>
+        <target>"Use test card" 填入的卡；为 null 时隐藏该按钮。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckout.Totals">
+        <source>The current subtotal, discount, tax and total.</source>
+        <target>当前的小计、折扣、税和合计。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckout.TotalsChanged">
+        <source>Raised whenever the totals change (plan, seats, billing, add-ons, coupon or country).</source>
+        <target>合计变化时引发（套餐、席位、计费周期、附加项、优惠码或国家）。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckout.Wallets">
+        <source>The express wallet buttons above the card form; an empty list hides the row and its divider.</source>
+        <target>卡片表单上方的快捷钱包按钮；列表为空时隐藏这一行及其分隔线。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckout.YearlyDiscount">
+        <source>Discount for yearly billing, from 0 to 1 (0.2 by default), shown on the billing switch.</source>
+        <target>按年计费的折扣，取值 0 到 1（默认 0.2），显示在计费周期切换上。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckoutAddon">
+        <source>An optional add-on with a flat monthly price, independent of the seat count.</source>
+        <target>按月固定计价的可选附加项，与席位数无关。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckoutCountry">
+        <source>A billing country: its sales tax and the shape of its postal codes.</source>
+        <target>一个账单国家：它的销售税和邮编格式。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckoutCouponEventArgs">
+        <source>Arguments of `CouponApplied` and `CouponRemoved`.</source>
+        <target>`CouponApplied` 和 `CouponRemoved` 的参数。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckoutCouponResult">
+        <source>The answer of `ValidateCouponAsync`.</source>
+        <target>`ValidateCouponAsync` 的应答。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckoutLabels">
+        <source>Every text a `LiveCheckout` shows or announces, with English defaults. Replace the object (or set single properties before the block is shown) to localize it; sentences with numbers are format delegates.</source>
+        <target>`LiveCheckout` 显示或播报的全部文字，带英文默认值。替换整个对象（或在区块显示前设置单个属性）即可本地化；含数字的句子是格式委托。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckoutLine">
+        <source>One row of the order summary.</source>
+        <target>订单摘要中的一行。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckoutOrder">
+        <source>Everything a payment handler needs to charge the order.</source>
+        <target>支付处理程序为订单扣款所需的全部信息。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckoutPaidEventArgs">
+        <source>Arguments of `Paid` and `ReceiptRequested`.</source>
+        <target>`Paid` 和 `ReceiptRequested` 的参数。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckoutPaymentFailedEventArgs">
+        <source>Arguments of `PaymentFailed`.</source>
+        <target>`PaymentFailed` 的参数。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckoutPlan">
+        <source>One plan a customer can choose in a `LiveCheckout`.</source>
+        <target>客户可在 `LiveCheckout` 中选择的一个套餐。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckoutReceipt">
+        <source>What a payment handler may return to fill the receipt; any value left null is filled by the checkout.</source>
+        <target>支付处理程序可以返回、用于填写收据的内容；留为 null 的值由结账组件补齐。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckoutTestCard">
+        <source>A card the "Use test card" button fills in.</source>
+        <target>"Use test card" 按钮填入的卡。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckoutTotalsChangedEventArgs">
+        <source>Arguments of `TotalsChanged`.</source>
+        <target>`TotalsChanged` 的参数。</target>
+      </trans-unit>
+      <trans-unit id="LiveCheckoutWallet">
+        <source>An express wallet button above the card form. Wallet buttons carry their own colors, not theme colors.</source>
+        <target>卡片表单上方的一个快捷钱包按钮。钱包按钮使用自己的颜色，而不是主题颜色。</target>
+      </trans-unit>
       <trans-unit id="LiveVisitors">
         <source>A realtime visitors card (Arc Live visitors, design reference): a pulsing live status, the number of people on the site rolling digit by digit, a dotted world map where new arrivals ping in and fade, the top pages right now with bars that reorder as counts change, and a ticker of signups and upgrades with the country and how long ago. A pause button holds the last snapshot. Feed it from your realtime source: set `Count`, `Pages`, `Visitors` and `Events` to new snapshots as they arrive (the card works out what moved from the ids), or push single arrivals and conversions with `PushVisitor` and `PushEvent`. Reflect the socket's state in `Connection`. Without `Count` the card plays its `Simulation`, a `LiveVisitorsSimulation` of a site you describe; with neither, it holds placeholders and says there is no data.</source>
         <target>实时访客卡片（Arc Live visitors，设计参考）：脉动的实时状态、逐位滚动的站内人数、新访客闪现后淡去的点阵世界地图、带条形且随人数重新排序的当前热门页面，以及显示国家和多久之前的注册与升级动态。暂停按钮保留最后一份快照。从你的实时数据源获取数据：在新快照到达时设置 `Count`、`Pages`、`Visitors` 和 `Events`（卡片根据 id 判断哪些发生了变化），或用 `PushVisitor` 和 `PushEvent` 逐条推送访客与转化。用 `Connection` 反映连接状态。没有 `Count` 时，卡片播放它的 `Simulation`，即一个描述你所指定网站的 `LiveVisitorsSimulation`；两者都没有时，卡片保持占位状态并说明没有数据。</target>
@@ -18548,6 +19464,262 @@
         <source>Arguments of `ShownStatusChanged`.</source>
         <target>`ShownStatusChanged` 的参数。</target>
       </trans-unit>
+      <trans-unit id="PlanComparison">
+        <source>A side-by-side plan comparison: a heading with a monthly / yearly switch, a feature count with a "Show differences only" filter, one column per plan with its price and a select button, and a feature matrix. Switching the billing period counts every price to the new amount; selecting a plan tints its column and slides a rail under it; the filter collapses the rows every plan shares. Without plans and features it shows Arc's sample offering (`PlanComparisonSamples`).</source>
+        <target>并排的套餐比较：带月付 / 年付切换的标题、带“Show differences only”筛选的特性计数、每个套餐一列（含价格与选择按钮），以及特性矩阵。切换计费周期时每个价格都会计数到新金额；选中套餐会为其列着色并在下方滑入一条导轨；筛选会收起所有套餐共有的行。没有套餐和特性时显示 Arc 的示例方案（`PlanComparisonSamples`）。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparison.Billing">
+        <source>The billing period the prices are shown for. Two-way: the billing switch edits it.</source>
+        <target>价格所对应的计费周期。双向：计费切换会修改它。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparison.BillingChanged">
+        <source>Raised when `Billing` changes, by the billing switch or by the app.</source>
+        <target>`Billing` 变化时引发，无论来自计费切换还是应用。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparison.ClearSelection">
+        <source>Clears the selection.</source>
+        <target>清除选择。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparison.Currency">
+        <source>ISO 4217 code of the prices ("USD" by default).</source>
+        <target>价格的 ISO 4217 代码（默认 "USD"）。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparison.Features">
+        <source>The feature rows, in display order, each with one value per plan. Empty (and no `FeaturesSource`) shows the sample features.</source>
+        <target>特性行，按显示顺序排列，每行为每个套餐提供一个值。为空（且没有 `FeaturesSource`）时显示示例特性。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparison.FeaturesSource">
+        <source>A list of features that replaces `Features` when set; a list that raises collection changes is followed.</source>
+        <target>设置后取代 `Features` 的特性列表；会跟随引发集合变更的列表。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparison.IsBillingVisible">
+        <source>Whether the monthly / yearly switch and its note show (true by default).</source>
+        <target>是否显示月付 / 年付切换及其说明（默认 true）。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparison.IsDifferencesOnly">
+        <source>Whether only the features the plans do not share are listed. Two-way: the filter switch edits it.</source>
+        <target>是否只列出各套餐不共有的特性。双向：筛选开关会修改它。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparison.IsFootnoteVisible">
+        <source>Whether the footnote under the matrix shows (true by default).</source>
+        <target>是否显示矩阵下方的脚注（默认 true）。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparison.IsFramed">
+        <source>Whether the block draws its own card (border, corner radius, surface and the lines between its sections, at most 1060 wide). Turn it off to set the block flush into a page section, as Arc's preview does.</source>
+        <target>区块是否绘制自己的卡片（边框、圆角、表面以及各部分之间的分隔线，最宽 1060）。关闭后区块平铺在页面区段中，与 Arc 的预览相同。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparison.Labels">
+        <source>The built-in text and its culture; replace the object to localize the block.</source>
+        <target>内置文本及其区域性设置；替换整个对象即可本地化此区块。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparison.Plans">
+        <source>The plans, one column each, in display order. Empty (and no `PlansSource`) shows the sample plans.</source>
+        <target>套餐列表，每个一列，按显示顺序排列。为空（且没有 `PlansSource`）时显示示例套餐。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparison.PlansSource">
+        <source>A list of plans that replaces `Plans` when set; a list that raises collection changes is followed.</source>
+        <target>设置后取代 `Plans` 的套餐列表；会跟随引发集合变更的列表。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparison.Reset">
+        <source>Back to the first look: monthly prices, every feature listed, nothing selected.</source>
+        <target>回到初始状态：月付价格、列出全部特性、未选中任何套餐。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparison.Select">
+        <source>Selects `plan` (null clears the selection), as if its button were pressed, without the command.</source>
+        <target>选中 `plan`（null 清除选择），如同按下其按钮，但不执行命令。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparison.SelectCommand">
+        <source>Invoked when someone presses a select button, with the plan selected now (null when it was cleared).</source>
+        <target>有人按下选择按钮时调用，参数为当前选中的套餐（清除选择时为 null）。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparison.SelectedPlan">
+        <source>The chosen plan, or null. Two-way: the select buttons edit it (pressing the chosen plan's button clears it).</source>
+        <target>选中的套餐，或 null。双向：选择按钮会修改它（再次按下已选套餐的按钮会清除选择）。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparison.SelectedPlanChanged">
+        <source>Raised when `SelectedPlan` changes, by a select button or by the app.</source>
+        <target>`SelectedPlan` 变化时引发，无论来自选择按钮还是应用。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparison.VisibleFeatureCount">
+        <source>How many features are listed now.</source>
+        <target>当前列出的特性数量。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonBilling">
+        <source>The billing period a `PlanComparison` prices its plans for.</source>
+        <target>`PlanComparison` 为其套餐定价所用的计费周期。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonBilling.Monthly">
+        <source>Billed month to month (`PlanComparisonPlan.MonthlyPrice`).</source>
+        <target>按月计费（`PlanComparisonPlan.MonthlyPrice`）。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonBilling.Yearly">
+        <source>Billed once a year (`PlanComparisonPlan.YearlyPrice`, shown per month).</source>
+        <target>按年计费一次（`PlanComparisonPlan.YearlyPrice`，按月显示）。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonBillingChangedEventArgs">
+        <source>Arguments of `BillingChanged`.</source>
+        <target>`BillingChanged` 的参数。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonBillingChangedEventArgs.NewBilling">
+        <source>The billing period now shown.</source>
+        <target>当前显示的计费周期。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonBillingChangedEventArgs.OldBilling">
+        <source>The billing period before the change.</source>
+        <target>变化前的计费周期。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonFeature">
+        <source>One row of a `PlanComparison`'s feature matrix: the feature's name and what each plan offers, in the order of the block's plans. A value equal to `Included` shows a check, one equal to `NotIncluded` is muted. Rows that every plan shares (`IsShared`) are hidden by "Show differences only".</source>
+        <target>`PlanComparison` 特性矩阵的一行：特性名称以及各套餐提供的内容，按区块套餐的顺序排列。等于 `Included` 的值显示勾选标记，等于 `NotIncluded` 的值以弱化颜色显示。所有套餐共有的行（`IsShared`）会被“Show differences only”隐藏。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonFeature.IsShared">
+        <source>True when every plan offers the same, so the row hides while only differences are shown.</source>
+        <target>所有套餐提供相同内容时为 true，此时只显示差异时该行会隐藏。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonFeature.Label">
+        <source>The feature's name, such as "Version history"; the row header.</source>
+        <target>特性名称，例如 "Version history"；用作行表头。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonFeature.ValueAt">
+        <source>The value for the plan at `index`, or an empty string when there is none.</source>
+        <target>索引为 `index` 的套餐对应的值；没有时为空字符串。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonFeature.Values">
+        <source>What each plan offers, in the order of the block's plans; a missing value shows as empty.</source>
+        <target>各套餐提供的内容，按区块套餐的顺序排列；缺少的值显示为空。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonLabels">
+        <source>The built-in text of `PlanComparison`. Replace the whole object to localize the block; sentences with a number or a plan name are functions. Prices and counts use `Culture`.</source>
+        <target>`PlanComparison` 的内置文本。替换整个对象即可本地化此区块；含数字或套餐名称的句子是函数。价格与计数使用 `Culture`。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonLabels.BillingPeriod">
+        <source>Accessible name of the billing switch: "Billing period".</source>
+        <target>计费切换的无障碍名称："Billing period"。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonLabels.CompareTitle">
+        <source>The heading of the filter bar: "Compare plans".</source>
+        <target>筛选栏的标题："Compare plans"。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonLabels.Culture">
+        <source>Culture for prices and counts (default en-US).</source>
+        <target>价格与计数使用的区域性（默认 en-US）。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonLabels.Description">
+        <source>The sentence under the heading.</source>
+        <target>标题下方的说明句。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonLabels.DifferencesOnly">
+        <source>The label of the filter switch: "Show differences only".</source>
+        <target>筛选开关的标签："Show differences only"。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonLabels.FeatureCount">
+        <source>The count beside it: (shown, total) ⇒ "6 of 8 features".</source>
+        <target>旁边的计数：(shown, total) ⇒ "6 of 8 features"。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonLabels.FeatureHeader">
+        <source>The header over the feature names: "What changes".</source>
+        <target>特性名称上方的表头："What changes"。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonLabels.Footnote">
+        <source>The footnote: "Prices in USD per seat. Yearly plans are billed annually.".</source>
+        <target>脚注："Prices in USD per seat. Yearly plans are billed annually."。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonLabels.Included">
+        <source>A feature value that shows a check: "Included".</source>
+        <target>显示勾选标记的特性值："Included"。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonLabels.Monthly">
+        <source>The monthly segment: "Monthly".</source>
+        <target>月付分段："Monthly"。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonLabels.MonthlyNote">
+        <source>The note under the billing switch while monthly prices show: "Billed month to month".</source>
+        <target>显示月付价格时计费切换下方的说明："Billed month to month"。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonLabels.NotIncluded">
+        <source>A feature value that is muted: "Not included".</source>
+        <target>以弱化颜色显示的特性值："Not included"。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonLabels.PlanHeader">
+        <source>Accessible name of a plan's column header: "Team" ⇒ "Team plan".</source>
+        <target>套餐列表头的无障碍名称："Team" ⇒ "Team plan"。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonLabels.PricePeriod">
+        <source>The text after each price: "per seat / month".</source>
+        <target>每个价格后的文字："per seat / month"。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonLabels.Select">
+        <source>A plan's select button: "Team" ⇒ "Select Team".</source>
+        <target>套餐的选择按钮："Team" ⇒ "Select Team"。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonLabels.Selected">
+        <source>The select button of the chosen plan: "Selected".</source>
+        <target>已选套餐的选择按钮："Selected"。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonLabels.SelectedAnnouncement">
+        <source>Announced when a plan is chosen: "Team" ⇒ "Team selected".</source>
+        <target>选中套餐时播报："Team" ⇒ "Team selected"。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonLabels.TableName">
+        <source>Accessible name of the matrix; receives the plan names: ["Team", "Studio"] ⇒ "Team and Studio plan comparison".</source>
+        <target>矩阵的无障碍名称；参数为套餐名称：["Team", "Studio"] ⇒ "Team and Studio plan comparison"。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonLabels.Title">
+        <source>The block's heading: "Room for the way you work".</source>
+        <target>区块标题："Room for the way you work"。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonLabels.Yearly">
+        <source>The yearly segment: "Yearly".</source>
+        <target>年付分段："Yearly"。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonLabels.YearlyNote">
+        <source>The note under the billing switch while yearly prices show; receives the largest yearly saving of any plan in whole percent: 23 ⇒ "Billed yearly, save up to 23%" (0 ⇒ "Billed yearly").</source>
+        <target>显示年付价格时计费切换下方的说明；参数为所有套餐中最大的年付节省（整数百分比）：23 ⇒ "Billed yearly, save up to 23%"（0 ⇒ "Billed yearly"）。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonPlan">
+        <source>One plan column of a `PlanComparison`: its name, a one-line description and its price per seat and month for each billing period. Changes reach the block while it is shown.</source>
+        <target>`PlanComparison` 的一个套餐列：名称、一行说明，以及每个计费周期下每席位每月的价格。显示期间的更改会同步到区块。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonPlan.Description">
+        <source>A short line under the name, such as "For smaller teams".</source>
+        <target>名称下方的一行简短说明，例如 "For smaller teams"。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonPlan.MonthlyPrice">
+        <source>The price per seat and month when billed monthly, in the block's currency.</source>
+        <target>按月计费时每席位每月的价格，以区块的货币计。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonPlan.Name">
+        <source>The plan's name, such as "Team"; the column header and the select button's label.</source>
+        <target>套餐名称，例如 "Team"；用作列表头和选择按钮的标签。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonPlan.PriceFor">
+        <source>The price per seat and month for `billing`.</source>
+        <target>`billing` 下每席位每月的价格。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonPlan.YearlyPrice">
+        <source>The price per seat and month when billed yearly, in the block's currency.</source>
+        <target>按年计费时每席位每月的价格，以区块的货币计。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonSamples">
+        <source>The sample offering a `PlanComparison` shows until it is given plans and features: a Team and a Studio plan priced per seat and eight features, two of which both plans share. Each call returns new objects.</source>
+        <target>`PlanComparison` 在获得套餐和特性之前显示的示例方案：按席位定价的 Team 和 Studio 两个套餐，以及八项特性，其中两项为两个套餐共有。每次调用都返回新对象。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonSelectionChangedEventArgs">
+        <source>Arguments of `SelectedPlanChanged`.</source>
+        <target>`SelectedPlanChanged` 的参数。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonSelectionChangedEventArgs.IsUserAction">
+        <source>True when someone pressed a select button; false when the app changed the selection.</source>
+        <target>有人按下选择按钮时为 true；由应用更改选择时为 false。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonSelectionChangedEventArgs.NewPlan">
+        <source>The plan selected now, or null when the selection was cleared.</source>
+        <target>当前选中的套餐；清除选择时为 null。</target>
+      </trans-unit>
+      <trans-unit id="PlanComparisonSelectionChangedEventArgs.OldPlan">
+        <source>The plan that was selected before, or null.</source>
+        <target>之前选中的套餐，或 null。</target>
+      </trans-unit>
       <trans-unit id="Popover">
         <source>A small surface anchored to a trigger and opened by a click, for interactive content that should not block the page: share settings, a small filter form, a picker built from your own controls. Two ways to use it: Code can open any content anchored to any control with `ShowAt`. The panel starts 5px toward its trigger at scale 0.97, fades in fast and settles on a spring from the side it actually landed on; it leaves in about 160ms at half the travel, and an open and a close reverse each other mid-flight. Escape and a press outside close it and return focus to the trigger; focus moves into the panel on open. The trigger answers presses with color only (no press scale), since the panel is measured against it.</source>
         <target>一个锚定在触发器上、由点击打开的小型浮层，适用于不应阻塞页面的交互内容：分享设置、小型筛选表单、由您自己的控件组成的选择器。有两种用法：代码可通过 `ShowAt` 将任意内容锚定到任意控件上打开。面板从触发器方向偏移 5px 开始，缩放比例为 0.97，快速淡入并以弹簧从实际落位的一侧稳定下来；关闭时约 160ms 内完成，移动距离为一半，且打开与关闭在过程中可相互反转。按下 Escape 或在外部按下会关闭面板，并将焦点返回触发器；打开时焦点会移入面板。触发器仅以颜色响应按下（无按压缩放），因为面板是相对于它测量的。</target>
@@ -18587,6 +19759,186 @@
       <trans-unit id="Popover.Trigger">
         <source>The control that opens the panel, shown in place of the popover (optional with `AttachProperty` or `ShowAt`).</source>
         <target>打开面板的控件，显示在浮层所在位置（可选，与 `AttachProperty` 或 `ShowAt` 配合使用）。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculator">
+        <source>A seat-priced plan picker: a seat slider with step buttons and a billing switch above the plan cards, and a totals row with the selected plan's price, the yearly savings and a trial button. Every number rolls digit by digit as the seats or the billing change; the recommended badge glides to the plan that fits the team, and the selection frame follows the plan in use. A plan the user picks stays selected while it covers the seats; above its cap the selection falls back to the recommendation and the capped card offers to go back to its seat limit. All plans, stops, prices and rules are data: `Plans`, `SeatStops`, the plans' volume tiers, caps and thresholds.</source>
+        <target>按席位计价的方案选择器：方案卡片上方是带步进按钮的席位滑块和计费切换，下方是合计行，显示所选方案的价格、年付节省金额和试用按钮。席位或计费变化时，每个数字都会逐位滚动；推荐徽章会滑动到最适合团队的方案，选中框跟随当前使用的方案。用户选择的方案只要能覆盖席位就保持选中；席位超过其上限时，选中会回落到推荐方案，且超限的卡片会提供返回其席位上限的选项。所有方案、档位、价格和规则都是数据：`Plans`、`SeatStops`、方案的批量折扣层级、上限和阈值。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculator.Billing">
+        <source>The billing period (two-way; yearly by default).</source>
+        <target>计费周期（双向；默认按年付）。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculator.BillingChanged">
+        <source>Raised when the billing period changes.</source>
+        <target>计费周期变化时引发。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculator.Currency">
+        <source>ISO 4217 code of every amount ("USD" by default).</source>
+        <target>每个金额所用的 ISO 4217 货币代码（默认 "USD"）。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculator.Description">
+        <source>The line under the heading.</source>
+        <target>标题下方的说明行。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculator.IsHeaderVisible">
+        <source>Whether the heading and its line show (true by default).</source>
+        <target>标题和说明行是否显示（默认 true）。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculator.Labels">
+        <source>The built-in text and its culture; replace the object to localize the block.</source>
+        <target>内置文本及其区域性设置；替换整个对象即可本地化此区块。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculator.PickedPlanId">
+        <source>The `Id` of the plan the user picked (two-way); null follows the recommendation. The pick is remembered while its plan's cap is exceeded and applies again once the seats fit.</source>
+        <target>用户所选方案的 `Id`（双向）；为 null 时跟随推荐。当该方案超出上限时，所选项会被记住，席位符合后再次生效。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculator.PlanPicked">
+        <source>Raised when the user picks a plan (a card's button, including a capped card's "back to the cap" button).</source>
+        <target>用户选择方案时引发（卡片上的按钮，包括超限卡片上“回到上限”的按钮）。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculator.PlanPickedCommand">
+        <source>Invoked with the `PricingCalculatorPlan` when the user picks a plan.</source>
+        <target>用户选择方案时调用，参数为 `PricingCalculatorPlan`。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculator.Plans">
+        <source>The plans, in display order (three is the design target; two to four fit). Plans written inline in XAML land here.</source>
+        <target>按显示顺序排列的方案（设计目标为三个，两到四个均可）。直接在 XAML 中内联编写的方案会归入此属性。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculator.PlansSource">
+        <source>A source of plans that wins over `Plans`; a collection that raises changes is followed.</source>
+        <target>优先于 `Plans` 的方案来源；会跟踪引发变更通知的集合。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculator.RecommendPlan">
+        <source>Optional: chooses the recommended plan for a seat count from the plans; null uses each plan's `RecommendFromSeats` (the largest threshold reached wins).</source>
+        <target>可选：根据席位数从方案中选出推荐方案；为 null 时使用各方案的 `RecommendFromSeats`（达到的最大阈值生效）。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculator.RecommendedPlan">
+        <source>The plan recommended for the current seats.</source>
+        <target>当前席位数下推荐的方案。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculator.SeatIndex">
+        <source>The index of the current seat stop (two-way; 11 = 20 seats on the sample stops).</source>
+        <target>当前席位档位的索引（双向；按示例档位，11 对应 20 个席位）。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculator.SeatStops">
+        <source>The seat counts the slider stops at, ascending, evenly spaced along the track; null uses the 23 sample stops from 1 to 300.</source>
+        <target>滑块停靠的席位数，按升序排列，沿轨道均匀分布；为 null 时使用从 1 到 300 的 23 个示例档位。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculator.Seats">
+        <source>The current seat count (the stop at `SeatIndex`).</source>
+        <target>当前席位数（即 `SeatIndex` 所指的档位）。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculator.SeatsChanged">
+        <source>Raised when the seat count changes.</source>
+        <target>席位数变化时引发。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculator.SelectedPlan">
+        <source>The plan in use: the picked plan while it covers the seats, otherwise the recommended one.</source>
+        <target>当前使用的方案：只要所选方案仍能覆盖席位，即为所选方案；否则为推荐方案。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculator.ShowsPanels">
+        <source>Whether the controls and the totals sit on muted rounded panels (the look on a documentation page); false (default) keeps them flat on the page.</source>
+        <target>控件和合计是否置于柔和的圆角面板上（文档页面的样式）；为 false（默认）时保持平铺在页面上。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculator.Title">
+        <source>The heading above the controls.</source>
+        <target>控件上方的标题。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculator.Total">
+        <source>What the selected plan costs for one billing period (a year with yearly billing).</source>
+        <target>所选方案在一个计费周期内的费用（按年计费时即一年的费用）。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculator.TrialHandler">
+        <source>Starts a trial on your backend; true when it started. Null uses `SimulatedTrial` (1.1 s, always succeeds). The trial button shows a spinner while the task runs.</source>
+        <target>在你的后端启动试用；启动成功时返回 true。为 null 时使用 `SimulatedTrial`（1.1 s，总是成功）。任务运行期间，试用按钮显示加载指示器。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculator.TrialStarted">
+        <source>Raised once a trial started.</source>
+        <target>试用启动后引发。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculator.TrialStartedCommand">
+        <source>Invoked with the `PricingCalculatorTrialRequest` once a trial started.</source>
+        <target>试用启动后调用，参数为 `PricingCalculatorTrialRequest`。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculator.TrialState">
+        <source>Where the trial button stands.</source>
+        <target>试用按钮所处的状态。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculator.TrialSuccessDuration">
+        <source>How long the trial button says the trial started before it offers it again (2.8 s).</source>
+        <target>试用按钮显示“试用已启动”状态的时长，之后才会再次提供该按钮（2.8 s）。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculator.YearlyDiscount">
+        <source>The share yearly billing takes off (0.2 by default): the yearly price of plans without one, and the note after the yearly option.</source>
+        <target>年付计费减免的比例（默认 0.2）：用于计算未设置年付单价的方案的年付价格，以及年付选项后的说明。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculator.YearlySavings">
+        <source>What yearly billing saves on the selected plan in a year.</source>
+        <target>所选方案按年付计费一年可节省的金额。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculatorBillingChangedEventArgs">
+        <source>Arguments of `BillingChanged`.</source>
+        <target>`BillingChanged` 的参数。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculatorFeature">
+        <source>One line of a plan's feature list; it can depend on the seats and the billing period.</source>
+        <target>方案功能列表中的一个功能行；其内容可取决于席位数和计费周期。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculatorLabels">
+        <source>The built-in text of `PricingCalculator`. Replace the whole object to localize the block; entries with numbers are functions that receive the already formatted amounts and counts. Formats with a `{0}` keep the amount rolling in place, so they are format strings instead of functions. Amounts and counts use `Culture`.</source>
+        <target>`PricingCalculator` 的内置文本。替换整个对象即可本地化此区块；带数字的条目是接收已格式化金额和数量的函数。带 `{0}` 的格式使金额能原位滚动，因此它们是格式字符串而非函数。金额和数量使用 `Culture`。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculatorPlan">
+        <source>One plan of a `PricingCalculator`: its name and line, monthly and yearly seat prices, an optional seat cap, volume tiers, the seat count from which it is recommended, and its feature lines. Changes show at once.</source>
+        <target>`PricingCalculator` 的一个方案：包括名称和说明行、按月与按年的席位单价、可选的席位上限、批量折扣层级、开始推荐的席位数，以及功能行。修改会立即生效。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculatorPlan.Description">
+        <source>One line under the name.</source>
+        <target>名称下方的一行说明。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculatorPlan.Id">
+        <source>A stable key (picked plan, shared badge); defaults to the name when empty.</source>
+        <target>稳定的键（用于所选方案和共享徽章）；为空时使用名称。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculatorPlan.MaxSeats">
+        <source>The most seats the plan covers; above it the card offers to go back to this many seats. Null: no cap.</source>
+        <target>方案可覆盖的最多席位数；超过时卡片会提供回到该席位数的选项。为 null 表示没有上限。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculatorPlan.MonthlySeatPrice">
+        <source>Price of one seat for one month with monthly billing.</source>
+        <target>按月付费时，每个席位每月的价格。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculatorPlan.Name">
+        <source>The plan's name: the card title and the totals' first line.</source>
+        <target>方案名称：卡片标题，也是合计行的第一行。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculatorPlan.RecommendFromSeats">
+        <source>The plan is recommended from this many seats on, until the next plan's threshold (the plan with the largest threshold reached wins; the first plan when none is reached).</source>
+        <target>从该席位数起推荐此方案，直到下一个方案的阈值（以达到的最大阈值对应的方案为准；都未达到时推荐第一个方案）。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculatorPlan.YearlySeatPrice">
+        <source>Price of one seat for one month with yearly billing; null: the monthly price less `YearlyDiscount`.</source>
+        <target>按年付费时，每个席位每月的价格；为 null 时使用月付价格减去 `YearlyDiscount`。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculatorPlanPickedEventArgs">
+        <source>Arguments of `PlanPicked`.</source>
+        <target>`PlanPicked` 的参数。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculatorSeatsChangedEventArgs">
+        <source>Arguments of `SeatsChanged`.</source>
+        <target>`SeatsChanged` 的参数。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculatorTrialRequest">
+        <source>What a trial request carries: the plan, the seats, the billing period and the total shown.</source>
+        <target>试用请求所包含的内容：方案、席位数、计费周期以及所显示的合计。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculatorTrialStartedEventArgs">
+        <source>Arguments of `TrialStarted`.</source>
+        <target>`TrialStarted` 的参数。</target>
+      </trans-unit>
+      <trans-unit id="PricingCalculatorVolumeTier">
+        <source>A price cut per seat that applies from a number of seats on (the largest tier reached wins).</source>
+        <target>每个席位的降价，从某个席位数起生效（以达到的最大层级为准）。</target>
       </trans-unit>
       <trans-unit id="ProfileActivity">
         <source>One row of the Activity tab: "{first name} {Action} {Target}", an optional `Detail` line and a time. Rows are grouped under `Group` headings in the order the groups first appear.</source>
@@ -22183,6 +23535,158 @@
       <trans-unit id="SearchValueFilter">
         <source>A group of checkbox values over one attribute. Tick several values to see results with any of them. Leave `Values` empty to list the values found in the items (in the order they first appear); list them yourself to fix their order and labels. `SearchResults` writes each value's `Count`: the results that value would show with the query and the other filters applied.</source>
         <target>基于同一属性的一组复选框值。勾选多个值可查看匹配其中任一值的结果。将 `Values` 留空时，会按项中值首次出现的顺序列出找到的值；如需固定顺序和标签，请自行列出。`SearchResults` 会写入每个值的 `Count`：即在应用查询和其他筛选器后，该值会显示的结果数。</target>
+      </trans-unit>
+      <trans-unit id="SeatManager">
+        <source>A team's seats and what they cost, in one card: avatars and a seat meter show members, pending invites and open seats against the seats paid for; a stepper changes the seat count while today's prorated charge and the new recurring total roll live; pending invites can be resent, or revoked with an inline undo; and Update seats goes through a confirm step before anything is charged. When every seat is taken the card says so and offers to add one. The change is applied by `UpdateSeatsAsync`; without handlers the block simulates its backend and, by default, plays a short demonstration loop until someone touches it.</source>
+        <target>团队的席位及其费用集中在一张卡片中：头像和席位条显示成员、待处理邀请以及相对于已购席位的空余席位；步进器用于改变席位数，今天按比例计费的金额和新的周期性总额会实时滚动更新；待处理邀请可以重新发送，或在行内撤销并提供撤销恢复；“Update seats”会先经过确认步骤，然后才会扣费。当所有席位都已占用时，卡片会说明这一点并提供添加一个席位的选项。变更由 `UpdateSeatsAsync` 应用；若未设置处理函数，该区块会模拟其后端，并且默认播放一段示范循环，直到有人与它交互为止。</target>
+      </trans-unit>
+      <trans-unit id="SeatManager.ErrorMessage">
+        <source>The message of the last failed update while `Phase` is Error, otherwise null.</source>
+        <target>最近一次失败更新的消息，仅当 `Phase` 为 Error 时有值，否则为 null。</target>
+      </trans-unit>
+      <trans-unit id="SeatManager.InviteResent">
+        <source>Raised when an invite went out again.</source>
+        <target>邀请再次发出时触发。</target>
+      </trans-unit>
+      <trans-unit id="SeatManager.InviteRestored">
+        <source>Raised when a revoked invite came back: Undo, or a revoke handler that failed.</source>
+        <target>已撤销的邀请恢复时触发：点击撤销，或撤销处理函数失败时。</target>
+      </trans-unit>
+      <trans-unit id="SeatManager.InviteRevoked">
+        <source>Raised when a revoked invite's undo window closed and the invite left the list.</source>
+        <target>已撤销邀请的撤销恢复窗口关闭、邀请离开列表时触发。</target>
+      </trans-unit>
+      <trans-unit id="SeatManager.Invites">
+        <source>The pending invites; each holds a seat until it is accepted or revoked. A revoked invite leaves the list when its undo window closes.</source>
+        <target>待处理的邀请；每个邀请在被接受或撤销之前都占用一个席位。已撤销的邀请会在其撤销恢复窗口关闭时离开列表。</target>
+      </trans-unit>
+      <trans-unit id="SeatManager.IsAutoPlayEnabled">
+        <source>Whether the demonstration loop plays (add three seats, pay, resend, revoke, reset; 12.7 s, paused off screen). Null (default) plays it when none of the three handlers is set. Any pointer press or key press inside the card stops it for good and leaves the card as it is.</source>
+        <target>示范循环是否播放（添加三个席位、付款、重新发送、撤销、重置；12.7 秒，移出屏幕时暂停）。null（默认）时，若三个处理函数都未设置则播放。卡片内任何指针按下或按键按下都会永久停止播放，并保留卡片当前状态。</target>
+      </trans-unit>
+      <trans-unit id="SeatManager.IsAutoPlaying">
+        <source>True while the demonstration loop is playing.</source>
+        <target>示范循环播放期间为 true。</target>
+      </trans-unit>
+      <trans-unit id="SeatManager.Labels">
+        <source>The built-in text and its culture; replace the object to localize the block.</source>
+        <target>内置文本及其文化设置；替换该对象即可本地化此区块。</target>
+      </trans-unit>
+      <trans-unit id="SeatManager.Maximum">
+        <source>The most seats the stepper allows: the plan's `MaxSeats` (999 without a cap).</source>
+        <target>步进器允许的最大席位数：套餐的 `MaxSeats`（无上限时为 999）。</target>
+      </trans-unit>
+      <trans-unit id="SeatManager.MemberCount">
+        <source>The total number of members when `Members` is only a sample for the avatars; null counts the list.</source>
+        <target>成员总数，当 `Members` 仅作为头像的样本时使用；null 则统计列表。</target>
+      </trans-unit>
+      <trans-unit id="SeatManager.Members">
+        <source>The members holding a seat. The first four are drawn as avatars, the rest as a "+N" count.</source>
+        <target>持有席位的成员。前四位以头像显示，其余以 "+N" 计数显示。</target>
+      </trans-unit>
+      <trans-unit id="SeatManager.Minimum">
+        <source>The fewest seats the stepper allows: members plus the invites that still hold a seat.</source>
+        <target>步进器允许的最小席位数：成员数加上仍占用席位的邀请数。</target>
+      </trans-unit>
+      <trans-unit id="SeatManager.Now">
+        <source>"Today" for the proration; null uses the local date.</source>
+        <target>按比例计费所用的 "Today"；null 则使用本地日期。</target>
+      </trans-unit>
+      <trans-unit id="SeatManager.PaymentMethod">
+        <source>The card named in the footer and in the confirm step; null hides it.</source>
+        <target>在页脚和确认步骤中显示的卡片；null 则隐藏。</target>
+      </trans-unit>
+      <trans-unit id="SeatManager.PeriodEnd">
+        <source>The day the current billing period ends; the new total starts here and added seats are prorated up to it.</source>
+        <target>当前计费周期结束的日期；新的总额从此日开始，新增席位按比例计费至此日。</target>
+      </trans-unit>
+      <trans-unit id="SeatManager.PeriodStart">
+        <source>The first day of the current billing period.</source>
+        <target>当前计费周期的第一天。</target>
+      </trans-unit>
+      <trans-unit id="SeatManager.Phase">
+        <source>Where the footer is in applying a change.</source>
+        <target>页脚处于应用席位变更的哪个阶段。</target>
+      </trans-unit>
+      <trans-unit id="SeatManager.PhaseChanged">
+        <source>Raised on every change of `Phase`.</source>
+        <target>每次 `Phase` 变化时触发。</target>
+      </trans-unit>
+      <trans-unit id="SeatManager.Plan">
+        <source>The plan: its badge, the price of a seat, the billing interval, the currency and the seat cap.</source>
+        <target>套餐：其徽章、单个席位的价格、计费间隔、货币和席位上限。</target>
+      </trans-unit>
+      <trans-unit id="SeatManager.Purchased">
+        <source>The seats paid for now. Two-way: becomes the new count after a successful update.</source>
+        <target>现已购买的席位数。双向绑定：成功更新后成为新的数量。</target>
+      </trans-unit>
+      <trans-unit id="SeatManager.Quote">
+        <source>The quote for the stepper's seat count against the seats paid for.</source>
+        <target>步进器席位数相对于已购席位数的报价。</target>
+      </trans-unit>
+      <trans-unit id="SeatManager.QuoteChanged">
+        <source>Raised whenever the stepper changes the quote.</source>
+        <target>步进器每次改变报价时触发。</target>
+      </trans-unit>
+      <trans-unit id="SeatManager.ReceiptEmail">
+        <source>The address named in the done message.</source>
+        <target>完成消息中显示的地址。</target>
+      </trans-unit>
+      <trans-unit id="SeatManager.ResendInviteAsync">
+        <source>Sends an invite again. The button shows a spinner, then "Sent"; if it throws the button returns. Null simulates 660 ms.</source>
+        <target>重新发送邀请。按钮先显示加载图标，然后显示 "Sent"；若抛出异常，按钮恢复原状。null 则模拟 660 毫秒。</target>
+      </trans-unit>
+      <trans-unit id="SeatManager.RevokeInviteAsync">
+        <source>Revokes an invite. Called when the undo window closes; if it throws, the invite goes back where it was.</source>
+        <target>撤销邀请。在撤销恢复窗口关闭时调用；若抛出异常，邀请将回到原来的位置。</target>
+      </trans-unit>
+      <trans-unit id="SeatManager.SeatsChanged">
+        <source>Raised after a seat change was applied.</source>
+        <target>席位变更应用后触发。</target>
+      </trans-unit>
+      <trans-unit id="SeatManager.Target">
+        <source>The seat count on the stepper. Two-way; kept between `Minimum` and `Maximum`, and follows `Purchased` while nothing is being changed.</source>
+        <target>步进器上的席位数。双向绑定；保持在 `Minimum` 与 `Maximum` 之间，并在没有任何变更进行时跟随 `Purchased`。</target>
+      </trans-unit>
+      <trans-unit id="SeatManager.UndoDuration">
+        <source>How long Undo stays on a revoked invite (3 seconds).</source>
+        <target>已撤销邀请上撤销按钮保留的时长（3 秒）。</target>
+      </trans-unit>
+      <trans-unit id="SeatManager.UpdateSeatsAsync">
+        <source>Applies a seat change. The block shows the spinner while it runs; if it throws, the exception's message appears in the footer with Try again. Null simulates a 900 ms charge (`ChargeDelay`).</source>
+        <target>应用席位变更。该区块运行期间显示加载图标；若抛出异常，异常消息会连同 "Try again" 显示在页脚中。null 则模拟 900 毫秒的扣费（`ChargeDelay`）。</target>
+      </trans-unit>
+      <trans-unit id="SeatManager.Workspace">
+        <source>The workspace named in the line under the title.</source>
+        <target>标题下方一行中显示的工作区名称。</target>
+      </trans-unit>
+      <trans-unit id="SeatManagerInvite">
+        <source>A pending invite. It reserves a seat until it is accepted or revoked.</source>
+        <target>待处理的邀请。在被接受或撤销之前占用一个席位。</target>
+      </trans-unit>
+      <trans-unit id="SeatManagerLabels">
+        <source>The built-in text of `SeatManager`. Replace the whole object to localize the block. Entries whose text holds a rolling number are templates: `{0}` (and `{1}`) mark where the number rolls, and a function picks the singular or plural template from the count. Sentences without rolling numbers are functions that receive the counts and the already formatted amounts and dates. Amounts and dates use `Culture`.</source>
+        <target>`SeatManager` 的内置文本。替换整个对象即可本地化该区块。文本中含滚动数字的条目为模板：`{0}`（以及 `{1}`）标记数字滚动的位置，并由函数根据数量选择单数或复数模板。不含滚动数字的句子为函数，接收数量以及已格式化的金额和日期。金额和日期使用 `Culture`。</target>
+      </trans-unit>
+      <trans-unit id="SeatManagerMember">
+        <source>A member holding a seat. The first four are drawn as avatars, the rest are counted.</source>
+        <target>持有席位的成员。前四位以头像绘制，其余计入数量。</target>
+      </trans-unit>
+      <trans-unit id="SeatManagerPaymentMethod">
+        <source>The card the seats are charged to, named in the footer and in the confirm step.</source>
+        <target>用于扣费的卡片，显示在页脚和确认步骤中。</target>
+      </trans-unit>
+      <trans-unit id="SeatManagerPhase">
+        <source>Where the footer of a `SeatManager` is in applying a seat change.</source>
+        <target>`SeatManager` 的页脚处于应用席位变更的哪个阶段。</target>
+      </trans-unit>
+      <trans-unit id="SeatManagerPlan">
+        <source>The plan the seats are bought on: its name, the price of one seat, the billing interval and the seat cap.</source>
+        <target>购买席位所用的套餐：其名称、单个席位的价格、计费间隔和席位上限。</target>
+      </trans-unit>
+      <trans-unit id="SeatManagerQuote">
+        <source>The price of moving from `Current` to `Target` seats. Added seats are charged today for the days left in the period (`Delta` × price × `DaysLeft` ÷ `PeriodDays`, the total rounded to cents); removed seats cost nothing today and leave at `RenewsOn`.</source>
+        <target>将席位从 `Current` 变更为 `Target` 的价格。新增席位今天按本计费周期剩余天数计费（`Delta` × 单价 × `DaysLeft` ÷ `PeriodDays`，总额四舍五入到分）；减少的席位今天不计费，并在 `RenewsOn` 时离开。</target>
       </trans-unit>
       <trans-unit id="SecuritySettings">
         <source>The account security page: a checkup of four safeguards (password, two-step verification, passkeys, recovery codes), the password with a change form that opens in place, the two-step methods, and every signed-in session with a way to sign it out. Each action happens on the page; the host hears about it through routed events.</source>
@@ -28787,6 +30291,434 @@
       <trans-unit id="UsageOutcome">
         <source>How a billing cycle looks against the budget (what the headline says).</source>
         <target>计费周期相对预算的表现(标题所说的内容)。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricing">
+        <source>A pricing calculator that picks the plan: two stepped sliders (seats and monthly usage) and a monthly / yearly switch drive a breakdown and a recommendation card. The recommended plan is the first whose seat and usage limits both cover the selection; the card morphs the plan name, says why (four reasons), rolls the monthly estimate, reflows the plan's features and offers a trial, which turns itself off when the plan changes. From 780px wide the card has its own column.</source>
+        <target>一个选择套餐的定价计算器：两个分级滑块（席位数和每月用量）以及月付 / 年付切换驱动明细与推荐卡片。推荐的套餐是第一个席位上限和用量上限都覆盖所选值的套餐；卡片会变形显示套餐名称，说明推荐理由（四种情形），滚动更新每月估算，重排套餐的功能列表，并提供试用；套餐变化时试用会自动关闭。宽度从 780px 起，卡片占用独立的一列。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricing.BillingPeriod">
+        <source>Monthly or yearly billing. Two-way: the switch edits it.</source>
+        <target>按月或按年计费。双向：切换会修改它。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricing.Currency">
+        <source>ISO 4217 code of every amount ("USD" by default). Amounts are whole: no minor units.</source>
+        <target>每个金额所用的 ISO 4217 货币代码（默认为 "USD"）。金额均为整数：没有小数位。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricing.EstimatedTotal">
+        <source>The monthly estimate: seats + usage beyond the plan − the yearly discount under yearly billing.</source>
+        <target>每月估算：席位 + 超出套餐的用量 − 年付时的年付折扣。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricing.IsTrialBusy">
+        <source>True while `TrialHandler` runs.</source>
+        <target>`TrialHandler` 运行期间为 true。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricing.IsTrialStarted">
+        <source>Whether the trial of the recommended plan is on. Two-way: the button turns it on and the undo link off; it turns itself off when the recommended plan changes.</source>
+        <target>推荐套餐的试用是否开启。双向：按钮会开启它并关闭撤销链接；推荐套餐变化时它会自动关闭。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricing.Labels">
+        <source>The built-in text and its culture; replace the object to localize the block.</source>
+        <target>内置文字及其文化区域；替换该对象即可本地化区块。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricing.OverageUnit">
+        <source>The usage a plan's `OveragePrice` buys (1,000,000 by default: "per million").</source>
+        <target>套餐 `OveragePrice` 所购买的用量单位（默认为 1,000,000，即 "per million"）。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricing.Plans">
+        <source>The plans from the smallest to the largest. The first plan whose limits cover the seats and the usage is recommended. Inline XAML plans land here; while the list is empty the block shows the three sample plans of `UsagePricingSamples`.</source>
+        <target>套餐列表，从小到大排列。第一个上限同时覆盖席位与用量的套餐会被推荐。XAML 中内联的套餐会放入此处；列表为空时，区块显示 `UsagePricingSamples` 的三个示例套餐。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricing.Reason">
+        <source>Why the plan is recommended.</source>
+        <target>套餐被推荐的理由。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricing.RecommendationChanged">
+        <source>Raised when the recommended plan (or only its reason) changes.</source>
+        <target>推荐的套餐（或仅其理由）变化时引发。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricing.RecommendedPlan">
+        <source>The recommended plan (null without plans).</source>
+        <target>推荐的套餐（没有套餐时为 null）。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricing.SeatIndex">
+        <source>The selected seat stop (an index into `SeatStops`). Two-way: the slider edits it.</source>
+        <target>选中的席位刻度（`SeatStops` 的索引）。双向：滑块会修改它。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricing.SeatStops">
+        <source>The seat counts the seat slider steps through, smallest first; stops sit evenly along the track.</source>
+        <target>席位滑块逐步经过的席位数，从小到大；刻度沿轨道均匀分布。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricing.Seats">
+        <source>The seats on the seat slider.</source>
+        <target>席位滑块上的席位数。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricing.SelectionChanged">
+        <source>Raised when the seats, the usage or the billing period change.</source>
+        <target>席位、用量或计费周期变化时引发。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricing.StartTrialAsync">
+        <source>Starts the trial of the recommended plan, as the button does: runs `TrialHandler` when set, then turns `IsTrialStarted` on. Returns false when nothing started (no plan, already on, busy, failed or cancelled).</source>
+        <target>像按钮一样开始推荐套餐的试用：设置了 `TrialHandler` 时先运行它，然后开启 `IsTrialStarted`。若未能开始（没有套餐、已开启、正忙、失败或被取消），返回 false。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricing.TrialFailed">
+        <source>Raised when `TrialHandler` throws; the trial stays off.</source>
+        <target>`TrialHandler` 抛出异常时引发；试用保持关闭。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricing.TrialHandler">
+        <source>Called when someone starts the trial (your sign-up flow); the button shows its spinner until the task ends. A thrown exception (other than a cancellation) leaves the trial off and raises `TrialFailed`. Null (the default) turns the trial on at once.</source>
+        <target>发起试用时调用（即你的注册流程）；按钮会显示旋转指示，直到任务结束。抛出的异常（取消除外）会使试用保持关闭，并引发 `TrialFailed`。为 null（默认）时立即开启试用。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricing.TrialStarted">
+        <source>Raised when the trial turns on (after `TrialHandler` succeeds).</source>
+        <target>试用开启时引发（在 `TrialHandler` 成功之后）。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricing.TrialUndone">
+        <source>Raised when the trial turns off: undone, or reset because the recommended plan changed.</source>
+        <target>试用关闭时引发：被撤销，或因推荐套餐变化而重置。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricing.UndoTrial">
+        <source>Turns the trial off again (the undo link); keyboard focus returns to the button.</source>
+        <target>关闭试用（撤销链接）；键盘焦点回到按钮。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricing.Usage">
+        <source>The monthly usage on the usage slider.</source>
+        <target>用量滑块上的每月用量。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricing.UsageFormatter">
+        <source>Formats usage for the readout, the marks, the reason and the breakdown (default: 100k, 1.5M, 300M).</source>
+        <target>为读数、刻度、理由和明细格式化用量（默认：100k、1.5M、300M）。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricing.UsageIndex">
+        <source>The selected usage stop (an index into `UsageStops`). Two-way: the slider edits it.</source>
+        <target>选中的用量刻度（`UsageStops` 的索引）。双向：滑块会修改它。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricing.UsageStops">
+        <source>The monthly usage amounts the usage slider steps through, smallest first; stops sit evenly along the track.</source>
+        <target>用量滑块逐步经过的每月用量，从小到大；刻度沿轨道均匀分布。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricing.YearlySaving">
+        <source>What a year of yearly billing saves on the seats (shown under either period).</source>
+        <target>年付一年在席位上节省的金额（无论哪种计费周期都会显示）。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingFeature">
+        <source>One line of a plan's feature list in `UsagePricing`. Lines of different plans with the same `Key` are the same feature: when the recommendation moves between plans the line stays in place and only its value changes.</source>
+        <target>`UsagePricing` 中套餐功能列表的一行。不同套餐中 `Key` 相同的行是同一项功能：推荐在套餐之间移动时，该行保持原位，只更新其值。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingFeature.Key">
+        <source>Stable identity across plans ("history", "sso").</source>
+        <target>跨套餐保持不变的标识（"history"、"sso"）。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingFeature.Label">
+        <source>What the feature is ("Event history").</source>
+        <target>功能的名称（"Event history"）。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingFeature.Value">
+        <source>How much of it the plan gives ("30 days"); null shows no value on the right.</source>
+        <target>套餐提供的数量（"30 days"）；为 null 时右侧不显示值。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingLabels">
+        <source>The built-in text of `UsagePricing`. Replace the whole object to localize the block; parameterized entries are functions that receive already formatted counts, usage and amounts. A sentence that carries an animated amount or plan name ("{amount} saved per year", "{plan} seats") may put it anywhere: the block splits the sentence around it.</source>
+        <target>`UsagePricing` 的内置文字。替换整个对象即可本地化该区块；带参数的条目是函数，接收已格式化的数量、用量和金额。携带动画金额或套餐名称的句子（"{amount} saved per year"、"{plan} seats"）可以把它放在任意位置：区块会把句子拆开，在其间插入该值。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingLabels.Announcement">
+        <source>Spoken when the plan or the reason changes: (plan, reason) ⇒ "Studio. Suggested beyond 4 seats and 1.5M calls.".</source>
+        <target>套餐或理由变化时朗读的内容：（套餐，理由）⇒ "Studio. Suggested beyond 4 seats and 1.5M calls."。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingLabels.BilledMonthly">
+        <source>Under the price under monthly billing: "Charged monthly, calls included".</source>
+        <target>月付时价格下方："Charged monthly, calls included"。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingLabels.BilledYearly">
+        <source>Under the price under yearly billing: seats per year ⇒ "$4,032 per year for seats, calls monthly".</source>
+        <target>年付时价格下方：每年席位金额 ⇒ "$4,032 per year for seats, calls monthly"。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingLabels.BillingPeriodName">
+        <source>Accessible name of the billing period switch: "Billing period".</source>
+        <target>计费周期开关的无障碍名称："Billing period"。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingLabels.BreakdownTitle">
+        <source>Heading of the breakdown: "Cost breakdown".</source>
+        <target>明细的标题："Cost breakdown"。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingLabels.BundledValue">
+        <source>The usage row's amount while nothing is charged for usage: "Bundled".</source>
+        <target>用量不产生费用时，用量行显示的金额："Bundled"。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingLabels.Culture">
+        <source>Culture for amounts, counts and usage figures (default en-US).</source>
+        <target>金额、数量和用量数字所用的文化区域（默认 en-US）。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingLabels.Description">
+        <source>The paragraph under the heading.</source>
+        <target>标题下方的段落。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingLabels.IncludedIn">
+        <source>Accessible name of the feature list: plan ⇒ "Included in Studio".</source>
+        <target>功能列表的无障碍名称：套餐 ⇒ "Included in Studio"。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingLabels.Monthly">
+        <source>The monthly segment: "Monthly".</source>
+        <target>月付分段："Monthly"。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingLabels.PerMonth">
+        <source>After the card's price: "per month".</source>
+        <target>卡片价格之后："per month"。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingLabels.ReasonBoth">
+        <source>Reason when both pass the previous plan: (seat limit, usage limit) ⇒ "Suggested beyond 4 seats and 1.5M calls".</source>
+        <target>席位和用量都超过上一个套餐时的理由：（席位上限，用量上限）⇒ "Suggested beyond 4 seats and 1.5M calls"。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingLabels.ReasonSeats">
+        <source>Reason when only the seats pass the previous plan: seat limit ⇒ "Suggested beyond 36 seats".</source>
+        <target>仅席位超过上一个套餐时的理由：席位上限 ⇒ "Suggested beyond 36 seats"。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingLabels.ReasonUsage">
+        <source>Reason when only the usage passes the previous plan: usage limit ⇒ "Suggested beyond 20M calls a month".</source>
+        <target>仅用量超过上一个套餐时的理由：用量上限 ⇒ "Suggested beyond 20M calls a month"。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingLabels.ReasonWithin">
+        <source>Reason for the first plan: (seat limit, usage limit) ⇒ "Fits up to 4 seats and 1.5M calls a month".</source>
+        <target>第一个套餐的理由：（席位上限，用量上限）⇒ "Fits up to 4 seats and 1.5M calls a month"。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingLabels.Saving">
+        <source>Next to the billing switch: amount ⇒ "$960 saved per year".</source>
+        <target>计费开关旁边：金额 ⇒ "$960 saved per year"。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingLabels.SeatsDetail">
+        <source>Under the seats row: (seats, seat price) ⇒ "16 × $26".</source>
+        <target>席位行下方：（席位数，席位价格）⇒ "16 × $26"。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingLabels.SeatsLabel">
+        <source>Label of the seat slider: "Team size".</source>
+        <target>席位滑块的标签："Team size"。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingLabels.SeatsRow">
+        <source>The seats row: plan ⇒ "Studio seats".</source>
+        <target>席位行：套餐 ⇒ "Studio seats"。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingLabels.StartWith">
+        <source>The call to action: plan ⇒ "Try Studio".</source>
+        <target>行动按钮：套餐 ⇒ "Try Studio"。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingLabels.Title">
+        <source>The heading: "Plan your monthly cost".</source>
+        <target>标题："Plan your monthly cost"。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingLabels.TotalDetail">
+        <source>Under the total row: "Monthly, excluding tax".</source>
+        <target>总计行下方："Monthly, excluding tax"。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingLabels.TotalRow">
+        <source>The total row: "Estimated total".</source>
+        <target>总计行："Estimated total"。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingLabels.TrialNote">
+        <source>Under the button before the trial: "Free for 14 days, then billed as shown".</source>
+        <target>试用前按钮下方："Free for 14 days, then billed as shown"。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingLabels.TrialStarted">
+        <source>The button once the trial is on: "Trial is on".</source>
+        <target>试用开启后的按钮："Trial is on"。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingLabels.TrialStartedNote">
+        <source>Under the button once the trial is on, before the undo link: "Trial is on.".</source>
+        <target>试用开启后、撤销链接之前的按钮下方："Trial is on."。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingLabels.Undo">
+        <source>The link that turns the trial off again: "Undo".</source>
+        <target>使试用关闭的链接："Undo"。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingLabels.UsageBundled">
+        <source>Under the usage row while it stays inside the plan: (used, included) ⇒ "600k of 1M bundled".</source>
+        <target>用量行在套餐之内时的下方：（已用量，包含量）⇒ "600k of 1M bundled"。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingLabels.UsageLabel">
+        <source>Label of the usage slider: "API calls each month".</source>
+        <target>用量滑块的标签："API calls each month"。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingLabels.UsageOver">
+        <source>Under the usage row past the plan: (used, extra, rate) ⇒ "12M used, 4M extra at $5 per million".</source>
+        <target>用量行超出套餐时的下方：（已用量，超出量，费率）⇒ "12M used, 4M extra at $5 per million"。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingLabels.UsageRow">
+        <source>The usage row: "API calls".</source>
+        <target>用量行："API calls"。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingLabels.Yearly">
+        <source>The yearly segment: "Annual".</source>
+        <target>年付分段："Annual"。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingLabels.YearlyDetail">
+        <source>Under the discount row: (seats, discount) ⇒ "16 × $5 off per seat".</source>
+        <target>折扣行下方：（席位数，折扣）⇒ "16 × $5 off per seat"。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingLabels.YearlyRow">
+        <source>The discount row shown under yearly billing: "Annual billing".</source>
+        <target>年付时显示的折扣行："Annual billing"。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingPeriod">
+        <source>How a `UsagePricing` estimate is billed.</source>
+        <target>`UsagePricing` 估算的计费方式。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingPeriod.Monthly">
+        <source>Seats are paid month by month, without the yearly discount.</source>
+        <target>席位按月付费，不享受年付折扣。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingPeriod.Yearly">
+        <source>Seats are paid for a year up front; every seat gets the plan's `YearlySeatDiscount`.</source>
+        <target>席位一次性预付一年；每个席位都享有套餐的 `YearlySeatDiscount`。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingPlan">
+        <source>A plan `UsagePricing` can recommend: its seat price, the usage it bundles, the price of usage beyond that, the yearly seat discount, the limits up to which it is recommended, and its feature list. Changes to these properties update the block.</source>
+        <target>`UsagePricing` 可以推荐的一个套餐：包括席位价格、包含的用量、超出用量的价格、年付席位折扣、推荐所覆盖的上限以及功能列表。修改这些属性会更新该区块。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingPlan.Features">
+        <source>The plan's features in display order. Features new in this plan (keys the previous plan does not have) are listed first and drawn in the strong color; the rest follow in the previous plan's order. Inline XAML items land here.</source>
+        <target>套餐的功能，按显示顺序排列。相对于上一个套餐新增的功能（上一个套餐中没有的键）排在最前，并以强调色绘制；其余功能按上一个套餐的顺序排在后面。XAML 中内联的项目会放入此处。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingPlan.IncludedUsage">
+        <source>Usage the plan bundles each month, in the units of `UsageStops`.</source>
+        <target>套餐每月包含的用量，单位与 `UsageStops` 相同。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingPlan.Key">
+        <source>Stable identity of the plan (the trial and the feature list follow it). Defaults to `Name`.</source>
+        <target>套餐的稳定标识（试用和功能列表都依此识别）。默认为 `Name`。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingPlan.MaxSeats">
+        <source>The most seats the plan is recommended for; null means no limit (the last plan).</source>
+        <target>套餐推荐适用的最大席位数；null 表示不限（通常是最后一个套餐）。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingPlan.MaxUsage">
+        <source>The most monthly usage the plan is recommended for; null means no limit (the last plan).</source>
+        <target>套餐推荐适用的最大月用量；null 表示不限（通常是最后一个套餐）。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingPlan.Name">
+        <source>The plan's name, shown on the card, the meter, the seats row and the button.</source>
+        <target>套餐名称，显示在卡片、计量条、席位行和按钮上。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingPlan.OveragePrice">
+        <source>Price of each `OverageUnit` of usage beyond `IncludedUsage`.</source>
+        <target>超出 `IncludedUsage` 的用量每 `OverageUnit` 的价格。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingPlan.SeatPrice">
+        <source>Price of one seat for one month.</source>
+        <target>一个席位一个月的价格。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingPlan.YearlySeatDiscount">
+        <source>What yearly billing takes off each seat's monthly price.</source>
+        <target>年付时每个席位月价减去的金额。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingReason">
+        <source>Why `UsagePricing` recommends its plan: the reason line under the plan name.</source>
+        <target>`UsagePricing` 推荐套餐的理由：套餐名称下方的理由行。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingReason.BothAbove">
+        <source>Both the seats and the usage go past the previous plan's limits.</source>
+        <target>席位和用量都超过了上一个套餐的上限。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingReason.SeatsAbove">
+        <source>The seats go past the previous plan's seat limit; the usage does not.</source>
+        <target>席位超过了上一个套餐的席位上限；用量没有超过。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingReason.UsageAbove">
+        <source>The usage goes past the previous plan's usage limit; the seats do not.</source>
+        <target>用量超过了上一个套餐的用量上限；席位没有超过。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingReason.WithinLimits">
+        <source>The first plan: the seats and the usage fit inside its limits.</source>
+        <target>第一个套餐：席位和用量都在其上限之内。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingRecommendationChangedEventArgs">
+        <source>Arguments of `RecommendationChanged`.</source>
+        <target>`RecommendationChanged` 的参数。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingRecommendationChangedEventArgs.NewPlan">
+        <source>The plan recommended now.</source>
+        <target>当前推荐的套餐。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingRecommendationChangedEventArgs.OldPlan">
+        <source>The plan recommended before (null the first time).</source>
+        <target>之前推荐的套餐（首次为 null）。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingRecommendationChangedEventArgs.Reason">
+        <source>Why the new plan is recommended.</source>
+        <target>新套餐被推荐的理由。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingSamples">
+        <source>The invented sample of `UsagePricing` (also its defaults): three plans (Spark, Studio, Fleet), 23 seat stops and 27 monthly call stops, and a simulated trial backend for demos.</source>
+        <target>`UsagePricing` 的虚构示例（也是它的默认值）：三个套餐（Spark、Studio、Fleet）、23 个席位刻度和 27 个每月调用次数刻度，以及一个用于演示的模拟试用后端。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingSamples.CreatePlans">
+        <source>Creates the three sample plans (a new list each call).</source>
+        <target>创建三个示例套餐（每次调用都返回新列表）。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingSamples.DefaultSeatIndex">
+        <source>The seat stop selected at first (16 seats).</source>
+        <target>最初选中的席位刻度（16 个席位）。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingSamples.DefaultUsageIndex">
+        <source>The usage stop selected at first (12M calls).</source>
+        <target>最初选中的用量刻度（12M 次调用）。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingSamples.SeatStops">
+        <source>Seat stops: 1–6 one by one, then wider steps up to 250.</source>
+        <target>席位刻度：1–6 逐个排列，之后以更大的步长递增至 250。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingSamples.SimulatedTrial">
+        <source>A stand-in for a sign-up backend: waits `delay` and succeeds, or throws `InvalidOperationException` when `fail` says so. `wait` replaces `Delay` (tests pass a wait they step themselves).</source>
+        <target>注册后端的替身：等待 `delay` 后成功，或在 `fail` 指定时抛出 `InvalidOperationException`。`wait` 用于替代 `Delay`（测试会传入由其自行推进的等待）。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingSamples.UsageStops">
+        <source>Monthly call stops from 100k to 300M, roughly logarithmic.</source>
+        <target>每月调用次数刻度，从 100k 到 300M，大致呈对数分布。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingSelectionEventArgs">
+        <source>Arguments of `SelectionChanged`, `TrialStarted` and `TrialUndone`.</source>
+        <target>`SelectionChanged`、`TrialStarted` 和 `TrialUndone` 的参数。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingSelectionEventArgs.Period">
+        <source>The billing period.</source>
+        <target>计费周期。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingSelectionEventArgs.Plan">
+        <source>The recommended plan.</source>
+        <target>推荐的套餐。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingSelectionEventArgs.Seats">
+        <source>The seats on the seat slider.</source>
+        <target>席位滑块上的席位数。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingSelectionEventArgs.Total">
+        <source>The estimated monthly total.</source>
+        <target>预估的每月总额。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingSelectionEventArgs.Usage">
+        <source>The monthly usage on the usage slider.</source>
+        <target>用量滑块上的每月用量。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingTrialRequest">
+        <source>What `TrialHandler` is asked to start.</source>
+        <target>`TrialHandler` 被要求开始的内容。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingTrialRequest.Period">
+        <source>The billing period.</source>
+        <target>计费周期。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingTrialRequest.Plan">
+        <source>The recommended plan.</source>
+        <target>推荐的套餐。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingTrialRequest.Seats">
+        <source>The seats on the seat slider.</source>
+        <target>席位滑块上的席位数。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingTrialRequest.Total">
+        <source>The estimated monthly total.</source>
+        <target>预估的每月总额。</target>
+      </trans-unit>
+      <trans-unit id="UsagePricingTrialRequest.Usage">
+        <source>The monthly usage on the usage slider.</source>
+        <target>用量滑块上的每月用量。</target>
       </trans-unit>
       <trans-unit id="UsageSegment">
         <source>One category of a `UsageMeter` (Arc `segments[]` entry).</source>
