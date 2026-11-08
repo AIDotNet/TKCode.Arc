@@ -134,6 +134,75 @@ public class InkFluidTests
         window.Close();
     }
 
+    [AvaloniaTheory]
+    [InlineData(InkFluidQuality.Medium)]
+    [InlineData(InkFluidQuality.High)]
+    public void Running_ink_on_the_real_frame_clock_lets_the_dispatcher_go_idle(InkFluidQuality quality)
+    {
+        // Regression: on the real frame clock a simulation step that costs more than a frame was followed straight away by
+        // the next one (each frame's picture is committed, and the finished commit asks for another frame), so the UI
+        // thread never went idle and Dispatcher.RunJobs never returned: the gallery smoke test hung on this page.
+        RunJobsWithWatchdog(quality, ArcMotionLevel.Full).ShouldBeTrue("the dispatcher never went idle while the ink ran");
+    }
+
+    [AvaloniaFact]
+    public void Running_ink_in_the_gallery_page_lets_the_dispatcher_go_idle()
+    {
+        var entry = TKCode.Arc.Gallery.Catalog.GalleryCatalog.AllEntries.First(e => e.ClassName == nameof(InkFluid));
+        var page = TKCode.Arc.Gallery.Pages.GalleryPages.Create(entry);
+        var host = new Window { Content = page, Width = 1000, Height = 800 };
+        RunJobsWithWatchdog(host).ShouldBeTrue("the dispatcher never went idle on the InkFluid gallery page");
+    }
+
+    private static bool RunJobsWithWatchdog(InkFluidQuality quality, ArcMotionLevel level)
+    {
+        var ink = new InkFluid { Width = 760, Height = 440, Quality = quality };
+        var window = new Window { Content = ink, Width = 800, Height = 500 };
+        ArcMotion.SetLevel(window, level);
+        var idle = RunJobsWithWatchdog(window);
+        ink.Canvas.ShouldNotBeNull().Solver.Columns.ShouldBeGreaterThan(0);
+        return idle;
+    }
+
+    /// <summary>
+    /// Shows <paramref name="window"/> and drains the dispatcher. A runaway frame loop would keep RunJobs busy forever,
+    /// so a dispatcher timer (timers are promoted between jobs, inside RunJobs) closes the window after a while: that
+    /// stops the loop and the test fails instead of hanging. Returns whether the dispatcher went idle on its own.
+    /// </summary>
+    private static bool RunJobsWithWatchdog(Window window)
+    {
+        var timedOut = false;
+        // Above render priority: a runaway frame loop keeps a render job at the head of the queue.
+        var watchdog = new DispatcherTimer(DispatcherPriority.Normal) { Interval = TimeSpan.FromSeconds(15) };
+        watchdog.Tick += (_, _) =>
+        {
+            watchdog.Stop();
+            timedOut = true;
+            window.Close();
+        };
+        watchdog.Start();
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            // A few more passes: the loop keeps running, and every pass must still go idle.
+            for (var i = 0; i < 3 && !timedOut; i++)
+            {
+                Thread.Sleep(20);
+                Dispatcher.UIThread.RunJobs();
+            }
+        }
+        finally
+        {
+            watchdog.Stop();
+            if (!timedOut)
+            {
+                window.Close();
+            }
+        }
+        return !timedOut;
+    }
+
     [AvaloniaFact]
     public void Pointer_strokes_add_ink()
     {
@@ -155,9 +224,13 @@ public class InkFluidTests
         canvas.Solver.TotalInk().ShouldBeGreaterThan(0);
         canvas.Solver.TotalAccent().ShouldBeGreaterThan(0);
 
-        // Without the ambient stir the loop stops once the ink has faded.
-        frames.Advance(TimeSpan.FromSeconds(12), Frame);
-        Dispatcher.UIThread.RunJobs();
+        // Without the ambient stir the loop stops once the ink has faded. Where a step costs more than half a frame (a debug
+        // build) the canvas paces itself and skips frames, and each step simulates at most 1/30s, so allow a minute of frames.
+        for (var second = 0; second < 60 && canvas.Loop.IsActive; second++)
+        {
+            frames.Advance(TimeSpan.FromSeconds(1), Frame);
+            Dispatcher.UIThread.RunJobs();
+        }
         canvas.Loop.IsActive.ShouldBeFalse();
         window.Close();
     }
