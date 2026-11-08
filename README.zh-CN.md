@@ -121,6 +121,8 @@ dotnet test tests/TKCode.Arc.Tests
 dotnet run --project gallery/TKCode.Arc.Gallery.Desktop -f net10.0
 ```
 
+PDFium 和 pdf.js 没有提交到仓库：`tools/pdf/sync-native.sh` 和 `tools/pdf/sync-pdfjs.sh` 会下载并校验它们。没有它们时，桌面 Gallery 的 PDF 示例显示模拟文档，浏览器构建没有可导入的 pdf.js。
+
 ## 赞助
 
 TKCode.Arc 主要由 [nextco.work](https://nextco.work/) 赞助，其提供低价、好用的 Claude、OpenAI 和 DeepSeek 模型服务。

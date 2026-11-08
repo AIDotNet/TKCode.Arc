@@ -36,7 +36,7 @@ dotnet add package TKCode.Arc.Icons.Lucide --version 0.4.0-preview.6    # option
 `TKCode.Arc` brings in `TKCode.Arc.Core` (and, from 0.3.2, `TKCode.Arc.Foundation`). `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts` and `TKCode.Arc.Special`
 (the animated AI explainers of the Special components section) are separate packages on NuGet; `TKCode.Arc.Workflow`
 (the workflow canvas, `UseArcWorkflow()`) ships with them too. `TKCode.Arc.Themes.Pixel` (a pixel-art theme, `UseArcPixelTheme()`) and
-`TKCode.Arc.Mobile` (the first touch-first controls, `UseArcMobile()`, not yet verified on devices) are new in 0.3.1-preview.1; `TKCode.Arc.Themes.Corners` (global corner style, `UseArcCorners()`) is new in 0.3.1-preview.2. `TKCode.Arc.Terminal` (`TerminalView` over libghostty-vt, native libraries bundled) is new in 0.3.1-preview.4. `TKCode.Arc.Audio` (the `IAudioPlayer` abstraction behind the media blocks, silent by default) with its backends `TKCode.Arc.Audio.Native` (desktop, miniaudio, `ArcAudioNative.Use()`) and `TKCode.Arc.Audio.Browser` (WebAssembly, `ArcAudioBrowser.UseAsync()`) is new in 0.3.2-preview.1. Versions carry a `-preview` suffix, so the API may still change between
+`TKCode.Arc.Mobile` (the first touch-first controls, `UseArcMobile()`, not yet verified on devices) are new in 0.3.1-preview.1; `TKCode.Arc.Themes.Corners` (global corner style, `UseArcCorners()`) is new in 0.3.1-preview.2. `TKCode.Arc.Terminal` (`TerminalView` over libghostty-vt, native libraries bundled) is new in 0.3.1-preview.4. `TKCode.Arc.Audio` (the `IAudioPlayer` abstraction behind the media blocks, silent by default) with its backends `TKCode.Arc.Audio.Native` (desktop, miniaudio, `ArcAudioNative.Use()`) and `TKCode.Arc.Audio.Browser` (WebAssembly, `ArcAudioBrowser.UseAsync()`) is new in 0.3.2-preview.1. `TKCode.Arc.Pdf` (`PdfViewer`) with its backends `TKCode.Arc.Pdf.Native` (desktop, PDFium, `ArcPdfNative.Use()`) and `TKCode.Arc.Pdf.Browser` (WebAssembly, pdf.js, `ArcPdfBrowser.UseAsync()`) is new in the next version. Versions carry a `-preview` suffix, so the API may still change between
 releases.
 
 ## Getting started
@@ -125,6 +125,9 @@ dotnet test tests/TKCode.Arc.Core.Tests
 dotnet test tests/TKCode.Arc.Tests
 dotnet run --project gallery/TKCode.Arc.Gallery.Desktop -f net10.0
 ```
+
+PDFium and pdf.js are not committed: `tools/pdf/sync-native.sh` and `tools/pdf/sync-pdfjs.sh` download them with their checksums
+checked. Without them the desktop gallery shows a simulated document in the PDF demos, and a browser build has no pdf.js to import.
 
 ## Sponsors
 
