@@ -9348,6 +9348,94 @@
         <source>Where a value came from: a short label and the address it opens.</source>
         <target>值的出處：一個簡短的標籤和它開啟的網址。</target>
       </trans-unit>
+      <trans-unit id="EnumMetadataAttribute">
+        <source>Asks the Foundation generator (shipped with TKCode.Arc.Foundation) to describe an enum at compile time: its members in declaration order, their values, the `[Description]` or `[Display(Name)]` text and whether it is `[Flags]`. The description is registered with `EnumTypes` when the assembly loads, so an `EnumSelector` lists the enum without reflection (AOT and trimming safe).</source>
+        <target>請 Foundation 產生器（隨 TKCode.Arc.Foundation 發佈）在編譯期描述一個列舉：依宣告順序的成員、它們的值、`[Description]` 或 `[Display(Name)]` 文字，以及是否帶 `[Flags]`。描述在組件載入時註冊到 `EnumTypes`，因此 `EnumSelector` 不需反射即可列出該列舉（相容 AOT 與修剪）。</target>
+      </trans-unit>
+      <trans-unit id="EnumSelector">
+        <source>Lists the members of an enum as choices: a `RadioGroup` for a plain enum, and `Checkbox`es for a `[Flags]` enum, whose checked members are combined bit by bit (checking a composite member checks its parts, a member whose bits are only partly set shows the dash, and a zero member such as `None` clears the rest). The members, their `[Description]` texts and the `[Flags]` marker come from code the generator writes for enums marked `EnumMetadataAttribute`, so nothing is reflected (AOT and trimming safe). `SelectedEnum` (two-way) is the value; the options are laid out in `Rows` and `Columns`, or in a panel of your own (`ItemsPanel`).</source>
+        <target>把列舉的成員列為選項：一般列舉顯示為 `RadioGroup`，`[Flags]` 列舉顯示為 `Checkbox`，勾選的成員按位元組合（勾選組合成員會勾選其組成部分，位元只設定了一部分的成員顯示短橫，`None` 這樣的零值成員會清除其餘選項）。成員、它們的 `[Description]` 文字和 `[Flags]` 標記來自產生器為標記了 `EnumMetadataAttribute` 的列舉產生的程式碼，因此不使用反射（相容 AOT 與修剪）。`SelectedEnum`（雙向）是值；選項依 `Rows` 和 `Columns` 排列，或放在自訂的面板（`ItemsPanel`）中。</target>
+      </trans-unit>
+      <trans-unit id="EnumSelector.ColumnSpacing">
+        <source>Gap between columns of the default grid (16 by default).</source>
+        <target>預設格線的欄間距（預設 16）。</target>
+      </trans-unit>
+      <trans-unit id="EnumSelector.Columns">
+        <source>Columns of the default grid; 0 computes them from `Rows`. With both 0 the options are one column.</source>
+        <target>預設格線的欄數；0 表示依 `Rows` 計算。兩者都為 0 時選項排成一欄。</target>
+      </trans-unit>
+      <trans-unit id="EnumSelector.DisplayMode">
+        <source>Radio options or checkboxes; `Auto` picks by `HasFlags`.</source>
+        <target>單選項或核取方塊；`Auto` 依 `HasFlags` 選擇。</target>
+      </trans-unit>
+      <trans-unit id="EnumSelector.EffectiveDisplayMode">
+        <source>The mode in use: `DisplayMode` with `Auto` resolved.</source>
+        <target>實際使用的模式：解析了 `Auto` 之後的 `DisplayMode`。</target>
+      </trans-unit>
+      <trans-unit id="EnumSelector.EnumType">
+        <source>The enum to list. When null, the type of `SelectedEnum` is used. The enum must be marked `EnumMetadataAttribute` (or registered with `EnumTypes`); otherwise no option is shown.</source>
+        <target>要列出的列舉。為 null 時使用 `SelectedEnum` 的型別。列舉必須標記 `EnumMetadataAttribute`（或註冊到 `EnumTypes`），否則不顯示任何選項。</target>
+      </trans-unit>
+      <trans-unit id="EnumSelector.HasFlags">
+        <source>Whether the listed enum is marked `[Flags]`.</source>
+        <target>列出的列舉是否標記了 `[Flags]`。</target>
+      </trans-unit>
+      <trans-unit id="EnumSelector.Header">
+        <source>The legend above the options; a string is also the group's accessible name.</source>
+        <target>選項上方的圖例；字串同時作為群組的無障礙名稱。</target>
+      </trans-unit>
+      <trans-unit id="EnumSelector.ItemTemplate">
+        <source>The label of each option; it receives an `EnumSelectorItem`. Null shows its `Text`.</source>
+        <target>每個選項的標籤；它接收一個 `EnumSelectorItem`。為 null 時顯示其 `Text`。</target>
+      </trans-unit>
+      <trans-unit id="EnumSelector.Items">
+        <source>The options shown, one per listed member, in declaration order.</source>
+        <target>顯示的選項，每個列出的成員一個，依宣告順序。</target>
+      </trans-unit>
+      <trans-unit id="EnumSelector.ItemsPanel">
+        <source>A panel of your own for the options (for example a `WrapPanel`); null uses a uniform grid of `Rows` by `Columns`.</source>
+        <target>自訂的選項面板（例如 `WrapPanel`）；為 null 時使用 `Rows` × `Columns` 的均勻格線。</target>
+      </trans-unit>
+      <trans-unit id="EnumSelector.RowSpacing">
+        <source>Gap between rows of the default grid; 8 for radio options and 0 for checkboxes by default.</source>
+        <target>預設格線的列間距；預設單選項為 8，核取方塊為 0。</target>
+      </trans-unit>
+      <trans-unit id="EnumSelector.Rows">
+        <source>Rows of the default grid; 0 computes them from `Columns`.</source>
+        <target>預設格線的列數；0 表示依 `Columns` 計算。</target>
+      </trans-unit>
+      <trans-unit id="EnumSelector.SelectedEnum">
+        <source>The selected value (two-way): a member, a combination of members of a `[Flags]` enum, or null for none.</source>
+        <target>選取的值（雙向）：一個成員、`[Flags]` 列舉的成員組合，或表示未選取的 null。</target>
+      </trans-unit>
+      <trans-unit id="EnumSelector.SelectedEnumChanged">
+        <source>Raised when `SelectedEnum` changes, by the person or by code.</source>
+        <target>`SelectedEnum` 變化時觸發，無論由使用者還是程式碼引起。</target>
+      </trans-unit>
+      <trans-unit id="EnumSelector.UseDisplayNames">
+        <source>Show each member's localized text or `[Description]` (true, the default), or its name in code.</source>
+        <target>顯示每個成員的在地化文字或 `[Description]`（true，預設），或顯示其程式碼中的名稱。</target>
+      </trans-unit>
+      <trans-unit id="EnumSelectorChangedEventArgs">
+        <source>Arguments of `SelectedEnumChanged`.</source>
+        <target>`SelectedEnumChanged` 的參數。</target>
+      </trans-unit>
+      <trans-unit id="EnumSelectorDisplayMode">
+        <source>How an `EnumSelector` presents its options.</source>
+        <target>`EnumSelector` 如何呈現它的選項。</target>
+      </trans-unit>
+      <trans-unit id="EnumSelectorItem">
+        <source>One option of an `EnumSelector`: an enum member and the text it shows. It is the data an `ItemTemplate` receives (bind to `Text`, or to `Member` for the rest).</source>
+        <target>`EnumSelector` 的一個選項：一個列舉成員及其顯示的文字。它是 `ItemTemplate` 接收的資料（繫結 `Text`，其他資訊繫結 `Member`）。</target>
+      </trans-unit>
+      <trans-unit id="EnumSelectorItem.Text">
+        <source>The text shown for the member: its localized text, `[Description]` or name, as `UseDisplayNames` says.</source>
+        <target>成員顯示的文字：依 `UseDisplayNames` 的設定，為在地化文字、`[Description]` 或名稱。</target>
+      </trans-unit>
+      <trans-unit id="EnumTypes">
+        <source>The enums controls can describe without reflection. Enums marked `EnumMetadataAttribute` register themselves when their assembly loads (generated code); others can be registered in code with `Register`. A registration made later replaces an earlier one for the same type.</source>
+        <target>控制項不需反射即可描述的列舉。標記了 `EnumMetadataAttribute` 的列舉在組件載入時自動註冊（產生的程式碼）；其他列舉可以在程式碼中用 `Register` 註冊。同一型別後註冊的會取代先註冊的。</target>
+      </trans-unit>
       <trans-unit id="EnvEnvironment">
         <source>An environment of `EnvVariables`: a column of the matrix and a choice in the pills and selects.</source>
         <target>`EnvVariables` 的一個環境：矩陣中的一欄，也是膠囊與下拉選單中的一個選項。</target>

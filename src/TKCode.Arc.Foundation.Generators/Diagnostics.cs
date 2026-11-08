@@ -77,6 +77,31 @@ namespace TKCode.Arc.Foundation.Generators
             "'{0}' is marked [PropertyGridModel], but the target framework has no ModuleInitializerAttribute (.NET 5 or later); register it in code with PropertyGridTypes.Register<T>",
             Category, DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
+        public static readonly DiagnosticDescriptor EnumMetadataTarget = new DiagnosticDescriptor(
+            "ARCF033", "EnumMetadata target must be an enum",
+            "[EnumMetadata] names '{0}', which is not an enum; mark an enum, or write [assembly: EnumMetadata(typeof(SomeEnum))]",
+            Category, DiagnosticSeverity.Error, isEnabledByDefault: true);
+
+        public static readonly DiagnosticDescriptor EnumMetadataAccess = new DiagnosticDescriptor(
+            "ARCF034", "EnumMetadata enum must be accessible",
+            "Enum '{0}' is marked [EnumMetadata] but it or a containing type is not accessible from this assembly; make it public or internal",
+            Category, DiagnosticSeverity.Error, isEnabledByDefault: true);
+
+        public static readonly DiagnosticDescriptor EnumMetadataNoModuleInitializer = new DiagnosticDescriptor(
+            "ARCF035", "EnumMetadata needs module initializers",
+            "Enum '{0}' is marked [EnumMetadata], but the target framework has no ModuleInitializerAttribute (.NET 5 or later); register it in code with EnumTypes.Register",
+            Category, DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
+        public static readonly DiagnosticDescriptor EnumMetadataCatalog = new DiagnosticDescriptor(
+            "ARCF036", "EnumMetadata language catalog must be a [LanguageCatalog] enum",
+            "[EnumMetadata] on '{0}' names '{1}' as its LanguageCatalog, which is not a [LanguageCatalog] enum; the member texts are not localized",
+            Category, DiagnosticSeverity.Error, isEnabledByDefault: true);
+
+        public static readonly DiagnosticDescriptor EnumMetadataMissingText = new DiagnosticDescriptor(
+            "ARCF037", "Enum member has no text in its language catalog",
+            "'{0}' has no text in the language catalog '{1}' (expected a member named '{2}'); its [Description] or name is shown",
+            Category, DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
         public static readonly DiagnosticDescriptor EmptyThemeFile = new DiagnosticDescriptor(
             "ARCF014", "Theme file defines no resources",
             "Theme file '{0}' has no keyed top-level resources, so nothing can ever load it",

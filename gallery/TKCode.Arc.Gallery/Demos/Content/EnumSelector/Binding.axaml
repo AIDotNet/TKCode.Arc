@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.EnumSelectorBindingDemo"
+             x:DataType="demos:EnumSelectorDemoState">
+    <StackPanel Spacing="24" MaxWidth="560" HorizontalAlignment="Center">
+        <!-- Two selectors bound to one property: change either and the other follows. -->
+        <arc:EnumSelector Header="Permissions"
+                          EnumType="{x:Type demos:DemoFilePermissions}"
+                          SelectedEnum="{Binding Permissions}"
+                          Columns="2" />
+        <arc:EnumSelector Header="The same value, one member at a time"
+                          EnumType="{x:Type demos:DemoFilePermissions}"
+                          SelectedEnum="{Binding Permissions}"
+                          DisplayMode="Radio"
+                          Columns="2" />
+        <TextBlock Text="{Binding Permissions, StringFormat='Permissions = {0}'}"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        <arc:Button x:Name="Reset" Content="Reset to read only" Variant="Secondary" HorizontalAlignment="Left" />
+    </StackPanel>
+</UserControl>

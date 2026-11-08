@@ -118,6 +118,9 @@ public static partial class GalleryCatalog
             new("TextFilterBox", "Text filter box", "text-filter-box", 0,
                 "One text filter condition: a checkbox to switch it on, contains, starts with, ends with, equals or a regular expression, and case sensitivity.",
                 IsArc: false, AddedOn: "2026-11-07"),
+            new("EnumSelector", "Enum selector", "enum-selector", 0,
+                "Pick from the members of an enum: radio options for a plain enum, and checkboxes that combine flags for a [Flags] enum, described at compile time without reflection.",
+                IsArc: false, AddedOn: "2026-11-07"),
         ], IsArc: false),
     ];
 

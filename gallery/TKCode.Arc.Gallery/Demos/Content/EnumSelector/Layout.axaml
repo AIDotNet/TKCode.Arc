@@ -1,0 +1,30 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+             x:Class="TKCode.Arc.Gallery.Demos.EnumSelectorLayoutDemo">
+    <StackPanel Spacing="28" MaxWidth="640" HorizontalAlignment="Center">
+        <arc:EnumSelector Header="Four columns"
+                          EnumType="{x:Type demos:DemoPriority}"
+                          SelectedEnum="{x:Static demos:DemoPriority.Low}"
+                          Columns="4" />
+        <arc:EnumSelector Header="Two rows"
+                          EnumType="{x:Type demos:DemoFilePermissions}"
+                          SelectedEnum="{x:Static demos:DemoFilePermissions.ReadWrite}"
+                          Rows="2"
+                          ColumnSpacing="24" />
+        <!-- A panel of your own: the options wrap to the width they are given. DayOfWeek is described by an
+             assembly attribute, [assembly: EnumMetadata(typeof(DayOfWeek))]. -->
+        <arc:EnumSelector Header="Wrapping"
+                          EnumType="{x:Type sys:DayOfWeek}"
+                          SelectedEnum="{x:Static sys:DayOfWeek.Monday}"
+                          DisplayMode="Check">
+            <arc:EnumSelector.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel ItemSpacing="16" />
+                </ItemsPanelTemplate>
+            </arc:EnumSelector.ItemsPanel>
+        </arc:EnumSelector>
+    </StackPanel>
+</UserControl>

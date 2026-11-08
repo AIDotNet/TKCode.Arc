@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.EnumSelectorFlagsDemo">
+    <StackPanel Spacing="12" Width="420" HorizontalAlignment="Center">
+        <arc:EnumSelector x:Name="Permissions"
+                          Header="Permissions"
+                          EnumType="{x:Type demos:DemoFilePermissions}"
+                          SelectedEnum="{x:Static demos:DemoFilePermissions.Read}"
+                          Columns="2" />
+        <TextBlock Text="{Binding #Permissions.SelectedEnum, StringFormat='Value: {0}'}"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>
