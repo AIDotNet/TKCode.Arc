@@ -32,6 +32,8 @@ internal sealed partial class Program
             GalleryShots.Source = new HttpShotSource(new Uri(args[1]));
             // The video demos' clip is served next to the screenshots (wwwroot/media/Video/).
             TKCode.Arc.Gallery.Demos.VideoDemoMedia.HttpRoot = new Uri(args[1]);
+            // So are the PDF demos' sample documents (wwwroot/media/Pdf/).
+            PdfDemoMedia.HttpRoot = new Uri(args[1]);
         }
         // Nor the pages' text (the content assembly): a page is fetched when it is shown, in the language it is shown in.
         if (AppContext.TryGetSwitch("Arc.Gallery.TextsOverHttp", out var textsOverHttp) && textsOverHttp && args.Length > 1)
@@ -51,6 +53,8 @@ internal sealed partial class Program
         await ArcAudioBrowser.UseAsync();
         // Video players draw the frames of one HTML video element each into the canvas; if the module cannot load they show a test picture.
         await ArcVideoBrowser.UseAsync();
+        // The PDF page imports pdf.js (about 110 KB compressed, and a worker of 310 KB when a document opens) before it builds its demos: other visits never fetch it.
+        GalleryModules.PdfBackend = static () => ArcPdfBrowser.UseAsync();
         await BuildAvaloniaApp().StartBrowserAppAsync("out");
     }
 

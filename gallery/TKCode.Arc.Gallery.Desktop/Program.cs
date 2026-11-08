@@ -23,6 +23,8 @@ internal static class Program
         ArcAudioNative.Use();
         // Video players decode with the system player (AVFoundation, Media Foundation, GStreamer); without it they show a test picture.
         ArcVideoNative.Use();
+        // PDF viewers render with PDFium (tools/pdf/sync-native.sh fetches it); without it the demos show a simulated document.
+        ArcPdfNative.Use();
         BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
     }
 

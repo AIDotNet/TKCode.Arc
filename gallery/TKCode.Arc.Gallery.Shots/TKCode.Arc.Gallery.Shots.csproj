@@ -22,4 +22,10 @@
     <ItemGroup>
         <AvaloniaResource Include="../TKCode.Arc.Gallery/Media/Video/*.mp4" Link="Media/Video/%(Filename)%(Extension)" />
     </ItemGroup>
+
+    <!-- The PDF demos' sample documents (PdfDemoMedia, made by tools/pdf/make-sample.py): here for desktop hosts, served as
+         wwwroot/media/Pdf/ by the WebAssembly host. -->
+    <ItemGroup>
+        <AvaloniaResource Include="../TKCode.Arc.Gallery/Assets/Pdf/*.pdf" Link="Assets/Pdf/%(Filename)%(Extension)" />
+    </ItemGroup>
 </Project>

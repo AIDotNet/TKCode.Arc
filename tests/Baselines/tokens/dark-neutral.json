@@ -4755,6 +4755,18 @@
       "TabHeight": "44",
       "TabPadding": "10,0,10,0"
     },
+    "PageViewer": {
+      "CanvasPadding": "24",
+      "CanvasPaddingNarrow": "8",
+      "FocusRingMargin": "2,2,2,2",
+      "FocusRingRadius": "0,0,0,0",
+      "PageNumberBoxWidth": "56",
+      "PageSpacing": "12",
+      "PlaceholderInk": "#380B0B0B",
+      "ToolbarHeight": "48",
+      "ToolbarPadding": "8,0,8,0",
+      "ZoomMenuWidth": "72"
+    },
     "Pagination": {
       "ButtonFocusRingRadius": "22,22,22,22",
       "DisabledOpacity": "0.4",
@@ -4788,6 +4800,16 @@
       "FramePadding": "20,20,20,14",
       "NodeRadius": "12",
       "PacketSize": "7"
+    },
+    "PdfViewer": {
+      "LinkHoverFill": "#14000000",
+      "PasswordFormWidth": "320",
+      "SearchBarWidth": "360",
+      "SearchHighlight": "#66FFD60A",
+      "SearchHighlightCurrent": "#99FF9500",
+      "SidebarWidth": "224",
+      "ThumbnailSpacing": "12",
+      "ThumbnailWidth": "120"
     },
     "PhoneInput": {
       "ChevronMargin": "0,0,12,0",

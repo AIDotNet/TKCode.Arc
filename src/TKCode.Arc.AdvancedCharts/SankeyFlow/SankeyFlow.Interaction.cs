@@ -462,17 +462,17 @@ public partial class SankeyFlow
             var xs = p.TypeXS;
             _tooltip.SetRows(new[]
             {
-                new ChartsBTipRow { Left = ChartsBText.Make(title, p, xs, p.TextSecondary), MinHeight = xs * 1.5 },
+                new ChartsBTipRow { Left = ChartsBText.Run(title, p, xs, p.TextSecondary), MinHeight = xs * 1.5 },
                 new ChartsBTipRow
                 {
                     MarginTop = 2, MinHeight = p.TypeSM * 1.4,
-                    Left = ChartsBText.Make("Value", p, xs, p.TextMuted),
-                    Right = ChartsBText.Make(Format(amount), p, p.TypeSM, p.Foreground, FontWeight.Medium)
+                    Left = ChartsBText.Run("Value", p, xs, p.TextMuted),
+                    Right = ChartsBText.Run(Format(amount), p, p.TypeSM, p.Foreground, FontWeight.Medium)
                 },
                 new ChartsBTipRow
                 {
                     MinHeight = xs * 1.5,
-                    Left = ChartsBText.Make($"{ShareOf(amount)} of {TotalLabel}", p, xs, p.TextMuted)
+                    Left = ChartsBText.Run($"{ShareOf(amount)} of {TotalLabel}", p, xs, p.TextMuted)
                 }
             });
         }

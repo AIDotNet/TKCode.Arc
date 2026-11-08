@@ -289,6 +289,48 @@ jobs:
           TKV_TRACE: ${{ runner.os == 'Windows' && '1' || '' }}
         run: dotnet run --project tests/TKCode.Arc.Video.Native.Tests -c Release
 
+  # TKCode.Arc.Pdf.Native against the real PDFium on each OS (design/components/pdf/pdf.md section 14). The tests need the
+  # library for the host's RID only.
+  pdf-native-test:
+    name: PDFium tests (${{ matrix.os }})
+    if: github.event_name != 'workflow_dispatch' && !startsWith(github.ref, 'refs/tags/')
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            rid: linux-x64
+          - os: macos-15
+            rid: osx-arm64
+          - os: windows-latest
+            rid: win-x64
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+          dotnet-version: 10.0.x
+
+      - uses: actions/cache@v6
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', 'Directory.Packages.props', 'build/Versions.props', 'global.json') }}
+          restore-keys: nuget-${{ runner.os }}-
+
+      # PDFium and Skia's Linux build load these.
+      - name: Install the font libraries
+        if: runner.os == 'Linux'
+        run: sudo apt-get update -q && sudo apt-get install -y -q --no-install-recommends libfontconfig1 libfreetype6
+
+      - name: Download PDFium
+        run: tools/pdf/sync-native.sh ${{ matrix.rid }}
+
+      - name: Test
+        run: dotnet test tests/TKCode.Arc.Pdf.Native.Tests -c Release
+
   # libghostty-vt for every RID, built from the commit pinned in native/ghostty/ghostty-upstream.json (+ overlays) with
   # the Zig in native/toolchain.json. Linux cross-compiles the Linux and Windows targets; the macOS targets need the
   # Apple SDK. TKCode.Arc.Terminal ships the results under runtimes/<rid>/native. The same job builds the miniaudio shim of
@@ -425,6 +467,8 @@ jobs:
           tools/terminal/sync-native.sh
           tools/audio/sync-native.sh
           tools/video/sync-native.sh
+          tools/pdf/sync-native.sh
+          tools/pdf/sync-pdfjs.sh
 
       # Build the whole solution once, then pack without rebuilding.
       - name: Build
@@ -444,7 +488,7 @@ jobs:
         env:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
-          for id in TKCode.Arc TKCode.Arc.Foundation TKCode.Arc.Core TKCode.Arc.Fonts TKCode.Arc.Icons.Lucide TKCode.Arc.Blocks TKCode.Arc.AdvancedCharts TKCode.Arc.Special TKCode.Arc.Terminal TKCode.Arc.Workflow TKCode.Arc.Dock TKCode.Arc.Themes.Pixel TKCode.Arc.Themes.Corners TKCode.Arc.Mobile TKCode.Arc.Audio TKCode.Arc.Audio.Native TKCode.Arc.Audio.Browser; do
+          for id in TKCode.Arc TKCode.Arc.Foundation TKCode.Arc.Core TKCode.Arc.Fonts TKCode.Arc.Icons.Lucide TKCode.Arc.Blocks TKCode.Arc.AdvancedCharts TKCode.Arc.Special TKCode.Arc.Terminal TKCode.Arc.Workflow TKCode.Arc.Dock TKCode.Arc.Themes.Pixel TKCode.Arc.Themes.Corners TKCode.Arc.Mobile TKCode.Arc.Audio TKCode.Arc.Audio.Native TKCode.Arc.Audio.Browser TKCode.Arc.Pdf TKCode.Arc.Pdf.Native TKCode.Arc.Pdf.Browser; do
             for ext in nupkg snupkg; do
               file="artifacts/nupkg/$id.$VERSION.$ext"
               if [[ ! -f "$file" ]]; then
@@ -474,6 +518,20 @@ jobs:
                        runtimes/win-x64/native/tkcode_audio.dll runtimes/win-arm64/native/tkcode_audio.dll \
                        runtimes/osx-x64/native/libtkcode_audio.dylib runtimes/osx-arm64/native/libtkcode_audio.dylib; do
             unzip -l "$audio" | grep -q " $entry\$" || { echo "::error::$audio lacks $entry"; exit 1; }
+          done
+          # TKCode.Arc.Pdf.Native must carry PDFium for every RID, its licenses and its notices.
+          pdf="artifacts/nupkg/TKCode.Arc.Pdf.Native.$VERSION.nupkg"
+          for entry in runtimes/linux-x64/native/libpdfium.so runtimes/linux-arm64/native/libpdfium.so \
+                       runtimes/win-x64/native/pdfium.dll runtimes/win-arm64/native/pdfium.dll \
+                       runtimes/osx-x64/native/libpdfium.dylib runtimes/osx-arm64/native/libpdfium.dylib \
+                       licenses/pdfium.txt licenses/freetype.txt licenses/pdfium-binaries.txt PDFIUM-NOTICES.md; do
+            unzip -l "$pdf" | grep -q " $entry\$" || { echo "::error::$pdf lacks $entry"; exit 1; }
+          done
+          # TKCode.Arc.Pdf.Browser must carry pdf.js and its notices.
+          pdfjs="artifacts/nupkg/TKCode.Arc.Pdf.Browser.$VERSION.nupkg"
+          for entry in staticwebassets/pdfjs/pdf.min.mjs staticwebassets/pdfjs/pdf.worker.min.mjs \
+                       staticwebassets/pdfjs/wasm/openjpeg.wasm staticwebassets/pdfjs/cmaps/UniGB-UCS2-H.bcmap PDFJS-NOTICES.md; do
+            unzip -l "$pdfjs" | grep -q " $entry\$" || { echo "::error::$pdfjs lacks $entry"; exit 1; }
           done
           ls -l artifacts/nupkg
           for pkg in artifacts/nupkg/*.nupkg; do
@@ -531,7 +589,7 @@ jobs:
         env:
           NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
         run: |
-          for id in TKCode.Arc.Foundation TKCode.Arc.Core TKCode.Arc.Fonts TKCode.Arc.Icons.Lucide TKCode.Arc.Audio TKCode.Arc.Audio.Native TKCode.Arc.Audio.Browser TKCode.Arc TKCode.Arc.Blocks TKCode.Arc.AdvancedCharts TKCode.Arc.Special TKCode.Arc.Terminal TKCode.Arc.Workflow TKCode.Arc.Dock TKCode.Arc.Themes.Pixel TKCode.Arc.Themes.Corners TKCode.Arc.Mobile TKCode.Arc.Templates; do
+          for id in TKCode.Arc.Foundation TKCode.Arc.Core TKCode.Arc.Fonts TKCode.Arc.Icons.Lucide TKCode.Arc.Audio TKCode.Arc.Audio.Native TKCode.Arc.Audio.Browser TKCode.Arc TKCode.Arc.Pdf TKCode.Arc.Pdf.Native TKCode.Arc.Pdf.Browser TKCode.Arc.Blocks TKCode.Arc.AdvancedCharts TKCode.Arc.Special TKCode.Arc.Terminal TKCode.Arc.Workflow TKCode.Arc.Dock TKCode.Arc.Themes.Pixel TKCode.Arc.Themes.Corners TKCode.Arc.Mobile TKCode.Arc.Templates; do
             dotnet nuget push "nupkg/$id.${{ needs.pack.outputs.version }}.nupkg" \
               --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
           done

@@ -619,14 +619,14 @@ internal sealed class WaffleGrid : Avalonia.Controls.Control, Avalonia.Rendering
                 new ChartsBTipRow
                 {
                     Swatch = _owner.ColorOf(item.Key), Shape = _owner.ShapeOf(item.Key),
-                    Left = ChartsBText.Make(item.Label, palette, sm, palette.TextSecondary),
-                    Right = ChartsBText.Make(_owner.ShareText(_owner.ShareOf(item)), palette, sm, palette.Foreground, FontWeight.Medium),
+                    Left = ChartsBText.Run(item.Label, palette, sm, palette.TextSecondary),
+                    Right = ChartsBText.Run(_owner.ShareText(_owner.ShareOf(item)), palette, sm, palette.Foreground, FontWeight.Medium),
                     MinHeight = sm * 1.3
                 },
                 new ChartsBTipRow
                 {
                     Indent = 18,
-                    Left = ChartsBText.Make(_owner.FormatValue(item), palette, palette.TypeXS, palette.TextMuted),
+                    Left = ChartsBText.Run(_owner.FormatValue(item), palette, palette.TypeXS, palette.TextMuted),
                     MinHeight = palette.TypeXS * 1.5
                 }
             ]);

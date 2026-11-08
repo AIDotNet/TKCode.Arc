@@ -15,8 +15,8 @@ internal enum ChartsBSwatchShape
 /// <summary>One line of a <see cref="ChartsBTooltip"/>: text on the left, an optional value on the right.</summary>
 internal sealed class ChartsBTipRow
 {
-    public FormattedText? Left { get; init; }
-    public FormattedText? Right { get; init; }
+    public ChartsBRun? Left { get; init; }
+    public ChartsBRun? Right { get; init; }
     public Color? Swatch { get; init; }
     public ChartsBSwatchShape Shape { get; init; }
     public double Indent { get; init; }
@@ -67,8 +67,17 @@ internal sealed class ChartsBTooltip
     /// <summary>Replaces the content and measures it.</summary>
     public void SetRows(IEnumerable<ChartsBTipRow> rows)
     {
+        var previous = _rows.ToArray();
         _rows.Clear();
         _rows.AddRange(rows);
+        foreach (var row in previous)
+        {
+            if (!_rows.Contains(row))
+            {
+                row.Left?.Dispose();
+                row.Right?.Dispose();
+            }
+        }
         var inner = MaxWidth - Padding.Left - Padding.Right;
         var width = 0.0;
         var height = 0.0;
@@ -76,18 +85,9 @@ internal sealed class ChartsBTooltip
         {
             var row = _rows[i];
             var lead = row.Indent + (row.Swatch is null ? 0 : 18);
-            var right = row.Right?.WidthIncludingTrailingWhitespace ?? 0;
-            if (row.Left is { } left)
-            {
-                var room = Math.Max(10, inner - lead - (row.Right is null ? 0 : right + ColumnGap));
-                if (left.WidthIncludingTrailingWhitespace > room)
-                {
-                    left.MaxTextWidth = room;
-                    left.MaxLineCount = 1;
-                    left.Trimming = TextTrimming.CharacterEllipsis;
-                }
-            }
-            var rowWidth = lead + (row.Left?.WidthIncludingTrailingWhitespace ?? 0) + (row.Right is null ? 0 : ColumnGap + right);
+            var right = row.Right?.Width ?? 0;
+            row.Left?.Constrain(Math.Max(10, inner - lead - (row.Right is null ? 0 : right + ColumnGap)));
+            var rowWidth = lead + (row.Left?.Width ?? 0) + (row.Right is null ? 0 : ColumnGap + right);
             width = Math.Max(width, rowWidth);
             height += (i > 0 ? RowGap : 0) + row.MarginTop + RowHeight(row);
         }
@@ -167,11 +167,11 @@ internal sealed class ChartsBTooltip
                 }
                 if (row.Left is { } left)
                 {
-                    context.DrawText(left, new Point(x, y + (height - left.Height) / 2));
+                    left.Draw(context, new Point(x, y + (height - left.Height) / 2));
                 }
                 if (row.Right is { } value)
                 {
-                    context.DrawText(value, new Point(right - value.WidthIncludingTrailingWhitespace, y + (height - value.Height) / 2));
+                    value.Draw(context, new Point(right - value.Width, y + (height - value.Height) / 2));
                 }
                 y += height;
             }

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="2.1" srcLang="en-US" trgLang="zh-TW" xmlns="urn:oasis:names:tc:xliff:document:2.0">
+  <file id="TKCode.Arc.Localization.PdfViewerLangResourceKind">
+    <unit id="BackendHint">
+      <segment>
+        <source>Call ArcPdfNative.Use() at startup on desktop, or await ArcPdfBrowser.UseAsync() in a browser.</source>
+        <target state="translated">在桌面應用程式啟動時呼叫 ArcPdfNative.Use()，瀏覽器中呼叫 await ArcPdfBrowser.UseAsync()。</target>
+      </segment>
+    </unit>
+    <unit id="Cancel">
+      <segment>
+        <source>Cancel</source>
+        <target state="translated">取消</target>
+      </segment>
+    </unit>
+    <unit id="CloseSearch">
+      <segment>
+        <source>Close</source>
+        <target state="translated">關閉</target>
+      </segment>
+    </unit>
+    <unit id="Copy">
+      <segment>
+        <source>Copy</source>
+        <target state="translated">複製</target>
+      </segment>
+    </unit>
+    <unit id="CouldNotOpen">
+      <segment>
+        <source>Could not open this document</source>
+        <target state="translated">無法開啟此文件</target>
+      </segment>
+    </unit>
+    <unit id="FileDamaged">
+      <segment>
+        <source>The file is damaged</source>
+        <target state="translated">檔案已損壞</target>
+      </segment>
+    </unit>
+    <unit id="FileNotFound">
+      <segment>
+        <source>The file was not found</source>
+        <target state="translated">找不到檔案</target>
+      </segment>
+    </unit>
+    <unit id="Loading">
+      <segment>
+        <source>Loading</source>
+        <target state="translated">正在載入</target>
+      </segment>
+    </unit>
+    <unit id="MatchCase">
+      <segment>
+        <source>Match case</source>
+        <target state="translated">區分大小寫</target>
+      </segment>
+    </unit>
+    <unit id="MatchPosition">
+      <segment>
+        <source>{0} of {1}</source>
+        <target state="translated">第 {0} 個，共 {1} 個</target>
+      </segment>
+    </unit>
+    <unit id="NextMatch">
+      <segment>
+        <source>Next match</source>
+        <target state="translated">下一處</target>
+      </segment>
+    </unit>
+    <unit id="NoBackend">
+      <segment>
+        <source>No PDF renderer is set up</source>
+        <target state="translated">尚未設定 PDF 轉譯器</target>
+      </segment>
+    </unit>
+    <unit id="NoResults">
+      <segment>
+        <source>No results</source>
+        <target state="translated">無結果</target>
+      </segment>
+    </unit>
+    <unit id="Open">
+      <segment>
+        <source>Open</source>
+        <target state="translated">開啟</target>
+      </segment>
+    </unit>
+    <unit id="Outline">
+      <segment>
+        <source>Outline</source>
+        <target state="translated">目錄</target>
+      </segment>
+    </unit>
+    <unit id="PageNumber">
+      <segment>
+        <source>Page {0}</source>
+        <target state="translated">第 {0} 頁</target>
+      </segment>
+    </unit>
+    <unit id="Password">
+      <segment>
+        <source>Password</source>
+        <target state="translated">密碼</target>
+      </segment>
+    </unit>
+    <unit id="PasswordIncorrect">
+      <segment>
+        <source>Incorrect password</source>
+        <target state="translated">密碼不正確</target>
+      </segment>
+    </unit>
+    <unit id="PasswordRequired">
+      <segment>
+        <source>Password required</source>
+        <target state="translated">需要密碼</target>
+      </segment>
+    </unit>
+    <unit id="PreviousMatch">
+      <segment>
+        <source>Previous match</source>
+        <target state="translated">上一處</target>
+      </segment>
+    </unit>
+    <unit id="Protected">
+      <segment>
+        <source>This document is protected</source>
+        <target state="translated">此文件受密碼保護</target>
+      </segment>
+    </unit>
+    <unit id="Search">
+      <segment>
+        <source>Search</source>
+        <target state="translated">搜尋</target>
+      </segment>
+    </unit>
+    <unit id="SelectAll">
+      <segment>
+        <source>Select all</source>
+        <target state="translated">全選</target>
+      </segment>
+    </unit>
+    <unit id="Sidebar">
+      <segment>
+        <source>Sidebar</source>
+        <target state="translated">側欄</target>
+      </segment>
+    </unit>
+    <unit id="Thumbnails">
+      <segment>
+        <source>Thumbnails</source>
+        <target state="translated">縮圖</target>
+      </segment>
+    </unit>
+    <unit id="WholeWord">
+      <segment>
+        <source>Whole word</source>
+        <target state="translated">全字符合</target>
+      </segment>
+    </unit>
+  </file>
+</xliff>

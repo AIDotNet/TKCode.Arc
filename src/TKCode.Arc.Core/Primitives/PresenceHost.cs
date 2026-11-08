@@ -21,7 +21,10 @@ public enum PresenceMode
     Rise,
 
     /// <summary>Drops in from above by <see cref="PresenceHost.Offset"/> px.</summary>
-    Drop
+    Drop,
+
+    /// <summary>Slides in from the left by <see cref="PresenceHost.Offset"/> px (a panel from the edge of its container).</summary>
+    Slide
 }
 
 /// <summary>Which dimension collapses while a <see cref="PresenceHost"/> is hidden.</summary>
@@ -197,6 +200,7 @@ public class PresenceHost : Decorator
         Opacity = Math.Clamp(p, 0, 1);
         var effect = _reduced ? PresenceMode.Fade : Mode;
         var scale = 1.0;
+        double dx = 0;
         double dy = 0;
         switch (effect)
         {
@@ -212,9 +216,13 @@ public class PresenceHost : Decorator
             case PresenceMode.Drop:
                 dy = -(1 - Math.Clamp(p, 0, 1)) * Offset;
                 break;
+            case PresenceMode.Slide:
+                dx = -(1 - Math.Clamp(p, 0, 1)) * Offset;
+                break;
         }
         _scale.ScaleX = scale;
         _scale.ScaleY = scale;
+        _translate.X = dx;
         _translate.Y = dy;
         if (Collapse != PresenceCollapse.None)
         {

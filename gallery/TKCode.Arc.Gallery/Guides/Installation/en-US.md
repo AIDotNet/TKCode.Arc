@@ -219,6 +219,24 @@ dotnet add package TKCode.Arc.Mobile --version 0.4.0-preview.6    # optional: to
 Each package registers the packages it depends on (Blocks registers the controls, for example), and registering one
 twice does nothing.
 
+### PDF
+
+`TKCode.Arc.Pdf` (`PdfViewer`) needs a renderer as well: `TKCode.Arc.Pdf.Native` with PDFium on desktop, about 7.5 MB in an
+app for one platform, or `TKCode.Arc.Pdf.Browser` with pdf.js in WebAssembly:
+
+```bash
+dotnet add package TKCode.Arc.Pdf --version 0.4.0-preview.6
+dotnet add package TKCode.Arc.Pdf.Native --version 0.4.0-preview.6     # desktop
+dotnet add package TKCode.Arc.Pdf.Browser --version 0.4.0-preview.6    # browser
+```
+
+```csharp
+.UseArc(arc => arc.UseArcControls().UseArcPdf())    // TKCode.Arc.Pdf
+
+ArcPdfNative.Use();                                 // desktop, before the app starts
+await ArcPdfBrowser.UseAsync();                     // browser, before the app starts
+```
+
 ### Languages
 
 Arc handles the application language (namespace `TKCode.Arc.Localization`). To offer more than one, declare them in
@@ -269,6 +287,10 @@ dotnet test tests/TKCode.Arc.Foundation.Tests
 dotnet test tests/TKCode.Arc.Tests
 dotnet run --project gallery/TKCode.Arc.Gallery.Desktop -f net10.0
 ```
+
+The PDF demos need PDFium and pdf.js, which are not committed. Run `tools/pdf/sync-native.sh` and `tools/pdf/sync-pdfjs.sh` once
+to download them with their checksums checked; without them the desktop gallery shows a simulated document, and a browser
+build has no pdf.js to import.
 
 ## Troubleshooting
 

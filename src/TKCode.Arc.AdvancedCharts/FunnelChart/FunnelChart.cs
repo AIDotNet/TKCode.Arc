@@ -800,24 +800,24 @@ public partial class FunnelChart : Control, IChartsBAccessible, Avalonia.Renderi
             var xs = p.TypeXS;
             var rows = new List<ChartsBTipRow>
             {
-                new() { Left = ChartsBText.Make(StageName(_model.Stages[index]), p, xs, p.TextSecondary), MinHeight = xs * 1.5 },
+                new() { Left = ChartsBText.Run(StageName(_model.Stages[index]), p, xs, p.TextSecondary), MinHeight = xs * 1.5 },
                 new()
                 {
                     MarginTop = 2, MinHeight = p.TypeSM * 1.4,
-                    Left = ChartsBText.Make("Count", p, xs, p.TextMuted),
-                    Right = ChartsBText.Make(Format(_model.CountAt(view, index)), p, p.TypeSM, p.Foreground, FontWeight.Medium)
+                    Left = ChartsBText.Run("Count", p, xs, p.TextMuted),
+                    Right = ChartsBText.Run(Format(_model.CountAt(view, index)), p, p.TypeSM, p.Foreground, FontWeight.Medium)
                 },
                 new()
                 {
                     MinHeight = xs * 1.5,
-                    Left = ChartsBText.Make("From previous", p, xs, p.TextMuted),
-                    Right = ChartsBText.Make(ChartsBMath.Percent(_model.FromPrevious(view, index), 1), p, xs, p.Foreground)
+                    Left = ChartsBText.Run("From previous", p, xs, p.TextMuted),
+                    Right = ChartsBText.Run(ChartsBMath.Percent(_model.FromPrevious(view, index), 1), p, xs, p.Foreground)
                 },
                 new()
                 {
                     MinHeight = xs * 1.5,
-                    Left = ChartsBText.Make("From first", p, xs, p.TextMuted),
-                    Right = ChartsBText.Make(ChartsBMath.Percent(_model.FromFirst(view, index), 1), p, xs, p.Foreground)
+                    Left = ChartsBText.Run("From first", p, xs, p.TextMuted),
+                    Right = ChartsBText.Run(ChartsBMath.Percent(_model.FromFirst(view, index), 1), p, xs, p.Foreground)
                 }
             };
             if (index > 0)
@@ -825,8 +825,8 @@ public partial class FunnelChart : Control, IChartsBAccessible, Avalonia.Renderi
                 rows.Add(new ChartsBTipRow
                 {
                     MinHeight = xs * 1.5,
-                    Left = ChartsBText.Make("Dropped", p, xs, p.TextMuted),
-                    Right = ChartsBText.Make("↓ " + Format(_model.DropOff(view, index)), p, xs, p.Foreground)
+                    Left = ChartsBText.Run("Dropped", p, xs, p.TextMuted),
+                    Right = ChartsBText.Run("↓ " + Format(_model.DropOff(view, index)), p, xs, p.Foreground)
                 });
             }
             if (view == FunnelModel.SplitView)
@@ -836,8 +836,8 @@ public partial class FunnelChart : Control, IChartsBAccessible, Avalonia.Renderi
                     rows.Add(new ChartsBTipRow
                     {
                         MarginTop = k == 0 ? 4 : 0, MinHeight = xs * 1.5, Swatch = p.Series(k % 4),
-                        Left = ChartsBText.Make(_model.Segments[k].Label, p, xs, p.TextMuted),
-                        Right = ChartsBText.Make(Format(_model.LayerCountAt(k, index)), p, xs, p.Foreground)
+                        Left = ChartsBText.Run(_model.Segments[k].Label, p, xs, p.TextMuted),
+                        Right = ChartsBText.Run(Format(_model.LayerCountAt(k, index)), p, xs, p.Foreground)
                     });
                 }
             }

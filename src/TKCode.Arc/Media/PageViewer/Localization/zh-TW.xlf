@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="2.1" srcLang="en-US" trgLang="zh-TW" xmlns="urn:oasis:names:tc:xliff:document:2.0">
+  <file id="TKCode.Arc.Localization.PageViewerLangResourceKind">
+    <unit id="ActualSize">
+      <segment>
+        <source>Actual size</source>
+        <target state="translated">實際大小</target>
+      </segment>
+    </unit>
+    <unit id="Continuous">
+      <segment>
+        <source>Continuous</source>
+        <target state="translated">連續</target>
+      </segment>
+    </unit>
+    <unit id="FitHeight">
+      <segment>
+        <source>Fit height</source>
+        <target state="translated">符合高度</target>
+      </segment>
+    </unit>
+    <unit id="FitPage">
+      <segment>
+        <source>Fit page</source>
+        <target state="translated">符合整頁</target>
+      </segment>
+    </unit>
+    <unit id="FitWidth">
+      <segment>
+        <source>Fit width</source>
+        <target state="translated">符合寬度</target>
+      </segment>
+    </unit>
+    <unit id="NextPage">
+      <segment>
+        <source>Next page</source>
+        <target state="translated">下一頁</target>
+      </segment>
+    </unit>
+    <unit id="Page">
+      <segment>
+        <source>Page</source>
+        <target state="translated">頁碼</target>
+      </segment>
+    </unit>
+    <unit id="PageOfTotal">
+      <segment>
+        <source>Page {0} of {1}</source>
+        <target state="translated">第 {0} 頁，共 {1} 頁</target>
+      </segment>
+    </unit>
+    <unit id="Pan">
+      <segment>
+        <source>Pan</source>
+        <target state="translated">平移</target>
+      </segment>
+    </unit>
+    <unit id="PreviousPage">
+      <segment>
+        <source>Previous page</source>
+        <target state="translated">上一頁</target>
+      </segment>
+    </unit>
+    <unit id="Select">
+      <segment>
+        <source>Select</source>
+        <target state="translated">選取</target>
+      </segment>
+    </unit>
+    <unit id="SinglePage">
+      <segment>
+        <source>Single page</source>
+        <target state="translated">單頁</target>
+      </segment>
+    </unit>
+    <unit id="Zoom">
+      <segment>
+        <source>Zoom</source>
+        <target state="translated">縮放</target>
+      </segment>
+    </unit>
+    <unit id="ZoomIn">
+      <segment>
+        <source>Zoom in</source>
+        <target state="translated">放大</target>
+      </segment>
+    </unit>
+    <unit id="ZoomOut">
+      <segment>
+        <source>Zoom out</source>
+        <target state="translated">縮小</target>
+      </segment>
+    </unit>
+  </file>
+</xliff>

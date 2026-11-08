@@ -121,6 +121,12 @@
         <target state="translated">影片</target>
       </segment>
     </unit>
+    <unit id="Category_Pdf">
+      <segment>
+        <source>PDF</source>
+        <target state="translated">PDF 文件</target>
+      </segment>
+    </unit>
     <unit id="Category_Layout">
       <segment>
         <source>Layout</source>

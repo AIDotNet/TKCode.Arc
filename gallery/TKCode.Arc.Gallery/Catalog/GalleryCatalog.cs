@@ -114,6 +114,12 @@ public static partial class GalleryCatalog
                 "Show a video's picture with nothing over it, as a background or under controls of your own; it clips, fades and transforms like any control.",
                 IsArc: false, AddedOn: "2026-11-07"),
         ], IsArc: false),
+        new("Pdf", "PDF", "PDF 文档",
+        [
+            new("PdfViewer", "PDF viewer", "pdf-viewer", 0,
+                "View a PDF with thumbnails, a table of contents, search, text selection, links and password prompts, rendered by PDFium on desktop and pdf.js in a browser.",
+                IsArc: false, AddedOn: "2026-11-08"),
+        ], IsArc: false),
         new("Layout", "Layout", "布局",
         [
             new("WaterfallPanel", "Waterfall panel", "waterfall-panel", 0,
@@ -409,10 +415,13 @@ public static partial class GalleryCatalog
     /// <summary>The video group (TKCode.Arc.Video); listed after Dock, not part of the 112 Arc components.</summary>
     public static GalleryCategory Video => Extras[3];
 
-    /// <summary>The Components section of the sidebar: Arc's groups with Advanced charts, Workflow, Dock and Video after Charts, then the other extras.</summary>
+    /// <summary>The PDF group (TKCode.Arc.Pdf); listed after Video, not part of the 112 Arc components.</summary>
+    public static GalleryCategory Pdf => Extras[4];
+
+    /// <summary>The Components section of the sidebar: Arc's groups with Advanced charts, Workflow, Dock, Video and PDF after Charts, then the other extras.</summary>
     public static IEnumerable<GalleryCategory> AllCategories =>
-        Categories.SelectMany(c => c.Code == "Charts" ? new[] { c, AdvancedCharts, Workflow, Dock, Video } : new[] { c })
-                  .Concat(Extras.Where(e => !ReferenceEquals(e, AdvancedCharts) && !ReferenceEquals(e, Workflow) && !ReferenceEquals(e, Dock) && !ReferenceEquals(e, Video)));
+        Categories.SelectMany(c => c.Code == "Charts" ? new[] { c, AdvancedCharts, Workflow, Dock, Video, Pdf } : new[] { c })
+                  .Concat(Extras.Where(e => !ReferenceEquals(e, AdvancedCharts) && !ReferenceEquals(e, Workflow) && !ReferenceEquals(e, Dock) && !ReferenceEquals(e, Video) && !ReferenceEquals(e, Pdf)));
 
     /// <summary>Every entry the gallery lists: the Docs, Components, Blocks and Special components sections.</summary>
     public static IEnumerable<GalleryEntry> AllEntries =>
