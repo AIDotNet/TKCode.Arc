@@ -80,4 +80,7 @@
             <AdditionalFiles Include="@(_GalleryArcDocumentation)" Condition="Exists('%(FullPath)')" GalleryDocKind="XmlDoc" />
         </ItemGroup>
     </Target>
+    <ItemGroup>
+        <InternalsVisibleTo Include="TKCode.Arc.Tests" />
+    </ItemGroup>
 </Project>

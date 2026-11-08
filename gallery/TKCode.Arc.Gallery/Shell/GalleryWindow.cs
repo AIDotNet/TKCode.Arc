@@ -29,7 +29,7 @@ public sealed class GalleryWindow : ArcWindow
     /// </param>
     public GalleryWindow(bool drawsCaptionButtons)
     {
-        Title = "TKCode.Arc Gallery";
+        Title = "TKCode Gallery";
         Icon = GalleryBrand.CreateWindowIcon();
         Width = 1280;
         Height = 860;

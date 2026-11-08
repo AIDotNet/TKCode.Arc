@@ -165,6 +165,8 @@ dotnetRuntime.setModuleImports('arc-stars', {
 const languageKey = 'arc.gallery.language';
 dotnetRuntime.setModuleImports('arc-lang', {
     preferred: () => (navigator.languages?.length ? navigator.languages : [navigator.language ?? '']).join(','),
+    // iPadOS asks for desktop pages and says Macintosh; only the touch points give it away.
+    agent: () => (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1 ? 'iPad' : navigator.userAgent),
     read: () => {
         try {
             return localStorage.getItem(languageKey) ?? '';

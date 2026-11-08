@@ -9,6 +9,29 @@ namespace TKCode.Arc.Tests.TextEffects;
 public class TextRevealTests
 {
     [Fact]
+    public void Latin_Text_Still_Splits_At_Spaces()
+    {
+        TextEffectsWordLayout.Split("Hello brave\nworld").ShouldBe([["Hello", "brave"], ["world"]]);
+        TextEffectsWordLayout.Tokenize("Hello brave")[0].ShouldAllBe(token => !token.IsGlued);
+    }
+
+    [Fact]
+    public void Cjk_Text_Can_Break_Between_Characters_But_Not_Before_Closing_Punctuation()
+    {
+        var tokens = TextEffectsWordLayout.Tokenize("改值，《整页》变")[0];
+        tokens.Select(token => token.Text).ShouldBe(["改", "值，", "《整", "页》", "变"]);
+        tokens[0].IsGlued.ShouldBeFalse();
+        tokens.Skip(1).ShouldAllBe(token => token.IsGlued);
+    }
+
+    [Fact]
+    public void Mixed_Text_Keeps_The_Spaces_It_Has_And_Adds_None()
+    {
+        var tokens = TextEffectsWordLayout.Tokenize("交给 Arc，文字")[0];
+        tokens.Select(token => (token.Text, token.IsGlued)).ShouldBe([("交", false), ("给", true), ("Arc，", false), ("文", true), ("字", true)]);
+    }
+
+    [Fact]
     public void Reveal_Stagger_Stays_Under_The_Considered_Duration()
     {
         TextReveal.StepFor(5).ShouldBe(0.04, 1e-9);

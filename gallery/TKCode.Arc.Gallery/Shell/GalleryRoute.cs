@@ -10,7 +10,13 @@ public enum GalleryRouteKind
     Components,
     Blocks,
     Friends,
-    Demo
+    Demo,
+
+    /// <summary>The StreamMark product page.</summary>
+    StreamMark,
+
+    /// <summary>The desktop app's settings; the site has no such pages.</summary>
+    Settings
 }
 
 /// <summary>
@@ -18,11 +24,12 @@ public enum GalleryRouteKind
 /// an address that the WebAssembly host keeps in the browser's address bar: <c>/</c>, <c>/docs/installation</c>,
 /// <c>/components/split-button</c> and <c>/blocks/command-palette</c>, made of the section and the entry's slug. The
 /// Northstar dashboard demo lives under <c>/demo</c>: <c>/demo/overview</c>, <c>/demo/login</c> (<see cref="Page"/>);
-/// <c>/demo</c> itself names no page and opens the one the demo's session leads to.
+/// <c>/demo</c> itself names no page and opens the one the demo's session leads to. <c>/streammark</c> is the StreamMark
+/// product page, and <c>/settings/about</c> a page of the desktop app's settings (<see cref="Page"/>).
 /// </summary>
 public sealed record GalleryRoute(GalleryRouteKind Kind, GalleryEntry? Entry = null, string? Page = null)
 {
-    public const string Brand = "Arc Gallery";
+    public const string Brand = "TKCode Gallery";
 
     private static readonly Lazy<Dictionary<(GalleryRouteKind, string), GalleryEntry>> s_entries = new(BuildIndex);
 
@@ -30,6 +37,12 @@ public sealed record GalleryRoute(GalleryRouteKind Kind, GalleryEntry? Entry = n
 
     /// <summary>The friends and sponsors page.</summary>
     public static GalleryRoute Friends { get; } = new(GalleryRouteKind.Friends);
+
+    /// <summary>The StreamMark product page.</summary>
+    public static GalleryRoute StreamMark { get; } = new(GalleryRouteKind.StreamMark);
+
+    /// <summary>The desktop app's settings page <paramref name="page"/> (one of <see cref="GallerySettingsView.Pages"/>).</summary>
+    public static GalleryRoute Settings(string page) => new(GalleryRouteKind.Settings, Page: page);
 
     /// <summary>
     /// The route of the dashboard demo's <paramref name="page"/> (a slug of <see cref="DemoPages"/>), or of <c>/demo</c>,
@@ -56,6 +69,8 @@ public sealed record GalleryRoute(GalleryRouteKind Kind, GalleryEntry? Entry = n
     public string Path => Kind switch
     {
         GalleryRouteKind.Friends => "/friends",
+        GalleryRouteKind.StreamMark => "/streammark",
+        GalleryRouteKind.Settings => $"/settings/{Page}",
         GalleryRouteKind.Demo => Page is null ? "/demo" : $"/demo/{Page}",
         _ => Entry is null ? "/" : $"/{Kind.ToString().ToLowerInvariant()}/{Entry.Slug}"
     };
@@ -64,6 +79,8 @@ public sealed record GalleryRoute(GalleryRouteKind Kind, GalleryEntry? Entry = n
     public string Title => Kind switch
     {
         GalleryRouteKind.Friends => $"Friends · {Brand}",
+        GalleryRouteKind.StreamMark => $"StreamMark · {Brand}",
+        GalleryRouteKind.Settings => $"Settings · {Brand}",
         GalleryRouteKind.Demo => DemoPages.Find(Page) is { } page ? $"{page.Title} · Demo · {Brand}" : $"Demo · {Brand}",
         _ => Entry is null ? Brand : $"{Entry.Title} · {Brand}"
     };
@@ -88,6 +105,17 @@ public sealed record GalleryRoute(GalleryRouteKind Kind, GalleryEntry? Entry = n
         {
             return Friends;
         }
+        if (segments.Length == 1 && segments[0].Equals("streammark", StringComparison.OrdinalIgnoreCase))
+        {
+            return StreamMark;
+        }
+        if (segments[0].Equals("settings", StringComparison.OrdinalIgnoreCase))
+        {
+            // The site has no settings, so the address means nothing there.
+            return GalleryHost.IsDesktop && segments.Length == 2 && GallerySettingsView.Pages.Contains(segments[1].ToLowerInvariant())
+                ? Settings(segments[1].ToLowerInvariant())
+                : null;
+        }
         if (segments[0].Equals("demo", StringComparison.OrdinalIgnoreCase))
         {
             return segments.Length switch
@@ -97,7 +125,7 @@ public sealed record GalleryRoute(GalleryRouteKind Kind, GalleryEntry? Entry = n
                 _ => null
             };
         }
-        if (segments.Length != 2 || !Enum.TryParse<GalleryRouteKind>(segments[0], ignoreCase: true, out var kind) || kind is GalleryRouteKind.Home or GalleryRouteKind.Friends or GalleryRouteKind.Demo)
+        if (segments.Length != 2 || !Enum.TryParse<GalleryRouteKind>(segments[0], ignoreCase: true, out var kind) || kind is GalleryRouteKind.Home or GalleryRouteKind.Friends or GalleryRouteKind.Demo or GalleryRouteKind.StreamMark or GalleryRouteKind.Settings)
         {
             return null;
         }

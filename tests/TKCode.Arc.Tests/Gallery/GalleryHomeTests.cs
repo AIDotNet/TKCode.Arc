@@ -54,15 +54,16 @@ public class GalleryHomeTests
             Dispatcher.UIThread.RunJobs();
             window.Sidebar.IsVisible.ShouldBeTrue();
             window.Sidebar.SelectedEntry.ShouldBe(GalleryCatalog.Categories[0].Entries[0]);
-            window.TopBar.MarkedNavIndex.ShouldBe(0);
+            window.TopBar.MarkedNavIndex.ShouldBe(1);
             raised.ShouldHaveSingleItem().Path.ShouldBe("/components/button");
 
+            // The changelog is a page of the Docs section; the menu no longer has an item of its own for it.
             window.Shell.Navigate(GalleryRoute.To(Changelog));
             window.TopBar.MarkedNavIndex.ShouldBe(3);
             window.Shell.Navigate(window.Shell.RouteFor(GalleryRouteKind.Docs));
-            window.TopBar.MarkedNavIndex.ShouldBe(2);
+            window.TopBar.MarkedNavIndex.ShouldBe(3);
             window.Shell.Navigate(window.Shell.RouteFor(GalleryRouteKind.Blocks));
-            window.TopBar.MarkedNavIndex.ShouldBe(1);
+            window.TopBar.MarkedNavIndex.ShouldBe(2);
             raised.Select(r => r.Kind).ShouldBe([GalleryRouteKind.Components, GalleryRouteKind.Docs, GalleryRouteKind.Docs, GalleryRouteKind.Blocks]);
             raised.Select(r => r.Entry!.ClassName).ShouldBe([window.Shell.RouteFor(GalleryRouteKind.Components).Entry!.ClassName, "DocsChangelog", "DocsIntroduction", GalleryCatalog.Blocks.AllEntries.First().ClassName]);
         }

@@ -14,6 +14,9 @@ internal static class GalleryIcons
 
     public static Geometry Code { get; } = ArcIcons.Code;
 
+    /// <summary>Lucide smartphone.</summary>
+    public static Geometry Smartphone { get; } = ArcIcons.Parse("M7 2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z M12 18h.01");
+
     public static Geometry X { get; } = ArcIcons.X;
 
     /// <summary>Lucide <c>pin</c> (not in the Core subset): the title bar's keep-on-top button.</summary>

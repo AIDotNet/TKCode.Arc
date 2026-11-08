@@ -11,7 +11,7 @@ public class GalleryRouteTests
     public void The_Friends_Page_Has_Its_Own_Address()
     {
         GalleryRoute.Friends.Path.ShouldBe("/friends");
-        GalleryRoute.Friends.Title.ShouldBe("Friends · Arc Gallery");
+        GalleryRoute.Friends.Title.ShouldBe("Friends · TKCode Gallery");
         GalleryRoute.Parse("/friends")!.ShouldBe(GalleryRoute.Friends);
         GalleryRoute.Parse("/Friends/")!.ShouldBe(GalleryRoute.Friends);
         GalleryRoute.Parse("/friends/avalonia").ShouldBeNull();
@@ -22,8 +22,8 @@ public class GalleryRouteTests
     {
         GalleryRoute.Demo().Path.ShouldBe("/demo");
         GalleryRoute.Demo("overview").Path.ShouldBe("/demo/overview");
-        GalleryRoute.Demo("overview").Title.ShouldBe("Overview · Demo · Arc Gallery");
-        GalleryRoute.Demo("login").Title.ShouldBe("Sign in · Demo · Arc Gallery");
+        GalleryRoute.Demo("overview").Title.ShouldBe("Overview · Demo · TKCode Gallery");
+        GalleryRoute.Demo("login").Title.ShouldBe("Sign in · Demo · TKCode Gallery");
         GalleryRoute.Parse("/demo")!.ShouldBe(GalleryRoute.Demo());
         GalleryRoute.Parse("/Demo/Settings/")!.ShouldBe(GalleryRoute.Demo("settings"));
         foreach (var page in DemoPages.App.Append(DemoPages.Login))
@@ -38,7 +38,7 @@ public class GalleryRouteTests
     public void The_Home_Page_Is_The_Root()
     {
         GalleryRoute.Home.Path.ShouldBe("/");
-        GalleryRoute.Home.Title.ShouldBe("Arc Gallery");
+        GalleryRoute.Home.Title.ShouldBe("TKCode Gallery");
         GalleryRoute.Parse("/").ShouldBe(GalleryRoute.Home);
         GalleryRoute.Parse(string.Empty).ShouldBe(GalleryRoute.Home);
     }
@@ -68,7 +68,7 @@ public class GalleryRouteTests
         GalleryRoute.To(block).Kind.ShouldBe(GalleryRouteKind.Blocks);
         GalleryRoute.To(GalleryCatalog.Categories[0].Entries[0]).Kind.ShouldBe(GalleryRouteKind.Components);
         GalleryRoute.To(GalleryCatalog.Docs.Entries[0]).Kind.ShouldBe(GalleryRouteKind.Docs);
-        GalleryRoute.Parse("/components/button")!.Title.ShouldBe("Button · Arc Gallery");
+        GalleryRoute.Parse("/components/button")!.Title.ShouldBe("Button · TKCode Gallery");
     }
 
     [Theory]

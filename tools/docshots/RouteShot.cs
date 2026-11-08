@@ -9,9 +9,10 @@ using TKCode.Arc.Gallery.Shell;
 namespace TKCode.Arc.DocShots;
 
 /// <summary>
-/// <c>route &lt;address&gt; &lt;out.png&gt; [dark] [width=&lt;px&gt;] [height=&lt;px&gt;] [scroll=&lt;y&gt;] [signedout]</c>: the gallery at an address,
+/// <c>route &lt;address&gt; &lt;out.png&gt; [dark] [width=&lt;px&gt;] [height=&lt;px&gt;] [scroll=&lt;y&gt;] [signedout] [web] [phone] [drawer] [menu] [lang=&lt;tag&gt;]</c>: the gallery at an address,
 /// such as <c>/demo/overview</c> or <c>/friends</c>, as people see it; <c>scroll</c> moves the open demo page down and
-/// <c>signedout</c> signs out of the demo first (its sign-in page).
+/// <c>signedout</c> signs out of the demo first (its sign-in page). <c>web</c> shows it as the site does (the desktop app is
+/// the default), <c>phone</c> as the site does on a phone, <c>drawer</c> opens the narrow page's sidebar, <c>menu</c> the Products menu.
 /// </summary>
 internal static class RouteShot
 {
@@ -19,11 +20,20 @@ internal static class RouteShot
     {
         if (args.Length < 2)
         {
-            Console.Error.WriteLine("usage: DocShots route <address> <out.png> [dark] [width=<px>] [height=<px>] [scroll=<y>] [signedout]");
+            Console.Error.WriteLine("usage: DocShots route <address> <out.png> [dark] [width=<px>] [height=<px>] [scroll=<y>] [signedout] [web] [phone] [drawer] [menu] [lang=<tag>]");
             return 2;
         }
         var (address, output) = (args[0], Path.GetFullPath(args[1]));
         var options = args.Skip(2).ToArray();
+        if (options.Contains("web") || options.Contains("phone"))
+        {
+            GalleryHost.Kind = GalleryHostKind.Web;
+            GalleryHost.ClientOs = options.Contains("phone") ? GalleryClientOs.Mobile : GalleryClientOs.MacOS;
+        }
+        if (options.FirstOrDefault(o => o.StartsWith("lang=", StringComparison.Ordinal)) is { } language)
+        {
+            TKCode.Arc.Localization.ArcLanguage.Set(language["lang=".Length..]);
+        }
         if (GalleryRoute.Parse(address) is not { } route)
         {
             Console.Error.WriteLine($"no gallery page at {address}");
@@ -38,7 +48,8 @@ internal static class RouteShot
             DemoSession.SignOut();
         }
         Shooter.ApplyTheme(options.Contains("dark"), TKCode.Arc.Themes.Corners.ArcCornerStyle.Default);
-        var window = new GalleryWindow { Width = Option("width", 1440), Height = Option("height", 960) };
+        // The site has no minimum width, unlike the desktop window.
+        var window = new GalleryWindow { MinWidth = 0, Width = Option("width", 1440), Height = Option("height", 960) };
         window.Show();
         window.Shell.Navigate(route);
         Program.Pump(60);
@@ -52,6 +63,31 @@ internal static class RouteShot
             }
             Program.Pump(20);
             Console.WriteLine($"page height {scroller.Extent.Height:0}");
+        }
+        if (window.GetVisualDescendants().OfType<GalleryHomeView>().FirstOrDefault() is { } home
+            && home.GetVisualDescendants().OfType<ScrollViewer>().FirstOrDefault() is { } homeScroll)
+        {
+            home.MarkTouched();
+            homeScroll.Offset = new Vector(0, Option("scroll", 0));
+            Program.Pump(30);
+            Console.WriteLine($"home height {homeScroll.Extent.Height:0}");
+        }
+        if (options.Contains("menu"))
+        {
+            if (window.TopBar.Header.IsCollapsed)
+            {
+                window.TopBar.Header.OpenMenu();
+            }
+            else
+            {
+                window.TopBar.Header.OpenPanel("products");
+            }
+            Program.Pump(30);
+        }
+        if (options.Contains("drawer"))
+        {
+            window.Shell.SidebarDrawer.IsOpen = true;
+            Program.Pump(30);
         }
         Dispatcher.UIThread.RunJobs();
         window.CaptureRenderedFrame()!.Save(output, new Avalonia.Media.Imaging.PngBitmapEncoderOptions());

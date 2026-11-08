@@ -729,14 +729,14 @@
     </unit>
     <unit id="HomeTitle">
       <segment>
-        <source>Arc's motion and polish, native to Avalonia</source>
-        <target state="translated">Arc 的动效与质感，原生属于 Avalonia</target>
+        <source>Change one value. The whole page follows.</source>
+        <target state="translated">改一个值，整页跟着变</target>
       </segment>
     </unit>
     <unit id="HomeSubtitle">
       <segment>
-        <source>{0} components in {1} groups and {2} page blocks. Spring motion, design tokens, ready for AOT.</source>
-        <target state="translated">{0} 个组件、{1} 个分组，另有 {2} 个页面区块。弹簧动效、设计令牌，支持 AOT。</target>
+        <source>TKCode is an open source line of native UI products for .NET. Arc brings {0} components, spring motion and themes; StreamMark streams Markdown for AI chat.</source>
+        <target state="translated">TKCode 是面向 .NET 的开源原生 UI 产品线。Arc 提供 {0} 个组件、弹簧动效和主题，StreamMark 负责 AI 对话里的流式 Markdown。</target>
       </segment>
     </unit>
     <unit id="HomeExplore">
@@ -779,30 +779,6 @@
       <segment>
         <source>Open</source>
         <target state="translated">打开</target>
-      </segment>
-    </unit>
-    <unit id="HomeStatComponents">
-      <segment>
-        <source>components</source>
-        <target state="translated">组件</target>
-      </segment>
-    </unit>
-    <unit id="HomeStatGroups">
-      <segment>
-        <source>groups</source>
-        <target state="translated">分组</target>
-      </segment>
-    </unit>
-    <unit id="HomeStatBlocks">
-      <segment>
-        <source>page blocks</source>
-        <target state="translated">页面区块</target>
-      </segment>
-    </unit>
-    <unit id="HomeStatLanguages">
-      <segment>
-        <source>languages</source>
-        <target state="translated">种语言</target>
       </segment>
     </unit>
     <unit id="NavFriends">
@@ -863,18 +839,6 @@
       <segment>
         <source>See all</source>
         <target state="translated">查看全部</target>
-      </segment>
-    </unit>
-    <unit id="HomeCtaTitle">
-      <segment>
-        <source>Start building with Arc</source>
-        <target state="translated">开始用 Arc 构建</target>
-      </segment>
-    </unit>
-    <unit id="HomeCtaSubtitle">
-      <segment>
-        <source>One package, spring motion and design tokens included.</source>
-        <target state="translated">一个包，内置弹簧动效与设计令牌。</target>
       </segment>
     </unit>
     <unit id="FriendsTitle">
@@ -945,8 +909,8 @@
     </unit>
     <unit id="FriendAtomUIDesc">
       <segment>
-        <source>The Avalonia component library under TKCode.Arc.</source>
-        <target state="translated">TKCode.Arc 所依托的 Avalonia 组件库。</target>
+        <source>An Avalonia component library.</source>
+        <target state="translated">一个 Avalonia 组件库。</target>
       </segment>
     </unit>
     <unit id="FriendLucideDesc">
@@ -1073,6 +1037,1080 @@
       <segment>
         <source>Stop keeping on top</source>
         <target state="translated">取消置顶</target>
+      </segment>
+    </unit>
+    <unit id="NavProducts">
+      <segment>
+        <source>Products</source>
+        <target state="translated">产品</target>
+      </segment>
+    </unit>
+    <unit id="NavDownload">
+      <segment>
+        <source>Download desktop app</source>
+        <target state="translated">下载桌面版</target>
+      </segment>
+    </unit>
+    <unit id="ProductArc">
+      <segment>
+        <source>Arc components</source>
+        <target state="translated">Arc 组件库</target>
+      </segment>
+    </unit>
+    <unit id="ProductArcNav">
+      <segment>
+        <source>Components, motion and themes for Avalonia</source>
+        <target state="translated">面向 Avalonia 的组件、动效和主题</target>
+      </segment>
+    </unit>
+    <unit id="ProductStreamMarkNav">
+      <segment>
+        <source>Streaming Markdown for AI chat clients</source>
+        <target state="translated">面向 AI 对话客户端的流式 Markdown</target>
+      </segment>
+    </unit>
+    <unit id="ProductBlocksNav">
+      <segment>
+        <source>Page-level compositions, ready to use</source>
+        <target state="translated">可以直接使用的页面级组合</target>
+      </segment>
+    </unit>
+    <unit id="ProductSpecial">
+      <segment>
+        <source>Effects</source>
+        <target state="translated">特效</target>
+      </segment>
+    </unit>
+    <unit id="ProductSpecialNav">
+      <segment>
+        <source>Animated explainers, loaders and pointer effects</source>
+        <target state="translated">动画讲解、加载器和指针效果</target>
+      </segment>
+    </unit>
+    <unit id="ProductMobile">
+      <segment>
+        <source>Mobile</source>
+        <target state="translated">移动端</target>
+      </segment>
+    </unit>
+    <unit id="ProductMobileNav">
+      <segment>
+        <source>Touch-first controls</source>
+        <target state="translated">触屏优先的控件</target>
+      </segment>
+    </unit>
+    <unit id="ProductTemplates">
+      <segment>
+        <source>Project templates</source>
+        <target state="translated">项目模板</target>
+      </segment>
+    </unit>
+    <unit id="ProductTemplatesNav">
+      <segment>
+        <source>Start an app with dotnet new</source>
+        <target state="translated">用 dotnet new 创建应用</target>
+      </segment>
+    </unit>
+    <unit id="ProductFeatureWebTitle">
+      <segment>
+        <source>Try the desktop app</source>
+        <target state="translated">试试桌面版</target>
+      </segment>
+    </unit>
+    <unit id="ProductFeatureWebText">
+      <segment>
+        <source>This site runs in WebAssembly. The app shows how Arc really performs.</source>
+        <target state="translated">这个网站运行在 WebAssembly 里。桌面版才能体现 Arc 的真实性能。</target>
+      </segment>
+    </unit>
+    <unit id="ProductFeatureDesktopTitle">
+      <segment>
+        <source>About this app</source>
+        <target state="translated">关于这个应用</target>
+      </segment>
+    </unit>
+    <unit id="ProductFeatureDesktopText">
+      <segment>
+        <source>Version, updates and the open source project.</source>
+        <target state="translated">版本、更新和开源项目信息。</target>
+      </segment>
+    </unit>
+    <unit id="Settings">
+      <segment>
+        <source>Settings</source>
+        <target state="translated">设置</target>
+      </segment>
+    </unit>
+    <unit id="SettingsCheckUpdates">
+      <segment>
+        <source>Check for updates</source>
+        <target state="translated">检查更新</target>
+      </segment>
+    </unit>
+    <unit id="SettingsAbout">
+      <segment>
+        <source>About</source>
+        <target state="translated">关于</target>
+      </segment>
+    </unit>
+    <unit id="SettingsAboutApp">
+      <segment>
+        <source>About TKCode Gallery</source>
+        <target state="translated">关于 TKCode Gallery</target>
+      </segment>
+    </unit>
+    <unit id="SettingsBackHome">
+      <segment>
+        <source>Back to home</source>
+        <target state="translated">返回首页</target>
+      </segment>
+    </unit>
+    <unit id="AboutAppName">
+      <segment>
+        <source>TKCode Arc Gallery</source>
+        <target state="translated">TKCode Arc Gallery</target>
+      </segment>
+    </unit>
+    <unit id="AboutAppDescription">
+      <segment>
+        <source>The official sample app of the Arc component library. Open source and free.</source>
+        <target state="translated">Arc 组件库的官方示例应用，开源免费。</target>
+      </segment>
+    </unit>
+    <unit id="AboutPreview">
+      <segment>
+        <source>Preview</source>
+        <target state="translated">预览版</target>
+      </segment>
+    </unit>
+    <unit id="AboutVersionGroup">
+      <segment>
+        <source>Version</source>
+        <target state="translated">版本</target>
+      </segment>
+    </unit>
+    <unit id="AboutVersion">
+      <segment>
+        <source>Version</source>
+        <target state="translated">版本号</target>
+      </segment>
+    </unit>
+    <unit id="AboutRuntime">
+      <segment>
+        <source>Runtime</source>
+        <target state="translated">运行环境</target>
+      </segment>
+    </unit>
+    <unit id="AboutDiagnostics">
+      <segment>
+        <source>Diagnostics</source>
+        <target state="translated">诊断信息</target>
+      </segment>
+    </unit>
+    <unit id="AboutDiagnosticsHint">
+      <segment>
+        <source>Attach this when you report a problem.</source>
+        <target state="translated">提交问题时附上这些内容。</target>
+      </segment>
+    </unit>
+    <unit id="AboutCopy">
+      <segment>
+        <source>Copy</source>
+        <target state="translated">复制</target>
+      </segment>
+    </unit>
+    <unit id="AboutOpenSource">
+      <segment>
+        <source>Open source</source>
+        <target state="translated">开源项目</target>
+      </segment>
+    </unit>
+    <unit id="AboutLicense">
+      <segment>
+        <source>License</source>
+        <target state="translated">开源协议</target>
+      </segment>
+    </unit>
+    <unit id="AboutSource">
+      <segment>
+        <source>Source code</source>
+        <target state="translated">源代码</target>
+      </segment>
+    </unit>
+    <unit id="AboutOpenGitHub">
+      <segment>
+        <source>Open GitHub</source>
+        <target state="translated">打开 GitHub</target>
+      </segment>
+    </unit>
+    <unit id="AboutIssues">
+      <segment>
+        <source>Report a problem</source>
+        <target state="translated">反馈问题</target>
+      </segment>
+    </unit>
+    <unit id="AboutIssuesHint">
+      <segment>
+        <source>Bugs, ideas and component requests.</source>
+        <target state="translated">Bug、建议或新组件需求。</target>
+      </segment>
+    </unit>
+    <unit id="AboutChangelog">
+      <segment>
+        <source>Changelog</source>
+        <target state="translated">更新日志</target>
+      </segment>
+    </unit>
+    <unit id="AboutChangelogOpen">
+      <segment>
+        <source>All versions</source>
+        <target state="translated">查看全部版本</target>
+      </segment>
+    </unit>
+    <unit id="AboutNotices">
+      <segment>
+        <source>Third-party notices</source>
+        <target state="translated">第三方声明</target>
+      </segment>
+    </unit>
+    <unit id="AboutNoticesHint">
+      <segment>
+        <source>The open source projects and fonts this app uses.</source>
+        <target state="translated">这个应用使用的开源项目和字体。</target>
+      </segment>
+    </unit>
+    <unit id="AboutView">
+      <segment>
+        <source>View</source>
+        <target state="translated">查看</target>
+      </segment>
+    </unit>
+    <unit id="AboutSponsor">
+      <segment>
+        <source>Main sponsor</source>
+        <target state="translated">主要赞助商</target>
+      </segment>
+    </unit>
+    <unit id="UpdateCheckNow">
+      <segment>
+        <source>Check for updates</source>
+        <target state="translated">检查更新</target>
+      </segment>
+    </unit>
+    <unit id="UpdateChecking">
+      <segment>
+        <source>Checking…</source>
+        <target state="translated">正在检查…</target>
+      </segment>
+    </unit>
+    <unit id="UpdateCheckingHint">
+      <segment>
+        <source>Reading GitHub Releases.</source>
+        <target state="translated">正在读取 GitHub Releases。</target>
+      </segment>
+    </unit>
+    <unit id="UpdateIdle">
+      <segment>
+        <source>Version {0}</source>
+        <target state="translated">版本 {0}</target>
+      </segment>
+    </unit>
+    <unit id="UpdateIdleHint">
+      <segment>
+        <source>Not checked yet in this session.</source>
+        <target state="translated">本次运行还没有检查。</target>
+      </segment>
+    </unit>
+    <unit id="UpdateUpToDate">
+      <segment>
+        <source>You have the latest version</source>
+        <target state="translated">已是最新版本</target>
+      </segment>
+    </unit>
+    <unit id="UpdateUpToDateHint">
+      <segment>
+        <source>{0} is the newest release.</source>
+        <target state="translated">{0} 是目前最新的发布。</target>
+      </segment>
+    </unit>
+    <unit id="UpdateFailed">
+      <segment>
+        <source>Could not check for updates</source>
+        <target state="translated">无法检查更新</target>
+      </segment>
+    </unit>
+    <unit id="UpdateFailedHint">
+      <segment>
+        <source>GitHub cannot be reached. Check your connection and try again.</source>
+        <target state="translated">无法连接 GitHub。请检查网络后重试。</target>
+      </segment>
+    </unit>
+    <unit id="UpdateAvailableHint">
+      <segment>
+        <source>You have {0}. The download opens in your browser.</source>
+        <target state="translated">当前版本 {0}。下载会在浏览器中打开。</target>
+      </segment>
+    </unit>
+    <unit id="UpdateAutoCheck">
+      <segment>
+        <source>Check when the app starts</source>
+        <target state="translated">启动时自动检查</target>
+      </segment>
+    </unit>
+    <unit id="UpdateAutoCheckHint">
+      <segment>
+        <source>Reads GitHub Releases, previews included. A failed check stays quiet.</source>
+        <target state="translated">从 GitHub Releases 读取，包含预览版；检查失败时不打扰。</target>
+      </segment>
+    </unit>
+    <unit id="HomeDesktopBadge">
+      <segment>
+        <source>Desktop app · native rendering</source>
+        <target state="translated">桌面版 · 本机渲染</target>
+      </segment>
+    </unit>
+    <unit id="HomeDesktopTitle">
+      <segment>
+        <source>Tune it here, take it with you</source>
+        <target state="translated">在本机调好，直接带走</target>
+      </segment>
+    </unit>
+    <unit id="HomeDesktopSubtitle">
+      <segment>
+        <source>This window draws Arc and StreamMark natively, so scrolling, dragging and motion here are a fair measure. Copy the theme code when you like the result.</source>
+        <target state="translated">这个窗口用本机渲染 Arc 和 StreamMark，这里的滚动、拖拽和动效可以作为性能参考。调好主题后复制代码就能带走。</target>
+      </segment>
+    </unit>
+    <unit id="HomeUpdateTitle">
+      <segment>
+        <source>App version</source>
+        <target state="translated">应用版本</target>
+      </segment>
+    </unit>
+    <unit id="HomePreviewNote">
+      <segment>
+        <source>Sample app built from Arc components. The figures are examples.</source>
+        <target state="translated">用 Arc 组件搭的示例应用，其中的数据都是示例。</target>
+      </segment>
+    </unit>
+    <unit id="HomePreviewProjects">
+      <segment>
+        <source>Active projects</source>
+        <target state="translated">活跃项目</target>
+      </segment>
+    </unit>
+    <unit id="HomePreviewOnTime">
+      <segment>
+        <source>On time</source>
+        <target state="translated">准时率</target>
+      </segment>
+    </unit>
+    <unit id="HomePreviewReview">
+      <segment>
+        <source>Awaiting review</source>
+        <target state="translated">待评审</target>
+      </segment>
+    </unit>
+    <unit id="HomePreviewWeek">
+      <segment>
+        <source>This week</source>
+        <target state="translated">本周概览</target>
+      </segment>
+    </unit>
+    <unit id="HomePreviewNew">
+      <segment>
+        <source>New project</source>
+        <target state="translated">新建项目</target>
+      </segment>
+    </unit>
+    <unit id="HomePreviewChart">
+      <segment>
+        <source>Deploys</source>
+        <target state="translated">部署次数</target>
+      </segment>
+    </unit>
+    <unit id="HomeTunerTitle">
+      <segment>
+        <source>Theme</source>
+        <target state="translated">主题面板</target>
+      </segment>
+    </unit>
+    <unit id="HomeTunerCode">
+      <segment>
+        <source>Theme code</source>
+        <target state="translated">主题代码</target>
+      </segment>
+    </unit>
+    <unit id="HomeWebNoteTitle">
+      <segment>
+        <source>You are on the web version</source>
+        <target state="translated">你正在使用 Web 版</target>
+      </segment>
+    </unit>
+    <unit id="HomeWebNoteText">
+      <segment>
+        <source>Avalonia renders this page in WebAssembly and the .NET code is interpreted, so startup and motion here do not represent the desktop app.</source>
+        <target state="translated">这个页面由 Avalonia 在 WebAssembly 中渲染，.NET 代码以解释方式运行，启动和动画的表现都不代表桌面应用。</target>
+      </segment>
+    </unit>
+    <unit id="HomeWebNoteAction">
+      <segment>
+        <source>About the desktop app</source>
+        <target state="translated">了解桌面版</target>
+      </segment>
+    </unit>
+    <unit id="HomeProductsEyebrow">
+      <segment>
+        <source>Two products</source>
+        <target state="translated">两个产品</target>
+      </segment>
+    </unit>
+    <unit id="HomeProductsTitle">
+      <segment>
+        <source>Arc for the interface, StreamMark for the words</source>
+        <target state="translated">界面交给 Arc，文字交给 StreamMark</target>
+      </segment>
+    </unit>
+    <unit id="HomeProductsSubtitle">
+      <segment>
+        <source>Use them together or on their own. Arc's Markdown control is built on StreamMark.</source>
+        <target state="translated">可以一起用，也可以单独用。Arc 的 Markdown 控件内部就是 StreamMark。</target>
+      </segment>
+    </unit>
+    <unit id="HomeArcText">
+      <segment>
+        <source>The component library for Avalonia. Spring motion, design tokens and themes are built in, ready for AOT and trimming.</source>
+        <target state="translated">Avalonia 上的组件库。弹簧动效、设计令牌和主题已内置，支持 AOT 与裁剪。</target>
+      </segment>
+    </unit>
+    <unit id="HomeArcPoint1">
+      <segment>
+        <source>{0} components, {1} page blocks, {2} effects</source>
+        <target state="translated">{0} 个组件，{1} 个页面区块，{2} 个特效</target>
+      </segment>
+    </unit>
+    <unit id="HomeArcPoint2">
+      <segment>
+        <source>8 accents; corner and Pixel styles switch at run time</source>
+        <target state="translated">8 种强调色，圆角和像素风格可运行时切换</target>
+      </segment>
+    </unit>
+    <unit id="HomeArcPoint3">
+      <segment>
+        <source>dotnet new templates to start from</source>
+        <target state="translated">可以用 dotnet new 模板起步</target>
+      </segment>
+    </unit>
+    <unit id="HomeStreamMarkText">
+      <segment>
+        <source>The streaming Markdown that AI chat clients need. Drawn natively by Avalonia, with no WebView.</source>
+        <target state="translated">AI 对话客户端需要的流式 Markdown。Avalonia 原生绘制，不依赖 WebView。</target>
+      </segment>
+    </unit>
+    <unit id="StreamMarkPoint1">
+      <segment>
+        <source>Stable blocks are parsed once; only the tail is parsed again</source>
+        <target state="translated">已稳定的块只解析一次，只重解析末尾</target>
+      </segment>
+    </unit>
+    <unit id="StreamMarkPoint2">
+      <segment>
+        <source>Unfinished syntax is healed while the text arrives</source>
+        <target state="translated">流式过程中自动补全未闭合的语法</target>
+      </segment>
+    </unit>
+    <unit id="StreamMarkPoint3">
+      <segment>
+        <source>LaTeX, Mermaid and TextMate highlighting as add-on packages</source>
+        <target state="translated">LaTeX、Mermaid、TextMate 语法高亮可按需添加</target>
+      </segment>
+    </unit>
+    <unit id="StreamMarkLearn">
+      <segment>
+        <source>Explore StreamMark</source>
+        <target state="translated">了解 StreamMark</target>
+      </segment>
+    </unit>
+    <unit id="HomeStreamEyebrow">
+      <segment>
+        <source>StreamMark, live</source>
+        <target state="translated">StreamMark 现场演示</target>
+      </segment>
+    </unit>
+    <unit id="HomeStreamTitle">
+      <segment>
+        <source>Words that arrive without flicker</source>
+        <target state="translated">文字到来时不闪烁</target>
+      </segment>
+    </unit>
+    <unit id="HomeStreamText">
+      <segment>
+        <source>This reply is pushed in chunks to a real Markdown control. Watch the raw tail beside it: a marker that is not closed yet already renders as if it were.</source>
+        <target state="translated">这段回复被一小块一小块地推给真实的 Markdown 控件。看旁边的原始文本：标记还没闭合时，就已经按闭合后的样子显示。</target>
+      </segment>
+    </unit>
+    <unit id="StreamReplay">
+      <segment>
+        <source>Replay</source>
+        <target state="translated">重放</target>
+      </segment>
+    </unit>
+    <unit id="StreamSkip">
+      <segment>
+        <source>Skip to end</source>
+        <target state="translated">跳到结尾</target>
+      </segment>
+    </unit>
+    <unit id="StreamSlow">
+      <segment>
+        <source>Slow</source>
+        <target state="translated">慢速</target>
+      </segment>
+    </unit>
+    <unit id="StreamNormal">
+      <segment>
+        <source>Normal</source>
+        <target state="translated">正常</target>
+      </segment>
+    </unit>
+    <unit id="StreamFast">
+      <segment>
+        <source>Fast</source>
+        <target state="translated">快速</target>
+      </segment>
+    </unit>
+    <unit id="StreamChars">
+      <segment>
+        <source>Characters received</source>
+        <target state="translated">已接收字符</target>
+      </segment>
+    </unit>
+    <unit id="StreamRaw">
+      <segment>
+        <source>Raw text so far</source>
+        <target state="translated">原始文本的末尾</target>
+      </segment>
+    </unit>
+    <unit id="StreamReplyIntro">
+      <segment>
+        <source>Here is the short version.</source>
+        <target state="translated">简单来说是这样。</target>
+      </segment>
+    </unit>
+    <unit id="StreamReplyBody">
+      <segment>
+        <source>**Streaming** keeps the document stable while text arrives: finished blocks are never parsed again, only the last one grows.</source>
+        <target state="translated">**流式渲染**让文档在文字到来时保持稳定：写完的块不再解析，只有最后一块在增长。</target>
+      </segment>
+    </unit>
+    <unit id="StreamReplyTableStep">
+      <segment>
+        <source>Step</source>
+        <target state="translated">步骤</target>
+      </segment>
+    </unit>
+    <unit id="StreamReplyTableCall">
+      <segment>
+        <source>Call</source>
+        <target state="translated">调用</target>
+      </segment>
+    </unit>
+    <unit id="StreamReplyStart">
+      <segment>
+        <source>Start</source>
+        <target state="translated">开始</target>
+      </segment>
+    </unit>
+    <unit id="StreamReplyFinish">
+      <segment>
+        <source>Finish</source>
+        <target state="translated">结束</target>
+      </segment>
+    </unit>
+    <unit id="StreamReplyOutro">
+      <segment>
+        <source>Selection works across messages, and a long transcript stays [virtualized](https://github.com/AtomUICommunity/StreamMark).</source>
+        <target state="translated">选择可以跨消息，长对话也保持[虚拟化](https://github.com/AtomUICommunity/StreamMark)。</target>
+      </segment>
+    </unit>
+    <unit id="HomeAtlasEyebrow">
+      <segment>
+        <source>Every Arc component</source>
+        <target state="translated">Arc 全部组件</target>
+      </segment>
+    </unit>
+    <unit id="HomeAtlasTitle">
+      <segment>
+        <source>{0} components on one page</source>
+        <target state="translated">{0} 个组件，一页看完</target>
+      </segment>
+    </unit>
+    <unit id="HomeAtlasSubtitle">
+      <segment>
+        <source>Point at a component to read about it. Open it for docs and live examples.</source>
+        <target state="translated">指向组件查看说明，点击打开它的文档和示例。</target>
+      </segment>
+    </unit>
+    <unit id="HomeAtlasFilter">
+      <segment>
+        <source>Filter components</source>
+        <target state="translated">筛选组件</target>
+      </segment>
+    </unit>
+    <unit id="HomeExtrasEyebrow">
+      <segment>
+        <source>Arc add-on packages</source>
+        <target state="translated">Arc 扩展包</target>
+      </segment>
+    </unit>
+    <unit id="HomeExtrasTitle">
+      <segment>
+        <source>Reference what you use</source>
+        <target state="translated">按需引用，用不到的不进包</target>
+      </segment>
+    </unit>
+    <unit id="ExtraBlocksText">
+      <segment>
+        <source>{0} page-level compositions</source>
+        <target state="translated">{0} 个页面级组合</target>
+      </segment>
+    </unit>
+    <unit id="ExtraSpecialText">
+      <segment>
+        <source>{0} animated explainers and pointer effects</source>
+        <target state="translated">{0} 个动画讲解和指针效果</target>
+      </segment>
+    </unit>
+    <unit id="ExtraMobileText">
+      <segment>
+        <source>{0} touch-first controls, not yet verified on devices</source>
+        <target state="translated">{0} 个触屏控件，尚未在真机上验证</target>
+      </segment>
+    </unit>
+    <unit id="ExtraWorkflow">
+      <segment>
+        <source>Workflow</source>
+        <target state="translated">工作流</target>
+      </segment>
+    </unit>
+    <unit id="ExtraWorkflowText">
+      <segment>
+        <source>A node canvas</source>
+        <target state="translated">节点画布</target>
+      </segment>
+    </unit>
+    <unit id="ExtraDock">
+      <segment>
+        <source>Docking</source>
+        <target state="translated">停靠</target>
+      </segment>
+    </unit>
+    <unit id="ExtraDockText">
+      <segment>
+        <source>IDE-style docking layouts</source>
+        <target state="translated">IDE 风格的停靠布局</target>
+      </segment>
+    </unit>
+    <unit id="ExtraTerminal">
+      <segment>
+        <source>Terminal</source>
+        <target state="translated">终端</target>
+      </segment>
+    </unit>
+    <unit id="ExtraTerminalText">
+      <segment>
+        <source>A TerminalView on libghostty-vt</source>
+        <target state="translated">基于 libghostty-vt 的 TerminalView</target>
+      </segment>
+    </unit>
+    <unit id="ExtraMedia">
+      <segment>
+        <source>Audio and video</source>
+        <target state="translated">音视频</target>
+      </segment>
+    </unit>
+    <unit id="ExtraMediaText">
+      <segment>
+        <source>VideoPlayer and audio playback</source>
+        <target state="translated">VideoPlayer 和音频播放</target>
+      </segment>
+    </unit>
+    <unit id="ExtraCharts">
+      <segment>
+        <source>Advanced charts</source>
+        <target state="translated">高级图表</target>
+      </segment>
+    </unit>
+    <unit id="ExtraChartsText">
+      <segment>
+        <source>A spreadsheet-style DataGrid</source>
+        <target state="translated">电子表格风格的 DataGrid</target>
+      </segment>
+    </unit>
+    <unit id="DownloadEyebrow">
+      <segment>
+        <source>You are on the web version</source>
+        <target state="translated">你现在用的是 Web 版</target>
+      </segment>
+    </unit>
+    <unit id="DownloadTitle">
+      <segment>
+        <source>Why download the desktop app</source>
+        <target state="translated">为什么推荐下载桌面版</target>
+      </segment>
+    </unit>
+    <unit id="DownloadText">
+      <segment>
+        <source>Avalonia renders this page in WebAssembly. The startup, scrolling and motion you see are shaped by that environment and do not represent Arc in a native app. To judge performance, use the desktop app.</source>
+        <target state="translated">这个页面由 Avalonia 渲染，运行在 WebAssembly 里。你感受到的启动速度、滚动和动画都受这层环境影响，不代表 Arc 在原生应用里的表现。评估性能时，请以桌面版为准。</target>
+      </segment>
+    </unit>
+    <unit id="DownloadMobileNote">
+      <segment>
+        <source>The desktop app runs on a computer. Open this page on one to install it, or keep the link for later.</source>
+        <target state="translated">桌面版要在电脑上运行。请在电脑上打开这个页面安装，或者保存链接以后再用。</target>
+      </segment>
+    </unit>
+    <unit id="DownloadNote">
+      <segment>
+        <source>This is a preview. All packages are published on GitHub Releases; the macOS app is signed and notarized.</source>
+        <target state="translated">这是预览版。所有安装包都发布在 GitHub Releases，macOS 版已签名和公证。</target>
+      </segment>
+    </unit>
+    <unit id="DownloadAll">
+      <segment>
+        <source>All releases</source>
+        <target state="translated">全部版本</target>
+      </segment>
+    </unit>
+    <unit id="DownloadMacArm">
+      <segment>
+        <source>macOS, Apple silicon</source>
+        <target state="translated">macOS，Apple 芯片</target>
+      </segment>
+    </unit>
+    <unit id="DownloadMacIntel">
+      <segment>
+        <source>macOS, Intel</source>
+        <target state="translated">macOS，Intel 芯片</target>
+      </segment>
+    </unit>
+    <unit id="DownloadWindows">
+      <segment>
+        <source>Windows x64</source>
+        <target state="translated">Windows x64</target>
+      </segment>
+    </unit>
+    <unit id="DownloadLinux">
+      <segment>
+        <source>Linux x64</source>
+        <target state="translated">Linux x64</target>
+      </segment>
+    </unit>
+    <unit id="CompareWeb">
+      <segment>
+        <source>Web</source>
+        <target state="translated">Web 版</target>
+      </segment>
+    </unit>
+    <unit id="CompareDesktop">
+      <segment>
+        <source>Desktop</source>
+        <target state="translated">桌面版</target>
+      </segment>
+    </unit>
+    <unit id="CompareRuntime">
+      <segment>
+        <source>Runs as</source>
+        <target state="translated">运行方式</target>
+      </segment>
+    </unit>
+    <unit id="CompareRuntimeWeb">
+      <segment>
+        <source>.NET code interpreted in WebAssembly</source>
+        <target state="translated">.NET 代码在 WebAssembly 中解释执行</target>
+      </segment>
+    </unit>
+    <unit id="CompareRuntimeDesktop">
+      <segment>
+        <source>A native process on .NET 10, runtime included</source>
+        <target state="translated">本机进程运行 .NET 10，已自带运行时</target>
+      </segment>
+    </unit>
+    <unit id="CompareThreads">
+      <segment>
+        <source>Threads</source>
+        <target state="translated">线程</target>
+      </segment>
+    </unit>
+    <unit id="CompareThreadsWeb">
+      <segment>
+        <source>The interface and .NET code share the browser's one thread</source>
+        <target state="translated">界面和 .NET 代码共用浏览器的一个线程</target>
+      </segment>
+    </unit>
+    <unit id="CompareThreadsDesktop">
+      <segment>
+        <source>Rendering has its own thread; background work leaves the interface alone</source>
+        <target state="translated">渲染有独立线程，后台工作不占界面线程</target>
+      </segment>
+    </unit>
+    <unit id="CompareDrawing">
+      <segment>
+        <source>Drawing</source>
+        <target state="translated">绘制</target>
+      </segment>
+    </unit>
+    <unit id="CompareDrawingWeb">
+      <segment>
+        <source>Avalonia draws to a browser canvas</source>
+        <target state="translated">Avalonia 画到浏览器的 Canvas 上</target>
+      </segment>
+    </unit>
+    <unit id="CompareDrawingDesktop">
+      <segment>
+        <source>Avalonia uses the system's graphics directly</source>
+        <target state="translated">Avalonia 直接使用本机图形接口</target>
+      </segment>
+    </unit>
+    <unit id="CompareStartup">
+      <segment>
+        <source>Startup</source>
+        <target state="translated">启动</target>
+      </segment>
+    </unit>
+    <unit id="CompareStartupWeb">
+      <segment>
+        <source>Downloads the runtime, assemblies and fonts; pages load on demand</source>
+        <target state="translated">需要下载运行时、程序集和字体，页面按需加载</target>
+      </segment>
+    </unit>
+    <unit id="CompareStartupDesktop">
+      <segment>
+        <source>One download with pages and pictures included</source>
+        <target state="translated">下载一次，页面和截图都已打包</target>
+      </segment>
+    </unit>
+    <unit id="CompareMedia">
+      <segment>
+        <source>Audio and video</source>
+        <target state="translated">音视频</target>
+      </segment>
+    </unit>
+    <unit id="CompareMediaWeb">
+      <segment>
+        <source>The browser's media elements</source>
+        <target state="translated">使用浏览器的媒体元素</target>
+      </segment>
+    </unit>
+    <unit id="CompareMediaDesktop">
+      <segment>
+        <source>The system's video players and miniaudio</source>
+        <target state="translated">视频用系统播放器，音频用 miniaudio</target>
+      </segment>
+    </unit>
+    <unit id="CompareBest">
+      <segment>
+        <source>Best for</source>
+        <target state="translated">更适合</target>
+      </segment>
+    </unit>
+    <unit id="CompareBestWeb">
+      <segment>
+        <source>Looking up docs and APIs, nothing to install</source>
+        <target state="translated">快速查文档和组件 API，免安装</target>
+      </segment>
+    </unit>
+    <unit id="CompareBestDesktop">
+      <segment>
+        <source>Judging motion, scrolling and large data</source>
+        <target state="translated">评估动效、滚动和大数据量的真实性能</target>
+      </segment>
+    </unit>
+    <unit id="FooterTagline">
+      <segment>
+        <source>Open source native UI for .NET and Avalonia.</source>
+        <target state="translated">面向 .NET 和 Avalonia 的开源原生 UI 产品线。</target>
+      </segment>
+    </unit>
+    <unit id="FooterProducts">
+      <segment>
+        <source>Products</source>
+        <target state="translated">产品</target>
+      </segment>
+    </unit>
+    <unit id="FooterDevelopers">
+      <segment>
+        <source>Developers</source>
+        <target state="translated">开发者</target>
+      </segment>
+    </unit>
+    <unit id="FooterCommunity">
+      <segment>
+        <source>Community</source>
+        <target state="translated">社区</target>
+      </segment>
+    </unit>
+    <unit id="FooterSponsor">
+      <segment>
+        <source>Sponsor</source>
+        <target state="translated">赞助</target>
+      </segment>
+    </unit>
+    <unit id="FooterStreamMarkRepo">
+      <segment>
+        <source>StreamMark on GitHub</source>
+        <target state="translated">StreamMark 仓库</target>
+      </segment>
+    </unit>
+    <unit id="FooterLicense">
+      <segment>
+        <source>MIT License</source>
+        <target state="translated">MIT 协议</target>
+      </segment>
+    </unit>
+    <unit id="StreamMarkBadge">
+      <segment>
+        <source>TKCode.StreamMark · {0}</source>
+        <target state="translated">TKCode.StreamMark · {0}</target>
+      </segment>
+    </unit>
+    <unit id="StreamMarkTitle">
+      <segment>
+        <source>Markdown that keeps up with the model</source>
+        <target state="translated">跟得上模型的 Markdown</target>
+      </segment>
+    </unit>
+    <unit id="StreamMarkSubtitle">
+      <segment>
+        <source>High-performance streaming Markdown for Avalonia, built for AI chat clients. Native, with no WebView, and safe for NativeAOT.</source>
+        <target state="translated">面向 Avalonia 的高性能流式 Markdown，专为 AI 对话客户端打造。原生绘制，不用 WebView，支持 NativeAOT。</target>
+      </segment>
+    </unit>
+    <unit id="StreamMarkGitHub">
+      <segment>
+        <source>View on GitHub</source>
+        <target state="translated">查看 GitHub</target>
+      </segment>
+    </unit>
+    <unit id="StreamMarkInArc">
+      <segment>
+        <source>Markdown in Arc</source>
+        <target state="translated">Arc 中的 Markdown</target>
+      </segment>
+    </unit>
+    <unit id="StreamMarkLiveTitle">
+      <segment>
+        <source>See it stream</source>
+        <target state="translated">看它流式输出</target>
+      </segment>
+    </unit>
+    <unit id="StreamMarkFeaturesTitle">
+      <segment>
+        <source>Built for replies that are still being written</source>
+        <target state="translated">为还在输出的回复而做</target>
+      </segment>
+    </unit>
+    <unit id="StreamMarkFeatureStreaming">
+      <segment>
+        <source>Streaming first</source>
+        <target state="translated">流式优先</target>
+      </segment>
+    </unit>
+    <unit id="StreamMarkFeatureStreamingText">
+      <segment>
+        <source>Stable blocks are frozen and parsed once; only the tail is parsed again. Unfinished bold, code and links are healed as they arrive.</source>
+        <target state="translated">稳定的块被冻结，只解析一次，只重解析末尾。未写完的粗体、代码和链接会在到来时自动补全。</target>
+      </segment>
+    </unit>
+    <unit id="StreamMarkFeatureNative">
+      <segment>
+        <source>Native, no WebView</source>
+        <target state="translated">原生，不用 WebView</target>
+      </segment>
+    </unit>
+    <unit id="StreamMarkFeatureNativeText">
+      <segment>
+        <source>Self-drawn text blocks, a virtualized transcript and selection across messages.</source>
+        <target state="translated">自绘文本块、虚拟化对话列表和跨消息选择。</target>
+      </segment>
+    </unit>
+    <unit id="StreamMarkFeatureScience">
+      <segment>
+        <source>Scientific content</source>
+        <target state="translated">科学内容</target>
+      </segment>
+    </unit>
+    <unit id="StreamMarkFeatureScienceText">
+      <segment>
+        <source>KaTeX-grade LaTeX through RaTeX, Mermaid diagrams and TextMate highlighting.</source>
+        <target state="translated">通过 RaTeX 提供 KaTeX 级公式，还有 Mermaid 图表和 TextMate 语法高亮。</target>
+      </segment>
+    </unit>
+    <unit id="StreamMarkFeatureAot">
+      <segment>
+        <source>NativeAOT-safe</source>
+        <target state="translated">支持 NativeAOT</target>
+      </segment>
+    </unit>
+    <unit id="StreamMarkFeatureAotText">
+      <segment>
+        <source>Zero trim and AOT warnings is a gate in its CI.</source>
+        <target state="translated">裁剪和 AOT 零警告是 CI 门禁。</target>
+      </segment>
+    </unit>
+    <unit id="StreamMarkPackagesTitle">
+      <segment>
+        <source>Packages</source>
+        <target state="translated">安装包</target>
+      </segment>
+    </unit>
+    <unit id="StreamMarkPackageCore">
+      <segment>
+        <source>The streaming engine, with no UI dependency</source>
+        <target state="translated">流式引擎，不依赖 UI</target>
+      </segment>
+    </unit>
+    <unit id="StreamMarkPackageAvalonia">
+      <segment>
+        <source>Avalonia controls and the default theme</source>
+        <target state="translated">Avalonia 控件和默认主题</target>
+      </segment>
+    </unit>
+    <unit id="StreamMarkPackageTextMate">
+      <segment>
+        <source>Incremental syntax highlighting</source>
+        <target state="translated">增量语法高亮</target>
+      </segment>
+    </unit>
+    <unit id="StreamMarkPackageRaTeX">
+      <segment>
+        <source>LaTeX math, native library included</source>
+        <target state="translated">LaTeX 公式，已带原生库</target>
+      </segment>
+    </unit>
+    <unit id="StreamMarkPackageMermaid">
+      <segment>
+        <source>Mermaid diagrams</source>
+        <target state="translated">Mermaid 图表</target>
+      </segment>
+    </unit>
+    <unit id="SidebarOpen">
+      <segment>
+        <source>Browse</source>
+        <target state="translated">目录</target>
+      </segment>
+    </unit>
+    <unit id="StreamMarkName">
+      <segment>
+        <source>StreamMark</source>
+        <target state="translated">StreamMark</target>
+      </segment>
+    </unit>
+    <unit id="HomePreviewAverage">
+      <segment>
+        <source>Weekly average</source>
+        <target state="translated">周均部署</target>
       </segment>
     </unit>
   </file>

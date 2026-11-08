@@ -12,6 +12,8 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
+            GalleryHost.Kind = GalleryHostKind.Desktop;
+            GalleryUpdates.Store = new FileUpdateStore();
             var window = new GalleryWindow();
             window.Opened += (_, _) =>
             {
@@ -23,17 +25,22 @@ public partial class App : Application
         base.OnFrameworkInitializationCompleted();
     }
 
-    /// <summary>Shows a toast with a download button when GitHub has a release newer than this build.</summary>
+    /// <summary>Unless turned off in About, checks at startup and shows a toast with a download button when GitHub has a newer release.</summary>
     private static async Task NotifyUpdateAsync(GalleryWindow window)
     {
-        if (await UpdateChecker.CheckAsync(UpdateChecker.CurrentVersion) is not { } release)
+        if (!GalleryUpdates.AutoCheck)
+        {
+            return;
+        }
+        await GalleryUpdates.CheckAsync();
+        if (GalleryUpdates.Available is not { } release)
         {
             return;
         }
         await Dispatcher.UIThread.InvokeAsync(() =>
         {
             var download = new ToastAction(GalleryText.Get(GalleryShellLangResourceKind.UpdateDownload),
-                                           id => { _ = window.Launcher.LaunchUriAsync(release.Url); });
+                                           id => { _ = window.Launcher.LaunchUriAsync(release.DownloadUrl); });
             Toast.Show(window, GalleryText.Format(GalleryShellLangResourceKind.UpdateAvailable, release.Version),
                        action: download, duration: TimeSpan.FromSeconds(30));
         });
