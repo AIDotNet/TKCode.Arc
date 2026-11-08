@@ -1,0 +1,30 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.WaterfallPanelPreviewDemo">
+    <UserControl.Styles>
+        <Style Selector="Border.card">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
+            <Setter Property="Padding" Value="12" />
+        </Style>
+        <Style Selector="Border.card > TextBlock">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        </Style>
+    </UserControl.Styles>
+    <ScrollViewer MaxHeight="380" MaxWidth="560">
+        <arc:WaterfallPanel Columns="3">
+            <Border Classes="card" Height="120"><TextBlock Text="1" /></Border>
+            <Border Classes="card" Height="200"><TextBlock Text="2" /></Border>
+            <Border Classes="card" Height="150"><TextBlock Text="3" /></Border>
+            <Border Classes="card" Height="90"><TextBlock Text="4" /></Border>
+            <Border Classes="card" Height="170"><TextBlock Text="5" /></Border>
+            <Border Classes="card" Height="110"><TextBlock Text="6" /></Border>
+            <Border Classes="card" Height="140"><TextBlock Text="7" /></Border>
+            <Border Classes="card" Height="80"><TextBlock Text="8" /></Border>
+            <Border Classes="card" Height="190"><TextBlock Text="9" /></Border>
+            <Border Classes="card" Height="100"><TextBlock Text="10" /></Border>
+        </arc:WaterfallPanel>
+    </ScrollViewer>
+</UserControl>

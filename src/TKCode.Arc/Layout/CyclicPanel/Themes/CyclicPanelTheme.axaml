@@ -1,0 +1,13 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.CyclicPanelTheme">
+    <ControlTheme x:Key="{x:Type arc:CyclicPanel}" TargetType="arc:CyclicPanel">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <!-- Transparent, so the wheel reaches the panel between and around its items. -->
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Spacing" Value="{arc:CyclicPanelTokenResource Spacing}" />
+        <Setter Property="AnimationDuration" Value="{arc:CyclicPanelTokenResource ScrollDuration}" />
+    </ControlTheme>
+</ResourceDictionary>

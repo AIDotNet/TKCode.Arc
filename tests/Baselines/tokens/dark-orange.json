@@ -2110,6 +2110,10 @@
       "TotalsSplitWidth": "600",
       "ZoomMargin": "12,12,12,12"
     },
+    "CyclicPanel": {
+      "ScrollDuration": "240ms",
+      "Spacing": "0"
+    },
     "DataFlow": {
       "FramePadding": "20,20,20,14",
       "NodeRadius": "12",
@@ -6784,6 +6788,10 @@
       "TicketPadding": "12,10,12,10",
       "TitleFontSize": "14"
     },
+    "TilePanel": {
+      "MinCellSize": "96",
+      "Spacing": "8"
+    },
     "TimePicker": {
       "AffixGap": "9",
       "DotDiameter": "6",
@@ -7365,6 +7373,10 @@
       "HeaderHeight": "32",
       "TitleSize": "16",
       "WalletMaxWidth": "296"
+    },
+    "WaterfallPanel": {
+      "MinLaneSize": "200",
+      "Spacing": "12"
     },
     "WebhookTester": {
       "ColumnGap": "20",

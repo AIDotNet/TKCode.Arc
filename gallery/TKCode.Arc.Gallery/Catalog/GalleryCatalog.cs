@@ -95,6 +95,18 @@ public static partial class GalleryCatalog
                 "Show a video's picture with nothing over it, as a background or under controls of your own; it clips, fades and transforms like any control.",
                 IsArc: false, AddedOn: "2026-11-07"),
         ], IsArc: false),
+        new("Layout", "Layout", "布局",
+        [
+            new("WaterfallPanel", "Waterfall panel", "waterfall-panel", 0,
+                "A masonry panel: cards of different heights flow into equal columns, each to the shortest one, so they pack without gaps.",
+                IsArc: false, AddedOn: "2026-11-07"),
+            new("TilePanel", "Tile panel", "tile-panel", 0,
+                "A start-screen tile grid: tiles span rows and columns, take the first free place without overlapping, and resize with the panel.",
+                IsArc: false, AddedOn: "2026-11-07"),
+            new("CyclicPanel", "Cyclic panel", "cyclic-panel", 0,
+                "A list that loops without a seam: after the last item comes the first, scrolled by wheel, touchpad or code, with the visible items reported.",
+                IsArc: false, AddedOn: "2026-11-07"),
+        ], IsArc: false),
         new("Content", "Extras", "扩展",
         [
             new("Markdown", "Markdown", "markdown", 0,

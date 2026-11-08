@@ -7640,6 +7640,50 @@
         <source>The zoom factor of the zoom buttons and the + / − keys (default 1.6).</source>
         <target>縮放按鈕以及 + / − 鍵的縮放倍率（預設 1.6）。</target>
       </trans-unit>
+      <trans-unit id="CyclicPanel">
+        <source>A panel whose children repeat end to end without a seam: after the last child comes the first again, in both directions. The viewport shows `VisibleItemCount` equal slots; children scroll with the wheel or touchpad, or from code (`ScrollToIndex`, `ScrollToIndexCentered`, `ScrollNext`, `ScrollPrevious`). Usable on its own or as an `ItemsPanel`; it scrolls itself, so it needs no `ScrollViewer`.</source>
+        <target>子元素首尾無縫循環的面板：最後一個子元素之後又是第一個，兩個方向都一樣。可視區域顯示 `VisibleItemCount` 個等大的槽位；子元素可用滾輪或觸控板捲動，也可用程式碼捲動（`ScrollToIndex`、`ScrollToIndexCentered`、`ScrollNext`、`ScrollPrevious`）。可單獨使用，也可作為 `ItemsPanel`；它自己處理捲動，不需要 `ScrollViewer`。</target>
+      </trans-unit>
+      <trans-unit id="CyclicPanel.AnimationDuration">
+        <source>The length of an animated scroll.</source>
+        <target>平順捲動的時間長度。</target>
+      </trans-unit>
+      <trans-unit id="CyclicPanel.AnimationEasing">
+        <source>The easing of an animated scroll (Arc's standard ease-out curve by default).</source>
+        <target>平順捲動的緩動（預設為 Arc 標準緩出曲線）。</target>
+      </trans-unit>
+      <trans-unit id="CyclicPanel.IsAnimationEnabled">
+        <source>Whether scrolls from code and wheel notches glide; when false they jump. Reduced or no motion always jumps.</source>
+        <target>程式碼發起的捲動與滾輪格捲動是否平順過渡；為 false 時直接跳轉。減少動態效果或關閉動態效果時一律跳轉。</target>
+      </trans-unit>
+      <trans-unit id="CyclicPanel.IsWheelEnabled">
+        <source>Whether the mouse wheel and touchpad scroll the panel.</source>
+        <target>滑鼠滾輪與觸控板是否捲動面板。</target>
+      </trans-unit>
+      <trans-unit id="CyclicPanel.Offset">
+        <source>The scroll position in items, wrapped into `[0, count)`: 2.5 means the leading edge is halfway through the third item.</source>
+        <target>以項目為單位的捲動位置，折回 `[0, count)` 之內：2.5 表示前緣位於第三個項目的一半。</target>
+      </trans-unit>
+      <trans-unit id="CyclicPanel.Orientation">
+        <source>The scroll direction: `Vertical` (the default) stacks items top to bottom, `Horizontal` left to right.</source>
+        <target>捲動方向：`Vertical`（預設）由上到下排列各項目，`Horizontal` 由左到右。</target>
+      </trans-unit>
+      <trans-unit id="CyclicPanel.SnapsToItems">
+        <source>Whether the panel settles on the nearest whole item after a touchpad or smooth-wheel scroll stops.</source>
+        <target>觸控板或平順滾輪捲動停止後，面板是否停靠到最近的完整項目。</target>
+      </trans-unit>
+      <trans-unit id="CyclicPanel.Spacing">
+        <source>The gap between neighbouring items.</source>
+        <target>相鄰項目之間的間距。</target>
+      </trans-unit>
+      <trans-unit id="CyclicPanel.VisibleItemCount">
+        <source>How many item slots the viewport holds; each slot gets an equal share of the panel's length.</source>
+        <target>可視區域容納的槽位數；每個槽位平分面板的長度。</target>
+      </trans-unit>
+      <trans-unit id="CyclicPanel.VisibleItemIndices">
+        <source>The child indexes the viewport shows, in display order (leading edge first). An item counts as visible when any part of its slot is inside the panel.</source>
+        <target>可視區域中顯示的子元素索引，依顯示順序（前緣在前）。只要槽位有任何部分在面板內，該項目就算可見。</target>
+      </trans-unit>
       <trans-unit id="DataFlow">
         <source>An animated data pipeline: events leave their sources, queue up in an event stream, are validated and enriched in batches (some are filtered out) and land in a warehouse, with part of them pushed to live dashboards. Readouts show throughput and what has been stored.</source>
         <target>動畫資料管線：事件從各來源送出，在事件串流中排隊，分批驗證並豐富化（部分事件會被過濾掉），最後存入資料倉儲，其中一部分會推送到即時儀表板。讀數顯示吞吐量與已儲存的數量。</target>
@@ -26752,6 +26796,46 @@
         <source>An inbox a `TicketRouter` plays on its own while the app sets no `Tickets`: the classifier model's name, the lanes, the stream of messages with the answer the simulated classifier gives for each (`Sample`) and the tickets already in the lanes. The router reads, labels and routes one message at a time, sends the ones below the review threshold to the review lane, and loops when the stream runs out; it pauses off screen and with `IsPaused`. Nothing is sent. Set the data before handing the simulation to the router; to play another inbox, give the router a new simulation.</source>
         <target>應用程式沒有設定 `Tickets` 時 `TicketRouter` 自行播放的收件匣：分類器模型的名稱、泳道、訊息流（每則附有模擬分類器給出的答案 `Sample`）以及已在泳道中的工單。路由器一次讀取、標註並路由一則訊息，把低於複核門檻的訊息送入複核泳道，訊息流用完時循環；離開畫面時以及 `IsPaused` 時暫停。不會送出任何內容。請在把模擬交給路由器之前設定好資料；要播放另一個收件匣，就給路由器一個新的模擬。</target>
       </trans-unit>
+      <trans-unit id="TilePanel">
+        <source>A tile grid like a start screen: the panel is divided into equal cells, each child covers RowSpan × ColumnSpan of them, and children go, in order, to the first place where they fit without overlapping. Usable on its own or as an `ItemsPanel`.</source>
+        <target>類似開始畫面的磁磚格線：面板被分成相等的儲存格，每個子元素涵蓋 RowSpan × ColumnSpan 個儲存格，子元素依序放到第一個放得下且不重疊的位置。可單獨使用，也可作為 `ItemsPanel`。</target>
+      </trans-unit>
+      <trans-unit id="TilePanel.ColumnSpan">
+        <source>How many columns a child covers (at least 1; attached).</source>
+        <target>子元素涵蓋的欄數（至少為 1；附加屬性）。</target>
+      </trans-unit>
+      <trans-unit id="TilePanel.Columns">
+        <source>Number of columns; 0 fits as many columns of at least `MinCellSize` as the width allows.</source>
+        <target>欄數；0 表示依寬度放下盡可能多、至少 `MinCellSize` 寬的欄。</target>
+      </trans-unit>
+      <trans-unit id="TilePanel.IsAutoFill">
+        <source>Lets tiles grow into the empty cells to their right and below them after placement (see the remarks of `TilePanel`).</source>
+        <target>放置之後讓磁磚延伸到右側與下方的空儲存格（見 `TilePanel` 的說明）。</target>
+      </trans-unit>
+      <trans-unit id="TilePanel.MaxColumnSpan">
+        <source>The most columns a tile may span; 0 means no limit beyond the grid.</source>
+        <target>磁磚最多可跨的欄數；0 表示除格線外不設限制。</target>
+      </trans-unit>
+      <trans-unit id="TilePanel.MaxRowSpan">
+        <source>The most rows a tile may span; 0 means no limit beyond the grid.</source>
+        <target>磁磚最多可跨的列數；0 表示除格線外不設限制。</target>
+      </trans-unit>
+      <trans-unit id="TilePanel.MinCellSize">
+        <source>The narrowest cell when `Columns` is 0, and the cell size when neither side is otherwise sized.</source>
+        <target>`Columns` 為 0 時儲存格的最小寬度；兩邊都沒有其他尺寸來源時，它就是儲存格尺寸。</target>
+      </trans-unit>
+      <trans-unit id="TilePanel.RowSpan">
+        <source>How many rows a child covers (at least 1; attached).</source>
+        <target>子元素涵蓋的列數（至少為 1；附加屬性）。</target>
+      </trans-unit>
+      <trans-unit id="TilePanel.Rows">
+        <source>Number of rows the height is shared between (tiles that do not fit continue on further rows); 0 sizes rows like columns. Also fixes the row count when the grid grows sideways (unbounded width and `Columns` 0).</source>
+        <target>平分高度的列數（放不下的磁磚繼續排在後續的列中）；0 表示列的尺寸與欄相同。格線橫向增長（寬度無界且 `Columns` 為 0）時，它也固定列數。</target>
+      </trans-unit>
+      <trans-unit id="TilePanel.Spacing">
+        <source>The gap between neighbouring cells.</source>
+        <target>相鄰儲存格之間的間距。</target>
+      </trans-unit>
       <trans-unit id="TimePicker">
         <source>Arc time field: a trigger over a scrolling list of times generated every `MinuteStep` minutes. The list opens centred on the chosen time, arrow keys move the highlight (the list glides to keep it in view, wrapping at both ends), Enter or a click chooses and closes, Escape closes. The shown time rolls like a clock face: a later time rises from below, an earlier one drops from above. 12- or 24-hour display follows the culture unless `ClockFormat` says otherwise; the value is always a 24-hour `TimeOnly`.</source>
         <target>Arc 時間欄位：觸發器下方是一個可捲動的時間清單，每隔 `MinuteStep` 分鐘產生一項。清單開啟時以所選時間為中心，方向鍵移動反白（清單會滑動以保持其可見，兩端循環），Enter 或按一下選取並關閉，Escape 關閉。顯示的時間如同鐘面一樣滾動：較晚的時間從下方升起，較早的時間從上方落下。除非 `ClockFormat` 另有指定，否則 12 小時制或 24 小時制顯示跟隨文化設定；值一律為 24 小時制的 `TimeOnly`。</target>
@@ -29427,6 +29511,42 @@
       <trans-unit id="WalletStackTransaction">
         <source>One line of a card's recent activity.</source>
         <target>卡片近期交易中的一行。</target>
+      </trans-unit>
+      <trans-unit id="WaterfallPanel">
+        <source>A masonry (waterfall) panel: children flow into equal-width columns (or equal-height rows), each going to the end of the lane that is currently shortest, so cards of different heights pack without row gaps. Usable on its own or as an `ItemsPanel`.</source>
+        <target>瀑布流（Masonry）面板：子元素流入等寬的欄（或等高的列），每個都放到目前最短那條通道的末端，高度不一的卡片排列緊密、沒有列間空隙。可單獨使用，也可作為 `ItemsPanel`。</target>
+      </trans-unit>
+      <trans-unit id="WaterfallPanel.Columns">
+        <source>Number of columns when `Orientation` is `Vertical`; 0 fits as many as `MinLaneSize` allows.</source>
+        <target>`Orientation` 為 `Vertical` 時的欄數；0 表示依 `MinLaneSize` 放下盡可能多的欄。</target>
+      </trans-unit>
+      <trans-unit id="WaterfallPanel.FillLastItem">
+        <source>Stretches the last child of every lane to the panel's end, so all lanes end together. The end is the longest lane, or the panel's arranged size when its parent gives it more; it never reaches past the panel.</source>
+        <target>把每條通道的最後一個子元素拉伸到面板末端，讓所有通道一起結束。末端是最長的通道；父項給面板更多空間時則是面板的排列尺寸；永遠不會超出面板。</target>
+      </trans-unit>
+      <trans-unit id="WaterfallPanel.MaxItemSize">
+        <source>The largest size a child gets along the flow; children are also measured within it.</source>
+        <target>子元素沿排列方向的最大尺寸；子元素也在這個尺寸之內測量。</target>
+      </trans-unit>
+      <trans-unit id="WaterfallPanel.MinItemSize">
+        <source>The smallest size a child gets along the flow (its height in columns, its width in rows).</source>
+        <target>子元素沿排列方向的最小尺寸（欄中為高度，列中為寬度）。</target>
+      </trans-unit>
+      <trans-unit id="WaterfallPanel.MinLaneSize">
+        <source>The narrowest lane (column width or row height) when `Columns` or `Rows` is 0.</source>
+        <target>`Columns` 或 `Rows` 為 0 時通道的最小尺寸（欄寬或列高）。</target>
+      </trans-unit>
+      <trans-unit id="WaterfallPanel.Orientation">
+        <source>The direction the lanes run: `Vertical` stacks children in columns, `Horizontal` in rows.</source>
+        <target>通道的方向：`Vertical` 把子元素排成欄，`Horizontal` 排成列。</target>
+      </trans-unit>
+      <trans-unit id="WaterfallPanel.Rows">
+        <source>Number of rows when `Orientation` is `Horizontal`; 0 fits as many as `MinLaneSize` allows.</source>
+        <target>`Orientation` 為 `Horizontal` 時的列數；0 表示依 `MinLaneSize` 放下盡可能多的列。</target>
+      </trans-unit>
+      <trans-unit id="WaterfallPanel.Spacing">
+        <source>The gap between lanes and between consecutive children of a lane.</source>
+        <target>通道之間以及同一通道中相鄰子元素之間的間距。</target>
       </trans-unit>
       <trans-unit id="WebhookDelivery">
         <source>One attempt to deliver an event to an endpoint, with what was sent and what came back.</source>

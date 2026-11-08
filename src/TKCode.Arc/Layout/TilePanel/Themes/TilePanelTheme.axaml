@@ -1,0 +1,10 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.TilePanelTheme">
+    <ControlTheme x:Key="{x:Type arc:TilePanel}" TargetType="arc:TilePanel">
+        <Setter Property="Spacing" Value="{arc:TilePanelTokenResource Spacing}" />
+        <Setter Property="MinCellSize" Value="{arc:TilePanelTokenResource MinCellSize}" />
+    </ControlTheme>
+</ResourceDictionary>

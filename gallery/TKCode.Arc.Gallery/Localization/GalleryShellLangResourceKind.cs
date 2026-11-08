@@ -87,6 +87,7 @@ public enum GalleryShellLangResourceKind
     Category_Workflow,
     Category_Dock,
     Category_Video,
+    Category_Layout,
     Category_Tables,
     Category_Activity,
     Category_Media,

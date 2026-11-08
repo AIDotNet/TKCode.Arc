@@ -26,9 +26,9 @@ public class GallerySmokeTests
         GalleryCatalog.AllEntries.Count().ShouldBe(112 + GalleryCatalog.Extras.Sum(c => c.Entries.Length) + GalleryCatalog.Docs.Entries.Length
             + GalleryCatalog.Blocks.AllEntries.Count() + GalleryCatalog.Special.Sum(c => c.Entries.Length) + GalleryCatalog.Mobile.Entries.Length);
         GalleryCatalog.AllEntries.Select(e => e.ClassName).ShouldBeUnique();
-        // The sidebar footer counts the whole Components section, extras included: 112 + 10 = 122.
-        GalleryCatalog.ComponentCount.ShouldBe(122);
-        GalleryCatalog.ComponentEntries.Count().ShouldBe(122);
+        // The sidebar footer counts the whole Components section, extras included: 112 + 13 = 125.
+        GalleryCatalog.ComponentCount.ShouldBe(125);
+        GalleryCatalog.ComponentEntries.Count().ShouldBe(125);
     }
 
     [AvaloniaFact]

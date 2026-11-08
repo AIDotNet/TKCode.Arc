@@ -1,0 +1,45 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CyclicPanelScrollToIndexDemo">
+    <UserControl.Styles>
+        <Style Selector="arc|CyclicPanel > Border">
+            <Setter Property="Margin" Value="0,2" />
+            <Setter Property="Padding" Value="16,0" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep8}" />
+        </Style>
+        <Style Selector="arc|CyclicPanel > Border > TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+    </UserControl.Styles>
+    <Grid ColumnDefinitions="220,Auto" ColumnSpacing="24" HorizontalAlignment="Center">
+        <Grid>
+            <arc:CyclicPanel x:Name="Months" Height="240" VisibleItemCount="5">
+                <Border><TextBlock Text="0 · January" /></Border>
+                <Border><TextBlock Text="1 · February" /></Border>
+                <Border><TextBlock Text="2 · March" /></Border>
+                <Border><TextBlock Text="3 · April" /></Border>
+                <Border><TextBlock Text="4 · May" /></Border>
+                <Border><TextBlock Text="5 · June" /></Border>
+                <Border><TextBlock Text="6 · July" /></Border>
+                <Border><TextBlock Text="7 · August" /></Border>
+                <Border><TextBlock Text="8 · September" /></Border>
+                <Border><TextBlock Text="9 · October" /></Border>
+                <Border><TextBlock Text="10 · November" /></Border>
+                <Border><TextBlock Text="11 · December" /></Border>
+            </arc:CyclicPanel>
+            <!-- Marks the middle slot that ScrollToIndexCentered aims at. -->
+            <Border Height="48" VerticalAlignment="Center" IsHitTestVisible="False"
+                    BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                    BorderBrush="{arc:ArcDesignTokenResource Accent}"
+                    CornerRadius="{arc:ArcDesignTokenResource RadiusStep8}" />
+        </Grid>
+        <StackPanel Grid.Column="1" Spacing="8" VerticalAlignment="Center">
+            <arc:Button x:Name="Top" Content="ScrollToIndex(7)" Variant="Secondary" Size="Small" />
+            <arc:Button x:Name="Center" Content="ScrollToIndexCentered(0)" Variant="Secondary" Size="Small" />
+            <arc:Button x:Name="Today" Content="Center this month" Variant="Secondary" Size="Small" />
+            <arc:Button x:Name="Jump" Content="Jump to 6, no animation" Variant="Ghost" Size="Small" />
+        </StackPanel>
+    </Grid>
+</UserControl>

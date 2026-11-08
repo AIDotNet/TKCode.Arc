@@ -1,0 +1,10 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.WaterfallPanelTheme">
+    <ControlTheme x:Key="{x:Type arc:WaterfallPanel}" TargetType="arc:WaterfallPanel">
+        <Setter Property="Spacing" Value="{arc:WaterfallPanelTokenResource Spacing}" />
+        <Setter Property="MinLaneSize" Value="{arc:WaterfallPanelTokenResource MinLaneSize}" />
+    </ControlTheme>
+</ResourceDictionary>

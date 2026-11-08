@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TilePanelAutoColumnsDemo">
+    <UserControl.Styles>
+        <Style Selector="arc|TilePanel > Border">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
+        </Style>
+    </UserControl.Styles>
+    <!-- Columns="0" (the default): as many columns of at least 88 px as fit; resize the window to see them change. -->
+    <arc:TilePanel MinCellSize="88">
+        <Border arc:TilePanel.ColumnSpan="2" />
+        <Border />
+        <Border arc:TilePanel.RowSpan="2" />
+        <Border />
+        <Border />
+        <Border arc:TilePanel.ColumnSpan="2" />
+        <Border />
+        <Border />
+        <Border />
+    </arc:TilePanel>
+</UserControl>

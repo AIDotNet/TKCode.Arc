@@ -1,0 +1,39 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.WaterfallPanelItemsControlDemo">
+    <StackPanel Spacing="12" MaxWidth="560">
+        <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+            <arc:Button x:Name="Add" Content="Add note" Variant="Secondary" Size="Small" />
+            <arc:Button x:Name="Remove" Content="Remove first" Variant="Secondary" Size="Small" />
+        </StackPanel>
+        <ScrollViewer MaxHeight="360">
+            <ItemsControl x:Name="Notes">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <arc:WaterfallPanel Columns="0" MinLaneSize="150" Spacing="10" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="demos:WaterfallNote">
+                        <Border Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusStep12}"
+                                Padding="12">
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="{Binding Title}"
+                                           FontWeight="SemiBold"
+                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <TextBlock Text="{Binding Body}"
+                                           TextWrapping="Wrap"
+                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </StackPanel>
+</UserControl>
