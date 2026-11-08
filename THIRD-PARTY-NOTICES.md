@@ -239,6 +239,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
+## PDFium — `TKCode.Arc.Pdf.Native`
+
+`TKCode.Arc.Pdf.Native` ships PDFium's native library and the components it bundles. Only that package carries them, so their notices and license texts travel with it and not with every package: see [`src/TKCode.Arc.Pdf.Native/PDFIUM-NOTICES.md`](src/TKCode.Arc.Pdf.Native/PDFIUM-NOTICES.md) (`PDFIUM-NOTICES.md` and `licenses/` in the package).
+
+## pdf.js — `TKCode.Arc.Pdf.Browser`
+
+`TKCode.Arc.Pdf.Browser` ships pdf.js and the data and decoders it needs. Only that package carries them, so their notices and license texts travel with it and not with every package: see [`src/TKCode.Arc.Pdf.Browser/PDFJS-NOTICES.md`](src/TKCode.Arc.Pdf.Browser/PDFJS-NOTICES.md) (`PDFJS-NOTICES.md` and the files under `staticwebassets/pdfjs/` in the package).
+
 ## Dependencies
 
 - Avalonia (MIT).
