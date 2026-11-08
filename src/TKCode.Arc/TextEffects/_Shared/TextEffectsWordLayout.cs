@@ -213,20 +213,22 @@ internal sealed class TextEffectsWordLayout
     }
 
     /// <summary>Lines at <paramref name="width"/> with greedy wrapping.</summary>
-    internal static int CountLines(IReadOnlyList<double> widths, double space, double width)
+    internal static int CountLines(IReadOnlyList<double> widths, double space, double width, IReadOnlyList<bool>? glued = null)
     {
         var lines = 1;
         var x = 0.0;
         var first = true;
-        foreach (var w in widths)
+        for (var i = 0; i < widths.Count; i++)
         {
-            if (!first && x + space + w > width + 0.5)
+            var w = widths[i];
+            var gap = glued is not null && glued[i] ? 0 : space;
+            if (!first && x + gap + w > width + 0.5)
             {
                 lines++;
                 x = 0;
                 first = true;
             }
-            x += (first ? 0 : space) + w;
+            x += (first ? 0 : gap) + w;
             first = false;
         }
         return lines;
@@ -235,14 +237,12 @@ internal sealed class TextEffectsWordLayout
     /// <summary>The narrowest width that keeps the greedy line count, so lines come out evenly filled.</summary>
     internal static double Balance(IReadOnlyList<Word> words, double space, double maxWidth)
     {
-        // A glued word adds no space: taking it off its width lets the balancing, which adds one to every word, stay simple.
-        var widths = words.Select(w => w.IsGlued ? w.Width - space : w.Width).ToList();
-        return BalanceWidths(widths, space, maxWidth);
+        return BalanceWidths(words.Select(w => w.Width).ToList(), space, maxWidth, words.Select(w => w.IsGlued).ToList());
     }
 
-    internal static double BalanceWidths(IReadOnlyList<double> widths, double space, double maxWidth)
+    internal static double BalanceWidths(IReadOnlyList<double> widths, double space, double maxWidth, IReadOnlyList<bool>? glued = null)
     {
-        var target = CountLines(widths, space, maxWidth);
+        var target = CountLines(widths, space, maxWidth, glued);
         if (target <= 1)
         {
             return maxWidth;
@@ -252,7 +252,7 @@ internal sealed class TextEffectsWordLayout
         for (var i = 0; i < 14 && hi - lo > 0.5; i++)
         {
             var mid = (lo + hi) / 2;
-            if (CountLines(widths, space, mid) <= target)
+            if (CountLines(widths, space, mid, glued) <= target)
             {
                 hi = mid;
             }

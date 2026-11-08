@@ -81,7 +81,6 @@ public class GalleryRouteTests
 
     [Theory]
     [InlineData(null)]
-    [InlineData("/components")]
     [InlineData("/components/nope")]
     [InlineData("/nope/button")]
     [InlineData("/components/button/extra")]

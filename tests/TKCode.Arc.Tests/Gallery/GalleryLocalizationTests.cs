@@ -169,7 +169,6 @@ public class GalleryLocalizationTests
             var english = Texts(window);
             english.ShouldContain("Components");
             english.ShouldContain("Search");
-            english.ShouldContain("Appearance");
             english.ShouldContain("Text fields");
             english.ShouldContain("Preview");
             english.ShouldContain("Code");
@@ -183,7 +182,6 @@ public class GalleryLocalizationTests
             var chinese = Texts(window);
             chinese.ShouldContain("组件");
             chinese.ShouldContain("搜索");
-            chinese.ShouldContain("外观");
             chinese.ShouldContain("文本输入");
             chinese.ShouldContain("全部");
             chinese.ShouldContain("规划中");

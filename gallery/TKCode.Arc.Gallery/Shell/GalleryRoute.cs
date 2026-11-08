@@ -15,6 +15,12 @@ public enum GalleryRouteKind
     /// <summary>The StreamMark product page.</summary>
     StreamMark,
 
+    /// <summary>The open source projects.</summary>
+    Projects,
+
+    /// <summary>The overview of the components, blocks, effects and mobile controls.</summary>
+    ComponentsIndex,
+
     /// <summary>The desktop app's settings; the site has no such pages.</summary>
     Settings
 }
@@ -24,8 +30,8 @@ public enum GalleryRouteKind
 /// an address that the WebAssembly host keeps in the browser's address bar: <c>/</c>, <c>/docs/installation</c>,
 /// <c>/components/split-button</c> and <c>/blocks/command-palette</c>, made of the section and the entry's slug. The
 /// Northstar dashboard demo lives under <c>/demo</c>: <c>/demo/overview</c>, <c>/demo/login</c> (<see cref="Page"/>);
-/// <c>/demo</c> itself names no page and opens the one the demo's session leads to. <c>/streammark</c> is the StreamMark
-/// product page, and <c>/settings/about</c> a page of the desktop app's settings (<see cref="Page"/>).
+/// <c>/demo</c> itself names no page and opens the one the demo's session leads to. <c>/components</c> is the overview of the
+/// library, <c>/projects</c> the open source projects, <c>/streammark</c> the StreamMark product page, and <c>/settings/about</c> a page of the desktop app's settings (<see cref="Page"/>).
 /// </summary>
 public sealed record GalleryRoute(GalleryRouteKind Kind, GalleryEntry? Entry = null, string? Page = null)
 {
@@ -40,6 +46,12 @@ public sealed record GalleryRoute(GalleryRouteKind Kind, GalleryEntry? Entry = n
 
     /// <summary>The StreamMark product page.</summary>
     public static GalleryRoute StreamMark { get; } = new(GalleryRouteKind.StreamMark);
+
+    /// <summary>The open source projects.</summary>
+    public static GalleryRoute Projects { get; } = new(GalleryRouteKind.Projects);
+
+    /// <summary>The overview of the library.</summary>
+    public static GalleryRoute ComponentsIndex { get; } = new(GalleryRouteKind.ComponentsIndex);
 
     /// <summary>The desktop app's settings page <paramref name="page"/> (one of <see cref="GallerySettingsView.Pages"/>).</summary>
     public static GalleryRoute Settings(string page) => new(GalleryRouteKind.Settings, Page: page);
@@ -70,6 +82,8 @@ public sealed record GalleryRoute(GalleryRouteKind Kind, GalleryEntry? Entry = n
     {
         GalleryRouteKind.Friends => "/friends",
         GalleryRouteKind.StreamMark => "/streammark",
+        GalleryRouteKind.Projects => "/projects",
+        GalleryRouteKind.ComponentsIndex => "/components",
         GalleryRouteKind.Settings => $"/settings/{Page}",
         GalleryRouteKind.Demo => Page is null ? "/demo" : $"/demo/{Page}",
         _ => Entry is null ? "/" : $"/{Kind.ToString().ToLowerInvariant()}/{Entry.Slug}"
@@ -80,6 +94,8 @@ public sealed record GalleryRoute(GalleryRouteKind Kind, GalleryEntry? Entry = n
     {
         GalleryRouteKind.Friends => $"Friends · {Brand}",
         GalleryRouteKind.StreamMark => $"StreamMark · {Brand}",
+        GalleryRouteKind.Projects => $"Open source · {Brand}",
+        GalleryRouteKind.ComponentsIndex => $"Components · {Brand}",
         GalleryRouteKind.Settings => $"Settings · {Brand}",
         GalleryRouteKind.Demo => DemoPages.Find(Page) is { } page ? $"{page.Title} · Demo · {Brand}" : $"Demo · {Brand}",
         _ => Entry is null ? Brand : $"{Entry.Title} · {Brand}"
@@ -109,6 +125,14 @@ public sealed record GalleryRoute(GalleryRouteKind Kind, GalleryEntry? Entry = n
         {
             return StreamMark;
         }
+        if (segments.Length == 1 && segments[0].Equals("projects", StringComparison.OrdinalIgnoreCase))
+        {
+            return Projects;
+        }
+        if (segments.Length == 1 && segments[0].Equals("components", StringComparison.OrdinalIgnoreCase))
+        {
+            return ComponentsIndex;
+        }
         if (segments[0].Equals("settings", StringComparison.OrdinalIgnoreCase))
         {
             // The site has no settings, so the address means nothing there.
@@ -125,7 +149,7 @@ public sealed record GalleryRoute(GalleryRouteKind Kind, GalleryEntry? Entry = n
                 _ => null
             };
         }
-        if (segments.Length != 2 || !Enum.TryParse<GalleryRouteKind>(segments[0], ignoreCase: true, out var kind) || kind is GalleryRouteKind.Home or GalleryRouteKind.Friends or GalleryRouteKind.Demo or GalleryRouteKind.StreamMark or GalleryRouteKind.Settings)
+        if (segments.Length != 2 || !Enum.TryParse<GalleryRouteKind>(segments[0], ignoreCase: true, out var kind) || kind is GalleryRouteKind.Home or GalleryRouteKind.Friends or GalleryRouteKind.Demo or GalleryRouteKind.StreamMark or GalleryRouteKind.Projects or GalleryRouteKind.ComponentsIndex or GalleryRouteKind.Settings)
         {
             return null;
         }

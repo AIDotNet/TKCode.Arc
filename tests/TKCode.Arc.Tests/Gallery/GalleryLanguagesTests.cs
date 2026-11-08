@@ -90,6 +90,9 @@ public class GalleryLanguagesTests
         var previous = GalleryLanguages.Store;
         var store = new MemoryStore();
         GalleryLanguages.Store = store;
+        // The site has the language menu; the desktop app keeps the choice in its settings.
+        var host = GalleryHost.Kind;
+        GalleryHost.Kind = GalleryHostKind.Web;
         var window = new GalleryWindow { Width = 1280, Height = 860 };
         ArcMotion.SetLevel(window, ArcMotionLevel.Off);
         window.Show();
@@ -127,6 +130,7 @@ public class GalleryLanguagesTests
         }
         finally
         {
+            GalleryHost.Kind = host;
             GalleryLanguages.Store = previous;
             GalleryText.SetLanguage("en-US");
             window.Close();

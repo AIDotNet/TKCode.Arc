@@ -14,10 +14,10 @@ using Avalonia.VisualTree;
 namespace TKCode.Arc.Gallery.Shell;
 
 /// <summary>
-/// The top bar of uiarc.dev: brand logo (back to the home page), the menu of sections, a GitHub button with the star
-/// count, a search shortcut, the language menu, the Appearance popover and the light / dark toggle, then what only its
-/// host has: the site's download button or the desktop app's settings menu. When the buttons do not fit beside the menu,
-/// the bar gives up room step by step (<see cref="FitLevel"/>).
+/// The site's top bar: the brand (back to the home page), Components (a menu of the library's parts), Open source and Docs;
+/// then a GitHub button with the star count and icon buttons for search and the light / dark toggle. The site also has
+/// language and Appearance buttons and a download button; the desktop app keeps those two choices in its settings menu.
+/// When everything does not fit, the bar gives up room step by step (<see cref="FitLevel"/>).
 /// </summary>
 public sealed class GalleryTopBar : Border
 {
@@ -29,7 +29,7 @@ public sealed class GalleryTopBar : Border
     private const double Gap = 16;
     private const double MenuInset = 32;
     private const double SearchMinWidth = 148;
-    private const int MostCompactLevel = 7;
+    private const int MostCompactLevel = 4;
     private const string BrandName = "TKCode";
 
     private readonly GalleryTheme _theme;
@@ -44,14 +44,12 @@ public sealed class GalleryTopBar : Border
     private readonly Button _language;
     private readonly TextBlock _languageName;
     private readonly MenuSurface _languageMenu;
-    private readonly string[] _navValues = ["products", "components", "blocks", "docs", "demo"];
+    private readonly string[] _navValues = ["components", "projects", "docs"];
     private readonly GalleryShellLangResourceKind[] _navLabels =
     [
-        GalleryShellLangResourceKind.NavProducts, GalleryShellLangResourceKind.Components, GalleryShellLangResourceKind.Category_Blocks,
-        GalleryShellLangResourceKind.Category_Docs, GalleryShellLangResourceKind.NavDemo
+        GalleryShellLangResourceKind.Components, GalleryShellLangResourceKind.NavProjects, GalleryShellLangResourceKind.Category_Docs
     ];
-    private readonly List<(SiteHeaderLink Link, GalleryShellLangResourceKind Label, GalleryShellLangResourceKind Text, Func<GalleryRoute> Route)> _productLinks = new();
-    private readonly SiteHeaderFeature _productFeature = new();
+    private readonly List<(SiteHeaderLink Link, GalleryShellLangResourceKind Label, GalleryShellLangResourceKind Text, Func<GalleryRoute> Route)> _componentLinks = new();
     private readonly Button? _download;
     private readonly TextBlock? _downloadLabel;
     private readonly Button? _gear;
@@ -72,8 +70,8 @@ public sealed class GalleryTopBar : Border
         _shell = shell;
         Control owner = shell;
 
-        // The site header block draws the brand and the section menu; the buttons ride in its trailing slot. Products opens a
-        // mega menu; Components, Blocks and Docs open their sections and Demo the Northstar dashboard demo (/demo).
+        // The site header block draws the brand and the section menu; the buttons ride in its trailing slot. Components opens a
+        // mega menu of the library's parts and the dashboard demo; Open source and Docs open their pages.
         _header = new SiteHeader
         {
             Variant = SiteHeaderVariant.Mega,
@@ -89,7 +87,7 @@ public sealed class GalleryTopBar : Border
         {
             _header.Items.Add(new SiteHeaderItem { Value = _navValues[i], Label = GalleryText.Get(_navLabels[i]) });
         }
-        BuildProductsMenu(shell);
+        BuildComponentsMenu(shell);
         GalleryText.Bind(_header, Avalonia.Automation.AutomationProperties.NameProperty, GalleryShellLangResourceKind.GoHome);
         _header.Navigate += (_, e) =>
         {
@@ -101,30 +99,18 @@ public sealed class GalleryTopBar : Border
                 case SiteHeaderNavigateKind.Item:
                     shell.Navigate(e.Section switch
                     {
-                        "components" => shell.RouteFor(GalleryRouteKind.Components),
-                        "blocks" => shell.RouteFor(GalleryRouteKind.Blocks),
                         "docs" => shell.RouteFor(GalleryRouteKind.Docs),
-                        "demo" => GalleryRoute.Demo(),
-                        _ => GalleryRoute.StreamMark
+                        "projects" => GalleryRoute.Projects,
+                        _ => GalleryRoute.ComponentsIndex
                     });
                     break;
                 case SiteHeaderNavigateKind.PanelLink:
-                    foreach (var (link, _, _, route) in _productLinks)
+                    foreach (var (link, _, _, route) in _componentLinks)
                     {
                         if (ReferenceEquals(link, e.Link))
                         {
                             shell.Navigate(route());
                         }
-                    }
-                    break;
-                case SiteHeaderNavigateKind.Feature:
-                    if (GalleryHost.IsWeb)
-                    {
-                        shell.ShowDownload();
-                    }
-                    else
-                    {
-                        shell.Navigate(GalleryRoute.Settings(GallerySettingsView.AboutPage));
                     }
                     break;
             }
@@ -168,6 +154,16 @@ public sealed class GalleryTopBar : Border
         _right.Children.Add(_language);
         _right.Children.Add(_appearance);
         _right.Children.Add(_themeToggle);
+        // Icons only: the bar stays quiet, and each button says what it is when pointed at.
+        SetIconOnly(_search, null, true, GalleryShellLangResourceKind.Search);
+        _searchRow.Children[1].IsVisible = false;
+        _searchRow.Children[2].IsVisible = false;
+        _searchRow.MinWidth = 0;
+        SetIconOnly(_language, _languageName, true, null);
+        SetIconOnly(_appearance, _appearanceLabel, true, GalleryShellLangResourceKind.Appearance);
+        // The desktop app keeps these two in its settings menu.
+        _language.IsVisible = GalleryHost.IsWeb;
+        _appearance.IsVisible = GalleryHost.IsWeb;
         if (GalleryHost.IsWeb)
         {
             (_download, _downloadLabel) = BuildDownloadButton(shell);
@@ -194,7 +190,7 @@ public sealed class GalleryTopBar : Border
             {
                 _header.Items[i].Label = GalleryText.Get(_navLabels[i]);
             }
-            SyncProductsMenu();
+            SyncComponentsMenu();
             SyncLanguage();
             _fittedLevel = -1;
             Dispatcher.UIThread.Post(InvalidateMeasure);
@@ -202,10 +198,9 @@ public sealed class GalleryTopBar : Border
     }
 
     /// <summary>
-    /// How much room the bar has given up: 0 shows everything; 1 shows only the icon of Appearance, 2 also of the language
-    /// button, 3 also drops the shortcut hint of Search, 4 also folds the section menu into the header's menu button, 5 also
-    /// shortens Search to its icon, 6 also hides the GitHub button, 7 also leaves only the brand's logo (a phone). The site's
-    /// download button shows only its icon from 3 and goes at 5: on a phone there is nothing to install.
+    /// How much room the bar has given up: 0 shows everything; 1 shows only the icon of the site's download button, 2 also
+    /// folds the section menu into the header's menu button and drops the download button (a phone has nothing to install,
+    /// and the home page offers it too), 3 also hides the GitHub button, 4 also leaves only the brand's logo.
     /// </summary>
     public int FitLevel => _fitLevel;
 
@@ -283,7 +278,7 @@ public sealed class GalleryTopBar : Border
         }
         right += Math.Max(0, shown - 1) * _right.Spacing;
         RememberWidths();
-        if (_fitLevel >= 4)
+        if (_fitLevel >= 2)
         {
             // The menu is folded away: brand and buttons share the bar, with the header's menu button after the buttons.
             return _brandWidth + Gap + right + MenuButtonWidth <= inner;
@@ -335,35 +330,19 @@ public sealed class GalleryTopBar : Border
             return;
         }
         _fitLevel = level;
-        SetIconOnly(_appearance, _appearanceLabel, level >= 1, GalleryShellLangResourceKind.Appearance);
-        SetIconOnly(_language, _languageName, level >= 2, null);
-        // The search row is the icon, the label and the shortcut hint.
-        var searchShort = level >= 3;
-        var searchIconOnly = level >= 5;
-        _searchRow.Children[1].IsVisible = !searchIconOnly;
-        _searchRow.Children[1].Margin = new Thickness(8, 0, searchShort ? 0 : 12, 0);
-        _searchRow.Children[2].IsVisible = !searchShort;
-        _searchRow.MinWidth = searchShort ? 0 : SearchMinWidth;
-        SetIconOnly(_search, null, searchIconOnly, GalleryShellLangResourceKind.Search);
-        _header.CollapseWidth = level >= 4 ? double.MaxValue : 0;
-        _github.IsVisible = level < 6;
-        _header.BrandName = level >= 7 ? string.Empty : BrandName;
+        _header.CollapseWidth = level >= 2 ? double.MaxValue : 0;
+        _github.IsVisible = level < 3;
+        _header.BrandName = level >= 4 ? string.Empty : BrandName;
         if (_download is not null)
         {
-            _download.IsVisible = level < 5 && GalleryHost.ClientOs != GalleryClientOs.Mobile;
-            SetIconOnly(_download, _downloadLabel, level >= 3, GalleryShellLangResourceKind.NavDownload);
+            _download.IsVisible = level < 2 && GalleryHost.ClientOs != GalleryClientOs.Mobile;
+            SetIconOnly(_download, _downloadLabel, level >= 1, GalleryShellLangResourceKind.NavDownload);
             Remeasure(_download);
             Remeasure(_downloadLabel!);
         }
 
         // A control re-measures only itself; its parents learn of a new size in the next layout pass. Fits measures now, so
         // mark everything between each changed part and the bar.
-        Remeasure(_appearanceLabel);
-        Remeasure(_languageName);
-        foreach (var child in _searchRow.Children)
-        {
-            Remeasure(child);
-        }
         Remeasure(_github);
     }
 
@@ -454,35 +433,32 @@ public sealed class GalleryTopBar : Border
         }
     }
 
-    /// <summary>The Products mega menu: the two products first, then the add-on packages and the templates.</summary>
-    private void BuildProductsMenu(GalleryShell shell)
+    /// <summary>The Components menu: the parts of the library, and the demo built from them.</summary>
+    private void BuildComponentsMenu(GalleryShell shell)
     {
         void Add(GalleryShellLangResourceKind label, GalleryShellLangResourceKind text, Geometry icon, Func<GalleryRoute> route)
         {
             var link = new SiteHeaderLink { Icon = icon };
-            _productLinks.Add((link, label, text, route));
+            _componentLinks.Add((link, label, text, route));
             _header.Items[0].Links.Add(link);
         }
 
-        Add(GalleryShellLangResourceKind.ProductArc, GalleryShellLangResourceKind.ProductArcNav, ArcIcons.Layers, () => shell.RouteFor(GalleryRouteKind.Components));
-        Add(GalleryShellLangResourceKind.StreamMarkName, GalleryShellLangResourceKind.ProductStreamMarkNav, ArcIcons.Zap, () => GalleryRoute.StreamMark);
+        Add(GalleryShellLangResourceKind.ProductAllComponents, GalleryShellLangResourceKind.ProductArcNav, ArcIcons.Layers, () => GalleryRoute.ComponentsIndex);
         Add(GalleryShellLangResourceKind.Category_Blocks, GalleryShellLangResourceKind.ProductBlocksNav, ArcIcons.LayoutTemplate, () => shell.RouteFor(GalleryRouteKind.Blocks));
         Add(GalleryShellLangResourceKind.ProductSpecial, GalleryShellLangResourceKind.ProductSpecialNav, ArcIcons.Sparkles, () => GalleryRoute.To(GalleryCatalog.Special[0].AllEntries.First()));
         Add(GalleryShellLangResourceKind.ProductMobile, GalleryShellLangResourceKind.ProductMobileNav, GalleryIcons.Smartphone, () => GalleryRoute.To(GalleryCatalog.Mobile.Entries[0]));
+        Add(GalleryShellLangResourceKind.NavDemo, GalleryShellLangResourceKind.ProductDemoNav, ArcIcons.Monitor, () => GalleryRoute.Demo());
         Add(GalleryShellLangResourceKind.ProductTemplates, GalleryShellLangResourceKind.ProductTemplatesNav, ArcIcons.Package, () => GallerySite.Docs("DocsTemplates"));
-        _header.Items[0].Feature = _productFeature;
-        SyncProductsMenu();
+        SyncComponentsMenu();
     }
 
-    private void SyncProductsMenu()
+    private void SyncComponentsMenu()
     {
-        foreach (var (link, label, text, _) in _productLinks)
+        foreach (var (link, label, text, _) in _componentLinks)
         {
             link.Label = GalleryText.Get(label);
             link.Description = GalleryText.Get(text);
         }
-        _productFeature.Title = GalleryText.Get(GalleryHost.IsWeb ? GalleryShellLangResourceKind.ProductFeatureWebTitle : GalleryShellLangResourceKind.ProductFeatureDesktopTitle);
-        _productFeature.Description = GalleryText.Get(GalleryHost.IsWeb ? GalleryShellLangResourceKind.ProductFeatureWebText : GalleryShellLangResourceKind.ProductFeatureDesktopText);
     }
 
     private static (Button Button, TextBlock Label) BuildDownloadButton(GalleryShell shell)
@@ -578,11 +554,9 @@ public sealed class GalleryTopBar : Border
     {
         _header.Current = route.Kind switch
         {
-            GalleryRouteKind.Components => "components",
-            GalleryRouteKind.Blocks => "blocks",
+            GalleryRouteKind.Components or GalleryRouteKind.Blocks or GalleryRouteKind.ComponentsIndex => "components",
             GalleryRouteKind.Docs => "docs",
-            GalleryRouteKind.StreamMark => "products",
-            GalleryRouteKind.Demo => "demo",
+            GalleryRouteKind.Projects or GalleryRouteKind.StreamMark => "projects",
             _ => null
         };
     }
@@ -593,7 +567,7 @@ public sealed class GalleryTopBar : Border
     /// <summary>The header block that draws the brand and the menu.</summary>
     public SiteHeader Header => _header;
 
-    /// <summary>The buttons at the end of the bar: GitHub, search, language, Appearance and the light / dark toggle.</summary>
+    /// <summary>The buttons at the end of the bar: GitHub, search, language, Appearance, the light / dark toggle and the host's own.</summary>
     public StackPanel Buttons => _right;
 
     private void SyncThemeToggle()

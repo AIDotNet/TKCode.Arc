@@ -39,15 +39,16 @@ public class GalleryDemoAppTests
     }
 
     [AvaloniaFact]
-    public void The_Home_Page_Live_Demo_Button_Opens_The_Overview_Without_The_Gallery_Chrome()
+    public void The_Components_Menus_Demo_Link_Opens_The_Overview_Without_The_Gallery_Chrome()
     {
         var window = Open();
         try
         {
             var raised = new List<string>();
             window.Shell.RouteChanged += route => raised.Add(route.Path);
-            var button = window.GetVisualDescendants().OfType<TextBlock>().First(t => t.Text == "Live demo").FindAncestorOfType<Button>()!;
-            button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            var item = window.TopBar.Header.Items[0];
+            var link = item.Links.Single(l => l.Label == "Demo");
+            window.TopBar.Header.RaiseEvent(new SiteHeaderNavigateEventArgs(SiteHeader.NavigateEvent, window.TopBar.Header, SiteHeaderNavigateKind.PanelLink, link.Label, null, item, link));
             Pump();
 
             window.Shell.Route.ShouldBe(GalleryRoute.Demo("overview"));
@@ -194,10 +195,10 @@ public class GalleryDemoAppTests
         var window = Open();
         try
         {
-            var item = window.TopBar.Header.Items.Last();
-            item.Value.ShouldBe("demo");
-            item.Label.ShouldBe("Demo");
-            window.TopBar.Header.RaiseEvent(new SiteHeaderNavigateEventArgs(SiteHeader.NavigateEvent, window.TopBar.Header, SiteHeaderNavigateKind.Item, item.Label, null, item));
+            // The demo is a link of the Components menu.
+            var item = window.TopBar.Header.Items[0];
+            var link = item.Links.Single(l => l.Label == "Demo");
+            window.TopBar.Header.RaiseEvent(new SiteHeaderNavigateEventArgs(SiteHeader.NavigateEvent, window.TopBar.Header, SiteHeaderNavigateKind.PanelLink, link.Label, null, item, link));
             Pump();
             window.Shell.Route.ShouldBe(GalleryRoute.Demo("overview"));
         }

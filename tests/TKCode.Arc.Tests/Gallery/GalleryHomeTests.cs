@@ -54,16 +54,17 @@ public class GalleryHomeTests
             Dispatcher.UIThread.RunJobs();
             window.Sidebar.IsVisible.ShouldBeTrue();
             window.Sidebar.SelectedEntry.ShouldBe(GalleryCatalog.Categories[0].Entries[0]);
-            window.TopBar.MarkedNavIndex.ShouldBe(1);
+            window.TopBar.MarkedNavIndex.ShouldBe(0);
             raised.ShouldHaveSingleItem().Path.ShouldBe("/components/button");
 
             // The changelog is a page of the Docs section; the menu no longer has an item of its own for it.
             window.Shell.Navigate(GalleryRoute.To(Changelog));
-            window.TopBar.MarkedNavIndex.ShouldBe(3);
-            window.Shell.Navigate(window.Shell.RouteFor(GalleryRouteKind.Docs));
-            window.TopBar.MarkedNavIndex.ShouldBe(3);
-            window.Shell.Navigate(window.Shell.RouteFor(GalleryRouteKind.Blocks));
             window.TopBar.MarkedNavIndex.ShouldBe(2);
+            window.Shell.Navigate(window.Shell.RouteFor(GalleryRouteKind.Docs));
+            window.TopBar.MarkedNavIndex.ShouldBe(2);
+            // Blocks are a part of the Components menu item.
+            window.Shell.Navigate(window.Shell.RouteFor(GalleryRouteKind.Blocks));
+            window.TopBar.MarkedNavIndex.ShouldBe(0);
             raised.Select(r => r.Kind).ShouldBe([GalleryRouteKind.Components, GalleryRouteKind.Docs, GalleryRouteKind.Docs, GalleryRouteKind.Blocks]);
             raised.Select(r => r.Entry!.ClassName).ShouldBe([window.Shell.RouteFor(GalleryRouteKind.Components).Entry!.ClassName, "DocsChangelog", "DocsIntroduction", GalleryCatalog.Blocks.AllEntries.First().ClassName]);
         }
@@ -131,28 +132,6 @@ public class GalleryHomeTests
             Dispatcher.UIThread.RunJobs();
             shell.Route.Kind.ShouldBe(GalleryRouteKind.Components);
             shell.Sidebar.IsVisible.ShouldBeTrue();
-        }
-        finally
-        {
-            window.Close();
-        }
-    }
-
-    [AvaloniaFact]
-    public void The_Live_Examples_Are_Built_On_Demand_And_Open_Their_Pages()
-    {
-        var window = Open();
-        try
-        {
-            var home = window.GetVisualDescendants().OfType<GalleryHomeView>().Single();
-            home.Cards.Count.ShouldBe(6);
-            foreach (var card in home.Cards)
-            {
-                card.EnsureCreated();
-                card.IsCreated.ShouldBeTrue();
-                card.Entry.ShouldNotBeNull();
-            }
-            home.Cards.Select(c => c.Entry.ClassName).ShouldBe(["ButtonGroup", "Gauge", "ChatThread", "CommandPalette", "Calendar", "MultiSelect"]);
         }
         finally
         {

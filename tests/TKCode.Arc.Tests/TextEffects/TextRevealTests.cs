@@ -25,6 +25,18 @@ public class TextRevealTests
     }
 
     [Fact]
+    public void Balancing_Does_Not_Add_A_Line_To_Glued_Text()
+    {
+        // Ten 40-wide characters in 240: two lines, and the balanced width must still give two.
+        double[] widths = [40, 40, 40, 40, 40, 40, 40, 40, 40, 40];
+        var glued = widths.Select((_, i) => i > 0).ToList();
+        TextEffectsWordLayout.CountLines(widths, 20, 240, glued).ShouldBe(2);
+        var balanced = TextEffectsWordLayout.BalanceWidths(widths, 20, 240, glued);
+        balanced.ShouldBe(200, 1);
+        TextEffectsWordLayout.CountLines(widths, 20, balanced, glued).ShouldBe(2);
+    }
+
+    [Fact]
     public void Mixed_Text_Keeps_The_Spaces_It_Has_And_Adds_None()
     {
         var tokens = TextEffectsWordLayout.Tokenize("交给 Arc，文字")[0];
