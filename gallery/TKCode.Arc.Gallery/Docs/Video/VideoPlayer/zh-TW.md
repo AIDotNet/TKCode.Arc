@@ -1,7 +1,7 @@
 ---
 title: 影片播放器
 summary: "在畫面上疊加控制列播放影片：可用章節跳轉、調整音量、播放速度、字幕和全螢幕，外觀依 Arc 風格繪製，由平台自己的播放器解碼。"
-source-hash: e4fef62c63a7
+source-hash: 40b842b9f1e2
 ---
 
 <Demo name="Preview" />
@@ -57,6 +57,8 @@ await ArcVideoBrowser.UseAsync();  // browser: TKCode.Arc.Video.Browser
 ### 播放後端
 
 播放器使用 `ArcVideo.Backend` 中的後端解碼，並把畫面繪製在視窗內，因此控制列、字幕和圓角都會繪製在畫面之上。平台允許時（macOS 和 Windows），畫面會在 GPU 上從解碼器直接送到螢幕，不做複製；其他情況下會複製到點陣圖中。
+
+在瀏覽器中，`BrowserPresentation="Native"` 改為顯示瀏覽器自己的影片元素：不複製畫面，瀏覽器能播放的格式都能播放（例如 Safari 中的 HLS）。這個元素上面不能繪製任何內容，所以控制列放在畫面下方並一直顯示，字幕由瀏覽器繪製，也沒有圓角；顯示海報、錯誤、重播按鈕或選單時，這個元素會暫時隱藏。沒有這種元素時（桌面平台，或 net8.0 版本），播放器仍使用畫布。
 
 <Demo name="Playback" />
 

@@ -57,6 +57,8 @@ The bar hides two seconds after the pointer stops while the video plays, and sta
 
 The player decodes with the backend in `ArcVideo.Backend` and draws the frames inside the window, so its controls, captions and rounded corners draw over the picture. Where the platform allows, frames move from the decoder to the screen on the GPU without a copy (macOS and Windows); elsewhere they are copied into a bitmap.
 
+In a browser, `BrowserPresentation="Native"` shows the browser's own video element instead: nothing is copied, and every format the browser plays works (HLS in Safari, for example). Nothing can be drawn over that element, so the control bar sits below the picture and always shows, the captions are the browser's, and the corners are square; the element hides while the poster, an error, the replay button or a menu is shown. Without such an element (desktop, or the net8.0 build) the player keeps the canvas.
+
 <Demo name="Playback" />
 
 ## API reference
