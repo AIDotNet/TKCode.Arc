@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.NumberFilterBoxModesDemo">
+    <StackPanel HorizontalAlignment="Center" Spacing="8" Grid.IsSharedSizeScope="True">
+        <arc:NumberFilterBox Label="Stock"
+                             LabelSizeGroup="Label"
+                             NumberMode="Integer"
+                             Operator="LessThan"
+                             Value="50" />
+        <arc:NumberFilterBox Label="Rating"
+                             LabelSizeGroup="Label"
+                             NumberMode="Decimal"
+                             DecimalPlaces="1"
+                             SmallChange="0.5"
+                             Maximum="5"
+                             Operator="GreaterThanOrEqual"
+                             Value="4.5" />
+        <arc:NumberFilterBox Label="Weight (kg)"
+                             LabelSizeGroup="Label"
+                             NumberMode="Decimal"
+                             DecimalPlaces="3"
+                             Tolerance="0.005"
+                             Operator="Equal"
+                             Value="1.25" />
+    </StackPanel>
+</UserControl>

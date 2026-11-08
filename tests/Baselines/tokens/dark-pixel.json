@@ -4421,6 +4421,11 @@
       "WarnBorderFocus": "#FFD09B2C",
       "WarnSurface": "#FF22201C"
     },
+    "NumberFilterBox": {
+      "ColumnGap": "12",
+      "OperatorWidth": "84",
+      "ValueWidth": "168"
+    },
     "OnboardingIllustration": {
       "ActionFocusRingRadius": "0,0,0,0",
       "ActionGap": "8",
@@ -6716,6 +6721,11 @@
       "ViewPadding": "6,0,6,6",
       "ViewShift": "6",
       "VisibleRows": "6"
+    },
+    "TextFilterBox": {
+      "ColumnGap": "12",
+      "InputMinWidth": "160",
+      "OperatorWidth": "84"
     },
     "TextMorph": {
       "EnterRiseEm": "0.14",

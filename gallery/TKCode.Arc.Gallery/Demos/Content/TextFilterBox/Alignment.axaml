@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TextFilterBoxAlignmentDemo">
+    <StackPanel HorizontalAlignment="Center" Width="600" Spacing="8" Grid.IsSharedSizeScope="True">
+        <arc:NumberFilterBox Label="Price"
+                             LabelSizeGroup="FilterLabel"
+                             Operator="GreaterThanOrEqual"
+                             Value="100" />
+        <arc:TextFilterBox Label="Product name"
+                           LabelSizeGroup="FilterLabel"
+                           Text="Keyboard" />
+        <arc:NumberFilterBox Label="Units in stock"
+                             LabelSizeGroup="FilterLabel"
+                             NumberMode="Integer"
+                             Operator="LessThan"
+                             Value="50" />
+    </StackPanel>
+</UserControl>

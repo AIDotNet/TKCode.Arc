@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.NumberFilterBoxBasicDemo">
+    <arc:NumberFilterBox HorizontalAlignment="Center"
+                         Label="Price"
+                         Description="Products at or above this price."
+                         Operator="GreaterThanOrEqual"
+                         Value="100"
+                         NumberMode="Decimal"
+                         DecimalPlaces="2"
+                         Maximum="99999" />
+</UserControl>

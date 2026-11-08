@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TextFilterBoxBasicDemo">
+    <arc:TextFilterBox HorizontalAlignment="Center"
+                       Width="520"
+                       Label="Product name"
+                       Description="Products whose name contains this text."
+                       Placeholder="Type a product name"
+                       Text="Keyboard" />
+</UserControl>

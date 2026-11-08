@@ -112,6 +112,12 @@ public static partial class GalleryCatalog
             new("ArcWindow", "Window", "arc-window", 0,
                 "A desktop window with an Arc title bar: left, center and right areas for your controls, native dragging, snapping and resizing, and caption buttons that follow the theme.",
                 IsArc: false, AddedOn: "2026-11-04"),
+            new("NumberFilterBox", "Number filter box", "number-filter-box", 0,
+                "One number filter condition: a checkbox to switch it on, an operator shown as a symbol and a value, with an optional tolerance.",
+                IsArc: false, AddedOn: "2026-11-07"),
+            new("TextFilterBox", "Text filter box", "text-filter-box", 0,
+                "One text filter condition: a checkbox to switch it on, contains, starts with, ends with, equals or a regular expression, and case sensitivity.",
+                IsArc: false, AddedOn: "2026-11-07"),
         ], IsArc: false),
     ];
 
