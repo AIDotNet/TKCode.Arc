@@ -1,0 +1,98 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.FluidTabControlDefaultDemo">
+    <UserControl.Styles>
+        <Style Selector="TextBlock.title">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeLG}" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="TextBlock.note">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+    </UserControl.Styles>
+    <Border Height="380"
+            MaxWidth="760"
+            BorderThickness="1"
+            BorderBrush="{arc:ArcDesignTokenResource Border}"
+            CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+            Background="{arc:ArcDesignTokenResource Surface}"
+            ClipToBounds="True">
+        <arc:FluidTabControl AutomationProperties.Name="Settings">
+            <arc:FluidTabItem Header="General">
+                <arc:FluidTabItem.Icon>
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Settings}" Size="16" StrokeThickness="1.8" />
+                </arc:FluidTabItem.Icon>
+                <StackPanel Spacing="12">
+                    <TextBlock Classes="title" Text="General" />
+                    <TextBlock Classes="note" Text="Startup, language and updates." />
+                    <arc:Switch Content="Open at login" IsChecked="True" />
+                    <arc:Switch Content="Check for updates automatically" IsChecked="True" />
+                    <arc:Switch Content="Restore windows from the last session" />
+                </StackPanel>
+            </arc:FluidTabItem>
+            <arc:FluidTabItem Header="Appearance">
+                <arc:FluidTabItem.Icon>
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Palette}" Size="16" StrokeThickness="1.8" />
+                </arc:FluidTabItem.Icon>
+                <StackPanel Spacing="12">
+                    <TextBlock Classes="title" Text="Appearance" />
+                    <TextBlock Classes="note" Text="Theme, density and motion." />
+                    <arc:Switch Content="Follow the system theme" IsChecked="True" />
+                    <arc:Switch Content="Compact rows" />
+                    <arc:Switch Content="Reduce motion" />
+                </StackPanel>
+            </arc:FluidTabItem>
+            <arc:FluidTabItem Header="Account">
+                <arc:FluidTabItem.Icon>
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.User}" Size="16" StrokeThickness="1.8" />
+                </arc:FluidTabItem.Icon>
+                <StackPanel Spacing="12">
+                    <TextBlock Classes="title" Text="Account" />
+                    <TextBlock Classes="note" Text="The name and email address on your invoices." />
+                    <arc:Input Label="Full name" Text="Noor Haddad" />
+                    <arc:Input Label="Email" Text="noor@larkspur.co" />
+                </StackPanel>
+            </arc:FluidTabItem>
+            <arc:FluidTabItem Header="Notifications">
+                <arc:FluidTabItem.Icon>
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Bell}" Size="16" StrokeThickness="1.8" />
+                </arc:FluidTabItem.Icon>
+                <StackPanel Spacing="12">
+                    <TextBlock Classes="title" Text="Notifications" />
+                    <TextBlock Classes="note" Text="What reaches you, and where." />
+                    <arc:Switch Content="Mentions" IsChecked="True" />
+                    <arc:Switch Content="Weekly digest by email" IsChecked="True" />
+                    <arc:Switch Content="Product news" />
+                </StackPanel>
+            </arc:FluidTabItem>
+            <arc:FluidTabItem Header="Privacy">
+                <arc:FluidTabItem.Icon>
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Shield}" Size="16" StrokeThickness="1.8" />
+                </arc:FluidTabItem.Icon>
+                <StackPanel Spacing="12">
+                    <TextBlock Classes="title" Text="Privacy" />
+                    <TextBlock Classes="note" Text="Diagnostics and who can see your profile." />
+                    <arc:Switch Content="Send crash reports" IsChecked="True" />
+                    <arc:Switch Content="Share usage data" />
+                    <arc:Switch Content="Show my profile to other workspaces" />
+                </StackPanel>
+            </arc:FluidTabItem>
+            <arc:FluidTabItem Header="Advanced">
+                <arc:FluidTabItem.Icon>
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Wrench}" Size="16" StrokeThickness="1.8" />
+                </arc:FluidTabItem.Icon>
+                <StackPanel Spacing="12">
+                    <TextBlock Classes="title" Text="Advanced" />
+                    <TextBlock Classes="note" Text="Proxy, cache and experimental features." />
+                    <arc:Input Label="Proxy" Text="http://proxy.larkspur.co:8080" />
+                    <arc:Switch Content="Hardware acceleration" IsChecked="True" />
+                    <arc:Switch Content="Experimental features" />
+                </StackPanel>
+            </arc:FluidTabItem>
+        </arc:FluidTabControl>
+    </Border>
+</UserControl>

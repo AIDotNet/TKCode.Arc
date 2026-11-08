@@ -8,6 +8,16 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native` and `TKCode.Arc.Audio.Browser`.
 
+## Unreleased
+
+### Added
+
+- `FluidTabControl` and `FluidTabItem` (`TKCode.Arc`, issue #60): scroll-linked tabs. A tab list on the left or right
+  beside one scroll area that stacks the content of every tab; picking a tab scrolls smoothly to its section
+  (`AnimationDuration`, `EasingFunction`, `IsAnimationEnabled`), scrolling selects the tab of the section on the anchor
+  line (`SnapAlignment` Top or Center), with two-way `SelectedItem` / `SelectedIndex`, header, icon and content
+  templates, keyboard navigation and live add, remove and move. Docs and demos in English, 简体中文 and 繁體中文.
+
 ## 0.4.0-preview.5 - 2026-11-08
 
 Fourteen new Special components: Surfaces, Audio and video, and Loaders; Gallery pages open faster.

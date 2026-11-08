@@ -2748,6 +2748,28 @@
       "RuleMargin": "2,0,2,0",
       "VerticalRuleMargin": "0,2,0,2"
     },
+    "FluidTabControl": {
+      "ContentPadding": "24,24,24,24",
+      "DividerLeftPlacement": "0,0,1,0",
+      "DividerRightPlacement": "1,0,0,0",
+      "HighlightRadius": "0,0,0,0",
+      "IndicatorInset": "9",
+      "IndicatorRadius": "0,0,0,0",
+      "IndicatorThickness": "3",
+      "ItemSpacing": "2",
+      "ScrollDuration": "480ms",
+      "SectionSpacing": "40",
+      "TabListPadding": "8,8,8,8",
+      "TabListWidth": "200"
+    },
+    "FluidTabItem": {
+      "DisabledOpacity": "0.5",
+      "FocusRingMargin": "-2,-2,-2,-2",
+      "FocusRingRadius": "0,0,0,0",
+      "IconMargin": "0,0,10,0",
+      "InlinePadding": "14,8,14,8",
+      "ItemRadius": "0,0,0,0"
+    },
     "GanttTimeline": {
       "BarHeight": "24",
       "BarRadius": "8",

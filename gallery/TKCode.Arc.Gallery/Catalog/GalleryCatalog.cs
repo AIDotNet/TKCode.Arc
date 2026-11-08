@@ -112,6 +112,9 @@ public static partial class GalleryCatalog
             new("ArcWindow", "Window", "arc-window", 0,
                 "A desktop window with an Arc title bar: left, center and right areas for your controls, native dragging, snapping and resizing, and caption buttons that follow the theme.",
                 IsArc: false, AddedOn: "2026-11-04"),
+            new("FluidTabControl", "Fluid tab control", "fluid-tab-control", 0,
+                "Tabs beside one scroll area that holds every tab's content in order. Picking a tab scrolls to its section, and scrolling selects the tab of the section in view.",
+                IsArc: false, AddedOn: "2026-11-07"),
         ], IsArc: false),
     ];
 

@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.FluidTabControlDynamicItemsDemo">
+    <StackPanel Spacing="12" MaxWidth="760">
+        <WrapPanel ItemSpacing="8" LineSpacing="8">
+            <arc:Button x:Name="Add" Content="Add a section" Variant="Secondary" Size="Small" />
+            <arc:Button x:Name="Remove" Content="Remove the selected section" Variant="Secondary" Size="Small" />
+            <arc:Button x:Name="MoveUp" Content="Move it up" Variant="Ghost" Size="Small" />
+        </WrapPanel>
+        <Border Height="300"
+                BorderThickness="1"
+                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+                Background="{arc:ArcDesignTokenResource Surface}"
+                ClipToBounds="True">
+            <arc:FluidTabControl x:Name="Board" AutomationProperties.Name="Release notes">
+                <arc:FluidTabControl.ContentTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <Border Height="160"
+                                Padding="16"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
+                                Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+                            <TextBlock Text="{Binding StringFormat='{}{0}: notes for this release.'}" TextWrapping="Wrap" />
+                        </Border>
+                    </DataTemplate>
+                </arc:FluidTabControl.ContentTemplate>
+            </arc:FluidTabControl>
+        </Border>
+    </StackPanel>
+</UserControl>

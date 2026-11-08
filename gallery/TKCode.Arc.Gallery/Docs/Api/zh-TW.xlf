@@ -10476,6 +10476,66 @@
         <source>Surface of the tray: Muted (default), or Floating for a raised shadow and hairline edge.</source>
         <target>托盤的表面樣式：Muted（預設），或帶有凸起陰影與細邊框的 Floating。</target>
       </trans-unit>
+      <trans-unit id="FluidTabControl">
+        <source>A tab list beside one scroll area that holds the content of every tab, stacked in order (scroll-linked tabs, or a scroll spy). Selecting a tab scrolls its section into place; scrolling the content selects the tab of the section that reaches the anchor line (`SnapAlignment`). Use it for settings pages, long forms and documents where the person reads straight through but also jumps between sections. Items are `FluidTabItem` containers written inline, or are generated from `ItemsSource`: `ItemTemplate` renders the tab, `IconTemplate` its icon and `ContentTemplate` its section.</source>
+        <target>標籤列旁是一個捲動區域，依序堆疊每個標籤的內容（捲動連動標籤頁，即 scroll spy）。選取標籤會把它的區段捲動到位；捲動內容會選取到達錨線（`SnapAlignment`）的區段所對應的標籤。適用於設定頁、長表單與文件：使用者可以一路讀下去，也可以在區段之間跳轉。項目是直接寫入的 `FluidTabItem` 容器，或由 `ItemsSource` 產生：`ItemTemplate` 呈現標籤，`IconTemplate` 呈現圖示，`ContentTemplate` 呈現區段。</target>
+      </trans-unit>
+      <trans-unit id="FluidTabControl.AnimationDuration">
+        <source>Length of the smooth scroll to a selected section. Zero jumps.</source>
+        <target>平滑捲動到選取區段的時長。為零時直接跳轉。</target>
+      </trans-unit>
+      <trans-unit id="FluidTabControl.ContentPadding">
+        <source>Padding around the stacked sections inside the scroll area.</source>
+        <target>捲動區域內堆疊區段周圍的內距。</target>
+      </trans-unit>
+      <trans-unit id="FluidTabControl.ContentTemplate">
+        <source>Template for the section of a data item (the tab uses `ItemTemplate`).</source>
+        <target>資料項目區段的範本（標籤使用 `ItemTemplate`）。</target>
+      </trans-unit>
+      <trans-unit id="FluidTabControl.EasingFunction">
+        <source>Easing of the smooth scroll to a selected section.</source>
+        <target>平滑捲動到選取區段的緩動函式。</target>
+      </trans-unit>
+      <trans-unit id="FluidTabControl.IconTemplate">
+        <source>Template for the icon of a data item's tab; the item itself is the icon's data. Without it, data items have no icon.</source>
+        <target>資料項目標籤圖示的範本；資料項目本身就是圖示的資料。未設定時資料項目沒有圖示。</target>
+      </trans-unit>
+      <trans-unit id="FluidTabControl.IsAnimationEnabled">
+        <source>Whether selecting a tab scrolls smoothly. When false, or when the motion level is below full, the scroll jumps.</source>
+        <target>選取標籤時是否平滑捲動。為 false 或動態效果等級低於完整時，直接跳轉。</target>
+      </trans-unit>
+      <trans-unit id="FluidTabControl.SectionSpacing">
+        <source>Space between two sections in the scroll area.</source>
+        <target>捲動區域中兩個區段之間的間距。</target>
+      </trans-unit>
+      <trans-unit id="FluidTabControl.SnapAlignment">
+        <source>The line of the scroll area that a selected section scrolls to, and that decides the current section while scrolling.</source>
+        <target>選取區段要捲動到的那條線，也是捲動時判斷目前區段的那條線。</target>
+      </trans-unit>
+      <trans-unit id="FluidTabControl.TabListWidth">
+        <source>Width of the tab list.</source>
+        <target>標籤列的寬度。</target>
+      </trans-unit>
+      <trans-unit id="FluidTabControl.TabPlacement">
+        <source>Which side the tab list is on.</source>
+        <target>標籤列位於哪一側。</target>
+      </trans-unit>
+      <trans-unit id="FluidTabItem">
+        <source>One tab of a `FluidTabControl`: `Header` (with an optional `Icon`) is shown in the tab list, and `Content` is shown as the tab's section in the control's scroll area, stacked with the sections of the other tabs. Disabled tabs are skipped by the arrow keys and cannot be selected; a hidden tab hides its section too.</source>
+        <target>`FluidTabControl` 的一個標籤：`Header`（以及選用的 `Icon`）顯示在標籤列中，`Content` 作為該標籤的區段顯示在控制項的捲動區域中，與其他標籤的區段依序堆疊。停用的標籤會被方向鍵略過且無法選取；隱藏的標籤也會隱藏它的區段。</target>
+      </trans-unit>
+      <trans-unit id="FluidTabItem.Icon">
+        <source>Optional icon shown before the header in the tab list: a glyph, a control or a value for `IconTemplate`.</source>
+        <target>在標籤列中顯示於標題之前的選用圖示：字形、控制項，或交給 `IconTemplate` 的值。</target>
+      </trans-unit>
+      <trans-unit id="FluidTabItem.IconTemplate">
+        <source>Template that renders `Icon`.</source>
+        <target>呈現 `Icon` 的範本。</target>
+      </trans-unit>
+      <trans-unit id="FluidTabItem.IsSelected">
+        <source>Whether this tab is the selected one.</source>
+        <target>該標籤是否為選取的標籤。</target>
+      </trans-unit>
       <trans-unit id="GalaxyAccount">
         <source>One customer account of a `CustomerGalaxy`: a dot whose area follows `Mrr` and whose color follows `Health`. The values the groupings read (plan, region, industry …) go into `Groups` under the grouping's `Key`.</source>
         <target>`CustomerGalaxy` 的一個客戶帳戶：一個圓點，其面積隨 `Mrr` 變化，顏色隨 `Health` 變化。分組所讀取的值（方案、地區、產業等）放入 `Groups` 中，以分組的 `Key` 為鍵。</target>
