@@ -1,0 +1,31 @@
+<!-- The Razor SDK for its static web assets alone (there are no Razor files): wwwroot/ is served by the host at
+     _content/TKCode.Arc.Pdf.Browser/, for project references and packages alike. pdf.js needs real addresses for its worker, CMaps
+     and fonts, so unlike the single modules of the Video and Audio packages these cannot be data: URLs. -->
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+    <PropertyGroup>
+        <TargetFrameworks>$(ArcTargetFrameworks)</TargetFrameworks>
+        <AssemblyName>TKCode.Arc.Pdf.Browser</AssemblyName>
+        <RootNamespace>TKCode.Arc</RootNamespace>
+        <PackageId>TKCode.Arc.Pdf.Browser</PackageId>
+        <Description>WebAssembly PDF backend for TKCode.Arc.Pdf, built on pdf.js. Call await ArcPdfBrowser.UseAsync() at startup of a browser app. pdf.js and its data files ship in the package as static web assets; their licenses are summarized in PDFJS-NOTICES.md.</Description>
+        <PackageTags>$(PackageTags);pdf;viewer;document;pdfjs;browser;wasm</PackageTags>
+        <!-- The JSImport source generator emits unsafe code, and page pixels go through native memory. -->
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <!-- The package holds pdf.js and what it bundles as well as MIT code, so its license is a file: LICENSE.txt says which is which. -->
+        <PackageLicenseExpression></PackageLicenseExpression>
+        <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="../TKCode.Arc.Pdf/TKCode.Arc.Pdf.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <!-- Imported from a data: URL by ArcPdfBrowser, like arc-video.js. -->
+        <EmbeddedResource Include="arc-pdf.js" LogicalName="TKCode.Arc.Pdf.Browser.arc-pdf.js" />
+        <None Include="LICENSE.txt" Pack="true" PackagePath="/" />
+        <None Include="PDFJS-NOTICES.md" Pack="true" PackagePath="/" />
+    </ItemGroup>
+    <!-- wwwroot/pdfjs is not committed: tools/pdf/sync-pdfjs.sh downloads and verifies it. -->
+    <Target Name="WarnMissingPdfJs" BeforeTargets="GenerateNuspec">
+        <Warning Condition="!Exists('$(MSBuildProjectDirectory)/wwwroot/pdfjs/pdf.min.mjs') Or !Exists('$(MSBuildProjectDirectory)/wwwroot/pdfjs/pdf.worker.min.mjs')" Text="No pdf.js under wwwroot/pdfjs: the package would ship without its renderer. Run tools/pdf/sync-pdfjs.sh." />
+    </Target>
+</Project>

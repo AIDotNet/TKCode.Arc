@@ -46,8 +46,8 @@ internal sealed class SunburstStage : Avalonia.Controls.Control, Avalonia.Render
     private SunburstEntry? _tipNode;
     private ChartsBAutomationPeer? _peer;
     private int _paintVersion = -1;
-    private FormattedText? _centerLabel;
-    private FormattedText? _centerValue;
+    private ChartsBRun? _centerLabel;
+    private ChartsBRun? _centerValue;
     private FormattedText? _empty;
     private (SunburstEntry? Node, double Room) _centerKey;
     private int _textVersion = -1;
@@ -754,19 +754,19 @@ internal sealed class SunburstStage : Avalonia.Controls.Control, Avalonia.Render
             var title = node.Path.Length > 1 ? string.Join(" / ", node.Path.Take(node.Path.Length - 1)) : _owner.Tree.Root.Label;
             _tooltip.SetRows(
             [
-                new ChartsBTipRow { Left = ChartsBText.Make(title, p, p.TypeXS, p.TextMuted), MinHeight = p.TypeXS * 1.5 },
+                new ChartsBTipRow { Left = ChartsBText.Run(title, p, p.TypeXS, p.TextMuted), MinHeight = p.TypeXS * 1.5 },
                 new ChartsBTipRow
                 {
                     MinHeight = p.TypeSM * 1.35,
                     Swatch = FillOf(node),
                     Shape = ChartsBSwatchShape.Round,
-                    Left = ChartsBText.Make(node.Label, p, p.TypeSM, p.Foreground),
-                    Right = ChartsBText.Make(_owner.Format(node.Value), p, p.TypeSM, p.Foreground, FontWeight.Medium)
+                    Left = ChartsBText.Run(node.Label, p, p.TypeSM, p.Foreground),
+                    Right = ChartsBText.Run(_owner.Format(node.Value), p, p.TypeSM, p.Foreground, FontWeight.Medium)
                 },
                 new ChartsBTipRow
                 {
                     MinHeight = p.TypeXS * 1.5,
-                    Left = ChartsBText.Make($"{ChartsBMath.Percent(Sunburst.ShareOf(node, parent), 1)} of {parent.Label}", p, p.TypeXS, p.TextMuted)
+                    Left = ChartsBText.Run($"{ChartsBMath.Percent(Sunburst.ShareOf(node, parent), 1)} of {parent.Label}", p, p.TypeXS, p.TextMuted)
                 }
             ]);
         }
@@ -775,15 +775,19 @@ internal sealed class SunburstStage : Avalonia.Controls.Control, Avalonia.Render
         var anchor = (_pointer ?? PointOf(node)) + offset;
         var size = _tooltip.Size;
         var bounds = _owner.Bounds.Size;
-        var left = anchor.X + TipGap;
-        if (left + size.Width > bounds.Width)
+        // Away from the hole, so the total in the centre stays readable; toward it only when the chart has no room outward.
+        var ring = Frame().Item1 + offset;
+        var right = anchor.X >= ring.X;
+        var left = right ? anchor.X + TipGap : anchor.X - TipGap - size.Width;
+        if (right ? left + size.Width > bounds.Width : left < 0)
         {
-            left = anchor.X - TipGap - size.Width;
+            left = right ? anchor.X - TipGap - size.Width : anchor.X + TipGap;
         }
-        var top = anchor.Y + TipGap;
-        if (top + size.Height > bounds.Height)
+        var down = anchor.Y >= ring.Y;
+        var top = down ? anchor.Y + TipGap : anchor.Y - TipGap - size.Height;
+        if (down ? top + size.Height > bounds.Height : top < 0)
         {
-            top = anchor.Y - TipGap - size.Height;
+            top = down ? anchor.Y - TipGap - size.Height : anchor.Y + TipGap;
         }
         _tooltip.Show(new Point(ChartsBMath.Clamp(left, 0, Math.Max(0, bounds.Width - size.Width)), ChartsBMath.Clamp(top, 0, Math.Max(0, bounds.Height - size.Height))));
         _owner.Overlay.InvalidateVisual();
@@ -918,18 +922,22 @@ internal sealed class SunburstStage : Avalonia.Controls.Control, Avalonia.Render
         if (_centerKey != key || _centerLabel is null)
         {
             _centerKey = key;
-            _centerLabel = ChartsBText.Trimmed(node.Label, p, p.TypeXS, p.TextSecondary, room);
-            _centerValue = ChartsBText.Trimmed(_owner.Format(node.Value), p, p.TypeBase, p.Foreground, room, FontWeight.Medium);
+            _centerLabel?.Dispose();
+            _centerValue?.Dispose();
+            _centerLabel = ChartsBText.Run(node.Label, p, p.TypeXS, p.TextSecondary);
+            _centerLabel.Constrain(room);
+            _centerValue = ChartsBText.Run(_owner.Format(node.Value), p, p.TypeBase, p.Foreground, FontWeight.Medium);
+            _centerValue.Constrain(room);
         }
         var fade = _labelFade.Value;
         var digits = _digits.IsVisible ? _digits.Bounds.Height : _centerValue!.Height;
         var labelHeight = p.TypeXS * 1.4;
         var top = center.Y - (labelHeight + digits) / 2;
         using var opacity = context.PushOpacity(Math.Max(fade, 0));
-        context.DrawText(_centerLabel, new Point(center.X - _centerLabel.WidthIncludingTrailingWhitespace / 2, top + (labelHeight - _centerLabel.Height) / 2));
+        _centerLabel.Draw(context, new Point(center.X - _centerLabel.Width / 2, top + (labelHeight - _centerLabel.Height) / 2));
         if (!_digits.IsVisible)
         {
-            context.DrawText(_centerValue!, new Point(center.X - _centerValue!.WidthIncludingTrailingWhitespace / 2, top + labelHeight));
+            _centerValue!.Draw(context, new Point(center.X - _centerValue!.Width / 2, top + labelHeight));
         }
     }
 

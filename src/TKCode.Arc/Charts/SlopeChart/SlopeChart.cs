@@ -852,23 +852,23 @@ public class SlopeChart : Control, IChartsBAccessible, Avalonia.Rendering.ICusto
             var sm = p.TypeSM;
             _tooltip.SetRows(
             [
-                new ChartsBTipRow { Left = ChartsBText.Make(row.Item.Label, p, sm, p.Foreground, FontWeight.Medium), MinHeight = sm * 1.5 },
+                new ChartsBTipRow { Left = ChartsBText.Run(row.Item.Label, p, sm, p.Foreground, FontWeight.Medium), MinHeight = sm * 1.5 },
                 new ChartsBTipRow
                 {
                     MarginTop = 2, MinHeight = sm * 1.3,
-                    Left = ChartsBText.Make(StartLabel, p, sm, p.TextSecondary),
-                    Right = ChartsBText.Make(Format(row.Item.Start), p, sm, p.Foreground, FontWeight.Medium)
+                    Left = ChartsBText.Run(StartLabel, p, sm, p.TextSecondary),
+                    Right = ChartsBText.Run(Format(row.Item.Start), p, sm, p.Foreground, FontWeight.Medium)
                 },
                 new ChartsBTipRow
                 {
                     MinHeight = sm * 1.3,
-                    Left = ChartsBText.Make(EndLabel, p, sm, p.TextSecondary),
-                    Right = ChartsBText.Make(Format(row.Item.End), p, sm, p.Foreground, FontWeight.Medium)
+                    Left = ChartsBText.Run(EndLabel, p, sm, p.TextSecondary),
+                    Right = ChartsBText.Run(Format(row.Item.End), p, sm, p.Foreground, FontWeight.Medium)
                 },
                 new ChartsBTipRow
                 {
                     MarginTop = 2, MinHeight = p.TypeXS * 1.5,
-                    Left = ChartsBText.Make($"{Change(row.Item)}, {RankText(row)}", p, p.TypeXS, p.TextMuted)
+                    Left = ChartsBText.Run($"{Change(row.Item)}, {RankText(row)}", p, p.TypeXS, p.TextMuted)
                 }
             ]);
         }

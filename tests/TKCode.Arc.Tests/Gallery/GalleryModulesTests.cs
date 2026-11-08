@@ -52,6 +52,73 @@ public class GalleryModulesTests
         }
     }
 
+    [Fact]
+    public async Task Only_A_Pdf_Page_Asks_For_The_Pdf_Backend_And_A_Failure_Still_Opens_It()
+    {
+        var asked = 0;
+        var answer = new TaskCompletionSource<bool>();
+        GalleryModules.PdfBackend = () =>
+        {
+            asked++;
+            return answer.Task;
+        };
+        try
+        {
+            GalleryModules.IsReady(Entry("Button")).ShouldBeTrue();
+            (await GalleryModules.EnsureAsync(Entry("Button"))).ShouldBeTrue();
+            GalleryModules.IsReady(Entry("PageViewer")).ShouldBeTrue("PageViewer has no PDF in it");
+            asked.ShouldBe(0);
+
+            GalleryModules.IsReady(Entry("PdfViewer")).ShouldBeFalse();
+            var page = GalleryModules.EnsureAsync(Entry("PdfViewer"));
+            page.IsCompleted.ShouldBeFalse();
+            asked.ShouldBe(1);
+            answer.SetResult(false);
+            (await page).ShouldBeTrue("the demos fall back to a simulated document");
+        }
+        finally
+        {
+            GalleryModules.PdfBackend = null;
+        }
+        GalleryModules.IsReady(Entry("PdfViewer")).ShouldBeTrue();
+    }
+
+    [Fact]
+    public void The_Pdf_Demos_Use_The_Sample_With_A_Renderer_And_Generated_Pages_Without()
+    {
+        var root = TKCode.Arc.Gallery.Demos.PdfDemoMedia.HttpRoot;
+        var previous = ArcPdf.Backend;
+        try
+        {
+            ArcPdf.Backend = new TKCode.Arc.Tests.Pdf.FakePdfBackend();
+            TKCode.Arc.Gallery.Demos.PdfDemoMedia.Simulated.ShouldBeNull();
+            TKCode.Arc.Gallery.Demos.PdfDemoMedia.HttpRoot = null;
+            TKCode.Arc.Gallery.Demos.PdfDemoMedia.Sample!.Uri!.AbsoluteUri.ShouldBe("avares://TKCode.Arc.Gallery.Shots/Assets/Pdf/arc-sample.pdf");
+            TKCode.Arc.Gallery.Demos.PdfDemoMedia.HttpRoot = new Uri("https://example.com/site/");
+            TKCode.Arc.Gallery.Demos.PdfDemoMedia.Locked!.Uri!.AbsoluteUri.ShouldBe("https://example.com/site/media/Pdf/arc-sample-locked.pdf");
+
+            ArcPdf.Backend = new NoRenderer();
+            TKCode.Arc.Gallery.Demos.PdfDemoMedia.Sample.ShouldBeNull();
+            TKCode.Arc.Gallery.Demos.PdfDemoMedia.Locked.ShouldBeNull();
+            TKCode.Arc.Gallery.Demos.PdfDemoMedia.Simulated.ShouldBeOfType<SimulatedPdfDocument>().Dispose();
+        }
+        finally
+        {
+            ArcPdf.Backend = previous;
+            TKCode.Arc.Gallery.Demos.PdfDemoMedia.HttpRoot = root;
+        }
+    }
+
+    private sealed class NoRenderer : IPdfBackend
+    {
+        public string Name => "none";
+
+        public bool IsReal => false;
+
+        public Task<PdfDocument> OpenAsync(PdfSource source, string? password, CancellationToken cancellationToken) =>
+            throw new PdfException(PdfErrorKind.BackendUnavailable);
+    }
+
     [AvaloniaFact]
     public void A_Special_Page_Loads_The_Assembly_Once_Before_Its_Demos()
     {

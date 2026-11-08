@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="2.1" srcLang="en-US" xmlns="urn:oasis:names:tc:xliff:document:2.0">
+  <file id="TKCode.Arc.Localization.PageViewerLangResourceKind">
+    <unit id="ActualSize">
+      <segment>
+        <source>Actual size</source>
+      </segment>
+    </unit>
+    <unit id="Continuous">
+      <segment>
+        <source>Continuous</source>
+      </segment>
+    </unit>
+    <unit id="FitHeight">
+      <segment>
+        <source>Fit height</source>
+      </segment>
+    </unit>
+    <unit id="FitPage">
+      <segment>
+        <source>Fit page</source>
+      </segment>
+    </unit>
+    <unit id="FitWidth">
+      <segment>
+        <source>Fit width</source>
+      </segment>
+    </unit>
+    <unit id="NextPage">
+      <segment>
+        <source>Next page</source>
+      </segment>
+    </unit>
+    <unit id="Page">
+      <segment>
+        <source>Page</source>
+      </segment>
+    </unit>
+    <unit id="PageOfTotal">
+      <segment>
+        <source>Page {0} of {1}</source>
+      </segment>
+    </unit>
+    <unit id="Pan">
+      <segment>
+        <source>Pan</source>
+      </segment>
+    </unit>
+    <unit id="PreviousPage">
+      <segment>
+        <source>Previous page</source>
+      </segment>
+    </unit>
+    <unit id="Select">
+      <segment>
+        <source>Select</source>
+      </segment>
+    </unit>
+    <unit id="SinglePage">
+      <segment>
+        <source>Single page</source>
+      </segment>
+    </unit>
+    <unit id="Zoom">
+      <segment>
+        <source>Zoom</source>
+      </segment>
+    </unit>
+    <unit id="ZoomIn">
+      <segment>
+        <source>Zoom in</source>
+      </segment>
+    </unit>
+    <unit id="ZoomOut">
+      <segment>
+        <source>Zoom out</source>
+      </segment>
+    </unit>
+  </file>
+</xliff>

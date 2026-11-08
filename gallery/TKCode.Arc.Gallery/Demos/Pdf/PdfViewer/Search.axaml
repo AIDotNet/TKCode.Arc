@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.PdfViewerSearchDemo">
+    <!-- The search box opens with a term in it. Enter and Shift+Enter walk through the results. -->
+    <arc:PdfViewer Height="480"
+                   Source="{x:Static demos:PdfDemoMedia.Sample}"
+                   Document="{x:Static demos:PdfDemoMedia.Simulated}"
+                   IsSearchOpen="True"
+                   SearchText="page" />
+</UserControl>

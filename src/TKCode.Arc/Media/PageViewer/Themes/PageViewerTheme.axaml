@@ -1,0 +1,190 @@
+<!--
+    PageViewer (design/components/pdf/pdf.md): a toolbar over a scroll viewer that holds one self-drawn presenter. Paper stays
+    white in dark themes (ADR 0041, item 7), so the presenter's page colors are not tokens; the canvas is SurfaceMuted.
+    The leading pane and the overlay are empty here; a derived viewer fills them (PageViewer.LeadingPane, ContentOverlay).
+-->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.PageViewerTheme">
+    <ControlTheme x:Key="{x:Type arc:PageViewerToolbar}" TargetType="arc:PageViewerToolbar">
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessBottom}" />
+        <Setter Property="Height" Value="{arc:PageViewerTokenResource ToolbarHeight}" />
+        <Setter Property="Padding" Value="{arc:PageViewerTokenResource ToolbarPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="ClipToBounds" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:PageViewerToolbar">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Padding="{TemplateBinding Padding}">
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <ContentPresenter Grid.Column="0"
+                                          VerticalAlignment="Center"
+                                          Content="{TemplateBinding Start}" />
+                        <StackPanel Name="PART_Tools"
+                                    Grid.Column="1"
+                                    Orientation="Horizontal"
+                                    Spacing="{arc:ArcDesignTokenResource Space1}"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center">
+                            <arc:Button Name="PART_Previous"
+                                        Classes="tool wide-only"
+                                        Variant="Ghost"
+                                        Size="Small"
+                                        arc:Tooltip.Tip="{arc:PageViewerLangResource PreviousPage}"
+                                        AutomationProperties.Name="{arc:PageViewerLangResource PreviousPage}">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronUp}" />
+                            </arc:Button>
+                            <arc:Input Name="PART_PageBox"
+                                       Size="Small"
+                                       IsLabelVisible="False"
+                                       Label="{arc:PageViewerLangResource Page}"
+                                       Width="{arc:PageViewerTokenResource PageNumberBoxWidth}"
+                                       TextAlignment="Center"
+                                       VerticalAlignment="Center" />
+                            <TextBlock Name="PART_PageTotal"
+                                       VerticalAlignment="Center"
+                                       Margin="4,0"
+                                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            <arc:Button Name="PART_Next"
+                                        Classes="tool wide-only"
+                                        Variant="Ghost"
+                                        Size="Small"
+                                        arc:Tooltip.Tip="{arc:PageViewerLangResource NextPage}"
+                                        AutomationProperties.Name="{arc:PageViewerLangResource NextPage}">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronDown}" />
+                            </arc:Button>
+                            <Border Classes="gap wide-only" />
+                            <arc:Button Name="PART_ZoomOut"
+                                        Classes="tool"
+                                        Variant="Ghost"
+                                        Size="Small"
+                                        arc:Tooltip.Tip="{arc:PageViewerLangResource ZoomOut}"
+                                        AutomationProperties.Name="{arc:PageViewerLangResource ZoomOut}">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Minus}" />
+                            </arc:Button>
+                            <arc:Button Name="PART_ZoomMenu"
+                                        Variant="Ghost"
+                                        Size="Small"
+                                        Width="{arc:PageViewerTokenResource ZoomMenuWidth}"
+                                        Padding="0"
+                                        arc:Tooltip.Tip="{arc:PageViewerLangResource Zoom}"
+                                        AutomationProperties.Name="{arc:PageViewerLangResource Zoom}">
+                                <TextBlock Name="PART_ZoomLabel"
+                                           HorizontalAlignment="Center"
+                                           FontSize="{arc:ArcDesignTokenResource TypeSM}" />
+                            </arc:Button>
+                            <arc:Button Name="PART_ZoomIn"
+                                        Classes="tool"
+                                        Variant="Ghost"
+                                        Size="Small"
+                                        arc:Tooltip.Tip="{arc:PageViewerLangResource ZoomIn}"
+                                        AutomationProperties.Name="{arc:PageViewerLangResource ZoomIn}">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Plus}" />
+                            </arc:Button>
+                            <Border Classes="gap wide-only" />
+                            <arc:Button Name="PART_Layout"
+                                        Classes="tool wide-only"
+                                        Variant="Ghost"
+                                        Size="Small">
+                                <arc:ArcGlyph Name="PART_LayoutGlyph" />
+                            </arc:Button>
+                            <arc:Button Name="PART_Pan"
+                                        Classes="tool wide-only"
+                                        Variant="Ghost"
+                                        Size="Small">
+                                <arc:ArcGlyph Name="PART_PanGlyph" />
+                            </arc:Button>
+                        </StackPanel>
+                        <ContentPresenter Grid.Column="2"
+                                          VerticalAlignment="Center"
+                                          Content="{TemplateBinding End}" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ arc|Button.tool">
+            <Setter Property="Width" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+        <Style Selector="^ /template/ Border.gap">
+            <Setter Property="Width" Value="{arc:ArcDesignTokenResource Space2}" />
+        </Style>
+        <Style Selector="^:narrow /template/ :is(Control).wide-only">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <!-- No pages: "/ 0" and a zoom of nothing say nothing, and nothing here can be used. The two slots stay. -->
+        <Style Selector="^:empty /template/ StackPanel#PART_Tools">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+
+        <!-- The layout button names what it switches to. -->
+        <Style Selector="^ /template/ arc|Button#PART_Layout">
+            <Setter Property="arc:Tooltip.Tip" Value="{arc:PageViewerLangResource SinglePage}" />
+            <Setter Property="AutomationProperties.Name" Value="{arc:PageViewerLangResource SinglePage}" />
+        </Style>
+        <Style Selector="^:single /template/ arc|Button#PART_Layout">
+            <Setter Property="arc:Tooltip.Tip" Value="{arc:PageViewerLangResource Continuous}" />
+            <Setter Property="AutomationProperties.Name" Value="{arc:PageViewerLangResource Continuous}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button#PART_Pan">
+            <Setter Property="arc:Tooltip.Tip" Value="{arc:PageViewerLangResource Pan}" />
+            <Setter Property="AutomationProperties.Name" Value="{arc:PageViewerLangResource Pan}" />
+        </Style>
+        <Style Selector="^:pan /template/ arc|Button#PART_Pan">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+            <Setter Property="arc:Tooltip.Tip" Value="{arc:PageViewerLangResource Select}" />
+            <Setter Property="AutomationProperties.Name" Value="{arc:PageViewerLangResource Select}" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:PageViewer}" TargetType="arc:PageViewer">
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:PageViewer">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <Grid RowDefinitions="Auto,*">
+                        <arc:PageViewerToolbar Name="PART_Toolbar"
+                                               IsVisible="{TemplateBinding IsToolbarVisible}"
+                                               Start="{TemplateBinding ToolbarStart}"
+                                               End="{TemplateBinding ToolbarEnd}" />
+                        <Grid Grid.Row="1" ColumnDefinitions="Auto,*">
+                            <ContentPresenter Name="PART_LeadingPane" />
+                            <ScrollViewer Name="PART_Scroll"
+                                          Grid.Column="1"
+                                          HorizontalScrollBarVisibility="Auto"
+                                          VerticalScrollBarVisibility="Auto">
+                                <arc:PageViewerPresenter Name="PART_Presenter" />
+                            </ScrollViewer>
+                            <ContentPresenter Name="PART_Overlay" Grid.ColumnSpan="2" />
+                        </Grid>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ arc|PageViewerPresenter">
+            <Setter Property="PageShadow" Value="{arc:ArcDesignTokenResource ShadowResting}" />
+            <Setter Property="PlaceholderInk" Value="{arc:PageViewerTokenResource PlaceholderInk}" />
+            <Setter Property="PageSpacing" Value="{arc:PageViewerTokenResource PageSpacing}" />
+            <Setter Property="CanvasPadding" Value="{arc:PageViewerTokenResource CanvasPadding}" />
+            <Setter Property="CanvasPaddingNarrow" Value="{arc:PageViewerTokenResource CanvasPaddingNarrow}" />
+            <Setter Property="FocusAdorner" Value="{x:Null}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

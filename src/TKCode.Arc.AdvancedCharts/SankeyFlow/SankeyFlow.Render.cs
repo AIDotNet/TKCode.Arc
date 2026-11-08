@@ -28,6 +28,8 @@ public partial class SankeyFlow
     private readonly IBrush?[] _ribbonBrushes = new IBrush?[16];
     private bool _ribbonBrushUpright;
     private int _ribbonBrushVersion = -1;
+    // Each list belongs to the layer that draws its text and is rebuilt with it, so neither outlives or outgrows a paint.
+    private readonly List<Rect> _headerKeepOut = [];
     private readonly List<Rect> _particleKeepOut = [];
     private readonly IBrush?[] _particleBrushes = new IBrush?[(4 + 1) * ParticleLevels];
     private int _particleBrushVersion = -1;
@@ -179,7 +181,7 @@ public partial class SankeyFlow
             return;
         }
         using var fade = context.PushOpacity(_reveal.Fade);
-        _particleKeepOut.Clear();
+        _headerKeepOut.Clear();
         // Stacked, a stage's name sits where the ribbons run, so it draws over them; side by side it sits above them.
         if (!_upright || !_reveal.IsRevealed)
         {
@@ -219,7 +221,7 @@ public partial class SankeyFlow
                 var row = c < _placement.Columns.Length && _placement.Columns[c].Length > 0 ? _placement.Nodes[_placement.Columns[c][0]].Main : 0;
                 var at = new Point(Inset, row - layout.Height - 2);
                 layout.Draw(context, at);
-                KeepParticlesOff(at, layout.WidthIncludingTrailingWhitespace, layout.Height);
+                _headerKeepOut.Add(new Rect(at, new Size(layout.WidthIncludingTrailingWhitespace, layout.Height)).Inflate(ParticleTextMargin));
                 continue;
             }
             var main = Inset + (columnCount == 1 ? run / 2 : run * c / (columnCount - 1));
@@ -327,6 +329,7 @@ public partial class SankeyFlow
     /// <summary>The top layer: labels above the particles so dots never cross the text, then the tooltip.</summary>
     private void PaintOverlay(DrawingContext context)
     {
+        _particleKeepOut.Clear();
         if (Bounds.Width > 0 && _placement is not null && _reveal.IsRevealed && !_model.IsEmpty)
         {
             EnsureText();
@@ -403,6 +406,9 @@ public partial class SankeyFlow
     /// <summary>Marks drawn text so the particle layer, which paints above it, leaves it readable.</summary>
     private void KeepParticlesOff(Point at, double width, double height) =>
         _particleKeepOut.Add(new Rect(at, new Size(width, height)).Inflate(ParticleTextMargin));
+
+    /// <summary>How many labels the particles avoid now; stays the size of one paint however often the overlay repaints.</summary>
+    internal int ParticleKeepOutCount => _particleKeepOut.Count;
 
     /// <summary>Whether a particle at <paramref name="point"/> would land on text.</summary>
     internal static bool IsKeptOut(List<Rect> keepOut, Point point)
@@ -506,7 +512,7 @@ public partial class SankeyFlow
             {
                 SampleParticle(item.Drawn, item.Seed, item.Speed, k, _clock, spread, out var main, out var cross, out var level);
                 var at = At(main, cross);
-                if (!IsKeptOut(_particleKeepOut, at))
+                if (!IsKeptOut(_particleKeepOut, at) && !IsKeptOut(_headerKeepOut, at))
                 {
                     context.DrawEllipse(_particleBrushes[palette * ParticleLevels + level], null, at, radius, radius);
                 }

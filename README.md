@@ -9,7 +9,7 @@ English | [简体中文](https://github.com/AIDotNet/TKCode.Arc/blob/main/README
 
 TKCode.Arc is a UI kit for .NET applications on Avalonia 12. It ports Arc's 112 free components and adds what a full
 product needs around them: page-level blocks, a spreadsheet-style data grid, a workflow canvas, IDE-style docking, a
-terminal, and audio and video playback.
+terminal, a PDF viewer, and audio and video playback.
 
 **[Live gallery and documentation](https://docs.tkcode.si/)** · [Changelog](https://github.com/AIDotNet/TKCode.Arc/blob/main/CHANGELOG.md)
 ## Why Arc
@@ -43,6 +43,7 @@ terminal, and audio and video playback.
 | `TKCode.Arc.Workflow` | A canvas for showing, editing and running graphs of steps, with pan, zoom, auto-arrange and undo. |
 | `TKCode.Arc.Dock` | IDE-style tab groups and resizable splits, with keyboard navigation and layouts saved as JSON. |
 | `TKCode.Arc.Terminal` | `TerminalView` over libghostty-vt, with the native libraries bundled. |
+| `TKCode.Arc.Pdf`, `.Pdf.Native`, `.Pdf.Browser` | `PdfViewer` with thumbnails, outline, search, text selection and links, using PDFium on desktop and pdf.js on WebAssembly. New in the next version. |
 | `TKCode.Arc.Audio`, `.Audio.Native`, `.Audio.Browser` | The `IAudioPlayer` abstraction, with miniaudio on desktop and HTML audio on WebAssembly. |
 | `TKCode.Arc.Video`, `.Video.Native`, `.Video.Browser` | `VideoPlayer` and `VideoSurface` over each platform's own player. In this repository, not published to NuGet yet. |
 
@@ -73,7 +74,7 @@ lists each release and its migration notes.
 | **.NET** | `net8.0`, `net10.0` and `net11.0`. `TKCode.Arc.Terminal` targets `net10.0` and `net11.0`. |
 | **Avalonia** | Avalonia 12, pinned to an exact version in [`build/Versions.props`](https://github.com/AIDotNet/TKCode.Arc/blob/main/build/Versions.props). |
 | **Desktop** | Windows, macOS and Linux. |
-| **Browser** | The gallery itself runs on WebAssembly, and audio and video have browser backends. |
+| **Browser** | The gallery itself runs on WebAssembly, and audio, video and PDF have browser backends. |
 | **Mobile** | `TKCode.Arc.Mobile` is previewed in a desktop phone frame and is not yet verified on Android or iOS devices. |
 
 ## Repository
@@ -98,6 +99,10 @@ dotnet test tests/TKCode.Arc.Foundation.Tests
 dotnet test tests/TKCode.Arc.Tests
 dotnet run --project gallery/TKCode.Arc.Gallery.Desktop -f net10.0
 ```
+
+PDFium and pdf.js are not committed: `tools/pdf/sync-native.sh` and `tools/pdf/sync-pdfjs.sh` download them and check their
+checksums. Without them the desktop gallery shows a simulated document in the PDF demos, and a browser build has no pdf.js to
+import.
 
 Project rules and conventions are in [AGENTS.md](https://github.com/AIDotNet/TKCode.Arc/blob/main/AGENTS.md).
 

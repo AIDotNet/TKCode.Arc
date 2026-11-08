@@ -1,13 +1,13 @@
 ---
 title: 更新日志
-source-hash: 037a5f79e7e2
+source-hash: 8d74f32403b2
 ---
 
 # 更新日志
 
 TKCode.Arc 的所有重要变更，最新的在前。版本遵循[语义化版本](https://semver.org/)。版本带有 `-preview` 后缀期间，API 在各发布版本之间仍可能变化；升级前请阅读说明，并在项目中固定版本号。同样的列表也保存在仓库的 `CHANGELOG.md` 中。
 
-每次发布附带的 NuGet 包：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Foundation`（0.3.2 起）、`TKCode.Arc.Fonts` `TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 、`TKCode.Arc.Special`、`TKCode.Arc.Workflow`、`TKCode.Arc.Dock`（0.4.0-preview.2 起）、`TKCode.Arc.Themes.Pixel`、`TKCode.Arc.Themes.Corners`、`TKCode.Arc.Mobile`、`TKCode.Arc.Terminal`、`TKCode.Arc.Audio`、`TKCode.Arc.Audio.Native`、`TKCode.Arc.Audio.Browser` 和 `TKCode.Arc.Templates`（0.4.0-preview.6 起）。
+每次发布附带的 NuGet 包：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Foundation`（0.3.2 起）、`TKCode.Arc.Fonts` `TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 、`TKCode.Arc.Special`、`TKCode.Arc.Workflow`、`TKCode.Arc.Dock`（0.4.0-preview.2 起）、`TKCode.Arc.Themes.Pixel`、`TKCode.Arc.Themes.Corners`、`TKCode.Arc.Mobile`、`TKCode.Arc.Terminal`、`TKCode.Arc.Audio`、`TKCode.Arc.Audio.Native`、`TKCode.Arc.Audio.Browser`、`TKCode.Arc.Templates`（0.4.0-preview.6 起）、`TKCode.Arc.Pdf`、`TKCode.Arc.Pdf.Native` 和 `TKCode.Arc.Pdf.Browser`（下一版本起）。
 
 ## 未发布
 
@@ -17,6 +17,8 @@ TKCode.Arc 的所有重要变更，最新的在前。版本遵循[语义化版�
 - **Gallery 的 Web 版与桌面版**：网站说明自身运行在 WebAssembly 中、性能不代表桌面版，并按访客系统优先列出最新版本的安装包。桌面版新增设置菜单，包含外观、语言和关于（版本号、更新检测、开源协议、源代码和第三方声明），首页改为显示更新状态。
 - **Gallery 适配手机**：宽度小于 760 像素时侧边栏改为抽屉，文档页和首页使用手机边距，各区块改为纵向排列。
 - **特殊组件 › 趣味**（`TKCode.Arc.Special`，参考 Arc Pro 行为与动效的原创设计）：`TicketTear`，一张活动门票，票根随手沿齿孔一孔一孔撕开，然后掉落。Enter、Space 或 `IsTorn` 会自动撕完。
+- **PDF**（新包 `TKCode.Arc.Pdf`、`TKCode.Arc.Pdf.Native` 和 `TKCode.Arc.Pdf.Browser`；issue #51）：`PdfViewer` 从文件、字节、流或地址打开 PDF，侧栏带缩略图和目录，支持带计数和高亮的搜索、文字选择和复制、链接（外部链接只接受 `http`、`https` 和 `mailto`）、密码表单或 `PasswordRequested` 事件，以及加载和失败状态。`arc:Pdf.Source` 在普通 `PageViewer` 中只显示页面。桌面上由 PDFium 渲染（`ArcPdfNative.Use()`，在进程内，Windows、Linux 和 macOS 的 x64 与 arm64），浏览器中由 pdf.js 渲染（`await ArcPdfBrowser.UseAsync()`）。没有后端时文档会失败并给出提示，绝不伪造页面。需要了解的限制：没有嵌入中日韩字体的文档依赖本机字体，不支持触屏拖动选择，纯文本网址只有在 PDFium 下才是链接，浏览器包不含 Liberation 字体。文档和示例提供英文、简体中文和繁体中文。
+- **`PageViewer`**（`TKCode.Arc`，媒体；issue #51）：缩放、平移并翻阅图片（`ItemsSource`）或按需渲染的页面（`IPageSource`），可连续或单页显示，带适应模式、工具栏，以及让你在页面上自行绘制和接收指针输入的 `PageLayer`。一个自绘表面只绘制可见页。文档和示例提供英文、简体中文和繁体中文。
 - **模板**（新包 `TKCode.Arc.Templates`）：`dotnet new install TKCode.Arc.Templates` 后，用 `dotnet new tkcode-arc` 创建桌面应用，或用 `dotnet new tkcode-arc-xplat` 创建同时面向桌面和浏览器（WebAssembly）的应用。提供四种布局（`--layout blank|sidebar|header|dock`），以及这些选项：用 CommunityToolkit.Mvvm 的 MVVM（`--mvvm toolkit`）、依赖注入（`--di`）、保存偏好设置（`--settings`，默认开启：外观、强调色、窗口位置和布局状态在下次启动时恢复）、本地化（`--i18n`：English、简体中文和繁體中文的 `.xlf` 文件加语言切换；`--ui-language` 选择界面文字的语言）、Headless 测试项目（`--tests`）、Arc 标题栏（`--custom-titlebar`）、`--framework` 与 `--accent`。项模板可添加页面（`tkcode-arc-page`）、窗口（`tkcode-arc-window`）、可等待结果的对话框（`tkcode-arc-dialog`），以及带 Token 类和主题文件的 Arc 风格控件（`tkcode-arc-control`）。另有三个模板从完整的应用开始，由 Arc 的 Block 组成，示例数据放在服务接口后面，带 MVVM 和依赖注入：`tkcode-arc-admin`（登录、仪表盘、带搜索、筛选、分页和详情抽屉的客户表格、团队与角色、账单、设置、命令面板）、`tkcode-arc-ai-chat`（对话列表加 `AiChat`，回复由示例 responder 流式生成，可换成你的模型客户端；对话在两次运行之间保存）和 `tkcode-arc-devtool`（停靠布局：文件浏览、编辑器标签、属性表格、构建输出和问题列表，打开的文件随布局恢复）。此外还有 `tkcode-arc-workflow`（步骤面板、可撤销的流程画布、小地图和属性检查器、模拟运行、JSON 导入导出）、`tkcode-arc-projects`（看板、甘特时间线、周日历、发布检查清单）和 `tkcode-arc-analytics`（KPI 下钻、收入、留存分组、用量预测、服务状态）。`tkcode-arc-lib` 用于开始编写自己的控件库：示例控件及其设计 Token 和主题、`Use<Name>()` 注册、Headless 测试和示例应用，可直接 `dotnet pack`。新增的 **模板** 指南列出了全部内容；安装指南新增“从模板开始”一节。
 
 ### 修复

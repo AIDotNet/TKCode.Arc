@@ -43,3 +43,10 @@ src/TKCode.Arc.Audio.Native/runtimes/
 # Local agent skills
 /.agents/
 src/TKCode.Arc.Video.Native/runtimes/
+
+# PDFium for TKCode.Arc.Pdf.Native (tools/pdf/sync-native.sh)
+src/TKCode.Arc.Pdf.Native/runtimes/
+src/TKCode.Arc.Pdf.Native/licenses/
+
+# pdf.js for TKCode.Arc.Pdf.Browser (tools/pdf/sync-pdfjs.sh)
+src/TKCode.Arc.Pdf.Browser/wwwroot/pdfjs/

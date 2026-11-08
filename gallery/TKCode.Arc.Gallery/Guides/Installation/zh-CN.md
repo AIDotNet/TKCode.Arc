@@ -1,6 +1,6 @@
 ---
 title: 安装
-source-hash: cc2bd0fa7655
+source-hash: f3048c518906
 ---
 
 # 安装
@@ -197,6 +197,23 @@ dotnet add package TKCode.Arc.Mobile --version 0.4.0-preview.6    # 可选：移
 
 每个包会注册它所依赖的包（例如 Blocks 会注册控件包），重复注册同一个包不会产生任何效果。
 
+### PDF
+
+`TKCode.Arc.Pdf`（`PdfViewer`）还需要一个渲染器：桌面上是带 PDFium 的 `TKCode.Arc.Pdf.Native`，单平台应用中约 7.5 MB；WebAssembly 中是带 pdf.js 的 `TKCode.Arc.Pdf.Browser`：
+
+```bash
+dotnet add package TKCode.Arc.Pdf --version 0.4.0-preview.6
+dotnet add package TKCode.Arc.Pdf.Native --version 0.4.0-preview.6     # desktop
+dotnet add package TKCode.Arc.Pdf.Browser --version 0.4.0-preview.6    # browser
+```
+
+```csharp
+.UseArc(arc => arc.UseArcControls().UseArcPdf())    // TKCode.Arc.Pdf
+
+ArcPdfNative.Use();                                 // desktop, before the app starts
+await ArcPdfBrowser.UseAsync();                     // browser, before the app starts
+```
+
 ### 语言
 
 应用语言由 Arc 处理（命名空间 `TKCode.Arc.Localization`）。若要提供多种语言，请在 `UseArc(...)` 中声明：第一个参数是启动时的语言，第二个参数是应用提供的语言。本图库以这种方式提供英文、简体中文和繁体中文：
@@ -233,6 +250,8 @@ dotnet test tests/TKCode.Arc.Foundation.Tests
 dotnet test tests/TKCode.Arc.Tests
 dotnet run --project gallery/TKCode.Arc.Gallery.Desktop -f net10.0
 ```
+
+PDF 示例需要 PDFium 和 pdf.js，它们没有提交到仓库。请运行一次 `tools/pdf/sync-native.sh` 和 `tools/pdf/sync-pdfjs.sh`，下载时会校验校验和；没有它们时，桌面 Gallery 显示模拟文档，浏览器构建没有可导入的 pdf.js。
 
 ## 故障排查
 

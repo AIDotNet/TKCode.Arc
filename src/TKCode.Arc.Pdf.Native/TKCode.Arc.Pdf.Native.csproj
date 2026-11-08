@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>$(ArcTargetFrameworks)</TargetFrameworks>
+        <AssemblyName>TKCode.Arc.Pdf.Native</AssemblyName>
+        <RootNamespace>TKCode.Arc</RootNamespace>
+        <PackageId>TKCode.Arc.Pdf.Native</PackageId>
+        <Description>Desktop PDF backend for TKCode.Arc.Pdf (Windows, macOS, Linux; x64 and arm64), built on PDFium. Call ArcPdfNative.Use() at startup. The native library ships in the package under runtimes/&lt;rid&gt;/native and its licenses under licenses/.</Description>
+        <PackageTags>$(PackageTags);pdf;viewer;document;pdfium</PackageTags>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <!-- The package holds PDFium and what it bundles as well as MIT code, so its license is a file: LICENSE.txt says which is which. -->
+        <PackageLicenseExpression></PackageLicenseExpression>
+        <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="../TKCode.Arc.Pdf/TKCode.Arc.Pdf.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="TKCode.Arc.Pdf.Native.Tests" />
+    </ItemGroup>
+    <!-- PDFium per RID and its license texts. Not committed: tools/pdf/sync-native.sh downloads and verifies them.
+         Packed for NuGet consumers, and the library is copied next to the assembly for project references, where
+         ArcPdfNative's resolver finds it under runtimes/<rid>/native. -->
+    <ItemGroup>
+        <None Include="runtimes/**" Pack="true" PackagePath="runtimes/" Visible="false" CopyToOutputDirectory="PreserveNewest" />
+        <None Include="licenses/**" Pack="true" PackagePath="licenses/" Visible="false" />
+        <None Include="LICENSE.txt" Pack="true" PackagePath="/" />
+        <None Include="PDFIUM-NOTICES.md" Pack="true" PackagePath="/" />
+    </ItemGroup>
+    <Target Name="WarnMissingPdfNative" BeforeTargets="Pack">
+        <ItemGroup>
+            <_PdfNative Include="$(MSBuildProjectDirectory)/runtimes/*/native/*" />
+            <_PdfLicenses Include="$(MSBuildProjectDirectory)/licenses/*" />
+        </ItemGroup>
+        <Warning Condition="'@(_PdfNative)' == ''" Text="No PDFium under runtimes/&lt;rid&gt;/native: the package would ship without the native library. Run tools/pdf/sync-native.sh." />
+        <Warning Condition="'@(_PdfLicenses)' == ''" Text="No license files under licenses/: the package would ship PDFium without its licenses. Run tools/pdf/sync-native.sh." />
+    </Target>
+</Project>

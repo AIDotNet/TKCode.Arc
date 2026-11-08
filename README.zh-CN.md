@@ -8,7 +8,7 @@
 **把 [Arc](https://uiarc.dev) 的视觉语言和弹簧动效，做成原生 Avalonia 控件。**
 
 TKCode.Arc 是面向 Avalonia 12 的 .NET 应用 UI 套件。它移植了 Arc 的 112 个免费组件，并补齐完整产品所需的其他部分：
-页面级区块、电子表格式数据表格、工作流画布、IDE 式停靠布局、终端，以及音视频播放。
+页面级区块、电子表格式数据表格、工作流画布、IDE 式停靠布局、终端、PDF 查看器，以及音视频播放。
 
 **[在线组件库与文档](https://docs.tkcode.si/)** · [更新日志](https://github.com/AIDotNet/TKCode.Arc/blob/main/CHANGELOG.md)
 ## 为什么选择 Arc
@@ -40,6 +40,7 @@ TKCode.Arc 是面向 Avalonia 12 的 .NET 应用 UI 套件。它移植了 Arc �
 | `TKCode.Arc.Workflow` | 用于展示、编辑和运行步骤图的画布，支持平移、缩放、自动排列和撤销。 |
 | `TKCode.Arc.Dock` | IDE 式标签组和可调整大小的分栏，支持键盘导航，布局可保存为 JSON。 |
 | `TKCode.Arc.Terminal` | 基于 libghostty-vt 的 `TerminalView`，已内置原生库。 |
+| `TKCode.Arc.Pdf`、`.Pdf.Native`、`.Pdf.Browser` | `PdfViewer`，支持缩略图、大纲、搜索、文本选择和链接，桌面端使用 PDFium，WebAssembly 使用 pdf.js。将在下一版本提供。 |
 | `TKCode.Arc.Audio`、`.Audio.Native`、`.Audio.Browser` | `IAudioPlayer` 抽象，桌面端使用 miniaudio，WebAssembly 使用 HTML audio。 |
 | `TKCode.Arc.Video`、`.Video.Native`、`.Video.Browser` | 基于各平台自带播放器的 `VideoPlayer` 和 `VideoSurface`。代码已在本仓库，尚未发布到 NuGet。 |
 
@@ -70,7 +71,7 @@ Arc 目前处于预览阶段，不同版本之间 API 仍可能变化。各版�
 | **.NET** | `net8.0`、`net10.0` 和 `net11.0`。`TKCode.Arc.Terminal` 面向 `net10.0` 和 `net11.0`。 |
 | **Avalonia** | Avalonia 12，在 [`build/Versions.props`](https://github.com/AIDotNet/TKCode.Arc/blob/main/build/Versions.props) 中锁定精确版本。 |
 | **桌面** | Windows、macOS 和 Linux。 |
-| **浏览器** | 组件库站点本身运行在 WebAssembly 上，音频和视频都有浏览器后端。 |
+| **浏览器** | 组件库站点本身运行在 WebAssembly 上，音频、视频和 PDF 都有浏览器后端。 |
 | **移动端** | `TKCode.Arc.Mobile` 目前在桌面的手机外框中预览，尚未在 Android 或 iOS 真机上验证。 |
 
 ## 仓库结构
@@ -95,6 +96,9 @@ dotnet test tests/TKCode.Arc.Foundation.Tests
 dotnet test tests/TKCode.Arc.Tests
 dotnet run --project gallery/TKCode.Arc.Gallery.Desktop -f net10.0
 ```
+
+PDFium 和 pdf.js 没有提交到仓库：`tools/pdf/sync-native.sh` 和 `tools/pdf/sync-pdfjs.sh` 会下载它们并校验校验和。缺少它们时，桌面版组件库的
+PDF 示例会显示模拟文档，浏览器构建也没有 pdf.js 可导入。
 
 项目规则和约定见 [AGENTS.md](https://github.com/AIDotNet/TKCode.Arc/blob/main/AGENTS.md)。
 

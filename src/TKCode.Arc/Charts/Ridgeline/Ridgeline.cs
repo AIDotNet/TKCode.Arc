@@ -912,24 +912,24 @@ public class Ridgeline : Control, IChartsBAccessible, Avalonia.Rendering.ICustom
             var xs = p.TypeXS;
             var rows = new List<ChartsBTipRow>
             {
-                new() { Left = ChartsBText.Make(series.Label, p, xs, p.TextSecondary), MinHeight = xs * 1.5 },
+                new() { Left = ChartsBText.Run(series.Label, p, xs, p.TextSecondary), MinHeight = xs * 1.5 },
                 new()
                 {
                     MarginTop = 2, MinHeight = p.TypeSM * 1.4,
-                    Left = ChartsBText.Make("Median", p, xs, p.TextMuted),
-                    Right = ChartsBText.Make(Format(stats.Median), p, p.TypeSM, p.Foreground, FontWeight.Medium)
+                    Left = ChartsBText.Run("Median", p, xs, p.TextMuted),
+                    Right = ChartsBText.Run(Format(stats.Median), p, p.TypeSM, p.Foreground, FontWeight.Medium)
                 },
                 new()
                 {
                     MinHeight = xs * 1.5,
-                    Left = ChartsBText.Make("Middle half", p, xs, p.TextMuted),
-                    Right = ChartsBText.Make($"{Format(stats.Q1)} to {Format(stats.Q3)}", p, xs, p.Foreground)
+                    Left = ChartsBText.Run("Middle half", p, xs, p.TextMuted),
+                    Right = ChartsBText.Run($"{Format(stats.Q1)} to {Format(stats.Q3)}", p, xs, p.Foreground)
                 },
                 new()
                 {
                     MinHeight = xs * 1.5,
-                    Left = ChartsBText.Make("Range", p, xs, p.TextMuted),
-                    Right = ChartsBText.Make($"{Format(stats.Min)} to {Format(stats.Max)}", p, xs, p.Foreground)
+                    Left = ChartsBText.Run("Range", p, xs, p.TextMuted),
+                    Right = ChartsBText.Run($"{Format(stats.Min)} to {Format(stats.Max)}", p, xs, p.Foreground)
                 }
             };
             if (_cursor is { } cursor)
@@ -937,7 +937,7 @@ public class Ridgeline : Control, IChartsBAccessible, Avalonia.Rendering.ICustom
                 rows.Add(new ChartsBTipRow
                 {
                     MarginTop = 4, MinHeight = xs * 1.5,
-                    Left = ChartsBText.Make($"{ChartsBMath.Percent(stats.FractionAtOrBelow(cursor.Value))} at or below {Format(cursor.Value)}", p, xs, p.TextMuted)
+                    Left = ChartsBText.Run($"{ChartsBMath.Percent(stats.FractionAtOrBelow(cursor.Value))} at or below {Format(cursor.Value)}", p, xs, p.TextMuted)
                 });
             }
             _tooltip.SetRows(rows);

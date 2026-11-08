@@ -38,7 +38,7 @@ public class GalleryNewBadgeTests
     [Fact]
     public void The_Arc_Component_Count_Includes_Tree_Table()
     {
-        GalleryCatalog.Count.ShouldBe(112);
+        GalleryCatalog.Count.ShouldBe(113);
         GalleryCatalog.Categories.Length.ShouldBe(22);
     }
 
@@ -51,6 +51,7 @@ public class GalleryNewBadgeTests
             .Concat(GalleryCatalog.Workflow.AllEntries)
             .Concat(GalleryCatalog.Dock.AllEntries)
             .Concat(GalleryCatalog.Video.AllEntries)
+            .Concat(GalleryCatalog.Pdf.AllEntries)
             .ToList();
         entries.Count.ShouldBeGreaterThan(0);
         entries.Where(e => !DateOnly.TryParseExact(e.AddedOn, "yyyy-MM-dd", out _)).Select(e => e.ClassName).ShouldBeEmpty();

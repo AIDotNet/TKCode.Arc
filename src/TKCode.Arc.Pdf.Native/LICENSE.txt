@@ -1,0 +1,32 @@
+TKCode.Arc.Pdf.Native has two parts under different licenses.
+
+1. The managed assembly (TKCode.Arc.Pdf.Native.dll) is under the MIT License:
+
+Copyright (c) 2026 TKCode.Arc contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+2. The native libraries under runtimes/<rid>/native are PDFium (BSD-3-Clause and
+Apache-2.0) as built by the pdfium-binaries project (MIT), and contain the
+third-party components that PDFium bundles: Abseil, AGG 2.3, dragonbox,
+fast_float, FreeType (under the FreeType License, FTL), HarfBuzz, Highway, ICU,
+Little CMS, libjpeg-turbo, OpenJPEG, libpng, LLVM libc, simdutf and zlib. The
+license of each one is in the licenses/ folder of this package and they are
+summarized in PDFIUM-NOTICES.md. An application that ships these libraries
+must carry those notices.
