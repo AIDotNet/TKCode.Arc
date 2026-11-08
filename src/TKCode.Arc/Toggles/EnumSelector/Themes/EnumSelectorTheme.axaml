@@ -1,0 +1,32 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.EnumSelectorTheme">
+    <!-- The options are an arc:RadioGroup or arc:Checkbox controls the selector builds into PART_Host; their own themes
+         give them their look and motion, so this theme only lays out the legend and the host. -->
+    <ControlTheme x:Key="{x:Type arc:EnumSelector}" TargetType="arc:EnumSelector">
+        <!-- Focus rings of the options sit outside their bounds. -->
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:EnumSelector">
+                <StackPanel>
+                    <ContentPresenter Name="PART_HeaderPresenter"
+                                      IsVisible="{TemplateBinding Header, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                      Content="{TemplateBinding Header}"
+                                      Margin="{arc:EnumSelectorTokenResource LegendMargin}"
+                                      FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                    <Decorator Name="PART_Host" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="RowSpacing" Value="{arc:EnumSelectorTokenResource RadioRowSpacing}" />
+        <Setter Property="ColumnSpacing" Value="{arc:EnumSelectorTokenResource ColumnSpacing}" />
+        <Style Selector="^:check">
+            <Setter Property="RowSpacing" Value="{arc:EnumSelectorTokenResource CheckRowSpacing}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

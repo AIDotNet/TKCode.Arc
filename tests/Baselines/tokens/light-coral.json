@@ -2519,6 +2519,12 @@
       "StatusSize": "16",
       "TopBarHeight": "56"
     },
+    "EnumSelector": {
+      "CheckRowSpacing": "0",
+      "ColumnSpacing": "16",
+      "LegendMargin": "0,0,0,8",
+      "RadioRowSpacing": "8"
+    },
     "EnvVariables": {
       "CompactWidth": "760",
       "EditColumnWidth": "52",

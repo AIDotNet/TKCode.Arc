@@ -112,6 +112,9 @@ public static partial class GalleryCatalog
             new("ArcWindow", "Window", "arc-window", 0,
                 "A desktop window with an Arc title bar: left, center and right areas for your controls, native dragging, snapping and resizing, and caption buttons that follow the theme.",
                 IsArc: false, AddedOn: "2026-11-04"),
+            new("EnumSelector", "Enum selector", "enum-selector", 0,
+                "Pick from the members of an enum: radio options for a plain enum, and checkboxes that combine flags for a [Flags] enum, described at compile time without reflection.",
+                IsArc: false, AddedOn: "2026-11-07"),
         ], IsArc: false),
     ];
 

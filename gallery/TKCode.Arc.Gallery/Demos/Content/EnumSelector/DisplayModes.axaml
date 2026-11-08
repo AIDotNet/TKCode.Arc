@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.EnumSelectorDisplayModesDemo">
+    <WrapPanel HorizontalAlignment="Center" ItemSpacing="40" LineSpacing="24">
+        <!-- A plain enum shown as checkboxes: still one member at a time. -->
+        <arc:EnumSelector Header="Check, plain enum"
+                          EnumType="{x:Type demos:DemoPriority}"
+                          SelectedEnum="{x:Static demos:DemoPriority.High}"
+                          DisplayMode="Check"
+                          Width="220" />
+        <!-- A flags enum shown as radio options: one member, composites included. -->
+        <arc:EnumSelector Header="Radio, flags enum"
+                          EnumType="{x:Type demos:DemoFilePermissions}"
+                          SelectedEnum="{x:Static demos:DemoFilePermissions.ReadWrite}"
+                          DisplayMode="Radio"
+                          Width="240" />
+    </WrapPanel>
+</UserControl>

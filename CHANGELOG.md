@@ -8,6 +8,20 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native` and `TKCode.Arc.Audio.Browser`.
 
+## Unreleased
+
+### Added
+
+- **`EnumSelector`** (`TKCode.Arc`, Extras; issue #56): lists the members of an enum as choices, a `RadioGroup` for a
+  plain enum and `Checkbox`es for a `[Flags]` enum whose checked members combine bit by bit (composite members such as
+  `ReadWrite` check their parts and show a dash when partly set, a zero member such as `None` clears the rest, and every
+  integer underlying type is handled). `SelectedEnum` binds two-way; `DisplayMode` (`Auto`, `Radio`, `Check`),
+  `UseDisplayNames`, `Rows` / `Columns` / spacing or a custom `ItemsPanel`, and `ItemTemplate`. The members, their
+  `[Description]` / `[Display(Name)]` texts and the `[Flags]` marker come from a new Foundation generator for enums marked
+  `[EnumMetadata]` (or `[assembly: EnumMetadata(typeof(...))]`), registered with `EnumTypes`, so nothing is reflected
+  (AOT and trimming safe); `EnumMetadata(LanguageCatalog = ...)` takes the texts from a language catalog and follows the
+  application language. New diagnostics ARCF033–ARCF037. Docs and demos in English, 简体中文 and 繁體中文.
+
 ## 0.4.0-preview.5 - 2026-11-08
 
 Fourteen new Special components: Surfaces, Audio and video, and Loaders; Gallery pages open faster.

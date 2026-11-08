@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.EnumSelectorItemTemplateDemo">
+    <arc:EnumSelector Header="Priority"
+                      EnumType="{x:Type demos:DemoPriority}"
+                      SelectedEnum="{x:Static demos:DemoPriority.High}"
+                      Columns="2"
+                      Width="460"
+                      HorizontalAlignment="Center">
+        <arc:EnumSelector.ItemTemplate>
+            <DataTemplate x:DataType="arc:EnumSelectorItem">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <TextBlock Text="{Binding Text}" />
+                    <TextBlock Text="{Binding Name, StringFormat='({0})'}"
+                               FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                </StackPanel>
+            </DataTemplate>
+        </arc:EnumSelector.ItemTemplate>
+    </arc:EnumSelector>
+</UserControl>
