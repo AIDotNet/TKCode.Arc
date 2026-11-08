@@ -1,13 +1,30 @@
 ---
 title: 更新日誌
-source-hash: c379edd07e5e
+source-hash: 7d723d4658a8
 ---
 
 # 更新日誌
 
 TKCode.Arc 的所有重要變更，最新的在前。版本遵循[語意化版本](https://semver.org/)。版本帶有 `-preview` 後綴期間，API 在各發行版本之間仍可能變動；升級前請閱讀說明，並在專案中固定版本號。同一份清單也保存在儲存庫的 `CHANGELOG.md` 中。
 
-每次發行附帶的 NuGet 套件：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Foundation`（0.3.2 起）、`TKCode.Arc.Fonts` 、`TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 、`TKCode.Arc.Special`、`TKCode.Arc.Workflow`、`TKCode.Arc.Dock`（0.4.0-preview.2 起）、`TKCode.Arc.Themes.Pixel`、`TKCode.Arc.Themes.Corners`、`TKCode.Arc.Mobile`、`TKCode.Arc.Terminal`、`TKCode.Arc.Audio`、`TKCode.Arc.Audio.Native` 與 `TKCode.Arc.Audio.Browser`。
+每次發行附帶的 NuGet 套件：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Foundation`（0.3.2 起）、`TKCode.Arc.Fonts` 、`TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 、`TKCode.Arc.Special`、`TKCode.Arc.Workflow`、`TKCode.Arc.Dock`（0.4.0-preview.2 起）、`TKCode.Arc.Themes.Pixel`、`TKCode.Arc.Themes.Corners`、`TKCode.Arc.Mobile`、`TKCode.Arc.Terminal`、`TKCode.Arc.Audio`、`TKCode.Arc.Audio.Native`、`TKCode.Arc.Audio.Browser` 與 `TKCode.Arc.Templates`（0.4.0-preview.6 起）。
+
+## 0.4.0-preview.6（2026-11-08）
+
+新增 8 個定價區塊、`dotnet new` 範本套件、SettingsGroup 多欄配置，以及瀏覽器原生影片呈現。
+
+### 新增
+
+- **區塊 › 定價**（`TKCode.Arc.Blocks`）：`PlanComparison`（移植自 Arc：帶月付/年付切換的方案卡片，價格滾動切換，突顯推薦方案並附功能比較表），以及參考 Arc Pro 行為的 7 個原創設計：`PricingCalculator`（依席位滑桿與計費切換定價的方案卡片，推薦徽章滑向合適的方案）、`UsagePricing`（拖曳席位與流量，方案名稱變形、預估金額計數到新總額）、`CartDrawer`（商品飛入購物車、數量滾動，側邊抽屜含步進器、免運費進度列與結帳）、`CheckoutSummary`（優惠碼變為可移除的標籤，折扣與稅額列滑入，總額滾動，付款按鈕經處理中到已付款）、`LiveCheckout`（訂閱結帳，摘要隨每次修改即時重算並展開為收據）、`SeatManager`（頭像列、席位用量條、帶按比例計費的步進器、確認步驟，以及可重寄或撤銷並能復原的邀請）和 `CreditTopUp`（餘額與用量圖、預設儲值包、自訂金額滑桿、自動儲值，新餘額像里程表一樣滾入）。文件與範例提供 English、简体中文與繁體中文。
+- **範本**（新套件 `TKCode.Arc.Templates`）：`dotnet new install TKCode.Arc.Templates` 後執行 `dotnet new tkcode-arc`，支援 `--layout blank|sidebar`、`--mvvm none|toolkit`（使用 CommunityToolkit.Mvvm 的 ViewModel 與編譯繫結）、`--settings`（預設開啟：外觀、強調色、視窗位置與側邊欄的收合狀態會在下次啟動時還原）、`--framework` 與 `--accent`。項目範本可加入頁面（`tkcode-arc-page`，可附 ViewModel）、視窗（`tkcode-arc-window`）、可等待結果的對話方塊（`tkcode-arc-dialog`），以及附 Token 類別與佈景主題檔的 Arc 風格控制項（`tkcode-arc-control`）。安裝指南新增「從範本開始」一節。
+- `SettingsGroup` 可依固定或自適應欄數排列列（`Columns`、`MinColumnWidth`、`ColumnSpacing`、`RowSpacing`、附加屬性 `ColumnSpan`），並向列共用 `LabelWidth`、`ContentAlignment` 與 `ContentSpacing`，列可個別覆寫。預設仍為單欄配置。
+- `VideoPlayer.BrowserPresentation="Native"` 在瀏覽器中改用瀏覽器內建的 video 元素：不必複製影格，瀏覽器能播放的格式都可用（例如 Safari 中的 HLS）。此時控制列位於畫面下方，字幕由瀏覽器顯示。
+- `VideoPlayer` 的系統全螢幕在瀏覽器中也可用（Fullscreen API）；透過視窗管理員或 Esc 離開全螢幕時，播放器也會一併離開全螢幕。
+
+### 修正
+
+- Linux 影片（GStreamer）：事件依發生順序送達 .NET；事件批次已滿時捨棄進度事件，而不是狀態、錯誤或結束事件。
+- 影片（原生後端）：在其他執行緒讀取影格時載入或釋放，不再釋放正在讀取的影格；上一個媒體的錯誤保留其錯誤訊息。
 
 ## 0.4.0-preview.5（2026-11-08）
 

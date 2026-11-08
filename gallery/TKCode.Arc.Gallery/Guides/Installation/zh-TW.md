@@ -1,6 +1,6 @@
 ---
 title: 安裝
-source-hash: 5297dc695acd
+source-hash: 41a91457d83d
 ---
 
 # 安裝
@@ -26,18 +26,21 @@ TKCode.Arc 目前處於預覽階段，Avalonia 固定為確切版本。除 Avalo
 dotnet new install TKCode.Arc.Templates
 dotnet new tkcode-arc -n MyApp                      # 頂端列加單一頁面
 dotnet new tkcode-arc -n MyApp --layout sidebar     # 可收合的側邊欄與多個頁面
+dotnet new tkcode-arc -n MyApp --layout sidebar --mvvm toolkit   # 再加上 ViewModel
 cd MyApp
 dotnet run
 ```
 
-`--layout sidebar` 會加入 `TKCode.Arc.Blocks`，並以其中的 `Sidebar` 組成視窗：圖示、選取頁面的醒目提示、收合為圖示列、顯示頁面標題的頂端列，以及三個範例頁面。`-f` 選擇目標框架（預設 `net10.0`，也可以是 `net8.0` 或 `net11.0`），`--accent` 選擇啟動時的強調色。Visual Studio 與 Rider 中的範本名稱為 **TKCode.Arc App**。以下步驟說明如何把 Arc 加入現有專案，也說明範本設定了哪些內容。
+`--layout sidebar` 會加入 `TKCode.Arc.Blocks`，並以其中的 `Sidebar` 組成視窗：圖示、選取頁面的醒目提示、收合為圖示列、顯示頁面標題的頂端列，以及三個範例頁面。`-f` 選擇目標框架（預設 `net10.0`，也可以是 `net8.0` 或 `net11.0`），`--accent` 選擇啟動時的強調色。`--mvvm toolkit` 會加入以 CommunityToolkit.Mvvm 撰寫的 ViewModel，檢視透過編譯繫結與它們相連。應用程式會儲存外觀、強調色、視窗大小與位置，以及側邊欄的收合狀態，並在下次啟動時還原；`--settings false` 可移除這項功能。Visual Studio 與 Rider 中的範本名稱為 **TKCode.Arc App**。
+
+在專案中，項目範本可以加入常用元件：`dotnet new tkcode-arc-page -n Reports`（頁面；加上 `--view-model` 會一併產生 ViewModel）、`tkcode-arc-window`（次要視窗）、`tkcode-arc-dialog`（放在 Arc `Dialog` 中的表單，附可等待的 `ShowAsync`）與 `tkcode-arc-control`（附 Token 類別與佈景主題檔的 Arc 風格控制項）。產生檔案頂端的註解說明如何把它們接入應用程式。以下步驟說明如何把 Arc 加入現有專案，也說明範本設定了哪些內容。
 
 ## 1. 加入套件
 
 ```bash
-dotnet add package TKCode.Arc --version 0.4.0-preview.5
-dotnet add package TKCode.Arc.Fonts --version 0.4.0-preview.5           # 選用：Geist 與 Geist Mono
-dotnet add package TKCode.Arc.Icons.Lucide --version 0.4.0-preview.5    # 選用：完整的 Lucide 圖示集
+dotnet add package TKCode.Arc --version 0.4.0-preview.6
+dotnet add package TKCode.Arc.Fonts --version 0.4.0-preview.6           # 選用：Geist 與 Geist Mono
+dotnet add package TKCode.Arc.Icons.Lucide --version 0.4.0-preview.6    # 選用：完整的 Lucide 圖示集
 dotnet add package Avalonia.Fonts.Inter --version 12.1.4                 # 選用：內文使用的 Inter
 ```
 
@@ -45,9 +48,9 @@ dotnet add package Avalonia.Fonts.Inter --version 12.1.4                 # 選�
 
 ```xml
 <ItemGroup>
-    <PackageVersion Include="TKCode.Arc" Version="0.4.0-preview.5" />
-    <PackageVersion Include="TKCode.Arc.Fonts" Version="0.4.0-preview.5" />
-    <PackageVersion Include="TKCode.Arc.Icons.Lucide" Version="0.4.0-preview.5" />
+    <PackageVersion Include="TKCode.Arc" Version="0.4.0-preview.6" />
+    <PackageVersion Include="TKCode.Arc.Fonts" Version="0.4.0-preview.6" />
+    <PackageVersion Include="TKCode.Arc.Icons.Lucide" Version="0.4.0-preview.6" />
     <PackageVersion Include="Avalonia.Fonts.Inter" Version="12.1.4" />
 </ItemGroup>
 ```
@@ -173,14 +176,14 @@ Arc 自有的圖示字形（`{x:Static arc:ArcIcons.Check}` 以及另外 186 個
 `TKCode.Arc.Blocks`（頁面層級區塊）、`TKCode.Arc.AdvancedCharts`（`DataGrid`）與 `TKCode.Arc.Special`（AI 動畫講解）是獨立的套件。依需要加入，並在 `UseArc(...)` 中註冊：
 
 ```bash
-dotnet add package TKCode.Arc.Blocks --version 0.4.0-preview.5
-dotnet add package TKCode.Arc.AdvancedCharts --version 0.4.0-preview.5
-dotnet add package TKCode.Arc.Special --version 0.4.0-preview.5
-dotnet add package TKCode.Arc.Workflow --version 0.4.0-preview.5
-dotnet add package TKCode.Arc.Dock --version 0.4.0-preview.5    # 選用：IDE 式停靠版面（UseArcDock()）
-dotnet add package TKCode.Arc.Themes.Pixel --version 0.4.0-preview.5    # 選用：像素風主題（UseArcPixelTheme()）
-dotnet add package TKCode.Arc.Themes.Corners --version 0.4.0-preview.5    # 選用：全域圓角風格（UseArcCorners()）
-dotnet add package TKCode.Arc.Mobile --version 0.4.0-preview.5    # 選用：行動端控制項，尚未在真機上驗證（UseArcMobile()）
+dotnet add package TKCode.Arc.Blocks --version 0.4.0-preview.6
+dotnet add package TKCode.Arc.AdvancedCharts --version 0.4.0-preview.6
+dotnet add package TKCode.Arc.Special --version 0.4.0-preview.6
+dotnet add package TKCode.Arc.Workflow --version 0.4.0-preview.6
+dotnet add package TKCode.Arc.Dock --version 0.4.0-preview.6    # 選用：IDE 式停靠版面（UseArcDock()）
+dotnet add package TKCode.Arc.Themes.Pixel --version 0.4.0-preview.6    # 選用：像素風主題（UseArcPixelTheme()）
+dotnet add package TKCode.Arc.Themes.Corners --version 0.4.0-preview.6    # 選用：全域圓角風格（UseArcCorners()）
+dotnet add package TKCode.Arc.Mobile --version 0.4.0-preview.6    # 選用：行動端控制項，尚未在真機上驗證（UseArcMobile()）
 ```
 
 ```csharp
