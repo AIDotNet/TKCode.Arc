@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="2.1" srcLang="en-US" xmlns="urn:oasis:names:tc:xliff:document:2.0">
+  <file id="TKCode.Arc.Localization.PdfViewerLangResourceKind">
+    <unit id="BackendHint">
+      <segment>
+        <source>Call ArcPdfNative.Use() at startup on desktop, or await ArcPdfBrowser.UseAsync() in a browser.</source>
+      </segment>
+    </unit>
+    <unit id="Cancel">
+      <segment>
+        <source>Cancel</source>
+      </segment>
+    </unit>
+    <unit id="CloseSearch">
+      <segment>
+        <source>Close</source>
+      </segment>
+    </unit>
+    <unit id="Copy">
+      <segment>
+        <source>Copy</source>
+      </segment>
+    </unit>
+    <unit id="CouldNotOpen">
+      <segment>
+        <source>Could not open this document</source>
+      </segment>
+    </unit>
+    <unit id="FileDamaged">
+      <segment>
+        <source>The file is damaged</source>
+      </segment>
+    </unit>
+    <unit id="FileNotFound">
+      <segment>
+        <source>The file was not found</source>
+      </segment>
+    </unit>
+    <unit id="Loading">
+      <segment>
+        <source>Loading</source>
+      </segment>
+    </unit>
+    <unit id="MatchCase">
+      <segment>
+        <source>Match case</source>
+      </segment>
+    </unit>
+    <unit id="MatchPosition">
+      <segment>
+        <source>{0} of {1}</source>
+      </segment>
+    </unit>
+    <unit id="NextMatch">
+      <segment>
+        <source>Next match</source>
+      </segment>
+    </unit>
+    <unit id="NoBackend">
+      <segment>
+        <source>No PDF renderer is set up</source>
+      </segment>
+    </unit>
+    <unit id="NoResults">
+      <segment>
+        <source>No results</source>
+      </segment>
+    </unit>
+    <unit id="Open">
+      <segment>
+        <source>Open</source>
+      </segment>
+    </unit>
+    <unit id="Outline">
+      <segment>
+        <source>Outline</source>
+      </segment>
+    </unit>
+    <unit id="PageNumber">
+      <segment>
+        <source>Page {0}</source>
+      </segment>
+    </unit>
+    <unit id="Password">
+      <segment>
+        <source>Password</source>
+      </segment>
+    </unit>
+    <unit id="PasswordIncorrect">
+      <segment>
+        <source>Incorrect password</source>
+      </segment>
+    </unit>
+    <unit id="PasswordRequired">
+      <segment>
+        <source>Password required</source>
+      </segment>
+    </unit>
+    <unit id="PreviousMatch">
+      <segment>
+        <source>Previous match</source>
+      </segment>
+    </unit>
+    <unit id="Protected">
+      <segment>
+        <source>This document is protected</source>
+      </segment>
+    </unit>
+    <unit id="Search">
+      <segment>
+        <source>Search</source>
+      </segment>
+    </unit>
+    <unit id="SelectAll">
+      <segment>
+        <source>Select all</source>
+      </segment>
+    </unit>
+    <unit id="Sidebar">
+      <segment>
+        <source>Sidebar</source>
+      </segment>
+    </unit>
+    <unit id="Thumbnails">
+      <segment>
+        <source>Thumbnails</source>
+      </segment>
+    </unit>
+    <unit id="WholeWord">
+      <segment>
+        <source>Whole word</source>
+      </segment>
+    </unit>
+  </file>
+</xliff>

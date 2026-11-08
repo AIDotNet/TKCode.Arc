@@ -26,6 +26,7 @@
         <ProjectReference Include="../../src/TKCode.Arc.Workflow/TKCode.Arc.Workflow.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Dock/TKCode.Arc.Dock.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Video/TKCode.Arc.Video.csproj" />
+        <ProjectReference Include="../../src/TKCode.Arc.Pdf/TKCode.Arc.Pdf.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Themes.Corners/TKCode.Arc.Themes.Corners.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Themes.Pixel/TKCode.Arc.Themes.Pixel.csproj" />
         <ProjectReference Include="../../gallery/TKCode.Arc.Gallery/TKCode.Arc.Gallery.csproj" />
@@ -35,5 +36,9 @@
         <!-- PropertyGrid tests use [PropertyGridModel] types: the Foundation generator registers them (no themes or tokens here). -->
         <ProjectReference Include="../../src/TKCode.Arc.Foundation.Generators/TKCode.Arc.Foundation.Generators.csproj"
                           OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="all" />
+    </ItemGroup>
+    <ItemGroup>
+        <!-- The browser backend's arithmetic: the package itself is for browsers only, this part runs anywhere. -->
+        <Compile Include="../../src/TKCode.Arc.Pdf.Browser/PdfJs/*.cs" Link="Pdf/PdfJs/%(Filename)%(Extension)" />
     </ItemGroup>
 </Project>
