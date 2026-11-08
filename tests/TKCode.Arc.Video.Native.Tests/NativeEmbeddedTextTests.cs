@@ -7,7 +7,7 @@ namespace TKCode.Arc.Video.Native.Tests;
 /// <summary>
 /// Embedded text tracks (completion-plan.md, embedded subtitles): the clips from tools/video/make-text-clip.sh carry an
 /// English and a Chinese track with two cues each, as MP4 timed text (tx3g) and as Matroska SRT. AVFoundation reads MP4
-/// only; GStreamer reads both. Shims without the exports (Windows for now) skip.
+/// only; GStreamer reads both. Windows has the exports but reads no tracks yet, so it skips.
 /// </summary>
 [Collection(nameof(NativeVideoCollection))]
 public class NativeEmbeddedTextTests
@@ -106,6 +106,10 @@ public class NativeEmbeddedTextTests
         if (OperatingSystem.IsMacOS() && !MainRunLoop.IsServiced)
         {
             Assert.Skip("AVFoundation needs the main run loop; run the test executable directly (its Main services it).");
+        }
+        if (OperatingSystem.IsWindows())
+        {
+            Assert.Skip("Media Foundation text tracks are not read yet (tkv_player_text_track_count is always 0).");
         }
         var player = ArcVideo.Backend.CreatePlayer();
         if (player is not IVideoEmbeddedTextTracks)
