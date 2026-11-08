@@ -41,7 +41,8 @@ internal sealed partial class GanttChart : Control
     public static readonly StyledProperty<IBrush?> TodayTextBrushProperty = AvaloniaProperty.Register<GanttChart, IBrush?>(nameof(TodayTextBrush));
     public static readonly StyledProperty<IBrush?> FocusBrushProperty = AvaloniaProperty.Register<GanttChart, IBrush?>(nameof(FocusBrush));
 
-    private readonly Dictionary<string, FormattedText> _textCache = [];
+    private readonly Dictionary<(string Text, double Size, FontWeight Weight, double Max, IBrush? Brush), FormattedText> _textCache = [];
+    private readonly Dictionary<(string Key, double? Hue), IBrush> _avatars = [];
     private readonly MotionValue<double> _dayWidth;
     private readonly MotionValue<double> _layoutT;
     private readonly MotionValue<double> _release;
@@ -315,14 +316,14 @@ internal sealed partial class GanttChart : Control
         return map;
     }
 
-    private static string RowId(GanttRow row) => row.Task is { } t ? "t:" + t.Id : "g:" + row.Group!.Id;
+    private static string RowId(GanttRow row) => row.Key;
 
     protected override AutomationPeer OnCreateAutomationPeer() => new GanttChartPeer(this);
 
     private FormattedText Text(string text, double size, IBrush? brush, FontWeight weight = FontWeight.Normal, double maxWidth = double.PositiveInfinity)
     {
         var family = TextElement.GetFontFamily(this);
-        var key = $"{text}|{size}|{(int)weight}|{maxWidth:F0}|{brush?.GetHashCode()}";
+        var key = (text, size, weight, double.IsInfinity(maxWidth) ? maxWidth : Math.Round(maxWidth), brush);
         if (_textCache.TryGetValue(key, out var cached))
         {
             return cached;
@@ -346,7 +347,18 @@ internal sealed partial class GanttChart : Control
 
     private static string AvatarKey(ProjectPerson p) => string.IsNullOrEmpty(p.Key) ? p.Name : p.Key;
 
-    private static IBrush AvatarBrush(ProjectPerson p)
+    private IBrush AvatarBrush(ProjectPerson p)
+    {
+        var cacheKey = (AvatarKey(p), p.Hue);
+        if (!_avatars.TryGetValue(cacheKey, out var brush))
+        {
+            brush = MakeAvatarBrush(p);
+            _avatars[cacheKey] = brush;
+        }
+        return brush;
+    }
+
+    private static IBrush MakeAvatarBrush(ProjectPerson p)
     {
         var key = AvatarKey(p);
         var hash = 17;
