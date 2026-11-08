@@ -1,0 +1,257 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.CartDrawerTheme">
+    <!--
+        Cart drawer: the shop (header with the cart button, product grid) scrolls in its own viewer; the scrim, the drawer
+        (built in code on first open) and the flight layer sit on top, all inside the block and clipped by it. Cards, rows,
+        totals and the receipt are built in code because they follow the cart's data; their colors come from ArcDesign
+        tokens and the CartDrawer token.
+    -->
+    <ControlTheme x:Key="{x:Type arc:CartDrawer}" TargetType="arc:CartDrawer">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="True" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CartDrawer">
+                <Panel Name="PART_Root" Background="Transparent">
+                    <ScrollViewer Name="PART_ShopScroller"
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  VerticalScrollBarVisibility="Auto">
+                        <StackPanel Name="PART_Shop" Margin="{arc:CartDrawerTokenResource ShopPadding}">
+                            <Grid Name="PART_Header" ColumnDefinitions="*,Auto" MinHeight="36" Margin="0,0,0,20">
+                                <TextBlock Name="PART_Title"
+                                           VerticalAlignment="Center"
+                                           TextTrimming="CharacterEllipsis"
+                                           FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXL}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           LetterSpacing="-0.22"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <Panel Name="PART_CartWrap" Grid.Column="1" VerticalAlignment="Center" Margin="12,0,0,0">
+                                    <Border Name="PART_Ripple"
+                                            IsHitTestVisible="False"
+                                            Opacity="0"
+                                            BorderThickness="1"
+                                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                            BorderBrush="{arc:ArcDesignTokenResource Accent}" />
+                                    <arc:CartDrawerCartButton Name="PART_CartButton" />
+                                </Panel>
+                            </Grid>
+                            <arc:CartDrawerGridPanel Name="PART_Grid"
+                                                     ColumnGap="{arc:CartDrawerTokenResource GridColumnGap}"
+                                                     RowGap="{arc:CartDrawerTokenResource GridRowGap}" />
+                        </StackPanel>
+                    </ScrollViewer>
+                    <Border Name="PART_Scrim"
+                            IsVisible="False"
+                            Opacity="0"
+                            Background="{arc:CartDrawerTokenResource ScrimColor}" />
+                    <Panel Name="PART_DrawerHost" />
+                    <Canvas Name="PART_FlightLayer" IsHitTestVisible="False" />
+                    <TextBlock Name="PART_Live"
+                               Width="1"
+                               Height="1"
+                               Opacity="0"
+                               IsHitTestVisible="False"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               AutomationProperties.LiveSetting="Polite" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:compact /template/ StackPanel#PART_Shop">
+            <Setter Property="Margin" Value="{arc:CartDrawerTokenResource ShopPaddingCompact}" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|CartDrawerGridPanel#PART_Grid">
+            <Setter Property="Columns" Value="2" />
+            <Setter Property="ColumnGap" Value="{arc:CartDrawerTokenResource GridColumnGapCompact}" />
+            <Setter Property="RowGap" Value="{arc:CartDrawerTokenResource GridRowGapCompact}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- Small round or text buttons of the drawer: transparent until hovered, keyboard-only ring, icon buttons press to 0.92. -->
+    <ControlTheme x:Key="{x:Type arc:CartDrawerPlainButton}" TargetType="arc:CartDrawerPlainButton">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="RenderTransform" Value="scale(1)" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CartDrawerPlainButton">
+                <Panel>
+                    <Border Name="PART_Background"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <arc:ArcGlyph Data="{TemplateBinding Glyph}"
+                                  Size="{TemplateBinding GlyphSize}"
+                                  StrokeThickness="1.75"
+                                  Foreground="{TemplateBinding Foreground}"
+                                  IsVisible="{TemplateBinding Glyph, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center" />
+                    <ContentPresenter Name="PART_Content"
+                                      Content="{TemplateBinding Content}"
+                                      Padding="{TemplateBinding Padding}"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      HorizontalContentAlignment="Center"
+                                      VerticalContentAlignment="Center"
+                                      IsVisible="{TemplateBinding Content, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^.text">
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep14}" />
+            <Setter Property="Padding" Value="12,0" />
+            <Style Selector="^ /template/ Border#PART_FocusRing">
+                <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep18}" />
+            </Style>
+        </Style>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:CartDrawerTokenResource HoverFill}" />
+        </Style>
+        <Style Selector="^.icon:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.92)" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.4" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The pill cart button: 36px, 1px border, surface; hover deepens the fill and the border over 160ms. -->
+    <ControlTheme x:Key="{x:Type arc:CartDrawerCartButton}" TargetType="arc:CartDrawerCartButton">
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Padding" Value="13,0,8,0" />
+        <Setter Property="Height" Value="36" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CartDrawerCartButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Content="{TemplateBinding Content}" VerticalAlignment="Center" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- Checkout: 50px accent button, label left and amount right; dims when the cart is empty. -->
+    <ControlTheme x:Key="{x:Type arc:CartDrawerCheckoutButton}" TargetType="arc:CartDrawerCheckoutButton">
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        <Setter Property="Height" Value="{arc:CartDrawerTokenResource CheckoutHeight}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Padding" Value="18,0" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CartDrawerCheckoutButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
+                            Padding="{TemplateBinding Padding}"
+                            ClipToBounds="True">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          HorizontalContentAlignment="Stretch"
+                                          VerticalContentAlignment="Center" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep22}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.45" />
+            <Setter Property="Cursor" Value="No" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

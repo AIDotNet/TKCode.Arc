@@ -1,0 +1,325 @@
+<!-- Ported from Arc's free plan-comparison block (MIT, Copyright (c) 2026 Elia Kuratli). -->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.PlanComparisonTheme">
+    <!--
+        Plan comparison: heading and billing switch, the filter bar, the matrix (plan headers and feature rows, built in
+        code into PART_Matrix) and the footnote. Values a layout tier changes (grid placement, gutters, alignment) are set
+        by styles, not in the template: template values are local and a state style could not override them.
+    -->
+    <ControlTheme x:Key="{x:Type arc:PlanComparison}" TargetType="arc:PlanComparison">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FrameMaxWidth" Value="{arc:PlanComparisonTokenResource FrameMaxWidth}" />
+        <Setter Property="MediumWidth" Value="{arc:PlanComparisonTokenResource MediumWidth}" />
+        <Setter Property="SmallWidth" Value="{arc:PlanComparisonTokenResource SmallWidth}" />
+        <Setter Property="TinyWidth" Value="{arc:PlanComparisonTokenResource TinyWidth}" />
+        <Setter Property="SideInset" Value="{arc:PlanComparisonTokenResource SideInset}" />
+        <Setter Property="CellInset" Value="{arc:PlanComparisonTokenResource CellInset}" />
+        <Setter Property="PlanInsetY" Value="{arc:PlanComparisonTokenResource PlanInsetY}" />
+        <Setter Property="RowMinHeight" Value="{arc:PlanComparisonTokenResource RowMinHeight}" />
+        <Setter Property="RowInsetY" Value="{arc:PlanComparisonTokenResource RowInsetY}" />
+        <Setter Property="FeatureHeaderBottom" Value="{arc:PlanComparisonTokenResource FeatureHeaderBottom}" />
+        <Setter Property="PriceMargin" Value="{arc:PlanComparisonTokenResource PriceMargin}" />
+        <Setter Property="PriceGap" Value="{arc:PlanComparisonTokenResource PriceGap}" />
+        <Setter Property="PriceRowGap" Value="{arc:PlanComparisonTokenResource PriceRowGap}" />
+        <Setter Property="RailHeight" Value="{arc:PlanComparisonTokenResource RailHeight}" />
+        <Setter Property="CheckSize" Value="{arc:PlanComparisonTokenResource CheckSize}" />
+        <Setter Property="CheckGap" Value="{arc:PlanComparisonTokenResource CheckGap}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:PlanComparison">
+                <Border Name="PART_Frame" ClipToBounds="True">
+                    <StackPanel>
+                        <Grid Name="PART_Intro" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                            <StackPanel Name="PART_Heading"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Bottom"
+                                        MaxWidth="{arc:PlanComparisonTokenResource HeadingMaxWidth}">
+                                <arc:PlanComparisonBalance>
+                                    <TextBlock Name="PART_Title"
+                                               ClipToBounds="False"
+                                               TextWrapping="Wrap"
+                                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                               FontWeight="Normal"
+                                               AutomationProperties.HeadingLevel="2" />
+                                </arc:PlanComparisonBalance>
+                                <TextBlock Name="PART_Description"
+                                           HorizontalAlignment="Left"
+                                           TextWrapping="Wrap"
+                                           MaxWidth="{arc:PlanComparisonTokenResource DescriptionMaxWidth}"
+                                           Margin="{arc:PlanComparisonTokenResource DescriptionMargin}"
+                                           LineHeight="{arc:PlanComparisonTokenResource BodyLineHeight}"
+                                           LetterSpacing="{arc:PlanComparisonTokenResource BodyLetterSpacing}"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            </StackPanel>
+                            <StackPanel Name="PART_BillingBox"
+                                        VerticalAlignment="Bottom"
+                                        IsVisible="{TemplateBinding IsBillingVisible}"
+                                        Spacing="{arc:PlanComparisonTokenResource BillingGap}">
+                                <arc:SegmentedControl Name="PART_Billing" />
+                                <TextBlock Name="PART_BillingNote"
+                                           MinHeight="16"
+                                           FontFeatures="tnum"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           LineHeight="{arc:PlanComparisonTokenResource SmallLineHeight}"
+                                           LetterSpacing="{arc:PlanComparisonTokenResource BodyLetterSpacing}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </StackPanel>
+                        </Grid>
+                        <Border Name="PART_Filter"
+                                MinHeight="{arc:PlanComparisonTokenResource FilterMinHeight}"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}">
+                            <arc:PlanComparisonWrapRow ColumnGap="{arc:PlanComparisonTokenResource FilterColumnGap}"
+                                                       RowGap="{arc:PlanComparisonTokenResource FilterRowGap}">
+                                <StackPanel Orientation="Horizontal"
+                                            VerticalAlignment="Center"
+                                            Spacing="{arc:PlanComparisonTokenResource FilterTitleGap}">
+                                    <TextBlock Name="PART_CompareTitle"
+                                               VerticalAlignment="Bottom"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               LineHeight="{arc:PlanComparisonTokenResource CompareTitleLineHeight}"
+                                               LetterSpacing="{arc:PlanComparisonTokenResource BodyLetterSpacing}"
+                                               AutomationProperties.HeadingLevel="3" />
+                                    <TextBlock Name="PART_FeatureCount"
+                                               VerticalAlignment="Bottom"
+                                               Margin="0,0,0,-2"
+                                               FontFeatures="tnum"
+                                               MinWidth="{arc:PlanComparisonTokenResource FeatureCountMinWidth}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                               LineHeight="{arc:PlanComparisonTokenResource SmallLineHeight}"
+                                               LetterSpacing="{arc:PlanComparisonTokenResource BodyLetterSpacing}"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                </StackPanel>
+                                <arc:Switch Name="PART_DifferencesSwitch" VerticalAlignment="Center" />
+                            </arc:PlanComparisonWrapRow>
+                        </Border>
+                        <Border Name="PART_Matrix" BorderBrush="{arc:ArcDesignTokenResource Border}" />
+                        <Border Name="PART_Footer"
+                                IsVisible="{TemplateBinding IsFootnoteVisible}"
+                                MinHeight="{arc:PlanComparisonTokenResource FooterMinHeight}"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}">
+                            <Panel VerticalAlignment="Center">
+                                <TextBlock Name="PART_Footnote"
+                                           TextWrapping="Wrap"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           LineHeight="{arc:PlanComparisonTokenResource SmallLineHeight}"
+                                           LetterSpacing="{arc:PlanComparisonTokenResource BodyLetterSpacing}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                <arc:SiteAnnouncer Name="PART_Announcer" />
+                            </Panel>
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- The card (Arc's .comparison) and the lines between its sections; :flat sets it into a page section. -->
+        <Style Selector="^ /template/ Border#PART_Frame">
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+            <Setter Property="MaxWidth" Value="{arc:PlanComparisonTokenResource FrameMaxWidth}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Filter">
+            <Setter Property="BorderThickness" Value="0,1,0,0" />
+            <Setter Property="Padding" Value="{arc:PlanComparisonTokenResource FilterInset}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Matrix">
+            <Setter Property="BorderThickness" Value="0,1,0,0" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Footer">
+            <Setter Property="BorderThickness" Value="0,1,0,0" />
+            <Setter Property="Padding" Value="{arc:PlanComparisonTokenResource FooterInset}" />
+        </Style>
+        <Style Selector="^:flat /template/ Border#PART_Frame">
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="MaxWidth" Value="Infinity" />
+        </Style>
+        <Style Selector="^:flat /template/ Border#PART_Filter">
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style Selector="^:flat /template/ Border#PART_Matrix">
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style Selector="^:flat /template/ Border#PART_Footer">
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+
+        <!-- Intro: heading and billing side by side, bottoms aligned; from the medium layout the billing stacks under. -->
+        <Style Selector="^ /template/ Grid#PART_Intro">
+            <Setter Property="Margin" Value="{arc:PlanComparisonTokenResource IntroInset}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Title">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type3XL}" />
+            <Setter Property="LineHeight" Value="{arc:PlanComparisonTokenResource TitleLineHeight}" />
+            <Setter Property="LetterSpacing" Value="{arc:PlanComparisonTokenResource DisplayLetterSpacing}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_BillingBox">
+            <Setter Property="Grid.Column" Value="1" />
+            <Setter Property="Grid.Row" Value="0" />
+            <Setter Property="Margin" Value="{arc:PlanComparisonTokenResource BillingMargin}" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+        </Style>
+        <Style Selector="^ /template/ arc|SegmentedControl#PART_Billing">
+            <Setter Property="HorizontalAlignment" Value="Right" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_BillingNote">
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="TextAlignment" Value="Right" />
+        </Style>
+        <Style Selector="^:compact /template/ Grid#PART_Intro">
+            <Setter Property="Margin" Value="{arc:PlanComparisonTokenResource IntroInsetCompact}" />
+        </Style>
+        <Style Selector="^:compact /template/ StackPanel#PART_BillingBox">
+            <Setter Property="Grid.Column" Value="0" />
+            <Setter Property="Grid.Row" Value="1" />
+            <Setter Property="Margin" Value="{arc:PlanComparisonTokenResource BillingMarginCompact}" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|SegmentedControl#PART_Billing">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+        <Style Selector="^:compact /template/ TextBlock#PART_BillingNote">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="TextAlignment" Value="Left" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_Filter">
+            <Setter Property="Padding" Value="{arc:PlanComparisonTokenResource FilterInsetCompact}" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_Footer">
+            <Setter Property="Padding" Value="{arc:PlanComparisonTokenResource FooterInsetCompact}" />
+        </Style>
+        <Style Selector="^:compact">
+            <Setter Property="SideInset" Value="{arc:PlanComparisonTokenResource SideInsetCompact}" />
+            <Setter Property="CellInset" Value="{arc:PlanComparisonTokenResource CellInsetCompact}" />
+            <Setter Property="PlanInsetY" Value="{arc:PlanComparisonTokenResource PlanInsetYCompact}" />
+        </Style>
+        <Style Selector="^:narrow /template/ TextBlock#PART_Title">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type2XL}" />
+            <Setter Property="LineHeight" Value="{arc:PlanComparisonTokenResource TitleLineHeightNarrow}" />
+            <Setter Property="LetterSpacing" Value="{arc:PlanComparisonTokenResource DisplayLetterSpacingNarrow}" />
+        </Style>
+        <Style Selector="^:tiny">
+            <Setter Property="SideInset" Value="{arc:PlanComparisonTokenResource SideInsetTiny}" />
+            <Setter Property="CellInset" Value="{arc:PlanComparisonTokenResource CellInsetTiny}" />
+        </Style>
+        <Style Selector="^:tiny /template/ Grid#PART_Intro">
+            <Setter Property="Margin" Value="{arc:PlanComparisonTokenResource IntroInsetTiny}" />
+        </Style>
+        <Style Selector="^:tiny /template/ Border#PART_Filter">
+            <Setter Property="Padding" Value="{arc:PlanComparisonTokenResource FilterInsetTiny}" />
+        </Style>
+        <Style Selector="^:tiny /template/ Border#PART_Footer">
+            <Setter Property="Padding" Value="{arc:PlanComparisonTokenResource FooterInsetTiny}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- A plan header or feature value: tints while its plan is selected (CSS transition 240ms standard). -->
+    <ControlTheme x:Key="{x:Type arc:PlanComparisonCell}" TargetType="arc:PlanComparisonCell">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Style Selector="^.subtle">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        </Style>
+        <Style Selector="^:selected">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- Matrix text by role; a value's color follows its plan's selection (240ms standard). -->
+    <ControlTheme x:Key="{x:Type arc:PlanComparisonText}" TargetType="arc:PlanComparisonText">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="LineHeight" Value="{arc:PlanComparisonTokenResource BodyLineHeight}" />
+        <Setter Property="LetterSpacing" Value="{arc:PlanComparisonTokenResource BodyLetterSpacing}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Style Selector="^.name">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^.name:narrow">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="{arc:PlanComparisonTokenResource SmallLineHeight}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^.value:selected">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^.included">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^.muted">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^.header">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="{arc:PlanComparisonTokenResource SmallLineHeight}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^.plan-name">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="LineHeight" Value="{arc:PlanComparisonTokenResource HeadingLineHeight}" />
+            <Setter Property="LetterSpacing" Value="{arc:PlanComparisonTokenResource PlanNameLetterSpacing}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^.plan-description">
+            <Setter Property="Margin" Value="{arc:PlanComparisonTokenResource PlanDescriptionMargin}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="{arc:PlanComparisonTokenResource SmallLineHeight}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^.price">
+            <Setter Property="TextWrapping" Value="NoWrap" />
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource DisplayFontFamily}" />
+            <Setter Property="FontFeatures" Value="tnum" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type3XL}" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="LineHeight" Value="{arc:ArcDesignTokenResource Type3XL}" />
+            <Setter Property="LetterSpacing" Value="{arc:PlanComparisonTokenResource DisplayLetterSpacing}" />
+            <Setter Property="MinWidth" Value="{arc:PlanComparisonTokenResource PriceMinWidth}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^.price:narrow">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type2XL}" />
+            <Setter Property="LineHeight" Value="{arc:ArcDesignTokenResource Type2XL}" />
+            <Setter Property="LetterSpacing" Value="{arc:PlanComparisonTokenResource DisplayLetterSpacingNarrow}" />
+            <Setter Property="MinWidth" Value="{arc:PlanComparisonTokenResource PriceMinWidthNarrow}" />
+        </Style>
+        <Style Selector="^.period">
+            <Setter Property="TextWrapping" Value="NoWrap" />
+            <Setter Property="Margin" Value="0,0,0,1" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="{arc:PlanComparisonTokenResource SmallLineHeight}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:PlanComparisonRow}" TargetType="arc:PlanComparisonRow">
+        <Setter Property="DividerBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+    </ControlTheme>
+</ResourceDictionary>

@@ -1,0 +1,317 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.UsagePricingTheme">
+    <!--
+        Usage pricing: the page grid (UsagePricingLayout) takes its children in this order: heading, controls, breakdown,
+        card (then the live region). Two columns from ColumnsThreshold; stacked below it (:stacked) with the smaller
+        heading, paddings and margins. Values a state changes are set by styles, not in the template.
+    -->
+    <ControlTheme x:Key="{x:Type arc:UsagePricing}" TargetType="arc:UsagePricing">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:UsagePricing">
+                <arc:UsagePricingLayout Name="PART_Layout"
+                                        Threshold="{arc:UsagePricingTokenResource ColumnsThreshold}"
+                                        ColumnGap="{arc:UsagePricingTokenResource ColumnGap}"
+                                        CardWidth="{arc:UsagePricingTokenResource CardWidth}"
+                                        StackedCardGap="{arc:UsagePricingTokenResource StackedCardGap}"
+                                        TextElement.Foreground="{TemplateBinding Foreground}"
+                                        TextElement.FontFamily="{TemplateBinding FontFamily}"
+                                        TextElement.FontSize="{TemplateBinding FontSize}">
+                    <!-- Heading -->
+                    <StackPanel Name="PART_Head" Margin="0,8,0,0">
+                        <TextBlock Name="PART_Title"
+                                   TextWrapping="Wrap"
+                                   FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                        <TextBlock Name="PART_Description"
+                                   Margin="0,10,0,0"
+                                   HorizontalAlignment="Left"
+                                   TextWrapping="Wrap"
+                                   LineHeight="19.6"
+                                   MaxWidth="{arc:UsagePricingTokenResource DescriptionMaxWidth}"
+                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                    </StackPanel>
+
+                    <!-- Sliders and the billing row -->
+                    <StackPanel Name="PART_Controls" Spacing="{arc:UsagePricingTokenResource ControlsGap}">
+                        <arc:Slider Name="PART_SeatSlider" Minimum="0" SmallChange="1" LargeChange="3" />
+                        <arc:Slider Name="PART_UsageSlider" Minimum="0" SmallChange="1" LargeChange="3" />
+                        <WrapPanel Name="PART_BillingRow" Orientation="Horizontal" ItemSpacing="16" LineSpacing="12">
+                            <arc:SegmentedControl Name="PART_Period" VerticalAlignment="Center" />
+                            <StackPanel Name="PART_SavingRow"
+                                        Orientation="Horizontal"
+                                        VerticalAlignment="Center">
+                                <arc:UsagePricingSavingMark Name="PART_SavingMark" VerticalAlignment="Center" />
+                                <TextBlock Name="PART_SavingBefore" VerticalAlignment="Center" />
+                                <arc:UsagePricingDigits Name="PART_Saving"
+                                                        VerticalAlignment="Center" />
+                                <TextBlock Name="PART_SavingAfter" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </WrapPanel>
+                    </StackPanel>
+
+                    <!-- Breakdown -->
+                    <StackPanel Name="PART_Breakdown">
+                        <TextBlock Name="PART_BreakdownTitle"
+                                   Margin="0,0,0,10"
+                                   FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   LetterSpacing="-0.42" />
+                        <Border Classes="row"
+                                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                                <StackPanel Classes="term">
+                                    <StackPanel Orientation="Horizontal" MinHeight="19.6">
+                                        <TextBlock Name="PART_SeatsRowBefore" VerticalAlignment="Center" />
+                                        <arc:TextMorph Name="PART_SeatsRowPlan"
+                                                       VerticalAlignment="Center"
+                                                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                        <TextBlock Name="PART_SeatsRowAfter" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                    <TextBlock Name="PART_SeatsDetail" Classes="detail" />
+                                </StackPanel>
+                                <arc:UsagePricingDigits Name="PART_SeatsCost"
+                                                        Grid.Column="1"
+                                                        VerticalAlignment="Center"
+                                                        Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            </Grid>
+                        </Border>
+                        <Border Classes="row"
+                                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                                <StackPanel Classes="term">
+                                    <TextBlock Name="PART_UsageRow" Classes="main" />
+                                    <TextBlock Name="PART_UsageDetail" Classes="detail" TextWrapping="Wrap" />
+                                </StackPanel>
+                                <arc:ArcContentSwap Name="PART_UsageValue"
+                                                    Grid.Column="1"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalContentAlignment="Right"
+                                                    Mode="Label"
+                                                    EnterOffset="6"
+                                                    EnterDuration="0:0:0.2"
+                                                    ExitDuration="0:0:0.12"
+                                                    TextElement.Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            </Grid>
+                        </Border>
+                        <arc:SpringSizeDecorator Name="PART_YearlyRow" Axis="Height" Spring="Smooth" IsExpanded="False">
+                            <Border Name="PART_YearlyContent"
+                                    Classes="row"
+                                    BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}">
+                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                                    <StackPanel Classes="term">
+                                        <TextBlock Name="PART_YearlyLabel" Classes="main" />
+                                        <TextBlock Name="PART_YearlyDetail" Classes="detail" />
+                                    </StackPanel>
+                                    <arc:UsagePricingDigits Name="PART_YearlyOff"
+                                                            Grid.Column="1"
+                                                            VerticalAlignment="Center"
+                                                            Foreground="{arc:ArcDesignTokenResource Success}" />
+                                </Grid>
+                            </Border>
+                        </arc:SpringSizeDecorator>
+                        <Border Classes="row"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                                <StackPanel Classes="term">
+                                    <TextBlock Name="PART_TotalLabel" Classes="main" FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                    <TextBlock Name="PART_TotalDetail" Classes="detail" />
+                                </StackPanel>
+                                <arc:UsagePricingDigits Name="PART_Total"
+                                                        Grid.Column="1"
+                                                        VerticalAlignment="Center"
+                                                        FontSize="{arc:ArcDesignTokenResource TypeLG}"
+                                                        FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                        Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- Recommendation card -->
+                    <Border Name="PART_Card"
+                            VerticalAlignment="Top"
+                            Background="{arc:ArcDesignTokenResource Surface}"
+                            BorderBrush="{arc:ArcDesignTokenResource Border}"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+                            AutomationProperties.LandmarkType="Complementary">
+                        <StackPanel>
+                            <arc:UsagePricingMeter Name="PART_Meter"
+                                                   BarHeight="{arc:UsagePricingTokenResource MeterBarHeight}"
+                                                   Gap="{arc:UsagePricingTokenResource MeterGap}"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   TrackBrush="{arc:UsagePricingTokenResource MeterTrackColor}"
+                                                   FillBrush="{arc:ArcDesignTokenResource Accent}"
+                                                   NameBrush="{arc:ArcDesignTokenResource TextMuted}"
+                                                   CurrentNameBrush="{arc:ArcDesignTokenResource Foreground}" />
+                            <arc:TextMorph Name="PART_PlanName"
+                                           Margin="0,30,0,0"
+                                           HorizontalAlignment="Left"
+                                           FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                           FontSize="{arc:UsagePricingTokenResource PlanNameFontSize}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            <arc:ArcContentSwap Name="PART_Reason"
+                                                Margin="0,6,0,0"
+                                                Mode="Label"
+                                                EnterOffset="6"
+                                                EnterDuration="0:0:0.2"
+                                                ExitDuration="0:0:0.12"
+                                                HorizontalContentAlignment="Left"
+                                                TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            <StackPanel Name="PART_PriceRow" Margin="0,26,0,0" Orientation="Horizontal" Spacing="8">
+                                <arc:UsagePricingDigits Name="PART_Price"
+                                                        FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                                        FontSize="{arc:UsagePricingTokenResource PriceFontSize}"
+                                                        FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                        MaxBlur="{arc:UsagePricingTokenResource DigitBlur}"
+                                                        Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <TextBlock Name="PART_PerMonth"
+                                           VerticalAlignment="Bottom"
+                                           Margin="0,0,0,9"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </StackPanel>
+                            <arc:ArcContentSwap Name="PART_Billed"
+                                                Margin="0,10,0,0"
+                                                Mode="Label"
+                                                EnterOffset="6"
+                                                EnterDuration="0:0:0.2"
+                                                ExitDuration="0:0:0.12"
+                                                HorizontalContentAlignment="Left"
+                                                TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            <Border Margin="0,22,0,0"
+                                    BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}">
+                                <arc:UsagePricingFeatureList Name="PART_Features"
+                                                             RowHeight="{arc:UsagePricingTokenResource FeatureRowHeight}"
+                                                             StrongBrush="{arc:ArcDesignTokenResource Foreground}"
+                                                             SoftBrush="{arc:ArcDesignTokenResource TextSecondary}"
+                                                             ValueBrush="{arc:ArcDesignTokenResource TextMuted}" />
+                            </Border>
+                            <StackPanel Margin="0,18,0,0" Spacing="10">
+                                <arc:Button Name="PART_Action"
+                                            HorizontalAlignment="Stretch"
+                                            HorizontalContentAlignment="Center"
+                                            LabelSwapMode="Label"
+                                            LabelSpring="Smooth" />
+                                <arc:ArcContentSwap Name="PART_Note"
+                                                    Mode="Label"
+                                                    EnterOffset="6"
+                                                    EnterDuration="0:0:0.2"
+                                                    ExitDuration="0:0:0.12"
+                                                    HorizontalAlignment="Center"
+                                                    HorizontalContentAlignment="Center"
+                                                    TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                    TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <arc:SiteAnnouncer Name="PART_Announcer" />
+                </arc:UsagePricingLayout>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Two columns -->
+        <Style Selector="^ /template/ TextBlock#PART_Title">
+            <Setter Property="FontSize" Value="{arc:UsagePricingTokenResource TitleFontSize}" />
+            <Setter Property="LetterSpacing" Value="-1.08" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Controls">
+            <Setter Property="Margin" Value="{arc:UsagePricingTokenResource ControlsMargin}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Breakdown">
+            <Setter Property="Margin" Value="{arc:UsagePricingTokenResource BreakdownMargin}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Card">
+            <Setter Property="Padding" Value="{arc:UsagePricingTokenResource CardPadding}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel.term">
+            <Setter Property="Margin" Value="{arc:UsagePricingTokenResource BreakdownRowPadding}" />
+            <Setter Property="Spacing" Value="2" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.main">
+            <Setter Property="LineHeight" Value="19.6" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.detail">
+            <Setter Property="LineHeight" Value="16.8" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_SavingRow">
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:yearly /template/ StackPanel#PART_SavingRow">
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:motion-full /template/ StackPanel#PART_SavingRow">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="TextElement.Foreground" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+
+        <!-- Stacked -->
+        <Style Selector="^:stacked /template/ TextBlock#PART_Title">
+            <Setter Property="FontSize" Value="{arc:UsagePricingTokenResource StackedTitleFontSize}" />
+            <Setter Property="LetterSpacing" Value="-0.84" />
+        </Style>
+        <Style Selector="^:stacked /template/ StackPanel#PART_Controls">
+            <Setter Property="Margin" Value="{arc:UsagePricingTokenResource StackedControlsMargin}" />
+        </Style>
+        <Style Selector="^:stacked /template/ StackPanel#PART_Breakdown">
+            <Setter Property="Margin" Value="{arc:UsagePricingTokenResource StackedBreakdownMargin}" />
+        </Style>
+        <Style Selector="^:stacked /template/ Border#PART_Card">
+            <Setter Property="Padding" Value="{arc:UsagePricingTokenResource StackedCardPadding}" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:UsagePricingUndoButton}" TargetType="arc:UsagePricingUndoButton">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Padding" Value="2,0" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:UsagePricingUndoButton">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            Margin="-2"
+                            IsVisible="False"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="6" />
+                    <Border Background="{TemplateBinding Background}"
+                            Padding="{TemplateBinding Padding}"
+                            CornerRadius="4">
+                        <StackPanel Spacing="1">
+                            <ContentPresenter Name="PART_ContentPresenter"
+                                              Content="{TemplateBinding Content}"
+                                              Foreground="{TemplateBinding Foreground}" />
+                            <Border Height="1" Background="{arc:ArcDesignTokenResource BorderStrong}" />
+                        </StackPanel>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

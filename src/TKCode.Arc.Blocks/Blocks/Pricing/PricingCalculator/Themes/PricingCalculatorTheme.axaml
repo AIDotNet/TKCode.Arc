@@ -1,0 +1,567 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.PricingCalculatorTheme">
+    <!--
+        Pricing calculator (design reference: Arc's Pro pricing-calculator block, ADR 0039; values measured on its preview,
+        notes .work/refs/pricing/notes/pricing-calculator.md). Header, the controls (seat slider, step buttons, billing
+        switch), the plan cards with the gliding frame and badge, and the totals row. Values that change with :compact are
+        set in styles, never on the template elements, so the compact styles can override them.
+    -->
+    <ControlTheme x:Key="{x:Type arc:PricingCalculator}" TargetType="arc:PricingCalculator">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Padding" Value="0,8" />
+        <Setter Property="StackedWidth" Value="{arc:PricingCalculatorTokenResource StackedWidth}" />
+        <Setter Property="CompactWidth" Value="{arc:PricingCalculatorTokenResource CompactWidth}" />
+        <Setter Property="NarrowWidth" Value="{arc:PricingCalculatorTokenResource NarrowWidth}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:PricingCalculator">
+                <Panel>
+                    <StackPanel Margin="{TemplateBinding Padding}" TextElement.LetterSpacing="-0.14">
+                        <StackPanel Name="PART_Header"
+                                    IsVisible="{TemplateBinding IsHeaderVisible}"
+                                    MaxWidth="{arc:PricingCalculatorTokenResource HeaderMaxWidth}"
+                                    Margin="{arc:PricingCalculatorTokenResource HeaderMargin}"
+                                    HorizontalAlignment="Center"
+                                    Spacing="8">
+                            <TextBlock Name="PART_Title"
+                                       Text="{TemplateBinding Title}"
+                                       TextAlignment="Center"
+                                       TextWrapping="Wrap"
+                                       FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                       FontWeight="Medium"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            <TextBlock Name="PART_Description"
+                                       Text="{TemplateBinding Description}"
+                                       TextAlignment="Center"
+                                       TextWrapping="Wrap"
+                                       LineHeight="19.6"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </StackPanel>
+                        <Border Name="PART_Controls"
+                                Margin="{arc:PricingCalculatorTokenResource ControlsMargin}"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}">
+                            <arc:PricingCalculatorControlsPanel Name="PART_ControlsPanel">
+                                <StackPanel Name="PART_Seats">
+                                    <Grid Height="30" ColumnDefinitions="*,Auto">
+                                        <TextBlock Name="PART_TeamSize"
+                                                   VerticalAlignment="Center"
+                                                   FontWeight="Medium"
+                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4">
+                                            <arc:PricingCalculatorStepButton Name="PART_Minus">
+                                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Minus}" Size="16" />
+                                            </arc:PricingCalculatorStepButton>
+                                            <Panel Width="{arc:PricingCalculatorTokenResource SeatValueWidth}">
+                                                <StackPanel Orientation="Horizontal"
+                                                            HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center"
+                                                            Spacing="5.4">
+                                                    <arc:PricingCalculatorDigits Name="PART_SeatValue"
+                                                                                 FontSize="18"
+                                                                                 FontWeight="Medium"
+                                                                                 VerticalAlignment="Center" />
+                                                    <arc:PricingCalculatorSwapText Name="PART_SeatUnit"
+                                                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                                                   VerticalAlignment="Center"
+                                                                                   Margin="0,2,0,0" />
+                                                </StackPanel>
+                                            </Panel>
+                                            <arc:PricingCalculatorStepButton Name="PART_Plus">
+                                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Plus}" Size="16" />
+                                            </arc:PricingCalculatorStepButton>
+                                        </StackPanel>
+                                    </Grid>
+                                    <StackPanel Margin="0,14,0,0" Height="44">
+                                        <arc:PricingCalculatorSeatSlider Name="PART_Slider" />
+                                        <arc:PricingCalculatorSeatMarks Name="PART_Marks" Margin="0,4,0,0" />
+                                    </StackPanel>
+                                </StackPanel>
+                                <arc:PricingCalculatorBillingSwitch Name="PART_Billing" VerticalAlignment="Bottom" />
+                            </arc:PricingCalculatorControlsPanel>
+                        </Border>
+                        <arc:PricingCalculatorPlansPanel Name="PART_Plans" Margin="0,0,0,16" />
+                        <Border Name="PART_Totals" CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}">
+                            <arc:PricingCalculatorTotalsPanel Name="PART_TotalsPanel">
+                                <StackPanel Spacing="2">
+                                    <arc:PricingCalculatorSwapText Name="PART_TotalsPlan"
+                                                                   LineHeight="19.6"
+                                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    <StackPanel Orientation="Horizontal" Spacing="11.2">
+                                        <arc:PricingCalculatorDigits Name="PART_Total"
+                                                                     FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                                                     FontSize="{arc:ArcDesignTokenResource Type2XL}"
+                                                                     LetterSpacing="-0.56"
+                                                                     VerticalAlignment="Bottom" />
+                                        <arc:PricingCalculatorSwapText Name="PART_TotalUnit"
+                                                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                                       VerticalAlignment="Bottom"
+                                                                       Margin="0,0,0,5" />
+                                    </StackPanel>
+                                    <arc:PricingCalculatorSwapText Name="PART_Rate"
+                                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                                   LineHeight="16.8"
+                                                                   TextWrapping="Wrap"
+                                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                </StackPanel>
+                                <arc:PricingCalculatorSwapPanel Name="PART_Savings" VerticalAlignment="Center">
+                                    <StackPanel Orientation="Horizontal"
+                                                Spacing="6"
+                                                VerticalAlignment="Center"
+                                                TextElement.FontWeight="Medium"
+                                                TextElement.Foreground="{arc:PricingCalculatorTokenResource SavingsColor}">
+                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Check}" Size="16" VerticalAlignment="Center" />
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <TextBlock Name="PART_SavingsBefore" VerticalAlignment="Center" />
+                                            <arc:PricingCalculatorDigits Name="PART_SavingsAmount" VerticalAlignment="Center" />
+                                            <TextBlock Name="PART_SavingsAfter" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <arc:PricingCalculatorPillButton Name="PART_SwitchYearly" VerticalAlignment="Center" />
+                                    <Panel />
+                                </arc:PricingCalculatorSwapPanel>
+                                <arc:Button Name="PART_Trial"
+                                            Variant="Primary"
+                                            Size="Large"
+                                            LabelSwapMode="Label"
+                                            HorizontalContentAlignment="Center" />
+                            </arc:PricingCalculatorTotalsPanel>
+                        </Border>
+                    </StackPanel>
+                    <arc:AuthAnnouncer Name="PART_Announcer" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ TextBlock#PART_Title">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type3XL}" />
+            <Setter Property="LineHeight" Value="39.6" />
+            <Setter Property="LetterSpacing" Value="-1.08" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Controls">
+            <Setter Property="Padding" Value="{arc:PricingCalculatorTokenResource ControlsPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Totals">
+            <Setter Property="Padding" Value="{arc:PricingCalculatorTokenResource TotalsPadding}" />
+        </Style>
+        <Style Selector="^ /template/ arc|PricingCalculatorBillingSwitch#PART_Billing">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+        <Style Selector="^:panels /template/ Border#PART_Controls">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:panels /template/ Border#PART_Totals">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:compact /template/ TextBlock#PART_Title">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type2XL}" />
+            <Setter Property="LineHeight" Value="31" />
+            <Setter Property="LetterSpacing" Value="-0.84" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_Controls">
+            <Setter Property="Padding" Value="{arc:PricingCalculatorTokenResource ControlsPaddingCompact}" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_Totals">
+            <Setter Property="Padding" Value="{arc:PricingCalculatorTokenResource TotalsPaddingCompact}" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|PricingCalculatorBillingSwitch#PART_Billing">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|PricingCalculatorPillButton#PART_SwitchYearly">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+    </ControlTheme>
+
+    <!-- A plan card: surface, 1px border, panel radius, 20px padding (18 18 16 when compact). -->
+    <ControlTheme x:Key="{x:Type arc:PricingCalculatorCard}" TargetType="arc:PricingCalculatorCard">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Padding" Value="{arc:PricingCalculatorTokenResource CardPadding}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:PricingCalculatorCard">
+                <Border Name="PART_Card"
+                        Background="{arc:ArcDesignTokenResource Surface}"
+                        BorderBrush="{arc:ArcDesignTokenResource Border}"
+                        BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                        CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+                        Padding="{TemplateBinding Padding}">
+                    <StackPanel>
+                        <Grid Height="26" ColumnDefinitions="*,Auto">
+                            <TextBlock Text="{TemplateBinding PlanName}"
+                                       VerticalAlignment="Center"
+                                       TextTrimming="CharacterEllipsis"
+                                       FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeLG}"
+                                       FontWeight="Medium"
+                                       LetterSpacing="-0.18"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            <Border Name="PART_Badge"
+                                    Grid.Column="1"
+                                    Height="{arc:PricingCalculatorTokenResource BadgeHeight}"
+                                    Padding="8,0"
+                                    VerticalAlignment="Center"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                    Background="{arc:ArcDesignTokenResource AccentSubtle}">
+                                <TextBlock Text="{TemplateBinding BadgeText}"
+                                           VerticalAlignment="Center"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           FontWeight="Medium"
+                                           LetterSpacing="-0.12"
+                                           Foreground="{arc:ArcDesignTokenResource AccentStrong}" />
+                            </Border>
+                        </Grid>
+                        <arc:SpringSizeDecorator Name="PART_DescriptionFold"
+                                                 Classes="fold"
+                                                 Axis="Height"
+                                                 Spring="Smooth"
+                                                 IsExpanded="{TemplateBinding IsExpanded}">
+                            <TextBlock Name="PART_Description"
+                                       Text="{TemplateBinding Description}"
+                                       TextWrapping="Wrap"
+                                       LineHeight="19.6"
+                                       Opacity="{TemplateBinding DimOpacity}"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </arc:SpringSizeDecorator>
+                        <arc:PricingCalculatorSwapPanel Name="PART_PriceArea"
+                                                        Margin="0,16,0,14"
+                                                        SelectedIndex="{TemplateBinding AreaIndex}">
+                            <StackPanel VerticalAlignment="Top" MinHeight="{arc:PricingCalculatorTokenResource PriceAreaHeight}">
+                                <StackPanel Orientation="Horizontal" Height="40">
+                                    <arc:PricingCalculatorDigits Value="{TemplateBinding PriceValue}"
+                                                                 Prefix="{TemplateBinding MoneyPrefix}"
+                                                                 Suffix="{TemplateBinding MoneySuffix}"
+                                                                 Decimals="{TemplateBinding PriceDecimals}"
+                                                                 Culture="{TemplateBinding Culture}"
+                                                                 FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                                                 FontSize="{arc:ArcDesignTokenResource Type3XL}"
+                                                                 FontWeight="Normal"
+                                                                 LetterSpacing="-1.08"
+                                                                 VerticalAlignment="Bottom" />
+                                    <StackPanel Margin="10,0,0,3"
+                                                VerticalAlignment="Bottom"
+                                                TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}">
+                                        <TextBlock Text="{TemplateBinding PerSeat}" LineHeight="15.6" />
+                                        <TextBlock Text="{TemplateBinding PerMonth}" LineHeight="15.6" />
+                                    </StackPanel>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Spacing="4.9" Margin="0,4,0,0">
+                                    <arc:PricingCalculatorDigits Value="{TemplateBinding TotalValue}"
+                                                                 Prefix="{TemplateBinding MoneyPrefix}"
+                                                                 Suffix="{TemplateBinding MoneySuffix}"
+                                                                 Decimals="{TemplateBinding TotalDecimals}"
+                                                                 Culture="{TemplateBinding Culture}"
+                                                                 FontWeight="Medium"
+                                                                 VerticalAlignment="Center" />
+                                    <arc:PricingCalculatorSwapText Text="{TemplateBinding TotalCaption}"
+                                                                   LineHeight="19.6"
+                                                                   VerticalAlignment="Center"
+                                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                </StackPanel>
+                            </StackPanel>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="{TemplateBinding LimitTitle}"
+                                           TextWrapping="Wrap"
+                                           LineHeight="19.6"
+                                           FontWeight="Medium"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <arc:PricingCalculatorSwapText Text="{TemplateBinding LimitDetail}"
+                                                               TextWrapping="Wrap"
+                                                               LineHeight="19.6"
+                                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            </StackPanel>
+                        </arc:PricingCalculatorSwapPanel>
+                        <arc:Button Name="PART_Action"
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Center"
+                                    LabelSwapMode="Label" />
+                        <arc:SpringSizeDecorator Name="PART_FeaturesFold"
+                                                 Classes="fold"
+                                                 Axis="Height"
+                                                 Spring="Smooth"
+                                                 IsExpanded="{TemplateBinding IsExpanded}">
+                            <Border Margin="0,16,0,0"
+                                    Padding="0,12,0,0"
+                                    Opacity="{TemplateBinding DimOpacity}"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
+                                    BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                                <arc:PricingCalculatorFeatureList Name="PART_Features" />
+                            </Border>
+                        </arc:SpringSizeDecorator>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Wide: the price area keeps the price block's 76px so the buttons line up; folded (stacked, not selected) the
+             cap note takes only its own two lines. -->
+        <Style Selector="^ /template/ arc|PricingCalculatorSwapPanel#PART_PriceArea">
+            <Setter Property="Height" Value="{arc:PricingCalculatorTokenResource PriceAreaHeight}" />
+        </Style>
+        <Style Selector="^:collapsed /template/ arc|PricingCalculatorSwapPanel#PART_PriceArea">
+            <Setter Property="Height" Value="NaN" />
+        </Style>
+        <Style Selector="^ /template/ arc|PricingCalculatorFeatureList#PART_Features">
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Setter Property="CheckBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:selected /template/ arc|PricingCalculatorFeatureList#PART_Features">
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="CheckBrush" Value="{arc:PricingCalculatorTokenResource SavingsColor}" />
+        </Style>
+        <Style Selector="^ /template/ arc|SpringSizeDecorator.fold">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:collapsed /template/ arc|SpringSizeDecorator.fold">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:unavailable">
+            <Setter Property="DimOpacity" Value="0.5" />
+        </Style>
+        <Style Selector="^:compact">
+            <Setter Property="Padding" Value="{arc:PricingCalculatorTokenResource CardPaddingCompact}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="DimOpacity" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|SpringSizeDecorator.fold">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ arc|SpringSizeDecorator.fold">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- Seat slider: drawn in code; colors from tokens. -->
+    <ControlTheme x:Key="{x:Type arc:PricingCalculatorSeatSlider}" TargetType="arc:PricingCalculatorSeatSlider">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="ThumbSize" Value="{arc:PricingCalculatorTokenResource SliderHeight}" />
+        <Setter Property="TrackThickness" Value="{arc:PricingCalculatorTokenResource TrackThickness}" />
+        <Setter Property="FillBrush" Value="{arc:PricingCalculatorTokenResource TrackFillColor}" />
+        <Setter Property="TrackBrush" Value="{arc:PricingCalculatorTokenResource TrackRestColor}" />
+        <Setter Property="ThumbBrush" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="ThumbBorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="ThumbShadow" Value="{arc:ArcDesignTokenResource ShadowRaised}" />
+        <Setter Property="FocusBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+    </ControlTheme>
+
+    <!-- Plan marks under the slider. -->
+    <ControlTheme x:Key="{x:Type arc:PricingCalculatorMarkLabel}" TargetType="arc:PricingCalculatorMarkLabel">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="LineHeight" Value="16.8" />
+        <Setter Property="LetterSpacing" Value="-0.12" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="TickBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Style Selector="^:on">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- Round seat step buttons. -->
+    <ControlTheme x:Key="{x:Type arc:PricingCalculatorStepButton}" TargetType="arc:PricingCalculatorStepButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Width" Value="{arc:PricingCalculatorTokenResource StepSize}" />
+        <Setter Property="Height" Value="{arc:PricingCalculatorTokenResource StepSize}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="RenderTransform" Value="scale(1)" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:PricingCalculatorStepButton">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            Margin="-4"
+                            IsVisible="False"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.95)" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The yearly offer pill in the totals (billed monthly). -->
+    <ControlTheme x:Key="{x:Type arc:PricingCalculatorPillButton}" TargetType="arc:PricingCalculatorPillButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="MinHeight" Value="32" />
+        <Setter Property="Padding" Value="12,6" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:PricingCalculatorPillButton">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            Margin="-4"
+                            IsVisible="False"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Padding="{TemplateBinding Padding}">
+                        <TextBlock Text="{TemplateBinding Content}"
+                                   TextWrapping="Wrap"
+                                   VerticalAlignment="Center" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- Billing switch: a pill groove, a gliding surface thumb, two options. -->
+    <ControlTheme x:Key="{x:Type arc:PricingCalculatorBillingSwitch}" TargetType="arc:PricingCalculatorBillingSwitch">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:PricingCalculatorBillingSwitch">
+                <Border Background="{arc:PricingCalculatorTokenResource BillingGrooveColor}"
+                        Padding="{arc:PricingCalculatorTokenResource BillingInset}"
+                        CornerRadius="{arc:ArcDesignTokenResource RadiusPill}">
+                    <arc:PricingCalculatorBillingPanel Name="PART_Panel">
+                        <arc:GlidingIndicator Name="PART_Thumb"
+                                              Fill="{arc:ArcDesignTokenResource SurfaceRaised}"
+                                              Stroke="{arc:ArcDesignTokenResource Border}"
+                                              StrokeThickness="1"
+                                              CornerRadius="16"
+                                              BoxShadow="{arc:ArcDesignTokenResource ShadowResting}" />
+                        <arc:PricingCalculatorBillingOption Name="PART_Monthly" Content="{TemplateBinding MonthlyText}" />
+                        <arc:PricingCalculatorBillingOption Name="PART_Yearly"
+                                                            Content="{TemplateBinding YearlyText}"
+                                                            Note="{TemplateBinding YearlyNote}" />
+                    </arc:PricingCalculatorBillingPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:PricingCalculatorBillingOption}" TargetType="arc:PricingCalculatorBillingOption">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Height" Value="{arc:PricingCalculatorTokenResource BillingOptionHeight}" />
+        <Setter Property="Padding" Value="14,0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:PricingCalculatorBillingOption">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            Margin="-4"
+                            IsVisible="False"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <Border Background="Transparent"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="8"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center">
+                            <ContentPresenter Content="{TemplateBinding Content}" VerticalAlignment="Center" />
+                            <TextBlock Text="{TemplateBinding Note}"
+                                       IsVisible="{TemplateBinding Note, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                       VerticalAlignment="Center"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       FontWeight="Medium"
+                                       Foreground="{arc:PricingCalculatorTokenResource SavingsColor}" />
+                        </StackPanel>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:checked">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>
