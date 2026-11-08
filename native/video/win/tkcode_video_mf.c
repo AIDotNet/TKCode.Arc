@@ -1142,11 +1142,16 @@ TKV_API int32_t tkv_player_play(tkv_player* p)
     if (p == NULL) {
         return TKV_E_INVALID_ARG;
     }
+    int was_ended = current_state(p) == TKV_STATE_ENDED;
     HRESULT hr = IMFMediaEngine_Play(p->engine);
     TKV_TRACE("play hr=0x%08lX", (unsigned long)hr);
     if (FAILED(hr)) {
         set_error_hr(p, "Play failed", hr);
         return TKV_E_FAIL;
+    }
+    if (was_ended) {
+        /* Play at the end starts over, and the engine raises no PLAYING for that. */
+        emit_state(p, TKV_STATE_PLAYING, 0);
     }
     return TKV_OK;
 }
