@@ -28,6 +28,20 @@ Arc task:
 - [ ] 6. Review: run checklist.md, fix, and run it again until every line passes
 ```
 
+**Starting a new app or control library?** Create it from a template instead of wiring packages by hand; it builds and
+runs as soon as it is created, with Arc registered and the theme in place. See {{base}}/docs/templates.md.
+
+```bash
+dotnet new install TKCode.Arc.Templates
+dotnet new tkcode-arc -n MyApp --layout sidebar   # blank, sidebar, header or dock; --mvvm toolkit, --di, --i18n, --tests
+dotnet new tkcode-arc-xplat -n MyApp              # desktop and browser (WebAssembly) hosts
+dotnet new tkcode-arc-admin -n MyApp              # finished apps: -admin, -ai-chat, -devtool, -workflow, -projects, -analytics
+dotnet new tkcode-arc-lib -n Acme.Controls        # a control library with tests and a sample
+```
+
+Inside an existing project, `tkcode-arc-page`, `tkcode-arc-window`, `tkcode-arc-dialog` and `tkcode-arc-control` add
+those pieces. The finished apps have English UI text.
+
 **Find.** Start from [components.md](components.md) and shortlist by purpose; each line also gives the names other
 libraries use (modal, snackbar, autocomplete, ...), so search it for the word in the request. Then read the shortlisted
 classes in [choosing.md](choosing.md): for each component it lists the nearby ones to choose instead and when, so you
@@ -180,6 +194,7 @@ declares transitions under `^:motion-full` and `^:motion-reduced` with `arc:ArcM
 | [components.md](components.md) | Finding components: every component and block by group, with its class, package, purpose and other names |
 | [choosing.md](choosing.md) | Deciding between close candidates: for each component, what to choose instead and when |
 | [checklist.md](checklist.md) | Before you finish: the review checklist |
+| {{base}}/docs/templates.md | Creating an app or control library with `dotnet new`, every template and option |
 | {{base}}/docs/installation.md | Setting up a project, publishing, troubleshooting |
 | {{base}}/docs/theming.md | Light and dark, accents, every design token, overriding tokens |
 | {{base}}/docs/motion.md | Motion levels, springs, motion in your own controls |

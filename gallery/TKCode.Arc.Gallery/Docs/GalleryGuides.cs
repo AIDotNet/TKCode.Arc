@@ -19,7 +19,7 @@ public sealed record GalleryGuide(string Page, string Language, string Requested
 public static class GalleryGuides
 {
     /// <summary>The pages, in sidebar order; the gallery entry of each is <c>Docs&lt;Page&gt;</c>.</summary>
-    public static readonly IReadOnlyList<string> Pages = ["Introduction", "Installation", "Theming", "Motion", "AiAndMcp", "Changelog"];
+    public static readonly IReadOnlyList<string> Pages = ["Introduction", "Installation", "Templates", "Theming", "Motion", "AiAndMcp", "Changelog"];
 
     /// <summary>The languages a guide may be written in, en-US first.</summary>
     public static readonly IReadOnlyList<string> Languages = [GalleryDocs.SourceLanguage, "zh-CN", "zh-TW"];

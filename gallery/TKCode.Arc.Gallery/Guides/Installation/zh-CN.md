@@ -1,6 +1,6 @@
 ---
 title: 安装
-source-hash: 41a91457d83d
+source-hash: cc2bd0fa7655
 ---
 
 # 安装
@@ -24,16 +24,13 @@ TKCode.Arc 目前处于预览阶段，Avalonia 固定为确切版本。除 Avalo
 
 ```bash
 dotnet new install TKCode.Arc.Templates
-dotnet new tkcode-arc -n MyApp                      # 顶栏加单个页面
-dotnet new tkcode-arc -n MyApp --layout sidebar     # 可收起的侧边栏和多个页面
-dotnet new tkcode-arc -n MyApp --layout sidebar --mvvm toolkit   # 再加上 ViewModel
+dotnet new tkcode-arc -n MyApp --layout sidebar
 cd MyApp
 dotnet run
 ```
 
-`--layout sidebar` 会加入 `TKCode.Arc.Blocks`，并用其中的 `Sidebar` 搭建窗口：图标、选中页面高亮、收起为图标栏、显示页面标题的顶栏，以及三个示例页面。`-f` 选择目标框架（默认 `net10.0`，也可以是 `net8.0` 或 `net11.0`），`--accent` 选择启动时的强调色。`--mvvm toolkit` 会加入用 CommunityToolkit.Mvvm 编写的 ViewModel，视图通过编译绑定与它们相连。应用会保存外观、强调色、窗口大小与位置以及侧边栏的收起状态，并在下次启动时恢复；`--settings false` 可去掉这项功能。Visual Studio 和 Rider 中的模板名为 **TKCode.Arc App**。
+模板提供四种布局（`blank`、`sidebar`、`header`、`dock`），以及 MVVM、依赖注入、保存偏好设置、本地化、测试和 Arc 标题栏等选项；`tkcode-arc-xplat` 为桌面和浏览器创建同样的应用，项模板则可以添加页面、窗口、对话框和控件。本节的 **模板** 页面列出了全部内容。下面的步骤介绍如何把 Arc 添加到现有项目，也说明了模板配置了哪些内容。
 
-在项目中，项模板可以添加常用部件：`dotnet new tkcode-arc-page -n Reports`（页面；加 `--view-model` 同时生成 ViewModel）、`tkcode-arc-window`（次级窗口）、`tkcode-arc-dialog`（放在 Arc `Dialog` 中的表单，带可等待的 `ShowAsync`）和 `tkcode-arc-control`（带 Token 类和主题文件的 Arc 风格控件）。生成文件顶部的注释说明了如何把它们接入应用。下面的步骤介绍如何把 Arc 添加到现有项目，也说明了模板配置了哪些内容。
 
 ## 1. 添加包
 

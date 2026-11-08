@@ -27,25 +27,16 @@ references, the fonts, Lucide icons, `UseArc(...)` and a light/dark switch are a
 
 ```bash
 dotnet new install TKCode.Arc.Templates
-dotnet new tkcode-arc -n MyApp                      # a top bar over one page
-dotnet new tkcode-arc -n MyApp --layout sidebar     # a collapsible sidebar with pages
-dotnet new tkcode-arc -n MyApp --layout sidebar --mvvm toolkit   # ... with view models
+dotnet new tkcode-arc -n MyApp --layout sidebar
 cd MyApp
 dotnet run
 ```
 
-`--layout sidebar` adds `TKCode.Arc.Blocks` and builds the window from its `Sidebar`: icons, the selected page, a
-collapse to an icon rail, a top bar with the page title and three sample pages. `-f` picks the target framework
-(`net10.0` by default, or `net8.0` and `net11.0`) and `--accent` the start-up accent. `--mvvm toolkit` adds view models
-built with CommunityToolkit.Mvvm and binds the views to them with compiled bindings. The app saves the appearance, the
-accent, the window's size and position and the folded sidebar, and restores them on the next start; `--settings false`
-leaves that out. Visual Studio and Rider list the template as **TKCode.Arc App**.
+The template offers four layouts (`blank`, `sidebar`, `header`, `dock`) and options for MVVM, dependency injection,
+saved preferences, localization, tests and Arc's title bar; `tkcode-arc-xplat` creates the same app for the desktop and
+the browser, and item templates add pages, windows, dialogs and controls. The **Templates** page in this section lists
+them all. The steps below add Arc to an existing project and explain what the template sets up.
 
-Inside the project, item templates add the usual pieces: `dotnet new tkcode-arc-page -n Reports` (a page, `--view-model`
-for one with a view model), `tkcode-arc-window` (a secondary window), `tkcode-arc-dialog` (a form in an Arc `Dialog`
-with an awaitable `ShowAsync`) and `tkcode-arc-control` (an Arc-style control with its token class and theme file). The
-comments at the top of the created files say how to wire them in. The steps below add Arc to an existing project and
-explain what the template sets up.
 
 ## 1. Add the packages
 

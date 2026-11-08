@@ -1,6 +1,6 @@
 ---
 title: 安裝
-source-hash: 41a91457d83d
+source-hash: cc2bd0fa7655
 ---
 
 # 安裝
@@ -24,16 +24,13 @@ TKCode.Arc 目前處於預覽階段，Avalonia 固定為確切版本。除 Avalo
 
 ```bash
 dotnet new install TKCode.Arc.Templates
-dotnet new tkcode-arc -n MyApp                      # 頂端列加單一頁面
-dotnet new tkcode-arc -n MyApp --layout sidebar     # 可收合的側邊欄與多個頁面
-dotnet new tkcode-arc -n MyApp --layout sidebar --mvvm toolkit   # 再加上 ViewModel
+dotnet new tkcode-arc -n MyApp --layout sidebar
 cd MyApp
 dotnet run
 ```
 
-`--layout sidebar` 會加入 `TKCode.Arc.Blocks`，並以其中的 `Sidebar` 組成視窗：圖示、選取頁面的醒目提示、收合為圖示列、顯示頁面標題的頂端列，以及三個範例頁面。`-f` 選擇目標框架（預設 `net10.0`，也可以是 `net8.0` 或 `net11.0`），`--accent` 選擇啟動時的強調色。`--mvvm toolkit` 會加入以 CommunityToolkit.Mvvm 撰寫的 ViewModel，檢視透過編譯繫結與它們相連。應用程式會儲存外觀、強調色、視窗大小與位置，以及側邊欄的收合狀態，並在下次啟動時還原；`--settings false` 可移除這項功能。Visual Studio 與 Rider 中的範本名稱為 **TKCode.Arc App**。
+範本提供四種版面配置（`blank`、`sidebar`、`header`、`dock`），以及 MVVM、相依性插入、儲存偏好設定、本地化、測試與 Arc 標題列等選項；`tkcode-arc-xplat` 為桌面與瀏覽器建立同樣的應用程式，項目範本則可以加入頁面、視窗、對話方塊與控制項。本節的 **範本** 頁面列出了全部內容。以下步驟說明如何把 Arc 加入現有專案，也說明範本設定了哪些內容。
 
-在專案中，項目範本可以加入常用元件：`dotnet new tkcode-arc-page -n Reports`（頁面；加上 `--view-model` 會一併產生 ViewModel）、`tkcode-arc-window`（次要視窗）、`tkcode-arc-dialog`（放在 Arc `Dialog` 中的表單，附可等待的 `ShowAsync`）與 `tkcode-arc-control`（附 Token 類別與佈景主題檔的 Arc 風格控制項）。產生檔案頂端的註解說明如何把它們接入應用程式。以下步驟說明如何把 Arc 加入現有專案，也說明範本設定了哪些內容。
 
 ## 1. 加入套件
 

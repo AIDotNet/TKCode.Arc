@@ -29,6 +29,7 @@ Eight Pricing blocks, a `dotnet new` template package, SettingsGroup columns and
 
 ### Added
 
+- **Templates** (new package `TKCode.Arc.Templates`): `dotnet new install TKCode.Arc.Templates`, then `dotnet new tkcode-arc` for a desktop app or `dotnet new tkcode-arc-xplat` for the desktop and the browser (WebAssembly). Four layouts (`--layout blank|sidebar|header|dock`) and options for MVVM with CommunityToolkit.Mvvm (`--mvvm toolkit`), dependency injection (`--di`), saved preferences (`--settings`, on by default: the appearance, the accent, the window placement and the layout's state come back on the next start), localization (`--i18n`: English, 简体中文 and 繁體中文 in `.xlf` files with a language switch; `--ui-language` picks the text's language), a headless test project (`--tests`), Arc's title bar (`--custom-titlebar`), `--framework` and `--accent`. Item templates add a page (`tkcode-arc-page`), a window (`tkcode-arc-window`), a dialog with an awaitable result (`tkcode-arc-dialog`) and an Arc-style control with its token class and theme file (`tkcode-arc-control`). Three more templates start from a finished app built from Arc's blocks, with sample data behind service interfaces, MVVM and dependency injection: `tkcode-arc-admin` (sign-in, a dashboard, a customer table with search, filters, paging and a detail drawer, team and roles, billing, settings, a command palette), `tkcode-arc-ai-chat` (a conversation list beside `AiChat` with streamed replies from a sample responder you replace with your model client, conversations kept between runs) and `tkcode-arc-devtool` (a dock layout with a file explorer, editor tabs, a property grid, build output and problems, the open files restored with the layout). Also `tkcode-arc-workflow` (a step palette, an editable workflow canvas with undo, a minimap and an inspector, a simulated run, JSON import and export), `tkcode-arc-projects` (Kanban board, Gantt timeline, week calendar, release checklist) and `tkcode-arc-analytics` (KPI drill-down, revenue, cohort retention, usage forecast, service status). `tkcode-arc-lib` starts a control library of your own: an example control with its design tokens and theme, a `Use<Name>()` registration, headless tests and a sample app, ready for `dotnet pack`. The new **Templates** guide lists them all; the Installation guide gains a “Start from a template” section.
 - **`EnumSelector`** (`TKCode.Arc`, Extras; issue #56): lists the members of an enum as choices, a `RadioGroup` for a
   plain enum and `Checkbox`es for a `[Flags]` enum whose checked members combine bit by bit (composite members such as
   `ReadWrite` check their parts and show a dash when partly set, a zero member such as `None` clears the rest, and every
@@ -43,6 +44,11 @@ Eight Pricing blocks, a `dotnet new` template package, SettingsGroup columns and
   (`AnimationDuration`, `EasingFunction`, `IsAnimationEnabled`), scrolling selects the tab of the section on the anchor
   line (`SnapAlignment` Top or Center), with two-way `SelectedItem` / `SelectedIndex`, header, icon and content
   templates, keyboard navigation and live add, remove and move. Docs and demos in English, 简体中文 and 繁體中文.
+
+### Fixed
+
+- **`dotnet new install TKCode.Arc.Templates` failed for 0.4.0-preview.6**: the package was released with its template files moved but not the `template.json` that points at them, so it could not be installed (`MV012: Source ... does not exist`). Use this version or later.
+- **Lucide icons**: 32 icons whose path starts with a move followed directly by a line (`UserCog`, `FileCog`, `ServerCog`, `Coins`, `Watch`, `ZapOff`, ...) threw "Invalid double value" when first shown; the generator read `16.53.923` as one number. A test now parses every icon's path.
 
 ## 0.4.0-preview.5 - 2026-11-08
 
