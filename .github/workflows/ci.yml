@@ -143,8 +143,7 @@ jobs:
               failed=1
             fi
             # The analyzer project switches packing and documentation off itself; it ships inside TKCode.Arc.Foundation.
-            # The video packages are switched off until Windows and real devices are verified, so a release leaves them out.
-            if [[ "$name" != *.Generators && "$name" != TKCode.Arc.Video* ]] && ! echo "$values" | grep -q '"IsPackable": "true"'; then
+            if [[ "$name" != *.Generators ]] && ! echo "$values" | grep -q '"IsPackable": "true"'; then
               echo "::error::$name is not packable"
               failed=1
             fi
@@ -488,7 +487,7 @@ jobs:
         env:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
-          for id in TKCode.Arc TKCode.Arc.Foundation TKCode.Arc.Core TKCode.Arc.Fonts TKCode.Arc.Icons.Lucide TKCode.Arc.Blocks TKCode.Arc.AdvancedCharts TKCode.Arc.Special TKCode.Arc.Terminal TKCode.Arc.Workflow TKCode.Arc.Dock TKCode.Arc.Themes.Pixel TKCode.Arc.Themes.Corners TKCode.Arc.Mobile TKCode.Arc.Audio TKCode.Arc.Audio.Native TKCode.Arc.Audio.Browser TKCode.Arc.Pdf TKCode.Arc.Pdf.Native TKCode.Arc.Pdf.Browser; do
+          for id in TKCode.Arc TKCode.Arc.Foundation TKCode.Arc.Core TKCode.Arc.Fonts TKCode.Arc.Icons.Lucide TKCode.Arc.Blocks TKCode.Arc.AdvancedCharts TKCode.Arc.Special TKCode.Arc.Terminal TKCode.Arc.Workflow TKCode.Arc.Dock TKCode.Arc.Themes.Pixel TKCode.Arc.Themes.Corners TKCode.Arc.Mobile TKCode.Arc.Audio TKCode.Arc.Audio.Native TKCode.Arc.Audio.Browser TKCode.Arc.Pdf TKCode.Arc.Pdf.Native TKCode.Arc.Pdf.Browser TKCode.Arc.Video TKCode.Arc.Video.Native TKCode.Arc.Video.Browser; do
             for ext in nupkg snupkg; do
               file="artifacts/nupkg/$id.$VERSION.$ext"
               if [[ ! -f "$file" ]]; then
@@ -518,6 +517,13 @@ jobs:
                        runtimes/win-x64/native/tkcode_audio.dll runtimes/win-arm64/native/tkcode_audio.dll \
                        runtimes/osx-x64/native/libtkcode_audio.dylib runtimes/osx-arm64/native/libtkcode_audio.dylib; do
             unzip -l "$audio" | grep -q " $entry\$" || { echo "::error::$audio lacks $entry"; exit 1; }
+          done
+          # TKCode.Arc.Video.Native must carry the video shim for every RID.
+          video="artifacts/nupkg/TKCode.Arc.Video.Native.$VERSION.nupkg"
+          for entry in runtimes/linux-x64/native/libtkcode_video.so runtimes/linux-arm64/native/libtkcode_video.so \
+                       runtimes/win-x64/native/tkcode_video.dll runtimes/win-arm64/native/tkcode_video.dll \
+                       runtimes/osx-x64/native/libtkcode_video.dylib runtimes/osx-arm64/native/libtkcode_video.dylib; do
+            unzip -l "$video" | grep -q " $entry\$" || { echo "::error::$video lacks $entry"; exit 1; }
           done
           # TKCode.Arc.Pdf.Native must carry PDFium for every RID, its licenses and its notices.
           pdf="artifacts/nupkg/TKCode.Arc.Pdf.Native.$VERSION.nupkg"
@@ -589,7 +595,7 @@ jobs:
         env:
           NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
         run: |
-          for id in TKCode.Arc.Foundation TKCode.Arc.Core TKCode.Arc.Fonts TKCode.Arc.Icons.Lucide TKCode.Arc.Audio TKCode.Arc.Audio.Native TKCode.Arc.Audio.Browser TKCode.Arc TKCode.Arc.Pdf TKCode.Arc.Pdf.Native TKCode.Arc.Pdf.Browser TKCode.Arc.Blocks TKCode.Arc.AdvancedCharts TKCode.Arc.Special TKCode.Arc.Terminal TKCode.Arc.Workflow TKCode.Arc.Dock TKCode.Arc.Themes.Pixel TKCode.Arc.Themes.Corners TKCode.Arc.Mobile TKCode.Arc.Templates; do
+          for id in TKCode.Arc.Foundation TKCode.Arc.Core TKCode.Arc.Fonts TKCode.Arc.Icons.Lucide TKCode.Arc.Audio TKCode.Arc.Audio.Native TKCode.Arc.Audio.Browser TKCode.Arc TKCode.Arc.Pdf TKCode.Arc.Pdf.Native TKCode.Arc.Pdf.Browser TKCode.Arc.Video TKCode.Arc.Video.Native TKCode.Arc.Video.Browser TKCode.Arc.Blocks TKCode.Arc.AdvancedCharts TKCode.Arc.Special TKCode.Arc.Terminal TKCode.Arc.Workflow TKCode.Arc.Dock TKCode.Arc.Themes.Pixel TKCode.Arc.Themes.Corners TKCode.Arc.Mobile TKCode.Arc.Templates; do
             dotnet nuget push "nupkg/$id.${{ needs.pack.outputs.version }}.nupkg" \
               --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
           done

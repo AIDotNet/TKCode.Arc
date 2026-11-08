@@ -42,7 +42,7 @@ TKCode.Arc 是面向 Avalonia 12 的 .NET 应用 UI 套件。它移植了 Arc �
 | `TKCode.Arc.Terminal` | 基于 libghostty-vt 的 `TerminalView`，已内置原生库。 |
 | `TKCode.Arc.Pdf`、`.Pdf.Native`、`.Pdf.Browser` | `PdfViewer`，支持缩略图、大纲、搜索、文本选择和链接，桌面端使用 PDFium，WebAssembly 使用 pdf.js。将在下一版本提供。 |
 | `TKCode.Arc.Audio`、`.Audio.Native`、`.Audio.Browser` | `IAudioPlayer` 抽象，桌面端使用 miniaudio，WebAssembly 使用 HTML audio。 |
-| `TKCode.Arc.Video`、`.Video.Native`、`.Video.Browser` | 基于各平台自带播放器的 `VideoPlayer` 和 `VideoSurface`。代码已在本仓库，尚未发布到 NuGet。 |
+| `TKCode.Arc.Video`、`.Video.Native`、`.Video.Browser` | 基于各平台自带播放器的 `VideoPlayer` 和 `VideoSurface`。 |
 
 ### 主题与资源
 

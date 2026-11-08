@@ -45,7 +45,7 @@ terminal, a PDF viewer, and audio and video playback.
 | `TKCode.Arc.Terminal` | `TerminalView` over libghostty-vt, with the native libraries bundled. |
 | `TKCode.Arc.Pdf`, `.Pdf.Native`, `.Pdf.Browser` | `PdfViewer` with thumbnails, outline, search, text selection and links, using PDFium on desktop and pdf.js on WebAssembly. New in the next version. |
 | `TKCode.Arc.Audio`, `.Audio.Native`, `.Audio.Browser` | The `IAudioPlayer` abstraction, with miniaudio on desktop and HTML audio on WebAssembly. |
-| `TKCode.Arc.Video`, `.Video.Native`, `.Video.Browser` | `VideoPlayer` and `VideoSurface` over each platform's own player. In this repository, not published to NuGet yet. |
+| `TKCode.Arc.Video`, `.Video.Native`, `.Video.Browser` | `VideoPlayer` and `VideoSurface` over each platform's own player. |
 
 ### Theming and assets
 

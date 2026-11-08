@@ -8,7 +8,6 @@
         <PackageTags>$(PackageTags);video;media;browser;wasm</PackageTags>
         <!-- The JSImport source generator emits unsafe code. -->
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <IsPackable>false</IsPackable>
     </PropertyGroup>
     <!--
         Native presentation (the video element itself on the page through NativeControlHost) needs Avalonia.Browser's

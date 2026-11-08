@@ -9,8 +9,6 @@
         <!-- TKCode.Arc and Core contain generated types with identical names. -->
         <NoWarn>$(NoWarn);CS0436</NoWarn>
         <ArcFoundationGenerator>true</ArcFoundationGenerator>
-        <!-- Not packed until M8 (design/components/video/video.md section 18). -->
-        <IsPackable>false</IsPackable>
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="../TKCode.Arc/TKCode.Arc.csproj" />
