@@ -19,18 +19,29 @@ namespace TKCode.Arc;
 [TemplatePart(LayoutPart, typeof(Grid))]
 [TemplatePart(TogglePart, typeof(Checkbox))]
 [TemplatePart(OperatorPart, typeof(Select))]
-[PseudoClasses(InactivePseudoClass, ExtraPseudoClass)]
+[TemplatePart(ExtraPart, typeof(Control))]
+[PseudoClasses(InactivePseudoClass, ExtraPseudoClass, StackedPseudoClass)]
 public abstract class FilterBox : TemplatedControl
 {
     public const string LayoutPart = "PART_Layout";
     public const string TogglePart = "PART_Toggle";
     public const string OperatorPart = "PART_Operator";
+    public const string ExtraPart = "PART_Extra";
 
     /// <summary>The filter is switched off (<see cref="IsActive"/> is false).</summary>
     public const string InactivePseudoClass = ":inactive";
 
     /// <summary><see cref="ExtraContent"/> is set.</summary>
     public const string ExtraPseudoClass = ":extra";
+
+    /// <summary>Too narrow for one row: the label sits above the fields.</summary>
+    public const string StackedPseudoClass = ":stacked";
+
+    /// <summary>Below this much room for the label the box stacks, instead of wrapping the label a word at a time.</summary>
+    private const double LabelMinWidth = 120;
+
+    /// <summary>The operator menu shows names as well as symbols, so it is wider than the field.</summary>
+    private const double OperatorMenuMinWidth = 200;
 
     #region 公共属性定义
 
@@ -111,6 +122,8 @@ public abstract class FilterBox : TemplatedControl
     private Checkbox? _toggle;
     private Select? _operator;
     private bool _syncingOperator;
+    private bool _stacked;
+    private Control? _extra;
 
     /// <summary>The operator field of the applied template.</summary>
     protected Select? OperatorField => _operator;
@@ -158,12 +171,131 @@ public abstract class FilterBox : TemplatedControl
         }
         if (_operator is not null)
         {
-            _operator.TextSelector = item => item is null ? null : SymbolOf(item);
+            // The field keeps the compact symbol; the menu spells each one out, because few people can read a symbol like ∋ alone.
+            _operator.TextSelector = item => item is null ? null : $"{SymbolOf(item)}   {NameOf(item)}";
+            _operator.FieldTextSelector = item => item is null ? null : SymbolOf(item);
+            _operator.MenuMinWidth = OperatorMenuMinWidth;
             RefreshOperatorChoices();
             _operator.SelectionChanged += OnOperatorPicked;
         }
+        _extra = e.NameScope.Find<Control>(ExtraPart);
+        _stacked = false;
+        PseudoClasses.Set(StackedPseudoClass, false);
         UpdateLabelColumn();
+        UpdateValueSpan();
         UpdateAutomation();
+    }
+
+    /// <summary>
+    /// Fits the row to the width before the grid measures it. A grid's Auto column offers its content unlimited width, so a long
+    /// description would push the fields out of the box instead of wrapping: the label gets what the fields leave, and when
+    /// that is too little the label moves above them.
+    /// </summary>
+    protected override Size MeasureOverride(Size availableSize)
+    {
+        FitToWidth(availableSize.Width);
+        return base.MeasureOverride(availableSize);
+    }
+
+    private void FitToWidth(double available)
+    {
+        if (_layout is null || _toggle is null)
+        {
+            return;
+        }
+        if (double.IsInfinity(available))
+        {
+            SetStacked(false);
+            _toggle.MaxWidth = double.PositiveInfinity;
+            return;
+        }
+        var fields = FieldsWidth();
+        var fixedLabel = !double.IsNaN(LabelWidth) && LabelWidth >= 0;
+        var stacked = available < (fixedLabel ? LabelWidth : LabelMinWidth) + fields;
+        SetStacked(stacked);
+        _toggle.MaxWidth = stacked || fixedLabel ? double.PositiveInfinity : available - fields;
+    }
+
+    /// <summary>
+    /// A grid keeps the gap of a column whose content is collapsed, so with no extra content the value editor would stop one gap
+    /// short of the edge, and that gap would count against the room for the fields. It takes the empty column over instead.
+    /// </summary>
+    private void UpdateValueSpan()
+    {
+        if (_layout is not { } layout || _extra is null)
+        {
+            return;
+        }
+        foreach (var child in layout.Children)
+        {
+            if (child != _toggle && child != _operator && child != _extra)
+            {
+                Grid.SetColumnSpan(child, ExtraContent is null ? 2 : 1);
+            }
+        }
+    }
+
+    /// <summary>The width of everything after the label, with the gap before each part.</summary>
+    private double FieldsWidth()
+    {
+        var total = 0.0;
+        foreach (var child in _layout!.Children)
+        {
+            if (child == _toggle || !child.IsVisible)
+            {
+                continue;
+            }
+            var width = child.Width;
+            if (double.IsNaN(width))
+            {
+                width = child.MinWidth;
+            }
+            if (width <= 0)
+            {
+                // Content sized by itself (the extra content): ask it.
+                child.Measure(new Avalonia.Size(double.PositiveInfinity, double.PositiveInfinity));
+                width = child.DesiredSize.Width;
+            }
+            total += _layout.ColumnSpacing + width;
+        }
+        return total;
+    }
+
+    private void SetStacked(bool stacked)
+    {
+        if (_stacked == stacked || _layout is not { } layout || _toggle is not { } toggle)
+        {
+            return;
+        }
+        _stacked = stacked;
+        PseudoClasses.Set(StackedPseudoClass, stacked);
+        var fields = layout.Children.Where(child => child != toggle).ToList();
+        if (stacked)
+        {
+            // The label column goes: the fields shift into its place on a second row, and the label spans them.
+            layout.ColumnDefinitions.RemoveAt(0);
+            layout.RowDefinitions = new RowDefinitions("Auto,Auto");
+            layout.RowSpacing = layout.ColumnSpacing;
+            Grid.SetColumnSpan(toggle, layout.ColumnDefinitions.Count);
+            foreach (var field in fields)
+            {
+                Grid.SetRow(field, 1);
+                Grid.SetColumn(field, Grid.GetColumn(field) - 1);
+            }
+        }
+        else
+        {
+            layout.ColumnDefinitions.Insert(0, new ColumnDefinition(GridLength.Auto));
+            layout.RowDefinitions = new RowDefinitions();
+            layout.RowSpacing = 0;
+            Grid.SetColumnSpan(toggle, 1);
+            foreach (var field in fields)
+            {
+                Grid.SetRow(field, 0);
+                Grid.SetColumn(field, Grid.GetColumn(field) + 1);
+            }
+            UpdateLabelColumn();
+        }
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -181,6 +313,7 @@ public abstract class FilterBox : TemplatedControl
         else if (change.Property == ExtraContentProperty)
         {
             PseudoClasses.Set(ExtraPseudoClass, change.NewValue is not null);
+            UpdateValueSpan();
         }
         else if (change.Property == LabelSizeGroupProperty || change.Property == LabelWidthProperty)
         {
@@ -258,7 +391,7 @@ public abstract class FilterBox : TemplatedControl
 
     private void UpdateLabelColumn()
     {
-        if (_layout is null || _layout.ColumnDefinitions.Count == 0)
+        if (_layout is null || _layout.ColumnDefinitions.Count == 0 || _stacked)
         {
             return;
         }

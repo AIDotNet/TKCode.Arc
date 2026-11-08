@@ -2,7 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
              x:Class="TKCode.Arc.Gallery.Demos.TextFilterBoxAlignmentDemo">
-    <StackPanel HorizontalAlignment="Center" Width="600" Spacing="8" Grid.IsSharedSizeScope="True">
+    <StackPanel HorizontalAlignment="Stretch" MaxWidth="600" Spacing="8" Grid.IsSharedSizeScope="True">
         <arc:NumberFilterBox Label="Price"
                              LabelSizeGroup="FilterLabel"
                              Operator="GreaterThanOrEqual"

@@ -1,7 +1,7 @@
 ---
 title: 数字筛选框
 summary: 一个数字筛选条件：用复选框启用，操作符以符号显示，再填一个值，可设比较容差。
-source-hash: 89a81c71b544
+source-hash: d8035c1b0666
 ---
 
 <Demo name="Basic" />
@@ -123,8 +123,8 @@ var visible = products.Where(p => !PriceActive || price.Matches(p.Price));
 
 ## 响应式
 
-- 筛选框只有一行：标签列与标签同宽（或取 `LabelWidth`，或取其尺寸组的宽度），操作符 84 px，值 168 px。它不会换行；面板较窄时把筛选框放进 `ScrollViewer`，或缩短标签。
-- 只有在标签列设了固定的 `LabelWidth` 时，过长的标签才会在列内换行。
+- 操作符 84 px，值 168 px。标签列与标签同宽（或取 `LabelWidth`，或取其尺寸组的宽度），过长的标签或说明会换行，为输入框留出空间。
+- 连 120 px 的标签都放不下时（约 400 px 以下），标签移到输入框上方单独一行，此时该筛选框不再使用共享的 `LabelSizeGroup`。固定的 `LabelWidth` 放不下时同样如此。
 - 所有输入框至少 36 px 高（`Size="Small"`），复选框在任何尺寸下都保留 44 px 的点击区域。
 
 ## 相关组件

@@ -2,7 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
              x:Class="TKCode.Arc.Gallery.Demos.TextFilterBoxExtraContentDemo">
-    <StackPanel HorizontalAlignment="Center" Width="600" Spacing="8">
+    <StackPanel HorizontalAlignment="Stretch" MaxWidth="600" Spacing="8">
         <arc:TextFilterBox x:Name="FileFilter"
                            Label="File name"
                            Operator="EndsWith"

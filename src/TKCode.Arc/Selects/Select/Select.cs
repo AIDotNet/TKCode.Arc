@@ -359,10 +359,18 @@ public class Select : SelectingItemsControl, ISelectOptionHost, ISelectFieldAuto
         _options.SetOptions(_all);
     }
 
+    /// <summary>The text the closed field shows for an item when it differs from the menu's (<see cref="TextSelector"/>).</summary>
+    internal Func<object?, string?>? FieldTextSelector { get; set; }
+
+    /// <summary>Narrowest the menu gets, for a field too narrow for its options' text. By default it is as wide as the field.</summary>
+    internal double MenuMinWidth { get; set; }
+
     private void UpdateValue(bool animate)
     {
         var index = SelectedIndex;
-        var text = index >= 0 ? _entries.TextAt(index) : null;
+        var text = index < 0 ? null
+            : FieldTextSelector is { } fieldText ? fieldText(SelectedItem)
+            : _entries.TextAt(index);
         SelectedText = text;
         PseudoClasses.Set(PlaceholderPseudoClass, text is null);
         if (_value is not null)
@@ -450,7 +458,7 @@ public class Select : SelectingItemsControl, ISelectOptionHost, ISelectFieldAuto
         if (_surface is not null && _trigger is not null && _trigger.Bounds.Width > 0)
         {
             // Radix: the content is exactly as wide as the trigger.
-            _surface.Width = _trigger.Bounds.Width;
+            _surface.Width = Math.Max(_trigger.Bounds.Width, MenuMinWidth);
         }
     }
 

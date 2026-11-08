@@ -69,5 +69,9 @@
                 <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeLG}" />
             </Style>
         </Style>
+        <!-- On a row of its own the label has no field to center on. After the size styles, which it overrides. -->
+        <Style Selector="^:stacked /template/ arc|Checkbox#PART_Toggle">
+            <Setter Property="Margin" Value="0" />
+        </Style>
     </ControlTheme>
 </ResourceDictionary>
