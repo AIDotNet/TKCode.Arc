@@ -55,14 +55,14 @@ Bars are buttons named "Task bar" or "Milestone", with a pressed state for selec
 ## Motion
 
 After a drag the bar springs to its snapped day from where the pointer released it. Shortening a bar below one day
-resists with a soft rubber band. Zoom glides on a spring around the middle of the view. Folding a phase slides its rows up
+resists with a soft rubber band. Zoom glides on a spring around the middle of the view, and Today glides the today line into view. Folding a phase slides its rows up
 into the phase row. With reduced motion everything jumps to its target.
 
 ## Responsive behavior
 
 - The chart measures its own width, not the window's. Below 560 px the task column narrows from 248 px
   (`TaskColumnWidth`) to 132 px (`NarrowTaskColumnWidth`), and the calendar takes the rest of the width.
-- The calendar scrolls sideways and downward inside the chart. A Shift and wheel gesture scrolls it sideways.
+- The calendar scrolls sideways and downward inside the chart, with a scroll bar on each side that does not fit. A Shift and wheel gesture scrolls it sideways.
 - The heading and the zoom switches share one row. At phone width the heading is cut short beside them, so give the
   timeline a short `Title`.
 - Touch: task rows are 40 px high (`GanttModel.RowHeight`) and the zoom switches are 32 px (`SwitchButtonHeight`), below

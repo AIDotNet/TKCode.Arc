@@ -28,6 +28,8 @@ namespace TKCode.Arc;
 [TemplatePart(ResetPart, typeof(AvButton))]
 [TemplatePart(StatusPart, typeof(TextBlock))]
 [TemplatePart(SubtitlePart, typeof(TextBlock))]
+[TemplatePart(HorizontalScrollPart, typeof(ScrollBar))]
+[TemplatePart(VerticalScrollPart, typeof(ScrollBar))]
 [PseudoClasses(NarrowPseudoClass)]
 public class GanttTimeline : TemplatedControl
 {
@@ -40,6 +42,8 @@ public class GanttTimeline : TemplatedControl
     public const string ResetPart = "PART_Reset";
     public const string StatusPart = "PART_Status";
     public const string SubtitlePart = "PART_Subtitle";
+    public const string HorizontalScrollPart = "PART_HorizontalScroll";
+    public const string VerticalScrollPart = "PART_VerticalScroll";
     public const string NarrowPseudoClass = ":narrow";
 
     /// <summary>The heading in the toolbar.</summary>
@@ -76,6 +80,9 @@ public class GanttTimeline : TemplatedControl
     private AvButton? _resetButton;
     private TextBlock? _status;
     private TextBlock? _subtitle;
+    private ScrollBar? _horizontal;
+    private ScrollBar? _vertical;
+    private bool _syncingScroll;
     private List<GanttTask> _initial = [];
     private List<GanttTask> _working = [];
     private bool _updating;
@@ -135,8 +142,19 @@ public class GanttTimeline : TemplatedControl
         _resetButton = e.NameScope.Find<AvButton>(ResetPart);
         _status = e.NameScope.Find<TextBlock>(StatusPart);
         _subtitle = e.NameScope.Find<TextBlock>(SubtitlePart);
+        _horizontal = e.NameScope.Find<ScrollBar>(HorizontalScrollPart);
+        _vertical = e.NameScope.Find<ScrollBar>(VerticalScrollPart);
+        if (_horizontal is not null)
+        {
+            _horizontal.PropertyChanged += OnScrollBarChanged;
+        }
+        if (_vertical is not null)
+        {
+            _vertical.PropertyChanged += OnScrollBarChanged;
+        }
         if (_chart is not null)
         {
+            _chart.ScrollChanged += SyncScrollBars;
             _chart.Edited += OnEdited;
             _chart.GroupToggled += OnGroupToggled;
             _chart.Announce += OnAnnounce;
@@ -170,8 +188,17 @@ public class GanttTimeline : TemplatedControl
 
     private void Unhook()
     {
+        if (_horizontal is not null)
+        {
+            _horizontal.PropertyChanged -= OnScrollBarChanged;
+        }
+        if (_vertical is not null)
+        {
+            _vertical.PropertyChanged -= OnScrollBarChanged;
+        }
         if (_chart is not null)
         {
+            _chart.ScrollChanged -= SyncScrollBars;
             _chart.Edited -= OnEdited;
             _chart.GroupToggled -= OnGroupToggled;
             _chart.Announce -= OnAnnounce;
@@ -188,6 +215,43 @@ public class GanttTimeline : TemplatedControl
         {
             _resetButton.Click -= OnResetClick;
         }
+    }
+
+    private void SyncScrollBars()
+    {
+        if (_chart is null)
+        {
+            return;
+        }
+        _syncingScroll = true;
+        try
+        {
+            if (_horizontal is not null)
+            {
+                _horizontal.Maximum = _chart.MaxScrollX;
+                _horizontal.ViewportSize = _chart.ViewportWidth;
+                _horizontal.Value = _chart.ScrollX;
+            }
+            if (_vertical is not null)
+            {
+                _vertical.Maximum = _chart.MaxScrollY;
+                _vertical.ViewportSize = _chart.ViewHeight;
+                _vertical.Value = _chart.ScrollY;
+            }
+        }
+        finally
+        {
+            _syncingScroll = false;
+        }
+    }
+
+    private void OnScrollBarChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+    {
+        if (_syncingScroll || _chart is null || e.Property != RangeBase.ValueProperty)
+        {
+            return;
+        }
+        _chart.SetScroll(_horizontal?.Value ?? _chart.ScrollX, _vertical?.Value ?? _chart.ScrollY);
     }
 
     protected override void OnSizeChanged(SizeChangedEventArgs e)
@@ -263,7 +327,7 @@ public class GanttTimeline : TemplatedControl
     {
         if (_subtitle is not null)
         {
-            _subtitle.Text = ((int)Math.Round(model.OverallProgress() * 100)).ToString(CultureInfo.CurrentUICulture) + "% done";
+            _subtitle.Text = ((int)Math.Round(model.OverallProgress() * 100)).ToString(CultureInfo.InvariantCulture) + "% done";
         }
         var dirty = _undo.Count > 0;
         if (_undoButton is not null)
@@ -293,7 +357,7 @@ public class GanttTimeline : TemplatedControl
     {
         var model = new GanttModel(Groups, _working, new HashSet<string>(CollapsedGroups));
         var s = t.Name + (kind == GanttChangeKind.Move ? " moved to " : " now ")
-            + t.Start.ToString("MMM d", CultureInfo.CurrentUICulture) + (t.IsMilestone ? string.Empty : " – " + t.End.ToString("MMM d", CultureInfo.CurrentUICulture));
+            + t.Start.ToString("MMM d", CultureInfo.InvariantCulture) + (t.IsMilestone ? string.Empty : " – " + t.End.ToString("MMM d", CultureInfo.InvariantCulture));
         return model.HasConflict(t) ? s + ". It starts before a task it depends on ends." : s + ".";
     }
 

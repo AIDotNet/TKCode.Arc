@@ -22,9 +22,14 @@ internal sealed partial class GanttChart : Control
     public static readonly StyledProperty<double> HeaderHeightProperty = AvaloniaProperty.Register<GanttChart, double>(nameof(HeaderHeight), 56);
     public static readonly StyledProperty<double> BarHeightProperty = AvaloniaProperty.Register<GanttChart, double>(nameof(BarHeight), 24);
     public static readonly StyledProperty<double> BarRadiusProperty = AvaloniaProperty.Register<GanttChart, double>(nameof(BarRadius), 8);
+    public static readonly StyledProperty<double> DefaultHeightProperty = AvaloniaProperty.Register<GanttChart, double>(nameof(DefaultHeight), 480);
     public static readonly StyledProperty<IBrush?> SurfaceBrushProperty = AvaloniaProperty.Register<GanttChart, IBrush?>(nameof(SurfaceBrush));
     public static readonly StyledProperty<IBrush?> TextBrushProperty = AvaloniaProperty.Register<GanttChart, IBrush?>(nameof(TextBrush));
     public static readonly StyledProperty<IBrush?> MutedBrushProperty = AvaloniaProperty.Register<GanttChart, IBrush?>(nameof(MutedBrush));
+    public static readonly StyledProperty<IBrush?> SecondaryBrushProperty = AvaloniaProperty.Register<GanttChart, IBrush?>(nameof(SecondaryBrush));
+    public static readonly StyledProperty<IBrush?> RowHotBrushProperty = AvaloniaProperty.Register<GanttChart, IBrush?>(nameof(RowHotBrush));
+    public static readonly StyledProperty<IBrush?> BarEdgeBrushProperty = AvaloniaProperty.Register<GanttChart, IBrush?>(nameof(BarEdgeBrush));
+    public static readonly StyledProperty<IBrush?> SummaryTrackBrushProperty = AvaloniaProperty.Register<GanttChart, IBrush?>(nameof(SummaryTrackBrush));
     public static readonly StyledProperty<IBrush?> GridBrushProperty = AvaloniaProperty.Register<GanttChart, IBrush?>(nameof(GridBrush));
     public static readonly StyledProperty<IBrush?> WeekendBrushProperty = AvaloniaProperty.Register<GanttChart, IBrush?>(nameof(WeekendBrush));
     public static readonly StyledProperty<IBrush?> BarBrushProperty = AvaloniaProperty.Register<GanttChart, IBrush?>(nameof(BarBrush));
@@ -40,6 +45,7 @@ internal sealed partial class GanttChart : Control
     private readonly MotionValue<double> _dayWidth;
     private readonly MotionValue<double> _layoutT;
     private readonly MotionValue<double> _release;
+    private readonly MotionValue<double> _scrollMotion;
     private GanttModel _model = new([], [], new HashSet<string>());
     private GanttZoom _zoom = GanttZoom.Week;
     private DateOnly _today = DateOnly.FromDateTime(DateTime.Today);
@@ -54,6 +60,8 @@ internal sealed partial class GanttChart : Control
     private bool _viewportReady;
     private double _anchorDays;
     private bool _zooming;
+    private string? _hoverId;
+    private (double, double, double, double, double, double) _published;
 
     private readonly record struct Snapshot(double Y, double X0, double X1, bool Present);
 
@@ -61,8 +69,9 @@ internal sealed partial class GanttChart : Control
     {
         AffectsRender<GanttChart>(SurfaceBrushProperty, TextBrushProperty, MutedBrushProperty, GridBrushProperty, WeekendBrushProperty,
             BarBrushProperty, BarFillBrushProperty, SummaryBrushProperty, ArrowBrushProperty, ConflictBrushProperty, TodayBrushProperty,
-            TodayTextBrushProperty, FocusBrushProperty, BarHeightProperty, BarRadiusProperty, HeaderHeightProperty);
-        AffectsMeasure<GanttChart>(HeaderHeightProperty);
+            TodayTextBrushProperty, FocusBrushProperty, SecondaryBrushProperty, RowHotBrushProperty, BarEdgeBrushProperty,
+            SummaryTrackBrushProperty, BarHeightProperty, BarRadiusProperty, HeaderHeightProperty);
+        AffectsMeasure<GanttChart>(HeaderHeightProperty, DefaultHeightProperty);
         FocusableProperty.OverrideDefaultValue<GanttChart>(true);
         ClipToBoundsProperty.OverrideDefaultValue<GanttChart>(true);
     }
@@ -75,6 +84,14 @@ internal sealed partial class GanttChart : Control
         _layoutT.Changed += _ => InvalidateVisual();
         _release = new MotionValue<double>(this, 0, MotionVectors.Double);
         _release.Changed += _ => InvalidateVisual();
+        // The Today glide: a scroll offset has no property a ControlTheme transition could animate.
+        _scrollMotion = new MotionValue<double>(this, 0, MotionVectors.Double);
+        _scrollMotion.Changed += v =>
+        {
+            _scrollX = v;
+            ClampScroll();
+            InvalidateVisual();
+        };
     }
 
     public double TaskColumnWidth { get => GetValue(TaskColumnWidthProperty); set => SetValue(TaskColumnWidthProperty, value); }
@@ -82,6 +99,11 @@ internal sealed partial class GanttChart : Control
     public double HeaderHeight { get => GetValue(HeaderHeightProperty); set => SetValue(HeaderHeightProperty, value); }
     public double BarHeight { get => GetValue(BarHeightProperty); set => SetValue(BarHeightProperty, value); }
     public double BarRadius { get => GetValue(BarRadiusProperty); set => SetValue(BarRadiusProperty, value); }
+    public double DefaultHeight { get => GetValue(DefaultHeightProperty); set => SetValue(DefaultHeightProperty, value); }
+    public IBrush? SecondaryBrush { get => GetValue(SecondaryBrushProperty); set => SetValue(SecondaryBrushProperty, value); }
+    public IBrush? RowHotBrush { get => GetValue(RowHotBrushProperty); set => SetValue(RowHotBrushProperty, value); }
+    public IBrush? BarEdgeBrush { get => GetValue(BarEdgeBrushProperty); set => SetValue(BarEdgeBrushProperty, value); }
+    public IBrush? SummaryTrackBrush { get => GetValue(SummaryTrackBrushProperty); set => SetValue(SummaryTrackBrushProperty, value); }
     public IBrush? SurfaceBrush { get => GetValue(SurfaceBrushProperty); set => SetValue(SurfaceBrushProperty, value); }
     public IBrush? TextBrush { get => GetValue(TextBrushProperty); set => SetValue(TextBrushProperty, value); }
     public IBrush? MutedBrush { get => GetValue(MutedBrushProperty); set => SetValue(MutedBrushProperty, value); }
@@ -105,11 +127,29 @@ internal sealed partial class GanttChart : Control
     /// <summary>Raised with a sentence for the status line.</summary>
     public event Action<string>? Announce;
 
+    /// <summary>Raised when the scroll offsets, the scrollable range or the viewport change, for the scroll bars.</summary>
+    public event Action? ScrollChanged;
+
     public GanttModel Model => _model;
+
+    internal double ScrollX => _scrollX;
+
+    internal double ScrollY => _scrollY;
+
+    internal double MaxScrollX => Math.Max(0, ContentWidth - ViewWidth);
+
+    internal double MaxScrollY => Math.Max(0, ContentHeight - ViewHeight);
+
+    internal double ViewHeight => Math.Max(0, Bounds.Height - HeaderHeight);
+
+    internal double ViewportWidth => Bounds.Width;
 
     public DateOnly Today => _today;
 
     internal bool IsReduced => ArcMotion.GetEffectiveLevel(this) != ArcMotionLevel.Full;
+
+    /// <summary>Where the today line rests in the view when the plan opens or Today is pressed: more plan ahead than behind.</summary>
+    private const double TodayViewFraction = 0.3;
 
     private double ColumnWidth => Bounds.Width < 560 + 0 ? NarrowTaskColumnWidth : TaskColumnWidth;
 
@@ -170,6 +210,7 @@ internal sealed partial class GanttChart : Control
             return;
         }
         _zoom = zoom;
+        _scrollMotion.Stop();
         _anchorDays = DayPx > 0 ? (_scrollX + ViewWidth / 2) / DayPx : 0;
         var target = GanttModel.DayWidth(zoom);
         _zooming = true;
@@ -187,12 +228,30 @@ internal sealed partial class GanttChart : Control
 
     public void ScrollToToday(bool animate)
     {
-        var target = XOf(_today) + DayPx / 2 - ViewWidth / 2;
-        _scrollX = Math.Clamp(target, 0, Math.Max(0, ContentWidth - ViewWidth));
+        var target = Math.Clamp(XOf(_today) + DayPx / 2 - ViewWidth * TodayViewFraction, 0, MaxScrollX);
+        if (animate && !IsReduced)
+        {
+            _scrollMotion.Jump(_scrollX);
+            _ = _scrollMotion.AnimateTo(target, MotionSpec.Spring(ProjectsSprings.Card));
+            return;
+        }
+        _scrollMotion.Stop();
+        _scrollX = target;
+        ClampScroll();
         InvalidateVisual();
     }
 
     public void SetCollapsedChanged() => InvalidateVisual();
+
+    /// <summary>Scrolls from a scroll bar, ending any Today glide.</summary>
+    internal void SetScroll(double x, double y)
+    {
+        _scrollMotion.Stop();
+        _scrollX = x;
+        _scrollY = y;
+        ClampScroll();
+        InvalidateVisual();
+    }
 
     private void OnScaleFrame()
     {
@@ -206,8 +265,14 @@ internal sealed partial class GanttChart : Control
 
     private void ClampScroll()
     {
-        _scrollX = Math.Clamp(_scrollX, 0, Math.Max(0, ContentWidth - ViewWidth));
-        _scrollY = Math.Clamp(_scrollY, 0, Math.Max(0, ContentHeight - (Bounds.Height - HeaderHeight)));
+        _scrollX = Math.Clamp(_scrollX, 0, MaxScrollX);
+        _scrollY = Math.Clamp(_scrollY, 0, MaxScrollY);
+        var state = (_scrollX, _scrollY, MaxScrollX, MaxScrollY, ViewportWidth, ViewHeight);
+        if (state != _published)
+        {
+            _published = state;
+            ScrollChanged?.Invoke();
+        }
     }
 
     protected override void OnSizeChanged(SizeChangedEventArgs e)
@@ -224,7 +289,7 @@ internal sealed partial class GanttChart : Control
     protected override Size MeasureOverride(Size availableSize)
     {
         var w = double.IsInfinity(availableSize.Width) ? 640 : availableSize.Width;
-        var h = double.IsInfinity(availableSize.Height) ? HeaderHeight + ContentHeight : availableSize.Height;
+        var h = double.IsInfinity(availableSize.Height) ? DefaultHeight : availableSize.Height;
         return new Size(w, h);
     }
 
@@ -292,11 +357,12 @@ internal sealed partial class GanttChart : Control
         var hue = p.Hue ?? Math.Abs(hash % 360);
         var a = new HslColor(1, hue, 0.72, 0.58).ToRgb();
         var b = new HslColor(1, (hue + 70) % 360, 0.78, 0.62).ToRgb();
+        var d = new HslColor(1, (hue + 140) % 360, 0.7, 0.68).ToRgb();
         return new LinearGradientBrush
         {
             StartPoint = new RelativePoint(0, 0, RelativeUnit.Relative),
             EndPoint = new RelativePoint(1, 1, RelativeUnit.Relative),
-            GradientStops = { new GradientStop(a, 0), new GradientStop(b, 1) },
+            GradientStops = { new GradientStop(a, 0), new GradientStop(b, 0.55), new GradientStop(d, 1) },
         };
     }
 }

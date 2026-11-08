@@ -4,6 +4,12 @@ namespace TKCode.Arc;
 internal readonly record struct GanttRow(GanttGroup? Group, GanttTask? Task, int GroupTaskCount, bool IsCollapsed);
 
 /// <summary>
+/// One dependency arrow. A task inside a folded phase has no bar, so its end of the arrow sits on the phase's summary bar;
+/// <see cref="FoldedTask"/> and <see cref="FoldedDependency"/> name that phase.
+/// </summary>
+internal readonly record struct GanttLink(GanttTask Task, GanttTask Dependency, GanttGroup? FoldedTask, GanttGroup? FoldedDependency);
+
+/// <summary>
 /// The pure part of <see cref="GanttTimeline"/>: rows, dates and pixels, dependency conflicts and group summaries.
 /// No Avalonia types, so the rules are testable without a window.
 /// </summary>
@@ -34,6 +40,7 @@ internal sealed class GanttModel
             }
         }
         Rows = rows;
+        Links = BuildLinks();
     }
 
     public IReadOnlyList<GanttGroup> Groups { get; }
@@ -45,6 +52,41 @@ internal sealed class GanttModel
     public IReadOnlyDictionary<string, GanttTask> ById { get; }
 
     public IReadOnlyList<GanttRow> Rows { get; }
+
+    /// <summary>The dependency arrows to draw; a dependency between two tasks folded into the same phase has none.</summary>
+    public IReadOnlyList<GanttLink> Links { get; }
+
+    private List<GanttLink> BuildLinks()
+    {
+        var groups = new Dictionary<string, GanttGroup>();
+        foreach (var g in Groups)
+        {
+            groups[g.Id] = g;
+        }
+        var links = new List<GanttLink>();
+        foreach (var task in Tasks)
+        {
+            if (!groups.TryGetValue(task.GroupId, out var taskGroup))
+            {
+                continue;
+            }
+            foreach (var id in task.DependsOn)
+            {
+                if (!ById.TryGetValue(id, out var dep) || !groups.TryGetValue(dep.GroupId, out var depGroup))
+                {
+                    continue;
+                }
+                var foldedTask = Collapsed.Contains(taskGroup.Id) ? taskGroup : null;
+                var foldedDep = Collapsed.Contains(depGroup.Id) ? depGroup : null;
+                if (foldedTask is not null && ReferenceEquals(foldedTask, foldedDep))
+                {
+                    continue;
+                }
+                links.Add(new GanttLink(task, dep, foldedTask, foldedDep));
+            }
+        }
+        return links;
+    }
 
     /// <summary>The pixels one day takes at <paramref name="zoom"/>.</summary>
     public static double DayWidth(GanttZoom zoom) => zoom switch

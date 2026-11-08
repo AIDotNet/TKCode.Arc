@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.Threading;
@@ -79,6 +80,111 @@ public class GanttTimelineTests
         Assert.Equal(0, GanttModel.Resist(0));
         Assert.True(GanttModel.Resist(10) < 10);
         Assert.True(GanttModel.Resist(1000) < 28.0001);
+    }
+
+    [Fact]
+    public void Links_attach_to_folded_phases_and_skip_those_inside_one()
+    {
+        var tasks = new[]
+        {
+            new GanttTask("1", "One", "a", Monday, Monday.AddDays(1)),
+            new GanttTask("2", "Two", "a", Monday.AddDays(2), Monday.AddDays(3)) { DependsOn = ["1"] },
+            new GanttTask("3", "Three", "b", Monday.AddDays(4), Monday.AddDays(5)) { DependsOn = ["2"] },
+        };
+        var groups = new[] { new GanttGroup("a", "A"), new GanttGroup("b", "B") };
+        Assert.Equal(2, new GanttModel(groups, tasks, new HashSet<string>()).Links.Count);
+        var link = Assert.Single(new GanttModel(groups, tasks, new HashSet<string> { "a" }).Links);
+        Assert.Equal("3", link.Task.Id);
+        Assert.Equal("a", link.FoldedDependency?.Id);
+        Assert.Null(link.FoldedTask);
+    }
+
+    private static (Window Window, GanttTimeline Timeline, GanttChart Chart) Show(double width, double? height, double windowHeight = 800)
+    {
+        var timeline = new GanttTimeline { Today = Monday, Width = width };
+        if (height is { } h)
+        {
+            timeline.Height = h;
+        }
+        timeline.Groups.Add(new GanttGroup("a", "A"));
+        for (var i = 0; i < 20; i++)
+        {
+            timeline.Tasks.Add(new GanttTask("t" + i, "Task " + i, "a", Monday.AddDays(i * 7), Monday.AddDays(i * 7 + 5)));
+        }
+        var window = new Window { Content = new ScrollViewer { Content = timeline }, Width = width, Height = windowHeight };
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+        return (window, timeline, timeline.GetVisualDescendants().OfType<GanttChart>().Single());
+    }
+
+    [AvaloniaTheory]
+    [InlineData(420.0)]
+    [InlineData(560.0)]
+    public void The_frame_stays_between_the_toolbar_and_the_footer_in_a_short_block(double height)
+    {
+        var (window, timeline, chart) = Show(900, height);
+        var buttons = timeline.GetVisualDescendants().OfType<Avalonia.Controls.Button>().ToList();
+        var today = buttons.Single(b => b.Name == GanttTimeline.TodayPart);
+        var undo = buttons.Single(b => b.Name == GanttTimeline.UndoPart);
+        var chartTop = chart.TranslatePoint(default, timeline)!.Value.Y;
+        var chartBottom = chartTop + chart.Bounds.Height;
+        Assert.True(today.TranslatePoint(new Avalonia.Point(0, today.Bounds.Height), timeline)!.Value.Y <= chartTop);
+        Assert.True(undo.TranslatePoint(default, timeline)!.Value.Y >= chartBottom);
+        Assert.True(undo.TranslatePoint(new Avalonia.Point(0, undo.Bounds.Height), timeline)!.Value.Y <= height);
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void Without_a_height_the_chart_takes_its_default_height()
+    {
+        // A window shorter than the block: in a taller one the ScrollViewer stretches the block to fill it.
+        var (window, _, chart) = Show(900, null, windowHeight: 300);
+        Assert.Equal(chart.DefaultHeight, chart.Bounds.Height, 1);
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void The_scroll_bars_follow_the_chart_and_scroll_it()
+    {
+        var (window, timeline, chart) = Show(900, 560);
+        var bars = timeline.GetVisualDescendants().OfType<Avalonia.Controls.Primitives.ScrollBar>().ToList();
+        var horizontal = bars.Single(b => b.Name == GanttTimeline.HorizontalScrollPart);
+        var vertical = bars.Single(b => b.Name == GanttTimeline.VerticalScrollPart);
+        Assert.Equal(chart.MaxScrollX, horizontal.Maximum, 3);
+        Assert.Equal(chart.MaxScrollY, vertical.Maximum, 3);
+        Assert.Equal(chart.ScrollX, horizontal.Value, 3);
+        Assert.True(horizontal.Maximum > 0);
+        vertical.Value = 40;
+        Assert.Equal(40, chart.ScrollY, 3);
+        chart.SetScroll(100, 0);
+        Assert.Equal(100, horizontal.Value, 3);
+        Assert.Equal(0, vertical.Value, 3);
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void Dates_in_the_status_line_match_its_english_text_in_any_culture()
+    {
+        var culture = System.Globalization.CultureInfo.CurrentUICulture;
+        System.Globalization.CultureInfo.CurrentUICulture = new System.Globalization.CultureInfo("zh-CN");
+        try
+        {
+            var (window, timeline, chart) = Show(900, 560);
+            chart.Focus();
+            chart.RaiseEvent(new Avalonia.Input.KeyEventArgs
+            {
+                RoutedEvent = Avalonia.Input.InputElement.KeyDownEvent,
+                Key = Avalonia.Input.Key.Right,
+                KeyModifiers = Avalonia.Input.KeyModifiers.Alt,
+            });
+            var status = timeline.GetVisualDescendants().OfType<TextBlock>().Single(t => t.Name == GanttTimeline.StatusPart);
+            Assert.Contains("Oct 6", status.Text);
+            window.Close();
+        }
+        finally
+        {
+            System.Globalization.CultureInfo.CurrentUICulture = culture;
+        }
     }
 
     [AvaloniaFact]

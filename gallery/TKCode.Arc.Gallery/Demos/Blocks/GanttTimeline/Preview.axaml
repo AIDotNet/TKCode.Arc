@@ -3,5 +3,5 @@
              xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
              x:Class="TKCode.Arc.Gallery.Demos.GanttTimelinePreviewDemo">
     <!-- The "Studio relaunch" plan from GanttTimelineDemoData: four phases, ten tasks, two milestones. -->
-    <arc:GanttTimeline x:Name="Timeline" Height="560" />
+    <arc:GanttTimeline x:Name="Timeline" />
 </UserControl>
