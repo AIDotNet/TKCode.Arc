@@ -119,6 +119,7 @@ struct tkv_player {
     CRITICAL_SECTION lock;   /* guards everything below that MF threads touch */
     int32_t state;           /* last TKV_STATE_* reported */
     int loaded;              /* PAUSED (or PLAYING) reported after the current load */
+    int local_source;        /* the media is a file: all of it is available, though the engine reports no ranges */
     ULONGLONG last_position_tick;
     char error[TKV_ERROR_CAPACITY];
 
@@ -540,6 +541,7 @@ static void announce_loaded(tkv_player* p)
         return;
     }
     InterlockedExchange(&p->force_frame, 1);
+    emit(p, TKV_EVENT_BUFFERED, 0, 0);
     if (IMFMediaEngine_IsPaused(p->engine)) {
         emit_state(p, TKV_STATE_PAUSED, 0);
         emit(p, TKV_EVENT_FRAME, 0, 0);
@@ -1111,6 +1113,7 @@ TKV_API int32_t tkv_player_open(tkv_player* p, const char* url)
     }
     EnterCriticalSection(&p->lock);
     p->loaded = 0;
+    p->local_source = _strnicmp(url, "file:", 5) == 0;
     p->last_position_tick = 0;
     /* p->error is kept: an ERROR of the previous media may still be queued on the .NET side, which reads the text when it
        handles the event. Every failure sets its own text before it is reported, so a stale one is never shown. */
@@ -1245,10 +1248,22 @@ TKV_API int32_t tkv_player_buffered(tkv_player* p, double* ranges, int32_t capac
     }
     IMFMediaTimeRange* buffered = NULL;
     HRESULT hr = IMFMediaEngine_GetBuffered(p->engine, &buffered);
-    if (FAILED(hr) || buffered == NULL) {
-        return 0;
+    DWORD length = SUCCEEDED(hr) && buffered != NULL ? IMFMediaTimeRange_GetLength(buffered) : 0;
+    if (length == 0) {
+        if (buffered != NULL) {
+            IMFMediaTimeRange_Release(buffered);
+        }
+        double duration = finite_or_zero(IMFMediaEngine_GetDuration(p->engine));
+        EnterCriticalSection(&p->lock);
+        int whole = p->local_source && duration > 0;
+        LeaveCriticalSection(&p->lock);
+        if (!whole || capacity < 1) {
+            return 0;
+        }
+        ranges[0] = 0;
+        ranges[1] = duration;
+        return 1;
     }
-    DWORD length = IMFMediaTimeRange_GetLength(buffered);
     int32_t count = 0;
     for (DWORD i = 0; i < length && count < capacity; i++) {
         double start = 0;
