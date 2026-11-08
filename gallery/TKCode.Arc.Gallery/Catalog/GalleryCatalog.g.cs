@@ -177,6 +177,7 @@ public static partial class GalleryCatalog
             new("ImageCompare", "Image compare", "image-compare", 7, "Drag a divider across two images to see what changed."),
             new("Carousel", "Carousel", "carousel", 7, "Browse a row of slides by dragging, flicking, or arrowing through them."),
             new("CardStack", "Card stack", "card-stack", 7, "Review a deck one card at a time, with a throw and an undo."),
+            new("PageViewer", "Page viewer", "page-viewer", 0, "Zoom, pan and page through pictures or pages rendered on demand.", IsArc: false, AddedOn: "2026-11-08"),
         ]),
         new("TextEffects", "Text effects", "文字效果",
         [

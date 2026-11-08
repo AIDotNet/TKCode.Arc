@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.PdfViewerPagesOnlyDemo">
+    <!-- A plain PageViewer: pages, zoom and the toolbar, with no sidebar, search or selection, and no password form. -->
+    <arc:PageViewer Height="480"
+                    arc:Pdf.Source="{x:Static demos:PdfDemoMedia.Sample}"
+                    PageSource="{x:Static demos:PdfDemoMedia.Simulated}" />
+</UserControl>

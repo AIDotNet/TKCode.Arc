@@ -15,8 +15,8 @@ public interface IGalleryAssemblyLoader
 }
 
 /// <summary>
-/// The parts of the gallery a host can load when a page first needs them: the Special components (TKCode.Arc.Special),
-/// which only the pages of the Special section show. A host that passes an <see cref="IGalleryAssemblyLoader"/> to
+/// The parts of the gallery a host can load when a page first needs them: a PDF renderer (<see cref="PdfBackend"/>), and the Special
+/// components (TKCode.Arc.Special), which only the pages of the Special section show. A host that passes an <see cref="IGalleryAssemblyLoader"/> to
 /// <c>UseArcGallery</c> starts without them; opening a Special page loads the assembly and enables its package
 /// (<see cref="ArcRuntime.UsePackages"/>) before the page builds its demos. Every other host has them from the start.
 /// </summary>
@@ -38,14 +38,30 @@ public static class GalleryModules
     /// <summary>Whether <paramref name="entry"/>'s page can be built now: it needs no part that still has to be loaded.</summary>
     /// <param name="entry">The page's entry.</param>
     public static bool IsReady(GalleryEntry entry)
-        => s_loader is null || !NeedsSpecial(entry) || s_special is { IsCompletedSuccessfully: true, Result: true };
+        => !NeedsPdfBackend(entry) && (s_loader is null || !NeedsSpecial(entry) || s_special is { IsCompletedSuccessfully: true, Result: true });
 
     /// <summary>
     /// Loads and enables what <paramref name="entry"/>'s page needs; true when the page can be built, false when a part
     /// could not be loaded (asking again tries again). Pages call it before they create their demos.
     /// </summary>
     /// <param name="entry">The page's entry.</param>
-    public static Task<bool> EnsureAsync(GalleryEntry entry) => NeedsSpecial(entry) ? EnsureSpecialAsync() : Task.FromResult(true);
+    public static Task<bool> EnsureAsync(GalleryEntry entry) =>
+        NeedsSpecial(entry) ? EnsureSpecialAsync() : NeedsPdfBackend(entry) ? EnsurePdfBackendAsync() : Task.FromResult(true);
+
+    /// <summary>
+    /// Turns on a PDF renderer that a host would rather not load at startup (the WebAssembly host: pdf.js). Asked for before the page of a
+    /// PDF component builds its demos. If it answers false the page still opens: its demos then show a simulated document.
+    /// </summary>
+    public static Func<Task<bool>>? PdfBackend { get; set; }
+
+    private static bool NeedsPdfBackend(GalleryEntry entry) =>
+        PdfBackend is not null && !ArcPdf.Backend.IsReal && GalleryCatalog.Pdf.AllEntries.Contains(entry);
+
+    private static async Task<bool> EnsurePdfBackendAsync()
+    {
+        await PdfBackend!();
+        return true;
+    }
 
     /// <summary>
     /// Loads and enables the Special components; true when they are ready. Pages go through <see cref="EnsureAsync"/>; a

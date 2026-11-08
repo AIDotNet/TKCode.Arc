@@ -105,6 +105,7 @@ public static class GalleryText
             "Workflow" => GalleryShellLangResourceKind.Category_Workflow,
             "Dock" => GalleryShellLangResourceKind.Category_Dock,
             "Video" => GalleryShellLangResourceKind.Category_Video,
+            "Pdf" => GalleryShellLangResourceKind.Category_Pdf,
             "Layout" => GalleryShellLangResourceKind.Category_Layout,
             "Tables" => GalleryShellLangResourceKind.Category_Tables,
             "Activity" => GalleryShellLangResourceKind.Category_Activity,

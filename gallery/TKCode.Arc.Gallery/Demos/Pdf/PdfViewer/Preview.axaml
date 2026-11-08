@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.PdfViewerPreviewDemo">
+    <!-- The sample opens when the viewer enters the tree and closes when it leaves. A page of its own needs only Source;
+         Document is here for hosts of this gallery that have no renderer (the docs screenshots). -->
+    <arc:PdfViewer Height="520"
+                   Source="{x:Static demos:PdfDemoMedia.Sample}"
+                   Document="{x:Static demos:PdfDemoMedia.Simulated}"
+                   FitMode="Page" />
+</UserControl>

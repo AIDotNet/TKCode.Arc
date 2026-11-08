@@ -105,6 +105,8 @@ Timeline: activity feed, history, audit log, changelog list
 CommentThread: comments, discussion, replies
 ChatThread: chat, messages, conversation view, message list
 ImageCompare: before and after, image slider compare
+PdfViewer: pdf reader, pdf preview, document viewer, pdf.js, pdfium
+PageViewer: document viewer, image viewer, zoom and pan, pdf pages, page reader
 Carousel: slideshow, image gallery, slider of cards
 Markdown: Markdown viewer, Markdown renderer, streaming text
 Cascader: cascading select, nested dropdown, region picker

@@ -19436,6 +19436,74 @@
         <source>Whether this tab is the selected one.</source>
         <target>此标签是否为选中的标签。</target>
       </trans-unit>
+      <trans-unit id="PageViewer">
+        <source>Zooms, pans and pages through a set of pages: pictures from `ItemsSource` or pages rendered on demand from an `IPageSource`. One self-drawn surface draws only the visible pages, so a document of ten thousand pages costs no more than a short one; a toolbar moves between pages and picks the zoom and the layout, and `Layers` draw over the pages and take pointer input. Pages are always white paper, in dark themes too. Ctrl / Cmd + wheel, a trackpad magnify and a touch pinch zoom about the pointer; the toolbar and the keyboard zoom about the viewport center on a spring; the middle button or holding Space pans in any mode. Designed to be derived from: `ToolbarStart` and `ToolbarEnd` extend the toolbar; `LeadingPane` and `ContentOverlay` add a side panel and floating parts without a new template (give the derived control a theme that is `BasedOn` this one); `OnViewerKeyDown` takes keys first; `GetPageBitmap` shares the render cache with other views of the same pages.</source>
+        <target>缩放、平移并翻阅一组页面：来自 `ItemsSource` 的图片，或由 `IPageSource` 按需渲染的页面。一个自绘表面只绘制可见页，所以一万页的文档开销不比短文档大；工具栏用于翻页、选择缩放和布局，`Layers` 在页面之上绘制并接收指针输入。页面始终是白纸，暗色主题下也一样。Ctrl / Cmd + 滚轮、触控板放大和触屏捏合以指针为锚缩放；工具栏和键盘以视口中心为锚，用弹簧缩放；任何模式下中键或按住空格都能平移。专为派生设计：`ToolbarStart` 和 `ToolbarEnd` 扩展工具栏；`LeadingPane` 和 `ContentOverlay` 无需新模板即可添加侧栏和浮动部件（让派生控件的主题 `BasedOn` 此主题）；`OnViewerKeyDown` 最先处理按键；`GetPageBitmap` 让同一页面的其他视图共用渲染缓存。</target>
+      </trans-unit>
+      <trans-unit id="PageViewer.CurrentPageChanged">
+        <source>Raised when `CurrentPageIndex` changes.</source>
+        <target>`CurrentPageIndex` 变化时引发。</target>
+      </trans-unit>
+      <trans-unit id="PageViewer.CurrentPageIndex">
+        <source>The page at the middle of the viewport (two-way, from 0); setting it jumps there.</source>
+        <target>视口中线所在的页（双向，从 0 开始）；设置它会跳转到该页。</target>
+      </trans-unit>
+      <trans-unit id="PageViewer.FitMode">
+        <source>Keeps the zoom fitted to the viewport (default Width); the zoom is worked out again when the viewport changes.</source>
+        <target>让缩放适应视口（默认 Width）；视口变化时重新计算缩放。</target>
+      </trans-unit>
+      <trans-unit id="PageViewer.InteractionMode">
+        <source>What a drag does: Select leaves it to the layers (default), Pan moves the view.</source>
+        <target>拖动的效果：Select 交给图层（默认），Pan 移动视图。</target>
+      </trans-unit>
+      <trans-unit id="PageViewer.IsLoading">
+        <source>True while a visible page waits for its first bitmap.</source>
+        <target>可见页等待首个位图期间为 true。</target>
+      </trans-unit>
+      <trans-unit id="PageViewer.IsToolbarVisible">
+        <source>Shows the toolbar (default true).</source>
+        <target>显示工具栏（默认 true）。</target>
+      </trans-unit>
+      <trans-unit id="PageViewer.ItemsSource">
+        <source>Pictures to show as pages (see `ImagePageSource`); a set `PageSource` wins over it.</source>
+        <target>作为页面显示的图片（见 `ImagePageSource`）；设置了 `PageSource` 时以它为准。</target>
+      </trans-unit>
+      <trans-unit id="PageViewer.LayoutMode">
+        <source>All pages in a column (Continuous, the default) or one at a time (Single).</source>
+        <target>所有页面排成一列（Continuous，默认）或一次一页（Single）。</target>
+      </trans-unit>
+      <trans-unit id="PageViewer.MaxZoom">
+        <source>The largest zoom (default 8).</source>
+        <target>最大缩放（默认 8）。</target>
+      </trans-unit>
+      <trans-unit id="PageViewer.MinZoom">
+        <source>The smallest zoom (default 0.1).</source>
+        <target>最小缩放（默认 0.1）。</target>
+      </trans-unit>
+      <trans-unit id="PageViewer.PageCount">
+        <source>How many pages there are.</source>
+        <target>页数。</target>
+      </trans-unit>
+      <trans-unit id="PageViewer.PageSource">
+        <source>Pages rendered on demand.</source>
+        <target>按需渲染的页面。</target>
+      </trans-unit>
+      <trans-unit id="PageViewer.RenderCacheBytes">
+        <source>How many bytes of rendered bitmaps to keep (default 192 MB). Least recently used go first; what visible pages draw stays.</source>
+        <target>保留多少字节的渲染位图（默认 192 MB）。最久未使用的先淘汰；可见页正在绘制的保留。</target>
+      </trans-unit>
+      <trans-unit id="PageViewer.ToolbarEnd">
+        <source>Content at the right end of the toolbar.</source>
+        <target>工具栏右端的内容。</target>
+      </trans-unit>
+      <trans-unit id="PageViewer.ToolbarStart">
+        <source>Content at the left end of the toolbar.</source>
+        <target>工具栏左端的内容。</target>
+      </trans-unit>
+      <trans-unit id="PageViewer.Zoom">
+        <source>The zoom (two-way): 1 shows pages at their own size. Clamped to the limits; a change from outside sets `FitMode` to None.</source>
+        <target>缩放（双向）：1 表示页面按自身大小显示。钳制到上下限；从外部更改时会把 `FitMode` 设为 None。</target>
+      </trans-unit>
       <trans-unit id="Pagination">
         <source>Arc pagination: previous and next buttons around a sliding window of five page buttons and one current-page mark that travels between them on a morph spring. When the window moves, the numbers travel like a belt by the number of slots it moved (smooth spring), entering numbers fade in and leaving ones fade out quickly. `CurrentPage` is 1-based, two-way and clamped to `1..PageCount`; with `ShowBoundaryPages` the first and last pages stay reachable behind an ellipsis.</source>
         <target>Arc 分页：上一页、下一页按钮之间是由五个页码按钮组成的滑动窗口，以及一个当前页标记，它会借助形变弹簧在各按钮之间移动。窗口移动时，页码会按移动的格数像传送带一样平移（平滑弹簧）；新出现的页码淡入，离开的页码快速淡出。`CurrentPage` 从 1 开始计数，双向绑定，并限制在 `1..PageCount` 范围内；启用 `ShowBoundaryPages` 后，首页与末页仍可通过省略号访问。</target>
@@ -19563,6 +19631,110 @@
       <trans-unit id="PaymentFlowLabels">
         <source>Every visible word of a `PaymentFlow` (override for another language or domain).</source>
         <target>`PaymentFlow` 中所有可见文字（可覆盖以用于其他语言或领域）。</target>
+      </trans-unit>
+      <trans-unit id="Pdf">
+        <source>Shows a PDF in a plain `PageViewer`, without the tools of `PdfViewer`: `arc:Pdf.Source="report.pdf"`. The document opens while the viewer is in a tree and is closed when the source changes or the viewer leaves. There is no password form and no failure cover; failures, a needed password included, are in `Pdf.Error`.</source>
+        <target>在普通 `PageViewer` 中显示 PDF，不带 `PdfViewer` 的工具：`arc:Pdf.Source="report.pdf"`。查看器在可视树中时打开文档，来源变化或查看器离开时关闭。没有密码表单和失败覆盖层；失败（包括需要密码）记录在 `Pdf.Error` 中。</target>
+      </trans-unit>
+      <trans-unit id="Pdf.Error">
+        <source>Why the document of `Pdf.Source` could not be opened, a needed password included; null otherwise.</source>
+        <target>`Pdf.Source` 的文档未能打开的原因（包括需要密码）；否则为 null。</target>
+      </trans-unit>
+      <trans-unit id="Pdf.Source">
+        <source>The PDF to show. Sets the viewer's `PageSource`.</source>
+        <target>要显示的 PDF。会设置查看器的 `PageSource`。</target>
+      </trans-unit>
+      <trans-unit id="PdfViewer">
+        <source>A PDF viewer: `PageViewer` plus a document (`Source` or `Document`), a sidebar with thumbnails and the table of contents, search, text selection, links, and the states of opening one (loading, failed, password). Rendering comes from `Backend`: call `ArcPdfNative.Use()` on desktop or `await ArcPdfBrowser.UseAsync()` in a browser. Without a backend a real document fails with a hint; pages are never faked. `SimulatedPdfDocument` gives generated pages for tests and design time.</source>
+        <target>PDF 查看器：`PageViewer` 加上文档（`Source` 或 `Document`）、带缩略图和目录的侧栏、搜索、文字选择、链接，以及打开文档的各种状态（加载、失败、密码）。渲染来自 `Backend`：桌面上调用 `ArcPdfNative.Use()`，浏览器中调用 `await ArcPdfBrowser.UseAsync()`。没有后端时，真实文档会失败并给出提示，绝不伪造页面。`SimulatedPdfDocument` 提供生成的页面，用于测试和设计时。</target>
+      </trans-unit>
+      <trans-unit id="PdfViewer.CurrentSearchMatch">
+        <source>The current result (two-way), from 0 in document order, or -1 for none. Setting it scrolls to that result. While a scan wraps around to earlier pages, the same result's number can grow.</source>
+        <target>当前结果（双向），按文档顺序从 0 开始，没有时为 -1。设置它会滚动到该结果。扫描环绕到前面的页面时，同一结果的序号可能变大。</target>
+      </trans-unit>
+      <trans-unit id="PdfViewer.Document">
+        <source>An already open document to show. It stays yours: the viewer never disposes it.</source>
+        <target>要显示的已打开文档。它仍归你所有：查看器从不释放它。</target>
+      </trans-unit>
+      <trans-unit id="PdfViewer.DocumentFailed">
+        <source>A document could not be opened.</source>
+        <target>文档未能打开。</target>
+      </trans-unit>
+      <trans-unit id="PdfViewer.DocumentOpened">
+        <source>A document went on show.</source>
+        <target>文档已显示。</target>
+      </trans-unit>
+      <trans-unit id="PdfViewer.Error">
+        <source>Why the document could not be opened, while `Status` is Failed.</source>
+        <target>`Status` 为 Failed 时，文档未能打开的原因。</target>
+      </trans-unit>
+      <trans-unit id="PdfViewer.ExternalLinkBehavior">
+        <source>What to do with a link that leads out of the document. Only http, https and mailto ever open; a document is untrusted, so every other scheme is refused whatever this says.</source>
+        <target>如何处理指向文档外部的链接。只有 http、https 和 mailto 才会打开；文档不可信，所以无论这里如何设置，其他协议都会被拒绝。</target>
+      </trans-unit>
+      <trans-unit id="PdfViewer.IsMatchCase">
+        <source>Matches only text of the same case.</source>
+        <target>只匹配大小写相同的文字。</target>
+      </trans-unit>
+      <trans-unit id="PdfViewer.IsSearchOpen">
+        <source>Shows the search bar (two-way). Closing it ends the search and takes the highlights away; `SearchText` stays, and opening again searches for it.</source>
+        <target>显示搜索框（双向）。关闭它会结束搜索并去掉高亮；`SearchText` 保留，再次打开时重新搜索。</target>
+      </trans-unit>
+      <trans-unit id="PdfViewer.IsSearching">
+        <source>True while pages are being scanned.</source>
+        <target>正在扫描页面时为 true。</target>
+      </trans-unit>
+      <trans-unit id="PdfViewer.IsSidebarOpen">
+        <source>Shows the sidebar (two-way). Below a width of 640 it floats over the pages.</source>
+        <target>显示侧栏（双向）。宽度小于 640 时浮在页面上。</target>
+      </trans-unit>
+      <trans-unit id="PdfViewer.IsTextSelectionEnabled">
+        <source>Lets the pointer select text in `Select` mode.</source>
+        <target>允许指针在 `Select` 模式下选择文字。</target>
+      </trans-unit>
+      <trans-unit id="PdfViewer.IsWholeWord">
+        <source>Matches only whole words. There are no word boundaries in Chinese, Japanese and Korean, so it does not apply to them.</source>
+        <target>只匹配整词。中文、日文和韩文没有词边界，所以对它们不适用。</target>
+      </trans-unit>
+      <trans-unit id="PdfViewer.LinkActivated">
+        <source>A link was clicked. Setting Handled keeps the viewer from following it.</source>
+        <target>点击了链接。设置 Handled 可阻止查看器跟随它。</target>
+      </trans-unit>
+      <trans-unit id="PdfViewer.OpenedDocument">
+        <source>The document on show. One opened from `Source` belongs to the viewer, which closes it when the source changes or the viewer leaves the tree.</source>
+        <target>正在显示的文档。从 `Source` 打开的文档归查看器所有，来源变化或查看器离开可视树时关闭。</target>
+      </trans-unit>
+      <trans-unit id="PdfViewer.PasswordRequested">
+        <source>The document needs a password. No answer shows the built-in form.</source>
+        <target>文档需要密码。没有回答时显示内置表单。</target>
+      </trans-unit>
+      <trans-unit id="PdfViewer.SearchMatchCount">
+        <source>How many results were found so far; it grows while `IsSearching` is true.</source>
+        <target>目前找到的结果数；`IsSearching` 为 true 时不断增长。</target>
+      </trans-unit>
+      <trans-unit id="PdfViewer.SearchText">
+        <source>What to search for (two-way); a search starts 300 ms after the last change. A host with its own search field can set this with the bar closed.</source>
+        <target>要搜索的内容（双向）；最后一次变化 300 毫秒后开始搜索。有自己搜索框的宿主可以在搜索框关闭时设置它。</target>
+      </trans-unit>
+      <trans-unit id="PdfViewer.SelectedText">
+        <source>The selected text: pages in order with a line break between them. Pages between the ends of a long selection are read in the background, and it is complete once they are.</source>
+        <target>所选文字：按页面顺序排列，页间以换行分隔。长选区两端之间的页面在后台读取，读完后才完整。</target>
+      </trans-unit>
+      <trans-unit id="PdfViewer.SidebarMode">
+        <source>What the sidebar shows (two-way). A document without a table of contents shows thumbnails and no tabs, whatever this says.</source>
+        <target>侧栏显示的内容（双向）。没有目录的文档只显示缩略图，没有页签，无论这里如何设置。</target>
+      </trans-unit>
+      <trans-unit id="PdfViewer.Source">
+        <source>The PDF to open; changing it stops the open in progress and closes the document the viewer opened. In XAML, a path or an absolute URI. Wins over `Document`.</source>
+        <target>要打开的 PDF；更改它会停止正在进行的打开，并关闭查看器打开的文档。在 XAML 中是路径或绝对 URI。优先于 `Document`。</target>
+      </trans-unit>
+      <trans-unit id="PdfViewer.Status">
+        <source>Where the viewer is with its document.</source>
+        <target>查看器与其文档的当前状态。</target>
+      </trans-unit>
+      <trans-unit id="PdfViewer.Title">
+        <source>The document's title, or else `DisplayName`.</source>
+        <target>文档的标题，否则为 `DisplayName`。</target>
       </trans-unit>
       <trans-unit id="PhoneInput">
         <source>Arc phone input: a phone field with a country picker. The number formats as it is typed in the selected country's shape (separators only print while digits follow, a typed trunk prefix is kept) with a faint guide showing the rest of the expected number; the value comes out in E.164. The flag button grows into a searchable country list (one morphing surface), pasted or autofilled international numbers pick their own country (+1 picks Canada by area code), and typing "+" in the number jumps into the picker with a calling-code search. After blur an incomplete or too long number shows "Numbers in United Kingdom have 10 digits" unless `IsValidationEnabled` is off or an `ErrorMessage` replaces it; a valid number shows a check. Keyboard: on the country button ArrowDown / ArrowUp open the list and a printable key opens it seeded with that key; in the search ArrowDown / ArrowUp, PageDown / PageUp (8 rows), Home / End (with an empty search) move, Enter picks, Escape closes and returns to the button, Tab closes. In the number, Backspace / Delete on a separator delete the digit beside it.</source>
