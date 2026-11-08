@@ -456,4 +456,27 @@ public class SankeyFlowTests
         Assert.False(SankeyFlow.IsKeptOut(keepOut, new Avalonia.Point(5, 15)));
         Assert.False(SankeyFlow.IsKeptOut([], new Avalonia.Point(15, 15)));
     }
+
+    [AvaloniaFact]
+    public void Repainting_the_labels_does_not_grow_the_list_particles_check()
+    {
+        var chart = Chart([new("a", "b", 10), new("b", "c", 8)]);
+        var window = TestHelpers.Show(chart, ArcMotionLevel.Off);
+        try
+        {
+            using var bitmap = new Avalonia.Media.Imaging.RenderTargetBitmap(new Avalonia.PixelSize(640, 480));
+            bitmap.Render(chart);
+            var once = chart.ParticleKeepOutCount;
+            once.ShouldBeGreaterThan(0);
+            for (var i = 0; i < 5; i++)
+            {
+                bitmap.Render(chart);
+            }
+            chart.ParticleKeepOutCount.ShouldBe(once);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

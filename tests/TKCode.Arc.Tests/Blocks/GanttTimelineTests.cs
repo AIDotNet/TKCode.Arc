@@ -213,4 +213,25 @@ public class GanttTimelineTests
         Assert.Equal(Monday, timeline.Tasks[0].Start);
         window.Close();
     }
+
+    [Fact]
+    public void A_row_knows_its_place_and_a_summary_is_worked_out_once()
+    {
+        var tasks = new[]
+        {
+            new GanttTask("1", "One", "a", Monday, Monday.AddDays(1)),
+            new GanttTask("2", "Two", "b", Monday, Monday.AddDays(1)),
+        };
+        var model = Model(tasks);
+        Assert.Equal(0, model.GroupRows["a"]);
+        Assert.Equal(1, model.TaskRows["1"]);
+        Assert.Equal(2, model.GroupRows["b"]);
+        Assert.Equal(3, model.TaskRows["2"]);
+        var before = GC.GetAllocatedBytesForCurrentThread();
+        _ = model.Summary(model.Groups[0]);
+        var first = GC.GetAllocatedBytesForCurrentThread() - before;
+        before = GC.GetAllocatedBytesForCurrentThread();
+        _ = model.Summary(model.Groups[0]);
+        Assert.True(GC.GetAllocatedBytesForCurrentThread() - before < first);
+    }
 }
