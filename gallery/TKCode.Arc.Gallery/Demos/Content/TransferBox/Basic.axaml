@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TransferBoxBasicDemo">
+    <arc:TransferBox x:Name="Box"
+                     SourceHeader="Available languages"
+                     TargetHeader="Selected languages"
+                     MaxWidth="640"
+                     Height="340" />
+</UserControl>

@@ -1,0 +1,289 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.TransferBoxTheme">
+
+    <!-- A row: hover and selected fills, the content, and a check that fades in when the row is selected. -->
+    <ControlTheme x:Key="{x:Type arc:TransferBoxListItem}" TargetType="arc:TransferBoxListItem">
+        <!-- Rows draw their own focus ring (LazyFocusRing); suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Padding" Value="{arc:TransferBoxTokenResource RowPadding}" />
+        <Setter Property="Margin" Value="{arc:TransferBoxTokenResource RowMargin}" />
+        <Setter Property="MinHeight" Value="{arc:TransferBoxTokenResource RowMinHeight}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TransferBoxListItem">
+                <Panel Name="PART_Root">
+                    <Border Name="PART_Face"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <ContentPresenter Name="PART_ContentPresenter"
+                                              Content="{TemplateBinding Content}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              TextWrapping="NoWrap"
+                                              TextTrimming="CharacterEllipsis" />
+                            <arc:ArcGlyph Name="PART_Check"
+                                          Grid.Column="1"
+                                          Margin="{arc:TransferBoxTokenResource RowCheckMargin}"
+                                          Data="{x:Static arc:ArcIcons.Check}"
+                                          Size="{arc:TransferBoxTokenResource CheckGlyphSize}"
+                                          Opacity="0"
+                                          VerticalAlignment="Center" />
+                        </Grid>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Check">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        </Style>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:selected">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        </Style>
+        <Style Selector="^:selected /template/ arc|ArcGlyph#PART_Check">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{arc:TransferBoxTokenResource DisabledOpacity}" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Check">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- One list: a scroll viewer around the virtualized rows. -->
+    <ControlTheme x:Key="{x:Type arc:TransferBoxList}" TargetType="arc:TransferBoxList">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TransferBoxList">
+                <ScrollViewer Name="PART_ScrollViewer"
+                              Background="{TemplateBinding Background}"
+                              HorizontalScrollBarVisibility="{TemplateBinding (ScrollViewer.HorizontalScrollBarVisibility)}"
+                              VerticalScrollBarVisibility="{TemplateBinding (ScrollViewer.VerticalScrollBarVisibility)}">
+                    <ItemsPresenter Name="PART_ItemsPresenter"
+                                    Margin="{arc:TransferBoxTokenResource ListPadding}"
+                                    ItemsPanel="{TemplateBinding ItemsPanel}" />
+                </ScrollViewer>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:TransferBox}" TargetType="arc:TransferBox">
+        <Setter Property="Height" Value="{arc:TransferBoxTokenResource DefaultHeight}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <!-- Focus rings of the header boxes and the move buttons sit outside them. -->
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TransferBox">
+                <Grid ColumnDefinitions="*,Auto,*">
+                    <!-- Source panel -->
+                    <Border Name="PART_SourcePanel"
+                            MinWidth="{arc:TransferBoxTokenResource PanelMinWidth}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            BoxShadow="{arc:ArcDesignTokenResource ShadowResting}">
+                        <DockPanel>
+                            <Border DockPanel.Dock="Top"
+                                    Classes="transfer-header"
+                                    MinHeight="{arc:TransferBoxTokenResource HeaderMinHeight}"
+                                    Padding="{arc:TransferBoxTokenResource HeaderPadding}"
+                                    BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}">
+                                <Grid ColumnDefinitions="Auto,*,Auto">
+                                    <arc:Checkbox Name="PART_SourceSelectAll" VerticalAlignment="Center" />
+                                    <ContentPresenter Name="PART_SourceHeader"
+                                                      Grid.Column="1"
+                                                      Margin="{arc:TransferBoxTokenResource HeaderTitleMargin}"
+                                                      VerticalAlignment="Center"
+                                                      Content="{TemplateBinding SourceHeader}"
+                                                      FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                      TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Name="PART_SourceCount"
+                                               Grid.Column="2"
+                                               VerticalAlignment="Center"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                </Grid>
+                            </Border>
+                            <arc:SearchField Name="PART_SourceSearch"
+                                             DockPanel.Dock="Top"
+                                             Margin="{arc:TransferBoxTokenResource SearchMargin}"
+                                             Size="Small"
+                                             IsLabelVisible="False"
+                                             Label="{TemplateBinding SearchPlaceholder}"
+                                             Placeholder="{TemplateBinding SearchPlaceholder}"
+                                             IsVisible="{TemplateBinding IsSearchable}"
+                                             Text="{TemplateBinding SourceSearchText, Mode=TwoWay}" />
+                            <Panel>
+                                <arc:TransferBoxList Name="PART_SourceList"
+                                                     ItemTemplate="{TemplateBinding ItemTemplate}" />
+                                <ContentPresenter Name="PART_SourceEmpty"
+                                                  Classes="transfer-empty"
+                                                  IsVisible="False"
+                                                  IsHitTestVisible="False"
+                                                  Padding="{arc:TransferBoxTokenResource EmptyPadding}"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"
+                                                  HorizontalContentAlignment="Center"
+                                                  TextWrapping="Wrap"
+                                                  Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </Panel>
+                        </DockPanel>
+                    </Border>
+
+                    <!-- Move actions -->
+                    <StackPanel Grid.Column="1"
+                                Margin="{arc:TransferBoxTokenResource ActionsMargin}"
+                                Spacing="{arc:TransferBoxTokenResource ActionsGap}"
+                                VerticalAlignment="Center">
+                        <arc:Button Name="PART_MoveAllToTarget"
+                                    Classes="transfer-move"
+                                    Variant="Secondary"
+                                    Size="Small"
+                                    IsVisible="{TemplateBinding IsMoveAllVisible}"
+                                    AutomationProperties.Name="{TemplateBinding MoveAllToTargetLabel}"
+                                    arc:Tooltip.Tip="{TemplateBinding MoveAllToTargetLabel}">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronsRight}" Size="{arc:TransferBoxTokenResource MoveGlyphSize}" />
+                        </arc:Button>
+                        <arc:Button Name="PART_MoveToTarget"
+                                    Classes="transfer-move"
+                                    Variant="Secondary"
+                                    Size="Small"
+                                    AutomationProperties.Name="{TemplateBinding MoveToTargetLabel}"
+                                    arc:Tooltip.Tip="{TemplateBinding MoveToTargetLabel}">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronRight}" Size="{arc:TransferBoxTokenResource MoveGlyphSize}" />
+                        </arc:Button>
+                        <arc:Button Name="PART_MoveToSource"
+                                    Classes="transfer-move"
+                                    Variant="Secondary"
+                                    Size="Small"
+                                    AutomationProperties.Name="{TemplateBinding MoveToSourceLabel}"
+                                    arc:Tooltip.Tip="{TemplateBinding MoveToSourceLabel}">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronLeft}" Size="{arc:TransferBoxTokenResource MoveGlyphSize}" />
+                        </arc:Button>
+                        <arc:Button Name="PART_MoveAllToSource"
+                                    Classes="transfer-move"
+                                    Variant="Secondary"
+                                    Size="Small"
+                                    IsVisible="{TemplateBinding IsMoveAllVisible}"
+                                    AutomationProperties.Name="{TemplateBinding MoveAllToSourceLabel}"
+                                    arc:Tooltip.Tip="{TemplateBinding MoveAllToSourceLabel}">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronsLeft}" Size="{arc:TransferBoxTokenResource MoveGlyphSize}" />
+                        </arc:Button>
+                    </StackPanel>
+
+                    <!-- Target panel -->
+                    <Border Name="PART_TargetPanel"
+                            Grid.Column="2"
+                            MinWidth="{arc:TransferBoxTokenResource PanelMinWidth}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            BoxShadow="{arc:ArcDesignTokenResource ShadowResting}">
+                        <DockPanel>
+                            <Border DockPanel.Dock="Top"
+                                    Classes="transfer-header"
+                                    MinHeight="{arc:TransferBoxTokenResource HeaderMinHeight}"
+                                    Padding="{arc:TransferBoxTokenResource HeaderPadding}"
+                                    BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}">
+                                <Grid ColumnDefinitions="Auto,*,Auto">
+                                    <arc:Checkbox Name="PART_TargetSelectAll" VerticalAlignment="Center" />
+                                    <ContentPresenter Name="PART_TargetHeader"
+                                                      Grid.Column="1"
+                                                      Margin="{arc:TransferBoxTokenResource HeaderTitleMargin}"
+                                                      VerticalAlignment="Center"
+                                                      Content="{TemplateBinding TargetHeader}"
+                                                      FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                      TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Name="PART_TargetCount"
+                                               Grid.Column="2"
+                                               VerticalAlignment="Center"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                </Grid>
+                            </Border>
+                            <arc:SearchField Name="PART_TargetSearch"
+                                             DockPanel.Dock="Top"
+                                             Margin="{arc:TransferBoxTokenResource SearchMargin}"
+                                             Size="Small"
+                                             IsLabelVisible="False"
+                                             Label="{TemplateBinding SearchPlaceholder}"
+                                             Placeholder="{TemplateBinding SearchPlaceholder}"
+                                             IsVisible="{TemplateBinding IsSearchable}"
+                                             Text="{TemplateBinding TargetSearchText, Mode=TwoWay}" />
+                            <Panel>
+                                <arc:TransferBoxList Name="PART_TargetList"
+                                                     ItemTemplate="{TemplateBinding ItemTemplate}" />
+                                <ContentPresenter Name="PART_TargetEmpty"
+                                                  Classes="transfer-empty"
+                                                  IsVisible="False"
+                                                  IsHitTestVisible="False"
+                                                  Padding="{arc:TransferBoxTokenResource EmptyPadding}"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"
+                                                  HorizontalContentAlignment="Center"
+                                                  TextWrapping="Wrap"
+                                                  Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </Panel>
+                        </DockPanel>
+                    </Border>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ arc|Button.transfer-move">
+            <Setter Property="Width" Value="{arc:TransferBoxTokenResource MoveButtonExtent}" />
+            <Setter Property="Height" Value="{arc:TransferBoxTokenResource MoveButtonExtent}" />
+            <Setter Property="MinWidth" Value="0" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{arc:TransferBoxTokenResource DisabledOpacity}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TransferBoxCommandsDemo">
+    <StackPanel MaxWidth="640" Spacing="12">
+        <arc:TransferBox x:Name="Box"
+                         SourceHeader="Hidden columns"
+                         TargetHeader="Visible columns"
+                         SelectionMode="Single"
+                         Height="300" />
+        <WrapPanel ItemSpacing="8" LineSpacing="8">
+            <arc:Button Content="Show column"
+                        Variant="Secondary"
+                        Size="Small"
+                        Command="{Binding #Box.MoveToTargetCommand}" />
+            <arc:Button Content="Hide column"
+                        Variant="Secondary"
+                        Size="Small"
+                        Command="{Binding #Box.MoveToSourceCommand}" />
+            <arc:Button Content="Show all columns"
+                        Variant="Ghost"
+                        Size="Small"
+                        Command="{Binding #Box.MoveAllToTargetCommand}" />
+        </WrapPanel>
+        <TextBlock x:Name="Log"
+                   Text="Move a column to see the event."
+                   FontSize="13"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>
