@@ -1,0 +1,28 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.VideoPlayerFilmsDemo">
+    <!-- Real animated films with sound: the trailers of two Blender Foundation open movies. Changing Source keeps the player
+         and loads the new clip. The licence (CC BY 3.0) asks for the credit under the player. -->
+    <StackPanel Spacing="12" MaxWidth="720">
+        <arc:SegmentedControl x:Name="Film"
+                              HorizontalAlignment="Center"
+                              SelectedValue="sintel"
+                              SelectionChanged="OnFilmChanged">
+            <arc:SegmentedOption Value="sintel" Label="Sintel" />
+            <arc:SegmentedOption Value="bunny" Label="Big Buck Bunny" />
+        </arc:SegmentedControl>
+        <arc:VideoPlayer x:Name="Player"
+                         Title="Sintel"
+                         AspectRatio="1.7778"
+                         Source="{x:Static demos:VideoDemoMedia.Sintel}"
+                         Poster="{x:Static demos:VideoDemoMedia.SintelPoster}" />
+        <TextBlock x:Name="Credit"
+                   HorizontalAlignment="Center"
+                   TextWrapping="Wrap"
+                   FontSize="12"
+                   Opacity="0.7"
+                   Text="Sintel trailer © Blender Foundation, durian.blender.org, CC BY 3.0" />
+    </StackPanel>
+</UserControl>

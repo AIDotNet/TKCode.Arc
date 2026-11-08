@@ -41,6 +41,12 @@ Set `Source` to an address (`avares://`, `file://`, `http(s)://`) or a `VideoSou
 
 `IsPlaying`, `Position`, `Volume`, `IsMuted`, `IsLooping` and `PlaybackRate` bind both ways. `Play()`, `Pause()`, `Stop()`, `Seek()` and the `PlayPauseCommand`, `StopCommand`, `SkipForwardCommand`, `SkipBackwardCommand`, `ToggleMuteCommand` and `ToggleFullScreenCommand` commands drive the player from outside. `Stop()` pauses, returns to the start and shows the poster again; the video stays loaded, so the next play starts at once. `Failed` reports why a video cannot play.
 
+### Animated films
+
+Changing `Source` loads another video in the same player. These are the trailers of two Blender Foundation open movies, © Blender Foundation, under [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/).
+
+<Demo name="Films" />
+
 ### Captions and chapters
 
 Add WebVTT or SRT files as `TextTracks`. The captions menu lists every captions and subtitles track, sets the text size, and turns captions off. A `Chapters` track splits the seek bar into segments and names the chapter under the pointer.

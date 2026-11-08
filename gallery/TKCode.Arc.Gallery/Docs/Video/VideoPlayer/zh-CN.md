@@ -1,7 +1,7 @@
 ---
 title: 视频播放器
 summary: "在画面上叠加控制条播放视频：可用章节跳转、调节音量、倍速、字幕和全屏，外观与 Arc 风格一致，由平台自带的播放器解码。"
-source-hash: c5f0cc22d9b4
+source-hash: a73f2874046b
 ---
 
 <Demo name="Preview" />
@@ -41,6 +41,12 @@ await ArcVideoBrowser.UseAsync();  // browser: TKCode.Arc.Video.Browser
 ```
 
 `IsPlaying`、`Position`、`Volume`、`IsMuted`、`IsLooping` 和 `PlaybackRate` 都是双向绑定。`Play()`、`Pause()`、`Stop()`、`Seek()` 以及 `PlayPauseCommand`、`StopCommand`、`SkipForwardCommand`、`SkipBackwardCommand`、`ToggleMuteCommand`、`ToggleFullScreenCommand` 命令可以从外部控制播放器。`Stop()` 会暂停、回到开头并重新显示海报；视频保持已加载，所以下次播放会立即开始。`Failed` 会报告视频无法播放的原因。
+
+### 动画影片
+
+改变 `Source` 会在同一个播放器里加载另一个视频。这里是 Blender 基金会两部开放电影的预告片，© Blender Foundation，采用 [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) 许可。
+
+<Demo name="Films" />
 
 ### 字幕与章节
 
