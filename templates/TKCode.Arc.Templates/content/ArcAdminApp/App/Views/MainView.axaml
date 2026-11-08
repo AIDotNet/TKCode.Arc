@@ -119,6 +119,7 @@
                         <arc:Button Grid.Column="2"
                                     Variant="Secondary"
                                     Size="Small"
+                                    VerticalAlignment="Center"
                                     ToolTip.Tip="Search pages and actions (Cmd+K / Ctrl+K)"
                                     arc:CommandPaletteDialog.Opens="{Binding #Palette}">
                             <StackPanel Orientation="Horizontal" Spacing="8">

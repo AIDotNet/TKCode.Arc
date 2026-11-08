@@ -38,7 +38,7 @@
                     <Run Text="ArcDisplayName" /><Run Text=" · " Foreground="{arc:ArcDesignTokenResource TextMuted}" /><Run Text="{Binding Workspace.Name}" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
                 </TextBlock>
                 <TextBlock Grid.Column="2" Classes="muted" Text="{Binding Status}" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                <arc:Button Grid.Column="3" Size="Small" Command="{Binding RunCommand}" ToolTip.Tip="Save the changed files and build">
+                <arc:Button Grid.Column="3" Size="Small" VerticalAlignment="Center" Command="{Binding RunCommand}" ToolTip.Tip="Save the changed files and build">
                     <StackPanel Orientation="Horizontal" Spacing="6">
                         <lucide:LucideIcon Kind="Play" Size="13" />
                         <TextBlock Text="Run" />
@@ -46,6 +46,7 @@
                 </arc:Button>
                 <arc:Button Grid.Column="4"
                             Size="Small"
+                            VerticalAlignment="Center"
                             Variant="Secondary"
                             ToolTip.Tip="Command palette (Cmd+K / Ctrl+K)"
                             arc:CommandPaletteDialog.Opens="{Binding #Palette}">
@@ -54,7 +55,7 @@
                         <TextBlock Text="Commands" />
                     </StackPanel>
                 </arc:Button>
-                <arc:Button Grid.Column="5" Content="Reset layout" Variant="Ghost" Size="Small" Click="OnResetLayout" />
+                <arc:Button Grid.Column="5" Content="Reset layout" Variant="Ghost" Size="Small" VerticalAlignment="Center" Click="OnResetLayout" />
                 <arc:ThemeSwitcher Grid.Column="6" IsIconOnly="True" />
             </Grid>
         </Border>

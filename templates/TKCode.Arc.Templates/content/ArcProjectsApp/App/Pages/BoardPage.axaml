@@ -7,6 +7,7 @@
     <!-- Drag cards between columns, quick-add at the bottom of a column, open a card for its details. -->
     <arc:KanbanBoard x:Name="Board"
                      Margin="20"
+                     MinColumnWidth="210"
                      Title="{Binding Title}"
                      Columns="{Binding Columns}"
                      People="{Binding People}"

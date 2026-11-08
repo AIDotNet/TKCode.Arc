@@ -19,13 +19,6 @@
                 </Transitions>
             </Setter>
         </Style>
-        <Style Selector="arc|Button.icon">
-            <Setter Property="Width" Value="32" />
-            <Setter Property="Height" Value="32" />
-            <Setter Property="MinHeight" Value="0" />
-            <Setter Property="Padding" Value="0" />
-            <Setter Property="CornerRadius" Value="10" />
-        </Style>
     </UserControl.Styles>
 
     <DockPanel ClipToBounds="True">
@@ -33,7 +26,7 @@
              folds the sidebar to its icon rail. -->
         <arc:Sidebar x:Name="Nav" DockPanel.Dock="Left" ResizeMode="Overlay" IsFilterVisible="True">
             <arc:Sidebar.Header>
-                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10" Margin="6,0,0,0">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" Margin="6,0,0,0">
                     <Border Width="28" Height="28" CornerRadius="8" Background="{arc:ArcDesignTokenResource Foreground}">
                         <lucide:LucideIcon Kind="MessageCircle"
                                            Size="14"
@@ -44,17 +37,10 @@
                     <TextBlock Grid.Column="1"
                                Classes="rail-fade"
                                Text="ArcDisplayName"
+                               TextTrimming="CharacterEllipsis"
                                VerticalAlignment="Center"
                                FontWeight="Medium"
                                Foreground="{arc:ArcDesignTokenResource Foreground}" />
-                    <arc:Button Grid.Column="2"
-                                Classes="icon rail-fade"
-                                Variant="Ghost"
-                                AutomationProperties.Name="New chat"
-                                ToolTip.Tip="New chat"
-                                Click="OnNewChat">
-                        <lucide:LucideIcon Kind="SquarePen" Size="15" />
-                    </arc:Button>
                 </Grid>
             </arc:Sidebar.Header>
             <arc:Sidebar.Footer>

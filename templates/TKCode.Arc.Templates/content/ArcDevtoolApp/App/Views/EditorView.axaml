@@ -6,7 +6,8 @@
              x:DataType="m:EditorDocument">
     <!-- The editor of one file. Arc has no code editor; for syntax highlighting and folding, put a code editor control
          here (AvaloniaEdit, for example) and bind it to Text the same way. -->
-    <arc:Textarea Margin="8"
+    <arc:Textarea x:Name="Editor"
+                  Margin="8"
                   Text="{Binding Text}"
                   TextWrapping="{Binding Wrapping}"
                   IsReadOnly="{Binding IsReadOnly}"

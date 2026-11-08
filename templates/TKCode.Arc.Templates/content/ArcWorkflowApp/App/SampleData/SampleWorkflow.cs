@@ -10,12 +10,12 @@ public static class SampleWorkflow
         Name = "Refund requests",
         Steps =
         [
-            new() { Id = "request", Kind = "trigger", Title = "Refund requested", Description = "Support form" },
-            new() { Id = "order", Kind = "lookup", Title = "Find the order", Description = "Payments" },
-            new() { Id = "check", Kind = "condition", Title = "Amount over $500?", Description = "Condition" },
-            new() { Id = "approve", Kind = "approval", Title = "Manager approval", Description = "Finance team", IsLocked = true },
-            new() { Id = "refund", Kind = "action", Title = "Issue the refund", Description = "Payments" },
-            new() { Id = "notify", Kind = "email", Title = "Email the customer", Description = "Refund template" },
+            new() { Id = "request", X = 300, Y = 0, Kind = "trigger", Title = "Refund requested", Description = "Support form" },
+            new() { Id = "order", X = 300, Y = 120, Kind = "lookup", Title = "Find the order", Description = "Payments" },
+            new() { Id = "check", X = 300, Y = 240, Kind = "condition", Title = "Amount over $500?", Description = "Condition" },
+            new() { Id = "approve", X = 100, Y = 380, Kind = "approval", Title = "Manager approval", Description = "Finance team", IsLocked = true },
+            new() { Id = "refund", X = 300, Y = 520, Kind = "action", Title = "Issue the refund", Description = "Payments" },
+            new() { Id = "notify", X = 300, Y = 640, Kind = "email", Title = "Email the customer", Description = "Refund template" },
         ],
         Connections =
         [
