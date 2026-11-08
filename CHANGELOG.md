@@ -21,6 +21,11 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
   `[EnumMetadata]` (or `[assembly: EnumMetadata(typeof(...))]`), registered with `EnumTypes`, so nothing is reflected
   (AOT and trimming safe); `EnumMetadata(LanguageCatalog = ...)` takes the texts from a language catalog and follows the
   application language. New diagnostics ARCF033–ARCF037. Docs and demos in English, 简体中文 and 繁體中文.
+- `FluidTabControl` and `FluidTabItem` (`TKCode.Arc`, issue #60): scroll-linked tabs. A tab list on the left or right
+  beside one scroll area that stacks the content of every tab; picking a tab scrolls smoothly to its section
+  (`AnimationDuration`, `EasingFunction`, `IsAnimationEnabled`), scrolling selects the tab of the section on the anchor
+  line (`SnapAlignment` Top or Center), with two-way `SelectedItem` / `SelectedIndex`, header, icon and content
+  templates, keyboard navigation and live add, remove and move. Docs and demos in English, 简体中文 and 繁體中文.
 
 ## 0.4.0-preview.5 - 2026-11-08
 

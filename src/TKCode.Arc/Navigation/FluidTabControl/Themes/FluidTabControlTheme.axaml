@@ -1,0 +1,68 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.FluidTabControlTheme">
+    <ControlTheme x:Key="{x:Type arc:FluidTabControl}" TargetType="arc:FluidTabControl">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="TabListWidth" Value="{arc:FluidTabControlTokenResource TabListWidth}" />
+        <Setter Property="SectionSpacing" Value="{arc:FluidTabControlTokenResource SectionSpacing}" />
+        <Setter Property="ContentPadding" Value="{arc:FluidTabControlTokenResource ContentPadding}" />
+        <Setter Property="AnimationDuration" Value="{arc:FluidTabControlTokenResource ScrollDuration}" />
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+                <StackPanel Orientation="Vertical" Spacing="{arc:FluidTabControlTokenResource ItemSpacing}" />
+            </ItemsPanelTemplate>
+        </Setter>
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:FluidTabControl">
+                <DockPanel Background="{TemplateBinding Background}">
+                    <Border Name="PART_TabList"
+                            Width="{TemplateBinding TabListWidth}"
+                            BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                        <ScrollViewer Name="PART_TabListViewport"
+                                      HorizontalScrollBarVisibility="Disabled"
+                                      VerticalScrollBarVisibility="Auto"
+                                      BringIntoViewOnFocusChange="False">
+                            <arc:FluidTabListPanel Name="PART_TabListPanel" Margin="{arc:FluidTabControlTokenResource TabListPadding}">
+                                <arc:GlidingIndicator Name="PART_SelectionHighlight"
+                                                      Fill="{arc:ArcDesignTokenResource AccentSubtle}"
+                                                      CornerRadius="{arc:FluidTabControlTokenResource HighlightRadius}"
+                                                      Spring="Morph" />
+                                <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
+                                <arc:GlidingIndicator Name="PART_SelectionIndicator"
+                                                      Fill="{arc:ArcDesignTokenResource Accent}"
+                                                      CornerRadius="{arc:FluidTabControlTokenResource IndicatorRadius}"
+                                                      IsHitTestVisible="False"
+                                                      Spring="Morph" />
+                            </arc:FluidTabListPanel>
+                        </ScrollViewer>
+                    </Border>
+                    <ScrollViewer Name="PART_ContentViewport"
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  VerticalScrollBarVisibility="Auto">
+                        <StackPanel Name="PART_SectionsPanel"
+                                    Orientation="Vertical"
+                                    Margin="{TemplateBinding ContentPadding}"
+                                    Spacing="{TemplateBinding SectionSpacing}" />
+                    </ScrollViewer>
+                </DockPanel>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+
+        <!-- Placement-dependent values are style setters, not template attributes, so :right can replace them. -->
+        <Style Selector="^ /template/ Border#PART_TabList">
+            <Setter Property="DockPanel.Dock" Value="Left" />
+            <Setter Property="BorderThickness" Value="{arc:FluidTabControlTokenResource DividerLeftPlacement}" />
+        </Style>
+        <Style Selector="^:right /template/ Border#PART_TabList">
+            <Setter Property="DockPanel.Dock" Value="Right" />
+            <Setter Property="BorderThickness" Value="{arc:FluidTabControlTokenResource DividerRightPlacement}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

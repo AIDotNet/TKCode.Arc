@@ -352,6 +352,14 @@
       "ItemRadiusMD": "26",
       "ItemRadiusSM": "22"
     },
+    "FluidTabControl": {
+      "HighlightRadius": "24",
+      "IndicatorRadius": "3"
+    },
+    "FluidTabItem": {
+      "FocusRingRadius": "28",
+      "ItemRadius": "24"
+    },
     "GenerationStats": {
       "CardCornerRadius": "32",
       "InlinePanelCornerRadius": "28"
@@ -1257,6 +1265,14 @@
     "FloatingButtonGroupItem": {
       "ItemRadiusMD": "26",
       "ItemRadiusSM": "22"
+    },
+    "FluidTabControl": {
+      "HighlightRadius": "24",
+      "IndicatorRadius": "3"
+    },
+    "FluidTabItem": {
+      "FocusRingRadius": "28",
+      "ItemRadius": "24"
     },
     "GenerationStats": {
       "CardCornerRadius": "32",

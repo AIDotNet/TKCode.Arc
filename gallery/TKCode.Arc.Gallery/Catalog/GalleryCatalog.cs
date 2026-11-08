@@ -121,6 +121,9 @@ public static partial class GalleryCatalog
             new("EnumSelector", "Enum selector", "enum-selector", 0,
                 "Pick from the members of an enum: radio options for a plain enum, and checkboxes that combine flags for a [Flags] enum, described at compile time without reflection.",
                 IsArc: false, AddedOn: "2026-11-07"),
+            new("FluidTabControl", "Fluid tab control", "fluid-tab-control", 0,
+                "Tabs beside one scroll area that holds every tab's content in order. Picking a tab scrolls to its section, and scrolling selects the tab of the section in view.",
+                IsArc: false, AddedOn: "2026-11-07"),
         ], IsArc: false),
     ];
 

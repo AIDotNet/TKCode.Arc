@@ -1,0 +1,49 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.FluidTabControlPlacementDemo">
+    <StackPanel Spacing="16" MaxWidth="760">
+        <WrapPanel ItemSpacing="16" LineSpacing="12">
+            <arc:SegmentedControl SelectedValue="{Binding #Guide.TabPlacement, Mode=TwoWay}">
+                <arc:SegmentedOption Value="{x:Static arc:FluidTabPlacement.Left}" Label="Tabs on the left" />
+                <arc:SegmentedOption Value="{x:Static arc:FluidTabPlacement.Right}" Label="Tabs on the right" />
+            </arc:SegmentedControl>
+            <arc:SegmentedControl SelectedValue="{Binding #Guide.SnapAlignment, Mode=TwoWay}">
+                <arc:SegmentedOption Value="{x:Static arc:FluidTabSnapAlignment.Top}" Label="Top" />
+                <arc:SegmentedOption Value="{x:Static arc:FluidTabSnapAlignment.Center}" Label="Center" />
+            </arc:SegmentedControl>
+        </WrapPanel>
+        <Border Height="320"
+                BorderThickness="1"
+                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+                Background="{arc:ArcDesignTokenResource Surface}"
+                ClipToBounds="True">
+            <arc:FluidTabControl x:Name="Guide"
+                                 TabPlacement="Right"
+                                 TabListWidth="168"
+                                 AutomationProperties.Name="Setup guide">
+                <arc:FluidTabItem Header="Install">
+                    <Border Height="180" CornerRadius="{arc:ArcDesignTokenResource RadiusControl}" Background="{arc:ArcDesignTokenResource SurfaceMuted}" Padding="16">
+                        <TextBlock Text="Install: add the package and call UseArc() on the app builder." TextWrapping="Wrap" />
+                    </Border>
+                </arc:FluidTabItem>
+                <arc:FluidTabItem Header="Theme">
+                    <Border Height="140" CornerRadius="{arc:ArcDesignTokenResource RadiusControl}" Background="{arc:ArcDesignTokenResource SurfaceMuted}" Padding="16">
+                        <TextBlock Text="Theme: pick an accent and an appearance." TextWrapping="Wrap" />
+                    </Border>
+                </arc:FluidTabItem>
+                <arc:FluidTabItem Header="First page">
+                    <Border Height="220" CornerRadius="{arc:ArcDesignTokenResource RadiusControl}" Background="{arc:ArcDesignTokenResource SurfaceMuted}" Padding="16">
+                        <TextBlock Text="First page: lay out a form with inputs and a primary button." TextWrapping="Wrap" />
+                    </Border>
+                </arc:FluidTabItem>
+                <arc:FluidTabItem Header="Publish">
+                    <Border Height="160" CornerRadius="{arc:ArcDesignTokenResource RadiusControl}" Background="{arc:ArcDesignTokenResource SurfaceMuted}" Padding="16">
+                        <TextBlock Text="Publish: trim and compile ahead of time." TextWrapping="Wrap" />
+                    </Border>
+                </arc:FluidTabItem>
+            </arc:FluidTabControl>
+        </Border>
+    </StackPanel>
+</UserControl>

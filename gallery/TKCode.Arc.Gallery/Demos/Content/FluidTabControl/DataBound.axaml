@@ -1,0 +1,53 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:local="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.FluidTabControlDataBoundDemo">
+    <StackPanel Spacing="12" MaxWidth="760">
+        <Border Height="340"
+                BorderThickness="1"
+                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+                Background="{arc:ArcDesignTokenResource Surface}"
+                ClipToBounds="True">
+            <arc:FluidTabControl x:Name="Chapters"
+                                 AnimationDuration="0:0:0.6"
+                                 EasingFunction="CubicEaseOut"
+                                 AutomationProperties.Name="Handbook chapters">
+                <arc:FluidTabControl.ItemTemplate>
+                    <DataTemplate x:DataType="local:HandbookChapter">
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="{Binding Title}" />
+                            <TextBlock Text="{Binding Subtitle}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       FontWeight="Normal"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </arc:FluidTabControl.ItemTemplate>
+                <arc:FluidTabControl.IconTemplate>
+                    <DataTemplate x:DataType="local:HandbookChapter">
+                        <TextBlock Text="{Binding Number}" FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}" />
+                    </DataTemplate>
+                </arc:FluidTabControl.IconTemplate>
+                <arc:FluidTabControl.ContentTemplate>
+                    <DataTemplate x:DataType="local:HandbookChapter">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="{Binding Title}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeLG}"
+                                       FontWeight="SemiBold" />
+                            <TextBlock Text="{Binding Body}"
+                                       TextWrapping="Wrap"
+                                       LineHeight="22"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </arc:FluidTabControl.ContentTemplate>
+            </arc:FluidTabControl>
+        </Border>
+        <TextBlock x:Name="Status"
+                   FontSize="12"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>
