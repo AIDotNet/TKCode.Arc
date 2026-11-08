@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CartDrawerPreviewDemo">
+    <!--
+        The sample store: six products (the water jug starts in the cart), free shipping from $240, $9 below it, the code
+        WORKSHOP10 for 10% off, and an order desk that confirms after 1.3 seconds. The drawer opens inside the block.
+    -->
+    <arc:CartDrawer x:Name="Store" Height="760" />
+</UserControl>

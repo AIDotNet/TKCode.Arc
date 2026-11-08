@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CreditTopUpDrainingDemo">
+    <!-- The host owns the balance: every 2 seconds usage takes 30 to 80 credits and the figure rolls down; a purchase rolls it up. -->
+    <StackPanel Spacing="12" Margin="0,12">
+        <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Center">
+            <arc:Switch x:Name="Running" IsChecked="True" VerticalAlignment="Center" />
+            <TextBlock Text="Usage running" VerticalAlignment="Center" />
+            <arc:Button Content="Reset" Variant="Ghost" Size="Small" Click="OnReset" />
+        </StackPanel>
+        <arc:CreditTopUp x:Name="Card" Balance="1820" IsAutoTopUpEnabled="True" AutoTopUpThreshold="1500" />
+        <TextBlock x:Name="Log" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" MaxWidth="480" />
+    </StackPanel>
+</UserControl>

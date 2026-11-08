@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PlanComparisonPreviewDemo">
+    <!-- Arc's preview: the sample Team and Studio plans set flush into a page section (no card of its own). -->
+    <arc:PlanComparison IsFramed="False" />
+</UserControl>

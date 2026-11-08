@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SeatManagerNarrowDemo">
+    <!-- A 360px container: paddings tighten to 20, the quote notes and the legend's change entry hide, long text ends in an ellipsis. -->
+    <arc:SeatManager x:Name="Card" Width="360" Margin="0,12" HorizontalAlignment="Center" IsAutoPlayEnabled="False" />
+</UserControl>

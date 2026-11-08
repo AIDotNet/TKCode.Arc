@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PricingCalculatorBackendDemo">
+    <!-- Own plans and stops (PricingCalculatorDemoData), every event written to the log, and a pretend backend for trials. -->
+    <StackPanel Spacing="12" Margin="0,12">
+        <arc:Switch x:Name="FailNext" Content="Fail the next trial request" HorizontalAlignment="Center" />
+        <arc:PricingCalculator x:Name="Calculator"
+                               Title="Plans for every crew"
+                               Description="Prices drop as your crew grows. Billing can change any time." />
+        <TextBlock x:Name="Log"
+                   HorizontalAlignment="Center"
+                   TextAlignment="Center"
+                   TextWrapping="Wrap"
+                   MaxWidth="560"
+                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CreditTopUpDeclinedDemo">
+    <!-- The first charge is declined: the status line shows the message and the button offers Retry; the second goes through. -->
+    <StackPanel Spacing="12" Margin="0,12">
+        <arc:CreditTopUp x:Name="Card" />
+        <TextBlock x:Name="Log" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" MaxWidth="480" />
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LiveCheckoutHandlersDemo">
+    <!-- Your own catalogue, coupon check and payment handler, in euros. The log under the block lists every event.
+         Coupon: STUDIO25. The switch makes the next payment fail with the handler's message. -->
+    <StackPanel Spacing="16" Margin="0,24" MaxWidth="1040">
+        <arc:Switch x:Name="FailNext" Content="Fail the next payment" HorizontalAlignment="Center" />
+        <arc:LiveCheckout x:Name="Checkout"
+                          Currency="EUR"
+                          Seats="3"
+                          Billing="Monthly"
+                          CountryCode="FR"
+                          Email="ines@pebblework.io"
+                          CardholderName="Inès Moreau"
+                          Address="18 rue des Tanneurs"
+                          City="Lyon"
+                          PostalCode="69002" />
+        <TextBlock x:Name="Log"
+                   TextWrapping="Wrap"
+                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

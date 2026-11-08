@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CartDrawerOwnStoreDemo">
+    <!-- A tea shop in pounds with pence, its own code check and order desk, and a log of the block's events. -->
+    <Grid ColumnDefinitions="*,220" ColumnSpacing="16">
+        <arc:CartDrawer x:Name="Store"
+                        Height="640"
+                        Title="Leaf &amp; Kettle"
+                        Currency="GBP"
+                        AmountDecimals="2"
+                        FreeShippingThreshold="45"
+                        ShippingFee="3.95" />
+        <Border Grid.Column="1"
+                Padding="14"
+                CornerRadius="{arc:ArcDesignTokenResource RadiusStep16}"
+                Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+            <StackPanel Spacing="8">
+                <TextBlock Text="Events" FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                <TextBlock x:Name="Log"
+                           TextWrapping="Wrap"
+                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

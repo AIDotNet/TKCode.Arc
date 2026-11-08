@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CheckoutSummaryEventsDemo">
+    <!-- Your own order and backend: every event the block raises is written to the log under it. Try TEAM20. -->
+    <StackPanel Spacing="16" Margin="0,24">
+        <arc:CheckoutSummary x:Name="Summary" HorizontalAlignment="Center" Width="440" Title="Your order">
+            <arc:CheckoutSummary.Item>
+                <arc:CheckoutSummaryItem Name="Lumen Notes, team of 5"
+                                         Description="Shared notebooks, version history and admin tools"
+                                         Price="250"
+                                         Period="per month" />
+            </arc:CheckoutSummary.Item>
+            <arc:CheckoutSummaryLine Id="seats" Label="Extra seat" Note="One more editor" Amount="40" />
+            <arc:CheckoutSummaryLine Id="credit" Label="Referral credit" Amount="-25" />
+            <arc:CheckoutSummary.Tax>
+                <arc:CheckoutSummaryTax Label="VAT" Rate="0.2" />
+            </arc:CheckoutSummary.Tax>
+        </arc:CheckoutSummary>
+        <TextBlock x:Name="Log"
+                   HorizontalAlignment="Center"
+                   TextAlignment="Center"
+                   TextWrapping="Wrap"
+                   MaxWidth="440"
+                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                   Text="Events appear here." />
+    </StackPanel>
+</UserControl>

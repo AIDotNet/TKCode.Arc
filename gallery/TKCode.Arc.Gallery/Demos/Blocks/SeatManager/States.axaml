@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SeatManagerStatesDemo">
+    <!-- Three moments without the loop: three seats being added, three open seats being removed, and no pending invites. -->
+    <StackPanel Spacing="16" Margin="0,12">
+        <arc:SeatManager x:Name="Adding" IsAutoPlayEnabled="False" />
+        <arc:SeatManager x:Name="Removing" IsAutoPlayEnabled="False" />
+        <arc:SeatManager x:Name="NoInvites" IsAutoPlayEnabled="False" />
+    </StackPanel>
+</UserControl>

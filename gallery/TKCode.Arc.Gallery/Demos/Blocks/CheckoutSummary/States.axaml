@@ -1,0 +1,40 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CheckoutSummaryStatesDemo">
+    <!--
+        Pay states side by side, driven through PayState: processing, paid, and a failed payment with its message.
+        The first card also has a 44 px media cell and no promo field (no CouponValidator).
+    -->
+    <WrapPanel HorizontalAlignment="Center" Margin="0,24" ItemSpacing="16" LineSpacing="16">
+        <arc:CheckoutSummary Width="340" PayState="Processing" Title="Processing">
+            <arc:CheckoutSummary.Item>
+                <arc:CheckoutSummaryItem Name="Brush pack" Description="Forty textured brushes" Price="18" Period="one time">
+                    <arc:CheckoutSummaryItem.Media>
+                        <Border CornerRadius="12">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                                    <GradientStop Color="#F6C9A8" Offset="0" />
+                                    <GradientStop Color="#C7B8F2" Offset="1" />
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Pencil}" Size="20" Foreground="#3B3355"
+                                          HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </arc:CheckoutSummaryItem.Media>
+                </arc:CheckoutSummaryItem>
+            </arc:CheckoutSummary.Item>
+        </arc:CheckoutSummary>
+        <arc:CheckoutSummary Width="340" PayState="Paid" Title="Paid">
+            <arc:CheckoutSummary.Item>
+                <arc:CheckoutSummaryItem Name="Brush pack" Description="Forty textured brushes" Price="18" Period="one time" />
+            </arc:CheckoutSummary.Item>
+        </arc:CheckoutSummary>
+        <arc:CheckoutSummary Width="340" PayState="Error" Title="Payment failed"
+                             PayErrorMessage="Your card was declined. Nothing was charged.">
+            <arc:CheckoutSummary.Item>
+                <arc:CheckoutSummaryItem Name="Brush pack" Description="Forty textured brushes" Price="18" Period="one time" />
+            </arc:CheckoutSummary.Item>
+        </arc:CheckoutSummary>
+    </WrapPanel>
+</UserControl>

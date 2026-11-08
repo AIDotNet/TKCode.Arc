@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LiveCheckoutPreviewDemo">
+    <!-- The sample checkout as it ships: Crew for 8 seats billed yearly, Priority care ticked, a Dutch billing address
+         and empty card fields. Press "Use test card" and Pay; on the receipt, "Start over" puts everything back.
+         Coupons: SPRING15 and CREW10. The card 4000 0000 0000 9995 is declined. -->
+    <arc:LiveCheckout Margin="0,24" MaxWidth="1040" />
+</UserControl>

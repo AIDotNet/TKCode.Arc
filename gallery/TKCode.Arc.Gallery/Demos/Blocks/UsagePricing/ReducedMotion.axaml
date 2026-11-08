@@ -1,0 +1,8 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.UsagePricingReducedMotionDemo">
+    <!-- Reduced motion: numbers, the plan name, the list's slide and height and the meter jump; new features and the
+         swapped sentences only fade. Colors still ease. -->
+    <arc:UsagePricing arc:ArcMotion.Level="Reduced" SeatIndex="14" Margin="0,12" />
+</UserControl>

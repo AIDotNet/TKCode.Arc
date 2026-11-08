@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PlanComparisonLocalizedDemo">
+    <!-- Every string, the culture and the currency come from Labels and Currency (German text, euro prices). -->
+    <arc:PlanComparison x:Name="Comparison" Currency="EUR" />
+</UserControl>

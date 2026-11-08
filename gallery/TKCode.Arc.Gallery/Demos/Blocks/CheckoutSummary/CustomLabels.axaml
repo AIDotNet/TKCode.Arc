@@ -1,0 +1,30 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CheckoutSummaryCustomLabelsDemo">
+    <!--
+        Euros formatted with German number rules, every text replaced through Labels, a tax without a rate (shown as
+        pending and left out of the total), a footnote, and reduced motion: crossfades only, no shake, lines and the
+        total jump. Try GIFT10.
+    -->
+    <arc:CheckoutSummary x:Name="Summary"
+                         Width="440"
+                         Margin="0,24"
+                         HorizontalAlignment="Center"
+                         arc:ArcMotion.Level="Reduced"
+                         Currency="EUR"
+                         CultureName="de-DE"
+                         Title="Your basket"
+                         SecureNote="Paid through an encrypted connection"
+                         Footnote="Cancel any time. The invoice arrives by email.">
+        <arc:CheckoutSummary.Item>
+            <arc:CheckoutSummaryItem Name="Atlas offline maps"
+                                     Description="Every region, on up to three devices"
+                                     Price="39.90"
+                                     Period="per year" />
+        </arc:CheckoutSummary.Item>
+        <arc:CheckoutSummary.Tax>
+            <arc:CheckoutSummaryTax Label="VAT" />
+        </arc:CheckoutSummary.Tax>
+    </arc:CheckoutSummary>
+</UserControl>

@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CreditTopUpNarrowDemo">
+    <!-- Breakpoints follow the card's own width: 440 wide puts the chart under the balance; 360 also tightens the padding to 16. -->
+    <WrapPanel HorizontalAlignment="Center" Margin="0,12">
+        <StackPanel Width="440" Margin="8" Spacing="8">
+            <TextBlock Text="440 wide" HorizontalAlignment="Center" Opacity="0.7" />
+            <arc:CreditTopUp />
+        </StackPanel>
+        <StackPanel Width="360" Margin="8" Spacing="8">
+            <TextBlock Text="360 wide" HorizontalAlignment="Center" Opacity="0.7" />
+            <arc:CreditTopUp SelectedCredits="1500" />
+        </StackPanel>
+    </WrapPanel>
+</UserControl>

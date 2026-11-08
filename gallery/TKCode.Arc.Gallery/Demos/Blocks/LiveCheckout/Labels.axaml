@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LiveCheckoutLabelsDemo">
+    <!-- Other words, pounds and British dates: a LiveCheckoutLabels object with its own text and culture, no wallets,
+         a 15% yearly discount and no test card button. -->
+    <arc:LiveCheckout x:Name="Checkout"
+                      Margin="0,24"
+                      MaxWidth="1040"
+                      Currency="GBP"
+                      YearlyDiscount="0.15"
+                      CountryCode="NZ"
+                      PostalCode="6011"
+                      City="Wellington"
+                      Address="22 Cuba Street" />
+</UserControl>

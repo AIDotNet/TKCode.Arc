@@ -58,6 +58,7 @@ public static partial class GalleryCatalog
         ("2026-10-27", ["FileUpload", "MediaPlayer"]),
         ("2026-10-29", ["DomainVerify", "WebhookTester"]),
         ("2026-11-06", ["GanttTimeline"]),
+        ("2026-11-08", ["PlanComparison", "PricingCalculator", "UsagePricing", "CartDrawer", "CheckoutSummary", "LiveCheckout", "SeatManager", "CreditTopUp"]),
     }.SelectMany(g => g.Classes.Select(c => (c, g.Date))).ToDictionary(e => e.c, e => e.Date);
 
     private static string? AddedOnOf(string className) => s_addedOn.GetValueOrDefault(className);

@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PricingCalculatorPreviewDemo">
+    <!--
+        The reference preview: 23 seat stops starting at 20 seats, yearly billing, three plans (Solo, Studio, Scale) and a
+        simulated trial that takes 1.1 s. Everything comes from PricingCalculatorSamples, the block's defaults.
+    -->
+    <arc:PricingCalculator ShowsPanels="True" Margin="0,12" />
+</UserControl>

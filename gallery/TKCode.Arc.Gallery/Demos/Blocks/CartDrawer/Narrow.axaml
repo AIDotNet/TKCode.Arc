@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CartDrawerNarrowDemo">
+    <!-- At 360px the cart button keeps only its bag and count, prices sit under the names and the drawer fills the block. -->
+    <Border Width="360"
+            Height="700"
+            HorizontalAlignment="Center"
+            ClipToBounds="True"
+            BorderThickness="1"
+            CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+            BorderBrush="{arc:ArcDesignTokenResource Border}">
+        <arc:CartDrawer x:Name="Store" />
+    </Border>
+</UserControl>

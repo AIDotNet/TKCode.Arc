@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CartDrawerReducedMotionDemo">
+    <!--
+        Reduced motion: nothing flies and the badge counts at once, the drawer fades in place, rows cannot be swiped (× still
+        removes them) and numbers change without rolling. Text, focus and announcements stay the same.
+    -->
+    <arc:CartDrawer x:Name="Store" Height="680" arc:ArcMotion.Level="Reduced" />
+</UserControl>

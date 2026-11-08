@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CheckoutSummaryNarrowDemo">
+    <!-- In a 320 px column the card fills the width, the description wraps and the chip still fits. Try HELLO15. -->
+    <Border Width="320" HorizontalAlignment="Center" Margin="0,24">
+        <arc:CheckoutSummary x:Name="Summary">
+            <arc:CheckoutSummary.Item>
+                <arc:CheckoutSummaryItem Name="Sketchbook Pro, annual"
+                                         Description="Infinite canvases and backups for one maker"
+                                         Price="120"
+                                         Period="billed yearly" />
+            </arc:CheckoutSummary.Item>
+            <arc:CheckoutSummaryLine Id="annual" Label="Annual plan" Note="Three months free" Amount="-30" />
+            <arc:CheckoutSummary.Tax>
+                <arc:CheckoutSummaryTax Label="Sales tax" Rate="0.075" />
+            </arc:CheckoutSummary.Tax>
+        </arc:CheckoutSummary>
+    </Border>
+</UserControl>
