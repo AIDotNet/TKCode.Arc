@@ -33,6 +33,7 @@
 #include <mfapi.h>
 #include <mfidl.h>
 #include <mfmediaengine.h>
+#include <wincodec.h>
 
 #include <math.h>
 #include <stdarg.h>
@@ -135,6 +136,12 @@ struct tkv_player {
     int pool_height;
     int pool_next;
     int gpu_failed;          /* creating the shared pool failed once; GPU frames are not offered again */
+    int software;            /* the device has no video support: the engine runs without it, frames go through WIC */
+
+    IWICImagingFactory* wic;
+    IWICBitmap* wic_bitmap;
+    int wic_width;
+    int wic_height;
 
     ID3D11Texture2D* cpu_texture;
     ID3D11Texture2D* cpu_staging;
@@ -914,6 +921,18 @@ static void release_cpu(tkv_player* p)
     p->cpu_height = 0;
 }
 
+/* A device without video support (Microsoft Basic Render Driver, as in many VMs) stalls the engine at position 0 with no
+   error when it is handed over, so such a machine plays in software and hands out CPU frames only. */
+static int has_video_support(ID3D11Device* device)
+{
+    ID3D11VideoDevice* video = NULL;
+    if (FAILED(ID3D11Device_QueryInterface(device, &IID_ID3D11VideoDevice, (void**)&video))) {
+        return 0;
+    }
+    ID3D11VideoDevice_Release(video);
+    return 1;
+}
+
 TKV_API int32_t tkv_player_create(tkv_event_callback callback, void* context, const uint8_t* adapter_luid,
                                   tkv_player** player)
 {
@@ -941,30 +960,14 @@ TKV_API int32_t tkv_player_create(tkv_event_callback callback, void* context, co
     if (adapter != NULL) {
         IDXGIAdapter1_Release(adapter);
     }
-    if (SUCCEEDED(hr) && trace_enabled()) {
-        ID3D11VideoDevice* video = NULL;
-        IDXGIDevice* dxgi = NULL;
-        IDXGIAdapter* dxgi_adapter = NULL;
-        DXGI_ADAPTER_DESC desc;
-        memset(&desc, 0, sizeof desc);
-        HRESULT video_hr = ID3D11Device_QueryInterface(p->device, &IID_ID3D11VideoDevice, (void**)&video);
-        if (SUCCEEDED(ID3D11Device_QueryInterface(p->device, &IID_IDXGIDevice, (void**)&dxgi))) {
-            if (SUCCEEDED(IDXGIDevice_GetAdapter(dxgi, &dxgi_adapter))) {
-                IDXGIAdapter_GetDesc(dxgi_adapter, &desc);
-                IDXGIAdapter_Release(dxgi_adapter);
-            }
-            IDXGIDevice_Release(dxgi);
-        }
-        TKV_TRACE("device adapter='%ls' feature_level=0x%x video_device=0x%08lX", desc.Description,
-                  (unsigned)ID3D11Device_GetFeatureLevel(p->device), (unsigned long)video_hr);
-        if (video != NULL) {
-            ID3D11VideoDevice_Release(video);
-        }
-    }
     if (SUCCEEDED(hr)) {
         hr = ID3D11Device_QueryInterface(p->device, &IID_ID3D10Multithread, (void**)&p->multithread);
     }
     if (SUCCEEDED(hr)) {
+        p->software = !has_video_support(p->device);
+        TKV_TRACE("device feature_level=0x%x software=%d", (unsigned)ID3D11Device_GetFeatureLevel(p->device), p->software);
+    }
+    if (SUCCEEDED(hr) && !p->software) {
         /* The engine decodes and converts on its own threads with this device. */
         ID3D10Multithread_SetMultithreadProtected(p->multithread, TRUE);
         UINT token = 0;
@@ -1017,6 +1020,12 @@ TKV_API void tkv_player_destroy(tkv_player* p)
     release_pool(p);
     release_cpu(p);
     free(p->cpu_pixels);
+    if (p->wic_bitmap != NULL) {
+        IWICBitmap_Release(p->wic_bitmap);
+    }
+    if (p->wic != NULL) {
+        IWICImagingFactory_Release(p->wic);
+    }
     if (p->manager != NULL) {
         IMFDXGIDeviceManager_Release(p->manager);
     }
@@ -1415,13 +1424,70 @@ static void fit_size(int width, int height, int target_width, int target_height,
     *out_height = h < 1 ? 1 : h;
 }
 
+/* The software engine's frames: it can only transfer to a WIC bitmap without a DXGI manager. */
+static int32_t read_wic_frame(tkv_player* p, int w, int h, uint8_t* pixels)
+{
+    HRESULT hr = S_OK;
+    if (p->wic == NULL) {
+        hr = CoCreateInstance(&CLSID_WICImagingFactory, NULL, CLSCTX_INPROC_SERVER, &IID_IWICImagingFactory,
+                              (void**)&p->wic);
+    }
+    if (SUCCEEDED(hr) && (p->wic_bitmap == NULL || p->wic_width != w || p->wic_height != h)) {
+        if (p->wic_bitmap != NULL) {
+            IWICBitmap_Release(p->wic_bitmap);
+            p->wic_bitmap = NULL;
+        }
+        hr = IWICImagingFactory_CreateBitmap(p->wic, (UINT)w, (UINT)h, &GUID_WICPixelFormat32bppBGRA, WICBitmapCacheOnLoad,
+                                             &p->wic_bitmap);
+        p->wic_width = w;
+        p->wic_height = h;
+    }
+    if (FAILED(hr)) {
+        set_error_hr(p, "Creating the frame bitmap failed", hr);
+        return TKV_E_FAIL;
+    }
+    RECT dst = { 0, 0, w, h };
+    MFARGB border = { 0, 0, 0, 255 };
+    hr = IMFMediaEngine_TransferVideoFrame(p->engine, (IUnknown*)p->wic_bitmap, NULL, &dst, &border);
+    if (FAILED(hr)) {
+        set_error_hr(p, "TransferVideoFrame failed", hr);
+        return TKV_E_NO_FRAME;
+    }
+    WICRect area = { 0, 0, w, h };
+    IWICBitmapLock* lock = NULL;
+    hr = IWICBitmap_Lock(p->wic_bitmap, &area, WICBitmapLockRead, &lock);
+    UINT stride = 0;
+    UINT size = 0;
+    BYTE* data = NULL;
+    if (SUCCEEDED(hr)) {
+        hr = IWICBitmapLock_GetStride(lock, &stride);
+    }
+    if (SUCCEEDED(hr)) {
+        hr = IWICBitmapLock_GetDataPointer(lock, &size, &data);
+    }
+    if (SUCCEEDED(hr)) {
+        size_t row_bytes = (size_t)w * 4;
+        for (int y = 0; y < h; y++) {
+            memcpy(pixels + (size_t)y * row_bytes, data + (size_t)y * stride, row_bytes);
+        }
+    }
+    if (lock != NULL) {
+        IWICBitmapLock_Release(lock);
+    }
+    if (FAILED(hr)) {
+        set_error_hr(p, "Reading the frame bitmap failed", hr);
+        return TKV_E_FAIL;
+    }
+    return TKV_OK;
+}
+
 static int32_t acquire_cpu(tkv_player* p, int width, int height, const tkv_frame_request* request, double time,
                            tkv_frame* frame)
 {
     int w;
     int h;
     fit_size(width, height, request->target_width, request->target_height, &w, &h);
-    if (p->cpu_width != w || p->cpu_height != h || p->cpu_texture == NULL) {
+    if (!p->software && (p->cpu_width != w || p->cpu_height != h || p->cpu_texture == NULL)) {
         release_cpu(p);
         D3D11_TEXTURE2D_DESC desc;
         memset(&desc, 0, sizeof desc);
@@ -1462,6 +1528,13 @@ static int32_t acquire_cpu(tkv_player* p, int width, int height, const tkv_frame
 
     /* The engine scales to the destination rectangle and keeps the picture's aspect inside it; fit_size kept the
        aspect, so nothing is letterboxed here. */
+    if (p->software) {
+        int32_t read = read_wic_frame(p, w, h, p->cpu_pixels);
+        if (read != TKV_OK) {
+            return read;
+        }
+        goto done;
+    }
     RECT dst = { 0, 0, w, h };
     MFARGB border = { 0, 0, 0, 255 };
     HRESULT hr = IMFMediaEngine_TransferVideoFrame(p->engine, (IUnknown*)p->cpu_texture, NULL, &dst, &border);
@@ -1485,6 +1558,7 @@ static int32_t acquire_cpu(tkv_player* p, int width, int height, const tkv_frame
         set_error_hr(p, "Reading the frame back failed", hr);
         return TKV_E_FAIL;
     }
+done:
     /* BGRA from the engine carries alpha 255 for video; the ABI promises opaque pixels either way. */
     p->out_slot = -1;
     p->out_token = p->next_token++;
@@ -1508,7 +1582,7 @@ TKV_API int32_t tkv_player_acquire_frame(tkv_player* p, const tkv_frame_request*
         return TKV_E_INVALID_ARG;
     }
     int want_gpu = (request->accept & TKV_FRAME_GPU) != 0 && request->gpu_handle_type == TKV_GPU_D3D11_NT_HANDLE &&
-                   !p->gpu_failed;
+                   !p->gpu_failed && !p->software;
     int want_cpu = (request->accept & TKV_FRAME_CPU_BGRA) != 0;
     if (!want_gpu && !want_cpu) {
         return (request->accept & TKV_FRAME_GPU) != 0 ? TKV_E_UNSUPPORTED : TKV_E_INVALID_ARG;
