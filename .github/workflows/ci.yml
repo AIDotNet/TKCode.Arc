@@ -285,6 +285,8 @@ jobs:
 
       # The test project is an executable: on macOS its Main must own the main thread (AVPlayer), so it runs directly.
       - name: Test
+        env:
+          TKV_TRACE: ${{ runner.os == 'Windows' && '1' || '' }}
         run: dotnet run --project tests/TKCode.Arc.Video.Native.Tests -c Release
 
   # libghostty-vt for every RID, built from the commit pinned in native/ghostty/ghostty-upstream.json (+ overlays) with

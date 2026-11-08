@@ -232,6 +232,17 @@ public sealed class NativeVideoPlayerTests
     }
 
     [Fact]
+    public async Task A_clip_without_sound_plays()
+    {
+        var backend = RequireBackend();
+        using var player = backend.CreatePlayer();
+        await LoadClipAsync(player, "red-blue-2s-no-audio.mp4");
+        player.Play();
+        await WaitUntilAsync(() => player.Position > TimeSpan.FromSeconds(0.3), "a clip without sound to play");
+        player.Pause();
+    }
+
+    [Fact]
     public async Task Mute_keeps_volume_and_playback()
     {
         var backend = RequireBackend();
@@ -443,13 +454,14 @@ public sealed class NativeVideoPlayerTests
         return (NativeVideoBackend)ArcVideo.Backend;
     }
 
-    private static async Task LoadClipAsync(IVideoPlayer player)
+    private static async Task LoadClipAsync(IVideoPlayer player, string? file = null)
     {
-        File.Exists(ClipPath).ShouldBeTrue(ClipPath);
+        var path = file is null ? ClipPath : Path.Combine(AppContext.BaseDirectory, "Media", file);
+        File.Exists(path).ShouldBeTrue(path);
         s_watched = player;
         s_lastFailure = null;
         player.Failed += (_, e) => s_lastFailure = $"{e.Kind}: {e.Message}";
-        await player.LoadAsync(VideoSource.FromFile(ClipPath)).WaitAsync(s_timeout);
+        await player.LoadAsync(VideoSource.FromFile(path)).WaitAsync(s_timeout);
         player.State.ShouldBe(VideoPlaybackState.Paused, $"load ended in {player.State}");
     }
 

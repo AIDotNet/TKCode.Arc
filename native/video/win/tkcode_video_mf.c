@@ -49,6 +49,26 @@ typedef HRESULT (WINAPI *pfn_MFStartup)(ULONG version, DWORD flags);
 typedef HRESULT (WINAPI *pfn_MFCreateAttributes)(IMFAttributes** attributes, UINT32 initial_size);
 typedef HRESULT (WINAPI *pfn_MFCreateDXGIDeviceManager)(UINT* reset_token, IMFDXGIDeviceManager** manager);
 
+/* TKV_TRACE=1 writes what the engine does to stderr: the only view of a stalled pipeline on a machine out of reach. */
+static int trace_enabled(void)
+{
+    static LONG volatile enabled = -1;
+    if (enabled < 0) {
+        InterlockedExchange(&enabled, GetEnvironmentVariableA("TKV_TRACE", NULL, 0) > 0 ? 1 : 0);
+    }
+    return enabled == 1;
+}
+
+#define TKV_TRACE(...)                      \
+    do {                                    \
+        if (trace_enabled()) {              \
+            fprintf(stderr, "[tkv] ");      \
+            fprintf(stderr, __VA_ARGS__);   \
+            fprintf(stderr, "\n");          \
+            fflush(stderr);                 \
+        }                                   \
+    } while (0)
+
 static INIT_ONCE g_init_once = INIT_ONCE_STATIC_INIT;
 static int32_t g_init_result = TKV_E_FAIL;
 static HMODULE g_mfplat;
@@ -519,6 +539,9 @@ static void announce_loaded(tkv_player* p)
 
 static void handle_event(tkv_player* p, DWORD event, DWORD_PTR param1, DWORD param2)
 {
+    TKV_TRACE("event %lu param1=%llu param2=0x%08lX time=%.3f paused=%d", (unsigned long)event,
+              (unsigned long long)param1, (unsigned long)param2, IMFMediaEngine_GetCurrentTime(p->engine),
+              (int)IMFMediaEngine_IsPaused(p->engine));
     switch (event) {
     case MF_MEDIA_ENGINE_EVENT_LOADSTART:
         emit_state(p, TKV_STATE_LOADING, 0);
@@ -918,6 +941,26 @@ TKV_API int32_t tkv_player_create(tkv_event_callback callback, void* context, co
     if (adapter != NULL) {
         IDXGIAdapter1_Release(adapter);
     }
+    if (SUCCEEDED(hr) && trace_enabled()) {
+        ID3D11VideoDevice* video = NULL;
+        IDXGIDevice* dxgi = NULL;
+        IDXGIAdapter* dxgi_adapter = NULL;
+        DXGI_ADAPTER_DESC desc;
+        memset(&desc, 0, sizeof desc);
+        HRESULT video_hr = ID3D11Device_QueryInterface(p->device, &IID_ID3D11VideoDevice, (void**)&video);
+        if (SUCCEEDED(ID3D11Device_QueryInterface(p->device, &IID_IDXGIDevice, (void**)&dxgi))) {
+            if (SUCCEEDED(IDXGIDevice_GetAdapter(dxgi, &dxgi_adapter))) {
+                IDXGIAdapter_GetDesc(dxgi_adapter, &desc);
+                IDXGIAdapter_Release(dxgi_adapter);
+            }
+            IDXGIDevice_Release(dxgi);
+        }
+        TKV_TRACE("device adapter='%ls' feature_level=0x%x video_device=0x%08lX", desc.Description,
+                  (unsigned)ID3D11Device_GetFeatureLevel(p->device), (unsigned long)video_hr);
+        if (video != NULL) {
+            ID3D11VideoDevice_Release(video);
+        }
+    }
     if (SUCCEEDED(hr)) {
         hr = ID3D11Device_QueryInterface(p->device, &IID_ID3D10Multithread, (void**)&p->multithread);
     }
@@ -1035,6 +1078,7 @@ TKV_API int32_t tkv_player_play(tkv_player* p)
         return TKV_E_INVALID_ARG;
     }
     HRESULT hr = IMFMediaEngine_Play(p->engine);
+    TKV_TRACE("play hr=0x%08lX", (unsigned long)hr);
     if (FAILED(hr)) {
         set_error_hr(p, "Play failed", hr);
         return TKV_E_FAIL;
@@ -1477,6 +1521,7 @@ TKV_API int32_t tkv_player_acquire_frame(tkv_player* p, const tkv_frame_request*
     LONGLONG pts = -1;
     int force = InterlockedExchange(&p->force_frame, 0) != 0;
     HRESULT hr = IMFMediaEngine_OnVideoStreamTick(p->engine, &pts);
+    TKV_TRACE("tick hr=0x%08lX pts=%lld force=%d", (unsigned long)hr, (long long)pts, force);
     if (hr != S_OK) {
         if (!force || FAILED(hr)) {
             if (force) {
