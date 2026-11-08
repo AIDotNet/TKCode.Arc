@@ -15,20 +15,22 @@ namespace TKCode.Arc.Gallery.Shell;
 
 /// <summary>
 /// The top bar of uiarc.dev: brand logo (back to the home page), the menu of sections, a GitHub button with the star
-/// count, a search shortcut, the language menu, the Appearance popover and the light / dark toggle. When the buttons do
-/// not fit beside the centred menu, the bar gives up room step by step (<see cref="FitLevel"/>).
+/// count, a search shortcut, the language menu, the Appearance popover and the light / dark toggle, then what only its
+/// host has: the site's download button or the desktop app's settings menu. When the buttons do not fit beside the menu,
+/// the bar gives up room step by step (<see cref="FitLevel"/>).
 /// </summary>
 public sealed class GalleryTopBar : Border
 {
-    private const string ChangelogClassName = "DocsChangelog";
     private const double SideMargin = 24;
 
     /// <summary>The header's content is at most this wide (its <c>InnerMaxWidth</c>).</summary>
     private const double HeaderMaxWidth = 1200;
     private const double MenuButtonWidth = 44;
     private const double Gap = 16;
+    private const double MenuInset = 32;
     private const double SearchMinWidth = 148;
     private const int MostCompactLevel = 7;
+    private const string BrandName = "TKCode";
 
     private readonly GalleryTheme _theme;
     private readonly Button _themeToggle;
@@ -42,12 +44,17 @@ public sealed class GalleryTopBar : Border
     private readonly Button _language;
     private readonly TextBlock _languageName;
     private readonly MenuSurface _languageMenu;
-    private readonly string[] _navValues = ["components", "blocks", "docs", "changelog", "friends", "demo"];
+    private readonly string[] _navValues = ["products", "components", "blocks", "docs", "demo"];
     private readonly GalleryShellLangResourceKind[] _navLabels =
     [
-        GalleryShellLangResourceKind.Components, GalleryShellLangResourceKind.Category_Blocks, GalleryShellLangResourceKind.Category_Docs,
-        GalleryShellLangResourceKind.NavChangelog, GalleryShellLangResourceKind.NavFriends, GalleryShellLangResourceKind.NavDemo
+        GalleryShellLangResourceKind.NavProducts, GalleryShellLangResourceKind.Components, GalleryShellLangResourceKind.Category_Blocks,
+        GalleryShellLangResourceKind.Category_Docs, GalleryShellLangResourceKind.NavDemo
     ];
+    private readonly List<(SiteHeaderLink Link, GalleryShellLangResourceKind Label, GalleryShellLangResourceKind Text, Func<GalleryRoute> Route)> _productLinks = new();
+    private readonly SiteHeaderFeature _productFeature = new();
+    private readonly Button? _download;
+    private readonly TextBlock? _downloadLabel;
+    private readonly Button? _gear;
     private double _navWidth = 420;
     private double _brandWidth = 150;
     private readonly GalleryShell _shell;
@@ -65,13 +72,12 @@ public sealed class GalleryTopBar : Border
         _shell = shell;
         Control owner = shell;
 
-        // The site header block draws the brand and the section menu (a capsule, as on uiarc.dev); the buttons ride in its
-        // trailing slot. Components, Blocks, Docs, Changelog, Friends and Demo; Changelog is a page of the Docs section and Demo
-        // opens the Northstar dashboard demo (/demo).
+        // The site header block draws the brand and the section menu; the buttons ride in its trailing slot. Products opens a
+        // mega menu; Components, Blocks and Docs open their sections and Demo the Northstar dashboard demo (/demo).
         _header = new SiteHeader
         {
-            Variant = SiteHeaderVariant.Simple,
-            BrandName = "Arc Gallery",
+            Variant = SiteHeaderVariant.Mega,
+            BrandName = BrandName,
             // The logo carries its own light rounded tile, so it reads the same on the light and the dark bar.
             BrandMark = GalleryBrand.CreateLogo(),
             IsSticky = false,
@@ -83,6 +89,7 @@ public sealed class GalleryTopBar : Border
         {
             _header.Items.Add(new SiteHeaderItem { Value = _navValues[i], Label = GalleryText.Get(_navLabels[i]) });
         }
+        BuildProductsMenu(shell);
         GalleryText.Bind(_header, Avalonia.Automation.AutomationProperties.NameProperty, GalleryShellLangResourceKind.GoHome);
         _header.Navigate += (_, e) =>
         {
@@ -97,10 +104,28 @@ public sealed class GalleryTopBar : Border
                         "components" => shell.RouteFor(GalleryRouteKind.Components),
                         "blocks" => shell.RouteFor(GalleryRouteKind.Blocks),
                         "docs" => shell.RouteFor(GalleryRouteKind.Docs),
-                        "changelog" => GalleryRoute.To(GalleryCatalog.Docs.Entries.First(entry => entry.ClassName == ChangelogClassName)),
                         "demo" => GalleryRoute.Demo(),
-                        _ => GalleryRoute.Friends
+                        _ => GalleryRoute.StreamMark
                     });
+                    break;
+                case SiteHeaderNavigateKind.PanelLink:
+                    foreach (var (link, _, _, route) in _productLinks)
+                    {
+                        if (ReferenceEquals(link, e.Link))
+                        {
+                            shell.Navigate(route());
+                        }
+                    }
+                    break;
+                case SiteHeaderNavigateKind.Feature:
+                    if (GalleryHost.IsWeb)
+                    {
+                        shell.ShowDownload();
+                    }
+                    else
+                    {
+                        shell.Navigate(GalleryRoute.Settings(GallerySettingsView.AboutPage));
+                    }
                     break;
             }
         };
@@ -143,6 +168,16 @@ public sealed class GalleryTopBar : Border
         _right.Children.Add(_language);
         _right.Children.Add(_appearance);
         _right.Children.Add(_themeToggle);
+        if (GalleryHost.IsWeb)
+        {
+            (_download, _downloadLabel) = BuildDownloadButton(shell);
+            _right.Children.Add(_download);
+        }
+        else
+        {
+            _gear = BuildSettingsMenu(shell);
+            _right.Children.Add(_gear);
+        }
 
         _header.TrailingContent = _right;
         _header.Label = GalleryText.Get(GalleryShellLangResourceKind.GoHome);
@@ -159,6 +194,7 @@ public sealed class GalleryTopBar : Border
             {
                 _header.Items[i].Label = GalleryText.Get(_navLabels[i]);
             }
+            SyncProductsMenu();
             SyncLanguage();
             _fittedLevel = -1;
             Dispatcher.UIThread.Post(InvalidateMeasure);
@@ -168,7 +204,8 @@ public sealed class GalleryTopBar : Border
     /// <summary>
     /// How much room the bar has given up: 0 shows everything; 1 shows only the icon of Appearance, 2 also of the language
     /// button, 3 also drops the shortcut hint of Search, 4 also folds the section menu into the header's menu button, 5 also
-    /// shortens Search to its icon, 6 also hides the GitHub button, 7 also shortens the brand to "Arc" (a phone).
+    /// shortens Search to its icon, 6 also hides the GitHub button, 7 also leaves only the brand's logo (a phone). The site's
+    /// download button shows only its icon from 3 and goes at 5: on a phone there is nothing to install.
     /// </summary>
     public int FitLevel => _fitLevel;
 
@@ -251,8 +288,8 @@ public sealed class GalleryTopBar : Border
             // The menu is folded away: brand and buttons share the bar, with the header's menu button after the buttons.
             return _brandWidth + Gap + right + MenuButtonWidth <= inner;
         }
-        // The menu follows the brand (16 further in) and the buttons end the bar.
-        return _brandWidth + Gap + 16 + _navWidth + Gap + right <= inner;
+        // The menu follows the brand and the buttons end the bar; the mega menu's items keep a wider gap than Gap to both.
+        return _brandWidth + MenuInset + _navWidth + MenuInset + right <= inner;
     }
 
     /// <summary>Takes the widths of the header's brand and menu while they are shown (the header hides the menu when it folds).</summary>
@@ -310,7 +347,14 @@ public sealed class GalleryTopBar : Border
         SetIconOnly(_search, null, searchIconOnly, GalleryShellLangResourceKind.Search);
         _header.CollapseWidth = level >= 4 ? double.MaxValue : 0;
         _github.IsVisible = level < 6;
-        _header.BrandName = level >= 7 ? "Arc" : "Arc Gallery";
+        _header.BrandName = level >= 7 ? string.Empty : BrandName;
+        if (_download is not null)
+        {
+            _download.IsVisible = level < 5 && GalleryHost.ClientOs != GalleryClientOs.Mobile;
+            SetIconOnly(_download, _downloadLabel, level >= 3, GalleryShellLangResourceKind.NavDownload);
+            Remeasure(_download);
+            Remeasure(_downloadLabel!);
+        }
 
         // A control re-measures only itself; its parents learn of a new size in the next layout pass. Fits measures now, so
         // mark everything between each changed part and the bar.
@@ -410,6 +454,93 @@ public sealed class GalleryTopBar : Border
         }
     }
 
+    /// <summary>The Products mega menu: the two products first, then the add-on packages and the templates.</summary>
+    private void BuildProductsMenu(GalleryShell shell)
+    {
+        void Add(GalleryShellLangResourceKind label, GalleryShellLangResourceKind text, Geometry icon, Func<GalleryRoute> route)
+        {
+            var link = new SiteHeaderLink { Icon = icon };
+            _productLinks.Add((link, label, text, route));
+            _header.Items[0].Links.Add(link);
+        }
+
+        Add(GalleryShellLangResourceKind.ProductArc, GalleryShellLangResourceKind.ProductArcNav, ArcIcons.Layers, () => shell.RouteFor(GalleryRouteKind.Components));
+        Add(GalleryShellLangResourceKind.StreamMarkName, GalleryShellLangResourceKind.ProductStreamMarkNav, ArcIcons.Zap, () => GalleryRoute.StreamMark);
+        Add(GalleryShellLangResourceKind.Category_Blocks, GalleryShellLangResourceKind.ProductBlocksNav, ArcIcons.LayoutTemplate, () => shell.RouteFor(GalleryRouteKind.Blocks));
+        Add(GalleryShellLangResourceKind.ProductSpecial, GalleryShellLangResourceKind.ProductSpecialNav, ArcIcons.Sparkles, () => GalleryRoute.To(GalleryCatalog.Special[0].AllEntries.First()));
+        Add(GalleryShellLangResourceKind.ProductMobile, GalleryShellLangResourceKind.ProductMobileNav, GalleryIcons.Smartphone, () => GalleryRoute.To(GalleryCatalog.Mobile.Entries[0]));
+        Add(GalleryShellLangResourceKind.ProductTemplates, GalleryShellLangResourceKind.ProductTemplatesNav, ArcIcons.Package, () => GallerySite.Docs("DocsTemplates"));
+        _header.Items[0].Feature = _productFeature;
+        SyncProductsMenu();
+    }
+
+    private void SyncProductsMenu()
+    {
+        foreach (var (link, label, text, _) in _productLinks)
+        {
+            link.Label = GalleryText.Get(label);
+            link.Description = GalleryText.Get(text);
+        }
+        _productFeature.Title = GalleryText.Get(GalleryHost.IsWeb ? GalleryShellLangResourceKind.ProductFeatureWebTitle : GalleryShellLangResourceKind.ProductFeatureDesktopTitle);
+        _productFeature.Description = GalleryText.Get(GalleryHost.IsWeb ? GalleryShellLangResourceKind.ProductFeatureWebText : GalleryShellLangResourceKind.ProductFeatureDesktopText);
+    }
+
+    private static (Button Button, TextBlock Label) BuildDownloadButton(GalleryShell shell)
+    {
+        var label = new TextBlock { VerticalAlignment = VerticalAlignment.Center };
+        GalleryText.Bind(label, TextBlock.TextProperty, GalleryShellLangResourceKind.NavDownload);
+        var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
+        row.Children.Add(new ArcGlyph { Data = ArcIcons.Download, Size = 16, VerticalAlignment = VerticalAlignment.Center });
+        row.Children.Add(label);
+        var button = new Button { Variant = ButtonVariant.Primary, Size = ControlSize.Small, Content = row, IsPressScaleEnabled = false };
+        GalleryText.Bind(button, Avalonia.Automation.AutomationProperties.NameProperty, GalleryShellLangResourceKind.NavDownload);
+        button.Click += (_, _) => shell.ShowDownload();
+        return (button, label);
+    }
+
+    /// <summary>The desktop app's settings menu: Appearance, Language, Check for updates and About.</summary>
+    private Button BuildSettingsMenu(GalleryShell shell)
+    {
+        var menu = new MenuSurface { Variant = MenuSurfaceVariant.Dropdown, Alignment = MenuAlignment.End, AnchorGap = 6 };
+        GalleryText.Bind(menu, Avalonia.Automation.AutomationProperties.NameProperty, GalleryShellLangResourceKind.Settings);
+
+        void Add(GalleryShellLangResourceKind label, Geometry icon, Action click)
+        {
+            var entry = new MenuEntry { Icon = new ArcGlyph { Data = icon, Size = 15 } };
+            GalleryText.Bind(entry, MenuEntry.HeaderProperty, label);
+            entry.Click += (_, _) => click();
+            menu.Items.Add(entry);
+        }
+
+        Add(GalleryShellLangResourceKind.Appearance, ArcIcons.Palette, () => shell.Navigate(GalleryRoute.Settings(GallerySettingsView.AppearancePage)));
+        Add(GalleryShellLangResourceKind.Language, ArcIcons.Languages, () => shell.Navigate(GalleryRoute.Settings(GallerySettingsView.LanguagePage)));
+        Add(GalleryShellLangResourceKind.SettingsCheckUpdates, ArcIcons.RefreshCw, shell.CheckForUpdates);
+        Add(GalleryShellLangResourceKind.SettingsAboutApp, ArcIcons.Info, () => shell.Navigate(GalleryRoute.Settings(GallerySettingsView.AboutPage)));
+        SettingsMenu = menu;
+
+        var button = new Button
+        {
+            Variant = ButtonVariant.Secondary,
+            Size = ControlSize.Small,
+            Padding = new Thickness(0),
+            MinWidth = 36,
+            Content = new ArcGlyph { Data = ArcIcons.Settings, Size = 16 }
+        };
+        GalleryText.Bind(button, Avalonia.Automation.AutomationProperties.NameProperty, GalleryShellLangResourceKind.Settings);
+        GalleryText.Bind(button, Tooltip.TipProperty, GalleryShellLangResourceKind.Settings);
+        DropdownMenu.SetMenu(button, menu);
+        return button;
+    }
+
+    /// <summary>The desktop app's settings menu; null on the site.</summary>
+    public MenuSurface? SettingsMenu { get; private set; }
+
+    /// <summary>The desktop app's settings button; null on the site.</summary>
+    public Button? SettingsButton => _gear;
+
+    /// <summary>The site's download button; null in the desktop app.</summary>
+    public Button? DownloadButton => _download;
+
     /// <summary>The language button of the bar; it opens the language menu.</summary>
     public Button LanguageButton => _language;
 
@@ -449,8 +580,8 @@ public sealed class GalleryTopBar : Border
         {
             GalleryRouteKind.Components => "components",
             GalleryRouteKind.Blocks => "blocks",
-            GalleryRouteKind.Docs => route.Entry?.ClassName == ChangelogClassName ? "changelog" : "docs",
-            GalleryRouteKind.Friends => "friends",
+            GalleryRouteKind.Docs => "docs",
+            GalleryRouteKind.StreamMark => "products",
             GalleryRouteKind.Demo => "demo",
             _ => null
         };

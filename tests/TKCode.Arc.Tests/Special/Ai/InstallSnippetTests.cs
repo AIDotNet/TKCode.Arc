@@ -656,10 +656,7 @@ public class InstallSnippetTests
         try
         {
             var view = Step(card, InstallSnippetStep.Code).CodeView!;
-            // Highlighting runs on the thread pool, and every code view in the process shares one TextMate engine that
-            // tokenizes one snippet at a time, so work left by earlier tests (every gallery page's code blocks) can queue
-            // ahead of this one on a slow CI runner (timed out at 30 s once on a two-core runner). The bound only turns a
-            // real stall into a failure instead of a hung run.
+            // Highlighting runs on the thread pool. The bound only turns a real stall into a failure instead of a hung run.
             await view.WhenHighlighted.WaitAsync(TimeSpan.FromMinutes(2));
             Pump();
             view.HasTokens.ShouldBeTrue();

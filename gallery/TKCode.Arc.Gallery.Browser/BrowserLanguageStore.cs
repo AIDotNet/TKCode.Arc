@@ -13,12 +13,18 @@ internal sealed partial class BrowserLanguageStore : IGalleryLanguageStore
     /// <summary>The browser's preferred languages, most preferred first (for example <c>zh-TW, en-US</c>).</summary>
     public static string[] Preferred() => Languages().Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
+    /// <summary>The browser's user agent; an iPad that claims to be a Mac is reported as an iPad.</summary>
+    public static string UserAgent() => Agent();
+
     public string? Read() => Load() is { Length: > 0 } tag ? tag : null;
 
     public void Write(string languageTag) => Save(languageTag);
 
     [JSImport("preferred", "arc-lang")]
     private static partial string Languages();
+
+    [JSImport("agent", "arc-lang")]
+    private static partial string Agent();
 
     [JSImport("read", "arc-lang")]
     private static partial string Load();

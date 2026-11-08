@@ -165,6 +165,8 @@ dotnetRuntime.setModuleImports('arc-stars', {
 const languageKey = 'arc.gallery.language';
 dotnetRuntime.setModuleImports('arc-lang', {
     preferred: () => (navigator.languages?.length ? navigator.languages : [navigator.language ?? '']).join(','),
+    // iPadOS asks for desktop pages and says Macintosh; only the touch points give it away.
+    agent: () => (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1 ? 'iPad' : navigator.userAgent),
     read: () => {
         try {
             return localStorage.getItem(languageKey) ?? '';
@@ -180,6 +182,24 @@ dotnetRuntime.setModuleImports('arc-lang', {
         }
     }
 });
+
+// Avalonia.Browser (12.1.4) types every keydown whose key is one character, but macOS browsers keep the letter in key while an input
+// method owns the keystroke (keyCode 229). The letter would land in the text box, and writing the box's text back to Avalonia's input
+// element ends the composition, so pinyin could not be typed. Those keydowns stay away from Avalonia; the input method answers with
+// composition events, which Avalonia handles. It can also insert text without composing (Chinese punctuation), and Avalonia reads
+// such text only from the end of a composition, so that is what it is given.
+let imeKeystroke = false;
+addEventListener('keydown', event => {
+    imeKeystroke = event.isComposing || event.keyCode === 229;
+    if (imeKeystroke) {
+        event.stopImmediatePropagation();
+    }
+}, { capture: true });
+addEventListener('input', event => {
+    if (imeKeystroke && !event.isComposing && event.inputType === 'insertText' && event.data && event.target.classList?.contains('avalonia-input-element')) {
+        event.target.dispatchEvent(new CompositionEvent('compositionend', { data: event.data, bubbles: true }));
+    }
+}, { capture: true });
 
 // The second argument is the document's base address: the screenshots and lazy assemblies are relative to it.
 await dotnetRuntime.runMain(config.mainAssemblyName, [globalThis.location.href, document.baseURI]);

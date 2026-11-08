@@ -6,29 +6,22 @@ using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Avalonia.Styling;
 
 namespace TKCode.Arc.Gallery.Shell;
 
 /// <summary>
-/// The gallery's home page: a hero with the two ways in (the components, the docs) and the install command, four live
-/// examples that open their pages, the size of the library in numbers, and a footer. The hero is drawn, with no live
-/// content, so the first frame stays cheap in the browser; an example is built when its card first scrolls into view.
+/// The home page, written as the product site of TKCode: the theme panel beside a sample app (change a value and the page
+/// follows), the two products, StreamMark streaming a reply, live examples, every component, a screen taken apart, the add-on
+/// packages, the sponsor and friends, and the footer. The site says it runs in WebAssembly and recommends the desktop app;
+/// the desktop app replaces that with its version and updates (<see cref="GalleryHost"/>). Everything below the first screen
+/// is built when it first comes into view, so the first frame stays cheap in the browser.
 /// </summary>
 public sealed class GalleryHomeView : UserControl
 {
-    private const double ContentMaxWidth = 1120;
-    private const double OneColumnBelow = 760;
-    private const double ThreeColumnsFrom = 1000;
-
-    /// <summary>The languages the hosts offer (en-US, zh-CN, zh-TW).</summary>
-    private const int LanguageCount = 3;
-
     private const string InstallCommand = "dotnet add package TKCode.Arc --prerelease";
 
     /// <summary>The examples on the cards: the page they open and the demo they show (<c>Component.Name</c>).</summary>
@@ -44,127 +37,268 @@ public sealed class GalleryHomeView : UserControl
 
     private readonly GalleryShell _shell;
     private readonly List<LiveCard> _cards = new();
+    private readonly ScrollViewer _scroll;
+    private readonly TextBlock _updateTitle = GalleryUi.Text(string.Empty, ArcDesignTokenKind.Foreground, 14, FontWeight.Medium);
+    private readonly TextBlock _updateHint = GalleryUi.Text(string.Empty, ArcDesignTokenKind.TextMuted, 12.5);
+    private bool _touched;
 
     public GalleryHomeView(GalleryShell shell)
     {
         _shell = shell;
-        // Stretch with a maximum width: the column fills a narrow window and is centered in a wide one.
-        var column = new StackPanel { Spacing = 72, MaxWidth = ContentMaxWidth, HorizontalAlignment = HorizontalAlignment.Stretch };
+        var column = new StackPanel();
         column.Children.Add(BuildHero());
+        column.Children.Add(BuildProducts());
+        column.Children.Add(BuildStream());
         column.Children.Add(BuildLive());
+        Atlas = new GalleryAtlas(shell);
+        column.Children.Add(Atlas);
         column.Children.Add(BuildExplode());
-        column.Children.Add(BuildStats());
-        column.Children.Add(BuildFriends());
-        column.Children.Add(BuildCta());
-        column.Children.Add(BuildFooter());
-        var scroll = new ScrollViewer
+        column.Children.Add(BuildExtras());
+        if (GalleryHost.IsWeb)
         {
-            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
-            BringIntoViewOnFocusChange = false,
-            Content = new Border { Padding = new Thickness(24, 24, 24, 48), Child = column }
-        };
-        KeepAtTopUntilTouched(scroll);
-        Content = scroll;
+            Download = new GalleryDownloadSection();
+            column.Children.Add(Download);
+        }
+        column.Children.Add(BuildFriends());
+        column.Children.Add(GallerySiteFooter.Create(shell, GalleryHost.IsWeb ? ShowDownload : null));
+        _scroll = GallerySite.Page(column, out _);
+        KeepAtTopUntilTouched(_scroll);
+        Content = _scroll;
+
+        if (GalleryHost.IsDesktop)
+        {
+            AttachedToVisualTree += (_, _) => GalleryUpdates.Changed += SyncUpdate;
+            DetachedFromVisualTree += (_, _) => GalleryUpdates.Changed -= SyncUpdate;
+            GalleryText.Track(this, SyncUpdate);
+        }
     }
+
+    /// <summary>The cards of the live examples, in order.</summary>
+    public IReadOnlyList<LiveCard> Cards => _cards;
+
+    /// <summary>The section with every component.</summary>
+    internal GalleryAtlas Atlas { get; }
+
+    /// <summary>The recommendation of the desktop app; null in the desktop app.</summary>
+    internal GalleryDownloadSection? Download { get; }
+
+    /// <summary>The theme panel beside the sample app.</summary>
+    internal GalleryThemeTuner Tuner { get; private set; } = null!;
+
+    /// <summary>The line under the hero that says this page runs in WebAssembly; null in the desktop app.</summary>
+    internal Alert? WebNote { get; private set; }
+
+    /// <summary>Scrolls to the recommendation of the desktop app.</summary>
+    public void ShowDownload()
+    {
+        if (Download is { } section)
+        {
+            _touched = true;
+            section.BringIntoView(new Rect(section.Bounds.Size));
+        }
+    }
+
+    /// <summary>Hands the scroll over, as the first wheel, key or press does (tools that scroll the page themselves).</summary>
+    public void MarkTouched() => _touched = true;
 
     /// <summary>
     /// The page opens at the top and stays there until the visitor scrolls. A live example that takes the focus or asks to be
     /// brought into view when it is built (the cards and the exploded view are built as they come into view) would otherwise
     /// carry the page away from the top; the first wheel, key or press hands the scroll over.
     /// </summary>
-    private static void KeepAtTopUntilTouched(ScrollViewer scroll)
+    private void KeepAtTopUntilTouched(ScrollViewer scroll)
     {
-        var touched = false;
-        void Touch(object? sender, RoutedEventArgs e) => touched = true;
+        void Touch(object? sender, RoutedEventArgs e) => _touched = true;
         scroll.AddHandler(PointerWheelChangedEvent, Touch, RoutingStrategies.Tunnel);
         scroll.AddHandler(PointerPressedEvent, Touch, RoutingStrategies.Tunnel);
         scroll.AddHandler(KeyDownEvent, Touch, RoutingStrategies.Tunnel);
         scroll.ScrollChanged += (_, _) =>
         {
-            if (!touched && scroll.Offset.Y > 0)
+            if (!_touched && scroll.Offset.Y > 0)
             {
                 scroll.Offset = default;
             }
         };
     }
 
-    /// <summary>The cards of the live examples, in order.</summary>
-    public IReadOnlyList<LiveCard> Cards => _cards;
-
     #region Hero
+
+    /// <summary>The aurora card that opens a product page.</summary>
+    internal static Control HeroCard(Control content)
+    {
+        var padding = new Border { Padding = new Thickness(40, 44), Child = content };
+        padding.SizeChanged += (_, e) => padding.Padding = e.NewSize.Width < GallerySite.PhoneWidth ? new Thickness(20, 28) : new Thickness(40, 44);
+        var surface = new AuroraSurface();
+        surface.Children.Add(padding);
+        var hero = new Border { BorderThickness = new Thickness(1), ClipToBounds = true, Child = surface };
+        ArcTokens.Bind(hero, Border.BorderBrushProperty, ArcDesignTokenKind.BorderSubtle);
+        ArcTokens.Bind(hero, Border.CornerRadiusProperty, ArcDesignTokenKind.RadiusSurface);
+        return hero;
+    }
 
     private Control BuildHero()
     {
-        var badge = new Badge { Tone = BadgeTone.Info, Icon = new ArcGlyph { Data = ArcIcons.Sparkles, Size = 12 }, HorizontalAlignment = HorizontalAlignment.Center };
-        GalleryText.Bind(badge, ContentControl.ContentProperty, GalleryShellLangResourceKind.HomeBadge);
+        var web = GalleryHost.IsWeb;
+        var badge = new Badge { Tone = BadgeTone.Info, Icon = new ArcGlyph { Data = ArcIcons.Sparkles, Size = 12 }, HorizontalAlignment = HorizontalAlignment.Left };
+        GalleryText.Bind(badge, ContentControl.ContentProperty, web ? GalleryShellLangResourceKind.HomeBadge : GalleryShellLangResourceKind.HomeDesktopBadge);
 
-        var title = Reveal(GalleryShellLangResourceKind.HomeTitle, TextLevel.H1, TimeSpan.Zero, center: true);
+        var title = GallerySite.Reveal(web ? GalleryShellLangResourceKind.HomeTitle : GalleryShellLangResourceKind.HomeDesktopTitle, TextLevel.H1);
 
-        var subtitle = new TextReveal { Level = TextLevel.Paragraph, Delay = TimeSpan.FromMilliseconds(200), HorizontalAlignment = HorizontalAlignment.Center };
-        ArcTokens.Bind(subtitle, TextReveal.ForegroundProperty, ArcDesignTokenKind.TextSecondary);
-        GalleryText.BindFormat(subtitle, TextReveal.TextProperty, GalleryShellLangResourceKind.HomeSubtitle,
-            GalleryCatalog.Count, GalleryCatalog.Categories.Length, GalleryCatalog.Blocks.AllEntries.Count());
-
-        var explore = new Button { Variant = ButtonVariant.Primary, Size = ControlSize.Medium, Content = WithArrow(GalleryShellLangResourceKind.HomeExplore) };
-        explore.Click += (_, _) => _shell.Navigate(_shell.RouteFor(GalleryRouteKind.Components));
-        var docs = new Button { Variant = ButtonVariant.Secondary, Size = ControlSize.Medium, Content = WithArrow(GalleryShellLangResourceKind.HomeReadDocs) };
-        docs.Click += (_, _) => _shell.Navigate(_shell.RouteFor(GalleryRouteKind.Docs));
-        // The dashboard demo: /demo, which opens its overview.
-        var demo = new Button { Variant = ButtonVariant.Secondary, Size = ControlSize.Medium, Content = WithArrow(GalleryShellLangResourceKind.HomeDemo) };
-        demo.Click += (_, _) => _shell.Navigate(GalleryRoute.Demo());
-        var actions = new WrapPanel { Orientation = Orientation.Horizontal, ItemSpacing = 12, LineSpacing = 12, HorizontalAlignment = HorizontalAlignment.Center };
-        actions.Children.Add(explore);
-        actions.Children.Add(docs);
-        actions.Children.Add(demo);
-
-        var command = GalleryUi.Mono($"$ {InstallCommand}", ArcDesignTokenKind.TextSecondary, 13);
-        command.VerticalAlignment = VerticalAlignment.Center;
-        var copy = new CopyButton { Value = InstallCommand, IsIconOnly = true };
-        var install = new Border
+        TextBlock subtitle;
+        if (web)
         {
-            Padding = new Thickness(14, 4, 6, 4),
-            CornerRadius = new CornerRadius(12),
-            BorderThickness = new Thickness(1),
-            HorizontalAlignment = HorizontalAlignment.Center,
-            Child = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10, Children = { command, copy } }
-        };
-        ArcTokens.Bind(install, Border.BackgroundProperty, ArcDesignTokenKind.Surface);
-        ArcTokens.Bind(install, Border.BorderBrushProperty, ArcDesignTokenKind.BorderSubtle);
+            subtitle = GallerySite.Format(GalleryShellLangResourceKind.HomeSubtitle, ArcDesignTokenKind.TextSecondary, 17, GalleryCatalog.Count);
+        }
+        else
+        {
+            subtitle = GallerySite.Text(GalleryShellLangResourceKind.HomeDesktopSubtitle, ArcDesignTokenKind.TextSecondary, 17);
+        }
 
-        var content = new StackPanel { Spacing = 20, VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Center, Margin = new Thickness(24, 80) };
+        var explore = GallerySite.Action(GalleryShellLangResourceKind.HomeExplore, ButtonVariant.Primary, () => _shell.Navigate(_shell.RouteFor(GalleryRouteKind.Components)), ArcIcons.ArrowRight);
+        var docs = GallerySite.Action(GalleryShellLangResourceKind.HomeReadDocs, ButtonVariant.Secondary, () => _shell.Navigate(_shell.RouteFor(GalleryRouteKind.Docs)));
+        // The dashboard demo: /demo, which opens its overview.
+        var demo = GallerySite.Action(GalleryShellLangResourceKind.HomeDemo, ButtonVariant.Secondary, () => _shell.Navigate(GalleryRoute.Demo()));
+        var actions = GallerySite.Actions(explore, docs, demo);
+
+        var content = new StackPanel { Spacing = 18, MaxWidth = 760, HorizontalAlignment = HorizontalAlignment.Left };
         content.Children.Add(badge);
         content.Children.Add(title);
         content.Children.Add(subtitle);
         content.Children.Add(actions);
-        content.Children.Add(install);
+        content.Children.Add(GallerySite.Install(InstallCommand));
 
-        var surface = new AuroraSurface();
-        surface.Children.Add(content);
-        var hero = new Border { CornerRadius = new CornerRadius(24), BorderThickness = new Thickness(1), ClipToBounds = true, Child = surface };
-        ArcTokens.Bind(hero, Border.BorderBrushProperty, ArcDesignTokenKind.BorderSubtle);
+        Tuner = new GalleryThemeTuner(_shell.Appearance, _shell);
+
+        var hero = new StackPanel { Spacing = 14 };
+        if (web)
+        {
+            hero.Children.Add(HeroCard(content));
+            WebNote = BuildWebNote();
+            hero.Children.Add(WebNote);
+        }
+        else
+        {
+            var top = new GalleryTwoPane { EndWidth = 320, StackBelow = 880, Spacing = 14 };
+            top.Children.Add(HeroCard(content));
+            top.Children.Add(BuildUpdateCard());
+            hero.Children.Add(top);
+        }
+        hero.Children.Add(Tuner);
         return hero;
     }
 
-    /// <summary>A heading that reveals word by word when it scrolls into view; its text follows the language.</summary>
-    private static TextReveal Reveal(GalleryShellLangResourceKind kind, TextLevel level, TimeSpan delay, bool center)
+    private Alert BuildWebNote()
     {
-        var reveal = new TextReveal { Level = level, Delay = delay, MaxWidthInChars = center ? 22 : 0 };
-        if (center)
-        {
-            reveal.HorizontalAlignment = HorizontalAlignment.Center;
-        }
-        GalleryText.Bind(reveal, TextReveal.TextProperty, kind);
-        return reveal;
+        var text = GallerySite.Text(GalleryShellLangResourceKind.HomeWebNoteText, ArcDesignTokenKind.TextSecondary, 13.5);
+        var action = GallerySite.Action(GalleryShellLangResourceKind.HomeWebNoteAction, ButtonVariant.Secondary, ShowDownload, ArcIcons.ArrowRight, ControlSize.Small);
+        action.HorizontalAlignment = HorizontalAlignment.Left;
+        var stack = new StackPanel { Spacing = 10 };
+        stack.Children.Add(text);
+        stack.Children.Add(action);
+        var note = new Alert { Tone = AlertTone.Warning, Content = stack };
+        GalleryText.Bind(note, Alert.TitleProperty, GalleryShellLangResourceKind.HomeWebNoteTitle);
+        return note;
     }
 
-    private static Control WithArrow(GalleryShellLangResourceKind label)
+    /// <summary>The desktop app's own line at the top: its version, the update state, and the way to About.</summary>
+    private Control BuildUpdateCard()
     {
-        var text = new TextBlock { VerticalAlignment = VerticalAlignment.Center };
-        GalleryText.Bind(text, TextBlock.TextProperty, label);
-        var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
-        row.Children.Add(text);
-        row.Children.Add(new ArcGlyph { Data = ArcIcons.ArrowRight, Size = 14, VerticalAlignment = VerticalAlignment.Center });
-        return row;
+        var stack = new StackPanel { Spacing = 10 };
+        stack.Children.Add(GallerySite.Eyebrow(GalleryShellLangResourceKind.HomeUpdateTitle));
+        stack.Children.Add(_updateTitle);
+        stack.Children.Add(_updateHint);
+        stack.Children.Add(Quick(GalleryShellLangResourceKind.Components, () => _shell.RouteFor(GalleryRouteKind.Components)));
+        stack.Children.Add(Quick(GalleryShellLangResourceKind.Category_Blocks, () => _shell.RouteFor(GalleryRouteKind.Blocks)));
+        stack.Children.Add(Quick(GalleryShellLangResourceKind.HomeDemo, () => GalleryRoute.Demo()));
+        stack.Children.Add(Quick(GalleryShellLangResourceKind.ProductTemplates, () => GallerySite.Docs("DocsTemplates")));
+        stack.Children.Add(GallerySite.Actions(
+            GallerySite.Action(GalleryShellLangResourceKind.SettingsAbout, ButtonVariant.Secondary, () => _shell.Navigate(GalleryRoute.Settings(GallerySettingsView.AboutPage)), null, ControlSize.Small),
+            GallerySite.Action(GalleryShellLangResourceKind.AboutChangelog, ButtonVariant.Ghost, () => _shell.Navigate(GallerySite.Docs("DocsChangelog")), null, ControlSize.Small)));
+        return GallerySite.Panel(stack, ArcDesignTokenKind.SurfaceMuted);
+    }
+
+    /// <summary>A way into the gallery from the desktop app's first screen.</summary>
+    private Button Quick(GalleryShellLangResourceKind label, Func<GalleryRoute> route)
+    {
+        var button = GallerySite.Action(label, ButtonVariant.Secondary, () => _shell.Navigate(route()), ArcIcons.ArrowRight, ControlSize.Small);
+        button.HorizontalAlignment = HorizontalAlignment.Stretch;
+        return button;
+    }
+
+    private void SyncUpdate()
+    {
+        _updateTitle.Text = GalleryUpdates.Status switch
+        {
+            GalleryUpdateStatus.Available => GalleryText.Format(GalleryShellLangResourceKind.UpdateAvailable, GalleryUpdates.Available!.Version),
+            GalleryUpdateStatus.UpToDate => GalleryText.Get(GalleryShellLangResourceKind.UpdateUpToDate),
+            GalleryUpdateStatus.Checking => GalleryText.Get(GalleryShellLangResourceKind.UpdateChecking),
+            _ => GalleryText.Format(GalleryShellLangResourceKind.UpdateIdle, GalleryHost.Version)
+        };
+        _updateHint.Text = GalleryHost.Version;
+        _updateHint.IsVisible = GalleryUpdates.Status is GalleryUpdateStatus.Available or GalleryUpdateStatus.UpToDate;
+    }
+
+    #endregion
+
+    #region Products
+
+    private Control BuildProducts()
+    {
+        var specials = GalleryCatalog.Special.Sum(category => category.AllEntries.Count());
+        var arc = ProductCard("TKCode.Arc", GalleryHost.Version, "Arc", GalleryShellLangResourceKind.HomeArcText, InstallCommand,
+            [
+                GallerySite.Format(GalleryShellLangResourceKind.HomeArcPoint1, ArcDesignTokenKind.Foreground, 14, GalleryCatalog.Count, GalleryCatalog.Blocks.AllEntries.Count(), specials),
+                GallerySite.Text(GalleryShellLangResourceKind.HomeArcPoint2),
+                GallerySite.Text(GalleryShellLangResourceKind.HomeArcPoint3)
+            ],
+            GallerySite.Action(GalleryShellLangResourceKind.HomeExplore, ButtonVariant.Primary, () => _shell.Navigate(_shell.RouteFor(GalleryRouteKind.Components))),
+            GallerySite.Action(GalleryShellLangResourceKind.HomeReadDocs, ButtonVariant.Ghost, () => _shell.Navigate(_shell.RouteFor(GalleryRouteKind.Docs)), ArcIcons.ArrowRight));
+        var streamMark = ProductCard("TKCode.StreamMark", GallerySite.StreamMarkVersion, "StreamMark", GalleryShellLangResourceKind.HomeStreamMarkText, "dotnet add package TKCode.StreamMark.Avalonia",
+            [
+                GallerySite.Text(GalleryShellLangResourceKind.StreamMarkPoint1),
+                GallerySite.Text(GalleryShellLangResourceKind.StreamMarkPoint2),
+                GallerySite.Text(GalleryShellLangResourceKind.StreamMarkPoint3)
+            ],
+            GallerySite.Action(GalleryShellLangResourceKind.StreamMarkLearn, ButtonVariant.Primary, () => _shell.Navigate(GalleryRoute.StreamMark)),
+            GallerySite.Action(GalleryShellLangResourceKind.StreamMarkGitHub, ButtonVariant.Ghost, () => GallerySite.Open(this, GalleryStreamMarkView.RepositoryUrl), ArcIcons.ArrowUpRight));
+        var grid = new GalleryGrid { MinItemWidth = 340, MaxColumns = 2, Spacing = 16 };
+        grid.Children.Add(arc);
+        grid.Children.Add(streamMark);
+
+        var section = new StackPanel { Spacing = 24 };
+        section.Children.Add(GallerySite.Heading(GalleryShellLangResourceKind.HomeProductsEyebrow,
+                                                 GallerySite.Reveal(GalleryShellLangResourceKind.HomeProductsTitle),
+                                                 GalleryShellLangResourceKind.HomeProductsSubtitle));
+        section.Children.Add(grid);
+        return section;
+    }
+
+    private static Control ProductCard(string package, string version, string name, GalleryShellLangResourceKind text, string install, Control[] points, params Control[] actions)
+    {
+        var tag = GalleryUi.Mono($"{package} · {version}", ArcDesignTokenKind.TextMuted, 12);
+        tag.TextWrapping = TextWrapping.Wrap;
+        var stack = new StackPanel { Spacing = 16 };
+        stack.Children.Add(tag);
+        stack.Children.Add(GalleryUi.Text(name, ArcDesignTokenKind.Foreground, 32, FontWeight.SemiBold));
+        stack.Children.Add(GallerySite.Text(text, ArcDesignTokenKind.TextSecondary, 15));
+        stack.Children.Add(GallerySite.Checks(points));
+        stack.Children.Add(GallerySite.Install(install));
+        stack.Children.Add(GallerySite.Actions(actions));
+        return GallerySite.Panel(stack, ArcDesignTokenKind.SurfaceMuted, 24);
+    }
+
+    private Control BuildStream()
+    {
+        var stage = new GalleryStreamStage { EndWidth = 280, StackBelow = 820 };
+        var learn = GallerySite.Action(GalleryShellLangResourceKind.StreamMarkLearn, ButtonVariant.Secondary, () => _shell.Navigate(GalleryRoute.StreamMark), ArcIcons.ArrowRight);
+        learn.HorizontalAlignment = HorizontalAlignment.Left;
+        var section = new StackPanel { Spacing = 20 };
+        section.Children.Add(GallerySite.Heading(GalleryShellLangResourceKind.HomeStreamEyebrow,
+                                                 GallerySite.Reveal(GalleryShellLangResourceKind.HomeStreamTitle),
+                                                 GalleryShellLangResourceKind.HomeStreamText));
+        section.Children.Add(stage);
+        section.Children.Add(learn);
+        return section;
     }
 
     #endregion
@@ -173,14 +307,7 @@ public sealed class GalleryHomeView : UserControl
 
     private Control BuildLive()
     {
-        var title = Reveal(GalleryShellLangResourceKind.HomeWallTitle, TextLevel.H2, TimeSpan.Zero, center: false);
-        var subtitle = GalleryUi.Text(string.Empty, ArcDesignTokenKind.TextSecondary, 14);
-        GalleryText.Bind(subtitle, TextBlock.TextProperty, GalleryShellLangResourceKind.HomeWallSubtitle);
-        var heading = new StackPanel { Spacing = 6 };
-        heading.Children.Add(title);
-        heading.Children.Add(subtitle);
-
-        var all = new Button { Variant = ButtonVariant.Ghost, Size = ControlSize.Small, VerticalAlignment = VerticalAlignment.Bottom };
+        var all = new Button { Variant = ButtonVariant.Ghost, Size = ControlSize.Small, HorizontalAlignment = HorizontalAlignment.Left };
         var allLabel = new TextBlock { VerticalAlignment = VerticalAlignment.Center };
         GalleryText.BindFormat(allLabel, TextBlock.TextProperty, GalleryShellLangResourceKind.HomeBrowseAll, GalleryCatalog.Count);
         var allRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
@@ -189,12 +316,7 @@ public sealed class GalleryHomeView : UserControl
         all.Content = allRow;
         all.Click += (_, _) => _shell.Navigate(_shell.RouteFor(GalleryRouteKind.Components));
 
-        var header = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto") };
-        Grid.SetColumn(all, 1);
-        header.Children.Add(heading);
-        header.Children.Add(all);
-
-        var grid = new UniformGrid { Columns = 3 };
+        var grid = new GalleryGrid { MinItemWidth = 300, MaxColumns = 3, Spacing = 14 };
         foreach (var (className, demoId) in s_examples)
         {
             var entry = GalleryCatalog.AllEntries.FirstOrDefault(e => e.ClassName == className);
@@ -206,11 +328,11 @@ public sealed class GalleryHomeView : UserControl
             _cards.Add(card);
             grid.Children.Add(card);
         }
-        grid.SizeChanged += (_, e) => grid.Columns = e.NewSize.Width < OneColumnBelow ? 1 : e.NewSize.Width < ThreeColumnsFrom ? 2 : 3;
 
         var section = new StackPanel { Spacing = 20 };
-        section.Children.Add(header);
+        section.Children.Add(GallerySite.Heading(null, GallerySite.Reveal(GalleryShellLangResourceKind.HomeWallTitle), GalleryShellLangResourceKind.HomeWallSubtitle));
         section.Children.Add(grid);
+        section.Children.Add(all);
         return section;
     }
 
@@ -249,12 +371,11 @@ public sealed class GalleryHomeView : UserControl
             stack.Children.Add(_stage);
             stack.Children.Add(footer);
             Child = stack;
-            Margin = new Thickness(0, 0, 14, 14);
             Padding = new Thickness(14, 14, 14, 8);
-            CornerRadius = new CornerRadius(20);
             BorderThickness = new Thickness(1);
             ArcTokens.Bind(this, BackgroundProperty, ArcDesignTokenKind.SurfaceMuted);
             ArcTokens.Bind(this, BorderBrushProperty, ArcDesignTokenKind.BorderSubtle);
+            ArcTokens.Bind(this, CornerRadiusProperty, ArcDesignTokenKind.RadiusPanel);
             // The demo is built when the card first reaches the viewport, not with the page.
             _ = new GalleryFirstSight(this, EnsureCreated);
         }
@@ -288,16 +409,12 @@ public sealed class GalleryHomeView : UserControl
     /// <summary>The section that takes a screen apart as the page scrolls.</summary>
     private Control BuildExplode()
     {
-        var title = Reveal(GalleryShellLangResourceKind.HomeExplodeTitle, TextLevel.H2, TimeSpan.Zero, center: false);
-        var subtitle = GalleryUi.Text(string.Empty, ArcDesignTokenKind.TextSecondary, 14);
-        GalleryText.Bind(subtitle, TextBlock.TextProperty, GalleryShellLangResourceKind.HomeExplodeSubtitle);
-
         // The view is a tall track in this page's scroll viewer (ScrollMode.Page) and is built when it first comes into view.
         var host = ExplodeHost = new Border { MinHeight = 560 };
         _ = new GalleryFirstSight(host, EnsureExplodeCreated);
 
         var section = new StackPanel { Spacing = 20 };
-        section.Children.Add(new StackPanel { Spacing = 6, Children = { title, subtitle } });
+        section.Children.Add(GallerySite.Heading(null, GallerySite.Reveal(GalleryShellLangResourceKind.HomeExplodeTitle), GalleryShellLangResourceKind.HomeExplodeSubtitle));
         section.Children.Add(host);
         return section;
     }
@@ -323,20 +440,58 @@ public sealed class GalleryHomeView : UserControl
 
     #endregion
 
-    #region Friends and call to action
+    #region Add-on packages
+
+    private Control BuildExtras()
+    {
+        var specials = GalleryCatalog.Special.Sum(category => category.AllEntries.Count());
+        var grid = new GalleryGrid { MinItemWidth = 240, MaxColumns = 4, Spacing = 12 };
+        grid.Children.Add(Extra(GalleryShellLangResourceKind.Category_Blocks, GalleryShellLangResourceKind.ExtraBlocksText, "TKCode.Arc.Blocks", () => _shell.RouteFor(GalleryRouteKind.Blocks), GalleryCatalog.Blocks.AllEntries.Count()));
+        grid.Children.Add(Extra(GalleryShellLangResourceKind.ProductSpecial, GalleryShellLangResourceKind.ExtraSpecialText, "TKCode.Arc.Special", () => GalleryRoute.To(GalleryCatalog.Special[0].AllEntries.First()), specials));
+        grid.Children.Add(Extra(GalleryShellLangResourceKind.ProductMobile, GalleryShellLangResourceKind.ExtraMobileText, "TKCode.Arc.Mobile", () => GalleryRoute.To(GalleryCatalog.Mobile.Entries[0]), GalleryCatalog.Mobile.Entries.Length));
+        grid.Children.Add(Extra(GalleryShellLangResourceKind.ExtraWorkflow, GalleryShellLangResourceKind.ExtraWorkflowText, "TKCode.Arc.Workflow", () => Entry("WorkflowCanvas")));
+        grid.Children.Add(Extra(GalleryShellLangResourceKind.ExtraDock, GalleryShellLangResourceKind.ExtraDockText, "TKCode.Arc.Dock", () => Entry("DockLayout")));
+        // The terminal has no page in the Gallery: it needs a native process and does not run in the browser.
+        grid.Children.Add(Extra(GalleryShellLangResourceKind.ExtraTerminal, GalleryShellLangResourceKind.ExtraTerminalText, "TKCode.Arc.Terminal", null));
+        grid.Children.Add(Extra(GalleryShellLangResourceKind.ExtraMedia, GalleryShellLangResourceKind.ExtraMediaText, "TKCode.Arc.Video · Audio", () => Entry("VideoPlayer")));
+        grid.Children.Add(Extra(GalleryShellLangResourceKind.ExtraCharts, GalleryShellLangResourceKind.ExtraChartsText, "TKCode.Arc.AdvancedCharts", () => Entry("DataGrid")));
+
+        var section = new StackPanel { Spacing = 20 };
+        section.Children.Add(GallerySite.Heading(GalleryShellLangResourceKind.HomeExtrasEyebrow, GallerySite.Reveal(GalleryShellLangResourceKind.HomeExtrasTitle)));
+        section.Children.Add(grid);
+        return section;
+    }
+
+    private static GalleryRoute Entry(string className) => GalleryRoute.To(GalleryCatalog.AllEntries.First(entry => entry.ClassName == className));
+
+    private Control Extra(GalleryShellLangResourceKind title, GalleryShellLangResourceKind text, string package, Func<GalleryRoute>? route, params object[] args)
+    {
+        var description = GallerySite.Format(text, ArcDesignTokenKind.TextSecondary, 13, args);
+        var name = GalleryUi.Mono(package, ArcDesignTokenKind.TextMuted, 11.5);
+        name.TextWrapping = TextWrapping.Wrap;
+
+        var stack = new StackPanel { Spacing = 4 };
+        stack.Children.Add(GallerySite.Text(title, ArcDesignTokenKind.Foreground, 15, FontWeight.Medium));
+        stack.Children.Add(description);
+        stack.Children.Add(name);
+        if (route is { } target)
+        {
+            var open = new Button { Variant = ButtonVariant.Ghost, Size = ControlSize.Small, HorizontalAlignment = HorizontalAlignment.Left, Margin = new Thickness(-8, 4, 0, 0), Content = GallerySite.Labelled(GalleryShellLangResourceKind.HomeOpen, ArcIcons.ArrowRight) };
+            GalleryText.Bind(open, AutomationProperties.NameProperty, title);
+            open.Click += (_, _) => _shell.Navigate(target());
+            stack.Children.Add(open);
+        }
+        return GallerySite.Panel(stack, padding: 16);
+    }
+
+    #endregion
+
+    #region Friends
 
     private Control BuildFriends()
     {
-        var title = Reveal(GalleryShellLangResourceKind.HomeFriendsTitle, TextLevel.H2, TimeSpan.Zero, center: false);
-        var subtitle = GalleryUi.Text(string.Empty, ArcDesignTokenKind.TextSecondary, 14);
-        GalleryText.Bind(subtitle, TextBlock.TextProperty, GalleryShellLangResourceKind.HomeFriendsSubtitle);
-
-        var all = new Button { Variant = ButtonVariant.Ghost, Size = ControlSize.Small, VerticalAlignment = VerticalAlignment.Bottom, Content = GalleryFriendsView.LabelWithGlyph(GalleryShellLangResourceKind.HomeSeeAll, ArcIcons.ArrowRight) };
+        var all = new Button { Variant = ButtonVariant.Ghost, Size = ControlSize.Small, HorizontalAlignment = HorizontalAlignment.Left, Content = GalleryFriendsView.LabelWithGlyph(GalleryShellLangResourceKind.HomeSeeAll, ArcIcons.ArrowRight) };
         all.Click += (_, _) => _shell.Navigate(GalleryRoute.Friends);
-        var header = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto") };
-        Grid.SetColumn(all, 1);
-        header.Children.Add(new StackPanel { Spacing = 6, Children = { title, subtitle } });
-        header.Children.Add(all);
 
         // The sites rotate in a Carousel: the active one in the center, its neighbours dimmed at the sides.
         var sites = GalleryFriends.Sponsors.Concat(GalleryFriends.Friends).ToList();
@@ -350,12 +505,14 @@ public sealed class GalleryHomeView : UserControl
             IsAutoPlay = true,
             ItemTemplate = new FuncDataTemplate<GalleryFriend>((site, _) => site is null ? null : SiteSlide(site))
         };
-        Avalonia.Automation.AutomationProperties.SetName(carousel, GalleryText.Get(GalleryShellLangResourceKind.HomeFriendsTitle));
-        var grid = carousel;
+        // On a phone a slide takes most of the width, with a glimpse of its neighbours.
+        carousel.SizeChanged += (_, e) => carousel.SlideWidthRatio = e.NewSize.Width < GallerySite.PhoneWidth ? 0.8 : 0.34;
+        AutomationProperties.SetName(carousel, GalleryText.Get(GalleryShellLangResourceKind.HomeFriendsTitle));
 
         var section = new StackPanel { Spacing = 20 };
-        section.Children.Add(header);
-        section.Children.Add(grid);
+        section.Children.Add(GallerySite.Heading(null, GallerySite.Reveal(GalleryShellLangResourceKind.HomeFriendsTitle), GalleryShellLangResourceKind.HomeFriendsSubtitle));
+        section.Children.Add(carousel);
+        section.Children.Add(all);
         return section;
     }
 
@@ -367,8 +524,8 @@ public sealed class GalleryHomeView : UserControl
         description.TextWrapping = TextWrapping.Wrap;
         GalleryText.Bind(description, TextBlock.TextProperty, site.Description);
         var visit = new Button { Variant = ButtonVariant.Secondary, Size = ControlSize.Small, HorizontalAlignment = HorizontalAlignment.Left, Content = GalleryFriendsView.LabelWithGlyph(GalleryShellLangResourceKind.FriendsVisit, ArcIcons.ArrowUpRight) };
-        Avalonia.Automation.AutomationProperties.SetName(visit, site.Name);
-        visit.Click += (_, _) => _ = TopLevel.GetTopLevel(this)?.Launcher.LaunchUriAsync(site.Url);
+        AutomationProperties.SetName(visit, site.Name);
+        visit.Click += (_, _) => GallerySite.Open(this, site.Url);
 
         var body = new StackPanel { Spacing = 6, Margin = new Thickness(18, 14, 18, 18) };
         body.Children.Add(name);
@@ -377,112 +534,11 @@ public sealed class GalleryHomeView : UserControl
         var stack = new StackPanel();
         stack.Children.Add(new FriendMark(site, 56, 120));
         stack.Children.Add(body);
-        var frame = new Border { CornerRadius = new CornerRadius(20), BorderThickness = new Thickness(1), ClipToBounds = true, Child = stack };
+        var frame = new Border { BorderThickness = new Thickness(1), ClipToBounds = true, Child = stack };
         ArcTokens.Bind(frame, Border.BorderBrushProperty, ArcDesignTokenKind.BorderSubtle);
         ArcTokens.Bind(frame, Border.BackgroundProperty, ArcDesignTokenKind.Surface);
+        ArcTokens.Bind(frame, Border.CornerRadiusProperty, ArcDesignTokenKind.RadiusPanel);
         return frame;
-    }
-
-    /// <summary>The closing band: a line, the install command to copy and the way in.</summary>
-    /// <summary>The closing call to action: the library's own <see cref="CtaSection"/> block.</summary>
-    private Control BuildCta()
-    {
-        var primary = new CtaAction();
-        var cta = new CtaSection { Variant = CtaVariant.Centered, PrimaryAction = primary, IsSecondaryActionVisible = false };
-        void Refresh()
-        {
-            cta.Title = GalleryText.Get(GalleryShellLangResourceKind.HomeCtaTitle);
-            cta.Description = GalleryText.Get(GalleryShellLangResourceKind.HomeCtaSubtitle);
-            primary.Label = GalleryText.Get(GalleryShellLangResourceKind.HomeExplore);
-        }
-        Refresh();
-        // The text is plain strings, not bindings: it is set again when the language changes.
-        GalleryText.Track(cta, Refresh);
-        cta.ActionInvoked += (_, e) =>
-        {
-            e.Handled = true;
-            _shell.Navigate(_shell.RouteFor(GalleryRouteKind.Components));
-        };
-        return cta;
-    }
-
-    #endregion
-
-    #region Numbers and footer
-
-    private Control BuildStats()
-    {
-        var grid = new UniformGrid { Columns = 4 };
-        AddStat(grid, GalleryCatalog.Count, GalleryShellLangResourceKind.HomeStatComponents);
-        AddStat(grid, GalleryCatalog.Categories.Length, GalleryShellLangResourceKind.HomeStatGroups);
-        AddStat(grid, GalleryCatalog.Blocks.AllEntries.Count(), GalleryShellLangResourceKind.HomeStatBlocks);
-        AddStat(grid, LanguageCount, GalleryShellLangResourceKind.HomeStatLanguages);
-        grid.SizeChanged += (_, e) => grid.Columns = e.NewSize.Width < OneColumnBelow ? 2 : 4;
-        var frame = new Border { CornerRadius = new CornerRadius(20), BorderThickness = new Thickness(1), ClipToBounds = true, Child = grid };
-        ArcTokens.Bind(frame, Border.BorderBrushProperty, ArcDesignTokenKind.BorderSubtle);
-        return frame;
-    }
-
-    private static void AddStat(Panel grid, int value, GalleryShellLangResourceKind label)
-    {
-        var number = GalleryUi.Text(value.ToString(System.Globalization.CultureInfo.InvariantCulture), ArcDesignTokenKind.Foreground, 30, FontWeight.Medium);
-        var caption = GalleryUi.Text(string.Empty, ArcDesignTokenKind.TextMuted, 13);
-        GalleryText.Bind(caption, TextBlock.TextProperty, label);
-        var cell = new StackPanel { Spacing = 2, Margin = new Thickness(20, 18) };
-        cell.Children.Add(number);
-        cell.Children.Add(caption);
-        grid.Children.Add(cell);
-    }
-
-    /// <summary>The page footer: the library's own <see cref="SiteFooter"/> block in its one-row layout.</summary>
-    private Control BuildFooter()
-    {
-        var docs = new SiteFooterLink();
-        var changelog = new SiteFooterLink();
-        var friends = new SiteFooterLink();
-        var github = new SiteFooterLink { Label = "GitHub", IsExternal = true };
-        var footer = new SiteFooter
-        {
-            Variant = SiteFooterVariant.Minimal,
-            BrandName = "TKCode.Arc",
-            // The Gallery's own logo, not the arch of the block's default.
-            BrandMark = new Image { Source = GalleryBrand.CreateLogo(), Width = 22, Height = 22 },
-            // The brand line is the same in every language: product names, not translated text.
-            Tagline = "Powered by Avalonia and .NET 11",
-            IsStatusVisible = false,
-            BorderThickness = new Thickness(0)
-        };
-        footer.Links = new Avalonia.Collections.AvaloniaList<SiteFooterLink> { docs, changelog, friends };
-        footer.SocialLinks.Add(github);
-        void Refresh()
-        {
-            docs.Label = GalleryText.Get(GalleryShellLangResourceKind.Category_Docs);
-            changelog.Label = GalleryText.Get(GalleryShellLangResourceKind.NavChangelog);
-            friends.Label = GalleryText.Get(GalleryShellLangResourceKind.NavFriends);
-        }
-        Refresh();
-        GalleryText.Track(footer, Refresh);
-        footer.Navigate += (_, e) =>
-        {
-            e.Handled = true;
-            if (ReferenceEquals(e.Link, docs))
-            {
-                _shell.Navigate(_shell.RouteFor(GalleryRouteKind.Docs));
-            }
-            else if (ReferenceEquals(e.Link, changelog))
-            {
-                _shell.Navigate(GalleryRoute.To(GalleryCatalog.Docs.Entries.First(entry => entry.ClassName == "DocsChangelog")));
-            }
-            else if (ReferenceEquals(e.Link, friends))
-            {
-                _shell.Navigate(GalleryRoute.Friends);
-            }
-            else if (ReferenceEquals(e.Link, github))
-            {
-                _ = TopLevel.GetTopLevel(this)?.Launcher.LaunchUriAsync(GalleryGitHub.RepositoryUrl);
-            }
-        };
-        return footer;
     }
 
     #endregion

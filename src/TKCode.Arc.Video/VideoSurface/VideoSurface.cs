@@ -806,9 +806,10 @@ public class VideoSurface : Control
             Width = lease.Size.Width,
             Height = lease.Size.Height,
             Format = lease.GpuFormat,
-            // IOSurfaces (CVPixelBuffers) store the top row first; Metal reads them that way. Other handle types keep
-            // Avalonia's default (bottom-left origin, as OpenGL/ANGLE textures).
-            TopLeftOrigin = handle.HandleDescriptor == KnownPlatformGraphicsExternalImageHandleTypes.IOSurfaceRef,
+            // IOSurfaces (CVPixelBuffers) and the D3D11 textures Media Foundation writes store the top row first. Other
+            // handle types keep Avalonia's default (bottom-left origin, as OpenGL textures).
+            TopLeftOrigin = handle.HandleDescriptor == KnownPlatformGraphicsExternalImageHandleTypes.IOSurfaceRef
+                || handle.HandleDescriptor == KnownPlatformGraphicsExternalImageHandleTypes.D3D11TextureNtHandle,
         });
         if (_imported.Count >= MaxImportedImages)
         {

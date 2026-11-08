@@ -13,6 +13,8 @@ public partial class App : Application
         {
             // The star count is kept in local storage for an hour; the address bar decides the first page and follows the open one.
             GalleryGitHub.Cache = new BrowserStarCache();
+            GalleryHost.Kind = GalleryHostKind.Web;
+            GalleryHost.ClientOs = GalleryHost.ParseUserAgent(BrowserLanguageStore.UserAgent());
             var shell = new GalleryShell(BrowserRouter.InitialRoute());
             singleView.MainView = shell;
             BrowserRouter.Attach(shell);

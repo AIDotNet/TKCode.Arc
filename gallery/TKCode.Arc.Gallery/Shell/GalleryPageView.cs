@@ -3,6 +3,7 @@ using TKCode.Arc.Gallery.Catalog;
 using TKCode.Arc.Gallery.Docs;
 using TKCode.Arc.Gallery.Localization;
 using TKCode.Arc.Motion;
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -208,10 +209,12 @@ public sealed class GalleryPageView : Grid
             _toc.IsVisible = visible;
         }
         // The page keeps clear of the list instead of sliding under it.
-        var right = visible ? 56 + TocWidth + 24 : 56;
-        if (Math.Abs(_padding.Padding.Right - right) > 0.5)
+        // A phone keeps its width for the page.
+        var side = Bounds.Width < GallerySite.PhoneWidth ? 16 : 56;
+        var right = visible ? side + TocWidth + 24 : side;
+        if (Math.Abs(_padding.Padding.Right - right) > 0.5 || Math.Abs(_padding.Padding.Left - side) > 0.5)
         {
-            _padding.Padding = new Thickness(56, 36, right, 96);
+            _padding.Padding = new Thickness(side, side == 16 ? 20 : 36, right, 96);
         }
     }
 
@@ -250,7 +253,7 @@ public sealed class GalleryPageView : Grid
         }
         left.Children.Add(BuildStatus(entry, implemented));
 
-        var right = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, VerticalAlignment = VerticalAlignment.Top };
+        var right = new WrapPanel { Orientation = Orientation.Horizontal, ItemSpacing = 8, LineSpacing = 8, VerticalAlignment = VerticalAlignment.Top };
         if (_copyPage is not null)
         {
             right.Children.Add(_copyPage);
@@ -269,10 +272,18 @@ public sealed class GalleryPageView : Grid
             right.Children.Add(original);
         }
 
-        var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto") };
+        var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto"), RowDefinitions = new RowDefinitions("Auto,Auto") };
         Grid.SetColumn(right, 1);
         grid.Children.Add(left);
         grid.Children.Add(right);
+        // On a phone the two sides would overlap: the buttons move under the command, which may wrap.
+        grid.SizeChanged += (_, e) =>
+        {
+            var phone = e.NewSize.Width < GallerySite.PhoneWidth;
+            Grid.SetColumn(right, phone ? 0 : 1);
+            Grid.SetRow(right, phone ? 1 : 0);
+            right.Margin = phone ? new Thickness(0, 10, 0, 0) : default;
+        };
         return grid;
     }
 
@@ -286,7 +297,9 @@ public sealed class GalleryPageView : Grid
         prompt.VerticalAlignment = VerticalAlignment.Center;
         text.VerticalAlignment = VerticalAlignment.Center;
         text.Margin = new Thickness(0, 0, 2, 0);
-        var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, VerticalAlignment = VerticalAlignment.Center };
+        text.TextWrapping = TextWrapping.Wrap;
+        ArcShrinkRow.SetIsShrinkable(text, true);
+        var row = new ArcShrinkRow { Spacing = 8, VerticalAlignment = VerticalAlignment.Center };
         row.Children.Add(prompt);
         row.Children.Add(text);
         row.Children.Add(copy);

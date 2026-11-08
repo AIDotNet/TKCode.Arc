@@ -1,6 +1,6 @@
 ---
 title: 更新日誌
-source-hash: 423846c776d5
+source-hash: 8d74f32403b2
 ---
 
 # 更新日誌
@@ -13,6 +13,9 @@ TKCode.Arc 的所有重要變更，最新的在前。版本遵循[語意化版�
 
 ### 新增
 
+- **Gallery 改為產品官網**：首頁以 TKCode 為品牌，介紹 Arc 和 StreamMark 兩個產品。首屏是範例應用程式和主題面板（整頁跟著變化，並顯示可複製的程式碼），接著是產品介紹、StreamMark 現場串流示範、即時範例、可篩選的全部元件、拆解檢視、擴充套件和新的頁尾。頂列新增「產品」選單，更新日誌和友情專案移到頁尾與文件。StreamMark 有了獨立頁面 `/streammark`。頂部贊助橫條不變。
+- **Gallery 的 Web 版與桌面版**：網站說明自身執行在 WebAssembly 中、效能不代表桌面版，並按訪客系統優先列出最新版本的安裝套件。桌面版新增設定選單，包含外觀、語言和關於（版本號、更新檢測、開源授權、原始碼和第三方聲明），首頁改為顯示更新狀態。
+- **Gallery 適配手機**：寬度小於 760 像素時側邊欄改為抽屜，文件頁和首頁使用手機邊距，各區塊改為縱向排列。
 - **特殊元件 › 趣味**（`TKCode.Arc.Special`，參考 Arc Pro 行為與動效的原創設計）：`TicketTear`，一張活動門票，票根隨手沿齒孔一孔一孔撕開，然後掉落。Enter、Space 或 `IsTorn` 會自動撕完。
 - **PDF**（新套件 `TKCode.Arc.Pdf`、`TKCode.Arc.Pdf.Native` 和 `TKCode.Arc.Pdf.Browser`；issue #51）：`PdfViewer` 從檔案、位元組、資料流或位址開啟 PDF，側邊欄帶縮圖和目錄，支援帶計數和醒目提示的搜尋、文字選取和複製、連結（外部連結只接受 `http`、`https` 和 `mailto`）、密碼表單或 `PasswordRequested` 事件，以及載入和失敗狀態。`arc:Pdf.Source` 在一般 `PageViewer` 中只顯示頁面。桌面上由 PDFium 繪製（`ArcPdfNative.Use()`，在處理程序內，Windows、Linux 和 macOS 的 x64 與 arm64），瀏覽器中由 pdf.js 繪製（`await ArcPdfBrowser.UseAsync()`）。沒有後端時文件會失敗並給出提示，絕不偽造頁面。需要了解的限制：沒有內嵌中日韓字型的文件依賴本機字型，不支援觸控拖曳選取，純文字網址只有在 PDFium 下才是連結，瀏覽器套件不含 Liberation 字型。文件和範例提供英文、簡體中文和繁體中文。
 - **`PageViewer`**（`TKCode.Arc`，媒體；issue #51）：縮放、平移並翻閱圖片（`ItemsSource`）或按需繪製的頁面（`IPageSource`），可連續或單頁顯示，帶適應模式、工具列，以及讓你在頁面上自行繪製和接收指標輸入的 `PageLayer`。一個自繪表面只繪製可見頁面。文件和範例提供英文、簡體中文和繁體中文。
@@ -300,6 +303,7 @@ ArcTheme.Apply(t => t
 
 ### 修復
 
+- **`TextReveal`、`InViewTitle`**：中文、日文和韓文可以在字元之間換行。之前沒有空格的標題在窄欄中會被裁切。
 - **TimePicker**、**FilterMenu**：列的空白區域不再回應指標輸入 (#20)；**Combobox**：清除後不再開啟清單。
 - **Password**：顯隱選擇與輸入狀態保持一致 (#21)。
 - **Gallery**：修復 Windows 上側邊欄搜尋框重複提交輸入法內容的問題。

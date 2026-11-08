@@ -1,6 +1,6 @@
 ---
 title: 更新日志
-source-hash: 423846c776d5
+source-hash: 8d74f32403b2
 ---
 
 # 更新日志
@@ -13,6 +13,9 @@ TKCode.Arc 的所有重要变更，最新的在前。版本遵循[语义化版�
 
 ### 新增
 
+- **Gallery 改为产品官网**：首页以 TKCode 为品牌，介绍 Arc 和 StreamMark 两个产品。首屏是示例应用和主题面板（整页跟着变化，并显示可复制的代码），接着是产品介绍、StreamMark 现场流式演示、实时示例、可筛选的全部组件、拆解视图、扩展包和新的页脚。顶栏新增“产品”菜单，更新日志和友情项目移到页脚与文档。StreamMark 有了独立页面 `/streammark`。顶部赞助横条不变。
+- **Gallery 的 Web 版与桌面版**：网站说明自身运行在 WebAssembly 中、性能不代表桌面版，并按访客系统优先列出最新版本的安装包。桌面版新增设置菜单，包含外观、语言和关于（版本号、更新检测、开源协议、源代码和第三方声明），首页改为显示更新状态。
+- **Gallery 适配手机**：宽度小于 760 像素时侧边栏改为抽屉，文档页和首页使用手机边距，各区块改为纵向排列。
 - **特殊组件 › 趣味**（`TKCode.Arc.Special`，参考 Arc Pro 行为与动效的原创设计）：`TicketTear`，一张活动门票，票根随手沿齿孔一孔一孔撕开，然后掉落。Enter、Space 或 `IsTorn` 会自动撕完。
 - **PDF**（新包 `TKCode.Arc.Pdf`、`TKCode.Arc.Pdf.Native` 和 `TKCode.Arc.Pdf.Browser`；issue #51）：`PdfViewer` 从文件、字节、流或地址打开 PDF，侧栏带缩略图和目录，支持带计数和高亮的搜索、文字选择和复制、链接（外部链接只接受 `http`、`https` 和 `mailto`）、密码表单或 `PasswordRequested` 事件，以及加载和失败状态。`arc:Pdf.Source` 在普通 `PageViewer` 中只显示页面。桌面上由 PDFium 渲染（`ArcPdfNative.Use()`，在进程内，Windows、Linux 和 macOS 的 x64 与 arm64），浏览器中由 pdf.js 渲染（`await ArcPdfBrowser.UseAsync()`）。没有后端时文档会失败并给出提示，绝不伪造页面。需要了解的限制：没有嵌入中日韩字体的文档依赖本机字体，不支持触屏拖动选择，纯文本网址只有在 PDFium 下才是链接，浏览器包不含 Liberation 字体。文档和示例提供英文、简体中文和繁体中文。
 - **`PageViewer`**（`TKCode.Arc`，媒体；issue #51）：缩放、平移并翻阅图片（`ItemsSource`）或按需渲染的页面（`IPageSource`），可连续或单页显示，带适应模式、工具栏，以及让你在页面上自行绘制和接收指针输入的 `PageLayer`。一个自绘表面只绘制可见页。文档和示例提供英文、简体中文和繁体中文。
@@ -20,6 +23,7 @@ TKCode.Arc 的所有重要变更，最新的在前。版本遵循[语义化版�
 
 ### 修复
 
+- **`TextReveal`、`InViewTitle`**：中文、日文和韩文可以在字符之间换行。之前没有空格的标题在窄栏中会被裁切。
 - **`TKCode.Arc.Templates` 0.4.0-preview.6 无法安装**：该包发布时模板文件已移动，但指向它们的 `template.json` 没有更新，`dotnet new install` 报错（`MV012: Source ... does not exist`）。请使用此版本或更高版本。
 - **Lucide 图标**：路径以移动命令紧接直线开头的 32 个图标（`UserCog`、`FileCog`、`ServerCog`、`Coins`、`Watch`、`ZapOff` 等）首次显示时抛出 “Invalid double value”：生成器把 `16.53.923` 读成了一个数。现在有测试解析每个图标的路径。
 

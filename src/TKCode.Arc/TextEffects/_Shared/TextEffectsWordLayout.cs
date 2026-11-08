@@ -21,6 +21,9 @@ internal sealed class TextEffectsWordLayout
         public double Width { get; init; }
         public int Index { get; init; }
         public int ForcedLine { get; init; }
+
+        /// <summary>Follows the previous word with no space: both belong to a run of CJK text.</summary>
+        public bool IsGlued { get; init; }
         public int Line { get; set; }
         public double X { get; set; }
         public double Y { get; set; }
@@ -56,9 +59,63 @@ internal sealed class TextEffectsWordLayout
         return false;
     }
 
-    /// <summary>Splits on <c>\n</c> (forced lines) and spaces (words), dropping empty words.</summary>
+    /// <summary>
+    /// Splits on <c>\n</c> (forced lines) and spaces (words), dropping empty words. Chinese, Japanese and Korean have no spaces
+    /// to wrap at, so each of their characters counts as a word (see <see cref="Tokenize"/>).
+    /// </summary>
     public static List<string[]> Split(string text) =>
-        text.Replace("\r\n", "\n").Split('\n').Select(line => line.Split(' ', StringSplitOptions.RemoveEmptyEntries)).ToList();
+        Tokenize(text).Select(line => line.Select(token => token.Text).ToArray()).ToList();
+
+    /// <summary>
+    /// The words of each forced line, each saying whether it follows the previous one with no space. Inside a CJK run every
+    /// character is a word; closing punctuation stays with the character before it and opening punctuation with the one
+    /// after it, so neither ends up alone at the wrong end of a line.
+    /// </summary>
+    internal static List<(string Text, bool IsGlued)[]> Tokenize(string text)
+    {
+        var lines = new List<(string, bool)[]>();
+        foreach (var line in text.Replace("\r\n", "\n").Split('\n'))
+        {
+            var tokens = new List<(string, bool)>();
+            foreach (var part in line.Split(' ', StringSplitOptions.RemoveEmptyEntries))
+            {
+                var start = 0;
+                var isFirst = true;
+                for (var i = 1; i <= part.Length; i++)
+                {
+                    if (i < part.Length && !BreaksBefore(part, i))
+                    {
+                        continue;
+                    }
+                    tokens.Add((part[start..i], !isFirst));
+                    isFirst = false;
+                    start = i;
+                }
+            }
+            lines.Add(tokens.ToArray());
+        }
+        return lines;
+    }
+
+    /// <summary>Whether a line may break between <c>part[index - 1]</c> and <c>part[index]</c>.</summary>
+    private static bool BreaksBefore(string part, int index)
+    {
+        var previous = part[index - 1];
+        var next = part[index];
+        if (char.IsSurrogate(next) || IsOpeningPunctuation(previous) || IsClosingPunctuation(next))
+        {
+            return false;
+        }
+        return IsCjk(previous) || IsCjk(next);
+    }
+
+    private static bool IsCjk(char c) =>
+        c is >= '\u3000' and <= '\u30FF' or >= '\u3400' and <= '\u4DBF' or >= '\u4E00' and <= '\u9FFF'
+            or >= '\uAC00' and <= '\uD7AF' or >= '\uF900' and <= '\uFAFF' or >= '\uFF00' and <= '\uFFEF';
+
+    private static bool IsOpeningPunctuation(char c) => "（《〈「『【〔［｛“‘".Contains(c);
+
+    private static bool IsClosingPunctuation(char c) => "，。、！？；：）》〉」』】〕］｝”’…·".Contains(c);
 
     private static TextLayout Shape(string text, in TextEffectsStyle style, double maxWidth = double.PositiveInfinity,
                                     TextWrapping wrapping = TextWrapping.NoWrap) =>
@@ -76,16 +133,16 @@ internal sealed class TextEffectsWordLayout
         Lines.Clear();
         LineHeight = style.LineHeight;
         var space = Shape(" ", style).WidthIncludingTrailingWhitespace;
-        var forced = Split(text);
+        var forced = Tokenize(text);
         var index = 0;
         var perLine = new List<List<Word>>();
         for (var f = 0; f < forced.Count; f++)
         {
             var list = new List<Word>();
-            foreach (var part in forced[f])
+            foreach (var (part, isGlued) in forced[f])
             {
                 var layout = Shape(part, style);
-                var word = new Word { Text = part, Layout = layout, Width = layout.WidthIncludingTrailingWhitespace, Index = index++, ForcedLine = f };
+                var word = new Word { Text = part, IsGlued = isGlued, Layout = layout, Width = layout.WidthIncludingTrailingWhitespace, Index = index++, ForcedLine = f };
                 if (letters)
                 {
                     ShapeLetters(word, style);
@@ -114,7 +171,8 @@ internal sealed class TextEffectsWordLayout
             var first = true;
             foreach (var word in list)
             {
-                if (!first && x + space + word.Width > width + 0.5)
+                var gap = word.IsGlued ? 0 : space;
+                if (!first && x + gap + word.Width > width + 0.5)
                 {
                     widest = Math.Max(widest, x);
                     x = 0;
@@ -124,7 +182,7 @@ internal sealed class TextEffectsWordLayout
                 }
                 if (!first)
                 {
-                    x += space;
+                    x += gap;
                 }
                 word.X = x;
                 word.Y = y;
@@ -177,7 +235,8 @@ internal sealed class TextEffectsWordLayout
     /// <summary>The narrowest width that keeps the greedy line count, so lines come out evenly filled.</summary>
     internal static double Balance(IReadOnlyList<Word> words, double space, double maxWidth)
     {
-        var widths = words.Select(w => w.Width).ToList();
+        // A glued word adds no space: taking it off its width lets the balancing, which adds one to every word, stay simple.
+        var widths = words.Select(w => w.IsGlued ? w.Width - space : w.Width).ToList();
         return BalanceWidths(widths, space, maxWidth);
     }
 
