@@ -27,6 +27,8 @@ ENV DOTNET_ROOT=/opt/dotnet \
 # The host targets net11.0-browser: the wasm-tools workload (wasm-tools-net10 is for net10.0-browser).
 RUN dotnet --info && dotnet workload install wasm-tools
 COPY . .
+# pdf.js is not committed: the viewer's renderer in a browser, fetched here with its checksum checked (TKCode.Arc.Pdf.Browser).
+RUN bash tools/pdf/sync-pdfjs.sh
 # Trimmed and interpreted: compiling ahead of time to WebAssembly froze the site on page switches, so it is off (-p:ArcAot=true turns it on).
 RUN dotnet publish gallery/TKCode.Arc.Gallery.Browser/TKCode.Arc.Gallery.Browser.csproj \
         -c Release -o /app \
@@ -38,7 +40,7 @@ RUN dotnet run --project gallery/TKCode.Arc.Gallery.Llms -c Release -- /app/wwwr
 # The *.dll files are the assemblies the publish loads on demand (wwwroot/_lazy, see the Browser project file); the *.otf file is the Chinese font;
 # the *.md and *.txt files are the pages for AI assistants.
 RUN cd /app/wwwroot \
-    && find . -type f \( -name '*.js' -o -name '*.wasm' -o -name '*.dat' -o -name '*.json' -o -name '*.html' \
+    && find . -type f \( -name '*.js' -o -name '*.mjs' -o -name '*.wasm' -o -name '*.dat' -o -name '*.json' -o -name '*.html' \
                          -o -name '*.css' -o -name '*.map' -o -name '*.svg' -o -name '*.xml' -o -name '*.dll' -o -name '*.otf' \
                          -o -name '*.md' -o -name '*.txt' \) -print0 \
        | xargs -0 -P "$(nproc)" -I{} sh -c 'brotli -q 11 -c "{}" > "{}.br" && gzip -9 -c "{}" > "{}.gz"'
