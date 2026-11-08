@@ -288,10 +288,11 @@ static void initialize_once(void) {
    Player. */
 
 typedef struct tkv_event { int32_t event; double a; double b; } tkv_event;
-typedef struct tkv_events { tkv_event items[24]; int count; } tkv_events;
+typedef struct tkv_events { tkv_event items[64]; int count; } tkv_events;
 
 struct tkv_player {
     pthread_mutex_t lock;
+    pthread_mutex_t deliver_lock; /* taken before lock is released, so events reach .NET in the order they were made */
     tkv_event_callback callback;
     void* context;
 
@@ -352,16 +353,56 @@ static double now_seconds(void) {
     return (double)ts.tv_sec + (double)ts.tv_nsec / 1e9;
 }
 
+/* Progress events that a later one of the same kind replaces; the first to go when a batch is full. */
+static int is_droppable(int32_t event) {
+    return event == TKV_EVENT_POSITION || event == TKV_EVENT_BUFFERED || event == TKV_EVENT_FRAME;
+}
+
 static void push(tkv_events* q, int32_t event, double a, double b) {
-    if (q->count < (int)(sizeof(q->items) / sizeof(q->items[0]))) {
-        q->items[q->count].event = event;
-        q->items[q->count].a = a;
-        q->items[q->count].b = b;
-        q->count++;
+    const int capacity = (int)(sizeof(q->items) / sizeof(q->items[0]));
+    if (q->count == capacity) {
+        /* Full: make room by dropping the oldest progress event; state, error and end events are never lost. */
+        int victim = -1;
+        for (int i = 0; i < q->count; i++) {
+            if (is_droppable(q->items[i].event)) {
+                victim = i;
+                break;
+            }
+        }
+        if (victim < 0) {
+            if (is_droppable(event)) {
+                return;
+            }
+            victim = 0;
+        }
+        memmove(&q->items[victim], &q->items[victim + 1], (size_t)(q->count - victim - 1) * sizeof(q->items[0]));
+        q->count--;
     }
+    q->items[q->count].event = event;
+    q->items[q->count].a = a;
+    q->items[q->count].b = b;
+    q->count++;
 }
 
 /* Delivers queued events; call without the lock. */
+static void deliver(tkv_player* p, tkv_events* q);
+
+/*
+ * Releases p->lock and delivers q. Control calls and the bus thread both deliver; taking deliver_lock before releasing
+ * the state lock (hand over hand) makes them deliver in the order they changed the state, so a caller's PLAYING cannot
+ * overtake the bus thread's later BUFFERING. The callback only queues (it never calls back into the shim), so holding
+ * deliver_lock while it runs cannot deadlock.
+ */
+static void unlock_and_deliver(tkv_player* p, tkv_events* q, int send) {
+    pthread_mutex_lock(&p->deliver_lock);
+    pthread_mutex_unlock(&p->lock);
+    if (send) {
+        deliver(p, q);
+    }
+    pthread_mutex_unlock(&p->deliver_lock);
+    q->count = 0;
+}
+
 static void deliver(tkv_player* p, tkv_events* q) {
     for (int i = 0; i < q->count; i++) {
         if (p->callback != NULL) {
@@ -770,14 +811,10 @@ static void* bus_thread(void* arg) {
             }
         }
         int closing = p->closing;
-        pthread_mutex_unlock(&p->lock);
+        unlock_and_deliver(p, &q, !closing);
         if (msg != NULL) {
             p_gst_mini_object_unref(msg);
         }
-        if (!closing) {
-            deliver(p, &q);
-        }
-        q.count = 0;
     }
     return NULL;
 }
@@ -939,6 +976,7 @@ TKV_API int32_t tkv_player_create(tkv_event_callback callback, void* context, co
         return TKV_E_FAIL;
     }
     pthread_mutex_init(&p->lock, NULL);
+    pthread_mutex_init(&p->deliver_lock, NULL);
     p->callback = callback;
     p->context = context;
     p->rate = 1.0;
@@ -955,6 +993,7 @@ TKV_API int32_t tkv_player_create(tkv_event_callback callback, void* context, co
         if (p->appsink != NULL) {
             p_gst_object_unref(p_gst_object_ref_sink(p->appsink));
         }
+        pthread_mutex_destroy(&p->deliver_lock);
         pthread_mutex_destroy(&p->lock);
         free(p);
         return TKV_E_FAIL;
@@ -1042,6 +1081,7 @@ TKV_API void tkv_player_destroy(tkv_player* p) {
         p_gst_object_unref(p->playbin);
     }
     free(p->uri);
+    pthread_mutex_destroy(&p->deliver_lock);
     pthread_mutex_destroy(&p->lock);
     free(p);
 }
@@ -1073,8 +1113,7 @@ TKV_API int32_t tkv_player_open(tkv_player* p, const char* url) {
     int ok = start_loading(p);
     p->reported = TKV_STATE_LOADING;
     push(&q, TKV_EVENT_STATE, TKV_STATE_LOADING, 0);
-    pthread_mutex_unlock(&p->lock);
-    deliver(p, &q);
+    unlock_and_deliver(p, &q, 1);
     (void)ok;
     return TKV_OK;
 }
@@ -1100,8 +1139,7 @@ TKV_API int32_t tkv_player_play(tkv_player* p) {
         p_gst_element_set_state(p->playbin, GST_STATE_PLAYING);
     }
     update_state(p, &q);
-    pthread_mutex_unlock(&p->lock);
-    deliver(p, &q);
+    unlock_and_deliver(p, &q, 1);
     return TKV_OK;
 }
 
@@ -1119,8 +1157,7 @@ TKV_API int32_t tkv_player_pause(tkv_player* p) {
     p->target_playing = 0;
     p_gst_element_set_state(p->playbin, GST_STATE_PAUSED);
     update_state(p, &q);
-    pthread_mutex_unlock(&p->lock);
-    deliver(p, &q);
+    unlock_and_deliver(p, &q, 1);
     return TKV_OK;
 }
 
@@ -1154,8 +1191,7 @@ TKV_API int32_t tkv_player_seek(tkv_player* p, double seconds, int32_t accurate)
             push(&q, TKV_EVENT_STATE, p->reported, 0);
         }
     }
-    pthread_mutex_unlock(&p->lock);
-    deliver(p, &q);
+    unlock_and_deliver(p, &q, 1);
     return result;
 }
 

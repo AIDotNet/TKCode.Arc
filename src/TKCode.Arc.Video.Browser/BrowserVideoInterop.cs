@@ -78,6 +78,19 @@ internal static partial class BrowserVideoInterop
     [JSImport("detachNative", Module)]
     public static partial void DetachNative(JSObject player);
 
+    [JSImport("watchFullscreen", Module)]
+    public static partial void WatchFullscreen([JSMarshalAs<JSType.Function>] Action onExit);
+
+    [JSImport("enterFullscreen", Module)]
+    public static partial void EnterFullscreen();
+
+    [JSImport("exitFullscreen", Module)]
+    public static partial void ExitFullscreen();
+
+    [JSImport("setCaptions", Module)]
+    public static partial void SetCaptions(JSObject player, [JSMarshalAs<JSType.Array<JSType.Number>>] double[] starts,
+        [JSMarshalAs<JSType.Array<JSType.Number>>] double[] ends, string[] texts);
+
     [JSImport("dispose", Module)]
     public static partial void Dispose(JSObject player);
 }

@@ -21,6 +21,7 @@ internal sealed class BrowserVideoPlayer : VideoPlayerBase, IVideoFrameOwner, IV
     private bool _leased;
     private long _frameToken;
     private bool _native;
+    private VideoTextTrack? _nativeCaptions;
 
     public BrowserVideoPlayer(BrowserVideoBackend backend)
         : base(backend)
@@ -105,8 +106,9 @@ internal sealed class BrowserVideoPlayer : VideoPlayerBase, IVideoFrameOwner, IV
         {
             started = await BrowserVideoInterop.Play(_player);
         }
-        catch (JSException exception)
+        catch (Exception exception)
         {
+            // async void: nothing may escape, or it would crash the app.
             if (version == _loadVersion && !IsDisposed)
             {
                 Fail(VideoErrorKind.Decode, exception.Message, exception);
@@ -270,6 +272,15 @@ internal sealed class BrowserVideoPlayer : VideoPlayerBase, IVideoFrameOwner, IV
                     Fail(KindOf((int)value), $"Media error {value}.");
                 }
                 break;
+            case "tainted":
+                // A cross-origin video served without CORS headers: the browser plays it but its frames cannot be read.
+                if (State != VideoPlaybackState.Failed)
+                {
+                    BrowserVideoInterop.Pause(_player);
+                    Fail(VideoErrorKind.Network,
+                        "The video's frames cannot be read: it is cross-origin and its server sends no CORS headers (Access-Control-Allow-Origin).");
+                }
+                break;
             case "frame":
                 if (State != VideoPlaybackState.Playing)
                 {
@@ -370,6 +381,76 @@ internal sealed class BrowserVideoPlayer : VideoPlayerBase, IVideoFrameOwner, IV
 #endif
     }
 
+    public void SetNativeCaptions(VideoTextTrack? track)
+    {
+        if (ReferenceEquals(track, _nativeCaptions))
+        {
+            PushNativeCaptions();
+            return;
+        }
+        if (_nativeCaptions is not null)
+        {
+            _nativeCaptions.CuesChanged -= OnNativeCaptionCuesChanged;
+        }
+        _nativeCaptions = track;
+        if (track is not null)
+        {
+            track.CuesChanged += OnNativeCaptionCuesChanged;
+        }
+        PushNativeCaptions();
+    }
+
+    private void OnNativeCaptionCuesChanged(object? sender, EventArgs e) => PushNativeCaptions();
+
+    private void PushNativeCaptions()
+    {
+        if (IsDisposed)
+        {
+            return;
+        }
+        var cues = _nativeCaptions?.Cues ?? [];
+        var starts = new double[cues.Count];
+        var ends = new double[cues.Count];
+        var texts = new string[cues.Count];
+        for (var i = 0; i < cues.Count; i++)
+        {
+            starts[i] = cues[i].Start.TotalSeconds;
+            ends[i] = cues[i].End.TotalSeconds;
+            texts[i] = NativeCaptionText(cues[i]);
+        }
+        BrowserVideoInterop.SetCaptions(_player, starts, ends, texts);
+    }
+
+    /// <summary>The cue as WebVTT cue text: its bold, italic and underlined runs as tags, everything else escaped.</summary>
+    internal static string NativeCaptionText(VideoCue cue)
+    {
+        if (cue.Runs.Count == 0)
+        {
+            return EscapeCueText(cue.Text);
+        }
+        var builder = new System.Text.StringBuilder();
+        foreach (var run in cue.Runs)
+        {
+            var text = EscapeCueText(run.Text);
+            if (run.IsUnderline)
+            {
+                text = "<u>" + text + "</u>";
+            }
+            if (run.IsItalic)
+            {
+                text = "<i>" + text + "</i>";
+            }
+            if (run.IsBold)
+            {
+                text = "<b>" + text + "</b>";
+            }
+            builder.Append(text);
+        }
+        return builder.ToString();
+    }
+
+    private static string EscapeCueText(string text) => text.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;");
+
     /// <summary>Hands the element to a native host; frames stop being copied until <see cref="DetachNative"/>.</summary>
     internal JSObject AttachNative()
     {
@@ -389,6 +470,11 @@ internal sealed class BrowserVideoPlayer : VideoPlayerBase, IVideoFrameOwner, IV
 
     protected override void Dispose(bool disposing)
     {
+        if (_nativeCaptions is not null)
+        {
+            _nativeCaptions.CuesChanged -= OnNativeCaptionCuesChanged;
+            _nativeCaptions = null;
+        }
         _loadVersion++;
         BrowserVideoInterop.Dispose(_player);
         _player.Dispose();

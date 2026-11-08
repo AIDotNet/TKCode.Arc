@@ -1011,7 +1011,8 @@ TKV_API int32_t tkv_player_open(tkv_player* p, const char* url)
     EnterCriticalSection(&p->lock);
     p->loaded = 0;
     p->last_position_tick = 0;
-    p->error[0] = 0;
+    /* p->error is kept: an ERROR of the previous media may still be queued on the .NET side, which reads the text when it
+       handles the event. Every failure sets its own text before it is reported, so a stale one is never shown. */
     LeaveCriticalSection(&p->lock);
     InterlockedExchange(&p->force_frame, 0);
     /* A frame still out stays valid until its release; the pool is rebuilt on the next acquire if the size changes. */

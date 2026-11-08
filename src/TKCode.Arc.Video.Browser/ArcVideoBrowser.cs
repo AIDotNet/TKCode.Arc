@@ -25,6 +25,8 @@ public static class ArcVideoBrowser
         {
             await JSHost.ImportAsync(BrowserVideoInterop.Module, ModuleUrl());
             ArcVideo.Backend = BrowserVideoBackend.Instance;
+            BrowserVideoInterop.WatchFullscreen(VideoSystemFullScreen.RaiseExited);
+            VideoSystemFullScreen.Register(BrowserVideoInterop.EnterFullscreen, BrowserVideoInterop.ExitFullscreen);
             return true;
         }
         catch (Exception exception)

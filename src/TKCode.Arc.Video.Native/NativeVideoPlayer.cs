@@ -25,13 +25,19 @@ namespace TKCode.Arc;
 /// </para>
 /// <para>
 /// Dispose destroys the native player under the gate; tkv_player_destroy guarantees no callbacks after it returns, so the
-/// GC handle passed as the callback context is freed only then. A frame still leased at Dispose becomes invalid.
+/// GC handle passed as the callback context is freed only then.
+/// </para>
+/// <para>
+/// A CPU lease points into native memory and is read outside the gate. A load, a cancelled load or Dispose on another thread
+/// would free that memory under the reader, so they first wait (up to <see cref="LeaseWaitMilliseconds"/>) for the lease to
+/// come back, and no new frame is lent meanwhile. The lease's own thread does not wait (it cannot be reading then).
 /// </para>
 /// </remarks>
 internal sealed class NativeVideoPlayer : VideoPlayerBase, IVideoFrameOwner, IVideoTimelineSync
 {
     private const int MarkerOpen = 0;
     private const int MaxBufferedRanges = 32;
+    private const int LeaseWaitMilliseconds = 1000;
     private static readonly WaitCallback s_drain = static state => ((NativeVideoPlayer)state!).Drain();
 
     private readonly NativeVideoBackend _backend;
@@ -49,6 +55,8 @@ internal sealed class NativeVideoPlayer : VideoPlayerBase, IVideoFrameOwner, IVi
     private PendingLoad? _pendingLoad;
     private bool _leased;
     private long _leaseToken;
+    private int _leaseThread;
+    private int _lendingBlocked;
     private bool _rateWarningShown;
     private bool _failureRaised;
     private long _leaseImageId;
@@ -119,6 +127,7 @@ internal sealed class NativeVideoPlayer : VideoPlayerBase, IVideoFrameOwner, IVi
         var pending = new PendingLoad();
         lock (_gate)
         {
+            WaitForLeaseLocked();
             // A newer load or Dispose won the race while the source was materialized.
             if (version != _loadVersion || IsDisposed)
             {
@@ -167,6 +176,7 @@ internal sealed class NativeVideoPlayer : VideoPlayerBase, IVideoFrameOwner, IVi
             {
                 lock (_gate)
                 {
+                    WaitForLeaseLocked();
                     // Stop the native load: there is no "close" in the ABI, so drop the player; the next load recreates it.
                     if (ReferenceEquals(_pendingLoad, pending) && !IsDisposed)
                     {
@@ -259,7 +269,7 @@ internal sealed class NativeVideoPlayer : VideoPlayerBase, IVideoFrameOwner, IVi
         TkvFrame frame;
         lock (_gate)
         {
-            if (_native == 0 || IsDisposed || _leased)
+            if (_native == 0 || IsDisposed || _leased || _lendingBlocked > 0)
             {
                 return false;
             }
@@ -270,6 +280,7 @@ internal sealed class NativeVideoPlayer : VideoPlayerBase, IVideoFrameOwner, IVi
             }
             _leased = true;
             _leaseToken = frame.Token;
+            _leaseThread = Environment.CurrentManagedThreadId;
             _leaseImageId = frame.Kind == VideoNativeInterop.FrameGpu ? frame.GpuImageId : 0;
         }
         var size = new PixelSize(frame.Width, frame.Height);
@@ -311,6 +322,7 @@ internal sealed class NativeVideoPlayer : VideoPlayerBase, IVideoFrameOwner, IVi
             {
                 VideoNativeInterop.PlayerReleaseFrame(_native, token);
             }
+            Monitor.PulseAll(_gate);
         }
     }
 
@@ -429,6 +441,7 @@ internal sealed class NativeVideoPlayer : VideoPlayerBase, IVideoFrameOwner, IVi
         lock (_gate)
         {
             Interlocked.Increment(ref _loadVersion);
+            WaitForLeaseLocked();
             pending = _pendingLoad;
             _pendingLoad = null;
             DestroyNativeLocked();
@@ -495,6 +508,37 @@ internal sealed class NativeVideoPlayer : VideoPlayerBase, IVideoFrameOwner, IVi
         _nativeLuid = null;
         _gpuImages.Clear();
         _semaphores.Clear();
+    }
+
+    /// <summary>
+    /// Waits, holding the gate between checks, until a frame lent to another thread is returned (see the class remarks). Gives
+    /// up after <see cref="LeaseWaitMilliseconds"/>: a lease that is never disposed is a caller bug and must not hang a load.
+    /// </summary>
+    private void WaitForLeaseLocked()
+    {
+        if (!_leased || _leaseThread == Environment.CurrentManagedThreadId)
+        {
+            return;
+        }
+        _lendingBlocked++;
+        try
+        {
+            var deadline = Environment.TickCount64 + LeaseWaitMilliseconds;
+            while (_leased)
+            {
+                var left = deadline - Environment.TickCount64;
+                if (left <= 0)
+                {
+                    Trace.TraceWarning("TKCode.Arc.Video.Native: a leased frame was not returned in time; releasing it anyway.");
+                    return;
+                }
+                Monitor.Wait(_gate, (int)left);
+            }
+        }
+        finally
+        {
+            _lendingBlocked--;
+        }
     }
 
     private void ReleaseLeaseLocked()

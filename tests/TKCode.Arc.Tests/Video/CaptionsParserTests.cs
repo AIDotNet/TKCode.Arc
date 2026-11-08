@@ -92,7 +92,9 @@ public class CaptionsParserTests
             result.Warnings.ShouldBeEmpty();
             best = watch.Elapsed < best ? watch.Elapsed : best;
         }
-        best.TotalMilliseconds.ShouldBeLessThan(100);
+        // A loose bound that still catches a quadratic slip (seconds at this size) without failing on a loaded CI machine;
+        // unloaded it takes a few tens of milliseconds.
+        best.TotalMilliseconds.ShouldBeLessThan(500);
     }
 
     [Theory]

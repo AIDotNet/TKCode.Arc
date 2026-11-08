@@ -4,7 +4,8 @@
 //
 // Event kinds sent to the callback (kind, value):
 //   time (seconds), duration (seconds, 0 when unknown or live), size (width * 65536 + height), buffered, waiting, playing,
-//   pause, ended, error (MediaError code), seeked (seconds), frame (a new frame is ready while not playing).
+//   pause, ended, error (MediaError code), seeked (seconds), frame (a new frame is ready while not playing), tainted (a
+//   cross-origin video without CORS headers: its frames cannot be read).
 
 const hasFrameCallback = typeof HTMLVideoElement !== 'undefined' && 'requestVideoFrameCallback' in HTMLVideoElement.prototype;
 const hasOffscreen = typeof OffscreenCanvas !== 'undefined';
@@ -54,7 +55,7 @@ export function create(callback) {
         path: 'gpu', canvas: null, context: null,
         buffer: null, frameWidth: 0, frameHeight: 0, frameTime: 0, sequence: 0, taken: 0, reportedCopyError: false,
         targetWidth: 0, targetHeight: 0, lastAsk: 0, stale: false, frameRequest: 0, animationRequest: 0, lastMediaTime: -1,
-        native: false, disposed: false, bufferedKey: '',
+        native: false, wasPlaying: false, captionTrack: null, disposed: false, bufferedKey: '', settleLoad: null,
         stats: { copies: 0, copyMs: 0, takes: 0, takeMs: 0, skipped: 0 },
     };
     const size = () => callback('size', video.videoWidth * 65536 + video.videoHeight);
@@ -84,22 +85,41 @@ export function create(callback) {
 
 // ---- Loading ----
 
-// Resolves to the duration (>= 0) once the metadata is known, or to -code (MediaError code 1-4) when loading fails.
-function waitForMetadata(video) {
+// Resolves to the duration (>= 0) once the metadata is known, or to -code (MediaError code 1-4) when loading fails. A
+// load replaced by another one or by dispose() resolves to -1 (aborted): neither fires 'loadedmetadata' or 'error', and
+// the caller's await would otherwise never end.
+function waitForMetadata(p) {
+    const video = p.video;
     return new Promise(resolve => {
-        const done = () => { cleanup(); resolve(finite(video.duration)); };
-        const fail = () => { cleanup(); resolve(-(video.error ? video.error.code : 4)); };
-        const cleanup = () => { video.removeEventListener('loadedmetadata', done); video.removeEventListener('error', fail); };
+        const settle = value => {
+            video.removeEventListener('loadedmetadata', done);
+            video.removeEventListener('error', fail);
+            if (p.settleLoad === settle) {
+                p.settleLoad = null;
+            }
+            resolve(value);
+        };
+        const done = () => settle(finite(video.duration));
+        const fail = () => settle(-(video.error ? video.error.code : 4));
+        p.settleLoad = settle;
         video.addEventListener('loadedmetadata', done);
         video.addEventListener('error', fail);
     });
 }
 
+function abortLoad(p) {
+    if (p.settleLoad) {
+        p.settleLoad(-1);
+    }
+}
+
 // owned: the URL is an object URL made by blobUrl(), revoked when the element loads something else or is disposed.
 export function loadUrl(p, url, owned) {
     const video = p.video;
+    abortLoad(p);
     video.pause();
     revoke(p);
+    p.reportedCopyError = false;
     if (owned) {
         p.ownedUrl = url;
     }
@@ -114,7 +134,7 @@ export function loadUrl(p, url, owned) {
     } else {
         video.removeAttribute('crossorigin');
     }
-    const ready = waitForMetadata(video);
+    const ready = waitForMetadata(p);
     video.src = url;
     video.load();
     return ready;
@@ -280,6 +300,10 @@ function produce(p, mediaTime) {
         if (!p.reportedCopyError) {
             p.reportedCopyError = true;
             console.warn('TKCode.Arc.Video.Browser: cannot read video frames: ' + error);
+            // Without a picture the player would play sound over black; tell .NET so it can fail visibly.
+            if (error && error.name === 'SecurityError') {
+                p.callback('tainted', 0);
+            }
         }
         return;
     }
@@ -356,6 +380,14 @@ export function attachNative(p) {
     video.style.objectFit = 'contain';
     video.style.background = '#000';
     video.style.display = 'block';
+    // Clicks and the wheel go to the Avalonia canvas under the element, so the player's own picture gestures keep working.
+    // Avalonia reads pointer offsets from the event target, and the layer holding native elements is at the canvas origin.
+    video.style.pointerEvents = 'none';
+    // Moving the element to a new host (full screen) removed it from the document, which paused it; play on.
+    if (p.wasPlaying && video.paused) {
+        video.play().catch(() => { });
+    }
+    p.wasPlaying = false;
     return video;
 }
 
@@ -363,6 +395,7 @@ export function detachNative(p) {
     p.native = false;
     const video = p.video;
     const playing = !video.paused;
+    p.wasPlaying = playing;
     if (video.parentNode) {
         video.parentNode.removeChild(video);
     }
@@ -372,6 +405,30 @@ export function detachNative(p) {
     }
     p.stale = true;
     watchFrames(p);
+}
+
+// ---- Captions in Native presentation ----
+
+// Replaces the captions the element shows with cues given as parallel arrays (seconds, seconds, WebVTT cue text); empty
+// arrays show none. Uses one text track created on first use: a TextTrack cannot be removed, only emptied and disabled.
+export function setCaptions(p, starts, ends, texts) {
+    const video = p.video;
+    if (!p.captionTrack) {
+        if (!starts.length || typeof video.addTextTrack !== 'function' || typeof VTTCue === 'undefined') {
+            return;
+        }
+        p.captionTrack = video.addTextTrack('captions');
+    }
+    const track = p.captionTrack;
+    // Cues can be read and removed only while the track is not disabled.
+    track.mode = 'hidden';
+    while (track.cues && track.cues.length > 0) {
+        track.removeCue(track.cues[0]);
+    }
+    for (let i = 0; i < starts.length; i++) {
+        track.addCue(new VTTCue(starts[i], ends[i], texts[i]));
+    }
+    track.mode = starts.length > 0 ? 'showing' : 'disabled';
 }
 
 // ---- Diagnostics and tests ----
@@ -389,6 +446,7 @@ export function stats(p) {
 
 export function dispose(p) {
     p.disposed = true;
+    abortLoad(p);
     stopWatching(p);
     const video = p.video;
     video.pause();
@@ -401,4 +459,36 @@ export function dispose(p) {
     p.buffer = null;
     p.canvas = null;
     p.context = null;
+}
+
+// ---- Page full screen (VideoPlayer FullScreenMode.System) ----
+
+let fullscreenWatched = false;
+
+// Calls onExit when the page leaves full screen (Escape, the browser's own control).
+export function watchFullscreen(onExit) {
+    if (fullscreenWatched) {
+        return;
+    }
+    fullscreenWatched = true;
+    document.addEventListener('fullscreenchange', () => {
+        if (!document.fullscreenElement) {
+            onExit();
+        }
+    });
+}
+
+// The browser refuses without a user gesture; the player then stays full screen inside the page only.
+export function enterFullscreen() {
+    const root = document.documentElement;
+    if (document.fullscreenElement || typeof root.requestFullscreen !== 'function') {
+        return;
+    }
+    root.requestFullscreen().catch(error => console.info('TKCode.Arc.Video.Browser: full screen refused: ' + error));
+}
+
+export function exitFullscreen() {
+    if (document.fullscreenElement && typeof document.exitFullscreen === 'function') {
+        document.exitFullscreen().catch(() => { });
+    }
 }
