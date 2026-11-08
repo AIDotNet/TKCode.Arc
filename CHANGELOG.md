@@ -6,7 +6,24 @@ while the version carries a `-preview` suffix the API may still change between r
 NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Foundation` (from 0.3.2),
 `TKCode.Arc.Fonts`, `TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special`,
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
-`TKCode.Arc.Audio.Native` and `TKCode.Arc.Audio.Browser`.
+`TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser` and `TKCode.Arc.Templates` (from 0.4.0-preview.6).
+
+## 0.4.0-preview.6 - 2026-11-08
+
+Eight Pricing blocks, a `dotnet new` template package, SettingsGroup columns and a browser-native video presentation.
+
+### Added
+
+- **Blocks › Pricing** (`TKCode.Arc.Blocks`): `PlanComparison` (an Arc port: plan cards with a monthly or yearly switch that rolls every price, a highlighted plan and a feature matrix) and seven original designs that take Arc's Pro behaviour as a reference: `PricingCalculator` (plan cards priced by a seat slider and a billing switch, with a recommended badge that glides to the plan that fits), `UsagePricing` (drag seats and traffic and the plan name morphs while the estimate counts to the new total), `CartDrawer` (items fly into the cart, a rolling count and a side drawer with steppers, a free-shipping bar and checkout), `CheckoutSummary` (a promo code that turns into a chip, sliding discount and tax lines, rolling totals and a pay button that walks to paid), `LiveCheckout` (a subscription checkout whose summary recalculates live and unfolds into a receipt), `SeatManager` (an avatar row, a seat meter, a stepper with prorated charges, a confirm step and invites you can resend or revoke with undo) and `CreditTopUp` (a balance with a usage chart, preset packs, a custom amount slider, auto top-up and a new balance that rolls in like an odometer). Docs and demos in English, 简体中文 and 繁體中文.
+- **Templates** (new package `TKCode.Arc.Templates`): `dotnet new install TKCode.Arc.Templates`, then `dotnet new tkcode-arc` with `--layout blank|sidebar`, `--mvvm none|toolkit` (view models with CommunityToolkit.Mvvm and compiled bindings), `--settings` (on by default: the appearance, the accent, the window placement and the folded sidebar come back on the next start), `--framework` and `--accent`. Item templates add a page (`tkcode-arc-page`, optionally with a view model), a window (`tkcode-arc-window`), a dialog with an awaitable result (`tkcode-arc-dialog`) and an Arc-style control with its token class and theme file (`tkcode-arc-control`). The Installation guide gains a “Start from a template” section.
+- `SettingsGroup` lays rows out in a fixed or responsive number of columns (`Columns`, `MinColumnWidth`, `ColumnSpacing`, `RowSpacing`, attached `ColumnSpan`) and shares `LabelWidth`, `ContentAlignment` and `ContentSpacing` with its rows, which can override them. Defaults keep the single-column layout.
+- `VideoPlayer.BrowserPresentation="Native"` shows the browser's own video element instead of the canvas: no copies, and every format the browser plays (HLS in Safari, for example). The control bar then sits below the picture and the captions are the browser's.
+- `VideoPlayer` system full screen also works in the browser (Fullscreen API), and leaving full screen through the window manager or Escape leaves the player's full screen too.
+
+### Fixed
+
+- Video on Linux (GStreamer): events reach .NET in the order they happened, and a full event batch drops progress events instead of state, error or end events.
+- Video (native backends): loading or disposing while a frame is read on another thread no longer frees the frame under the reader, and an error of the previous media keeps its message.
 
 ## Unreleased
 
@@ -930,6 +947,7 @@ ArcTheme.Apply(t => t
 
 First preview release.
 
+[0.4.0-preview.6]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.4.0-preview.5...v0.4.0-preview.6
 [0.4.0-preview.5]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.4.0-preview.4...v0.4.0-preview.5
 [0.4.0-preview.4]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.4.0-preview.3...v0.4.0-preview.4
 [0.4.0-preview.3]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.4.0-preview.2...v0.4.0-preview.3

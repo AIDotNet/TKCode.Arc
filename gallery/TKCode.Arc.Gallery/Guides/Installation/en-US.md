@@ -29,21 +29,30 @@ references, the fonts, Lucide icons, `UseArc(...)` and a light/dark switch are a
 dotnet new install TKCode.Arc.Templates
 dotnet new tkcode-arc -n MyApp                      # a top bar over one page
 dotnet new tkcode-arc -n MyApp --layout sidebar     # a collapsible sidebar with pages
+dotnet new tkcode-arc -n MyApp --layout sidebar --mvvm toolkit   # ... with view models
 cd MyApp
 dotnet run
 ```
 
 `--layout sidebar` adds `TKCode.Arc.Blocks` and builds the window from its `Sidebar`: icons, the selected page, a
 collapse to an icon rail, a top bar with the page title and three sample pages. `-f` picks the target framework
-(`net10.0` by default, or `net8.0` and `net11.0`) and `--accent` the start-up accent. Visual Studio and Rider list the
-template as **TKCode.Arc App**. The steps below add Arc to an existing project and explain what the template sets up.
+(`net10.0` by default, or `net8.0` and `net11.0`) and `--accent` the start-up accent. `--mvvm toolkit` adds view models
+built with CommunityToolkit.Mvvm and binds the views to them with compiled bindings. The app saves the appearance, the
+accent, the window's size and position and the folded sidebar, and restores them on the next start; `--settings false`
+leaves that out. Visual Studio and Rider list the template as **TKCode.Arc App**.
+
+Inside the project, item templates add the usual pieces: `dotnet new tkcode-arc-page -n Reports` (a page, `--view-model`
+for one with a view model), `tkcode-arc-window` (a secondary window), `tkcode-arc-dialog` (a form in an Arc `Dialog`
+with an awaitable `ShowAsync`) and `tkcode-arc-control` (an Arc-style control with its token class and theme file). The
+comments at the top of the created files say how to wire them in. The steps below add Arc to an existing project and
+explain what the template sets up.
 
 ## 1. Add the packages
 
 ```bash
-dotnet add package TKCode.Arc --version 0.4.0-preview.5
-dotnet add package TKCode.Arc.Fonts --version 0.4.0-preview.5           # optional: Geist and Geist Mono
-dotnet add package TKCode.Arc.Icons.Lucide --version 0.4.0-preview.5    # optional: the full Lucide set
+dotnet add package TKCode.Arc --version 0.4.0-preview.6
+dotnet add package TKCode.Arc.Fonts --version 0.4.0-preview.6           # optional: Geist and Geist Mono
+dotnet add package TKCode.Arc.Icons.Lucide --version 0.4.0-preview.6    # optional: the full Lucide set
 dotnet add package Avalonia.Fonts.Inter --version 12.1.4                 # optional: Inter for body text
 ```
 
@@ -52,9 +61,9 @@ package management, add the versions to `Directory.Packages.props` once and keep
 
 ```xml
 <ItemGroup>
-    <PackageVersion Include="TKCode.Arc" Version="0.4.0-preview.5" />
-    <PackageVersion Include="TKCode.Arc.Fonts" Version="0.4.0-preview.5" />
-    <PackageVersion Include="TKCode.Arc.Icons.Lucide" Version="0.4.0-preview.5" />
+    <PackageVersion Include="TKCode.Arc" Version="0.4.0-preview.6" />
+    <PackageVersion Include="TKCode.Arc.Fonts" Version="0.4.0-preview.6" />
+    <PackageVersion Include="TKCode.Arc.Icons.Lucide" Version="0.4.0-preview.6" />
     <PackageVersion Include="Avalonia.Fonts.Inter" Version="12.1.4" />
 </ItemGroup>
 ```
@@ -194,14 +203,14 @@ icon that is not compiled in draws nothing and logs a warning naming the line to
 AI explainers) are separate packages. Add the ones you need and register them inside `UseArc(...)`:
 
 ```bash
-dotnet add package TKCode.Arc.Blocks --version 0.4.0-preview.5
-dotnet add package TKCode.Arc.AdvancedCharts --version 0.4.0-preview.5
-dotnet add package TKCode.Arc.Special --version 0.4.0-preview.5
-dotnet add package TKCode.Arc.Workflow --version 0.4.0-preview.5
-dotnet add package TKCode.Arc.Dock --version 0.4.0-preview.5    # optional: IDE-style dock layout (UseArcDock())
-dotnet add package TKCode.Arc.Themes.Pixel --version 0.4.0-preview.5    # optional: pixel-art theme (UseArcPixelTheme())
-dotnet add package TKCode.Arc.Themes.Corners --version 0.4.0-preview.5    # optional: global corner style (UseArcCorners())
-dotnet add package TKCode.Arc.Mobile --version 0.4.0-preview.5    # optional: touch-first controls, not yet verified on devices (UseArcMobile())
+dotnet add package TKCode.Arc.Blocks --version 0.4.0-preview.6
+dotnet add package TKCode.Arc.AdvancedCharts --version 0.4.0-preview.6
+dotnet add package TKCode.Arc.Special --version 0.4.0-preview.6
+dotnet add package TKCode.Arc.Workflow --version 0.4.0-preview.6
+dotnet add package TKCode.Arc.Dock --version 0.4.0-preview.6    # optional: IDE-style dock layout (UseArcDock())
+dotnet add package TKCode.Arc.Themes.Pixel --version 0.4.0-preview.6    # optional: pixel-art theme (UseArcPixelTheme())
+dotnet add package TKCode.Arc.Themes.Corners --version 0.4.0-preview.6    # optional: global corner style (UseArcCorners())
+dotnet add package TKCode.Arc.Mobile --version 0.4.0-preview.6    # optional: touch-first controls, not yet verified on devices (UseArcMobile())
 ```
 
 ```csharp
