@@ -25,7 +25,10 @@
 extern "C" {
 #endif
 
-/* 1: initial. 2: adds tkv_player_timeline_sync and tkv_player_redeliver_frame (optional exports, see below). */
+/* 1: initial. 2: adds tkv_player_timeline_sync and tkv_player_redeliver_frame (optional exports, see below).
+   Later optional exports (no version change; a missing export means the feature is absent): the embedded text track
+   functions tkv_player_set_text_callback, tkv_player_text_track_count, tkv_player_text_track_info and
+   tkv_player_select_text_track, with TKV_EVENT_TEXT_TRACKS. */
 #define TKV_ABI_VERSION 2
 
 /* Results. */
@@ -52,6 +55,7 @@ extern "C" {
 #define TKV_EVENT_ERROR           7  /* a = TKV_ERR_*; message via tkv_player_last_error */
 #define TKV_EVENT_ENDED           8  /* reached the end (not looping) */
 #define TKV_EVENT_SEEKABLE        9  /* a = 1 or 0 */
+#define TKV_EVENT_TEXT_TRACKS    10  /* the embedded text tracks are known or changed: call tkv_player_text_track_count */
 
 /* States reported with TKV_EVENT_STATE (match VideoPlaybackState). */
 #define TKV_STATE_IDLE            0
@@ -77,6 +81,19 @@ extern "C" {
 #define TKV_SEM_METAL_SHARED_EVENT 1  /* id<MTLSharedEvent> */
 
 typedef void (*tkv_event_callback)(void* context, int32_t event, double a, double b);
+
+/* Text track kinds (match VideoTextTrackKind). */
+#define TKV_TEXT_SUBTITLES        0
+#define TKV_TEXT_CAPTIONS         1
+
+/* Text formats of a cue. */
+#define TKV_TEXT_PLAIN            0  /* plain text */
+#define TKV_TEXT_MARKUP           1  /* WebVTT cue text: <b>, <i>, <u> and the entities &amp; &lt; &gt; (Pango markup qualifies) */
+
+/* A cue of the selected embedded text track: shown from start to end (seconds of media time). end < 0: until the next
+   call for the same track, which also ends it (an empty text then only ends the shown cue). Same threading rules as the
+   event callback. */
+typedef void (*tkv_text_callback)(void* context, int32_t track, double start, double end, int32_t format, const char* text);
 
 typedef struct tkv_player tkv_player;
 
@@ -163,6 +180,20 @@ TKV_API int32_t tkv_player_timeline_sync(tkv_player* player, int64_t token, void
    lost its copy: surface re-attached, moved to full screen, render path changed). One-shot; cleared by any delivered frame
    and by tkv_player_open. */
 TKV_API int32_t tkv_player_redeliver_frame(tkv_player* player);
+
+/* Embedded text tracks (optional exports): subtitles and captions stored in the media (MP4 tx3g, Matroska text).
+   Nothing is delivered until a track is selected; the player then calls the text callback with that track's cues as the
+   media reaches them (a backend may send them ahead of time). The tracks are known after TKV_EVENT_TEXT_TRACKS; opening
+   other media clears them and the selection. */
+TKV_API int32_t tkv_player_set_text_callback(tkv_player* player, tkv_text_callback callback, void* context);
+/* The number of embedded text tracks (0 before TKV_EVENT_TEXT_TRACKS), or a negative TKV_E_*. */
+TKV_API int32_t tkv_player_text_track_count(tkv_player* player);
+/* Copies the track's language (BCP 47 or ISO 639, may be empty) and label (may be empty), NUL-terminated and cut to the
+   buffer sizes, and its kind (TKV_TEXT_SUBTITLES or TKV_TEXT_CAPTIONS). */
+TKV_API int32_t tkv_player_text_track_info(tkv_player* player, int32_t index, char* language, int32_t language_size,
+                                           char* label, int32_t label_size, int32_t* kind);
+/* Selects the track whose cues are delivered; -1 selects none. */
+TKV_API int32_t tkv_player_select_text_track(tkv_player* player, int32_t index);
 
 /* The last error message (UTF-8, owned by the player, valid until the next tkv_* call on it). */
 TKV_API const char* tkv_player_last_error(tkv_player* player);

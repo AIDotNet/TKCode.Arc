@@ -39,11 +39,13 @@ Set `Source` to an address (`avares://`, `file://`, `http(s)://`) or a `VideoSou
                  AspectRatio="1.7778" />
 ```
 
-`IsPlaying`, `Position`, `Volume`, `IsMuted`, `IsLooping` and `PlaybackRate` bind both ways. `Play()`, `Pause()`, `Seek()` and the `PlayPauseCommand`, `ToggleMuteCommand` and `ToggleFullScreenCommand` commands drive the player from outside. `Failed` reports why a video cannot play.
+`IsPlaying`, `Position`, `Volume`, `IsMuted`, `IsLooping` and `PlaybackRate` bind both ways. `Play()`, `Pause()`, `Stop()`, `Seek()` and the `PlayPauseCommand`, `StopCommand`, `SkipForwardCommand`, `SkipBackwardCommand`, `ToggleMuteCommand` and `ToggleFullScreenCommand` commands drive the player from outside. `Stop()` pauses, returns to the start and shows the poster again; the video stays loaded, so the next play starts at once. `Failed` reports why a video cannot play.
 
 ### Captions and chapters
 
 Add WebVTT or SRT files as `TextTracks`. The captions menu lists every captions and subtitles track, sets the text size, and turns captions off. A `Chapters` track splits the seek bar into segments and names the chapter under the pointer.
+
+Subtitles stored in the video itself (MP4 timed text, Matroska text tracks) join `TextTracks` once the video is loaded, after your own tracks, with `IsEmbedded` set, and leave when the source changes. They are read on macOS and iOS (MP4), Android (MP4, plain text, one cue at a time) and Linux (MP4 and Matroska; the MP4 demuxer there drops bold and italic); Windows and the browser do not list them yet.
 
 <Demo name="Captions" />
 
@@ -56,6 +58,8 @@ The bar hides two seconds after the pointer stops while the video plays, and sta
 ### Playback backends
 
 The player decodes with the backend in `ArcVideo.Backend` and draws the frames inside the window, so its controls, captions and rounded corners draw over the picture. Where the platform allows, frames move from the decoder to the screen on the GPU without a copy (macOS and Windows); elsewhere they are copied into a bitmap.
+
+On iOS and Android, `ArcVideoNative.Use()` works the same way: iOS plays through AVFoundation and Android through the platform's MediaPlayer, both with frames copied into a bitmap. Reference `TKCode.Arc.Video.Native` from a `net11.0-ios` or `net11.0-android` app (iOS 15, Android API 24 or later).
 
 In a browser, `BrowserPresentation="Native"` shows the browser's own video element instead: nothing is copied, and every format the browser plays works (HLS in Safari, for example). Nothing can be drawn over that element, so the control bar sits below the picture and always shows, the captions are the browser's, and the corners are square; the element hides while the poster, an error, the replay button or a menu is shown. Without such an element (desktop, or the net8.0 build) the player keeps the canvas.
 

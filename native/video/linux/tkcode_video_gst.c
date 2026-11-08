@@ -22,6 +22,7 @@
 
 #define _GNU_SOURCE
 #include "../tkcode_video.h"
+#include "../tkv_scale.h"
 
 #include <dlfcn.h>
 #include <pthread.h>
@@ -135,6 +136,16 @@ enum {
 };
 enum { GST_CORE_ERROR_MISSING_PLUGIN = 12 };
 #define GST_PLAY_FLAG_TEXT 0x4
+#define TKV_MAX_TEXT_TRACKS 16
+#define TKV_MAX_TEXT_CUES 32
+#define TKV_TEXT_CACHE 256
+
+typedef struct tkv_text_cue {
+    double start;
+    double end;
+    int32_t format;
+    char* text;
+} tkv_text_cue;
 
 /* Function pointers. */
 #define TKV_GST_FUNCS(X) \
@@ -165,6 +176,7 @@ enum { GST_CORE_ERROR_MISSING_PLUGIN = 12 };
     X(void, gst_message_parse_buffering, (void*, int*)) \
     X(void, gst_message_parse_tag, (void*, void**)) \
     X(gboolean, gst_tag_list_get_string, (void*, const char*, char**)) \
+    X(const char*, gst_structure_get_string, (void*, const char*)) \
     X(void*, gst_structure_new_empty, (const char*)) \
     X(gboolean, gst_structure_get_int, (void*, const char*, int*)) \
     X(void*, gst_caps_from_string, (const char*)) \
@@ -192,7 +204,8 @@ enum { GST_CORE_ERROR_MISSING_PLUGIN = 12 };
 
 #define TKV_GOBJECT_FUNCS(X) \
     X(void, g_object_set, (void*, const char*, ...)) \
-    X(void, g_object_get, (void*, const char*, ...))
+    X(void, g_object_get, (void*, const char*, ...)) \
+    X(void, g_signal_emit_by_name, (void*, const char*, ...))
 
 #define TKV_GLIB_FUNCS(X) \
     X(void, g_free, (void*)) \
@@ -299,6 +312,7 @@ struct tkv_player {
     void* playbin;
     void* appsink;
     void* audiosink;      /* the autoaudiosink we handed to playbin (our ref), NULL once on the fakesink fallback */
+    void* textsink;       /* appsink for embedded text (our ref), NULL when it could not be made */
     void* bus;
     pthread_t thread;
     int thread_started;
@@ -337,10 +351,25 @@ struct tkv_player {
     void* out_sample;
     void* out_buffer;
     GstMapInfo out_map;
+    tkv_scaler scaler;   /* CPU frames scaled to the request's target size (under lock) */
     int64_t out_token;
     int64_t next_token;
     void* last_sample;    /* our ref to the last delivered sample, for tkv_player_redeliver_frame */
     int redeliver;
+
+    /* Embedded text tracks: read when the media is loaded; cues of playbin's current text stream are pulled by the bus
+       thread and delivered while one is selected. */
+    tkv_text_callback text_callback;
+    void* text_context;
+    int text_count;
+    char text_language[TKV_MAX_TEXT_TRACKS][64];
+    char text_label[TKV_MAX_TEXT_TRACKS][128];
+    int text_selected;    /* -1 = none */
+    int text_stream;      /* playbin's current-text */
+    /* Cues of text_stream pulled so far (oldest first, the oldest dropped when full): the appsink is pulled whether or not
+       a track is selected, so selecting the current stream later sends these instead of seeking. */
+    tkv_text_cue text_cache[TKV_TEXT_CACHE];
+    int text_cache_count;
 
     double last_tick;
     char error[1024];
@@ -562,8 +591,19 @@ static void post_marker(tkv_player* p) {
     }
 }
 
+static void clear_text_cache(tkv_player* p) {
+    for (int i = 0; i < p->text_cache_count; i++) {
+        free(p->text_cache[i].text);
+    }
+    p->text_cache_count = 0;
+}
+
 static void reset_media_state(tkv_player* p) {
     p->loaded = 0;
+    p->text_count = 0;
+    p->text_selected = -1;
+    p->text_stream = 0;
+    clear_text_cache(p);
     p->seeking = 0;
     p->buffering = 0;
     p->ended = 0;
@@ -617,6 +657,122 @@ static int map_error_kind(tkv_player* p, const GError* e) {
     return TKV_ERR_DECODE;
 }
 
+/* The embedded text streams playbin found (n-text) with their language and title tags. Under lock. */
+static void read_text_tracks(tkv_player* p) {
+    p->text_count = 0;
+    if (p->textsink == NULL) {
+        return;
+    }
+    int n = 0;
+    p_g_object_get(p->playbin, "n-text", &n, NULL);
+    if (n > TKV_MAX_TEXT_TRACKS) {
+        n = TKV_MAX_TEXT_TRACKS;
+    }
+    for (int i = 0; i < n; i++) {
+        p->text_language[i][0] = 0;
+        p->text_label[i][0] = 0;
+        void* tags = NULL;
+        p_g_signal_emit_by_name(p->playbin, "get-text-tags", i, &tags);
+        if (tags != NULL) {
+            char* value = NULL;
+            if (p_gst_tag_list_get_string(tags, "language-code", &value) && value != NULL) {
+                snprintf(p->text_language[i], sizeof(p->text_language[i]), "%s", value);
+                p_g_free(value);
+            }
+            value = NULL;
+            if (p_gst_tag_list_get_string(tags, "title", &value) && value != NULL) {
+                snprintf(p->text_label[i], sizeof(p->text_label[i]), "%s", value);
+                p_g_free(value);
+            }
+            p_gst_mini_object_unref(tags);
+        }
+    }
+    p->text_count = n;
+}
+
+typedef struct tkv_text_cues {
+    int count;
+    int track;
+    tkv_text_cue items[TKV_MAX_TEXT_CUES];
+} tkv_text_cues;
+
+/* Copies a cue into out (when there is room). */
+static void queue_cue(tkv_text_cues* out, const tkv_text_cue* cue) {
+    if (out->count >= TKV_MAX_TEXT_CUES) {
+        return;
+    }
+    char* text = strdup(cue->text);
+    if (text == NULL) {
+        return;
+    }
+    tkv_text_cue* copy = &out->items[out->count++];
+    *copy = *cue;
+    copy->text = text;
+}
+
+/* Pulls the text samples the appsink holds into the cache; queues them for delivery when the stream is selected.
+   Under lock. */
+static void pull_text(tkv_player* p, tkv_text_cues* out) {
+    out->count = 0;
+    out->track = p->text_selected;
+    if (p->textsink == NULL) {
+        return;
+    }
+    for (;;) {
+        void* sample = p_gst_app_sink_try_pull_sample(p->textsink, 0);
+        if (sample == NULL) {
+            break;
+        }
+        void* buffer = p_gst_sample_get_buffer(sample);
+        GstMapInfo map;
+        if (buffer != NULL && ((GstBuffer*)buffer)->pts != GST_CLOCK_TIME_NONE && p_gst_buffer_map(buffer, &map, GST_MAP_READ)) {
+            GstClockTime pts = ((GstBuffer*)buffer)->pts;
+            GstClockTime duration = ((GstBuffer*)buffer)->duration;
+            void* segment = p_gst_sample_get_segment(sample);
+            uint64_t start_ns = segment != NULL ? p_gst_segment_to_stream_time(segment, GST_FORMAT_TIME, pts) : pts;
+            char* text = (char*)malloc(map.size + 1);
+            if (text != NULL && start_ns != GST_CLOCK_TIME_NONE) {
+                /* Some demuxers pad with NULs; the text ends at the first. */
+                memcpy(text, map.data, map.size);
+                text[map.size] = 0;
+                void* caps = p_gst_sample_get_caps(sample);
+                void* st = caps != NULL ? p_gst_caps_get_structure(caps, 0) : NULL;
+                const char* format = st != NULL ? p_gst_structure_get_string(st, "format") : NULL;
+                tkv_text_cue cue;
+                cue.start = (double)start_ns / (double)GST_SECOND;
+                cue.end = duration != GST_CLOCK_TIME_NONE ? cue.start + (double)duration / (double)GST_SECOND : -1;
+                cue.format = format != NULL && strcmp(format, "pango-markup") == 0 ? TKV_TEXT_MARKUP : TKV_TEXT_PLAIN;
+                cue.text = text;
+                if (p->text_selected >= 0 && p->text_selected == p->text_stream) {
+                    queue_cue(out, &cue);
+                }
+                if (p->text_cache_count == TKV_TEXT_CACHE) {
+                    free(p->text_cache[0].text);
+                    memmove(&p->text_cache[0], &p->text_cache[1], sizeof(tkv_text_cue) * (TKV_TEXT_CACHE - 1));
+                    p->text_cache_count--;
+                }
+                p->text_cache[p->text_cache_count++] = cue;
+            } else {
+                free(text);
+            }
+            p_gst_buffer_unmap(buffer, &map);
+        }
+        p_gst_mini_object_unref(sample);
+    }
+}
+
+/* Delivers pulled cues outside the lock (the callback may run long). */
+static void deliver_text(tkv_player* p, tkv_text_cues* cues, int send) {
+    for (int i = 0; i < cues->count; i++) {
+        if (send && p->text_callback != NULL && cues->items[i].text[0] != 0) {
+            p->text_callback(p->text_context, cues->track, cues->items[i].start, cues->items[i].end, cues->items[i].format,
+                             cues->items[i].text);
+        }
+        free(cues->items[i].text);
+    }
+    cues->count = 0;
+}
+
 static void handle_message(tkv_player* p, GstMessage* msg, tkv_events* q) {
     if (p->marker_pending) {
         if (msg->type == GST_MESSAGE_APPLICATION && msg->seqnum == p->marker_seqnum) {
@@ -645,6 +801,10 @@ static void handle_message(tkv_player* p, GstMessage* msg, tkv_events* q) {
             }
             if (!p->loaded) {
                 p->loaded = 1;
+                read_text_tracks(p);
+                if (p->text_count > 0) {
+                    push(q, TKV_EVENT_TEXT_TRACKS, p->text_count, 0);
+                }
                 p->duration = query_duration(p);
                 push(q, TKV_EVENT_DURATION, p->duration, 0);
                 read_sink_size(p);
@@ -810,8 +970,14 @@ static void* bus_thread(void* arg) {
                 push(&q, TKV_EVENT_POSITION, query_position(p), 0);
             }
         }
+        tkv_text_cues cues;
+        cues.count = 0;
+        if (!p->closing) {
+            pull_text(p, &cues);
+        }
         int closing = p->closing;
         unlock_and_deliver(p, &q, !closing);
+        deliver_text(p, &cues, !closing);
         if (msg != NULL) {
             p_gst_mini_object_unref(msg);
         }
@@ -1009,6 +1175,20 @@ TKV_API int32_t tkv_player_create(tkv_event_callback callback, void* context, co
     p_gst_mini_object_unref(caps);
     p_g_object_set(p->playbin, "video-sink", p->appsink, NULL);
 
+    /* Embedded text goes to an appsink instead of being drawn into the picture (VideoCaptionLayer draws captions).
+       Not synced: cues come as soon as they are demuxed, with their times, and the consumer shows them on time; not async:
+       a sparse text stream must not hold up prerolling. */
+    p->text_selected = -1;
+    p->textsink = p_gst_element_factory_make("appsink", "tkv-text-sink");
+    if (p->textsink != NULL) {
+        p_gst_object_ref_sink(p->textsink);
+        void* text_caps = p_gst_caps_from_string("text/x-raw");
+        p_g_object_set(p->textsink, "caps", text_caps, "sync", (gboolean)0, "async", (gboolean)0, "max-buffers", (guint)0,
+                       "drop", (gboolean)0, "emit-signals", (gboolean)0, "enable-last-sample", (gboolean)0, NULL);
+        p_gst_mini_object_unref(text_caps);
+        p_g_object_set(p->playbin, "text-sink", p->textsink, NULL);
+    }
+
     /* Audio: autoaudiosink when it can open a device, otherwise a synced fakesink so the clock still runs. */
     void* audio = p_gst_element_factory_make("autoaudiosink", "tkv-audio-sink");
     if (audio != NULL) {
@@ -1035,10 +1215,11 @@ TKV_API int32_t tkv_player_create(tkv_event_callback callback, void* context, co
             p_g_object_set(p->playbin, "audio-filter", tempo, NULL);
         }
     }
-    /* Captions are drawn by VideoCaptionLayer; keep playbin from rendering embedded subtitles. */
+    /* Captions are drawn by VideoCaptionLayer: without our text sink, keep playbin from drawing embedded subtitles. */
     guint flags = 0;
     p_g_object_get(p->playbin, "flags", &flags, NULL);
-    p_g_object_set(p->playbin, "flags", flags & ~(guint)GST_PLAY_FLAG_TEXT, NULL);
+    flags = p->textsink != NULL ? (flags | (guint)GST_PLAY_FLAG_TEXT) : (flags & ~(guint)GST_PLAY_FLAG_TEXT);
+    p_g_object_set(p->playbin, "flags", flags, NULL);
 
     p->bus = p_gst_element_get_bus(p->playbin);
     if (p->bus == NULL || pthread_create(&p->thread, NULL, bus_thread, p) != 0) {
@@ -1077,10 +1258,15 @@ TKV_API void tkv_player_destroy(tkv_player* p) {
     if (p->appsink != NULL) {
         p_gst_object_unref(p->appsink);
     }
+    if (p->textsink != NULL) {
+        p_gst_object_unref(p->textsink);
+    }
     if (p->playbin != NULL) {
         p_gst_object_unref(p->playbin);
     }
     free(p->uri);
+    clear_text_cache(p);
+    tkv_scaler_free(&p->scaler);
     pthread_mutex_destroy(&p->deliver_lock);
     pthread_mutex_destroy(&p->lock);
     free(p);
@@ -1320,7 +1506,6 @@ TKV_API int32_t tkv_player_buffered(tkv_player* p, double* ranges, int32_t capac
 }
 
 TKV_API int32_t tkv_player_acquire_frame(tkv_player* p, const tkv_frame_request* request, tkv_frame* frame) {
-    (void)request; /* No scaling: the appsink delivers the natural size. */
     if (p == NULL || frame == NULL) {
         return TKV_E_INVALID_ARG;
     }
@@ -1418,6 +1603,21 @@ TKV_API int32_t tkv_player_acquire_frame(tkv_player* p, const tkv_frame_request*
     frame->time = time;
     frame->pixels = p->out_map.data + offset;
     frame->row_bytes = stride;
+    /* The appsink keeps the natural size (the player reads it from the negotiated caps), so the frame is scaled here,
+       which also keeps the copy into the consumer's bitmap small. Falls back to the natural size without memory. */
+    if (request != NULL) {
+        int32_t w, h;
+        tkv_fit_size(width, height, request->target_width, request->target_height, &w, &h);
+        if (w != width || h != height) {
+            const uint8_t* scaled = tkv_scale_bgra(&p->scaler, frame->pixels, width, height, stride, w, h);
+            if (scaled != NULL) {
+                frame->pixels = scaled;
+                frame->row_bytes = w * 4;
+                frame->width = w;
+                frame->height = h;
+            }
+        }
+    }
     frame->gpu_handle_type = TKV_GPU_NONE;
     frame->token = p->out_token;
     pthread_mutex_unlock(&p->lock);
@@ -1454,5 +1654,97 @@ TKV_API int32_t tkv_player_redeliver_frame(tkv_player* p) {
     pthread_mutex_lock(&p->lock);
     p->redeliver = 1;
     pthread_mutex_unlock(&p->lock);
+    return TKV_OK;
+}
+
+TKV_API int32_t tkv_player_set_text_callback(tkv_player* p, tkv_text_callback callback, void* context) {
+    if (p == NULL) {
+        return TKV_E_INVALID_ARG;
+    }
+    /* deliver_lock too: the bus thread calls the text callback holding it. */
+    pthread_mutex_lock(&p->deliver_lock);
+    pthread_mutex_lock(&p->lock);
+    p->text_callback = callback;
+    p->text_context = context;
+    pthread_mutex_unlock(&p->lock);
+    pthread_mutex_unlock(&p->deliver_lock);
+    return TKV_OK;
+}
+
+TKV_API int32_t tkv_player_text_track_count(tkv_player* p) {
+    if (p == NULL) {
+        return TKV_E_INVALID_ARG;
+    }
+    pthread_mutex_lock(&p->lock);
+    int count = p->text_count;
+    pthread_mutex_unlock(&p->lock);
+    return count;
+}
+
+TKV_API int32_t tkv_player_text_track_info(tkv_player* p, int32_t index, char* language, int32_t language_size,
+                                           char* label, int32_t label_size, int32_t* kind) {
+    if (p == NULL) {
+        return TKV_E_INVALID_ARG;
+    }
+    pthread_mutex_lock(&p->lock);
+    if (index < 0 || index >= p->text_count) {
+        pthread_mutex_unlock(&p->lock);
+        return TKV_E_INVALID_ARG;
+    }
+    if (language != NULL && language_size > 0) {
+        snprintf(language, (size_t)language_size, "%s", p->text_language[index]);
+    }
+    if (label != NULL && label_size > 0) {
+        snprintf(label, (size_t)label_size, "%s", p->text_label[index]);
+    }
+    if (kind != NULL) {
+        /* GStreamer's tags do not tell captions from subtitles. */
+        *kind = TKV_TEXT_SUBTITLES;
+    }
+    pthread_mutex_unlock(&p->lock);
+    return TKV_OK;
+}
+
+TKV_API int32_t tkv_player_select_text_track(tkv_player* p, int32_t index) {
+    if (p == NULL) {
+        return TKV_E_INVALID_ARG;
+    }
+    tkv_events q;
+    q.count = 0;
+    pthread_mutex_lock(&p->lock);
+    if (index < -1 || index >= p->text_count || (index >= 0 && p->textsink == NULL)) {
+        pthread_mutex_unlock(&p->lock);
+        return TKV_E_INVALID_ARG;
+    }
+    tkv_text_cues cues;
+    cues.count = 0;
+    cues.track = index;
+    int was = p->text_selected;
+    p->text_selected = index;
+    if (index >= 0 && index != p->text_stream) {
+        /* Another stream: the cache holds the old one's, and the new one's cues before the playhead were demuxed already, so
+           a flushing seek to the playhead sends them again. */
+        p_g_object_set(p->playbin, "current-text", (int)index, NULL);
+        p->text_stream = index;
+        tkv_text_cues dropped;
+        p->text_selected = -1;
+        pull_text(p, &dropped);
+        deliver_text(p, &dropped, 0);
+        p->text_selected = index;
+        clear_text_cache(p);
+        if (p->loaded && !p->failed) {
+            do_seek(p, query_position(p), 1);
+            update_state(p, &q);
+        }
+    } else if (index >= 0 && was != index) {
+        /* The current stream: send what was pulled while it was not selected. */
+        int first = p->text_cache_count > TKV_MAX_TEXT_CUES ? p->text_cache_count - TKV_MAX_TEXT_CUES : 0;
+        for (int i = first; i < p->text_cache_count; i++) {
+            queue_cue(&cues, &p->text_cache[i]);
+        }
+    }
+    void* callback = (void*)p->text_callback;
+    unlock_and_deliver(p, &q, 1);
+    deliver_text(p, &cues, callback != NULL);
     return TKV_OK;
 }

@@ -30,7 +30,7 @@ xcrun clang -arch "$arch" -isysroot "$sdk" -mmacosx-version-min=11.0 \
   -fobjc-arc -fvisibility=hidden -O2 -Wall -Wextra -Wno-unused-parameter -shared \
   -I"$root/native/video" \
   "$root/native/video/mac/tkcode_video_av.m" \
-  -framework AVFoundation -framework CoreMedia -framework CoreVideo -framework IOSurface -framework Metal -framework QuartzCore -framework Foundation \
+  -framework Accelerate -framework AVFoundation -framework CoreMedia -framework CoreVideo -framework IOSurface -framework Metal -framework QuartzCore -framework Foundation \
   -Wl,-install_name,@rpath/$lib \
   -o "$work/$lib"
 strip -x "$work/$lib"

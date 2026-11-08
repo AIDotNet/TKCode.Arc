@@ -1,7 +1,7 @@
 ---
 title: 影片播放器
 summary: "在畫面上疊加控制列播放影片：可用章節跳轉、調整音量、播放速度、字幕和全螢幕，外觀依 Arc 風格繪製，由平台自己的播放器解碼。"
-source-hash: 40b842b9f1e2
+source-hash: c5f0cc22d9b4
 ---
 
 <Demo name="Preview" />
@@ -40,11 +40,13 @@ await ArcVideoBrowser.UseAsync();  // browser: TKCode.Arc.Video.Browser
                  AspectRatio="1.7778" />
 ```
 
-`IsPlaying`、`Position`、`Volume`、`IsMuted`、`IsLooping` 和 `PlaybackRate` 都是雙向繫結。`Play()`、`Pause()`、`Seek()` 以及 `PlayPauseCommand`、`ToggleMuteCommand`、`ToggleFullScreenCommand` 命令可以從外部控制播放器。`Failed` 會回報影片無法播放的原因。
+`IsPlaying`、`Position`、`Volume`、`IsMuted`、`IsLooping` 和 `PlaybackRate` 都是雙向繫結。`Play()`、`Pause()`、`Stop()`、`Seek()` 以及 `PlayPauseCommand`、`StopCommand`、`SkipForwardCommand`、`SkipBackwardCommand`、`ToggleMuteCommand`、`ToggleFullScreenCommand` 命令可以從外部控制播放器。`Stop()` 會暫停、回到開頭並重新顯示海報；影片保持已載入，所以下次播放會立即開始。`Failed` 會回報影片無法播放的原因。
 
 ### 字幕與章節
 
 把 WebVTT 或 SRT 檔案加入為 `TextTracks`。字幕選單會列出所有字幕軌，設定文字大小，並可以關閉字幕。`Chapters` 軌會把進度列分成若干段，並在指標下方顯示章節名稱。
+
+影片檔本身帶的字幕（MP4 定時文字、Matroska 文字軌）在影片載入後會加入 `TextTracks`，排在你自己的軌之後，`IsEmbedded` 為 true，換來源時移除。macOS 和 iOS 讀取 MP4 中的字幕，Android 讀取 MP4 中的字幕（純文字，逐條顯示），Linux 讀取 MP4 和 Matroska 中的字幕（Linux 的 MP4 解多工器會丟掉粗體和斜體）；Windows 和瀏覽器暫時不列出內嵌字幕。
 
 <Demo name="Captions" />
 
@@ -57,6 +59,8 @@ await ArcVideoBrowser.UseAsync();  // browser: TKCode.Arc.Video.Browser
 ### 播放後端
 
 播放器使用 `ArcVideo.Backend` 中的後端解碼，並把畫面繪製在視窗內，因此控制列、字幕和圓角都會繪製在畫面之上。平台允許時（macOS 和 Windows），畫面會在 GPU 上從解碼器直接送到螢幕，不做複製；其他情況下會複製到點陣圖中。
+
+在 iOS 和 Android 上同樣呼叫 `ArcVideoNative.Use()`：iOS 透過 AVFoundation 播放，Android 透過系統的 MediaPlayer 播放，畫面都複製到點陣圖中。在 `net11.0-ios` 或 `net11.0-android` 應用程式中參考 `TKCode.Arc.Video.Native` 即可（iOS 15、Android API 24 或更高）。
 
 在瀏覽器中，`BrowserPresentation="Native"` 改為顯示瀏覽器自己的影片元素：不複製畫面，瀏覽器能播放的格式都能播放（例如 Safari 中的 HLS）。這個元素上面不能繪製任何內容，所以控制列放在畫面下方並一直顯示，字幕由瀏覽器繪製，也沒有圓角；顯示海報、錯誤、重播按鈕或選單時，這個元素會暫時隱藏。沒有這種元素時（桌面平台，或 net8.0 版本），播放器仍使用畫布。
 

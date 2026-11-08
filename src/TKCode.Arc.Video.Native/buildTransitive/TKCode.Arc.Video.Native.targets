@@ -1,0 +1,8 @@
+<Project>
+    <!-- iOS apps: embed the tkcode_video shim (an xcframework built by tools/video/build-ios.sh) as a dynamic framework;
+         ArcVideoNative loads it from the app bundle's Frameworks folder. The same relative path works in the package
+         (buildTransitive/ next to runtimes/) and in the repository (src/TKCode.Arc.Video.Native/). -->
+    <ItemGroup Condition="'$(TargetPlatformIdentifier)' == 'iOS'">
+        <NativeReference Include="$(MSBuildThisFileDirectory)../runtimes/ios/native/tkcode_video.xcframework" Kind="Framework" />
+    </ItemGroup>
+</Project>

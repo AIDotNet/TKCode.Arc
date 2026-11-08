@@ -31025,8 +31025,8 @@
         <target>定義 `Stretch` 屬性。</target>
       </trans-unit>
       <trans-unit id="VideoTextTrack">
-        <source>A captions, subtitles, chapters or descriptions track for `VideoPlayer`: WebVTT or SRT text from `Source` (avares, file, http(s)) or `Text`.</source>
-        <target>用於 `VideoPlayer` 的字幕、隱藏式字幕、章節或描述軌道：來自 `Source`（avares、file、http(s)）或 `Text` 的 WebVTT 或 SRT 文字。</target>
+        <source>A captions, subtitles, chapters or descriptions track for `VideoPlayer`: WebVTT or SRT text from `Source` (avares, file, http(s)) or `Text`, or a track stored in the media (`IsEmbedded`), which `VideoPlayer` adds to its `TextTracks` itself.</source>
+        <target>用於 `VideoPlayer` 的字幕、隱藏式字幕、章節或描述軌道：來自 `Source`（avares、file、http(s)）或 `Text` 的 WebVTT 或 SRT 文字，或者媒體檔自帶的軌道（`IsEmbedded`），後者由 `VideoPlayer` 自己加入它的 `TextTracks`。</target>
       </trans-unit>
       <trans-unit id="VideoTextTrack.CuesChanged">
         <source>Raised on the UI thread when `Cues` changes.</source>

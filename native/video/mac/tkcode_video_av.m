@@ -15,19 +15,23 @@
      held pixel buffer, under frame_lock.
    - tkv_player_destroy marks the player destroyed on the private queue; events check the flag on that queue, so none
      follow after it returns. */
+#import <Accelerate/Accelerate.h>
 #import <AVFoundation/AVFoundation.h>
 #import <CoreMedia/CoreMedia.h>
 #import <CoreVideo/CoreVideo.h>
 #import <Foundation/Foundation.h>
-#import <IOSurface/IOSurface.h>
+#import <IOSurface/IOSurfaceRef.h>
 #import <Metal/Metal.h>
 #import <QuartzCore/QuartzCore.h>
+#include <TargetConditionals.h>
 #include <os/lock.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "../tkcode_video.h"
+
+#include "../tkv_scale.h"
 
 static void* const kQueueKey = (void*)&kQueueKey;
 static void* const kKvoContext = (void*)&kKvoContext;
@@ -98,6 +102,7 @@ static id<MTLDevice> DeviceForLuid(const uint8_t* luid)
         {
             registryId = (registryId << 8) | luid[i];
         }
+#if TARGET_OS_OSX
         NSArray<id<MTLDevice>>* devices = MTLCopyAllDevices();
         for (id<MTLDevice> device in devices)
         {
@@ -106,11 +111,14 @@ static id<MTLDevice> DeviceForLuid(const uint8_t* luid)
                 return device;
             }
         }
+#else
+        (void)registryId; /* iOS has one GPU. */
+#endif
     }
     return MTLCreateSystemDefaultDevice();
 }
 
-@interface TKVPlayer : NSObject <AVPlayerItemOutputPullDelegate>
+@interface TKVPlayer : NSObject <AVPlayerItemOutputPullDelegate, AVPlayerItemLegibleOutputPushDelegate>
 @end
 
 @implementation TKVPlayer {
@@ -145,6 +153,14 @@ static id<MTLDevice> DeviceForLuid(const uint8_t* luid)
     int32_t _reportedWidth;
     int32_t _reportedHeight;
     int32_t _rotation;
+
+    /* Embedded text tracks (the legible media selection group), on _queue. */
+    AVMediaSelectionGroup* _legibleGroup;
+    NSArray<AVMediaSelectionOption*>* _textOptions;
+    AVPlayerItemLegibleOutput* _legibleOutput;
+    int32_t _selectedText;
+    tkv_text_callback _textCallback;
+    void* _textContext;
     int32_t _seekable;
     NSArray<NSValue*>* _buffered;
     BOOL _framePending;
@@ -169,6 +185,11 @@ static id<MTLDevice> DeviceForLuid(const uint8_t* luid)
     CVPixelBufferRef _lastBuffer;
     CMTime _lastTime;
     BOOL _redeliver;
+    /* CPU frames scaled down to the request's target size: the pixels handed out, and vImage's scratch memory. */
+    uint8_t* _scaled;
+    size_t _scaledCapacity;
+    void* _scaleScratch;
+    size_t _scaleScratchCapacity;
     id<MTLDevice> _device;
     int64_t _nextToken;
 
@@ -192,6 +213,9 @@ static id<MTLDevice> DeviceForLuid(const uint8_t* luid)
         dispatch_queue_set_specific(_queue, kQueueKey, (__bridge void*)self, NULL);
         _player = [[AVPlayer alloc] init];
         _player.actionAtItemEnd = AVPlayerActionAtItemEndPause;
+        /* Text tracks stay off until the consumer selects one (no automatic choice by the system's language). */
+        _player.appliesMediaSelectionCriteriaAutomatically = NO;
+        _selectedText = -1;
         _rate = 1.0;
         _volume = 1.0f;
         _state = TKV_STATE_IDLE;
@@ -217,6 +241,8 @@ static id<MTLDevice> DeviceForLuid(const uint8_t* luid)
 {
     free(_lastError);
     free(_retiredError);
+    free(_scaled);
+    free(_scaleScratch);
     if (_lastBuffer)
     {
         CVPixelBufferRelease(_lastBuffer);
@@ -371,6 +397,14 @@ static int32_t ErrorKind(NSError* error)
     {
         [_item removeOutput:_output];
     }
+    if (_item && _legibleOutput)
+    {
+        [_item removeOutput:_legibleOutput];
+    }
+    _legibleOutput = nil;
+    _legibleGroup = nil;
+    _textOptions = nil;
+    _selectedText = -1;
     os_unfair_lock_lock(&_frameLock);
     _frameOutput = nil;
     _redeliver = NO;
@@ -426,7 +460,7 @@ static int32_t ErrorKind(NSError* error)
     AVURLAsset* asset = [AVURLAsset URLAssetWithURL:url options:@{ AVURLAssetPreferPreciseDurationAndTimingKey: @YES }];
     _asset = asset;
     __weak TKVPlayer* weakSelf = self;
-    NSArray<NSString*>* keys = @[ @"playable", @"tracks", @"duration" ];
+    NSArray<NSString*>* keys = @[ @"playable", @"tracks", @"duration", @"availableMediaCharacteristicsWithMediaSelectionOptions" ];
     [asset loadValuesAsynchronouslyForKeys:keys completionHandler:^{
         TKVPlayer* strongSelf = weakSelf;
         if (!strongSelf)
@@ -504,6 +538,7 @@ static int32_t ErrorKind(NSError* error)
     [item addOutput:output];
     _item = item;
     _output = output;
+    [self attachTextTracks:asset item:item];
     os_unfair_lock_lock(&_frameLock);
     _frameOutput = output;
     os_unfair_lock_unlock(&_frameLock);
@@ -539,6 +574,251 @@ static int32_t ErrorKind(NSError* error)
         }
     }];
     [self refresh];
+}
+
+/* ---- Embedded text tracks (on _queue). */
+
+- (void)attachTextTracks:(AVURLAsset*)asset item:(AVPlayerItem*)item
+{
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    AVMediaSelectionGroup* group = [asset mediaSelectionGroupForMediaCharacteristic:AVMediaCharacteristicLegible];
+#pragma clang diagnostic pop
+    /* Each subtitle track also comes as a "forced subtitles only" option of the same track; those are not tracks to offer. */
+    NSMutableArray<AVMediaSelectionOption*>* options = [NSMutableArray array];
+    for (AVMediaSelectionOption* option in group.options)
+    {
+        if (![option hasMediaCharacteristic:AVMediaCharacteristicContainsOnlyForcedSubtitles])
+        {
+            [options addObject:option];
+        }
+    }
+    if (!group || options.count == 0)
+    {
+        return;
+    }
+    _legibleGroup = group;
+    _textOptions = options;
+    /* Cues come to legibleOutput:... below and VideoCaptionLayer draws them; the player draws nothing itself. */
+    /* tx3g comes as native samples (parsed below): the attributed strings carry the system's caption style (it can make
+       everything bold), so the cue's own styling and its end time are only in the samples. */
+    AVPlayerItemLegibleOutput* legible = [[AVPlayerItemLegibleOutput alloc]
+        initWithMediaSubtypesForNativeRepresentation:@[ @(kCMSubtitleFormatType_3GText) ]];
+    legible.suppressesPlayerRendering = YES;
+    [legible setDelegate:self queue:_queue];
+    [item addOutput:legible];
+    _legibleOutput = legible;
+    if (group.allowsEmptySelection)
+    {
+        [item selectMediaOption:nil inMediaSelectionGroup:group];
+    }
+    [self emit:TKV_EVENT_TEXT_TRACKS a:(double)_textOptions.count b:0];
+}
+
+static void AppendEscaped(NSMutableString* out, NSString* text)
+{
+    NSString* escaped = [[[text stringByReplacingOccurrencesOfString:@"&" withString:@"&amp;"]
+                         stringByReplacingOccurrencesOfString:@"<" withString:@"&lt;"]
+                         stringByReplacingOccurrencesOfString:@">" withString:@"&gt;"];
+    [out appendString:escaped];
+}
+
+static uint16_t ReadU16(const uint8_t* p)
+{
+    return (uint16_t)((p[0] << 8) | p[1]);
+}
+
+static uint32_t ReadU32(const uint8_t* p)
+{
+    return ((uint32_t)p[0] << 24) | ((uint32_t)p[1] << 16) | ((uint32_t)p[2] << 8) | p[3];
+}
+
+/* A 3GPP timed text sample (3GPP TS 26.245): a 16-bit length, the text (UTF-8, or UTF-16 after a BOM), then boxes; the
+   'styl' box styles character ranges (face flags 1 bold, 2 italic, 4 underline). Returns WebVTT cue text, or nil. */
+static NSString* Parse3GText(const uint8_t* data, size_t size)
+{
+    if (size < 2)
+    {
+        return nil;
+    }
+    size_t length = ReadU16(data);
+    if (2 + length > size)
+    {
+        return nil;
+    }
+    NSString* text;
+    if (length >= 2 && data[2] == 0xFE && data[3] == 0xFF)
+    {
+        text = [[NSString alloc] initWithBytes:data + 4 length:length - 2 encoding:NSUTF16BigEndianStringEncoding];
+    }
+    else
+    {
+        text = [[NSString alloc] initWithBytes:data + 2 length:length encoding:NSUTF8StringEncoding];
+    }
+    if (!text)
+    {
+        return nil;
+    }
+    /* Character offsets: code points, so work on the composed characters' UTF-32 positions. */
+    NSUInteger count = 0;
+    NSMutableArray<NSString*>* characters = [NSMutableArray array];
+    [text enumerateSubstringsInRange:NSMakeRange(0, text.length) options:NSStringEnumerationByComposedCharacterSequences
+                          usingBlock:^(NSString* sub, NSRange r, NSRange e, BOOL* stop) { [characters addObject:sub]; }];
+    count = characters.count;
+    uint8_t* faces = calloc(count > 0 ? count : 1, 1);
+    for (size_t at = 2 + length; at + 8 <= size;)
+    {
+        uint32_t boxSize = ReadU32(data + at);
+        if (boxSize < 8 || at + boxSize > size)
+        {
+            break;
+        }
+        if (memcmp(data + at + 4, "styl", 4) == 0 && boxSize >= 10)
+        {
+            uint16_t entries = ReadU16(data + at + 8);
+            for (uint16_t i = 0; i < entries && at + 10 + (size_t)(i + 1) * 12 <= at + boxSize; i++)
+            {
+                const uint8_t* record = data + at + 10 + (size_t)i * 12;
+                uint16_t start = ReadU16(record);
+                uint16_t end = ReadU16(record + 2);
+                uint8_t face = record[6];
+                for (NSUInteger c = start; c < end && c < count; c++)
+                {
+                    faces[c] = face;
+                }
+            }
+        }
+        at += boxSize;
+    }
+    NSMutableString* out = [NSMutableString string];
+    uint8_t current = 0;
+    for (NSUInteger c = 0; c <= count; c++)
+    {
+        uint8_t face = c < count ? (faces[c] & 7) : 0;
+        if (face != current)
+        {
+            if (current & 4) { [out appendString:@"</u>"]; }
+            if (current & 2) { [out appendString:@"</i>"]; }
+            if (current & 1) { [out appendString:@"</b>"]; }
+            if (face & 1) { [out appendString:@"<b>"]; }
+            if (face & 2) { [out appendString:@"<i>"]; }
+            if (face & 4) { [out appendString:@"<u>"]; }
+            current = face;
+        }
+        if (c < count)
+        {
+            NSString* character = characters[c];
+            if ([character isEqualToString:@"\r"])
+            {
+                continue;
+            }
+            AppendEscaped(out, character);
+        }
+    }
+    free(faces);
+    return out;
+}
+
+- (void)legibleOutput:(AVPlayerItemLegibleOutput*)output didOutputAttributedStrings:(NSArray<NSAttributedString*>*)strings
+  nativeSampleBuffers:(NSArray*)nativeSamples forItemTime:(CMTime)itemTime
+{
+    if (_destroyed || output != _legibleOutput || _selectedText < 0 || !_textCallback)
+    {
+        return;
+    }
+    for (id object in nativeSamples)
+    {
+        CMSampleBufferRef sample = (__bridge CMSampleBufferRef)object;
+        CMBlockBufferRef block = CMSampleBufferGetDataBuffer(sample);
+        size_t size = block ? CMBlockBufferGetDataLength(block) : 0;
+        if (size < 2 || size > 65536)
+        {
+            continue;
+        }
+        uint8_t* bytes = malloc(size);
+        if (!bytes || CMBlockBufferCopyDataBytes(block, 0, size, bytes) != kCMBlockBufferNoErr)
+        {
+            free(bytes);
+            continue;
+        }
+        NSString* markup = Parse3GText(bytes, size);
+        free(bytes);
+        if (markup.length == 0)
+        {
+            continue;
+        }
+        CMTime pts = CMSampleBufferGetPresentationTimeStamp(sample);
+        CMTime duration = CMSampleBufferGetDuration(sample);
+        double start = CMTIME_IS_NUMERIC(pts) ? CMTimeGetSeconds(pts) : CMTimeGetSeconds(itemTime);
+        double end = CMTIME_IS_NUMERIC(duration) && CMTimeGetSeconds(duration) > 0 ? start + CMTimeGetSeconds(duration) : -1;
+        _textCallback(_textContext, _selectedText, start, end, TKV_TEXT_MARKUP, markup.UTF8String);
+    }
+    if (nativeSamples.count > 0)
+    {
+        return;
+    }
+    /* Other formats (WebVTT in HLS, CEA-608): what shows from itemTime on, with no end; the next call (empty when nothing
+       shows) ends it. Plain text: the strings' styling is the system's caption style, not the cue's. */
+    double start = CMTIME_IS_NUMERIC(itemTime) ? CMTimeGetSeconds(itemTime) : 0;
+    NSMutableArray<NSString*>* lines = [NSMutableArray array];
+    for (NSAttributedString* string in strings)
+    {
+        [lines addObject:string.string];
+    }
+    NSString* text = [lines componentsJoinedByString:@"\n"];
+    _textCallback(_textContext, _selectedText, start, -1, TKV_TEXT_PLAIN, text.UTF8String);
+}
+
+- (void)setTextCallback:(tkv_text_callback)callback context:(void*)context
+{
+    _textCallback = callback;
+    _textContext = context;
+}
+
+- (int32_t)textTrackCount
+{
+    return (int32_t)_textOptions.count;
+}
+
+- (int32_t)textTrack:(int32_t)index language:(char*)language size:(int32_t)languageSize label:(char*)label size:(int32_t)labelSize kind:(int32_t*)kind
+{
+    if (index < 0 || index >= (int32_t)_textOptions.count)
+    {
+        return TKV_E_INVALID_ARG;
+    }
+    AVMediaSelectionOption* option = _textOptions[index];
+    NSString* tag = option.extendedLanguageTag ?: option.locale.languageCode ?: @"";
+    NSString* name = option.displayName ?: @"";
+    if (language && languageSize > 0)
+    {
+        snprintf(language, (size_t)languageSize, "%s", tag.UTF8String);
+    }
+    if (label && labelSize > 0)
+    {
+        snprintf(label, (size_t)labelSize, "%s", name.UTF8String);
+    }
+    if (kind)
+    {
+        BOOL captions = [option hasMediaCharacteristic:AVMediaCharacteristicTranscribesSpokenDialogForAccessibility] ||
+                        [option hasMediaCharacteristic:AVMediaCharacteristicDescribesMusicAndSoundForAccessibility];
+        *kind = captions ? TKV_TEXT_CAPTIONS : TKV_TEXT_SUBTITLES;
+    }
+    return TKV_OK;
+}
+
+- (int32_t)selectTextTrack:(int32_t)index
+{
+    if (index >= (int32_t)_textOptions.count || index < -1)
+    {
+        return TKV_E_INVALID_ARG;
+    }
+    if (!_item || !_legibleGroup)
+    {
+        return index == -1 ? TKV_OK : TKV_E_INVALID_ARG;
+    }
+    _selectedText = index;
+    [_item selectMediaOption:index >= 0 ? _textOptions[index] : nil inMediaSelectionGroup:_legibleGroup];
+    return TKV_OK;
 }
 
 - (void)observeValueForKeyPath:(NSString*)keyPath ofObject:(id)object change:(NSDictionary*)change context:(void*)context
@@ -962,6 +1242,51 @@ static double Seconds(CMTime time)
     [_pending removeObjectsAtIndexes:done];
 }
 
+/* Scales the locked CPU frame in frame (BGRA) into _scaled at width × height and points frame at it. NO when memory runs
+   out or vImage fails; the frame is then handed out at its natural size. */
+- (BOOL)scaleLocked:(tkv_frame*)frame width:(int32_t)width height:(int32_t)height
+{
+    size_t rowBytes = (size_t)width * 4;
+    size_t needed = rowBytes * (size_t)height;
+    if (needed > _scaledCapacity)
+    {
+        uint8_t* grown = (uint8_t*)realloc(_scaled, needed);
+        if (!grown)
+        {
+            return NO;
+        }
+        _scaled = grown;
+        _scaledCapacity = needed;
+    }
+    vImage_Buffer source = { (void*)frame->pixels, (vImagePixelCount)frame->height, (vImagePixelCount)frame->width, (size_t)frame->row_bytes };
+    vImage_Buffer destination = { _scaled, (vImagePixelCount)height, (vImagePixelCount)width, rowBytes };
+    /* The channel order does not matter to the scaler, so the ARGB8888 entry point scales BGRA as is. */
+    vImage_Error scratch = vImageScale_ARGB8888(&source, &destination, NULL, kvImageGetTempBufferSize);
+    if (scratch < 0)
+    {
+        return NO;
+    }
+    if ((size_t)scratch > _scaleScratchCapacity)
+    {
+        void* grown = realloc(_scaleScratch, (size_t)scratch);
+        if (!grown)
+        {
+            return NO;
+        }
+        _scaleScratch = grown;
+        _scaleScratchCapacity = (size_t)scratch;
+    }
+    if (vImageScale_ARGB8888(&source, &destination, _scaleScratch, kvImageNoFlags) != kvImageNoError)
+    {
+        return NO;
+    }
+    frame->pixels = _scaled;
+    frame->row_bytes = (int32_t)rowBytes;
+    frame->width = width;
+    frame->height = height;
+    return YES;
+}
+
 - (int32_t)acquire:(const tkv_frame_request*)request frame:(tkv_frame*)frame
 {
     BOOL wantGpu = (request->accept & TKV_FRAME_GPU) && request->gpu_handle_type == TKV_GPU_IOSURFACE;
@@ -1045,6 +1370,14 @@ static double Seconds(CMTime time)
         frame->pixels = (const uint8_t*)CVPixelBufferGetBaseAddress(buffer);
         frame->row_bytes = (int32_t)CVPixelBufferGetBytesPerRow(buffer);
         _heldLocked = YES;
+        int32_t w, h;
+        tkv_fit_size(frame->width, frame->height, request->target_width, request->target_height, &w, &h);
+        if ((w != frame->width || h != frame->height) && [self scaleLocked:frame width:w height:h])
+        {
+            /* The scaled copy is what is handed out; the decoder's buffer is no longer read. */
+            CVPixelBufferUnlockBaseAddress(buffer, kCVPixelBufferLock_ReadOnly);
+            _heldLocked = NO;
+        }
     }
     else
     {
@@ -1436,4 +1769,63 @@ TKV_API int32_t tkv_player_redeliver_frame(tkv_player* player)
     }
     [P(player) redeliver];
     return TKV_OK;
+}
+
+TKV_API int32_t tkv_player_set_text_callback(tkv_player* player, tkv_text_callback callback, void* context)
+{
+    if (!player)
+    {
+        return TKV_E_INVALID_ARG;
+    }
+    TKVPlayer* instance = P(player);
+    [instance sync:^{
+        [instance setTextCallback:callback context:context];
+    }];
+    return TKV_OK;
+}
+
+TKV_API int32_t tkv_player_text_track_count(tkv_player* player)
+{
+    if (!player)
+    {
+        return TKV_E_INVALID_ARG;
+    }
+    __block int32_t count = 0;
+    TKVPlayer* instance = P(player);
+    [instance sync:^{
+        count = [instance textTrackCount];
+    }];
+    return count;
+}
+
+TKV_API int32_t tkv_player_text_track_info(tkv_player* player, int32_t index, char* language, int32_t language_size,
+                                           char* label, int32_t label_size, int32_t* kind)
+{
+    if (!player)
+    {
+        return TKV_E_INVALID_ARG;
+    }
+    @autoreleasepool
+    {
+        __block int32_t result = TKV_OK;
+        TKVPlayer* instance = P(player);
+        [instance sync:^{
+            result = [instance textTrack:index language:language size:language_size label:label size:label_size kind:kind];
+        }];
+        return result;
+    }
+}
+
+TKV_API int32_t tkv_player_select_text_track(tkv_player* player, int32_t index)
+{
+    if (!player)
+    {
+        return TKV_E_INVALID_ARG;
+    }
+    __block int32_t result = TKV_OK;
+    TKVPlayer* instance = P(player);
+    [instance sync:^{
+        result = [instance selectTextTrack:index];
+    }];
+    return result;
 }

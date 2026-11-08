@@ -33,9 +33,11 @@ namespace TKCode.Arc;
 /// come back, and no new frame is lent meanwhile. The lease's own thread does not wait (it cannot be reading then).
 /// </para>
 /// </remarks>
-internal sealed class NativeVideoPlayer : VideoPlayerBase, IVideoFrameOwner, IVideoTimelineSync
+internal sealed class NativeVideoPlayer : VideoPlayerBase, IVideoFrameOwner, IVideoTimelineSync, IVideoEmbeddedTextTracks
 {
     private const int MarkerOpen = 0;
+    private const int TextCue = -1;
+    private const int TextInfoSize = 256;
     private const int MaxBufferedRanges = 32;
     private const int LeaseWaitMilliseconds = 1000;
     private static readonly WaitCallback s_drain = static state => ((NativeVideoPlayer)state!).Drain();
@@ -63,6 +65,9 @@ internal sealed class NativeVideoPlayer : VideoPlayerBase, IVideoFrameOwner, IVi
     private bool _timelineSyncMissing;
     private bool _redeliverMissing;
     private readonly Dictionary<nint, NativeSemaphoreHandle> _semaphores = [];
+    private bool _textMissing;
+    private int _selectedText = -1;
+    private IReadOnlyList<VideoEmbeddedTextTrackInfo> _textTracks = [];
 
     public NativeVideoPlayer(NativeVideoBackend backend, VideoPlayerOptions options)
         : base(backend)
@@ -148,6 +153,8 @@ internal sealed class NativeVideoPlayer : VideoPlayerBase, IVideoFrameOwner, IVi
             SetNaturalSize(default);
             SetBuffered([]);
             SetSeekable(false);
+            _selectedText = -1;
+            SetTextTracks([]);
             _events.Enqueue(new NativeEvent(MarkerOpen, pending.Epoch, 0));
             var result = VideoNativeInterop.PlayerOpen(_native, uri.IsFile ? uri.AbsoluteUri : uri.OriginalString);
             if (result != VideoNativeInterop.Ok)
@@ -485,6 +492,20 @@ internal sealed class NativeVideoPlayer : VideoPlayerBase, IVideoFrameOwner, IVi
         }
         _native = native;
         _nativeLuid = luid is null ? null : (byte[])luid.Clone();
+        _selectedText = -1;
+        if (!_textMissing)
+        {
+            try
+            {
+                VideoNativeInterop.PlayerSetTextCallback(native, &OnNativeText, GCHandle.ToIntPtr(_self));
+            }
+            catch (EntryPointNotFoundException)
+            {
+                // An older shim without the embedded text exports: the media's text tracks are not offered. (The Windows shim
+                // has them but reports no tracks for now.)
+                _textMissing = true;
+            }
+        }
         VideoNativeInterop.PlayerSetVolume(native, EffectiveGain);
         VideoNativeInterop.PlayerSetLoop(native, IsLooping ? 1 : 0);
         if (PlaybackRate != 1)
@@ -692,6 +713,15 @@ internal sealed class NativeVideoPlayer : VideoPlayerBase, IVideoFrameOwner, IVi
             case VideoNativeInterop.EventSeekable:
                 SetSeekable(e.A != 0);
                 break;
+            case VideoNativeInterop.EventTextTracks:
+                SetTextTracks(ReadTextTracks());
+                break;
+            case TextCue:
+                if (e.Text is { } cue && cue.Track == Volatile.Read(ref _selectedText))
+                {
+                    Post(() => EmbeddedCue?.Invoke(this, cue));
+                }
+                break;
         }
     }
 
@@ -769,6 +799,108 @@ internal sealed class NativeVideoPlayer : VideoPlayerBase, IVideoFrameOwner, IVi
         return list;
     }
 
+    // ---- Embedded text tracks.
+
+    public IReadOnlyList<VideoEmbeddedTextTrackInfo> EmbeddedTextTracks => Volatile.Read(ref _textTracks);
+
+    public event EventHandler? EmbeddedTextTracksChanged;
+
+    public event EventHandler<VideoEmbeddedCueEventArgs>? EmbeddedCue;
+
+    public void SelectEmbeddedTextTrack(int index)
+    {
+        lock (_gate)
+        {
+            if (_native == 0 || _textMissing || IsDisposed || index == _selectedText)
+            {
+                return;
+            }
+            if (index >= 0 && index >= _textTracks.Count)
+            {
+                return;
+            }
+            if (VideoNativeInterop.PlayerSelectTextTrack(_native, index) == VideoNativeInterop.Ok)
+            {
+                Volatile.Write(ref _selectedText, index);
+            }
+        }
+    }
+
+    private void SetTextTracks(IReadOnlyList<VideoEmbeddedTextTrackInfo> tracks)
+    {
+        if (tracks.Count == 0 && Volatile.Read(ref _textTracks).Count == 0)
+        {
+            return;
+        }
+        Volatile.Write(ref _textTracks, tracks);
+        Post(() => EmbeddedTextTracksChanged?.Invoke(this, EventArgs.Empty));
+    }
+
+    private unsafe IReadOnlyList<VideoEmbeddedTextTrackInfo> ReadTextTracks()
+    {
+        lock (_gate)
+        {
+            if (_native == 0 || _textMissing)
+            {
+                return [];
+            }
+            var count = VideoNativeInterop.PlayerTextTrackCount(_native);
+            if (count <= 0)
+            {
+                return [];
+            }
+            var list = new List<VideoEmbeddedTextTrackInfo>(count);
+            var language = stackalloc byte[TextInfoSize];
+            var label = stackalloc byte[TextInfoSize];
+            for (var i = 0; i < count; i++)
+            {
+                language[0] = 0;
+                label[0] = 0;
+                if (VideoNativeInterop.PlayerTextTrackInfo(_native, i, language, TextInfoSize, label, TextInfoSize, out var kind) != VideoNativeInterop.Ok)
+                {
+                    continue;
+                }
+                list.Add(new VideoEmbeddedTextTrackInfo(
+                    i,
+                    kind == 1 ? VideoTextTrackKind.Captions : VideoTextTrackKind.Subtitles,
+                    NullIfEmpty(Marshal.PtrToStringUTF8((nint)language)),
+                    NullIfEmpty(Marshal.PtrToStringUTF8((nint)label))));
+            }
+            return list;
+        }
+    }
+
+    private static string? NullIfEmpty(string? value) => string.IsNullOrWhiteSpace(value) ? null : value;
+
+    [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
+    private static unsafe void OnNativeText(nint context, int track, double start, double end, int format, byte* text)
+    {
+        try
+        {
+            if (context == 0 || GCHandle.FromIntPtr(context).Target is not NativeVideoPlayer player)
+            {
+                return;
+            }
+            var value = text == null ? "" : Marshal.PtrToStringUTF8((nint)text) ?? "";
+            if (format == VideoNativeInterop.TextPlain)
+            {
+                value = value.Replace("&", "&amp;", StringComparison.Ordinal).Replace("<", "&lt;", StringComparison.Ordinal).Replace(">", "&gt;", StringComparison.Ordinal);
+            }
+            var cue = new VideoEmbeddedCueEventArgs(
+                track,
+                TimeSpan.FromSeconds(double.IsFinite(start) && start > 0 ? start : 0),
+                double.IsFinite(end) && end >= 0 ? TimeSpan.FromSeconds(end) : null,
+                value);
+            // Through the event queue, so a cue of replaced media is dropped like its other events.
+            player._events.Enqueue(new NativeEvent(TextCue, 0, 0, cue));
+            player.ScheduleDrain();
+        }
+        catch (Exception exception)
+        {
+            Trace.TraceError($"TKCode.Arc.Video.Native: text callback failed: {exception}");
+        }
+    }
+
     private string ReadLastError(string fallback)
     {
         lock (_gate)
@@ -786,7 +918,7 @@ internal sealed class NativeVideoPlayer : VideoPlayerBase, IVideoFrameOwner, IVi
         _ => VideoErrorKind.Decode,
     };
 
-    private readonly record struct NativeEvent(int Kind, double A, double B);
+    private readonly record struct NativeEvent(int Kind, double A, double B, VideoEmbeddedCueEventArgs? Text = null);
 
     private sealed class PendingLoad
     {

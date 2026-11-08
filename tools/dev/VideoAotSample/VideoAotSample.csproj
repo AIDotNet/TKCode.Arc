@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <!-- Not shipped, not in the solution: proves an app using TKCode.Arc.Video and TKCode.Arc.Video.Native publishes with
+         Native AOT without trim or AOT warnings and plays a clip with the system player (design/components/video/
+         completion-plan.md A7). The native shim comes from src/TKCode.Arc.Video.Native/runtimes (tools/video/build-native.sh,
+         tools/video/sync-native.sh).
+         Publish: dotnet publish -c Release -r osx-arm64 (or the current RID), then run the executable; see Program.cs. -->
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net10.0</TargetFramework>
+        <RootNamespace>TKCode.Arc.VideoAotSample</RootNamespace>
+        <PublishAot>true</PublishAot>
+        <TrimmerSingleWarn>false</TrimmerSingleWarn>
+        <IsPackable>false</IsPackable>
+        <BuiltInComInteropSupport>false</BuiltInComInteropSupport>
+        <!-- See FoundationAotSample: the optimized AOT publish of .NET SDK 11 embeds no compiled XAML with Avalonia 12.1. -->
+        <UseOptimizedPublish>false</UseOptimizedPublish>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Avalonia.Desktop" />
+        <PackageReference Include="Avalonia.Fonts.Inter" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="../../../src/TKCode.Arc/TKCode.Arc.csproj" />
+        <ProjectReference Include="../../../src/TKCode.Arc.Video/TKCode.Arc.Video.csproj" />
+        <ProjectReference Include="../../../src/TKCode.Arc.Video.Native/TKCode.Arc.Video.Native.csproj" />
+    </ItemGroup>
+</Project>

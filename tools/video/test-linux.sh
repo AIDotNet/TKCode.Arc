@@ -14,7 +14,8 @@
 #                                        build the shim, then run cmd (default: dotnet test of
 #                                        tests/TKCode.Arc.Video.Native.Tests) in an image with the .NET 10 SDK, the
 #                                        SDK pinned by global.json and the same GStreamer packages. The workspace is
-#                                        mounted read-only and copied to /src inside, so host bin/obj stay untouched.
+#                                        mounted read-only and copied to /src inside, so host bin/obj stay untouched;
+#                                        the shims just built are staged into runtimes/ there (sync-native.sh).
 # Images: tkcode-video-gst:bookworm, tkcode-video-dotnet:10 (built on first use; TKV_REBUILD=1 rebuilds).
 set -euo pipefail
 root="$(cd "$(dirname "$0")/../.." && pwd)"
@@ -59,7 +60,7 @@ ENV DOTNET_CLI_TELEMETRY_OPTOUT=1 DOTNET_NOLOGO=1" --build-arg "SDK_VERSION=$sdk
     set -euo pipefail
     mkdir -p /src && cd /work
     tar --exclude=./.git --exclude=./.work --exclude='*/bin' --exclude='*/obj' --exclude=./artifacts/native-build -cf - . | tar -xf - -C /src
-    cd /src && $cmd"
+    cd /src && tools/video/sync-native.sh >/dev/null && $cmd"
 fi
 
 [[ "$mode" == "gst" ]] || { echo "usage: $0 [dotnet [cmd...]]" >&2; exit 2; }

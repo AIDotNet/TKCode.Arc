@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <!-- Not shipped, not in the solution: plays a clip with the system player on iOS and Android and prints
+         "VIDEO-SAMPLE: PASS|FAIL ..." (App.cs). Needs the .NET ios / android workloads; see design/components/video/video.md 5.5.
+         Always pass -p:ArcVideoMobile=true (it must reach TKCode.Arc.Video.Native too).
+         iOS simulator:  dotnet build -t:Run -f net11.0-ios -p:ArcVideoMobile=true -p:RuntimeIdentifier=iossimulator-arm64
+         Android:        dotnet build -t:Run -f net11.0-android -p:ArcVideoMobile=true (an emulator or device attached) -->
+    <PropertyGroup>
+        <TargetFrameworks>net11.0-ios;net11.0-android</TargetFrameworks>
+        <OutputType>Exe</OutputType>
+        <RootNamespace>TKCode.Arc.VideoMobileSample</RootNamespace>
+        <AssemblyName>TKCode.Arc.VideoMobileSample</AssemblyName>
+        <ApplicationId>dev.tkcode.arc.videosample</ApplicationId>
+        <ApplicationTitle>Arc Video Sample</ApplicationTitle>
+        <ApplicationVersion>1</ApplicationVersion>
+        <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+        <IsPackable>false</IsPackable>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(TargetFramework.Contains('-ios'))">
+        <SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
+        <AppleAppManifest>iOS/Info.plist</AppleAppManifest>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(TargetFramework.Contains('-android'))">
+        <SupportedOSPlatformVersion>24</SupportedOSPlatformVersion>
+        <AndroidManifest>Android/AndroidManifest.xml</AndroidManifest>
+    </PropertyGroup>
+    <ItemGroup>
+        <AvaloniaResource Include="Assets/**" />
+    </ItemGroup>
+    <ItemGroup Condition="$(TargetFramework.Contains('-ios'))">
+        <PackageReference Include="Avalonia.iOS" />
+        <Compile Remove="Android/**" />
+    </ItemGroup>
+    <ItemGroup Condition="$(TargetFramework.Contains('-android'))">
+        <PackageReference Include="Avalonia.Android" />
+        <Compile Remove="iOS/**" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="../../../src/TKCode.Arc/TKCode.Arc.csproj" />
+        <ProjectReference Include="../../../src/TKCode.Arc.Video/TKCode.Arc.Video.csproj" />
+        <ProjectReference Include="../../../src/TKCode.Arc.Video.Native/TKCode.Arc.Video.Native.csproj" />
+    </ItemGroup>
+    <!-- A NuGet consumer gets this from the package's buildTransitive folder. -->
+    <Import Project="../../../src/TKCode.Arc.Video.Native/buildTransitive/TKCode.Arc.Video.Native.targets" />
+</Project>
