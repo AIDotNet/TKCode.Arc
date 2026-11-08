@@ -236,6 +236,30 @@ public sealed class NativeVideoPlayerTests
         advanced.ShouldBe(2.0, 0.5);
     }
 
+    // VideoSurface pulls a frame for every composition tick; these do the same while playing.
+    [Theory]
+    [InlineData("red-blue-2s.mp4")]
+    [InlineData("red-blue-2s-no-audio.mp4")]
+    public async Task A_clip_plays_while_its_frames_are_pulled(string file)
+    {
+        var backend = RequireBackend();
+        using var player = backend.CreatePlayer();
+        await LoadClipAsync(player, file);
+        player.Play();
+        var request = new VideoFrameRequest(TimeSpan.Zero, default, VideoFrameKinds.CpuBgra);
+        var clock = Stopwatch.StartNew();
+        while (player.Position <= TimeSpan.FromSeconds(0.3) && clock.Elapsed < s_timeout)
+        {
+            if (player.TryAcquireFrame(request, out var lease))
+            {
+                lease.Dispose();
+            }
+            await Task.Delay(16);
+        }
+        player.Position.ShouldBeGreaterThan(TimeSpan.FromSeconds(0.3), DescribeWatched());
+        player.Pause();
+    }
+
     [Fact]
     public async Task A_clip_without_sound_plays()
     {
