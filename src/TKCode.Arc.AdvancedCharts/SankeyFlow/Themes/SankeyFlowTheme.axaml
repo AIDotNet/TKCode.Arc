@@ -1,0 +1,16 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.SankeyFlowTheme">
+    <ControlTheme x:Key="{x:Type arc:SankeyFlow}" TargetType="arc:SankeyFlow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <!-- The focused node draws its own ring; the whole chart is not outlined. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="NodeThickness" Value="{arc:SankeyFlowTokenResource NodeThickness}" />
+        <Setter Property="NodeGap" Value="{arc:SankeyFlowTokenResource NodeGap}" />
+        <Setter Property="NodeRadius" Value="{arc:SankeyFlowTokenResource NodeRadius}" />
+        <Setter Property="ParticleRadius" Value="{arc:SankeyFlowTokenResource ParticleRadius}" />
+        <Setter Property="FigureGap" Value="{arc:SankeyFlowTokenResource FigureGap}" />
+    </ControlTheme>
+</ResourceDictionary>

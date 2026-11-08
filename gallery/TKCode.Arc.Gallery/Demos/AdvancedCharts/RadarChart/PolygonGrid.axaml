@@ -1,0 +1,35 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.RadarChartPolygonGridDemo">
+    <arc:RadarChart Label="Two hiking routes, scored out of ten"
+                    GridShape="Polygon"
+                    Rings="5"
+                    FillOpacity="0.32"
+                    Maximum="10"
+                    Size="280">
+        <arc:RadarChart.Axes>
+            <arc:RadarAxis Key="views" Label="Views" />
+            <arc:RadarAxis Key="shade" Label="Shade" />
+            <arc:RadarAxis Key="water" Label="Water stops" />
+            <arc:RadarAxis Key="quiet" Label="Quiet" />
+            <arc:RadarAxis Key="access" Label="Easy access" />
+        </arc:RadarChart.Axes>
+        <arc:RadarChart.Series>
+            <arc:RadarSeries Key="ridge" Label="Ridge loop">
+                <arc:RadarValue Axis="views" Value="9" />
+                <arc:RadarValue Axis="shade" Value="3" />
+                <arc:RadarValue Axis="water" Value="4" />
+                <arc:RadarValue Axis="quiet" Value="7" />
+                <arc:RadarValue Axis="access" Value="5" />
+            </arc:RadarSeries>
+            <arc:RadarSeries Key="valley" Label="Valley path">
+                <arc:RadarValue Axis="views" Value="5" />
+                <arc:RadarValue Axis="shade" Value="8" />
+                <arc:RadarValue Axis="water" Value="9" />
+                <arc:RadarValue Axis="quiet" Value="4" />
+                <arc:RadarValue Axis="access" Value="8" />
+            </arc:RadarSeries>
+        </arc:RadarChart.Series>
+    </arc:RadarChart>
+</UserControl>

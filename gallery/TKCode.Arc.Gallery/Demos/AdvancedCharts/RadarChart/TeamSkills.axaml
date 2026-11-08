@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.RadarChartTeamSkillsDemo">
+    <StackPanel Spacing="16">
+        <arc:SegmentedControl x:Name="Picker"
+                              AutomationProperties.Name="Compare Maya with"
+                              HorizontalAlignment="Center"
+                              SelectedValue="theo">
+            <arc:SegmentedOption Value="theo" Label="Theo" />
+            <arc:SegmentedOption Value="ines" Label="Ines" />
+            <arc:SegmentedOption Value="kofi" Label="Kofi" />
+        </arc:SegmentedControl>
+        <arc:RadarChart x:Name="Chart" Label="Staff engineer panel scores" />
+    </StackPanel>
+</UserControl>

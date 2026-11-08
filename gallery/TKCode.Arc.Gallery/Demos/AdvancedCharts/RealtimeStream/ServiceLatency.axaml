@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.RealtimeStreamServiceLatencyDemo">
+    <arc:RealtimeStream x:Name="Stream"
+                        Label="Larkspur checkout API, p95 latency"
+                        Unit="ms"
+                        WindowDuration="0:0:30"
+                        Interval="0:0:1" />
+</UserControl>

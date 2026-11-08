@@ -1,0 +1,15 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.FunnelChartTheme">
+    <ControlTheme x:Key="{x:Type arc:FunnelChart}" TargetType="arc:FunnelChart">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="SplitGap" Value="{arc:FunnelChartTokenResource SplitGap}" />
+        <Setter Property="VerticalRowHeight" Value="{arc:FunnelChartTokenResource VerticalRowHeight}" />
+        <Setter Property="HeaderGap" Value="{arc:FunnelChartTokenResource HeaderGap}" />
+        <Setter Property="DotRadius" Value="{arc:FunnelChartTokenResource DotRadius}" />
+        <Setter Property="HighlightRadius" Value="{arc:FunnelChartTokenResource HighlightRadius}" />
+    </ControlTheme>
+</ResourceDictionary>

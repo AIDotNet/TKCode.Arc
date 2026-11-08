@@ -86,6 +86,12 @@ ActivityHeatmap: contribution graph, calendar heatmap
 AnimatedCounter: rolling number, number ticker, count up
 Treemap: hierarchy chart, area breakdown
 DataGrid: spreadsheet, editable grid, data table with editing, excel-like grid
+Sunburst: radial treemap, ring hierarchy, multi-level pie chart, zoomable hierarchy
+SankeyFlow: sankey diagram, flow diagram, alluvial chart, funnel flow, user journey chart
+FunnelChart: conversion funnel, sales funnel, drop-off chart, pipeline chart
+RadarChart: spider chart, web chart, star plot, skill radar, capability chart
+RealtimeStream: live line chart, streaming chart, real-time chart, telemetry chart, scrolling time series
+RaceBarChart: bar chart race, racing bars, animated ranking, ranking over time, leaderboard animation
 WorkflowCanvas: node editor, flow chart, pipeline diagram, DAG view
 DockLayout: docking panels, IDE layout, tool windows, docking manager
 Table: data table, list view with columns, grid view, sortable table

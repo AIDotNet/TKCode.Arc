@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.RealtimeStreamQueueDepthDemo">
+    <arc:RealtimeStream x:Name="Stream"
+                        Label="Thumbnail render queue"
+                        Unit=" jobs"
+                        Minimum="0"
+                        Maximum="500"
+                        WindowDuration="0:1:0"
+                        Interval="0:0:0.5"
+                        PlotHeight="160" />
+</UserControl>

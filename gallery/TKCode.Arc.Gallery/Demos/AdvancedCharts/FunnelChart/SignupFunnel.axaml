@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.FunnelChartSignupFunnelDemo">
+    <StackPanel Spacing="16">
+        <arc:SegmentedControl x:Name="ViewPicker"
+                              AutomationProperties.Name="Funnel view"
+                              HorizontalAlignment="Center"
+                              SelectedValue="total">
+            <arc:SegmentedOption Value="total" Label="Total" />
+            <arc:SegmentedOption Value="split" Label="Split" />
+            <arc:SegmentedOption Value="search" Label="Search" />
+            <arc:SegmentedOption Value="ads" Label="Ads" />
+            <arc:SegmentedOption Value="friends" Label="Friends" />
+        </arc:SegmentedControl>
+        <arc:FunnelChart x:Name="Chart" Label="Quillpad signups this quarter">
+            <arc:FunnelChart.Segments>
+                <arc:FunnelSegment Key="search" Label="Search" />
+                <arc:FunnelSegment Key="ads" Label="Ads" />
+                <arc:FunnelSegment Key="friends" Label="Friends" />
+            </arc:FunnelChart.Segments>
+            <arc:FunnelChart.Stages>
+                <arc:FunnelStage Key="landing" Label="Opened the landing page" Values="5200,3100,1540" />
+                <arc:FunnelStage Key="account" Label="Created an account" Values="3120,1420,1110" />
+                <arc:FunnelStage Key="verified" Label="Verified their email" Values="1690,640,790" />
+                <arc:FunnelStage Key="notebook" Label="Wrote a first note" Values="860,260,520" />
+                <arc:FunnelStage Key="invite" Label="Invited a teammate" Values="410,96,332" />
+            </arc:FunnelChart.Stages>
+        </arc:FunnelChart>
+    </StackPanel>
+</UserControl>

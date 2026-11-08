@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.RaceBarChartRisingAndFallingDemo">
+    <arc:RaceBarChart x:Name="Chart"
+                      Label="Weekly listeners by radio show"
+                      BarCount="6"
+                      IsLooping="True"
+                      FrameDuration="0:0:1.1" />
+</UserControl>

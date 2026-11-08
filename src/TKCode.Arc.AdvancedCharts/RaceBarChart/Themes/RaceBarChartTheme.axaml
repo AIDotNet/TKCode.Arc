@@ -1,0 +1,72 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.RaceBarChartTheme">
+    <ControlTheme x:Key="{x:Type arc:RaceBarChart}" TargetType="arc:RaceBarChart">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="BarHeight" Value="{arc:RaceBarChartTokenResource BarHeight}" />
+        <Setter Property="BarGap" Value="{arc:RaceBarChartTokenResource BarGap}" />
+        <Setter Property="BarRadius" Value="{arc:RaceBarChartTokenResource BarRadius}" />
+        <Setter Property="NameColumnWidth" Value="{arc:RaceBarChartTokenResource NameColumnWidth}" />
+        <Setter Property="AxisHeight" Value="{arc:RaceBarChartTokenResource AxisHeight}" />
+        <Setter Property="TickSpacing" Value="{arc:RaceBarChartTokenResource TickSpacing}" />
+        <Setter Property="NarrowWidth" Value="{arc:RaceBarChartTokenResource NarrowWidth}" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid RowDefinitions="Auto,Auto">
+                    <!-- Behind the stage, so bars and text pass over the period. -->
+                    <arc:ArcContentSwap Name="PART_Period"
+                                        Mode="Roll"
+                                        IsHitTestVisible="False"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalContentAlignment="Right"
+                                        Margin="0,0,4,8"
+                                        Opacity="0.72" />
+                    <arc:RaceBarStage Name="PART_Stage" />
+                    <Grid Grid.Row="1" ColumnDefinitions="Auto,Auto,*,Auto" Margin="0,12,0,0">
+                        <arc:Button Name="PART_Play"
+                                    Variant="Secondary"
+                                    Size="Small"
+                                    Width="36"
+                                    Padding="0"
+                                    VerticalAlignment="Center">
+                            <arc:ArcGlyph Name="PART_PlayGlyph" Size="16" />
+                        </arc:Button>
+                        <TextBlock Name="PART_FirstPeriod" Grid.Column="1" Margin="12,0,4,0" VerticalAlignment="Center" />
+                        <arc:RaceBarTimeline Name="PART_Timeline"
+                                             Grid.Column="2"
+                                             Height="{arc:RaceBarChartTokenResource TimelineHeight}"
+                                             VerticalAlignment="Center" />
+                        <TextBlock Name="PART_LastPeriod" Grid.Column="3" Margin="4,0,0,0" VerticalAlignment="Center" />
+                    </Grid>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|ArcContentSwap#PART_Period">
+            <Setter Property="TextElement.FontSize" Value="{arc:ArcDesignTokenResource Type3XL}" />
+            <Setter Property="TextElement.FontFamily" Value="{arc:ArcDesignTokenResource DisplayFontFamily}" />
+            <Setter Property="TextElement.FontWeight" Value="SemiBold" />
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|ArcContentSwap#PART_Period">
+            <Setter Property="TextElement.FontSize" Value="{arc:ArcDesignTokenResource Type2XL}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_FirstPeriod">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_LastPeriod">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:narrow /template/ TextBlock#PART_FirstPeriod">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:narrow /template/ TextBlock#PART_LastPeriod">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

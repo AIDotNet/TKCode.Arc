@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SunburstCustomDepthDemo">
+    <arc:Sunburst Label="Storage by folder, GB" Depth="2" Size="280" IsLegendVisible="False">
+        <arc:SunburstNode Id="media" Label="Media">
+            <arc:SunburstNode Id="video" Label="Video">
+                <arc:SunburstNode Id="raw" Label="Raw footage" Value="412" />
+                <arc:SunburstNode Id="edits" Label="Edits" Value="138" />
+            </arc:SunburstNode>
+            <arc:SunburstNode Id="photos" Label="Photos" Value="96" />
+        </arc:SunburstNode>
+        <arc:SunburstNode Id="projects" Label="Projects">
+            <arc:SunburstNode Id="active" Label="Active" Value="184" />
+            <arc:SunburstNode Id="archive" Label="Archive">
+                <arc:SunburstNode Id="y2024" Label="2024" Value="75" />
+                <arc:SunburstNode Id="y2025" Label="2025" Value="121" />
+            </arc:SunburstNode>
+        </arc:SunburstNode>
+        <arc:SunburstNode Id="system" Label="System" Value="64" />
+    </arc:Sunburst>
+</UserControl>

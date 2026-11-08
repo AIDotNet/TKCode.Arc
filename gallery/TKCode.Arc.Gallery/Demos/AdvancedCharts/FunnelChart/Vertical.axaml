@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.FunnelChartVerticalDemo">
+    <arc:FunnelChart Label="Pottery course completion"
+                     Orientation="Vertical"
+                     IsFlowEnabled="False"
+                     MaxWidth="440"
+                     HorizontalAlignment="Center">
+        <arc:FunnelChart.Stages>
+            <arc:FunnelStage Key="enrolled" Label="Enrolled" Value="1280" />
+            <arc:FunnelStage Key="first" Label="Finished the first lesson" Value="1010" />
+            <arc:FunnelStage Key="midway" Label="Fired a first bowl" Value="640" />
+            <arc:FunnelStage Key="final" Label="Handed in the final piece" Value="430" />
+            <arc:FunnelStage Key="certificate" Label="Collected the certificate" Value="355" />
+        </arc:FunnelChart.Stages>
+    </arc:FunnelChart>
+</UserControl>

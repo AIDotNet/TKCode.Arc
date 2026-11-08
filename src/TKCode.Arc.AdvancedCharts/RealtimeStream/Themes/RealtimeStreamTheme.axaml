@@ -1,0 +1,77 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.RealtimeStreamTheme">
+    <ControlTheme x:Key="{x:Type arc:RealtimeStream}" TargetType="arc:RealtimeStream">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Gutter" Value="{arc:RealtimeStreamTokenResource Gutter}" />
+        <Setter Property="NarrowGutter" Value="{arc:RealtimeStreamTokenResource NarrowGutter}" />
+        <Setter Property="TimeAxisHeight" Value="{arc:RealtimeStreamTokenResource TimeAxisHeight}" />
+        <Setter Property="TimeLabelGap" Value="{arc:RealtimeStreamTokenResource TimeLabelGap}" />
+        <Setter Property="LineThickness" Value="{arc:RealtimeStreamTokenResource LineThickness}" />
+        <Setter Property="MarkerRadius" Value="{arc:RealtimeStreamTokenResource MarkerRadius}" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <StackPanel Spacing="{arc:RealtimeStreamTokenResource HeaderGap}">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                        <StackPanel Spacing="2">
+                            <TextBlock Name="PART_Label"
+                                       Text="{TemplateBinding Label}"
+                                       TextTrimming="CharacterEllipsis"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                       FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeSM}" />
+                            <!-- The digits are drawn; this row carries their words for assistive technology. -->
+                            <StackPanel Name="PART_ValueRow"
+                                        Orientation="Horizontal"
+                                        Spacing="4"
+                                        AutomationProperties.AccessibilityView="Content">
+                                <arc:RollingDigits Name="PART_Value"
+                                                   VerticalAlignment="Bottom"
+                                                   FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                                   FontSize="{arc:ArcDesignTokenResource Type2XL}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <TextBlock Name="PART_ValueText"
+                                           VerticalAlignment="Bottom"
+                                           FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                           FontSize="{arc:ArcDesignTokenResource Type2XL}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <TextBlock Name="PART_Unit"
+                                           VerticalAlignment="Bottom"
+                                           Margin="0,0,0,4"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                           FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeSM}" />
+                            </StackPanel>
+                        </StackPanel>
+                        <arc:Button Name="PART_Status"
+                                    Grid.Column="1"
+                                    Variant="Ghost"
+                                    Size="Small"
+                                    VerticalAlignment="Top">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <Border Name="PART_LiveDot"
+                                        Width="8"
+                                        Height="8"
+                                        VerticalAlignment="Center"
+                                        Background="{arc:ArcDesignTokenResource Success}"
+                                        CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" />
+                                <arc:ArcGlyph Name="PART_PausedGlyph"
+                                              Data="{x:Static arc:ArcIcons.Pause}"
+                                              Size="14"
+                                              VerticalAlignment="Center"
+                                              IsVisible="False" />
+                                <TextBlock Name="PART_StatusText" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </arc:Button>
+                    </Grid>
+                    <arc:RealtimeStreamPlot Name="PART_Plot" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

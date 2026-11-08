@@ -11432,6 +11432,66 @@
         <source>Whether this tab is the selected one.</source>
         <target>該標籤是否為選取的標籤。</target>
       </trans-unit>
+      <trans-unit id="FunnelChart">
+        <source>A tapered conversion funnel with the drop-off at each step. Every step is a column with its name, count, retention and drop-off; the band's thickness follows the count. `View` shows the total, a gapped split by segment, or one segment rescaled to the full band, and the band morphs between them on a spring. Dots stream through the band and leave at each step with that step's real drop-off. Below 420 pixels of width the funnel runs top to bottom.</source>
+        <target>逐級收窄的轉換漏斗，標出每一步的流失。每一步是一欄，顯示名稱、人數、留存率和流失；色帶的粗細跟隨人數。`View` 顯示總計、依區隔拆開並留有間隙的色帶，或重新縮放到整條色帶的單一區隔，色帶在它們之間沿彈簧變形。圓點流過色帶，並在每一步依該步的真實流失離開。寬度低於 420 像素時漏斗由上到下排列。</target>
+      </trans-unit>
+      <trans-unit id="FunnelChart.ActiveIndex">
+        <source>The step being read, or null (two-way). A number outside the stages clears it.</source>
+        <target>正在讀取的步驟，或 null（雙向）。超出階段範圍的數字會清除它。</target>
+      </trans-unit>
+      <trans-unit id="FunnelChart.ActiveIndexChanged">
+        <source>Raised when the step being read changes.</source>
+        <target>正在讀取的步驟變更時觸發。</target>
+      </trans-unit>
+      <trans-unit id="FunnelChart.BandHeight">
+        <source>Thickness of the band at the first step when it runs left to right (default 200).</source>
+        <target>由左到右排列時色帶在第一步的粗細（預設 200）。</target>
+      </trans-unit>
+      <trans-unit id="FunnelChart.EmptyLabel">
+        <source>Message shown when the first step of the current view is zero or there are no stages (default "No data").</source>
+        <target>目前檢視的第一步為零或沒有階段時顯示的訊息（預設 "No data"）。</target>
+      </trans-unit>
+      <trans-unit id="FunnelChart.IsFlowEnabled">
+        <source>Streams dots through the band; they leave at each step with its real drop-off. Off under reduced motion (default true).</source>
+        <target>讓圓點流過色帶；它們在每一步依真實流失離開。減少動態效果時關閉（預設 true）。</target>
+      </trans-unit>
+      <trans-unit id="FunnelChart.Label">
+        <source>What the funnel measures, such as "Signups in March"; names the chart for assistive technology.</source>
+        <target>漏斗衡量的內容，例如 "Signups in March"；也是輔助科技讀到的圖表名稱。</target>
+      </trans-unit>
+      <trans-unit id="FunnelChart.Orientation">
+        <source>Which way the funnel runs; `Auto` (default) goes top to bottom below 420 pixels of width.</source>
+        <target>漏斗的排列方向；`Auto`（預設）在寬度低於 420 像素時由上到下。</target>
+      </trans-unit>
+      <trans-unit id="FunnelChart.Segments">
+        <source>Optional parts of the audience; each stage then lists one count per segment in `Values`.</source>
+        <target>選用的受眾區隔；此時每個階段在 `Values` 中為每個區隔列出一個數字。</target>
+      </trans-unit>
+      <trans-unit id="FunnelChart.Stages">
+        <source>The steps from first to last. Inline in XAML, or assign any list; replace or change the list to update the chart.</source>
+        <target>從第一步到最後一步的步驟。可在 XAML 中內嵌撰寫，或指派任意清單；取代或變更清單即可更新圖表。</target>
+      </trans-unit>
+      <trans-unit id="FunnelChart.Unit">
+        <source>Unit after each count, such as "users" (default: none).</source>
+        <target>每個人數後的單位，例如 "users"（預設無）。</target>
+      </trans-unit>
+      <trans-unit id="FunnelChart.ValueFormatter">
+        <source>Formats counts (default: grouped, one decimal at most, then `Unit`).</source>
+        <target>格式化人數（預設：千分位分組，最多一位小數，後接 `Unit`）。</target>
+      </trans-unit>
+      <trans-unit id="FunnelChart.View">
+        <source>`total` (default), `split` for a gapped band per segment, or a segment key that isolates and rescales that segment. Unknown names show the total.</source>
+        <target>`total`（預設）、`split`（每個區隔一條帶間隙的色帶），或單獨顯示並重新縮放某區隔的區隔鍵。未知名稱顯示總計。</target>
+      </trans-unit>
+      <trans-unit id="FunnelSegment">
+        <source>One part of the audience that a `FunnelChart` can split or isolate.</source>
+        <target>`FunnelChart` 可以拆分或單獨顯示的一部分受眾。</target>
+      </trans-unit>
+      <trans-unit id="FunnelStage">
+        <source>One step of a `FunnelChart`.</source>
+        <target>`FunnelChart` 的一個步驟。</target>
+      </trans-unit>
       <trans-unit id="GalaxyAccount">
         <source>One customer account of a `CustomerGalaxy`: a dot whose area follows `Mrr` and whose color follows `Health`. The values the groupings read (plan, region, industry …) go into `Groups` under the grouping's `Key`.</source>
         <target>`CustomerGalaxy` 的一個客戶帳戶：一個圓點，其面積隨 `Mrr` 變化，顏色隨 `Health` 變化。分組所讀取的值（方案、地區、產業等）放入 `Groups` 中，以分組的 `Key` 為鍵。</target>
@@ -21364,6 +21424,142 @@
         <source>One update of an incident.</source>
         <target>事件的一則更新。</target>
       </trans-unit>
+      <trans-unit id="RaceBarChart">
+        <source>A ranking that changes over time: bars slide past each other as their values climb, and a timeline plays, pauses or scrubs the periods. Every bar shows its name and value, so hue is never the only cue. Space or Enter plays or pauses, ← / → step a period, ↑ / ↓ read the bars by rank, Home / End go to the first and last period, Escape clears the reading. Under reduced motion nothing plays by itself and periods change without interpolation.</source>
+        <target>隨時間變化的排名：數值上升時長條彼此超越，時間軸可以播放、暫停或拖曳瀏覽各個時期。每個長條都顯示名稱和數值，因此色相不是唯一的線索。Space 或 Enter 播放或暫停，← / → 逐步切換時期，↑ / ↓ 依名次讀取長條，Home / End 前往第一個和最後一個時期，Escape 清除讀數。減少動態時不會自動播放，時期切換也沒有內插。</target>
+      </trans-unit>
+      <trans-unit id="RaceBarChart.BarCount">
+        <source>How many bars are shown (default 8, at least 1); items ranked below slide out.</source>
+        <target>顯示多少個長條（預設 8，至少 1）；排名更低的項目滑出。</target>
+      </trans-unit>
+      <trans-unit id="RaceBarChart.EmptyLabel">
+        <source>Message shown without items or frames.</source>
+        <target>沒有項目或幀時顯示的訊息。</target>
+      </trans-unit>
+      <trans-unit id="RaceBarChart.FrameChanged">
+        <source>Raised when the period shown changes, whether by playback, a step, a scrub or `FrameIndex`.</source>
+        <target>顯示的時期變化時觸發，無論來自播放、逐步、拖曳還是 `FrameIndex`。</target>
+      </trans-unit>
+      <trans-unit id="RaceBarChart.FrameDuration">
+        <source>How long one period takes while playing (default 1400 ms).</source>
+        <target>播放時一個時期的時長（預設 1400 ms）。</target>
+      </trans-unit>
+      <trans-unit id="RaceBarChart.FrameIndex">
+        <source>The period shown (two-way). Changing it glides through the values between periods.</source>
+        <target>顯示的時期（雙向）。變更時會平滑經過時期之間的數值。</target>
+      </trans-unit>
+      <trans-unit id="RaceBarChart.Frames">
+        <source>One frame per period, in order: the period's name and the values by item id. A missing id counts as zero.</source>
+        <target>每個時期一幀，依順序：時期名稱和依項目 id 的數值。缺少的 id 計為零。</target>
+      </trans-unit>
+      <trans-unit id="RaceBarChart.Groups">
+        <source>Optional categories: the first four take series hues and a legend appears. Without groups every bar uses the first hue.</source>
+        <target>選用的分類：前四個使用系列色相並顯示圖例。沒有群組時所有長條都使用第一個色相。</target>
+      </trans-unit>
+      <trans-unit id="RaceBarChart.HighlightId">
+        <source>Id of the item whose name and value are emphasised.</source>
+        <target>名稱和數值被強調的項目 id。</target>
+      </trans-unit>
+      <trans-unit id="RaceBarChart.IsAutoPlay">
+        <source>Starts playing the first time the chart scrolls into view (default true). Ignored under reduced motion.</source>
+        <target>圖表第一次捲動進入可視範圍時開始播放（預設 true）。減少動態時忽略。</target>
+      </trans-unit>
+      <trans-unit id="RaceBarChart.IsLooping">
+        <source>Starts over from the first period after the last one (default false).</source>
+        <target>最後一個時期之後從第一個時期重新開始（預設 false）。</target>
+      </trans-unit>
+      <trans-unit id="RaceBarChart.IsPlaying">
+        <source>Whether the timeline is playing (two-way). Starting it on the last period replays from the first.</source>
+        <target>時間軸是否正在播放（雙向）。在最後一個時期開始播放時從第一個時期重播。</target>
+      </trans-unit>
+      <trans-unit id="RaceBarChart.Items">
+        <source>The competitors, one per bar. Assign a list or add items inline in XAML; changes to an observable list are followed.</source>
+        <target>參賽者，每個長條一項。可指派清單，或在 XAML 中內嵌加入；可觀察清單的變化會被追蹤。</target>
+      </trans-unit>
+      <trans-unit id="RaceBarChart.Label">
+        <source>What is being ranked, such as "Monthly riders by city"; names the chart for assistive technology.</source>
+        <target>排名的內容，例如 "Monthly riders by city"；為輔助技術命名圖表。</target>
+      </trans-unit>
+      <trans-unit id="RaceBarChart.PlayingChanged">
+        <source>Raised when playback starts or stops.</source>
+        <target>播放開始或停止時觸發。</target>
+      </trans-unit>
+      <trans-unit id="RaceBarChart.TickFormatter">
+        <source>Formats the axis ticks (default: `ValueFormatter`, or compact numbers).</source>
+        <target>格式化座標軸刻度（預設：`ValueFormatter`，或精簡數字）。</target>
+      </trans-unit>
+      <trans-unit id="RaceBarChart.ValueFormatter">
+        <source>Formats bar values and tooltips (default: compact numbers through `ArcFormatting.Compact`, such as 1.2K).</source>
+        <target>格式化長條數值和提示框（預設：透過 `ArcFormatting.Compact` 得到的精簡數字，例如 1.2K）。</target>
+      </trans-unit>
+      <trans-unit id="RadarAxis">
+        <source>One measure of a `RadarChart`; axes run clockwise from the top in the order given.</source>
+        <target>`RadarChart` 的一個度量；各軸依給定順序從頂端開始順時針排列。</target>
+      </trans-unit>
+      <trans-unit id="RadarChart">
+        <source>A radar chart: several profiles drawn on one web of measures. Replacing a profile morphs its shape on a gently bouncing spring; sweeping the axes with the pointer or the keyboard compares each profile's value at that axis.</source>
+        <target>雷達圖：在同一張度量網上繪製多個對象。替換對象時，其形狀在輕微回彈的彈簧上變形；用指標或鍵盤掃過各軸，可比較每個對象在該軸上的數值。</target>
+      </trans-unit>
+      <trans-unit id="RadarChart.ActiveAxis">
+        <source>Key of the axis being read (two-way), or null. A key that matches no axis shows no reading.</source>
+        <target>正在讀取的軸的索引鍵（雙向），或 null。與任何軸都不相符的索引鍵不顯示讀數。</target>
+      </trans-unit>
+      <trans-unit id="RadarChart.ActiveAxisChanged">
+        <source>Raised when the axis being read changes.</source>
+        <target>正在讀取的軸變化時觸發。</target>
+      </trans-unit>
+      <trans-unit id="RadarChart.Axes">
+        <source>The measures, at least three, clockwise from the top. Add `RadarAxis` items in XAML or bind any list; an observable list is followed.</source>
+        <target>度量，至少三條，從頂端開始順時針排列。可在 XAML 中加入 `RadarAxis` 項目，或繫結任意清單；可觀察的清單會被追蹤。</target>
+      </trans-unit>
+      <trans-unit id="RadarChart.EmptyLabel">
+        <source>Message shown with fewer than three axes or no series.</source>
+        <target>少於三條軸或沒有系列時顯示的訊息。</target>
+      </trans-unit>
+      <trans-unit id="RadarChart.FillOpacity">
+        <source>Opacity of each profile's fill, from 0 to 1 (default 0.18).</source>
+        <target>每個對象填滿的不透明度，範圍 0 到 1（預設 0.18）。</target>
+      </trans-unit>
+      <trans-unit id="RadarChart.GridShape">
+        <source>Draws the rings as circles (default) or as polygons with a corner on each axis.</source>
+        <target>把環繪製為圓形（預設）或每條軸上有一個角的多邊形。</target>
+      </trans-unit>
+      <trans-unit id="RadarChart.IsLegendVisible">
+        <source>Shows the legend: each profile's name and line key (default true).</source>
+        <target>顯示圖例：每個對象的名稱與線條樣式（預設 true）。</target>
+      </trans-unit>
+      <trans-unit id="RadarChart.Label">
+        <source>What the chart compares, such as "Team skills"; names it for assistive technology.</source>
+        <target>圖表比較的內容，例如 "Team skills"；為輔助技術命名圖表。</target>
+      </trans-unit>
+      <trans-unit id="RadarChart.Maximum">
+        <source>The value at the outer ring (default 100). `RadarAxis.Maximum` wins on its axis.</source>
+        <target>外環處的值（預設 100）。`RadarAxis.Maximum` 在其軸上優先。</target>
+      </trans-unit>
+      <trans-unit id="RadarChart.Rings">
+        <source>Number of rings in the web (default 4).</source>
+        <target>網的環數（預設 4）。</target>
+      </trans-unit>
+      <trans-unit id="RadarChart.Series">
+        <source>The profiles, in drawing and colour order. Add `RadarSeries` items in XAML or bind any list; an observable list is followed.</source>
+        <target>各個對象，依繪製與顏色順序排列。可在 XAML 中加入 `RadarSeries` 項目，或繫結任意清單；可觀察的清單會被追蹤。</target>
+      </trans-unit>
+      <trans-unit id="RadarChart.Size">
+        <source>Largest diameter of the web in pixels (default 320); it shrinks to fit the space.</source>
+        <target>網的最大直徑，單位為像素（預設 320）；會縮小以符合空間。</target>
+      </trans-unit>
+      <trans-unit id="RadarChart.ValueFormatter">
+        <source>Formats a value on its axis for the tooltip and assistive technology (default: grouped, one decimal at most, true minus sign).</source>
+        <target>為提示與輔助技術格式化某條軸上的數值（預設：千位分組，最多一位小數，使用真正的減號）。</target>
+      </trans-unit>
+      <trans-unit id="RadarSeries">
+        <source>One profile of a `RadarChart`: a closed shape with a value per axis.</source>
+        <target>`RadarChart` 的一個對象：封閉形狀，每條軸一個數值。</target>
+      </trans-unit>
+      <trans-unit id="RadarValue">
+        <source>A value of a `RadarSeries` on one axis.</source>
+        <target>`RadarSeries` 在一條軸上的數值。</target>
+      </trans-unit>
       <trans-unit id="RadioCardOption">
         <source>One option of `RadioCards` (Arc `RadioCardOption`): a label with optional description, a meta value (price, estimate), a decorative icon, and a reason shown in place of the description when the option is disabled. Its properties can be bound in XAML; the cards follow later changes.</source>
         <target>`RadioCards` 的一個選項（Arc `RadioCardOption`）：一個標籤，可選的描述、中繼資訊（價格、估算）、裝飾圖示，以及選項停用時取代描述顯示的原因。它的屬性可以在 XAML 中繫結；卡片組會跟隨之後的變化。</target>
@@ -21503,6 +21699,82 @@
       <trans-unit id="Reactions.ValueChanged">
         <source>Raised when the viewer adds or removes a reaction (Arc's onValueChange), after `Value` changed.</source>
         <target>檢視者新增或移除回應時觸發（Arc 的 onValueChange），於 `Value` 變更之後。</target>
+      </trans-unit>
+      <trans-unit id="RealtimeStream">
+        <source>A live line chart that scrolls continuously as readings arrive, holds still under the pointer so a point can be read, and marks readings flagged as anomalies. Feed it through `Points` or `Append`.</source>
+        <target>隨讀數到達而持續捲動的即時折線圖，指標懸停時靜止以便讀取某個點，並標記被判定為異常的讀數。透過 `Points` 或 `Append` 饋入。</target>
+      </trans-unit>
+      <trans-unit id="RealtimeStream.EmptyLabel">
+        <source>Message shown before the first reading.</source>
+        <target>第一個讀數到達前顯示的訊息。</target>
+      </trans-unit>
+      <trans-unit id="RealtimeStream.Interval">
+        <source>The usual time between readings (default 1 second). The view trails the newest reading by this, so the line has somewhere to go until the next one arrives.</source>
+        <target>讀數之間的通常間隔（預設 1 秒）。檢視比最新讀數落後這麼多，這樣折線在下一個讀數到達前一直有前進的餘地。</target>
+      </trans-unit>
+      <trans-unit id="RealtimeStream.IsHeld">
+        <source>True while the view holds still for any reason: `IsPaused`, the pointer or the keyboard.</source>
+        <target>檢視因任何原因保持靜止時為 true：`IsPaused`、指標或鍵盤。</target>
+      </trans-unit>
+      <trans-unit id="RealtimeStream.IsPauseOnHover">
+        <source>Holds the view still while the pointer is over the plot (default true).</source>
+        <target>指標停留在繪圖區上時讓檢視保持靜止（預設 true）。</target>
+      </trans-unit>
+      <trans-unit id="RealtimeStream.IsPaused">
+        <source>Holds the view still; readings that arrive meanwhile are kept (two-way). Set by the status button, Space and Enter.</source>
+        <target>讓檢視保持靜止；期間到達的讀數會被保留（雙向）。由狀態按鈕、Space 和 Enter 設定。</target>
+      </trans-unit>
+      <trans-unit id="RealtimeStream.Label">
+        <source>What is measured, such as "Checkout latency"; shown above the value and names the chart for assistive technology.</source>
+        <target>量測的內容，例如「Checkout latency」；顯示在數值上方，並作為圖表對輔助技術的名稱。</target>
+      </trans-unit>
+      <trans-unit id="RealtimeStream.LiveLabel">
+        <source>Text of the status button while the view follows the feed.</source>
+        <target>檢視跟隨資料時狀態按鈕的文字。</target>
+      </trans-unit>
+      <trans-unit id="RealtimeStream.Maximum">
+        <source>Fixed upper end of the value axis (null: follow the data in view).</source>
+        <target>數值軸固定的上端（null：跟隨檢視內的資料）。</target>
+      </trans-unit>
+      <trans-unit id="RealtimeStream.Minimum">
+        <source>Fixed lower end of the value axis (null: follow the data in view).</source>
+        <target>數值軸固定的下端（null：跟隨檢視內的資料）。</target>
+      </trans-unit>
+      <trans-unit id="RealtimeStream.PausedChanged">
+        <source>Raised when the view starts or stops holding still, for any reason.</source>
+        <target>檢視因任何原因開始或停止保持靜止時引發。</target>
+      </trans-unit>
+      <trans-unit id="RealtimeStream.PausedLabel">
+        <source>Text of the status button while the view holds still.</source>
+        <target>檢視保持靜止時狀態按鈕的文字。</target>
+      </trans-unit>
+      <trans-unit id="RealtimeStream.PlotHeight">
+        <source>Height of the plot in pixels, without the time labels (default 200).</source>
+        <target>繪圖區的高度（像素），不含時間標籤（預設 200）。</target>
+      </trans-unit>
+      <trans-unit id="RealtimeStream.Points">
+        <source>Readings in ascending time. An `INotifyCollectionChanged` source is watched, and its new items are appended; removing the oldest items from it does not change the view.</source>
+        <target>依時間遞增排列的讀數。`INotifyCollectionChanged` 資料來源會被監看，其新增項目會被附加；從中移除最舊的項目不會改變檢視。</target>
+      </trans-unit>
+      <trans-unit id="RealtimeStream.TimeFormatter">
+        <source>Formats times (default: HH:mm:ss, in the offset the readings carry).</source>
+        <target>格式化時間（預設：HH:mm:ss，採用讀數所帶的時區位移）。</target>
+      </trans-unit>
+      <trans-unit id="RealtimeStream.Unit">
+        <source>Unit after each value, such as "ms".</source>
+        <target>每個數值後面的單位，例如「ms」。</target>
+      </trans-unit>
+      <trans-unit id="RealtimeStream.ValueFormatter">
+        <source>Formats values (default: grouped, one decimal at most, true minus sign, then `Unit`). With a formatter the header shows its text instead of rolling digits.</source>
+        <target>格式化數值（預設：分組，最多一位小數，真正的減號，後接 `Unit`）。設定後頁首顯示其文字，而不是滾動數字。</target>
+      </trans-unit>
+      <trans-unit id="RealtimeStream.WindowDuration">
+        <source>How much time the plot shows (default 30 seconds).</source>
+        <target>繪圖區顯示的時長（預設 30 秒）。</target>
+      </trans-unit>
+      <trans-unit id="RealtimeStreamPoint">
+        <source>One reading of a `RealtimeStream`.</source>
+        <target>`RealtimeStream` 的一個讀數。</target>
       </trans-unit>
       <trans-unit id="ReasoningBlock">
         <source>The collapsible thinking block of an AI reply (Arc Reasoning block, design reference). While the model thinks, a shimmering label counts the seconds and the latest reasoning streams under it in muted text, two lines tall. When it finishes it folds to "Thought for 7s" with a chevron; opening it shows the full reasoning as steps with headings on a quiet rail, then a footer with the outcome and a copy button. Give it the reasoning as one growing string in `Reasoning` (blank lines split paragraphs and a line written as `**Heading**` or `## Heading` starts a step) or as `ReasoningStep`s in `Steps`, and set `Status`. The seconds are counted here unless you set `Elapsed`. With no data it reads "Thought process" and has nothing to open; a `Simulation` plays a reasoning you pass in instead.</source>
@@ -23195,6 +23467,70 @@
       <trans-unit id="RoutedTicket">
         <source>A ticket that landed in a lane of a `TicketRouter`.</source>
         <target>落入 `TicketRouter` 某條泳道的工單。</target>
+      </trans-unit>
+      <trans-unit id="SankeyFlow">
+        <source>A flow diagram: stages in columns, ribbons between them with a thickness proportional to their value, and particles drifting along the ribbons. Hovering or focusing a node or ribbon traces its share through the whole journey in the accent color while everything else dims. Below 420 px wide the columns become rows, read from top to bottom.</source>
+        <target>流向圖：各階段排成欄，欄之間的色帶粗細與其值成正比，粒子沿色帶飄移。懸停或聚焦節點、色帶時，會以強調色追蹤其占比貫穿整段旅程，其他內容變暗。寬度低於 420 px 時欄變成列，由上到下閱讀。</target>
+      </trans-unit>
+      <trans-unit id="SankeyFlow.Columns">
+        <source>Stage names drawn above each column, from the first column on.</source>
+        <target>繪製在每欄上方的階段名稱，從第一欄開始。</target>
+      </trans-unit>
+      <trans-unit id="SankeyFlow.EmptyLabel">
+        <source>Message shown while there are no flows (default "No flows yet").</source>
+        <target>沒有流量時顯示的訊息（預設 "No flows yet"）。</target>
+      </trans-unit>
+      <trans-unit id="SankeyFlow.IsParticleToggleVisible">
+        <source>Shows the switch that turns particles on and off (default true). Reduced motion removes it.</source>
+        <target>顯示開啟或關閉粒子的開關（預設 true）。減少動態效果時會移除它。</target>
+      </trans-unit>
+      <trans-unit id="SankeyFlow.IsParticlesEnabled">
+        <source>Whether particles drift along the ribbons (two-way, default true). Reduced motion never draws them.</source>
+        <target>粒子是否沿色帶飄移（雙向，預設 true）。減少動態效果時不繪製粒子。</target>
+      </trans-unit>
+      <trans-unit id="SankeyFlow.Label">
+        <source>What flows, such as "Trial journey, March"; names the chart for assistive technology.</source>
+        <target>流動的內容，例如 "Trial journey, March"；為輔助科技命名圖表。</target>
+      </trans-unit>
+      <trans-unit id="SankeyFlow.Links">
+        <source>The flows between nodes: add them inline in XAML, or assign any list. Repeated pairs add up; self loops and values that are not positive are ignored.</source>
+        <target>節點之間的流量：可在 XAML 中內嵌加入，也可指定任意清單。重複的節點對會累加；自我迴圈和非正數的值會被忽略。</target>
+      </trans-unit>
+      <trans-unit id="SankeyFlow.Nodes">
+        <source>The stages' nodes: add them inline in XAML, or assign any list. Link ends with no node here get a node named after their id.</source>
+        <target>各階段的節點：可在 XAML 中內嵌加入，也可指定任意清單。在這裡沒有對應節點的連結端會得到一個以其 id 命名的節點。</target>
+      </trans-unit>
+      <trans-unit id="SankeyFlow.ParticleToggleLabel">
+        <source>Text of the particle switch (default "Particles").</source>
+        <target>粒子開關的文字（預設 "Particles"）。</target>
+      </trans-unit>
+      <trans-unit id="SankeyFlow.ParticlesChanged">
+        <source>Raised when `IsParticlesEnabled` changes.</source>
+        <target>`IsParticlesEnabled` 變更時觸發。</target>
+      </trans-unit>
+      <trans-unit id="SankeyFlow.PlotHeight">
+        <source>Height of the plot in pixels (default 340). The upright layout grows past it when its rows need more room.</source>
+        <target>繪圖區高度，單位為像素（預設 340）。直向版面的列需要更多空間時會超過此高度。</target>
+      </trans-unit>
+      <trans-unit id="SankeyFlow.TotalLabel">
+        <source>Names the whole in share readouts: "42% of the total" (default "the total").</source>
+        <target>在占比讀數中命名整體："42% of the total"（預設 "the total"）。</target>
+      </trans-unit>
+      <trans-unit id="SankeyFlow.Unit">
+        <source>Text after each value, such as "k" or " users" (default empty).</source>
+        <target>每個值後面的文字，例如 "k" 或 " users"（預設為空）。</target>
+      </trans-unit>
+      <trans-unit id="SankeyFlow.ValueFormatter">
+        <source>Formats values (default: grouped, one decimal at most, then `Unit`).</source>
+        <target>格式化數值（預設：千位分組，最多一位小數，然後是 `Unit`）。</target>
+      </trans-unit>
+      <trans-unit id="SankeyFlowLink">
+        <source>One flow of a `SankeyFlow`, drawn as a ribbon from its source node to its target node.</source>
+        <target>`SankeyFlow` 中的一股流量，繪製為從來源節點到目標節點的色帶。</target>
+      </trans-unit>
+      <trans-unit id="SankeyFlowNode">
+        <source>One stage node of a `SankeyFlow`.</source>
+        <target>`SankeyFlow` 中一個階段的節點。</target>
       </trans-unit>
       <trans-unit id="ScatterAxis">
         <source>One axis of a `ConnectedScatter`. The range and the step are used exactly as given (no rounding to nice numbers, not forced to start at zero); leave them unset to derive them from the data of every series.</source>
@@ -27539,6 +27875,50 @@
       <trans-unit id="StretchRefreshStartedEventArgs">
         <source>Data of `RefreshStarted`.</source>
         <target>`RefreshStarted` 的事件資料。</target>
+      </trans-unit>
+      <trans-unit id="Sunburst">
+        <source>A hierarchy drawn as concentric rings. Clicking a segment makes it the new centre: every arc moves to its new angles on one shared spring while rings grow or shrink as levels appear and leave. A breadcrumb, the centre and the legend lead back and forth, the centre rolls the current total digit by digit, and labels show only where they fit their arc.</source>
+        <target>以同心圓環繪製的階層結構。點擊扇區使其成為新的中心：每段圓弧在同一個共用彈簧上移動到新的角度，圓環隨層級出現和離開而變大或變小。麵包屑、中心和圖例用於來回導覽，中心逐位捲動顯示目前總計，標籤只在放得下圓弧時才顯示。</target>
+      </trans-unit>
+      <trans-unit id="Sunburst.Depth">
+        <source>How many rings are visible at once (at least 1, default 3).</source>
+        <target>同時可見的圈數（至少 1，預設 3）。</target>
+      </trans-unit>
+      <trans-unit id="Sunburst.EmptyLabel">
+        <source>Message shown when the total is zero.</source>
+        <target>總計為零時顯示的訊息。</target>
+      </trans-unit>
+      <trans-unit id="Sunburst.FocusedId">
+        <source>Id of the node at the centre (two-way; null is the root). A leaf's id shows its parent at the centre, and an unknown id shows the root.</source>
+        <target>中心節點的 id（雙向；null 表示根節點）。設為葉節點的 id 時中心顯示其父節點，未知的 id 顯示根節點。</target>
+      </trans-unit>
+      <trans-unit id="Sunburst.FocusedIdChanged">
+        <source>Raised when another node moves to the centre, from a segment, the breadcrumb, the legend, the centre or code.</source>
+        <target>另一個節點移到中心時引發，來源可以是扇區、麵包屑、圖例、中心或程式碼。</target>
+      </trans-unit>
+      <trans-unit id="Sunburst.IsLegendVisible">
+        <source>Whether the legend of the centre's children shows, with values and shares (default true).</source>
+        <target>是否顯示中心子節點的圖例，包含數值和佔比（預設 true）。</target>
+      </trans-unit>
+      <trans-unit id="Sunburst.Label">
+        <source>What the whole is, such as "Annual costs": the accessible name of the chart, and the first breadcrumb when the nodes come from `Items`.</source>
+        <target>整體是什麼，例如 "Annual costs"：圖表的無障礙名稱；節點來自 `Items` 時也是第一個麵包屑。</target>
+      </trans-unit>
+      <trans-unit id="Sunburst.Root">
+        <source>The whole hierarchy; its label names the first breadcrumb. Wins over `Items`.</source>
+        <target>整個階層結構；其標籤作為第一個麵包屑的名稱。優先於 `Items`。</target>
+      </trans-unit>
+      <trans-unit id="Sunburst.Size">
+        <source>Largest diameter of the ring in pixels (default 340); it scales down to fit its container.</source>
+        <target>圓環的最大直徑，單位為像素（預設 340）；會縮小以符合容器。</target>
+      </trans-unit>
+      <trans-unit id="Sunburst.ValueFormatter">
+        <source>Formats values in the centre, legend, tooltip and accessible reading (default: grouped, at most one decimal).</source>
+        <target>格式化中心、圖例、工具提示和無障礙朗讀中的數值（預設：數字分組，最多一位小數）。</target>
+      </trans-unit>
+      <trans-unit id="SunburstNode">
+        <source>A node of a `Sunburst`: a leaf with a value, or a branch whose value is the sum of its children.</source>
+        <target>`Sunburst` 的節點：帶數值的葉節點，或值為其子節點總和的分支。</target>
       </trans-unit>
       <trans-unit id="SwipeAction">
         <source>One action of a `SwipeActionsRow`: revealed under the row's edge by a swipe (icon over label), committed by a full swipe on the outermost action, a tap on the revealed action, or the row's More actions menu. An action that removes its item (the default) runs once the row has slid away and collapsed, so the handler can remove the item without a jump; set `KeepsRow` for actions such as Mark as unread, which run at once while the row springs home.</source>

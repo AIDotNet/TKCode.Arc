@@ -1,0 +1,52 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:generic="using:System.Collections.Generic"
+             x:Class="TKCode.Arc.Gallery.Demos.SankeyFlowTrialJourneyDemo">
+    <arc:SankeyFlow Label="Lumen Notes trials, third quarter"
+                    Unit=" trials"
+                    TotalLabel="all trials">
+        <arc:SankeyFlow.Columns>
+            <generic:List x:TypeArguments="x:String">
+                <x:String>Channel</x:String>
+                <x:String>Onboarding</x:String>
+                <x:String>Outcome</x:String>
+            </generic:List>
+        </arc:SankeyFlow.Columns>
+        <arc:SankeyFlow.Nodes>
+            <arc:SankeyFlowNode Id="search" Label="Search ads" />
+            <arc:SankeyFlowNode Id="forum" Label="Community forum" />
+            <arc:SankeyFlowNode Id="newsletter" Label="Partner newsletter" />
+            <arc:SankeyFlowNode Id="podcast" Label="Podcast sponsor" />
+            <arc:SankeyFlowNode Id="setup" Label="Finished setup" />
+            <arc:SankeyFlowNode Id="invited" Label="Invited a teammate" />
+            <arc:SankeyFlowNode Id="stalled" Label="Stalled" />
+            <arc:SankeyFlowNode Id="starter" Label="Starter plan" />
+            <arc:SankeyFlowNode Id="pro" Label="Pro plan" />
+            <arc:SankeyFlowNode Id="team" Label="Team plan" />
+            <arc:SankeyFlowNode Id="lapsed" Label="Lapsed" />
+        </arc:SankeyFlow.Nodes>
+        <arc:SankeyFlow.Links>
+            <arc:SankeyFlowLink Source="search" Target="setup" Value="610" />
+            <arc:SankeyFlowLink Source="search" Target="invited" Value="280" />
+            <arc:SankeyFlowLink Source="search" Target="stalled" Value="360" />
+            <arc:SankeyFlowLink Source="forum" Target="setup" Value="380" />
+            <arc:SankeyFlowLink Source="forum" Target="invited" Value="300" />
+            <arc:SankeyFlowLink Source="forum" Target="stalled" Value="140" />
+            <arc:SankeyFlowLink Source="newsletter" Target="setup" Value="300" />
+            <arc:SankeyFlowLink Source="newsletter" Target="invited" Value="120" />
+            <arc:SankeyFlowLink Source="newsletter" Target="stalled" Value="220" />
+            <arc:SankeyFlowLink Source="podcast" Target="setup" Value="210" />
+            <arc:SankeyFlowLink Source="podcast" Target="invited" Value="80" />
+            <arc:SankeyFlowLink Source="podcast" Target="stalled" Value="200" />
+            <arc:SankeyFlowLink Source="setup" Target="starter" Value="690" />
+            <arc:SankeyFlowLink Source="setup" Target="pro" Value="360" />
+            <arc:SankeyFlowLink Source="setup" Target="lapsed" Value="450" />
+            <arc:SankeyFlowLink Source="invited" Target="pro" Value="290" />
+            <arc:SankeyFlowLink Source="invited" Target="team" Value="410" />
+            <arc:SankeyFlowLink Source="invited" Target="lapsed" Value="80" />
+            <arc:SankeyFlowLink Source="stalled" Target="starter" Value="60" />
+            <arc:SankeyFlowLink Source="stalled" Target="lapsed" Value="860" />
+        </arc:SankeyFlow.Links>
+    </arc:SankeyFlow>
+</UserControl>

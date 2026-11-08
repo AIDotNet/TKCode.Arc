@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.RealtimeStreamControlledPauseDemo">
+    <StackPanel Spacing="12">
+        <arc:Switch x:Name="Hold" Content="Hold the chart for the incident review" />
+        <arc:RealtimeStream x:Name="Stream"
+                            Label="Greenhouse 3 soil moisture"
+                            Unit="%"
+                            IsPauseOnHover="False"
+                            IsPaused="{Binding #Hold.IsChecked, Mode=TwoWay}"
+                            WindowDuration="0:0:20"
+                            Interval="0:0:1"
+                            PlotHeight="150" />
+        <TextBlock x:Name="Log" Text="Following the feed." />
+    </StackPanel>
+</UserControl>

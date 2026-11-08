@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.FunnelChartSingleSeriesDemo">
+    <arc:FunnelChart Label="Help chat outcomes in June" Unit="chats" BandHeight="160">
+        <arc:FunnelChart.Stages>
+            <arc:FunnelStage Key="opened" Label="Opened the chat" Value="4200" />
+            <arc:FunnelStage Key="asked" Label="Asked a question" Value="2980" />
+            <arc:FunnelStage Key="agent" Label="Reached an agent" Value="1640" />
+            <arc:FunnelStage Key="solved" Label="Problem solved" Value="1210" />
+            <arc:FunnelStage Key="rated" Label="Left a rating" Value="380" />
+        </arc:FunnelChart.Stages>
+    </arc:FunnelChart>
+</UserControl>

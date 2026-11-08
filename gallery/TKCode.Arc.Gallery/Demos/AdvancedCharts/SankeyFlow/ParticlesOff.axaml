@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SankeyFlowParticlesOffDemo">
+    <arc:SankeyFlow Label="Home energy on a clear day"
+                    Unit=" kWh"
+                    TotalLabel="all energy"
+                    PlotHeight="260"
+                    IsParticlesEnabled="False"
+                    IsParticleToggleVisible="False">
+        <arc:SankeyFlow.Nodes>
+            <arc:SankeyFlowNode Id="solar" Label="Rooftop solar" Column="0" />
+            <arc:SankeyFlowNode Id="grid" Label="Grid" Column="0" />
+            <arc:SankeyFlowNode Id="battery" Label="Home battery" Column="1" />
+            <arc:SankeyFlowNode Id="house" Label="House" Column="2" />
+            <arc:SankeyFlowNode Id="car" Label="Car charger" Column="2" />
+            <arc:SankeyFlowNode Id="export" Label="Sold back" Column="2" />
+        </arc:SankeyFlow.Nodes>
+        <arc:SankeyFlow.Links>
+            <arc:SankeyFlowLink Source="solar" Target="house" Value="19" />
+            <arc:SankeyFlowLink Source="solar" Target="battery" Value="8" />
+            <arc:SankeyFlowLink Source="solar" Target="export" Value="4" />
+            <arc:SankeyFlowLink Source="grid" Target="house" Value="6" />
+            <arc:SankeyFlowLink Source="grid" Target="car" Value="4" />
+            <arc:SankeyFlowLink Source="battery" Target="house" Value="5.5" />
+            <arc:SankeyFlowLink Source="battery" Target="car" Value="2.5" />
+        </arc:SankeyFlow.Links>
+    </arc:SankeyFlow>
+</UserControl>

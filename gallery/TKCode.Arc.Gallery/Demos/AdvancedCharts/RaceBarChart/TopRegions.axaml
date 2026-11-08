@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.RaceBarChartTopRegionsDemo">
+    <arc:RaceBarChart x:Name="Chart"
+                      Label="Rooftop solar installations by district, cumulative"
+                      BarCount="8"
+                      HighlightId="larkfield" />
+</UserControl>

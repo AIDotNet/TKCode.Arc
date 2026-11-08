@@ -2915,6 +2915,13 @@
       "InlinePadding": "14,8,14,8",
       "ItemRadius": "12,12,12,12"
     },
+    "FunnelChart": {
+      "DotRadius": "2.5",
+      "HeaderGap": "10",
+      "HighlightRadius": "12",
+      "SplitGap": "6",
+      "VerticalRowHeight": "100"
+    },
     "GanttTimeline": {
       "BarHeight": "24",
       "BarRadius": "8",
@@ -5250,6 +5257,27 @@
       "UpdateMargin": "0,0,0,14",
       "UptimeColumnWidth": "60"
     },
+    "RaceBarChart": {
+      "AxisHeight": "26",
+      "BarGap": "6",
+      "BarHeight": "28",
+      "BarRadius": "6",
+      "NameColumnWidth": "132",
+      "NarrowWidth": "400",
+      "TickSpacing": "84",
+      "TimelineHeight": "36"
+    },
+    "RadarChart": {
+      "CompactLabelGap": "6",
+      "CompactLabelWidth": "68",
+      "LabelGap": "12",
+      "LabelWidth": "112",
+      "LegendGap": "14",
+      "LineKeyWidth": "22",
+      "MarkerRadius": "4",
+      "StrokeThickness": "2",
+      "TooltipGap": "10"
+    },
     "RadioCards": {
       "BodyGap": "2",
       "CardInsetGrid": "16,14,16,14",
@@ -5317,6 +5345,15 @@
       "ReactedRingOpacity": "0.45",
       "RowGap": "8",
       "TipDelay": "450ms"
+    },
+    "RealtimeStream": {
+      "Gutter": "44",
+      "HeaderGap": "12",
+      "LineThickness": "2",
+      "MarkerRadius": "6",
+      "NarrowGutter": "32",
+      "TimeAxisHeight": "26",
+      "TimeLabelGap": "28"
     },
     "ReasoningBlock": {
       "ActionHeight": "28",
@@ -5701,6 +5738,13 @@
       "TableRippleStep": "30ms",
       "TitleLetterSpacing": "-0.16",
       "TitleLineHeight": "17.6"
+    },
+    "SankeyFlow": {
+      "FigureGap": "10",
+      "NodeGap": "14",
+      "NodeRadius": "3",
+      "NodeThickness": "12",
+      "ParticleRadius": "1.75"
     },
     "ScrollArea": {
       "FocusRingMargin": "0,0,0,0",
@@ -6748,6 +6792,17 @@
       "PhotoMargin": "0,6,0,2",
       "PhotoMaxWidth": "240",
       "SuccessColor": "#FF00774E"
+    },
+    "Sunburst": {
+      "FigureGap": "12",
+      "HoleRatio": "0.3",
+      "LegendGap": "24",
+      "LegendMaxWidth": "300",
+      "LegendMinWidth": "200",
+      "LegendRowHeight": "36",
+      "LegendRowRadius": "8",
+      "SegmentCorner": "3",
+      "SegmentGap": "2"
     },
     "SwipeActions": {
       "ListInset": "0,0,0,-1"

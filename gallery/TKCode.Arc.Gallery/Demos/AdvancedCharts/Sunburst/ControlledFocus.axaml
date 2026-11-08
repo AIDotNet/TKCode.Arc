@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SunburstControlledFocusDemo">
+    <StackPanel Spacing="16">
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="8" LineSpacing="8">
+            <arc:Button Content="All branches" Variant="Secondary" Size="Small" Tag="city" Click="OnGoClick" />
+            <arc:Button Content="Riverside" Variant="Secondary" Size="Small" Tag="riverside" Click="OnGoClick" />
+            <arc:Button Content="Old Town" Variant="Secondary" Size="Small" Tag="old-town" Click="OnGoClick" />
+            <arc:Button Content="Riverside fiction" Variant="Secondary" Size="Small" Tag="riverside-fiction" Click="OnGoClick" />
+        </WrapPanel>
+        <arc:Sunburst x:Name="Chart"
+                      Label="Library loans this month"
+                      Size="300"
+                      FocusedIdChanged="OnFocusedIdChanged" />
+        <TextBlock x:Name="Status"
+                   Text="Use the buttons, or click a segment, the centre, a breadcrumb or a legend row."
+                   FontSize="13"
+                   TextWrapping="Wrap"
+                   HorizontalAlignment="Center"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

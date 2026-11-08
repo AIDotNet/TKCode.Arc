@@ -1,0 +1,18 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.SunburstTheme">
+    <ControlTheme x:Key="{x:Type arc:Sunburst}" TargetType="arc:Sunburst">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FigureGap" Value="{arc:SunburstTokenResource FigureGap}" />
+        <Setter Property="HoleRatio" Value="{arc:SunburstTokenResource HoleRatio}" />
+        <Setter Property="SegmentGap" Value="{arc:SunburstTokenResource SegmentGap}" />
+        <Setter Property="SegmentCorner" Value="{arc:SunburstTokenResource SegmentCorner}" />
+        <Setter Property="LegendGap" Value="{arc:SunburstTokenResource LegendGap}" />
+        <Setter Property="LegendMinWidth" Value="{arc:SunburstTokenResource LegendMinWidth}" />
+        <Setter Property="LegendMaxWidth" Value="{arc:SunburstTokenResource LegendMaxWidth}" />
+        <Setter Property="LegendRowHeight" Value="{arc:SunburstTokenResource LegendRowHeight}" />
+        <Setter Property="LegendRowRadius" Value="{arc:SunburstTokenResource LegendRowRadius}" />
+    </ControlTheme>
+</ResourceDictionary>

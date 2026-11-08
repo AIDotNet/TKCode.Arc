@@ -1,0 +1,19 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.RadarChartTheme">
+    <ControlTheme x:Key="{x:Type arc:RadarChart}" TargetType="arc:RadarChart">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="LabelGap" Value="{arc:RadarChartTokenResource LabelGap}" />
+        <Setter Property="CompactLabelGap" Value="{arc:RadarChartTokenResource CompactLabelGap}" />
+        <Setter Property="LabelWidth" Value="{arc:RadarChartTokenResource LabelWidth}" />
+        <Setter Property="CompactLabelWidth" Value="{arc:RadarChartTokenResource CompactLabelWidth}" />
+        <Setter Property="StrokeThickness" Value="{arc:RadarChartTokenResource StrokeThickness}" />
+        <Setter Property="MarkerRadius" Value="{arc:RadarChartTokenResource MarkerRadius}" />
+        <Setter Property="LineKeyWidth" Value="{arc:RadarChartTokenResource LineKeyWidth}" />
+        <Setter Property="LegendGap" Value="{arc:RadarChartTokenResource LegendGap}" />
+        <Setter Property="TooltipGap" Value="{arc:RadarChartTokenResource TooltipGap}" />
+    </ControlTheme>
+</ResourceDictionary>
