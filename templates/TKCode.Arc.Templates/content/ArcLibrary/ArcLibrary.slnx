@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/ArcLibrary/ArcLibrary.csproj" />
+  </Folder>
+<!--#if (UsesTests) -->
+  <Folder Name="/tests/">
+    <Project Path="tests/ArcLibrary.Tests/ArcLibrary.Tests.csproj" />
+  </Folder>
+<!--#endif -->
+<!--#if (UsesSample) -->
+  <Folder Name="/samples/">
+    <Project Path="samples/ArcLibrary.Sample/ArcLibrary.Sample.csproj" />
+  </Folder>
+<!--#endif -->
+</Solution>

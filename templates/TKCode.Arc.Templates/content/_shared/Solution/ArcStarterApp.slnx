@@ -1,0 +1,10 @@
+<Solution>
+  <Project Path="ArcStarterApp/ArcStarterApp.csproj" />
+<!--#if (IsXplat) -->
+  <Project Path="ArcStarterApp.Desktop/ArcStarterApp.Desktop.csproj" />
+  <Project Path="ArcStarterApp.Browser/ArcStarterApp.Browser.csproj" />
+<!--#endif -->
+<!--#if (UsesTests) -->
+  <Project Path="ArcStarterApp.Tests/ArcStarterApp.Tests.csproj" />
+<!--#endif -->
+</Solution>

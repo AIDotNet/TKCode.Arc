@@ -1,6 +1,6 @@
 ---
 title: 更新日志
-source-hash: 7d723d4658a8
+source-hash: 143bc4e0076a
 ---
 
 # 更新日志
@@ -8,6 +8,17 @@ source-hash: 7d723d4658a8
 TKCode.Arc 的所有重要变更，最新的在前。版本遵循[语义化版本](https://semver.org/)。版本带有 `-preview` 后缀期间，API 在各发布版本之间仍可能变化；升级前请阅读说明，并在项目中固定版本号。同样的列表也保存在仓库的 `CHANGELOG.md` 中。
 
 每次发布附带的 NuGet 包：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Foundation`（0.3.2 起）、`TKCode.Arc.Fonts` `TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 、`TKCode.Arc.Special`、`TKCode.Arc.Workflow`、`TKCode.Arc.Dock`（0.4.0-preview.2 起）、`TKCode.Arc.Themes.Pixel`、`TKCode.Arc.Themes.Corners`、`TKCode.Arc.Mobile`、`TKCode.Arc.Terminal`、`TKCode.Arc.Audio`、`TKCode.Arc.Audio.Native`、`TKCode.Arc.Audio.Browser` 和 `TKCode.Arc.Templates`（0.4.0-preview.6 起）。
+
+## 未发布
+
+### 新增
+
+- **模板**（新包 `TKCode.Arc.Templates`）：`dotnet new install TKCode.Arc.Templates` 后，用 `dotnet new tkcode-arc` 创建桌面应用，或用 `dotnet new tkcode-arc-xplat` 创建同时面向桌面和浏览器（WebAssembly）的应用。提供四种布局（`--layout blank|sidebar|header|dock`），以及这些选项：用 CommunityToolkit.Mvvm 的 MVVM（`--mvvm toolkit`）、依赖注入（`--di`）、保存偏好设置（`--settings`，默认开启：外观、强调色、窗口位置和布局状态在下次启动时恢复）、本地化（`--i18n`：English、简体中文和繁體中文的 `.xlf` 文件加语言切换；`--ui-language` 选择界面文字的语言）、Headless 测试项目（`--tests`）、Arc 标题栏（`--custom-titlebar`）、`--framework` 与 `--accent`。项模板可添加页面（`tkcode-arc-page`）、窗口（`tkcode-arc-window`）、可等待结果的对话框（`tkcode-arc-dialog`），以及带 Token 类和主题文件的 Arc 风格控件（`tkcode-arc-control`）。另有三个模板从完整的应用开始，由 Arc 的 Block 组成，示例数据放在服务接口后面，带 MVVM 和依赖注入：`tkcode-arc-admin`（登录、仪表盘、带搜索、筛选、分页和详情抽屉的客户表格、团队与角色、账单、设置、命令面板）、`tkcode-arc-ai-chat`（对话列表加 `AiChat`，回复由示例 responder 流式生成，可换成你的模型客户端；对话在两次运行之间保存）和 `tkcode-arc-devtool`（停靠布局：文件浏览、编辑器标签、属性表格、构建输出和问题列表，打开的文件随布局恢复）。此外还有 `tkcode-arc-workflow`（步骤面板、可撤销的流程画布、小地图和属性检查器、模拟运行、JSON 导入导出）、`tkcode-arc-projects`（看板、甘特时间线、周日历、发布检查清单）和 `tkcode-arc-analytics`（KPI 下钻、收入、留存分组、用量预测、服务状态）。`tkcode-arc-lib` 用于开始编写自己的控件库：示例控件及其设计 Token 和主题、`Use<Name>()` 注册、Headless 测试和示例应用，可直接 `dotnet pack`。新增的 **模板** 指南列出了全部内容；安装指南新增“从模板开始”一节。
+
+### 修复
+
+- **`TKCode.Arc.Templates` 0.4.0-preview.6 无法安装**：该包发布时模板文件已移动，但指向它们的 `template.json` 没有更新，`dotnet new install` 报错（`MV012: Source ... does not exist`）。请使用此版本或更高版本。
+- **Lucide 图标**：路径以移动命令紧接直线开头的 32 个图标（`UserCog`、`FileCog`、`ServerCog`、`Coins`、`Watch`、`ZapOff` 等）首次显示时抛出 “Invalid double value”：生成器把 `16.53.923` 读成了一个数。现在有测试解析每个图标的路径。
 
 ## 0.4.0-preview.6（2026-11-08）
 

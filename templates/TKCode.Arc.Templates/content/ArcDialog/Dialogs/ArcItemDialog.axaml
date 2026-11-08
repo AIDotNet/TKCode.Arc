@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="ArcItemNamespace.Dialogs.ArcItemDialog">
+    <!-- The dialog's body. The title, the description and the buttons are set in ShowAsync (ArcItemDialog.axaml.cs). -->
+    <StackPanel Spacing="16" Margin="0,4,0,0">
+        <arc:Input x:Name="NameInput"
+                   Label="Name"
+                   PlaceholderText="Untitled"
+                   Description="Shown wherever this item appears." />
+        <arc:Switch x:Name="NotifyChoice" Content="Let the team know" IsChecked="True" />
+    </StackPanel>
+</UserControl>

@@ -1,6 +1,4 @@
 using Avalonia;
-using TKCode.Arc;
-using TKCode.Arc.Fonts;
 
 namespace ArcStarterApp;
 
@@ -10,20 +8,10 @@ internal static class Program
     [STAThread]
     public static void Main(string[] args) => BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
 
-    // Also used by the XAML previewer of your IDE.
+    // Also used by the XAML previewer of your IDE. UseArcApp() (AppSetup.cs) sets up the fonts, Arc and the theme.
     public static AppBuilder BuildAvaloniaApp() =>
         AppBuilder.Configure<App>()
                   .UsePlatformDetect()
-                  .WithInterFont()      // Inter for body text (Avalonia.Fonts.Inter)
-                  .WithArcFonts()       // Geist for display text, Geist Mono for code (TKCode.Arc.Fonts)
-                  .UseArc(arc => arc
-#if (UsesBlocks)
-                      .UseArcBlocks()   // Arc's controls and the page-level blocks (Sidebar); registers UseArcControls() too
-#else
-                      .UseArcControls() // Arc's controls, themes and design tokens
-#endif
-                      // The theme of the first frame: follow the system's light or dark setting.
-                      // Change it at run time with ArcTheme.Apply(t => t.Appearance(...).Accent(...)).
-                      .WithTheme(t => t.Appearance(ArcAppearance.System).Accent(ArcAccentPreset.Neutral)))
+                  .UseArcApp()
                   .LogToTrace();
 }

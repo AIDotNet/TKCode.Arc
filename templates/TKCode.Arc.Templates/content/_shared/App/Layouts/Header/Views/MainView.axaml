@@ -1,0 +1,66 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+<!--#if (UsesI18n) -->
+             xmlns:l="using:ArcStarterApp.Localization"
+<!--#endif -->
+             xmlns:lucide="https://github.com/AIDotNet/TKCode.Arc/lucide"
+             xmlns:nav="using:ArcStarterApp.Navigation"
+<!--#if (UsesMvvm) -->
+             xmlns:vm="using:ArcStarterApp.ViewModels"
+             x:DataType="vm:MainViewModel"
+<!--#endif -->
+             x:Class="ArcStarterApp.Views.MainView">
+    <DockPanel>
+        <!-- The top bar: the app name, the page switch and the light/dark switch. Each option's Value names a page in
+             Navigation/AppPages.cs; choosing one shows that page. -->
+        <Border DockPanel.Dock="Top"
+                Height="56"
+                Padding="20,0"
+                BorderThickness="0,0,0,1"
+                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+            <Grid ColumnDefinitions="*,Auto,*">
+                <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                    <Border Width="28"
+                            Height="28"
+                            CornerRadius="8"
+                            Background="{arc:ArcDesignTokenResource Foreground}">
+                        <lucide:LucideIcon Kind="Sparkles"
+                                           Size="14"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           Foreground="{arc:ArcDesignTokenResource Background}" />
+                    </Border>
+                    <TextBlock Text="ArcDisplayName"
+                               VerticalAlignment="Center"
+                               FontWeight="Medium"
+                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                </StackPanel>
+<!--#if (UsesMvvm) -->
+                <arc:SegmentedControl Grid.Column="1"
+                                      VerticalAlignment="Center"
+                                      SelectedValue="{Binding SelectedKey, Mode=TwoWay}"
+                                      AutomationProperties.Name="ArcDisplayName">
+<!--#else -->
+                <arc:SegmentedControl x:Name="Nav"
+                                      Grid.Column="1"
+                                      VerticalAlignment="Center"
+                                      SelectedValue="home"
+                                      AutomationProperties.Name="ArcDisplayName">
+<!--#endif -->
+                    <arc:SegmentedOption Value="home" Label="@@Home@@" />
+                    <arc:SegmentedOption Value="projects" Label="@@Projects@@" />
+                    <arc:SegmentedOption Value="settings" Label="@@Settings@@" />
+                </arc:SegmentedControl>
+                <!-- Applies the other appearance through ArcThemeManager and plays the reveal transition. -->
+                <arc:ThemeSwitcher Grid.Column="2" IsIconOnly="True" HorizontalAlignment="Right" />
+            </Grid>
+        </Border>
+
+<!--#if (UsesMvvm) -->
+        <nav:PageHost x:Name="PageView" Page="{Binding CurrentPage}" />
+<!--#else -->
+        <nav:PageHost x:Name="PageView" />
+<!--#endif -->
+    </DockPanel>
+</UserControl>

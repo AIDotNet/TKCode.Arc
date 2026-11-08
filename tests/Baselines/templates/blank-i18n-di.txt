@@ -1,0 +1,17 @@
+App.cs
+AppSetup.cs
+BlankWorld.csproj
+Localization/AppLangResourceKind.cs
+Localization/AppLanguages.cs
+Localization/en-US.xlf
+Localization/zh-CN.xlf
+Localization/zh-TW.xlf
+Program.cs
+Services/AppServices.cs
+ViewModels/MainViewModel.cs
+Views/LanguagePicker.axaml
+Views/LanguagePicker.axaml.cs
+Views/MainView.axaml
+Views/MainView.axaml.cs
+Views/MainWindow.axaml
+Views/MainWindow.axaml.cs

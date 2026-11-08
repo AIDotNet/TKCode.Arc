@@ -1,0 +1,35 @@
+<!--#if (viewModel) -->
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:vm="using:ArcItemNamespace.ViewModels"
+             x:Class="ArcItemNamespace.Pages.ArcItemPage"
+             x:DataType="vm:ArcItemPageViewModel">
+<!--#else -->
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="ArcItemNamespace.Pages.ArcItemPage">
+<!--#endif -->
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="28,24,28,28" Spacing="20" MaxWidth="880" HorizontalAlignment="Left">
+            <StackPanel Spacing="4">
+                <TextBlock Text="ArcItemTitle"
+                           FontSize="{arc:ArcDesignTokenResource Type2XL}"
+                           FontWeight="Medium"
+                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                <TextBlock Text="Describe what this page is for."
+                           TextWrapping="Wrap"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            </StackPanel>
+
+<!--#if (viewModel) -->
+            <arc:Card Title="{Binding Heading}" Description="This card is bound to ArcItemPageViewModel.">
+                <arc:Button Content="Refresh" HorizontalAlignment="Left" Margin="0,12,0,0" Command="{Binding RefreshCommand}" />
+            </arc:Card>
+<!--#else -->
+            <arc:Card Title="Content" Description="Replace this card with the page's content." />
+<!--#endif -->
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

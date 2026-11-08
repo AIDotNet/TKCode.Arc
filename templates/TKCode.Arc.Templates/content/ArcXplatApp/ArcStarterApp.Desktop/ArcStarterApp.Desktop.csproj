@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <!-- The desktop host (Windows, macOS, Linux). Start it from the solution folder: dotnet run with the project option set to ArcStarterApp.Desktop. -->
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <BuiltInComInteropSupport>false</BuiltInComInteropSupport>
+        <!-- The .NET 11 SDK's optimized AOT publish drops Avalonia's compiled XAML ("No precompiled XAML found" at start). -->
+        <UseOptimizedPublish>false</UseOptimizedPublish>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia.Desktop" Version="__AVALONIA_VERSION__" />
+        <ProjectReference Include="../ArcStarterApp/ArcStarterApp.csproj" />
+    </ItemGroup>
+</Project>

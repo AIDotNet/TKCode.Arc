@@ -369,6 +369,7 @@ public static partial class GalleryCatalog
     [
         new("DocsIntroduction", "Introduction", "introduction", 0, "What Arc is and how the gallery is organized.", IsArc: false),
         new("DocsInstallation", "Installation", "installation", 0, "Add the Arc packages to a project.", IsArc: false),
+        new("DocsTemplates", "Templates", "templates", 0, "Start an app from a dotnet new template, and add pages, windows, dialogs and controls to it.", IsArc: false),
         new("DocsTheming", "Theming", "theming", 0, "Themes, design tokens and appearance.", IsArc: false),
         new("DocsMotion", "Motion", "motion", 0, "The motion engine and its presets.", IsArc: false),
         new("DocsAiAndMcp", "AI and MCP", "ai-and-mcp", 0, "Use Arc with AI assistants: llms.txt, Markdown pages, an agent skill and MCP.", IsArc: false),

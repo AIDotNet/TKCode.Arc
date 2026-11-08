@@ -1,0 +1,49 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:vm="using:ArcStarterApp.ViewModels"
+             x:Class="ArcStarterApp.Pages.SettingsPage"
+             x:DataType="vm:SettingsPageViewModel">
+    <!-- Arc's settings layout: a section list beside the selected section. A section whose IsDirty is true shows the save
+         bar; SaveRequested / DiscardRequested say which one (SettingsPage.axaml.cs). -->
+    <arc:SettingsPage x:Name="Page" Title="Settings" Margin="28,24,28,28">
+        <arc:SettingsSection x:Name="General"
+                             Header="General"
+                             Icon="{x:Static arc:ArcIcons.Settings}"
+                             Description="The workspace's name."
+                             IsDirty="{Binding IsGeneralDirty}">
+            <StackPanel Spacing="16" MaxWidth="420" HorizontalAlignment="Left">
+                <arc:Input Label="Workspace name" Text="{Binding WorkspaceName}" />
+            </StackPanel>
+        </arc:SettingsSection>
+        <arc:SettingsSection Header="Appearance" Icon="{x:Static arc:ArcIcons.Sun}" Description="Saved on this computer.">
+            <StackPanel Spacing="16">
+                <arc:SegmentedControl SelectedValue="{Binding Appearance, Mode=TwoWay}" HorizontalAlignment="Left" AutomationProperties.Name="Appearance">
+                    <arc:SegmentedOption Value="System" Label="System" />
+                    <arc:SegmentedOption Value="Light" Label="Light" />
+                    <arc:SegmentedOption Value="Dark" Label="Dark" />
+                </arc:SegmentedControl>
+                <arc:Select Label="Accent" Width="220" HorizontalAlignment="Left" SelectedValue="{Binding Accent, Mode=TwoWay}">
+                    <arc:SelectItem Content="Neutral" Value="Neutral" />
+                    <arc:SelectItem Content="Violet" Value="Violet" />
+                    <arc:SelectItem Content="Blue" Value="Blue" />
+                    <arc:SelectItem Content="Green" Value="Green" />
+                    <arc:SelectItem Content="Amber" Value="Amber" />
+                    <arc:SelectItem Content="Orange" Value="Orange" />
+                    <arc:SelectItem Content="Coral" Value="Coral" />
+                    <arc:SelectItem Content="Rose" Value="Rose" />
+                </arc:Select>
+            </StackPanel>
+        </arc:SettingsSection>
+        <arc:SettingsSection Header="Notifications" Icon="{x:Static arc:ArcIcons.Bell}" Description="What the workspace emails you.">
+            <arc:SettingsGroup Appearance="Plain">
+                <arc:SettingsRow Header="Weekly digest" Description="New customers, churn and revenue, every Monday.">
+                    <arc:Switch IsChecked="{Binding EmailDigest}" />
+                </arc:SettingsRow>
+                <arc:SettingsRow Header="Payment alerts" Description="When a customer's payment fails.">
+                    <arc:Switch IsChecked="{Binding PaymentAlerts}" />
+                </arc:SettingsRow>
+            </arc:SettingsGroup>
+        </arc:SettingsSection>
+    </arc:SettingsPage>
+</UserControl>

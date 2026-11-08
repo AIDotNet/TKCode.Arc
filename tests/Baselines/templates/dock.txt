@@ -1,0 +1,10 @@
+App.cs
+AppSetup.cs
+DockApp.csproj
+Program.cs
+Settings/AppSettings.cs
+Settings/SettingsStore.cs
+Views/MainView.axaml
+Views/MainView.axaml.cs
+Views/MainWindow.axaml
+Views/MainWindow.axaml.cs

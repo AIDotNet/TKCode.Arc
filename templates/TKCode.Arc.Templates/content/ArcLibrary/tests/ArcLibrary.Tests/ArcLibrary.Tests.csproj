@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <!-- The library's controls on Avalonia's headless platform: no window opens, so the tests run anywhere, CI included. -->
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <OutputType>Exe</OutputType>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="__TEST_SDK_VERSION__" />
+        <PackageReference Include="xunit.v3" Version="__XUNIT_VERSION__" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="__XUNIT_RUNNER_VERSION__" />
+        <PackageReference Include="Avalonia.Headless.XUnit" Version="__AVALONIA_VERSION__" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="../../src/ArcLibrary/ArcLibrary.csproj" />
+    </ItemGroup>
+</Project>

@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:vm="using:ArcStarterApp.ViewModels"
+             x:Class="ArcStarterApp.Pages.BoardPage"
+             x:DataType="vm:BoardPageViewModel">
+    <!-- Drag cards between columns, quick-add at the bottom of a column, open a card for its details. -->
+    <arc:KanbanBoard x:Name="Board"
+                     Margin="20"
+                     Title="{Binding Title}"
+                     Columns="{Binding Columns}"
+                     People="{Binding People}"
+                     Labels="{Binding Labels}"
+                     Cards="{Binding Cards}"
+                     CardsChanged="OnCardsChanged" />
+</UserControl>

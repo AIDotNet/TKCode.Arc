@@ -1,0 +1,56 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:m="using:ArcStarterApp.Models"
+             xmlns:vm="using:ArcStarterApp.ViewModels"
+             x:Class="ArcStarterApp.Pages.DashboardPage"
+             x:DataType="vm:DashboardPageViewModel">
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="28,24,28,28" Spacing="20">
+            <StackPanel Spacing="4">
+                <TextBlock Text="Dashboard"
+                           FontSize="{arc:ArcDesignTokenResource Type2XL}"
+                           FontWeight="Medium"
+                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                <TextBlock Text="How the business did over the last 30 days."
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            </StackPanel>
+
+            <!-- The headline figures (ICustomerService.GetDashboardAsync). -->
+            <ItemsControl ItemsSource="{Binding Kpis}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="4" ColumnSpacing="16" RowSpacing="16" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="m:Kpi">
+                        <arc:MetricCard Label="{Binding Label}"
+                                        Value="{Binding Value}"
+                                        Prefix="{Binding Prefix}"
+                                        Suffix="{Binding Suffix}"
+                                        Decimals="{Binding Decimals}"
+                                        Change="{Binding Change}"
+                                        Context="vs. previous 30 days"
+                                        Sparkline="{Binding Trend}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <arc:Card Title="Revenue" Description="Daily revenue, this period against the one before.">
+                <arc:LineChart x:Name="Revenue"
+                               Margin="0,12,0,0"
+                               Label="Revenue"
+                               Unit="$"
+                               CategoryLabel="Date"
+                               PlotHeight="260"
+                               IsLoading="{Binding IsLoading}">
+                    <arc:LineChart.Series>
+                        <arc:ChartSeries Key="current" Name="This period" />
+                        <arc:ChartSeries Key="previous" Name="Previous period" IsDashed="True" />
+                    </arc:LineChart.Series>
+                </arc:LineChart>
+            </arc:Card>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

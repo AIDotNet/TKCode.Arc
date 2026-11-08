@@ -95,7 +95,9 @@ import xml.etree.ElementTree as ET
 def absolute_start(d):
     """A <path>'s leading 'm' is absolute; joined after another path it would turn relative. Make it M + l."""
     d = d.strip()
-    m = re.match(r"m\s*(-?[\d.]+)[\s,]*(-?[\d.]+)(.*)", d, re.S)
+    # One SVG number each: "16.53.923" is 16.53 followed by .923 (the start of the implicit line-to), not one number.
+    number = r"-?(?:\d+\.?\d*|\.\d+)(?:[eE][-+]?\d+)?"
+    m = re.match(rf"m\s*({number})[\s,]*({number})(.*)", d, re.S)
     if not m:
         return d
     x, y, rest = m.groups()

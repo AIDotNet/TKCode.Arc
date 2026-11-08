@@ -1,0 +1,8 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:l="using:ArcStarterApp.Localization"
+             x:Class="ArcStarterApp.Views.LanguagePicker">
+    <!-- Every text written {l:AppLangResource ...} follows the language at once, Arc's own text included. -->
+    <arc:Select x:Name="Choice" AutomationProperties.Name="{l:AppLangResource Language}" />
+</UserControl>

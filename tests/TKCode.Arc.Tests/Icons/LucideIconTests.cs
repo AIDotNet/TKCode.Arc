@@ -1,4 +1,5 @@
 using Avalonia.Headless.XUnit;
+using Avalonia.Media;
 using TKCode.Arc.Icons.Lucide;
 
 namespace TKCode.Arc.Tests.Icons;
@@ -43,5 +44,37 @@ public class LucideIconTests
         icon.Kind = Kind("ZodiacVirgo");
         icon.Data.ShouldNotBeNull();
         icon.Data!.Bounds.Width.ShouldBe(0);
+    }
+
+    [AvaloniaFact]
+    public void Every_shipped_path_parses()
+    {
+        // The generator's path data for every icon (tools/lucide/generate_lucide.py). A path that does not parse throws
+        // when an app first shows the icon; "M14.305 16.53.923l-.382" (UserCog) once did.
+        var directory = new DirectoryInfo(AppContext.BaseDirectory);
+        while (directory is not null && !File.Exists(Path.Combine(directory.FullName, "TKCode.Arc.slnx")))
+        {
+            directory = directory.Parent;
+        }
+        directory.ShouldNotBeNull();
+        var file = Path.Combine(directory!.FullName, "src", "TKCode.Arc.Icons.Lucide.Generators", "LucidePaths.txt");
+        var broken = new List<string>();
+        foreach (var line in File.ReadLines(file))
+        {
+            if (line.Length == 0 || line.StartsWith('#'))
+            {
+                continue;
+            }
+            var parts = line.Split('\t');
+            try
+            {
+                StreamGeometry.Parse(parts[1]);
+            }
+            catch (Exception e) when (e is InvalidDataException or FormatException)
+            {
+                broken.Add(parts[0]);
+            }
+        }
+        broken.ShouldBeEmpty();
     }
 }

@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json.schemastore.org/dotnetcli.host",
+  "symbolInfo": {
+    "layout": {
+      "longName": "layout",
+      "shortName": ""
+    },
+    "mvvm": {
+      "longName": "mvvm",
+      "shortName": ""
+    },
+    "di": {
+      "longName": "di",
+      "shortName": ""
+    },
+    "settings": {
+      "longName": "settings",
+      "shortName": ""
+    },
+    "i18n": {
+      "longName": "i18n",
+      "shortName": ""
+    },
+    "uiLanguage": {
+      "longName": "ui-language",
+      "shortName": ""
+    },
+    "tests": {
+      "longName": "tests",
+      "shortName": ""
+    },
+    "customTitlebar": {
+      "longName": "custom-titlebar",
+      "shortName": ""
+    },
+    "framework": {
+      "longName": "framework",
+      "shortName": "f"
+    },
+    "accent": {
+      "longName": "accent",
+      "shortName": ""
+    },
+    "skipRestore": {
+      "longName": "no-restore",
+      "shortName": ""
+    }
+  }
+}

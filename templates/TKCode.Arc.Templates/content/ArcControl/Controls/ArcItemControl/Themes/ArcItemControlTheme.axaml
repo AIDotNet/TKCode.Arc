@@ -1,0 +1,67 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    xmlns:local="using:ArcItemNamespace.Controls"
+                    xmlns:tokens="using:ArcItemNamespace.Controls.DesignTokens"
+                    x:ClassModifier="internal"
+                    x:Class="ArcItemNamespace.Controls.ArcItemControlTheme">
+    <!--
+        The theme of ArcItemControl. Arc loads this file the first time an ArcItemControl appears (the class named by
+        x:Class is generated). Colors and radii come from Arc's tokens, sizes from ArcItemControlToken. Transitions are
+        declared per motion level: ^:motion-full animates, ^:motion-reduced changes at once (the person asked for less
+        motion); arc:ArcMotion.Tracks turns those two states on.
+    -->
+    <ControlTheme x:Key="{x:Type local:ArcItemControl}" TargetType="local:ArcItemControl">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Padding" Value="{tokens:ArcItemControlTokenResource Padding}" />
+        <Setter Property="MinWidth" Value="{tokens:ArcItemControlTokenResource MinWidth}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="local:ArcItemControl">
+                <Border Name="PART_Root"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <StackPanel Spacing="{tokens:ArcItemControlTokenResource Spacing}">
+                        <TextBlock Text="{TemplateBinding Title}"
+                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        <TextBlock Text="{TemplateBinding Value}"
+                                   FontSize="{arc:ArcDesignTokenResource TypeXL}"
+                                   FontWeight="Medium"
+                                   Foreground="{TemplateBinding Foreground}" />
+                        <TextBlock Text="{TemplateBinding Caption}"
+                                   IsVisible="{TemplateBinding Caption, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                   TextWrapping="Wrap"
+                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:pointerover">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

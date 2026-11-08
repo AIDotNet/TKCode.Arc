@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:vm="using:ArcStarterApp.ViewModels"
+             x:Class="ArcStarterApp.Pages.StatusPage"
+             x:DataType="vm:StatusPageViewModel">
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+        <arc:UptimeStatus Margin="24"
+                          PageName="Service status"
+                          Today="{Binding Now}"
+                          UpdatedAt="{Binding Now}"
+                          ServicesSource="{Binding Services}"
+                          IncidentsSource="{Binding Incidents}" />
+    </ScrollViewer>
+</UserControl>

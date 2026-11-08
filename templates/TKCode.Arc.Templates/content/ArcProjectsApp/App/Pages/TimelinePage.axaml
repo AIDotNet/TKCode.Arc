@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:vm="using:ArcStarterApp.ViewModels"
+             x:Class="ArcStarterApp.Pages.TimelinePage"
+             x:DataType="vm:TimelinePageViewModel">
+    <!-- Drag a bar to move a task, its edges to change the dates; Day, Week and Month zoom in the header. -->
+    <arc:GanttTimeline Margin="20"
+                       Title="Studio relaunch"
+                       Groups="{Binding Groups}"
+                       Tasks="{Binding Tasks}"
+                       TasksChanged="OnTasksChanged" />
+</UserControl>

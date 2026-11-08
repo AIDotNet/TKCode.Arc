@@ -1,0 +1,39 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:vm="using:ArcStarterApp.ViewModels"
+             x:Class="ArcStarterApp.Pages.TeamPage"
+             x:DataType="vm:TeamPageViewModel">
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="28,24,28,28" Spacing="16" MaxWidth="960" HorizontalAlignment="Left">
+            <StackPanel Spacing="4">
+                <TextBlock Text="Team"
+                           FontSize="{arc:ArcDesignTokenResource Type2XL}"
+                           FontWeight="Medium"
+                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                <TextBlock Text="Who can work in the workspace, and what each role may do."
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            </StackPanel>
+            <!-- Arc's blocks: TeamMembers edits the view model's collections in place; RolesPermissions keeps the unsaved
+                 grants and calls SaveHandler. Their actions are set in TeamPage.axaml.cs. -->
+            <arc:Tabs>
+                <arc:TabItem Header="Members">
+                    <arc:TeamMembers x:Name="Members"
+                                     Margin="0,12,0,0"
+                                     WorkspaceName="{Binding WorkspaceName}"
+                                     SeatLimit="{Binding SeatLimit}"
+                                     MembersSource="{Binding Members}"
+                                     InvitesSource="{Binding Invites}" />
+                </arc:TabItem>
+                <arc:TabItem Header="Roles">
+                    <arc:RolesPermissions x:Name="Roles"
+                                          Margin="0,12,0,0"
+                                          WorkspaceName="{Binding WorkspaceName}"
+                                          RolesSource="{Binding Roles}"
+                                          GroupsSource="{Binding PermissionGroups}"
+                                          SavedGrants="{Binding Grants}" />
+                </arc:TabItem>
+            </arc:Tabs>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

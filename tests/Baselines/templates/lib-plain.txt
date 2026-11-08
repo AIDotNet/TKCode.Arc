@@ -1,0 +1,7 @@
+LibPlain.slnx
+README.md
+src/LibPlain/Controls/StatTile/StatTile.cs
+src/LibPlain/Controls/StatTile/StatTileToken.cs
+src/LibPlain/Controls/StatTile/Themes/StatTileTheme.axaml
+src/LibPlain/LibPlain.csproj
+src/LibPlain/LibPlainBuilderExtensions.cs

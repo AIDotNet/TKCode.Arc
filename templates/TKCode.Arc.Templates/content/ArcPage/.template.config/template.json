@@ -1,0 +1,91 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "TKCode.Arc contributors",
+  "classifications": [ "Desktop", "Avalonia", "Arc", "Page" ],
+  "identity": "TKCode.Arc.Templates.Page",
+  "name": "TKCode.Arc Page",
+  "description": "A page for a TKCode.Arc app (Pages/<Name>Page.axaml): a scrolling column with a heading and a card, optionally with a CommunityToolkit.Mvvm view model.",
+  "shortName": "tkcode-arc-page",
+  "defaultName": "New",
+  "sourceName": "ArcItemSource",
+  "preferNameDirectory": false,
+  "tags": {
+    "language": "C#",
+    "type": "item"
+  },
+  "symbols": {
+    "namespace": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "The root namespace; the project's RootNamespace when left out (the project must have been restored).",
+      "displayName": "Namespace",
+      "defaultValue": ""
+    },
+    "viewModel": {
+      "type": "parameter",
+      "datatype": "bool",
+      "description": "Adds ViewModels/<Name>PageViewModel.cs (needs CommunityToolkit.Mvvm, as in dotnet new tkcode-arc --mvvm toolkit).",
+      "displayName": "View model",
+      "defaultValue": "false"
+    },
+    "projectNamespace": {
+      "type": "bind",
+      "binding": "msbuild:RootNamespace",
+      "defaultValue": "ArcApp"
+    },
+    "rootNamespace": {
+      "type": "generated",
+      "generator": "coalesce",
+      "parameters": {
+        "sourceVariableName": "namespace",
+        "fallbackVariableName": "projectNamespace"
+      },
+      "replaces": "ArcItemNamespace"
+    },
+    "className": {
+      "type": "derived",
+      "valueSource": "name",
+      "valueTransform": "withPageSuffix",
+      "replaces": "ArcItemPage",
+      "fileRename": "ArcItemPage"
+    },
+    "title": {
+      "type": "derived",
+      "valueSource": "name",
+      "valueTransform": "withoutPageSuffix",
+      "replaces": "ArcItemTitle"
+    },
+    "key": {
+      "type": "derived",
+      "valueSource": "name",
+      "valueTransform": "pageKey",
+      "replaces": "arc-item-key"
+    }
+  },
+  "forms": {
+    "withPageSuffix": { "identifier": "replace", "pattern": "^(.*?)(Page)?$", "replacement": "$1Page" },
+    "withoutPageSuffix": { "identifier": "replace", "pattern": "^(.*?)(Page)?$", "replacement": "$1" },
+    "lowerCase": { "identifier": "lowerCaseInvariant" },
+    "pageKey": { "identifier": "chain", "steps": [ "withoutPageSuffix", "lowerCase" ] }
+  },
+  "sources": [
+    {
+      "exclude": [ ".template.config/**" ],
+      "modifiers": [
+        { "condition": "(!viewModel)", "exclude": [ "ViewModels/**" ] }
+      ]
+    }
+  ],
+  "postActions": [
+    {
+      "description": "How to show the page in the app.",
+      "manualInstructions": [
+        {
+          "text": "To show the page, add it to Navigation/AppPages.cs and give the navigation a row with the same key: the comment at the top of the page's .axaml.cs file has both lines."
+        }
+      ],
+      "actionId": "AC1156F7-BB77-4DB8-B28F-24EEBCCA1E5C",
+      "continueOnError": true
+    }
+  ]
+}

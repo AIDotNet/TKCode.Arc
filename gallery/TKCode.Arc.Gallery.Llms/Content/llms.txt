@@ -8,6 +8,15 @@ Version {{version}} (preview: pin the exact version). Each link below is a page 
 
 Any page of {{base}} is available as Markdown at its address plus `.md`, for example {{base}}/components/button.md for {{base}}/components/button. The site itself is an Avalonia WebAssembly app that draws to a canvas, so its HTML carries no text: read the Markdown. Each component and block page also comes as a short reference at its address plus `.api.md`, for example {{base}}/components/button.api.md: the first example, the components to choose instead and the API reference, about a quarter of the full page. Simplified and Traditional Chinese pages are under {{base}}/zh-CN/ and {{base}}/zh-TW/, for example {{base}}/zh-CN/components/button.md.
 
+## Start from a template
+
+```bash
+dotnet new install TKCode.Arc.Templates
+dotnet new tkcode-arc -n MyApp --layout sidebar
+```
+
+`tkcode-arc` (layouts `blank`, `sidebar`, `header`, `dock`; options `--mvvm toolkit`, `--di`, `--i18n`, `--ui-language`, `--tests`, `--custom-titlebar`), `tkcode-arc-xplat` (desktop and browser), the finished apps `tkcode-arc-admin`, `-ai-chat`, `-devtool`, `-workflow`, `-projects`, `-analytics`, the control library `tkcode-arc-lib`, and the item templates `tkcode-arc-page`, `-window`, `-dialog`, `-control`. All options: [Templates]({{base}}/docs/templates.md). To add Arc to an existing app, install the packages as below.
+
 ## Install
 
 ```bash

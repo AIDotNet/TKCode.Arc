@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <!-- A control library built on TKCode.Arc. The Foundation generator (it comes with the TKCode.Arc package) turns the
+         [ControlDesignToken] classes and the Themes/*Theme.axaml files into ArcGeneratedAssets, which UseArcLibraryIdentifier()
+         registers; its ARCF diagnostics check the token and theme rules at build time. -->
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+        <!-- The XML docs: IntelliSense for the people who use the library. -->
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <IsTrimmable>true</IsTrimmable>
+        <IsAotCompatible>true</IsAotCompatible>
+
+        <!-- The NuGet package (dotnet pack). A prerelease version while TKCode.Arc is one: a stable package cannot depend
+             on a prerelease (NuGet error NU5104). -->
+        <PackageId>ArcLibrary</PackageId>
+        <Version>0.1.0-preview.1</Version>
+        <Description>Controls for TKCode.Arc apps.</Description>
+        <PackageTags>avalonia;tkcode-arc;controls</PackageTags>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="../../README.md" Pack="true" PackagePath="/" Visible="false" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <!-- Arc is built against this exact Avalonia version; the library and the apps that use it stay on it. -->
+        <PackageReference Include="TKCode.Arc" Version="__ARC_VERSION__" />
+    </ItemGroup>
+</Project>
