@@ -308,11 +308,14 @@ public partial class RadarChart
         }
     }
 
+    private const double InnerRingAlpha = 0.6;
+
     private void PaintGrid(DrawingContext context)
     {
         var p = _palette;
         var rings = Math.Max(1, Rings);
-        var ringPen = p.Pen(p.Border, 1);
+        // The stage is often SurfaceMuted, where Border all but disappears: the inner rings are a softer outer ring.
+        var ringPen = p.Pen(ChartsBMath.Alpha(p.BorderStrong, InnerRingAlpha), 1);
         var outerPen = p.Pen(p.BorderStrong, 1);
         if (GridShape == RadarGridShape.Polygon)
         {

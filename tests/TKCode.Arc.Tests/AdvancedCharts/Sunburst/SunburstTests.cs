@@ -650,4 +650,12 @@ public class SunburstTests
             chart.GetVisualDescendants().OfType<Control>().ShouldContain(chart.Stage.Digits);
         });
     }
+
+    [Fact]
+    public void Legend_shares_always_show_one_decimal()
+    {
+        Assert.Equal("44.0%", Sunburst.LegendShare(0.44));
+        Assert.Equal("38.8%", Sunburst.LegendShare(0.3883));
+        Assert.Equal("100.0%", Sunburst.LegendShare(1));
+    }
 }

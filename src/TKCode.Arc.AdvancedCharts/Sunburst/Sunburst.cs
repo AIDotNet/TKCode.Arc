@@ -268,6 +268,9 @@ public class Sunburst : Control, IChartsBAccessible
 
     internal string Format(double value) => ValueFormatter?.Invoke(value) ?? ChartsBMath.Grouped(value);
 
+    /// <summary>A share in the legend: always one decimal, so the column's figures line up and read alike.</summary>
+    internal static string LegendShare(double share) => (share * 100).ToString("0.0", System.Globalization.CultureInfo.InvariantCulture) + "%";
+
     internal static double ShareOf(SunburstEntry node, SunburstEntry of) => of.Value > 0 ? node.Value / of.Value : 0;
 
     /// <summary>Path, value and share of the parent: what the tooltip shows and a screen reader says.</summary>

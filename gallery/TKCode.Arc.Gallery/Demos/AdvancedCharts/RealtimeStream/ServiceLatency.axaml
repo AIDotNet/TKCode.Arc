@@ -4,7 +4,7 @@
              x:Class="TKCode.Arc.Gallery.Demos.RealtimeStreamServiceLatencyDemo">
     <arc:RealtimeStream x:Name="Stream"
                         Label="Larkspur checkout API, p95 latency"
-                        Unit="ms"
+                        Unit=" ms"
                         WindowDuration="0:0:30"
                         Interval="0:0:1" />
 </UserControl>

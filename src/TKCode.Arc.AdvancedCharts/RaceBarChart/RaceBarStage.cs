@@ -642,6 +642,8 @@ internal sealed class RaceBarStage : Control, IChartsBAccessible, Avalonia.Rende
                     var end = Math.Min(radius, barWidth);
                     context.DrawRectangle(p.Brush(color), null, new RoundedRect(new Rect(plotLeft, y, barWidth, barHeight), 0, end, end, 0));
                 }
+                // While another bar slides past, its labels sit on this one's: the one being passed steps back.
+                using var labels = context.PushOpacity(LabelOpacity(engine.Row, engine.Presence, order, r));
                 var row = RowOf(item, p);
                 var name = row.Name!;
                 var value = row.Value!;
@@ -672,6 +674,28 @@ internal sealed class RaceBarStage : Control, IChartsBAccessible, Avalonia.Rende
                 }
             }
         }
+    }
+
+    /// <summary>How close two rows may come, in rows, before the labels of the one being passed start to fade.</summary>
+    internal const double LabelClearRows = 0.8;
+
+    /// <summary>
+    /// The opacity of the labels at rank <paramref name="rank"/>: full unless a visible bar of a better rank, which draws
+    /// over this one, is within <see cref="LabelClearRows"/> of its row. The best rank always stays readable.
+    /// </summary>
+    internal static double LabelOpacity(double[] rows, double[] presence, int[] order, int rank)
+    {
+        var item = order[rank];
+        var nearest = LabelClearRows;
+        for (var k = 0; k < rank; k++)
+        {
+            var other = order[k];
+            if (presence[other] > 0.004)
+            {
+                nearest = Math.Min(nearest, Math.Abs(rows[item] - rows[other]));
+            }
+        }
+        return nearest / LabelClearRows;
     }
 
     private static double ClampValueX(double x, TextLayout value, double width) => Math.Min(x, Math.Max(0, width - value.WidthIncludingTrailingWhitespace));

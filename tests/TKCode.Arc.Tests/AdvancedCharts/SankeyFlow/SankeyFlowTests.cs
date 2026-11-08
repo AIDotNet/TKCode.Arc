@@ -447,4 +447,13 @@ public class SankeyFlowTests
         second.Links.ShouldBe(first.Links);
         first.Nodes.ShouldAllBe(n => n.Cross >= -1e-6 && n.Cross + n.Extent <= 340 + 1e-6);
     }
+
+    [Fact]
+    public void Particles_stay_off_text()
+    {
+        List<Avalonia.Rect> keepOut = [new(10, 10, 20, 10)];
+        Assert.True(SankeyFlow.IsKeptOut(keepOut, new Avalonia.Point(15, 15)));
+        Assert.False(SankeyFlow.IsKeptOut(keepOut, new Avalonia.Point(5, 15)));
+        Assert.False(SankeyFlow.IsKeptOut([], new Avalonia.Point(15, 15)));
+    }
 }

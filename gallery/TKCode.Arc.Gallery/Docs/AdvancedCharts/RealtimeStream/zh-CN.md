@@ -1,7 +1,7 @@
 ---
 title: 实时数据流
 summary: 随读数到达而滚动的实时折线图，指针悬停时静止以便读取某个点，并标记被判定为异常的读数。
-source-hash: 7e3d86d84698
+source-hash: 0178c9de6d7f
 ---
 
 <Demo name="ServiceLatency" />
@@ -33,7 +33,7 @@ source-hash: 7e3d86d84698
              xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:RealtimeStream x:Name="Latency"
                         Label="Checkout latency"
-                        Unit="ms" />
+                        Unit=" ms" />
 </UserControl>
 ```
 

@@ -1149,7 +1149,8 @@ public class RealtimeStream : TemplatedControl
         if (_unitText is not null)
         {
             _unitText.IsVisible = !empty && !custom && !string.IsNullOrEmpty(Unit);
-            _unitText.Text = Unit;
+            // The row already spaces the unit from the digits; a leading space in Unit is for the axis labels.
+            _unitText.Text = Unit.Trim();
         }
         var label = string.IsNullOrEmpty(Label) ? "Current value" : Label;
         AutomationProperties.SetName(_valueRow, empty ? $"{label}: {EmptyLabel}" : $"{label}: {Format(value)}");

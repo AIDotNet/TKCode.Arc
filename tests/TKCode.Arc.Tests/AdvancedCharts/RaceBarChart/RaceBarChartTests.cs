@@ -603,4 +603,16 @@ public class RaceBarChartTests
             window.Close();
         }
     }
+
+    [Fact]
+    public void The_labels_of_a_bar_being_passed_fade_and_return()
+    {
+        double[] presence = [1, 1];
+        int[] order = [0, 1];
+        Assert.Equal(1, RaceBarStage.LabelOpacity([0, 1], presence, order, 1), 3);
+        Assert.Equal(0, RaceBarStage.LabelOpacity([0.5, 0.5], presence, order, 1), 3);
+        Assert.Equal(0.5, RaceBarStage.LabelOpacity([0, RaceBarStage.LabelClearRows / 2], presence, order, 1), 3);
+        Assert.Equal(1, RaceBarStage.LabelOpacity([0.5, 0.5], presence, order, 0), 3);
+        Assert.Equal(1, RaceBarStage.LabelOpacity([0.5, 0.5], [0, 1], order, 1), 3);
+    }
 }

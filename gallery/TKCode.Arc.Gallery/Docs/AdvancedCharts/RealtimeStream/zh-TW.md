@@ -1,7 +1,7 @@
 ---
 title: 即時資料串流
 summary: 隨讀數到達而捲動的即時折線圖，指標懸停時靜止以便讀取某個點，並標記被判定為異常的讀數。
-source-hash: 7e3d86d84698
+source-hash: 0178c9de6d7f
 ---
 
 <Demo name="ServiceLatency" />
@@ -33,7 +33,7 @@ source-hash: 7e3d86d84698
              xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:RealtimeStream x:Name="Latency"
                         Label="Checkout latency"
-                        Unit="ms" />
+                        Unit=" ms" />
 </UserControl>
 ```
 

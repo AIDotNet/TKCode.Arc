@@ -173,7 +173,7 @@ internal sealed class SunburstLegendRow : Avalonia.Controls.Control, Avalonia.Re
             _textVersion = p.Version;
             _textWidth = size.Width;
             _value = ChartsBText.Make(_owner.Format(entry.Value), p, p.TypeSM, p.TextSecondary);
-            _share = ChartsBText.Make(ChartsBMath.Percent(Sunburst.ShareOf(entry, center), 1), p, p.TypeXS, p.TextMuted);
+            _share = ChartsBText.Make(Sunburst.LegendShare(Sunburst.ShareOf(entry, center)), p, p.TypeXS, p.TextMuted);
             var room = size.Width - x - Inset - ShareWidth - ColumnGap * 2 - _value.WidthIncludingTrailingWhitespace;
             _label = ChartsBText.Trimmed(entry.Label, p, p.TypeSM, p.Foreground, Math.Max(10, room));
         }

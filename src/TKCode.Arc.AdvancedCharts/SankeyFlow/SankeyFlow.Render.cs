@@ -12,6 +12,7 @@ public partial class SankeyFlow
     private const double RibbonAlpha = 0.34;
     private const double BandAlpha = 0.36;
     private const int ParticleLevels = 3;
+    private const double ParticleTextMargin = 3;
     private const double GoldenRatio = 0.6180339887498949;
     private const double PlasticRatio = 0.7548776662466927;
 
@@ -27,6 +28,7 @@ public partial class SankeyFlow
     private readonly IBrush?[] _ribbonBrushes = new IBrush?[16];
     private bool _ribbonBrushUpright;
     private int _ribbonBrushVersion = -1;
+    private readonly List<Rect> _particleKeepOut = [];
     private readonly IBrush?[] _particleBrushes = new IBrush?[(4 + 1) * ParticleLevels];
     private int _particleBrushVersion = -1;
 
@@ -95,7 +97,7 @@ public partial class SankeyFlow
                         _nodeNames[n] = MakeText(node.Label, p.TypeXS, p.Foreground, room, FontWeight.Medium);
                         if (room >= 48)
                         {
-                            _nodeValues[n] = MakeText(Format(node.Value), p.TypeXS, p.TextMuted, room);
+                            _nodeValues[n] = MakeText(Format(node.Value), p.TypeXS, p.TextSecondary, room);
                         }
                     }
                     continue;
@@ -111,7 +113,7 @@ public partial class SankeyFlow
                 var two = center - nameHeight >= lastBottom && center + nameHeight <= nextTop;
                 if (two)
                 {
-                    _nodeValues[n] = MakeText(Format(node.Value), p.TypeXS, p.TextMuted, spacing);
+                    _nodeValues[n] = MakeText(Format(node.Value), p.TypeXS, p.TextSecondary, spacing);
                 }
                 lastBottom = center + (two ? nameHeight : nameHeight / 2);
             }
@@ -177,7 +179,12 @@ public partial class SankeyFlow
             return;
         }
         using var fade = context.PushOpacity(_reveal.Fade);
-        DrawHeaders(context);
+        _particleKeepOut.Clear();
+        // Stacked, a stage's name sits where the ribbons run, so it draws over them; side by side it sits above them.
+        if (!_upright || !_reveal.IsRevealed)
+        {
+            DrawHeaders(context);
+        }
         if (!_reveal.IsRevealed)
         {
             return;
@@ -190,6 +197,10 @@ public partial class SankeyFlow
             DrawTraceBands(context, trace, dim);
         }
         DrawNodes(context, trace, dim);
+        if (_upright)
+        {
+            DrawHeaders(context);
+        }
     }
 
     private void DrawHeaders(DrawingContext context)
@@ -206,7 +217,9 @@ public partial class SankeyFlow
             if (_upright)
             {
                 var row = c < _placement.Columns.Length && _placement.Columns[c].Length > 0 ? _placement.Nodes[_placement.Columns[c][0]].Main : 0;
-                layout.Draw(context, new Point(Inset, row - layout.Height - 2));
+                var at = new Point(Inset, row - layout.Height - 2);
+                layout.Draw(context, at);
+                KeepParticlesOff(at, layout.WidthIncludingTrailingWhitespace, layout.Height);
                 continue;
             }
             var main = Inset + (columnCount == 1 ? run / 2 : run * c / (columnCount - 1));
@@ -363,19 +376,45 @@ public partial class SankeyFlow
         {
             var center = pose.CrossCenter;
             var y = pose.Main + pose.Thickness + 3;
-            name.Draw(context, new Point(ChartsBMath.Clamp(center - name.WidthIncludingTrailingWhitespace / 2, 0, Math.Max(0, _placedSize.Width - name.WidthIncludingTrailingWhitespace)), y));
-            value?.Draw(context, new Point(ChartsBMath.Clamp(center - value.WidthIncludingTrailingWhitespace / 2, 0, Math.Max(0, _placedSize.Width - value.WidthIncludingTrailingWhitespace)), y + name.Height));
+            var nameAt = new Point(ChartsBMath.Clamp(center - name.WidthIncludingTrailingWhitespace / 2, 0, Math.Max(0, _placedSize.Width - name.WidthIncludingTrailingWhitespace)), y);
+            name.Draw(context, nameAt);
+            KeepParticlesOff(nameAt, name.WidthIncludingTrailingWhitespace, name.Height);
+            if (value is not null)
+            {
+                var valueAt = new Point(ChartsBMath.Clamp(center - value.WidthIncludingTrailingWhitespace / 2, 0, Math.Max(0, _placedSize.Width - value.WidthIncludingTrailingWhitespace)), y + name.Height);
+                value.Draw(context, valueAt);
+                KeepParticlesOff(valueAt, value.WidthIncludingTrailingWhitespace, value.Height);
+            }
             return;
         }
         var last = _model.ColumnCount > 1 && _model.Nodes[index].Column == _model.ColumnCount - 1;
         var top = pose.CrossCenter - height / 2;
         var nameX = last ? pose.Main - LabelGap - name.WidthIncludingTrailingWhitespace : pose.Main + pose.Thickness + LabelGap;
         name.Draw(context, new Point(nameX, top));
+        KeepParticlesOff(new Point(nameX, top), name.WidthIncludingTrailingWhitespace, name.Height);
         if (value is not null)
         {
             var valueX = last ? pose.Main - LabelGap - value.WidthIncludingTrailingWhitespace : nameX;
             value.Draw(context, new Point(valueX, top + name.Height));
+            KeepParticlesOff(new Point(valueX, top + name.Height), value.WidthIncludingTrailingWhitespace, value.Height);
         }
+    }
+
+    /// <summary>Marks drawn text so the particle layer, which paints above it, leaves it readable.</summary>
+    private void KeepParticlesOff(Point at, double width, double height) =>
+        _particleKeepOut.Add(new Rect(at, new Size(width, height)).Inflate(ParticleTextMargin));
+
+    /// <summary>Whether a particle at <paramref name="point"/> would land on text.</summary>
+    internal static bool IsKeptOut(List<Rect> keepOut, Point point)
+    {
+        foreach (var rect in keepOut)
+        {
+            if (rect.Contains(point))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     // ---- particles (a layer of its own, so a frame repaints only the dots) ------------------------------------------
@@ -466,7 +505,11 @@ public partial class SankeyFlow
             for (var k = 0; k < count; k++)
             {
                 SampleParticle(item.Drawn, item.Seed, item.Speed, k, _clock, spread, out var main, out var cross, out var level);
-                context.DrawEllipse(_particleBrushes[palette * ParticleLevels + level], null, At(main, cross), radius, radius);
+                var at = At(main, cross);
+                if (!IsKeptOut(_particleKeepOut, at))
+                {
+                    context.DrawEllipse(_particleBrushes[palette * ParticleLevels + level], null, at, radius, radius);
+                }
             }
         }
     }

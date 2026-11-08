@@ -39,7 +39,7 @@ optional anomaly text, and allocates nothing of its own.
              xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:RealtimeStream x:Name="Latency"
                         Label="Checkout latency"
-                        Unit="ms" />
+                        Unit=" ms" />
 </UserControl>
 ```
 
