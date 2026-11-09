@@ -67,7 +67,7 @@ public partial class MarkdownDocumentDemo : UserControl
             ```
 
             ```bash
-            dotnet add package TKCode.Arc --prerelease
+            dotnet add package TKCode.Arc
             dotnet run --project src/App
             ```
             """;

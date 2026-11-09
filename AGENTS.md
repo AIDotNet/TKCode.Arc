@@ -30,6 +30,8 @@ Read `design/engineering/implementation-guide.md` before writing a component: fi
 - C# control-flow bodies always use braces. No reflection; AOT and trimming safe.
 - Every Arc component needs gallery docs pages `gallery/TKCode.Arc.Gallery/Docs/<Category>/<Component>/{en-US,zh-CN,zh-TW}.md` (checked by `GalleryDocsTests`; design/engineering/gallery-app.md section 6.6), and its public properties and events need XML `<summary>` text (they feed the API tables).
 - Every new component or block gets the gallery's "New" badge: its catalog entry carries `AddedOn: "yyyy-MM-dd"` (the day it joins the gallery; the badge shows for `GalleryCatalog.NewWindowDays`). Arc components: the entry in `gallery/TKCode.Arc.Gallery/Catalog/GalleryCatalog.g.cs` (keep it when regenerating); Extras, Special and Workflow: the entry in `GalleryCatalog.cs`; Blocks and Mobile: the `s_addedOn` table in `GalleryCatalog.cs` (checked by `GalleryNewBadgeTests`).
+- Versions follow [Semantic Versioning](https://semver.org/): from 1.0.0 on, breaking API changes come only with a new major version. Record each release's changes and migration notes in `CHANGELOG.md`. While a version carries a `-preview` suffix, the API may still change between releases.
+- Releases go through one or more `X.Y.Z-preview.N` versions and end with a stable `X.Y.Z` of the same number; a new version number starts only after the previous one has shipped stable.
 - Do not commit without an explicit request.
 
 ## Verify

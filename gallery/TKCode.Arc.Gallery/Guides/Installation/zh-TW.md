@@ -1,6 +1,6 @@
 ---
 title: 安裝
-source-hash: f3048c518906
+source-hash: 53690996f436
 ---
 
 # 安裝
@@ -16,7 +16,7 @@ source-hash: f3048c518906
 | TKCode.Arc.Foundation | 與 Arc 相同 | MIT；佈景主題、權杖、語言與套件註冊的執行階段，隨 `TKCode.Arc` 一起引入。 |
 | 字型（選用） | `Avalonia.Fonts.Inter` | Arc 的內文使用 Inter；Geist 來自 `TKCode.Arc.Fonts`。 |
 
-TKCode.Arc 目前處於預覽階段，Avalonia 固定為確切版本。除 Avalonia 之外，每個 Arc 套件只依賴 Arc 自己的 MIT 套件。請在你的應用程式中使用相同的 Avalonia 版本；版本混用會導致還原警告，並在執行時出現樣式遺失或型別載入錯誤。
+Avalonia 固定為確切版本。除 Avalonia 之外，每個 Arc 套件只依賴 Arc 自己的 MIT 套件。請在你的應用程式中使用相同的 Avalonia 版本；版本混用會導致還原警告，並在執行時出現樣式遺失或型別載入錯誤。
 
 ## 從範本開始
 
@@ -35,9 +35,9 @@ dotnet run
 ## 1. 加入套件
 
 ```bash
-dotnet add package TKCode.Arc --version 0.4.0-preview.6
-dotnet add package TKCode.Arc.Fonts --version 0.4.0-preview.6           # 選用：Geist 與 Geist Mono
-dotnet add package TKCode.Arc.Icons.Lucide --version 0.4.0-preview.6    # 選用：完整的 Lucide 圖示集
+dotnet add package TKCode.Arc --version 1.0.0
+dotnet add package TKCode.Arc.Fonts --version 1.0.0           # 選用：Geist 與 Geist Mono
+dotnet add package TKCode.Arc.Icons.Lucide --version 1.0.0    # 選用：完整的 Lucide 圖示集
 dotnet add package Avalonia.Fonts.Inter --version 12.1.4                 # 選用：內文使用的 Inter
 ```
 
@@ -45,14 +45,14 @@ dotnet add package Avalonia.Fonts.Inter --version 12.1.4                 # 選�
 
 ```xml
 <ItemGroup>
-    <PackageVersion Include="TKCode.Arc" Version="0.4.0-preview.6" />
-    <PackageVersion Include="TKCode.Arc.Fonts" Version="0.4.0-preview.6" />
-    <PackageVersion Include="TKCode.Arc.Icons.Lucide" Version="0.4.0-preview.6" />
+    <PackageVersion Include="TKCode.Arc" Version="1.0.0" />
+    <PackageVersion Include="TKCode.Arc.Fonts" Version="1.0.0" />
+    <PackageVersion Include="TKCode.Arc.Icons.Lucide" Version="1.0.0" />
     <PackageVersion Include="Avalonia.Fonts.Inter" Version="12.1.4" />
 </ItemGroup>
 ```
 
-請固定確切的預覽版本。像 `0.1.*` 這樣的浮動版本可能會在下一次還原時拉到帶有破壞性變更的預覽版。
+請讓所有 Arc 套件保持同一版本。它們一起發行，並遵循語意化版本：破壞性 API 變更只在新的主版本中出現。
 
 ## 2. 在應用程式建構器中註冊 Arc
 
@@ -173,14 +173,14 @@ Arc 自有的圖示字形（`{x:Static arc:ArcIcons.Check}` 以及另外 186 個
 `TKCode.Arc.Blocks`（頁面層級區塊）、`TKCode.Arc.AdvancedCharts`（`DataGrid`）與 `TKCode.Arc.Special`（AI 動畫講解）是獨立的套件。依需要加入，並在 `UseArc(...)` 中註冊：
 
 ```bash
-dotnet add package TKCode.Arc.Blocks --version 0.4.0-preview.6
-dotnet add package TKCode.Arc.AdvancedCharts --version 0.4.0-preview.6
-dotnet add package TKCode.Arc.Special --version 0.4.0-preview.6
-dotnet add package TKCode.Arc.Workflow --version 0.4.0-preview.6
-dotnet add package TKCode.Arc.Dock --version 0.4.0-preview.6    # 選用：IDE 式停靠版面（UseArcDock()）
-dotnet add package TKCode.Arc.Themes.Pixel --version 0.4.0-preview.6    # 選用：像素風主題（UseArcPixelTheme()）
-dotnet add package TKCode.Arc.Themes.Corners --version 0.4.0-preview.6    # 選用：全域圓角風格（UseArcCorners()）
-dotnet add package TKCode.Arc.Mobile --version 0.4.0-preview.6    # 選用：行動端控制項，尚未在真機上驗證（UseArcMobile()）
+dotnet add package TKCode.Arc.Blocks --version 1.0.0
+dotnet add package TKCode.Arc.AdvancedCharts --version 1.0.0
+dotnet add package TKCode.Arc.Special --version 1.0.0
+dotnet add package TKCode.Arc.Workflow --version 1.0.0
+dotnet add package TKCode.Arc.Dock --version 1.0.0    # 選用：IDE 式停靠版面（UseArcDock()）
+dotnet add package TKCode.Arc.Themes.Pixel --version 1.0.0    # 選用：像素風主題（UseArcPixelTheme()）
+dotnet add package TKCode.Arc.Themes.Corners --version 1.0.0    # 選用：全域圓角風格（UseArcCorners()）
+dotnet add package TKCode.Arc.Mobile --version 1.0.0    # 選用：行動端控制項，尚未在真機上驗證（UseArcMobile()）
 ```
 
 ```csharp
@@ -202,9 +202,9 @@ dotnet add package TKCode.Arc.Mobile --version 0.4.0-preview.6    # 選用：行
 `TKCode.Arc.Pdf`（`PdfViewer`）還需要一個繪製器：桌面上是帶 PDFium 的 `TKCode.Arc.Pdf.Native`，單一平台應用程式中約 7.5 MB；WebAssembly 中是帶 pdf.js 的 `TKCode.Arc.Pdf.Browser`：
 
 ```bash
-dotnet add package TKCode.Arc.Pdf --version 0.4.0-preview.6
-dotnet add package TKCode.Arc.Pdf.Native --version 0.4.0-preview.6     # desktop
-dotnet add package TKCode.Arc.Pdf.Browser --version 0.4.0-preview.6    # browser
+dotnet add package TKCode.Arc.Pdf --version 1.0.0
+dotnet add package TKCode.Arc.Pdf.Native --version 1.0.0     # desktop
+dotnet add package TKCode.Arc.Pdf.Browser --version 1.0.0    # browser
 ```
 
 ```csharp

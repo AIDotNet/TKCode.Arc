@@ -57,6 +57,8 @@ internal static class ThemeSwitcherTransition
             Width = layer.Bounds.Width,
             Height = layer.Bounds.Height
         };
+        // Before it can be drawn: the theme is applied beneath it from here on, and a frame may be painted at any point.
+        overlay.CoverWindow();
         layer.Children.Add(overlay);
         try
         {
@@ -97,6 +99,15 @@ internal sealed class ThemeSwitcherSnapshot : Control
         IsHitTestVisible = true;
         _clip = new CombinedGeometry(GeometryCombineMode.Exclude, _bounds, variant == ThemeSwitcherVariant.Split ? _seam : _disc);
     }
+
+    /// <summary>
+    /// Sets the clip to the start of the reveal, the whole old window. Until then the clip is empty and nothing is drawn,
+    /// which would show the new theme for as long as it takes to apply (issue #74).
+    /// </summary>
+    public void CoverWindow() => Update(0);
+
+    /// <summary>The area the old window can be drawn in.</summary>
+    internal Rect DrawnArea => _variant == ThemeSwitcherVariant.Rise ? new Rect(0, 0, _bounds.Rect.Width, _riseTop) : _bounds.Rect;
 
     public Task PlayAsync(TimeSpan duration)
     {

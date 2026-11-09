@@ -16,7 +16,7 @@ takes about five minutes on a new project and does not change how the rest of yo
 | TKCode.Arc.Foundation | same as Arc | MIT; the theme, token, language and package runtime. Comes with `TKCode.Arc`. |
 | Fonts (optional) | `Avalonia.Fonts.Inter` | Arc's body text uses Inter; Geist comes from `TKCode.Arc.Fonts`. |
 
-TKCode.Arc is in preview, and Avalonia is pinned to an exact version. Besides Avalonia, every Arc package depends only
+Avalonia is pinned to an exact version. Besides Avalonia, every Arc package depends only
 on MIT packages of its own. Use the same Avalonia version in your application; mixing versions leads to restore
 warnings and, at run time, to missing styles or type load errors.
 
@@ -41,9 +41,9 @@ them all. The steps below add Arc to an existing project and explain what the te
 ## 1. Add the packages
 
 ```bash
-dotnet add package TKCode.Arc --version 0.4.0-preview.6
-dotnet add package TKCode.Arc.Fonts --version 0.4.0-preview.6           # optional: Geist and Geist Mono
-dotnet add package TKCode.Arc.Icons.Lucide --version 0.4.0-preview.6    # optional: the full Lucide set
+dotnet add package TKCode.Arc --version 1.0.0
+dotnet add package TKCode.Arc.Fonts --version 1.0.0           # optional: Geist and Geist Mono
+dotnet add package TKCode.Arc.Icons.Lucide --version 1.0.0    # optional: the full Lucide set
 dotnet add package Avalonia.Fonts.Inter --version 12.1.4                 # optional: Inter for body text
 ```
 
@@ -52,15 +52,15 @@ package management, add the versions to `Directory.Packages.props` once and keep
 
 ```xml
 <ItemGroup>
-    <PackageVersion Include="TKCode.Arc" Version="0.4.0-preview.6" />
-    <PackageVersion Include="TKCode.Arc.Fonts" Version="0.4.0-preview.6" />
-    <PackageVersion Include="TKCode.Arc.Icons.Lucide" Version="0.4.0-preview.6" />
+    <PackageVersion Include="TKCode.Arc" Version="1.0.0" />
+    <PackageVersion Include="TKCode.Arc.Fonts" Version="1.0.0" />
+    <PackageVersion Include="TKCode.Arc.Icons.Lucide" Version="1.0.0" />
     <PackageVersion Include="Avalonia.Fonts.Inter" Version="12.1.4" />
 </ItemGroup>
 ```
 
-Pin the exact preview version. Floating versions such as `0.1.*` can pick up a preview with breaking changes on the next
-restore.
+Keep the Arc packages on one version. They are released together, and Arc follows Semantic Versioning: breaking API
+changes come only with a new major version.
 
 ## 2. Register Arc in the application builder
 
@@ -194,14 +194,14 @@ icon that is not compiled in draws nothing and logs a warning naming the line to
 AI explainers) are separate packages. Add the ones you need and register them inside `UseArc(...)`:
 
 ```bash
-dotnet add package TKCode.Arc.Blocks --version 0.4.0-preview.6
-dotnet add package TKCode.Arc.AdvancedCharts --version 0.4.0-preview.6
-dotnet add package TKCode.Arc.Special --version 0.4.0-preview.6
-dotnet add package TKCode.Arc.Workflow --version 0.4.0-preview.6
-dotnet add package TKCode.Arc.Dock --version 0.4.0-preview.6    # optional: IDE-style dock layout (UseArcDock())
-dotnet add package TKCode.Arc.Themes.Pixel --version 0.4.0-preview.6    # optional: pixel-art theme (UseArcPixelTheme())
-dotnet add package TKCode.Arc.Themes.Corners --version 0.4.0-preview.6    # optional: global corner style (UseArcCorners())
-dotnet add package TKCode.Arc.Mobile --version 0.4.0-preview.6    # optional: touch-first controls, not yet verified on devices (UseArcMobile())
+dotnet add package TKCode.Arc.Blocks --version 1.0.0
+dotnet add package TKCode.Arc.AdvancedCharts --version 1.0.0
+dotnet add package TKCode.Arc.Special --version 1.0.0
+dotnet add package TKCode.Arc.Workflow --version 1.0.0
+dotnet add package TKCode.Arc.Dock --version 1.0.0    # optional: IDE-style dock layout (UseArcDock())
+dotnet add package TKCode.Arc.Themes.Pixel --version 1.0.0    # optional: pixel-art theme (UseArcPixelTheme())
+dotnet add package TKCode.Arc.Themes.Corners --version 1.0.0    # optional: global corner style (UseArcCorners())
+dotnet add package TKCode.Arc.Mobile --version 1.0.0    # optional: touch-first controls, not yet verified on devices (UseArcMobile())
 ```
 
 ```csharp
@@ -225,9 +225,9 @@ twice does nothing.
 app for one platform, or `TKCode.Arc.Pdf.Browser` with pdf.js in WebAssembly:
 
 ```bash
-dotnet add package TKCode.Arc.Pdf --version 0.4.0-preview.6
-dotnet add package TKCode.Arc.Pdf.Native --version 0.4.0-preview.6     # desktop
-dotnet add package TKCode.Arc.Pdf.Browser --version 0.4.0-preview.6    # browser
+dotnet add package TKCode.Arc.Pdf --version 1.0.0
+dotnet add package TKCode.Arc.Pdf.Native --version 1.0.0     # desktop
+dotnet add package TKCode.Arc.Pdf.Browser --version 1.0.0    # browser
 ```
 
 ```csharp

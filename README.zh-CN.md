@@ -2,7 +2,7 @@
 
 [English](https://github.com/AIDotNet/TKCode.Arc/blob/main/README.md) | 简体中文
 
-[![NuGet](https://img.shields.io/nuget/vpre/TKCode.Arc?label=NuGet)](https://www.nuget.org/packages/TKCode.Arc)
+[![NuGet](https://img.shields.io/nuget/v/TKCode.Arc?label=NuGet)](https://www.nuget.org/packages/TKCode.Arc)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](https://github.com/AIDotNet/TKCode.Arc/blob/main/LICENSE)
 
 **把 [Arc](https://uiarc.dev) 的视觉语言和弹簧动效，做成原生 Avalonia 控件。**
@@ -63,7 +63,7 @@ TKCode.Arc 是面向 Avalonia 12 的 .NET 应用 UI 套件。它移植了 Arc �
 
 ## 状态与兼容性
 
-Arc 目前处于预览阶段，不同版本之间 API 仍可能变化。各版本内容和迁移说明见
+Arc 遵循[语义化版本](https://semver.org/)：从 1.0.0 起，破坏性 API 变更只在新的主版本中出现。各版本内容和迁移说明见
 [CHANGELOG.md](https://github.com/AIDotNet/TKCode.Arc/blob/main/CHANGELOG.md)。
 
 | | |

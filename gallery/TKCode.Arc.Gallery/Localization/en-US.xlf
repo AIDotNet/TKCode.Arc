@@ -1198,7 +1198,7 @@
     </unit>
     <unit id="DownloadNote">
       <segment>
-        <source>This is a preview. All packages are published on GitHub Releases; the macOS app is signed and notarized.</source>
+        <source>All packages are published on GitHub Releases; the macOS app is signed and notarized.</source>
       </segment>
     </unit>
     <unit id="DownloadAll">

@@ -153,7 +153,7 @@ dotnet run --project samples/Acme.Controls.Sample
 dotnet pack src/Acme.Controls -c Release -o artifacts
 ```
 
-`src/<name>/` holds an example control (`StatTile`) with its design token class and theme, and a `Use<Name>()` method for `UseArc(...)` that registers everything the Foundation generator found. `tests/` runs the controls on Avalonia's headless platform, and `samples/` is a desktop app that shows them. `--tests false` and `--sample false` leave those projects out. The example token's identity starts with the library's name (`AcmeControlsStatTile`), because an identity must be unique across every package an app registers, Arc's included. The package version starts as a prerelease, because a stable package cannot depend on a prerelease of TKCode.Arc.
+`src/<name>/` holds an example control (`StatTile`) with its design token class and theme, and a `Use<Name>()` method for `UseArc(...)` that registers everything the Foundation generator found. `tests/` runs the controls on Avalonia's headless platform, and `samples/` is a desktop app that shows them. `--tests false` and `--sample false` leave those projects out. The example token's identity starts with the library's name (`AcmeControlsStatTile`), because an identity must be unique across every package an app registers, Arc's included.
 
 ## Add to an app
 

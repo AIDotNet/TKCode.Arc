@@ -4,14 +4,27 @@ title: Changelog
 
 # Changelog
 
-All notable changes to TKCode.Arc, newest first. Versions follow [Semantic Versioning](https://semver.org/). While a
-version carries a `-preview` suffix, the API may still change between releases; read the notes before upgrading and
-keep the version pinned in your project. The same list is kept in `CHANGELOG.md` in the repository.
+All notable changes to TKCode.Arc, newest first. Versions follow [Semantic Versioning](https://semver.org/). From 1.0.0 on, breaking API changes come only with a new major version; earlier `-preview` versions could change the API
+between releases. The same list is kept in `CHANGELOG.md` in the repository.
 
 NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Foundation` (from 0.3.2), `TKCode.Arc.Fonts` and
-`TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special`, `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`, `TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from the next version).
+`TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special`, `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`, `TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0).
 
-## Unreleased
+## 1.0.0 (2026-11-08)
+
+The first stable release of TKCode.Arc: Arc's visual language and spring motion as native Avalonia 12 controls, with page-level blocks, a data grid, a workflow canvas, docking, a terminal, a PDF viewer and audio playback around them. It targets `net8.0`, `net10.0` and `net11.0` on Avalonia 12.1.4 (`TKCode.Arc.Terminal`: `net10.0` and `net11.0`).
+
+### Stability
+
+From this version on, Arc follows Semantic Versioning without a `-preview` suffix: breaking API changes come only with a new major version, and the changelog lists them. All packages are released together on one version, so keep them on the same one. Installing no longer needs `--prerelease`.
+
+### Packages
+
+These 21 packages are published to NuGet: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Foundation`, `TKCode.Arc.Fonts`, `TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special`, `TKCode.Arc.Workflow`, `TKCode.Arc.Dock`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`, `TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native`, `TKCode.Arc.Pdf.Browser`, `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Templates`.
+
+### Upgrading from 0.4.0-preview.6
+
+An API comparison of the 11 packages that also shipped in 0.4.0-preview.6 and have a `net10.0` build (`TKCode.Arc`, `.Core`, `.Foundation`, `.Blocks`, `.AdvancedCharts`, `.Special`, `.Workflow`, `.Dock`, `.Mobile`, `.Terminal`, `.Audio`) found no breaking changes. One thing can still affect you: many parts that are not always shown are no longer in the control templates and are created in code on first use. A custom `ControlTheme` or code that looks up one of those `PART_` names should handle it being absent. Remove `--prerelease` from your install commands.
 
 ### Added
 
@@ -22,12 +35,44 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 - **PDF** (new packages `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser`; issue #51): `PdfViewer` opens a PDF from a file, bytes, a stream or an address, with thumbnails and a table of contents in a sidebar, search with counts and highlights, text selection and copy, links (external ones only for `http`, `https` and `mailto`), a password form or a `PasswordRequested` event, and loading and failure states. `arc:Pdf.Source` shows only the pages in a plain `PageViewer`. PDFium renders on desktop (`ArcPdfNative.Use()`, in-process, x64 and arm64 for Windows, Linux and macOS) and pdf.js in a browser (`await ArcPdfBrowser.UseAsync()`). Without a backend a document fails with a hint; pages are never faked. Know the limits: documents without embedded Chinese, Japanese or Korean fonts depend on the machine's fonts, there is no touch drag selection, plain-text web addresses are links only with PDFium, and the Liberation fonts are not in the browser package. Docs and demos in English, 简体中文 and 繁體中文.
 - **`PageViewer`** (`TKCode.Arc`, Media; issue #51): zoom, pan and page through pictures (`ItemsSource`) or pages rendered on demand (`IPageSource`), continuous or one page at a time, with fit modes, a toolbar and `PageLayer` for your own drawing and pointer input on the pages. One self-drawn surface draws only the visible pages. Docs and demos in English, 简体中文 and 繁體中文.
 - **Templates** (new package `TKCode.Arc.Templates`): `dotnet new install TKCode.Arc.Templates`, then `dotnet new tkcode-arc` for a desktop app or `dotnet new tkcode-arc-xplat` for the desktop and the browser (WebAssembly). Four layouts (`--layout blank|sidebar|header|dock`) and options for MVVM with CommunityToolkit.Mvvm (`--mvvm toolkit`), dependency injection (`--di`), saved preferences (`--settings`, on by default: the appearance, the accent, the window placement and the layout's state come back on the next start), localization (`--i18n`: English, 简体中文 and 繁體中文 in `.xlf` files with a language switch; `--ui-language` picks the text's language), a headless test project (`--tests`), Arc's title bar (`--custom-titlebar`), `--framework` and `--accent`. Item templates add a page (`tkcode-arc-page`), a window (`tkcode-arc-window`), a dialog with an awaitable result (`tkcode-arc-dialog`) and an Arc-style control with its token class and theme file (`tkcode-arc-control`). Three more templates start from a finished app built from Arc's blocks, with sample data behind service interfaces, MVVM and dependency injection: `tkcode-arc-admin` (sign-in, a dashboard, a customer table with search, filters, paging and a detail drawer, team and roles, billing, settings, a command palette), `tkcode-arc-ai-chat` (a conversation list beside `AiChat` with streamed replies from a sample responder you replace with your model client, conversations kept between runs) and `tkcode-arc-devtool` (a dock layout with a file explorer, editor tabs, a property grid, build output and problems, the open files restored with the layout). Also `tkcode-arc-workflow` (a step palette, an editable workflow canvas with undo, a minimap and an inspector, a simulated run, JSON import and export), `tkcode-arc-projects` (Kanban board, Gantt timeline, week calendar, release checklist) and `tkcode-arc-analytics` (KPI drill-down, revenue, cohort retention, usage forecast, service status). `tkcode-arc-lib` starts a control library of your own: an example control with its design tokens and theme, a `Use<Name>()` registration, headless tests and a sample app, ready for `dotnet pack`. The new **Templates** guide lists them all; the Installation guide gains a “Start from a template” section.
+- **`EnumSelector`** (`TKCode.Arc`; issue #56): lists an enum's members as a `RadioGroup`, or as `Checkbox`es for a `[Flags]` enum, with `SelectedEnum` binding two-way. Member data comes from a new Foundation generator for enums marked `[EnumMetadata]`, so nothing is reflected.
+- **`FluidTabControl`, `FluidTabItem`** (`TKCode.Arc`; issue #60): scroll-linked tabs. Picking a tab scrolls smoothly to its section, and scrolling selects the tab of the section on the anchor line.
+- **Advanced charts** (`TKCode.Arc.AdvancedCharts`): `Sunburst`, `SankeyFlow`, `FunnelChart`, `RadarChart` (issue #66: polygon grid, adjustable fill opacity), `RealtimeStream` and `RaceBarChart`. Docs and demos in English, 简体中文 and 繁體中文.
+- **Layout panels** (`TKCode.Arc`, new Layout group): `WaterfallPanel` (cards of different heights flow into equal columns), `TilePanel` (start-screen tiles that span rows and columns and take the first free place) and `CyclicPanel` (a list that loops without a seam).
+- **`TransferBox`**: move items between two lists, one by one, as a selection or all at once, with select all, search and the bound collections edited in place.
+- **`NumberFilterBox`, `TextFilterBox`**: one filter condition each. The number box has a checkbox, an operator and a value with an optional tolerance; the text box has contains, starts with, ends with, equals, a regular expression and case sensitivity.
+- **Gallery community section**: the home page and the READMEs show the QQ group's QR code and number, which can be copied.
+
+### Changed
+
+- **Performance across the library**: controls create parts that are not showing (focus rings, Info badge layers, select menus and more) on first use, so a form with many controls builds much less. Themes select on pseudo-classes instead of property selectors, labels painted every frame reuse a shaped `TextLayout`, tables keep shaped cell text, `TerminalView` caches rendered rows, and the motion engine, content swap, modal presence, rolling digits, palette and token lookups allocate less. These changes are meant to leave motion and appearance as they were.
+- **Pictures**: `ArcImageHeader` reads a picture's size from its file header, so a picture much larger than its slot decodes straight to the slot's size.
+- **`GanttTimeline`**: zooming 60 tasks allocates about 100 KB per frame instead of 1.8 MB, and rows, bars and arrows outside the view are not drawn.
+- **Gallery startup in the browser**: audio and video modules load only on pages with a player, a visitor reading Chinese gets the font ahead of the first frame, API descriptions load per language when first shown, and the sidebar is built when a page first needs it.
+- **Gallery**: new desktop icons, and the About page shows its preview badge only on preview builds.
+- The `tkcode-arc-lib` template starts at version `0.1.0` instead of `0.1.0-preview.1`.
 
 ### Fixed
 
+- **`ThemeSwitcher`** (issue #74): the new theme no longer flashes before the transition starts. The window's snapshot now covers it from the moment the theme begins to apply, in all four variants.
+- **`Tooltip`**: a control passed as the tip is shown itself, not its type name.
+- **`GanttTimeline`** (#72): the chart no longer covers the toolbar and footer in a 560 high block. Scroll bars on both axes stay in step with the chart, the today line runs under the bars, arrows route correctly over one-day gaps and to folded phases, and hover highlights the row, bar and arrows.
+- **`SankeyFlow`**: the list of labels that particles avoid no longer grows while the overlay repaints alone.
+- **Advanced chart labels**: `RaceBarChart` labels fade instead of overlapping when a bar is passed, `SankeyFlow` particles stay off text, `RadarChart` inner rings stay visible on a muted stage, and `Sunburst` legend shares always show one decimal.
+- **`InstallSnippet`**: highlighting could hang forever when its continuation never ran on the dispatcher.
+- **`InkFluid`**: the simulation is paced so the UI thread can go idle.
+- **Templates** (#70): fixed layout problems in the generated `admin`, `devtool`, `workflow`, `ai-chat`, `projects`, `sidebar` and `header` apps, such as clipped text, misaligned table columns and stretched top bar buttons.
+- **Gallery in the browser**: Chinese input methods can compose on macOS browsers, where letters used to land in the text box and end the composition. This was checked with simulated composition, not with a real macOS input method.
+- **Video** (in this repository, not on NuGet yet): Windows playback no longer stops when nothing pulls frames, such as a minimized window, and `VideoSurface` reads Media Foundation textures the right way up. `Stop`, embedded text tracks and iOS and Android backends were added.
 - **`TextReveal`, `InViewTitle`**: Chinese, Japanese and Korean text wraps between characters. A title without spaces was cut off at the edge of a narrow column.
 - **`dotnet new install TKCode.Arc.Templates` failed for 0.4.0-preview.6**: the package was released with its template files moved but not the `template.json` that points at them, so it could not be installed (`MV012: Source ... does not exist`). Use this version or later.
 - **Lucide icons**: 32 icons whose path starts with a move followed directly by a line (`UserCog`, `FileCog`, `ServerCog`, `Coins`, `Watch`, `ZapOff`, ...) threw "Invalid double value" when first shown; the generator read `16.53.923` as one number. A test now parses every icon's path.
+
+### Known limitations
+
+- `TKCode.Arc.Mobile` is previewed in a desktop phone frame and is not yet verified on Android or iOS devices.
+- `TKCode.Arc.Video`, `.Video.Native` and `.Video.Browser` stay in the repository and are not published to NuGet, until Windows and real devices are verified.
+- `PdfViewer`: documents without embedded Chinese, Japanese or Korean fonts depend on the machine's fonts, there is no touch drag selection, plain-text web addresses are links only with PDFium, and the Liberation fonts are not in the browser package.
 
 ## 0.4.0-preview.6 (2026-11-08)
 
