@@ -1,7 +1,11 @@
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
+using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.VisualTree;
 
@@ -29,6 +33,7 @@ internal readonly record struct ActivityReaction(string Emoji, int Count, bool M
 /// <see cref="Avalonia.Controls.Button.Click"/> and the thread updates its data. Presence (P26) is code-driven so the exit can gate the
 /// chip's removal and share one transform with the bar's FLIP glide (P19).
 /// </summary>
+[PseudoClasses(":comment", ":chat")]
 internal sealed class ActivityReactionChip : ToggleButton
 {
     public static readonly StyledProperty<string?> EmojiProperty =
@@ -51,6 +56,50 @@ internal sealed class ActivityReactionChip : ToggleButton
     private MotionValue<double>? _scale;
     private MotionValue<double>? _fade;
     private int _generation;
+    // The keyboard focus ring is built on first focus (a hidden ring in every chip of every message added up).
+    private LazyFocusRing? _focusRing;
+
+    public ActivityReactionChip()
+    {
+        UpdateVariantPseudoClasses();
+    }
+
+    // The theme selects the variant on pseudo-classes: a property selector costs every chip an activator per style.
+    private void UpdateVariantPseudoClasses()
+    {
+        var variant = Variant;
+        PseudoClasses.Set(":comment", variant == ActivityReactionChipVariant.Comment);
+        PseudoClasses.Set(":chat", variant == ActivityReactionChipVariant.Chat);
+    }
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == VariantProperty)
+        {
+            UpdateVariantPseudoClasses();
+        }
+    }
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        _focusRing ??= new LazyFocusRing(this, ActivityReactionChipTokens.Key(ActivityReactionChipTokenKind.FocusRingMargin),
+            ArcDesignTokens.Key(ArcDesignTokenKind.RadiusPill));
+        _focusRing.Attach(e.NameScope.Find<Panel>("PART_Root"));
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing?.Update();
+    }
 
     /// <summary>True while the exit plays (out of the flow, not focusable).</summary>
     public bool IsLeaving { get; private set; }

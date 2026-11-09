@@ -1,4 +1,6 @@
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Animation.Easings;
 using Avalonia.Automation;
@@ -172,15 +174,25 @@ public abstract class ExpandableClamp : TemplatedControl
         }
         base.OnApplyTemplate(e);
         _viewport = e.NameScope.Find<ExpandableTextViewport>(ViewportPart);
+        // The theme builds no toggle (EnsureToggle does, on demand); a custom template may still declare its own.
         _toggle = e.NameScope.Find<ExpandableTextToggle>(TogglePart);
         if (_toggle is not null)
         {
             _toggle.Click += OnToggleClick;
             _toggle.Owner = this;
+            UpdateLabels();
         }
         if (_viewport is not null)
         {
-            _viewport.OverflowChanged = overflowing => IsOverflowing = overflowing;
+            _viewport.OverflowChanged = overflowing =>
+            {
+                IsOverflowing = overflowing;
+                if (overflowing && _toggle is null)
+                {
+                    // The viewport can be measured on its own, without its height changing: bring the clamp's measure into this pass.
+                    InvalidateMeasure();
+                }
+            };
             _viewport.Source = GetLineSource(e.NameScope);
             _viewport.Lines = Lines;
             _viewport.LineHeight = ClampLineHeight;
@@ -189,7 +201,46 @@ public abstract class ExpandableClamp : TemplatedControl
             _viewport.AddHandler(GotFocusEvent, OnViewportGotFocus);
             _viewport.SetExpanded(IsExpanded, animate: false);
         }
+        if (_isOverflowing)
+        {
+            EnsureToggle();
+        }
+    }
+
+    /// <summary>
+    /// Most clamped text in a feed fits and never shows the toggle, so the button is built the first time the content
+    /// overflows. It joins the layout in the same pass that found the overflow, so it is there in the first frame that needs it.
+    /// </summary>
+    protected override Size MeasureOverride(Size availableSize)
+    {
+        var size = base.MeasureOverride(availableSize);
+        if (_isOverflowing && _toggle is null && EnsureToggle())
+        {
+            // Adding the toggle invalidated its panel: measuring again includes it.
+            size = base.MeasureOverride(availableSize);
+        }
+        return size;
+    }
+
+    private bool EnsureToggle()
+    {
+        if (_toggle is not null || _viewport?.GetVisualParent() is not Panel host)
+        {
+            return false;
+        }
+        _toggle = new ExpandableTextToggle
+        {
+            Name = TogglePart,
+            Owner = this,
+            IsVisible = _isOverflowing,
+            IsOpen = IsExpanded,
+            MoreText = MoreLabel,
+            LessText = LessLabel
+        };
+        _toggle.Click += OnToggleClick;
         UpdateLabels();
+        host.Children.Add(_toggle);
+        return true;
     }
 
     private void OnToggleClick(object? sender, RoutedEventArgs e) => IsExpanded = !IsExpanded;
@@ -235,6 +286,10 @@ public abstract class ExpandableClamp : TemplatedControl
                 this.BringIntoView(new Rect(0, 0, Math.Max(1, Bounds.Width), 1));
             }
             _viewport?.SetExpanded(expanded, animate);
+            if (_toggle is not null)
+            {
+                _toggle.IsOpen = expanded;
+            }
             UpdateLabels();
             _toggle?.RaiseExpandCollapseChanged(!expanded, expanded);
             RaiseEvent(new ExpandableTextExpandedChangedEventArgs(ExpandedChangedEvent, expanded));
@@ -253,7 +308,16 @@ public abstract class ExpandableClamp : TemplatedControl
         }
         else if (change.Property == MoreLabelProperty || change.Property == LessLabelProperty)
         {
+            if (_toggle is not null)
+            {
+                _toggle.MoreText = MoreLabel;
+                _toggle.LessText = LessLabel;
+            }
             UpdateLabels();
+        }
+        else if (change.Property == IsOverflowingProperty && _toggle is not null)
+        {
+            _toggle.IsVisible = change.GetNewValue<bool>();
         }
     }
 
@@ -670,6 +734,7 @@ internal sealed class ExpandableTextToggle : AvaloniaButton
     public bool IsOpen { get => GetValue(IsOpenProperty); set => SetValue(IsOpenProperty, value); }
 
     private RotateTransform? _rotate;
+    private LazyFocusRing? _focusRing;
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
@@ -680,6 +745,18 @@ internal sealed class ExpandableTextToggle : AvaloniaButton
         }
     }
 
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing?.Update();
+    }
+
     public ExpandableClamp? Owner { get; set; }
 
     protected override Type StyleKeyOverride => typeof(ExpandableTextToggle);
@@ -687,6 +764,10 @@ internal sealed class ExpandableTextToggle : AvaloniaButton
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
+        // Built the first time the toggle is keyboard focused, over the template's root panel.
+        _focusRing ??= new LazyFocusRing(this, ExpandableTextTokens.Key(ExpandableTextTokenKind.FocusRingMargin),
+            ExpandableTextTokens.Key(ExpandableTextTokenKind.FocusRingRadius));
+        _focusRing.Attach(VisualChildren.Count > 0 ? VisualChildren[0] as Panel : null);
         if (e.NameScope.Find<Control>("PART_Chevron") is { } chevron)
         {
             _rotate = new RotateTransform();

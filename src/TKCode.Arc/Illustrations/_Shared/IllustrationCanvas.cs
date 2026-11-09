@@ -231,4 +231,25 @@ internal sealed class IllustrationDots : Control
 internal sealed class IllustrationPlayButton : Avalonia.Controls.Button
 {
     protected override Type StyleKeyOverride => typeof(IllustrationPlayButton);
+
+    private TKCode.Arc.Primitives.LazyFocusRing? _focusRing;
+
+    protected override void OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        _focusRing ??= LiteralFocusRing.Create(this, TKCode.Arc.DesignTokens.ArcDesignTokens.Key(TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusPill));
+        LiteralFocusRing.Attach(_focusRing, e.NameScope.Find<Control>("PART_Frame")?.Parent as Panel, new Thickness(-2));
+    }
+
+    protected override void OnGotFocus(Avalonia.Input.FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
+    protected override void OnLostFocus(Avalonia.Input.FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing?.Update();
+    }
 }

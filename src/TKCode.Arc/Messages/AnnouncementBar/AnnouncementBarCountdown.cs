@@ -5,6 +5,7 @@ using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
 using Avalonia.Media;
+using Avalonia.Media.TextFormatting;
 using Avalonia.Threading;
 
 namespace TKCode.Arc;
@@ -43,10 +44,12 @@ internal sealed class AnnouncementBarCountdown : Control
     }
 
     private readonly Cell[] _cells = new Cell[12];
-    private readonly FormattedText?[] _digits = new FormattedText?[10];
-    private FormattedText? _colon;
-    private FormattedText? _dayMark;
-    private FormattedText? _label;
+    // TextLayout, not FormattedText: a FormattedText re-shapes its text on every Draw, and the drop animation draws every
+    // cell on every frame; a layout keeps its shaped line and only outputs glyphs.
+    private readonly TextLayout?[] _digits = new TextLayout?[10];
+    private TextLayout? _colon;
+    private TextLayout? _dayMark;
+    private TextLayout? _label;
     private string? _labelText;
     private int _cellCount;
     private int _dayDigits;
@@ -56,6 +59,7 @@ internal sealed class AnnouncementBarCountdown : Control
     private AnnouncementCountdown? _countdown;
     private Action? _onEnd;
     private bool _ended;
+    private long _spokenMinute = -1;
     private readonly MotionValue<double> _drop;
     private readonly MotionValue<double> _fade;
 
@@ -96,6 +100,7 @@ internal sealed class AnnouncementBarCountdown : Control
         _onEnd = onEnd;
         _ended = false;
         _cellCount = 0;
+        _spokenMinute = -1;
         Tick(animate: false);
         ScheduleTick();
     }
@@ -121,12 +126,23 @@ internal sealed class AnnouncementBarCountdown : Control
     {
         base.OnDetachedFromVisualTree(e);
         _timer?.Stop();
+        WaitForShow(false);
     }
 
+    /// <summary>
+    /// Arms the next tick. A hidden countdown (a hidden page, a face in the pool) does not wake every second: it waits
+    /// for the layout that shows it again (as Core's LiveLoop does), reads the clock then and its digits snap to the
+    /// current time, as they always did after a hidden tick.
+    /// </summary>
     private void ScheduleTick()
     {
         if (_countdown is null || _ended || TopLevel.GetTopLevel(this) is null)
         {
+            return;
+        }
+        if (!IsEffectivelyVisible)
+        {
+            WaitForShow(true);
             return;
         }
         _timer ??= CreateTimer();
@@ -191,8 +207,14 @@ internal sealed class AnnouncementBarCountdown : Control
         }
         _cellCount = count;
         _dayDigits = dayText.Length;
-        var spoken = d > 0 ? $"{d} days {h} hours {m} minutes" : $"{h} hours {m} minutes";
-        AutomationProperties.SetName(this, spoken);
+        // The spoken time names days, hours and minutes: it changes once a minute, not once a second.
+        var minute = total / 60;
+        if (minute != _spokenMinute)
+        {
+            _spokenMinute = minute;
+            var spoken = d > 0 ? $"{d} days {h} hours {m} minutes" : $"{h} hours {m} minutes";
+            AutomationProperties.SetName(this, spoken);
+        }
         if (layoutChanged)
         {
             InvalidateMeasure();
@@ -233,16 +255,62 @@ internal sealed class AnnouncementBarCountdown : Control
         if (change.Property == FontFamilyProperty || change.Property == FontSizeProperty ||
             change.Property == ForegroundProperty || change.Property == MutedForegroundProperty)
         {
-            Array.Clear(_digits);
-            _colon = null;
-            _dayMark = null;
-            _label = null;
+            ClearGlyphs();
         }
     }
 
-    private FormattedText Text(string text, FontWeight weight, IBrush? brush)
-        => new(text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
-               new Typeface(FontFamily, FontStyle.Normal, weight), FontSize, brush ?? Brushes.Black);
+    private bool _waitingForShow;
+
+    private void WaitForShow(bool wait)
+    {
+        if (wait == _waitingForShow)
+        {
+            return;
+        }
+        _waitingForShow = wait;
+        if (wait)
+        {
+            LayoutUpdated += OnLayoutUpdated;
+        }
+        else
+        {
+            LayoutUpdated -= OnLayoutUpdated;
+        }
+    }
+
+    private void OnLayoutUpdated(object? sender, EventArgs e)
+    {
+        if (!IsEffectivelyVisible)
+        {
+            return;
+        }
+        WaitForShow(false);
+        if (_countdown is not null && _timer is not { IsEnabled: true })
+        {
+            // Shown again: catch up with the clock at once and resume the beat.
+            Tick(animate: false);
+            ScheduleTick();
+        }
+    }
+
+    private void ClearGlyphs()
+    {
+        for (var i = 0; i < _digits.Length; i++)
+        {
+            _digits[i]?.Dispose();
+            _digits[i] = null;
+        }
+        _colon?.Dispose();
+        _colon = null;
+        _dayMark?.Dispose();
+        _dayMark = null;
+        _label?.Dispose();
+        _label = null;
+        _labelText = null;
+    }
+
+    private TextLayout Text(string text, FontWeight weight, IBrush? brush)
+        => new(text, new Typeface(FontFamily, FontStyle.Normal, weight), FontSize, brush ?? Brushes.Black);
 
     private void EnsureGlyphs()
     {
@@ -256,11 +324,13 @@ internal sealed class AnnouncementBarCountdown : Control
         var label = _countdown?.Label;
         if (!string.IsNullOrEmpty(label) && (_label is null || _labelText != label))
         {
+            _label?.Dispose();
             _label = Text(label, FontWeight.Normal, muted);
             _labelText = label;
         }
         else if (string.IsNullOrEmpty(label))
         {
+            _label?.Dispose();
             _label = null;
             _labelText = null;
         }
@@ -298,7 +368,7 @@ internal sealed class AnnouncementBarCountdown : Control
         var x = 0.0;
         if (_label is not null)
         {
-            context.DrawText(_label, new Point(x, top));
+            _label.Draw(context, new Point(x, top));
             x += _label.WidthIncludingTrailingWhitespace + LabelGap;
         }
         var drop = _drop.Value;
@@ -308,12 +378,12 @@ internal sealed class AnnouncementBarCountdown : Control
         {
             if (_dayDigits > 0 && i == _dayDigits)
             {
-                context.DrawText(_dayMark!, new Point(x + 1, top));
+                _dayMark!.Draw(context, new Point(x + 1, top));
                 x += 1 + _dayMark!.WidthIncludingTrailingWhitespace + 0.4 * FontSize;
             }
             else if (i == _dayDigits + 2 || i == _dayDigits + 4)
             {
-                context.DrawText(_colon!, new Point(x + 1, top));
+                _colon!.Draw(context, new Point(x + 1, top));
                 x += SeparatorWidth;
             }
             ref var cell = ref _cells[i];
@@ -321,7 +391,7 @@ internal sealed class AnnouncementBarCountdown : Control
             var offset = (_cellWidth - current.WidthIncludingTrailingWhitespace) / 2;
             if (!cell.Changed || (drop >= 1 && fade >= 1))
             {
-                context.DrawText(current, new Point(x + offset, top));
+                current.Draw(context, new Point(x + offset, top));
                 x += _cellWidth;
                 continue;
             }
@@ -330,13 +400,13 @@ internal sealed class AnnouncementBarCountdown : Control
                 // The new digit drops in from above; the old one falls away below.
                 using (context.PushOpacity(fade))
                 {
-                    context.DrawText(current, new Point(x + offset, top - 0.7 * cellHeight * (1 - drop)));
+                    current.Draw(context, new Point(x + offset, top - 0.7 * cellHeight * (1 - drop)));
                 }
                 var previous = _digits[cell.Previous - '0']!;
                 var previousOffset = (_cellWidth - previous.WidthIncludingTrailingWhitespace) / 2;
                 using (context.PushOpacity(1 - fade))
                 {
-                    context.DrawText(previous, new Point(x + previousOffset, top + 0.7 * cellHeight * drop));
+                    previous.Draw(context, new Point(x + previousOffset, top + 0.7 * cellHeight * drop));
                 }
             }
             x += _cellWidth;

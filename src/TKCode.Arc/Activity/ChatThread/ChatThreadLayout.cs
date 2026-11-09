@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Metadata;
 using Avalonia.Media;
 
 namespace TKCode.Arc;
@@ -163,6 +164,7 @@ internal sealed class ChatThreadLinePanel : Panel
 }
 
 /// <summary>A chat bubble: Arc's 18px radius with 6px corners on the author's side inside a group.</summary>
+[PseudoClasses(":mine", ":failed")]
 internal sealed class ChatThreadBubble : Border
 {
     public static readonly StyledProperty<bool> IsMineProperty =
@@ -175,6 +177,20 @@ internal sealed class ChatThreadBubble : Border
     public bool IsFailed { get => GetValue(IsFailedProperty); set => SetValue(IsFailedProperty, value); }
 
     protected override Type StyleKeyOverride => typeof(ChatThreadBubble);
+
+    // The theme selects on pseudo-classes: a property selector would cost every recycled bubble an activator per style.
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == IsMineProperty)
+        {
+            PseudoClasses.Set(":mine", IsMine);
+        }
+        else if (change.Property == IsFailedProperty)
+        {
+            PseudoClasses.Set(":failed", IsFailed);
+        }
+    }
 
     /// <summary>The corners for a bubble in its group.</summary>
     public static CornerRadius Corners(bool mine, bool first, bool last, double radius, double tight)

@@ -5,6 +5,7 @@ using Avalonia.Automation;
 using Avalonia.Automation.Peers;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
+using Avalonia.Controls.Metadata;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using TKCode.Arc.Primitives;
@@ -19,8 +20,21 @@ namespace TKCode.Arc;
 /// Use <c>\n</c> for a deliberate line break; lines are at most <see cref="MaxWidthInChars"/> wide and balanced.
 /// Drawn as one control: no per-word controls.
 /// </summary>
+[PseudoClasses(H1PseudoClass, H2PseudoClass, H3PseudoClass, ParagraphPseudoClass)]
 public class TextReveal : Control
 {
+    /// <summary>Set while <see cref="Level"/> is <see cref="TextLevel.H1"/>.</summary>
+    public const string H1PseudoClass = ":h1";
+
+    /// <summary>Set while <see cref="Level"/> is <see cref="TextLevel.H2"/>.</summary>
+    public const string H2PseudoClass = ":h2";
+
+    /// <summary>Set while <see cref="Level"/> is <see cref="TextLevel.H3"/>.</summary>
+    public const string H3PseudoClass = ":h3";
+
+    /// <summary>Set while <see cref="Level"/> is <see cref="TextLevel.Paragraph"/>.</summary>
+    public const string ParagraphPseudoClass = ":paragraph";
+
     /// <summary>The headline; use <c>\n</c> for a deliberate line break.</summary>
     public static readonly StyledProperty<string?> TextProperty =
         AvaloniaProperty.Register<TextReveal, string?>(nameof(Text));
@@ -89,6 +103,10 @@ public class TextReveal : Control
     private double _total;
     private IBrush? _mask;
     private double _maskHeight;
+    // The "0" width the line limit is measured in, kept per typeface and size: a measure pass is not a place to shape text.
+    private Typeface _chTypeface;
+    private double _chSize;
+    private double _chWidth;
     private static readonly Easing s_linear = new LinearEasing();
 
     static TextReveal()
@@ -97,6 +115,11 @@ public class TextReveal : Control
             FontFamilyProperty, FontSizeProperty, FontWeightProperty);
         AffectsRender<TextReveal>(ForegroundProperty, BlurRadiusProperty);
         AutomationProperties.ControlTypeOverrideProperty.OverrideDefaultValue<TextReveal>(AutomationControlType.Text);
+    }
+
+    public TextReveal()
+    {
+        TextEffectsLevel.Apply(PseudoClasses, Level);
     }
 
     /// <summary>True while the entrance is running.</summary>
@@ -141,6 +164,10 @@ public class TextReveal : Control
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
+        if (change.Property == LevelProperty)
+        {
+            TextEffectsLevel.Apply(PseudoClasses, Level);
+        }
         if (change.Property == TextProperty || change.Property == LevelProperty)
         {
             UpdateAutomation();
@@ -244,9 +271,14 @@ public class TextReveal : Control
         var limit = availableSize.Width;
         if (MaxWidthInChars > 0)
         {
-            var ch = new FormattedText("0", System.Globalization.CultureInfo.InvariantCulture, FlowDirection.LeftToRight,
-                style.Typeface, FontSize, null).WidthIncludingTrailingWhitespace;
-            limit = Math.Min(limit, MaxWidthInChars * ch);
+            if (_chWidth <= 0 || _chTypeface != style.Typeface || _chSize != FontSize)
+            {
+                _chTypeface = style.Typeface;
+                _chSize = FontSize;
+                _chWidth = new FormattedText("0", System.Globalization.CultureInfo.InvariantCulture, FlowDirection.LeftToRight,
+                    style.Typeface, FontSize, null).WidthIncludingTrailingWhitespace;
+            }
+            limit = Math.Min(limit, MaxWidthInChars * _chWidth);
         }
         if (_layout.BuildWords(Text ?? string.Empty, style, limit, balance: true, letters: false))
         {

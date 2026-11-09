@@ -30,7 +30,7 @@ namespace TKCode.Arc;
 [TemplatePart(NextPart, typeof(AvaloniaButton))]
 [TemplatePart(RingPart, typeof(AnnouncementBarRing))]
 [TemplatePart(DismissPart, typeof(AvaloniaButton))]
-[PseudoClasses(NarrowPseudoClass, NavigablePseudoClass, RotatingPseudoClass, DismissiblePseudoClass)]
+[PseudoClasses(NarrowPseudoClass, NavigablePseudoClass, RotatingPseudoClass, DismissiblePseudoClass, InvertedPseudoClass)]
 public class AnnouncementBar : TemplatedControl
 {
     public const string PresencePart = "PART_Presence";
@@ -43,6 +43,9 @@ public class AnnouncementBar : TemplatedControl
     public const string NavigablePseudoClass = ":navigable";
     public const string RotatingPseudoClass = ":rotating";
     public const string DismissiblePseudoClass = ":dismissible";
+
+    /// <summary>Set while <see cref="Tone"/> is <see cref="AnnouncementBarTone.Inverted"/> (the theme selects on it).</summary>
+    public const string InvertedPseudoClass = ":inverted";
 
     /// <summary>Bars this narrow (or narrower) drop the mirror column and read from the start edge.</summary>
     private const double NarrowWidth = 560;
@@ -251,10 +254,23 @@ public class AnnouncementBar : TemplatedControl
         _observedMessages = new ObservedItems(OnMessageChanged);
         // P22: the ring is the rotation clock, a Core timeline (pausable timer, reported every frame).
         _ring = new MotionTimeline(this);
-        _ring.Changed += v => RingProgress = v;
+        _ring.Changed += OnRingChanged;
         _ring.Completed += OnClockElapsed;
         AutomationProperties.SetLandmarkType(this, AutomationLandmarkType.Region);
         AutomationProperties.SetName(this, Label);
+    }
+
+    /// <summary>
+    /// The clock's progress reaches the ring's drawing only while the ring is shown: without navigation the ring button
+    /// is hidden, and the per-frame property chain (bar → ring → glyph render) would run for nothing. The value is
+    /// written in full when the ring appears (<see cref="UpdateControls"/>), so what it shows is the same.
+    /// </summary>
+    private void OnRingChanged(double value)
+    {
+        if (_ringButton is null || _ringButton.IsVisible)
+        {
+            RingProgress = value;
+        }
     }
 
     private IList<Announcement> Items => ItemsSource ?? Messages;
@@ -493,6 +509,10 @@ public class AnnouncementBar : TemplatedControl
             UpdateControls();
             UpdateRunning();
         }
+        else if (change.Property == ToneProperty)
+        {
+            PseudoClasses.Set(InvertedPseudoClass, Tone == AnnouncementBarTone.Inverted);
+        }
     }
 
     private bool IsAttached => TopLevel.GetTopLevel(this) is not null;
@@ -566,6 +586,11 @@ public class AnnouncementBar : TemplatedControl
         PseudoClasses.Set(NavigablePseudoClass, navigable);
         PseudoClasses.Set(RotatingPseudoClass, navigable && rotating);
         PseudoClasses.Set(DismissiblePseudoClass, IsDismissible);
+        PseudoClasses.Set(InvertedPseudoClass, Tone == AnnouncementBarTone.Inverted);
+        if (_ringButton is { IsVisible: true })
+        {
+            RingProgress = _ring.Value;
+        }
         var controls = (navigable ? 2 + (rotating ? 1 : 0) : 0) + (IsDismissible ? 1 : 0);
         // The side column mirrors the controls, so the message stays centered on the page.
         SideWidth = PseudoClasses.Contains(NarrowPseudoClass) ? 0 : controls * 32 + Math.Max(controls - 1, 0) * 2;

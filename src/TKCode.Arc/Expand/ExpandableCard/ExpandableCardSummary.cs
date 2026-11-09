@@ -7,6 +7,7 @@ using Avalonia.Automation.Peers;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
 using Avalonia.Media;
+using Avalonia.Media.TextFormatting;
 
 namespace TKCode.Arc;
 
@@ -39,7 +40,9 @@ internal sealed class ExpandableCardSummary : Control
     {
         public required string Key { get; init; }
         public required string Text { get; init; }
-        public FormattedText? Layout { get; set; }
+        // TextLayout, not FormattedText: a cached FormattedText re-shapes on every Draw, and every word is drawn each frame
+        // while the words roll and while the card's width morphs.
+        public TextLayout? Layout { get; set; }
         public Point Position { get; set; }
         public MotionValue<double>? Enter { get; set; }
         public MotionValue<double>? Exit { get; set; }
@@ -113,20 +116,19 @@ internal sealed class ExpandableCardSummary : Control
                 _ = word.Enter.AnimateTo(1, MotionSpec.Tween(ArcMotionPresets.Standard, ArcEasings.Enter));
             }
         }
-        if (animate)
+        foreach (var gone in previous.Values)
         {
-            foreach (var gone in previous.Values)
+            if (!animate || string.IsNullOrWhiteSpace(gone.Text) || gone.Layout is null)
             {
-                if (string.IsNullOrWhiteSpace(gone.Text) || gone.Layout is null)
-                {
-                    continue;
-                }
-                _leaving.Add(gone);
-                gone.Enter = null;
-                gone.Exit = new MotionValue<double>(this, 0, MotionVectors.Double);
-                gone.Exit.Changed += _ => InvalidateVisual();
-                RemoveWhenGone(gone);
+                gone.Layout?.Dispose();
+                gone.Layout = null;
+                continue;
             }
+            _leaving.Add(gone);
+            gone.Enter = null;
+            gone.Exit = new MotionValue<double>(this, 0, MotionVectors.Double);
+            gone.Exit.Changed += _ => InvalidateVisual();
+            RemoveWhenGone(gone);
         }
         InvalidateMeasure();
         InvalidateVisual();
@@ -135,7 +137,11 @@ internal sealed class ExpandableCardSummary : Control
     private async void RemoveWhenGone(Word word)
     {
         await word.Exit!.AnimateTo(1, MotionSpec.Tween(ArcMotionPresets.Fast, ArcEasings.Standard));
-        _leaving.Remove(word);
+        if (_leaving.Remove(word))
+        {
+            word.Layout?.Dispose();
+            word.Layout = null;
+        }
         InvalidateVisual();
     }
 
@@ -146,8 +152,8 @@ internal sealed class ExpandableCardSummary : Control
         {
             if (word.Layout is null || _fontDirty)
             {
-                word.Layout = new FormattedText(word.Text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, typeface, FontSize, Foreground);
-                word.Layout.SetFontFeatures(TabularNumbers);
+                word.Layout?.Dispose();
+                word.Layout = new TextLayout(word.Text, typeface, FontSize, Foreground, fontFeatures: TabularNumbers);
             }
         }
         _fontDirty = false;
@@ -213,12 +219,12 @@ internal sealed class ExpandableCardSummary : Control
                 var bounds = new Rect(origin, new Size(word.Layout.Width, word.Layout.Height)).Inflate(8);
                 using (context.PushEffect(effect, bounds))
                 {
-                    context.DrawText(word.Layout, origin);
+                    word.Layout.Draw(context, origin);
                 }
             }
             else
             {
-                context.DrawText(word.Layout, origin);
+                word.Layout.Draw(context, origin);
             }
         }
     }

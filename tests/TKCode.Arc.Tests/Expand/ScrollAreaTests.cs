@@ -12,6 +12,30 @@ namespace TKCode.Arc.Tests.Expand;
 
 public class ScrollAreaTests
 {
+    [AvaloniaFact]
+    public void The_Lazy_Focus_Ring_Follows_The_Corner_Radius()
+    {
+        var area = new ScrollArea { Width = 200, Height = 100, CornerRadius = new CornerRadius(9), Content = new Border { Height = 400 } };
+        var window = TestHelpers.Show(area);
+        try
+        {
+            TestHelpers.IsFocusRingVisible(area).ShouldBeFalse();
+            area.Focus(Avalonia.Input.NavigationMethod.Tab);
+            Dispatcher.UIThread.RunJobs();
+            TestHelpers.IsFocusRingVisible(area).ShouldBeTrue();
+            var ring = TestHelpers.Descendant<Border>(area, Primitives.LazyFocusRing.PartName);
+            ring.CornerRadius.ShouldBe(new CornerRadius(9));
+            area.CornerRadius = new CornerRadius(3);
+            Dispatcher.UIThread.RunJobs();
+            ring.CornerRadius.ShouldBe(new CornerRadius(3));
+            ring.Margin.ShouldBe(new Thickness(0));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     private static ScrollArea Tall(double height = 200, int rows = 30)
     {
         var stack = new StackPanel();

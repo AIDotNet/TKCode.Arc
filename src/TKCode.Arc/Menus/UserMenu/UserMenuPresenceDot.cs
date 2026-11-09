@@ -3,6 +3,7 @@ using TKCode.Arc.Motion;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
+using Avalonia.Media.Immutable;
 
 namespace TKCode.Arc;
 
@@ -36,7 +37,7 @@ internal sealed class UserMenuPresenceDot : Control
     private static readonly StyledProperty<IBrush?> DangerBrushProperty =
         AvaloniaProperty.Register<UserMenuPresenceDot, IBrush?>("DangerBrush");
 
-    private readonly SolidColorBrush _fill = new();
+    private ImmutableSolidColorBrush? _fill;
     private MotionValue<Color>? _color;
     private MotionValue<double>? _hole;
     private MotionValue<double>? _bar;
@@ -146,8 +147,7 @@ internal sealed class UserMenuPresenceDot : Control
         {
             context.DrawEllipse(surface, null, center, radius + RingThickness, radius + RingThickness);
         }
-        _fill.Color = _color?.Value ?? TargetColor;
-        context.DrawEllipse(_fill, null, center, radius, radius);
+        context.DrawEllipse(PickerDrawing.Brush(ref _fill, _color?.Value ?? TargetColor), null, center, radius, radius);
         if (surface is null)
         {
             return;

@@ -102,16 +102,16 @@
         <Style Selector="^ /template/ arc|MessagesGlyphSwap#PART_Icon">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
         </Style>
-        <Style Selector="^[Kind=Success] /template/ arc|MessagesGlyphSwap#PART_Icon">
+        <Style Selector="^:success /template/ arc|MessagesGlyphSwap#PART_Icon">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
         </Style>
-        <Style Selector="^[Kind=Info] /template/ arc|MessagesGlyphSwap#PART_Icon">
+        <Style Selector="^:info /template/ arc|MessagesGlyphSwap#PART_Icon">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
         </Style>
-        <Style Selector="^[Kind=Warning] /template/ arc|MessagesGlyphSwap#PART_Icon">
+        <Style Selector="^:warning /template/ arc|MessagesGlyphSwap#PART_Icon">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Warning}" />
         </Style>
-        <Style Selector="^[Kind=Error] /template/ arc|MessagesGlyphSwap#PART_Icon">
+        <Style Selector="^:error /template/ arc|MessagesGlyphSwap#PART_Icon">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
         </Style>
 

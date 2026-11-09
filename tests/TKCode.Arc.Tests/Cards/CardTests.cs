@@ -73,9 +73,10 @@ public class CardTests
         var window = Show(card);
         try
         {
-            TestHelpers.Descendant<Border>(card, "PART_Media").IsVisible.ShouldBeFalse();
-            TestHelpers.Descendant<TextBlock>(card, "PART_Description").IsVisible.ShouldBeFalse();
-            TestHelpers.Descendant<Grid>(card, "PART_Footer").IsVisible.ShouldBeFalse();
+            // The optional parts are built on first use: a plain card never has them.
+            card.GetVisualDescendants().OfType<Border>().Any(b => b.Name == "PART_Media").ShouldBeFalse();
+            card.GetVisualDescendants().OfType<TextBlock>().Any(b => b.Name == "PART_Description").ShouldBeFalse();
+            card.GetVisualDescendants().OfType<Grid>().Any(b => b.Name == "PART_Footer").ShouldBeFalse();
             card.Bounds.Height.ShouldBeLessThan(80);
         }
         finally

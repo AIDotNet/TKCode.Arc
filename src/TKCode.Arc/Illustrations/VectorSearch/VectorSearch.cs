@@ -78,7 +78,12 @@ public class VectorSearch : Illustration
     private const double ResultsTop = 168;
     private const double RowHeight = 28;
 
+    // Building an index runs 300 stress iterations on the UI thread, and it depends on the documents alone: TopK and Labels
+    // rebuild the scene with the same one, and every illustration on the default documents shares one.
+    private static readonly Lazy<VectorSearchIndex> s_defaultIndex = new(() => new VectorSearchIndex(DefaultDocuments));
     private VectorSearchIndex _index = null!;
+    private VectorSearchIndex? _customIndex;
+    private VectorSearchDocument[]? _customIndexDocuments;
     private Point[] _points = Array.Empty<Point>();
     private (string Topic, Point At)[] _clusters = Array.Empty<(string, Point)>();
     private IllustrationValue[] _highlight = Array.Empty<IllustrationValue>();
@@ -151,7 +156,7 @@ public class VectorSearch : Illustration
     private protected override void BuildScene()
     {
         var labels = Labels;
-        _index = new VectorSearchIndex(Documents is { Count: > 0 } docs ? docs : DefaultDocuments);
+        _index = Documents is { Count: > 0 } docs ? IndexFor(docs) : s_defaultIndex.Value;
         _header = labels.Header(TopK);
         _queryNode = AddNode(new IllustrationNode("query", s_queryBox, null, string.Empty) { IsHidden = true });
         _model = AddNode(new IllustrationNode("model", new Rect(14, 92, 186, 52), IllustrationGlyphs.BrainCircuit, labels.Model, labels.ModelDetail));
@@ -163,6 +168,23 @@ public class VectorSearch : Illustration
         _flight = AddEdge(new IllustrationEdge(_stripNode, _pointNode,
             IllustrationEdge.Curve(new Point(s_strip.Right + 4, s_strip.Center.Y), s_plot.Center), curved: true, dashed: true));
         LayoutPoints();
+    }
+
+    /// <summary>The index of <paramref name="documents"/>, rebuilt when the list holds other documents than last time (it may be edited in place).</summary>
+    private VectorSearchIndex IndexFor(IReadOnlyList<VectorSearchDocument> documents)
+    {
+        var known = _customIndexDocuments;
+        var same = known is not null && known.Length == documents.Count;
+        for (var i = 0; same && i < documents.Count; i++)
+        {
+            same = ReferenceEquals(known![i], documents[i]);
+        }
+        if (!same || _customIndex is null)
+        {
+            _customIndexDocuments = documents.ToArray();
+            _customIndex = new VectorSearchIndex(_customIndexDocuments);
+        }
+        return _customIndex;
     }
 
     /// <summary>Maps the documents' principal components into the plot, with a margin, and finds each topic's centre.</summary>
@@ -418,7 +440,7 @@ public class VectorSearch : Illustration
         foreach (var (topic, at) in _clusters)
         {
             var text = p.Text(topic, IllustrationInk.Muted, small: true, medium: true);
-            context.DrawText(text, new Point(at.X - text.Width / 2, at.Y - text.Height / 2));
+            text.Draw(context, new Point(at.X - text.Width / 2, at.Y - text.Height / 2));
         }
         foreach (var point in _points)
         {
@@ -446,14 +468,14 @@ public class VectorSearch : Illustration
             var text = p.Text(_typedText, IllustrationInk.Foreground, small: false);
             using (context.PushClip(new Rect(textX, s_queryBox.Y, s_queryBox.Right - textX - 14, s_queryBox.Height)))
             {
-                context.DrawText(text, new Point(textX, s_queryBox.Center.Y - text.Height / 2));
+                text.Draw(context, new Point(textX, s_queryBox.Center.Y - text.Height / 2));
             }
             caretX = Math.Min(textX + text.WidthIncludingTrailingWhitespace + 1, s_queryBox.Right - 14);
         }
         _caretX = caretX;
         var mid = s_strip.Center.Y;
         context.DrawLine(p.Pen(IllustrationInk.SubtleLine, 1), new Point(s_strip.Left, mid), new Point(s_strip.Right, mid));
-        context.DrawText(p.Text(_header, IllustrationInk.Muted, small: true, medium: true), new Point(14, ResultsTop));
+        p.Text(_header, IllustrationInk.Muted, small: true, medium: true).Draw(context, new Point(14, ResultsTop));
     }
 
     private bool IsTyping(double now) =>
@@ -564,12 +586,12 @@ public class VectorSearch : Illustration
             var y = ResultsTop + 24 + r * RowHeight + (1 - rowShown) * 8;
             using (context.PushOpacity(rowShown))
             {
-                context.DrawText(p.Text(_rankTexts[r], IllustrationInk.Muted, small: true, mono: true), new Point(14, y));
+                p.Text(_rankTexts[r], IllustrationInk.Muted, small: true, mono: true).Draw(context, new Point(14, y));
                 var score = p.Text(_scoreTexts[r], IllustrationInk.Secondary, small: true, mono: true);
-                context.DrawText(score, new Point(334 - score.Width, y));
+                score.Draw(context, new Point(334 - score.Width, y));
                 var title = p.Text(result.Document.Title, IllustrationInk.Foreground, small: true, medium: r == 0,
                     maxWidth: 334 - score.Width - 44);
-                context.DrawText(title, new Point(32, y));
+                title.Draw(context, new Point(32, y));
                 var track = new Rect(32, y + title.Height + 3, 334 - 32, 2);
                 context.DrawRectangle(p.Brush(IllustrationInk.SubtleLine), null, new RoundedRect(track, 1));
                 var fill = track.WithWidth(track.Width * Math.Clamp(result.Score, 0, 1) * rowShown);

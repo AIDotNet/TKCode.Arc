@@ -1,7 +1,7 @@
-using System.Globalization;
 using Avalonia;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
+using Avalonia.Media.TextFormatting;
 
 namespace TKCode.Arc;
 
@@ -38,7 +38,7 @@ internal sealed class IllustrationPalette
     private readonly Dictionary<(IllustrationInk Ink, int Alpha), IImmutableSolidColorBrush> _tints = new();
     private readonly Dictionary<(IllustrationInk Ink, double Thickness, bool Dashed), ImmutablePen> _pens = new();
     private readonly Dictionary<(IllustrationInk Ink, int Alpha, double Thickness), ImmutablePen> _tintPens = new();
-    private readonly Dictionary<(string Text, double Size, bool Medium, bool Mono, IllustrationInk Ink, int MaxWidth), FormattedText> _texts = new();
+    private readonly Dictionary<(string Text, double Size, bool Medium, bool Mono, IllustrationInk Ink, int MaxWidth), TextLayout> _texts = new();
 
     public int Version { get; private set; }
 
@@ -81,8 +81,17 @@ internal sealed class IllustrationPalette
         _tints.Clear();
         _pens.Clear();
         _tintPens.Clear();
-        _texts.Clear();
+        ClearTexts();
         Version++;
+    }
+
+    private void ClearTexts()
+    {
+        foreach (var layout in _texts.Values)
+        {
+            layout.Dispose();
+        }
+        _texts.Clear();
     }
 
     private void Set(IllustrationInk ink, IBrush? brush, Color fallback)
@@ -132,31 +141,32 @@ internal sealed class IllustrationPalette
         return pen;
     }
 
-    /// <summary>A cached text run (the cache resets on a theme change or when it grows past its limit).</summary>
-    public FormattedText Text(string text, IllustrationInk ink, bool small = true, bool medium = false, bool mono = false,
-                              double maxWidth = double.PositiveInfinity)
+    /// <summary>
+    /// A cached text run (the cache resets on a theme change or when it grows past its limit). A <see cref="TextLayout"/>
+    /// rather than a <c>FormattedText</c>: the static and motion layers redraw these strings on every animated frame, and
+    /// a FormattedText re-shapes its text on every Draw while a TextLayout keeps its lines and only emits glyphs.
+    /// </summary>
+    public TextLayout Text(string text, IllustrationInk ink, bool small = true, bool medium = false, bool mono = false,
+                           double maxWidth = double.PositiveInfinity)
     {
         var size = small ? SmallSize : TextSize;
         var width = double.IsFinite(maxWidth) ? (int)Math.Floor(maxWidth) : 0;
         var key = (text, size, medium, mono, ink, width);
-        if (!_texts.TryGetValue(key, out var formatted))
+        if (!_texts.TryGetValue(key, out var layout))
         {
             if (_texts.Count > TextCacheLimit)
             {
-                _texts.Clear();
+                ClearTexts();
             }
-            formatted = new FormattedText(text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
-                mono ? Mono : medium ? Medium : Regular, size, _brushes[(int)ink]);
-            if (width > 0)
-            {
+            var typeface = mono ? Mono : medium ? Medium : Regular;
+            layout = width > 0
                 // Too long for its card: one line ending in an ellipsis.
-                formatted.MaxTextWidth = width;
-                formatted.MaxLineCount = 1;
-                formatted.Trimming = TextTrimming.CharacterEllipsis;
-            }
-            _texts[key] = formatted;
+                ? new TextLayout(text, typeface, size, _brushes[(int)ink], textWrapping: TextWrapping.NoWrap,
+                    textTrimming: TextTrimming.CharacterEllipsis, maxWidth: width, maxLines: 1)
+                : new TextLayout(text, typeface, size, _brushes[(int)ink]);
+            _texts[key] = layout;
         }
-        return formatted;
+        return layout;
     }
 
     public static IllustrationInk InkOf(IllustrationTone tone) => tone switch

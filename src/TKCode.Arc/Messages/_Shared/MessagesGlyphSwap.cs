@@ -1,4 +1,5 @@
 using TKCode.Arc.Motion;
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Animation.Easings;
 using Avalonia.Controls;
@@ -229,7 +230,8 @@ internal sealed class MessagesGlyphLayer : Control
     private double _ringPenThickness;
     private StreamGeometry? _ring;
     private double _ringSize;
-    private BlurEffect? _blur;
+    // Full motion blurs the glyph as it fades (2px → 0) through the shared, quantized ArcBlur filters.
+    private bool _blurs;
     private MotionValue<double>? _grow;
     private MotionValue<double>? _fade;
     private LiveLoop? _spin;
@@ -281,21 +283,13 @@ internal sealed class MessagesGlyphLayer : Control
             _fade = new MotionValue<double>(this, 1, MotionVectors.Double);
             _fade.Changed += v =>
             {
-                Opacity = Math.Clamp(v, 0, 1);
-                if (_blur is null)
+                var fade = Math.Clamp(v, 0, 1);
+                Opacity = fade;
+                if (!_blurs)
                 {
                     return;
                 }
-                var radius = 2 * (1 - Math.Clamp(v, 0, 1));
-                if (radius < 0.05)
-                {
-                    Effect = null;
-                }
-                else
-                {
-                    _blur.Radius = radius;
-                    Effect = _blur;
-                }
+                Effect = ArcBlur.Get(2 * (1 - fade));
             };
         }
         return (_grow, _fade);
@@ -306,7 +300,7 @@ internal sealed class MessagesGlyphLayer : Control
         var (grow, fade) = Values();
         if (full)
         {
-            _blur ??= new BlurEffect();
+            _blurs = true;
             grow.Jump(0.6);
             fade.Jump(0);
             _ = grow.AnimateTo(1, MotionSpec.Spring(ArcSpring.Snappy));
@@ -314,7 +308,7 @@ internal sealed class MessagesGlyphLayer : Control
         }
         else
         {
-            _blur = null;
+            _blurs = false;
             Effect = null;
             grow.Jump(1);
             fade.Jump(0);
@@ -327,11 +321,11 @@ internal sealed class MessagesGlyphLayer : Control
         var (grow, fade) = Values();
         if (full)
         {
-            _blur ??= new BlurEffect();
+            _blurs = true;
             _ = grow.AnimateTo(0.6, MotionSpec.Tween(ArcMotionPresets.Fast, ArcEasings.Standard));
             return fade.AnimateTo(0, MotionSpec.Tween(ArcMotionPresets.Fast, ArcEasings.Standard));
         }
-        _blur = null;
+        _blurs = false;
         Effect = null;
         return fade.AnimateTo(0, MotionSpec.Tween(ArcMotionPresets.Instant, ArcEasings.Standard));
     }

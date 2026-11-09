@@ -45,12 +45,15 @@
         </Style>
     </ControlTheme>
 
-    <!-- Every small button, by Arc class (.action, .iconAction, .emoji, .resolve/.reopen, .send, .ghost). -->
+    <!--
+        Every small button, by Arc class (.action, .iconAction, .emoji, .resolve/.reopen, .send, .ghost), as pseudo-classes
+        the button sets from its Kind. The keyboard focus ring (4px outside, pill) is built by the button on first focus.
+    -->
     <ControlTheme x:Key="{x:Type arc:CommentThreadButton}" TargetType="arc:CommentThreadButton">
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:CommentThreadButton">
-                <Panel>
+                <Panel Name="PART_Root">
                     <Border Name="PART_Frame"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
@@ -75,13 +78,6 @@
                                               IsVisible="{TemplateBinding Content, Converter={x:Static ObjectConverters.IsNotNull}}" />
                         </StackPanel>
                     </Border>
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            Margin="-4"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
         </Setter>
@@ -99,20 +95,20 @@
         <Setter Property="ClipToBounds" Value="False" />
         <Setter Property="FocusAdorner" Value="{x:Null}" />
 
-        <Style Selector="^[Kind=Icon]">
+        <Style Selector="^:icon">
             <Setter Property="Width" Value="{arc:CommentThreadTokenResource ActionHeight}" />
             <Setter Property="Padding" Value="0" />
         </Style>
-        <Style Selector="^[Kind=Close]">
+        <Style Selector="^:close">
             <Setter Property="Width" Value="{arc:CommentThreadTokenResource ReplyingCloseSize}" />
             <Setter Property="Height" Value="{arc:CommentThreadTokenResource ReplyingCloseSize}" />
             <Setter Property="Padding" Value="0" />
             <Setter Property="Margin" Value="2,0,0,0" />
         </Style>
-        <Style Selector="^[Kind=Danger]">
+        <Style Selector="^:danger">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
         </Style>
-        <Style Selector="^[Kind=Emoji]">
+        <Style Selector="^:emoji">
             <Setter Property="Width" Value="{arc:CommentThreadTokenResource EmojiButtonSize}" />
             <Setter Property="Height" Value="{arc:CommentThreadTokenResource EmojiButtonSize}" />
             <Setter Property="Padding" Value="0" />
@@ -127,7 +123,7 @@
                 </DataTemplate>
             </Setter>
         </Style>
-        <Style Selector="^[Kind=Pill]">
+        <Style Selector="^:pill">
             <Setter Property="Height" Value="{arc:CommentThreadTokenResource ResolveHeight}" />
             <Setter Property="Padding" Value="{arc:CommentThreadTokenResource ResolvePadding}" />
             <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
@@ -141,63 +137,60 @@
         <Style Selector="^.resolve /template/ arc|ArcGlyph#PART_Glyph">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
         </Style>
-        <Style Selector="^[Kind=Send], ^[Kind=Ghost]">
+        <Style Selector="^:send, ^:ghost">
             <Setter Property="Height" Value="{arc:CommentThreadTokenResource SendHeight}" />
             <Setter Property="Padding" Value="{arc:CommentThreadTokenResource SendPadding}" />
             <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
         </Style>
-        <Style Selector="^[Kind=Send][IsCompact=True], ^[Kind=Ghost][IsCompact=True]">
+        <Style Selector="^:send:compact, ^:ghost:compact">
             <Setter Property="Height" Value="{arc:CommentThreadTokenResource CompactSendHeight}" />
             <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
         </Style>
-        <Style Selector="^[Kind=Send]">
+        <Style Selector="^:send">
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
         </Style>
-        <Style Selector="^[Kind=Ghost]">
+        <Style Selector="^:ghost">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
         </Style>
 
         <!-- Chosen emoji (aria-pressed); hover comes after it, like Arc's media query. -->
-        <Style Selector="^[Kind=Emoji][IsOn=True]">
+        <Style Selector="^:emoji:on">
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
         </Style>
 
         <Style Selector="^:pointerover">
-            <Style Selector="^[Kind=Action], ^[Kind=Icon], ^[Kind=Close], ^[Kind=Ghost]">
+            <Style Selector="^:action, ^:icon, ^:close, ^:ghost">
                 <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
                 <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
             </Style>
-            <Style Selector="^[Kind=Danger]">
+            <Style Selector="^:danger">
                 <Setter Property="Background" Value="{arc:CommentThreadTokenResource DangerHoverBackground}" />
             </Style>
-            <Style Selector="^[Kind=Emoji]">
+            <Style Selector="^:emoji">
                 <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
             </Style>
-            <Style Selector="^[Kind=Pill]">
+            <Style Selector="^:pill">
                 <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
                 <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
             </Style>
-            <Style Selector="^[Kind=Send]">
+            <Style Selector="^:send">
                 <Setter Property="Background" Value="{arc:CommentThreadTokenResource SendHoverBackground}" />
             </Style>
         </Style>
         <Style Selector="^:focus-visible">
-            <Style Selector="^[Kind=Action], ^[Kind=Icon], ^[Kind=Close], ^[Kind=Emoji]">
+            <Style Selector="^:action, ^:icon, ^:close, ^:emoji">
                 <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
             </Style>
-            <Style Selector="^[Kind=Action], ^[Kind=Icon], ^[Kind=Close]">
+            <Style Selector="^:action, ^:icon, ^:close">
                 <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
             </Style>
-            <Style Selector="^ /template/ Border#PART_FocusRing">
-                <Setter Property="IsVisible" Value="True" />
-            </Style>
         </Style>
-        <Style Selector="^[Kind=Pill]:disabled">
+        <Style Selector="^:pill:disabled">
             <Setter Property="Opacity" Value="{arc:CommentThreadTokenResource ResolveDisabledOpacity}" />
             <Setter Property="Cursor" Value="Arrow" />
         </Style>
-        <Style Selector="^[Kind=Send]:disabled">
+        <Style Selector="^:send:disabled">
             <Setter Property="Opacity" Value="{arc:CommentThreadTokenResource SendDisabledOpacity}" />
             <Setter Property="Cursor" Value="Arrow" />
         </Style>
@@ -211,7 +204,7 @@
                 </Transitions>
             </Setter>
             <!-- Send and the resolve pill also fade their disabled opacity (picker emoji drive their own opacity). -->
-            <Style Selector="^[Kind=Send], ^[Kind=Pill]">
+            <Style Selector="^:send, ^:pill">
                 <Setter Property="Transitions">
                     <Transitions>
                         <arc:ArcBrushTransition Property="Background" Tween="Fast" />
@@ -231,23 +224,23 @@
             </Style>
         </Style>
         <Style Selector="^:motion-full:pressed">
-            <Style Selector="^[Kind=Pill], ^[Kind=Send], ^[Kind=Ghost]">
+            <Style Selector="^:pill, ^:send, ^:ghost">
                 <Style Selector="^ /template/ Border#PART_Frame">
                     <Setter Property="RenderTransform" Value="scale(0.97)" />
                 </Style>
             </Style>
-            <Style Selector="^[Kind=Emoji] /template/ Border#PART_Frame">
+            <Style Selector="^:emoji /template/ Border#PART_Frame">
                 <Setter Property="RenderTransform" Value="scale(0.88)" />
             </Style>
         </Style>
     </ControlTheme>
 
-    <!-- "Show 2 replies" / "Hide replies": chevron turns 90° on the snappy spring. -->
+    <!-- "Show 2 replies" / "Hide replies": chevron turns 90° on the snappy spring. The focus ring is built on first focus. -->
     <ControlTheme x:Key="{x:Type arc:CommentThreadReplyToggle}" TargetType="arc:CommentThreadReplyToggle">
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:CommentThreadReplyToggle">
-                <Panel>
+                <Panel Name="PART_Root">
                     <Border Name="PART_Frame"
                             Background="{TemplateBinding Background}"
                             CornerRadius="{TemplateBinding CornerRadius}"
@@ -269,13 +262,6 @@
                                               IsVisible="{TemplateBinding IsExpanded, Converter={x:Static BoolConverters.Not}}" />
                         </StackPanel>
                     </Border>
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            Margin="-4"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
         </Setter>
@@ -294,7 +280,7 @@
         <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
             <Setter Property="RenderTransform" Value="rotate(0deg)" />
         </Style>
-        <Style Selector="^[IsExpanded=True] /template/ arc|ArcGlyph#PART_Chevron">
+        <Style Selector="^:expanded /template/ arc|ArcGlyph#PART_Chevron">
             <Setter Property="RenderTransform" Value="rotate(90deg)" />
         </Style>
         <Style Selector="^:pointerover, ^:focus-visible">
@@ -302,9 +288,6 @@
         </Style>
         <Style Selector="^:focus-visible">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
-            <Style Selector="^ /template/ Border#PART_FocusRing">
-                <Setter Property="IsVisible" Value="True" />
-            </Style>
         </Style>
         <Style Selector="^:motion-full">
             <Setter Property="Transitions">
@@ -323,28 +306,28 @@
     </ControlTheme>
 
     <ControlTheme x:Key="{x:Type arc:CommentThreadPart}" TargetType="arc:CommentThreadPart">
-        <Style Selector="^[Role=Header]">
+        <Style Selector="^:header">
             <Setter Property="Padding" Value="{arc:CommentThreadTokenResource HeaderPadding}" />
         </Style>
-        <Style Selector="^[Role=List]">
+        <Style Selector="^:list">
             <Setter Property="Padding" Value="{arc:CommentThreadTokenResource ListPadding}" />
         </Style>
-        <Style Selector="^[Role=Empty]">
+        <Style Selector="^:empty">
             <Setter Property="Padding" Value="{arc:CommentThreadTokenResource EmptyPadding}" />
         </Style>
-        <Style Selector="^[Role=ComposerArea]">
+        <Style Selector="^:composer-area">
             <Setter Property="Margin" Value="{arc:CommentThreadTokenResource ComposerAreaMargin}" />
             <Setter Property="Padding" Value="{arc:CommentThreadTokenResource ComposerAreaPadding}" />
             <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessTop}" />
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
         </Style>
-        <Style Selector="^[Role=Replying]">
+        <Style Selector="^:replying">
             <Setter Property="Padding" Value="{arc:CommentThreadTokenResource ReplyingPadding}" />
         </Style>
-        <Style Selector="^[Role=Replying].narrow">
+        <Style Selector="^:replying.narrow">
             <Setter Property="Padding" Value="{arc:CommentThreadTokenResource NarrowReplyingPadding}" />
         </Style>
-        <Style Selector="^[Role=Suggestions]">
+        <Style Selector="^:suggestions">
             <Setter Property="Margin" Value="{arc:CommentThreadTokenResource SuggestionsMargin}" />
             <Setter Property="Padding" Value="{arc:CommentThreadTokenResource SuggestionsPadding}" />
             <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
@@ -353,54 +336,54 @@
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
             <Setter Property="ClipToBounds" Value="True" />
         </Style>
-        <Style Selector="^[Role=Ring]">
+        <Style Selector="^:ring">
             <Setter Property="BorderThickness" Value="{arc:CommentThreadTokenResource StackRing}" />
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Surface}" />
             <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
             <Setter Property="Margin" Value="-2" />
         </Style>
-        <Style Selector="^[Role=ResolvedFace]">
+        <Style Selector="^:resolved-face">
             <Setter Property="Padding" Value="{arc:CommentThreadTokenResource ResolvedPadding}" />
         </Style>
     </ControlTheme>
 
     <ControlTheme x:Key="{x:Type arc:CommentThreadText}" TargetType="arc:CommentThreadText">
         <Setter Property="LineHeight" Value="{arc:CommentThreadTokenResource BodyLineHeight}" />
-        <Style Selector="^[Role=Title]">
+        <Style Selector="^:title">
             <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
             <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
         </Style>
-        <Style Selector="^[Role=Small]">
+        <Style Selector="^:small">
             <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
             <Setter Property="LineHeight" Value="{arc:CommentThreadTokenResource SmallLineHeight}" />
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
         </Style>
-        <Style Selector="^[Role=Name]">
+        <Style Selector="^:name">
             <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
         </Style>
-        <Style Selector="^[Role=Deleted]">
+        <Style Selector="^:deleted">
             <Setter Property="Margin" Value="{arc:CommentThreadTokenResource DeletedMargin}" />
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
             <Setter Property="FontStyle" Value="Italic" />
         </Style>
-        <Style Selector="^[Role=Empty]">
+        <Style Selector="^:empty">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
         </Style>
-        <Style Selector="^[Role=Prompt]">
+        <Style Selector="^:prompt">
             <Setter Property="Margin" Value="{arc:CommentThreadTokenResource PromptMargin}" />
             <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
             <Setter Property="LineHeight" Value="{arc:CommentThreadTokenResource SmallLineHeight}" />
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         </Style>
-        <Style Selector="^[Role=Replying]">
+        <Style Selector="^:replying">
             <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
             <Setter Property="LineHeight" Value="{arc:CommentThreadTokenResource SmallLineHeight}" />
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
             <Setter Property="EmphasisBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
         </Style>
-        <Style Selector="^[Role=ResolvedTitle]">
+        <Style Selector="^:resolved-title">
             <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
             <Setter Property="EmphasisBrush" Value="{arc:ArcDesignTokenResource TextSecondary}" />
@@ -444,7 +427,7 @@
     <ControlTheme x:Key="{x:Type arc:CommentThreadReveal}" TargetType="arc:CommentThreadReveal">
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Opacity" Value="0" />
-        <Style Selector="^[IsRevealed=True]">
+        <Style Selector="^:revealed">
             <Setter Property="Opacity" Value="1" />
         </Style>
         <Style Selector="^:motion-full">
@@ -464,35 +447,35 @@
     </ControlTheme>
 
     <ControlTheme x:Key="{x:Type arc:CommentThreadStack}" TargetType="arc:CommentThreadStack">
-        <Style Selector="^[Role=Main]">
+        <Style Selector="^:main">
             <Setter Property="Spacing" Value="{arc:CommentThreadTokenResource MainGap}" />
         </Style>
-        <Style Selector="^[Role=Actions]">
+        <Style Selector="^:actions">
             <Setter Property="Spacing" Value="{arc:CommentThreadTokenResource ActionsGap}" />
             <Setter Property="MinHeight" Value="{arc:CommentThreadTokenResource ActionHeight}" />
         </Style>
-        <Style Selector="^[Role=ComposerActions]">
+        <Style Selector="^:composer-actions">
             <Setter Property="Spacing" Value="{arc:CommentThreadTokenResource ComposerActionsGap}" />
         </Style>
-        <Style Selector="^[Role=Replying]">
+        <Style Selector="^:replying">
             <Setter Property="Spacing" Value="{arc:CommentThreadTokenResource ReplyingGap}" />
         </Style>
-        <Style Selector="^[Role=Resolved]">
+        <Style Selector="^:resolved">
             <Setter Property="Spacing" Value="{arc:CommentThreadTokenResource ResolvedGap}" />
         </Style>
-        <Style Selector="^[Role=Suggestion]">
+        <Style Selector="^:suggestion">
             <Setter Property="Spacing" Value="{arc:CommentThreadTokenResource SuggestionGap}" />
         </Style>
     </ControlTheme>
 
     <ControlTheme x:Key="{x:Type arc:CommentThreadRow}" TargetType="arc:CommentThreadRow">
-        <Style Selector="^[Role=Comment]">
+        <Style Selector="^:comment">
             <Setter Property="Gap" Value="{arc:CommentThreadTokenResource CommentGap}" />
         </Style>
-        <Style Selector="^[Role=Header]">
+        <Style Selector="^:header">
             <Setter Property="Gap" Value="{arc:CommentThreadTokenResource HeaderGap}" />
         </Style>
-        <Style Selector="^[Role=Resolved]">
+        <Style Selector="^:resolved">
             <Setter Property="Gap" Value="{arc:CommentThreadTokenResource ResolvedGap}" />
         </Style>
     </ControlTheme>
@@ -588,7 +571,7 @@
         <Setter Property="Padding" Value="{arc:CommentThreadTokenResource SuggestionPadding}" />
         <Setter Property="CornerRadius" Value="{arc:CommentThreadTokenResource SuggestionRadius}" />
         <Setter Property="Background" Value="Transparent" />
-        <Style Selector="^[IsActive=True]">
+        <Style Selector="^:active">
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
         </Style>
     </ControlTheme>
@@ -596,7 +579,7 @@
     <ControlTheme x:Key="{x:Type arc:CommentThreadComposer}" TargetType="arc:CommentThreadComposer">
         <Setter Property="ColumnGap" Value="{arc:CommentThreadTokenResource ComposerColumnGap}" />
         <Setter Property="RowGap" Value="{arc:CommentThreadTokenResource ComposerRowGap}" />
-        <Style Selector="^[IsCompact=True]">
+        <Style Selector="^:compact">
             <Setter Property="Margin" Value="{arc:CommentThreadTokenResource CompactComposerMargin}" />
         </Style>
     </ControlTheme>

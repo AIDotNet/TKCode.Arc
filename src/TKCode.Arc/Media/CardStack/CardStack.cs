@@ -11,6 +11,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using TKCode.Arc.Motion;
+using TKCode.Arc.Primitives;
 using AvaloniaButton = Avalonia.Controls.Button;
 
 namespace TKCode.Arc;
@@ -221,7 +222,6 @@ public class CardStack : ItemsControl
     private readonly Dictionary<int, Vector> _flings = new();
     private readonly MotionValue<double> _emptyProgress;
     private readonly TranslateTransform _emptyOffset = new();
-    private readonly BlurEffect _emptyBlur = new() { Radius = 0 };
     private int _position;
     private double _lift;
     private bool _emptyShown;
@@ -502,10 +502,20 @@ public class CardStack : ItemsControl
         {
             if (pair.Value is CardStackCard { Slot: > 0 } card && DecisionOf(pair.Key) is null)
             {
-                AnimateDepth(card, card.Slot - lift * CardStackMath.Lift);
+                var target = card.Slot - lift * CardStackMath.Lift;
+                // Kept on the spring: its lag behind the finger is part of the motion. But a drag moves this target on every
+                // pointer move and each new target costs a completion source, so steps under 0.005 of a slot (0.06px of peek)
+                // wait for the next one. Both ends of the range always land exactly.
+                if (lift > 0 && lift < 1 && Math.Abs(card.Depth.Target - target) < LiftRetargetEpsilon)
+                {
+                    continue;
+                }
+                AnimateDepth(card, target);
             }
         }
     }
+
+    private const double LiftRetargetEpsilon = 0.005;
 
     #endregion
 
@@ -725,15 +735,8 @@ public class CardStack : ItemsControl
         var rest = _emptyEntering ? 1 - progress : 0;
         _emptyOffset.Y = 8 * rest;
         var radius = 4 * rest;
-        if (radius < 0.05)
-        {
-            _empty.Effect = null;
-        }
-        else
-        {
-            _emptyBlur.Radius = radius;
-            _empty.Effect = _emptyBlur;
-        }
+        // ArcBlur: a quantized, shared immutable effect instead of a mutable BlurEffect whose radius changes every frame.
+        _empty.Effect = radius < 0.05 ? null : ArcBlur.Get(radius);
     }
 
     #endregion

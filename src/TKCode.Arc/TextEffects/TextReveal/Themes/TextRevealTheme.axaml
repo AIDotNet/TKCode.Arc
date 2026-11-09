@@ -15,13 +15,13 @@
         <Setter Property="Tracking" Value="{arc:ArcDesignTokenResource TrackingDisplay}" />
         <Setter Property="Leading" Value="{arc:TextRevealTokenResource HeadingLeading}" />
         <Setter Property="BlurRadius" Value="{arc:ArcDesignTokenResource BlurText}" />
-        <Style Selector="^[Level=H1]">
+        <Style Selector="^:h1">
             <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type4XL}" />
         </Style>
-        <Style Selector="^[Level=H3]">
+        <Style Selector="^:h3">
             <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type2XL}" />
         </Style>
-        <Style Selector="^[Level=Paragraph]">
+        <Style Selector="^:paragraph">
             <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
             <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
             <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeLG}" />

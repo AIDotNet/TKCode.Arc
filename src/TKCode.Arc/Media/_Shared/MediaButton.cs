@@ -1,7 +1,11 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
+using Avalonia.Controls.Primitives;
+using Avalonia.Input;
 using Avalonia.Media;
+using TKCode.Arc.DesignTokens;
+using TKCode.Arc.Primitives;
 using AvaloniaButton = Avalonia.Controls.Button;
 
 namespace TKCode.Arc;
@@ -35,13 +39,20 @@ internal enum MediaButtonShape
 /// tab order but ignores activation and dims. With <see cref="IsLabelHidden"/> only the glyph shows while the label
 /// still names the button for assistive technology.
 /// </summary>
-[PseudoClasses(SoftDisabledPseudoClass, IconOnlyPseudoClass, HasGlyphPseudoClass, HasLabelPseudoClass)]
+[PseudoClasses(SoftDisabledPseudoClass, IconOnlyPseudoClass, HasGlyphPseudoClass, HasLabelPseudoClass, RoundPseudoClass, WidePseudoClass,
+    PrimaryPseudoClass, QuietPseudoClass)]
 internal sealed class MediaButton : AvaloniaButton
 {
     public const string SoftDisabledPseudoClass = ":soft-disabled";
     public const string IconOnlyPseudoClass = ":icon-only";
     public const string HasGlyphPseudoClass = ":has-glyph";
     public const string HasLabelPseudoClass = ":has-label";
+
+    // Shape and Tone as pseudo-classes: a property selector builds an activator per instance and boxes the enum to compare.
+    public const string RoundPseudoClass = ":round";
+    public const string WidePseudoClass = ":wide";
+    public const string PrimaryPseudoClass = ":primary";
+    public const string QuietPseudoClass = ":quiet";
 
     public static readonly StyledProperty<Geometry?> GlyphProperty =
         AvaloniaProperty.Register<MediaButton, Geometry?>(nameof(Glyph));
@@ -93,6 +104,58 @@ internal sealed class MediaButton : AvaloniaButton
 
     protected override Type StyleKeyOverride => typeof(MediaButton);
 
+    public MediaButton()
+    {
+        UpdateShapePseudoClasses();
+        UpdateTonePseudoClasses();
+    }
+
+    private LazyFocusRing? _focusRing;
+    private Panel? _ringHost;
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        _ringHost = e.NameScope.Find<Control>("PART_Frame")?.Parent as Panel;
+        AttachFocusRing();
+    }
+
+    /// <summary>The ring's radius follows the shape: a pill around a round button, the wide radius otherwise.</summary>
+    private void AttachFocusRing()
+    {
+        _focusRing?.Attach(null, null);
+        _focusRing = new LazyFocusRing(this, MediaButtonTokens.Key(MediaButtonTokenKind.FocusRingMargin), Shape == MediaButtonShape.Round
+            ? ArcDesignTokens.Key(ArcDesignTokenKind.RadiusPill)
+            : MediaButtonTokens.Key(MediaButtonTokenKind.WideFocusRingRadius));
+        _focusRing.Attach(_ringHost);
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing?.Update();
+    }
+
+    private void UpdateShapePseudoClasses()
+    {
+        var shape = Shape;
+        PseudoClasses.Set(RoundPseudoClass, shape == MediaButtonShape.Round);
+        PseudoClasses.Set(WidePseudoClass, shape == MediaButtonShape.Wide);
+    }
+
+    private void UpdateTonePseudoClasses()
+    {
+        var tone = Tone;
+        PseudoClasses.Set(PrimaryPseudoClass, tone == MediaButtonTone.Primary);
+        PseudoClasses.Set(QuietPseudoClass, tone == MediaButtonTone.Quiet);
+    }
+
     protected override void OnClick()
     {
         // aria-disabled: the press is swallowed but focus stays on the button.
@@ -122,6 +185,18 @@ internal sealed class MediaButton : AvaloniaButton
         else if (change.Property == GlyphProperty)
         {
             PseudoClasses.Set(HasGlyphPseudoClass, Glyph is not null);
+        }
+        else if (change.Property == ShapeProperty)
+        {
+            UpdateShapePseudoClasses();
+            if (_ringHost is not null)
+            {
+                AttachFocusRing();
+            }
+        }
+        else if (change.Property == ToneProperty)
+        {
+            UpdateTonePseudoClasses();
         }
     }
 }

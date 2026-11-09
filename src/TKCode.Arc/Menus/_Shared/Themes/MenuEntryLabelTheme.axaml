@@ -16,7 +16,7 @@
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
         <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
-        <Style Selector="^[Variant=Account]">
+        <Style Selector="^:account">
             <Setter Property="Padding" Value="{arc:MenuEntryLabelTokenResource AccountLabelInset}" />
         </Style>
     </ControlTheme>

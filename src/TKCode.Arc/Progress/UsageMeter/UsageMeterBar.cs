@@ -199,16 +199,19 @@ internal sealed class UsageMeterBar : Control, Avalonia.Rendering.ICustomHitTest
         }
     }
 
-    private void CheckOver(ArcMotionLevel level)
+    // Runs on every frame of every moving value: the level (a walk up to the TopLevel on this control) is read only when the
+    // answer depends on it, which is not the case for a meter under its limit.
+    private void CheckOver(ArcMotionLevel? known = null)
     {
-        var over = Used > ShownLimit + 1e-9 || (UsedTarget > (_limit?.Target ?? 0) + 1e-9 && level != ArcMotionLevel.Full);
+        var over = Used > ShownLimit + 1e-9 ||
+                   (UsedTarget > (_limit?.Target ?? 0) + 1e-9 && (known ?? ArcMotion.GetEffectiveLevel(this)) != ArcMotionLevel.Full);
         _marker ??= CreateValue(over ? 1 : 0);
         if (over == _over)
         {
             return;
         }
         _over = over;
-        if (level == ArcMotionLevel.Full && IsLoaded)
+        if ((known ?? ArcMotion.GetEffectiveLevel(this)) == ArcMotionLevel.Full && IsLoaded)
         {
             _ = _marker.AnimateTo(over ? 1 : 0, MotionSpec.Tween(ArcMotionPresets.Fast, ArcEasings.Standard));
         }
@@ -223,7 +226,7 @@ internal sealed class UsageMeterBar : Control, Avalonia.Rendering.ICustomHitTest
         var value = new MotionValue<double>(this, initial, MotionVectors.Double);
         value.Changed += _ =>
         {
-            CheckOver(ArcMotion.GetEffectiveLevel(this));
+            CheckOver();
             InvalidateVisual();
         };
         return value;

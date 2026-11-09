@@ -1,4 +1,6 @@
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
@@ -139,6 +141,7 @@ public class ScrollArea : ScrollViewer
 
     #endregion
 
+    private LazyFocusRing? _focusRing;
     private Border? _fadeHost;
     private Border? _fadeHostY;
     private ScrollContentPresenter? _presenter;
@@ -218,6 +221,26 @@ public class ScrollArea : ScrollViewer
         ApplyOrientation();
         Sync();
         UpdateTracks();
+        // Built the first time the area is keyboard focused, over the template's root panel, with the area's own radius.
+        _focusRing ??= new LazyFocusRing(this, ScrollAreaTokens.Key(ScrollAreaTokenKind.FocusRingMargin), FocusRingKeys.None);
+        var host = VisualChildren.Count > 0 ? VisualChildren[0] as Panel : null;
+        _focusRing.Attach(host is null ? null : ring =>
+        {
+            ring.Bind(Border.CornerRadiusProperty, this.GetObservable(CornerRadiusProperty));
+            host.Children.Add(ring);
+        }, host is null ? null : ring => host.Children.Remove(ring));
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing?.Update();
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)

@@ -159,10 +159,10 @@
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="MaxWidth" Value="{arc:DialogSurfaceTokenResource PanelWidthMD}" />
 
-        <Style Selector="^[Size=Small]">
+        <Style Selector="^:small">
             <Setter Property="MaxWidth" Value="{arc:DialogSurfaceTokenResource PanelWidthSM}" />
         </Style>
-        <Style Selector="^[Size=Large]">
+        <Style Selector="^:large">
             <Setter Property="MaxWidth" Value="{arc:DialogSurfaceTokenResource PanelWidthLG}" />
         </Style>
         <Style Selector="^:has-description /template/ arc|ArcContentSwap#PART_Description">

@@ -31,9 +31,14 @@ namespace TKCode.Arc;
 /// </para>
 /// </summary>
 [TemplatePart(RowPart, typeof(Border))]
-[PseudoClasses(HighlightedPseudoClass, PressedPseudoClass, CheckedPseudoClass, SubmenuOpenPseudoClass)]
+[PseudoClasses(HighlightedPseudoClass, PressedPseudoClass, CheckedPseudoClass, SubmenuOpenPseudoClass, DestructivePseudoClass,
+    ContextPseudoClass, AccountPseudoClass, SheetPseudoClass)]
 public class MenuEntry : TemplatedControl
 {
+    public const string DestructivePseudoClass = ":destructive";
+    public const string ContextPseudoClass = ":context";
+    public const string AccountPseudoClass = ":account";
+    public const string SheetPseudoClass = ":sheet";
     public const string RowPart = "PART_Row";
     public const string HighlightedPseudoClass = ":highlighted";
     public const string PressedPseudoClass = ":pressed";
@@ -391,6 +396,18 @@ public class MenuEntry : TemplatedControl
             {
                 PseudoClasses.Set(CheckedPseudoClass, IsChecked);
             }
+            else if (change.Property == VariantProperty)
+            {
+                // Pseudo-classes, not [Variant=...] selectors: this is the most repeated control of the menus.
+                var variant = Variant;
+                PseudoClasses.Set(ContextPseudoClass, variant == MenuSurfaceVariant.Context);
+                PseudoClasses.Set(AccountPseudoClass, variant == MenuSurfaceVariant.Account);
+                PseudoClasses.Set(SheetPseudoClass, variant == MenuSurfaceVariant.Sheet);
+            }
+        }
+        else if (change.Property == IsDestructiveProperty)
+        {
+            PseudoClasses.Set(DestructivePseudoClass, IsDestructive);
         }
         else if (change.Property == HeaderProperty || change.Property == HeaderTemplateProperty)
         {

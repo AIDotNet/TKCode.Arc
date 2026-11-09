@@ -95,6 +95,8 @@ public class CyclicPanel : Panel
     {
         AffectsMeasure<CyclicPanel>(OrientationProperty, VisibleItemCountProperty, SpacingProperty);
         ClipToBoundsProperty.OverrideDefaultValue<CyclicPanel>(true);
+        // Parking children depends on the clip (ArrangeOverride).
+        AffectsArrange<CyclicPanel>(ClipToBoundsProperty);
     }
 
     /// <inheritdoc cref="OrientationProperty"/>
@@ -475,6 +477,13 @@ public class CyclicPanel : Panel
         var children = Children;
         _scratch.Clear();
 
+        // Children more than three slots past either edge share one parking rect while the panel clips: an unchanged rect lets
+        // Avalonia skip their arrange and composition update, so a scroll frame costs the items near the viewport, not every
+        // child. Without the clip they would be drawn, so they keep their true positions.
+        var park = ClipToBounds;
+        var reach = 3 * pitch;
+        var parking = vertical ? new Rect(0, -reach - slot, cross, slot) : new Rect(-reach - slot, 0, slot, cross);
+
         var next = 0;
         for (var i = 0; i < children.Count; i++)
         {
@@ -492,6 +501,11 @@ public class CyclicPanel : Panel
                 q -= count;
             }
             var start = q * pitch;
+            if (park && (start >= length + reach || start + slot <= -reach))
+            {
+                child.Arrange(parking);
+                continue;
+            }
             child.Arrange(vertical ? new Rect(0, start, cross, slot) : new Rect(start, 0, slot, cross));
             if (start < length - Epsilon && start + slot > Epsilon)
             {

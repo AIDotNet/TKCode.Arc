@@ -56,6 +56,9 @@ internal sealed class ActivityReactionBar : Panel
     private readonly Dictionary<string, ActivityReactionChip> _chips = new(StringComparer.Ordinal);
     private readonly Dictionary<Control, Slot> _slots = new();
     private readonly List<ActivityReaction> _current = new();
+    // Scratch of SetReactions (it runs on every refresh of a message or comment), kept between calls.
+    private readonly HashSet<string> _wanted = new(StringComparer.Ordinal);
+    private readonly List<KeyValuePair<string, ActivityReactionChip>> _leaving = new();
     private bool _flipArmed;
 
     static ActivityReactionBar()
@@ -89,7 +92,8 @@ internal sealed class ActivityReactionBar : Panel
         animate &= IsLoaded;
         _current.Clear();
         _current.AddRange(reactions);
-        var wanted = new HashSet<string>(StringComparer.Ordinal);
+        var wanted = _wanted;
+        wanted.Clear();
         var changedStructure = false;
         var index = 0;
         foreach (var reaction in reactions)
@@ -124,12 +128,18 @@ internal sealed class ActivityReactionBar : Panel
             }
             index++;
         }
-        foreach (var (emoji, chip) in _chips.ToArray())
+        // Chips no longer wanted are collected first: removing them changes _chips.
+        var leaving = _leaving;
+        leaving.Clear();
+        foreach (var pair in _chips)
         {
-            if (wanted.Contains(emoji) || chip.IsLeaving)
+            if (!wanted.Contains(pair.Key) && !pair.Value.IsLeaving)
             {
-                continue;
+                leaving.Add(pair);
             }
+        }
+        foreach (var (emoji, chip) in leaving)
+        {
             changedStructure = true;
             if (!animate)
             {
@@ -138,6 +148,8 @@ internal sealed class ActivityReactionBar : Panel
             }
             _ = LeaveAsync(emoji, chip);
         }
+        leaving.Clear();
+        wanted.Clear();
         if (changedStructure)
         {
             _flipArmed = animate;

@@ -25,19 +25,8 @@
                                           Stretch="UniformToFill" />
                         </Panel>
                     </Border>
-                    <arc:PresenceHost Name="PART_StatusHost"
-                                      Mode="Pop"
-                                      IsPresent="{TemplateBinding HasStatus}"
-                                      HorizontalAlignment="Right"
-                                      VerticalAlignment="Bottom">
-                        <Border Name="PART_Status"
-                                Width="{arc:AvatarTokenResource StatusSizeMD}"
-                                Height="{arc:AvatarTokenResource StatusSizeMD}"
-                                CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
-                                BorderThickness="{arc:AvatarTokenResource StatusRing}"
-                                BorderBrush="{arc:ArcDesignTokenResource Surface}"
-                                BoxShadow="{arc:AvatarTokenResource StatusHalo}" />
-                    </arc:PresenceHost>
+                    <!-- The presence dot (PART_StatusHost > PART_Status, an AvatarStatusDot) is built by the avatar the
+                         first time it has a status; its theme is below. -->
                 </Panel>
             </ControlTemplate>
         </Setter>
@@ -55,43 +44,21 @@
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
         <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
 
-        <Style Selector="^[Size=Small]">
+        <Style Selector="^:small">
             <Setter Property="Width" Value="{arc:AvatarTokenResource DiameterSM}" />
             <Setter Property="Height" Value="{arc:AvatarTokenResource DiameterSM}" />
             <Setter Property="FontSize" Value="{arc:AvatarTokenResource InitialsFontSizeSM}" />
-            <Style Selector="^ /template/ Border#PART_Status">
-                <Setter Property="Width" Value="{arc:AvatarTokenResource StatusSizeSM}" />
-                <Setter Property="Height" Value="{arc:AvatarTokenResource StatusSizeSM}" />
-                <Setter Property="BorderThickness" Value="{arc:AvatarTokenResource StatusRingSM}" />
-            </Style>
         </Style>
-        <Style Selector="^[Size=Large]">
+        <Style Selector="^:large">
             <Setter Property="Width" Value="{arc:AvatarTokenResource DiameterLG}" />
             <Setter Property="Height" Value="{arc:AvatarTokenResource DiameterLG}" />
             <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
-            <Style Selector="^ /template/ Border#PART_Status">
-                <Setter Property="Width" Value="{arc:AvatarTokenResource StatusSizeLG}" />
-                <Setter Property="Height" Value="{arc:AvatarTokenResource StatusSizeLG}" />
-            </Style>
         </Style>
-        <Style Selector="^[Size=XLarge]">
+        <Style Selector="^:xlarge">
             <Setter Property="Width" Value="{arc:AvatarTokenResource DiameterXL}" />
             <Setter Property="Height" Value="{arc:AvatarTokenResource DiameterXL}" />
             <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXL}" />
-            <Style Selector="^ /template/ Border#PART_Status">
-                <Setter Property="Width" Value="{arc:AvatarTokenResource StatusSizeXL}" />
-                <Setter Property="Height" Value="{arc:AvatarTokenResource StatusSizeXL}" />
-            </Style>
-            <Style Selector="^ /template/ arc|PresenceHost#PART_StatusHost">
-                <Setter Property="Margin" Value="{arc:AvatarTokenResource StatusMarginXL}" />
-            </Style>
-        </Style>
-        <!-- Base fill lives in a style (not the template) so the Online state can override it. -->
-        <Style Selector="^ /template/ Border#PART_Status">
-            <Setter Property="Background" Value="{arc:ArcDesignTokenResource TextMuted}" />
-        </Style>
-        <Style Selector="^[Status=Online] /template/ Border#PART_Status">
-            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Success}" />
+            <!-- The dot's XLarge inset (StatusMarginXL) is applied by the avatar to the host it builds. -->
         </Style>
 
         <Style Selector="^:show-image">
@@ -134,13 +101,30 @@
                     </Animation>
                 </Style.Animations>
             </Style>
-            <Style Selector="^ /template/ Border#PART_Status">
-                <Setter Property="Transitions">
-                    <Transitions>
-                        <arc:ArcBrushTransition Property="Background" />
-                    </Transitions>
-                </Setter>
-            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- The presence dot the avatar builds on demand (PART_Status). The dot keeps the medium size and ring whatever the
+         avatar's size, as the template part did (its token values were local and the size styles never overrode them);
+         the avatar mirrors Online into :online. -->
+    <ControlTheme x:Key="{x:Type arc:AvatarStatusDot}" TargetType="arc:AvatarStatusDot">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Width" Value="{arc:AvatarTokenResource StatusSizeMD}" />
+        <Setter Property="Height" Value="{arc:AvatarTokenResource StatusSizeMD}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="BorderThickness" Value="{arc:AvatarTokenResource StatusRing}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BoxShadow" Value="{arc:AvatarTokenResource StatusHalo}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Style Selector="^:online">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                </Transitions>
+            </Setter>
         </Style>
     </ControlTheme>
 </ResourceDictionary>

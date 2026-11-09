@@ -41,13 +41,6 @@
                             </DockPanel>
                         </Panel>
                     </Border>
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            Margin="-3"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{arc:ArcDesignTokenResource RadiusSurface}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
         </Setter>
@@ -81,9 +74,6 @@
         <Setter Property="RestingShadow" Value="{arc:ArcDesignTokenResource ShadowResting}" />
         <Setter Property="NodeRadius" Value="12" />
         <Setter Property="PacketSize" Value="7" />
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
-        </Style>
         <!-- The still poster frame has nothing to play. -->
         <Style Selector="^:poster /template/ arc|IllustrationPlayButton#PART_Play">
             <Setter Property="IsVisible" Value="False" />

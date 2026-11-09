@@ -76,7 +76,8 @@ public class ExpandableContentTests
         try
         {
             content.IsOverflowing.ShouldBeFalse();
-            Toggle(content).IsVisible.ShouldBeFalse();
+            // The toggle is built the first time the content overflows.
+            content.GetVisualDescendants().OfType<ExpandableTextToggle>().ShouldBeEmpty();
             Viewport(content).OpacityMask.ShouldBeNull();
         }
         finally

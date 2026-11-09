@@ -4,6 +4,7 @@ using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
+using Avalonia.Media.TextFormatting;
 
 namespace TKCode.Arc;
 
@@ -93,9 +94,9 @@ internal sealed class PaginationPanel : Panel
 
     private void AddGhost(int number, PaginationButton slot, double from, double by)
     {
-        var text = new FormattedText(number.ToString(CultureInfo.CurrentCulture), CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
-            new Typeface(slot.FontFamily, slot.FontStyle, slot.FontWeight), slot.FontSize, slot.Foreground);
-        text.SetFontFeatures(slot.FontFeatures);
+        // TextLayout, not FormattedText: a cached FormattedText re-shapes on every Draw, and a ghost is drawn every frame of its slide.
+        var text = new TextLayout(number.ToString(CultureInfo.CurrentCulture),
+            new Typeface(slot.FontFamily, slot.FontStyle, slot.FontWeight), slot.FontSize, slot.Foreground, fontFeatures: slot.FontFeatures);
         var layer = _ghostLayer;
         var x = new MotionValue<double>(layer, from, MotionVectors.Double);
         var opacity = new MotionValue<double>(layer, 1, MotionVectors.Double);
@@ -112,6 +113,7 @@ internal sealed class PaginationPanel : Panel
         await ghost.Opacity.AnimateTo(0, MotionSpec.Tween(ArcMotionPresets.Instant, ArcEasings.Standard));
         ghost.X.Stop();
         _ghostLayer.Ghosts.Remove(ghost);
+        ghost.Text.Dispose();
         _ghostLayer.InvalidateVisual();
     }
 
@@ -182,7 +184,7 @@ internal sealed class PaginationGhostLayer : Control
 {
     internal sealed class Ghost
     {
-        public required FormattedText Text { get; init; }
+        public required TextLayout Text { get; init; }
         public required Rect Slot { get; init; }
         public required MotionValue<double> X { get; init; }
         public required MotionValue<double> Opacity { get; init; }
@@ -208,7 +210,7 @@ internal sealed class PaginationGhostLayer : Control
             var origin = new Point(slot.X + ghost.X.Value + (slot.Width - ghost.Text.Width) / 2, slot.Y + (slot.Height - ghost.Text.Height) / 2);
             using (context.PushOpacity(opacity))
             {
-                context.DrawText(ghost.Text, origin);
+                ghost.Text.Draw(context, origin);
             }
         }
     }

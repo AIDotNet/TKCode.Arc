@@ -21,13 +21,6 @@
                                           HorizontalAlignment="Center"
                                           VerticalAlignment="Center" />
                     </Border>
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            Margin="-2"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
         </Setter>
@@ -50,9 +43,6 @@
         </Style>
         <Style Selector="^:pressed /template/ Border#PART_Frame">
             <Setter Property="RenderTransform" Value="scale(0.96)" />
-        </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
         </Style>
         <Style Selector="^:motion-full">
             <Style Selector="^ /template/ Border#PART_Frame">

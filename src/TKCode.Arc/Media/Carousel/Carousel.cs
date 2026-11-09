@@ -479,6 +479,15 @@ public class Carousel : SelectingItemsControl
         {
             _playButton.IsVisible = CanRotate;
         }
+        if (CanRotate)
+        {
+            HookPauseSources();
+        }
+        else
+        {
+            UnhookPauseSources();
+            _inView = false;
+        }
         var running = CanRotate && IsAutoPlay && !_hovered && !_focusPaused && !_dragActive && _inView && _windowVisible &&
                       IsInVisualTree();
         var index = SelectedIndex;
@@ -930,6 +939,30 @@ public class Carousel : SelectingItemsControl
         // ViewportVisibility reports the first reveal (and every change after it); until then the carousel counts as
         // out of view, like an IntersectionObserver that has not fired yet.
         _inView = false;
+        UpdateRotation();
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        _attached = false;
+        UnhookPauseSources();
+        _wheelTimer.Stop();
+        _wheelActive = false;
+        UpdateRotation();
+        _timer?.Stop();
+    }
+
+    /// <summary>
+    /// The viewport and window watchers only pause a rotation, so they are subscribed while the carousel can rotate and
+    /// dropped otherwise: an EffectiveViewportChanged subscriber costs an ancestor walk on every layout of the window.
+    /// </summary>
+    private void HookPauseSources()
+    {
+        if (_visibility is not null || !_attached)
+        {
+            return;
+        }
         _visibility = new ViewportVisibility(this, threshold: 0.001, once: false);
         _visibility.VisibilityChanged += OnVisibilityChanged;
         _window = TopLevel.GetTopLevel(this) as Window;
@@ -938,13 +971,10 @@ public class Carousel : SelectingItemsControl
             _window.PropertyChanged += OnWindowPropertyChanged;
             _windowVisible = _window.WindowState != WindowState.Minimized;
         }
-        UpdateRotation();
     }
 
-    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    private void UnhookPauseSources()
     {
-        base.OnDetachedFromVisualTree(e);
-        _attached = false;
         if (_visibility is not null)
         {
             _visibility.VisibilityChanged -= OnVisibilityChanged;
@@ -956,10 +986,6 @@ public class Carousel : SelectingItemsControl
             _window.PropertyChanged -= OnWindowPropertyChanged;
             _window = null;
         }
-        _wheelTimer.Stop();
-        _wheelActive = false;
-        UpdateRotation();
-        _timer?.Stop();
     }
 
     private void OnVisibilityChanged(object? sender, bool visible)

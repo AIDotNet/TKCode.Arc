@@ -29,7 +29,43 @@ internal sealed class ChatThreadDayRow(DateOnly day) : ChatThreadRow
 /// <summary>A message with its place in its group.</summary>
 internal sealed class ChatThreadMessageRow(ChatMessage message) : ChatThreadRow
 {
+    private DateTimeOffset _dayAt;
+    private TimeZoneInfo? _dayZone;
+    private DateOnly _day;
+    private string? _sniffedText;
+    private bool _sniffedMarkdown;
+
     public ChatMessage Message { get; } = message;
+
+    /// <summary>
+    /// Whether the message's text has Markdown syntax (<see cref="ChatThreadMarkdownSniffer"/>), decided once per text:
+    /// the sniff splits the text into lines, and every refresh of the row asks.
+    /// </summary>
+    public bool HasMarkdown(string? text)
+    {
+        if (!ReferenceEquals(text, _sniffedText))
+        {
+            _sniffedText = text;
+            _sniffedMarkdown = ChatThreadMarkdownSniffer.HasMarkdown(text);
+        }
+        return _sniffedMarkdown;
+    }
+
+    /// <summary>
+    /// The calendar day of the message in <paramref name="zone"/>, converted once per (time, zone): a rebuild asks for
+    /// every message's day several times (its own and as its neighbors'), and the conversion is the costly part.
+    /// </summary>
+    public DateOnly DayIn(TimeZoneInfo zone)
+    {
+        var at = Message.CreatedAt;
+        if (_dayZone is null || !ReferenceEquals(zone, _dayZone) || at != _dayAt)
+        {
+            _dayAt = at;
+            _dayZone = zone;
+            _day = ActivityTime.DayOf(at, zone);
+        }
+        return _day;
+    }
 
     public ChatParticipant Author { get; set; } = new();
 

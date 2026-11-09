@@ -14,13 +14,13 @@
         <Setter Property="Leading" Value="{arc:InViewTitleTokenResource TitleLeading}" />
         <Setter Property="BlurRadius" Value="{arc:ArcDesignTokenResource BlurText}" />
         <Setter Property="SoftBlurRadius" Value="{arc:ArcDesignTokenResource BlurSoft}" />
-        <Style Selector="^[Level=H1]">
+        <Style Selector="^:h1">
             <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type4XL}" />
         </Style>
-        <Style Selector="^[Level=H3]">
+        <Style Selector="^:h3">
             <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type2XL}" />
         </Style>
-        <Style Selector="^[Level=Paragraph]">
+        <Style Selector="^:paragraph">
             <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXL}" />
         </Style>
     </ControlTheme>

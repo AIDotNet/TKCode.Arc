@@ -6,6 +6,7 @@ using Avalonia.Automation;
 using Avalonia.Automation.Peers;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
+using Avalonia.Controls.Metadata;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
 
@@ -37,8 +38,21 @@ public enum InViewTitleVariant
 /// stagger) when it leaves and replays on every entry. Reduced motion shows the title without movement, blur or
 /// masks. Drawn as one control: no per-word controls.
 /// </summary>
+[PseudoClasses(H1PseudoClass, H2PseudoClass, H3PseudoClass, ParagraphPseudoClass)]
 public class InViewTitle : Control
 {
+    /// <summary>Set while <see cref="Level"/> is <see cref="TextLevel.H1"/>.</summary>
+    public const string H1PseudoClass = ":h1";
+
+    /// <summary>Set while <see cref="Level"/> is <see cref="TextLevel.H2"/>.</summary>
+    public const string H2PseudoClass = ":h2";
+
+    /// <summary>Set while <see cref="Level"/> is <see cref="TextLevel.H3"/>.</summary>
+    public const string H3PseudoClass = ":h3";
+
+    /// <summary>Set while <see cref="Level"/> is <see cref="TextLevel.Paragraph"/>.</summary>
+    public const string ParagraphPseudoClass = ":paragraph";
+
     /// <summary>The title (also its accessible name).</summary>
     public static readonly StyledProperty<string?> TextProperty =
         AvaloniaProperty.Register<InViewTitle, string?>(nameof(Text));
@@ -140,15 +154,44 @@ public class InViewTitle : Control
 
     public InViewTitle()
     {
-        EffectiveViewportChanged += (_, e) =>
+        TextEffectsLevel.Apply(PseudoClasses, Level);
+    }
+
+    private bool _watchingScrolledPast;
+
+    /// <summary>
+    /// Watches for the title being already scrolled past (its top above the viewport), which shows it at once. Hooked only
+    /// while the title waits for its reveal (or can replay): every EffectiveViewportChanged subscriber costs an ancestor
+    /// walk on each layout of the window, and a page carries dozens of titles that have long been revealed.
+    /// </summary>
+    private void WatchScrolledPast()
+    {
+        if (_watchingScrolledPast)
         {
-            // A title already scrolled past (its top above the viewport) shows at once.
-            if (!IsRevealed && e.EffectiveViewport.Height > 0 && e.EffectiveViewport.Y > 0 &&
-                e.EffectiveViewport.Bottom > 0 && Bounds.Height > 0 && e.EffectiveViewport.Y >= Bounds.Height * (1 - Threshold))
-            {
-                ShowInstantly();
-            }
-        };
+            return;
+        }
+        _watchingScrolledPast = true;
+        EffectiveViewportChanged += OnScrolledPastCheck;
+    }
+
+    private void UnwatchScrolledPast()
+    {
+        if (!_watchingScrolledPast)
+        {
+            return;
+        }
+        _watchingScrolledPast = false;
+        EffectiveViewportChanged -= OnScrolledPastCheck;
+    }
+
+    private void OnScrolledPastCheck(object? sender, Avalonia.Layout.EffectiveViewportChangedEventArgs e)
+    {
+        // A title already scrolled past (its top above the viewport) shows at once.
+        if (!IsRevealed && e.EffectiveViewport.Height > 0 && e.EffectiveViewport.Y > 0 &&
+            e.EffectiveViewport.Bottom > 0 && Bounds.Height > 0 && e.EffectiveViewport.Y >= Bounds.Height * (1 - Threshold))
+        {
+            ShowInstantly();
+        }
     }
 
     /// <summary>Settle duration of the movement track per variant (Arc <c>reveal(…, settle)</c>).</summary>
@@ -174,6 +217,10 @@ public class InViewTitle : Control
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
+        if (change.Property == LevelProperty)
+        {
+            TextEffectsLevel.Apply(PseudoClasses, Level);
+        }
         if (change.Property == TextProperty || change.Property == LevelProperty)
         {
             AutomationProperties.SetName(this, Text ?? string.Empty);
@@ -215,12 +262,14 @@ public class InViewTitle : Control
         base.OnDetachedFromVisualTree(e);
         _visibility?.Dispose();
         _visibility = null;
+        UnwatchScrolledPast();
         _clock?.Stop();
         _hide?.Stop();
     }
 
     private void Observe()
     {
+        WatchScrolledPast();
         _visibility?.Dispose();
         _visibility = new ViewportVisibility(this, Threshold, once: !IsReplayEnabled);
         _visibility.VisibilityChanged += (_, visible) =>
@@ -243,6 +292,10 @@ public class InViewTitle : Control
         _clock?.Stop();
         _hide?.Jump(0);
         IsRevealed = true;
+        if (!IsReplayEnabled)
+        {
+            UnwatchScrolledPast();
+        }
         InvalidateVisual();
     }
 
@@ -255,6 +308,10 @@ public class InViewTitle : Control
         }
         _instant = false;
         IsRevealed = true;
+        if (!IsReplayEnabled)
+        {
+            UnwatchScrolledPast();
+        }
         var units = UnitCount();
         var settle = SettleFor(Variant);
         _total = DelayFor(Variant, Math.Max(units - 1, 0), units) + settle;

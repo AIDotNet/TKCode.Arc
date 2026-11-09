@@ -105,7 +105,7 @@
         <Style Selector="^:submenu-open /template/ arc|ArcGlyph#PART_SubmenuChevron">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
         </Style>
-        <Style Selector="^[IsDestructive=True]">
+        <Style Selector="^:destructive">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
             <Style Selector="^ /template/ arc|ArcGlyph#PART_Icon">
                 <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
@@ -119,7 +119,7 @@
         </Style>
 
         <!-- Context menu rows: 34px, 16px icon slot with a 9px gap, press with a tint (never a scale). -->
-        <Style Selector="^[Variant=Context]">
+        <Style Selector="^:context">
             <Style Selector="^ /template/ Border#PART_Row">
                 <Setter Property="MinHeight" Value="{arc:MenuEntryTokenResource ContextRowHeight}" />
             </Style>
@@ -130,13 +130,13 @@
             <Style Selector="^:pressed">
                 <Setter Property="Background" Value="{arc:MenuEntryTokenResource PressedTint}" />
             </Style>
-            <Style Selector="^[IsDestructive=True] /template/ arc|ArcGlyph#PART_Icon">
+            <Style Selector="^:destructive /template/ arc|ArcGlyph#PART_Icon">
                 <Setter Property="Foreground" Value="{Binding $parent[arc:MenuEntry].Foreground}" />
             </Style>
         </Style>
 
         <!-- Account rows (user menu): 32px, 8px inset, 6px radius, 13px text; the icon lights up under the highlight. -->
-        <Style Selector="^[Variant=Account]">
+        <Style Selector="^:account">
             <Setter Property="Padding" Value="{arc:MenuEntryTokenResource AccountRowInset}" />
             <Setter Property="CornerRadius" Value="{arc:MenuEntryTokenResource AccountRowRadius}" />
             <Setter Property="FontSize" Value="{arc:MenuEntryTokenResource AccountFontSize}" />
@@ -156,7 +156,7 @@
         </Style>
 
         <!-- Sheet rows (user menu on narrow windows): 46px, 16px text, no shortcut hints. -->
-        <Style Selector="^[Variant=Sheet]">
+        <Style Selector="^:sheet">
             <Setter Property="Padding" Value="{arc:MenuEntryTokenResource AccountRowInset}" />
             <Setter Property="CornerRadius" Value="{arc:MenuEntryTokenResource AccountRowRadius}" />
             <Style Selector="^ /template/ Border#PART_Row">

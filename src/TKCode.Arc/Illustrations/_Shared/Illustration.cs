@@ -772,6 +772,20 @@ public abstract class Illustration : TemplatedControl
 
     #region Template, input, accessibility
 
+    private TKCode.Arc.Primitives.LazyFocusRing? _focusRing;
+
+    protected override void OnGotFocus(Avalonia.Input.FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
+    protected override void OnLostFocus(Avalonia.Input.FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing?.Update();
+    }
+
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
@@ -782,6 +796,8 @@ public abstract class Illustration : TemplatedControl
         _canvas = e.NameScope.Find<IllustrationCanvas>(CanvasPart);
         _captionSwap = e.NameScope.Find<ArcContentSwap>(CaptionPart);
         _play = e.NameScope.Find<Avalonia.Controls.Button>(PlayPart);
+        _focusRing ??= LiteralFocusRing.Create(this, TKCode.Arc.DesignTokens.ArcDesignTokens.Key(TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusSurface));
+        LiteralFocusRing.Attach(_focusRing, e.NameScope.Find<Control>("PART_Frame")?.Parent as Panel, new Thickness(-3));
         if (_canvas is not null)
         {
             _canvas.Owner = this;
@@ -1015,10 +1031,10 @@ public abstract class Illustration : TemplatedControl
             context.DrawEllipse(p.Tint(IllustrationPalette.InkOf(group.PreviousTone), 1 - mix), null, dot, 3.5, 3.5);
         }
         context.DrawEllipse(p.Tint(IllustrationPalette.InkOf(group.Tone), mix), null, dot, 3.5, 3.5);
-        context.DrawText(title, new Point(dot.X + 9, dot.Y - title.Height / 2));
+        title.Draw(context, new Point(dot.X + 9, dot.Y - title.Height / 2));
         if (status is not null)
         {
-            context.DrawText(status, new Point(dot.X + 9 + title.Width + 8, dot.Y - status.Height / 2));
+            status.Draw(context, new Point(dot.X + 9 + title.Width + 8, dot.Y - status.Height / 2));
         }
     }
 
@@ -1142,10 +1158,10 @@ public abstract class Illustration : TemplatedControl
             var subtitle = lod == 0 && !string.IsNullOrEmpty(node.Subtitle) ? p.Text(node.Subtitle!, IllustrationInk.Muted, maxWidth: room) : null;
             var height = title.Height + (subtitle?.Height ?? 0);
             var y = b.Center.Y - height / 2;
-            context.DrawText(title, new Point(x, y));
+            title.Draw(context, new Point(x, y));
             if (subtitle is not null)
             {
-                context.DrawText(subtitle, new Point(x, y + title.Height));
+                subtitle.Draw(context, new Point(x, y + title.Height));
             }
         }
         node.DrawnTitle = node.Title;
@@ -1227,7 +1243,7 @@ public abstract class Illustration : TemplatedControl
                 DrawIcon(context, icon, new Rect(tx, y + 5, 12, 12), ink);
                 tx += 16;
             }
-            context.DrawText(text, new Point(tx, y + (height - text.Height) / 2));
+            text.Draw(context, new Point(tx, y + (height - text.Height) / 2));
         }
     }
 
@@ -1247,7 +1263,7 @@ public abstract class Illustration : TemplatedControl
         };
         using (context.PushOpacity(Math.Clamp(opacity, 0, 1)))
         {
-            context.DrawText(text, new Point(x, label.Anchor.Y));
+            text.Draw(context, new Point(x, label.Anchor.Y));
         }
     }
 

@@ -83,13 +83,13 @@
         <Style Selector="^ /template/ arc|MessagesGlyphSwap#PART_Icon">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
         </Style>
-        <Style Selector="^[Tone=Success] /template/ arc|MessagesGlyphSwap#PART_Icon">
+        <Style Selector="^:success /template/ arc|MessagesGlyphSwap#PART_Icon">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
         </Style>
-        <Style Selector="^[Tone=Warning] /template/ arc|MessagesGlyphSwap#PART_Icon">
+        <Style Selector="^:warning /template/ arc|MessagesGlyphSwap#PART_Icon">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Warning}" />
         </Style>
-        <Style Selector="^[Tone=Danger] /template/ arc|MessagesGlyphSwap#PART_Icon">
+        <Style Selector="^:danger /template/ arc|MessagesGlyphSwap#PART_Icon">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
         </Style>
 

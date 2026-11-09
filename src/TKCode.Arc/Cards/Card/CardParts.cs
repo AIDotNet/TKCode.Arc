@@ -12,8 +12,12 @@ namespace TKCode.Arc;
 /// The card's heading. With <see cref="IsInteractive"/> (the card has details) it is the quick look trigger: a button in
 /// the tab order that opens on Enter / Space; otherwise a plain heading that takes no focus.
 /// </summary>
+[Avalonia.Controls.Metadata.PseudoClasses(InteractivePseudoClass)]
 internal sealed class CardTitle : AvaloniaButton
 {
+    /// <summary>Set while <see cref="IsInteractive"/> is true (the theme selects on it, not on the property).</summary>
+    public const string InteractivePseudoClass = ":interactive";
+
     public static readonly StyledProperty<bool> IsInteractiveProperty =
         AvaloniaProperty.Register<CardTitle, bool>(nameof(IsInteractive));
 
@@ -35,6 +39,7 @@ internal sealed class CardTitle : AvaloniaButton
         if (change.Property == IsInteractiveProperty)
         {
             var interactive = change.GetNewValue<bool>();
+            PseudoClasses.Set(InteractivePseudoClass, interactive);
             SetCurrentValue(FocusableProperty, interactive);
             SetCurrentValue(IsTabStopProperty, interactive);
             SetCurrentValue(AutomationProperties.ControlTypeOverrideProperty, interactive ? AutomationControlType.Button : AutomationControlType.Text);
@@ -96,23 +101,30 @@ internal sealed class CardQuickLook : DialogSurface
     internal void SetFlag(string pseudoClass, bool value) => PseudoClasses.Set(pseudoClass, value);
 }
 
-/// <summary>Named parts shared by the card template and the quick look template.</summary>
+/// <summary>
+/// Named parts shared by the card template and the quick look template. The quick look declares them all; the card
+/// declares only the ones every card has and builds the optional ones (media, description, content, footer) on first
+/// use, assigning them here.
+/// </summary>
 internal sealed class CardParts
 {
-    public Border? Surface { get; private init; }
-    public Border? Media { get; private init; }
-    public Decorator? Zoom { get; private init; }
-    public ContentPresenter? MediaPresenter { get; private init; }
-    public Control? Title { get; private init; }
-    public TextBlock? Description { get; private init; }
-    public ContentPresenter? ContentHost { get; private init; }
-    public ContentPresenter? AvatarPresenter { get; private init; }
-    public ContentPresenter? MetaPresenter { get; private init; }
-    public CardStatusLine? Status { get; private init; }
-    public ContentPresenter? ActionPresenter { get; private init; }
-    public ContentPresenter? DetailsPresenter { get; private init; }
-    public Control? Details { get; private init; }
-    public Control? CloseSlot { get; private init; }
+    public Border? Surface { get; set; }
+    public Border? Media { get; set; }
+    public Decorator? Zoom { get; set; }
+    public ContentPresenter? MediaPresenter { get; set; }
+    public Control? Title { get; set; }
+    public TextBlock? Description { get; set; }
+    public ContentPresenter? ContentHost { get; set; }
+    public Grid? Footer { get; set; }
+    public Grid? Byline { get; set; }
+    public Border? AvatarSlot { get; set; }
+    public ContentPresenter? AvatarPresenter { get; set; }
+    public ContentPresenter? MetaPresenter { get; set; }
+    public CardStatusLine? Status { get; set; }
+    public ContentPresenter? ActionPresenter { get; set; }
+    public ContentPresenter? DetailsPresenter { get; set; }
+    public Control? Details { get; set; }
+    public Control? CloseSlot { get; set; }
 
     /// <summary>The media zoom (hover drift in the card, settle in the quick look).</summary>
     public ScaleTransform ZoomTransform { get; } = new();
@@ -128,6 +140,9 @@ internal sealed class CardParts
             Title = scope.Find<Control>("PART_Title"),
             Description = scope.Find<TextBlock>("PART_Description"),
             ContentHost = scope.Find<ContentPresenter>("PART_ContentHost"),
+            Footer = scope.Find<Grid>("PART_Footer"),
+            Byline = scope.Find<Grid>("PART_Byline"),
+            AvatarSlot = scope.Find<Border>("PART_AvatarSlot"),
             AvatarPresenter = scope.Find<ContentPresenter>("PART_AvatarPresenter"),
             MetaPresenter = scope.Find<ContentPresenter>("PART_MetaPresenter"),
             Status = scope.Find<CardStatusLine>("PART_Status"),

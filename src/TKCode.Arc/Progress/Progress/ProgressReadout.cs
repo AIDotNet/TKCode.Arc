@@ -6,6 +6,7 @@ using Avalonia.Animation.Easings;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
 using Avalonia.Media;
+using Avalonia.Media.TextFormatting;
 
 namespace TKCode.Arc;
 
@@ -46,7 +47,8 @@ internal sealed class ProgressReadout : Control
     private const double CheckSize = 14;
     private const double Gap = 4;
 
-    private readonly FormattedText?[] _counts = new FormattedText?[101];
+    // TextLayout, not FormattedText: a cached FormattedText re-shapes on every Draw, and the count redraws every frame of the fill spring.
+    private readonly TextLayout?[] _counts = new TextLayout?[101];
     private double _countBoxWidth;
     private MotionValue<double>? _checkScale;
     private MotionValue<double>? _checkFade;
@@ -85,7 +87,7 @@ internal sealed class ProgressReadout : Control
         else if (change.Property == FontFamilyProperty || change.Property == FontSizeProperty ||
                  change.Property == FontWeightProperty || change.Property == ForegroundProperty)
         {
-            Array.Clear(_counts);
+            ClearCounts();
         }
         else if (change.Property == CheckBrushProperty)
         {
@@ -133,19 +135,27 @@ internal sealed class ProgressReadout : Control
         return value;
     }
 
-    private FormattedText Format(string text) =>
-        Configure(new FormattedText(text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight,
-            new Typeface(FontFamily, FontStyle.Normal, FontWeight), FontSize, Foreground ?? Brushes.Gray));
+    private TextLayout Format(string text) =>
+        new(text, new Typeface(FontFamily, FontStyle.Normal, FontWeight), FontSize, Foreground ?? Brushes.Gray, fontFeatures: s_tabular);
 
-    private static FormattedText Configure(FormattedText text)
-    {
-        text.SetFontFeatures(s_tabular);
-        return text;
-    }
-
-    private FormattedText CountText(int value)
+    private TextLayout CountText(int value)
     {
         return _counts[value] ??= Format(value.ToString(CultureInfo.InvariantCulture) + "%");
+    }
+
+    private void ClearCounts()
+    {
+        for (var i = 0; i < _counts.Length; i++)
+        {
+            _counts[i]?.Dispose();
+            _counts[i] = null;
+        }
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        ClearCounts();
     }
 
     protected override Size MeasureOverride(Size availableSize)
@@ -159,7 +169,7 @@ internal sealed class ProgressReadout : Control
         var height = Bounds.Height;
         var countBoxX = Bounds.Width - _countBoxWidth;
         var text = CountText(DisplayedCount);
-        context.DrawText(text, new Point(Bounds.Width - text.WidthIncludingTrailingWhitespace, (height - text.Height) / 2));
+        text.Draw(context, new Point(Bounds.Width - text.WidthIncludingTrailingWhitespace, (height - text.Height) / 2));
 
         var fade = Math.Clamp(CheckOpacity, 0, 1);
         if (fade <= 0.001 || CheckBrush is not { } brush)

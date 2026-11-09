@@ -1,7 +1,10 @@
+using TKCode.Arc.DesignTokens;
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
 using Avalonia.Controls.Primitives;
+using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using AvaloniaButton = Avalonia.Controls.Button;
@@ -24,6 +27,43 @@ internal sealed class AnnouncementBarRing : ToggleButton
     }
 
     protected override Type StyleKeyOverride => typeof(AnnouncementBarRing);
+
+    // Arc's ring sits 4px outside the button (no token holds it): set when the ring is created on first keyboard focus.
+    private static readonly Thickness s_focusRingMargin = new(-4);
+    private static readonly object s_noMarginToken = new();
+    private LazyFocusRing? _focusRing;
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        _focusRing ??= new LazyFocusRing(this, s_noMarginToken, ArcDesignTokens.Key(ArcDesignTokenKind.RadiusPill));
+        _focusRing.Attach(e.NameScope.Find<Panel>("PART_Root"));
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        UpdateFocusRing();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        UpdateFocusRing();
+    }
+
+    private void UpdateFocusRing()
+    {
+        if (_focusRing is null)
+        {
+            return;
+        }
+        _focusRing.Update();
+        if (_focusRing.Ring is { } ring && ring.Margin != s_focusRingMargin)
+        {
+            ring.Margin = s_focusRingMargin;
+        }
+    }
 }
 
 /// <summary>Draws the ring track (22% opacity), the progress arc and the pause / play glyph (filled, 9px).</summary>
@@ -111,4 +151,41 @@ internal sealed class AnnouncementBarRingGlyph : Control
 internal sealed class AnnouncementBarLink : AvaloniaButton
 {
     protected override Type StyleKeyOverride => typeof(AnnouncementBarLink);
+
+    // Arc's ring sits 4px beside and 2px above the link (no token holds it): set when the ring is created on first focus.
+    private static readonly Thickness s_focusRingMargin = new(-4, -2);
+    private static readonly object s_noMarginToken = new();
+    private LazyFocusRing? _focusRing;
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        _focusRing ??= new LazyFocusRing(this, s_noMarginToken, AnnouncementBarTokens.Key(AnnouncementBarTokenKind.LinkFocusRingRadius));
+        _focusRing.Attach(e.NameScope.Find<Panel>("PART_Root"));
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        UpdateFocusRing();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        UpdateFocusRing();
+    }
+
+    private void UpdateFocusRing()
+    {
+        if (_focusRing is null)
+        {
+            return;
+        }
+        _focusRing.Update();
+        if (_focusRing.Ring is { } ring && ring.Margin != s_focusRingMargin)
+        {
+            ring.Margin = s_focusRingMargin;
+        }
+    }
 }

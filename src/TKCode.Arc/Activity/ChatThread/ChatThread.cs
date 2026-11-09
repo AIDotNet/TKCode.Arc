@@ -3,6 +3,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
+using System.Text;
 using System.Windows.Input;
 using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
@@ -311,6 +312,16 @@ public class ChatThread : ItemsControl
     private readonly HashSet<ChatMessage> _tracked = new(ReferenceEqualityComparer.Instance);
     private readonly HashSet<string> _known = new(StringComparer.Ordinal);
     private readonly List<ChatMessage> _messages = new();
+    // Index of each message by id (first wins), rebuilt with the rows: AppendToMessage runs once per streamed token.
+    private readonly Dictionary<string, int> _indexById = new(StringComparer.Ordinal);
+    // Scratch collections of Rebuild and Sync, kept so a rebuild per appended message allocates nothing of its own.
+    private readonly Dictionary<string, ChatParticipant> _people = new(StringComparer.Ordinal);
+    private readonly List<ChatThreadRow> _nextRows = new();
+    private readonly List<ChatMessage> _addedMessages = new();
+    private readonly List<ChatMessage> _goneMessages = new();
+    private readonly HashSet<ChatMessage> _currentMessages = new(ReferenceEqualityComparer.Instance);
+    private readonly List<ChatParticipant> _typers = new();
+    private readonly HashSet<ChatThreadRow> _wantedRows = new(ReferenceEqualityComparer.Instance);
     private readonly ChatThreadBodies _bodies;
     private ChatThreadPicker? _picker;
     private ScrollViewer? _scroller;
@@ -357,7 +368,7 @@ public class ChatThread : ItemsControl
     {
         _bodies = new ChatThreadBodies(this);
         ItemsView.CollectionChanged += OnMessagesChanged;
-        _observedParticipants = new ObservedItems(_ => Rebuild());
+        _observedParticipants = new ObservedItems(_ => QueueRebuild());
     }
 
     #region Public API
@@ -403,8 +414,14 @@ public class ChatThread : ItemsControl
         {
             return true;
         }
-        _bodies.Append(message, text);
+        var started = _bodies.Append(message, text);
         ArmGrowth();
+        if (started)
+        {
+            // The first piece shows the bubble (an empty message has none) and hands it the streaming Markdown; the rest
+            // of the reply reaches the Markdown directly (OnMessagePropertyChanged skips the row refresh while appending).
+            RefreshMessage(message);
+        }
         return true;
     }
 
@@ -415,7 +432,11 @@ public class ChatThread : ItemsControl
         {
             return false;
         }
-        _bodies.Complete(message);
+        if (_bodies.Complete(message))
+        {
+            // The row's accessible name and tooltip read the whole reply once, here, instead of once per token.
+            RefreshMessage(message);
+        }
         return true;
     }
 
@@ -631,6 +652,16 @@ public class ChatThread : ItemsControl
 
     private ChatMessage? FindMessage(string id)
     {
+        if (_rebuildQueued)
+        {
+            // A message added a moment ago (Items.Add, then AppendToMessage) is found: the queued rebuild runs now.
+            Rebuild();
+        }
+        // The index is as old as the last rebuild; an id that changed since (a rebuild is queued) falls through to a scan.
+        if (_indexById.TryGetValue(id, out var at) && at < _messages.Count && _messages[at].Id == id)
+        {
+            return _messages[at];
+        }
         foreach (var message in _messages)
         {
             if (message.Id == id)
@@ -641,9 +672,10 @@ public class ChatThread : ItemsControl
         return null;
     }
 
-    private void OnMessagesChanged(object? sender, NotifyCollectionChangedEventArgs e) => Rebuild();
+    // Collection changes are coalesced into one rebuild per dispatcher turn: adding N messages in a row rebuilds once.
+    private void OnMessagesChanged(object? sender, NotifyCollectionChangedEventArgs e) => QueueRebuild();
 
-    private void OnTypingChanged(object? sender, NotifyCollectionChangedEventArgs e) => Rebuild();
+    private void OnTypingChanged(object? sender, NotifyCollectionChangedEventArgs e) => QueueRebuild();
 
     private void OnMessagePropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
@@ -666,6 +698,12 @@ public class ChatThread : ItemsControl
             case nameof(ChatMessage.Text):
                 _bodies.OnTextChanged(message);
                 ArmGrowth();
+                if (_bodies.IsAppending(message))
+                {
+                    // A streamed token: the bubble's Markdown already has it (AppendToMessage refreshes the row once at
+                    // the start and once at the end of the reply).
+                    break;
+                }
                 RefreshMessage(message);
                 break;
             default:
@@ -745,18 +783,40 @@ public class ChatThread : ItemsControl
                 _messages.Add(message);
             }
         }
-        // Keep PropertyChanged subscriptions (while attached) in step with the messages.
-        var current = new HashSet<ChatMessage>(_messages, ReferenceEqualityComparer.Instance);
-        foreach (var gone in _tracked.Where(m => !current.Contains(m)).ToList())
+        // Keep PropertyChanged subscriptions (while attached) in step with the messages. Rows and subscriptions cover the
+        // same messages (both are added and dropped here), so more rows than distinct messages means some left.
+        var current = _currentMessages;
+        current.Clear();
+        foreach (var message in _messages)
         {
-            if (_watching)
+            if (current.Add(message) && !_messageRows.ContainsKey(message))
             {
-                gone.PropertyChanged -= OnMessagePropertyChanged;
+                _messageRows[message] = new ChatThreadMessageRow(message);
             }
-            _tracked.Remove(gone);
-            _messageRows.Remove(gone);
-            _bodies.Forget(gone);
         }
+        if (_messageRows.Count > current.Count)
+        {
+            var gone = _goneMessages;
+            gone.Clear();
+            foreach (var pair in _messageRows)
+            {
+                if (!current.Contains(pair.Key))
+                {
+                    gone.Add(pair.Key);
+                }
+            }
+            foreach (var message in gone)
+            {
+                if (_tracked.Remove(message) && _watching)
+                {
+                    message.PropertyChanged -= OnMessagePropertyChanged;
+                }
+                _messageRows.Remove(message);
+                _bodies.Forget(message);
+            }
+            gone.Clear();
+        }
+        current.Clear();
         foreach (var message in _messages)
         {
             if (_tracked.Add(message) && _watching)
@@ -765,7 +825,8 @@ public class ChatThread : ItemsControl
             }
         }
 
-        var people = new Dictionary<string, ChatParticipant>(StringComparer.Ordinal);
+        var people = _people;
+        people.Clear();
         if (Participants is { } participants)
         {
             foreach (var person in participants)
@@ -778,8 +839,9 @@ public class ChatThread : ItemsControl
         var window = GroupWindow;
 
         // Receipts: a reader's avatar under their own message says nothing new, so it waits until they read past it.
-        var receipts = new Dictionary<string, List<ChatParticipant>>(StringComparer.Ordinal);
-        var indexById = new Dictionary<string, int>(StringComparer.Ordinal);
+        Dictionary<string, List<ChatParticipant>>? receipts = null;
+        var indexById = _indexById;
+        indexById.Clear();
         for (var i = 0; i < _messages.Count; i++)
         {
             indexById.TryAdd(_messages[i].Id, i);
@@ -793,6 +855,7 @@ public class ChatThread : ItemsControl
                 {
                     continue;
                 }
+                receipts ??= new Dictionary<string, List<ChatParticipant>>(StringComparer.Ordinal);
                 if (!receipts.TryGetValue(messageId, out var list))
                 {
                     list = new List<ChatParticipant>();
@@ -802,9 +865,12 @@ public class ChatThread : ItemsControl
             }
         }
         _readIndex = -1;
-        foreach (var messageId in receipts.Keys)
+        if (receipts is not null)
         {
-            _readIndex = Math.Max(_readIndex, indexById[messageId]);
+            foreach (var messageId in receipts.Keys)
+            {
+                _readIndex = Math.Max(_readIndex, indexById[messageId]);
+            }
         }
         _lastMine = -1;
         for (var i = _messages.Count - 1; i >= 0; i--)
@@ -816,14 +882,17 @@ public class ChatThread : ItemsControl
             }
         }
 
-        var next = new List<ChatThreadRow>(_messages.Count + 8);
+        var next = _nextRows;
+        next.Clear();
         var today = ActivityTime.DayOf(Now(), zone);
         DateOnly? lastDay = null;
-        var added = new List<ChatMessage>();
+        var added = _addedMessages;
+        added.Clear();
         for (var i = 0; i < _messages.Count; i++)
         {
             var message = _messages[i];
-            var day = ActivityTime.DayOf(message.CreatedAt, zone);
+            var row = _messageRows[message];
+            var day = row.DayIn(zone);
             var afterDay = false;
             if (day != lastDay)
             {
@@ -839,11 +908,6 @@ public class ChatThread : ItemsControl
                 lastDay = day;
                 afterDay = true;
             }
-            if (!_messageRows.TryGetValue(message, out var row))
-            {
-                row = new ChatThreadMessageRow(message);
-                _messageRows[message] = row;
-            }
             if (_shown && _known.Add(message.Id))
             {
                 row.Fresh = true;
@@ -857,7 +921,7 @@ public class ChatThread : ItemsControl
             row.AfterDay = afterDay;
             row.First = !Joins(i - 1, message, day, window, zone);
             row.Last = !Joins(i + 1, message, day, window, zone);
-            row.Readers = receipts.TryGetValue(message.Id, out var readers) ? readers : Array.Empty<ChatParticipant>();
+            row.Readers = receipts is not null && receipts.TryGetValue(message.Id, out var readers) ? readers : Array.Empty<ChatParticipant>();
             row.ShowsStatus = row.Mine && i == _lastMine;
             row.Status = message.Status switch
             {
@@ -871,7 +935,8 @@ public class ChatThread : ItemsControl
         }
 
         // Typing row (the first typer who is not the current user).
-        var typers = new List<ChatParticipant>();
+        var typers = _typers;
+        typers.Clear();
         if (TypingParticipantIds is { } typing)
         {
             foreach (var id in typing)
@@ -919,10 +984,14 @@ public class ChatThread : ItemsControl
         RefreshRealized();
         AnnounceTyping(typers);
         AnnounceAdded(added, people);
-        if (added.Any(m => m.AuthorId == me))
+        foreach (var message in added)
         {
-            // Your own message always brings the thread back to the bottom.
-            SetPinned(true);
+            if (message.AuthorId == me)
+            {
+                // Your own message always brings the thread back to the bottom.
+                SetPinned(true);
+                break;
+            }
         }
         if (IsPinned)
         {
@@ -944,8 +1013,8 @@ public class ChatThread : ItemsControl
             return false;
         }
         var neighbor = _messages[other];
-        return neighbor.AuthorId == message.AuthorId && ActivityTime.DayOf(neighbor.CreatedAt, zone) == day &&
-               (neighbor.CreatedAt - message.CreatedAt).Duration() <= window;
+        return neighbor.AuthorId == message.AuthorId && (neighbor.CreatedAt - message.CreatedAt).Duration() <= window &&
+               _messageRows[neighbor].DayIn(zone) == day;
     }
 
     private string DayLabel(DateOnly day, DateOnly today, DateTimeOffset sample)
@@ -998,7 +1067,12 @@ public class ChatThread : ItemsControl
     /// <summary>Brings the observable row list in line with <paramref name="next"/> using the fewest changes.</summary>
     private void Sync(List<ChatThreadRow> next)
     {
-        var wanted = new HashSet<ChatThreadRow>(next, ReferenceEqualityComparer.Instance);
+        var wanted = _wantedRows;
+        wanted.Clear();
+        foreach (var row in next)
+        {
+            wanted.Add(row);
+        }
         for (var i = _rows.Count - 1; i >= 0; i--)
         {
             if (!wanted.Contains(_rows[i]))
@@ -1040,6 +1114,7 @@ public class ChatThread : ItemsControl
         {
             _rowsByKey[row.Key] = row;
         }
+        wanted.Clear();
     }
 
     private ChatThreadTypingView? TypingViewFor(ChatThreadTypingRow row)
@@ -1498,7 +1573,12 @@ public class ChatThread : ItemsControl
             return true;
         }
         var format = message.Format ?? MessageFormat;
-        return format == ChatMessageFormat.Markdown && ChatThreadMarkdownSniffer.HasMarkdown(message.Text);
+        if (format != ChatMessageFormat.Markdown)
+        {
+            return false;
+        }
+        // The row remembers the answer for the text it last saw (rows refresh far more often than texts change).
+        return _messageRows.TryGetValue(message, out var row) ? row.HasMarkdown(message.Text) : ChatThreadMarkdownSniffer.HasMarkdown(message.Text);
     }
 
     internal Markdown AcquireMarkdown(ChatMessage message, bool mine) => _bodies.Acquire(message, mine);
@@ -1690,6 +1770,8 @@ internal sealed class ChatThreadBodies(ChatThread thread)
     private readonly LinkedList<ChatMessage> _recent = new();
     private readonly Dictionary<ChatMessage, LinkedListNode<ChatMessage>> _nodes = new(ReferenceEqualityComparer.Instance);
     private readonly HashSet<ChatMessage> _streaming = new(ReferenceEqualityComparer.Instance);
+    // The text of each streaming reply so far: appending a token extends it instead of concatenating the whole text.
+    private readonly Dictionary<ChatMessage, StringBuilder> _streamed = new(ReferenceEqualityComparer.Instance);
     // The message text each body was last given, to spot changes the thread missed while it was detached.
     private readonly Dictionary<ChatMessage, string?> _given = new(ReferenceEqualityComparer.Instance);
     private readonly Dictionary<ChatMessage, bool> _mine = new(ReferenceEqualityComparer.Instance);
@@ -1698,6 +1780,9 @@ internal sealed class ChatThreadBodies(ChatThread thread)
     public int Count => _bodies.Count;
 
     public bool IsStreaming(ChatMessage message) => _streaming.Contains(message);
+
+    /// <summary>True while <see cref="Append"/> writes a token into <paramref name="message"/>'s text.</summary>
+    public bool IsAppending(ChatMessage message) => ReferenceEquals(_appending, message);
 
     public Markdown? Peek(ChatMessage message) => _bodies.GetValueOrDefault(message);
 
@@ -1720,39 +1805,53 @@ internal sealed class ChatThreadBodies(ChatThread thread)
         return markdown;
     }
 
-    /// <summary>Streams <paramref name="text"/> onto <paramref name="message"/>.</summary>
-    public void Append(ChatMessage message, string text)
+    /// <summary>Streams <paramref name="text"/> onto <paramref name="message"/>; true when this piece started a new reply.</summary>
+    public bool Append(ChatMessage message, string text)
     {
-        var before = message.Text ?? string.Empty;
         var markdown = Acquire(message, message.AuthorId == thread.CurrentUserId);
-        if (!_streaming.Contains(message) || !markdown.IsStreaming)
+        _streamed.TryGetValue(message, out var buffer);
+        var started = buffer is null || !_streaming.Contains(message) || !markdown.IsStreaming;
+        string full;
+        if (started || buffer is null)
         {
             // A new reply starts from what the message already says.
+            var before = message.Text ?? string.Empty;
             _streaming.Add(message);
-            markdown.Append(before + text);
+            buffer = new StringBuilder(before, Math.Max(256, (before.Length + text.Length) * 2));
+            _streamed[message] = buffer;
+            buffer.Append(text);
+            full = buffer.ToString();
+            markdown.Append(full);
         }
         else
         {
+            buffer.Append(text);
+            full = buffer.ToString();
             markdown.Append(text);
         }
-        _given[message] = before + text;
+        _given[message] = full;
         _appending = message;
         try
         {
-            message.Text = before + text;
+            message.Text = full;
         }
         finally
         {
             _appending = null;
         }
+        return started;
     }
 
-    public void Complete(ChatMessage message)
+    /// <summary>Ends the reply; true when <paramref name="message"/> was streaming.</summary>
+    public bool Complete(ChatMessage message)
     {
+        _streamed.Remove(message);
         if (_bodies.TryGetValue(message, out var markdown) && _streaming.Remove(message))
         {
             markdown.Complete();
+            return true;
         }
+        return false;
     }
 
     /// <summary>The message's text changed outside <see cref="Append"/>: a static body shows the new text.</summary>
@@ -1762,6 +1861,7 @@ internal sealed class ChatThreadBodies(ChatThread thread)
         {
             return;
         }
+        _streamed.Remove(message);
         if (_streaming.Remove(message) && _bodies.TryGetValue(message, out var streamed))
         {
             streamed.Text = message.Text;
@@ -1809,6 +1909,7 @@ internal sealed class ChatThreadBodies(ChatThread thread)
             host.Child = null;
         }
         _streaming.Remove(message);
+        _streamed.Remove(message);
         _given.Remove(message);
         _mine.Remove(message);
         if (_nodes.Remove(message, out var node))
@@ -1877,26 +1978,30 @@ internal sealed class ChatThreadBodies(ChatThread thread)
         return markdown;
     }
 
+    // The keys drawn in the accent foreground on your own bubbles, and the alias they all point at (an alias is an
+    // immutable key-to-token pointer resolved from the Markdown that holds it, so one instance serves every bubble).
+    private static readonly string[] s_onAccent =
+    [
+        MarkdownResourceKeys.Foreground, MarkdownResourceKeys.SecondaryForeground, MarkdownResourceKeys.LinkForeground,
+        MarkdownResourceKeys.ListMarkerForeground, MarkdownResourceKeys.InlineCodeForeground, MarkdownResourceKeys.QuoteBorderBrush
+    ];
+    private static readonly MarkdownResourceAlias s_accentForeground = new(ArcDesignTokenKind.AccentForeground);
+
     private void ApplyColors(Markdown markdown, bool mine)
     {
         var resources = markdown.Resources;
-        string[] onAccent =
-        [
-            MarkdownResourceKeys.Foreground, MarkdownResourceKeys.SecondaryForeground, MarkdownResourceKeys.LinkForeground,
-            MarkdownResourceKeys.ListMarkerForeground, MarkdownResourceKeys.InlineCodeForeground, MarkdownResourceKeys.QuoteBorderBrush
-        ];
         if (mine)
         {
-            foreach (var key in onAccent)
+            foreach (var key in s_onAccent)
             {
-                resources[key] = new MarkdownResourceAlias(ArcDesignTokenKind.AccentForeground);
+                resources[key] = s_accentForeground;
             }
             resources[MarkdownResourceKeys.InlineCodeBackground] = thread.MineCodeBrush;
             resources[MarkdownResourceKeys.SelectionBackground] = thread.MineSelectionBrush;
         }
         else
         {
-            foreach (var key in onAccent)
+            foreach (var key in s_onAccent)
             {
                 resources.Remove(key);
             }

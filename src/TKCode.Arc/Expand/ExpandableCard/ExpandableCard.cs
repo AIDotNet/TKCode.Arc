@@ -1,4 +1,5 @@
 using TKCode.Arc.Motion;
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Automation.Peers;
@@ -404,6 +405,28 @@ internal sealed class ExpandableCardTrigger : AvaloniaButton
     public ExpandableCard? Card { get; set; }
 
     protected override Type StyleKeyOverride => typeof(ExpandableCardTrigger);
+
+    private LazyFocusRing? _focusRing;
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        // Built the first time the header is keyboard focused, square and flush with it (the card clips it to its corners).
+        _focusRing ??= new LazyFocusRing(this, FocusRingKeys.None, FocusRingKeys.None);
+        _focusRing.Attach(VisualChildren.Count > 0 ? VisualChildren[0] as Panel : null);
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing?.Update();
+    }
 
     internal void RaiseExpandCollapseChanged(bool oldValue, bool newValue)
     {

@@ -1,4 +1,3 @@
-using System.Globalization;
 using TKCode.Arc.Motion;
 using Avalonia;
 using Avalonia.Animation.Easings;
@@ -8,6 +7,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Documents;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
+using Avalonia.Media.TextFormatting;
 
 namespace TKCode.Arc;
 
@@ -47,15 +47,31 @@ internal sealed class CardStatusLine : Control
     private static readonly ImmutableBlurEffect[] s_blurs = CreateBlurs();
     private static readonly Easing s_linear = new LinearEasing();
 
+    // TextLayouts, not FormattedTexts: FormattedText re-shapes on every Draw (see ShapedText); the brush is applied when drawn.
     private sealed class Line
     {
         public required string Text { get; init; }
-        public required FormattedText Full { get; init; }
-        public required FormattedText[] Words { get; init; }
+        public required Typeface Typeface { get; init; }
+        public required double FontSize { get; init; }
+        /// <summary>The whole line, trimmed to <see cref="FullWidth"/> (the arranged width; unbounded before the first arrange).</summary>
+        public required TextLayout Full { get; set; }
+        public double FullWidth { get; set; } = double.PositiveInfinity;
+        public required TextLayout[] Words { get; init; }
         public required double[] X { get; init; }
         public required double[] Delays { get; init; }
         public required double Width { get; init; }
         public double Total => Delays.Length == 0 ? 0 : Delays[^1] + EnterSeconds;
+
+        /// <summary>Re-trims the whole line to <paramref name="width"/> (what setting FormattedText.MaxTextWidth did).</summary>
+        public void FitTo(double width)
+        {
+            if (width.Equals(FullWidth))
+            {
+                return;
+            }
+            FullWidth = width;
+            Full = ShapedText.ShapeTrimmed(Text, Typeface, FontSize, width);
+        }
     }
 
     private Line? _line;
@@ -97,8 +113,9 @@ internal sealed class CardStatusLine : Control
             }
         }
         else if (change.Property == FontFamilyProperty || change.Property == FontSizeProperty ||
-                 change.Property == FontWeightProperty || change.Property == ForegroundProperty)
+                 change.Property == FontWeightProperty)
         {
+            // Foreground is not here: the lines are drawn in the current brush, so a color change reshapes nothing.
             _line = null;
             _leaving = null;
             InvalidateMeasure();
@@ -114,12 +131,9 @@ internal sealed class CardStatusLine : Control
         }
         var text = Text ?? string.Empty;
         var typeface = new Typeface(FontFamily, FontStyle.Normal, FontWeight);
-        var brush = Foreground ?? Brushes.Black;
-        var full = Format(text, typeface, brush);
-        full.Trimming = TextTrimming.CharacterEllipsis;
-        full.MaxLineCount = 1;
+        var full = ShapedText.ShapeTrimmed(text, typeface, FontSize, double.PositiveInfinity);
         // Arc splits on whitespace runs and staggers by part index / 2: words rise in 40ms apart.
-        var words = new List<FormattedText>();
+        var words = new List<TextLayout>();
         var xs = new List<double>();
         var delays = new List<double>();
         var x = 0.0;
@@ -133,7 +147,7 @@ internal sealed class CardStatusLine : Control
             {
                 end++;
             }
-            var piece = Format(text[start..end], typeface, brush);
+            var piece = ShapedText.Shape(text[start..end], typeface, FontSize);
             if (!whitespace)
             {
                 words.Add(piece);
@@ -147,6 +161,8 @@ internal sealed class CardStatusLine : Control
         _line = new Line
         {
             Text = text,
+            Typeface = typeface,
+            FontSize = FontSize,
             Full = full,
             Words = words.ToArray(),
             X = xs.ToArray(),
@@ -155,9 +171,6 @@ internal sealed class CardStatusLine : Control
         };
         return _line;
     }
-
-    private FormattedText Format(string text, Typeface typeface, IBrush brush) =>
-        new(text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, typeface, FontSize, brush);
 
     private async Task PlayAsync()
     {
@@ -200,11 +213,8 @@ internal sealed class CardStatusLine : Control
     protected override Size ArrangeOverride(Size finalSize)
     {
         var line = EnsureLine();
-        line.Full.MaxTextWidth = Math.Max(1, finalSize.Width);
-        if (_leaving is { } leaving)
-        {
-            leaving.Full.MaxTextWidth = Math.Max(1, finalSize.Width);
-        }
+        line.FitTo(Math.Max(1, finalSize.Width));
+        _leaving?.FitTo(Math.Max(1, finalSize.Width));
         return finalSize;
     }
 
@@ -217,9 +227,10 @@ internal sealed class CardStatusLine : Control
         }
         var height = ResolvedLineHeight;
         var top = (height - line.Full.Height) / 2;
+        var brush = Foreground ?? Brushes.Black;
         if (!_playing || _clock is null)
         {
-            context.DrawText(line.Full, new Point(0, top));
+            ShapedText.Draw(context, line.Full, brush, new Point(0, top));
             return;
         }
         var t = _clock.Value;
@@ -232,7 +243,7 @@ internal sealed class CardStatusLine : Control
                 var p = ArcEasings.Standard.Ease(Math.Clamp(t / ExitSeconds, 0, 1));
                 if (p < 1)
                 {
-                    DrawPiece(context, leaving.Full, new Point(0, top - TravelEm * em * p), 1 - p, SubtleBlur * p);
+                    DrawPiece(context, leaving.Full, brush, new Point(0, top - TravelEm * em * p), 1 - p, SubtleBlur * p);
                 }
             }
             for (var i = 0; i < line.Words.Length; i++)
@@ -243,12 +254,12 @@ internal sealed class CardStatusLine : Control
                     continue;
                 }
                 var p = ArcEasings.Enter.Ease(local);
-                DrawPiece(context, line.Words[i], new Point(line.X[i], top + TravelEm * em * (1 - p)), p, SoftBlur * (1 - p));
+                DrawPiece(context, line.Words[i], brush, new Point(line.X[i], top + TravelEm * em * (1 - p)), p, SoftBlur * (1 - p));
             }
         }
     }
 
-    private static void DrawPiece(DrawingContext context, FormattedText text, Point origin, double opacity, double blur)
+    private static void DrawPiece(DrawingContext context, TextLayout text, IBrush brush, Point origin, double opacity, double blur)
     {
         if (opacity <= 0.001)
         {
@@ -259,13 +270,13 @@ internal sealed class CardStatusLine : Control
             var effect = Blur(blur);
             if (effect is null)
             {
-                context.DrawText(text, origin);
+                ShapedText.Draw(context, text, brush, origin);
                 return;
             }
             var area = new Rect(origin.X - 8, origin.Y - 8, text.WidthIncludingTrailingWhitespace + 16, text.Height + 16);
             using (context.PushEffect(effect, area))
             {
-                context.DrawText(text, origin);
+                ShapedText.Draw(context, text, brush, origin);
             }
         }
     }

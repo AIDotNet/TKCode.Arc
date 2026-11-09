@@ -42,6 +42,7 @@ internal sealed class PageViewerToolbar : TemplatedControl
 
     // Lucide "hand"; not in Core's subset, and only the toolbar draws it.
     private const string HandPath = "M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2 M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2 M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8 M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15";
+    private static readonly Avalonia.Media.Geometry s_handGlyph = ArcIcons.Parse(HandPath);
 
     /// <summary>Content at the left end.</summary>
     public static readonly StyledProperty<object?> StartProperty =
@@ -104,7 +105,7 @@ internal sealed class PageViewerToolbar : TemplatedControl
         _pan = scope.Find<Button>(PanPart);
         if (scope.Find<ArcGlyph>(PanGlyphPart) is { } panGlyph)
         {
-            panGlyph.Data = ArcIcons.Parse(HandPath);
+            panGlyph.Data = s_handGlyph;
         }
         Hook();
         Sync();
