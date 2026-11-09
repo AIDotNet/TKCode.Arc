@@ -29,6 +29,7 @@
     <!-- The brand logo (Shell/GalleryBrand.cs). -->
     <ItemGroup>
         <AvaloniaResource Include="Assets/*.png" />
+        <AvaloniaResource Include="Assets/community-qq.jpg" />
     </ItemGroup>
 
     <!-- The video demos' poster and captions (Demos/Video, VideoDemoMedia). The clip itself is a resource of TKCode.Arc.Gallery.Shots

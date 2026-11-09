@@ -2191,5 +2191,35 @@
         <target state="translated">AI 与 MCP 指南</target>
       </segment>
     </unit>
+    <unit id="HomeCommunityEyebrow">
+      <segment>
+        <source>Community</source>
+        <target state="translated">社区</target>
+      </segment>
+    </unit>
+    <unit id="HomeCommunityTitle">
+      <segment>
+        <source>Join the community</source>
+        <target state="translated">加入社区交流</target>
+      </segment>
+    </unit>
+    <unit id="HomeCommunityText">
+      <segment>
+        <source>Ask questions and talk about Avalonia with other developers in our QQ group. Scan the code, or search for the group number.</source>
+        <target state="translated">在 QQ 群里提问，和其他开发者交流 Avalonia。扫描二维码，或搜索群号加入。</target>
+      </segment>
+    </unit>
+    <unit id="HomeCommunityGroup">
+      <segment>
+        <source>QQ group</source>
+        <target state="translated">QQ 群</target>
+      </segment>
+    </unit>
+    <unit id="HomeCommunityCopy">
+      <segment>
+        <source>Copy the group number</source>
+        <target state="translated">复制群号</target>
+      </segment>
+    </unit>
   </file>
 </xliff>

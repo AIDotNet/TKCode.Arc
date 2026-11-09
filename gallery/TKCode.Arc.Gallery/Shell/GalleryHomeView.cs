@@ -26,6 +26,9 @@ public sealed class GalleryHomeView : UserControl
     private const double HeroPhoneSize = 44;
     private const double HeroWideSize = 88;
 
+    /// <summary>The community's QQ group.</summary>
+    internal const string CommunityGroupNumber = "922379598";
+
     /// <summary>The app and item templates of TKCode.Arc.Templates.</summary>
     private const int TemplateCount = 13;
 
@@ -58,6 +61,7 @@ public sealed class GalleryHomeView : UserControl
             host.Children.Add(Download);
         }
         column.Children.Add(host);
+        column.Children.Add(BuildCommunity());
         column.Children.Add(BuildSupporters());
         column.Children.Add(GallerySiteFooter.Create(shell));
         var margins = new Border { Padding = new Thickness(24, 40, 24, 0), Child = column };
@@ -359,6 +363,46 @@ public sealed class GalleryHomeView : UserControl
         row.Children.Add(value);
         return row;
     }
+
+    /// <summary>
+    /// The community's QQ group. The code is decoded on first sight, not with the page; the number can be copied, since a
+    /// phone cannot scan its own screen.
+    /// </summary>
+    private Control BuildCommunity()
+    {
+        var text = new StackPanel { Spacing = 14, VerticalAlignment = VerticalAlignment.Center };
+        text.Children.Add(GallerySite.Heading(GalleryShellLangResourceKind.HomeCommunityEyebrow, GallerySite.Reveal(GalleryShellLangResourceKind.HomeCommunityTitle), GalleryShellLangResourceKind.HomeCommunityText));
+        var number = GalleryUi.Text(CommunityGroupNumber, ArcDesignTokenKind.Foreground, 15, FontWeight.Medium);
+        number.VerticalAlignment = VerticalAlignment.Center;
+        var copy = new CopyButton { Value = CommunityGroupNumber, IsIconOnly = true, VerticalAlignment = VerticalAlignment.Center };
+        Avalonia.Automation.AutomationProperties.SetName(copy, GalleryText.Get(GalleryShellLangResourceKind.HomeCommunityCopy));
+        var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10 };
+        var group = GallerySite.Text(GalleryShellLangResourceKind.HomeCommunityGroup, ArcDesignTokenKind.TextMuted, 14);
+        group.VerticalAlignment = VerticalAlignment.Center;
+        row.Children.Add(group);
+        row.Children.Add(number);
+        row.Children.Add(copy);
+        row.VerticalAlignment = VerticalAlignment.Center;
+        text.Children.Add(row);
+        var issues = GallerySite.Action(GalleryShellLangResourceKind.AboutIssues, ButtonVariant.Secondary, () => GallerySite.Open(this, new Uri($"{GalleryGitHub.RepositoryUrl}/issues")), ArcIcons.ArrowUpRight, ControlSize.Small);
+        issues.HorizontalAlignment = HorizontalAlignment.Left;
+        text.Children.Add(issues);
+
+        var code = new Image { Width = 244, Height = 310, Stretch = Stretch.Uniform };
+        Avalonia.Automation.AutomationProperties.SetName(code, GalleryText.Get(GalleryShellLangResourceKind.HomeCommunityTitle));
+        var frame = new Border { Width = 244, Height = 310, ClipToBounds = true, HorizontalAlignment = HorizontalAlignment.Center, Child = code };
+        ArcTokens.Bind(frame, Border.CornerRadiusProperty, ArcDesignTokenKind.RadiusPanel);
+        CommunityCode = code;
+        _ = new GalleryFirstSight(frame, () => code.Source ??= GalleryBrand.CreateCommunityCode());
+
+        var pane = new GalleryTwoPane { EndWidth = 244, StackBelow = 640, Spacing = 32 };
+        pane.Children.Add(text);
+        pane.Children.Add(frame);
+        return GallerySite.Panel(pane, ArcDesignTokenKind.SurfaceMuted, 24);
+    }
+
+    /// <summary>The community's QR code.</summary>
+    internal Image CommunityCode { get; private set; } = null!;
 
     /// <summary>The main sponsor on a line of its own, then the friends.</summary>
     private Control BuildSupporters()

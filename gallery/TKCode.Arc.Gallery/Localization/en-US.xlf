@@ -1826,5 +1826,30 @@
         <source>AI and MCP guide</source>
       </segment>
     </unit>
+    <unit id="HomeCommunityEyebrow">
+      <segment>
+        <source>Community</source>
+      </segment>
+    </unit>
+    <unit id="HomeCommunityTitle">
+      <segment>
+        <source>Join the community</source>
+      </segment>
+    </unit>
+    <unit id="HomeCommunityText">
+      <segment>
+        <source>Ask questions and talk about Avalonia with other developers in our QQ group. Scan the code, or search for the group number.</source>
+      </segment>
+    </unit>
+    <unit id="HomeCommunityGroup">
+      <segment>
+        <source>QQ group</source>
+      </segment>
+    </unit>
+    <unit id="HomeCommunityCopy">
+      <segment>
+        <source>Copy the group number</source>
+      </segment>
+    </unit>
   </file>
 </xliff>

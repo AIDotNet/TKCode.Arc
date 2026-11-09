@@ -371,4 +371,9 @@ public enum GalleryShellLangResourceKind
     HomeAiSkill,
     HomeAiMcp,
     HomeAiOpen,
+    HomeCommunityEyebrow,
+    HomeCommunityTitle,
+    HomeCommunityText,
+    HomeCommunityGroup,
+    HomeCommunityCopy,
 }
