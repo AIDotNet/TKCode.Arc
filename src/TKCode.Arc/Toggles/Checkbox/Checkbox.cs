@@ -10,6 +10,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Media;
 using AvaloniaCheckBox = Avalonia.Controls.CheckBox;
 
 namespace TKCode.Arc;
@@ -138,14 +139,51 @@ public class Checkbox : AvaloniaCheckBox
         base.OnKeyDown(e);
     }
 
+    private StackPanel? _copy;
+    private TextBlock? _description;
+
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
         _mark = e.NameScope.Find<CheckboxMark>(MarkPart);
         _mark?.Apply(ToState(IsChecked), animate: false);
+        _copy = e.NameScope.Find<StackPanel>("PART_Copy");
+        _description = null;
+        UpdateDescription();
         // The ring sits under the box, inside the 44px hit area; built the first time the box is keyboard focused.
         _focusRing ??= new LazyFocusRing(this, CheckboxTokens.Key(CheckboxTokenKind.FocusRingMargin), CheckboxTokens.Key(CheckboxTokenKind.FocusRingRadius));
         _focusRing.Attach(e.NameScope.Find<Panel>("PART_Box"), below: true);
+    }
+
+    /// <summary>
+    /// The description line (PART_Description) is built the first time there is a description, under the label in
+    /// PART_Copy, with the token bindings the template used to declare; most checkboxes in a list have none.
+    /// </summary>
+    private void UpdateDescription()
+    {
+        if (string.IsNullOrEmpty(Description))
+        {
+            if (_description is not null)
+            {
+                _description.IsVisible = false;
+            }
+            return;
+        }
+        if (_description is null)
+        {
+            if (_copy is null)
+            {
+                return;
+            }
+            var block = new TextBlock { Name = "PART_Description", TextWrapping = TextWrapping.Wrap };
+            block.Bind(TextBlock.TextProperty, this.GetObservable(DescriptionProperty));
+            ArcTokens.Bind(block, TextBlock.FontSizeProperty, ArcDesignTokenKind.TypeXS, BindingPriority.LocalValue);
+            block.Bind(TextBlock.LineHeightProperty, block.GetResourceObservable(CheckboxTokens.Key(CheckboxTokenKind.DescriptionLineHeight)));
+            ArcTokens.Bind(block, TextBlock.ForegroundProperty, ArcDesignTokenKind.TextMuted, BindingPriority.LocalValue);
+            _copy.Children.Add(block);
+            _description = block;
+        }
+        _description.IsVisible = true;
     }
 
     protected override void OnGotFocus(FocusChangedEventArgs e)
@@ -204,6 +242,7 @@ public class Checkbox : AvaloniaCheckBox
         else if (change.Property == DescriptionProperty)
         {
             AutomationProperties.SetHelpText(this, Description);
+            UpdateDescription();
         }
         else if (change.Property == IsInvalidProperty)
         {

@@ -71,12 +71,27 @@ public sealed class ThemeSwitcherChangeRequestedEventArgs : RoutedEventArgs
 /// </summary>
 [TemplatePart(ButtonPart, typeof(Control))]
 [TemplatePart(IconPart, typeof(Control))]
-[PseudoClasses(DarkPseudoClass)]
+[PseudoClasses(DarkPseudoClass, IconOnlyPseudoClass, RevealPseudoClass, EclipsePseudoClass, SplitPseudoClass, RisePseudoClass)]
 public class ThemeSwitcher : TemplatedControl
 {
     public const string ButtonPart = "PART_Button";
     public const string IconPart = "PART_Icon";
     public const string DarkPseudoClass = ":dark";
+
+    /// <summary>Set while <see cref="IsIconOnly"/> is true (the theme selects on it, not on the property).</summary>
+    public const string IconOnlyPseudoClass = ":icon-only";
+
+    /// <summary><see cref="Variant"/> as a pseudo-class (the theme selects on these, not on the property).</summary>
+    public const string RevealPseudoClass = ":reveal";
+
+    /// <inheritdoc cref="RevealPseudoClass"/>
+    public const string EclipsePseudoClass = ":eclipse";
+
+    /// <inheritdoc cref="RevealPseudoClass"/>
+    public const string SplitPseudoClass = ":split";
+
+    /// <inheritdoc cref="RevealPseudoClass"/>
+    public const string RisePseudoClass = ":rise";
 
     #region 公共属性定义
 
@@ -175,10 +190,20 @@ public class ThemeSwitcher : TemplatedControl
         {
             Refresh();
         }
+        else if (change.Property == VariantProperty)
+        {
+            UpdateVariantPseudoClasses();
+        }
+        else if (change.Property == IsIconOnlyProperty)
+        {
+            PseudoClasses.Set(IconOnlyPseudoClass, IsIconOnly);
+        }
     }
 
     public ThemeSwitcher()
     {
+        UpdateVariantPseudoClasses();
+        PseudoClasses.Set(IconOnlyPseudoClass, IsIconOnly);
         ActualThemeVariantChanged += (_, _) =>
         {
             if (Appearance is null)
@@ -186,6 +211,15 @@ public class ThemeSwitcher : TemplatedControl
                 Refresh();
             }
         };
+    }
+
+    private void UpdateVariantPseudoClasses()
+    {
+        var variant = Variant;
+        PseudoClasses.Set(RevealPseudoClass, variant == ThemeSwitcherVariant.Reveal);
+        PseudoClasses.Set(EclipsePseudoClass, variant == ThemeSwitcherVariant.Eclipse);
+        PseudoClasses.Set(SplitPseudoClass, variant == ThemeSwitcherVariant.Split);
+        PseudoClasses.Set(RisePseudoClass, variant == ThemeSwitcherVariant.Rise);
     }
 
     private void Refresh()

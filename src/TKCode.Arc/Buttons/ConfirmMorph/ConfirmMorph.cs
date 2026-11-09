@@ -73,9 +73,13 @@ public sealed class ConfirmMorphStateChangedEventArgs : RoutedEventArgs
 /// </summary>
 [TemplatePart(PillPart, typeof(Control))]
 [TemplatePart(StatusPart, typeof(Control))]
-[PseudoClasses(CountingPseudoClass, HasUndoPseudoClass, IdlePseudoClass, ConfirmingPseudoClass, PendingPseudoClass, DonePseudoClass, ErrorPseudoClass)]
+[PseudoClasses(CountingPseudoClass, HasUndoPseudoClass, IdlePseudoClass, ConfirmingPseudoClass, PendingPseudoClass, DonePseudoClass, ErrorPseudoClass,
+    NeutralPseudoClass)]
 public class ConfirmMorph : TemplatedControl
 {
+    /// <summary>Set while <see cref="Tone"/> is Neutral (the theme selects on it, not on the property).</summary>
+    public const string NeutralPseudoClass = ":neutral";
+
     public const string PillPart = "PART_Pill";
     public const string StatusPart = "PART_Status";
     public const string CountingPseudoClass = ":counting";
@@ -331,6 +335,7 @@ public class ConfirmMorph : TemplatedControl
 
     public ConfirmMorph()
     {
+        PseudoClasses.Set(NeutralPseudoClass, Tone == ConfirmMorphTone.Neutral);
         AddHandler(KeyDownEvent, OnPreviewKeyDown, RoutingStrategies.Tunnel);
         AddHandler(KeyUpEvent, OnPreviewKeyUp, RoutingStrategies.Tunnel);
         AddHandler(PointerPressedEvent, (_, _) => _keyboard = false, RoutingStrategies.Tunnel, handledEventsToo: true);
@@ -648,6 +653,10 @@ public class ConfirmMorph : TemplatedControl
         {
             PseudoClasses.Set(HasUndoPseudoClass, UndoAction is not null);
         }
+        else if (change.Property == ToneProperty)
+        {
+            PseudoClasses.Set(NeutralPseudoClass, Tone == ConfirmMorphTone.Neutral);
+        }
         else if (change.Property == ConfirmModeProperty || change.Property == ConfirmLabelProperty)
         {
             UpdateConfirmHelp();
@@ -811,17 +820,17 @@ public class ConfirmMorph : TemplatedControl
     {
         outgoing.IsHitTestVisible = false;
         var motion = _faceMotion[(int)which] ??= CreateFaceMotion(outgoing, which);
-        // A leaving face stays where it was and fades (with a subtle blur) while the pill springs to the next one.
-        var blur = full ? new BlurEffect { Radius = 0 } : null;
-        outgoing.Effect = blur;
+        // A leaving face stays where it was and fades (with a subtle blur, from ArcBlur's cache each frame) while the
+        // pill springs to the next one.
+        outgoing.Effect = null;
         var start = outgoing.Opacity;
         motion.Stop();
-        _exiting[(int)which] = (start, blur);
+        _exiting[(int)which] = (start, full);
         motion.Jump(0);
         _ = motion.AnimateTo(1, MotionSpec.Tween(full ? ArcMotionPresets.Instant : TimeSpan.FromMilliseconds(100), ArcEasings.Standard));
     }
 
-    private readonly (double Start, BlurEffect? Blur)?[] _exiting = new (double, BlurEffect?)?[6];
+    private readonly (double Start, bool Blur)?[] _exiting = new (double, bool)?[6];
     private readonly bool[] _entering = new bool[6];
 
     private MotionValue<double> CreateFaceMotion(Panel panel, Face which)
@@ -837,9 +846,10 @@ public class ConfirmMorph : TemplatedControl
         if (_exiting[index] is { } exit)
         {
             panel.Opacity = exit.Start * (1 - v);
-            if (exit.Blur is not null)
+            if (exit.Blur)
             {
-                exit.Blur.Radius = 2 * v;
+                // ArcBlur: a cached, quantized effect instead of a mutable BlurEffect whose radius is rewritten every frame.
+                panel.Effect = ArcBlur.Get(2 * v);
             }
             if (v >= 1)
             {
@@ -872,18 +882,8 @@ public class ConfirmMorph : TemplatedControl
             var part = parts[i];
             part.Opacity = eased;
             var radius = 4 * (1 - eased);
-            if (radius < 0.05)
-            {
-                part.Effect = null;
-            }
-            else if (part.Effect is BlurEffect blur)
-            {
-                blur.Radius = radius;
-            }
-            else
-            {
-                part.Effect = new BlurEffect { Radius = radius };
-            }
+            // ArcBlur: a cached, quantized effect instead of a mutable BlurEffect whose radius is rewritten every frame.
+            part.Effect = radius < 0.05 ? null : ArcBlur.Get(radius);
         }
     }
 
@@ -1032,7 +1032,8 @@ public class ConfirmMorph : TemplatedControl
         _window = TopLevel.GetTopLevel(this) as Window;
         if (_window is not null)
         {
-            _window.PropertyChanged += OnWindowPropertyChanged;
+            // Only WindowState matters here; PropertyChanged would wake every ConfirmMorph on every window property.
+            _windowState = _window.GetObservable(Window.WindowStateProperty).Subscribe(new WindowStateObserver(this));
         }
         WatchOutside();
     }
@@ -1046,34 +1047,58 @@ public class ConfirmMorph : TemplatedControl
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
-        if (_window is not null)
-        {
-            _window.PropertyChanged -= OnWindowPropertyChanged;
-            _window = null;
-        }
+        _windowState?.Dispose();
+        _windowState = null;
+        _window = null;
         _timeout?.Stop();
         _countdown?.Stop();
         _outsideWatch?.RemoveHandler(PointerPressedEvent, OnOutsidePointerPressed);
         _outsideWatch = null;
     }
 
-    private void OnWindowPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+    private IDisposable? _windowState;
+
+    private void OnWindowStateChanged(WindowState state)
     {
-        if (e.Property == Window.WindowStateProperty && sender is Window window)
+        _hidden = state == WindowState.Minimized;
+        SyncHold();
+        if (_countdown is not null)
         {
-            _hidden = window.WindowState == WindowState.Minimized;
-            SyncHold();
-            if (_countdown is not null)
+            if (_hidden)
             {
-                if (_hidden)
-                {
-                    _countdown.Pause();
-                }
-                else
-                {
-                    _countdown.Resume();
-                }
+                _countdown.Pause();
             }
+            else
+            {
+                _countdown.Resume();
+            }
+        }
+    }
+
+    /// <summary>Reports WindowState changes (the observable's first value, the state at subscription, is skipped: it is not a change).</summary>
+    private sealed class WindowStateObserver : IObserver<WindowState>
+    {
+        private readonly ConfirmMorph _owner;
+        private bool _first = true;
+
+        public WindowStateObserver(ConfirmMorph owner) => _owner = owner;
+
+        public void OnCompleted()
+        {
+        }
+
+        public void OnError(Exception error)
+        {
+        }
+
+        public void OnNext(WindowState value)
+        {
+            if (_first)
+            {
+                _first = false;
+                return;
+            }
+            _owner.OnWindowStateChanged(value);
         }
     }
 

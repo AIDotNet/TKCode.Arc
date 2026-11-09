@@ -94,13 +94,7 @@
                                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
                                                       TextTrimming="CharacterEllipsis" />
                                 </Grid>
-                                <TextBlock Name="PART_Description"
-                                           IsVisible="{TemplateBinding ShownDescription, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                                           Text="{TemplateBinding ShownDescription}"
-                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
-                                           LineHeight="{arc:RadioCardsTokenResource DescriptionLineHeight}"
-                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}"
-                                           TextWrapping="Wrap" />
+                                <!-- The description line (PART_Description) is built by the card the first time it has one. -->
                             </StackPanel>
                             <ContentPresenter Name="PART_Meta"
                                               Grid.Row="1"
@@ -110,13 +104,7 @@
                                               Content="{TemplateBinding Meta}" />
                         </Grid>
                     </Border>
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            Margin="{arc:RadioCardsTokenResource FocusRingMargin}"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{arc:RadioCardsTokenResource FocusRingRadius}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <!-- The focus ring (PART_FocusRing) is built by the card the first time it is keyboard focused. -->
                 </Panel>
             </ControlTemplate>
         </Setter>
@@ -170,14 +158,9 @@
         <Style Selector="^:pressed:not(:selected)">
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
         </Style>
-        <Style Selector="^:focus-visible">
-            <Style Selector="^ /template/ Border#PART_FocusRing">
-                <Setter Property="IsVisible" Value="True" />
-            </Style>
-            <Style Selector="^:not(:selected)">
-                <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
-                <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
-            </Style>
+        <Style Selector="^:focus-visible:not(:selected)">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
         </Style>
         <Style Selector="^:selected">
             <Style Selector="^ /template/ Border#PART_Tint">

@@ -184,7 +184,25 @@ public class ExpandingButtonGroup : ItemsControl
     private static ExpandingButtonGroupItem? Drop(ExpandingButtonGroupItem? field, ExpandingButtonGroupItem item) =>
         ReferenceEquals(field, item) ? null : field;
 
-    private List<ExpandingButtonGroupItem> Buttons => GetRealizedContainers().OfType<ExpandingButtonGroupItem>().Where(b => b.IsVisible).ToList();
+    // One reusable list: the visible actions are walked on every pointer move (ItemAt), so no list or iterator per move.
+    // Callers never hold the list across another Buttons read.
+    private readonly List<ExpandingButtonGroupItem> _buttons = new();
+
+    private List<ExpandingButtonGroupItem> Buttons
+    {
+        get
+        {
+            _buttons.Clear();
+            foreach (var container in GetRealizedContainers())
+            {
+                if (container is ExpandingButtonGroupItem { IsVisible: true } button)
+                {
+                    _buttons.Add(button);
+                }
+            }
+            return _buttons;
+        }
+    }
 
     #endregion
 

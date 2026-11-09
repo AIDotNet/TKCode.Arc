@@ -6,6 +6,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Documents;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
+using Avalonia.Media.TextFormatting;
 
 namespace TKCode.Arc;
 
@@ -46,9 +47,11 @@ internal sealed class SplitButtonLabel : Control
     {
         public required string Char { get; init; }
         public int Order { get; init; }
-        public FormattedText? Text { get; set; }
+        public TextLayout? Text { get; set; }
         public double Width { get; set; }
         public double TargetX { get; set; }
+        /// <summary>Set once the glyph has a place; before that a move is a first placement, not a glide.</summary>
+        public bool Placed { get; set; }
         public MotionValue<double>? X { get; set; }
         public MotionValue<double>? Enter { get; set; }
         public MotionValue<double>? Exit { get; set; }
@@ -91,8 +94,9 @@ internal sealed class SplitButtonLabel : Control
             Morph(change.GetNewValue<string?>() ?? string.Empty);
         }
         else if (change.Property == FontFamilyProperty || change.Property == FontSizeProperty ||
-                 change.Property == FontWeightProperty || change.Property == ForegroundProperty)
+                 change.Property == FontWeightProperty)
         {
+            // Foreground is not here: the glyphs are drawn in the current brush, so a color transition reshapes nothing.
             _shapeDirty = true;
             InvalidateMeasure();
         }
@@ -217,12 +221,20 @@ internal sealed class SplitButtonLabel : Control
             {
                 continue;
             }
+            var current = glyph.X?.Value ?? glyph.TargetX;
+            var placed = glyph.Placed;
             glyph.TargetX = x;
+            glyph.Placed = true;
             if (glyph.X is null)
             {
-                var motion = new MotionValue<double>(this, x, MotionVectors.Double);
-                motion.Changed += _ => InvalidateVisual();
-                glyph.X = motion;
+                // A resting letter needs no motion value: it is created the first time this letter has to glide.
+                if (animate && placed && Math.Abs(current - x) > 0.01)
+                {
+                    var motion = new MotionValue<double>(this, current, MotionVectors.Double);
+                    motion.Changed += _ => InvalidateVisual();
+                    glyph.X = motion;
+                    _ = motion.AnimateTo(x, MotionSpec.Spring(ArcSpring.Morph));
+                }
             }
             else if (animate && Math.Abs(glyph.X.Value - x) > 0.01)
             {
@@ -240,8 +252,8 @@ internal sealed class SplitButtonLabel : Control
 
     private void Shape(Glyph glyph)
     {
-        glyph.Text = new FormattedText(glyph.Char, CultureInfo.CurrentUICulture, FlowDirection.LeftToRight, CurrentTypeface,
-            FontSize > 0 ? FontSize : 14, Foreground);
+        // TextLayout, not FormattedText: FormattedText re-shapes on every Draw (see ShapedText).
+        glyph.Text = ShapedText.Shape(glyph.Char, CurrentTypeface, FontSize > 0 ? FontSize : 14);
         glyph.Width = glyph.Text.WidthIncludingTrailingWhitespace;
     }
 
@@ -256,8 +268,7 @@ internal sealed class SplitButtonLabel : Control
         {
             Shape(glyph);
         }
-        _lineHeight = new FormattedText("Hg", CultureInfo.CurrentUICulture, FlowDirection.LeftToRight, CurrentTypeface,
-            FontSize > 0 ? FontSize : 14, null).Height;
+        _lineHeight = ShapedText.Shape("Hg", CurrentTypeface, FontSize > 0 ? FontSize : 14).Height;
         Relayout(animate: false);
     }
 
@@ -277,6 +288,11 @@ internal sealed class SplitButtonLabel : Control
 
     public override void Render(DrawingContext context)
     {
+        // A FormattedText with a null brush drew nothing; so does this.
+        if (Foreground is not { } brush)
+        {
+            return;
+        }
         foreach (var glyph in _glyphs)
         {
             if (glyph.Text is not { } text)
@@ -317,12 +333,12 @@ internal sealed class SplitButtonLabel : Control
                 {
                     using (context.PushEffect(Blurs[Math.Min(index, Blurs.Length - 1)], new Rect(origin, new Size(glyph.Width, _lineHeight))))
                     {
-                        context.DrawText(text, origin);
+                        ShapedText.Draw(context, text, brush, origin);
                     }
                 }
                 else
                 {
-                    context.DrawText(text, origin);
+                    ShapedText.Draw(context, text, brush, origin);
                 }
             }
         }

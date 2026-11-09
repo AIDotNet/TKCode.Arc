@@ -43,7 +43,7 @@
         <Setter Property="BadgeInk" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="BadgeTintOpacity" Value="{arc:BillingToggleTokenResource BadgeTintOpacity}" />
         <Setter Property="BadgeInkMix" Value="{arc:BillingToggleTokenResource BadgeInkMix}" />
-        <Style Selector="^[Size=Large]">
+        <Style Selector="^:large">
             <Setter Property="Padding" Value="{arc:BillingToggleTokenResource TrackInsetLG}" />
             <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
         </Style>
@@ -81,10 +81,9 @@
                                     CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
                                     TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
                                     TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}">
-                                <!-- Every candidate reserves the cell; the visible one crossfades on top. -->
+                                <!-- Every candidate reserves the cell (one measuring sizer, no hidden TextBlocks); the visible one crossfades on top. -->
                                 <Grid VerticalAlignment="Center" ClipToBounds="False">
-                                    <TextBlock Text="{TemplateBinding Badge}" Opacity="0" HorizontalAlignment="Center" />
-                                    <TextBlock Text="{TemplateBinding ActiveBadge}" Opacity="0" HorizontalAlignment="Center" />
+                                    <arc:ButtonsLabelSizer Name="PART_BadgeSizer" Labels="{TemplateBinding SizerLabels}" />
                                     <arc:ArcContentSwap Name="PART_BadgeText"
                                                         Mode="BlurSwap"
                                                         HorizontalAlignment="Center"

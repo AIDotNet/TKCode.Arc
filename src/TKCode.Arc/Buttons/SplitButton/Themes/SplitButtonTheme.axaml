@@ -9,28 +9,22 @@
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <!-- Arc draws its own focus indication; suppress the window's default focus adorner. -->
         <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <!-- The focus ring (PART_FocusRing) is the Button's own, built on first keyboard focus; SplitButton gives each
+             half the ring margin and the two-cornered radius of its side (SplitButton.UpdateVariant). -->
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:Button">
-                <Panel>
-                    <Border Name="PART_Frame"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="{TemplateBinding CornerRadius}"
-                            Padding="{TemplateBinding Padding}">
-                        <ContentPresenter Name="PART_ContentPresenter"
-                                          Content="{TemplateBinding Content}"
-                                          ContentTemplate="{TemplateBinding ContentTemplate}"
-                                          HorizontalAlignment="Center"
-                                          VerticalAlignment="Center" />
-                    </Border>
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            Margin="{arc:SplitButtonTokenResource FocusRingMargin}"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
-                </Panel>
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                </Border>
             </ControlTemplate>
         </Setter>
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
@@ -46,18 +40,12 @@
         <Setter Property="VerticalAlignment" Value="Stretch" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="ClipToBounds" Value="False" />
-        <Style Selector="^ /template/ Border#PART_FocusRing">
-            <Setter Property="CornerRadius" Value="{arc:SplitButtonTokenResource StartRingRadius}" />
-        </Style>
 
         <Style Selector="^.trigger">
             <Setter Property="Width" Value="{arc:SplitButtonTokenResource TriggerExtentPrimary}" />
             <Setter Property="Padding" Value="0" />
             <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessLeft}" />
             <Setter Property="CornerRadius" Value="{arc:SplitButtonTokenResource EndRadius}" />
-            <Style Selector="^ /template/ Border#PART_FocusRing">
-                <Setter Property="CornerRadius" Value="{arc:SplitButtonTokenResource EndRingRadius}" />
-            </Style>
         </Style>
 
         <!-- Secondary: a compact outlined pill with 12px text. -->
@@ -70,18 +58,12 @@
             <Setter Property="Padding" Value="{arc:SplitButtonTokenResource SecondaryInset}" />
             <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
             <Setter Property="CornerRadius" Value="{arc:SplitButtonTokenResource PillStartRadius}" />
-            <Style Selector="^ /template/ Border#PART_FocusRing">
-                <Setter Property="CornerRadius" Value="{arc:SplitButtonTokenResource PillStartRingRadius}" />
-            </Style>
         </Style>
         <Style Selector="^.secondary.trigger">
             <Setter Property="Width" Value="{arc:SplitButtonTokenResource TriggerExtentSecondary}" />
             <Setter Property="MinWidth" Value="0" />
             <Setter Property="Padding" Value="0" />
             <Setter Property="CornerRadius" Value="{arc:SplitButtonTokenResource PillEndRadius}" />
-            <Style Selector="^ /template/ Border#PART_FocusRing">
-                <Setter Property="CornerRadius" Value="{arc:SplitButtonTokenResource PillEndRingRadius}" />
-            </Style>
         </Style>
 
         <!-- Hover tints each half on its own; press and an open menu go one step deeper. -->
@@ -100,9 +82,6 @@
         <Style Selector="^:disabled">
             <Setter Property="Opacity" Value="{arc:SplitButtonTokenResource DisabledOpacity}" />
             <Setter Property="Cursor" Value="No" />
-        </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
         </Style>
 
         <Style Selector="^:motion-full">

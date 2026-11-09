@@ -20,13 +20,6 @@
                                           HorizontalAlignment="Center"
                                           VerticalAlignment="Center" />
                     </Border>
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            Margin="{arc:SwipeActionsRowTokenResource MoreRingMargin}"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{arc:SwipeActionsRowTokenResource MoreRingRadius}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
         </Setter>
@@ -42,9 +35,6 @@
         <Style Selector="^:pointerover, ^:pressed, ^:open">
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
-        </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
         </Style>
         <Style Selector="^:motion-full">
             <Setter Property="Transitions">

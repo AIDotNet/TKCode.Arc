@@ -1,9 +1,9 @@
-using System.Globalization;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
 using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia.Media.TextFormatting;
 using Avalonia.Rendering;
 
 namespace TKCode.Arc;
@@ -49,7 +49,35 @@ internal sealed class SliderMarkLabels : Control, ICustomHitTest
     public IBrush? OnForeground { get => GetValue(OnForegroundProperty); set => SetValue(OnForegroundProperty, value); }
     public IBrush? HoverForeground { get => GetValue(HoverForegroundProperty); set => SetValue(HoverForegroundProperty, value); }
 
-    private readonly List<(double Value, FormattedText Text)> _labels = new();
+    // Which of the three colors a label is drawn in.
+    private const int RestSlot = 0;
+    private const int OnSlot = 1;
+    private const int HoverSlot = 2;
+
+    /// <summary>
+    /// One label: its text shaped once per color (TextLayout; a cached FormattedText re-shapes on every draw, and
+    /// setting its brush re-shapes again), and the on-state it was last drawn with.
+    /// </summary>
+    private sealed class Label
+    {
+        public double Value;
+        public string Text = string.Empty;
+        public bool On;
+        public readonly TextLayout?[] Layouts = new TextLayout?[3];
+        public readonly IBrush?[] Brushes = new IBrush?[3];
+
+        public void Dispose()
+        {
+            for (var i = 0; i < Layouts.Length; i++)
+            {
+                Layouts[i]?.Dispose();
+                Layouts[i] = null;
+                Brushes[i] = null;
+            }
+        }
+    }
+
+    private readonly List<Label> _labels = new();
     private ISliderMarkHost? _host;
     private bool _dirty = true;
     private int _hover = -1;
@@ -79,6 +107,34 @@ internal sealed class SliderMarkLabels : Control, ICustomHitTest
         InvalidateVisual();
     }
 
+    /// <summary>
+    /// The value moved: redraws only when a label changed between its resting and on color (a drag used to redraw
+    /// every label on every value change).
+    /// </summary>
+    public void SyncMarkStates()
+    {
+        EnsureLabels();
+        if (_host is null)
+        {
+            return;
+        }
+        var changed = false;
+        for (var i = 0; i < _labels.Count; i++)
+        {
+            var label = _labels[i];
+            var on = _host.IsMarkOn(label.Value);
+            if (on != label.On)
+            {
+                label.On = on;
+                changed = true;
+            }
+        }
+        if (changed)
+        {
+            InvalidateVisual();
+        }
+    }
+
     public bool HasLabels
     {
         get
@@ -104,21 +160,49 @@ internal sealed class SliderMarkLabels : Control, ICustomHitTest
             return;
         }
         _dirty = false;
+        foreach (var label in _labels)
+        {
+            label.Dispose();
+        }
         _labels.Clear();
         if (_host is null)
         {
             return;
         }
-        var typeface = new Typeface(FontFamily);
         foreach (var mark in _host.Marks)
         {
             if (string.IsNullOrEmpty(mark.Label) || mark.Value < _host.Minimum || mark.Value > _host.Maximum)
             {
                 continue;
             }
-            var text = new FormattedText(mark.Label, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, typeface, FontSize, Foreground);
-            _labels.Add((mark.Value, text));
+            _labels.Add(new Label { Value = mark.Value, Text = mark.Label, On = _host.IsMarkOn(mark.Value) });
         }
+    }
+
+    private TextLayout Layout(Label label, int slot, IBrush? brush)
+    {
+        var layout = label.Layouts[slot];
+        if (layout is null || !ReferenceEquals(label.Brushes[slot], brush))
+        {
+            layout?.Dispose();
+            layout = new TextLayout(label.Text, new Typeface(FontFamily), FontSize, brush);
+            label.Layouts[slot] = layout;
+            label.Brushes[slot] = brush;
+        }
+        return layout;
+    }
+
+    /// <summary>Any shaped copy of the label (all colors share the metrics); the resting one is built when there is none.</summary>
+    private TextLayout Metrics(Label label)
+    {
+        for (var i = 0; i < label.Layouts.Length; i++)
+        {
+            if (label.Layouts[i] is { } layout)
+            {
+                return layout;
+            }
+        }
+        return Layout(label, RestSlot, Foreground);
     }
 
     protected override Size MeasureOverride(Size availableSize)
@@ -130,18 +214,19 @@ internal sealed class SliderMarkLabels : Control, ICustomHitTest
     private Rect LabelRect(int index)
     {
         var host = _host!;
-        var (value, text) = _labels[index];
+        var label = _labels[index];
+        var text = Metrics(label);
         var inset = host.MarkInset;
         var track = Math.Max(0, Bounds.Width - 2 * inset);
         var span = host.Maximum - host.Minimum;
-        var x = inset + (span <= 0 ? 0 : (value - host.Minimum) / span) * track;
+        var x = inset + (span <= 0 ? 0 : (label.Value - host.Minimum) / span) * track;
         var width = text.Width;
         var left = x - width / 2;
-        if (value <= host.Minimum)
+        if (label.Value <= host.Minimum)
         {
             left = x + Math.Max(-width / 2, -inset);
         }
-        else if (value >= host.Maximum)
+        else if (label.Value >= host.Maximum)
         {
             left = x + Math.Min(-width / 2, -width + inset);
         }
@@ -157,13 +242,13 @@ internal sealed class SliderMarkLabels : Control, ICustomHitTest
         }
         for (var i = 0; i < _labels.Count; i++)
         {
-            var (value, text) = _labels[i];
-            var brush = (i == _hover ? HoverForeground : _host.IsMarkOn(value) ? OnForeground : Foreground) ?? Foreground;
-            if (brush is not null)
-            {
-                text.SetForegroundBrush(brush);
-            }
-            context.DrawText(text, LabelRect(i).TopLeft);
+            var label = _labels[i];
+            var on = _host.IsMarkOn(label.Value);
+            label.On = on;
+            var slot = i == _hover ? HoverSlot : on ? OnSlot : RestSlot;
+            var brush = (slot == HoverSlot ? HoverForeground : slot == OnSlot ? OnForeground : Foreground) ?? Foreground;
+            var text = brush is null ? Metrics(label) : Layout(label, slot, brush);
+            text.Draw(context, LabelRect(i).TopLeft);
         }
     }
 

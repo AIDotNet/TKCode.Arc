@@ -43,7 +43,7 @@
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="VerticalAlignment" Value="Top" />
 
-        <Style Selector="^[Variant=Floating]">
+        <Style Selector="^:floating">
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
             <Style Selector="^ /template/ Border#PART_Tray">

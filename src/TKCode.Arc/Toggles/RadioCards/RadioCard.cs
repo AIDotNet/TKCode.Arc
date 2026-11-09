@@ -1,8 +1,12 @@
+using TKCode.Arc.DesignTokens;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Automation.Peers;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
+using Avalonia.Controls.Primitives;
+using Avalonia.Data;
+using Avalonia.Media;
 
 namespace TKCode.Arc;
 
@@ -11,6 +15,10 @@ namespace TKCode.Arc;
 internal sealed class RadioCard : TogglesItem
 {
     public const string ListPseudoClass = ":list";
+
+    // The ring is built by TogglesItem the first time the card is keyboard focused (the template used to keep a hidden Border).
+    protected override (object Margin, object Radius)? FocusRingKeys =>
+        (RadioCardsTokens.Key(RadioCardsTokenKind.FocusRingMargin), RadioCardsTokens.Key(RadioCardsTokenKind.FocusRingRadius));
 
     public static readonly StyledProperty<string?> DescriptionProperty =
         AvaloniaProperty.Register<RadioCard, string?>(nameof(Description));
@@ -46,6 +54,48 @@ internal sealed class RadioCard : TogglesItem
         set => PseudoClasses.Set(ListPseudoClass, value);
     }
 
+    private StackPanel? _body;
+    private TextBlock? _description;
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        _body = e.NameScope.Find<StackPanel>("PART_Body");
+        _description = null;
+        UpdateDescription();
+    }
+
+    /// <summary>
+    /// The description line (PART_Description) is built the first time there is one, under the label row in PART_Body,
+    /// with the token bindings the template used to declare; cards without a description carry no TextBlock.
+    /// </summary>
+    private void UpdateDescription()
+    {
+        if (string.IsNullOrEmpty(ShownDescription))
+        {
+            if (_description is not null)
+            {
+                _description.IsVisible = false;
+            }
+            return;
+        }
+        if (_description is null)
+        {
+            if (_body is null)
+            {
+                return;
+            }
+            var block = new TextBlock { Name = "PART_Description", TextWrapping = TextWrapping.Wrap };
+            block.Bind(TextBlock.TextProperty, this.GetObservable(ShownDescriptionProperty));
+            ArcTokens.Bind(block, TextBlock.FontSizeProperty, ArcDesignTokenKind.TypeXS, BindingPriority.LocalValue);
+            block.Bind(TextBlock.LineHeightProperty, block.GetResourceObservable(RadioCardsTokens.Key(RadioCardsTokenKind.DescriptionLineHeight)));
+            ArcTokens.Bind(block, TextBlock.ForegroundProperty, ArcDesignTokenKind.TextSecondary, BindingPriority.LocalValue);
+            _body.Children.Add(block);
+            _description = block;
+        }
+        _description.IsVisible = true;
+    }
+
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
@@ -53,6 +103,7 @@ internal sealed class RadioCard : TogglesItem
         {
             ShownDescription = !IsEffectivelyEnabled && !string.IsNullOrEmpty(DisabledReason) ? DisabledReason : Description;
             AutomationProperties.SetHelpText(this, ShownDescription);
+            UpdateDescription();
         }
     }
 

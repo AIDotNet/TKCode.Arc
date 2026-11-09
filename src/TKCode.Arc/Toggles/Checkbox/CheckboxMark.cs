@@ -86,10 +86,17 @@ internal sealed class CheckboxMark : Control
     /// <summary>Box edge of the mark geometry (Arc draws in an 18x18 viewBox).</summary>
     public const double BoxSize = 18;
 
-    private readonly MotionValue<double> _fillScale;
-    private readonly MotionValue<double> _fade;
-    private readonly MotionValue<double> _draw;
-    private readonly MotionValue<double> _morph;
+    // Rest values of the unchecked mark; a motion value is created only when its value first leaves its rest (most
+    // checkboxes in a long list never change state, so they carry no motion values at all).
+    private const double RestFillScale = 0.6;
+    private const double RestFade = 0;
+    private const double RestDraw = 0;
+    private const double RestMorph = 0;
+
+    private MotionValue<double>? _fillScale;
+    private MotionValue<double>? _fade;
+    private MotionValue<double>? _draw;
+    private MotionValue<double>? _morph;
     private Pen? _pen;
     private CheckboxState _state;
 
@@ -99,27 +106,32 @@ internal sealed class CheckboxMark : Control
         IsHitTestVisibleProperty.OverrideDefaultValue<CheckboxMark>(false);
     }
 
-    public CheckboxMark()
-    {
-        _fillScale = Create(0.6);
-        _fade = Create(0);
-        _draw = Create(0);
-        _morph = Create(0);
-    }
-
     public CheckboxState State => _state;
 
     // Read by tests.
-    internal double FillScale => _fillScale.Value;
-    internal double FadeValue => _fade.Value;
-    internal double DrawProgress => _draw.Value;
-    internal double MorphProgress => _morph.Value;
+    internal double FillScale => _fillScale?.Value ?? RestFillScale;
+    internal double FadeValue => _fade?.Value ?? RestFade;
+    internal double DrawProgress => _draw?.Value ?? RestDraw;
+    internal double MorphProgress => _morph?.Value ?? RestMorph;
 
-    private MotionValue<double> Create(double initial)
+    private MotionValue<double> Value(ref MotionValue<double>? field, double rest)
     {
-        var value = new MotionValue<double>(this, initial, MotionVectors.Double);
-        value.Changed += _ => InvalidateVisual();
-        return value;
+        if (field is null)
+        {
+            field = new MotionValue<double>(this, rest, MotionVectors.Double);
+            field.Changed += _ => InvalidateVisual();
+        }
+        return field;
+    }
+
+    /// <summary>Jumps <paramref name="field"/> to <paramref name="target"/>; a value still at rest that is sent to rest needs no motion value.</summary>
+    private void Jump(ref MotionValue<double>? field, double rest, double target)
+    {
+        if (field is null && target.Equals(rest))
+        {
+            return;
+        }
+        Value(ref field, rest).Jump(target);
     }
 
     /// <summary>Moves to <paramref name="state"/>. Reduced and Off apply every change at once (Arc: duration 0).</summary>
@@ -132,16 +144,17 @@ internal sealed class CheckboxMark : Control
         var morph = state == CheckboxState.Indeterminate ? 1.0 : 0.0;
         if (!animate || !IsLoaded || !ArcMotion.IsFull(this))
         {
-            _fillScale.Jump(fill);
-            _fade.Jump(fade);
-            _draw.Jump(fade);
-            _morph.Jump(morph);
+            Jump(ref _fillScale, RestFillScale, fill);
+            Jump(ref _fade, RestFade, fade);
+            Jump(ref _draw, RestDraw, fade);
+            Jump(ref _morph, RestMorph, morph);
+            InvalidateVisual();
             return;
         }
-        _ = _fillScale.AnimateTo(fill, MotionSpec.Spring(ArcSpring.Snappy));
-        _ = _draw.AnimateTo(fade, MotionSpec.Spring(ArcSpring.Snappy));
-        _ = _morph.AnimateTo(morph, MotionSpec.Spring(ArcSpring.Morph));
-        _ = _fade.AnimateTo(fade, MotionSpec.Tween(on ? ArcMotionPresets.Instant : ArcMotionPresets.Fast, ArcEasings.Standard));
+        _ = Value(ref _fillScale, RestFillScale).AnimateTo(fill, MotionSpec.Spring(ArcSpring.Snappy));
+        _ = Value(ref _draw, RestDraw).AnimateTo(fade, MotionSpec.Spring(ArcSpring.Snappy));
+        _ = Value(ref _morph, RestMorph).AnimateTo(morph, MotionSpec.Spring(ArcSpring.Morph));
+        _ = Value(ref _fade, RestFade).AnimateTo(fade, MotionSpec.Tween(on ? ArcMotionPresets.Instant : ArcMotionPresets.Fast, ArcEasings.Standard));
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -157,12 +170,12 @@ internal sealed class CheckboxMark : Control
 
     public override void Render(DrawingContext context)
     {
-        var fade = Math.Clamp(_fade.Value, 0, 1);
+        var fade = Math.Clamp(FadeValue, 0, 1);
         if (fade <= 0.001)
         {
             return;
         }
-        var scale = Math.Max(0, _fillScale.Value);
+        var scale = Math.Max(0, FillScale);
         if (Fill is { } fill && scale > 0)
         {
             var edge = BoxSize * scale;
@@ -177,7 +190,7 @@ internal sealed class CheckboxMark : Control
             _pen ??= new Pen(glyph, StrokeThickness, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round);
             using (context.PushOpacity(fade))
             {
-                CheckboxPathMorph.DrawPartial(context, _pen, _morph.Value, _draw.Value);
+                CheckboxPathMorph.DrawPartial(context, _pen, MorphProgress, DrawProgress);
             }
         }
     }

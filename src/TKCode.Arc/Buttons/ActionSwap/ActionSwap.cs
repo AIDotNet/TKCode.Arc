@@ -9,8 +9,10 @@ using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using TKCode.Arc.DesignTokens;
 using AvaloniaButton = Avalonia.Controls.Button;
 
 namespace TKCode.Arc;
@@ -118,11 +120,17 @@ public sealed class ActionSwapValueChangedEventArgs : RoutedEventArgs
 [TemplatePart(SurfacePart, typeof(Control))]
 [TemplatePart(StatusPart, typeof(Control))]
 [PseudoClasses(NeutralPseudoClass, AccentPseudoClass, SuccessPseudoClass, WarningPseudoClass, QuietPseudoClass, DangerPseudoClass,
-    WorkingPseudoClass, FoldedPseudoClass, FailedPseudoClass, InactivePseudoClass, WidePseudoClass)]
+    WorkingPseudoClass, FoldedPseudoClass, FailedPseudoClass, InactivePseudoClass, WidePseudoClass, SmallPseudoClass, LargePseudoClass)]
 public class ActionSwap : AvaloniaButton
 {
     public const string SurfacePart = "PART_Surface";
     public const string StatusPart = "PART_Status";
+
+    /// <summary><see cref="Size"/> Small or Large as a pseudo-class (Medium has none; the theme selects on these).</summary>
+    public const string SmallPseudoClass = ":small";
+
+    /// <inheritdoc cref="SmallPseudoClass"/>
+    public const string LargePseudoClass = ":large";
     public const string NeutralPseudoClass = ":neutral";
     public const string AccentPseudoClass = ":accent";
     public const string SuccessPseudoClass = ":success";
@@ -243,6 +251,7 @@ public class ActionSwap : AvaloniaButton
 
     public ActionSwap()
     {
+        UpdateSizePseudoClasses();
         _states.CollectionChanged += OnStatesChanged;
         _observedStates = new ObservedItems(state =>
         {
@@ -277,12 +286,30 @@ public class ActionSwap : AvaloniaButton
 
     private void OnStatesChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => Refresh();
 
+    private LazyFocusRing? _focusRing;
+
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
         _surface = e.NameScope.Find<ActionSwapSurface>(SurfacePart);
         _status = e.NameScope.Find<ButtonsLiveRegion>(StatusPart);
+        // The pill ring (4px outside, like Button's) is built the first time the pill is keyboard focused, as the last
+        // child of the template's root panel, where the template used to keep a hidden Border.
+        _focusRing ??= new LazyFocusRing(this, ButtonTokens.Key(ButtonTokenKind.FocusRingMargin), ArcDesignTokens.Key(ArcDesignTokenKind.RadiusPill));
+        _focusRing.Attach(VisualChildren.Count > 0 ? VisualChildren[0] as Panel : null);
         Refresh();
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing?.Update();
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -316,6 +343,17 @@ public class ActionSwap : AvaloniaButton
         {
             PseudoClasses.Set(WidePseudoClass, Bounds.Width > 220);
         }
+        else if (change.Property == SizeProperty)
+        {
+            UpdateSizePseudoClasses();
+        }
+    }
+
+    private void UpdateSizePseudoClasses()
+    {
+        var size = Size;
+        PseudoClasses.Set(SmallPseudoClass, size == ControlSize.Small);
+        PseudoClasses.Set(LargePseudoClass, size == ControlSize.Large);
     }
 
     #region 视图

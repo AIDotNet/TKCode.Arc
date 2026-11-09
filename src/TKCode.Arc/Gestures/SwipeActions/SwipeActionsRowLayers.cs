@@ -1,10 +1,10 @@
-using System.Globalization;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
 using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia.Media.TextFormatting;
 using Avalonia.Rendering;
 
 namespace TKCode.Arc;
@@ -67,11 +67,19 @@ internal sealed class SwipeActionsRowLayers : Control, ICustomHitTest
     public double FontSize { get => GetValue(FontSizeProperty); set => SetValue(FontSizeProperty, value); }
     public FontWeight FontWeight { get => GetValue(FontWeightProperty); set => SetValue(FontWeightProperty, value); }
 
+    // TextLayout, not FormattedText: the labels are redrawn on every move of a swipe and every frame of its spring, and a
+    // FormattedText re-shapes its text on each Draw while a TextLayout only emits its glyphs.
     private sealed class LabelCache
     {
         public string? Text;
         public IBrush? Ink;
-        public FormattedText? Layout;
+        public TextLayout? Layout;
+
+        public void Drop()
+        {
+            Layout?.Dispose();
+            Layout = null;
+        }
     }
 
     private readonly Dictionary<SwipeAction, LabelCache> _labels = new();
@@ -99,15 +107,24 @@ internal sealed class SwipeActionsRowLayers : Control, ICustomHitTest
         base.OnPropertyChanged(change);
         if (change.Property == FontFamilyProperty || change.Property == FontSizeProperty || change.Property == FontWeightProperty)
         {
-            _labels.Clear();
+            ClearLabels();
         }
     }
 
     /// <summary>Drops cached label layouts (actions changed).</summary>
     internal void Reset()
     {
-        _labels.Clear();
+        ClearLabels();
         InvalidateVisual();
+    }
+
+    private void ClearLabels()
+    {
+        foreach (var cache in _labels.Values)
+        {
+            cache.Drop();
+        }
+        _labels.Clear();
     }
 
     private (IBrush? Fill, IBrush? Ink) BrushesOf(SwipeActionTone tone) => tone switch
@@ -254,7 +271,7 @@ internal sealed class SwipeActionsRowLayers : Control, ICustomHitTest
         {
             using (context.PushOpacity(layer.LabelReveal))
             {
-                context.DrawText(label, new Point(layer.GlyphCenter - label.WidthIncludingTrailingWhitespace / 2, top + glyph + GlyphGap));
+                label.Draw(context, new Point(layer.GlyphCenter - label.WidthIncludingTrailingWhitespace / 2, top + glyph + GlyphGap));
             }
         }
     }
@@ -274,7 +291,7 @@ internal sealed class SwipeActionsRowLayers : Control, ICustomHitTest
         return pen;
     }
 
-    private FormattedText? LabelOf(SwipeAction action, IBrush ink)
+    private TextLayout? LabelOf(SwipeAction action, IBrush ink)
     {
         if (string.IsNullOrEmpty(action.Label))
         {
@@ -287,10 +304,10 @@ internal sealed class SwipeActionsRowLayers : Control, ICustomHitTest
         }
         if (cache.Layout is null || !ReferenceEquals(cache.Ink, ink) || cache.Text != action.Label)
         {
+            cache.Drop();
             cache.Text = action.Label;
             cache.Ink = ink;
-            cache.Layout = new FormattedText(action.Label, CultureInfo.CurrentUICulture, FlowDirection.LeftToRight,
-                new Typeface(FontFamily, FontStyle.Normal, FontWeight), FontSize > 0 ? FontSize : 12, ink);
+            cache.Layout = new TextLayout(action.Label, new Typeface(FontFamily, FontStyle.Normal, FontWeight), FontSize > 0 ? FontSize : 12, ink);
         }
         return cache.Layout;
     }

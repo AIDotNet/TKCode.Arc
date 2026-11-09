@@ -37,13 +37,7 @@
                             </Grid>
                         </StackPanel>
                     </Border>
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            Margin="-3"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <!-- The focus ring (PART_FocusRing, 3px outside) is built by the action the first time it is keyboard focused. -->
                 </Panel>
             </ControlTemplate>
         </Setter>
@@ -72,12 +66,12 @@
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
         </Style>
-        <Style Selector="^:expanded[Tone=Danger]">
+        <Style Selector="^:expanded:danger">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
             <Setter Property="Background" Value="{arc:ExpandingButtonGroupItemTokenResource DangerExpandedColor}" />
         </Style>
         <!-- The confirmation carries its meaning on the check, with a faint tint behind the whole button. -->
-        <Style Selector="^:done[Tone=Neutral]">
+        <Style Selector="^:done:not(:danger)">
             <Setter Property="Background" Value="{arc:ExpandingButtonGroupItemTokenResource DoneColor}" />
             <Style Selector="^ /template/ Panel#PART_IconBox">
                 <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Success}" />
@@ -97,9 +91,6 @@
         </Style>
         <Style Selector="^:disabled">
             <Setter Property="Opacity" Value="{arc:ExpandingButtonGroupItemTokenResource DisabledOpacity}" />
-        </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
         </Style>
 
         <Style Selector="^:motion-full">

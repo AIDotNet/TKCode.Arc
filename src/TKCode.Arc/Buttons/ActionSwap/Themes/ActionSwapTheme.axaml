@@ -35,13 +35,7 @@
                                                AutomationProperties.AccessibilityView="Raw" />
                     </Border>
                     <arc:ButtonsLiveRegion Name="PART_Status" />
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            Margin="-4"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <!-- The focus ring (PART_FocusRing) is built by the pill the first time it is keyboard focused. -->
                 </Panel>
             </ControlTemplate>
         </Setter>
@@ -63,11 +57,11 @@
         <Setter Property="ClipToBounds" Value="False" />
 
         <!-- Sizes: heights 36 / 44 / 50, inline padding 16 / 20 / 24. -->
-        <Style Selector="^[Size=Small]">
+        <Style Selector="^:small">
             <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
             <Setter Property="Padding" Value="{arc:ActionSwapTokenResource InlinePaddingSM}" />
         </Style>
-        <Style Selector="^[Size=Large]">
+        <Style Selector="^:large">
             <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeLG}" />
             <Setter Property="Padding" Value="{arc:ActionSwapTokenResource InlinePaddingLG}" />
         </Style>
@@ -128,9 +122,6 @@
         <Style Selector="^:disabled, ^:inactive">
             <Setter Property="Cursor" Value="Arrow" />
             <Setter Property="Opacity" Value="{arc:ActionSwapTokenResource DisabledOpacity}" />
-        </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
         </Style>
 
         <!-- Press: instant scale down, snappy return; wide pills press shallower. Never while working or inactive. -->

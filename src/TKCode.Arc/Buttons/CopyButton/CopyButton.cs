@@ -1,8 +1,11 @@
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
+using Avalonia.Controls.Primitives;
+using Avalonia.Input;
 using Avalonia.Media;
 using AvaloniaButton = Avalonia.Controls.Button;
 
@@ -26,12 +29,15 @@ public enum CopyState
 /// to "Copied", and everything returns to idle after 1.9s. The label cell reserves its widest state so the
 /// button never changes width.
 /// </summary>
-[PseudoClasses(CopiedPseudoClass, ErrorPseudoClass, IconOnlyPseudoClass)]
+[PseudoClasses(CopiedPseudoClass, ErrorPseudoClass, IconOnlyPseudoClass, PlainPseudoClass)]
 public class CopyButton : AvaloniaButton
 {
     public const string CopiedPseudoClass = ":copied";
     public const string ErrorPseudoClass = ":error";
     public const string IconOnlyPseudoClass = ":icon-only";
+
+    /// <summary>Set while <see cref="Variant"/> is Plain (the theme selects on it, not on the property).</summary>
+    public const string PlainPseudoClass = ":plain";
 
     /// <summary>Text copied to the clipboard when the button is clicked.</summary>
     public static readonly StyledProperty<string?> ValueProperty =
@@ -71,6 +77,10 @@ public class CopyButton : AvaloniaButton
     internal static readonly DirectProperty<CopyButton, Control?> IconProperty =
         AvaloniaProperty.RegisterDirect<CopyButton, Control?>(nameof(Icon), o => o.Icon);
 
+    /// <summary>The three labels, so the label cell reserves the widest (one measuring sizer instead of three hidden TextBlocks).</summary>
+    internal static readonly DirectProperty<CopyButton, IReadOnlyList<string>> SizerLabelsProperty =
+        AvaloniaProperty.RegisterDirect<CopyButton, IReadOnlyList<string>>(nameof(SizerLabels), o => o.SizerLabels);
+
     /// <inheritdoc cref="ValueProperty"/>
     public string? Value { get => GetValue(ValueProperty); set => SetValue(ValueProperty, value); }
     /// <inheritdoc cref="LabelProperty"/>
@@ -108,14 +118,48 @@ public class CopyButton : AvaloniaButton
         private set => SetAndRaise(IconProperty, ref _icon, value);
     }
 
+    private IReadOnlyList<string> _sizerLabels = [];
+
+    /// <inheritdoc cref="SizerLabelsProperty"/>
+    internal IReadOnlyList<string> SizerLabels
+    {
+        get => _sizerLabels;
+        private set => SetAndRaise(SizerLabelsProperty, ref _sizerLabels, value);
+    }
+
+    private void UpdateSizerLabels() => SizerLabels = [Label, CopiedLabel, FailedLabel];
+
     /// <summary>Occurs after the value is copied to the clipboard.</summary>
     public event EventHandler? Copied;
 
     private PausableTimer? _resetTimer;
+    private LazyFocusRing? _focusRing;
 
     public CopyButton()
     {
         Icon = CreateIcon(CopyState.Idle);
+        PseudoClasses.Set(PlainPseudoClass, Variant == CopyButtonVariant.Plain);
+    }
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        // The ring (4px outside, like Button's) is built the first time the button is keyboard focused, as the last
+        // child of the template's root panel, where the template used to keep a hidden Border.
+        _focusRing ??= new LazyFocusRing(this, ButtonTokens.Key(ButtonTokenKind.FocusRingMargin), CopyButtonTokens.Key(CopyButtonTokenKind.FocusRingRadius));
+        _focusRing.Attach(VisualChildren.Count > 0 ? VisualChildren[0] as Panel : null);
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing?.Update();
     }
 
     protected override async void OnClick()
@@ -165,14 +209,22 @@ public class CopyButton : AvaloniaButton
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-        if (change.Property == LabelProperty && State == CopyState.Idle)
+        if (change.Property == LabelProperty || change.Property == CopiedLabelProperty || change.Property == FailedLabelProperty)
         {
-            DisplayLabel = Label;
-            AutomationProperties.SetName(this, Label);
+            UpdateSizerLabels();
+            if (change.Property == LabelProperty && State == CopyState.Idle)
+            {
+                DisplayLabel = Label;
+                AutomationProperties.SetName(this, Label);
+            }
         }
         else if (change.Property == IsIconOnlyProperty)
         {
             PseudoClasses.Set(IconOnlyPseudoClass, IsIconOnly);
+        }
+        else if (change.Property == VariantProperty)
+        {
+            PseudoClasses.Set(PlainPseudoClass, Variant == CopyButtonVariant.Plain);
         }
     }
 
@@ -180,6 +232,7 @@ public class CopyButton : AvaloniaButton
     {
         base.OnInitialized();
         DisplayLabel = Label;
+        UpdateSizerLabels();
         AutomationProperties.SetName(this, Label);
     }
 }

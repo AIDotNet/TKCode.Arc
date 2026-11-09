@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Primitives;
 using System.Collections.Specialized;
 using System.Globalization;
@@ -71,6 +72,8 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
     public const string MarksPart = "PART_Marks";
     public const string ReadoutLowPart = "PART_ReadoutLow";
     public const string ReadoutHighPart = "PART_ReadoutHigh";
+    internal const string ReadoutPart = "PART_Readout";
+    internal const string ReadoutDashPart = "PART_ReadoutDash";
     public const string DraggingPseudoClass = ":dragging";
     public const string RangePseudoClass = ":range";
     public const string MarksPseudoClass = ":marks";
@@ -233,10 +236,16 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
     private bool _dragActive;
     private SliderRail? _rail;
     private SliderMarkLabels? _markLabels;
+    private Panel? _readout;
     private SliderNumberText? _readoutLow;
+    // The dash and the high readout are built the first time the slider is a range.
+    private TextBlock? _readoutDash;
     private SliderNumberText? _readoutHigh;
     // Built with their bubbles, the first time a bubble shows.
     private readonly SliderNumberText?[] _bubbleTexts = new SliderNumberText?[2];
+    // During a drag the readouts, bubbles and spoken values are refreshed once per frame, not once per pointer event.
+    private bool _textsPosted;
+    private Action? _flushTexts;
     private DispatcherTimer? _lingerTimer;
     private int _dragging = -1;
     private int _keyFocus = -1;
@@ -404,9 +413,32 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
             position.Jump(from);
             _ = position.AnimateTo(target, MotionSpec.Spring(ThumbSpring));
         }
-        UpdateTexts();
+        if (_dragActive)
+        {
+            // Pointer events arrive far above the frame rate; the value itself is already committed.
+            RequestTextUpdate();
+        }
+        else
+        {
+            UpdateTexts();
+        }
         _rail?.InvalidateVisual();
-        _markLabels?.InvalidateVisual();
+        _markLabels?.SyncMarkStates();
+    }
+
+    private void RequestTextUpdate()
+    {
+        if (_textsPosted)
+        {
+            return;
+        }
+        _textsPosted = true;
+        _flushTexts ??= () =>
+        {
+            _textsPosted = false;
+            UpdateTexts();
+        };
+        Dispatcher.UIThread.Post(_flushTexts, DispatcherPriority.Render);
     }
 
     #endregion
@@ -418,8 +450,10 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
         base.OnApplyTemplate(e);
         _rail = e.NameScope.Find<SliderRail>(RailPart);
         _markLabels = e.NameScope.Find<SliderMarkLabels>(MarksPart);
+        _readout = e.NameScope.Find<Panel>(ReadoutPart);
         _readoutLow = e.NameScope.Find<SliderNumberText>(ReadoutLowPart);
-        _readoutHigh = e.NameScope.Find<SliderNumberText>(ReadoutHighPart);
+        _readoutDash = null;
+        _readoutHigh = null;
         if (_rail is not null)
         {
             EnsureThumbMotion(0);
@@ -447,6 +481,7 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
         SyncThumbs(animate: false);
         UpdateThumbs();
         UpdateMarks();
+        UpdateRangeReadout();
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -535,6 +570,40 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
     {
         PseudoClasses.Set(RangePseudoClass, IsRange);
         PseudoClasses.Set(DraggingPseudoClass, _dragging >= 0);
+        UpdateRangeReadout();
+    }
+
+    /// <summary>
+    /// The dash and the high readout exist only once the slider has been a range (most sliders never are); afterwards
+    /// they hide and show with <see cref="IsRange"/>, as the template's hidden parts did.
+    /// </summary>
+    private void UpdateRangeReadout()
+    {
+        if (_readout is null)
+        {
+            return;
+        }
+        if (_readoutHigh is null)
+        {
+            if (!IsRange)
+            {
+                return;
+            }
+            _readoutDash = new TextBlock
+            {
+                Name = ReadoutDashPart,
+                Text = "–",
+                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
+            };
+            ArcTokens.Bind(_readoutDash, TextBlock.ForegroundProperty, ArcDesignTokenKind.TextMuted);
+            _readoutHigh = new SliderNumberText { Name = ReadoutHighPart, VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center };
+            // Before it is mounted, so the first value shows at once instead of rolling in.
+            _readoutHigh.SetText(FormatValue(_values[1]));
+            _readout.Children.Add(_readoutDash);
+            _readout.Children.Add(_readoutHigh);
+        }
+        _readoutDash!.IsVisible = IsRange;
+        _readoutHigh.IsVisible = IsRange;
     }
 
     private void UpdateThumbs()

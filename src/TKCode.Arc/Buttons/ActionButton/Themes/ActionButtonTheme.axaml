@@ -33,13 +33,7 @@
                         </StackPanel>
                     </Border>
                     <arc:ButtonsLiveRegion Name="PART_Status" />
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            Margin="-4"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{arc:ActionButtonTokenResource FocusRingRadius}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <!-- The focus ring (PART_FocusRing) is built by the button the first time it is keyboard focused. -->
                 </Panel>
             </ControlTemplate>
         </Setter>
@@ -70,9 +64,6 @@
         <Style Selector="^:disabled">
             <Setter Property="Cursor" Value="No" />
             <Setter Property="Opacity" Value="{arc:ActionButtonTokenResource DisabledOpacity}" />
-        </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
         </Style>
 
         <!-- Press: instant scale down, snappy return; wide buttons press shallower. Never while pending. -->

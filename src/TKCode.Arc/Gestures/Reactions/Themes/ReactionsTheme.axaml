@@ -76,13 +76,6 @@
                                 CornerRadius="{TemplateBinding CornerRadius}"
                                 BorderBrush="{arc:ArcDesignTokenResource Accent}" />
                     </Panel>
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            Margin="-4"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
         </Setter>
@@ -133,9 +126,6 @@
         </Style>
         <Style Selector="^:checked:pressed /template/ Border#PART_AccentFill">
             <Setter Property="Opacity" Value="{arc:ReactionsTokenResource ReactedPressFillOpacity}" />
-        </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
         </Style>
 
         <Style Selector="^:motion-full">
@@ -193,13 +183,6 @@
                             </arc:ArcContentSwap.ContentTemplate>
                         </arc:ArcContentSwap>
                     </Border>
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            Margin="-4"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
         </Setter>
@@ -221,9 +204,6 @@
         <Style Selector="^:pressed">
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
-        </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
         </Style>
         <Style Selector="^:motion-full">
             <Setter Property="Transitions">
@@ -292,12 +272,6 @@
                                         RenderTransformOrigin="50%,50%"
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center" />
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{TemplateBinding CornerRadius}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
         </Setter>
@@ -318,9 +292,6 @@
         </Style>
         <Style Selector="^:checked /template/ Border#PART_AccentRing">
             <Setter Property="Opacity" Value="{arc:ReactionsTokenResource ReactedRingOpacity}" />
-        </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
         </Style>
         <Style Selector="^:motion-full">
             <Setter Property="Transitions">

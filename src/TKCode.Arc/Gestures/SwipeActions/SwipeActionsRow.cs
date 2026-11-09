@@ -126,10 +126,11 @@ public class SwipeActionsRow : ContentControl
 
     #endregion
 
-    private readonly MotionValue<double> _x;
-    private readonly MotionValue<double> _cover;
-    private readonly MotionValue<double> _presence;
-    private readonly MotionValue<double> _fade;
+    // Built on the first swipe, commit or entrance: most rows of a list never move. Unbuilt they read as at rest.
+    private MotionValue<double>? _x;
+    private MotionValue<double>? _cover;
+    private MotionValue<double>? _presence;
+    private MotionValue<double>? _fade;
     private readonly TranslateTransform _translate = new();
     // The actions may be shared (the list's defaults, or app objects): their changes are watched only while the row is
     // shown, so a removed row is not kept alive by actions that outlive it.
@@ -161,16 +162,60 @@ public class SwipeActionsRow : ContentControl
 
     public SwipeActionsRow()
     {
-        _x = new MotionValue<double>(this, 0, MotionVectors.Double);
-        _x.Changed += OnOffsetChanged;
-        _cover = new MotionValue<double>(this, 0, MotionVectors.Double);
-        _cover.Changed += _ => _layers?.InvalidateVisual();
-        _presence = new MotionValue<double>(this, 1, MotionVectors.Double);
-        _presence.Changed += _ => InvalidateMeasure();
-        _fade = new MotionValue<double>(this, 1, MotionVectors.Double);
-        _fade.Changed += value => Opacity = value;
         LeadingActions.CollectionChanged += (_, _) => OnActionsChanged();
         TrailingActions.CollectionChanged += (_, _) => OnActionsChanged();
+    }
+
+    private MotionValue<double> X
+    {
+        get
+        {
+            if (_x is null)
+            {
+                _x = new MotionValue<double>(this, 0, MotionVectors.Double);
+                _x.Changed += OnOffsetChanged;
+            }
+            return _x;
+        }
+    }
+
+    private MotionValue<double> Cover
+    {
+        get
+        {
+            if (_cover is null)
+            {
+                _cover = new MotionValue<double>(this, 0, MotionVectors.Double);
+                _cover.Changed += _ => _layers?.InvalidateVisual();
+            }
+            return _cover;
+        }
+    }
+
+    private MotionValue<double> Presence
+    {
+        get
+        {
+            if (_presence is null)
+            {
+                _presence = new MotionValue<double>(this, 1, MotionVectors.Double);
+                _presence.Changed += _ => InvalidateMeasure();
+            }
+            return _presence;
+        }
+    }
+
+    private MotionValue<double> Fade
+    {
+        get
+        {
+            if (_fade is null)
+            {
+                _fade = new MotionValue<double>(this, 1, MotionVectors.Double);
+                _fade.Changed += value => Opacity = value;
+            }
+            return _fade;
+        }
     }
 
     /// <summary>The list this row belongs to (null when used on its own).</summary>
@@ -180,10 +225,10 @@ public class SwipeActionsRow : ContentControl
     internal bool IsGenerated { get; set; }
 
     /// <summary>Current horizontal offset of the content (positive: leading actions revealed).</summary>
-    internal double Offset => _x.Value;
+    internal double Offset => _x?.Value ?? 0;
 
     /// <summary>Progress of the covering action stretching across the row (0..1).</summary>
-    internal double CoverProgress => _cover.Value;
+    internal double CoverProgress => _cover?.Value ?? 0;
 
     /// <summary>The action stretching over the row on a full swipe or a commit.</summary>
     internal (SwipeActionSide Side, int Index)? Covering { get; private set; }
@@ -249,7 +294,7 @@ public class SwipeActionsRow : ContentControl
     /// <summary>Puts the row away.</summary>
     public void Close()
     {
-        if (!_leaving && (Math.Abs(_x.Value) > 0.01 || OpenSide != SwipeActionSide.None))
+        if (!_leaving && (Math.Abs(Offset) > 0.01 || OpenSide != SwipeActionSide.None))
         {
             Settle(0);
         }
@@ -307,7 +352,7 @@ public class SwipeActionsRow : ContentControl
         }
         if (_host is not null)
         {
-            _translate.X = _x.Value;
+            _translate.X = Offset;
             _host.RenderTransform = _translate;
             _host.AddHandler(PointerPressedEvent, OnHostPointerPressed, RoutingStrategies.Tunnel, handledEventsToo: true);
             _host.AddHandler(PointerReleasedEvent, OnHostPointerReleased, RoutingStrategies.Tunnel, handledEventsToo: true);
@@ -436,16 +481,16 @@ public class SwipeActionsRow : ContentControl
         {
             return;
         }
-        _fade.Jump(0);
+        Fade.Jump(0);
         if (level == ArcMotionLevel.Full)
         {
-            _presence.Jump(0);
-            _ = _presence.AnimateTo(1, MotionSpec.Spring(ArcSpring.Smooth));
-            _ = _fade.AnimateTo(1, MotionSpec.Tween(ArcMotionPresets.Standard, ArcEasings.Enter));
+            Presence.Jump(0);
+            _ = Presence.AnimateTo(1, MotionSpec.Spring(ArcSpring.Smooth));
+            _ = Fade.AnimateTo(1, MotionSpec.Tween(ArcMotionPresets.Standard, ArcEasings.Enter));
         }
         else
         {
-            _ = _fade.AnimateTo(1, MotionSpec.Tween(ReducedFade, ArcEasings.Standard));
+            _ = Fade.AnimateTo(1, MotionSpec.Tween(ReducedFade, ArcEasings.Standard));
         }
     }
 
@@ -481,10 +526,10 @@ public class SwipeActionsRow : ContentControl
         }
         _armed = false;
         Covering = null;
-        _x.Jump(0);
-        _cover.Jump(0);
-        _presence.Jump(1);
-        _fade.Jump(1);
+        _x?.Jump(0);
+        _cover?.Jump(0);
+        _presence?.Jump(1);
+        _fade?.Jump(1);
         SetOpenSide(SwipeActionSide.None);
     }
 
@@ -493,13 +538,13 @@ public class SwipeActionsRow : ContentControl
     {
         var size = base.MeasureOverride(availableSize);
         _naturalHeight = size.Height;
-        var presence = _presence.Value;
+        var presence = _presence?.Value ?? 1;
         return presence >= 0.9999 ? size : new Size(size.Width, size.Height * Math.Max(0, presence));
     }
 
     protected override Size ArrangeOverride(Size finalSize)
     {
-        if (_presence.Value >= 0.9999)
+        if ((_presence?.Value ?? 1) >= 0.9999)
         {
             return base.ArrangeOverride(finalSize);
         }
@@ -539,7 +584,7 @@ public class SwipeActionsRow : ContentControl
         return RubberBand.Clamp(raw, -LimitOf(SwipeActionSide.Trailing), LimitOf(SwipeActionSide.Leading), RowWidth);
     }
 
-    private void StretchTo(double value) => _ = _cover.AnimateTo(value, MotionSpec.Spring(ArcSpring.Morph));
+    private void StretchTo(double value) => _ = Cover.AnimateTo(value, MotionSpec.Spring(ArcSpring.Morph));
 
     /// <summary>Past the full-swipe threshold the outermost action stretches across the row (20px hysteresis on the way back).</summary>
     private void Arm(double value)
@@ -571,16 +616,16 @@ public class SwipeActionsRow : ContentControl
     /// <summary>Springs the row to a stop carrying the release velocity (smooth home, snappy open). Reduced motion jumps.</summary>
     private void Settle(double target, double velocity = 0)
     {
-        if (_armed || (target != 0 && _cover.Value != 0))
+        if (_armed || (target != 0 && CoverProgress != 0))
         {
             StretchTo(0);
         }
         _armed = false;
-        var from = _x.Value;
+        var from = Offset;
         // Heading home, the spring may not carry the row past zero, or the opposite actions would flash.
         var toward = target == 0 && Math.Sign(velocity) == -Math.Sign(from);
         var launch = toward ? Math.Sign(velocity) * Math.Min(Math.Abs(velocity), Math.Abs(from) * HomeLaunchCap) : velocity;
-        var settle = MomentumProjector.SettleTo(_x, target, launch, target == 0 ? ArcSpring.Smooth : ArcSpring.Snappy);
+        var settle = MomentumProjector.SettleTo(X, target, launch, target == 0 ? ArcSpring.Smooth : ArcSpring.Snappy);
         if (target == 0)
         {
             _ = HomeWhenSettled(settle);
@@ -592,7 +637,7 @@ public class SwipeActionsRow : ContentControl
     {
         if (await settle)
         {
-            _cover.Jump(0);
+            _cover?.Jump(0);
             Covering = null;
             _layers?.InvalidateVisual();
         }
@@ -600,7 +645,7 @@ public class SwipeActionsRow : ContentControl
 
     private void Release(double velocity)
     {
-        var value = _x.Value;
+        var value = Offset;
         var side = SideOf(value);
         if (side == SwipeActionSide.None || ActionsOf(side).Count == 0)
         {
@@ -626,7 +671,7 @@ public class SwipeActionsRow : ContentControl
 
     private void OnHostPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        _pressWhileOpen = !_leaving && Math.Abs(_x.Value) > 0.5;
+        _pressWhileOpen = !_leaving && Math.Abs(Offset) > 0.5;
     }
 
     private void OnHostPointerReleased(object? sender, PointerReleasedEventArgs e)
@@ -644,8 +689,8 @@ public class SwipeActionsRow : ContentControl
     private void OnDragPressed(object? sender, DragGestureEventArgs e)
     {
         // Catch the row mid-flight: the drag continues from wherever it is now.
-        _x.Stop();
-        _dragOrigin = _x.Value;
+        _x?.Stop();
+        _dragOrigin = Offset;
     }
 
     private void OnDragStarted(object? sender, DragGestureEventArgs e)
@@ -659,7 +704,7 @@ public class SwipeActionsRow : ContentControl
     private void OnDragMoved(object? sender, DragGestureEventArgs e)
     {
         var value = Constrain(_dragOrigin + e.Offset.X - _dragBase);
-        _x.Jump(value);
+        X.Jump(value);
         Arm(value);
     }
 
@@ -702,7 +747,7 @@ public class SwipeActionsRow : ContentControl
     /// <summary>Another row opened: put this one away unless it is leaving or being dragged.</summary>
     internal void CloseForOthers()
     {
-        if (!_leaving && _drag?.IsDragging != true && Math.Abs(_x.Value) > 0.01)
+        if (!_leaving && _drag?.IsDragging != true && Math.Abs(Offset) > 0.01)
         {
             Settle(0);
         }
@@ -780,16 +825,16 @@ public class SwipeActionsRow : ContentControl
         _leaving = true;
         PseudoClasses.Set(LeavingPseudoClass, true);
         List?.OnRowLeavingChanged();
-        _x.Stop();
-        _ = MomentumProjector.SettleTo(_x, direction * (RowWidth + 2), Math.Sign(velocity) == direction ? velocity : 0, ArcSpring.Smooth);
+        X.Stop();
+        _ = MomentumProjector.SettleTo(X, direction * (RowWidth + 2), Math.Sign(velocity) == direction ? velocity : 0, ArcSpring.Smooth);
         SetOpenSide(SwipeActionSide.None);
         var level = IsInVisualTree() ? ArcMotion.GetEffectiveLevel(this) : ArcMotionLevel.Off;
         var gone = level switch
         {
             ArcMotionLevel.Full => Task.WhenAll(
-                _presence.AnimateTo(0, MotionSpec.Spring(ArcSpring.Smooth, CollapseDelay)),
-                _fade.AnimateTo(0, MotionSpec.Tween(ArcMotionPresets.Instant, ArcEasings.Standard, FadeDelay))),
-            ArcMotionLevel.Reduced => _fade.AnimateTo(0, MotionSpec.Tween(ReducedFade, ArcEasings.Standard)),
+                Presence.AnimateTo(0, MotionSpec.Spring(ArcSpring.Smooth, CollapseDelay)),
+                Fade.AnimateTo(0, MotionSpec.Tween(ArcMotionPresets.Instant, ArcEasings.Standard, FadeDelay))),
+            ArcMotionLevel.Reduced => Fade.AnimateTo(0, MotionSpec.Tween(ReducedFade, ArcEasings.Standard)),
             _ => Task.CompletedTask
         };
         var token = ++_leaveToken;
@@ -823,8 +868,8 @@ public class SwipeActionsRow : ContentControl
         _leaving = false;
         PseudoClasses.Set(LeavingPseudoClass, false);
         List?.OnRowLeavingChanged();
-        _ = _presence.AnimateTo(1, MotionSpec.Spring(ArcSpring.Smooth));
-        _ = _fade.AnimateTo(1, MotionSpec.Tween(ArcMotionPresets.Standard, ArcEasings.Enter));
+        _ = Presence.AnimateTo(1, MotionSpec.Spring(ArcSpring.Smooth));
+        _ = Fade.AnimateTo(1, MotionSpec.Tween(ArcMotionPresets.Standard, ArcEasings.Enter));
         Settle(0);
     }
 

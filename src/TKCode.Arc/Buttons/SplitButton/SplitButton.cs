@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Windows.Input;
+using TKCode.Arc.DesignTokens;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
@@ -318,6 +319,11 @@ public class SplitButton : TemplatedControl
         PseudoClasses.Set(SecondaryPseudoClass, secondary);
         _primary?.Classes.Set("secondary", secondary);
         _menuButton?.Classes.Set("secondary", secondary);
+        // Each half's keyboard ring is the Button's own lazily built ring, with this half's margin and two-cornered radius
+        // (the half theme used to keep a second, hidden ring Border for that).
+        var margin = SplitButtonTokens.Key(SplitButtonTokenKind.FocusRingMargin);
+        _primary?.SetFocusRingKeys(margin, SplitButtonTokens.Key(secondary ? SplitButtonTokenKind.PillStartRingRadius : SplitButtonTokenKind.StartRingRadius));
+        _menuButton?.SetFocusRingKeys(margin, SplitButtonTokens.Key(secondary ? SplitButtonTokenKind.PillEndRingRadius : SplitButtonTokenKind.EndRingRadius));
     }
 
     private void ShowIcon()

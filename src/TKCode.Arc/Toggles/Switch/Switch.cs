@@ -65,19 +65,10 @@ public class Switch : ToggleButton
             thumbHost.RenderTransform = _thumbOffset;
         }
         _thumb = e.NameScope.Find<Border>("PART_Thumb");
-        if (_thumb is not null)
-        {
-            _thumbScale = new ScaleTransform();
-            _thumb.RenderTransform = _thumbScale;
-            _stretch = new MotionValue<double>(_thumb, 1, MotionVectors.Double);
-            _stretch.Changed += v =>
-            {
-                if (_thumbScale is not null)
-                {
-                    _thumbScale.ScaleX = v;
-                }
-            };
-        }
+        // The stretch (a scale transform and its motion value) is built on the first keyboard or code toggle: most
+        // switches are only ever pressed, and a new template starts it over.
+        _thumbScale = null;
+        _stretch = null;
         // The pill ring sits under the track; built the first time the switch is keyboard focused.
         _focusRing ??= new LazyFocusRing(this, SwitchTokens.Key(SwitchTokenKind.FocusRingMargin), ArcDesignTokens.Key(ArcDesignTokenKind.RadiusPill));
         _focusRing.Attach(e.NameScope.Find<Panel>("PART_TrackHost"), below: true);
@@ -151,7 +142,7 @@ public class Switch : ToggleButton
     /// </summary>
     private async void PlayStretch()
     {
-        if (_stretch is null || !ArcMotion.IsFull(this))
+        if (_thumb is null || !ArcMotion.IsFull(this))
         {
             return;
         }
@@ -160,7 +151,16 @@ public class Switch : ToggleButton
         {
             return;
         }
-        await _stretch.AnimateTo(1.16, MotionSpec.Tween(TimeSpan.FromSeconds(0.136), ArcEasings.Standard));
-        await _stretch.AnimateTo(1.0, MotionSpec.Tween(TimeSpan.FromSeconds(0.204), ArcEasings.InOut));
+        if (_stretch is null)
+        {
+            var scale = new ScaleTransform();
+            _thumbScale = scale;
+            _thumb.RenderTransform = scale;
+            _stretch = new MotionValue<double>(_thumb, 1, MotionVectors.Double);
+            _stretch.Changed += v => scale.ScaleX = v;
+        }
+        var stretch = _stretch;
+        await stretch.AnimateTo(1.16, MotionSpec.Tween(TimeSpan.FromSeconds(0.136), ArcEasings.Standard));
+        await stretch.AnimateTo(1.0, MotionSpec.Tween(TimeSpan.FromSeconds(0.204), ArcEasings.InOut));
     }
 }

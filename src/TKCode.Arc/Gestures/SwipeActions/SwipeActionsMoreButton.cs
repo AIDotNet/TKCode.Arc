@@ -3,6 +3,10 @@ using Avalonia.Automation.Peers;
 using Avalonia.Automation.Provider;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
+using Avalonia.Controls.Primitives;
+using Avalonia.Input;
+using TKCode.Arc.DesignTokens;
+using TKCode.Arc.Primitives;
 
 namespace TKCode.Arc;
 
@@ -23,6 +27,29 @@ internal sealed class SwipeActionsMoreButton : Button
     internal SwipeActionsRow? Row { get; set; }
 
     internal bool IsMenuOpen { get; private set; }
+
+    // One per row of a list, and keyboard focus reaches few of them.
+    private LazyFocusRing? _moreRing;
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        _moreRing ??= new LazyFocusRing(this, SwipeActionsRowTokens.Key(SwipeActionsRowTokenKind.MoreRingMargin),
+            SwipeActionsRowTokens.Key(SwipeActionsRowTokenKind.MoreRingRadius));
+        _moreRing.Attach(e.NameScope.Find<Control>("PART_Frame")?.Parent as Panel);
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _moreRing?.Update();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _moreRing?.Update();
+    }
 
     internal void SetMenuOpen(bool open)
     {

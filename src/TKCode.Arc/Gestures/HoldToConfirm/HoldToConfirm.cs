@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
 using Avalonia;
@@ -46,7 +47,7 @@ public sealed class HoldToConfirmHoldingChangedEventArgs : EventArgs
 [TemplatePart(FillPart, typeof(Control))]
 [TemplatePart(FillFacePart, typeof(Control))]
 [TemplatePart(StatusPart, typeof(Control))]
-[PseudoClasses(HoldingPseudoClass, ConfirmedPseudoClass, WidePseudoClass)]
+[PseudoClasses(HoldingPseudoClass, ConfirmedPseudoClass, WidePseudoClass, DangerPseudoClass, NeutralPseudoClass)]
 public class HoldToConfirm : AvaloniaButton
 {
     public const string FacePart = "PART_Face";
@@ -56,6 +57,12 @@ public class HoldToConfirm : AvaloniaButton
     public const string HoldingPseudoClass = ":holding";
     public const string ConfirmedPseudoClass = ":confirmed";
     public const string WidePseudoClass = ":wide";
+
+    /// <summary>Set while <see cref="Tone"/> is <see cref="HoldToConfirmTone.Danger"/>.</summary>
+    public const string DangerPseudoClass = ":danger";
+
+    /// <summary>Set while <see cref="Tone"/> is <see cref="HoldToConfirmTone.Neutral"/>.</summary>
+    public const string NeutralPseudoClass = ":neutral";
 
     /// <summary>Pointer travel beyond the button that cancels a hold, like a native press.</summary>
     internal const double CancelSlack = 24;
@@ -137,6 +144,7 @@ public class HoldToConfirm : AvaloniaButton
     private HoldToConfirmFace? _fillFace;
     private Control? _fill;
     private ButtonsLiveRegion? _status;
+    private LazyFocusRing? _focusRing;
     private readonly RectangleGeometry _fillClip = new();
     private MotionTimeline? _progress;
     private HoldSource _source;
@@ -145,6 +153,18 @@ public class HoldToConfirm : AvaloniaButton
     private WindowBase? _window;
 
     private static readonly SpringSpec Rewind = ArcMotionPresets.Smooth;
+
+    public HoldToConfirm()
+    {
+        UpdateTonePseudoClasses();
+    }
+
+    private void UpdateTonePseudoClasses()
+    {
+        var tone = Tone;
+        PseudoClasses.Set(DangerPseudoClass, tone == HoldToConfirmTone.Danger);
+        PseudoClasses.Set(NeutralPseudoClass, tone == HoldToConfirmTone.Neutral);
+    }
 
     /// <summary>P22 hold fill: the Core timeline runs while held (at every motion level) and rewinds on a spring.</summary>
     private MotionTimeline Progress
@@ -168,6 +188,8 @@ public class HoldToConfirm : AvaloniaButton
         _fillFace = e.NameScope.Find<HoldToConfirmFace>(FillFacePart);
         _fill = e.NameScope.Find<Control>(FillPart);
         _status = e.NameScope.Find<ButtonsLiveRegion>(StatusPart);
+        _focusRing ??= LiteralFocusRing.Create(this, HoldToConfirmTokens.Key(HoldToConfirmTokenKind.FocusRingRadius));
+        LiteralFocusRing.Attach(_focusRing, e.NameScope.Find<Control>("PART_Surface")?.Parent as Panel, new Thickness(-4));
         if (_fill is not null)
         {
             _fill.Clip = _fillClip;
@@ -372,9 +394,16 @@ public class HoldToConfirm : AvaloniaButton
         }
     }
 
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
     protected override void OnLostFocus(FocusChangedEventArgs e)
     {
         base.OnLostFocus(e);
+        _focusRing?.Update();
         Release();
     }
 
@@ -438,6 +467,10 @@ public class HoldToConfirm : AvaloniaButton
         else if (change.Property == HoldDurationProperty)
         {
             UpdateAutomation();
+        }
+        else if (change.Property == ToneProperty)
+        {
+            UpdateTonePseudoClasses();
         }
         else if (change.Property == BoundsProperty)
         {

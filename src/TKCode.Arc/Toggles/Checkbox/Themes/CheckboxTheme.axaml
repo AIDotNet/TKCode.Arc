@@ -45,13 +45,7 @@
                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
                                           LineHeight="{arc:CheckboxTokenResource LabelLineHeight}"
                                           TextWrapping="Wrap" />
-                        <TextBlock Name="PART_Description"
-                                   IsVisible="{TemplateBinding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                                   Text="{TemplateBinding Description}"
-                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
-                                   LineHeight="{arc:CheckboxTokenResource DescriptionLineHeight}"
-                                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
-                                   TextWrapping="Wrap" />
+                        <!-- The description line (PART_Description) is built by the checkbox the first time it has one. -->
                     </StackPanel>
                 </Grid>
             </ControlTemplate>
