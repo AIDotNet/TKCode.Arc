@@ -201,6 +201,8 @@ public partial class WorkflowCanvas
     }
 
     /// <summary>Redraws the ports: of hovered, selected and focused cards when editable, of every card while connecting.</summary>
+    private WorkflowEdgeVisual? _connectPreview;
+
     private void UpdatePorts()
     {
         if (_portLayer is null)
@@ -229,7 +231,7 @@ public partial class WorkflowCanvas
         {
             var start = PortPoint(from, _connectFromPort, true);
             var end = _connectTarget is { } t ? PortPoint(t.Node, t.Port, false) : _connectPointer;
-            var preview = new WorkflowEdgeVisual(new WorkflowEdge(from, from));
+            var preview = _connectPreview ??= new WorkflowEdgeVisual(new WorkflowEdge(from, from));
             preview.Place(start, end, LayoutDirection, EdgeStyle, _edgeLayer?.BezierMinHandle ?? 40, _edgeLayer?.StepCornerRadius ?? 8);
             _portLayer.Preview = preview.Wire;
             _portLayer.PreviewSnapped = _connectTarget is not null;

@@ -6,7 +6,9 @@ using Avalonia.Automation;
 using Avalonia.Automation.Peers;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
+using Avalonia.Controls.Metadata;
 using Avalonia.Media;
+using Avalonia.Media.TextFormatting;
 
 namespace TKCode.Arc;
 
@@ -38,8 +40,12 @@ public enum FieldMessageSwap
 /// fades changed words in; Off is immediate. Drawn in <see cref="Render"/>: no control per word, and the only
 /// layout work while animating is this row's own height. Assistive technology reads the plain text.
 /// </summary>
+[PseudoClasses(ErrorPseudoClass)]
 public class FieldMessage : Control
 {
+    /// <summary>Set while <see cref="Kind"/> is <see cref="FieldMessageKind.Error"/> (the theme selects on it, not on the property).</summary>
+    public const string ErrorPseudoClass = ":error";
+
     /// <summary>The copy. Null or empty closes the row.</summary>
     public static readonly StyledProperty<string?> TextProperty =
         AvaloniaProperty.Register<FieldMessage, string?>(nameof(Text));
@@ -107,7 +113,10 @@ public class FieldMessage : Control
         public string Word { get; set; } = string.Empty;
         public bool TrailingSpace { get; set; }
         public bool IsNumber { get; set; }
-        public FormattedText? Shaped { get; set; }
+        public TextLayout? Shaped { get; set; }
+        /// <summary>Whole copy: the wrap width and line height <see cref="Shaped"/> was built with.</summary>
+        public double ShapedWidth { get; set; } = double.PositiveInfinity;
+        public double ShapedLineHeight { get; set; } = double.NaN;
         public List<Column>? Columns { get; set; }
         public int Line { get; set; }
         public double LastX { get; set; }
@@ -133,8 +142,11 @@ public class FieldMessage : Control
 
     private readonly List<Segment> _segments = new();
     private readonly List<Segment> _leaving = new();
-    private readonly Dictionary<char, FormattedText> _glyphs = new();
-    private FormattedText? _space;
+    // TextLayout, not FormattedText: FormattedText.Draw re-shapes on every Draw and the words redraw every frame while
+    // they rise in, roll or leave; a layout keeps its shaped lines (FieldSwapText does the same).
+    private readonly Dictionary<char, TextLayout> _glyphs = new();
+    private TextLayout? _space;
+    private Typeface? _typeface;
     private double _digitWidth;
     private bool _shapeDirty = true;
     private bool _present;
@@ -163,24 +175,20 @@ public class FieldMessage : Control
         }
         else if (change.Property == KindProperty)
         {
+            PseudoClasses.Set(ErrorPseudoClass, Kind == FieldMessageKind.Error);
             AutomationProperties.SetLiveSetting(this, Kind == FieldMessageKind.Error ? AutomationLiveSetting.Assertive : AutomationLiveSetting.Off);
         }
         else if (change.Property == FontFamilyProperty || change.Property == FontSizeProperty || change.Property == FontWeightProperty)
         {
+            _typeface = null;
             _shapeDirty = true;
             InvalidateMeasure();
         }
         else if (change.Property == ForegroundProperty)
         {
-            var brush = Foreground ?? Brushes.Black;
-            foreach (var segment in _segments.Concat(_leaving))
-            {
-                segment.Shaped?.SetForegroundBrush(brush);
-            }
-            foreach (var glyph in _glyphs.Values)
-            {
-                glyph.SetForegroundBrush(brush);
-            }
+            // The brush is baked into the layouts: shape again with the new one (the next measure does it).
+            _shapeDirty = true;
+            InvalidateMeasure();
         }
         else if (change.Property == SwapProperty && _segments.Count > 0)
         {
@@ -294,7 +302,11 @@ public class FieldMessage : Control
 
     private void ClearSegments()
     {
-        foreach (var segment in _segments.Concat(_leaving))
+        foreach (var segment in _segments)
+        {
+            DisposeSegment(segment);
+        }
+        foreach (var segment in _leaving)
         {
             DisposeSegment(segment);
         }
@@ -304,6 +316,7 @@ public class FieldMessage : Control
 
     private static void DisposeSegment(Segment segment)
     {
+        ResetShaped(segment);
         segment.Enter?.Dispose();
         segment.Exit?.Dispose();
         if (segment.Columns is { } columns)
@@ -405,7 +418,7 @@ public class FieldMessage : Control
                 if (existing.TrailingSpace != trailing)
                 {
                     existing.TrailingSpace = trailing;
-                    existing.Shaped = null;
+                    ResetShaped(existing);
                 }
                 ordered.Add(existing);
                 continue;
@@ -572,12 +585,24 @@ public class FieldMessage : Control
 
     // ---- shaping and layout -----------------------------------------------------------------------------------
 
-    private Typeface Typeface => new(FontFamily, FontStyle.Normal, FontWeight);
+    private Typeface Typeface => _typeface ??= new Typeface(FontFamily, FontStyle.Normal, FontWeight);
 
-    private FormattedText Shape(string text) => new(text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
-        Typeface, FontSize, Foreground ?? Brushes.Black);
+    private TextLayout Shape(string text) => new(text, Typeface, FontSize, Foreground ?? Brushes.Black);
 
-    private FormattedText Glyph(char ch)
+    /// <summary>
+    /// The whole copy wraps at the row width with the row's line height. WrapWithOverflow is what FormattedText.MaxTextWidth
+    /// did (verified: a word wider than the row overflows instead of breaking mid-word).
+    /// </summary>
+    private TextLayout ShapeWhole(string text, double maxWidth, double lineHeight) =>
+        new(text, Typeface, FontSize, Foreground ?? Brushes.Black, textWrapping: TextWrapping.WrapWithOverflow, maxWidth: maxWidth, lineHeight: lineHeight);
+
+    private static void ResetShaped(Segment segment)
+    {
+        segment.Shaped?.Dispose();
+        segment.Shaped = null;
+    }
+
+    private TextLayout Glyph(char ch)
     {
         if (!_glyphs.TryGetValue(ch, out var glyph))
         {
@@ -587,32 +612,67 @@ public class FieldMessage : Control
         return glyph;
     }
 
+    private static bool AnyTrailingSpace(List<Segment> segments)
+    {
+        foreach (var segment in segments)
+        {
+            if (segment.TrailingSpace)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static bool AnyNumber(List<Segment> segments)
+    {
+        foreach (var segment in segments)
+        {
+            if (segment.IsNumber && segment.Columns is not null)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void ResetAllShaped(List<Segment> segments)
+    {
+        foreach (var segment in segments)
+        {
+            ResetShaped(segment);
+            if (segment.Columns is { } columns)
+            {
+                foreach (var column in columns)
+                {
+                    column.Width = 0;
+                }
+            }
+        }
+    }
+
     private void EnsureShaped()
     {
         if (_shapeDirty)
         {
             _shapeDirty = false;
+            foreach (var glyph in _glyphs.Values)
+            {
+                glyph.Dispose();
+            }
             _glyphs.Clear();
+            _space?.Dispose();
             _space = null;
             _digitWidth = 0;
-            foreach (var segment in _segments.Concat(_leaving))
-            {
-                segment.Shaped = null;
-                if (segment.Columns is { } columns)
-                {
-                    foreach (var column in columns)
-                    {
-                        column.Width = 0;
-                    }
-                }
-            }
+            ResetAllShaped(_segments);
+            ResetAllShaped(_leaving);
         }
         // An empty message (the usual state of a field) shapes nothing: digits and the space are measured on demand.
-        if (_space is null && (_segments.Any(static s => s.TrailingSpace) || _leaving.Any(static s => s.TrailingSpace)))
+        if (_space is null && (AnyTrailingSpace(_segments) || AnyTrailingSpace(_leaving)))
         {
             _space = Shape(" ");
         }
-        if (_digitWidth <= 0 && _segments.Any(static s => s.IsNumber && s.Columns is not null))
+        if (_digitWidth <= 0 && AnyNumber(_segments))
         {
             for (var d = '0'; d <= '9'; d++)
             {
@@ -633,11 +693,24 @@ public class FieldMessage : Control
                     }
                 }
             }
-            else
+            else if (Swap != FieldMessageSwap.Whole)
             {
                 segment.Shaped ??= Shape(segment.TrailingSpace ? segment.Word + " " : segment.Word);
             }
         }
+    }
+
+    /// <summary>The whole copy's layout for <paramref name="maxWidth"/> and <paramref name="lineHeight"/>, rebuilt when either changed.</summary>
+    private TextLayout EnsureWhole(Segment segment, double maxWidth, double lineHeight)
+    {
+        if (segment.Shaped is null || Math.Abs(segment.ShapedWidth - maxWidth) > 0.01 || Math.Abs(segment.ShapedLineHeight - lineHeight) > 0.01)
+        {
+            ResetShaped(segment);
+            segment.ShapedWidth = maxWidth;
+            segment.ShapedLineHeight = lineHeight;
+            segment.Shaped = ShapeWhole(segment.Word, maxWidth, lineHeight);
+        }
+        return segment.Shaped;
     }
 
     private double TargetWidth(Segment segment)
@@ -688,12 +761,10 @@ public class FieldMessage : Control
             {
                 if (Swap == FieldMessageSwap.Whole)
                 {
-                    var shaped = _segments[0].Shaped!;
-                    shaped.LineHeight = lineHeight;
-                    if (!double.IsInfinity(maxWidth) && maxWidth > 0)
-                    {
-                        shaped.MaxTextWidth = maxWidth;
-                    }
+                    // An unconstrained measure keeps the last wrap width, as FormattedText.MaxTextWidth did.
+                    var whole = _segments[0];
+                    var wrapWidth = !double.IsInfinity(maxWidth) && maxWidth > 0 ? maxWidth : whole.ShapedWidth;
+                    var shaped = EnsureWhole(whole, wrapWidth, lineHeight);
                     content = Math.Max(lineHeight, shaped.Height);
                     natural = shaped.WidthIncludingTrailingWhitespace;
                 }
@@ -868,7 +939,7 @@ public class FieldMessage : Control
             else if (segment.Shaped is { } shaped)
             {
                 var top = Swap == FieldMessageSwap.Whole ? y : y + (lineHeight - shaped.Height) / 2;
-                context.DrawText(shaped, new Point(x, top));
+                shaped.Draw(context, new Point(x, top));
             }
         }
     }
@@ -896,19 +967,19 @@ public class FieldMessage : Control
                     using (context.PushOpacity((1 - shown) * presence))
                     using (PushBlur(context, BlurSubtle * shown, cell))
                     {
-                        context.DrawText(old, new Point(ox, top - travel * p));
+                        old.Draw(context, new Point(ox, top - travel * p));
                     }
                     using (context.PushOpacity(shown * presence))
                     using (PushBlur(context, BlurSubtle * (1 - shown), cell))
                     {
-                        context.DrawText(glyph, new Point(gx, top + travel * (1 - p)));
+                        glyph.Draw(context, new Point(gx, top + travel * (1 - p)));
                     }
                 }
                 else
                 {
                     using (context.PushOpacity(presence))
                     {
-                        context.DrawText(glyph, new Point(gx, top));
+                        glyph.Draw(context, new Point(gx, top));
                     }
                 }
             }

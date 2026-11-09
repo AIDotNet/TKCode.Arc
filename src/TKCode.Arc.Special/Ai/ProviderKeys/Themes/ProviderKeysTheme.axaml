@@ -461,7 +461,7 @@
         <Style Selector="^.text:pointerover /template/ Border#PART_Fill">
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
         </Style>
-        <Style Selector="^[IsExpanded=True]">
+        <Style Selector="^:expanded">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         </Style>
     </ControlTheme>

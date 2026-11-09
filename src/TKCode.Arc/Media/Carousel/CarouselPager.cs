@@ -249,7 +249,8 @@ internal sealed class CarouselPager : Control
             {
                 edge = Math.Min(edge, Math.Clamp((view - rect.Center.X) / 18, 0, 1));
             }
-            using (context.PushOpacity(edge))
+            // Most dots sit clear of the edges: no opacity layer for those.
+            using (edge >= 1 ? default(DrawingContext.PushedState?) : context.PushOpacity(edge))
             {
                 context.DrawRectangle(dot, null, pill);
                 if (i == _hoverIndex && hoverMix > 0 && DotHoverBrush is { } hover)

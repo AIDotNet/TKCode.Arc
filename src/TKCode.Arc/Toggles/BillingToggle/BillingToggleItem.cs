@@ -29,6 +29,10 @@ internal sealed class BillingToggleItem : TogglesItem
     public static readonly DirectProperty<BillingToggleItem, string?> CurrentBadgeProperty =
         AvaloniaProperty.RegisterDirect<BillingToggleItem, string?>(nameof(CurrentBadge), o => o.CurrentBadge);
 
+    /// <summary>Every badge text the option can show, so the badge reserves the widest (one measuring sizer instead of hidden TextBlocks).</summary>
+    public static readonly DirectProperty<BillingToggleItem, IReadOnlyList<string>> SizerLabelsProperty =
+        AvaloniaProperty.RegisterDirect<BillingToggleItem, IReadOnlyList<string>>(nameof(SizerLabels), o => o.SizerLabels);
+
     public static readonly StyledProperty<IBrush?> ActiveBadgeBackgroundProperty =
         AvaloniaProperty.Register<BillingToggleItem, IBrush?>(nameof(ActiveBadgeBackground));
 
@@ -47,6 +51,15 @@ internal sealed class BillingToggleItem : TogglesItem
     {
         get => _currentBadge;
         private set => SetAndRaise(CurrentBadgeProperty, ref _currentBadge, value);
+    }
+
+    private IReadOnlyList<string> _sizerLabels = [];
+
+    /// <inheritdoc cref="SizerLabelsProperty"/>
+    public IReadOnlyList<string> SizerLabels
+    {
+        get => _sizerLabels;
+        private set => SetAndRaise(SizerLabelsProperty, ref _sizerLabels, value);
     }
 
     public bool IsLarge
@@ -69,6 +82,8 @@ internal sealed class BillingToggleItem : TogglesItem
     {
         CurrentBadge = IsSelected ? ActiveBadge ?? Badge : Badge;
         PseudoClasses.Set(BadgePseudoClass, !string.IsNullOrEmpty(Badge) || !string.IsNullOrEmpty(ActiveBadge));
+        // The two hidden TextBlocks measured "" for a missing text; the sizer measures the same (an empty label is 0 wide).
+        SizerLabels = [Badge ?? string.Empty, ActiveBadge ?? string.Empty];
         // The badge is part of the option's text, so the savings are read with its name.
         var label = Content?.ToString();
         AutomationProperties.SetName(this, string.IsNullOrEmpty(CurrentBadge) ? label : $"{label} {CurrentBadge}");

@@ -1,4 +1,5 @@
 using TKCode.Arc.Motion;
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
@@ -189,7 +190,8 @@ internal sealed class AnnouncementBarFace : Decorator
     private readonly MotionValue<double> _fade;
     private AnnouncementBarCountdown? _countdown;
     private AnnouncementBarLink? _link;
-    private BlurEffect? _blur;
+    // Full motion blurs the face as it fades (4px → 0); the shared, quantized ArcBlur filters replace a mutable radius.
+    private bool _blurs;
     private AnnouncementBar? _owner;
     private IBrush? _muted;
 
@@ -308,27 +310,19 @@ internal sealed class AnnouncementBarFace : Decorator
 
     private void ApplyFade(double v)
     {
-        Opacity = Math.Clamp(v, 0, 1);
-        if (_blur is null)
+        var fade = Math.Clamp(v, 0, 1);
+        Opacity = fade;
+        if (!_blurs)
         {
             return;
         }
-        var radius = 4 * (1 - Math.Clamp(v, 0, 1));
-        if (radius < 0.05)
-        {
-            Effect = null;
-        }
-        else
-        {
-            _blur.Radius = radius;
-            Effect = _blur;
-        }
+        Effect = ArcBlur.Get(4 * (1 - fade));
     }
 
     public void Settle()
     {
         _y.Jump(0);
-        _blur = null;
+        _blurs = false;
         Effect = null;
         _fade.Jump(1);
     }
@@ -337,7 +331,7 @@ internal sealed class AnnouncementBarFace : Decorator
     {
         if (full)
         {
-            _blur ??= new BlurEffect();
+            _blurs = true;
             _y.Jump(0.7 * direction);
             _fade.Jump(0);
             _ = _y.AnimateTo(0, MotionSpec.Spring(AnnouncementBarViewport.Rise));
@@ -345,7 +339,7 @@ internal sealed class AnnouncementBarFace : Decorator
         }
         else
         {
-            _blur = null;
+            _blurs = false;
             Effect = null;
             _y.Jump(0);
             _fade.Jump(0);
@@ -357,11 +351,11 @@ internal sealed class AnnouncementBarFace : Decorator
     {
         if (full)
         {
-            _blur ??= new BlurEffect();
+            _blurs = true;
             _ = _y.AnimateTo(-0.6 * direction, MotionSpec.Spring(AnnouncementBarViewport.Rise));
             return _fade.AnimateTo(0, MotionSpec.Tween(ArcMotionPresets.Fast, ArcEasings.Standard));
         }
-        _blur = null;
+        _blurs = false;
         Effect = null;
         return _fade.AnimateTo(0, MotionSpec.Tween(ArcMotionPresets.Instant, ArcEasings.Standard));
     }

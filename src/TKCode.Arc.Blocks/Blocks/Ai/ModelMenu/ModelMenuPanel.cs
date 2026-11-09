@@ -72,6 +72,7 @@ internal sealed class ModelMenuPageView
 [TemplatePart(ListPart, typeof(Panel))]
 [TemplatePart(HighlightPart, typeof(GlidingIndicator))]
 [TemplatePart(PagePart, typeof(Decorator))]
+[PseudoClasses(":inline", ":simple")]
 internal sealed class ModelMenuPanel : TemplatedControl
 {
     public const string SizePart = "PART_Size";
@@ -124,6 +125,19 @@ internal sealed class ModelMenuPanel : TemplatedControl
     }
 
     public double PageTravel { get => GetValue(PageTravelProperty); set => SetValue(PageTravelProperty, value); }
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == IsInlineProperty)
+        {
+            PseudoClasses.Set(":inline", change.GetNewValue<bool>());
+        }
+        else if (change.Property == IsSimpleProperty)
+        {
+            PseudoClasses.Set(":simple", change.GetNewValue<bool>());
+        }
+    }
 
     public bool IsInline { get => GetValue(IsInlineProperty); set => SetValue(IsInlineProperty, value); }
 

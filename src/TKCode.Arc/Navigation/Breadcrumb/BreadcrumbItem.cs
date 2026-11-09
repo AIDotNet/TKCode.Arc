@@ -1,5 +1,7 @@
 using System.Windows.Input;
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Automation.Peers;
@@ -118,13 +120,15 @@ public class BreadcrumbItem : ContentControl
     internal bool IsGhost { get; private init; }
 
     private ContentPresenter? _reserve;
+    private Panel? _label;
+    private ArcGlyph? _overflowGlyph;
+    private LazyFocusRing? _focusRing;
 
     /// <summary>The crumb's label frame (without the separator): the overflow menu anchors here.</summary>
     internal Control? Frame { get; private set; }
     private TranslateTransform? _translate;
     private MotionValue<double>? _enter;
     private MotionValue<Vector>? _shift;
-    private BlurEffect? _blur;
     private bool _pressed;
 
     static BreadcrumbItem()
@@ -145,6 +149,7 @@ public class BreadcrumbItem : ContentControl
         PseudoClasses.Set(CurrentPseudoClass, IsCurrent && !IsOverflowAnchor);
         PseudoClasses.Set(InteractivePseudoClass, interactive);
         PseudoClasses.Set(OverflowPseudoClass, IsOverflowAnchor);
+        UpdateOverflowGlyph();
         Focusable = interactive && !IsGhost;
         IsTabStop = interactive && !IsGhost;
         AutomationProperties.SetItemStatus(this, IsCurrent && !IsOverflowAnchor ? "current page" : string.Empty);
@@ -163,7 +168,50 @@ public class BreadcrumbItem : ContentControl
         base.OnApplyTemplate(e);
         _reserve = e.NameScope.Find<ContentPresenter>(ReservePart);
         Frame = e.NameScope.Find<Control>("PART_Frame");
+        _label = e.NameScope.Find<Panel>("PART_Label");
+        _overflowGlyph = null;
         UpdateReserve();
+        UpdateOverflowGlyph();
+        // Built the first time the crumb is keyboard focused, around its label frame (not the separator).
+        _focusRing ??= new LazyFocusRing(this, BreadcrumbItemTokens.Key(BreadcrumbItemTokenKind.FocusRingMargin),
+            BreadcrumbItemTokens.Key(BreadcrumbItemTokenKind.FocusRingRadius));
+        _focusRing.Attach(e.NameScope.Find<Panel>("PART_FrameHost"));
+    }
+
+    /// <summary>Only the crumb that stands in for a collapsed run shows the ellipsis, so the others never build it.</summary>
+    private void UpdateOverflowGlyph()
+    {
+        if (_overflowGlyph is null)
+        {
+            if (!IsOverflowAnchor || _label is null)
+            {
+                return;
+            }
+            _overflowGlyph = new ArcGlyph
+            {
+                Name = "PART_OverflowGlyph",
+                Data = ArcIcons.Ellipsis,
+                StrokeThickness = 2,
+                HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
+            };
+            _overflowGlyph.Bind(ArcGlyph.SizeProperty, _overflowGlyph.GetResourceObservable(BreadcrumbItemTokens.Key(BreadcrumbItemTokenKind.SeparatorSize)),
+                Avalonia.Data.BindingPriority.Template);
+            _label.Children.Add(_overflowGlyph);
+        }
+        _overflowGlyph.IsVisible = IsOverflowAnchor;
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing?.Update();
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -259,7 +307,6 @@ public class BreadcrumbItem : ContentControl
     internal void PlayEnter()
     {
         EnsureTransform();
-        _blur ??= new BlurEffect();
         _enter ??= CreateEnter();
         _enter.Jump(0);
         _ = _enter.AnimateTo(1, MotionSpec.Tween(ArcMotionPresets.Standard, ArcEasings.Enter));
@@ -282,14 +329,13 @@ public class BreadcrumbItem : ContentControl
     internal async void PlayExit(Action done)
     {
         EnsureTransform();
-        _blur ??= new BlurEffect();
-        Effect = _blur;
         var exit = new MotionValue<double>(this, 0, MotionVectors.Double);
         exit.Changed += p =>
         {
             Opacity = 1 - p;
             _translate!.X = -4 * p;
-            _blur.Radius = 2 * p;
+            // Core cache (radii quantized to 0.25px, immutable): no blur resource is rebuilt per frame.
+            Effect = ArcBlur.Get(2 * p);
         };
         await exit.AnimateTo(1, MotionSpec.Tween(ArcMotionPresets.Instant, ArcEasings.Standard));
         done();
@@ -328,15 +374,8 @@ public class BreadcrumbItem : ContentControl
         {
             Opacity = Math.Clamp(p, 0, 1);
             var radius = 2 * (1 - p);
-            if (radius < 0.05)
-            {
-                Effect = null;
-            }
-            else
-            {
-                _blur!.Radius = radius;
-                Effect = _blur;
-            }
+            // Core cache (radii quantized to 0.25px, immutable): no blur resource is rebuilt per frame.
+            Effect = radius < 0.05 ? null : ArcBlur.Get(radius);
             ApplyTransform();
             if (p >= 1)
             {

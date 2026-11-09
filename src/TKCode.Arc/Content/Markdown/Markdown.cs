@@ -711,32 +711,44 @@ public class Markdown : TemplatedControl
         });
     }
 
+
     /// <summary>
     /// StreamMark's colors, fonts and radii as aliases of ArcDesign tokens, resolved from the view so they follow the
     /// theme scope, light/dark and the accent. Values follow Arc's rich text content styles (links in the strong
     /// accent, inline code on the muted surface, quotes with a strong border) and its CodeBlock (surface, border,
-    /// mono font).
+    /// mono font). An alias is an immutable key-to-token pointer resolved from the control that holds it, so the same
+    /// sixteen serve every instance (a chat thread keeps dozens); a resource dictionary can have one owner, so each
+    /// instance still gets its own.
     /// </summary>
+    private static readonly KeyValuePair<string, MarkdownResourceAlias>[] s_aliases =
+    [
+        Alias(MarkdownResourceKeys.Foreground, ArcDesignTokenKind.Foreground),
+        Alias(MarkdownResourceKeys.SecondaryForeground, ArcDesignTokenKind.TextSecondary),
+        Alias(MarkdownResourceKeys.LinkForeground, ArcDesignTokenKind.AccentStrong),
+        Alias(MarkdownResourceKeys.SelectionBackground, ArcDesignTokenKind.AccentSubtle),
+        Alias(MarkdownResourceKeys.CodeBackground, ArcDesignTokenKind.Surface),
+        Alias(MarkdownResourceKeys.CodeBorderBrush, ArcDesignTokenKind.Border),
+        Alias(MarkdownResourceKeys.InlineCodeBackground, ArcDesignTokenKind.SurfaceMuted),
+        Alias(MarkdownResourceKeys.InlineCodeForeground, ArcDesignTokenKind.Foreground),
+        Alias(MarkdownResourceKeys.ListMarkerForeground, ArcDesignTokenKind.TextMuted),
+        Alias(MarkdownResourceKeys.MarkBackground, ArcDesignTokenKind.WarningSubtle),
+        Alias(MarkdownResourceKeys.QuoteBorderBrush, ArcDesignTokenKind.BorderStrong),
+        Alias(MarkdownResourceKeys.TableBorderBrush, ArcDesignTokenKind.Border),
+        Alias(MarkdownResourceKeys.TableHeaderBackground, ArcDesignTokenKind.SurfaceMuted),
+        Alias(MarkdownResourceKeys.HoverBackground, ArcDesignTokenKind.SurfaceMuted),
+        Alias(MarkdownResourceKeys.MonospaceFontFamily, ArcDesignTokenKind.MonoFontFamily),
+        Alias(MarkdownResourceKeys.CornerRadius, ArcDesignTokenKind.RadiusControl)
+    ];
+
+    private static KeyValuePair<string, MarkdownResourceAlias> Alias(string key, ArcDesignTokenKind token) => new(key, new MarkdownResourceAlias(token));
+
     private static ResourceDictionary CreateResources()
     {
         var resources = new ResourceDictionary();
-        void Alias(string key, ArcDesignTokenKind token) => resources[key] = new MarkdownResourceAlias(token);
-        Alias(MarkdownResourceKeys.Foreground, ArcDesignTokenKind.Foreground);
-        Alias(MarkdownResourceKeys.SecondaryForeground, ArcDesignTokenKind.TextSecondary);
-        Alias(MarkdownResourceKeys.LinkForeground, ArcDesignTokenKind.AccentStrong);
-        Alias(MarkdownResourceKeys.SelectionBackground, ArcDesignTokenKind.AccentSubtle);
-        Alias(MarkdownResourceKeys.CodeBackground, ArcDesignTokenKind.Surface);
-        Alias(MarkdownResourceKeys.CodeBorderBrush, ArcDesignTokenKind.Border);
-        Alias(MarkdownResourceKeys.InlineCodeBackground, ArcDesignTokenKind.SurfaceMuted);
-        Alias(MarkdownResourceKeys.InlineCodeForeground, ArcDesignTokenKind.Foreground);
-        Alias(MarkdownResourceKeys.ListMarkerForeground, ArcDesignTokenKind.TextMuted);
-        Alias(MarkdownResourceKeys.MarkBackground, ArcDesignTokenKind.WarningSubtle);
-        Alias(MarkdownResourceKeys.QuoteBorderBrush, ArcDesignTokenKind.BorderStrong);
-        Alias(MarkdownResourceKeys.TableBorderBrush, ArcDesignTokenKind.Border);
-        Alias(MarkdownResourceKeys.TableHeaderBackground, ArcDesignTokenKind.SurfaceMuted);
-        Alias(MarkdownResourceKeys.HoverBackground, ArcDesignTokenKind.SurfaceMuted);
-        Alias(MarkdownResourceKeys.MonospaceFontFamily, ArcDesignTokenKind.MonoFontFamily);
-        Alias(MarkdownResourceKeys.CornerRadius, ArcDesignTokenKind.RadiusControl);
+        foreach (var (key, alias) in s_aliases)
+        {
+            resources[key] = alias;
+        }
         return resources;
     }
 }

@@ -8,10 +8,14 @@ namespace TKCode.Arc.Motion;
 /// <summary>Shared spring configuration for the declarative spring transitions.</summary>
 internal static class SpringTransitionConfig
 {
+    // A custom spring's easing samples the spring up to 2,400 times to find its settle time; themes declare the same few
+    // (VisualDuration, Bounce) pairs in many transitions, so each pair is baked once (the easing is immutable).
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<(double, double), ArcSpringEasing> s_custom = new();
+
     public static void Apply(TransitionBase transition, ArcSpring spring, double visualDuration, double bounce)
     {
         var easing = visualDuration > 0
-            ? new ArcSpringEasing(SpringSpec.FromVisual(visualDuration, bounce))
+            ? s_custom.GetOrAdd((visualDuration, bounce), static key => new ArcSpringEasing(SpringSpec.FromVisual(key.Item1, key.Item2)))
             : ArcSpringEasing.For(spring);
         transition.Easing = easing;
         transition.Duration = easing.SettleDuration;

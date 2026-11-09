@@ -87,6 +87,37 @@ public class CyclicPanelTests
     }
 
     [AvaloniaFact]
+    public void Children_Far_From_The_Viewport_Share_A_Parking_Rect_Until_They_Come_Near()
+    {
+        var panel = Panel(40);
+        var window = Show(panel);
+        try
+        {
+            var parked = panel.Children[20].Bounds;
+            panel.Children[30].Bounds.ShouldBe(parked);
+            (parked.Bottom <= 0).ShouldBeTrue();
+            // A scroll moves the near children and leaves the parked ones alone.
+            panel.ScrollToIndex(1, animated: false);
+            Dispatcher.UIThread.RunJobs();
+            panel.Children[20].Bounds.ShouldBe(parked);
+            // Once near, a child has its true slot again.
+            panel.ScrollToIndex(19, animated: false);
+            Dispatcher.UIThread.RunJobs();
+            panel.Children[20].Bounds.ShouldBe(new Rect(0, 100, 200, 100));
+            panel.Children[0].Bounds.ShouldBe(parked);
+            // Without the clip every child keeps its true position, because it would be drawn.
+            panel.ClipToBounds = false;
+            panel.InvalidateArrange();
+            Dispatcher.UIThread.RunJobs();
+            panel.Children[0].Bounds.ShouldNotBe(parked);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void ScrollToIndex_Wraps_Around_The_End()
     {
         var panel = Panel(8);

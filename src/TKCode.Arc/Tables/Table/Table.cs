@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Specialized;
 using System.Globalization;
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Collections;
 using Avalonia.Controls;
+using Avalonia.Controls.Documents;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
@@ -28,13 +31,24 @@ namespace TKCode.Arc;
 /// </summary>
 [TemplatePart(ScrollViewerPart, typeof(ScrollViewer))]
 [TemplatePart(AnnouncerPart, typeof(TextBlock))]
-[TemplatePart(ClearPart, typeof(AvaloniaButton))]
+[TemplatePart(BodyPart, typeof(Grid))]
 [PseudoClasses(CompactPseudoClass, SelectablePseudoClass, LoadingPseudoClass, EmptyPseudoClass, SelectionPseudoClass)]
 public class Table : TemplatedControl
 {
     public const string ScrollViewerPart = "PART_ScrollViewer";
     public const string AnnouncerPart = "PART_Announcer";
+
+    /// <summary>The two-row grid of the template that holds the scroll viewer and receives the loading veil and the footer.</summary>
+    public const string BodyPart = "PART_Body";
+
+    /// <summary>The Clear selection button in the footer (built with the footer the first time <see cref="IsSelectable"/> is true).</summary>
     public const string ClearPart = "PART_Clear";
+
+    /// <summary>The loading veil over the body (built the first time <see cref="IsLoading"/> is true).</summary>
+    public const string LoadingPart = "PART_Loading";
+
+    /// <summary>The count line under the body (built the first time <see cref="IsSelectable"/> is true).</summary>
+    public const string FooterPart = "PART_Footer";
     public const string CompactPseudoClass = ":compact";
     public const string SelectablePseudoClass = ":selectable";
     public const string LoadingPseudoClass = ":loading";
@@ -356,6 +370,12 @@ public class Table : TemplatedControl
     private TablePresenter? _presenter;
     private ScrollViewer? _scroll;
     private TextBlock? _announcer;
+    private Grid? _body;
+    private Panel? _loading;
+    private Border? _footer;
+    private Border? _countHost;
+    private IDisposable? _countForeground;
+    private bool _countForegroundSelected;
     private AvaloniaButton? _clear;
     private INotifyCollectionChanged? _observedSource;
     private INotifyCollectionChanged? _observedSelection;
@@ -464,31 +484,21 @@ public class Table : TemplatedControl
         columnIndex >= 0 && columnIndex < _states.Length && _states[columnIndex].Column.Wraps
         && !(compact && IsCompactLeadNumeric(columnIndex));
 
-    /// <summary>The drawn text of one cell (rows draw it, row heights are measured from it).</summary>
-    internal FormattedText CreateCellText(int sourceIndex, int columnIndex, bool compact) =>
-        CreateCellText(CellText(sourceIndex, columnIndex), columnIndex, compact);
-
-    internal FormattedText CreateCellText(string text, int columnIndex, bool compact)
+    /// <summary>
+    /// The drawn text of one cell at <paramref name="maxWidth"/> (rows cache and draw it, row heights are measured from
+    /// it). A <see cref="TablesBText"/> keeps its shaped lines; the <c>FormattedText</c> it replaces re-shaped the cell on
+    /// every draw, which the hover and selection tweens do each frame.
+    /// </summary>
+    internal TablesBText CreateCellLayout(string text, int columnIndex, bool compact, IBrush? brush, double maxWidth)
     {
         var primary = columnIndex == 0;
         var small = compact && !primary && !IsCompactLeadNumeric(columnIndex);
         var typeface = compact && primary ? Palette.Medium : Palette.Regular;
         var wraps = WrapsAt(columnIndex, compact);
-        var formatted = new FormattedText(text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
-            typeface, small ? Palette.SmallFontSize : Palette.FontSize, null)
-        {
-            MaxLineCount = !wraps ? 1 : _states[columnIndex].Column.MaxLines is > 0 and var lines ? lines : int.MaxValue,
-            Trimming = TextTrimming.CharacterEllipsis
-        };
-        if (IsNumericColumn(columnIndex))
-        {
-            formatted.SetFontFeatures(TablePalette.TabularNumbers);
-            if (wraps && !compact)
-            {
-                formatted.TextAlignment = TextAlignment.Right;
-            }
-        }
-        return formatted;
+        var maxLines = !wraps ? 1 : _states[columnIndex].Column.MaxLines is > 0 and var lines ? lines : 0;
+        var numeric = IsNumericColumn(columnIndex);
+        return new TablesBText(text, typeface, small ? Palette.SmallFontSize : Palette.FontSize, brush, maxWidth, maxLines,
+            numeric && wraps && !compact ? TextAlignment.Right : TextAlignment.Left, numeric ? TablePalette.TabularNumbers : null);
     }
 
     /// <summary>Arc right-aligns a column when every non-empty value is a number (sampled for large sources).</summary>
@@ -548,6 +558,7 @@ public class Table : TemplatedControl
             foreach (DataTableColumn column in e.OldItems)
             {
                 column.DefinitionChanged -= OnColumnDefinitionChanged;
+                column.AppearanceChanged -= OnColumnAppearanceChanged;
             }
         }
         if (e.NewItems is not null)
@@ -555,6 +566,7 @@ public class Table : TemplatedControl
             foreach (DataTableColumn column in e.NewItems)
             {
                 column.DefinitionChanged += OnColumnDefinitionChanged;
+                column.AppearanceChanged += OnColumnAppearanceChanged;
             }
         }
         if (e.Action == NotifyCollectionChangedAction.Reset)
@@ -562,17 +574,47 @@ public class Table : TemplatedControl
             foreach (var state in _states)
             {
                 state.Column.DefinitionChanged -= OnColumnDefinitionChanged;
+                state.Column.AppearanceChanged -= OnColumnAppearanceChanged;
             }
             foreach (var column in Columns)
             {
                 column.DefinitionChanged -= OnColumnDefinitionChanged;
                 column.DefinitionChanged += OnColumnDefinitionChanged;
+                column.AppearanceChanged -= OnColumnAppearanceChanged;
+                column.AppearanceChanged += OnColumnAppearanceChanged;
             }
         }
         RebuildColumns();
     }
 
     private void OnColumnDefinitionChanged(object? sender, EventArgs e) => RebuildColumns();
+
+    /// <summary>A header text or track width changed: the header relabels and the layout is measured again; rows keep their state.</summary>
+    private void OnColumnAppearanceChanged(object? sender, AvaloniaProperty property)
+    {
+        if (sender is not DataTableColumn column)
+        {
+            return;
+        }
+        var index = Columns.IndexOf(column);
+        if (property == DataTableColumn.HeaderProperty)
+        {
+            // The header is part of a column's natural width (and the sort-by name of its cell).
+            _naturalLocked = false;
+            if (index >= 0 && index < _states.Length)
+            {
+                _states[index].Natural = -1;
+            }
+            if (_presenter?.Header.CellFor(index) is { } cell)
+            {
+                cell.UpdateAutomation();
+                cell.InvalidateMeasure();
+                cell.InvalidateVisual();
+            }
+        }
+        _presenter?.Header.InvalidateMeasure();
+        _presenter?.InvalidateMeasure();
+    }
 
     private void RebuildColumns()
     {
@@ -851,9 +893,8 @@ public class Table : TemplatedControl
             }
             else
             {
-                var text = CreateCellText(source, c, compact: false);
-                text.MaxTextWidth = Math.Max(1, layout.ColumnWidth(c) - LeadingPadding(c) - CellInlinePadding);
-                content = text.Height;
+                content = CreateCellLayout(CellText(source, c), c, compact: false, null,
+                    layout.ColumnWidth(c) - LeadingPadding(c) - CellInlinePadding).Height;
             }
             height = Math.Max(height, Math.Ceiling(content + 2 * CellBlockPadding) + 1);
         }
@@ -869,9 +910,15 @@ public class Table : TemplatedControl
         var leadWidth = 0.0;
         if (lead > 0)
         {
-            var width = _states[lead].Column.CellTemplate is not null
-                ? row?.CellSize(lead).Width ?? room / 2
-                : CreateCellText(source, lead, compact: true).WidthIncludingTrailingWhitespace;
+            double width;
+            if (_states[lead].Column.CellTemplate is not null)
+            {
+                width = row?.CellSize(lead).Width ?? room / 2;
+            }
+            else
+            {
+                width = CreateCellLayout(CellText(source, lead), lead, compact: true, null, double.PositiveInfinity).WidthIncludingTrailingWhitespace;
+            }
             leadWidth = Math.Min(width, room / 2) + 8;
         }
         var content = CompactLine1;
@@ -903,13 +950,12 @@ public class Table : TemplatedControl
         {
             return row?.CellSize(column).Height ?? 0;
         }
-        if (column > 0 && string.IsNullOrEmpty(CellText(source, column)))
+        var value = CellText(source, column);
+        if (column > 0 && string.IsNullOrEmpty(value))
         {
             return 0;
         }
-        var text = CreateCellText(source, column, compact: true);
-        text.MaxTextWidth = Math.Max(1, width);
-        return text.Height;
+        return CreateCellLayout(value, column, compact: true, null, width).Height;
     }
 
     #endregion
@@ -1576,15 +1622,26 @@ public class Table : TemplatedControl
         }
         _scroll = e.NameScope.Find<ScrollViewer>(ScrollViewerPart);
         _announcer = e.NameScope.Find<TextBlock>(AnnouncerPart);
-        _clear = e.NameScope.Find<AvaloniaButton>(ClearPart);
-        if (_clear is not null)
-        {
-            _clear.Click += OnClearClick;
-        }
+        _body = e.NameScope.Find<Grid>(BodyPart);
+        // The old template took the lazily built parts with it; they come back on demand.
+        _clear = null;
+        _loading = null;
+        _footer = null;
+        _countHost = null;
+        _countForeground?.Dispose();
+        _countForeground = null;
         _presenter ??= new TablePresenter(this);
         if (_scroll is not null)
         {
             _scroll.Content = _presenter;
+        }
+        if (IsLoading)
+        {
+            EnsureLoading();
+        }
+        if (IsSelectable)
+        {
+            EnsureFooter();
         }
         UpdatePalette();
         _presenter.Header.Rebuild();
@@ -1595,6 +1652,119 @@ public class Table : TemplatedControl
     }
 
     private void OnClearClick(object? sender, RoutedEventArgs e) => ClearSelection();
+
+    /// <summary>The loading veil (PART_Loading): a 60% surface over the body, a spinner and the message; bound like the template part was.</summary>
+    private void EnsureLoading()
+    {
+        if (_loading is not null || _body is null)
+        {
+            return;
+        }
+        var veil = new Border { Opacity = 0.6 };
+        veil.Bind(Border.BackgroundProperty, this.GetObservable(BackgroundProperty), BindingPriority.Template);
+        var message = new TextBlock { VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center };
+        message.Bind(TextBlock.TextProperty, this.GetObservable(LoadingMessageProperty), BindingPriority.Template);
+        message.Bind(TextBlock.FontSizeProperty, this.GetObservable(FontSizeProperty), BindingPriority.Template);
+        ArcTokens.Bind(message, TextBlock.ForegroundProperty, ArcDesignTokenKind.TextMuted);
+        var row = new StackPanel
+        {
+            Orientation = Avalonia.Layout.Orientation.Horizontal,
+            Spacing = 10,
+            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+            Children =
+            {
+                new ArcSpinner { Width = 18, Height = 18, VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center },
+                message
+            }
+        };
+        _loading = new Panel { Name = LoadingPart, Children = { veil, row } };
+        _loading.Bind(IsVisibleProperty, this.GetObservable(IsLoadingProperty), BindingPriority.Template);
+        _loading.Bind(MarginProperty, _loading.GetResourceObservable(TableTokens.Key(TableTokenKind.LoadingInset)), BindingPriority.Template);
+        // Above the scroll viewer, below the footer and the announcer, as in the template.
+        _body.Children.Insert(Math.Min(1, _body.Children.Count), _loading);
+    }
+
+    /// <summary>The footer (PART_Footer): the rolling count line and the Clear selection button (PART_Clear) in a presence host.</summary>
+    private void EnsureFooter()
+    {
+        if (_footer is not null || _body is null)
+        {
+            return;
+        }
+        var count = new ArcContentSwap { Mode = ContentSwapMode.Roll };
+        count.Bind(ArcContentSwap.DirectionProperty, this.GetObservable(CountDirectionProperty), BindingPriority.Template);
+        count.Bind(ArcContentSwap.ContentProperty, this.GetObservable(CountTextProperty), BindingPriority.Template);
+        var noun = new ArcContentSwap { Mode = ContentSwapMode.Roll };
+        noun.Bind(ArcContentSwap.DirectionProperty, this.GetObservable(NounDirectionProperty), BindingPriority.Template);
+        noun.Bind(ArcContentSwap.ContentProperty, this.GetObservable(CountNounProperty), BindingPriority.Template);
+        var words = new StackPanel
+        {
+            Orientation = Avalonia.Layout.Orientation.Horizontal,
+            Children =
+            {
+                new SpringSizeDecorator { Axis = SpringSizeAxis.Width, Spring = ArcSpring.Morph, Child = count },
+                new SpringSizeDecorator { Axis = SpringSizeAxis.Width, Spring = ArcSpring.Morph, Child = noun }
+            }
+        };
+        words.Bind(StackPanel.SpacingProperty, words.GetResourceObservable(TableTokens.Key(TableTokenKind.CountGap)), BindingPriority.Template);
+        _countHost = new Border
+        {
+            Name = "PART_CountHost",
+            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
+            ClipToBounds = false,
+            Child = words
+        };
+        _countForegroundSelected = !HasSelection;
+        UpdateCountForeground();
+        var clear = new Button { Name = ClearPart, Variant = ButtonVariant.Ghost };
+        clear.Bind(ContentControl.ContentProperty, this.GetObservable(ClearSelectionLabelProperty), BindingPriority.Template);
+        ArcTokens.Bind(clear, ForegroundProperty, ArcDesignTokenKind.Foreground);
+        clear.Bind(MinHeightProperty, clear.GetResourceObservable(TableTokens.Key(TableTokenKind.ClearButtonHeight)), BindingPriority.Template);
+        clear.Bind(HeightProperty, clear.GetResourceObservable(TableTokens.Key(TableTokenKind.ClearButtonHeight)), BindingPriority.Template);
+        clear.Bind(PaddingProperty, clear.GetResourceObservable(TableTokens.Key(TableTokenKind.ClearButtonInset)), BindingPriority.Template);
+        clear.Click += OnClearClick;
+        _clear = clear;
+        var presence = new PresenceHost
+        {
+            Mode = PresenceMode.Scale,
+            EnterScale = 0.96,
+            Spring = ArcSpring.Snappy,
+            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+            Child = clear
+        };
+        presence.Bind(PresenceHost.IsPresentProperty, this.GetObservable(HasSelectionProperty), BindingPriority.Template);
+        var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto") };
+        Grid.SetColumn(presence, 1);
+        grid.Children.Add(_countHost);
+        grid.Children.Add(presence);
+        _footer = new Border { Name = FooterPart, Child = grid };
+        Grid.SetRow(_footer, 1);
+        _footer.Bind(IsVisibleProperty, this.GetObservable(IsSelectableProperty), BindingPriority.Template);
+        _footer.Bind(HeightProperty, _footer.GetResourceObservable(TableTokens.Key(TableTokenKind.FooterHeight)), BindingPriority.Template);
+        _footer.Bind(Border.PaddingProperty, _footer.GetResourceObservable(TableTokens.Key(TableTokenKind.FooterInset)), BindingPriority.Template);
+        ArcTokens.Bind(_footer, Border.BorderThicknessProperty, ArcDesignTokenKind.EdgeThicknessTop);
+        _footer.Bind(Border.BorderBrushProperty, this.GetObservable(BorderBrushProperty), BindingPriority.Template);
+        // Before the announcer (the template's last child) so the z-order matches the template.
+        var at = _announcer is not null && _body.Children.Count > 0 && ReferenceEquals(_body.Children[^1], _announcer)
+            ? _body.Children.Count - 1
+            : _body.Children.Count;
+        _body.Children.Insert(at, _footer);
+    }
+
+    /// <summary>The count words are muted until something is selected (the template styled this on <c>:has-selection</c>).</summary>
+    private void UpdateCountForeground()
+    {
+        if (_countHost is null || _countForegroundSelected == HasSelection)
+        {
+            return;
+        }
+        _countForegroundSelected = HasSelection;
+        _countForeground?.Dispose();
+        _countForeground = ArcTokens.Bind(_countHost, TextElement.ForegroundProperty,
+            HasSelection ? ArcDesignTokenKind.Foreground : ArcDesignTokenKind.TextMuted);
+    }
 
     protected override Size MeasureOverride(Size availableSize)
     {
@@ -1635,6 +1805,7 @@ public class Table : TemplatedControl
         CountText = shown.ToString(CultureInfo.CurrentCulture);
         CountNoun = selected > 0 ? SelectedNoun : total == 1 ? ItemNameOne : ItemNameOther;
         HasSelection = selected > 0;
+        UpdateCountForeground();
     }
 
     private void Announce(string message)
@@ -1697,6 +1868,10 @@ public class Table : TemplatedControl
         }
         else if (property == IsSelectableProperty)
         {
+            if (IsSelectable)
+            {
+                EnsureFooter();
+            }
             _naturalLocked = false;
             foreach (var state in _states)
             {
@@ -1722,6 +1897,10 @@ public class Table : TemplatedControl
         }
         else if (property == IsLoadingProperty)
         {
+            if (IsLoading)
+            {
+                EnsureLoading();
+            }
             UpdatePseudoClasses();
             _presenter?.InvalidateVisual();
         }

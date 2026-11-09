@@ -4,6 +4,7 @@ using Avalonia.Automation;
 using Avalonia.Automation.Peers;
 using Avalonia.Automation.Provider;
 using Avalonia.Controls;
+using Avalonia.Controls.Metadata;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
@@ -76,6 +77,7 @@ internal sealed class CommentThreadSuggestionList : StackPanel
 }
 
 /// <summary>One suggested person: a 20px portrait and the name; the active one takes the muted surface.</summary>
+[PseudoClasses(":active")]
 internal sealed class CommentThreadSuggestion : Border
 {
     public static readonly StyledProperty<bool> IsActiveProperty =
@@ -116,9 +118,13 @@ internal sealed class CommentThreadSuggestion : Border
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-        if (change.Property == IsActiveProperty && ControlAutomationPeer.FromElement(this) is { } peer)
+        if (change.Property == IsActiveProperty)
         {
-            peer.RaisePropertyChangedEvent(SelectionItemPatternIdentifiers.IsSelectedProperty, change.OldValue, change.NewValue);
+            PseudoClasses.Set(":active", IsActive);
+            if (ControlAutomationPeer.FromElement(this) is { } peer)
+            {
+                peer.RaisePropertyChangedEvent(SelectionItemPatternIdentifiers.IsSelectedProperty, change.OldValue, change.NewValue);
+            }
         }
     }
 
@@ -159,6 +165,7 @@ internal sealed class CommentThreadSuggestion : Border
 /// name (or any word of it) starts with what follows "@"; ↑ / ↓ move (wrapping), Enter or Tab inserts "@Full Name ".
 /// The main composer leads with the current user's portrait; the compact one (editing) stacks Cancel / Save below.
 /// </summary>
+[PseudoClasses(":compact")]
 internal sealed class CommentThreadComposer : DockPanel
 {
     public static readonly StyledProperty<double> ColumnGapProperty =
@@ -205,6 +212,8 @@ internal sealed class CommentThreadComposer : DockPanel
     {
         _compact = compact;
         SetValue(IsCompactProperty, compact);
+        // The theme selects the compact margin on this pseudo-class (not on the property).
+        PseudoClasses.Set(":compact", compact);
         LastChildFill = true;
         _field = new CommentThreadField(this);
         _field.PropertyChanged += OnFieldPropertyChanged;

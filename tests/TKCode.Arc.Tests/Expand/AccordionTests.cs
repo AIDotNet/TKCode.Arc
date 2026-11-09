@@ -156,6 +156,48 @@ public class AccordionTests
     }
 
     [AvaloniaFact]
+    public void A_Closed_Answer_Is_Built_On_First_Open_And_Stays_Mounted()
+    {
+        var accordion = Faq();
+        var window = TestHelpers.Show(accordion);
+        try
+        {
+            static int Texts(AccordionItem row) => row.GetVisualDescendants().OfType<Control>()
+                .First(c => c.Name == AccordionItem.AnswerPart).GetVisualDescendants().OfType<TextBlock>().Count();
+            Texts(Row(accordion, 0)).ShouldBe(1);
+            Texts(Row(accordion, 1)).ShouldBe(0);
+            Row(accordion, 1).IsExpanded = true;
+            Dispatcher.UIThread.RunJobs();
+            Texts(Row(accordion, 1)).ShouldBe(1);
+            Panel(Row(accordion, 1)).Bounds.Height.ShouldBeGreaterThan(0);
+            Row(accordion, 1).IsExpanded = false;
+            Dispatcher.UIThread.RunJobs();
+            Texts(Row(accordion, 1)).ShouldBe(1);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_List_That_Sizes_To_Its_Content_Is_As_Wide_As_Its_Closed_Answers()
+    {
+        var accordion = new Accordion { HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left };
+        accordion.Items.Add(new AccordionItem { Header = "Q" });
+        accordion.Items.Add(new AccordionItem { Header = "Q", Content = new Border { Width = 400, Height = 10 } });
+        var window = TestHelpers.Show(accordion);
+        try
+        {
+            accordion.Bounds.Width.ShouldBeGreaterThanOrEqualTo(400);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void Height_Springs_With_Full_Motion()
     {
         var clock = new Motion.ManualFrameClock();

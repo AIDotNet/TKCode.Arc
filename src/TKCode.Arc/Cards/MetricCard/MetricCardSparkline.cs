@@ -34,8 +34,9 @@ internal sealed class MetricCardSparkline : Control
         public Point End;
     }
 
-    private readonly MotionValue<double> _reveal;
-    private readonly MotionValue<double> _swap;
+    // Created on first use: the reveal when the line first draws itself, the swap on the first data change.
+    private MotionValue<double>? _reveal;
+    private MotionValue<double>? _swap;
     private Shape? _current;
     private Shape? _previous;
     private Size _builtFor;
@@ -53,15 +54,17 @@ internal sealed class MetricCardSparkline : Control
         IsHitTestVisibleProperty.OverrideDefaultValue<MetricCardSparkline>(false);
     }
 
-    public MetricCardSparkline()
+    private MotionValue<double> Value(ref MotionValue<double>? field, double initial)
     {
-        _reveal = new MotionValue<double>(this, 0, MotionVectors.Double);
-        _reveal.Changed += _ => InvalidateVisual();
-        _swap = new MotionValue<double>(this, 1, MotionVectors.Double);
-        _swap.Changed += _ => InvalidateVisual();
+        if (field is null)
+        {
+            field = new MotionValue<double>(this, initial, MotionVectors.Double);
+            field.Changed += _ => InvalidateVisual();
+        }
+        return field;
     }
 
-    internal double RevealProgress => _reveal.Value;
+    internal double RevealProgress => _reveal?.Value ?? 0;
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
@@ -92,7 +95,7 @@ internal sealed class MetricCardSparkline : Control
         _visibility = null;
         if (!_revealed)
         {
-            _reveal.Jump(0);
+            _reveal?.Jump(0);
         }
     }
 
@@ -101,14 +104,15 @@ internal sealed class MetricCardSparkline : Control
         _revealed = true;
         _visibility?.Dispose();
         _visibility = null;
+        var reveal = Value(ref _reveal, 0);
         if (animate && IsLoaded)
         {
-            _reveal.Jump(0);
-            _ = _reveal.AnimateTo(1, MotionSpec.Tween(TimeSpan.FromSeconds(0.9), ArcEasings.InOut));
+            reveal.Jump(0);
+            _ = reveal.AnimateTo(1, MotionSpec.Tween(TimeSpan.FromSeconds(0.9), ArcEasings.InOut));
         }
         else
         {
-            _reveal.Jump(1);
+            reveal.Jump(1);
         }
     }
 
@@ -123,8 +127,9 @@ internal sealed class MetricCardSparkline : Control
             _builtFrom = null;
             if (_previous is not null)
             {
-                _swap.Jump(0);
-                _ = _swap.AnimateTo(1, MotionSpec.Tween(level == ArcMotionLevel.Full ? ArcMotionPresets.Standard : ArcMotionPresets.Instant, ArcEasings.Standard));
+                var swap = Value(ref _swap, 1);
+                swap.Jump(0);
+                _ = swap.AnimateTo(1, MotionSpec.Tween(level == ArcMotionLevel.Full ? ArcMotionPresets.Standard : ArcMotionPresets.Instant, ArcEasings.Standard));
             }
             InvalidateVisual();
         }
@@ -206,12 +211,12 @@ internal sealed class MetricCardSparkline : Control
             var color = stroke is ISolidColorBrush solid ? solid.Color : Colors.Gray;
             _wash = new ImmutableSolidColorBrush(Color.FromArgb((byte)(color.A * 0.09), color.R, color.G, color.B));
         }
-        var reveal = Math.Clamp(_reveal.Value, 0, 1);
+        var reveal = Math.Clamp(RevealProgress, 0, 1);
         if (reveal <= 0)
         {
             return;
         }
-        var swap = Math.Clamp(_swap.Value, 0, 1);
+        var swap = Math.Clamp(_swap?.Value ?? 1, 0, 1);
         using (context.PushClip(new Rect(-Dot, -Dot, (Bounds.Width + 2 * Dot) * reveal, Bounds.Height + 2 * Dot)))
         {
             if (_previous is not null && swap < 1)

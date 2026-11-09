@@ -80,16 +80,7 @@ internal sealed class AiWorkflowPathSwap : Control
         _leaving = old;
         if (old is not null)
         {
-            var leaving = old;
-            _ = Fade(old, 0, full ? s_out : ArcMotionPresets.Instant).ContinueWith(_ => Avalonia.Threading.Dispatcher.UIThread.Post(() =>
-            {
-                if (ReferenceEquals(_leaving, leaving))
-                {
-                    Remove(leaving);
-                    _leaving = null;
-                    InvalidateMeasure();
-                }
-            }), TaskScheduler.Default);
+            _ = RemoveAfterFade(old, full ? s_out : ArcMotionPresets.Instant);
         }
         if (content is not null)
         {
@@ -103,6 +94,18 @@ internal sealed class AiWorkflowPathSwap : Control
             _height.Jump(Bounds.Height);
         }
         InvalidateMeasure();
+    }
+
+    // Awaited on the UI thread: a thread-pool continuation that posts back lets a test (or a frame) see the old state.
+    private async Task RemoveAfterFade(Control leaving, TimeSpan duration)
+    {
+        await Fade(leaving, 0, duration);
+        if (ReferenceEquals(_leaving, leaving))
+        {
+            Remove(leaving);
+            _leaving = null;
+            InvalidateMeasure();
+        }
     }
 
     private Task<bool> Fade(Control control, double to, TimeSpan duration)

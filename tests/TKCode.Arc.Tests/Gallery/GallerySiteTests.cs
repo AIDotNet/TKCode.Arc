@@ -291,13 +291,23 @@ public class GallerySiteTests
             page.Current.Build();
             var all = page.Current.VisibleEntries.Count();
             all.ShouldBeGreaterThanOrEqualTo(TKCode.Arc.Gallery.Catalog.GalleryCatalog.Count);
+            page.Counts[0].Text.ShouldBe(all.ToString(), "every tab shows its size");
+            page.Counts[1].Text.ShouldBe(TKCode.Arc.Gallery.Catalog.GalleryCatalog.Blocks.AllEntries.Count().ToString());
             page.FilterBox.Text = "chart";
             Dispatcher.UIThread.RunJobs();
             page.Current.VisibleEntries.ShouldNotBeEmpty();
             page.Current.VisibleEntries.ShouldAllBe(entry => entry.Title.Contains("chart", StringComparison.OrdinalIgnoreCase) || entry.ClassName.Contains("chart", StringComparison.OrdinalIgnoreCase));
+            page.Counts[0].Text.ShouldBe(page.Current.VisibleEntries.Count().ToString(), "while filtering, a tab shows how many of its entries match");
+            page.Current.GetVisualDescendants().OfType<TextBlock>().ShouldNotContain(t => t.IsVisible && t.Text!.StartsWith("No components match", StringComparison.Ordinal));
+            page.FilterBox.Text = "zzzz-nothing";
+            Dispatcher.UIThread.RunJobs();
+            page.Current.VisibleEntries.ShouldBeEmpty();
+            page.Counts[0].Text.ShouldBe("0");
+            page.Current.GetVisualDescendants().OfType<TextBlock>().ShouldContain(t => t.IsVisible && t.Text == "No components match “zzzz-nothing”.", "the list says that nothing matches");
             page.FilterBox.Text = string.Empty;
             Dispatcher.UIThread.RunJobs();
             page.Current.VisibleEntries.Count().ShouldBe(all);
+            page.Counts[0].Text.ShouldBe(all.ToString());
 
             page.Show(3);
             Dispatcher.UIThread.RunJobs();

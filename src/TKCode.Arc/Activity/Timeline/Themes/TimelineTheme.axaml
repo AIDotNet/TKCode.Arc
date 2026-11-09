@@ -102,8 +102,9 @@
     <ControlTheme x:Key="{x:Type arc:TimelineTrigger}" TargetType="arc:TimelineTrigger">
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">
+            <!-- The keyboard focus ring (FocusRingMargin / FocusRingRadius) is built by the trigger on first focus (LazyFocusRing). -->
             <ControlTemplate TargetType="arc:TimelineTrigger">
-                <Panel>
+                <Panel Name="PART_Root">
                     <Border Name="PART_Frame"
                             Background="{TemplateBinding Background}"
                             CornerRadius="{TemplateBinding CornerRadius}"
@@ -112,13 +113,6 @@
                                           Content="{TemplateBinding Content}"
                                           HorizontalContentAlignment="Stretch" />
                     </Border>
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            Margin="{arc:TimelineTokenResource FocusRingMargin}"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{arc:TimelineTokenResource FocusRingRadius}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
         </Setter>
@@ -136,9 +130,6 @@
         <Style Selector="^:interactive:pointerover, ^:interactive:pressed">
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
         </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
-        </Style>
         <Style Selector="^:motion-full">
             <Setter Property="Transitions">
                 <Transitions>
@@ -151,6 +142,8 @@
     <!--
         .item: the marker (28px at 8px) and the line under it in the left column, the content 36px in. A person's portrait
         sits on a hairline ring; a system event is a quiet node (Surface, TextSecondary icon) tinted 12% by its tone.
+        The tone tint (PART_MarkerTone, between the fill and the content) and the detail host (PART_Detail, under the
+        trigger) are built by the row for the events that need them.
     -->
     <ControlTheme x:Key="{x:Type arc:TimelineRow}" TargetType="arc:TimelineRow">
         <Setter Property="Template">
@@ -171,7 +164,6 @@
                                    VerticalAlignment="Top"
                                    Margin="{arc:TimelineTokenResource MarkerMargin}">
                                 <Border Name="PART_MarkerFill" CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" />
-                                <Border Name="PART_MarkerTone" CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" Opacity="0" />
                                 <Decorator Name="PART_MarkerContent" />
                                 <Border Name="PART_MarkerRing"
                                         IsHitTestVisible="False"
@@ -215,13 +207,6 @@
                                             </StackPanel>
                                         </DockPanel>
                                     </arc:TimelineTrigger>
-                                    <arc:TimelineGrowHost Name="PART_Detail">
-                                        <Border Name="PART_DetailBody">
-                                            <Decorator Name="PART_DetailHost"
-                                                       TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}"
-                                                       TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
-                                        </Border>
-                                    </arc:TimelineGrowHost>
                                 </StackPanel>
                             </Panel>
                         </Panel>
@@ -243,9 +228,6 @@
         <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
             <Setter Property="Margin" Value="{arc:TimelineTokenResource ChevronMargin}" />
         </Style>
-        <Style Selector="^ /template/ Border#PART_DetailBody">
-            <Setter Property="Padding" Value="{arc:TimelineTokenResource DetailPadding}" />
-        </Style>
         <Style Selector="^ /template/ Border#PART_MarkerFill">
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
         </Style>
@@ -255,23 +237,12 @@
         <Style Selector="^:avatar /template/ Border#PART_MarkerFill">
             <Setter Property="Background" Value="Transparent" />
         </Style>
-        <Style Selector="^:success">
-            <Style Selector="^ /template/ Border#PART_MarkerTone">
-                <Setter Property="Background" Value="{arc:ArcDesignTokenResource Success}" />
-                <Setter Property="Opacity" Value="{arc:TimelineTokenResource ToneTintOpacity}" />
-            </Style>
-            <Style Selector="^ /template/ Panel#PART_Marker">
-                <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Success}" />
-            </Style>
+        <!-- The tone tint itself (Success / Danger at ToneTintOpacity) is bound by the row on its code-built PART_MarkerTone. -->
+        <Style Selector="^:success /template/ Panel#PART_Marker">
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Success}" />
         </Style>
-        <Style Selector="^:danger">
-            <Style Selector="^ /template/ Border#PART_MarkerTone">
-                <Setter Property="Background" Value="{arc:ArcDesignTokenResource Danger}" />
-                <Setter Property="Opacity" Value="{arc:TimelineTokenResource ToneTintOpacity}" />
-            </Style>
-            <Style Selector="^ /template/ Panel#PART_Marker">
-                <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
-            </Style>
+        <Style Selector="^:danger /template/ Panel#PART_Marker">
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
         </Style>
         <Style Selector="^:not(:expandable) /template/ arc|ArcGlyph#PART_Chevron">
             <Setter Property="IsVisible" Value="False" />
@@ -287,9 +258,7 @@
             <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
                 <Setter Property="Margin" Value="{arc:TimelineTokenResource ChevronMarginNarrow}" />
             </Style>
-            <Style Selector="^ /template/ Border#PART_DetailBody">
-                <Setter Property="Padding" Value="{arc:TimelineTokenResource DetailPaddingNarrow}" />
-            </Style>
+            <!-- The detail body's DetailPaddingNarrow is bound by the row (the body is code-built). -->
         </Style>
     </ControlTheme>
 </ResourceDictionary>

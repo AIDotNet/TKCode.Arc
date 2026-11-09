@@ -255,7 +255,7 @@ internal sealed class MixtureOfExpertsStage : Control
             0 => anchor.At.X - formatted.Width / 2,
             _ => anchor.At.X
         };
-        context.DrawText(formatted, new Point(x, anchor.At.Y - formatted.Height / 2));
+        formatted.Draw(context, new Point(x, anchor.At.Y - formatted.Height / 2));
     }
 
     private void DrawLine(DrawingContext context, ExplainerPath path, Color rest, Color active, MixtureOfExpertsFade fade, double wall)
@@ -379,7 +379,7 @@ internal sealed class MixtureOfExpertsStage : Control
         var x = layout.IsWide ? rect.Right - formatted.Width : rect.X + (rect.Width - formatted.Width) / 2;
         using (context.PushOpacity(opacity))
         {
-            context.DrawText(formatted, new Point(x, rect.Y + (rect.Height - formatted.Height) / 2));
+            formatted.Draw(context, new Point(x, rect.Y + (rect.Height - formatted.Height) / 2));
         }
     }
 
@@ -490,7 +490,7 @@ internal sealed class MixtureOfExpertsStage : Control
                 }
                 cx += 4;
             }
-            context.DrawText(text, new Point(cx, rect.Y + (rect.Height - text.Height) / 2));
+            text.Draw(context, new Point(cx, rect.Y + (rect.Height - text.Height) / 2));
         }
     }
 }

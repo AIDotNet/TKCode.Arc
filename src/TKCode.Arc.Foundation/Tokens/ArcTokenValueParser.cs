@@ -15,9 +15,28 @@ namespace TKCode.Arc;
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class ArcTokenValueParser
 {
+    // One brush per color: a theme computes thousands of color tokens per apply and most keep their color, so the
+    // published value is the same instance and the publisher's comparison is a reference check. Bounded so a stream of
+    // unique colors (an accent picker dragged) cannot grow it without end; colors past the bound get a brush of their own.
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<uint, ImmutableSolidColorBrush> s_brushes = new();
+    private const int MaxCachedBrushes = 4096;
+
     /// <summary>Converts a color token to the resource value it is published as (an immutable solid color brush).</summary>
     /// <param name="color">The color.</param>
-    public static object Brush(Color color) => new ImmutableSolidColorBrush(color);
+    public static object Brush(Color color)
+    {
+        var key = color.ToUInt32();
+        if (s_brushes.TryGetValue(key, out var brush))
+        {
+            return brush;
+        }
+        brush = new ImmutableSolidColorBrush(color);
+        if (s_brushes.Count < MaxCachedBrushes)
+        {
+            return s_brushes.GetOrAdd(key, brush);
+        }
+        return brush;
+    }
 
     /// <summary>Parses <c>#RGB</c>, <c>#ARGB</c>, <c>#RRGGBB</c>, <c>#AARRGGBB</c> or a known color name.</summary>
     public static bool TryParseColor(string text, out Color value) => Color.TryParse(text.Trim(), out value);

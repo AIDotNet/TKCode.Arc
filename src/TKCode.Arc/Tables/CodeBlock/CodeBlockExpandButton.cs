@@ -1,8 +1,12 @@
+using TKCode.Arc.DesignTokens;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Automation.Peers;
 using Avalonia.Automation.Provider;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
+using Avalonia.Input;
+using Avalonia.Interactivity;
 using AvaloniaButton = Avalonia.Controls.Button;
 
 namespace TKCode.Arc;
@@ -63,6 +67,28 @@ internal sealed class CodeBlockExpandButton : AvaloniaButton
             PseudoClasses.Set(ExpandedPseudoClass, IsExpanded);
             Avalonia.Automation.AutomationProperties.SetName(this, CurrentLabel);
         }
+    }
+
+    // The focus ring is built on the first keyboard focus rather than declared hidden in every block's template.
+    private readonly TablesBFocusRing _focusRing = new(new Thickness(4), CodeBlockTokens.Key(CodeBlockTokenKind.ExpandFocusRingRadius));
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        _focusRing.Attach(e.NameScope.Find<Panel>("PART_Layers"));
+        _focusRing.Update(Classes.Contains(":focus-visible"));
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing.Update(Classes.Contains(":focus-visible"));
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing.Update(Classes.Contains(":focus-visible"));
     }
 
     protected override AutomationPeer OnCreateAutomationPeer() => new ExpandPeer(this);

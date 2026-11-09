@@ -146,9 +146,8 @@ as small, fast-starting single files.
 
 ## Status and versioning
 
-TKCode.Arc is in preview. Versions follow [Semantic Versioning](https://semver.org/); while a version carries a
-`-preview` suffix, the API may still change between releases, and each release lists breaking changes in the
-**Changelog**. Pin the exact version in your project and read the changelog before upgrading.
+Versions follow [Semantic Versioning](https://semver.org/). From 1.0.0 on, breaking API changes come only with a new
+major version, and the **Changelog** lists them with each release. Keep the Arc packages on one version.
 
 ## License
 

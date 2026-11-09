@@ -79,7 +79,7 @@
         <!-- The height comes from the aspect ratio, not from the parent. -->
         <Setter Property="VerticalAlignment" Value="Top" />
         <Setter Property="ClipToBounds" Value="False" />
-        <Style Selector="^[Orientation=Vertical]">
+        <Style Selector="^:vertical">
             <Setter Property="Cursor" Value="SizeNorthSouth" />
         </Style>
 

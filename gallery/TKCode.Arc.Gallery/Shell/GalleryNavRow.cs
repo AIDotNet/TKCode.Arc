@@ -23,13 +23,9 @@ public sealed class GalleryNavRow : Panel
     private static Cursor HandCursor => s_hand ??= new Cursor(StandardCursorType.Hand);
 
     private readonly Border _surface = new();
-    private readonly Border _ring = new()
-    {
-        IsVisible = false,
-        IsHitTestVisible = false,
-        Margin = new Thickness(-3),
-        BorderThickness = new Thickness(2)
-    };
+    // Built the first time the row takes the keyboard focus: most rows of a list of hundreds never do.
+    private Border? _ring;
+    private readonly double _radius;
     private readonly ArcDesignTokenKind _rest;
     private readonly ArcDesignTokenKind _hover;
     private readonly ArcDesignTokenKind? _restFill;
@@ -63,10 +59,8 @@ public sealed class GalleryNavRow : Panel
             _surface.BorderThickness = new Thickness(1);
             ArcTokens.Bind(_surface, Border.BorderBrushProperty, strokeToken);
         }
-        _ring.CornerRadius = new CornerRadius(radius + 3);
-        ArcTokens.Bind(_ring, Border.BorderBrushProperty, ArcDesignTokenKind.FocusRing);
+        _radius = radius;
         Children.Add(_surface);
-        Children.Add(_ring);
 
         TextElement.SetFontSize(this, fontSize);
         ArcTokens.Bind(this, TextElement.FontFamilyProperty, ArcDesignTokenKind.BodyFontFamily);
@@ -174,13 +168,32 @@ public sealed class GalleryNavRow : Panel
     protected override void OnGotFocus(FocusChangedEventArgs e)
     {
         base.OnGotFocus(e);
-        _ring.IsVisible = e.NavigationMethod is NavigationMethod.Tab or NavigationMethod.Directional;
+        var keyboard = e.NavigationMethod is NavigationMethod.Tab or NavigationMethod.Directional;
+        if (keyboard && _ring is null)
+        {
+            _ring = new Border
+            {
+                IsHitTestVisible = false,
+                Margin = new Thickness(-3),
+                BorderThickness = new Thickness(2),
+                CornerRadius = new CornerRadius(_radius + 3)
+            };
+            ArcTokens.Bind(_ring, Border.BorderBrushProperty, ArcDesignTokenKind.FocusRing);
+            Children.Add(_ring);
+        }
+        if (_ring is not null)
+        {
+            _ring.IsVisible = keyboard;
+        }
     }
 
     protected override void OnLostFocus(FocusChangedEventArgs e)
     {
         base.OnLostFocus(e);
-        _ring.IsVisible = false;
+        if (_ring is not null)
+        {
+            _ring.IsVisible = false;
+        }
     }
 
     protected override AutomationPeer OnCreateAutomationPeer() => new ControlAutomationPeer(this);

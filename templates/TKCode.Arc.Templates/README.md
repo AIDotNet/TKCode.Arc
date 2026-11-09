@@ -151,8 +151,7 @@ dotnet pack src/Acme.Controls -c Release -o artifacts
 controls on Avalonia's headless platform; `samples/` is a desktop app that shows them. `--tests false` and
 `--sample false` leave those out; `-f` picks `net10.0`, `net8.0` or `net11.0`. The example token's identity has the
 library's name in front (`AcmeControlsStatTile`): an identity must be unique among every package an app registers,
-Arc's included. The package version starts as a prerelease, because a stable package cannot depend on a prerelease of
-TKCode.Arc.
+Arc's included.
 
 ## Add to an app
 

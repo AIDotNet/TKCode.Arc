@@ -320,7 +320,34 @@ internal sealed class KanbanCardView : TemplatedControl
     public bool IsProxy { get; init; }
 
     /// <summary>The proxy shows the focus ring its card had when it was lifted.</summary>
-    public void SetFocusRing(bool visible) => PseudoClasses.Set(FocusRingPseudoClass, visible);
+    public void SetFocusRing(bool visible)
+    {
+        PseudoClasses.Set(FocusRingPseudoClass, visible);
+        // The proxy is never focused: this is what asks its lazily built ring to show.
+        PseudoClasses.Set(":focus-visible", visible);
+        _focusRing?.Update();
+    }
+
+    private LazyFocusRing? _focusRing;
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        _focusRing ??= new LazyFocusRing(this, KanbanBoardTokens.Key(KanbanBoardTokenKind.FocusRingOutset), KanbanBoardTokens.Key(KanbanBoardTokenKind.CardFocusRadius));
+        _focusRing.Attach(e.NameScope.Find<Panel>(KanbanRingButton.RingHostPart), below: true);
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing?.Update();
+    }
 
     /// <summary>True while the keyboard focus ring is shown.</summary>
     public bool IsFocusRingVisible => Classes.Contains(":focus-visible") || Classes.Contains(FocusRingPseudoClass);
@@ -783,9 +810,10 @@ internal sealed class KanbanLaneHead : TemplatedControl
 }
 
 /// <summary>The Add card row under a Status column's cards (internal).</summary>
-internal sealed class KanbanAddRow : AvaloniaButton
+internal sealed class KanbanAddRow : KanbanRingButton
 {
     public KanbanAddRow(int column)
+        : base(ArcDesignTokenKind.RadiusStep16)
     {
         Column = column;
     }
@@ -794,7 +822,7 @@ internal sealed class KanbanAddRow : AvaloniaButton
 }
 
 /// <summary>The round icon button of a column head and of the drawer (internal).</summary>
-internal sealed class KanbanIconButton : AvaloniaButton
+internal sealed class KanbanIconButton : KanbanRingButton
 {
     public static readonly StyledProperty<Geometry?> GlyphProperty =
         AvaloniaProperty.Register<KanbanIconButton, Geometry?>(nameof(Glyph));
@@ -802,14 +830,57 @@ internal sealed class KanbanIconButton : AvaloniaButton
     public static readonly StyledProperty<double> GlyphSizeProperty =
         AvaloniaProperty.Register<KanbanIconButton, double>(nameof(GlyphSize), 15);
 
+    public KanbanIconButton()
+        : base(ArcDesignTokenKind.RadiusPill)
+    {
+    }
+
     public Geometry? Glyph { get => GetValue(GlyphProperty); set => SetValue(GlyphProperty, value); }
 
     public double GlyphSize { get => GetValue(GlyphSizeProperty); set => SetValue(GlyphSizeProperty, value); }
 }
 
 /// <summary>A pill button of the composer and the drawer (internal): Primary (Accent) or quiet text.</summary>
-internal sealed class KanbanPillButton : AvaloniaButton
+internal sealed class KanbanPillButton : KanbanRingButton
 {
+    public KanbanPillButton()
+        : base(ArcDesignTokenKind.RadiusPill)
+    {
+    }
+}
+
+/// <summary>A button of the board whose focus ring is built the first time it shows (a board has many, rarely keyboard focused).</summary>
+internal abstract class KanbanRingButton : AvaloniaButton
+{
+    /// <summary>The template's root panel: the ring goes under its other children.</summary>
+    public const string RingHostPart = "PART_RingHost";
+
+    private readonly ArcDesignTokenKind _ringRadius;
+    private LazyFocusRing? _focusRing;
+
+    protected KanbanRingButton(ArcDesignTokenKind ringRadius)
+    {
+        _ringRadius = ringRadius;
+    }
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        _focusRing ??= new LazyFocusRing(this, KanbanBoardTokens.Key(KanbanBoardTokenKind.FocusRingOutset), ArcDesignTokens.Key(_ringRadius));
+        _focusRing.Attach(e.NameScope.Find<Panel>(RingHostPart), below: true);
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing?.Update();
+    }
 }
 
 /// <summary>
@@ -1072,7 +1143,17 @@ internal sealed class KanbanSegmentedPanel : Panel
         return new Size(width, height);
     }
 
+    /// <summary>Raised when the options were arranged.</summary>
+    public event Action? Arranged;
+
     protected override Size ArrangeOverride(Size finalSize)
+    {
+        var size = ArrangeOptions(finalSize);
+        Arranged?.Invoke();
+        return size;
+    }
+
+    private Size ArrangeOptions(Size finalSize)
     {
         var n = Children.Count;
         if (n == 0)
@@ -1194,19 +1275,41 @@ internal sealed class KanbanSegmented : TemplatedControl
         _panel?.Children.Clear();
         if (_panel is not null)
         {
+            _panel.Arranged -= OnPanelArranged;
             _panel.LayoutUpdated -= OnPanelLayoutUpdated;
         }
+        _placeArmed = false;
         _pill = e.NameScope.Find<GlidingIndicator>(PillPart);
         _panel = e.NameScope.Find<KanbanSegmentedPanel>(OptionsPart);
         _placed = false;
         if (_panel is not null)
         {
             _panel.Children.AddRange(_options);
+            _panel.Arranged += OnPanelArranged;
+        }
+    }
+
+    private bool _placeArmed;
+
+    // The options only move when the panel arranges them: wait for the end of that pass, and listen to no other pass.
+    private void OnPanelArranged()
+    {
+        if (!_placeArmed && _panel is not null)
+        {
+            _placeArmed = true;
             _panel.LayoutUpdated += OnPanelLayoutUpdated;
         }
     }
 
-    private void OnPanelLayoutUpdated(object? sender, EventArgs e) => PlacePill();
+    private void OnPanelLayoutUpdated(object? sender, EventArgs e)
+    {
+        if (_panel is not null)
+        {
+            _panel.LayoutUpdated -= OnPanelLayoutUpdated;
+        }
+        _placeArmed = false;
+        PlacePill();
+    }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {

@@ -52,7 +52,8 @@
             <Setter Property="Opacity" Value="0" />
             <Setter Property="IsHitTestVisible" Value="False" />
         </Style>
-        <Style Selector="^[(arc|ScrollViewerAutoHide.IsShown)=True] /template/ ScrollBar">
+        <!-- :bars-shown is set by ScrollViewerAutoHide (a pseudo-class, not a property selector: no activator per viewer). -->
+        <Style Selector="^:bars-shown /template/ ScrollBar">
             <Setter Property="Opacity" Value="1" />
             <Setter Property="IsHitTestVisible" Value="True" />
         </Style>
@@ -65,7 +66,7 @@
                 </Transitions>
             </Setter>
         </Style>
-        <Style Selector="^[(arc|ScrollViewerAutoHide.IsShown)=True] /template/ ScrollBar:motion-full">
+        <Style Selector="^:bars-shown /template/ ScrollBar:motion-full">
             <Setter Property="Transitions">
                 <Transitions>
                     <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
@@ -139,7 +140,7 @@
 
         <!-- The thumb fills the 11px hit area; the pill is its template's border, inset by the thumb's Padding. -->
         <Style Selector="^ /template/ Thumb#thumb">
-            <Setter Property="Background" Value="{Binding $parent[ScrollBar].Foreground}" />
+            <Setter Property="Background" Value="{TemplateBinding Foreground}" />
             <Setter Property="Opacity" Value="0.30" />
             <Setter Property="Template">
                 <ControlTemplate TargetType="Thumb">

@@ -26,15 +26,15 @@
         <Setter Property="ChipForeground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
         <Setter Property="TipBackground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="TipForeground" Value="{arc:ArcDesignTokenResource Background}" />
-        <Style Selector="^[Size=Small]">
+        <Style Selector="^:small">
             <Setter Property="Diameter" Value="{arc:AvatarGroupTokenResource DiameterSM}" />
             <Setter Property="ChipFontSize" Value="{arc:AvatarGroupTokenResource ChipFontSizeSM}" />
         </Style>
-        <Style Selector="^[Size=Large]">
+        <Style Selector="^:large">
             <Setter Property="Diameter" Value="{arc:AvatarGroupTokenResource DiameterLG}" />
             <Setter Property="ChipFontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
         </Style>
-        <Style Selector="^[Size=XLarge]">
+        <Style Selector="^:xlarge">
             <Setter Property="Diameter" Value="{arc:AvatarGroupTokenResource DiameterLG}" />
             <Setter Property="ChipFontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
         </Style>

@@ -24,13 +24,22 @@ namespace TKCode.Arc;
 /// <see cref="EffectiveErrorMessage"/>.
 /// </remarks>
 [TemplatePart(FramePart, typeof(FieldFrame))]
-[PseudoClasses(InvalidPseudoClass)]
+[PseudoClasses(InvalidPseudoClass, SmallPseudoClass, MediumPseudoClass, LargePseudoClass)]
 public abstract class FieldTextBox : AvaloniaTextBox
 {
     public const string FramePart = "PART_Frame";
 
     /// <summary>Set while <see cref="IsInvalid"/> is true.</summary>
     public const string InvalidPseudoClass = ":invalid";
+
+    /// <summary><see cref="Size"/> as a pseudo-class (the themes select on these, not on the property).</summary>
+    public const string SmallPseudoClass = ":small";
+
+    /// <inheritdoc cref="SmallPseudoClass"/>
+    public const string MediumPseudoClass = ":medium";
+
+    /// <inheritdoc cref="SmallPseudoClass"/>
+    public const string LargePseudoClass = ":large";
 
     /// <summary>The visible label above the frame; also the accessible name.</summary>
     public static readonly StyledProperty<string?> LabelProperty =
@@ -117,6 +126,19 @@ public abstract class FieldTextBox : AvaloniaTextBox
     private static bool CoerceIsInvalid(AvaloniaObject target, bool value)
         => value || !string.IsNullOrEmpty(((FieldTextBox)target).EffectiveErrorMessage);
 
+    protected FieldTextBox()
+    {
+        UpdateSizePseudoClasses();
+    }
+
+    private void UpdateSizePseudoClasses()
+    {
+        var size = Size;
+        PseudoClasses.Set(SmallPseudoClass, size == ControlSize.Small);
+        PseudoClasses.Set(MediumPseudoClass, size == ControlSize.Medium);
+        PseudoClasses.Set(LargePseudoClass, size == ControlSize.Large);
+    }
+
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
@@ -146,6 +168,10 @@ public abstract class FieldTextBox : AvaloniaTextBox
         else if (change.Property == PlaceholderProperty)
         {
             SetCurrentValue(PlaceholderTextProperty, Placeholder);
+        }
+        else if (change.Property == SizeProperty)
+        {
+            UpdateSizePseudoClasses();
         }
     }
 

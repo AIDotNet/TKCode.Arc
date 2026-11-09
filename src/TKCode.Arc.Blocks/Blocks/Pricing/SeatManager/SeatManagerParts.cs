@@ -13,6 +13,10 @@ namespace TKCode.Arc;
 internal sealed class SeatManagerLegendDot : Control
 {
     private SeatManagerMeter? _meter;
+    private Color _fillColor;
+    private Color _strokeColor;
+    private ImmutableSolidColorBrush? _fill;
+    private ImmutablePen? _stroke;
 
     public SeatManagerLegendDot()
     {
@@ -51,11 +55,20 @@ internal sealed class SeatManagerLegendDot : Control
         var rect = new Rect(Bounds.Size);
         using (context.PushOpacity(look.Opacity))
         {
-            context.DrawRectangle(new ImmutableSolidColorBrush(look.Fill), null, new RoundedRect(rect, 2));
+            if (_fill is null || _fillColor != look.Fill)
+            {
+                _fillColor = look.Fill;
+                _fill = new ImmutableSolidColorBrush(look.Fill);
+            }
+            context.DrawRectangle(_fill, null, new RoundedRect(rect, 2));
             if (look.Stroke.A > 0)
             {
-                context.DrawRectangle(null, new ImmutablePen(new ImmutableSolidColorBrush(look.Stroke), 1),
-                    new RoundedRect(rect.Deflate(0.5), 1.5));
+                if (_stroke is null || _strokeColor != look.Stroke)
+                {
+                    _strokeColor = look.Stroke;
+                    _stroke = new ImmutablePen(new ImmutableSolidColorBrush(look.Stroke), 1);
+                }
+                context.DrawRectangle(null, _stroke, new RoundedRect(rect.Deflate(0.5), 1.5));
             }
         }
     }

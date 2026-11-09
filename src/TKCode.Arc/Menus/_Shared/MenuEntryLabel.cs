@@ -1,10 +1,13 @@
+using Avalonia.Controls;
 using Avalonia;
 using Avalonia.Automation.Peers;
+using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
 
 namespace TKCode.Arc;
 
 /// <summary>A quiet group label inside a <see cref="MenuSurface"/> ("Sort by", "Workspace"). Not focusable; navigation skips it.</summary>
+[PseudoClasses(MenuEntry.AccountPseudoClass)]
 public class MenuEntryLabel : TemplatedControl
 {
     public static readonly StyledProperty<string?> TextProperty =
@@ -29,6 +32,15 @@ public class MenuEntryLabel : TemplatedControl
     static MenuEntryLabel()
     {
         FocusableProperty.OverrideDefaultValue<MenuEntryLabel>(false);
+    }
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == VariantProperty)
+        {
+            PseudoClasses.Set(MenuEntry.AccountPseudoClass, Variant == MenuSurfaceVariant.Account);
+        }
     }
 
     protected override AutomationPeer OnCreateAutomationPeer() => new MenuEntryLabelAutomationPeer(this);

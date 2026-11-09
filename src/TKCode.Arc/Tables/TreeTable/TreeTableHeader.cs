@@ -1,4 +1,3 @@
-using System.Globalization;
 using TKCode.Arc.Motion;
 using Avalonia;
 using Avalonia.Automation;
@@ -6,7 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
-using Avalonia.Media.Immutable;
+using Avalonia.Media.TextFormatting;
 
 namespace TKCode.Arc;
 
@@ -20,12 +19,19 @@ internal sealed class TreeTableHeaderCell : Control
     private const double ButtonInset = 8;
     private const double Gap = 4;
 
+    private static readonly Cursor s_arrow = new(StandardCursorType.Arrow);
+
     private readonly TreeTable _owner;
     private MotionValue<double>? _arrowShown;
     private MotionValue<double>? _arrowTurn;
-    private FormattedText? _label;
+    private TextLayout? _label;
+    private IBrush? _labelBrush;
     private double _labelWidth = -1;
     private int _paletteVersion = -1;
+    private double _naturalWidth = double.NaN;
+    private int _naturalVersion = -1;
+    private Pen? _arrowPen;
+    private IBrush? _arrowPenBrush;
     private bool _hover;
     private bool _pressed;
 
@@ -60,7 +66,7 @@ internal sealed class TreeTableHeaderCell : Control
         Margin = sortable ? new Thickness(-ButtonInset, 0) : default;
         Focusable = sortable;
         IsTabStop = sortable;
-        Cursor = new Cursor(StandardCursorType.Arrow);
+        Cursor = s_arrow;
         var previous = Direction;
         Direction = direction;
         var shown = direction == DataTableSortDirection.None ? 0.0 : 1.0;
@@ -98,20 +104,28 @@ internal sealed class TreeTableHeaderCell : Control
         return value;
     }
 
-    private FormattedText Label(double maxWidth)
+    /// <summary>The column's header text changed: the label and its natural width are measured again.</summary>
+    internal void HeaderChanged()
+    {
+        _label?.Dispose();
+        _label = null;
+        _naturalWidth = double.NaN;
+        AutomationProperties.SetName(this, Column.Header);
+        InvalidateMeasure();
+        InvalidateVisual();
+    }
+
+    private TextLayout Label(double maxWidth)
     {
         var palette = _owner.Palette;
-        if (_label is null || _paletteVersion != palette.Version || Math.Abs(_labelWidth - maxWidth) > 0.5)
+        var brush = IsSortable && Direction != DataTableSortDirection.None ? palette.Foreground : palette.TextMuted;
+        if (_label is null || _paletteVersion != palette.Version || Math.Abs(_labelWidth - maxWidth) > 0.5 || !ReferenceEquals(_labelBrush, brush))
         {
+            _label?.Dispose();
             _paletteVersion = palette.Version;
             _labelWidth = maxWidth;
-            _label = new FormattedText(Column.Header, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, palette.Regular,
-                palette.SmallFontSize, IsSortable && Direction != DataTableSortDirection.None ? palette.Foreground : palette.TextMuted)
-            {
-                MaxTextWidth = Math.Max(1, maxWidth),
-                MaxLineCount = 1,
-                Trimming = TextTrimming.CharacterEllipsis
-            };
+            _labelBrush = brush;
+            _label = TablesBDrawing.Layout(Column.Header, palette.Regular, palette.SmallFontSize, brush, maxWidth, 1);
         }
         return _label;
     }
@@ -121,9 +135,14 @@ internal sealed class TreeTableHeaderCell : Control
     protected override Size MeasureOverride(Size availableSize)
     {
         var palette = _owner.Palette;
-        var natural = new FormattedText(Column.Header, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, palette.Regular,
-            palette.SmallFontSize, palette.TextMuted).Width;
-        var width = natural + Extra;
+        if (double.IsNaN(_naturalWidth) || _naturalVersion != palette.Version)
+        {
+            // Measured once per header text and palette, not on every layout pass.
+            _naturalVersion = palette.Version;
+            using var natural = new TextLayout(Column.Header, palette.Regular, palette.SmallFontSize, palette.TextMuted);
+            _naturalWidth = natural.Width;
+        }
+        var width = _naturalWidth + Extra;
         if (!double.IsInfinity(availableSize.Width))
         {
             width = Math.Min(width, availableSize.Width);
@@ -153,7 +172,7 @@ internal sealed class TreeTableHeaderCell : Control
             labelOrigin = new Point(inset + ArrowExtent + Gap, labelOrigin.Y);
             arrowX = inset;
         }
-        context.DrawText(label, labelOrigin);
+        label.Draw(context, labelOrigin);
         if (IsSortable)
         {
             var shown = Math.Clamp(ArrowOpacity, 0, 1);
@@ -163,7 +182,12 @@ internal sealed class TreeTableHeaderCell : Control
                 var scale = ArrowExtent / 24;
                 var matrix = Matrix.CreateTranslation(-12, -12) * Matrix.CreateRotation(ArrowAngle * Math.PI / 180) *
                              Matrix.CreateScale(scale, scale) * Matrix.CreateTranslation(center.X, center.Y);
-                var pen = new Pen(foreground, 1.75, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round);
+                if (_arrowPen is null || !ReferenceEquals(_arrowPenBrush, foreground))
+                {
+                    _arrowPenBrush = foreground;
+                    _arrowPen = new Pen(foreground, 1.75, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round);
+                }
+                var pen = _arrowPen;
                 using (context.PushOpacity(shown))
                 using (context.PushTransform(matrix))
                 {

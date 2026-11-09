@@ -67,13 +67,13 @@
         </Style>
 
         <!-- Context menu: 13rem minimum width, 300px maximum height (scrolls beyond). -->
-        <Style Selector="^[Variant=Context]">
+        <Style Selector="^:context">
             <Setter Property="MinWidth" Value="{arc:MenuSurfaceTokenResource ContextMinWidth}" />
             <Setter Property="MaxHeight" Value="{arc:MenuSurfaceTokenResource ContextMaxHeight}" />
         </Style>
 
         <!-- Account panel (user menu): 15.5rem, 4px inset, 10px radius, half-pixel border, quiet highlight. -->
-        <Style Selector="^[Variant=Account]">
+        <Style Selector="^:account">
             <Setter Property="Width" Value="{arc:MenuSurfaceTokenResource AccountWidth}" />
             <Setter Property="MinWidth" Value="0" />
             <Setter Property="Padding" Value="{arc:MenuSurfaceTokenResource AccountInset}" />
@@ -87,7 +87,7 @@
         </Style>
 
         <!-- Sheet (narrow windows): full width along the bottom edge, top-rounded, handle, 16px text. -->
-        <Style Selector="^[Variant=Sheet]">
+        <Style Selector="^:sheet">
             <Setter Property="MinWidth" Value="0" />
             <Setter Property="MaxHeight" Value="Infinity" />
             <Setter Property="Padding" Value="{arc:MenuSurfaceTokenResource SheetInset}" />

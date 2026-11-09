@@ -146,14 +146,7 @@
         <Setter Property="RenderTransform" Value="scale(1)" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:KanbanIconButton">
-                <Panel>
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            Margin="{arc:KanbanBoardTokenResource FocusRingOutset}"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                <Panel Name="PART_RingHost">
                     <Border Name="PART_Frame"
                             Background="{TemplateBinding Background}"
                             CornerRadius="{arc:ArcDesignTokenResource RadiusPill}">
@@ -174,9 +167,6 @@
         <Style Selector="^:pressed">
             <Setter Property="Background" Value="{arc:KanbanBoardTokenResource HoverFill}" />
             <Setter Property="RenderTransform" Value="scale(0.94)" />
-        </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
         </Style>
         <Style Selector="^:motion-full">
             <Setter Property="Transitions">
@@ -211,14 +201,7 @@
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:KanbanPillButton">
-                <Panel>
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            Margin="{arc:KanbanBoardTokenResource FocusRingOutset}"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                <Panel Name="PART_RingHost">
                     <Border Name="PART_Frame"
                             Background="{TemplateBinding Background}"
                             CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
@@ -245,9 +228,6 @@
             <Setter Property="Opacity" Value="0.4" />
             <Setter Property="Cursor" Value="Arrow" />
         </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
-        </Style>
         <Style Selector="^:motion-full">
             <Setter Property="Transitions">
                 <Transitions>
@@ -269,14 +249,7 @@
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:KanbanCardView">
-                <Panel>
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            Margin="{arc:KanbanBoardTokenResource FocusRingOutset}"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{arc:KanbanBoardTokenResource CardFocusRadius}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                <Panel Name="PART_RingHost">
                     <Border Name="PART_Frame"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding FrameBorderBrush}"
@@ -367,12 +340,6 @@
                 </Panel>
             </ControlTemplate>
         </Setter>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
-        </Style>
-        <Style Selector="^:focus-ring /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
-        </Style>
         <Style Selector="^:untitled /template/ TextBlock#PART_Title">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
         </Style>
@@ -560,14 +527,7 @@
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:KanbanAddRow">
-                <Panel>
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            Margin="{arc:KanbanBoardTokenResource FocusRingOutset}"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep16}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                <Panel Name="PART_RingHost">
                     <Border Name="PART_Frame"
                             Background="{TemplateBinding Background}"
                             CornerRadius="{arc:KanbanBoardTokenResource AddRowRadius}"
@@ -591,9 +551,6 @@
         <Style Selector="^:pointerover">
             <Setter Property="Background" Value="{arc:KanbanBoardTokenResource HoverFill}" />
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
-        </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
         </Style>
         <Style Selector="^:motion-full">
             <Setter Property="Transitions">

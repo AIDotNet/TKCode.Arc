@@ -5,6 +5,7 @@ using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
@@ -12,6 +13,7 @@ using Avalonia.Media.Immutable;
 using Avalonia.Threading;
 using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Localization;
+using TKCode.Arc.Primitives;
 
 namespace TKCode.Arc;
 
@@ -244,6 +246,7 @@ public class WorkflowNodeCard : TemplatedControl
         if (IsSelected != selected)
         {
             PseudoClasses.Set(SelectedPseudoClass, selected);
+            SyncSelectionHalo();
             Refresh();
         }
     }
@@ -277,6 +280,44 @@ public class WorkflowNodeCard : TemplatedControl
         Refresh();
     }
 
+    /// <summary>Selected: 3px of the subtle accent around the card's accent border. Most cards are never selected, so the halo comes on first use.</summary>
+    private void SyncSelectionHalo()
+    {
+        if (_selectionHalo is null)
+        {
+            if (!IsSelected || _root is null)
+            {
+                return;
+            }
+            _selectionHalo = new Border { Name = "PART_Selection", IsHitTestVisible = false };
+            _selectionHalo.Bind(MarginProperty, _root.GetResourceObservable(WorkflowNodeCardTokens.Key(WorkflowNodeCardTokenKind.SelectionHaloMargin)));
+            _selectionHalo.Bind(Border.CornerRadiusProperty, _root.GetResourceObservable(WorkflowNodeCardTokens.Key(WorkflowNodeCardTokenKind.SelectionHaloRadius)));
+            _selectionHalo.Bind(Border.BorderThicknessProperty, _root.GetResourceObservable(WorkflowNodeCardTokens.Key(WorkflowNodeCardTokenKind.SelectionHaloThickness)));
+            ArcTokens.Bind(_selectionHalo, Border.BorderBrushProperty, ArcDesignTokenKind.AccentSubtle);
+            // Under the focus ring, as in the drawing order of the card.
+            var ring = _focusRing?.Ring;
+            var index = ring is null ? -1 : _root.Children.IndexOf(ring);
+            _root.Children.Insert(index >= 0 ? index : _root.Children.Count, _selectionHalo);
+        }
+        _selectionHalo.IsVisible = IsSelected;
+    }
+
+    private Panel? _root;
+    private Border? _selectionHalo;
+    private LazyFocusRing? _focusRing;
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing?.Update();
+    }
+
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
@@ -286,6 +327,12 @@ public class WorkflowNodeCard : TemplatedControl
         _state = e.NameScope.Find<WorkflowStateMark>(StatePart);
         _layout = e.NameScope.Find<WorkflowCardPanel>(LayoutPart);
         _content = e.NameScope.Find<ContentPresenter>(ContentPart);
+        _root = e.NameScope.Find<Panel>("PART_Root");
+        _selectionHalo = null;
+        SyncSelectionHalo();
+        _focusRing ??= new LazyFocusRing(this, WorkflowNodeCardTokens.Key(WorkflowNodeCardTokenKind.FocusRingMargin),
+            WorkflowNodeCardTokens.Key(WorkflowNodeCardTokenKind.FocusRingRadius));
+        _focusRing.Attach(_root);
         UpdateContent();
         UpdateIcon();
         UpdateSize();

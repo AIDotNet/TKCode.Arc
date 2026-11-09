@@ -161,7 +161,14 @@ public partial class WorkflowCanvas
         UpdateRealized();
         if (_world is not null)
         {
-            _world.RenderTransform = new MatrixTransform(view.Matrix);
+            if (_world.RenderTransform is MatrixTransform world)
+            {
+                world.Matrix = view.Matrix;
+            }
+            else
+            {
+                _world.RenderTransform = new MatrixTransform(view.Matrix);
+            }
         }
         if (_grid is not null)
         {

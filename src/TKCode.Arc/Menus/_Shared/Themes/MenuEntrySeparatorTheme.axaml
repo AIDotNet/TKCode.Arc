@@ -12,11 +12,11 @@
         <Setter Property="Height" Value="{arc:MenuEntrySeparatorTokenResource LineThickness}" />
         <Setter Property="Margin" Value="{arc:MenuEntrySeparatorTokenResource LineMargin}" />
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
-        <Style Selector="^[Variant=Account]">
+        <Style Selector="^:account">
             <Setter Property="Height" Value="{arc:MenuEntrySeparatorTokenResource AccountLineThickness}" />
             <Setter Property="Background" Value="{arc:MenuEntrySeparatorTokenResource AccountLineColor}" />
         </Style>
-        <Style Selector="^[Variant=Sheet]">
+        <Style Selector="^:sheet">
             <Setter Property="Height" Value="{arc:MenuEntrySeparatorTokenResource AccountLineThickness}" />
             <Setter Property="Margin" Value="{arc:MenuEntrySeparatorTokenResource SheetLineMargin}" />
             <Setter Property="Background" Value="{arc:MenuEntrySeparatorTokenResource AccountLineColor}" />

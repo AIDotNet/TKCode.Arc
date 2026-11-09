@@ -7,19 +7,23 @@ using Avalonia.Automation.Peers;
 using Avalonia.Automation.Provider;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
+using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.VisualTree;
 using AvaloniaButton = Avalonia.Controls.Button;
 
 namespace TKCode.Arc;
 
 /// <summary>
 /// One row of an <see cref="Accordion"/>: <see cref="HeaderedContentControl.Header"/> is the question (the whole row
-/// is the trigger) and <see cref="ContentControl.Content"/> the answer. The answer stays mounted while closed so a
-/// second click mid-flight reverses from where it is; a closed answer takes no pointer or keyboard focus.
+/// is the trigger) and <see cref="ContentControl.Content"/> the answer. An answer is built when its row first opens (or
+/// at once when the list sizes to its content) and then stays mounted while closed, so a second click mid-flight
+/// reverses from where it is; a closed answer takes no pointer or keyboard focus.
 /// </summary>
 [TemplatePart(TriggerPart, typeof(AvaloniaButton))]
 [TemplatePart(PanelPart, typeof(SpringSizeDecorator))]
@@ -30,6 +34,7 @@ public class AccordionItem : HeaderedContentControl
     public const string TriggerPart = "PART_Trigger";
     public const string PanelPart = "PART_Panel";
     public const string AnswerPart = "PART_Answer";
+    private const string AnswerPresenterPart = "PART_ContentPresenter";
     public const string ExpandedPseudoClass = ":expanded";
     public const string LargePseudoClass = ":large";
 
@@ -66,6 +71,8 @@ public class AccordionItem : HeaderedContentControl
     private AccordionTrigger? _trigger;
     private Control? _panel;
     private Control? _answer;
+    private ContentPresenter? _answerPresenter;
+    private bool _answerRealized;
     private TranslateTransform? _answerShift;
     private MotionValue<double>? _reveal;
     private MotionValue<double>? _settleY;
@@ -102,13 +109,91 @@ public class AccordionItem : HeaderedContentControl
             _answerShift = new TranslateTransform();
             _answer.RenderTransform = _answerShift;
         }
+        _answerPresenter = e.NameScope.Find<ContentPresenter>(AnswerPresenterPart);
+        _answerRealized = false;
         _reveal = null;
         _settleY = null;
         _settleBlur = null;
+        if (IsExpanded)
+        {
+            RealizeAnswer();
+        }
         ApplyState(animate: false);
     }
 
     private void OnTriggerClick(object? sender, RoutedEventArgs e) => IsExpanded = !IsExpanded;
+
+    /// <summary>
+    /// Fills the answer's presenter. A long FAQ pays only for the rows that were opened; from then on the answer stays mounted,
+    /// so a click mid-flight still reverses. It runs before the decorator's next measure, so the first opening springs to
+    /// the same measured height as any other.
+    /// </summary>
+    private void RealizeAnswer()
+    {
+        if (_answerRealized || _answerPresenter is null)
+        {
+            return;
+        }
+        _answerRealized = true;
+        UpdateAnswerContent();
+    }
+
+    private void UpdateAnswerContent()
+    {
+        if (_answerPresenter is not { } presenter)
+        {
+            return;
+        }
+        // The template goes on after the content, and only with content: a presenter builds the template it has.
+        var content = Content;
+        presenter.ContentTemplate = null;
+        presenter.Content = content;
+        presenter.ContentTemplate = content is null ? null : ContentTemplate;
+    }
+
+    protected override Size MeasureOverride(Size availableSize)
+    {
+        if (!_answerRealized && !CanDeferAnswer(availableSize))
+        {
+            RealizeAnswer();
+        }
+        return base.MeasureOverride(availableSize);
+    }
+
+    /// <summary>
+    /// A closed answer still widens a list that sizes to its content (it is measured at height 0), so it can wait only when
+    /// the width comes from outside: every ancestor stretches up to a window or a fixed width.
+    /// </summary>
+    private bool CanDeferAnswer(Size availableSize)
+    {
+        if (double.IsInfinity(availableSize.Width))
+        {
+            return false;
+        }
+        for (Visual? visual = this; visual is not null; visual = visual.GetVisualParent())
+        {
+            if (visual is PopupRoot or OverlayPopupHost or WrapPanel)
+            {
+                return false;
+            }
+            if (visual is TopLevel)
+            {
+                return true;
+            }
+            if (visual is Layoutable layoutable)
+            {
+                if (!double.IsNaN(layoutable.Width))
+                {
+                    return true;
+                }
+                if (layoutable.HorizontalAlignment != HorizontalAlignment.Stretch)
+                {
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
@@ -117,6 +202,10 @@ public class AccordionItem : HeaderedContentControl
         {
             var expanded = change.GetNewValue<bool>();
             PseudoClasses.Set(ExpandedPseudoClass, expanded);
+            if (expanded)
+            {
+                RealizeAnswer();
+            }
             ApplyState(animate: true);
             _trigger?.RaiseExpandCollapseChanged(!expanded, expanded);
             Owner?.OnItemExpandedChanged(this, expanded);
@@ -125,6 +214,10 @@ public class AccordionItem : HeaderedContentControl
         else if (change.Property == HeaderProperty && change.NewValue is string header)
         {
             AutomationProperties.SetName(this, header);
+        }
+        else if ((change.Property == ContentProperty || change.Property == ContentTemplateProperty) && _answerRealized)
+        {
+            UpdateAnswerContent();
         }
     }
 

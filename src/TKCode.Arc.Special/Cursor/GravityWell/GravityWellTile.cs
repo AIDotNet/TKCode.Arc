@@ -91,8 +91,8 @@ internal sealed class GravityWellTile : ContentControl
     {
         if (_ring is not null)
         {
+            // Opacity alone: flipping IsVisible invalidates the whole grid's layout as a shockwave passes.
             _ring.Opacity = _ringOpacity;
-            _ring.IsVisible = _ringOpacity > 0;
         }
     }
 

@@ -46,8 +46,33 @@ public class ExpandableTextTests
         try
         {
             text.IsOverflowing.ShouldBeFalse();
-            Toggle(text).IsVisible.ShouldBeFalse();
+            // The toggle is built the first time the text overflows.
+            text.GetVisualDescendants().OfType<ExpandableTextToggle>().ShouldBeEmpty();
             Viewport(text).OpacityMask.ShouldBeNull();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void The_Toggle_Is_Laid_Out_In_The_Pass_That_Finds_The_Overflow_And_Follows_It()
+    {
+        var text = new ExpandableText { Text = "Fits on one line.", Width = 320, MoreLabel = "More", IsExpanded = false };
+        var window = TestHelpers.Show(text);
+        try
+        {
+            text.Text = Long;
+            Dispatcher.UIThread.RunJobs();
+            var toggle = Toggle(text);
+            toggle.IsVisible.ShouldBeTrue();
+            toggle.Bounds.Height.ShouldBeGreaterThan(0);
+            toggle.MoreText.ShouldBe("More");
+            Avalonia.Automation.AutomationProperties.GetName(toggle).ShouldBe("More");
+            text.Text = "Fits again.";
+            Dispatcher.UIThread.RunJobs();
+            toggle.IsVisible.ShouldBeFalse();
         }
         finally
         {

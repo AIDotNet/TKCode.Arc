@@ -20,7 +20,7 @@ namespace TKCode.Arc;
 [TemplatePart(TogglePart, typeof(Checkbox))]
 [TemplatePart(OperatorPart, typeof(Select))]
 [TemplatePart(ExtraPart, typeof(Control))]
-[PseudoClasses(InactivePseudoClass, ExtraPseudoClass, StackedPseudoClass)]
+[PseudoClasses(InactivePseudoClass, ExtraPseudoClass, StackedPseudoClass, SmallPseudoClass, LargePseudoClass)]
 public abstract class FilterBox : TemplatedControl
 {
     public const string LayoutPart = "PART_Layout";
@@ -42,6 +42,12 @@ public abstract class FilterBox : TemplatedControl
 
     /// <summary>The operator menu shows names as well as symbols, so it is wider than the field.</summary>
     private const double OperatorMenuMinWidth = 200;
+
+    /// <summary>Set while <see cref="Size"/> is <see cref="ControlSize.Small"/> (the theme selects on it instead of a property selector).</summary>
+    public const string SmallPseudoClass = ":small";
+
+    /// <summary>Set while <see cref="Size"/> is <see cref="ControlSize.Large"/>.</summary>
+    public const string LargePseudoClass = ":large";
 
     #region 公共属性定义
 
@@ -131,6 +137,14 @@ public abstract class FilterBox : TemplatedControl
     protected FilterBox()
     {
         PseudoClasses.Set(InactivePseudoClass, false);
+        UpdateSizePseudoClasses();
+    }
+
+    private void UpdateSizePseudoClasses()
+    {
+        var size = Size;
+        PseudoClasses.Set(SmallPseudoClass, size == ControlSize.Small);
+        PseudoClasses.Set(LargePseudoClass, size == ControlSize.Large);
     }
 
     /// <summary>The operators the menu offers, in order (boxed enum values).</summary>
@@ -314,6 +328,10 @@ public abstract class FilterBox : TemplatedControl
         {
             PseudoClasses.Set(ExtraPseudoClass, change.NewValue is not null);
             UpdateValueSpan();
+        }
+        else if (change.Property == SizeProperty)
+        {
+            UpdateSizePseudoClasses();
         }
         else if (change.Property == LabelSizeGroupProperty || change.Property == LabelWidthProperty)
         {

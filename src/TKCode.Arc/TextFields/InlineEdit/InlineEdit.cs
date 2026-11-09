@@ -79,9 +79,15 @@ public sealed class InlineEditSaveFailedEventArgs : RoutedEventArgs
 [TemplatePart(DisplayPart, typeof(AvaloniaButton))]
 [TemplatePart(EditorPart, typeof(TextBox))]
 [PseudoClasses(EditingPseudoClass, InvalidPseudoClass, SavingPseudoClass, FlashPseudoClass, FlashOffPseudoClass, EmptyPseudoClass,
-    TextHoverPseudoClass, TextFocusPseudoClass)]
+    TextHoverPseudoClass, TextFocusPseudoClass, BodyPseudoClass, MultilinePseudoClass)]
 public class InlineEdit : TemplatedControl
 {
+    /// <summary>Set while <see cref="Variant"/> is <see cref="InlineEditVariant.Body"/> (the theme selects on it, not on the property).</summary>
+    public const string BodyPseudoClass = ":body";
+
+    /// <summary>Set while <see cref="IsMultiline"/> is true (the theme selects on it, not on the property).</summary>
+    public const string MultilinePseudoClass = ":multiline";
+
     public const string BoxPart = "PART_Box";
     public const string DisplayPart = "PART_Display";
     public const string EditorPart = "PART_Editor";
@@ -254,13 +260,19 @@ public class InlineEdit : TemplatedControl
     private int _saveRun;
     private Point? _pressPoint;
     private bool _syncingValue;
-    private DispatcherTimer? _phaseTimer;
-    private DispatcherTimer? _flashTimer;
+    private OneShotTimer? _phaseTimer;
+    private OneShotTimer? _flashTimer;
 
     static InlineEdit()
     {
         FocusableProperty.OverrideDefaultValue<InlineEdit>(false);
         FocusModality.Watch();
+    }
+
+    public InlineEdit()
+    {
+        PseudoClasses.Set(BodyPseudoClass, Variant == InlineEditVariant.Body);
+        PseudoClasses.Set(MultilinePseudoClass, IsMultiline);
     }
 
     // ---- template ------------------------------------------------------------------------------------------------
@@ -350,11 +362,19 @@ public class InlineEdit : TemplatedControl
                 ShowText(roll: null);
             }
         }
-        else if (change.Property == IsMultilineProperty && _editor is not null)
+        else if (change.Property == IsMultilineProperty)
         {
-            _editor.AcceptsReturn = IsMultiline;
-            _editor.TextWrapping = IsMultiline ? TextWrapping.Wrap : TextWrapping.NoWrap;
-            UpdateSlot();
+            PseudoClasses.Set(MultilinePseudoClass, IsMultiline);
+            if (_editor is not null)
+            {
+                _editor.AcceptsReturn = IsMultiline;
+                _editor.TextWrapping = IsMultiline ? TextWrapping.Wrap : TextWrapping.NoWrap;
+                UpdateSlot();
+            }
+        }
+        else if (change.Property == VariantProperty)
+        {
+            PseudoClasses.Set(BodyPseudoClass, Variant == InlineEditVariant.Body);
         }
     }
 
@@ -728,17 +748,44 @@ public class InlineEdit : TemplatedControl
         }
     }
 
-    private static void RestartTimer(ref DispatcherTimer? timer, TimeSpan interval, Action action)
+    private static readonly Cursor s_handCursor = new(StandardCursorType.Hand);
+
+    /// <summary>A one-shot timer whose interval and callback change per use, so each phase reuses one timer object.</summary>
+    private sealed class OneShotTimer
     {
-        timer?.Stop();
-        var created = new DispatcherTimer { Interval = interval };
-        created.Tick += (_, _) =>
+        private readonly DispatcherTimer _timer = new();
+        private Action? _action;
+
+        public OneShotTimer()
         {
-            created.Stop();
-            action();
-        };
-        timer = created;
-        created.Start();
+            _timer.Tick += (_, _) =>
+            {
+                _timer.Stop();
+                var action = _action;
+                _action = null;
+                action?.Invoke();
+            };
+        }
+
+        public void Restart(TimeSpan interval, Action action)
+        {
+            _timer.Stop();
+            _timer.Interval = interval;
+            _action = action;
+            _timer.Start();
+        }
+
+        public void Stop()
+        {
+            _timer.Stop();
+            _action = null;
+        }
+    }
+
+    private static void RestartTimer(ref OneShotTimer? timer, TimeSpan interval, Action action)
+    {
+        timer ??= new OneShotTimer();
+        timer.Restart(interval, action);
     }
 
     // ---- slot and message ----------------------------------------------------------------------------------------
@@ -798,7 +845,7 @@ public class InlineEdit : TemplatedControl
         var pencil = CreateGlyph(ArcIcons.Pencil, 14, DesignTokens.ArcDesignTokenKind.TextMuted, "inline-edit-pencil");
         pencil.IsHitTestVisible = true;
         pencil.Margin = new Thickness(2, 0, 0, 0);
-        pencil.Cursor = new Cursor(StandardCursorType.Hand);
+        pencil.Cursor = s_handCursor;
         pencil.PointerReleased += (_, e) =>
         {
             e.Handled = true;

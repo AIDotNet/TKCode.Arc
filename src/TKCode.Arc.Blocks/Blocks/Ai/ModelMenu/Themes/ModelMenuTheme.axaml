@@ -62,17 +62,17 @@
         <Style Selector="^ /template/ arc|GlidingIndicator#PART_Highlight">
             <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
         </Style>
-        <Style Selector="^[IsInline=True] /template/ Panel#PART_List">
+        <Style Selector="^:inline /template/ Panel#PART_List">
             <Setter Property="Margin" Value="{arc:ModelMenuTokenResource InlineListPadding}" />
         </Style>
-        <Style Selector="^[IsInline=True] /template/ arc|GlidingIndicator#PART_Highlight">
+        <Style Selector="^:inline /template/ arc|GlidingIndicator#PART_Highlight">
             <Setter Property="CornerRadius" Value="{arc:ModelMenuTokenResource InlineHighlightRadius}" />
         </Style>
         <!-- The simple layout (the chat's menu): the control radius, a 12px highlight. -->
-        <Style Selector="^[IsSimple=True]">
+        <Style Selector="^:simple">
             <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
         </Style>
-        <Style Selector="^[IsSimple=True] /template/ arc|GlidingIndicator#PART_Highlight">
+        <Style Selector="^:simple /template/ arc|GlidingIndicator#PART_Highlight">
             <Setter Property="CornerRadius" Value="{arc:ModelMenuTokenResource SimpleHighlightRadius}" />
         </Style>
     </ControlTheme>
@@ -120,7 +120,7 @@
                 </Border>
             </ControlTemplate>
         </Setter>
-        <Style Selector="^[IsCompact=True]">
+        <Style Selector="^:compact">
             <Setter Property="Height" Value="{arc:ModelMenuTokenResource CompactRowHeight}" />
             <Setter Property="Template">
                 <ControlTemplate TargetType="arc:ModelMenuModelRow">
@@ -162,7 +162,7 @@
         </Style>
         <!-- Simple (the chat): 36, padding 0 10, mark 16 and 10px, the regular name, the muted note at the end, a 15px
              check in the text color 10px after it. -->
-        <Style Selector="^[IsSimple=True]">
+        <Style Selector="^:simple">
             <Setter Property="Height" Value="{arc:ModelMenuTokenResource SimpleRowHeight}" />
             <Setter Property="Template">
                 <ControlTemplate TargetType="arc:ModelMenuModelRow">
@@ -204,10 +204,10 @@
                 </ControlTemplate>
             </Setter>
         </Style>
-        <Style Selector="^[IsSimple=True][IsChecked=False] /template/ arc|ArcGlyph#PART_SimpleCheck">
+        <Style Selector="^:simple:not(:checked) /template/ arc|ArcGlyph#PART_SimpleCheck">
             <Setter Property="Opacity" Value="0" />
         </Style>
-        <Style Selector="^[IsInline=True]">
+        <Style Selector="^:inline">
             <Setter Property="Height" Value="{arc:ModelMenuTokenResource InlineRowHeight}" />
             <Setter Property="Padding" Value="{arc:ModelMenuTokenResource InlineRowPadding}" />
             <Setter Property="Template">
@@ -370,7 +370,7 @@
         <Style Selector="^ /template/ Border#PART_Line">
             <Setter Property="Margin" Value="{arc:ModelMenuTokenResource SeparatorMargin}" />
         </Style>
-        <Style Selector="^[IsInline=True] /template/ Border#PART_Line">
+        <Style Selector="^:inline /template/ Border#PART_Line">
             <Setter Property="Margin" Value="{arc:ModelMenuTokenResource InlineSeparatorMargin}" />
         </Style>
     </ControlTheme>
@@ -505,7 +505,7 @@
             <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
             <Setter Property="LineHeight" Value="{arc:ModelMenuTokenResource NoteLineHeight}" />
         </Style>
-        <Style Selector="^[IsFirst=True]">
+        <Style Selector="^:first">
             <Setter Property="Padding" Value="{arc:ModelMenuTokenResource GroupHeaderPadding}" />
         </Style>
         <Style Selector="^.empty">

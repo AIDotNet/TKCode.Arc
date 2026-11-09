@@ -143,10 +143,10 @@ public sealed class GalleryDocsGenerator : IIncrementalGenerator
         code.AppendLine();
         code.AppendLine("internal static class GalleryDemoData");
         code.AppendLine("{");
-        code.AppendLine("    public static readonly GalleryDemo[] Demos =");
-        code.AppendLine("    [");
-        foreach (var (demo, codeBehind) in valid)
+        // In chunks for the same reason as GalleryDocData's arrays.
+        AppendChunked(code, "GalleryDemo", "Demos", valid, 64, entry =>
         {
+            var (demo, codeBehind) = entry;
             code.Append("        new(").Append(Literal(demo.Component)).Append(", ").Append(Literal(demo.Name))
                 .Append(", static () => new global::").Append(demo.ClassName).AppendLine("(),");
             code.Append("            [new(").Append(Literal(demo.RelativePath)).Append(", \"axaml\", ").Append(Literal(demo.Source)).Append(')');
@@ -157,8 +157,7 @@ public sealed class GalleryDocsGenerator : IIncrementalGenerator
                     .Append(Literal(DemoFile.TextOf(codeBehind))).Append(')');
             }
             code.AppendLine("]),");
-        }
-        code.AppendLine("    ];");
+        });
         code.AppendLine("}");
         context.AddSource("GalleryDemoData.g.cs", SourceText.From(code.ToString(), Encoding.UTF8));
         if (views.Length > 0)
@@ -283,6 +282,8 @@ public sealed class GalleryDocsGenerator : IIncrementalGenerator
         code.AppendLine();
         code.AppendLine("namespace TKCode.Arc.Gallery.Docs;");
         code.AppendLine();
+        // A class per list, because reading one static field of a class builds all of its fields: the page list is read at startup,
+        // the types only with an API table, and the translations only for the language that table is shown in.
         code.AppendLine("internal static class GalleryDocData");
         code.AppendLine("{");
 
@@ -296,6 +297,11 @@ public sealed class GalleryDocsGenerator : IIncrementalGenerator
             code.Append("            [").Append(string.Join(", ", page.Demos.Select(d => Literal(d.Id)))).Append("],").AppendLine();
             code.Append("            [").Append(string.Join(", ", page.Screenshots.Select(s => $"({Literal(s.Name)}, {Literal(s.Caption)})"))).AppendLine("]),");
         });
+
+        code.AppendLine("}");
+        code.AppendLine();
+        code.AppendLine("internal static class GalleryApiTypeData");
+        code.AppendLine("{");
 
         // The type and its property fields are only named inside a lambda per type: reading the page list at startup must not load
         // the assembly of every documented control or run its static constructor (a host may load an assembly on demand).
@@ -319,13 +325,38 @@ public sealed class GalleryDocsGenerator : IIncrementalGenerator
                 .Append(string.Join(", ", type.Members.Select(m => m.FieldExpression ?? "null"))).AppendLine("])),");
         });
 
-        AppendChunked(code, "GalleryApiTranslation", "Translations", translations, 256, entry =>
+        code.AppendLine("}");
+        code.AppendLine();
+        var languages = translations.GroupBy(t => t.Language, System.StringComparer.Ordinal).ToList();
+        for (var i = 0; i < languages.Count; i++)
         {
-            code.Append("        new(").Append(Literal(entry.Language)).Append(", ").Append(Literal(entry.Unit.Key)).Append(", ")
-                .Append(Literal(entry.Unit.Target)).AppendLine("),");
-        });
+            code.Append("internal static class GalleryApiTranslations").Append(i).AppendLine();
+            code.AppendLine("{");
+            AppendChunked(code, "GalleryApiTranslation", "Entries", languages[i].ToList(), 256, entry =>
+            {
+                code.Append("        new(").Append(Literal(entry.Unit.Key)).Append(", ").Append(Literal(entry.Unit.Target)).AppendLine("),");
+            });
+            code.AppendLine("}");
+            code.AppendLine();
+        }
 
-        code.AppendLine("    private static T[] Join<T>(params T[][] parts)");
+        code.AppendLine("internal static class GalleryApiTranslations");
+        code.AppendLine("{");
+        code.AppendLine("    /// <summary>The API translations of a language tag in lower case; none for a language without any.</summary>");
+        code.AppendLine("    public static GalleryApiTranslation[] For(string language) => language switch");
+        code.AppendLine("    {");
+        for (var i = 0; i < languages.Count; i++)
+        {
+            code.Append("        ").Append(Literal(languages[i].Key.ToLowerInvariant())).Append(" => GalleryApiTranslations").Append(i).AppendLine(".Entries,");
+        }
+        code.AppendLine("        _ => []");
+        code.AppendLine("    };");
+        code.AppendLine("}");
+        code.AppendLine();
+
+        code.AppendLine("internal static class GalleryDocChunks");
+        code.AppendLine("{");
+        code.AppendLine("    public static T[] Join<T>(params T[][] parts)");
         code.AppendLine("    {");
         code.AppendLine("        var length = 0;");
         code.AppendLine("        foreach (var part in parts)");
@@ -349,7 +380,7 @@ public sealed class GalleryDocsGenerator : IIncrementalGenerator
     private static void AppendChunked<T>(StringBuilder code, string type, string name, IReadOnlyList<T> items, int size, System.Action<T> writeEntry)
     {
         var chunks = (items.Count + size - 1) / size;
-        code.Append("    public static readonly ").Append(type).Append("[] ").Append(name).Append(" = Join<").Append(type).Append(">(")
+        code.Append("    public static readonly ").Append(type).Append("[] ").Append(name).Append(" = GalleryDocChunks.Join<").Append(type).Append(">(")
             .Append(string.Join(", ", Enumerable.Range(0, chunks).Select(i => $"{name}{i}()"))).AppendLine(");");
         code.AppendLine();
         for (var chunk = 0; chunk < chunks; chunk++)

@@ -1,6 +1,7 @@
 using System.Globalization;
 using TKCode.Arc.Motion;
 using Avalonia;
+using Avalonia.Animation;
 using Avalonia.Automation;
 using Avalonia.Automation.Peers;
 using Avalonia.Automation.Provider;
@@ -105,6 +106,7 @@ internal sealed class ReorderableListItem : ContentControl
     public void SetLifted(bool lifted)
     {
         PseudoClasses.Set(LiftedPseudoClass, lifted);
+        UpdateLift(lifted);
         ZIndex = lifted ? 1 : IsSettling ? 1 : 0;
         var full = ArcMotion.IsFull(this);
         _scale ??= CreateScale();
@@ -122,8 +124,43 @@ internal sealed class ReorderableListItem : ContentControl
         }
     }
 
-    private static readonly Cursor s_grab = new(StandardCursorType.Hand);
+    internal static readonly Cursor s_grab = new(StandardCursorType.Hand);
     private static readonly Cursor s_grabbing = new(StandardCursorType.DragMove);
+
+    // The floating shadow layer used to be a template Border with Opacity 0 in every row (a second BoxShadow per row);
+    // it is built under PART_Row on the first lift and fades exactly as the theme did: Fast in, Standard out, full motion only.
+    private Panel? _layers;
+    private Border? _lift;
+    private Transitions? _liftIn;
+    private Transitions? _liftOut;
+
+    internal Border? LiftLayer => _lift;
+
+    private void UpdateLift(bool lifted)
+    {
+        if (_lift is null)
+        {
+            if (!lifted || _layers is null)
+            {
+                return;
+            }
+            _lift = new Border { Name = "PART_Lift", Opacity = 0, IsHitTestVisible = false };
+            ArcTokens.Bind(_lift, Border.CornerRadiusProperty, DesignTokens.ArcDesignTokenKind.RadiusControl);
+            ArcTokens.Bind(_lift, Border.BoxShadowProperty, DesignTokens.ArcDesignTokenKind.ShadowFloating);
+            _layers.Children.Insert(0, _lift);
+        }
+        if (ArcMotion.IsFull(this))
+        {
+            _lift.Transitions = lifted
+                ? _liftIn ??= new Transitions { new ArcDoubleTransition { Property = OpacityProperty, Tween = ArcTween.Fast } }
+                : _liftOut ??= new Transitions { new ArcDoubleTransition { Property = OpacityProperty, Tween = ArcTween.Standard } };
+        }
+        else
+        {
+            _lift.Transitions = null;
+        }
+        _lift.Opacity = lifted ? 1 : 0;
+    }
 
     public void SetDragging(bool dragging)
     {
@@ -167,6 +204,11 @@ internal sealed class ReorderableListItem : ContentControl
         _scale?.Jump(1);
         _settle = null;
         PseudoClasses.Set(LiftedPseudoClass, false);
+        if (_lift is not null)
+        {
+            _lift.Transitions = null;
+            _lift.Opacity = 0;
+        }
         PseudoClasses.Set(DraggingPseudoClass, false);
         ZIndex = 0;
     }
@@ -178,6 +220,12 @@ internal sealed class ReorderableListItem : ContentControl
         if (_handle is not null)
         {
             _handle.Owner = this;
+        }
+        _layers = e.NameScope.Find<Panel>("PART_Layers");
+        _lift = null;
+        if (PseudoClasses.Contains(LiftedPseudoClass))
+        {
+            UpdateLift(true);
         }
         _list.RefreshPositions();
     }
@@ -217,7 +265,7 @@ internal sealed class ReorderableListHandle : Decorator
     {
         Focusable = true;
         IsTabStop = true;
-        Cursor = new Cursor(StandardCursorType.Hand);
+        Cursor = ReorderableListItem.s_grab;
         FocusAdorner = null;
     }
 
@@ -225,8 +273,20 @@ internal sealed class ReorderableListHandle : Decorator
 
     internal ReorderableListItem? Owner { get; set; }
 
+    private string? _describedTitle;
+    private int _describedPosition;
+    private int _describedCount;
+
+    /// <summary>Writes the accessible name; only when something in it changed (every swap during a drag re-describes every row).</summary>
     public void Describe(string title, int position, int count)
     {
+        if (position == _describedPosition && count == _describedCount && string.Equals(title, _describedTitle, StringComparison.Ordinal))
+        {
+            return;
+        }
+        _describedTitle = title;
+        _describedPosition = position;
+        _describedCount = count;
         AutomationProperties.SetName(this, $"Reorder {title}. Position {position} of {count}. Use arrow keys.");
     }
 

@@ -38,13 +38,6 @@
                                                TextElement.Foreground="{arc:ArcDesignTokenResource AccentForeground}" />
                     </Border>
                     <arc:ButtonsLiveRegion Name="PART_Status" />
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            Margin="-4"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{arc:HoldToConfirmTokenResource FocusRingRadius}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
         </Setter>
@@ -65,7 +58,7 @@
         <Setter Property="RenderTransformOrigin" Value="50%,50%" />
         <Setter Property="ClipToBounds" Value="False" />
 
-        <Style Selector="^[Tone=Danger]">
+        <Style Selector="^:danger">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
             <Setter Property="BorderBrush" Value="{arc:HoldToConfirmTokenResource DangerBorder}" />
             <Style Selector="^ /template/ Border#PART_Fill, ^ /template/ Border#PART_Tint">
@@ -75,7 +68,7 @@
                 <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Background}" />
             </Style>
         </Style>
-        <Style Selector="^[Tone=Neutral]">
+        <Style Selector="^:neutral">
             <Style Selector="^ /template/ Border#PART_Fill, ^ /template/ Border#PART_Tint">
                 <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
             </Style>
@@ -93,9 +86,6 @@
         <Style Selector="^:disabled">
             <Setter Property="Cursor" Value="No" />
             <Setter Property="Opacity" Value="{arc:HoldToConfirmTokenResource DisabledOpacity}" />
-        </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
         </Style>
 
         <!-- Press depth while holding: 0.97 (0.985 when wider than 220px), snappy; none under reduced motion. -->

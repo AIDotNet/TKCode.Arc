@@ -107,6 +107,28 @@ public class FilterMenu : TemplatedControl
 
     internal FilterField? CurrentField => _field;
 
+    // The trigger's focus ring is built on the first keyboard focus rather than declared hidden in every menu's template.
+    private readonly TablesBFocusRing _focusRing = new(new Thickness(-3), FilterMenuTokens.Key(FilterMenuTokenKind.FocusRingRadius));
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        _focusRing.Attach(e.NameScope.Find<Panel>("PART_Layers"));
+        _focusRing.Update(Classes.Contains(":focus-visible"));
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing.Update(Classes.Contains(":focus-visible"));
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing.Update(Classes.Contains(":focus-visible"));
+    }
+
     internal ArcPopup? Popup => _popup;
 
     /// <summary>Opens the panel on the field step; <paramref name="focusLast"/> starts on the last field.</summary>

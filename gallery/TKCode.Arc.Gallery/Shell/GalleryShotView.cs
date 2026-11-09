@@ -1,3 +1,4 @@
+using System.Buffers.Binary;
 using System.Net.Http;
 using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Gallery.Docs;
@@ -66,6 +67,8 @@ public sealed class GalleryShotView : StackPanel
     private bool? _isDarkShown;
     private bool? _isDarkRequested;
     private int _loadVersion;
+    private double _decodedScaling = 1;
+    private TopLevel? _topLevel;
     // Whether the view has reached the viewport since it was attached.
     private readonly GalleryFirstSight _sight;
 
@@ -116,11 +119,21 @@ public sealed class GalleryShotView : StackPanel
         {
             _sight.Reset();
         }
+        _topLevel = TopLevel.GetTopLevel(this);
+        if (_topLevel is not null)
+        {
+            _topLevel.ScalingChanged += OnScalingChanged;
+        }
     }
 
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
+        if (_topLevel is not null)
+        {
+            _topLevel.ScalingChanged -= OnScalingChanged;
+            _topLevel = null;
+        }
         // A long page holds many captures; decoded bitmaps are released as soon as the page goes away, and a capture that
         // is still being fetched is dropped when it arrives.
         _loadVersion++;
@@ -129,6 +142,80 @@ public sealed class GalleryShotView : StackPanel
         _bitmap = null;
         _isDarkShown = null;
         _isDarkRequested = null;
+    }
+
+    /// <summary>
+    /// The capture at the pixels its largest size on this screen needs: half its width on a screen of scale 1, where a full
+    /// decode kept four times the memory to draw it smaller. Never below that size, whatever the column is now: a wider window
+    /// would have to decode it again. A capture of unknown size is decoded whole.
+    /// </summary>
+    private static Bitmap DecodeForScreen(Stream stream, PixelSize? size, double scaling)
+    {
+        if (size is { } full)
+        {
+            var width = (int)Math.Ceiling(full.Width / CaptureScale * Math.Max(scaling, 1));
+            if (width < full.Width)
+            {
+                return Bitmap.DecodeToWidth(stream, width, BitmapInterpolationMode.HighQuality);
+            }
+        }
+        return new Bitmap(stream);
+    }
+
+    /// <summary>
+    /// The pixel size in a WebP file's header, with the stream back at its start; null when it is not a WebP file the header
+    /// tells the size of (RIFF, then a lossless, lossy or extended chunk) or the stream cannot seek.
+    /// </summary>
+    private static PixelSize? WebPSize(Stream stream)
+    {
+        if (!stream.CanSeek)
+        {
+            return null;
+        }
+        var start = stream.Position;
+        Span<byte> header = stackalloc byte[30];
+        var read = stream.ReadAtLeast(header, header.Length, throwOnEndOfStream: false);
+        stream.Position = start;
+        return read == header.Length ? ParseWebPSize(header) : null;
+    }
+
+    /// <summary>The pixel size in the first 30 bytes of a WebP file; null when they do not tell it.</summary>
+    internal static PixelSize? ParseWebPSize(ReadOnlySpan<byte> header)
+    {
+        if (!header[..4].SequenceEqual("RIFF"u8) || !header.Slice(8, 4).SequenceEqual("WEBP"u8))
+        {
+            return null;
+        }
+        var chunk = header.Slice(12, 4);
+        if (chunk.SequenceEqual("VP8L"u8) && header[20] == 0x2F)
+        {
+            // 14 bits of width less one, then 14 bits of height less one, little-endian.
+            var bits = BinaryPrimitives.ReadUInt32LittleEndian(header.Slice(21, 4));
+            return new PixelSize((int)(bits & 0x3FFF) + 1, (int)((bits >> 14) & 0x3FFF) + 1);
+        }
+        if (chunk.SequenceEqual("VP8X"u8))
+        {
+            // 24 bits each, less one.
+            var width = header[24] | header[25] << 8 | header[26] << 16;
+            var height = header[27] | header[28] << 8 | header[29] << 16;
+            return new PixelSize(width + 1, height + 1);
+        }
+        if (chunk.SequenceEqual("VP8 "u8) && header[23] == 0x9D && header[24] == 0x01 && header[25] == 0x2A)
+        {
+            return new PixelSize(BinaryPrimitives.ReadUInt16LittleEndian(header.Slice(26, 2)) & 0x3FFF,
+                BinaryPrimitives.ReadUInt16LittleEndian(header.Slice(28, 2)) & 0x3FFF);
+        }
+        return null;
+    }
+
+    private void OnScalingChanged(object? sender, EventArgs e)
+    {
+        // A capture decoded for a screen of a lower scale would look soft on this one.
+        if (_bitmap is not null && (TopLevel.GetTopLevel(this)?.RenderScaling ?? 1) > _decodedScaling)
+        {
+            _isDarkRequested = null;
+            Load();
+        }
     }
 
     private void Load()
@@ -176,10 +263,13 @@ public sealed class GalleryShotView : StackPanel
         {
             using (stream)
             {
-                _bitmap = new Bitmap(stream);
+                var size = WebPSize(stream);
+                _decodedScaling = TopLevel.GetTopLevel(this)?.RenderScaling ?? 1;
+                _bitmap = DecodeForScreen(stream, size, _decodedScaling);
+                var full = size ?? _bitmap.PixelSize;
+                _image.MaxWidth = full.Width / CaptureScale;
+                _image.MaxHeight = full.Height / CaptureScale;
             }
-            _image.MaxWidth = _bitmap.PixelSize.Width / CaptureScale;
-            _image.MaxHeight = _bitmap.PixelSize.Height / CaptureScale;
         }
         else
         {

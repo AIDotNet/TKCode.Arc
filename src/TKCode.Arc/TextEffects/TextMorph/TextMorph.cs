@@ -1,10 +1,10 @@
-using System.Globalization;
 using TKCode.Arc.Motion;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
 using Avalonia.Media;
+using Avalonia.Media.TextFormatting;
 
 namespace TKCode.Arc;
 
@@ -59,10 +59,12 @@ public class TextMorph : Control
     {
         public required string Key { get; init; }
         public required string Char { get; init; }
-        public FormattedText? Text { get; set; }
+        public TextLayout? Text { get; set; }
         public double Width { get; set; }
         public MotionValue<double>? X { get; set; }
         public double TargetX { get; set; }
+        /// <summary>Set once the glyph has a place; before that a move is a first placement, not a glide.</summary>
+        public bool Placed { get; set; }
         public MotionValue<double>? Enter { get; set; }
         public MotionValue<double>? Exit { get; set; }
         public bool Leaving { get; set; }
@@ -93,19 +95,11 @@ public class TextMorph : Control
         {
             _fontDirty = true;
         }
-        else if (change.Property == ForegroundProperty)
-        {
-            // Color only: re-brush the shaped glyphs, metrics stay.
-            var brush = Foreground ?? Brushes.Black;
-            foreach (var glyph in _glyphs)
-            {
-                glyph.Text?.SetForegroundBrush(brush);
-            }
-        }
+        // Foreground: the glyphs are drawn in the current brush (AffectsRender), so a color change reshapes nothing.
     }
 
-    private FormattedText Shape(string ch) => new(ch == " " ? " " : ch, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
-        new Typeface(FontFamily, FontStyle.Normal, FontWeight), FontSize, Foreground ?? Brushes.Black);
+    // TextLayout, not FormattedText: FormattedText re-shapes on every Draw (see ShapedText).
+    private TextLayout Shape(string ch) => ShapedText.Shape(ch == " " ? " " : ch, new Typeface(FontFamily, FontStyle.Normal, FontWeight), FontSize);
 
     private void EnsureFont()
     {
@@ -232,17 +226,25 @@ public class TextMorph : Control
         var x = 0.0;
         foreach (var glyph in _glyphs.Where(g => !g.Leaving))
         {
+            var current = glyph.X?.Value ?? glyph.TargetX;
+            var placed = glyph.Placed;
             glyph.TargetX = x;
+            glyph.Placed = true;
             if (glyph.X is null)
             {
-                glyph.X = new MotionValue<double>(this, x, MotionVectors.Double);
-                glyph.X.Changed += _ =>
+                // A resting letter needs no motion value: it is created the first time this letter has to glide.
+                if (animate && placed && Math.Abs(current - x) > 0.001)
                 {
-                    if (!_suppressInvalidate)
+                    glyph.X = new MotionValue<double>(this, current, MotionVectors.Double);
+                    glyph.X.Changed += _ =>
                     {
-                        InvalidateVisual();
-                    }
-                };
+                        if (!_suppressInvalidate)
+                        {
+                            InvalidateVisual();
+                        }
+                    };
+                    _ = glyph.X.AnimateTo(x, MotionSpec.Spring(ArcSpring.Morph));
+                }
             }
             else if (animate)
             {
@@ -313,6 +315,7 @@ public class TextMorph : Control
     public override void Render(DrawingContext context)
     {
         var em = FontSize;
+        var brush = Foreground ?? Brushes.Black;
         foreach (var glyph in _glyphs)
         {
             if (glyph.Text is null)
@@ -346,7 +349,7 @@ public class TextMorph : Control
             using (context.PushTransform(matrix))
             using (context.PushOpacity(opacity))
             {
-                context.DrawText(glyph.Text, new Point(x, 0));
+                ShapedText.Draw(context, glyph.Text, brush, new Point(x, 0));
             }
         }
     }

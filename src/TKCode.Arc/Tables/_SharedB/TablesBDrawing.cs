@@ -1,12 +1,26 @@
 using Avalonia;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
+using Avalonia.Media.TextFormatting;
 
 namespace TKCode.Arc;
 
-/// <summary>Drawing helpers shared by the self-drawn parts of Table, ReorderableList and FilterToolbar.</summary>
+/// <summary>Drawing helpers shared by the self-drawn parts of Table, TreeTable, ReorderableList and FilterToolbar.</summary>
 internal static class TablesBDrawing
 {
+    /// <summary>
+    /// A cached-and-drawn label: the <see cref="TextLayout"/> twin of a <c>FormattedText</c> with <c>MaxTextWidth</c>,
+    /// <c>Trimming = CharacterEllipsis</c> and <c>MaxLineCount</c> (<paramref name="maxLines"/> 0 = unlimited). A
+    /// <c>FormattedText</c> re-shapes its text on every <c>Draw</c>, so caching one did not spare the hover and sort tweens
+    /// that redraw every frame; a layout keeps its lines and only emits glyphs. Line breaking matches <c>FormattedText</c>
+    /// (measured against it) for a single line (the whole text trimmed with the ellipsis, no wrapping) and for unlimited
+    /// lines (words wrap, a long word overflows); a capped multi-line text needs <see cref="TablesBText"/>.
+    /// </summary>
+    public static TextLayout Layout(string text, Typeface typeface, double fontSize, IBrush? brush, double maxWidth, int maxLines,
+                                    TextAlignment alignment = TextAlignment.Left, FontFeatureCollection? features = null)
+        => new(text, typeface, fontSize, brush, alignment, maxLines == 1 ? TextWrapping.NoWrap : TextWrapping.WrapWithOverflow,
+            TextTrimming.CharacterEllipsis, null, FlowDirection.LeftToRight, Math.Max(1, maxWidth), double.PositiveInfinity, double.NaN,
+            0, maxLines, features);
     public static Color Lerp(Color a, Color b, double t)
     {
         t = Math.Clamp(t, 0, 1);

@@ -10,6 +10,7 @@ using Avalonia.Controls.Metadata;
 using Avalonia.Input;
 using Avalonia.Input.GestureRecognizers;
 using Avalonia.Media;
+using Avalonia.Media.Immutable;
 using Avalonia.VisualTree;
 
 namespace TKCode.Arc;
@@ -118,7 +119,7 @@ internal abstract class ShowpieceStage : Control
     private ShowpieceTextCache? _textCache;
     private ArcMotionLevel _motionLevel = ArcMotionLevel.Full;
     private bool _motionKnown;
-    private Pen? _ringPen;
+    private ImmutablePen? _ringPen;
     private Color _ringColor;
     private bool _themeDirty = true;
     private object? _pressItem;
@@ -691,7 +692,7 @@ internal abstract class ShowpieceStage : Control
         if (_themeDirty || _ringPen is null)
         {
             _ringColor = ArcTokens.GetColor(this, ArcDesignTokenKind.FocusRing);
-            _ringPen = new Pen(new SolidColorBrush(_ringColor), 2);
+            _ringPen = new ImmutablePen(new ImmutableSolidColorBrush(_ringColor), 2);
             _themeDirty = false;
         }
         // 2px ring, 2px outside the stage: the pen's center line sits 3px out.

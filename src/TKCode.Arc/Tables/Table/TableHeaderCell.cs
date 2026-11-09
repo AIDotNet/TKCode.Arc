@@ -1,4 +1,3 @@
-using System.Globalization;
 using TKCode.Arc.Motion;
 using Avalonia;
 using Avalonia.Automation;
@@ -8,6 +7,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
+using Avalonia.Media.TextFormatting;
 
 namespace TKCode.Arc;
 
@@ -24,11 +24,17 @@ internal sealed class TableHeaderCell : Control
 
     private readonly Table _table;
     private readonly TableCheckbox? _checkbox;
-    private FormattedText? _label;
+    // The label is a TextLayout drawn with a mutable brush: the hover and sort tweens change its color every frame, and
+    // a FormattedText with SetForegroundBrush re-shaped the text on each of those frames.
+    private TextLayout? _label;
+    private readonly SolidColorBrush _labelBrush = new();
     private string? _labelText;
     private int _labelVersion = -1;
     private double _labelMax = -1;
     private bool _labelSmall;
+    private double _naturalWidth = double.NaN;
+    private string? _naturalText;
+    private int _naturalVersion = -1;
     private MotionValue<double>? _hover;
     private MotionValue<double>? _sorted;
     private MotionValue<double>? _arrow;
@@ -301,9 +307,16 @@ internal sealed class TableHeaderCell : Control
         {
             return 0;
         }
-        var label = new FormattedText(column.Header, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, palette.Medium,
-            palette.FontSize, null);
-        var width = label.WidthIncludingTrailingWhitespace + _table.CellInlinePadding * 2;
+        var header = column.Header;
+        if (double.IsNaN(_naturalWidth) || _naturalVersion != palette.Version || !string.Equals(_naturalText, header, StringComparison.Ordinal))
+        {
+            // Measured once per header text and palette: the compact pill strip asks on every arrange.
+            _naturalVersion = palette.Version;
+            _naturalText = header;
+            using var label = new TextLayout(header, palette.Medium, palette.FontSize, null);
+            _naturalWidth = label.WidthIncludingTrailingWhitespace;
+        }
+        var width = _naturalWidth + _table.CellInlinePadding * 2;
         if (column.IsSortable)
         {
             width += GlyphGap + GlyphExtent;
@@ -311,26 +324,18 @@ internal sealed class TableHeaderCell : Control
         return Math.Ceiling(width);
     }
 
-    private FormattedText EnsureLabel(string text, double maxWidth, bool small)
+    private TextLayout EnsureLabel(string text, double maxWidth, bool small)
     {
         var palette = _table.Palette;
-        if (_label is null || _labelText != text || _labelVersion != palette.Version || small != _labelSmall)
+        maxWidth = Math.Max(1, maxWidth);
+        if (_label is null || _labelText != text || _labelVersion != palette.Version || small != _labelSmall || Math.Abs(_labelMax - maxWidth) > 0.5)
         {
+            _label?.Dispose();
             _labelText = text;
             _labelVersion = palette.Version;
             _labelSmall = small;
-            _label = new FormattedText(text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, palette.Medium,
-                palette.FontSize, null)
-            {
-                MaxLineCount = 1,
-                Trimming = TextTrimming.CharacterEllipsis
-            };
-            _labelMax = -1;
-        }
-        if (Math.Abs(_labelMax - maxWidth) > 0.5)
-        {
             _labelMax = maxWidth;
-            _label.MaxTextWidth = Math.Max(1, maxWidth);
+            _label = TablesBDrawing.Layout(text, palette.Medium, palette.FontSize, _labelBrush, maxWidth, 1);
         }
         return _label;
     }
@@ -382,13 +387,16 @@ internal sealed class TableHeaderCell : Control
         var available = Math.Max(1, size.Width - padLeft - padRight - glyphSpace);
         var label = EnsureLabel(column.Header, available, false);
         var labelColor = TablesBDrawing.Lerp(palette.TextMuted, palette.Foreground, Math.Max(sorted, hover));
-        label.SetForegroundBrush(Cached(ref _labelBrush, labelColor));
+        if (_labelBrush.Color != labelColor)
+        {
+            _labelBrush.Color = labelColor;
+        }
         var labelWidth = Math.Min(label.WidthIncludingTrailingWhitespace, available);
         var innerWidth = labelWidth + glyphSpace;
         var innerX = numeric ? size.Width - padRight - innerWidth : padLeft;
         var midY = size.Height / 2;
         var labelX = numeric ? innerX + glyphSpace : innerX;
-        context.DrawText(label, new Point(labelX, midY - label.Height / 2));
+        label.Draw(context, new Point(labelX, midY - label.Height / 2));
         if (sortable)
         {
             var glyphX = numeric ? innerX : innerX + labelWidth + GlyphGap;
@@ -416,7 +424,6 @@ internal sealed class TableHeaderCell : Control
     }
 
     private ImmutableSolidColorBrush? _fillBrush;
-    private ImmutableSolidColorBrush? _labelBrush;
 
     private static ImmutableSolidColorBrush Cached(ref ImmutableSolidColorBrush? cache, Color color)
     {

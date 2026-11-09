@@ -32,10 +32,10 @@
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="ClipToBounds" Value="False" />
 
-        <Style Selector="^[IsIconOnly=False] /template/ arc|Button#PART_Button:pointerover">
+        <Style Selector="^:not(:icon-only) /template/ arc|Button#PART_Button:pointerover">
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
         </Style>
-        <Style Selector="^[IsIconOnly=True]">
+        <Style Selector="^:icon-only">
             <Style Selector="^ /template/ TextBlock#PART_Text">
                 <Setter Property="IsVisible" Value="False" />
             </Style>
@@ -62,16 +62,16 @@
                     </Transitions>
                 </Setter>
             </Style>
-            <Style Selector="^:dark[Variant=Reveal] /template/ Panel#PART_IconWrap">
+            <Style Selector="^:dark:reveal /template/ Panel#PART_IconWrap">
                 <Setter Property="RenderTransform" Value="scale(1.08)" />
             </Style>
-            <Style Selector="^:dark[Variant=Eclipse] /template/ Panel#PART_IconWrap">
+            <Style Selector="^:dark:eclipse /template/ Panel#PART_IconWrap">
                 <Setter Property="RenderTransform" Value="translateX(-2px)" />
             </Style>
-            <Style Selector="^:dark[Variant=Split] /template/ Panel#PART_IconWrap">
+            <Style Selector="^:dark:split /template/ Panel#PART_IconWrap">
                 <Setter Property="RenderTransform" Value="translateX(1px)" />
             </Style>
-            <Style Selector="^:dark[Variant=Rise] /template/ Panel#PART_IconWrap">
+            <Style Selector="^:dark:rise /template/ Panel#PART_IconWrap">
                 <Setter Property="RenderTransform" Value="translateY(-2px)" />
             </Style>
         </Style>

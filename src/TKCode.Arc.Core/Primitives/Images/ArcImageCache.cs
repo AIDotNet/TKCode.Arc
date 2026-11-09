@@ -232,10 +232,23 @@ internal static class ArcImageDecoder
             copy.Position = 0;
             stream = copy;
         }
+        // When the file header gives the picture's size and the slot needs far fewer pixels, the decoder samples the
+        // picture down while it decodes (DecodeToWidth / DecodeToHeight): a 4000×3000 photo for a 400×300 card never
+        // holds its 48 MB of pixels. The decoder reports no DPI, so the picture's own size is its pixel size, as the
+        // whole-picture path's Bitmap.Size is for these formats.
+        if (slotPixels is { } slot && ArcImageHeader.TryReadSize(stream, out var headerPixels)
+            && TargetPixels(headerPixels, slot, stretch) is { } sampled
+            && headerPixels.Width > sampled.Width * ReduceThreshold && headerPixels.Height > sampled.Height * ReduceThreshold)
+        {
+            var reduced = headerPixels.Width >= headerPixels.Height
+                ? Bitmap.DecodeToWidth(stream, sampled.Width, BitmapInterpolationMode.HighQuality)
+                : Bitmap.DecodeToHeight(stream, sampled.Height, BitmapInterpolationMode.HighQuality);
+            return new ArcImageFrame(reduced, new Size(headerPixels.Width, headerPixels.Height), headerPixels, isReduced: true);
+        }
         var bitmap = new Bitmap(stream);
         var natural = bitmap.Size;
         var pixels = bitmap.PixelSize;
-        if (slotPixels is { } slot && TargetPixels(pixels, slot, stretch) is { } target &&
+        if (slotPixels is { } slotSize && TargetPixels(pixels, slotSize, stretch) is { } target &&
             pixels.Width > target.Width * ReduceThreshold && pixels.Height > target.Height * ReduceThreshold)
         {
             var reduced = bitmap.CreateScaledBitmap(target, BitmapInterpolationMode.HighQuality);

@@ -320,17 +320,23 @@ public class ActivityHeatmap : Control
 
     internal string LegendDescription => $"Darker squares mean more {UnitOther}. Levels: {string.Join(", ", Enumerable.Range(0, 5).Select(l => RangeText(l, false)))}.";
 
+    private readonly Color[] _levelColors = new Color[5];
+    private int _levelColorsVersion = -1;
+
     internal Color LevelColor(int level)
     {
-        var level0 = ChartsBMath.MixIn(_palette.Foreground, 0.065, _palette.Surface);
-        return level switch
+        // Five Oklab mixes per palette version instead of two per square per track rebuild and per legend frame.
+        if (_levelColorsVersion != _palette.Version)
         {
-            1 => ChartsBMath.MixIn(_palette.Accent, 0.26, level0),
-            2 => ChartsBMath.MixIn(_palette.Accent, 0.50, level0),
-            3 => ChartsBMath.MixIn(_palette.Accent, 0.76, level0),
-            4 => _palette.Accent,
-            _ => level0
-        };
+            _levelColorsVersion = _palette.Version;
+            var level0 = ChartsBMath.MixIn(_palette.Foreground, 0.065, _palette.Surface);
+            _levelColors[0] = level0;
+            _levelColors[1] = ChartsBMath.MixIn(_palette.Accent, 0.26, level0);
+            _levelColors[2] = ChartsBMath.MixIn(_palette.Accent, 0.50, level0);
+            _levelColors[3] = ChartsBMath.MixIn(_palette.Accent, 0.76, level0);
+            _levelColors[4] = _palette.Accent;
+        }
+        return _levelColors[level is >= 1 and <= 4 ? level : 0];
     }
 
     internal void SetPreview(int? level)

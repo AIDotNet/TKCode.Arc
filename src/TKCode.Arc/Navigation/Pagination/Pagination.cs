@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Automation;
@@ -8,6 +9,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Layout;
 using Avalonia.Media;
 using AvaloniaButton = Avalonia.Controls.Button;
 
@@ -322,6 +324,10 @@ public class Pagination : TemplatedControl
         }
         var end = start + visible - 1;
         var boundaries = ShowBoundaryPages && count > WindowSize;
+        if (boundaries)
+        {
+            EnsureBoundaryParts();
+        }
         if (_first is PaginationButton first)
         {
             first.IsVisible = boundaries && start > 1;
@@ -362,6 +368,57 @@ public class Pagination : TemplatedControl
             RestoreFocus(focusedPage, focusVisible);
         }
         UpdateMark(animate && IsLoaded);
+    }
+
+    /// <summary>
+    /// Boundary pages are not in Arc and off by default, so the first and last buttons and both ellipses are built the first
+    /// time they are needed, in the row positions the keyboard order and the layout expect.
+    /// </summary>
+    private void EnsureBoundaryParts()
+    {
+        if (_panel is null || _slots[0] is not { } firstSlot || _slots[WindowSize - 1] is not { } lastSlot)
+        {
+            return;
+        }
+        var children = _panel.Children;
+        if (_first is null)
+        {
+            _first = new PaginationButton { Name = FirstPart, IsVisible = false };
+            _first.Click += OnPageClick;
+            children.Insert(children.IndexOf(firstSlot), _first);
+        }
+        if (_ellipsisStart is null)
+        {
+            _ellipsisStart = CreateEllipsis(EllipsisStartPart);
+            children.Insert(children.IndexOf(firstSlot), _ellipsisStart);
+        }
+        if (_last is null)
+        {
+            _last = new PaginationButton { Name = LastPart, IsVisible = false };
+            _last.Click += OnPageClick;
+            children.Insert(children.IndexOf(lastSlot) + 1, _last);
+        }
+        if (_ellipsisEnd is null)
+        {
+            _ellipsisEnd = CreateEllipsis(EllipsisEndPart);
+            children.Insert(children.IndexOf(lastSlot) + 1, _ellipsisEnd);
+        }
+    }
+
+    private static Border CreateEllipsis(string name)
+    {
+        var glyph = new ArcGlyph
+        {
+            Data = ArcIcons.Ellipsis,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        glyph.Bind(ArcGlyph.SizeProperty, glyph.GetResourceObservable(PaginationTokens.Key(PaginationTokenKind.StepGlyphSize)), BindingPriority.Template);
+        ArcTokens.Bind(glyph, ArcGlyph.ForegroundProperty, ArcDesignTokenKind.TextMuted);
+        var border = new Border { Name = name, IsVisible = false, Child = glyph };
+        border.Bind(WidthProperty, border.GetResourceObservable(PaginationTokens.Key(PaginationTokenKind.EllipsisWidth)), BindingPriority.Template);
+        ArcTokens.Bind(border, HeightProperty, ArcDesignTokenKind.ControlSizeSM);
+        return border;
     }
 
     private void ConfigurePage(PaginationButton button, int page, int current)

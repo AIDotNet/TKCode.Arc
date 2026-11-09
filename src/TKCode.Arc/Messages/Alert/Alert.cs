@@ -37,7 +37,7 @@ public enum AlertTone
 [TemplatePart(PresencePart, typeof(MessagesPresenceFrame))]
 [TemplatePart(IconPart, typeof(MessagesGlyphSwap))]
 [TemplatePart(DismissPart, typeof(AvaloniaButton))]
-[PseudoClasses(DismissiblePseudoClass, RichContentPseudoClass)]
+[PseudoClasses(DismissiblePseudoClass, RichContentPseudoClass, SuccessPseudoClass, WarningPseudoClass, DangerPseudoClass)]
 public class Alert : ContentControl
 {
     public const string PresencePart = "PART_Presence";
@@ -45,6 +45,15 @@ public class Alert : ContentControl
     public const string DismissPart = "PART_Dismiss";
     public const string DismissiblePseudoClass = ":dismissible";
     public const string RichContentPseudoClass = ":rich-content";
+
+    /// <summary><see cref="Tone"/> as a pseudo-class (the theme colors the icon on these; Info has none).</summary>
+    public const string SuccessPseudoClass = ":success";
+
+    /// <inheritdoc cref="SuccessPseudoClass"/>
+    public const string WarningPseudoClass = ":warning";
+
+    /// <inheritdoc cref="SuccessPseudoClass"/>
+    public const string DangerPseudoClass = ":danger";
 
     #region 公共属性定义
 
@@ -198,13 +207,17 @@ public class Alert : ContentControl
         base.OnPropertyChanged(change);
         if (change.Property == ToneProperty)
         {
-            IconData = Tone switch
+            var tone = Tone;
+            IconData = tone switch
             {
                 AlertTone.Success => ArcIcons.Check,
                 AlertTone.Warning => ArcIcons.TriangleAlert,
                 AlertTone.Danger => MessagesIcons.CircleX,
                 _ => ArcIcons.Info
             };
+            PseudoClasses.Set(SuccessPseudoClass, tone == AlertTone.Success);
+            PseudoClasses.Set(WarningPseudoClass, tone == AlertTone.Warning);
+            PseudoClasses.Set(DangerPseudoClass, tone == AlertTone.Danger);
             UpdateAutomation();
         }
         else if (change.Property == ContentProperty)

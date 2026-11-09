@@ -25,8 +25,15 @@ internal sealed class SliderNumberText : Panel
 
     internal RollingDigits Digits => _digits;
 
+    private bool _hasText;
+
     public void SetText(string text)
     {
+        if (_hasText && text == Text)
+        {
+            return;
+        }
+        _hasText = true;
         Text = text;
         if (TryParse(text, out var prefix, out var number, out var decimals, out var grouping, out var suffix))
         {

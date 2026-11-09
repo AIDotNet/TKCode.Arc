@@ -41,9 +41,12 @@ namespace TKCode.Arc;
 [TemplatePart(ClearButtonPart, typeof(AvaloniaButton))]
 [TemplatePart(StatusPart, typeof(TextBlock))]
 [TemplatePart(PanelAnchorPart, typeof(Control))]
-[PseudoClasses(ExpandedPseudoClass, InputFocusPseudoClass, TriggerFocusPseudoClass, TriggerPressedPseudoClass)]
+[PseudoClasses(ExpandedPseudoClass, InputFocusPseudoClass, TriggerFocusPseudoClass, TriggerPressedPseudoClass, AnchorStartPseudoClass)]
 public class ExpandingSearch : TemplatedControl
 {
+    /// <summary>Set while <see cref="Anchor"/> is <see cref="ExpandingSearchAnchor.Start"/> (the theme selects on it, not on the property).</summary>
+    public const string AnchorStartPseudoClass = ":anchor-start";
+
     public const string ShellHostPart = "PART_ShellHost";
     public const string ShellPart = "PART_Shell";
     public const string FocusRingPart = "PART_FocusRing";
@@ -209,6 +212,7 @@ public class ExpandingSearch : TemplatedControl
     public ExpandingSearch()
     {
         Items.CollectionChanged += OnItemsChanged;
+        PseudoClasses.Set(AnchorStartPseudoClass, Anchor == ExpandingSearchAnchor.Start);
     }
 
     private IReadOnlyList<ExpandingSearchItem> SourceItems => ItemsSource switch
@@ -313,9 +317,13 @@ public class ExpandingSearch : TemplatedControl
         {
             UpdateAutomation();
         }
-        else if (change.Property == AnchorProperty && _panelSurface is not null)
+        else if (change.Property == AnchorProperty)
         {
-            _panelSurface.HorizontalAlignment = SurfaceAlignment;
+            PseudoClasses.Set(AnchorStartPseudoClass, Anchor == ExpandingSearchAnchor.Start);
+            if (_panelSurface is not null)
+            {
+                _panelSurface.HorizontalAlignment = SurfaceAlignment;
+            }
         }
     }
 

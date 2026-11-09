@@ -249,7 +249,7 @@ public sealed class GalleryPageView : Grid
         var left = new WrapPanel { Orientation = Orientation.Horizontal, ItemSpacing = 12, LineSpacing = 12 };
         if (implemented)
         {
-            left.Children.Add(BuildInstallCommand($"dotnet add package {GalleryDocs.PackageOf(entry.ClassName) ?? "TKCode.Arc"} --prerelease"));
+            left.Children.Add(BuildInstallCommand($"dotnet add package {GalleryDocs.PackageOf(entry.ClassName) ?? "TKCode.Arc"}"));
         }
         left.Children.Add(BuildStatus(entry, implemented));
 

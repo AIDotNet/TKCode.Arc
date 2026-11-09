@@ -1,6 +1,6 @@
 ---
 title: 範本
-source-hash: 1e1c3fa2884a
+source-hash: e07cc444920a
 ---
 
 # 範本
@@ -147,7 +147,7 @@ dotnet run --project samples/Acme.Controls.Sample
 dotnet pack src/Acme.Controls -c Release -o artifacts
 ```
 
-`src/<name>/` 中有一個範例控制項（`StatTile`）及其設計 Token 類別與佈景主題，以及供 `UseArc(...)` 呼叫的 `Use<Name>()` 方法，它註冊 Foundation 產生器找到的全部內容。`tests/` 在 Avalonia 的 Headless 平台上執行這些控制項，`samples/` 是展示它們的桌面應用程式。`--tests false` 與 `--sample false` 可以去掉這兩個專案。範例 Token 的身分以程式庫名稱開頭（`AcmeControlsStatTile`），因為身分在應用程式註冊的所有套件（包括 Arc 自己的）中必須唯一。套件版本從預覽版開始，因為穩定版的套件不能相依於 TKCode.Arc 的預覽版。
+`src/<name>/` 中有一個範例控制項（`StatTile`）及其設計 Token 類別與佈景主題，以及供 `UseArc(...)` 呼叫的 `Use<Name>()` 方法，它註冊 Foundation 產生器找到的全部內容。`tests/` 在 Avalonia 的 Headless 平台上執行這些控制項，`samples/` 是展示它們的桌面應用程式。`--tests false` 與 `--sample false` 可以去掉這兩個專案。範例 Token 的身分以程式庫名稱開頭（`AcmeControlsStatTile`），因為身分在應用程式註冊的所有套件（包括 Arc 自己的）中必須唯一。
 
 ## 在應用程式中加入元件
 

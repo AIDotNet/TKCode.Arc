@@ -3,6 +3,7 @@ using Avalonia.Automation;
 using Avalonia.Automation.Peers;
 using Avalonia.Automation.Provider;
 using Avalonia.Controls;
+using Avalonia.Controls.Metadata;
 using Avalonia.Media;
 using Avalonia.Threading;
 using TKCode.Arc.Motion;
@@ -15,6 +16,7 @@ namespace TKCode.Arc;
 /// A button that opens and closes something (a row's panel, a group's list, a fold): screen readers get its expanded
 /// state through the expand / collapse pattern (Arc's <c>aria-expanded</c>). Enter and Space press it.
 /// </summary>
+[PseudoClasses(":expanded")]
 internal abstract class ToolCallDisclosureButton : AvaloniaButton
 {
     /// <summary>Whether what it controls is open.</summary>
@@ -27,9 +29,13 @@ internal abstract class ToolCallDisclosureButton : AvaloniaButton
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-        if (change.Property == IsExpandedProperty && ControlAutomationPeer.FromElement(this) is Peer peer)
+        if (change.Property == IsExpandedProperty)
         {
-            peer.RaiseExpanded(change.GetOldValue<bool>(), change.GetNewValue<bool>());
+            PseudoClasses.Set(":expanded", change.GetNewValue<bool>());
+            if (ControlAutomationPeer.FromElement(this) is Peer peer)
+            {
+                peer.RaiseExpanded(change.GetOldValue<bool>(), change.GetNewValue<bool>());
+            }
         }
     }
 

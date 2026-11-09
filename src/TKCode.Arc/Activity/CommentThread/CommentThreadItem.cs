@@ -29,7 +29,7 @@ internal sealed class CommentThreadItem : CommentThreadGrow
     private readonly CommentThread _owner;
     private readonly CommentThreadArticle _article;
     private readonly Avatar _avatar;
-    private readonly CommentThreadDeletedDot _deletedDot;
+    private readonly Panel _portrait;
     private readonly CommentThreadText _name;
     private readonly CommentThreadText _time;
     private readonly CommentThreadInlinePanel _meta;
@@ -41,12 +41,15 @@ internal sealed class CommentThreadItem : CommentThreadGrow
     private readonly CommentThreadReveal _reveal;
     private readonly CommentThreadSequence _sequence;
     private readonly CommentThreadStack _actionsRow;
+    private readonly CommentThreadStack _main;
     private readonly CommentThreadButton _addReaction;
     private readonly CommentThreadButton _reply;
     private readonly CommentThreadButton _edit;
     private readonly CommentThreadButton _delete;
-    private readonly CommentThreadText _deletedText;
-    private readonly CommentThreadReplyToggle _toggle;
+    // Built when a comment first needs them: the deleted placeholder (dot and text) and the replies toggle.
+    private CommentThreadDeletedDot? _deletedDot;
+    private CommentThreadText? _deletedText;
+    private CommentThreadReplyToggle? _toggle;
     private readonly CommentThreadGrow _repliesGrow;
     private readonly CommentThreadRail _rail;
     private CommentThreadStack? _confirmRow;
@@ -57,6 +60,13 @@ internal sealed class CommentThreadItem : CommentThreadGrow
     private CommentThreadItemMode _mode = CommentThreadItemMode.View;
     private Control? _restoreFocus;
     private string _pickerEmojiKey = string.Empty;
+    // What the last Update showed: an update for the same comment in the same state does nothing (a reaction elsewhere
+    // in the thread refreshes every comment).
+    private CommentThreadItemMode _shownMode;
+    private bool _shownCollapsed;
+    private CommentThreadLabels? _shownLabels;
+    private CommentAuthor? _shownUser;
+    private System.Text.RegularExpressions.Regex? _shownPattern;
 
     public CommentThreadItem(CommentThread owner, string id)
     {
@@ -64,8 +74,8 @@ internal sealed class CommentThreadItem : CommentThreadGrow
         Id = id;
 
         _avatar = ActivityAvatar.Create(28);
-        _deletedDot = new CommentThreadDeletedDot { IsVisible = false };
-        var portrait = new Panel { VerticalAlignment = VerticalAlignment.Top, Children = { _avatar, _deletedDot } };
+        _portrait = new Panel { VerticalAlignment = VerticalAlignment.Top, Children = { _avatar } };
+        var portrait = _portrait;
 
         _name = new CommentThreadText { Role = CommentThreadTextRole.Name };
         _time = new CommentThreadText { Role = CommentThreadTextRole.Small };
@@ -117,24 +127,15 @@ internal sealed class CommentThreadItem : CommentThreadGrow
         _faces.Show(_view, animate: false);
         _autoHeight = new CommentThreadAutoHeight { Child = _faces, ClipMargin = 4 };
 
-        _deletedText = new CommentThreadText { Role = CommentThreadTextRole.Deleted, IsVisible = false, TextWrapping = TextWrapping.Wrap };
-
-        _toggle = new CommentThreadReplyToggle { IsVisible = false };
-        _toggle.Click += (_, e) =>
-        {
-            e.Handled = true;
-            _owner.ToggleReplies(Id);
-        };
-
-        var main = new CommentThreadStack
+        _main = new CommentThreadStack
         {
             Role = CommentThreadStackRole.Main,
             Orientation = Orientation.Vertical,
-            Children = { _meta, _autoHeight, _deletedText, _toggle }
+            Children = { _meta, _autoHeight }
         };
         _article = new CommentThreadArticle
         {
-            Child = new CommentThreadRow { Role = CommentThreadRowRole.Comment, Children = { portrait, main } }
+            Child = new CommentThreadRow { Role = CommentThreadRowRole.Comment, Children = { portrait, _main } }
         };
         _article.PropertyChanged += OnArticlePropertyChanged;
         _article.AddHandler(PointerPressedEvent, OnArticlePressed, RoutingStrategies.Tunnel);
@@ -167,7 +168,7 @@ internal sealed class CommentThreadItem : CommentThreadGrow
     internal CommentThreadBody Body => _body;
     internal ActivityReactionBar ReactionBar => _reactions;
     internal CommentThreadReveal Reveal => _reveal;
-    internal CommentThreadReplyToggle Toggle => _toggle;
+    internal CommentThreadReplyToggle Toggle => EnsureToggle();
     internal CommentThreadGrow Replies => _repliesGrow;
     internal CommentThreadAutoHeight AutoHeight => _autoHeight;
     internal CommentThreadComposer? Editor => _editor;
@@ -183,36 +184,99 @@ internal sealed class CommentThreadItem : CommentThreadGrow
     internal CommentThreadItemMode Mode => _mode;
     internal CommentThreadText TimeText => _time;
     internal CommentThreadText NameText => _name;
-    internal CommentThreadText DeletedText => _deletedText;
+    internal CommentThreadText DeletedText => EnsureDeletedText();
     internal Avatar Portrait => _avatar;
 
     private static CommentThreadButton Button(CommentThreadButtonKind kind, Geometry? glyph = null, double glyphSize = 14) =>
         new() { Kind = kind, Glyph = glyph, GlyphSize = glyphSize, VerticalAlignment = VerticalAlignment.Center };
 
+    private CommentThreadReplyToggle EnsureToggle()
+    {
+        if (_toggle is null)
+        {
+            _toggle = new CommentThreadReplyToggle { IsVisible = false };
+            _toggle.Click += (_, e) =>
+            {
+                e.Handled = true;
+                _owner.ToggleReplies(Id);
+            };
+            // Last in the main column (after the deleted placeholder when there is one).
+            _main.Children.Add(_toggle);
+        }
+        return _toggle;
+    }
+
+    private CommentThreadText EnsureDeletedText()
+    {
+        if (_deletedText is null)
+        {
+            _deletedText = new CommentThreadText { Role = CommentThreadTextRole.Deleted, IsVisible = false, TextWrapping = TextWrapping.Wrap };
+            // After the meta line and the body, before the toggle.
+            _main.Children.Insert(Math.Min(2, _main.Children.Count), _deletedText);
+        }
+        return _deletedText;
+    }
+
+    private CommentThreadDeletedDot EnsureDeletedDot()
+    {
+        if (_deletedDot is null)
+        {
+            _deletedDot = new CommentThreadDeletedDot { IsVisible = false };
+            _portrait.Children.Add(_deletedDot);
+        }
+        return _deletedDot;
+    }
+
     /// <summary>Shows <paramref name="comment"/> at <paramref name="depth"/> in the thread's current state.</summary>
     public void Update(ThreadComment comment, int depth, CommentThreadItemMode mode, bool collapsed, bool animate)
     {
+        var labels = _owner.Labels;
+        var user = _owner.CurrentUser;
+        var pattern = _owner.MentionPattern;
+        if (ReferenceEquals(comment, Comment) && depth == Depth && mode == _shownMode && collapsed == _shownCollapsed &&
+            ReferenceEquals(labels, _shownLabels) && ReferenceEquals(user, _shownUser) && ReferenceEquals(pattern, _shownPattern))
+        {
+            // Comments are immutable records: the same comment in the same state shows the same thing.
+            UpdateReveal();
+            return;
+        }
         Comment = comment;
         Depth = depth;
-        var labels = _owner.Labels;
-        var mine = comment.Author.Id == _owner.CurrentUser.Id;
+        _shownMode = mode;
+        _shownCollapsed = collapsed;
+        _shownLabels = labels;
+        _shownUser = user;
+        _shownPattern = pattern;
+        var mine = comment.Author.Id == user.Id;
         var deleted = comment.IsDeleted;
 
         AutomationProperties.SetName(_article, deleted ? labels.DeletedComment : $"{comment.Author.Name}, {comment.CreatedAt}");
         _avatar.IsVisible = !deleted;
-        _deletedDot.IsVisible = deleted;
         _meta.IsVisible = !deleted;
         _autoHeight.IsVisible = !deleted;
-        _deletedText.IsVisible = deleted;
-        _deletedText.Text = labels.DeletedText;
-        if (!deleted)
+        if (deleted)
         {
+            EnsureDeletedDot().IsVisible = true;
+            var text = EnsureDeletedText();
+            text.IsVisible = true;
+            text.Text = labels.DeletedText;
+        }
+        else
+        {
+            if (_deletedDot is not null)
+            {
+                _deletedDot.IsVisible = false;
+            }
+            if (_deletedText is not null)
+            {
+                _deletedText.IsVisible = false;
+            }
             ActivityAvatar.Update(_avatar, comment.Author.Name, comment.Author.Avatar);
             _name.Text = comment.Author.Name;
             _time.Text = comment.IsEdited ? $"{comment.CreatedAt} · {labels.Edited}" : comment.CreatedAt;
-            _body.SetBody(comment.Body, _owner.MentionPattern);
+            _body.SetBody(comment.Body, pattern);
             _reactions.NameFormatter = r => labels.ReactionCount(r.Emoji, r.Count, r.Mine);
-            var me = _owner.CurrentUser.Id;
+            var me = user.Id;
             var reactions = new List<ActivityReaction>(comment.Reactions.Count);
             foreach (var reaction in comment.Reactions)
             {
@@ -234,12 +298,22 @@ internal sealed class CommentThreadItem : CommentThreadGrow
 
         // Replies toggle and the replies themselves.
         var replies = comment.Replies;
-        _toggle.IsVisible = replies.Count > 0;
-        _toggle.IsExpanded = !collapsed;
-        _toggle.Label = collapsed ? labels.ShowReplies(CommentThreadTree.Count(replies)) : labels.HideReplies;
-        if (collapsed)
+        if (replies.Count > 0)
         {
-            _toggle.Stack.SetPeople(CommentThreadTree.Authors(replies));
+            var toggle = EnsureToggle();
+            toggle.IsVisible = true;
+            toggle.IsExpanded = !collapsed;
+            toggle.Label = collapsed ? labels.ShowReplies(CommentThreadTree.Count(replies)) : labels.HideReplies;
+            if (collapsed)
+            {
+                toggle.Stack.SetPeople(CommentThreadTree.Authors(replies));
+            }
+        }
+        else if (_toggle is not null)
+        {
+            _toggle.IsVisible = false;
+            _toggle.IsExpanded = !collapsed;
+            _toggle.Label = collapsed ? labels.ShowReplies(0) : labels.HideReplies;
         }
         var showReplies = replies.Count > 0 && !collapsed;
         if (showReplies)

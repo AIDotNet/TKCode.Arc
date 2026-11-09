@@ -148,7 +148,7 @@ public class MoneyInput : FieldTextBox
         RoutedEvent.Register<MoneyInput, MoneyInputCurrencyChangedEventArgs>(nameof(CurrencyChanged), RoutingStrategies.Bubble);
 
     private readonly List<MoneyInputPart> _parts = new();
-    private readonly DispatcherTimer _flashTimer;
+    private DispatcherTimer? _flashTimer;
     private string _draft = string.Empty;
     private CultureInfo _culture = s_defaultCulture;
     private MoneyInputCurrencyInfo _info;
@@ -203,8 +203,6 @@ public class MoneyInput : FieldTextBox
     {
         _info = MoneyInputCurrencyInfo.Get(Currency, _culture);
         UpdateSymbols();
-        _flashTimer = new DispatcherTimer { Interval = s_flashDuration };
-        _flashTimer.Tick += (_, _) => EndFlash();
         AddHandler(PastingFromClipboardEvent, OnPasting);
         AddHandler(CuttingToClipboardEvent, OnCutting);
         AddHandler(RequestBringIntoViewEvent, OnRequestBringIntoView);
@@ -448,7 +446,7 @@ public class MoneyInput : FieldTextBox
         base.OnDetachedFromVisualTree(e);
         Subscribe(ref _currenciesSource, null, OnCurrenciesCollectionChanged);
         Subscribe(ref _quickAddSource, null, OnQuickAddCollectionChanged);
-        _flashTimer.Stop();
+        _flashTimer?.Stop();
         if (_flashing)
         {
             _flashing = false;
@@ -919,6 +917,12 @@ public class MoneyInput : FieldTextBox
     private void BeginFlash()
     {
         _flashing = true;
+        // Most inputs never hit a limit: the flash timer is created on the first flash.
+        if (_flashTimer is null)
+        {
+            _flashTimer = new DispatcherTimer { Interval = s_flashDuration };
+            _flashTimer.Tick += (_, _) => EndFlash();
+        }
         _flashTimer.Stop();
         _flashTimer.Start();
         AnimateFlash(1, ArcMotionPresets.Instant);
@@ -926,7 +930,7 @@ public class MoneyInput : FieldTextBox
 
     private void EndFlash()
     {
-        _flashTimer.Stop();
+        _flashTimer?.Stop();
         _flashing = false;
         AnimateFlash(0, ArcMotionPresets.Standard);
     }

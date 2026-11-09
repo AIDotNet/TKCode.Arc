@@ -46,9 +46,11 @@ internal enum NotificationCenterButtonKind
 /// <see cref="IsOn"/> is the open bell, the chosen view (<c>aria-pressed</c>) or the expanded row (<c>aria-expanded</c>).
 /// Hover styles use <c>:hover</c>, set for mouse and pen only (Arc's <c>(hover: hover) and (pointer: fine)</c>).
 /// </summary>
+[PseudoClasses(HoverPseudoClass, ":trigger", ":close", ":view", ":mark-all", ":row", ":action", ":link", ":footer", OnPseudoClass)]
 internal sealed class NotificationCenterButton : AvaloniaButton
 {
     public const string HoverPseudoClass = ":hover";
+    public const string OnPseudoClass = ":on";
 
     public static readonly StyledProperty<NotificationCenterButtonKind> KindProperty =
         AvaloniaProperty.Register<NotificationCenterButton, NotificationCenterButtonKind>(nameof(Kind));
@@ -63,6 +65,11 @@ internal sealed class NotificationCenterButton : AvaloniaButton
         AvaloniaProperty.Register<NotificationCenterButton, bool>(nameof(IsOn));
 
     private bool _keyboardActivation;
+
+    public NotificationCenterButton()
+    {
+        UpdateKindPseudoClasses();
+    }
 
     public NotificationCenterButtonKind Kind { get => GetValue(KindProperty); set => SetValue(KindProperty, value); }
     public Geometry? Glyph { get => GetValue(GlyphProperty); set => SetValue(GlyphProperty, value); }
@@ -115,10 +122,33 @@ internal sealed class NotificationCenterButton : AvaloniaButton
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-        if (change.Property == IsOnProperty && ControlAutomationPeer.FromElement(this) is ButtonPeer peer)
+        if (change.Property == IsOnProperty)
         {
-            peer.RaiseStateChanged(change.GetNewValue<bool>());
+            PseudoClasses.Set(OnPseudoClass, change.GetNewValue<bool>());
+            if (ControlAutomationPeer.FromElement(this) is ButtonPeer peer)
+            {
+                peer.RaiseStateChanged(change.GetNewValue<bool>());
+            }
         }
+        else if (change.Property == KindProperty)
+        {
+            UpdateKindPseudoClasses();
+        }
+    }
+
+    // One pseudo-class per Kind: a pseudo-class selector is a class-list check, a property selector an activator with a
+    // subscription and a boxed comparison on every one of the rows' buttons.
+    private void UpdateKindPseudoClasses()
+    {
+        var kind = Kind;
+        PseudoClasses.Set(":trigger", kind == NotificationCenterButtonKind.Trigger);
+        PseudoClasses.Set(":close", kind == NotificationCenterButtonKind.Close);
+        PseudoClasses.Set(":view", kind == NotificationCenterButtonKind.View);
+        PseudoClasses.Set(":mark-all", kind == NotificationCenterButtonKind.MarkAll);
+        PseudoClasses.Set(":row", kind == NotificationCenterButtonKind.Row);
+        PseudoClasses.Set(":action", kind == NotificationCenterButtonKind.Action);
+        PseudoClasses.Set(":link", kind == NotificationCenterButtonKind.Link);
+        PseudoClasses.Set(":footer", kind == NotificationCenterButtonKind.Footer);
     }
 
     protected override AutomationPeer OnCreateAutomationPeer() => new ButtonPeer(this);

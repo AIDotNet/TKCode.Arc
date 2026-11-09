@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
 using Avalonia;
@@ -403,6 +404,45 @@ public class Combobox : SelectingItemsControl, ISelectOptionHost, ISelectFieldAu
         SetCurrentValue(IsOpenProperty, true);
     }
 
+    /// <summary>Builds the menu on the first open (a template that declares its own PART_Options keeps it).</summary>
+    private void EnsureMenu()
+    {
+        if (_options is not null || _popup is null)
+        {
+            return;
+        }
+        _options = SelectMenuParts.Options(SelectCheckMode.Static)
+            .Token(SelectOptionView.RowHeightProperty, ComboboxTokens.Key(ComboboxTokenKind.OptionHeight))
+            .Token(SelectOptionView.RowCornerRadiusProperty, ComboboxTokens.Key(ComboboxTokenKind.OptionCornerRadius))
+            .Token(SelectOptionView.RowPaddingProperty, ComboboxTokens.Key(ComboboxTokenKind.OptionPadding))
+            .Token(SelectOptionView.DisabledOpacityProperty, ComboboxTokens.Key(ComboboxTokenKind.OptionDisabledOpacity));
+        _options.ContentSpacing = 12;
+        _scroll = new ScrollViewer
+        {
+            Name = ScrollPart,
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+            Content = _options
+        };
+        var empty = new TextBlock { TextWrapping = TextWrapping.Wrap }
+            .Token(TextBlock.PaddingProperty, ComboboxTokens.Key(ComboboxTokenKind.EmptyPadding))
+            .Token(TextBlock.FontSizeProperty, ArcDesignTokenKind.TypeSM)
+            .Token(TextBlock.ForegroundProperty, ArcDesignTokenKind.TextMuted);
+        empty.Bind(TextBlock.TextProperty, this.GetObservable(EmptyTextProperty));
+        _emptyHost = new PresenceHost { Name = EmptyHostPart, Mode = PresenceMode.Rise, Offset = 4, IsPresent = false, Child = empty };
+        _surface = SelectMenuParts.Surface(new SpringSizeDecorator
+            {
+                Axis = SpringSizeAxis.Height,
+                Spring = ArcSpring.Smooth,
+                IsExpanded = true,
+                Child = new StackPanel { Children = { _scroll, _emptyHost } }
+            })
+            .Token(Border.PaddingProperty, ComboboxTokens.Key(ComboboxTokenKind.PopoverPadding))
+            .Token(Border.CornerRadiusProperty, ArcDesignTokenKind.RadiusPanel);
+        _popup.Child = _surface;
+        _options.Host = this;
+    }
+
     private void OpenPopup()
     {
         if (!IsEffectivelyEnabled || _popup is null)
@@ -413,6 +453,7 @@ public class Combobox : SelectingItemsControl, ISelectOptionHost, ISelectFieldAu
             }
             return;
         }
+        EnsureMenu();
         // Arc positions the popover 8px under the whole field, so it hangs below the description when there is one.
         _popup.PlacementTarget = _description is { IsVisible: true } ? _description : _frame;
         if (_surface is not null && _frame is not null && _frame.Bounds.Width > 0)

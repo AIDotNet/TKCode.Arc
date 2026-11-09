@@ -52,6 +52,7 @@
                             </Panel>
                         </arc:FieldFrame.Suffix>
                         <ScrollViewer Name="PART_ScrollViewer"
+                                      Theme="{DynamicResource FieldScrollViewerTheme}"
                                       HorizontalScrollBarVisibility="Hidden"
                                       VerticalScrollBarVisibility="Disabled"
                                       BringIntoViewOnFocusChange="{TemplateBinding (ScrollViewer.BringIntoViewOnFocusChange)}">
@@ -118,11 +119,11 @@
             <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
             <Setter Property="LineHeight" Value="{arc:FieldTokenResource LabelLineHeight}" />
         </Style>
-        <Style Selector="^[Size=Small] /template/ TextBlock#PART_Label">
+        <Style Selector="^:small /template/ TextBlock#PART_Label">
             <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
             <Setter Property="LineHeight" Value="{arc:FieldTokenResource LabelLineHeightSM}" />
         </Style>
-        <Style Selector="^[Size=Large]">
+        <Style Selector="^:large">
             <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
             <Setter Property="LineHeight" Value="{arc:FieldTextBoxTokenResource TextLineHeightLG}" />
         </Style>

@@ -10,6 +10,7 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
 
 namespace TKCode.Arc;
@@ -140,19 +141,12 @@ public class BrushChart : ChartBase
     private readonly Dictionary<double, bool> _labelled = new();
     private string _lastAnnounced = string.Empty;
 
-    private readonly Func<int, double> _readValue;
-    private readonly Func<int, double> _readTrend;
-    private readonly Func<int, double> _readHigh;
-    private readonly Func<int, double> _readLow;
+    // The smoothed channels as plain arrays, so the path builder reads them without a delegate call per point.
+    private double[] _trendValues = [];
+    private double[] _highValues = [];
+    private double[] _lowValues = [];
     private (double, double, double) _timeTicksKey;
-
-    public BrushChart()
-    {
-        _readValue = i => _values[i];
-        _readTrend = i => _smooth[i].Value;
-        _readHigh = i => _smooth[i].High;
-        _readLow = i => _smooth[i].Low;
-    }
+    private bool _textRefreshPending;
 
     static BrushChart()
     {
@@ -239,6 +233,15 @@ public class BrushChart : ChartBase
         _times = points.Select(p => p.Time).ToArray();
         _values = points.Select(p => p.Value).ToArray();
         _smooth = SmoothSeries(_values);
+        _trendValues = new double[_smooth.Length];
+        _highValues = new double[_smooth.Length];
+        _lowValues = new double[_smooth.Length];
+        for (var i = 0; i < _smooth.Length; i++)
+        {
+            _trendValues[i] = _smooth[i].Value;
+            _highValues[i] = _smooth[i].High;
+            _lowValues[i] = _smooth[i].Low;
+        }
         RebuildEvents();
         _pathKey = default;
         if (IsEmptySeries)
@@ -330,7 +333,25 @@ public class BrushChart : ChartBase
         SetCurrentValue(RangeProperty, range);
         _syncingRange = false;
         RaiseEvent(new ChartTimeRangeChangedEventArgs(RangeChangedEvent, range));
-        RefreshText();
+        ScheduleRefreshText();
+    }
+
+    /// <summary>
+    /// Rebuilds the summary and the accessible data table once the dispatcher is idle: a drag commits on every pointer
+    /// move, and the table formats every point in view.
+    /// </summary>
+    private void ScheduleRefreshText()
+    {
+        if (_textRefreshPending)
+        {
+            return;
+        }
+        _textRefreshPending = true;
+        Dispatcher.UIThread.Post(() =>
+        {
+            _textRefreshPending = false;
+            RefreshText();
+        }, DispatcherPriority.Background);
     }
 
     internal void Reset() => Commit(First, Last, true);
@@ -864,20 +885,20 @@ public class BrushChart : ChartBase
         }
         _pathKey = key;
         var (from, to) = VisibleRange();
-        LinePath(from, to, width, _readValue, _buffer, width * 2);
+        LinePath(from, to, width, _values, _buffer, width * 2);
         _line = ChartGeometry.Line(System.Runtime.InteropServices.CollectionsMarshal.AsSpan(_buffer));
         _area = _buffer.Count > 0 ? ChartGeometry.Area(System.Runtime.InteropServices.CollectionsMarshal.AsSpan(_buffer), height) : null;
-        LinePath(from, to, width, _readTrend, _buffer, width * 8);
+        LinePath(from, to, width, _trendValues, _buffer, width * 8);
         _trend = ChartGeometry.Line(System.Runtime.InteropServices.CollectionsMarshal.AsSpan(_buffer));
-        LinePath(from, to, width, _readHigh, _buffer, width * 8);
-        LinePath(from, to, width, _readLow, _buffer2, width * 8);
+        LinePath(from, to, width, _highValues, _buffer, width * 8);
+        LinePath(from, to, width, _lowValues, _buffer2, width * 8);
         _band = _buffer.Count > 0
             ? ChartGeometry.Band(System.Runtime.InteropServices.CollectionsMarshal.AsSpan(_buffer), System.Runtime.InteropServices.CollectionsMarshal.AsSpan(_buffer2))
             : null;
     }
 
     /// <summary>A line through the points in view. Past two points per pixel, each pixel column keeps only its low and high so spikes survive.</summary>
-    private void LinePath(int from, int to, double width, Func<int, double> read, List<Point> output, double budget)
+    private void LinePath(int from, int to, double width, double[] read, List<Point> output, double budget)
     {
         output.Clear();
         var count = to - from;
@@ -889,7 +910,7 @@ public class BrushChart : ChartBase
         {
             for (var i = from; i < to; i++)
             {
-                output.Add(new Point(X(_times[i], width), Y(read(i))));
+                output.Add(new Point(X(_times[i], width), Y(read[i])));
             }
             return;
         }
@@ -905,11 +926,12 @@ public class BrushChart : ChartBase
                 low = high = i;
                 continue;
             }
-            if (read(i) < read(low))
+            var value = read[i];
+            if (value < read[low])
             {
                 low = i;
             }
-            if (read(i) > read(high))
+            if (value > read[high])
             {
                 high = i;
             }
@@ -917,17 +939,17 @@ public class BrushChart : ChartBase
         Flush(low, high, width, read, output);
     }
 
-    private void Flush(int low, int high, double width, Func<int, double> read, List<Point> output)
+    private void Flush(int low, int high, double width, double[] read, List<Point> output)
     {
         if (low < 0)
         {
             return;
         }
         var (a, b) = low < high ? (low, high) : (high, low);
-        output.Add(new Point(X(_times[a], width), Y(read(a))));
+        output.Add(new Point(X(_times[a], width), Y(read[a])));
         if (b != a)
         {
-            output.Add(new Point(X(_times[b], width), Y(read(b))));
+            output.Add(new Point(X(_times[b], width), Y(read[b])));
         }
     }
 
@@ -964,12 +986,12 @@ public class BrushChart : ChartBase
                 continue;
             }
             var label = Texts.Get(palette, TickLabel(tick), palette.SizeXS, palette.TextMuted);
-            context.DrawText(label, new Point(width + 10, y - label.Height / 2));
+            label.Draw(context, new Point(width + 10, y - label.Height / 2));
         }
         if (IsEmptySeries)
         {
             var message = Texts.Get(palette, EmptyLabel, palette.SizeSM, palette.TextMuted);
-            context.DrawText(message, new Point((width - message.WidthIncludingTrailingWhitespace) / 2, (height - message.Height) / 2));
+            message.Draw(context, new Point((width - message.WidthIncludingTrailingWhitespace) / 2, (height - message.Height) / 2));
             return;
         }
         var (start, end) = View;
@@ -1052,7 +1074,7 @@ public class BrushChart : ChartBase
             var label = Texts.Get(palette, text, palette.SizeXS, palette.TextMuted);
             var w = label.WidthIncludingTrailingWhitespace;
             var shift = x < 24 ? 0 : x > width - 24 ? w : w / 2;
-            context.DrawText(label, new Point(Math.Round(x - shift), height + 9));
+            label.Draw(context, new Point(Math.Round(x - shift), height + 9));
         }
         _tooltip?.Render(context, palette, Texts);
     }
@@ -1074,30 +1096,15 @@ public class BrushChart : ChartBase
             var px = X(e.Time, width);
             var text = Texts.Get(palette, e.Label, palette.SizeXS, palette.TextSecondary);
             var w = text.WidthIncludingTrailingWhitespace + 4;
-            var next = width;
-            for (var k = at + 1; k < _events.Length; k++)
-            {
-                if (_events[k].Time >= start && _events[k].Time <= end)
-                {
-                    next = X(_events[k].Time, width) - 10;
-                    break;
-                }
-            }
+            // Events are sorted by time, so the neighbours in the window are the adjacent entries.
+            var next = at + 1 < _events.Length && _events[at + 1].Time <= end ? X(_events[at + 1].Time, width) - 10 : width;
             if (px + 14 >= edge && px + 14 + w <= next)
             {
                 _labelled[e.Time] = false;
                 edge = px + 14 + w + 8;
                 continue;
             }
-            var previous = double.NegativeInfinity;
-            for (var k = at - 1; k >= 0; k--)
-            {
-                if (_events[k].Time >= start && _events[k].Time <= end)
-                {
-                    previous = X(_events[k].Time, width);
-                    break;
-                }
-            }
+            var previous = at > 0 && _events[at - 1].Time >= start ? X(_events[at - 1].Time, width) : double.NegativeInfinity;
             if (px - 14 - w >= Math.Max(0, edge) && (double.IsNegativeInfinity(previous) || px - 14 - w >= previous + 12))
             {
                 _labelled[e.Time] = true;
@@ -1121,7 +1128,7 @@ public class BrushChart : ChartBase
             {
                 var label = Texts.Get(palette, e.Label, palette.SizeXS, active ? palette.Foreground : palette.TextSecondary);
                 var x = flip ? px - 12 - 6 - label.WidthIncludingTrailingWhitespace : px + 12;
-                context.DrawText(label, new Point(Math.Round(x), center.Y - label.Height / 2));
+                label.Draw(context, new Point(Math.Round(x), center.Y - label.Height / 2));
             }
         }
     }

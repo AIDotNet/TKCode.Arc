@@ -51,7 +51,7 @@ public sealed class ImageComparePositionChangedEventArgs : RoutedEventArgs
 [TemplatePart(HandlePart, typeof(ImageCompareHandle))]
 [TemplatePart(BeforeImagePart, typeof(ArcImage))]
 [TemplatePart(AfterImagePart, typeof(ArcImage))]
-[PseudoClasses(DraggingPseudoClass, BeforeImagePseudoClass, AfterImagePseudoClass, BeforeLoadingPseudoClass, AfterLoadingPseudoClass)]
+[PseudoClasses(DraggingPseudoClass, BeforeImagePseudoClass, AfterImagePseudoClass, BeforeLoadingPseudoClass, AfterLoadingPseudoClass, VerticalPseudoClass)]
 public class ImageCompare : TemplatedControl
 {
     public const string FramePart = "PART_Frame";
@@ -72,6 +72,9 @@ public class ImageCompare : TemplatedControl
 
     /// <summary>Set while <see cref="AfterSource"/> is shown (set and not failed).</summary>
     public const string AfterImagePseudoClass = ":after-image";
+
+    /// <summary>Set while <see cref="Orientation"/> is vertical (the theme reads it instead of a property selector).</summary>
+    public const string VerticalPseudoClass = ":vertical";
 
     /// <summary>Set while the before picture is still downloading after mount (it fades in from a blur).</summary>
     public const string BeforeLoadingPseudoClass = ":before-loading";
@@ -221,6 +224,7 @@ public class ImageCompare : TemplatedControl
 
     public ImageCompare()
     {
+        PseudoClasses.Set(VerticalPseudoClass, Orientation == Orientation.Vertical);
         _latest = Position;
         _goal = Position;
         _pos = new MotionValue<double>(this, Position, MotionVectors.Double);
@@ -491,6 +495,7 @@ public class ImageCompare : TemplatedControl
         }
         else if (change.Property == OrientationProperty)
         {
+            PseudoClasses.Set(VerticalPseudoClass, Orientation == Orientation.Vertical);
             CreateTouchTracker();
             var target = Orientation == Orientation.Vertical ? 90 : 0;
             if (_theta.Value != target)

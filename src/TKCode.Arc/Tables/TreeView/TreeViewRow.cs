@@ -121,6 +121,7 @@ internal sealed class TreeViewRow : TablesTreeRow
     private readonly SolidColorBrush _labelBrush = new();
     private readonly SolidColorBrush _contentBrush = new();
     private ContentPresenter? _content;
+    private static readonly Cursor s_hand = new(StandardCursorType.Hand);
     private readonly Cursor _hand;
     private MotionValue<double>? _hover;
     private MotionValue<double>? _emphasis;
@@ -137,7 +138,7 @@ internal sealed class TreeViewRow : TablesTreeRow
     public TreeViewRow(TreeViewRowsPanel panel)
     {
         _panel = panel;
-        _hand = new Cursor(StandardCursorType.Hand);
+        _hand = s_hand;
         Cursor = _hand;
     }
 

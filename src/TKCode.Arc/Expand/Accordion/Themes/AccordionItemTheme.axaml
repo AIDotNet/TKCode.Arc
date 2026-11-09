@@ -33,10 +33,8 @@
                                                Spring="Smooth"
                                                IsExpanded="{TemplateBinding IsExpanded}">
                             <Border Name="PART_Answer" HorizontalAlignment="Left">
-                                <ContentPresenter Name="PART_ContentPresenter"
-                                                  TextWrapping="Wrap"
-                                                  Content="{TemplateBinding Content}"
-                                                  ContentTemplate="{TemplateBinding ContentTemplate}" />
+                                <!-- The row fills this presenter the first time the answer can be seen (AccordionItem.RealizeAnswer). -->
+                                <ContentPresenter Name="PART_ContentPresenter" TextWrapping="Wrap" />
                             </Border>
                         </arc:SpringSizeDecorator>
                     </StackPanel>

@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using System.Globalization;
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
@@ -283,6 +284,8 @@ public class DateRangePicker : TemplatedControl, IPickerAutomation
         set => SetCurrentValue(IsDropDownOpenProperty, value);
     }
 
+    private LazyFocusRing? _focusRing;
+
     protected override AutomationPeer OnCreateAutomationPeer() =>
         _peer = new PickerAutomationPeer(this, this, AutomationControlType.Button);
 
@@ -291,6 +294,9 @@ public class DateRangePicker : TemplatedControl, IPickerAutomation
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
+        // Built the first time the field is keyboard focused, under the trigger.
+        _focusRing ??= new LazyFocusRing(this, DateRangePickerTokens.Key(DateRangePickerTokenKind.TriggerFocusRingMargin), DateRangePickerTokens.Key(DateRangePickerTokenKind.TriggerFocusRingRadius));
+        _focusRing.Attach(e.NameScope.Find<Control>(TriggerPart)?.Parent as Panel, below: true);
         if (_trigger is not null)
         {
             _trigger.PointerPressed -= OnTriggerPressed;
@@ -975,9 +981,16 @@ public class DateRangePicker : TemplatedControl, IPickerAutomation
         }
     }
 
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
     protected override void OnLostFocus(FocusChangedEventArgs e)
     {
         base.OnLostFocus(e);
+        _focusRing?.Update();
         if (IsDropDownOpen)
         {
             Dispatcher.UIThread.Post(CheckFocusLeft, DispatcherPriority.Input);

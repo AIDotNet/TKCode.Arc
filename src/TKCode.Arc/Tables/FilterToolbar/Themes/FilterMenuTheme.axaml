@@ -9,7 +9,8 @@
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:FilterMenu">
-                <Panel>
+                <!-- PART_FocusRing (Margin -3) is built here by the menu on its first keyboard focus. -->
+                <Panel Name="PART_Layers">
                     <Border Name="PART_Surface"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
@@ -30,13 +31,6 @@
                                        FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
                         </StackPanel>
                     </Border>
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            Margin="-3"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{arc:FilterMenuTokenResource FocusRingRadius}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
         </Setter>
@@ -62,10 +56,6 @@
         <Style Selector="^:pressed, ^:open">
             <Setter Property="Background" Value="{arc:FilterMenuTokenResource PressedFill}" />
         </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
-        </Style>
-
         <Style Selector="^:motion-full">
             <Setter Property="Transitions">
                 <Transitions>

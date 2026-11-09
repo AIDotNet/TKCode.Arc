@@ -1,3 +1,5 @@
+using System.Globalization;
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
 using Avalonia;
@@ -139,6 +141,7 @@ internal sealed class ChatThreadRowMotion
 }
 
 /// <summary>A day separator (Arc <c>.day</c>): the label between two hairlines, xs muted medium text.</summary>
+[PseudoClasses(":first")]
 internal sealed class ChatThreadDayView : TemplatedControl
 {
     public static readonly StyledProperty<string?> LabelProperty =
@@ -151,6 +154,15 @@ internal sealed class ChatThreadDayView : TemplatedControl
     public bool IsFirst { get => GetValue(IsFirstProperty); set => SetValue(IsFirstProperty, value); }
 
     public ChatThreadDayRow? Row { get; private set; }
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == IsFirstProperty)
+        {
+            PseudoClasses.Set(":first", IsFirst);
+        }
+    }
 
     public void Bind(ChatThreadDayRow row)
     {
@@ -255,6 +267,7 @@ internal sealed class ChatThreadTypingView : TemplatedControl
 internal sealed class ChatThreadMessageView : TemplatedControl
 {
     public const string RowPart = "PART_Row";
+    public const string StackPart = "PART_Stack";
     public const string MetaPart = "PART_Meta";
     public const string AuthorPart = "PART_Author";
     public const string TimePart = "PART_Time";
@@ -304,6 +317,9 @@ internal sealed class ChatThreadMessageView : TemplatedControl
     public double ReaderOverlap { get => GetValue(ReaderOverlapProperty); set => SetValue(ReaderOverlapProperty, value); }
 
     private ChatThread? _thread;
+    private StackPanel? _stack;
+    // Built the first time a row needs them: the meta line (first message of a group), the status line and Retry (the
+    // current user's last message). Most rows show neither.
     private StackPanel? _meta;
     private TextBlock? _author;
     private TextBlock? _time;
@@ -313,10 +329,13 @@ internal sealed class ChatThreadMessageView : TemplatedControl
     private PresenceHost? _reactionsHost;
     private Border? _reactionsClip;
     private ActivityReactionBar? _reactions;
-    private Control? _receipts;
-    private Control? _status;
+    private StackPanel? _receipts;
+    private StackPanel? _status;
     private TextBlock? _statusText;
+    private IDisposable? _statusForeground;
+    private bool _statusFailed;
     private ChatThreadButton? _retry;
+    private TextBlock? _retryLabel;
     private StackPanel? _readers;
 
     private Avatar? _face;
@@ -330,6 +349,16 @@ internal sealed class ChatThreadMessageView : TemplatedControl
 
     private IReadOnlyList<ChatAttachment>? _shownAttachments;
     private bool _hasShownReactions;
+
+    // Formatted once per (time, zone, culture): a refresh for a reaction or a receipt does not convert time zones again.
+    private DateTimeOffset _clockAt;
+    private TimeZoneInfo? _clockZone;
+    private CultureInfo? _clockCulture;
+    private string _clock = string.Empty;
+    private string? _tip;
+    private readonly List<ActivityReaction> _reactionItems = new();
+    private ChatThreadLabels? _formatterLabels;
+    private IReadOnlyList<ChatParticipant>? _namedReaders;
 
     public ChatThreadMessageView()
     {
@@ -359,6 +388,7 @@ internal sealed class ChatThreadMessageView : TemplatedControl
 
     internal Control? Receipts => _receipts;
 
+    /// <summary>The status text once a row needed it (null before).</summary>
     internal TextBlock? StatusText => _statusText;
 
     internal Avatar? Face => _face;
@@ -393,28 +423,29 @@ internal sealed class ChatThreadMessageView : TemplatedControl
         {
             _reactions.Toggled -= OnReactionToggled;
         }
-        _meta = e.NameScope.Find<StackPanel>(MetaPart);
-        _author = e.NameScope.Find<TextBlock>(AuthorPart);
-        _time = e.NameScope.Find<TextBlock>(TimePart);
+        // The code-built parts belong to the old template's panels: a new template starts them over.
+        _meta = null;
+        _author = null;
+        _time = null;
+        _status = null;
+        _statusText = null;
+        _statusForeground?.Dispose();
+        _statusForeground = null;
+        _retry = null;
+        _retryLabel = null;
+        _stack = e.NameScope.Find<StackPanel>(StackPart);
         _line = e.NameScope.Find<ChatThreadLinePanel>(LinePart);
         _parts = e.NameScope.Find<StackPanel>(PartsPart);
         _react = e.NameScope.Find<ChatThreadButton>(ReactPart);
         _reactionsHost = e.NameScope.Find<PresenceHost>(ReactionsHostPart);
         _reactionsClip = e.NameScope.Find<Border>(ReactionsClipPart);
         _reactions = e.NameScope.Find<ActivityReactionBar>(ReactionsPart);
-        _receipts = e.NameScope.Find<Control>(ReceiptsPart);
-        _status = e.NameScope.Find<Control>(StatusPart);
-        _statusText = e.NameScope.Find<TextBlock>(StatusTextPart);
-        _retry = e.NameScope.Find<ChatThreadButton>(RetryPart);
+        _receipts = e.NameScope.Find<StackPanel>(ReceiptsPart);
         _readers = e.NameScope.Find<StackPanel>(ReadersPart);
         if (_react is not null)
         {
             _react.Content ??= new ArcGlyph { Data = ArcIcons.SmilePlus, Size = 16, StrokeThickness = 1.75 };
             _react.Click += OnReactClick;
-        }
-        if (_retry is not null)
-        {
-            _retry.Click += OnRetryClick;
         }
         if (_reactions is not null)
         {
@@ -514,20 +545,15 @@ internal sealed class ChatThreadMessageView : TemplatedControl
         }
 
         // Meta: author (others) and time on the first message of a group.
-        var time = ActivityTime.Clock(message.CreatedAt, thread.EffectiveTimeZone, thread.EffectiveCulture);
-        if (_meta is not null)
+        var time = Clock(message.CreatedAt, thread);
+        if (row.First || _meta is not null)
         {
-            _meta.IsVisible = row.First;
+            EnsureMeta();
+            _meta!.IsVisible = row.First;
             _meta.HorizontalAlignment = row.Mine ? HorizontalAlignment.Right : HorizontalAlignment.Left;
-        }
-        if (_author is not null)
-        {
-            _author.IsVisible = !row.Mine;
+            _author!.IsVisible = !row.Mine;
             _author.Text = row.Author.Name;
-        }
-        if (_time is not null)
-        {
-            _time.Text = time;
+            _time!.Text = time;
         }
 
         // The author's portrait hangs in the gutter beside the last message of a group.
@@ -561,6 +587,79 @@ internal sealed class ChatThreadMessageView : TemplatedControl
         _line?.InvalidateMeasure();
     }
 
+    /// <summary>The clock time of <paramref name="at"/>, formatted again only when the time, zone or culture changed.</summary>
+    private string Clock(DateTimeOffset at, ChatThread thread)
+    {
+        var zone = thread.EffectiveTimeZone;
+        var culture = thread.EffectiveCulture;
+        if (at != _clockAt || !ReferenceEquals(zone, _clockZone) || !ReferenceEquals(culture, _clockCulture))
+        {
+            _clockAt = at;
+            _clockZone = zone;
+            _clockCulture = culture;
+            _clock = ActivityTime.Clock(at, zone, culture);
+            _tip = null;
+        }
+        return _clock;
+    }
+
+    /// <summary>The bubble's tooltip (full date and time), kept with the clock text.</summary>
+    private string Tip(DateTimeOffset at, ChatThread thread)
+    {
+        Clock(at, thread);
+        return _tip ??= ActivityTime.MediumDateTime(at, _clockZone!, _clockCulture);
+    }
+
+    private void EnsureMeta()
+    {
+        if (_meta is not null || _stack is null)
+        {
+            return;
+        }
+        _author = new TextBlock { Name = AuthorPart };
+        ArcTokens.Bind(_author, TextBlock.FontSizeProperty, ArcDesignTokenKind.TypeXS);
+        ArcTokens.Bind(_author, TextBlock.FontWeightProperty, ArcDesignTokenKind.WeightMedium);
+        ArcTokens.Bind(_author, TextBlock.ForegroundProperty, ArcDesignTokenKind.TextSecondary);
+        _time = new TextBlock { Name = TimePart };
+        ArcTokens.Bind(_time, TextBlock.FontSizeProperty, ArcDesignTokenKind.TypeXS);
+        ArcTokens.Bind(_time, TextBlock.ForegroundProperty, ArcDesignTokenKind.TextMuted);
+        _meta = new StackPanel { Name = MetaPart, Orientation = Orientation.Horizontal, Children = { _author, _time } };
+        _meta.Bind(StackPanel.SpacingProperty, _meta.GetResourceObservable(ChatThreadTokens.Key(ChatThreadTokenKind.MetaGap)));
+        _meta.Bind(MarginProperty, _meta.GetResourceObservable(ChatThreadTokens.Key(ChatThreadTokenKind.MetaMargin)));
+        _stack.Children.Insert(0, _meta);
+    }
+
+    private void EnsureStatus()
+    {
+        if (_status is not null || _receipts is null)
+        {
+            return;
+        }
+        _statusText = new TextBlock { Name = StatusTextPart, VerticalAlignment = VerticalAlignment.Center };
+        ArcTokens.Bind(_statusText, TextBlock.FontSizeProperty, ArcDesignTokenKind.TypeXS);
+        _statusFailed = false;
+        _statusForeground = ArcTokens.Bind(_statusText, TextBlock.ForegroundProperty, ArcDesignTokenKind.TextMuted);
+        var glyph = new ArcGlyph { Data = ArcIcons.RotateCw, Size = 12, StrokeThickness = 2, VerticalAlignment = VerticalAlignment.Center };
+        ArcTokens.Bind(glyph, ArcGlyph.ForegroundProperty, ArcDesignTokenKind.TextSecondary);
+        _retryLabel = new TextBlock { VerticalAlignment = VerticalAlignment.Center };
+        _retry = new ChatThreadButton
+        {
+            Name = RetryPart,
+            Role = ChatThreadButtonRole.Retry,
+            Content = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 4, Children = { glyph, _retryLabel } }
+        };
+        _retry.Click += OnRetryClick;
+        _status = new StackPanel
+        {
+            Name = StatusPart,
+            Orientation = Orientation.Horizontal,
+            Spacing = 8,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { _statusText, _retry }
+        };
+        _receipts.Children.Insert(0, _status);
+    }
+
     private void UpdateParts(ChatThread thread, ChatThreadMessageRow row)
     {
         var message = row.Message;
@@ -586,7 +685,11 @@ internal sealed class ChatThreadMessageView : TemplatedControl
         _bubble.IsFailed = message.Status == ChatMessageStatus.Failed;
         _bubble.HorizontalAlignment = row.Mine ? HorizontalAlignment.Right : HorizontalAlignment.Left;
         _bubble.CornerRadius = ChatThreadBubble.Corners(row.Mine, row.First, row.Last, BubbleRadius, BubbleTightRadius);
-        Tooltip.SetTip(_bubble, hasText ? ActivityTime.MediumDateTime(message.CreatedAt, thread.EffectiveTimeZone, thread.EffectiveCulture) : null);
+        var tip = hasText ? Tip(message.CreatedAt, thread) : null;
+        if (!ReferenceEquals(Tooltip.GetTip(_bubble), tip))
+        {
+            Tooltip.SetTip(_bubble, tip);
+        }
         if (!hasText)
         {
             if (_body.Child is Markdown)
@@ -743,12 +846,24 @@ internal sealed class ChatThreadMessageView : TemplatedControl
         }
         var labels = thread.Labels;
         var list = row.Message.Reactions;
-        var items = list is null ? Array.Empty<ActivityReaction>() : list.Select(r => new ActivityReaction(r.Emoji, r.Count, r.Mine)).ToArray();
-        _reactions.NameFormatter = r => labels.ReactionCount(r.Emoji, r.Count, r.Mine);
+        var items = _reactionItems;
+        items.Clear();
+        if (list is not null)
+        {
+            foreach (var reaction in list)
+            {
+                items.Add(new ActivityReaction(reaction.Emoji, reaction.Count, reaction.Mine));
+            }
+        }
+        if (!ReferenceEquals(_formatterLabels, labels))
+        {
+            _formatterLabels = labels;
+            _reactions.NameFormatter = r => labels.ReactionCount(r.Emoji, r.Count, r.Mine);
+        }
         _reactions.IsRightAligned = row.Mine;
         _reactions.HorizontalAlignment = row.Mine ? HorizontalAlignment.Right : HorizontalAlignment.Left;
         AutomationProperties.SetName(_reactions, labels.Reactions);
-        var present = items.Length > 0;
+        var present = items.Count > 0;
         var animateBar = animate && _hasShownReactions && _reactionsHost.IsPresent;
         _reactions.SetReactions(items, animateBar || (animate && present && !_reactionsHost.IsPresent));
         if (animate)
@@ -776,30 +891,34 @@ internal sealed class ChatThreadMessageView : TemplatedControl
             _receipts.IsVisible = showStatus || readers.Count > 0;
             _receipts.HorizontalAlignment = row.Mine ? HorizontalAlignment.Right : HorizontalAlignment.Left;
         }
-        if (_status is not null)
+        if (showStatus || _status is not null)
         {
-            _status.IsVisible = showStatus;
-            _status.Classes.Set("failed", row.Status == ChatMessageStatus.Failed);
-        }
-        if (_statusText is not null)
-        {
-            _statusText.Text = row.Status switch
+            EnsureStatus();
+            if (_status is not null)
             {
-                ChatMessageStatus.Sending => labels.Sending,
-                ChatMessageStatus.Delivered => labels.Delivered,
-                ChatMessageStatus.Read => labels.Read,
-                ChatMessageStatus.Failed => labels.Failed,
-                _ => labels.Sent
-            };
-        }
-        if (_retry is not null)
-        {
-            _retry.IsVisible = showStatus && row.Status == ChatMessageStatus.Failed && thread.HasRetryHandler;
-            if (_retry.Content is StackPanel { Children: [_, TextBlock label] })
-            {
-                label.Text = labels.Retry;
+                _status.IsVisible = showStatus;
+                _status.Classes.Set("failed", row.Status == ChatMessageStatus.Failed);
+                _statusText!.Text = row.Status switch
+                {
+                    ChatMessageStatus.Sending => labels.Sending,
+                    ChatMessageStatus.Delivered => labels.Delivered,
+                    ChatMessageStatus.Read => labels.Read,
+                    ChatMessageStatus.Failed => labels.Failed,
+                    _ => labels.Sent
+                };
+                // The theme colored the status through the view's :failed pseudo-class; the code-built text binds the
+                // same two tokens itself.
+                var failed = row.Message.Status == ChatMessageStatus.Failed;
+                if (failed != _statusFailed)
+                {
+                    _statusFailed = failed;
+                    _statusForeground?.Dispose();
+                    _statusForeground = ArcTokens.Bind(_statusText, TextBlock.ForegroundProperty, failed ? ArcDesignTokenKind.Danger : ArcDesignTokenKind.TextMuted);
+                }
+                _retry!.IsVisible = showStatus && row.Status == ChatMessageStatus.Failed && thread.HasRetryHandler;
+                _retryLabel!.Text = labels.Retry;
+                AutomationProperties.SetName(_retry, labels.Retry);
             }
-            AutomationProperties.SetName(_retry, labels.Retry);
         }
         if (_readers is null)
         {
@@ -827,7 +946,11 @@ internal sealed class ChatThreadMessageView : TemplatedControl
                 _readers.Children.Add(avatar);
             }
         }
-        AutomationProperties.SetName(_readers, readers.Count > 0 ? labels.ReadBy(readers.Select(r => r.Name).ToArray()) : string.Empty);
+        if (!ReferenceEquals(readers, _namedReaders) || !ReferenceEquals(labels, _formatterLabels))
+        {
+            _namedReaders = readers;
+            AutomationProperties.SetName(_readers, readers.Count > 0 ? labels.ReadBy(readers.Select(r => r.Name).ToArray()) : string.Empty);
+        }
     }
 
     /// <summary>The reader portrait of <paramref name="participantId"/> under this message, if any.</summary>

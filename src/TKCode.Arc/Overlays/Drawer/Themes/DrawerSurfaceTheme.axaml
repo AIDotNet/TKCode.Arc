@@ -175,46 +175,46 @@
         <Setter Property="NarrowBreakpoint" Value="{arc:DrawerSurfaceTokenResource NarrowBreakpoint}" />
 
         <!-- Only the inner edges carry the hairline; the corner radius sits on the side away from the edge. -->
-        <Style Selector="^[Side=Right]">
+        <Style Selector="^:right">
             <Setter Property="HorizontalAlignment" Value="Right" />
             <Setter Property="VerticalAlignment" Value="Stretch" />
             <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessNoRight}" />
             <Setter Property="CornerRadius" Value="{arc:DrawerSurfaceTokenResource RadiusRight}" />
         </Style>
-        <Style Selector="^[Side=Right]:narrow">
+        <Style Selector="^:right:narrow">
             <Setter Property="CornerRadius" Value="{arc:DrawerSurfaceTokenResource NarrowRadiusRight}" />
         </Style>
-        <Style Selector="^[Side=Left]">
+        <Style Selector="^:left">
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Stretch" />
             <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessNoLeft}" />
             <Setter Property="CornerRadius" Value="{arc:DrawerSurfaceTokenResource RadiusLeft}" />
         </Style>
-        <Style Selector="^[Side=Left]:narrow">
+        <Style Selector="^:left:narrow">
             <Setter Property="CornerRadius" Value="{arc:DrawerSurfaceTokenResource NarrowRadiusLeft}" />
         </Style>
-        <Style Selector="^[Side=Top]">
+        <Style Selector="^:top">
             <Setter Property="HorizontalAlignment" Value="Stretch" />
             <Setter Property="VerticalAlignment" Value="Top" />
             <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessBottom}" />
             <Setter Property="CornerRadius" Value="{arc:DrawerSurfaceTokenResource RadiusTop}" />
         </Style>
-        <Style Selector="^[Side=Top]:narrow">
+        <Style Selector="^:top:narrow">
             <Setter Property="CornerRadius" Value="{arc:DrawerSurfaceTokenResource NarrowRadiusTop}" />
         </Style>
-        <Style Selector="^[Side=Bottom]">
+        <Style Selector="^:bottom">
             <Setter Property="HorizontalAlignment" Value="Stretch" />
             <Setter Property="VerticalAlignment" Value="Bottom" />
             <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessTop}" />
             <Setter Property="CornerRadius" Value="{arc:DrawerSurfaceTokenResource RadiusBottom}" />
         </Style>
-        <Style Selector="^[Side=Bottom]:narrow">
+        <Style Selector="^:bottom:narrow">
             <Setter Property="CornerRadius" Value="{arc:DrawerSurfaceTokenResource NarrowRadiusBottom}" />
         </Style>
-        <Style Selector="^[Side=Bottom] /template/ Border#PART_Grabber">
+        <Style Selector="^:bottom /template/ Border#PART_Grabber">
             <Setter Property="IsVisible" Value="True" />
         </Style>
-        <Style Selector="^[Side=Top] /template/ Border#PART_Header, ^[Side=Bottom] /template/ Border#PART_Header">
+        <Style Selector="^:top /template/ Border#PART_Header, ^:bottom /template/ Border#PART_Header">
             <Setter Property="Cursor" Value="SizeNorthSouth" />
         </Style>
         <Style Selector="^:narrow /template/ Border#PART_Header">

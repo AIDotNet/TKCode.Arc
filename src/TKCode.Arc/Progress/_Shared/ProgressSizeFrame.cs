@@ -42,6 +42,7 @@ internal sealed class ProgressSizeFrame : Decorator
     private MotionValue<double>? _width;
     private MotionValue<double>? _height;
     private Size? _lastAvailable;
+    private RectangleGeometry? _clip;
 
     static ProgressSizeFrame()
     {
@@ -71,8 +72,26 @@ internal sealed class ProgressSizeFrame : Decorator
         var width = Follow(ref _width, target.Width, animate && axis != ProgressSizeAxis.Height, WidthSpring);
         var height = Follow(ref _height, target.Height, animate && axis != ProgressSizeAxis.Width, HeightSpring);
         var size = new Size(axis == ProgressSizeAxis.Height ? target.Width : width, axis == ProgressSizeAxis.Width ? target.Height : height);
-        Clip = IsMoving ? new RectangleGeometry(new Rect(size)) : null;
+        UpdateClip(IsMoving ? new Rect(size) : null);
         return new Size(Math.Min(size.Width, availableSize.Width), Math.Min(size.Height, availableSize.Height));
+    }
+
+    /// <summary>One geometry, updated in place: a moving clip allocates nothing per frame (as in SpringSizeDecorator).</summary>
+    private void UpdateClip(Rect? rect)
+    {
+        if (rect is not { } value)
+        {
+            if (Clip is not null)
+            {
+                Clip = null;
+            }
+            return;
+        }
+        _clip ??= new RectangleGeometry();
+        _clip.Rect = value;
+        Clip = _clip;
+        // A changed clip geometry reaches the composition layer only with a redraw.
+        InvalidateVisual();
     }
 
     private double Follow(ref MotionValue<double>? value, double target, bool animate, ArcSpring spring)
@@ -117,7 +136,7 @@ internal sealed class ProgressSizeFrame : Decorator
         child.Arrange(new Rect(x, Axis == ProgressSizeAxis.Width ? 0 : (finalSize.Height - height) / 2, width, height));
         if (Clip is not null)
         {
-            Clip = new RectangleGeometry(new Rect(finalSize));
+            UpdateClip(new Rect(finalSize));
         }
         return finalSize;
     }

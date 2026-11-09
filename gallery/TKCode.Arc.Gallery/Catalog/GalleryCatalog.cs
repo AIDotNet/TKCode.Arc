@@ -25,7 +25,8 @@ public sealed record GalleryCategory(string Code, string Title, string ChineseTi
     GalleryCategory[]? Subcategories = null)
 {
     /// <summary>The entries of this group and of all its subgroups.</summary>
-    public IEnumerable<GalleryEntry> AllEntries => Entries.Concat((Subcategories ?? Array.Empty<GalleryCategory>()).SelectMany(s => s.AllEntries));
+    public IEnumerable<GalleryEntry> AllEntries { get; } =
+        Entries.Concat((Subcategories ?? Array.Empty<GalleryCategory>()).SelectMany(s => s.AllEntries)).ToArray();
 }
 
 public static partial class GalleryCatalog
@@ -419,16 +420,23 @@ public static partial class GalleryCatalog
     public static GalleryCategory Pdf => Extras[4];
 
     /// <summary>The Components section of the sidebar: Arc's groups with Advanced charts, Workflow, Dock, Video and PDF after Charts, then the other extras.</summary>
-    public static IEnumerable<GalleryCategory> AllCategories =>
+    public static IEnumerable<GalleryCategory> AllCategories => s_allCategories ??=
         Categories.SelectMany(c => c.Code == "Charts" ? new[] { c, AdvancedCharts, Workflow, Dock, Video, Pdf } : new[] { c })
-                  .Concat(Extras.Where(e => !ReferenceEquals(e, AdvancedCharts) && !ReferenceEquals(e, Workflow) && !ReferenceEquals(e, Dock) && !ReferenceEquals(e, Video) && !ReferenceEquals(e, Pdf)));
+                  .Concat(Extras.Where(e => !ReferenceEquals(e, AdvancedCharts) && !ReferenceEquals(e, Workflow) && !ReferenceEquals(e, Dock) && !ReferenceEquals(e, Video) && !ReferenceEquals(e, Pdf)))
+                  .ToArray();
+
+    // The lists below are built once, when first read: they are read on every page opening. Not in field initializers, whose
+    // order across this class's files is not one to rely on.
+    private static GalleryCategory[]? s_allCategories;
+    private static GalleryEntry[]? s_allEntries;
+    private static GalleryEntry[]? s_componentEntries;
 
     /// <summary>Every entry the gallery lists: the Docs, Components, Blocks and Special components sections.</summary>
-    public static IEnumerable<GalleryEntry> AllEntries =>
-        Docs.AllEntries.Concat(AllCategories.SelectMany(c => c.AllEntries)).Concat(Blocks.AllEntries).Concat(Special.SelectMany(c => c.AllEntries)).Concat(Mobile.AllEntries);
+    public static IEnumerable<GalleryEntry> AllEntries => s_allEntries ??=
+        Docs.AllEntries.Concat(AllCategories.SelectMany(c => c.AllEntries)).Concat(Blocks.AllEntries).Concat(Special.SelectMany(c => c.AllEntries)).Concat(Mobile.AllEntries).ToArray();
 
     /// <summary>Every entry of the Components section: Arc's components and the extras.</summary>
-    public static IEnumerable<GalleryEntry> ComponentEntries => AllCategories.SelectMany(c => c.Entries);
+    public static IEnumerable<GalleryEntry> ComponentEntries => s_componentEntries ??= AllCategories.SelectMany(c => c.Entries).ToArray();
 
     /// <summary>Number of Arc components (extras not included).</summary>
     public static int Count => Categories.Sum(c => c.Entries.Length);

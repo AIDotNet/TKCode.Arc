@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.InteropServices.JavaScript;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Media;
 using Avalonia.Media.Fonts;
@@ -13,7 +14,9 @@ namespace TKCode.Arc.Gallery.Browser;
 /// every Chinese character as a box. The font is Noto Sans SC Regular (SIL OFL 1.1) cut down to the characters the gallery
 /// uses plus the 3755 common ones (<c>tools/fonts/subset-noto-sans-sc.py</c>, about 1 MB, 0.7 MB over the wire). It is fetched
 /// the first time a Chinese character is drawn, so a visitor who never sees one never downloads it; the fetch is synchronous
-/// because the text layout asks for the glyph in the middle of measuring.
+/// because the text layout asks for the glyph in the middle of measuring. A visitor who starts in Chinese has it fetched ahead
+/// (<see cref="PreloadAsync"/>), which leaves the page free meanwhile; the synchronous request remains for everyone else, and
+/// for a fetch ahead that failed.
 /// </summary>
 internal sealed partial class CjkFontCollection : FontCollectionBase
 {
@@ -22,6 +25,7 @@ internal sealed partial class CjkFontCollection : FontCollectionBase
 
     private const string File = "fonts/NotoSansSC-Subset.otf";
     private static readonly Uri s_key = new("fonts:ArcCjk");
+    private static byte[]? s_preloaded;
     private bool _loadAttempted;
 
     public override Uri Key => s_key;
@@ -46,16 +50,33 @@ internal sealed partial class CjkFontCollection : FontCollectionBase
             return;
         }
         _loadAttempted = true;
-        var bytes = Fetch(File);
+        var bytes = s_preloaded ?? Fetch(File);
+        s_preloaded = null;
         if (bytes.Length > 0)
         {
             TryAddGlyphTypeface(new MemoryStream(bytes), out _);
         }
     }
 
+    /// <summary>Fetches the font ahead of the first text that needs it, without blocking the page.</summary>
+    public static async Task PreloadAsync()
+    {
+        await FetchAhead(File);
+        var bytes = TakeFetched(File);
+        s_preloaded = bytes.Length > 0 ? bytes : null;
+    }
+
     /// <summary>The bytes of a file of the site, or none when it has no such file.</summary>
     [JSImport("file", "arc-lazy")]
     private static partial byte[] Fetch(string path);
+
+    [JSImport("fetchFile", "arc-lazy")]
+    [return: JSMarshalAs<JSType.Promise<JSType.Void>>]
+    private static partial Task FetchAhead(string path);
+
+    /// <summary>The bytes <see cref="FetchAhead"/> received, or none when it received nothing.</summary>
+    [JSImport("takeFile", "arc-lazy")]
+    private static partial byte[] TakeFetched(string path);
 }
 
 public static class CjkFontAppBuilderExtensions

@@ -6,6 +6,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
+using Avalonia.Media.TextFormatting;
 
 namespace TKCode.Arc;
 
@@ -16,21 +17,30 @@ namespace TKCode.Arc;
 /// </summary>
 internal sealed class CalendarDayCell : Control
 {
+    // One platform cursor for every day of every calendar (Configure used to create one per cell per refresh).
+    private static Cursor? s_hand;
+
     private readonly CalendarMonthPane _pane;
-    private FormattedText? _text;
+    // TextLayout: a cached FormattedText re-shapes on every DrawText; the layout keeps its lines and is rebuilt only
+    // when the day, weight, palette or (while the selection fades) the color changes.
+    private TextLayout? _text;
     private int _textDay;
     private bool _textBold;
+    private Color _textColor;
     private MotionValue<double>? _selectedness;
     private MotionValue<double>? _hover;
     private MotionValue<double>? _press;
     private bool _pressed;
+    private bool _configured;
 
     public CalendarDayCell(CalendarMonthPane pane)
     {
         _pane = pane;
         Focusable = true;
-        Cursor = new Cursor(StandardCursorType.Hand);
+        Cursor = Hand;
     }
+
+    private static Cursor Hand => s_hand ??= new Cursor(StandardCursorType.Hand);
 
     public DateOnly Date { get; private set; }
     public bool IsOutside { get; private set; }
@@ -47,12 +57,20 @@ internal sealed class CalendarDayCell : Control
                           CultureInfo culture, TimeSpan? selectionDelay)
     {
         var dateChanged = date != Date;
+        // Only a change of what is drawn redraws the cell: a refresh of the month (selection, focus move) used to
+        // redraw all 42 days.
+        var changed = !_configured || dateChanged || outside != IsOutside || disabled != IsDisabled || today != IsToday ||
+                      selected != IsSelected;
+        _configured = true;
         Date = date;
         IsOutside = outside;
-        IsDisabled = disabled;
+        if (disabled != IsDisabled)
+        {
+            IsDisabled = disabled;
+            Cursor = disabled ? Cursor.Default : Hand;
+        }
         IsToday = today;
         IsTabStop = tabStop;
-        Cursor = disabled ? Cursor.Default : new Cursor(StandardCursorType.Hand);
         if (dateChanged)
         {
             AutomationProperties.SetName(this, date.ToString("D", culture));
@@ -74,7 +92,10 @@ internal sealed class CalendarDayCell : Control
             }
         }
         AutomationProperties.SetHelpText(this, selected ? "selected" : today ? "today" : string.Empty);
-        InvalidateVisual();
+        if (changed)
+        {
+            InvalidateVisual();
+        }
     }
 
     private MotionValue<double> CreateValue(double initial)
@@ -198,26 +219,20 @@ internal sealed class CalendarDayCell : Control
             }
         }
         var bold = IsSelected || IsToday;
-        EnsureText(palette, bold);
+        var rest = IsOutside || IsDisabled ? palette.MutedColor : palette.ForegroundColor;
+        var color = Lerp(rest, palette.SelectedForegroundColor, Math.Clamp(Selectedness, 0, 1));
+        // The number color only changes while selection fades, so the brush is rebuilt per color, not per frame.
+        var brush = PickerDrawing.Brush(ref _brush, color);
+        EnsureText(palette, bold, brush);
         if (_text is null)
         {
             return;
         }
-        var rest = IsOutside || IsDisabled ? palette.MutedColor : palette.ForegroundColor;
-        var color = Lerp(rest, palette.SelectedForegroundColor, Math.Clamp(Selectedness, 0, 1));
-        // The number color only changes while selection fades, so the brush is rebuilt per color, not per frame.
-        if (_brush is null || _brush.Color != color || !ReferenceEquals(_brushText, _text))
-        {
-            _brush = new ImmutableSolidColorBrush(color);
-            _brushText = _text;
-            _text.SetForegroundBrush(_brush);
-        }
-        var brush = _brush;
         var opacity = IsDisabled ? (IsOutside ? 0.3 : 0.42) : IsOutside && !IsSelected ? 0.8 : 1;
         var origin = new Point(center.X - _text.Width / 2, center.Y - _text.Height / 2);
         using (context.PushOpacity(opacity))
         {
-            context.DrawText(_text, origin);
+            _text.Draw(context, origin);
             if (IsToday)
             {
                 // A 4px dot 4px under the number's line box, in the number's color.
@@ -231,23 +246,23 @@ internal sealed class CalendarDayCell : Control
         }
     }
 
-    private void EnsureText(CalendarPalette palette, bool bold)
+    private void EnsureText(CalendarPalette palette, bool bold, ImmutableSolidColorBrush brush)
     {
-        if (_text is not null && _textDay == Date.Day && _textBold == bold && palette.Version == _textVersion)
+        if (_text is not null && _textDay == Date.Day && _textBold == bold && palette.Version == _textVersion && _textColor == brush.Color)
         {
             return;
         }
         _textDay = Date.Day;
         _textBold = bold;
         _textVersion = palette.Version;
+        _textColor = brush.Color;
         var typeface = new Typeface(palette.FontFamily, FontStyle.Normal, bold ? palette.BoldWeight : palette.RegularWeight);
-        _text = new FormattedText(Date.Day.ToString(CultureInfo.InvariantCulture), CultureInfo.InvariantCulture,
-            FlowDirection.LeftToRight, typeface, palette.FontSize, null);
+        _text?.Dispose();
+        _text = new TextLayout(Date.Day.ToString(CultureInfo.InvariantCulture), typeface, palette.FontSize, brush);
     }
 
     private int _textVersion = -1;
     private ImmutableSolidColorBrush? _brush;
-    private FormattedText? _brushText;
 
     private static Color Lerp(Color a, Color b, double t) => Color.FromArgb(
         (byte)Math.Round(a.A + (b.A - a.A) * t), (byte)Math.Round(a.R + (b.R - a.R) * t),

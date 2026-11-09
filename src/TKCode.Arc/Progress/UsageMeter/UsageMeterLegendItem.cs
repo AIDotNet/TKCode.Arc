@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Controls;
@@ -71,15 +72,32 @@ internal sealed class UsageMeterLegendItem : AvaloniaToggleButton
         RaiseEvent(args);
     }
 
+    private LazyFocusRing? _focusRing;
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        // Built the first time the entry is keyboard focused, over the template's root panel.
+        _focusRing ??= new LazyFocusRing(this, FocusRingKeys.None, UsageMeterTokens.Key(UsageMeterTokenKind.LegendFocusRingRadius));
+        var host = VisualChildren.Count > 0 ? VisualChildren[0] as Panel : null;
+        _focusRing.Attach(host is null ? null : ring =>
+        {
+            ring.Margin = new Thickness(-4);
+            host.Children.Add(ring);
+        }, host is null ? null : ring => host.Children.Remove(ring));
+    }
+
     protected override void OnGotFocus(FocusChangedEventArgs e)
     {
         base.OnGotFocus(e);
+        _focusRing?.Update();
         _owner.SetFocused(this);
     }
 
     protected override void OnLostFocus(FocusChangedEventArgs e)
     {
         base.OnLostFocus(e);
+        _focusRing?.Update();
         _owner.SetFocused(null);
     }
 

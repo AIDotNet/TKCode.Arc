@@ -263,20 +263,37 @@ internal sealed class ArcDesignToken : AbstractControlDesignToken
         ReduceTransparency = false;
     }
 
+    // Literals parsed once: Compute runs on every theme change and these never vary.
+    private static readonly Color[] s_neutralRamp =
+    [
+        Color.Parse("#FFFFFF"), Color.Parse("#FCFCFC"), Color.Parse("#F8F8F8"), Color.Parse("#F1F1F1"),
+        Color.Parse("#E3E3E3"), Color.Parse("#CACACA"), Color.Parse("#A4A4A4"), Color.Parse("#7D7D7D"),
+        Color.Parse("#585858"), Color.Parse("#383838"), Color.Parse("#1D1D1D"), Color.Parse("#0B0B0B")
+    ];
+
+    private static readonly BoxShadows s_controlThumbShadowDark = BoxShadows.Parse("0 0 0 0.5 #4C000000, 0 1 2 0 #59000000, 0 2 6 0 #33000000");
+    private static readonly BoxShadows s_shadowRestingDark = BoxShadows.Parse("0 1 2 0 #2E000000");
+    private static readonly BoxShadows s_shadowRaisedDark = BoxShadows.Parse("0 8 22 0 #38000000");
+    private static readonly BoxShadows s_shadowFloatingDark = BoxShadows.Parse("0 22 55 0 #57000000");
+    private static readonly BoxShadows s_controlThumbShadowLight = BoxShadows.Parse("0 0 0 0.5 #12000000, 0 1 2 0 #24000000, 0 2 6 0 #0F000000");
+    private static readonly BoxShadows s_shadowRestingLight = BoxShadows.Parse("0 1 2 0 #09000000");
+    private static readonly BoxShadows s_shadowRaisedLight = BoxShadows.Parse("0 6 18 0 #11000000, 0 1 3 0 #09000000");
+    private static readonly BoxShadows s_shadowFloatingLight = BoxShadows.Parse("0 20 48 0 #1B000000, 0 3 10 0 #0B000000");
+
     private void ApplyNeutralRamp()
     {
-        Neutral0 = Color.Parse("#FFFFFF");
-        Neutral1 = Color.Parse("#FCFCFC");
-        Neutral2 = Color.Parse("#F8F8F8");
-        Neutral3 = Color.Parse("#F1F1F1");
-        Neutral4 = Color.Parse("#E3E3E3");
-        Neutral5 = Color.Parse("#CACACA");
-        Neutral6 = Color.Parse("#A4A4A4");
-        Neutral7 = Color.Parse("#7D7D7D");
-        Neutral8 = Color.Parse("#585858");
-        Neutral9 = Color.Parse("#383838");
-        Neutral10 = Color.Parse("#1D1D1D");
-        Neutral11 = Color.Parse("#0B0B0B");
+        Neutral0 = s_neutralRamp[0];
+        Neutral1 = s_neutralRamp[1];
+        Neutral2 = s_neutralRamp[2];
+        Neutral3 = s_neutralRamp[3];
+        Neutral4 = s_neutralRamp[4];
+        Neutral5 = s_neutralRamp[5];
+        Neutral6 = s_neutralRamp[6];
+        Neutral7 = s_neutralRamp[7];
+        Neutral8 = s_neutralRamp[8];
+        Neutral9 = s_neutralRamp[9];
+        Neutral10 = s_neutralRamp[10];
+        Neutral11 = s_neutralRamp[11];
     }
 
     private void ApplySemantic(bool isDark)
@@ -324,17 +341,17 @@ internal sealed class ArcDesignToken : AbstractControlDesignToken
 
         if (isDark)
         {
-            ControlThumbShadow = BoxShadows.Parse("0 0 0 0.5 #4C000000, 0 1 2 0 #59000000, 0 2 6 0 #33000000");
-            ShadowResting = BoxShadows.Parse("0 1 2 0 #2E000000");
-            ShadowRaised = BoxShadows.Parse("0 8 22 0 #38000000");
-            ShadowFloating = BoxShadows.Parse("0 22 55 0 #57000000");
+            ControlThumbShadow = s_controlThumbShadowDark;
+            ShadowResting = s_shadowRestingDark;
+            ShadowRaised = s_shadowRaisedDark;
+            ShadowFloating = s_shadowFloatingDark;
         }
         else
         {
-            ControlThumbShadow = BoxShadows.Parse("0 0 0 0.5 #12000000, 0 1 2 0 #24000000, 0 2 6 0 #0F000000");
-            ShadowResting = BoxShadows.Parse("0 1 2 0 #09000000");
-            ShadowRaised = BoxShadows.Parse("0 6 18 0 #11000000, 0 1 3 0 #09000000");
-            ShadowFloating = BoxShadows.Parse("0 20 48 0 #1B000000, 0 3 10 0 #0B000000");
+            ControlThumbShadow = s_controlThumbShadowLight;
+            ShadowResting = s_shadowRestingLight;
+            ShadowRaised = s_shadowRaisedLight;
+            ShadowFloating = s_shadowFloatingLight;
         }
     }
 

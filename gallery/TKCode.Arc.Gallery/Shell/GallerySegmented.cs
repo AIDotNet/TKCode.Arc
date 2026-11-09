@@ -43,8 +43,16 @@ public sealed class GallerySegmented : Border
     {
     }
 
+    /// <summary>
+    /// Segments with content of their own (a label and a count, say). The caller keeps the controls, so it can change what
+    /// they show.
+    /// </summary>
+    public GallerySegmented(params Control[] contents) : this(contents.Length, null, null, null, i => contents[i])
+    {
+    }
+
     private GallerySegmented(int count, Func<int, string>? label, Func<int, GalleryShellLangResourceKind>? localized,
-                             Func<int, (Geometry Glyph, GalleryShellLangResourceKind Name)>? icon)
+                             Func<int, (Geometry Glyph, GalleryShellLangResourceKind Name)>? icon, Func<int, Control>? content = null)
     {
         for (var i = 0; i < count; i++)
         {
@@ -65,6 +73,10 @@ public sealed class GallerySegmented : Border
             if (localized is not null)
             {
                 GalleryText.Bind(segment, ContentControl.ContentProperty, localized(i));
+            }
+            if (content is not null)
+            {
+                segment.Content = content(i);
             }
             if (icon is not null)
             {

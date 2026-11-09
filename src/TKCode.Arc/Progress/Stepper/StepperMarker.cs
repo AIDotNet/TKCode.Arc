@@ -5,6 +5,7 @@ using Avalonia;
 using Avalonia.Animation.Easings;
 using Avalonia.Controls;
 using Avalonia.Media;
+using Avalonia.Media.TextFormatting;
 
 namespace TKCode.Arc;
 
@@ -58,8 +59,41 @@ internal sealed class StepperMarker : Control
     {
         public StepperGlyphKind Kind { get; init; }
         public int Number { get; init; }
-        public FormattedText? Text { get; set; }
-        public IBrush? LastBrush { get; set; }
+        // TextLayout, not FormattedText: a cached FormattedText re-shapes on every Draw, and the glyph redraws every frame of
+        // its pop and color cross. A layout has one brush and a cross draws the glyph in two per frame, so two are kept.
+        private TextLayout? _text;
+        private IBrush? _textBrush;
+        private TextLayout? _otherText;
+        private IBrush? _otherBrush;
+
+        public TextLayout TextFor(IBrush brush, StepperPalette palette)
+        {
+            if (_text is not null && ReferenceEquals(_textBrush, brush))
+            {
+                return _text;
+            }
+            if (_otherText is not null && ReferenceEquals(_otherBrush, brush))
+            {
+                return _otherText;
+            }
+            _otherText?.Dispose();
+            (_otherText, _otherBrush) = (_text, _textBrush);
+            _text = new TextLayout(Number.ToString(CultureInfo.InvariantCulture),
+                new Typeface(palette.FontFamily, FontStyle.Normal, palette.NumberWeight), palette.NumberFontSize, brush);
+            _textBrush = brush;
+            return _text;
+        }
+
+        public void ClearText()
+        {
+            _text?.Dispose();
+            _otherText?.Dispose();
+            _text = null;
+            _otherText = null;
+            _textBrush = null;
+            _otherBrush = null;
+        }
+
         public IBrush? LeavingBrush { get; set; }
         public MotionValue<double>? Fade { get; set; }
         public MotionValue<double>? Scale { get; set; }
@@ -112,7 +146,7 @@ internal sealed class StepperMarker : Control
         _paletteVersion = palette.Version;
         if (paletteChanged && _glyph is not null)
         {
-            _glyph.Text = null;
+            _glyph.ClearText();
             _glyphPen = null;
         }
 
@@ -215,9 +249,16 @@ internal sealed class StepperMarker : Control
                 outgoing.Exit.AnimateTo(1, MotionSpec.Tween(ArcMotionPresets.Fast, ArcEasings.Standard)).ContinueWith(_ =>
                     Dispatcher.Post(() =>
                     {
-                        _leaving.Remove(outgoing);
+                        if (_leaving.Remove(outgoing))
+                        {
+                            outgoing.ClearText();
+                        }
                         InvalidateVisual();
                     }), TaskScheduler.Default);
+            }
+            else
+            {
+                _glyph.ClearText();
             }
         }
         var glyph = new Glyph { Kind = kind, Number = number, Full = full };
@@ -356,15 +397,8 @@ internal sealed class StepperMarker : Control
             {
                 if (glyph.Kind == StepperGlyphKind.Number)
                 {
-                    glyph.Text ??= new FormattedText(glyph.Number.ToString(CultureInfo.InvariantCulture), CultureInfo.InvariantCulture,
-                        FlowDirection.LeftToRight, new Typeface(_palette.FontFamily, FontStyle.Normal, _palette.NumberWeight),
-                        _palette.NumberFontSize, brush);
-                    if (!ReferenceEquals(glyph.LastBrush, brush))
-                    {
-                        glyph.Text.SetForegroundBrush(brush);
-                        glyph.LastBrush = brush;
-                    }
-                    context.DrawText(glyph.Text, new Point(center.X - glyph.Text.Width / 2, center.Y - glyph.Text.Height / 2));
+                    var text = glyph.TextFor(brush, _palette);
+                    text.Draw(context, new Point(center.X - text.Width / 2, center.Y - text.Height / 2));
                     return;
                 }
                 if (!ReferenceEquals(_glyphPenBrush, brush) || _glyphPen is null)

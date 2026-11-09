@@ -60,7 +60,7 @@
                                           VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
                     </Border>
                     <Border Name="PART_Ring"
-                            IsVisible="False"
+                            Opacity="0"
                             IsHitTestVisible="False"
                             Margin="{arc:GravityWellTokenResource RingMargin}"
                             BorderThickness="{arc:GravityWellTokenResource RingThickness}"

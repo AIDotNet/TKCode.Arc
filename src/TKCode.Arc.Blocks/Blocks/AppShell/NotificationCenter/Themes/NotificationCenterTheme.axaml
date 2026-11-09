@@ -123,7 +123,7 @@
         <Setter Property="ClipToBounds" Value="False" />
         <Setter Property="FocusAdorner" Value="{x:Null}" />
 
-        <Style Selector="^[Kind=Trigger]">
+        <Style Selector="^:trigger">
             <Setter Property="Width" Value="{arc:NotificationCenterTokenResource TriggerSize}" />
             <Setter Property="Height" Value="{arc:NotificationCenterTokenResource TriggerSize}" />
             <Setter Property="CornerRadius" Value="{arc:NotificationCenterTokenResource TriggerRadius}" />
@@ -135,12 +135,12 @@
                 <Setter Property="CornerRadius" Value="{arc:NotificationCenterTokenResource TriggerRingRadius}" />
             </Style>
         </Style>
-        <Style Selector="^[Kind=Trigger]:hover, ^[Kind=Trigger]:pressed, ^[Kind=Trigger][IsOn=True]">
+        <Style Selector="^:trigger:hover, ^:trigger:pressed, ^:trigger:on">
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
         </Style>
 
-        <Style Selector="^[Kind=Close]">
+        <Style Selector="^:close">
             <Setter Property="Width" Value="{arc:NotificationCenterTokenResource CloseSize}" />
             <Setter Property="Height" Value="{arc:NotificationCenterTokenResource CloseSize}" />
             <Setter Property="CornerRadius" Value="{arc:NotificationCenterTokenResource CloseRadius}" />
@@ -150,12 +150,12 @@
                 <Setter Property="CornerRadius" Value="{arc:NotificationCenterTokenResource CloseRingRadius}" />
             </Style>
         </Style>
-        <Style Selector="^[Kind=Close]:hover">
+        <Style Selector="^:close:hover">
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         </Style>
 
-        <Style Selector="^[Kind=View]">
+        <Style Selector="^:view">
             <Setter Property="Height" Value="{arc:NotificationCenterTokenResource ViewButtonHeight}" />
             <Setter Property="MinWidth" Value="{arc:NotificationCenterTokenResource ViewButtonMinWidth}" />
             <Setter Property="Padding" Value="{arc:NotificationCenterTokenResource ViewButtonPadding}" />
@@ -164,21 +164,21 @@
                 <Setter Property="CornerRadius" Value="{arc:NotificationCenterTokenResource ViewRingRadius}" />
             </Style>
         </Style>
-        <Style Selector="^[Kind=View]:hover, ^[Kind=View][IsOn=True]">
+        <Style Selector="^:view:hover, ^:view:on">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         </Style>
 
-        <Style Selector="^[Kind=MarkAll]">
+        <Style Selector="^:mark-all">
             <Setter Property="Padding" Value="{arc:NotificationCenterTokenResource MarkAllPadding}" />
         </Style>
-        <Style Selector="^[Kind=Footer]">
+        <Style Selector="^:footer">
             <Setter Property="Padding" Value="{arc:NotificationCenterTokenResource FooterButtonPadding}" />
         </Style>
-        <Style Selector="^[Kind=MarkAll]:hover, ^[Kind=Footer]:hover">
+        <Style Selector="^:mark-all:hover, ^:footer:hover">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         </Style>
 
-        <Style Selector="^[Kind=Row]">
+        <Style Selector="^:row">
             <Setter Property="HorizontalAlignment" Value="Stretch" />
             <Setter Property="VerticalAlignment" Value="Top" />
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -187,7 +187,7 @@
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         </Style>
 
-        <Style Selector="^[Kind=Action]">
+        <Style Selector="^:action">
             <Setter Property="Height" Value="{arc:NotificationCenterTokenResource ActionHeight}" />
             <Setter Property="Padding" Value="{arc:NotificationCenterTokenResource ActionPadding}" />
             <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
@@ -202,12 +202,12 @@
                 <Setter Property="CornerRadius" Value="{arc:NotificationCenterTokenResource ActionRingRadius}" />
             </Style>
         </Style>
-        <Style Selector="^[Kind=Action]:hover">
+        <Style Selector="^:action:hover">
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
         </Style>
 
-        <Style Selector="^[Kind=Link]">
+        <Style Selector="^:link">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         </Style>
 
@@ -234,10 +234,10 @@
             </Style>
         </Style>
         <Style Selector="^:motion-full:pressed">
-            <Style Selector="^[Kind=Close] /template/ Border#PART_Frame">
+            <Style Selector="^:close /template/ Border#PART_Frame">
                 <Setter Property="RenderTransform" Value="scale(0.96)" />
             </Style>
-            <Style Selector="^[Kind=MarkAll], ^[Kind=Action], ^[Kind=Footer]">
+            <Style Selector="^:mark-all, ^:action, ^:footer">
                 <Style Selector="^ /template/ Border#PART_Frame">
                     <Setter Property="RenderTransform" Value="scale(0.97)" />
                 </Style>

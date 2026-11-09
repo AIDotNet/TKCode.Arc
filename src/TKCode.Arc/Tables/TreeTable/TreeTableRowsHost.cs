@@ -10,6 +10,12 @@ namespace TKCode.Arc;
 /// </summary>
 internal sealed class TreeTableRowsHost : StackPanel
 {
+    // Same caps as TablesTreeRowMotion: rows of one opened or closed run animate up to AnimatedRunCap, and at most
+    // AnimatedUpdateCap rows per reconcile; the rest land at once. Every animated row springs its own height and
+    // re-measures the stack each frame, so an uncapped "expand all" of a large tree measured thousands of rows per frame.
+    private const int AnimatedRunCap = 48;
+    private const int AnimatedUpdateCap = 96;
+
     private readonly TreeTable _owner;
     private readonly Dictionary<object, TreeTableRow> _rows = new();
     private Dictionary<object, double>? _tops;
@@ -47,20 +53,34 @@ internal sealed class TreeTableRowsHost : StackPanel
         }
 
         // Rows without a line leave; a loading line whose children just arrived goes at once.
+        var budget = AnimatedUpdateCap;
+        var run = 0;
         foreach (var row in previous)
         {
-            if (wanted.Contains(row.Key) || row.IsExiting)
+            if (wanted.Contains(row.Key))
+            {
+                run = 0;
+                continue;
+            }
+            if (row.IsExiting)
             {
                 continue;
             }
             var instant = row.Line.Kind != TreeTableLineKind.Row && row.Line.ParentKey is { } parent && handoff.Contains(parent);
-            row.Exit(instant || !animate, Remove);
+            var animated = animate && !instant && run < AnimatedRunCap && budget > 0;
+            if (animated)
+            {
+                run++;
+                budget--;
+            }
+            row.Exit(!animated, Remove);
         }
 
         var present = new List<TreeTableRow>(lines.Count);
-        var entering = new List<(TreeTableRow Row, bool TakeOver, int Position)>();
-        foreach (var line in lines)
+        var entering = new List<(TreeTableRow Row, bool TakeOver, int Position, int Index)>();
+        for (var index = 0; index < lines.Count; index++)
         {
+            var line = lines[index];
             if (_rows.TryGetValue(line.Key, out var row))
             {
                 var wasExiting = row.IsExiting;
@@ -77,7 +97,7 @@ internal sealed class TreeTableRowsHost : StackPanel
                 _rows[line.Key] = row;
                 row.Bind(line, rebuild: true);
                 var takeOver = line.Kind == TreeTableLineKind.Row && line.Position == 1 && line.ParentKey is { } parent && handoff.Contains(parent);
-                entering.Add((row, takeOver, line.Position));
+                entering.Add((row, takeOver, line.Position, index));
             }
             present.Add(row);
         }
@@ -121,10 +141,24 @@ internal sealed class TreeTableRowsHost : StackPanel
 
         Restripe(lines);
 
-        // Rows start their enter once they are in the tree, where the motion level is known.
-        foreach (var (row, takeOver, position) in entering)
+        // Rows start their enter once they are in the tree, where the motion level is known. Consecutive new lines form
+        // a run; rows past the caps appear at once (a single expand of up to 48 rows is unchanged).
+        run = 0;
+        var lastIndex = -2;
+        foreach (var (row, takeOver, position, index) in entering)
         {
-            row.Enter(animate, takeOver, position);
+            if (index != lastIndex + 1)
+            {
+                run = 0;
+            }
+            lastIndex = index;
+            var animated = animate && run < AnimatedRunCap && budget > 0;
+            if (animated)
+            {
+                run++;
+                budget--;
+            }
+            row.Enter(animated, takeOver, position);
         }
 
         if (_tops is not null)

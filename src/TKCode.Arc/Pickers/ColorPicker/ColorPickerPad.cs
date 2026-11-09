@@ -72,8 +72,8 @@ internal sealed class ColorPickerPad : Control
     public IBrush? CheckerBase { get => GetValue(CheckerBaseProperty); set => SetValue(CheckerBaseProperty, value); }
     public IBrush? FocusRingBrush { get => GetValue(FocusRingBrushProperty); set => SetValue(FocusRingBrushProperty, value); }
 
-    private readonly SolidColorBrush _hueFill = new(Colors.Red);
-    private readonly SolidColorBrush _thumbFill = new(Colors.Red);
+    private ImmutableSolidColorBrush _hueFill = new(Colors.Red);
+    private ImmutableSolidColorBrush _thumbFill = new(Colors.Red);
     private readonly GradientStop _alphaFrom = new(Color.FromArgb(0, 0, 0, 0), 0);
     private readonly GradientStop _alphaTo = new(Colors.Red, 1);
     private readonly LinearGradientBrush _alphaTrack;
@@ -126,14 +126,22 @@ internal sealed class ColorPickerPad : Control
     /// <summary>Sets the hue (area base), the opaque color (area thumb, alpha track end) and the full color (alpha thumb).</summary>
     public void SetColors(double hue, Color opaque, Color color)
     {
-        _hueFill.Color = ColorPickerMath.PureHue(hue);
+        var pure = ColorPickerMath.PureHue(hue);
+        if (_hueFill.Color != pure)
+        {
+            _hueFill = new ImmutableSolidColorBrush(pure);
+        }
         _alphaTo.Color = opaque;
-        _thumbFill.Color = Kind switch
+        var thumb = Kind switch
         {
             ColorPickerPadKind.Area => opaque,
-            ColorPickerPadKind.Hue => ColorPickerMath.PureHue(hue),
+            ColorPickerPadKind.Hue => pure,
             _ => color
         };
+        if (_thumbFill.Color != thumb)
+        {
+            _thumbFill = new ImmutableSolidColorBrush(thumb);
+        }
         InvalidateVisual();
     }
 

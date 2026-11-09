@@ -47,13 +47,16 @@ public sealed class FloatingButtonGroupActionEventArgs : RoutedEventArgs
 /// show the Arc <see cref="Tooltip"/>. One Tab stop; arrow keys move and wrap, Home and End jump, Enter and Space act.
 /// </summary>
 [TemplatePart(HighlightPart, typeof(GlidingIndicator))]
-[PseudoClasses(PressingPseudoClass, VerticalPseudoClass, SmallPseudoClass)]
+[PseudoClasses(PressingPseudoClass, VerticalPseudoClass, SmallPseudoClass, FloatingPseudoClass)]
 public class FloatingButtonGroup : ItemsControl
 {
     public const string HighlightPart = "PART_Highlight";
     public const string PressingPseudoClass = ":pressing";
     public const string VerticalPseudoClass = ":vertical";
     public const string SmallPseudoClass = ":small";
+
+    /// <summary>Set while <see cref="Variant"/> is Floating (the theme selects on it, not on the property).</summary>
+    public const string FloatingPseudoClass = ":floating";
 
     #region 公共属性定义
 
@@ -118,6 +121,7 @@ public class FloatingButtonGroup : ItemsControl
     {
         KeyboardNavigation.SetTabNavigation(this, KeyboardNavigationMode.Once);
         AddHandler(Avalonia.Controls.Button.ClickEvent, OnItemClick);
+        PseudoClasses.Set(FloatingPseudoClass, Variant == FloatingButtonGroupVariant.Floating);
     }
 
     static FloatingButtonGroup()
@@ -194,7 +198,24 @@ public class FloatingButtonGroup : ItemsControl
         }
     }
 
-    private IEnumerable<FloatingButtonGroupItem> Buttons => GetRealizedContainers().OfType<FloatingButtonGroupItem>();
+    // One reusable list: the realized items are walked on every pointer move (ItemAt, Place), so no iterator per move.
+    private readonly List<FloatingButtonGroupItem> _buttons = new();
+
+    private List<FloatingButtonGroupItem> Buttons
+    {
+        get
+        {
+            _buttons.Clear();
+            foreach (var container in GetRealizedContainers())
+            {
+                if (container is FloatingButtonGroupItem button)
+                {
+                    _buttons.Add(button);
+                }
+            }
+            return _buttons;
+        }
+    }
 
     #endregion
 
@@ -208,6 +229,10 @@ public class FloatingButtonGroup : ItemsControl
         if (change.Property == LabelProperty)
         {
             AutomationProperties.SetName(this, Label);
+        }
+        else if (change.Property == VariantProperty)
+        {
+            PseudoClasses.Set(FloatingPseudoClass, Variant == FloatingButtonGroupVariant.Floating);
         }
         else if (change.Property == SizeProperty || change.Property == OrientationProperty || change.Property == IsIconOnlyProperty ||
                  change.Property == TooltipPlacementProperty)
@@ -405,7 +430,8 @@ public class FloatingButtonGroup : ItemsControl
             return;
         }
         var vertical = Orientation == Orientation.Vertical;
-        var all = Buttons.Where(b => b.IsVisible).ToList();
+        var all = new List<FloatingButtonGroupItem>(Buttons);
+        all.RemoveAll(b => !b.IsVisible);
         var index = all.FindIndex(b => b.IsFocused);
         if (index < 0)
         {

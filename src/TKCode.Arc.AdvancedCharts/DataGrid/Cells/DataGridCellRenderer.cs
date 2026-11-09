@@ -266,6 +266,12 @@ public readonly struct DataGridCellPointerContext
 /// </remarks>
 public abstract class DataGridCellRenderer
 {
+    /// <summary>
+    /// Whether painting reads the pointer's position inside the cell. Custom renderers may, so only the built-in ones that
+    /// do not say false, and then a move within one cell repaints nothing.
+    /// </summary>
+    internal virtual bool PaintsPointer => true;
+
     /// <summary>Raised by <see cref="NotifyChanged"/> so the column redraws.</summary>
     internal event Action? Changed;
 

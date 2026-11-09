@@ -112,9 +112,9 @@ public class Treemap : Control, IChartsBAccessible
     private double _colorLo;
     private double _colorHi = 1;
     private bool _colored;
-    private FormattedText? _scaleLabel;
-    private FormattedText? _scaleLo;
-    private FormattedText? _scaleHi;
+    private ChartsBRun? _scaleLabel;
+    private ChartsBRun? _scaleLo;
+    private ChartsBRun? _scaleHi;
     private int _scaleVersion = -1;
 
     /// <summary>Creates a treemap.</summary>
@@ -576,17 +576,17 @@ public class Treemap : Control, IChartsBAccessible
         if (_scaleVersion != p.Version)
         {
             _scaleVersion = p.Version;
-            _scaleLabel = ChartsBText.Make(ColorLabel ?? string.Empty, p, p.TypeXS, p.TextSecondary);
-            _scaleLo = ChartsBText.Make(FormatColor(_colorLo), p, p.TypeXS, p.TextMuted);
-            _scaleHi = ChartsBText.Make(FormatColor(_colorHi), p, p.TypeXS, p.TextMuted);
+            _scaleLabel = ChartsBText.Label(ColorLabel ?? string.Empty, p, p.TypeXS, p.TextSecondary);
+            _scaleLo = ChartsBText.Label(FormatColor(_colorLo), p, p.TypeXS, p.TextMuted);
+            _scaleHi = ChartsBText.Label(FormatColor(_colorHi), p, p.TypeXS, p.TextMuted);
         }
         // The color scale: stepped swatches from light to dark, never a gradient.
         var y = _stage.Bounds.Bottom + FigureGap;
         var height = Math.Ceiling(p.TypeXS * 1.5);
         var x = 0.0;
-        context.DrawText(_scaleLabel!, new Point(x, y + (height - _scaleLabel!.Height) / 2));
+        _scaleLabel!.Draw(context, new Point(x, y + (height - _scaleLabel!.Height) / 2));
         x += _scaleLabel.WidthIncludingTrailingWhitespace + 4 + 8;
-        context.DrawText(_scaleLo!, new Point(x, y + (height - _scaleLo!.Height) / 2));
+        _scaleLo!.Draw(context, new Point(x, y + (height - _scaleLo!.Height) / 2));
         x += _scaleLo.WidthIncludingTrailingWhitespace + 8;
         var center = Center;
         var hue = center.Depth == 0 ? p.Foreground : HueOf(center.Id);
@@ -596,6 +596,6 @@ public class Treemap : Control, IChartsBAccessible
             context.DrawRectangle(p.Brush(fill), null, new RoundedRect(new Rect(x + i * 20, y + (height - 10) / 2, 18, 10), 3));
         }
         x += Steps * 20 - 2 + 8;
-        context.DrawText(_scaleHi!, new Point(x, y + (height - _scaleHi!.Height) / 2));
+        _scaleHi!.Draw(context, new Point(x, y + (height - _scaleHi!.Height) / 2));
     }
 }

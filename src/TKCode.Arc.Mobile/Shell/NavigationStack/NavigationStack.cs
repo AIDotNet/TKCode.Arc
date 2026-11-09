@@ -160,7 +160,7 @@ public class NavigationStack : TemplatedControl
         }
         _topLayer.Children.Add(page);
         _transition = Transition.Push;
-        _x.Jump(Width());
+        _x.Jump(StackWidth());
         Run(0, null, Transition.Push);
     }
 
@@ -262,7 +262,7 @@ public class NavigationStack : TemplatedControl
 
     private bool Reduced => ArcMotion.GetEffectiveLevel(this) != ArcMotionLevel.Full;
 
-    private double Width() => Bounds.Width;
+    private double StackWidth() => Bounds.Width;
 
     private void ResetTo(Control? root)
     {
@@ -292,7 +292,7 @@ public class NavigationStack : TemplatedControl
         {
             return;
         }
-        var width = Width();
+        var width = StackWidth();
         if (_transition == Transition.None || width <= 0)
         {
             _topShift.X = 0;
@@ -319,7 +319,7 @@ public class NavigationStack : TemplatedControl
         {
             return;
         }
-        if (Reduced || Width() <= 0)
+        if (Reduced || StackWidth() <= 0)
         {
             _x.Jump(target);
             Complete();
@@ -367,7 +367,7 @@ public class NavigationStack : TemplatedControl
         _transition = Transition.Pop;
         UpdateCanGoBack();
         Navigated?.Invoke(this, new NavigationEventArgs(NavigationKind.Pop, Top!));
-        Run(Width(), velocity, Transition.Pop);
+        Run(StackWidth(), velocity, Transition.Pop);
     }
 
     private void BeginPeek()
@@ -388,7 +388,7 @@ public class NavigationStack : TemplatedControl
     {
         if (_transition == Transition.Peek && _x is not null)
         {
-            _x.Jump(Math.Clamp(offset, 0, Width()));
+            _x.Jump(Math.Clamp(offset, 0, StackWidth()));
         }
     }
 
@@ -398,7 +398,7 @@ public class NavigationStack : TemplatedControl
         {
             return;
         }
-        var width = Width();
+        var width = StackWidth();
         Span<double> points = [0, width];
         var target = MomentumProjector.SelectSnapPoint(points, _x.Value, velocity,
             SnapProjection.Linear(Projection, 0, FlickVelocity));

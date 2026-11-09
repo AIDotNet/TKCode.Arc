@@ -8,6 +8,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Media.Transformation;
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
 using AvaloniaButton = Avalonia.Controls.Button;
 
@@ -21,6 +22,29 @@ namespace TKCode.Arc;
 internal abstract class MoneyInputPressable : AvaloniaButton
 {
     public const string HoverPseudoClass = ":hover";
+
+    // Chips are repeated items and the currency button is rarely keyboard focused: the pill focus ring is built on the
+    // first :focus-visible instead of a hidden Border in every template.
+    private FieldFocusRing? _focusRing;
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        _focusRing ??= new FieldFocusRing(this, MoneyInputTokens.Key(MoneyInputTokenKind.FocusRingMargin), ArcDesignTokens.Key(ArcDesignTokenKind.RadiusPill));
+        _focusRing.Attach(e.NameScope.Find<Panel>("PART_Host"));
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing?.Update();
+    }
 
     protected override void OnPointerEntered(PointerEventArgs e)
     {

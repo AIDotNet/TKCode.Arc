@@ -24,11 +24,16 @@ public static partial class GalleryDocs
         .GroupBy(p => p.ClassName, StringComparer.Ordinal)
         .ToDictionary(g => g.Key, g => g.ToArray(), StringComparer.Ordinal);
 
-    private static readonly Dictionary<string, GalleryApiType> s_types =
-        GalleryDocData.Types.ToDictionary(t => t.Name, StringComparer.Ordinal);
+    // Each language's API descriptions, indexed when a page in that language first builds an API table. The sidebar reads the
+    // pages at startup, for every entry, and must not pay for several thousand descriptions per language (GalleryApiTranslations).
+    private static readonly Dictionary<string, Dictionary<string, string>> s_translations = new(StringComparer.OrdinalIgnoreCase);
 
-    private static readonly Dictionary<(string Language, string Key), string> s_translations =
-        GalleryDocData.Translations.ToDictionary(t => (t.Language.ToLowerInvariant(), t.Key), t => t.Text);
+    /// <summary>The documented types, in a class of their own: the page list at startup does not need them.</summary>
+    private static class ApiTypes
+    {
+        internal static readonly Dictionary<string, GalleryApiType> ByName =
+            GalleryApiTypeData.Types.ToDictionary(t => t.Name, StringComparer.Ordinal);
+    }
 
     /// <summary>Whether <paramref name="className"/> has a page (in any language).</summary>
     public static bool Has(string className) => s_pages.ContainsKey(className);
@@ -55,7 +60,7 @@ public static partial class GalleryDocs
     /// <c>TKCode.Arc.Illustrations</c>), from the type its page documents; null when the page documents no such type.
     /// </summary>
     public static string? PackageOf(string className)
-        => s_types.TryGetValue(className, out var type) ? type.Package : null;
+        => ApiTypes.ByName.TryGetValue(className, out var type) ? type.Package : null;
 
     /// <summary>The folder of <paramref name="className"/>'s page below <c>Docs/</c>, such as <c>TextFields/Input</c>; null when it has no page.</summary>
     public static string? FolderOf(string className)
@@ -206,7 +211,7 @@ public static partial class GalleryDocs
     /// pseudo-classes and the base class it inherits the rest from.</summary>
     public static string ApiReference(string typeName, string language)
     {
-        if (!s_types.TryGetValue(typeName, out var type))
+        if (!ApiTypes.ByName.TryGetValue(typeName, out var type))
         {
             return string.Empty;
         }
@@ -262,7 +267,19 @@ public static partial class GalleryDocs
         => pages.FirstOrDefault(p => string.Equals(p.Language, language, StringComparison.OrdinalIgnoreCase));
 
     private static string? Translate(string language, string key, string? english)
-        => s_translations.TryGetValue((language.ToLowerInvariant(), key), out var translated) ? translated : english;
+    {
+        if (!s_translations.TryGetValue(language, out var translations))
+        {
+            var entries = GalleryApiTranslations.For(language.ToLowerInvariant());
+            translations = new Dictionary<string, string>(entries.Length, StringComparer.Ordinal);
+            foreach (var entry in entries)
+            {
+                translations[entry.Key] = entry.Text;
+            }
+            s_translations[language] = translations;
+        }
+        return translations.TryGetValue(key, out var translated) ? translated : english;
+    }
 
     private static void Row(StringBuilder markdown, params string[] cells)
     {

@@ -108,6 +108,9 @@ public class BreadcrumbTests
         try
         {
             Crumb(breadcrumb, 1).Classes.Contains(":overflow").ShouldBeTrue();
+            // Only the crumb that stands in for the collapsed run builds the ellipsis.
+            Crumb(breadcrumb, 1).GetVisualDescendants().OfType<ArcGlyph>().First(g => g.Name == "PART_OverflowGlyph").IsVisible.ShouldBeTrue();
+            Crumb(breadcrumb, 4).GetVisualDescendants().OfType<ArcGlyph>().ShouldNotContain(g => g.Name == "PART_OverflowGlyph");
             Crumb(breadcrumb, 2).IsVisible.ShouldBeFalse();
             Crumb(breadcrumb, 3).IsVisible.ShouldBeFalse();
             Crumb(breadcrumb, 4).IsVisible.ShouldBeTrue();

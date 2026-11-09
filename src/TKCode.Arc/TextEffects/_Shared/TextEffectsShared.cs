@@ -1,3 +1,5 @@
+using Avalonia.Controls;
+
 namespace TKCode.Arc;
 
 /// <summary>Heading level of a text effect; H1–H3 set <c>AutomationProperties.HeadingLevel</c> 1–3.</summary>
@@ -23,5 +25,17 @@ internal static class TextEffectsTiming
             return 0;
         }
         return p >= 1 ? 1 : easing.Ease(p);
+    }
+}
+
+/// <summary>Maps <see cref="TextLevel"/> to pseudo-classes, so the themes need no property selector per instance.</summary>
+internal static class TextEffectsLevel
+{
+    public static void Apply(IPseudoClasses classes, TextLevel level)
+    {
+        classes.Set(":h1", level == TextLevel.H1);
+        classes.Set(":h2", level == TextLevel.H2);
+        classes.Set(":h3", level == TextLevel.H3);
+        classes.Set(":paragraph", level == TextLevel.Paragraph);
     }
 }

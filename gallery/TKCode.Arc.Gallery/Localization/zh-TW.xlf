@@ -1437,8 +1437,8 @@
     </unit>
     <unit id="DownloadNote">
       <segment>
-        <source>This is a preview. All packages are published on GitHub Releases; the macOS app is signed and notarized.</source>
-        <target state="translated">這是預覽版。所有安裝套件都發佈在 GitHub Releases，macOS 版已簽署和公證。</target>
+        <source>All packages are published on GitHub Releases; the macOS app is signed and notarized.</source>
+        <target state="translated">所有安裝套件都發佈在 GitHub Releases，macOS 版已簽署和公證。</target>
       </segment>
     </unit>
     <unit id="DownloadAll">

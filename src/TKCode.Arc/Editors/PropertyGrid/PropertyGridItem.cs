@@ -9,6 +9,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.VisualTree;
+using TKCode.Arc.DesignTokens;
 
 namespace TKCode.Arc;
 
@@ -20,8 +21,7 @@ namespace TKCode.Arc;
 [TemplatePart(EditorPart, typeof(ContentPresenter))]
 [TemplatePart(ExpanderPart, typeof(Control))]
 [TemplatePart(SplitterPart, typeof(Control))]
-[TemplatePart(AddPart, typeof(Button))]
-[TemplatePart(RemovePart, typeof(Button))]
+[TemplatePart(ActionsPart, typeof(Panel))]
 [PseudoClasses(SelectedPseudoClass, ReadOnlyPseudoClass, MixedPseudoClass, ExpandablePseudoClass, ExpandedPseudoClass,
     NestedPseudoClass, CollectionPseudoClass, ListItemPseudoClass, InvalidPseudoClass)]
 public class PropertyGridItem : TemplatedControl
@@ -29,6 +29,7 @@ public class PropertyGridItem : TemplatedControl
     public const string EditorPart = "PART_Editor";
     public const string ExpanderPart = "PART_Expander";
     public const string SplitterPart = "PART_Splitter";
+    public const string ActionsPart = "PART_Actions";
     public const string AddPart = "PART_Add";
     public const string RemovePart = "PART_Remove";
 
@@ -90,12 +91,17 @@ public class PropertyGridItem : TemplatedControl
     private ContentPresenter? _editor;
     private Control? _expander;
     private Control? _splitter;
+    private Panel? _actions;
+    // Only list rows show Add / Remove: the buttons (two templated controls each) are built the first time a row needs
+    // them instead of sitting hidden in every row's template.
     private Button? _add;
     private Button? _remove;
     private string[] _rowClasses = [];
     private bool _resizing;
     private double _resizeStart;
     private double _resizeOrigin;
+    // Rows are repeated items: the focus ring is built on the first :focus-visible, not with every container.
+    private FieldFocusRing? _focusRing;
 
     static PropertyGridItem()
     {
@@ -218,10 +224,12 @@ public class PropertyGridItem : TemplatedControl
         if (_add is not null)
         {
             _add.Click -= OnAddClick;
+            _add = null;
         }
         if (_remove is not null)
         {
             _remove.Click -= OnRemoveClick;
+            _remove = null;
         }
         if (_editor is not null)
         {
@@ -231,8 +239,7 @@ public class PropertyGridItem : TemplatedControl
         _editor = e.NameScope.Find<ContentPresenter>(EditorPart);
         _expander = e.NameScope.Find<Control>(ExpanderPart);
         _splitter = e.NameScope.Find<Control>(SplitterPart);
-        _add = e.NameScope.Find<Button>(AddPart);
-        _remove = e.NameScope.Find<Button>(RemovePart);
+        _actions = e.NameScope.Find<Panel>(ActionsPart);
         if (_expander is not null)
         {
             _expander.PointerPressed += OnExpanderPressed;
@@ -244,16 +251,23 @@ public class PropertyGridItem : TemplatedControl
             _splitter.PointerReleased += OnSplitterReleased;
             _splitter.PointerCaptureLost += OnSplitterCaptureLost;
         }
-        if (_add is not null)
-        {
-            _add.Click += OnAddClick;
-        }
-        if (_remove is not null)
-        {
-            _remove.Click += OnRemoveClick;
-        }
+        _focusRing ??= new FieldFocusRing(this, PropertyGridItemTokens.Key(PropertyGridItemTokenKind.FocusRingMargin),
+            ArcDesignTokens.Key(ArcDesignTokenKind.RadiusStep14));
+        _focusRing.Attach(e.NameScope.Find<Panel>("PART_Host"));
         UpdateEditor();
         UpdateState();
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing?.Update();
     }
 
     protected override void OnPointerPressed(PointerPressedEventArgs e)
@@ -399,20 +413,56 @@ public class PropertyGridItem : TemplatedControl
         PseudoClasses.Set(ListItemPseudoClass, row?.Index >= 0);
         PseudoClasses.Set(InvalidPseudoClass, row?.ErrorMessage is not null);
         ToolTip.SetTip(this, row?.ErrorMessage);
+        var canAdd = row?.CanAddItem == true;
+        var canRemove = row?.CanRemove == true;
+        if (canAdd && _add is null && _actions is not null)
+        {
+            _add = CreateAction(AddPart, ArcIcons.Plus, OnAddClick);
+            _actions.Children.Insert(0, _add);
+        }
+        if (canRemove && _remove is null && _actions is not null)
+        {
+            _remove = CreateAction(RemovePart, ArcIcons.Minus, OnRemoveClick);
+            _actions.Children.Add(_remove);
+        }
         if (_add is not null)
         {
-            _add.IsVisible = row?.CanAddItem == true;
+            _add.IsVisible = canAdd;
             AutomationProperties.SetName(_add, _grid?.AddItemText);
         }
         if (_remove is not null)
         {
-            _remove.IsVisible = row?.CanRemove == true;
+            _remove.IsVisible = canRemove;
             AutomationProperties.SetName(_remove, _grid?.RemoveItemText);
         }
         if (row is not null)
         {
             AutomationProperties.SetItemStatus(this, row.IsExpandable ? (row.IsExpanded ? "Expanded" : "Collapsed") : null);
         }
+    }
+
+    /// <summary>
+    /// A 28px ghost icon button, as the template declared it (<c>Classes="property-grid-action" Variant="Ghost" Size="Small"</c>
+    /// with the ActionSize / RadiusStep10 style); built from code, so the former template style's values are bound here.
+    /// </summary>
+    private Button CreateAction(string name, Avalonia.Media.Geometry icon, EventHandler<RoutedEventArgs> click)
+    {
+        var button = new Button
+        {
+            Name = name,
+            Variant = ButtonVariant.Ghost,
+            Size = ControlSize.Small,
+            MinHeight = 0,
+            Padding = default,
+            Content = new ArcGlyph { Data = icon, Size = 16 }
+        };
+        button.Classes.Add("property-grid-action");
+        var size = button.GetResourceObservable(PropertyGridItemTokens.Key(PropertyGridItemTokenKind.ActionSize));
+        button.Bind(WidthProperty, size);
+        button.Bind(HeightProperty, size);
+        ArcTokens.Bind(button, Button.CornerRadiusProperty, ArcDesignTokenKind.RadiusStep10);
+        button.Click += click;
+        return button;
     }
 
     private void UpdateRowClasses(string? classes)
@@ -446,10 +496,32 @@ public class PropertyGridCategoryItem : TemplatedControl
 
     private PropertyGridCategory? _category;
     private string? _header;
+    private FieldFocusRing? _focusRing;
 
     static PropertyGridCategoryItem()
     {
         FocusableProperty.OverrideDefaultValue<PropertyGridCategoryItem>(true);
+    }
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        // Built on the first :focus-visible, inside the template's panel so it keeps the header margin.
+        _focusRing ??= new FieldFocusRing(this, PropertyGridCategoryItemTokens.Key(PropertyGridCategoryItemTokenKind.FocusRingMargin),
+            ArcDesignTokens.Key(ArcDesignTokenKind.RadiusStep12));
+        _focusRing.Attach(e.NameScope.Find<Panel>("PART_Host"));
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing?.Update();
     }
 
     /// <summary>The category shown.</summary>

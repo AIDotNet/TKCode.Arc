@@ -4,6 +4,7 @@ using Avalonia.Automation;
 using Avalonia.Automation.Peers;
 using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia.Media.Immutable;
 
 namespace TKCode.Arc;
 
@@ -40,9 +41,10 @@ internal sealed class TreemapStage : Avalonia.Controls.Control, Avalonia.Renderi
     private string? _reading;
     private bool _keyboard;
     private ChartsBAutomationPeer? _peer;
-    private readonly Dictionary<string, (int Version, FormattedText Label, FormattedText Value)> _text = new();
-    private readonly Dictionary<string, (double Width, FormattedText Label, FormattedText Value)> _trimmed = new();
-    private FormattedText? _empty;
+    private readonly Dictionary<string, (int Version, ChartsBRun Label, ChartsBRun Value)> _text = new();
+    private readonly Dictionary<string, (double Width, ChartsBRun Label, ChartsBRun Value)> _trimmed = new();
+    private readonly Dictionary<string, (int Version, bool Header, Color Hue, Color Fill)> _fills = new();
+    private ChartsBRun? _empty;
     private int _emptyVersion = -1;
 
     private readonly record struct Drawn(Rect Rect, double Opacity);
@@ -102,6 +104,7 @@ internal sealed class TreemapStage : Avalonia.Controls.Control, Avalonia.Renderi
         }
         _text.Clear();
         _trimmed.Clear();
+        _fills.Clear();
         Focusable = !_owner.IsEmpty;
         Relayout(animate: true);
     }
@@ -112,6 +115,7 @@ internal sealed class TreemapStage : Avalonia.Controls.Control, Avalonia.Renderi
     {
         _text.Clear();
         _trimmed.Clear();
+        _fills.Clear();
         _tipId = null;
         SyncTooltip();
         InvalidateVisual();
@@ -336,7 +340,16 @@ internal sealed class TreemapStage : Avalonia.Controls.Control, Avalonia.Renderi
         }
         _keyboard = false;
         var branch = _owner.Flat.TryGetValue(hit, out var node) && node.Children.Count > 0 && _levels.GetValueOrDefault(hit) == 1;
-        Cursor = new Cursor(branch ? StandardCursorType.Hand : StandardCursorType.Arrow);
+        // Shared cursors, set only when the state flips: a new Cursor per move is a platform handle lookup.
+        var cursor = branch ? ChartsBMath.HandCursor : Cursor.Default;
+        if (!ReferenceEquals(Cursor, cursor))
+        {
+            Cursor = cursor;
+        }
+        if (hit == _active && _pointer == point)
+        {
+            return;
+        }
         SetActive(hit, point);
     }
 
@@ -531,13 +544,13 @@ internal sealed class TreemapStage : Avalonia.Controls.Control, Avalonia.Renderi
 
     // ---- drawing ----------------------------------------------------------------------------------------------
 
-    private (FormattedText Label, FormattedText Value) TextOf(TreemapFlat node, double room)
+    private (ChartsBRun Label, ChartsBRun Value) TextOf(TreemapFlat node, double room)
     {
         var p = _owner.Palette;
         if (!_text.TryGetValue(node.Id, out var text) || text.Version != p.Version)
         {
-            text = (p.Version, ChartsBText.Make(node.Label, p, p.TypeXS, p.Foreground, FontWeight.Medium),
-                ChartsBText.Make(_owner.Format(node.Value), p, p.TypeXS, p.Foreground));
+            text = (p.Version, ChartsBText.Label(node.Label, p, p.TypeXS, p.Foreground, FontWeight.Medium),
+                ChartsBText.Label(_owner.Format(node.Value), p, p.TypeXS, p.Foreground));
             _text[node.Id] = text;
         }
         if (_animating || text.Label.WidthIncludingTrailingWhitespace <= room)
@@ -546,7 +559,7 @@ internal sealed class TreemapStage : Avalonia.Controls.Control, Avalonia.Renderi
         }
         if (!_trimmed.TryGetValue(node.Id, out var trimmed) || Math.Abs(trimmed.Width - room) > 0.5)
         {
-            trimmed = (room, ChartsBText.Trimmed(node.Label, p, p.TypeXS, p.Foreground, room, FontWeight.Medium), text.Value);
+            trimmed = (room, ChartsBText.TrimmedRun(node.Label, p, p.TypeXS, p.Foreground, room, FontWeight.Medium), text.Value);
             _trimmed[node.Id] = trimmed;
         }
         return (trimmed.Label, trimmed.Value);
@@ -565,9 +578,9 @@ internal sealed class TreemapStage : Avalonia.Controls.Control, Avalonia.Renderi
             if (_empty is null || _emptyVersion != p.Version)
             {
                 _emptyVersion = p.Version;
-                _empty = ChartsBText.Make(_owner.EmptyLabel, p, p.TypeSM, p.TextMuted);
+                _empty = ChartsBText.Label(_owner.EmptyLabel, p, p.TypeSM, p.TextMuted);
             }
-            context.DrawText(_empty, new Point((size.Width - _empty.Width) / 2, (size.Height - _empty.Height) / 2));
+            _empty.Draw(context, new Point((size.Width - _empty.TextWidth) / 2, (size.Height - _empty.Height) / 2));
             return;
         }
         using var fade = context.PushOpacity(_reveal.Fade);
@@ -588,12 +601,22 @@ internal sealed class TreemapStage : Avalonia.Controls.Control, Avalonia.Renderi
             var level = _levels.GetValueOrDefault(id);
             var branch = node.Children.Count > 0;
             var header = branch && level == 1;
-            var hue = _owner.HueOf(id);
-            var fill = header ? ChartsBMath.MixIn(hue, 0.09, p.Surface) : ChartsBMath.MixIn(hue, _owner.ShadeOf(node.Color), p.Surface);
+            var (hue, fill) = FillOf(id, node, header, p);
             var top = TopOf(node)?.Id;
             var dim = top is not null && _dim.TryGetValue(top, out var dv) ? dv.Value : 0;
             var radius = header ? 8 : 6;
-            using (context.PushOpacity(d.Opacity * (1 - 0.5 * dim)))
+            var opacity = d.Opacity * (1 - 0.5 * dim);
+            var labelled = rect.Width > 64 && rect.Height > 38;
+            var outlined = id == _active || id == activeTop;
+            if (!labelled && !outlined)
+            {
+                // A flat tile: its opacity rides on the brush (the renderer folds a pushed opacity into the paint the
+                // same way); tiles with text or an outline over the fill keep the opacity push.
+                var brush = _animating ? new ImmutableSolidColorBrush(fill, opacity) : p.Brush(fill, opacity);
+                context.DrawRectangle(brush, null, new RoundedRect(rect, radius));
+                continue;
+            }
+            using (context.PushOpacity(opacity))
             {
                 context.DrawRectangle(p.Brush(fill), null, new RoundedRect(rect, radius));
                 DrawLabels(context, node, rect, header, level);
@@ -614,6 +637,19 @@ internal sealed class TreemapStage : Avalonia.Controls.Control, Avalonia.Renderi
         _tooltip.Draw(context, p);
     }
 
+    /// <summary>A tile's hue and fill, mixed once per palette version (an Oklab mix per tile per frame adds up during a zoom).</summary>
+    private (Color Hue, Color Fill) FillOf(string id, TreemapFlat node, bool header, ChartsBPalette p)
+    {
+        if (_fills.TryGetValue(id, out var cached) && cached.Version == p.Version && cached.Header == header)
+        {
+            return (cached.Hue, cached.Fill);
+        }
+        var hue = _owner.HueOf(id);
+        var fill = header ? ChartsBMath.MixIn(hue, 0.09, p.Surface) : ChartsBMath.MixIn(hue, _owner.ShadeOf(node.Color), p.Surface);
+        _fills[id] = (p.Version, header, hue, fill);
+        return (hue, fill);
+    }
+
     /// <summary>Labels never scale: they show when the tile has room (name above 64 × 38, value above 54 high).</summary>
     private void DrawLabels(DrawingContext context, TreemapFlat node, Rect rect, bool header, int level)
     {
@@ -630,10 +666,10 @@ internal sealed class TreemapStage : Avalonia.Controls.Control, Avalonia.Renderi
             using (context.PushClip(rect.Deflate(1)))
             {
                 var valueX = rect.Right - 8 - value.WidthIncludingTrailingWhitespace;
-                context.DrawText(label, new Point(rect.X + 8, y));
+                label.Draw(context, new Point(rect.X + 8, y));
                 using (context.PushOpacity(0.6))
                 {
-                    context.DrawText(value, new Point(valueX, y));
+                    value.Draw(context, new Point(valueX, y));
                 }
             }
             return;
@@ -643,12 +679,12 @@ internal sealed class TreemapStage : Avalonia.Controls.Control, Avalonia.Renderi
         var (name, amount) = TextOf(node, room);
         using (context.PushClip(rect.Deflate(1)))
         {
-            context.DrawText(name, new Point(rect.X + pad.Left, rect.Y + pad.Top + (16 - name.Height) / 2));
+            name.Draw(context, new Point(rect.X + pad.Left, rect.Y + pad.Top + (16 - name.Height) / 2));
             if (full)
             {
                 using (context.PushOpacity(0.72))
                 {
-                    context.DrawText(amount, new Point(rect.X + pad.Left, rect.Y + pad.Top + 17 + (16 - amount.Height) / 2));
+                    amount.Draw(context, new Point(rect.X + pad.Left, rect.Y + pad.Top + 17 + (16 - amount.Height) / 2));
                 }
             }
         }

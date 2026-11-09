@@ -87,14 +87,7 @@
                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
                                                   LineHeight="{arc:RadioGroupTokenResource LabelLineHeight}"
                                                   TextWrapping="Wrap" />
-                                <TextBlock Name="PART_Description"
-                                           IsVisible="{TemplateBinding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                                           Text="{TemplateBinding Description}"
-                                           Margin="{arc:RadioGroupTokenResource DescriptionMargin}"
-                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
-                                           LineHeight="{arc:RadioGroupTokenResource DescriptionLineHeight}"
-                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
-                                           TextWrapping="Wrap" />
+                                <!-- The description line (PART_Description) is built by the row the first time it has one. -->
                             </StackPanel>
                         </Grid>
                     </Border>

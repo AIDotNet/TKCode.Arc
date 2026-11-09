@@ -27,23 +27,15 @@
                                                 Height="16"
                                                 Content="{TemplateBinding Icon}" />
                             <Grid Name="PART_Label">
-                                <!-- Reserve the widest of the three labels so the width never changes. -->
-                                <TextBlock Text="{TemplateBinding Label}" Opacity="0" />
-                                <TextBlock Text="{TemplateBinding CopiedLabel}" Opacity="0" />
-                                <TextBlock Text="{TemplateBinding FailedLabel}" Opacity="0" />
+                                <!-- Reserve the widest of the three labels so the width never changes (one measuring sizer, no hidden TextBlocks). -->
+                                <arc:ButtonsLabelSizer Name="PART_Sizer" Labels="{TemplateBinding SizerLabels}" />
                                 <arc:TextMorph Text="{TemplateBinding DisplayLabel}"
                                                Matching="PrefixSuffix"
                                                HorizontalAlignment="Left" />
                             </Grid>
                         </StackPanel>
                     </Border>
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            Margin="-4"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{arc:CopyButtonTokenResource FocusRingRadius}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <!-- The focus ring (PART_FocusRing) is built by the button the first time it is keyboard focused. -->
                 </Panel>
             </ControlTemplate>
         </Setter>
@@ -66,7 +58,7 @@
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
         </Style>
-        <Style Selector="^[Variant=Plain]">
+        <Style Selector="^:plain">
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderBrush" Value="Transparent" />
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
@@ -91,9 +83,6 @@
         </Style>
         <Style Selector="^:disabled">
             <Setter Property="Opacity" Value="{arc:CopyButtonTokenResource DisabledOpacity}" />
-        </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
         </Style>
 
         <Style Selector="^:motion-full">

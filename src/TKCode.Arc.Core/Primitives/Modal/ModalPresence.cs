@@ -37,11 +37,13 @@ public sealed class ModalPresence : IDisposable
 {
     private static int s_zIndex;
 
-    private readonly ModalHost _host;
-    private readonly MotionValue<double> _scrim;
-    private readonly MotionValue<double> _fade;
-    private readonly MotionValue<double> _rise;
-    private readonly MotionValue<double> _offset;
+    // The host (scrim, panel host, its token binding) and the four motion values are built on first use: a dialog or
+    // drawer that is declared but never opened keeps nothing mounted-only around.
+    private ModalHost? _host;
+    private MotionValue<double>? _scrim;
+    private MotionValue<double>? _fade;
+    private MotionValue<double>? _rise;
+    private MotionValue<double>? _offset;
     private Panel? _layer;
     private TopLevel? _topLevel;
     private Visual? _anchorInUse;
@@ -61,16 +63,73 @@ public sealed class ModalPresence : IDisposable
         FocusModality.Watch();
         Panel = panel ?? throw new ArgumentNullException(nameof(panel));
         Anchor = anchor;
-        _host = new ModalHost(this);
-        _host.PanelHostCore.Panel = panel;
-        _scrim = new MotionValue<double>(_host, 0, MotionVectors.Double);
-        _fade = new MotionValue<double>(_host, 1, MotionVectors.Double);
-        _rise = new MotionValue<double>(_host, 1, MotionVectors.Double);
-        _offset = new MotionValue<double>(_host, 0, MotionVectors.Double);
-        _scrim.Changed += _ => ApplyScrim();
-        _fade.Changed += _ => ApplyPanel();
-        _rise.Changed += _ => ApplyPanel();
-        _offset.Changed += _ => ApplyPanel();
+    }
+
+    /// <summary>The host, built on first use (see the fields).</summary>
+    private ModalHost HostCore
+    {
+        get
+        {
+            if (_host is null)
+            {
+                var host = new ModalHost(this);
+                host.PanelHostCore.Panel = Panel;
+                if (_scrimBrush is { } brush)
+                {
+                    host.Scrim.Background = brush;
+                }
+                var scrim = new MotionValue<double>(host, 0, MotionVectors.Double);
+                var fade = new MotionValue<double>(host, 1, MotionVectors.Double);
+                var rise = new MotionValue<double>(host, 1, MotionVectors.Double);
+                var offset = new MotionValue<double>(host, 0, MotionVectors.Double);
+                scrim.Changed += _ => ApplyScrim();
+                fade.Changed += _ => ApplyPanel();
+                rise.Changed += _ => ApplyPanel();
+                offset.Changed += _ => ApplyPanel();
+                _scrim = scrim;
+                _fade = fade;
+                _rise = rise;
+                _offset = offset;
+                _host = host;
+            }
+            return _host;
+        }
+    }
+
+    private MotionValue<double> ScrimMotion
+    {
+        get
+        {
+            _ = HostCore;
+            return _scrim!;
+        }
+    }
+
+    private MotionValue<double> FadeMotion
+    {
+        get
+        {
+            _ = HostCore;
+            return _fade!;
+        }
+    }
+
+    private MotionValue<double> RiseMotion
+    {
+        get
+        {
+            _ = HostCore;
+            return _rise!;
+        }
+    }
+
+    private MotionValue<double> OffsetMotion
+    {
+        get
+        {
+            _ = HostCore;
+            return _offset!;
+        }
     }
 
     #region Configuration
@@ -93,13 +152,18 @@ public sealed class ModalPresence : IDisposable
         set
         {
             _scrimBrush = value;
+            if (_host is null)
+            {
+                // Applied when the host is built.
+                return;
+            }
             if (value is null)
             {
-                _host.Scrim.ClearValue(Border.BackgroundProperty);
+                HostCore.Scrim.ClearValue(Border.BackgroundProperty);
             }
             else
             {
-                _host.Scrim.Background = value;
+                HostCore.Scrim.Background = value;
             }
         }
     }
@@ -147,8 +211,8 @@ public sealed class ModalPresence : IDisposable
     /// <summary>Opening or open (a leaving modal is not open).</summary>
     public bool IsOpen => State is ModalState.Opening or ModalState.Open;
 
-    /// <summary>The mounted host (scrim + panel host); null before the first open.</summary>
-    public ModalHost Host => _host;
+    /// <summary>The host (scrim + panel host); built on first access or open, mounted while the modal is on its layer.</summary>
+    public ModalHost Host => HostCore;
 
     /// <summary>Why the last close happened.</summary>
     public DismissReason CloseReason => _closeReason;
@@ -157,7 +221,7 @@ public sealed class ModalPresence : IDisposable
     public bool IsTopmost => _topLevel is { } top && ModalStack.Find(top)?.Topmost == this;
 
     /// <summary>Size of the overlay layer the modal is mounted on (the viewport for sizing rules).</summary>
-    public Size LayerSize => _host.LayerSize;
+    public Size LayerSize => _host?.LayerSize ?? default;
 
     /// <summary>Raised when the layer size changes while mounted (window resize).</summary>
     public event EventHandler? LayerSizeChanged;
@@ -188,7 +252,7 @@ public sealed class ModalPresence : IDisposable
     /// </summary>
     public double ScrimOpacity
     {
-        get => _activeEntrance == ModalEntrance.Custom ? _manualScrim : _scrim.Value;
+        get => _activeEntrance == ModalEntrance.Custom ? _manualScrim : _scrim?.Value ?? 0;
         set
         {
             _manualScrim = Math.Clamp(value, 0, 1);
@@ -203,17 +267,17 @@ public sealed class ModalPresence : IDisposable
     public double PanelExtent => Side is ModalSide.Left or ModalSide.Right ? Panel.Bounds.Width : Panel.Bounds.Height;
 
     /// <summary>Slide offset toward <see cref="Side"/> in px (0 = resting, <see cref="PanelExtent"/> = off-screen).</summary>
-    public double PanelOffset => _offset.Value;
+    public double PanelOffset => _offset?.Value ?? 0;
 
     /// <summary>Velocity of the slide offset (px/s).</summary>
-    public double PanelVelocity => _offset.Velocity;
+    public double PanelVelocity => _offset?.Velocity ?? 0;
 
     /// <summary>Moves the panel along its slide axis immediately (a drag), stopping any running slide motion.</summary>
-    public void SetPanelOffset(double offset) => _offset.Jump(offset);
+    public void SetPanelOffset(double offset) => OffsetMotion.Jump(offset);
 
     /// <summary>Animates the slide offset back to rest (or <paramref name="target"/>), starting with <paramref name="velocity"/> px/s.</summary>
     public Task<bool> SettlePanelAsync(MotionSpec spec, double velocity = 0, double target = 0)
-        => _offset.AnimateTo(target, spec, velocity);
+        => OffsetMotion.AnimateTo(target, spec, velocity);
 
     #endregion
 
@@ -239,8 +303,8 @@ public sealed class ModalPresence : IDisposable
             // Caught mid-exit: reverse from the current values.
             _generation++;
             SetState(ModalState.Opening);
-            _host.IsHitTestVisible = true;
-            _host.ZIndex = ++s_zIndex;
+            HostCore.IsHitTestVisible = true;
+            HostCore.ZIndex = ++s_zIndex;
             ModalStack.For(topLevel).Add(this);
             CaptureFocusOrigin(topLevel);
             _ = RunEnter(fresh: false);
@@ -270,17 +334,17 @@ public sealed class ModalPresence : IDisposable
             ((ISetLogicalParent)Panel).SetParent(logicalAnchor);
             _parentedPanel = true;
         }
-        _host.SetValue(ArcMotion.LevelProperty, ArcMotion.GetLevel(anchor));
-        _host.IsHitTestVisible = true;
-        _host.ZIndex = ++s_zIndex;
+        HostCore.SetValue(ArcMotion.LevelProperty, ArcMotion.GetLevel(anchor));
+        HostCore.IsHitTestVisible = true;
+        HostCore.ZIndex = ++s_zIndex;
         UpdateLayerSize();
-        layer.Children.Add(_host);
+        layer.Children.Add(HostCore);
         layer.SizeChanged += OnLayerSizeChanged;
         anchor.DetachedFromVisualTree += OnAnchorDetached;
         // Lay out now so the first frame (and the slide distance) uses the real panel size.
-        var size = _host.LayerSize;
-        _host.Measure(size);
-        _host.Arrange(new Rect(size));
+        var size = HostCore.LayerSize;
+        HostCore.Measure(size);
+        HostCore.Arrange(new Rect(size));
         SetState(ModalState.Opening);
         ModalStack.For(topLevel).Add(this);
         _ = RunEnter(fresh: true);
@@ -320,7 +384,7 @@ public sealed class ModalPresence : IDisposable
         _closeReason = reason;
         SetState(ModalState.Closing);
         // A leaving layer lets clicks through, so the trigger can reopen it mid-exit.
-        _host.IsHitTestVisible = false;
+        HostCore.IsHitTestVisible = false;
         ReturnFocus(reason);
         _ = RunExit(velocity);
     }
@@ -346,7 +410,7 @@ public sealed class ModalPresence : IDisposable
     private async Task RunEnter(bool fresh)
     {
         var generation = _generation;
-        var level = ArcMotion.GetEffectiveLevel(_host);
+        var level = ArcMotion.GetEffectiveLevel(HostCore);
         var full = level == ArcMotionLevel.Full;
         var reduced = level == ArcMotionLevel.Reduced;
         var fadeIn = reduced
@@ -362,9 +426,9 @@ public sealed class ModalPresence : IDisposable
             case ModalEntrance.Custom:
                 if (fresh)
                 {
-                    _fade.Jump(1);
-                    _rise.Jump(1);
-                    _offset.Jump(0);
+                    FadeMotion.Jump(1);
+                    RiseMotion.Jump(1);
+                    OffsetMotion.Jump(0);
                 }
                 panel = CustomMotion?.Invoke(this, true) ?? Task.FromResult(true);
                 break;
@@ -372,14 +436,14 @@ public sealed class ModalPresence : IDisposable
             {
                 if (fresh)
                 {
-                    _rise.Jump(1);
-                    _offset.Jump(full ? PanelExtent : 0);
-                    _fade.Jump(full ? 1 : 0);
-                    _scrim.Jump(0);
+                    RiseMotion.Jump(1);
+                    OffsetMotion.Jump(full ? PanelExtent : 0);
+                    FadeMotion.Jump(full ? 1 : 0);
+                    ScrimMotion.Jump(0);
                 }
-                var slide = full ? _offset.AnimateTo(0, MotionSpec.Spring(ArcSpring.Smooth)) : Jump(_offset, 0);
-                var fade = _fade.AnimateTo(1, fadeIn);
-                scrim = _scrim.AnimateTo(1, scrimIn);
+                var slide = full ? OffsetMotion.AnimateTo(0, MotionSpec.Spring(ArcSpring.Smooth)) : Jump(OffsetMotion,0);
+                var fade = FadeMotion.AnimateTo(1, fadeIn);
+                scrim = ScrimMotion.AnimateTo(1, scrimIn);
                 panel = Both(slide, fade);
                 break;
             }
@@ -387,14 +451,14 @@ public sealed class ModalPresence : IDisposable
             {
                 if (fresh)
                 {
-                    _offset.Jump(0);
-                    _fade.Jump(0);
-                    _rise.Jump(full && _activeEntrance == ModalEntrance.Rise ? 0 : 1);
-                    _scrim.Jump(0);
+                    OffsetMotion.Jump(0);
+                    FadeMotion.Jump(0);
+                    RiseMotion.Jump(full && _activeEntrance == ModalEntrance.Rise ? 0 : 1);
+                    ScrimMotion.Jump(0);
                 }
-                var rise = _activeEntrance == ModalEntrance.Rise ? _rise.AnimateTo(1, MotionSpec.Spring(ArcSpring.Smooth)) : Jump(_rise, 1);
-                var fade = _fade.AnimateTo(1, fadeIn);
-                scrim = _scrim.AnimateTo(1, scrimIn);
+                var rise = _activeEntrance == ModalEntrance.Rise ? RiseMotion.AnimateTo(1, MotionSpec.Spring(ArcSpring.Smooth)) : Jump(RiseMotion,1);
+                var fade = FadeMotion.AnimateTo(1, fadeIn);
+                scrim = ScrimMotion.AnimateTo(1, scrimIn);
                 panel = Both(rise, fade);
                 break;
             }
@@ -411,14 +475,14 @@ public sealed class ModalPresence : IDisposable
     private async Task RunExit(double velocity)
     {
         var generation = _generation;
-        var level = ArcMotion.GetEffectiveLevel(_host);
+        var level = ArcMotion.GetEffectiveLevel(HostCore);
         var full = level == ArcMotionLevel.Full;
         var reduced = level == ArcMotionLevel.Reduced;
         var quick = reduced
             ? MotionSpec.Tween(ArcMotionPresets.Instant, ArcEasings.Standard)
             : MotionSpec.Tween(ArcMotionPresets.Fast, ArcEasings.Standard);
         Task<bool> panel;
-        var scrim = _activeEntrance == ModalEntrance.Custom ? Task.FromResult(true) : _scrim.AnimateTo(0, quick);
+        var scrim = _activeEntrance == ModalEntrance.Custom ? Task.FromResult(true) : ScrimMotion.AnimateTo(0, quick);
         switch (_activeEntrance)
         {
             case ModalEntrance.Custom:
@@ -430,18 +494,18 @@ public sealed class ModalPresence : IDisposable
                 // the same length. The shadow fades over the last 35% so it leaves with the panel.
                 var extent = Math.Max(PanelExtent, 1);
                 var slide = velocity > 0 || _closeReason == DismissReason.Gesture
-                    ? _offset.AnimateTo(extent, MotionSpec.Spring(SpringSpec.FromVisual(ArcMotionPresets.Standard.TotalSeconds, 0)), Math.Max(velocity, 0))
-                    : _offset.AnimateTo(extent, MotionSpec.Tween(ArcMotionPresets.Standard, ArcEasings.Standard));
+                    ? OffsetMotion.AnimateTo(extent, MotionSpec.Spring(SpringSpec.FromVisual(ArcMotionPresets.Standard.TotalSeconds, 0)), Math.Max(velocity, 0))
+                    : OffsetMotion.AnimateTo(extent, MotionSpec.Tween(ArcMotionPresets.Standard, ArcEasings.Standard));
                 var lateFade = MotionSpec.Tween(TimeSpan.FromMilliseconds(ArcMotionPresets.Standard.TotalMilliseconds * 0.35),
                     s_linear, TimeSpan.FromMilliseconds(ArcMotionPresets.Standard.TotalMilliseconds * 0.65));
-                panel = Both(slide, _fade.AnimateTo(0, lateFade));
+                panel = Both(slide, FadeMotion.AnimateTo(0, lateFade));
                 break;
             }
             case ModalEntrance.Rise when full:
-                panel = Both(_rise.AnimateTo(0.5, quick), _fade.AnimateTo(0, quick));
+                panel = Both(RiseMotion.AnimateTo(0.5, quick), FadeMotion.AnimateTo(0, quick));
                 break;
             default:
-                panel = _fade.AnimateTo(0, quick);
+                panel = FadeMotion.AnimateTo(0, quick);
                 break;
         }
         var done = await Both(panel, scrim);
@@ -472,7 +536,10 @@ public sealed class ModalPresence : IDisposable
         if (_layer is { } layer)
         {
             layer.SizeChanged -= OnLayerSizeChanged;
-            layer.Children.Remove(_host);
+            if (_host is { } host)
+            {
+                layer.Children.Remove(host);
+            }
         }
         if (_anchorInUse is { } anchor)
         {
@@ -537,11 +604,12 @@ public sealed class ModalPresence : IDisposable
         {
             size = _topLevel.ClientSize;
         }
-        _host.LayerSize = size;
-        _host.Width = size.Width;
-        _host.Height = size.Height;
-        Canvas.SetLeft(_host, 0);
-        Canvas.SetTop(_host, 0);
+        var modalHost = HostCore;
+        modalHost.LayerSize = size;
+        modalHost.Width = size.Width;
+        modalHost.Height = size.Height;
+        Canvas.SetLeft(modalHost, 0);
+        Canvas.SetTop(modalHost, 0);
     }
 
     #endregion
@@ -579,8 +647,8 @@ public sealed class ModalPresence : IDisposable
 
     private void ApplyScrim()
     {
-        var opacity = _activeEntrance == ModalEntrance.Custom ? _manualScrim : _scrim.Value;
-        _host.Scrim.Opacity = Math.Clamp(opacity, 0, 1);
+        var opacity = _activeEntrance == ModalEntrance.Custom ? _manualScrim : ScrimMotion.Value;
+        HostCore.Scrim.Opacity = Math.Clamp(opacity, 0, 1);
         if (_topLevel is { } topLevel)
         {
             ModalStack.Find(topLevel)?.UpdateBlur();
@@ -589,20 +657,20 @@ public sealed class ModalPresence : IDisposable
 
     private void ApplyPanel()
     {
-        var host = _host.PanelHostCore;
-        host.Opacity = Math.Clamp(_fade.Value, 0, 1);
+        var host = HostCore.PanelHostCore;
+        host.Opacity = Math.Clamp(FadeMotion.Value, 0, 1);
         switch (_activeEntrance)
         {
             case ModalEntrance.Rise:
             {
                 // Dialog: y 8 → 0 and scale 0.96 → 1 (exit stops at half: y 4, scale 0.98).
-                var p = _rise.Value;
+                var p = RiseMotion.Value;
                 host.SetTransform(new Vector(0, 8 * (1 - p)), 0.96 + 0.04 * p);
                 break;
             }
             case ModalEntrance.Slide:
             {
-                var d = _offset.Value;
+                var d = OffsetMotion.Value;
                 var offset = Side switch
                 {
                     ModalSide.Left => new Vector(-d, 0),
@@ -625,7 +693,7 @@ public sealed class ModalPresence : IDisposable
 
     /// <summary>True when <paramref name="element"/> is inside this modal (panel or popups opened from it).</summary>
     public bool Contains(IInputElement element)
-        => ModalStack.IsWithin(_host, element) || ModalStack.IsWithin(Panel, element) ||
+        => (_host is { } host && ModalStack.IsWithin(host, element)) || ModalStack.IsWithin(Panel, element) ||
            (ContainmentRoot is Visual root && ModalStack.IsWithin(root, element));
 
     /// <summary>The element initial focus (and the focus trap) sends focus to.</summary>
@@ -635,7 +703,7 @@ public sealed class ModalPresence : IDisposable
         {
             return initial;
         }
-        return FocusManager.FindFirstFocusableElement(Panel) ?? (Panel.Focusable ? Panel : _host.PanelHostCore);
+        return FocusManager.FindFirstFocusableElement(Panel) ?? (Panel.Focusable ? Panel : HostCore.PanelHostCore);
     }
 
     private void CaptureFocusOrigin(TopLevel topLevel)
@@ -691,9 +759,9 @@ public sealed class ModalPresence : IDisposable
         {
             Unmount(raise: false);
         }
-        _scrim.Dispose();
-        _fade.Dispose();
-        _rise.Dispose();
-        _offset.Dispose();
+        _scrim?.Dispose();
+        _fade?.Dispose();
+        _rise?.Dispose();
+        _offset?.Dispose();
     }
 }

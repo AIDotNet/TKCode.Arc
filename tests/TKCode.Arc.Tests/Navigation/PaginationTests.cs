@@ -1,4 +1,5 @@
 using TKCode.Arc.Primitives;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
@@ -130,6 +131,61 @@ public class PaginationTests
             pagination.CurrentPage = 2;
             Dispatcher.UIThread.RunJobs();
             first.IsVisible.ShouldBeFalse();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void The_Lazy_Focus_Ring_Keeps_The_Template_Geometry()
+    {
+        var pagination = new Pagination { PageCount = 12, CurrentPage = 1 };
+        var window = TestHelpers.Show(pagination);
+        try
+        {
+            var button = Part(pagination, "PART_Page1");
+            button.Focus(Avalonia.Input.NavigationMethod.Tab);
+            Dispatcher.UIThread.RunJobs();
+            TestHelpers.IsFocusRingVisible(button).ShouldBeTrue();
+            var ring = TestHelpers.Descendant<Border>(button, Primitives.LazyFocusRing.PartName);
+            ring.Margin.ShouldBe(new Thickness(-4));
+            ring.CornerRadius.ShouldBe(new CornerRadius(22));
+            ring.BorderThickness.Left.ShouldBeGreaterThan(0);
+            ring.Bounds.Width.ShouldBe(button.Bounds.Width + 8);
+            // The last child of the template's panel: it draws over the frame.
+            ((Panel)ring.GetVisualParent()!).Children[^1].ShouldBe(ring);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Boundary_Parts_Are_Built_On_Demand_In_Row_Order()
+    {
+        var pagination = new Pagination { PageCount = 48, CurrentPage = 20 };
+        var window = TestHelpers.Show(pagination);
+        try
+        {
+            var panel = TestHelpers.Descendant<PaginationPanel>(pagination);
+            panel.Children.ShouldNotContain(c => c.Name == Pagination.FirstPart);
+            TestHelpers.IsFocusRingVisible(pagination).ShouldBeFalse();
+            pagination.GetVisualDescendants().OfType<Border>().ShouldNotContain(b => b.Name == Primitives.LazyFocusRing.PartName);
+            pagination.ShowBoundaryPages = true;
+            Dispatcher.UIThread.RunJobs();
+            panel.Children.Select(c => c.Name).Where(n => n is not null).ToArray().ShouldBe(
+            [
+                Pagination.MarkPart, Pagination.PreviousPart, Pagination.FirstPart, Pagination.EllipsisStartPart,
+                "PART_Page0", "PART_Page1", "PART_Page2", "PART_Page3", "PART_Page4",
+                Pagination.EllipsisEndPart, Pagination.LastPart, Pagination.NextPart
+            ]);
+            Part(pagination, Pagination.FirstPart).Bounds.Width.ShouldBeGreaterThan(0);
+            var ellipsis = pagination.GetVisualDescendants().OfType<Control>().First(c => c.Name == Pagination.EllipsisStartPart);
+            ellipsis.Bounds.Width.ShouldBe(24);
+            ellipsis.Bounds.Height.ShouldBe(Part(pagination, Pagination.FirstPart).Bounds.Height);
         }
         finally
         {

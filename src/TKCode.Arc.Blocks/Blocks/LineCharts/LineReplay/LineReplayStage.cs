@@ -63,6 +63,12 @@ internal sealed class LineReplayStage : Control
 
     private Point[] _points = [];
     private StreamGeometry? _baseline;
+    private StreamGeometry? _lineShape;
+    private StreamGeometry? _areaShape;
+    private int _shapeLast;
+    private Point _shapeHead;
+    private double _shapeBottom;
+    private Point[]? _shapePoints;
     private Size _geometrySize;
 
     private bool _colorsKnown;
@@ -501,6 +507,14 @@ internal sealed class LineReplayStage : Control
         {
             return;
         }
+        // A frame that does not move the head (a callout or a tick fading, the hover) draws the same shapes again.
+        if (_lineShape is not null && _areaShape is not null && last == _shapeLast && head == _shapeHead
+            && plot.Bottom == _shapeBottom && ReferenceEquals(_points, _shapePoints))
+        {
+            context.DrawGeometry(_area, null, _areaShape);
+            context.DrawGeometry(null, _linePen, _lineShape);
+            return;
+        }
         var line = new StreamGeometry();
         var area = new StreamGeometry();
         using (var l = line.Open())
@@ -524,6 +538,12 @@ internal sealed class LineReplayStage : Control
             a.EndFigure(true);
             l.EndFigure(false);
         }
+        _lineShape = line;
+        _areaShape = area;
+        _shapeLast = last;
+        _shapeHead = head;
+        _shapeBottom = plot.Bottom;
+        _shapePoints = _points;
         context.DrawGeometry(_area, null, area);
         context.DrawGeometry(null, _linePen, line);
     }

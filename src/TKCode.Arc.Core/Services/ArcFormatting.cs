@@ -23,24 +23,27 @@ public static class ArcFormatting
         for (var i = 0; i < formatted.Length; i++)
         {
             var c = formatted[i];
-            if (char.IsDigit(c))
-            {
-                parts.Add(new FormattedPart(FormattedPartKind.Digit, c.ToString()));
-            }
-            else if (Matches(formatted, i, format.NumberGroupSeparator) || Matches(formatted, i, format.CurrencyGroupSeparator))
-            {
-                parts.Add(new FormattedPart(FormattedPartKind.Group, c.ToString()));
-            }
-            else if (Matches(formatted, i, format.NumberDecimalSeparator) || Matches(formatted, i, format.CurrencyDecimalSeparator))
-            {
-                parts.Add(new FormattedPart(FormattedPartKind.Decimal, c.ToString()));
-            }
-            else
-            {
-                parts.Add(new FormattedPart(FormattedPartKind.Literal, c.ToString()));
-            }
+            parts.Add(new FormattedPart(Classify(c, format), c.ToString()));
         }
         return parts;
+    }
+
+    /// <summary>The kind of one character of a formatted number (what <see cref="ToParts"/> assigns it), without allocating.</summary>
+    internal static FormattedPartKind Classify(char c, NumberFormatInfo format)
+    {
+        if (char.IsDigit(c))
+        {
+            return FormattedPartKind.Digit;
+        }
+        if (Matches(c, format.NumberGroupSeparator) || Matches(c, format.CurrencyGroupSeparator))
+        {
+            return FormattedPartKind.Group;
+        }
+        if (Matches(c, format.NumberDecimalSeparator) || Matches(c, format.CurrencyDecimalSeparator))
+        {
+            return FormattedPartKind.Decimal;
+        }
+        return FormattedPartKind.Literal;
     }
 
     /// <summary>Compact notation: 1.2K, 3.4M, 5.6B.</summary>
@@ -57,6 +60,5 @@ public static class ArcFormatting
         };
     }
 
-    private static bool Matches(string text, int index, string token)
-        => token.Length == 1 && text[index] == token[0];
+    private static bool Matches(char c, string token) => token.Length == 1 && c == token[0];
 }

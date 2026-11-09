@@ -113,7 +113,10 @@ public class RollingDigits : Control
     public IBrush? Foreground { get => GetValue(ForegroundProperty); set => SetValue(ForegroundProperty, value); }
 
     /// <summary>The plain text currently shown (for accessibility).</summary>
-    public string DisplayText { get; private set; } = string.Empty;
+    public string DisplayText => _displayText ??= string.Concat(Prefix, _formatted, Suffix);
+
+    // Joined when read: a value driven every frame rebuilds often and is read rarely.
+    private string? _displayText = string.Empty;
 
     /// <summary>Wheel targets of the digit columns, most significant first (tests: which way the wheels turned).</summary>
     internal IReadOnlyList<double> WheelTargets => _columns.Where(c => c.IsDigit && !c.Leaving).Select(c => c.Target).ToList();
@@ -123,10 +126,21 @@ public class RollingDigits : Control
         _columns.Where(c => c.IsDigit && !c.Leaving).Select(c => c.Position?.Value ?? c.Target).ToList();
 
     private string _formatted = string.Empty;
+    private CultureInfo? _culture;
+    private string? _cultureName;
+    private string? _format;
+    private int _formatDecimals;
+    private bool _formatGrouping;
+
+    /// <summary>
+    /// What a column stands for across rebuilds: an integer digit by place value, a fraction digit by position, the
+    /// decimal mark, a group separator by the place it follows, or any other character by position and text.
+    /// </summary>
+    private readonly record struct ColumnKey(char Kind, int Index, char Text);
 
     private sealed class Column
     {
-        public required string Key { get; init; }
+        public required ColumnKey Key { get; init; }
         public bool IsDigit { get; init; }
         public string Text { get; set; } = string.Empty;
         public int Digit { get; set; }
@@ -136,9 +150,12 @@ public class RollingDigits : Control
         public MotionValue<double>? Position { get; set; }
         public MotionValue<double>? Presence { get; set; }
         public bool Leaving { get; set; }
+        /// <summary>Matched by the rebuild in progress.</summary>
+        public bool Claimed { get; set; }
     }
 
-    private readonly List<Column> _columns = new();
+    private List<Column> _columns = new();
+    private List<Column> _nextColumns = new();
     // Glyphs are laid-out TextLayouts whose glyph runs are drawn in Foreground: Avalonia 12's FormattedText.Draw breaks
     // and shapes its text again on every draw (1–2 KB of garbage per glyph, up to three glyphs per wheel per frame while
     // a number rolls), a TextLayout keeps its lines.
@@ -169,7 +186,7 @@ public class RollingDigits : Control
         }
         else if (change.Property == PrefixProperty || change.Property == SuffixProperty)
         {
-            DisplayText = $"{Prefix}{_formatted}{Suffix}";
+            _displayText = null;
         }
         else if (change.Property == FontFamilyProperty || change.Property == FontSizeProperty ||
                  change.Property == FontWeightProperty)
@@ -198,52 +215,41 @@ public class RollingDigits : Control
         }
         _previousValue = value;
 
-        var culture = CultureInfo.GetCultureInfo(CultureName);
-        var format = (UseGrouping ? "N" : "F") + Math.Max(0, Decimals);
-        var formatted = value.ToString(format, culture);
+        // A rebuild runs on every value change (every frame for a driven counter), so it allocates only the formatted
+        // string and the columns that are new: the culture, the format string and the column list are kept, and the
+        // characters are classified in place instead of split into parts.
+        var cultureName = CultureName;
+        if (_culture is null || !string.Equals(_cultureName, cultureName, StringComparison.Ordinal))
+        {
+            _culture = CultureInfo.GetCultureInfo(cultureName);
+            _cultureName = cultureName;
+        }
+        var culture = _culture;
+        var decimals = Math.Max(0, Decimals);
+        var grouping = UseGrouping;
+        if (_format is null || _formatDecimals != decimals || _formatGrouping != grouping)
+        {
+            _format = (grouping ? "N" : "F") + decimals.ToString(CultureInfo.InvariantCulture);
+            _formatDecimals = decimals;
+            _formatGrouping = grouping;
+        }
+        var formatted = value.ToString(_format, culture);
         _formatted = formatted;
-        DisplayText = $"{Prefix}{formatted}{Suffix}";
-        var parts = ArcFormatting.ToParts(formatted, culture);
+        _displayText = null;
+        var numberFormat = culture.NumberFormat;
 
         var integerDigits = 0;
         var seenDecimal = false;
-        foreach (var part in parts)
+        for (var i = 0; i < formatted.Length; i++)
         {
-            if (part.Kind == FormattedPartKind.Decimal)
+            var kind = ArcFormatting.Classify(formatted[i], numberFormat);
+            if (kind == FormattedPartKind.Decimal)
             {
                 seenDecimal = true;
             }
-            else if (part.Kind == FormattedPartKind.Digit && !seenDecimal)
+            else if (kind == FormattedPartKind.Digit && !seenDecimal)
             {
                 integerDigits++;
-            }
-        }
-
-        var place = integerDigits;
-        var fraction = 0;
-        var order = 0;
-        seenDecimal = false;
-        var wanted = new List<Column>(parts.Count);
-        foreach (var part in parts)
-        {
-            switch (part.Kind)
-            {
-                case FormattedPartKind.Digit when !seenDecimal:
-                    wanted.Add(new Column { Key = $"i{--place}", IsDigit = true, Digit = part.Text[0] - '0', Order = order++ });
-                    break;
-                case FormattedPartKind.Digit:
-                    wanted.Add(new Column { Key = $"f{fraction++}", IsDigit = true, Digit = part.Text[0] - '0', Order = order++ });
-                    break;
-                case FormattedPartKind.Decimal:
-                    seenDecimal = true;
-                    wanted.Add(new Column { Key = "d", Text = part.Text });
-                    break;
-                case FormattedPartKind.Group:
-                    wanted.Add(new Column { Key = $"g{place}", Text = part.Text });
-                    break;
-                default:
-                    wanted.Add(new Column { Key = $"l{wanted.Count}{part.Text}", Text = part.Text });
-                    break;
             }
         }
 
@@ -251,64 +257,139 @@ public class RollingDigits : Control
         var animate = IsLoaded && !IsInstant && level == ArcMotionLevel.Full;
         var reduced = level != ArcMotionLevel.Full;
         var structureChanged = false;
-        var existing = _columns.Where(c => !c.Leaving).ToDictionary(c => c.Key);
-        var next = new List<Column>(wanted.Count);
-        foreach (var w in wanted)
+        var columns = _columns;
+        foreach (var column in columns)
         {
-            if (existing.Remove(w.Key, out var column))
+            column.Claimed = false;
+        }
+        var next = _nextColumns;
+        next.Clear();
+
+        var place = integerDigits;
+        var fraction = 0;
+        var order = 0;
+        seenDecimal = false;
+        for (var i = 0; i < formatted.Length; i++)
+        {
+            var c = formatted[i];
+            var kind = ArcFormatting.Classify(c, numberFormat);
+            ColumnKey key;
+            var isDigit = false;
+            var digit = 0;
+            var columnOrder = 0;
+            switch (kind)
             {
-                column.Order = w.Order;
-                column.Text = w.Text;
-                if (column.IsDigit && column.Digit != w.Digit)
+                case FormattedPartKind.Digit when !seenDecimal:
+                    key = new ColumnKey('i', --place, '\0');
+                    isDigit = true;
+                    digit = c - '0';
+                    columnOrder = order++;
+                    break;
+                case FormattedPartKind.Digit:
+                    key = new ColumnKey('f', fraction++, '\0');
+                    isDigit = true;
+                    digit = c - '0';
+                    columnOrder = order++;
+                    break;
+                case FormattedPartKind.Decimal:
+                    seenDecimal = true;
+                    key = new ColumnKey('d', 0, '\0');
+                    break;
+                case FormattedPartKind.Group:
+                    key = new ColumnKey('g', place, '\0');
+                    break;
+                default:
+                    key = new ColumnKey('l', next.Count, c);
+                    break;
+            }
+            var existing = FindUnclaimed(columns, key);
+            if (existing is not null)
+            {
+                existing.Claimed = true;
+                existing.Order = columnOrder;
+                if (existing.IsDigit)
                 {
-                    TurnTo(column, w.Digit, reduced);
+                    if (existing.Digit != digit)
+                    {
+                        TurnTo(existing, digit, reduced);
+                    }
                 }
-                next.Add(column);
+                else if (existing.Text.Length != 1 || existing.Text[0] != c)
+                {
+                    // A separator keeps its column when the culture changes its character.
+                    existing.Text = c.ToString();
+                }
+                next.Add(existing);
             }
             else
             {
                 structureChanged = true;
-                w.Revealed = !IsArmed;
-                w.Target = IsArmed ? 0 : w.Digit;
-                w.Position = CreateValue(w.Target, invalidateMeasure: false);
-                w.Presence = CreateValue(animate ? 0 : 1, invalidateMeasure: true);
+                var column = new Column
+                {
+                    Key = key,
+                    IsDigit = isDigit,
+                    Text = isDigit ? string.Empty : c.ToString(),
+                    Digit = digit,
+                    Order = columnOrder,
+                    Claimed = true,
+                    Revealed = !IsArmed
+                };
+                column.Target = IsArmed ? 0 : digit;
+                column.Position = CreateValue(column.Target, invalidateMeasure: false);
+                column.Presence = CreateValue(animate ? 0 : 1, invalidateMeasure: true);
                 if (animate)
                 {
-                    _ = w.Presence.AnimateTo(1, MotionSpec.Spring(ArcSpring.Morph));
+                    _ = column.Presence.AnimateTo(1, MotionSpec.Spring(ArcSpring.Morph));
                 }
-                next.Add(w);
+                next.Add(column);
             }
         }
         // Columns that disappeared shrink away, then are removed.
-        foreach (var gone in existing.Values)
+        for (var index = 0; index < columns.Count; index++)
         {
+            var gone = columns[index];
+            if (gone.Leaving || gone.Claimed)
+            {
+                continue;
+            }
             structureChanged = true;
             gone.Leaving = true;
-            var index = _columns.IndexOf(gone);
-            next.Insert(Math.Min(index, next.Count), gone);
             if (animate && gone.Presence is not null)
             {
-                var leaving = gone;
-                gone.Presence.AnimateTo(0, MotionSpec.Spring(ArcSpring.Morph)).ContinueWith(_ =>
-                    Dispatcher.Post(() =>
-                    {
-                        _columns.Remove(leaving);
-                        InvalidateMeasure();
-                    }), TaskScheduler.Default);
-            }
-            else
-            {
-                next.Remove(gone);
+                next.Insert(Math.Min(index, next.Count), gone);
+                _ = RemoveWhenGone(gone, gone.Presence.AnimateTo(0, MotionSpec.Spring(ArcSpring.Morph)));
             }
         }
-        _columns.Clear();
-        _columns.AddRange(next);
+        _nextColumns = columns;
+        _columns = next;
         // Digits are tabular: turning wheels never change the width, so only a change of columns needs a layout pass.
         if (structureChanged)
         {
             InvalidateMeasure();
         }
         InvalidateVisual();
+    }
+
+    private static Column? FindUnclaimed(List<Column> columns, ColumnKey key)
+    {
+        // A number has a dozen columns at most: a scan beats building a dictionary per rebuild.
+        for (var i = 0; i < columns.Count; i++)
+        {
+            var column = columns[i];
+            if (!column.Leaving && !column.Claimed && column.Key == key)
+            {
+                return column;
+            }
+        }
+        return null;
+    }
+
+    /// <summary>Drops a leaving column once its shrink ran (the value completes its task on the UI thread).</summary>
+    private async Task RemoveWhenGone(Column column, Task<bool> shrink)
+    {
+        await shrink;
+        _columns.Remove(column);
+        InvalidateMeasure();
     }
 
     private void TurnTo(Column column, int digit, bool reduced)
@@ -343,8 +424,12 @@ public class RollingDigits : Control
     private void Reveal()
     {
         var reduced = ArcMotion.GetEffectiveLevel(this) != ArcMotionLevel.Full;
-        foreach (var column in _columns.Where(c => c.IsDigit && !c.Revealed))
+        foreach (var column in _columns)
         {
+            if (!column.IsDigit || column.Revealed)
+            {
+                continue;
+            }
             column.Target = column.Digit;
             if (reduced || !IsLoaded)
             {

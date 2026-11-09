@@ -22,13 +22,9 @@
                                     VerticalAlignment="Center"
                                     IsVisible="{TemplateBinding IsValueVisible}"
                                     TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}">
+                            <!-- The range dash and high readout (PART_ReadoutDash, PART_ReadoutHigh) are added by the slider
+                                 the first time it is a range. -->
                             <arc:SliderNumberText Name="PART_ReadoutLow" VerticalAlignment="Center" />
-                            <TextBlock Name="PART_ReadoutDash"
-                                       IsVisible="False"
-                                       Text="–"
-                                       VerticalAlignment="Center"
-                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
-                            <arc:SliderNumberText Name="PART_ReadoutHigh" IsVisible="False" VerticalAlignment="Center" />
                         </StackPanel>
                         <TextBlock Name="PART_Label"
                                    Text="{TemplateBinding Label}"
@@ -91,14 +87,6 @@
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
-        <Style Selector="^:range">
-            <Style Selector="^ /template/ TextBlock#PART_ReadoutDash">
-                <Setter Property="IsVisible" Value="True" />
-            </Style>
-            <Style Selector="^ /template/ arc|SliderNumberText#PART_ReadoutHigh">
-                <Setter Property="IsVisible" Value="True" />
-            </Style>
-        </Style>
         <Style Selector="^:disabled">
             <Setter Property="Opacity" Value="{arc:SliderTokenResource DisabledOpacity}" />
             <Style Selector="^ /template/ arc|SliderRail#PART_Rail">

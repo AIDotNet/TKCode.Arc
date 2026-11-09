@@ -67,7 +67,7 @@ internal static class ChartCategoryAxis
             var share = last > 0 ? (double)index / last : 0.5;
             var text = texts.Get(palette, label, palette.SizeXS, palette.TextMuted);
             var x = left + share * width - share * text.WidthIncludingTrailingWhitespace;
-            context.DrawText(text, new Point(Math.Round(x), top));
+            text.Draw(context, new Point(Math.Round(x), top));
         }
     }
 }

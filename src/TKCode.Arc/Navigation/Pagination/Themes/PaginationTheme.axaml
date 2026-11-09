@@ -21,33 +21,12 @@
                                       Size="{arc:PaginationTokenResource StepGlyphSize}"
                                       StrokeThickness="2" />
                     </arc:PaginationButton>
-                    <arc:PaginationButton Name="PART_First" IsVisible="False" />
-                    <Border Name="PART_EllipsisStart"
-                            IsVisible="False"
-                            Width="{arc:PaginationTokenResource EllipsisWidth}"
-                            Height="{arc:ArcDesignTokenResource ControlSizeSM}">
-                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Ellipsis}"
-                                      Size="{arc:PaginationTokenResource StepGlyphSize}"
-                                      Foreground="{arc:ArcDesignTokenResource TextMuted}"
-                                      HorizontalAlignment="Center"
-                                      VerticalAlignment="Center" />
-                    </Border>
+                    <!-- PART_First, PART_Last and the two ellipses are inserted by the control the first time ShowBoundaryPages needs them. -->
                     <arc:PaginationButton Name="PART_Page0" />
                     <arc:PaginationButton Name="PART_Page1" />
                     <arc:PaginationButton Name="PART_Page2" />
                     <arc:PaginationButton Name="PART_Page3" />
                     <arc:PaginationButton Name="PART_Page4" />
-                    <Border Name="PART_EllipsisEnd"
-                            IsVisible="False"
-                            Width="{arc:PaginationTokenResource EllipsisWidth}"
-                            Height="{arc:ArcDesignTokenResource ControlSizeSM}">
-                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Ellipsis}"
-                                      Size="{arc:PaginationTokenResource StepGlyphSize}"
-                                      Foreground="{arc:ArcDesignTokenResource TextMuted}"
-                                      HorizontalAlignment="Center"
-                                      VerticalAlignment="Center" />
-                    </Border>
-                    <arc:PaginationButton Name="PART_Last" IsVisible="False" />
                     <arc:PaginationButton Name="PART_Next" Classes="step">
                         <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronRight}"
                                       Size="{arc:PaginationTokenResource StepGlyphSize}"
@@ -81,13 +60,6 @@
                                           Content="{TemplateBinding Content}"
                                           ContentTemplate="{TemplateBinding ContentTemplate}" />
                     </Border>
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            Margin="-4"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{arc:PaginationTokenResource ButtonFocusRingRadius}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
         </Setter>
@@ -117,9 +89,6 @@
         <Style Selector="^:disabled">
             <Setter Property="Opacity" Value="{arc:PaginationTokenResource DisabledOpacity}" />
             <Setter Property="Cursor" Value="No" />
-        </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
         </Style>
 
         <Style Selector="^:motion-full">

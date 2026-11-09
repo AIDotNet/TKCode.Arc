@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Automation;
@@ -6,6 +7,9 @@ using Avalonia.Automation.Peers;
 using Avalonia.Automation.Provider;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
+using Avalonia.Controls.Metadata;
+using Avalonia.Controls.Primitives;
+using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
@@ -41,9 +45,86 @@ internal enum CommentThreadButtonKind
     Ghost
 }
 
-/// <summary>A button of <see cref="CommentThread"/>: optional Lucide glyph plus text, styled by <see cref="Kind"/>.</summary>
+/// <summary>
+/// A button of <see cref="CommentThread"/>: optional Lucide glyph plus text, styled by <see cref="Kind"/>. The kind and
+/// the two states are pseudo-classes (the theme selects on those: a property selector costs every comment's buttons an
+/// activator per style); the keyboard focus ring is built on first focus.
+/// </summary>
+[PseudoClasses(":action", ":danger", ":icon", ":close", ":emoji", ":pill", ":send", ":ghost", ":compact", ":on")]
 internal sealed class CommentThreadButton : AvaloniaButton
 {
+    // Arc's ring sits 4px outside every comment button (no token holds it): set when the ring is created.
+    private static readonly Thickness s_focusRingMargin = new(-4);
+    private static readonly object s_noMarginToken = new();
+    private LazyFocusRing? _focusRing;
+
+    public CommentThreadButton()
+    {
+        UpdateKindPseudoClasses();
+    }
+
+    private void UpdateKindPseudoClasses()
+    {
+        var kind = Kind;
+        PseudoClasses.Set(":action", kind == CommentThreadButtonKind.Action);
+        PseudoClasses.Set(":danger", kind == CommentThreadButtonKind.Danger);
+        PseudoClasses.Set(":icon", kind == CommentThreadButtonKind.Icon);
+        PseudoClasses.Set(":close", kind == CommentThreadButtonKind.Close);
+        PseudoClasses.Set(":emoji", kind == CommentThreadButtonKind.Emoji);
+        PseudoClasses.Set(":pill", kind == CommentThreadButtonKind.Pill);
+        PseudoClasses.Set(":send", kind == CommentThreadButtonKind.Send);
+        PseudoClasses.Set(":ghost", kind == CommentThreadButtonKind.Ghost);
+    }
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == KindProperty)
+        {
+            UpdateKindPseudoClasses();
+        }
+        else if (change.Property == IsCompactProperty)
+        {
+            PseudoClasses.Set(":compact", IsCompact);
+        }
+        else if (change.Property == IsOnProperty)
+        {
+            PseudoClasses.Set(":on", IsOn);
+        }
+    }
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        _focusRing ??= new LazyFocusRing(this, s_noMarginToken, ArcDesignTokens.Key(ArcDesignTokenKind.RadiusPill));
+        _focusRing.Attach(e.NameScope.Find<Panel>("PART_Root"));
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        UpdateFocusRing();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        UpdateFocusRing();
+    }
+
+    private void UpdateFocusRing()
+    {
+        if (_focusRing is null)
+        {
+            return;
+        }
+        _focusRing.Update();
+        if (_focusRing.Ring is { } ring && ring.Margin != s_focusRingMargin)
+        {
+            ring.Margin = s_focusRingMargin;
+        }
+    }
+
     public static readonly StyledProperty<CommentThreadButtonKind> KindProperty =
         AvaloniaProperty.Register<CommentThreadButton, CommentThreadButtonKind>(nameof(Kind));
 
@@ -103,7 +184,8 @@ internal enum CommentThreadPartRole
     ResolvedIcon
 }
 
-/// <summary>A themed box of a <see cref="CommentThread"/> (padding, radius and colors come from the theme by role).</summary>
+/// <summary>A themed box of a <see cref="CommentThread"/> (padding, radius and colors come from the theme by role, as a pseudo-class).</summary>
+[PseudoClasses(":header", ":list", ":empty", ":composer-area", ":replying", ":suggestions", ":ring", ":resolved-face", ":resolved-icon")]
 internal sealed class CommentThreadPart : Border
 {
     public static readonly StyledProperty<CommentThreadPartRole> RoleProperty =
@@ -112,6 +194,34 @@ internal sealed class CommentThreadPart : Border
     public CommentThreadPartRole Role { get => GetValue(RoleProperty); set => SetValue(RoleProperty, value); }
 
     protected override Type StyleKeyOverride => typeof(CommentThreadPart);
+
+    public CommentThreadPart()
+    {
+        UpdateRolePseudoClasses();
+    }
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == RoleProperty)
+        {
+            UpdateRolePseudoClasses();
+        }
+    }
+
+    private void UpdateRolePseudoClasses()
+    {
+        var role = Role;
+        PseudoClasses.Set(":header", role == CommentThreadPartRole.Header);
+        PseudoClasses.Set(":list", role == CommentThreadPartRole.List);
+        PseudoClasses.Set(":empty", role == CommentThreadPartRole.Empty);
+        PseudoClasses.Set(":composer-area", role == CommentThreadPartRole.ComposerArea);
+        PseudoClasses.Set(":replying", role == CommentThreadPartRole.Replying);
+        PseudoClasses.Set(":suggestions", role == CommentThreadPartRole.Suggestions);
+        PseudoClasses.Set(":ring", role == CommentThreadPartRole.Ring);
+        PseudoClasses.Set(":resolved-face", role == CommentThreadPartRole.ResolvedFace);
+        PseudoClasses.Set(":resolved-icon", role == CommentThreadPartRole.ResolvedIcon);
+    }
 }
 
 /// <summary>Roles of <see cref="CommentThreadText"/>.</summary>
@@ -142,7 +252,8 @@ internal enum CommentThreadTextRole
     ResolvedTitle
 }
 
-/// <summary>A themed text of a <see cref="CommentThread"/> (size, weight and color come from the theme by role).</summary>
+/// <summary>A themed text of a <see cref="CommentThread"/> (size, weight and color come from the theme by role, as a pseudo-class).</summary>
+[PseudoClasses(":title", ":small", ":name", ":deleted", ":empty", ":prompt", ":replying", ":resolved-title")]
 internal sealed class CommentThreadText : TextBlock
 {
     public static readonly StyledProperty<CommentThreadTextRole> RoleProperty =
@@ -162,12 +273,23 @@ internal sealed class CommentThreadText : TextBlock
     private FontWeight _partWeight = FontWeight.Medium;
     private bool _usesParts;
 
+    public CommentThreadText()
+    {
+        UpdateRolePseudoClasses();
+    }
+
     /// <summary>
     /// Shows <paramref name="text"/> with the first <paramref name="part"/> inside it emphasized (Arc's <c>highlight</c>:
     /// a translated sentence keeps its highlighted name wherever the language puts it).
     /// </summary>
     public void SetEmphasized(string text, string? part, FontWeight weight)
     {
+        if (_usesParts && Inlines is { Count: > 0 } && string.Equals(text, _text, StringComparison.Ordinal) &&
+            string.Equals(part, _part, StringComparison.Ordinal) && weight == _partWeight)
+        {
+            // The same runs: a refresh for an unrelated change does not rebuild the inlines.
+            return;
+        }
         _text = text;
         _part = part;
         _partWeight = weight;
@@ -182,6 +304,23 @@ internal sealed class CommentThreadText : TextBlock
         {
             Rebuild();
         }
+        else if (change.Property == RoleProperty)
+        {
+            UpdateRolePseudoClasses();
+        }
+    }
+
+    private void UpdateRolePseudoClasses()
+    {
+        var role = Role;
+        PseudoClasses.Set(":title", role == CommentThreadTextRole.Title);
+        PseudoClasses.Set(":small", role == CommentThreadTextRole.Small);
+        PseudoClasses.Set(":name", role == CommentThreadTextRole.Name);
+        PseudoClasses.Set(":deleted", role == CommentThreadTextRole.Deleted);
+        PseudoClasses.Set(":empty", role == CommentThreadTextRole.Empty);
+        PseudoClasses.Set(":prompt", role == CommentThreadTextRole.Prompt);
+        PseudoClasses.Set(":replying", role == CommentThreadTextRole.Replying);
+        PseudoClasses.Set(":resolved-title", role == CommentThreadTextRole.ResolvedTitle);
     }
 
     private void Rebuild()
@@ -487,6 +626,7 @@ internal sealed class CommentThreadDeletedDot : Control
 /// The actions of a comment, quiet until the comment is hovered or holds focus (Arc's <c>.actions</c> opacity), always
 /// shown while a prompt or the picker is open and on touch screens.
 /// </summary>
+[PseudoClasses(":revealed")]
 internal sealed class CommentThreadReveal : Decorator
 {
     public static readonly StyledProperty<bool> IsRevealedProperty =
@@ -495,6 +635,15 @@ internal sealed class CommentThreadReveal : Decorator
     public bool IsRevealed { get => GetValue(IsRevealedProperty); set => SetValue(IsRevealedProperty, value); }
 
     protected override Type StyleKeyOverride => typeof(CommentThreadReveal);
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == IsRevealedProperty)
+        {
+            PseudoClasses.Set(":revealed", IsRevealed);
+        }
+    }
 }
 
 /// <summary>A comment's footer: reactions then actions, wrapping (Arc's <c>.footer</c>: 4px row gap, 8px column gap).</summary>
@@ -528,7 +677,8 @@ internal enum CommentThreadStackRole
     Plain
 }
 
-/// <summary>A themed stack of a <see cref="CommentThread"/> (spacing from the theme by role).</summary>
+/// <summary>A themed stack of a <see cref="CommentThread"/> (spacing from the theme by role, as a pseudo-class).</summary>
+[PseudoClasses(":main", ":actions", ":composer-actions", ":replying", ":resolved", ":suggestion", ":plain")]
 internal sealed class CommentThreadStack : StackPanel
 {
     public static readonly StyledProperty<CommentThreadStackRole> RoleProperty =
@@ -537,12 +687,39 @@ internal sealed class CommentThreadStack : StackPanel
     public CommentThreadStackRole Role { get => GetValue(RoleProperty); set => SetValue(RoleProperty, value); }
 
     protected override Type StyleKeyOverride => typeof(CommentThreadStack);
+
+    public CommentThreadStack()
+    {
+        UpdateRolePseudoClasses();
+    }
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == RoleProperty)
+        {
+            UpdateRolePseudoClasses();
+        }
+    }
+
+    private void UpdateRolePseudoClasses()
+    {
+        var role = Role;
+        PseudoClasses.Set(":main", role == CommentThreadStackRole.Main);
+        PseudoClasses.Set(":actions", role == CommentThreadStackRole.Actions);
+        PseudoClasses.Set(":composer-actions", role == CommentThreadStackRole.ComposerActions);
+        PseudoClasses.Set(":replying", role == CommentThreadStackRole.Replying);
+        PseudoClasses.Set(":resolved", role == CommentThreadStackRole.Resolved);
+        PseudoClasses.Set(":suggestion", role == CommentThreadStackRole.Suggestion);
+        PseudoClasses.Set(":plain", role == CommentThreadStackRole.Plain);
+    }
 }
 
 /// <summary>
 /// "Show 2 replies" / "Hide replies" (Arc's <c>.toggle</c>): a chevron that turns 90° on the snappy spring, the label,
 /// and while collapsed a stack of up to three repliers. Exposes expand / collapse to automation.
 /// </summary>
+[PseudoClasses(":expanded")]
 internal sealed class CommentThreadReplyToggle : AvaloniaButton
 {
     public static readonly StyledProperty<bool> IsExpandedProperty =
@@ -556,20 +733,58 @@ internal sealed class CommentThreadReplyToggle : AvaloniaButton
 
     protected override Type StyleKeyOverride => typeof(CommentThreadReplyToggle);
 
+    private static readonly Thickness s_focusRingMargin = new(-4);
+    private static readonly object s_noMarginToken = new();
+    private LazyFocusRing? _focusRing;
+
     public CommentThreadReplyToggle()
     {
         Stack = new CommentThreadAvatarStack(18);
         Content = Stack;
+        PseudoClasses.Set(":expanded", IsExpanded);
     }
 
     /// <summary>The repliers shown while collapsed.</summary>
     public CommentThreadAvatarStack Stack { get; }
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        _focusRing ??= new LazyFocusRing(this, s_noMarginToken, ArcDesignTokens.Key(ArcDesignTokenKind.RadiusPill));
+        _focusRing.Attach(e.NameScope.Find<Panel>("PART_Root"));
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        UpdateFocusRing();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        UpdateFocusRing();
+    }
+
+    private void UpdateFocusRing()
+    {
+        if (_focusRing is null)
+        {
+            return;
+        }
+        _focusRing.Update();
+        if (_focusRing.Ring is { } ring && ring.Margin != s_focusRingMargin)
+        {
+            ring.Margin = s_focusRingMargin;
+        }
+    }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
         if (change.Property == IsExpandedProperty)
         {
+            PseudoClasses.Set(":expanded", IsExpanded);
             Stack.IsVisible = !IsExpanded;
             if (GetAutomationPeer() is { } peer)
             {
@@ -648,6 +863,7 @@ internal sealed class CommentThreadResolvedIcon : Border
 /// width, except the child at <see cref="FillIndex"/>, which takes the remaining width (<c>flex: 1; min-width: 0</c>).
 /// Each child aligns by its own <c>VerticalAlignment</c> within the row.
 /// </summary>
+[PseudoClasses(":comment", ":header", ":resolved")]
 internal sealed class CommentThreadRow : Panel
 {
     public static readonly StyledProperty<double> GapProperty =
@@ -668,7 +884,29 @@ internal sealed class CommentThreadRow : Panel
         AffectsMeasure<CommentThreadRow>(GapProperty, FillIndexProperty);
     }
 
+    public CommentThreadRow()
+    {
+        UpdateRolePseudoClasses();
+    }
+
     protected override Type StyleKeyOverride => typeof(CommentThreadRow);
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == RoleProperty)
+        {
+            UpdateRolePseudoClasses();
+        }
+    }
+
+    private void UpdateRolePseudoClasses()
+    {
+        var role = Role;
+        PseudoClasses.Set(":comment", role == CommentThreadRowRole.Comment);
+        PseudoClasses.Set(":header", role == CommentThreadRowRole.Header);
+        PseudoClasses.Set(":resolved", role == CommentThreadRowRole.Resolved);
+    }
 
     protected override Size MeasureOverride(Size availableSize)
     {

@@ -346,18 +346,26 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
     /// <summary>Values from outside a drag (keys, bindings, a clicked mark) spring the thumb from wherever it is on screen.</summary>
     private void SyncThumb(bool animate)
     {
-        UpdateText();
+        if (_dragging)
+        {
+            // Pointer events arrive far above the frame rate; the value itself is already committed.
+            RequestTextUpdate();
+        }
+        else
+        {
+            UpdateText();
+        }
         if (_position is not { } position || _lag is not { } lag)
         {
             _rail?.InvalidateVisual();
-            _markLabels?.InvalidateVisual();
+            _markLabels?.SyncMarkStates();
             return;
         }
         var target = ToPosition(ClampToRange(Value));
         if (_dragging || _goal == target)
         {
             _rail?.InvalidateVisual();
-            _markLabels?.InvalidateVisual();
+            _markLabels?.SyncMarkStates();
             return;
         }
         var placed = !double.IsNaN(_goal);
@@ -375,7 +383,26 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
             _ = position.AnimateTo(target, MotionSpec.Spring(ThumbSpring));
         }
         _rail?.InvalidateVisual();
-        _markLabels?.InvalidateVisual();
+        _markLabels?.SyncMarkStates();
+    }
+
+    // During a drag the readout, tag and spoken value are refreshed once per frame, not once per pointer event.
+    private bool _textPosted;
+    private Action? _flushText;
+
+    private void RequestTextUpdate()
+    {
+        if (_textPosted)
+        {
+            return;
+        }
+        _textPosted = true;
+        _flushText ??= () =>
+        {
+            _textPosted = false;
+            UpdateText();
+        };
+        Dispatcher.UIThread.Post(_flushText, DispatcherPriority.Render);
     }
 
     private void UpdateText()

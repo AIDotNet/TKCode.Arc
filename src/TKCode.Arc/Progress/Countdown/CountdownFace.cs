@@ -5,6 +5,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
+using Avalonia.Media.TextFormatting;
 
 namespace TKCode.Arc;
 
@@ -74,14 +75,15 @@ internal sealed class CountdownFace : Control
     {
         public required CountdownUnits Unit { get; init; }
         public List<Wheel> Wheels { get; } = new();
-        public FormattedText? Name { get; set; }
+        public TextLayout? Name { get; set; }
         public double Width { get; set; }
     }
 
     private readonly List<Group> _groups = new();
     private readonly Dictionary<string, Wheel> _wheels = new(StringComparer.Ordinal);
-    private readonly FormattedText?[] _digits = new FormattedText?[10];
-    private FormattedText? _colon;
+    // TextLayout, not FormattedText: a cached FormattedText re-shapes on every Draw, and a rolling face draws ~16 texts a frame.
+    private readonly TextLayout?[] _digits = new TextLayout?[10];
+    private TextLayout? _colon;
     private double _cell;
     private double _availableWidth = double.PositiveInfinity;
     private IBrush? _feather;
@@ -105,14 +107,31 @@ internal sealed class CountdownFace : Control
             change.Property == NameFontSizeProperty || change.Property == NameFontWeightProperty ||
             change.Property == TrackingProperty || change.Property == VariantProperty)
         {
-            Array.Clear(_digits);
-            _colon = null;
-            _feather = null;
-            foreach (var group in _groups)
-            {
-                group.Name = null;
-            }
+            ClearTexts();
         }
+    }
+
+    private void ClearTexts()
+    {
+        for (var d = 0; d < _digits.Length; d++)
+        {
+            _digits[d]?.Dispose();
+            _digits[d] = null;
+        }
+        _colon?.Dispose();
+        _colon = null;
+        _feather = null;
+        foreach (var group in _groups)
+        {
+            group.Name?.Dispose();
+            group.Name = null;
+        }
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        ClearTexts();
     }
 
     /// <summary>Dims the digits to 0.3 until the clock is first read; the dim clears over the considered duration.</summary>
@@ -143,6 +162,10 @@ internal sealed class CountdownFace : Control
         var structureChanged = parts.Count != _groups.Count || parts.Where((p, i) => _groups[i].Unit != p.Unit).Any();
         if (structureChanged)
         {
+            foreach (var group in _groups)
+            {
+                group.Name?.Dispose();
+            }
             _groups.Clear();
             foreach (var part in parts)
             {
@@ -232,23 +255,23 @@ internal sealed class CountdownFace : Control
         return value;
     }
 
-    private FormattedText Digit(int d)
+    private TextLayout Digit(int d)
     {
         if (_digits[d] is { } cached)
         {
             return cached;
         }
-        var text = new FormattedText(d.ToString(CultureInfo.InvariantCulture), CultureInfo.InvariantCulture, FlowDirection.LeftToRight,
+        var text = new TextLayout(d.ToString(CultureInfo.InvariantCulture),
             new Typeface(DigitFontFamily, FontStyle.Normal, DigitFontWeight), DigitFontSize, Foreground ?? Brushes.Black);
         _digits[d] = text;
         return text;
     }
 
-    private FormattedText Colon() => _colon ??= new FormattedText(":", CultureInfo.InvariantCulture, FlowDirection.LeftToRight,
+    private TextLayout Colon() => _colon ??= new TextLayout(":",
         new Typeface(DigitFontFamily, FontStyle.Normal, DigitFontWeight), DigitFontSize, MutedForeground ?? Brushes.Gray);
 
-    private FormattedText NameOf(Group group, bool compact) => group.Name ??= new FormattedText(
-        CountdownTime.Name(group.Unit, compact), CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
+    private TextLayout NameOf(Group group, bool compact) => group.Name ??= new TextLayout(
+        CountdownTime.Name(group.Unit, compact),
         new Typeface(compact ? DigitFontFamily : NameFontFamily, FontStyle.Normal, NameFontWeight), NameFontSize,
         MutedForeground ?? Brushes.Gray);
 
@@ -262,7 +285,12 @@ internal sealed class CountdownFace : Control
     {
         _availableWidth = availableSize.Width;
         var tracking = Tracking * DigitFontSize;
-        _cell = Enumerable.Range(0, 10).Max(d => Digit(d).WidthIncludingTrailingWhitespace) + tracking;
+        var widest = 0.0;
+        for (var d = 0; d < 10; d++)
+        {
+            widest = Math.Max(widest, Digit(d).WidthIncludingTrailingWhitespace);
+        }
+        _cell = widest + tracking;
         var compact = Compact;
         var width = 0.0;
         for (var g = 0; g < _groups.Count; g++)
@@ -308,7 +336,7 @@ internal sealed class CountdownFace : Control
                     var colon = Colon();
                     using (context.PushOpacity(0.6))
                     {
-                        context.DrawText(colon, new Point(x + 0.12 * size, digitTop + (size - colon.Height) / 2 - 0.06 * size));
+                        colon.Draw(context, new Point(x + 0.12 * size, digitTop + (size - colon.Height) / 2 - 0.06 * size));
                     }
                     x += ColonWidth;
                 }
@@ -323,11 +351,11 @@ internal sealed class CountdownFace : Control
             if (compact)
             {
                 var digitBaseline = digitTop + (size - Digit(0).Height) / 2 + Digit(0).Baseline;
-                context.DrawText(name, new Point(digitsX + digitsWidth + 1, digitBaseline - name.Baseline));
+                name.Draw(context, new Point(digitsX + digitsWidth + 1, digitBaseline - name.Baseline));
             }
             else
             {
-                context.DrawText(name, new Point(x + (group.Width - name.WidthIncludingTrailingWhitespace) / 2,
+                name.Draw(context, new Point(x + (group.Width - name.WidthIncludingTrailingWhitespace) / 2,
                     size + 6 + (NameFontSize - name.Height) / 2));
             }
             x += group.Width;
@@ -359,7 +387,7 @@ internal sealed class CountdownFace : Control
             // At rest the glyph sits inside the mask's opaque band: draw it alone. Most wheels of a ticking face are at
             // rest, so a frame where the seconds roll records one text run per still wheel instead of four layers.
             var still = Digit((int)(((nearest % baseSize) + baseSize) % baseSize));
-            context.DrawText(still, new Point(cell.X + (cell.Width - still.WidthIncludingTrailingWhitespace) / 2, cell.Y + (size - still.Height) / 2));
+            still.Draw(context, new Point(cell.X + (cell.Width - still.WidthIncludingTrailingWhitespace) / 2, cell.Y + (size - still.Height) / 2));
             return;
         }
         using (context.PushOpacity(presence))
@@ -379,7 +407,7 @@ internal sealed class CountdownFace : Control
                     cell.Y + (size - glyph.Height) / 2 + offset * size);
                 if (abs < 0.02)
                 {
-                    context.DrawText(glyph, origin);
+                    glyph.Draw(context, origin);
                     continue;
                 }
                 using (context.PushOpacity(1 - abs))
@@ -387,7 +415,7 @@ internal sealed class CountdownFace : Control
                     var effect = ArcBlur.Get(abs * 2);
                     using (effect is null ? default(DrawingContext.PushedState?) : context.PushEffect(effect, cell.Translate(new Vector(0, offset * size))))
                     {
-                        context.DrawText(glyph, origin);
+                        glyph.Draw(context, origin);
                     }
                 }
             }

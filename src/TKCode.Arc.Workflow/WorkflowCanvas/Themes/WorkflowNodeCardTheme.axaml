@@ -26,7 +26,7 @@
         <Setter Property="SkippedOpacity" Value="{arc:WorkflowNodeCardTokenResource SkippedOpacity}" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:WorkflowNodeCard">
-                <Panel>
+                <Panel Name="PART_Root">
                 <!-- The shadows are pictures (WorkflowCardShadow): a box shadow costs the GPU a blur pass per card per frame. -->
                 <arc:WorkflowCardShadow Shadows="{TemplateBinding StateShadow}"
                                         CornerRadius="{TemplateBinding CornerRadius}"
@@ -81,22 +81,7 @@
                                         CornerRadius="{TemplateBinding CornerRadius}"
                                         BorderThickness="{TemplateBinding BorderThickness}"
                                         Opacity="{TemplateBinding StateOpacity}" />
-                <!-- Selected: 3px of the subtle accent around the card's accent border. -->
-                <Border Name="PART_Selection"
-                        IsVisible="False"
-                        IsHitTestVisible="False"
-                        Margin="{arc:WorkflowNodeCardTokenResource SelectionHaloMargin}"
-                        CornerRadius="{arc:WorkflowNodeCardTokenResource SelectionHaloRadius}"
-                        BorderThickness="{arc:WorkflowNodeCardTokenResource SelectionHaloThickness}"
-                        BorderBrush="{arc:ArcDesignTokenResource AccentSubtle}" />
-                <!-- Keyboard focus: Arc's shared ring, 2px, 2px outside the card. -->
-                <Border Name="PART_FocusRing"
-                        IsVisible="False"
-                        IsHitTestVisible="False"
-                        Margin="{arc:WorkflowNodeCardTokenResource FocusRingMargin}"
-                        CornerRadius="{arc:WorkflowNodeCardTokenResource FocusRingRadius}"
-                        BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                        BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                <!-- The selection halo (PART_Selection) and the keyboard focus ring (LazyFocusRing) are added by the card when first needed. -->
                 </Panel>
             </ControlTemplate>
         </Setter>
@@ -133,14 +118,6 @@
         <!-- While a connection is made, the steps it cannot go to fade. -->
         <Style Selector="^:connect-invalid">
             <Setter Property="Opacity" Value="0.4" />
-        </Style>
-
-        <Style Selector="^:selected /template/ Border#PART_Selection">
-            <Setter Property="IsVisible" Value="True" />
-        </Style>
-
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
         </Style>
 
         <!-- Arc: border-color, background-color and opacity ease over the standard duration; reduced motion has no transition. -->

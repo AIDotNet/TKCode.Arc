@@ -10,6 +10,7 @@
             <ControlTemplate TargetType="arc:ScrubInputEditor">
                 <Border Background="Transparent" Padding="{TemplateBinding Padding}">
                     <ScrollViewer Name="PART_ScrollViewer"
+                                  Theme="{DynamicResource FieldScrollViewerTheme}"
                                   HorizontalScrollBarVisibility="Hidden"
                                   VerticalScrollBarVisibility="Disabled">
                         <TextPresenter Name="PART_TextPresenter"
@@ -55,7 +56,7 @@
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:ScrubInputUnitButton">
-                <Panel>
+                <Panel Name="PART_Host">
                     <Border Name="PART_Surface"
                             Background="{TemplateBinding Background}"
                             CornerRadius="{TemplateBinding CornerRadius}"
@@ -66,13 +67,6 @@
                                                 HorizontalAlignment="Center"
                                                 VerticalAlignment="Center" />
                     </Border>
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            Margin="{arc:ScrubInputTokenResource UnitFocusRingMargin}"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{arc:ScrubInputTokenResource UnitFocusRingRadius}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
         </Setter>
@@ -96,9 +90,6 @@
         </Style>
         <Style Selector="^:cycle:pressed:not(:motion-reduced)">
             <Setter Property="RenderTransform" Value="scale(0.94)" />
-        </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
         </Style>
 
         <!-- Colours and the press scale on fast + standard; reduced motion: instant colours, no scale. -->
@@ -165,7 +156,7 @@
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="ClipToBounds" Value="False" />
 
-        <Style Selector="^[Size=Small]">
+        <Style Selector="^:small">
             <Setter Property="Height" Value="{arc:ScrubInputTokenResource ShellHeightSM}" />
             <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
         </Style>
@@ -215,7 +206,7 @@
             <Setter Property="TrackBrush" Value="{arc:ScrubInputTokenResource TrackFill}" />
             <Setter Property="CornerRadius" Value="{arc:ScrubInputTokenResource ShellRadius}" />
         </Style>
-        <Style Selector="^[Size=Small] /template/ arc|ScrubInputShell#PART_Shell">
+        <Style Selector="^:small /template/ arc|ScrubInputShell#PART_Shell">
             <Setter Property="CornerRadius" Value="{arc:ScrubInputTokenResource ShellRadiusSM}" />
         </Style>
 

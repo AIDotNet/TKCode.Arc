@@ -131,7 +131,7 @@ internal sealed class MixtureOfExpertsSequenceToken : MixtureOfExpertsPart
         using (context.PushOpacity(opacity))
         {
             var text = palette.Text(_text, color);
-            context.DrawText(text, new Point(8, (h - text.Height) / 2));
+            text.Draw(context, new Point(8, (h - text.Height) / 2));
         }
     }
 }

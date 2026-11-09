@@ -1,7 +1,11 @@
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
+using Avalonia.Controls.Primitives;
+using Avalonia.Input;
 using Avalonia.Media;
 using AvaloniaButton = Avalonia.Controls.Button;
 
@@ -82,6 +86,33 @@ internal class PaginationButton : AvaloniaButton
         var value = new MotionValue<double>(this, 1, MotionVectors.Double);
         value.Changed += v => Opacity = Math.Clamp(v, 0, 1);
         return value;
+    }
+
+    private LazyFocusRing? _focusRing;
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        // Built the first time the button is keyboard focused, over the template's root panel (a pagination has nine buttons).
+        _focusRing ??= new LazyFocusRing(this, FocusRingKeys.None, PaginationTokens.Key(PaginationTokenKind.ButtonFocusRingRadius));
+        var host = VisualChildren.Count > 0 ? VisualChildren[0] as Panel : null;
+        _focusRing.Attach(host is null ? null : ring =>
+        {
+            ring.Margin = new Thickness(-4);
+            host.Children.Add(ring);
+        }, host is null ? null : ring => host.Children.Remove(ring));
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing?.Update();
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)

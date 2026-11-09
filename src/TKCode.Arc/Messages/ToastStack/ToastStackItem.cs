@@ -38,7 +38,8 @@ internal sealed class ToastStackRecord
 [TemplatePart(ContentPart, typeof(Control))]
 [TemplatePart(ActionPart, typeof(AvaloniaButton))]
 [TemplatePart(ClosePart, typeof(AvaloniaButton))]
-[PseudoClasses(FrontPseudoClass, ExpandedPseudoClass, TuckedPseudoClass, DraggingPseudoClass, NarrowPseudoClass)]
+[PseudoClasses(FrontPseudoClass, ExpandedPseudoClass, TuckedPseudoClass, DraggingPseudoClass, NarrowPseudoClass,
+    SuccessPseudoClass, InfoPseudoClass, WarningPseudoClass, ErrorPseudoClass)]
 internal sealed class ToastStackItem : TemplatedControl
 {
     public const string ContentPart = "PART_Content";
@@ -49,6 +50,12 @@ internal sealed class ToastStackItem : TemplatedControl
     public const string TuckedPseudoClass = ":tucked";
     public const string DraggingPseudoClass = ":dragging";
     public const string NarrowPseudoClass = ":narrow";
+
+    /// <summary>The record's kind as a pseudo-class (the icon color follows it; Loading has none).</summary>
+    public const string SuccessPseudoClass = ":success";
+    public const string InfoPseudoClass = ":info";
+    public const string WarningPseudoClass = ":warning";
+    public const string ErrorPseudoClass = ":error";
 
     /// <summary>A swipe this far right has faded most of the way out.</summary>
     private const double SwipeFade = 280;
@@ -216,7 +223,13 @@ internal sealed class ToastStackItem : TemplatedControl
     /// <summary>Copies the record into the bound properties (an update morphs the card in place).</summary>
     public void ApplyRecord()
     {
-        Kind = Record.Kind;
+        var kind = Record.Kind;
+        Kind = kind;
+        // The theme colors the icon on these pseudo-classes (not on Kind: a property selector per card per kind).
+        PseudoClasses.Set(SuccessPseudoClass, kind == ToastKind.Success);
+        PseudoClasses.Set(InfoPseudoClass, kind == ToastKind.Info);
+        PseudoClasses.Set(WarningPseudoClass, kind == ToastKind.Warning);
+        PseudoClasses.Set(ErrorPseudoClass, kind == ToastKind.Error);
         Glyph = ToastGlyphs.For(Record.Kind);
         IsLoading = Record.Kind == ToastKind.Loading;
         Title = Record.Title;

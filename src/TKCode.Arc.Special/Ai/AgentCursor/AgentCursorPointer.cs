@@ -2,6 +2,7 @@ using System.Globalization;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
+using Avalonia.Media.TextFormatting;
 using Avalonia.Media.Immutable;
 using TKCode.Arc.Motion;
 
@@ -80,8 +81,12 @@ internal sealed class AgentCursorPointer : Control
 
     private readonly TranslateTransform _translate = new();
     private readonly ScaleTransform _scale = new(1, 1);
-    private FormattedText? _label;
-    private FormattedText? _initials;
+    private ImmutableSolidColorBrush? _fill;
+    private IBrush? _outlineBrush;
+    private double _outlineWidth;
+    private Pen? _outline;
+    private TextLayout? _label;
+    private TextLayout? _initials;
 
     static AgentCursorPointer()
     {
@@ -187,6 +192,8 @@ internal sealed class AgentCursorPointer : Control
             || change.Property == TagFontSizeProperty || change.Property == ColorProperty || change.Property == LightTextProperty
             || change.Property == DarkTextProperty || change.Property == PortraitSizeProperty)
         {
+            _label?.Dispose();
+            _initials?.Dispose();
             _label = null;
             _initials = null;
         }
@@ -210,18 +217,29 @@ internal sealed class AgentCursorPointer : Control
         }
         var typeface = new Typeface(FontFamily, FontStyle.Normal, FontWeight.Medium);
         var brush = TextBrush();
-        _label = new FormattedText(Label, CultureInfo.CurrentUICulture, FlowDirection.LeftToRight, typeface, TagFontSize, brush);
+        _label = new TextLayout(Label, typeface, TagFontSize, brush);
         _initials = string.IsNullOrEmpty(Initials)
             ? null
-            : new FormattedText(Initials, CultureInfo.CurrentUICulture, FlowDirection.LeftToRight,
-                new Typeface(FontFamily, FontStyle.Normal, FontWeight.SemiBold), Math.Max(6, PortraitSize * 0.5), new ImmutableSolidColorBrush(Color));
+            : new TextLayout(Initials, new Typeface(FontFamily, FontStyle.Normal, FontWeight.SemiBold), Math.Max(6, PortraitSize * 0.5),
+                new ImmutableSolidColorBrush(Color));
     }
 
     public override void Render(DrawingContext context)
     {
         EnsureText();
-        var fill = new ImmutableSolidColorBrush(Color);
-        var outline = OutlineBrush is { } o ? new Pen(o, OutlineWidth, lineJoin: PenLineJoin.Round) : null;
+        if (_fill is null || _fill.Color != Color)
+        {
+            _fill = new ImmutableSolidColorBrush(Color);
+        }
+        var fill = _fill;
+        var o = OutlineBrush;
+        if (!ReferenceEquals(_outlineBrush, o) || _outlineWidth != OutlineWidth)
+        {
+            _outlineBrush = o;
+            _outlineWidth = OutlineWidth;
+            _outline = o is null ? null : new Pen(o, OutlineWidth, lineJoin: PenLineJoin.Round);
+        }
+        var outline = _outline;
         context.DrawGeometry(fill, outline, s_arrow);
 
         var width = TagWidth;
@@ -236,12 +254,12 @@ internal sealed class AgentCursorPointer : Control
             var size = PortraitSize;
             var disc = new Rect(tag.X + (height - size) / 2, tag.Y + (height - size) / 2, size, size);
             context.DrawEllipse(TextBrush(), null, disc);
-            context.DrawText(_initials, new Point(disc.X + (size - _initials.Width) / 2, disc.Y + (size - _initials.Height) / 2));
+            _initials.Draw(context, new Point(disc.X + (size - _initials.Width) / 2, disc.Y + (size - _initials.Height) / 2));
             x = disc.Right + 5;
         }
         if (_label is not null)
         {
-            context.DrawText(_label, new Point(x, tag.Y + (height - _label.Height) / 2));
+            _label.Draw(context, new Point(x, tag.Y + (height - _label.Height) / 2));
         }
     }
 }

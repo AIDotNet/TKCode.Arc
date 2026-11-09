@@ -2,6 +2,10 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
+using Avalonia.Data;
+using Avalonia.Input;
+using TKCode.Arc.DesignTokens;
+using TKCode.Arc.Primitives;
 using AvaloniaButton = Avalonia.Controls.Button;
 using AvaloniaTextBox = Avalonia.Controls.TextBox;
 
@@ -95,11 +99,91 @@ internal sealed class ColorPickerInput : AvaloniaTextBox
 /// <summary>The format button (HEX / RGB / HSL / OKLCH) at the start of the value field.</summary>
 internal sealed class ColorPickerFormatButton : AvaloniaButton
 {
+    private ColorPickerButtonRing? _ring;
+
     protected override Type StyleKeyOverride => typeof(ColorPickerFormatButton);
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        _ring = new ColorPickerButtonRing(this, e.NameScope.Find<Control>("PART_Surface")?.Parent as Panel, 2, ColorPickerTokenKind.FormatFocusRingRadius);
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _ring?.Update();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _ring?.Update();
+    }
+}
+
+/// <summary>
+/// The focus ring of the panel's small buttons, built the first time the button is keyboard focused (as Core's
+/// LazyFocusRing, whose margin comes from a token; these rings have literal margins).
+/// </summary>
+internal sealed class ColorPickerButtonRing
+{
+    private readonly Control _owner;
+    private readonly Panel? _host;
+    private readonly double _margin;
+    private readonly ColorPickerTokenKind _radius;
+    private Border? _border;
+
+    public ColorPickerButtonRing(Control owner, Panel? host, double margin, ColorPickerTokenKind radius)
+    {
+        _owner = owner;
+        _host = host;
+        _margin = margin;
+        _radius = radius;
+        Update();
+    }
+
+    public void Update()
+    {
+        var visible = _owner.Classes.Contains(":focus-visible");
+        if (_border is null)
+        {
+            if (!visible || _host is null)
+            {
+                return;
+            }
+            _border = new Border { Name = LazyFocusRing.PartName, IsHitTestVisible = false, Margin = new Thickness(_margin) };
+            _border.Bind(Border.CornerRadiusProperty, _border.GetResourceObservable(ColorPickerTokens.Key(_radius)), BindingPriority.Template);
+            ArcTokens.Bind(_border, Border.BorderThicknessProperty, ArcDesignTokenKind.FocusEdgeThickness);
+            ArcTokens.Bind(_border, Border.BorderBrushProperty, ArcDesignTokenKind.FocusRing);
+            _host.Children.Add(_border);
+        }
+        _border.IsVisible = visible;
+    }
 }
 
 /// <summary>The dashed "save swatch" button.</summary>
 internal sealed class ColorPickerAddButton : AvaloniaButton
 {
+    private ColorPickerButtonRing? _ring;
+
     protected override Type StyleKeyOverride => typeof(ColorPickerAddButton);
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        _ring = new ColorPickerButtonRing(this, e.NameScope.Find<Control>("PART_Ring")?.Parent as Panel, -4, ColorPickerTokenKind.AddFocusRingRadius);
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _ring?.Update();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _ring?.Update();
+    }
 }

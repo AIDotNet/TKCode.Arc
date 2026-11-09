@@ -4,6 +4,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
 using Avalonia.Media;
+using Avalonia.Media.TextFormatting;
 
 namespace TKCode.Arc;
 
@@ -24,7 +25,8 @@ internal sealed class ColorPickerRatioText : Control
     public IBrush? Foreground { get => GetValue(ForegroundProperty); set => SetValue(ForegroundProperty, value); }
 
     private const string Glyphs = "0123456789.:";
-    private readonly FormattedText?[] _glyphs = new FormattedText?[Glyphs.Length];
+    // TextLayout: the glyphs are drawn on every frame of the count; a cached FormattedText re-shapes on each DrawText.
+    private readonly TextLayout?[] _glyphs = new TextLayout?[Glyphs.Length];
     private double _digitWidth;
     private MotionValue<double>? _value;
     private double _target = 1;
@@ -66,15 +68,19 @@ internal sealed class ColorPickerRatioText : Control
         if (change.Property == FontFamilyProperty || change.Property == FontSizeProperty ||
             change.Property == FontWeightProperty || change.Property == ForegroundProperty)
         {
-            Array.Clear(_glyphs);
+            for (var i = 0; i < _glyphs.Length; i++)
+            {
+                _glyphs[i]?.Dispose();
+                _glyphs[i] = null;
+            }
         }
     }
 
-    private FormattedText Glyph(char c)
+    private TextLayout Glyph(char c)
     {
         var index = Glyphs.IndexOf(c);
-        return _glyphs[index] ??= new FormattedText(c.ToString(), CultureInfo.InvariantCulture, FlowDirection.LeftToRight,
-            new Typeface(FontFamily, FontStyle.Normal, FontWeight), FontSize, Foreground ?? Brushes.Black);
+        return _glyphs[index] ??= new TextLayout(c.ToString(), new Typeface(FontFamily, FontStyle.Normal, FontWeight), FontSize,
+            Foreground ?? Brushes.Black);
     }
 
     private void EnsureMetrics()
@@ -120,14 +126,14 @@ internal sealed class ColorPickerRatioText : Control
     private double DrawDigit(DrawingContext context, char digit, double x)
     {
         var glyph = Glyph(digit);
-        context.DrawText(glyph, new Point(x + (_digitWidth - glyph.WidthIncludingTrailingWhitespace) / 2, 0));
+        glyph.Draw(context, new Point(x + (_digitWidth - glyph.WidthIncludingTrailingWhitespace) / 2, 0));
         return x + _digitWidth;
     }
 
     private double DrawGlyph(DrawingContext context, char c, double x)
     {
         var glyph = Glyph(c);
-        context.DrawText(glyph, new Point(x, 0));
+        glyph.Draw(context, new Point(x, 0));
         return x + glyph.WidthIncludingTrailingWhitespace;
     }
 }

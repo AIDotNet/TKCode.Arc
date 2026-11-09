@@ -8,6 +8,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
+using Avalonia.Media.TextFormatting;
 
 namespace TKCode.Arc;
 
@@ -35,24 +36,33 @@ internal sealed class DateRangePickerPalette
 /// </summary>
 internal sealed class DateRangePickerDayCell : Control
 {
+    // One platform cursor for every day of every picker (Configure used to create one per cell per hover).
+    private static Cursor? s_hand;
+
     private readonly DateRangePickerMonthPane _pane;
-    private FormattedText? _text;
+    // TextLayout: a cached FormattedText re-shapes on every DrawText (and again when its brush is set); the layout is
+    // rebuilt only when the day, weight, palette or (while the number flips to the end color) the color changes.
+    private TextLayout? _text;
     private int _textDay;
     private bool _textEdge;
     private int _textVersion = -1;
+    private Color _textColor;
     private MotionValue<double>? _hover;
     private MotionValue<double>? _press;
     private MotionValue<double>? _edge;
     private ImmutableSolidColorBrush? _brush;
     private ImmutableSolidColorBrush? _dot;
     private bool _pressed;
+    private bool _configured;
 
     public DateRangePickerDayCell(DateRangePickerMonthPane pane)
     {
         _pane = pane;
         Focusable = true;
-        Cursor = new Cursor(StandardCursorType.Hand);
+        Cursor = Hand;
     }
+
+    private static Cursor Hand => s_hand ??= new Cursor(StandardCursorType.Hand);
 
     public DateOnly Date { get; private set; }
     public bool IsDisabled { get; private set; }
@@ -63,12 +73,20 @@ internal sealed class DateRangePickerDayCell : Control
     public void Configure(DateOnly date, bool disabled, bool today, bool edge, bool inRange, bool tabStop, CultureInfo culture, bool animate)
     {
         var dateChanged = date != Date;
+        // Only a change of what is drawn redraws the cell: a hover in the range preview reconfigures all 84 days of
+        // both months, of which only the ends change.
+        var changed = !_configured || dateChanged || disabled != IsDisabled || today != IsToday || edge != IsEdge;
+        _configured = true;
         Date = date;
-        IsDisabled = disabled;
+        if (disabled != IsDisabled)
+        {
+            IsDisabled = disabled;
+            Cursor = disabled ? Cursor.Default : Hand;
+            IsEnabled = !disabled;
+        }
         IsToday = today;
         IsInRange = inRange;
         IsTabStop = tabStop;
-        Cursor = disabled ? Cursor.Default : new Cursor(StandardCursorType.Hand);
         if (dateChanged)
         {
             AutomationProperties.SetName(this, date.ToDateTime(TimeOnly.MinValue).ToString(culture.DateTimeFormat.LongDatePattern, culture));
@@ -90,8 +108,10 @@ internal sealed class DateRangePickerDayCell : Control
             }
         }
         AutomationProperties.SetItemStatus(this, today ? "today" : string.Empty);
-        IsEnabled = !disabled;
-        InvalidateVisual();
+        if (changed)
+        {
+            InvalidateVisual();
+        }
     }
 
     private MotionValue<double> Create(double initial)
@@ -216,17 +236,16 @@ internal sealed class DateRangePickerDayCell : Control
                 }
             }
         }
-        EnsureText(palette);
+        var rest = IsDisabled ? palette.Muted : palette.Foreground;
+        var color = PickerDrawing.Mix(rest, palette.AccentForeground, edge);
+        EnsureText(palette, PickerDrawing.Brush(ref _brush, color));
         if (_text is null)
         {
             return;
         }
-        var rest = IsDisabled ? palette.Muted : palette.Foreground;
-        var color = PickerDrawing.Mix(rest, palette.AccentForeground, edge);
-        _text.SetForegroundBrush(PickerDrawing.Brush(ref _brush, color));
         using (context.PushOpacity(IsDisabled ? 0.5 : 1))
         {
-            context.DrawText(_text, new Point(center.X - _text.Width / 2, center.Y - _text.Height / 2));
+            _text.Draw(context, new Point(center.X - _text.Width / 2, center.Y - _text.Height / 2));
             if (IsToday)
             {
                 // A 4px dot 5px above the bottom: accent, or accent-foreground on a range end.
@@ -236,18 +255,19 @@ internal sealed class DateRangePickerDayCell : Control
         }
     }
 
-    private void EnsureText(DateRangePickerPalette palette)
+    private void EnsureText(DateRangePickerPalette palette, ImmutableSolidColorBrush brush)
     {
-        if (_text is not null && _textDay == Date.Day && _textEdge == IsEdge && _textVersion == palette.Version)
+        if (_text is not null && _textDay == Date.Day && _textEdge == IsEdge && _textVersion == palette.Version && _textColor == brush.Color)
         {
             return;
         }
         _textDay = Date.Day;
         _textEdge = IsEdge;
         _textVersion = palette.Version;
+        _textColor = brush.Color;
         var typeface = new Typeface(palette.FontFamily, FontStyle.Normal, IsEdge ? palette.MediumWeight : palette.RegularWeight);
-        _text = new FormattedText(Date.Day.ToString(CultureInfo.InvariantCulture), CultureInfo.InvariantCulture,
-            FlowDirection.LeftToRight, typeface, palette.FontSize, null);
+        _text?.Dispose();
+        _text = new TextLayout(Date.Day.ToString(CultureInfo.InvariantCulture), typeface, palette.FontSize, brush);
     }
 
     /// <summary>Grid cell peer: a button whose selection state reports "in range" (Arc: aria-selected).</summary>

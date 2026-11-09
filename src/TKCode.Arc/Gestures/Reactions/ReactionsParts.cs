@@ -1,9 +1,12 @@
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
 using Avalonia.Controls.Primitives;
+using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
@@ -184,17 +187,33 @@ internal sealed class ReactionsPill : ToggleButton
     public ReactionsGlyph? Glyph { get; private set; }
 
     private bool _pendingKick;
+    private LazyFocusRing? _focusRing;
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
         Glyph = e.NameScope.Find<ReactionsGlyph>("PART_Glyph");
+        // A thread page holds hundreds of pills and keyboard focus reaches few of them.
+        _focusRing ??= LiteralFocusRing.Create(this, ArcDesignTokens.Key(ArcDesignTokenKind.RadiusPill));
+        LiteralFocusRing.Attach(_focusRing, e.NameScope.Find<Control>("PART_Body")?.Parent as Panel, new Thickness(-4));
         if (_pendingKick)
         {
             // A pill that joins on a tap kicks as it mounts (Arc's pop count is already ahead of what it has seen).
             _pendingKick = false;
             Kick();
         }
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing?.Update();
     }
 
     /// <summary>The value owns the pressed state: a click asks the bar to toggle the reaction instead.</summary>
@@ -331,6 +350,27 @@ internal sealed class ReactionsAddButton : AvaloniaButton
     public Geometry? Glyph { get => GetValue(GlyphProperty); private set => SetValue(GlyphProperty, value); }
 
     protected override Type StyleKeyOverride => typeof(ReactionsAddButton);
+
+    private LazyFocusRing? _focusRing;
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        _focusRing ??= LiteralFocusRing.Create(this, ArcDesignTokens.Key(ArcDesignTokenKind.RadiusPill));
+        LiteralFocusRing.Attach(_focusRing, e.NameScope.Find<Control>("PART_Frame")?.Parent as Panel, new Thickness(-4));
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing?.Update();
+    }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {

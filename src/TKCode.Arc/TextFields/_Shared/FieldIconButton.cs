@@ -4,6 +4,9 @@ using Avalonia.Automation.Peers;
 using Avalonia.Automation.Provider;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
+using Avalonia.Controls.Primitives;
+using Avalonia.Input;
+using TKCode.Arc.DesignTokens;
 using AvaloniaButton = Avalonia.Controls.Button;
 
 namespace TKCode.Arc;
@@ -72,10 +75,34 @@ public class FieldIconButton : AvaloniaButton
 
     private Avalonia.Media.Transformation.TransformOperations? _pressed;
 
+    // Most field buttons are never keyboard focused: the ring is built on the first :focus-visible, not with every
+    // template; its corner radius follows FocusRingRadius as the template binding did.
+    private FieldFocusRing? _focusRing;
+
     public FieldIconButton()
     {
         // Start from an explicit identity so the first press animates too.
         RenderTransform = s_identity;
+    }
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        _focusRing ??= new FieldFocusRing(this, FieldIconButtonTokens.Key(FieldIconButtonTokenKind.FocusRingMargin),
+            FieldIconButtonTokens.Key(FieldIconButtonTokenKind.FocusRingRadius), radiusProperty: FocusRingRadiusProperty);
+        _focusRing.Attach(e.NameScope.Find<Panel>("PART_Host"));
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing?.Update();
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)

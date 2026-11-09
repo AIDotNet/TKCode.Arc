@@ -1,4 +1,5 @@
 using TKCode.Arc.Motion;
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
@@ -36,7 +37,6 @@ internal sealed class PhoneInputPresence : Decorator
 
     private readonly ScaleTransform _scale = new();
     private MotionValue<double>? _progress;
-    private BlurEffect? _blur;
     private bool _initialized;
     private bool _leaving;
     private double _exitFromOpacity;
@@ -154,8 +154,7 @@ internal sealed class PhoneInputPresence : Decorator
             }
             return;
         }
-        _blur ??= new BlurEffect();
-        _blur.Radius = radius;
-        Effect = _blur;
+        // Quantized, cached blur (ArcBlur): no per-frame filter rebuild.
+        Effect = ArcBlur.Get(radius);
     }
 }

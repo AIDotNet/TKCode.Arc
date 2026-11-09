@@ -78,7 +78,13 @@ internal sealed class TogglesGroupHost
         UpdateTabStop();
     }
 
-    public void UpdateTabStop() => TogglesNavigation.UpdateTabStop(_owner, _usable);
+    public void UpdateTabStop()
+    {
+        TogglesNavigation.UpdateTabStop(_owner, _usable);
+        // Called when a container is prepared, too: a container realized after the selection is found here (the tracker
+        // then follows its bounds), where the former LayoutUpdated subscription found it.
+        _tracker?.Place();
+    }
 
     private void OnOptionChanged(AvaloniaObject? option)
     {

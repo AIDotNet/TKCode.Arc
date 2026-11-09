@@ -1,6 +1,6 @@
 ---
 title: 介绍
-source-hash: b233db9faf04
+source-hash: c05b617dee31
 ---
 
 # 介绍
@@ -123,7 +123,7 @@ TKCode.Arc 将 [Arc](https://uiarc.dev) 带到 Avalonia：相同的组件分组�
 
 ## 状态与版本
 
-TKCode.Arc 处于预览阶段。版本遵循[语义化版本](https://semver.org/)；只要版本带有 `-preview` 后缀，API 在各发布版本之间仍可能变化，每个版本都会在 **更新日志** 中列出破坏性变更。请在项目中固定确切的版本，并在升级前阅读更新日志。
+版本遵循[语义化版本](https://semver.org/)。从 1.0.0 起，破坏性 API 变更只在新的主版本中出现，并在 **更新日志** 中随版本列出。请让所有 Arc 包保持同一版本。
 
 ## 许可证
 

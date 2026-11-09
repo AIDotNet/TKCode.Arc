@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
 using Avalonia;
@@ -30,7 +31,7 @@ public enum ExpandingButtonGroupTone
 [TemplatePart(IconPart, typeof(Control))]
 [TemplatePart(LabelPart, typeof(Control))]
 [TemplatePart(RowPart, typeof(StackPanel))]
-[PseudoClasses(ExpandedPseudoClass, DonePseudoClass, BusyPseudoClass, UnavailablePseudoClass, SmallPseudoClass)]
+[PseudoClasses(ExpandedPseudoClass, DonePseudoClass, BusyPseudoClass, UnavailablePseudoClass, SmallPseudoClass, DangerPseudoClass)]
 public class ExpandingButtonGroupItem : AvaloniaButton
 {
     public const string IconPart = "PART_Icon";
@@ -41,6 +42,9 @@ public class ExpandingButtonGroupItem : AvaloniaButton
     public const string BusyPseudoClass = ":busy";
     public const string UnavailablePseudoClass = ":unavailable";
     public const string SmallPseudoClass = ":small";
+
+    /// <summary>Set while <see cref="Tone"/> is Danger (the theme selects on it, not on the property).</summary>
+    public const string DangerPseudoClass = ":danger";
 
     #region 公共属性定义
 
@@ -156,7 +160,8 @@ public class ExpandingButtonGroupItem : AvaloniaButton
     private Control? _labelHost;
     private StackPanel? _row;
     private readonly TranslateTransform _labelShift = new();
-    private readonly BlurEffect _labelBlur = new() { Radius = 0 };
+    private LazyFocusRing? _focusRing;
+    private Border? _styledRing;
     private MotionValue<double>? _width;
     private MotionValue<double>? _reveal;
     private double _target;
@@ -165,6 +170,11 @@ public class ExpandingButtonGroupItem : AvaloniaButton
     static ExpandingButtonGroupItem()
     {
         AffectsMeasure<ExpandingButtonGroupItem>(TrailingInsetProperty);
+    }
+
+    public ExpandingButtonGroupItem()
+    {
+        PseudoClasses.Set(DangerPseudoClass, Tone == ExpandingButtonGroupTone.Danger);
     }
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
@@ -179,6 +189,33 @@ public class ExpandingButtonGroupItem : AvaloniaButton
             ApplyReveal(IsExpanded ? 1 : 0, full: false);
         }
         _icon?.Show(CreateGlyph(), default, default);
+        // The pill ring is built the first time the action is keyboard focused, as the last child of the template's
+        // root panel, where the template used to keep a hidden Border.
+        _focusRing ??= new LazyFocusRing(this, ButtonTokens.Key(ButtonTokenKind.FocusRingMargin), ArcDesignTokens.Key(ArcDesignTokenKind.RadiusPill));
+        _styledRing = null;
+        _focusRing.Attach(VisualChildren.Count > 0 ? VisualChildren[0] as Panel : null);
+        UpdateFocusRing();
+    }
+
+    private void UpdateFocusRing()
+    {
+        if (_focusRing is null)
+        {
+            return;
+        }
+        _focusRing.Update();
+        if (_focusRing.Ring is { } ring && !ReferenceEquals(ring, _styledRing))
+        {
+            // This ring sits 3px outside the box (the template said Margin="-3"); no token holds that value.
+            _styledRing = ring;
+            ring.Margin = new Thickness(-3);
+        }
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        UpdateFocusRing();
     }
 
     protected override void OnInitialized()
@@ -269,15 +306,8 @@ public class ExpandingButtonGroupItem : AvaloniaButton
         _labelHost.Opacity = Math.Clamp(v, 0, 1);
         _labelShift.X = full ? -6 * (1 - v) : 0;
         var blur = full ? 2 * (1 - v) : 0;
-        if (blur < 0.05)
-        {
-            _labelHost.Effect = null;
-        }
-        else
-        {
-            _labelBlur.Radius = blur;
-            _labelHost.Effect = _labelBlur;
-        }
+        // ArcBlur: a cached, quantized effect per frame instead of a mutable BlurEffect whose radius is rewritten every frame.
+        _labelHost.Effect = blur < 0.05 ? null : ArcBlur.Get(blur);
     }
 
     internal void SetDone(bool done)
@@ -323,6 +353,7 @@ public class ExpandingButtonGroupItem : AvaloniaButton
     protected override void OnGotFocus(FocusChangedEventArgs e)
     {
         base.OnGotFocus(e);
+        UpdateFocusRing();
         Group?.OnItemFocused(this, e.NavigationMethod);
     }
 
@@ -340,6 +371,10 @@ public class ExpandingButtonGroupItem : AvaloniaButton
         else if (change.Property == IsDisabledProperty)
         {
             PseudoClasses.Set(UnavailablePseudoClass, IsDisabled);
+        }
+        else if (change.Property == ToneProperty)
+        {
+            PseudoClasses.Set(DangerPseudoClass, Tone == ExpandingButtonGroupTone.Danger);
         }
     }
 

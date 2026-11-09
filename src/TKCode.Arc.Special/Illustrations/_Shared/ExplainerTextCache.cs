@@ -1,12 +1,12 @@
-using System.Globalization;
 using Avalonia;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
+using Avalonia.Media.TextFormatting;
 
 namespace TKCode.Arc;
 
 /// <summary>
-/// Text and brush cache for self-drawn explainer diagrams, so frames allocate nothing: <see cref="FormattedText"/> keyed
+/// Text and brush cache for self-drawn explainer diagrams, so frames allocate nothing: <see cref="TextLayout"/> (drawing a cached FormattedText shapes it again every time) keyed
 /// by text, typeface, font size quantized to <see cref="FontSizeStep"/> (0.5px), color and layout (plain, one line cut
 /// with an ellipsis at a width, or wrapped to at most N lines with an ellipsis; widths in whole px), and immutable
 /// brushes keyed by color with alpha quantized to <see cref="AlphaLevels"/> (16) levels. Vary text opacity with
@@ -21,7 +21,8 @@ internal sealed class ExplainerTextCache
     /// <summary>Alpha multipliers are rounded to one of this many levels (0, 1/15, …, 1).</summary>
     public const int AlphaLevels = 16;
 
-    private readonly Dictionary<TextKey, FormattedText> _texts = new();
+    private readonly Dictionary<TextKey, TextLayout> _texts = new();
+    private readonly List<TextLayout> _retired = new();
     private readonly Dictionary<uint, IImmutableSolidColorBrush> _brushes = new();
 
     public ExplainerTextCache(int capacity = 2048)
@@ -31,9 +32,6 @@ internal sealed class ExplainerTextCache
 
     /// <summary>Most texts kept before the cache starts over.</summary>
     public int Capacity { get; }
-
-    /// <summary>Culture used to shape text (default: the current culture).</summary>
-    public CultureInfo Culture { get; set; } = CultureInfo.CurrentCulture;
 
     /// <summary>Cached texts.</summary>
     public int Count => _texts.Count;
@@ -69,23 +67,23 @@ internal sealed class ExplainerTextCache
     }
 
     /// <summary>One line of text, unconstrained.</summary>
-    public FormattedText Get(string text, Typeface typeface, double fontSize, Color color)
+    public TextLayout Get(string text, Typeface typeface, double fontSize, Color color)
         => GetCore(text, typeface, fontSize, color, -1, 1);
 
     /// <summary>One line cut with an ellipsis to fit <paramref name="maxWidth"/> px (rounded down to whole px).</summary>
-    public FormattedText GetTrimmed(string text, Typeface typeface, double fontSize, Color color, double maxWidth)
+    public TextLayout GetTrimmed(string text, Typeface typeface, double fontSize, Color color, double maxWidth)
         => GetCore(text, typeface, fontSize, color, WidthBucket(maxWidth), 1);
 
     /// <summary>
     /// Text wrapped at <paramref name="maxWidth"/> px to at most <paramref name="maxLines"/> lines (default 2), the last
     /// one cut with an ellipsis.
     /// </summary>
-    public FormattedText GetWrapped(string text, Typeface typeface, double fontSize, Color color, double maxWidth, int maxLines = 2)
+    public TextLayout GetWrapped(string text, Typeface typeface, double fontSize, Color color, double maxWidth, int maxLines = 2)
         => GetCore(text, typeface, fontSize, color, WidthBucket(maxWidth), Math.Max(1, maxLines), wrap: true);
 
     private static int WidthBucket(double width) => Math.Max(1, (int)Math.Floor(double.IsFinite(width) ? width : 100000));
 
-    private FormattedText GetCore(string text, Typeface typeface, double fontSize, Color color, int maxWidth, int lines, bool wrap = false)
+    private TextLayout GetCore(string text, Typeface typeface, double fontSize, Color color, int maxWidth, int lines, bool wrap = false)
     {
         var size = QuantizeFontSize(fontSize);
         var key = new TextKey(text, typeface, size, color, maxWidth, wrap ? lines : maxWidth >= 0 ? -1 : 0);
@@ -95,25 +93,36 @@ internal sealed class ExplainerTextCache
         }
         if (_texts.Count >= Capacity)
         {
-            _texts.Clear();
+            RetireTexts();
         }
-        var formatted = new FormattedText(text, Culture, FlowDirection.LeftToRight, typeface, size, Brush(color));
-        if (maxWidth >= 0)
-        {
-            formatted.MaxTextWidth = maxWidth;
-            formatted.MaxLineCount = lines;
-            formatted.Trimming = TextTrimming.CharacterEllipsis;
-        }
-        _texts[key] = formatted;
+        // One line + ellipsis equals FormattedText's collapse of its last line, which re-formats that line without wrapping.
+        var wrapping = wrap ? TextWrapping.WrapWithOverflow : TextWrapping.NoWrap;
+        var layout = maxWidth >= 0
+            ? new TextLayout(text, typeface, size, Brush(color), TextAlignment.Left, wrapping, TextTrimming.CharacterEllipsis, null,
+                FlowDirection.LeftToRight, maxWidth, double.PositiveInfinity, double.NaN, 0, wrap ? lines : 1)
+            : new TextLayout(text, typeface, size, Brush(color));
+        _texts[key] = layout;
         Misses++;
-        return formatted;
+        return layout;
     }
 
     /// <summary>Drops every cached text and brush (theme or font change).</summary>
     public void Clear()
     {
-        _texts.Clear();
+        RetireTexts();
         _brushes.Clear();
+    }
+
+    /// <summary>A caller may still hold a layout from this frame, so dropped layouts are disposed at the next retirement.</summary>
+    private void RetireTexts()
+    {
+        foreach (var layout in _retired)
+        {
+            layout.Dispose();
+        }
+        _retired.Clear();
+        _retired.AddRange(_texts.Values);
+        _texts.Clear();
     }
 
     private readonly record struct TextKey(string Text, Typeface Typeface, double Size, Color Color, int MaxWidth, int Mode);

@@ -21,6 +21,7 @@ internal sealed class ProgressHeightFrame : Decorator
     private MotionValue<double>? _height;
     private double _lastTarget = double.NaN;
     private DateTime _armedAt = DateTime.MinValue;
+    private RectangleGeometry? _clip;
 
     /// <summary>Allows content-driven height changes during the next <see cref="ArmWindow"/> ms to spring.</summary>
     public void Arm() => _armedAt = DateTime.UtcNow;
@@ -56,7 +57,7 @@ internal sealed class ProgressHeightFrame : Decorator
             }
         }
         var height = _height.IsAnimating ? Math.Max(0, _height.Value) : target;
-        Clip = _height.IsAnimating ? new RectangleGeometry(new Rect(0, 0, child.DesiredSize.Width, height)) : null;
+        UpdateClip(_height.IsAnimating ? new Rect(0, 0, child.DesiredSize.Width, height) : null);
         return new Size(child.DesiredSize.Width, height);
     }
 
@@ -69,8 +70,26 @@ internal sealed class ProgressHeightFrame : Decorator
         }
         if (Clip is not null)
         {
-            Clip = new RectangleGeometry(new Rect(finalSize));
+            UpdateClip(new Rect(finalSize));
         }
         return finalSize;
+    }
+
+    /// <summary>One geometry, updated in place: a moving clip allocates nothing per frame (as in SpringSizeDecorator).</summary>
+    private void UpdateClip(Rect? rect)
+    {
+        if (rect is not { } value)
+        {
+            if (Clip is not null)
+            {
+                Clip = null;
+            }
+            return;
+        }
+        _clip ??= new RectangleGeometry();
+        _clip.Rect = value;
+        Clip = _clip;
+        // A changed clip geometry reaches the composition layer only with a redraw.
+        InvalidateVisual();
     }
 }

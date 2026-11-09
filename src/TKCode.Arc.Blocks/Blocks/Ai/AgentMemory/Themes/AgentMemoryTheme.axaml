@@ -278,7 +278,7 @@
             </ControlTemplate>
         </Setter>
 
-        <Style Selector="^[Kind=RowAction]">
+        <Style Selector="^:row-action">
             <Setter Property="Width" Value="28" />
             <Setter Property="Height" Value="28" />
             <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep8}" />
@@ -293,7 +293,7 @@
                 <Setter Property="Background" Value="{arc:AgentMemoryTokenResource ActionHoverBackground}" />
             </Style>
         </Style>
-        <Style Selector="^[Kind=Search]">
+        <Style Selector="^:search">
             <Setter Property="Width" Value="30" />
             <Setter Property="Height" Value="30" />
             <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
@@ -307,7 +307,7 @@
                 <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
             </Style>
         </Style>
-        <Style Selector="^[Kind=Link]">
+        <Style Selector="^:link">
             <Setter Property="Padding" Value="6,4" />
             <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep6}" />
             <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
@@ -327,7 +327,7 @@
                 <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
             </Style>
         </Style>
-        <Style Selector="^[Kind=Source]">
+        <Style Selector="^:source">
             <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep4}" />
             <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />

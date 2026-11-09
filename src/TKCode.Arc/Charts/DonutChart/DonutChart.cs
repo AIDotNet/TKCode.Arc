@@ -852,7 +852,12 @@ public class DonutChart : ChartBase
             return;
         }
         var key = Hit(plot, e.GetPosition(plot), out var inside);
-        plot.Cursor = key is not null ? new Cursor(StandardCursorType.Hand) : Cursor.Default;
+        // One shared hand cursor, set only when the hit state flips: a new Cursor per move is a platform handle lookup.
+        var cursor = key is not null ? ChartsBMath.HandCursor : Cursor.Default;
+        if (!ReferenceEquals(plot.Cursor, cursor))
+        {
+            plot.Cursor = cursor;
+        }
         if (key is not null || !inside)
         {
             SetPreview(key);

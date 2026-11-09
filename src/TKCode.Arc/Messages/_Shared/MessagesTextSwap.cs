@@ -1,4 +1,5 @@
 using TKCode.Arc.Motion;
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Animation.Easings;
 using Avalonia.Automation;
@@ -113,7 +114,6 @@ internal sealed class MessagesTextSwap : Control
     {
         public required TextBlock Block { get; init; }
         public required TranslateTransform Translate { get; init; }
-        public BlurEffect? Blur { get; set; }
         public MotionValue<double>? Progress { get; set; }
         public double ArrangeWidth { get; set; } = double.NaN;
         public int Generation { get; set; }
@@ -261,8 +261,8 @@ internal sealed class MessagesTextSwap : Control
         layer.Translate.Y = from;
         if (full)
         {
-            layer.Blur = new BlurEffect { Radius = 4 };
-            layer.Block.Effect = layer.Blur;
+            // Blur 4px → 0 through the shared, quantized filters (a mutable radius makes a new filter every frame).
+            layer.Block.Effect = ArcBlur.Get(4);
         }
         var progress = new MotionValue<double>(layer.Block, 0, MotionVectors.Double);
         layer.Progress = progress;
@@ -274,15 +274,7 @@ internal sealed class MessagesTextSwap : Control
                 return;
             }
             layer.Translate.Y = from * (1 - p);
-            var radius = 4 * (1 - p);
-            if (radius < 0.05)
-            {
-                layer.Block.Effect = null;
-            }
-            else if (layer.Blur is not null)
-            {
-                layer.Blur.Radius = radius;
-            }
+            layer.Block.Effect = ArcBlur.Get(4 * (1 - p));
         };
         _ = progress.AnimateTo(1, full
             ? MotionSpec.Tween(ArcMotionPresets.Standard, ArcEasings.Enter)
@@ -296,11 +288,6 @@ internal sealed class MessagesTextSwap : Control
         var startOpacity = layer.Block.Opacity;
         var startY = layer.Translate.Y;
         var to = full ? -Travel * direction : startY;
-        if (full)
-        {
-            layer.Blur ??= new BlurEffect { Radius = 0 };
-            layer.Block.Effect = layer.Blur;
-        }
         var generation = layer.Generation;
         var progress = new MotionValue<double>(layer.Block, 0, MotionVectors.Double);
         layer.Progress = progress;
@@ -310,10 +297,8 @@ internal sealed class MessagesTextSwap : Control
             if (full)
             {
                 layer.Translate.Y = startY + (to - startY) * p;
-                if (layer.Blur is not null)
-                {
-                    layer.Blur.Radius = 2 * p;
-                }
+                // Blur 0 → 2px as it leaves.
+                layer.Block.Effect = ArcBlur.Get(2 * p);
             }
         };
         FinishExit(layer, generation, progress.AnimateTo(1, full

@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Diagnostics;
@@ -314,6 +315,7 @@ public class Cascader : TemplatedControl, ISelectFieldAutomation, ICascaderColum
     private SelectValueRoll? _value;
     private PresenceHost? _clearHost;
     private AvaloniaButton? _clear;
+    private LazyFocusRing? _focusRing;
     private ArcPopup? _popup;
     private Border? _surface;
     private CascaderColumnsPanel? _panel;
@@ -332,7 +334,14 @@ public class Cascader : TemplatedControl, ISelectFieldAutomation, ICascaderColum
         PseudoClasses.Set(PlaceholderPseudoClass, true);
     }
 
-    internal CascaderColumnsPanel? ColumnsPanel => _panel;
+    internal CascaderColumnsPanel? ColumnsPanel
+    {
+        get
+        {
+            EnsureMenu();
+            return _panel;
+        }
+    }
 
     internal int ActiveLevel => _activeLevel;
 
@@ -371,6 +380,9 @@ public class Cascader : TemplatedControl, ISelectFieldAutomation, ICascaderColum
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
+        // Built the first time the field is keyboard focused, over the trigger in the field's panel.
+        _focusRing ??= new LazyFocusRing(this, CascaderTokens.Key(CascaderTokenKind.FocusRingMargin), CascaderTokens.Key(CascaderTokenKind.FocusRingRadius));
+        _focusRing.Attach(e.NameScope.Find<Control>(TriggerPart)?.Parent as Panel);
         if (_trigger is not null)
         {
             _trigger.PointerPressed -= OnTriggerPressed;
@@ -413,11 +425,7 @@ public class Cascader : TemplatedControl, ISelectFieldAutomation, ICascaderColum
         {
             _clear.Click += OnClearClick;
         }
-        if (_panel is not null)
-        {
-            _panel.ColumnWidth = ColumnWidth;
-            _panel.MaxColumnHeight = ColumnHeightLimit();
-        }
+        WireMenu();
         _rendered = false;
         UpdateValue(animate: false);
         UpdateClear();
@@ -550,7 +558,34 @@ public class Cascader : TemplatedControl, ISelectFieldAutomation, ICascaderColum
         return list;
     }
 
-    private bool IsLeaf(object node) => ChildrenOf(node).Count == 0;
+    // No list: the first child answers it. Row drawing and keyboard paths ask this often.
+    private bool IsLeaf(object node)
+    {
+        if (IsLeafSelector is { } isLeaf && isLeaf(node))
+        {
+            return true;
+        }
+        if (ChildrenSelector?.Invoke(node) is not { } children)
+        {
+            return true;
+        }
+        var enumerator = children.GetEnumerator();
+        try
+        {
+            while (enumerator.MoveNext())
+            {
+                if (enumerator.Current is not null)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        finally
+        {
+            (enumerator as IDisposable)?.Dispose();
+        }
+    }
 
     private string TextOf(object node) => (TextSelector?.Invoke(node) ?? node.ToString()) ?? string.Empty;
 
@@ -778,6 +813,43 @@ public class Cascader : TemplatedControl, ISelectFieldAutomation, ICascaderColum
 
     private double ColumnHeightLimit() => Math.Max(0, MaxDropDownHeight - 14);
 
+    /// <summary>Builds the menu on the first open (a template that declares its own PART_Columns keeps it).</summary>
+    private void EnsureMenu()
+    {
+        if (_panel is not null || _popup is null)
+        {
+            return;
+        }
+        _panel = new CascaderColumnsPanel { Name = ColumnsPart }
+            .Token(CascaderColumnsPanel.RowHeightProperty, CascaderTokens.Key(CascaderTokenKind.OptionHeight))
+            .Token(CascaderColumnsPanel.RowCornerRadiusProperty, CascaderTokens.Key(CascaderTokenKind.OptionCornerRadius))
+            .Token(CascaderColumnsPanel.RowPaddingProperty, CascaderTokens.Key(CascaderTokenKind.OptionPadding))
+            .Token(CascaderColumnsPanel.ChevronInsetProperty, CascaderTokens.Key(CascaderTokenKind.ChevronInset))
+            .Token(CascaderColumnsPanel.DisabledOpacityProperty, CascaderTokens.Key(CascaderTokenKind.OptionDisabledOpacity))
+            .Token(CascaderColumnsPanel.MinColumnWidthProperty, CascaderTokens.Key(CascaderTokenKind.MinColumnWidth))
+            .Token(CascaderColumnsPanel.MaxColumnWidthProperty, CascaderTokens.Key(CascaderTokenKind.MaxColumnWidth))
+            .Token(CascaderColumnsPanel.ColumnGapProperty, CascaderTokens.Key(CascaderTokenKind.ColumnGap))
+            .Token(CascaderColumnsPanel.HighlightBrushProperty, ArcDesignTokenKind.SurfaceMuted)
+            .Token(CascaderColumnsPanel.PathBrushProperty, ArcDesignTokenKind.SurfaceMuted)
+            .Token(CascaderColumnsPanel.ForegroundProperty, ArcDesignTokenKind.Foreground)
+            .Token(CascaderColumnsPanel.MutedForegroundProperty, ArcDesignTokenKind.TextMuted)
+            .Token(CascaderColumnsPanel.DividerBrushProperty, ArcDesignTokenKind.Border);
+        _surface = SelectMenuParts.Surface(_panel)
+            .Token(Border.PaddingProperty, CascaderTokens.Key(CascaderTokenKind.MenuPadding))
+            .Token(Border.CornerRadiusProperty, CascaderTokens.Key(CascaderTokenKind.MenuCornerRadius));
+        _popup.Child = _surface;
+        WireMenu();
+    }
+
+    private void WireMenu()
+    {
+        if (_panel is not null)
+        {
+            _panel.ColumnWidth = ColumnWidth;
+            _panel.MaxColumnHeight = ColumnHeightLimit();
+        }
+    }
+
     private void OpenPopup()
     {
         if (!IsEffectivelyEnabled || _popup is null)
@@ -788,6 +860,7 @@ public class Cascader : TemplatedControl, ISelectFieldAutomation, ICascaderColum
             }
             return;
         }
+        EnsureMenu();
         _typeahead.Reset();
         if (_popup.IsOpen)
         {
@@ -1047,9 +1120,16 @@ public class Cascader : TemplatedControl, ISelectFieldAutomation, ICascaderColum
         _pressedOnTrigger = false;
     }
 
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
     protected override void OnLostFocus(FocusChangedEventArgs e)
     {
         base.OnLostFocus(e);
+        _focusRing?.Update();
         PseudoClasses.Set(PressedPseudoClass, false);
     }
 

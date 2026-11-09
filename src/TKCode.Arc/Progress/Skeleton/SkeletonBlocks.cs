@@ -111,7 +111,8 @@ internal sealed class SkeletonBlocks : Control
         {
             return;
         }
-        var pulsing = ArcMotion.GetEffectiveLevel(this) == ArcMotionLevel.Full;
+        // A running loop is at full motion by definition: no walk up to the TopLevel on every frame of the pulse.
+        var pulsing = _loop.IsRunning || ArcMotion.GetEffectiveLevel(this) == ArcMotionLevel.Full;
         var width = Bounds.Width;
         var index = 0;
         var x = 0.0;

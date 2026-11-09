@@ -180,6 +180,8 @@ public class Timeline : ItemsControl
     private bool _featherOn;
     private MotionValue<double>? _scrollTop;
     private string? _announcement;
+    private bool _rebuildQueued;
+    private bool _rebuildRebaseline;
 
     static Timeline()
     {
@@ -229,6 +231,7 @@ public class Timeline : ItemsControl
     /// <summary>Brings the event of <paramref name="id"/> into view.</summary>
     public void ScrollIntoView(string id)
     {
+        FlushRebuild();
         if (_list is not null && _byKey.TryGetValue("ev:" + id, out var model))
         {
             var index = _rows.IndexOf(model);
@@ -361,13 +364,11 @@ public class Timeline : ItemsControl
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
-        LayoutUpdated += OnLayoutUpdated;
-    }
-
-    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
-    {
-        base.OnDetachedFromVisualTree(e);
-        LayoutUpdated -= OnLayoutUpdated;
+        if (_rebuildQueued)
+        {
+            // Changes that arrived while the feed was away show when it comes back.
+            Rebuild(_rebuildRebaseline);
+        }
     }
 
     protected override void OnLoaded(RoutedEventArgs e)
@@ -392,12 +393,18 @@ public class Timeline : ItemsControl
         {
             _isNarrow = narrow;
             PseudoClasses.Set(NarrowPseudoClass, narrow);
+            var days = Days();
             foreach (var row in RealizedContainers.OfType<TimelineRow>())
             {
-                row.Refresh();
+                row.Refresh(days);
             }
         }
-        return base.ArrangeOverride(finalSize);
+        var size = base.ArrangeOverride(finalSize);
+        // The rows are laid out now (realized, grown, moved): reveal, pinned label and feather follow in the same pass,
+        // as they did from LayoutUpdated, but only when this feed's own layout ran, not on every layout of the window.
+        // Scrolls (ScrollChanged) and the page scrolling the feed (EffectiveViewportChanged) sync on their own.
+        SyncViewport();
+        return size;
     }
 
     private void UpdateScrollMode()
@@ -419,7 +426,37 @@ public class Timeline : ItemsControl
     /// shows the new list as it is, like a first render.
     /// </summary>
     private void OnEventsChanged(object? sender, NotifyCollectionChangedEventArgs e) =>
-        Rebuild(rebaseline: e.Action == NotifyCollectionChangedAction.Reset);
+        QueueRebuild(rebaseline: e.Action == NotifyCollectionChangedAction.Reset);
+
+    /// <summary>
+    /// Collection changes are coalesced into one rebuild per dispatcher turn (adding a batch of events rebuilds once);
+    /// a reset among them makes that rebuild a baseline. A detached feed rebuilds when it is attached again.
+    /// </summary>
+    private void QueueRebuild(bool rebaseline)
+    {
+        _rebuildRebaseline |= rebaseline;
+        if (_rebuildQueued)
+        {
+            return;
+        }
+        _rebuildQueued = true;
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (_rebuildQueued && VisualRoot is not null)
+            {
+                Rebuild(_rebuildRebaseline);
+            }
+        }, DispatcherPriority.Background);
+    }
+
+    /// <summary>A public call that reads the rows (an event added a moment ago) sees the queued rebuild first.</summary>
+    private void FlushRebuild()
+    {
+        if (_rebuildQueued)
+        {
+            Rebuild(_rebuildRebaseline);
+        }
+    }
 
     /// <summary>
     /// Sorts the events newest first, groups them by day and patches the flattened rows in place: surviving rows keep
@@ -427,6 +464,8 @@ public class Timeline : ItemsControl
     /// </summary>
     private void Rebuild(bool rebaseline = false)
     {
+        _rebuildQueued = false;
+        _rebuildRebaseline = false;
         // A new source shows as it is, like a first render (its items are not fresh and not announced).
         if (!ReferenceEquals(_source, ItemsSource))
         {
@@ -461,7 +500,24 @@ public class Timeline : ItemsControl
         var count = 0;
         foreach (var (item, _) in events)
         {
-            var date = ActivityTime.DayOf(item.At, zone);
+            // The model first: it remembers the event's day in this zone, so a rebuild converts only new events.
+            var key = "ev:" + item.Id;
+            TimelineEventModel model;
+            if (_byKey.TryGetValue(key, out var existing) && existing is TimelineEventModel reused)
+            {
+                model = reused;
+                model.Item = item;
+                model.Leaving = false;
+            }
+            else
+            {
+                model = new TimelineEventModel(item) { Fresh = fresh, EnterUntil = fresh ? enterUntil : 0 };
+                if (fresh)
+                {
+                    added.Add(item);
+                }
+            }
+            var date = model.DayIn(zone);
             if (day is null || day.Day != date)
             {
                 if (day is not null)
@@ -484,22 +540,6 @@ public class Timeline : ItemsControl
                 day.Newest = item.At;
                 next.Add(day);
                 count = 0;
-            }
-            var key = "ev:" + item.Id;
-            TimelineEventModel model;
-            if (_byKey.TryGetValue(key, out var existing) && existing is TimelineEventModel reused)
-            {
-                model = reused;
-                model.Item = item;
-                model.Leaving = false;
-            }
-            else
-            {
-                model = new TimelineEventModel(item) { Fresh = fresh, EnterUntil = fresh ? enterUntil : 0 };
-                if (fresh)
-                {
-                    added.Add(item);
-                }
             }
             model.Day = date;
             model.IsLastOfDay = false;
@@ -698,7 +738,7 @@ public class Timeline : ItemsControl
                 header.Owner = this;
                 header.Model = day;
                 header.Background = HeaderBackground;
-                header.Set(DayLabel(day), day.Count, silent: true, HeadingLevel);
+                header.Set(DayLabel(day, Days()), day.Count, silent: true, HeadingLevel);
                 if (day.Fresh && day.EnterUntil > Stopwatch.GetTimestamp() && level != ArcMotionLevel.Off)
                 {
                     header.PlayEnter(level);
@@ -738,21 +778,22 @@ public class Timeline : ItemsControl
     /// <summary>Re-reads counts, labels and last-of-day flags into the realized containers (after a data change).</summary>
     private void RefreshRealized()
     {
+        var days = Days();
         foreach (var container in RealizedContainers)
         {
             switch (container)
             {
                 case TimelineRow { Model: not null } row:
-                    row.Refresh();
+                    row.Refresh(days);
                     break;
                 case TimelineDayHeader { Model: { } day } header:
-                    header.Set(DayLabel(day), day.Count, silent: false, HeadingLevel);
+                    header.Set(DayLabel(day, days), day.Count, silent: false, HeadingLevel);
                     break;
             }
         }
         if (_sticky?.Model is { } stickyDay)
         {
-            _sticky.Set(DayLabel(stickyDay), stickyDay.Count, silent: false, HeadingLevel);
+            _sticky.Set(DayLabel(stickyDay, days), stickyDay.Count, silent: false, HeadingLevel);
         }
     }
 
@@ -762,59 +803,78 @@ public class Timeline : ItemsControl
     /// </summary>
     private void RefreshLabels(bool animate)
     {
+        var days = Days();
         foreach (var container in RealizedContainers)
         {
             switch (container)
             {
                 case TimelineRow { Model: { } model } row:
-                    var (label, full) = TimeLabels(model);
+                    var (label, full) = TimeLabels(model, days);
                     row.SetTime(label, full, animate);
                     break;
                 case TimelineDayHeader { Model: { } day } header:
-                    header.Set(DayLabel(day), day.Count, silent: !animate, HeadingLevel);
+                    header.Set(DayLabel(day, days), day.Count, silent: !animate, HeadingLevel);
                     break;
             }
         }
         if (_sticky?.Model is { } stickyDay)
         {
-            _sticky.Set(DayLabel(stickyDay), stickyDay.Count, silent: true, HeadingLevel);
+            _sticky.Set(DayLabel(stickyDay, days), stickyDay.Count, silent: true, HeadingLevel);
         }
     }
 
-    /// <summary>Arc's day label: "Today", "Yesterday", or the weekday with month and day ("Monday, October 19").</summary>
-    internal string DayLabel(TimelineDayModel day)
+    /// <summary>
+    /// "Now" and its calendar day (and the day before) in the feed's zone, computed once for a batch of labels: every
+    /// label of a rebuild or refresh would otherwise convert the clock to the zone twice.
+    /// </summary>
+    internal readonly record struct DayContext(DateTimeOffset Now, DateOnly Today, DateOnly Yesterday);
+
+    internal DayContext Days()
     {
         var now = EffectiveNow;
         var zone = TimeZone;
-        if (day.Day == ActivityTime.DayOf(now, zone))
+        return new DayContext(now, ActivityTime.DayOf(now, zone), ActivityTime.DayOf(now.AddHours(-24), zone));
+    }
+
+    /// <summary>Arc's day label: "Today", "Yesterday", or the weekday with month and day ("Monday, October 19").</summary>
+    internal string DayLabel(TimelineDayModel day) => DayLabel(day, Days());
+
+    /// <inheritdoc cref="DayLabel(TimelineDayModel)"/>
+    internal string DayLabel(TimelineDayModel day, in DayContext days)
+    {
+        if (day.Day == days.Today)
         {
             return "Today";
         }
-        if (day.Day == ActivityTime.DayOf(now.AddHours(-24), zone))
+        if (day.Day == days.Yesterday)
         {
             return "Yesterday";
         }
-        return ActivityTime.WeekdayMonthDay(day.Newest, zone, EffectiveCulture);
+        return ActivityTime.WeekdayMonthDay(day.Newest, TimeZone, EffectiveCulture);
     }
 
     /// <summary>
     /// Arc's time label: within twelve hours today, relative ("Now", "9m", "2h"; read as "9 minutes ago, …"); else the
     /// clock time. The full text gives the weekday, date and time.
     /// </summary>
-    internal (string Label, string Full) TimeLabels(TimelineEventModel model)
+    internal (string Label, string Full) TimeLabels(TimelineEventModel model) => TimeLabels(model, Days());
+
+    /// <inheritdoc cref="TimeLabels(TimelineEventModel)"/>
+    internal (string Label, string Full) TimeLabels(TimelineEventModel model, in DayContext days)
     {
-        var now = EffectiveNow;
+        var now = days.Now;
         var zone = TimeZone;
         var culture = EffectiveCulture;
         var at = model.Item.At;
-        var full = ActivityTime.Full(at, zone, culture);
-        var today = model.Day == ActivityTime.DayOf(now, zone) && now - at < TimeSpan.FromHours(12);
+        // The full date never changes for an event in a zone and culture: the model keeps it (and the clock text with it).
+        var (full, clock) = model.FullIn(zone, culture);
+        var today = model.Day == days.Today && now - at < TimeSpan.FromHours(12);
         if (today)
         {
             var relative = ActivityTime.Relative(at, now);
             return (relative.Short, $"{relative.Long}, {full}");
         }
-        return (ActivityTime.Clock(at, zone, culture), full);
+        return (clock, full);
     }
 
     #endregion
@@ -827,6 +887,7 @@ public class Timeline : ItemsControl
         {
             return;
         }
+        FlushRebuild();
         var model = _byKey.TryGetValue("ev:" + id, out var found) ? found as TimelineEventModel : null;
         if (expanded && model is not null && !model.Item.HasDetail)
         {
@@ -951,8 +1012,6 @@ public class Timeline : ItemsControl
     #endregion
 
     #region Viewport: reveal, sticky day label, feather
-
-    private void OnLayoutUpdated(object? sender, EventArgs e) => SyncViewport();
 
     private void OnScrollChanged(object? sender, ScrollChangedEventArgs e) => SyncViewport();
 

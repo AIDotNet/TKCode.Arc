@@ -153,6 +153,19 @@ internal sealed class DockFloatingWindow : ArcWindow, IDockFloatHost
     public void Dismiss()
     {
         _dismissing = true;
+        Unhook();
+        _presenter.Child = null;
+        Close();
+    }
+
+    /// <summary>Lets go of the model and the owner, which outlive this window.</summary>
+    private void Unhook()
+    {
+        if (_unhooked)
+        {
+            return;
+        }
+        _unhooked = true;
         if (_owner is not null)
         {
             _owner.ActualThemeVariantChanged -= OnOwnerThemeVariantChanged;
@@ -161,9 +174,9 @@ internal sealed class DockFloatingWindow : ArcWindow, IDockFloatHost
         _title.Dispose();
         _titleGesture?.Dispose();
         _motion?.Dispose();
-        _presenter.Child = null;
-        Close();
     }
+
+    private bool _unhooked;
 
     /// <summary>Moves the window to a desktop-pixel position (a drag moving it).</summary>
     internal void MoveTo(PixelPoint position)
@@ -308,6 +321,7 @@ internal sealed class DockFloatingWindow : ArcWindow, IDockFloatHost
             // The owner or the application is closing: the float stays in the model (a saved layout keeps it).
             _dismissing = true;
             _layout.ForgetFloatHost(this);
+            Unhook();
             return;
         }
         // The user closed the window: close its panes (the window goes when its float empties), keeping it while some stay.

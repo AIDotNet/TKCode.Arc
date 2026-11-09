@@ -1,6 +1,8 @@
 using System.Diagnostics;
+using Avalonia;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
+using TKCode.Arc.Motion;
 
 namespace TKCode.Arc;
 
@@ -48,6 +50,8 @@ public sealed class VoiceOrbSession
     private int _shown;
     private double _elapsed;
     private DispatcherTimer? _timer;
+    private LiveLoop? _clock;
+    private Visual? _clockOwner;
     private Stopwatch? _stopwatch;
 
     /// <summary>Creates a session that plays <paramref name="script"/>.</summary>
@@ -236,6 +240,11 @@ public sealed class VoiceOrbSession
     /// </summary>
     public IDisposable Attach(VoiceOrb? orb, VoiceTranscript? transcript, VoiceControls? controls, bool runClock = true)
     {
+        if (runClock)
+        {
+            SetClockOwner((Visual?)orb ?? (Visual?)transcript ?? controls);
+        }
+
         void Push(object? sender, EventArgs e)
         {
             if (orb is not null)
@@ -287,6 +296,9 @@ public sealed class VoiceOrbSession
                 controls.MuteChanged -= OnMute;
             }
             _timer?.Stop();
+            _clock?.Dispose();
+            _clock = null;
+            _clockOwner = null;
         });
     }
 
@@ -294,8 +306,41 @@ public sealed class VoiceOrbSession
         ? new VoiceOrbScriptTurn("", "")
         : Script.Turns[ExchangeIndex % Script.Turns.Count];
 
+    private void SetClockOwner(Visual? owner)
+    {
+        if (ReferenceEquals(owner, _clockOwner))
+        {
+            return;
+        }
+        _clock?.Dispose();
+        _clock = null;
+        _clockOwner = owner;
+    }
+
+    // A session with a visual ticks on that visual's frames and rests while it is hidden or detached. It is a functional
+    // clock, so it runs at every motion level and keeps time while merely scrolled out of view.
+    private bool ClockStep(double dt)
+    {
+        // A stalled window loses time instead of jumping ahead.
+        Advance(TimeSpan.FromSeconds(Math.Min(dt, 0.25)));
+        return true;
+    }
+
     private void UpdateClock()
     {
+        if (_clockOwner is { } owner)
+        {
+            if (IsActive)
+            {
+                _clock ??= new LiveLoop(owner, ClockStep) { MinimumLevel = ArcMotionLevel.Off, TracksViewport = false };
+                _clock.Start();
+            }
+            else
+            {
+                _clock?.Stop();
+            }
+            return;
+        }
         if (IsActive)
         {
             if (_timer is null)

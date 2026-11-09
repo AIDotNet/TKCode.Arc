@@ -199,6 +199,12 @@ public sealed class GalleryHomeView : UserControl
         {
             return;
         }
+        // The page can be attached again while the components load: only the first call that gets here wraps the hero. A second
+        // field would draw its dots over the hero, and wrapping the same content twice throws in the middle of a layout pass.
+        if (HasDotField)
+        {
+            return;
+        }
         HasDotField = true;
         WrapHeroInDotField();
     }

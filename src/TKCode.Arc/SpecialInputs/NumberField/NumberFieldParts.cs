@@ -1,10 +1,10 @@
-using System.Globalization;
 using Avalonia;
 using Avalonia.Animation.Easings;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
 using Avalonia.Controls.Presenters;
 using Avalonia.Media;
+using Avalonia.Media.TextFormatting;
 using Avalonia.Threading;
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
@@ -222,7 +222,9 @@ internal sealed class NumberFieldAffixText : Control
     }
 
     private readonly List<Entry> _entries = new();
-    private readonly Dictionary<string, FormattedText> _glyphs = new(StringComparer.Ordinal);
+    // TextLayout, not FormattedText: FormattedText.Draw re-shapes on every Draw and the glyphs redraw every frame while
+    // they enter, rise or close; a layout keeps its shaped line.
+    private readonly Dictionary<string, TextLayout> _glyphs = new(StringComparer.Ordinal);
     private double _lineHeight = double.NaN;
 
     static NumberFieldAffixText()
@@ -244,6 +246,10 @@ internal sealed class NumberFieldAffixText : Control
         else if (change.Property == FontFamilyProperty || change.Property == FontSizeProperty ||
                  change.Property == FontWeightProperty || change.Property == ForegroundProperty)
         {
+            foreach (var glyph in _glyphs.Values)
+            {
+                glyph.Dispose();
+            }
             _glyphs.Clear();
             _lineHeight = double.NaN;
         }
@@ -356,12 +362,11 @@ internal sealed class NumberFieldAffixText : Control
         return value;
     }
 
-    private FormattedText Glyph(string text)
+    private TextLayout Glyph(string text)
     {
         if (!_glyphs.TryGetValue(text, out var glyph))
         {
-            glyph = new FormattedText(text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight,
-                new Typeface(FontFamily, FontStyle.Normal, FontWeight), FontSize, Foreground ?? Brushes.Black);
+            glyph = new TextLayout(text, new Typeface(FontFamily, FontStyle.Normal, FontWeight), FontSize, Foreground ?? Brushes.Black);
             _glyphs[text] = glyph;
         }
         return glyph;
@@ -410,7 +415,7 @@ internal sealed class NumberFieldAffixText : Control
             using (context.PushClip(new Rect(x, -height, width, height * 3)))
             using (context.PushOpacity(opacity))
             {
-                context.DrawText(Glyph(entry.Glyph), new Point(x, 0));
+                Glyph(entry.Glyph).Draw(context, new Point(x, 0));
             }
             x += width;
         }
@@ -569,7 +574,6 @@ internal sealed class NumberFieldStepGlyph : Control
 internal sealed class NumberFieldLimitNote : TextBlock
 {
     private readonly TranslateTransform _rise = new();
-    private BlurEffect? _blurEffect;
     private MotionValue<double>? _y;
     private MotionValue<double>? _opacity;
     private MotionValue<double>? _blur;
@@ -663,16 +667,7 @@ internal sealed class NumberFieldLimitNote : TextBlock
         _opacity = new MotionValue<double>(this, 0, MotionVectors.Double);
         _opacity.Changed += v => Opacity = Math.Clamp(v, 0, 1);
         _blur = new MotionValue<double>(this, 0, MotionVectors.Double);
-        _blur.Changed += v =>
-        {
-            if (v <= 0.01)
-            {
-                Effect = null;
-                return;
-            }
-            _blurEffect ??= new BlurEffect();
-            _blurEffect.Radius = v;
-            Effect = _blurEffect;
-        };
+        // Quantized, cached blur (ArcBlur): no per-frame filter rebuild.
+        _blur.Changed += v => Effect = ArcBlur.Get(v);
     }
 }

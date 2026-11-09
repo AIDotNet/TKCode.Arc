@@ -162,6 +162,12 @@ internal sealed class RichTextEditorSurface : Control
     private readonly List<double> _tops = new();
     private readonly List<string?> _markers = new();
     private readonly Dictionary<string, TextLayout> _markerLayouts = new(StringComparer.Ordinal);
+    // Render draws the same few pens on every pass (code frames, markers, the selected image): one immutable pen per
+    // slot, rebuilt only when its brush object changes, instead of a new pen per block per frame.
+    private readonly IBrush?[] _penBrushes = new IBrush?[PenSlotCount];
+    private readonly IPen?[] _pens = new IPen?[PenSlotCount];
+    private readonly Dictionary<(double Radius, bool Collapsed), StreamGeometry> _toggleArrows = new();
+    private static readonly StreamGeometry s_codeChevron = BuildCodeChevron();
     private readonly RichTextEditorCaret _caret = new();
     private readonly RichTextEditorImeClient _ime;
     private ImmutableList<RichTextEditorBlock>? _laidOut;
@@ -203,10 +209,15 @@ internal sealed class RichTextEditorSurface : Control
         public int Gap { get; set; } = -1;
     }
 
+    private static readonly Cursor s_ibeamCursor = new(StandardCursorType.Ibeam);
+    private static readonly Cursor s_handCursor = new(StandardCursorType.Hand);
+    private static readonly Cursor s_resizeCursor = new(StandardCursorType.BottomRightCorner);
+    private static readonly Cursor s_columnCursor = new(StandardCursorType.SizeWestEast);
+
     static RichTextEditorSurface()
     {
         FocusableProperty.OverrideDefaultValue<RichTextEditorSurface>(true);
-        CursorProperty.OverrideDefaultValue<RichTextEditorSurface>(new Cursor(StandardCursorType.Ibeam));
+        CursorProperty.OverrideDefaultValue<RichTextEditorSurface>(s_ibeamCursor);
         AffectsMeasure<RichTextEditorSurface>(FontFamilyProperty, MonoFontFamilyProperty, BaseFontSizeProperty, Heading1FontSizeProperty,
             Heading2FontSizeProperty, Heading3FontSizeProperty, CodeFontSizeProperty, TrackingProperty);
         TextInputMethodClientRequestedEvent.AddClassHandler<RichTextEditorSurface>((surface, e) =>
@@ -1431,7 +1442,7 @@ internal sealed class RichTextEditorSurface : Control
             : 0;
     }
 
-    /// <summary>The y of the block boundary <paramref name="gap"/> (0 to the block count), in surface coordinates.</summary>
+    /// <summary>The height of the box of <paramref name="block"/> (tests).</summary>
     internal double BlockHeightForTests(int block) => _views[block].Height;
 
     /// <summary>The laid out view of <paramref name="block"/> (tests).</summary>
@@ -1803,12 +1814,9 @@ internal sealed class RichTextEditorSurface : Control
             }
             if (_matchesByBlock is { } found && found.TryGetValue(i, out var blockMatches) && (FillYellowBrush ?? SelectionBrush) is { } matchBrush)
             {
-                foreach (var match in blockMatches)
+                foreach (var rect in MatchRects(view, blockMatches))
                 {
-                    foreach (var rect in view.Layout.HitTestTextRange(view.ToLayout(match.Start), match.Length))
-                    {
-                        context.DrawRectangle(matchBrush, null, new RoundedRect(rect.Translate(origin), 3));
-                    }
+                    context.DrawRectangle(matchBrush, null, new RoundedRect(rect.Translate(origin), 3));
                 }
             }
             if (showSelection && !inCells && selection.Start.Block <= i && selection.End.Block >= i)
@@ -1852,7 +1860,7 @@ internal sealed class RichTextEditorSurface : Control
                 DrawCallout(context, index, view, top, width);
                 break;
             case RichTextBlockType.CodeBlock:
-                var pen = CodeBorderBrush is { } border ? new ImmutablePen(border.ToImmutable(), 1) : null;
+                var pen = CodeBorderBrush is { } border ? PenFor(CodeBorderPen, border, 1) : null;
                 context.DrawRectangle(CodeBackground, pen, new RoundedRect(new Rect(0.5, top + 0.5, Math.Max(0, width - 1), Math.Max(0, view.Height - 1)), 14));
                 if (HasCodeHeader(block) && MutedBrush is { } muted)
                 {
@@ -1866,18 +1874,13 @@ internal sealed class RichTextEditorSurface : Control
                     label.Draw(context, new Point(15, top + 7));
                     if (ShowCodeHeader)
                     {
-                        // A chevron after the name marks the label as a picker.
-                        var chevron = new StreamGeometry();
-                        using (var g = chevron.Open())
+                        // A chevron after the name marks the label as a picker: one static geometry, translated into place.
+                        var x = 15 + label.WidthIncludingTrailingWhitespace + 8;
+                        var y = top + 7 + label.Height / 2;
+                        using (context.PushTransform(Matrix.CreateTranslation(x, y)))
                         {
-                            var x = 15 + label.WidthIncludingTrailingWhitespace + 8;
-                            var y = top + 7 + label.Height / 2;
-                            g.BeginFigure(new Point(x, y - 1.5), false);
-                            g.LineTo(new Point(x + 3.5, y + 2));
-                            g.LineTo(new Point(x + 7, y - 1.5));
-                            g.EndFigure(false);
+                            context.DrawGeometry(null, PenFor(CodeChevronPen, muted, 1.25, round: true), s_codeChevron);
                         }
-                        context.DrawGeometry(null, new ImmutablePen(muted.ToImmutable(), 1.25, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round), chevron);
                     }
                 }
                 break;
@@ -1931,7 +1934,7 @@ internal sealed class RichTextEditorSurface : Control
         }
         else
         {
-            var pen = CodeBorderBrush is { } border ? new ImmutablePen(border.ToImmutable(), 1) : null;
+            var pen = CodeBorderBrush is { } border ? PenFor(CodeBorderPen, border, 1) : null;
             context.DrawRectangle(CodeBackground, pen, new RoundedRect(rect.Deflate(0.5), 8));
             if (MutedBrush is { } muted)
             {
@@ -1947,9 +1950,9 @@ internal sealed class RichTextEditorSurface : Control
         }
         if (selected && AccentBrush is { } accent)
         {
-            context.DrawRectangle(null, new ImmutablePen(accent.ToImmutable(), 2), new RoundedRect(rect.Inflate(1), 9));
+            context.DrawRectangle(null, PenFor(ImageFramePen, accent, 2), new RoundedRect(rect.Inflate(1), 9));
             var grip = new Rect(rect.Right - 7, rect.Bottom - 7, 12, 12);
-            context.DrawRectangle(accent, CheckBrush is { } edge ? new ImmutablePen(edge.ToImmutable(), 1.5) : null, new RoundedRect(grip, 4));
+            context.DrawRectangle(accent, CheckBrush is { } edge ? PenFor(ImageGripPen, edge, 1.5) : null, new RoundedRect(grip, 4));
         }
     }
 
@@ -2005,7 +2008,7 @@ internal sealed class RichTextEditorSurface : Control
             }
             else
             {
-                context.DrawEllipse(null, new ImmutablePen(brush.ToImmutable(), 1), center, radius - 0.5, radius - 0.5);
+                context.DrawEllipse(null, PenFor(CircleMarkerPen, brush, 1), center, radius - 0.5, radius - 0.5);
             }
             return;
         }
@@ -2027,24 +2030,93 @@ internal sealed class RichTextEditorSurface : Control
         var box = ToggleArrowRect(view, top);
         var c = box.Center;
         var r = box.Width * 0.22;
-        var arrow = new StreamGeometry();
-        using (var g = arrow.Open())
+        // One geometry per (size, direction), drawn around the origin and translated to the box: a translation leaves
+        // the stroke width alone, so the arrow is the same as when it was built in place on every pass.
+        var key = (Math.Round(r, 3), view.Block.IsCollapsed);
+        if (!_toggleArrows.TryGetValue(key, out var arrow))
         {
-            if (view.Block.IsCollapsed)
+            arrow = new StreamGeometry();
+            using (var g = arrow.Open())
             {
-                g.BeginFigure(new Point(c.X - r * 0.6, c.Y - r * 1.2), false);
-                g.LineTo(new Point(c.X + r * 0.6, c.Y));
-                g.LineTo(new Point(c.X - r * 0.6, c.Y + r * 1.2));
+                if (view.Block.IsCollapsed)
+                {
+                    g.BeginFigure(new Point(-r * 0.6, -r * 1.2), false);
+                    g.LineTo(new Point(r * 0.6, 0));
+                    g.LineTo(new Point(-r * 0.6, r * 1.2));
+                }
+                else
+                {
+                    g.BeginFigure(new Point(-r * 1.2, -r * 0.6), false);
+                    g.LineTo(new Point(0, r * 0.6));
+                    g.LineTo(new Point(r * 1.2, -r * 0.6));
+                }
+                g.EndFigure(false);
             }
-            else
-            {
-                g.BeginFigure(new Point(c.X - r * 1.2, c.Y - r * 0.6), false);
-                g.LineTo(new Point(c.X, c.Y + r * 0.6));
-                g.LineTo(new Point(c.X + r * 1.2, c.Y - r * 0.6));
-            }
+            _toggleArrows[key] = arrow;
+        }
+        using (context.PushTransform(Matrix.CreateTranslation(c.X, c.Y)))
+        {
+            context.DrawGeometry(null, PenFor(ToggleArrowPen, brush, 1.6, round: true), arrow);
+        }
+    }
+
+    private const int CodeBorderPen = 0;
+    private const int CodeChevronPen = 1;
+    private const int ImageFramePen = 2;
+    private const int ImageGripPen = 3;
+    private const int CircleMarkerPen = 4;
+    private const int ToggleArrowPen = 5;
+    private const int PenSlotCount = 6;
+
+    /// <summary>The pen of <paramref name="slot"/> for <paramref name="brush"/>; rebuilt only when the brush object changed.</summary>
+    private IPen PenFor(int slot, IBrush brush, double thickness, bool round = false)
+    {
+        if (_pens[slot] is { } pen && ReferenceEquals(_penBrushes[slot], brush))
+        {
+            return pen;
+        }
+        pen = round
+            ? new ImmutablePen(brush.ToImmutable(), thickness, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round)
+            : new ImmutablePen(brush.ToImmutable(), thickness);
+        _pens[slot] = pen;
+        _penBrushes[slot] = brush;
+        return pen;
+    }
+
+    /// <summary>The code header's picker chevron around the origin (7 x 3.5, open downward).</summary>
+    private static StreamGeometry BuildCodeChevron()
+    {
+        var chevron = new StreamGeometry();
+        using (var g = chevron.Open())
+        {
+            g.BeginFigure(new Point(0, -1.5), false);
+            g.LineTo(new Point(3.5, 2));
+            g.LineTo(new Point(7, -1.5));
             g.EndFigure(false);
         }
-        context.DrawGeometry(null, new ImmutablePen(brush.ToImmutable(), 1.6, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round), arrow);
+        return chevron;
+    }
+
+    /// <summary>The find highlights of <paramref name="view"/> for <paramref name="matches"/>, hit-tested once per match list and layout.</summary>
+    private static List<Rect> MatchRects(RichTextEditorBlockView view, List<RichTextEditorMatch> matches)
+    {
+        if (view.MatchRects is { } rects && ReferenceEquals(view.MatchSource, matches) && ReferenceEquals(view.MatchLayout, view.Layout))
+        {
+            return rects;
+        }
+        rects = view.MatchRects ?? new List<Rect>();
+        rects.Clear();
+        foreach (var match in matches)
+        {
+            foreach (var rect in view.Layout!.HitTestTextRange(view.ToLayout(match.Start), match.Length))
+            {
+                rects.Add(rect);
+            }
+        }
+        view.MatchRects = rects;
+        view.MatchSource = matches;
+        view.MatchLayout = view.Layout;
+        return rects;
     }
 
     /// <summary>The toggle item whose arrow is under <paramref name="point"/>, or -1.</summary>
@@ -2423,10 +2495,11 @@ internal sealed class RichTextEditorSurface : Control
             _hoverTable = hover;
             InvalidateVisual();
         }
-        Cursor = OverResizeGrip(here, out _) ? new Cursor(StandardCursorType.BottomRightCorner)
-            : GripAt(here) is not null ? new Cursor(StandardCursorType.Hand)
-            : ColumnBorderAt(here) is not null ? new Cursor(StandardCursorType.SizeWestEast)
-            : new Cursor(StandardCursorType.Ibeam);
+        // Shared cursors: a pointer move must not allocate a platform cursor.
+        Cursor = OverResizeGrip(here, out _) ? s_resizeCursor
+            : GripAt(here) is not null ? s_handCursor
+            : ColumnBorderAt(here) is not null ? s_columnCursor
+            : s_ibeamCursor;
         if (!IsDragging || engine is null || !ReferenceEquals(e.Pointer.Captured, this))
         {
             return;

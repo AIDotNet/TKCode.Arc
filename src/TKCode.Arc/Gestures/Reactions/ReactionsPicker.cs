@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
 using Avalonia;
@@ -42,6 +43,27 @@ internal sealed class ReactionsPickerOption : ToggleButton
     internal ScaleTransform EnterTransform { get; } = new();
 
     internal void SetLit(bool lit) => PseudoClasses.Set(LitPseudoClass, lit);
+
+    private LazyFocusRing? _focusRing;
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        _focusRing ??= LiteralFocusRing.Create(this, ArcDesignTokens.Key(ArcDesignTokenKind.RadiusPill));
+        LiteralFocusRing.Attach(_focusRing, e.NameScope.Find<Control>("PART_Frame")?.Parent as Panel, default);
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing?.Update();
+    }
 
     /// <summary>Picking is the picker's job (it closes the tray and toggles the reaction).</summary>
     protected override void Toggle()

@@ -36,6 +36,9 @@ internal sealed class SeatManagerProcessorMark : Control
     public IBrush? Ink { get => GetValue(InkProperty); set => SetValue(InkProperty, value); }
     public IImage? Image { get => GetValue(ImageProperty); set => SetValue(ImageProperty, value); }
 
+    private IBrush? _inkSource;
+    private ImmutablePen? _inkPen;
+
     public override void Render(DrawingContext context)
     {
         var rect = new Rect(Bounds.Size);
@@ -47,7 +50,13 @@ internal sealed class SeatManagerProcessorMark : Control
         context.DrawRectangle(Fill, null, new RoundedRect(rect, 4));
         if (Ink is { } ink)
         {
-            var pen = new ImmutablePen(ink.ToImmutable(), 1.6, lineCap: PenLineCap.Round);
+            // Kept while the brush stays (a mutable brush can change in place, so it is read every time).
+            if (_inkPen is null || !ReferenceEquals(_inkSource, ink) || ink is not IImmutableBrush)
+            {
+                _inkSource = ink;
+                _inkPen = new ImmutablePen(ink.ToImmutable(), 1.6, lineCap: PenLineCap.Round);
+            }
+            var pen = _inkPen;
             var w = rect.Width;
             var h = rect.Height;
             context.DrawLine(pen, new Point(w * 0.30, h * 0.72), new Point(w * 0.50, h * 0.28));

@@ -47,16 +47,16 @@ internal sealed class ActivityHeatmapGrid : Avalonia.Controls.Control, IChartsBA
     private double _tipValue;
     private bool _tipOpen;
     private int _tipDirection;
-    private FormattedText? _tipPrimary;
-    private FormattedText? _tipSecondary;
-    private FormattedText? _tipOldPrimary;
-    private FormattedText? _tipOldSecondary;
+    private ChartsBRun? _tipPrimary;
+    private ChartsBRun? _tipSecondary;
+    private ChartsBRun? _tipOldPrimary;
+    private ChartsBRun? _tipOldSecondary;
     private IDisposable? _hideTimer;
     private bool _ringShown;
     private ChartsBAutomationPeer? _peer;
     private string? _reading;
-    private readonly List<(string Key, FormattedText Text, int Column)> _months = new();
-    private readonly FormattedText?[] _weekdays = new FormattedText?[7];
+    private readonly List<(string Key, ChartsBRun Text, int Column)> _months = new();
+    private readonly ChartsBRun?[] _weekdays = new ChartsBRun?[7];
     private int _textVersion = -1;
 
     /// <summary>Per-square animation; times are relative to the clock start.</summary>
@@ -449,8 +449,8 @@ internal sealed class ActivityHeatmapGrid : Avalonia.Controls.Control, IChartsBA
         }
         _tipIndex = index;
         _tipValue = value;
-        _tipPrimary = ChartsBText.Make(primary, palette, palette.TypeSM, palette.Background, FontWeight.Medium);
-        _tipSecondary = ChartsBText.Make(secondary, palette, palette.TypeXS, ChartsBMath.MixIn(palette.Background, 0.68, palette.Foreground));
+        _tipPrimary = ChartsBText.Label(primary, palette, palette.TypeSM, palette.Background, FontWeight.Medium);
+        _tipSecondary = ChartsBText.Label(secondary, palette, palette.TypeXS, ChartsBMath.MixIn(palette.Background, 0.68, palette.Foreground));
         var width = Math.Ceiling(Math.Max(_tipPrimary.WidthIncludingTrailingWhitespace, _tipSecondary.WidthIncludingTrailingWhitespace));
         var anchor = Anchor(index, width);
         if (gliding && full)
@@ -758,14 +758,14 @@ internal sealed class ActivityHeatmapGrid : Avalonia.Controls.Control, IChartsBA
         {
             var occurrence = seen.TryGetValue(month % 12, out var n) ? n : 0;
             seen[month % 12] = occurrence + 1;
-            _months.Add(($"{month % 12}-{(occurrence == 0 ? 0 : 1)}", ChartsBText.Make(label, palette, palette.TypeXS, palette.TextMuted), column));
+            _months.Add(($"{month % 12}-{(occurrence == 0 ? 0 : 1)}", ChartsBText.Label(label, palette, palette.TypeXS, palette.TextMuted), column));
         }
         var culture = _owner.EffectiveCulture;
         for (var row = 0; row < 7; row++)
         {
             var weekday = (row + (int)_owner.FirstDayOfWeek) % 7;
             _weekdays[row] = weekday % 2 == 1
-                ? ChartsBText.Make(culture.DateTimeFormat.GetAbbreviatedDayName((DayOfWeek)weekday), palette, palette.TypeXS, palette.TextMuted)
+                ? ChartsBText.Label(culture.DateTimeFormat.GetAbbreviatedDayName((DayOfWeek)weekday), palette, palette.TypeXS, palette.TextMuted)
                 : null;
         }
     }
@@ -792,7 +792,7 @@ internal sealed class ActivityHeatmapGrid : Avalonia.Controls.Control, IChartsBA
             foreach (var (key, text, column) in _months)
             {
                 var x = left + (_monthX.TryGetValue(key, out var mx) ? mx.Value : column) * step - _scroll;
-                context.DrawText(text, new Point(x, (MonthsHeight - text.Height) / 2));
+                text.Draw(context, new Point(x, (MonthsHeight - text.Height) / 2));
             }
             if (_reveal.IsRevealed)
             {
@@ -822,11 +822,10 @@ internal sealed class ActivityHeatmapGrid : Avalonia.Controls.Control, IChartsBA
                         }
                         var rect = new Rect(left + column * step - _scroll, top + row * step, cell, cell);
                         var drawn = scale >= 0.999 ? rect : rect.CenterRect(new Rect(0, 0, cell * scale, cell * scale));
-                        var brush = animating ? new ImmutableSolidColorBrush(color) : palette.Brush(color);
-                        using (context.PushOpacity(opacity))
-                        {
-                            context.DrawRectangle(brush, null, new RoundedRect(drawn, drawn.Width * 0.28));
-                        }
+                        // A flat square: its opacity rides on the brush (the renderer folds a pushed opacity into the
+                        // paint the same way), so a dimmed grid is 370 fills, not 370 opacity pushes.
+                        var brush = animating ? new ImmutableSolidColorBrush(color, opacity) : palette.Brush(color, opacity);
+                        context.DrawRectangle(brush, null, new RoundedRect(drawn, drawn.Width * 0.28));
                     }
                 }
                 // Hover (mouse) and the keyboard cursor: a 1.5px outline 1px outside the square.
@@ -856,7 +855,7 @@ internal sealed class ActivityHeatmapGrid : Avalonia.Controls.Control, IChartsBA
         {
             if (_weekdays[row] is { } text)
             {
-                context.DrawText(text, new Point(0, top + row * step + (cell - text.Height) / 2));
+                text.Draw(context, new Point(0, top + row * step + (cell - text.Height) / 2));
             }
         }
         DrawTooltip(context, palette);
@@ -917,9 +916,9 @@ internal sealed class ActivityHeatmapGrid : Avalonia.Controls.Control, IChartsBA
         }
     }
 
-    private static void DrawLines(DrawingContext context, FormattedText primary, FormattedText secondary, Rect body, double offset, double lineOne)
+    private static void DrawLines(DrawingContext context, ChartsBRun primary, ChartsBRun secondary, Rect body, double offset, double lineOne)
     {
-        context.DrawText(primary, new Point(body.X, body.Y + offset + (lineOne - primary.Height) / 2));
-        context.DrawText(secondary, new Point(body.X, body.Y + lineOne + offset));
+        primary.Draw(context, new Point(body.X, body.Y + offset + (lineOne - primary.Height) / 2));
+        secondary.Draw(context, new Point(body.X, body.Y + lineOne + offset));
     }
 }

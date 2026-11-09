@@ -56,55 +56,7 @@
                                       IsExitInstant="True"
                                       IsLightDismissEnabled="True"
                                       TakesFocusFromNativeControl="False"
-                                      WindowManagerAddShadowHint="False">
-                            <Border Name="PART_Surface"
-                                    Padding="{arc:SelectTokenResource MenuPadding}"
-                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
-                                    CornerRadius="{arc:SelectTokenResource MenuCornerRadius}"
-                                    Background="{arc:ArcDesignTokenResource SurfaceRaised}"
-                                    BorderBrush="{arc:ArcDesignTokenResource Border}">
-                                <DockPanel>
-                                    <Border Name="PART_ScrollUp"
-                                            DockPanel.Dock="Top"
-                                            IsVisible="False"
-                                            Background="Transparent"
-                                            Height="{arc:SelectTokenResource ScrollButtonHeight}">
-                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronUp}"
-                                                      Size="16"
-                                                      HorizontalAlignment="Center"
-                                                      VerticalAlignment="Center"
-                                                      Foreground="{arc:ArcDesignTokenResource TextMuted}" />
-                                    </Border>
-                                    <Border Name="PART_ScrollDown"
-                                            DockPanel.Dock="Bottom"
-                                            IsVisible="False"
-                                            Background="Transparent"
-                                            Height="{arc:SelectTokenResource ScrollButtonHeight}">
-                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronDown}"
-                                                      Size="16"
-                                                      HorizontalAlignment="Center"
-                                                      VerticalAlignment="Center"
-                                                      Foreground="{arc:ArcDesignTokenResource TextMuted}" />
-                                    </Border>
-                                    <ScrollViewer Name="PART_Scroll"
-                                                  Padding="{arc:SelectTokenResource ViewportPadding}"
-                                                  HorizontalScrollBarVisibility="Disabled"
-                                                  VerticalScrollBarVisibility="Hidden">
-                                        <arc:SelectOptionView Name="PART_Options"
-                                                              RowHeight="{arc:SelectTokenResource OptionHeight}"
-                                                              RowCornerRadius="{arc:SelectTokenResource OptionCornerRadius}"
-                                                              RowPadding="{arc:SelectTokenResource OptionPadding}"
-                                                              CheckInset="{arc:SelectTokenResource IndicatorInset}"
-                                                              CheckMode="ScaleIn"
-                                                              GlideHighlight="True"
-                                                              DisabledOpacity="{arc:SelectTokenResource OptionDisabledOpacity}"
-                                                              HighlightBrush="{arc:ArcDesignTokenResource SurfaceMuted}"
-                                                              Foreground="{arc:ArcDesignTokenResource Foreground}"
-                                                              CheckForeground="{arc:ArcDesignTokenResource Foreground}" />
-                                    </ScrollViewer>
-                                </DockPanel>
-                            </Border>
-                        </arc:ArcPopup>
+                                      WindowManagerAddShadowHint="False" />
                     </Panel>
                     <TextBlock Name="PART_Description"
                                Text="{TemplateBinding Description}"

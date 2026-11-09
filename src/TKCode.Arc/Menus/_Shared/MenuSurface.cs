@@ -40,7 +40,7 @@ namespace TKCode.Arc;
 [TemplatePart(ScrollViewerPart, typeof(ScrollViewer))]
 [TemplatePart(HighlightPart, typeof(GlidingIndicator))]
 [TemplatePart(ItemsHostPart, typeof(Panel))]
-[PseudoClasses(OpenPseudoClass, DangerHighlightPseudoClass)]
+[PseudoClasses(OpenPseudoClass, DangerHighlightPseudoClass, MenuEntry.ContextPseudoClass, MenuEntry.AccountPseudoClass, MenuEntry.SheetPseudoClass)]
 public class MenuSurface : HeaderedItemsControl
 {
     public const string FramePart = "PART_Frame";
@@ -361,7 +361,15 @@ public class MenuSurface : HeaderedItemsControl
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-        if (change.Property == IsOpenProperty)
+        if (change.Property == VariantProperty)
+        {
+            // Pseudo-classes, not [Variant=...] selectors (see MenuEntry).
+            var variant = Variant;
+            PseudoClasses.Set(MenuEntry.ContextPseudoClass, variant == MenuSurfaceVariant.Context);
+            PseudoClasses.Set(MenuEntry.AccountPseudoClass, variant == MenuSurfaceVariant.Account);
+            PseudoClasses.Set(MenuEntry.SheetPseudoClass, variant == MenuSurfaceVariant.Sheet);
+        }
+        else if (change.Property == IsOpenProperty)
         {
             if (change.GetNewValue<bool>())
             {

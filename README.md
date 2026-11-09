@@ -2,7 +2,7 @@
 
 English | [简体中文](https://github.com/AIDotNet/TKCode.Arc/blob/main/README.zh-CN.md)
 
-[![NuGet](https://img.shields.io/nuget/vpre/TKCode.Arc?label=NuGet)](https://www.nuget.org/packages/TKCode.Arc)
+[![NuGet](https://img.shields.io/nuget/v/TKCode.Arc?label=NuGet)](https://www.nuget.org/packages/TKCode.Arc)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](https://github.com/AIDotNet/TKCode.Arc/blob/main/LICENSE)
 
 **The visual language and spring motion of [Arc](https://uiarc.dev), as native Avalonia controls.**
@@ -66,7 +66,7 @@ terminal, a PDF viewer, and audio and video playback.
 
 ## Status and compatibility
 
-Arc is in preview, so the API may still change between releases. [CHANGELOG.md](https://github.com/AIDotNet/TKCode.Arc/blob/main/CHANGELOG.md)
+Arc follows [Semantic Versioning](https://semver.org/): from 1.0.0 on, breaking API changes come only with a new major version. [CHANGELOG.md](https://github.com/AIDotNet/TKCode.Arc/blob/main/CHANGELOG.md)
 lists each release and its migration notes.
 
 | | |

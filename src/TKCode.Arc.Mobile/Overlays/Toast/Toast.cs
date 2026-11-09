@@ -114,6 +114,7 @@ public class Toast : TemplatedControl
             entry.Dispose();
         }
         _entries.Clear();
+        SyncLayoutHook();
         _stack = e.NameScope.Find<StackPanel>("PART_Stack");
         _lastInset = double.NaN;
         UpdateInset();
@@ -131,13 +132,13 @@ public class Toast : TemplatedControl
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
-        LayoutUpdated += OnLayoutUpdated;
+        SyncLayoutHook();
     }
 
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
-        LayoutUpdated -= OnLayoutUpdated;
+        SyncLayoutHook();
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -148,6 +149,27 @@ public class Toast : TemplatedControl
             UpdateInset();
         }
     }
+
+    /// <summary>Every LayoutUpdated subscriber runs on each layout of the window, so only a showing toast listens.</summary>
+    private void SyncLayoutHook()
+    {
+        var wanted = _entries.Count > 0 && this.IsAttachedToVisualTree();
+        if (wanted == _layoutHooked)
+        {
+            return;
+        }
+        _layoutHooked = wanted;
+        if (wanted)
+        {
+            LayoutUpdated += OnLayoutUpdated;
+        }
+        else
+        {
+            LayoutUpdated -= OnLayoutUpdated;
+        }
+    }
+
+    private bool _layoutHooked;
 
     private void OnLayoutUpdated(object? sender, EventArgs e)
     {
@@ -203,6 +225,7 @@ public class Toast : TemplatedControl
         }
         var entry = new ToastEntry(this, message, icon);
         _entries.Add(entry);
+        SyncLayoutHook();
         _stack.Children.Add(entry.Root);
         entry.Enter(duration ?? DefaultDuration);
     }
@@ -225,6 +248,7 @@ public class Toast : TemplatedControl
     private void Remove(ToastEntry entry)
     {
         _entries.Remove(entry);
+        SyncLayoutHook();
         _stack?.Children.Remove(entry.Root);
         entry.Dispose();
     }

@@ -218,6 +218,11 @@ internal sealed class DonutChartLegendRow : Control, Avalonia.Rendering.ICustomH
     private double _valueShown = double.NaN;
     private string _shareText = string.Empty;
     private double _shareShown = double.NaN;
+    // The counting value and share texts change on every frame of the count spring: their layouts live on the row
+    // (replaced with the text) instead of filling the chart's shared label cache with one entry per frame.
+    private ChartsBRun? _valueRun;
+    private ChartsBRun? _shareRun;
+    private int _runVersion = -1;
 
     public DonutChartLegendRow()
     {
@@ -497,27 +502,38 @@ internal sealed class DonutChartLegendRow : Control, Avalonia.Rendering.ICustomH
         var shareColor = ChartPalette.Lerp(palette.Foreground, palette.TextMuted, muted);
         var valueColor = ChartPalette.Lerp(palette.TextSecondary, palette.TextMuted, muted);
         var labelColor = ChartPalette.Lerp(palette.Foreground, palette.TextMuted, muted);
-        var shareText = texts.Get(palette, _shareText, palette.SizeSM, shareColor, medium: true);
-        var valueText = texts.Get(palette, _valueText, palette.SizeSM, valueColor);
+        var shareText = Run(ref _shareRun, _shareText, palette.BodyMedium, palette, shareColor);
+        var valueText = Run(ref _valueRun, _valueText, palette.Body, palette, valueColor);
+        _runVersion = palette.Version;
         var mid = size.Height / 2;
-        context.DrawText(shareText, new Point(shareRight - shareText.WidthIncludingTrailingWhitespace, mid - shareText.Height / 2));
+        shareText.Draw(context, new Point(shareRight - shareText.WidthIncludingTrailingWhitespace, mid - shareText.Height / 2));
         var valueRight = shareRight - shareWidth - 10;
-        context.DrawText(valueText, new Point(valueRight - valueText.WidthIncludingTrailingWhitespace, mid - valueText.Height / 2));
+        valueText.Draw(context, new Point(valueRight - valueText.WidthIncludingTrailingWhitespace, mid - valueText.Height / 2));
         var textLeft = 10 + 10 + 10;
         var textWidth = Math.Max(1, valueRight - valueText.WidthIncludingTrailingWhitespace - 10 - textLeft);
         var label = texts.Get(palette, _slice.Label, palette.SizeSM, labelColor, maxWidth: textWidth);
         var members = DonutChart.MembersText(_slice);
         if (members is null)
         {
-            context.DrawText(label, new Point(textLeft, mid - label.Height / 2));
+            label.Draw(context, new Point(textLeft, mid - label.Height / 2));
         }
         else
         {
             var membersText = texts.Get(palette, members, palette.SizeXS, palette.TextMuted, maxWidth: textWidth);
             var top = mid - (label.Height + membersText.Height) / 2;
-            context.DrawText(label, new Point(textLeft, top));
-            context.DrawText(membersText, new Point(textLeft, top + label.Height));
+            label.Draw(context, new Point(textLeft, top));
+            membersText.Draw(context, new Point(textLeft, top + label.Height));
         }
+    }
+
+    private ChartText Run(ref ChartsBRun? run, string text, Typeface typeface, ChartPalette palette, Color color)
+    {
+        if (run is null || run.Text != text || _runVersion != palette.Version)
+        {
+            run?.Dispose();
+            run = new ChartsBRun(text, typeface, palette.SizeSM, Brushes.Black, singleLine: false);
+        }
+        return new ChartText(run, palette.Brush(color));
     }
 
     protected override AutomationPeer OnCreateAutomationPeer() => new DonutChartLegendRowAutomationPeer(this);

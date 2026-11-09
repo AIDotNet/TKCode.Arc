@@ -28,6 +28,7 @@ public sealed class DemoNav : DockPanel
     private readonly List<Control> _labels = new();
     private readonly Panel _content = new();
     private readonly GlidingIndicator _highlight = new() { IsHitTestVisible = false, Spring = ArcSpring.Morph, Opacity = 0.07 };
+    private readonly GalleryBoundsWatch _follow;
     private readonly ArcGlyph? _collapseGlyph;
     private readonly GalleryNavRow? _collapseRow;
     private string? _selected;
@@ -73,7 +74,7 @@ public sealed class DemoNav : DockPanel
             HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
             VerticalScrollBarVisibility = ScrollBarVisibility.Hidden
         });
-        _content.LayoutUpdated += (_, _) => SyncHighlight(animate: false);
+        _follow = new GalleryBoundsWatch(_content, () => SyncHighlight(animate: false));
     }
 
     /// <summary>A page row was chosen.</summary>
@@ -105,6 +106,8 @@ public sealed class DemoNav : DockPanel
             if (value is not null && _rows.TryGetValue(value, out var row))
             {
                 row.IsSelected = true;
+                // The row inside its group, and the group among the others.
+                _follow.Watch(row, (Control)row.Parent!);
             }
             // Glide now: a layout pass before a posted glide would see the new row and jump the highlight there.
             if (!SyncHighlight(animate))

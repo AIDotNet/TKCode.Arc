@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
 using Avalonia;
@@ -11,6 +12,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Layout;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.VisualTree;
@@ -152,6 +154,7 @@ public class Card : ContentControl
 
     private CardParts? _parts;
     private CardTitle? _title;
+    private LazyFocusRing? _focusRing;
     private CardQuickLook? _quickLook;
     private ModalPresence? _presence;
     private SharedElementScope? _flight;
@@ -161,8 +164,9 @@ public class Card : ContentControl
     private MotionValue<double>? _closeReveal;
     private MotionValue<double>? _detailsReveal;
     private MotionValue<double>? _quickZoom;
-    private readonly ScaleTransform _closeScale = new();
-    private readonly TranslateTransform _detailsShift = new();
+    // Quick look only: created with the quick look (EnsureQuickLook), not with every card.
+    private ScaleTransform? _closeScale;
+    private TranslateTransform? _detailsShift;
     private DismissReason _pendingReason = DismissReason.Programmatic;
     private bool _pendingOpen;
     private bool _held;
@@ -218,14 +222,183 @@ public class Card : ContentControl
             _title.GotFocus += OnTitleGotFocus;
             _title.LostFocus += OnTitleLostFocus;
             _title.IsInteractive = IsInteractive;
+            // The ring shows while the title has keyboard focus (its :focus-visible, the same Tab / Directional test as
+            // :trigger-focus) and the quick look is closed. Built on first use, as the last child of the root panel, where
+            // the template used to keep a hidden Border.
+            _focusRing = new LazyFocusRing(_title, CardTokens.Key(CardTokenKind.FocusRingMargin), CardTokens.Key(CardTokenKind.FocusRingRadius))
+            {
+                IsAllowed = !PseudoClasses.Contains(QuickLookPseudoClass)
+            };
+            _focusRing.Attach(e.NameScope.Find<Panel>("PART_Root"));
+        }
+        else
+        {
+            _focusRing = null;
         }
         if (_parts.Status is { } status)
         {
             AutomationProperties.SetLiveSetting(status, AutomationLiveSetting.Polite);
         }
+        _body = e.NameScope.Find<StackPanel>("PART_Body");
+        _frameStack = _body?.GetVisualParent() as StackPanel;
         _parts.SetZoom(_zoom?.Value ?? 1);
         _measuredFontSize = 0;
         UpdateSlots();
+    }
+
+    #region Optional parts, built on first use
+
+    // The template declares only what every card has (surface, frame, body, title). Media, description, content and the
+    // whole footer (byline, avatar slot, meta, status, action: nine nodes) used to be hidden template parts with some 25
+    // token bindings in every card of a grid; they are built here, with the same bindings, the first time a card needs them.
+    private StackPanel? _frameStack;
+    private StackPanel? _body;
+
+    private void EnsureMedia()
+    {
+        if (_parts is null || _parts.Media is not null || _frameStack is null)
+        {
+            return;
+        }
+        var presenter = new ContentPresenter
+        {
+            Name = "PART_MediaPresenter",
+            HorizontalContentAlignment = HorizontalAlignment.Stretch,
+            VerticalContentAlignment = VerticalAlignment.Stretch
+        };
+        var zoom = new Decorator { Name = "PART_Zoom", Child = presenter, RenderTransformOrigin = RelativePoint.Center, RenderTransform = _parts.ZoomTransform };
+        BindCardToken(zoom, MinHeightProperty, CardTokenKind.MediaMinHeight);
+        var media = new Border { Name = "PART_Media", ClipToBounds = true, Child = zoom };
+        SharedElement.SetKey(media, "media");
+        ArcTokens.Bind(media, Border.BackgroundProperty, ArcDesignTokenKind.SurfaceMuted, BindingPriority.LocalValue);
+        _frameStack.Children.Insert(0, media);
+        _parts.Media = media;
+        _parts.Zoom = zoom;
+        _parts.MediaPresenter = presenter;
+    }
+
+    private void EnsureDescription()
+    {
+        if (_parts is null || _parts.Description is not null || _body is null)
+        {
+            return;
+        }
+        var block = new TextBlock { Name = "PART_Description", HorizontalAlignment = HorizontalAlignment.Left, TextWrapping = TextWrapping.Wrap };
+        SharedElement.SetKey(block, "description");
+        SharedElement.SetMode(block, SharedElementMode.Position);
+        block.Bind(TextBlock.TextProperty, this.GetObservable(DescriptionProperty));
+        BindCardToken(block, MarginProperty, CardTokenKind.DescriptionMargin);
+        ArcTokens.Bind(block, TextBlock.FontSizeProperty, ArcDesignTokenKind.TypeSM, BindingPriority.LocalValue);
+        BindCardToken(block, TextBlock.LineHeightProperty, CardTokenKind.BodyLineHeight);
+        ArcTokens.Bind(block, TextBlock.ForegroundProperty, ArcDesignTokenKind.TextSecondary, BindingPriority.LocalValue);
+        // Right after the title.
+        _body.Children.Insert(Math.Min(1, _body.Children.Count), block);
+        _parts.Description = block;
+        _measuredFontSize = 0;
+        InvalidateMeasure();
+    }
+
+    private void EnsureContentHost()
+    {
+        if (_parts is null || _parts.ContentHost is not null || _body is null)
+        {
+            return;
+        }
+        var host = new ContentPresenter { Name = "PART_ContentHost", TextWrapping = TextWrapping.Wrap };
+        ArcTokens.Bind(host, ContentPresenter.FontSizeProperty, ArcDesignTokenKind.TypeSM, BindingPriority.LocalValue);
+        BindCardToken(host, ContentPresenter.LineHeightProperty, CardTokenKind.BodyLineHeight);
+        ArcTokens.Bind(host, ContentPresenter.ForegroundProperty, ArcDesignTokenKind.TextSecondary, BindingPriority.LocalValue);
+        // After the title and the description, before the footer.
+        var index = _parts.Description is { } description ? _body.Children.IndexOf(description) + 1 : Math.Min(1, _body.Children.Count);
+        _body.Children.Insert(index, host);
+        _parts.ContentHost = host;
+    }
+
+    private void EnsureFooter()
+    {
+        if (_parts is null || _parts.Footer is not null || _body is null)
+        {
+            return;
+        }
+        var footer = new Grid { Name = "PART_Footer", ColumnDefinitions = new ColumnDefinitions("*,Auto") };
+        BindCardToken(footer, Grid.ColumnSpacingProperty, CardTokenKind.FooterGap);
+        BindCardToken(footer, MarginProperty, CardTokenKind.FooterMargin);
+
+        var byline = new Grid { Name = "PART_Byline", ColumnDefinitions = new ColumnDefinitions("Auto,*"), VerticalAlignment = VerticalAlignment.Center };
+        SharedElement.SetKey(byline, "byline");
+        SharedElement.SetMode(byline, SharedElementMode.Position);
+        BindCardToken(byline, Grid.ColumnSpacingProperty, CardTokenKind.FooterGap);
+
+        var avatarPresenter = new ContentPresenter { Name = "PART_AvatarPresenter" };
+        var avatarSlot = new Border
+        {
+            Name = "PART_AvatarSlot",
+            ClipToBounds = true,
+            Child = new Viewbox { Stretch = Stretch.UniformToFill, Child = avatarPresenter }
+        };
+        BindCardToken(avatarSlot, WidthProperty, CardTokenKind.AvatarSlotSize);
+        BindCardToken(avatarSlot, HeightProperty, CardTokenKind.AvatarSlotSize);
+        ArcTokens.Bind(avatarSlot, Border.CornerRadiusProperty, ArcDesignTokenKind.RadiusPill, BindingPriority.LocalValue);
+        ArcTokens.Bind(avatarSlot, Border.BackgroundProperty, ArcDesignTokenKind.SurfaceMuted, BindingPriority.LocalValue);
+
+        var copy = new StackPanel { VerticalAlignment = VerticalAlignment.Center };
+        Grid.SetColumn(copy, 1);
+        var meta = new ContentPresenter { Name = "PART_MetaPresenter", TextTrimming = TextTrimming.CharacterEllipsis };
+        ArcTokens.Bind(meta, ContentPresenter.FontSizeProperty, ArcDesignTokenKind.TypeXS, BindingPriority.LocalValue);
+        ArcTokens.Bind(meta, ContentPresenter.FontWeightProperty, ArcDesignTokenKind.WeightMedium, BindingPriority.LocalValue);
+        BindCardToken(meta, ContentPresenter.LineHeightProperty, CardTokenKind.BylineLineHeight);
+        ArcTokens.Bind(meta, ContentPresenter.ForegroundProperty, ArcDesignTokenKind.Foreground, BindingPriority.LocalValue);
+        var status = new CardStatusLine { Name = "PART_Status" };
+        status.Bind(CardStatusLine.TextProperty, this.GetObservable(StatusProperty));
+        ArcTokens.Bind(status, CardStatusLine.FontSizeProperty, ArcDesignTokenKind.TypeXS, BindingPriority.LocalValue);
+        BindCardToken(status, CardStatusLine.LineHeightProperty, CardTokenKind.BylineLineHeight);
+        ArcTokens.Bind(status, CardStatusLine.ForegroundProperty, ArcDesignTokenKind.TextMuted, BindingPriority.LocalValue);
+        AutomationProperties.SetLiveSetting(status, AutomationLiveSetting.Polite);
+        copy.Children.Add(meta);
+        copy.Children.Add(status);
+        byline.Children.Add(avatarSlot);
+        byline.Children.Add(copy);
+
+        var action = new ContentPresenter { Name = "PART_ActionPresenter", VerticalAlignment = VerticalAlignment.Center };
+        Grid.SetColumn(action, 1);
+        SharedElement.SetKey(action, "action");
+        SharedElement.SetMode(action, SharedElementMode.Position);
+        footer.Children.Add(byline);
+        footer.Children.Add(action);
+
+        _body.Children.Add(footer);
+        _parts.Footer = footer;
+        _parts.Byline = byline;
+        _parts.AvatarSlot = avatarSlot;
+        _parts.AvatarPresenter = avatarPresenter;
+        _parts.MetaPresenter = meta;
+        _parts.Status = status;
+        _parts.ActionPresenter = action;
+    }
+
+    /// <summary>Binds a card token the way the template's token markup did (a dynamic resource at local priority).</summary>
+    private static void BindCardToken(Control target, AvaloniaProperty property, CardTokenKind kind)
+        => target.Bind(property, target.GetResourceObservable(CardTokens.Key(kind)));
+
+    private static void Show(Control? part, bool visible)
+    {
+        if (part is not null)
+        {
+            part.IsVisible = visible;
+        }
+    }
+
+    #endregion
+
+    /// <summary>Sets <c>:quick-look</c>; the ring hides while the quick look is open (the title keeps its focus state).</summary>
+    private void SetQuickLookState(bool open)
+    {
+        PseudoClasses.Set(QuickLookPseudoClass, open);
+        if (_focusRing is not null)
+        {
+            _focusRing.IsAllowed = !open;
+            _focusRing.Update();
+        }
     }
 
     protected override Size MeasureOverride(Size availableSize)
@@ -305,6 +478,41 @@ public class Card : ContentControl
     /// </summary>
     private void UpdateSlots()
     {
+        var hasMedia = Media is not null;
+        var hasAvatar = Avatar is not null;
+        var hasMeta = Meta is not null;
+        var hasStatus = !string.IsNullOrEmpty(Status);
+        var hasAction = Action is not null;
+        var hasFooter = hasAvatar || hasMeta || hasStatus || hasAction;
+        var hasDescription = !string.IsNullOrEmpty(Description);
+        var hasContent = Content is not null;
+        // Optional parts exist once they were needed; afterwards they only show and hide.
+        if (hasMedia)
+        {
+            EnsureMedia();
+        }
+        if (hasDescription)
+        {
+            EnsureDescription();
+        }
+        if (hasContent)
+        {
+            EnsureContentHost();
+        }
+        if (hasFooter)
+        {
+            EnsureFooter();
+        }
+        Show(_parts?.Media, hasMedia);
+        Show(_parts?.Description, hasDescription);
+        Show(_parts?.ContentHost, hasContent);
+        Show(_parts?.Footer, hasFooter);
+        Show(_parts?.Byline, hasAvatar || hasMeta || hasStatus);
+        Show(_parts?.AvatarSlot, hasAvatar);
+        Show(_parts?.MetaPresenter, hasMeta);
+        Show(_parts?.Status, hasStatus);
+        Show(_parts?.ActionPresenter, hasAction);
+
         var quick = _quickLook?.Parts;
         Place(_parts?.MediaPresenter, quick?.MediaPresenter, Media);
         Place(_parts?.AvatarPresenter, quick?.AvatarPresenter, Avatar);
@@ -316,15 +524,9 @@ public class Card : ContentControl
             details.Content = Details;
         }
 
-        var hasMedia = Media is not null;
-        var hasAvatar = Avatar is not null;
-        var hasMeta = Meta is not null;
-        var hasStatus = !string.IsNullOrEmpty(Status);
-        var hasAction = Action is not null;
-        var hasFooter = hasAvatar || hasMeta || hasStatus || hasAction;
         SetFlags(hasMedia, hasAvatar, hasMeta, hasStatus, hasAction, hasFooter);
-        PseudoClasses.Set(HasDescriptionPseudoClass, !string.IsNullOrEmpty(Description));
-        PseudoClasses.Set(HasContentPseudoClass, Content is not null);
+        PseudoClasses.Set(HasDescriptionPseudoClass, hasDescription);
+        PseudoClasses.Set(HasContentPseudoClass, hasContent);
         PseudoClasses.Set(InteractivePseudoClass, IsInteractive);
         if (_quickLook is { } look)
         {
@@ -415,10 +617,17 @@ public class Card : ContentControl
         OpenDetails();
     }
 
-    private void OnTitleGotFocus(object? sender, FocusChangedEventArgs e) =>
+    private void OnTitleGotFocus(object? sender, FocusChangedEventArgs e)
+    {
         PseudoClasses.Set(TriggerFocusPseudoClass, e.NavigationMethod is NavigationMethod.Tab or NavigationMethod.Directional);
+        _focusRing?.Update();
+    }
 
-    private void OnTitleLostFocus(object? sender, FocusChangedEventArgs e) => PseudoClasses.Set(TriggerFocusPseudoClass, false);
+    private void OnTitleLostFocus(object? sender, FocusChangedEventArgs e)
+    {
+        PseudoClasses.Set(TriggerFocusPseudoClass, false);
+        _focusRing?.Update();
+    }
 
     protected override void OnPointerEntered(PointerEventArgs e)
     {
@@ -540,6 +749,8 @@ public class Card : ContentControl
         };
         _presence.Closed += OnPresenceClosed;
         _flight = new SharedElementScope(this, look) { RevealsSourceOnArrival = false };
+        _closeScale = new ScaleTransform();
+        _detailsShift = new TranslateTransform();
 
         _scrim = CreateValue(0, v => _presence.ScrimOpacity = v);
         _surfaceFade = CreateValue(1, v => look.Opacity = Math.Clamp(v, 0, 1));
@@ -554,12 +765,12 @@ public class Card : ContentControl
         {
             return;
         }
-        if (parts.CloseSlot is { } close)
+        if (parts.CloseSlot is { } close && _closeScale is not null)
         {
             close.RenderTransformOrigin = RelativePoint.Center;
             close.RenderTransform = _closeScale;
         }
-        if (parts.Details is { } details)
+        if (parts.Details is { } details && _detailsShift is not null)
         {
             details.RenderTransform = _detailsShift;
         }
@@ -571,7 +782,7 @@ public class Card : ContentControl
 
     private void ApplyCloseReveal(double p)
     {
-        if (_quickLook?.Parts?.CloseSlot is not { } close)
+        if (_quickLook?.Parts?.CloseSlot is not { } close || _closeScale is null)
         {
             return;
         }
@@ -583,7 +794,7 @@ public class Card : ContentControl
 
     private void ApplyDetailsReveal(double p)
     {
-        if (_quickLook?.Parts?.Details is not { } details)
+        if (_quickLook?.Parts?.Details is not { } details || _detailsShift is null)
         {
             return;
         }
@@ -659,12 +870,12 @@ public class Card : ContentControl
         }
         _held = true;
         UpdateSlots();
-        PseudoClasses.Set(QuickLookPseudoClass, _morph);
+        SetQuickLookState(_morph);
         if (!presence.Open())
         {
             _held = false;
             UpdateSlots();
-            PseudoClasses.Set(QuickLookPseudoClass, false);
+            SetQuickLookState(false);
             _pendingOpen = true;
             return;
         }
@@ -706,7 +917,7 @@ public class Card : ContentControl
             _held = true;
             UpdateSlots();
             look.SetFlag(CardQuickLook.ReturningPseudoClass, false);
-            PseudoClasses.Set(QuickLookPseudoClass, _morph);
+            SetQuickLookState(_morph);
             var instant = MotionSpec.Tween(ArcMotionPresets.Instant, ArcEasings.Standard);
             if (!_morph)
             {
@@ -790,7 +1001,7 @@ public class Card : ContentControl
     {
         _held = false;
         UpdateSlots();
-        PseudoClasses.Set(QuickLookPseudoClass, false);
+        SetQuickLookState(false);
     }
 
     private void OnPresenceClosed(object? sender, ModalClosedEventArgs e)

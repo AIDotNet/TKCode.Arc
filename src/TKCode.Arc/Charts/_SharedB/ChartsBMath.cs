@@ -1,6 +1,7 @@
 using System.Globalization;
 using TKCode.Arc.Motion;
 using Avalonia;
+using Avalonia.Input;
 using Avalonia.Media;
 
 namespace TKCode.Arc;
@@ -21,6 +22,9 @@ internal static class ChartsBMath
 
     /// <summary>CSS <c>color-mix(in oklab, <paramref name="color"/> percent%, <paramref name="other"/>)</c>.</summary>
     public static Color MixIn(Color color, double percent, Color other) => Oklch.MixOklab(other, color, Clamp(percent, 0, 1));
+
+    /// <summary>The hand cursor charts show over clickable marks, shared so pointer moves allocate none.</summary>
+    public static readonly Cursor HandCursor = new(StandardCursorType.Hand);
 
     /// <summary>CSS <c>color-mix(in oklab, color percent%, transparent)</c>: the color at that alpha.</summary>
     public static Color Alpha(Color color, double alpha) => Oklch.WithAlpha(color, color.A / 255.0 * Clamp(alpha, 0, 1));

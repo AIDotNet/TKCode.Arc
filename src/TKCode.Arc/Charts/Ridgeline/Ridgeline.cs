@@ -129,12 +129,16 @@ public class Ridgeline : Control, IChartsBAccessible, Avalonia.Rendering.ICustom
     private BindingBase? _valuesBinding;
     private ChartsBAutomationPeer? _peer;
     private string? _tipSignature;
-    private readonly List<(double Value, FormattedText Text)> _ticks = new();
-    private readonly Dictionary<string, FormattedText> _rowLabels = new();
-    private FormattedText? _empty;
-    private FormattedText? _scaleLabel;
-    private FormattedText? _scaleLo;
-    private FormattedText? _scaleHi;
+    private readonly List<ChartsBTipRow> _tipRows = new();
+    private double? _tipCursorValue;
+    private readonly List<(double Value, ChartsBRun Text)> _ticks = new();
+    // Each row label twice: at rest and lifted (medium weight), so the active label is a swap, not a relayout.
+    private readonly Dictionary<string, (ChartsBRun Off, ChartsBRun On)> _rowLabels = new();
+    private (int Stamp, string Id, StreamGeometry Fill, StreamGeometry Half, StreamGeometry Line)? _lens;
+    private ChartsBRun? _empty;
+    private ChartsBRun? _scaleLabel;
+    private ChartsBRun? _scaleLo;
+    private ChartsBRun? _scaleHi;
     private int _textVersion = -1;
     private double _textWidth = -1;
 
@@ -904,43 +908,52 @@ public class Ridgeline : Control, IChartsBAccessible, Avalonia.Rendering.ICustom
             return;
         }
         var stats = _stats[series.Id];
-        var signature = $"{series.Id}|{_cursor?.Value}";
-        if (signature != _tipSignature)
+        var p = _palette;
+        var xs = p.TypeXS;
+        // The first four rows only change with the series; the pointer moves only the "at or below" row.
+        var seriesChanged = series.Id != _tipSignature;
+        if (seriesChanged)
         {
-            _tipSignature = signature;
-            var p = _palette;
-            var xs = p.TypeXS;
-            var rows = new List<ChartsBTipRow>
+            _tipSignature = series.Id;
+            _tipRows.Clear();
+            _tipRows.Add(new ChartsBTipRow { Left = ChartsBText.Run(series.Label, p, xs, p.TextSecondary), MinHeight = xs * 1.5 });
+            _tipRows.Add(new ChartsBTipRow
             {
-                new() { Left = ChartsBText.Run(series.Label, p, xs, p.TextSecondary), MinHeight = xs * 1.5 },
-                new()
-                {
-                    MarginTop = 2, MinHeight = p.TypeSM * 1.4,
-                    Left = ChartsBText.Run("Median", p, xs, p.TextMuted),
-                    Right = ChartsBText.Run(Format(stats.Median), p, p.TypeSM, p.Foreground, FontWeight.Medium)
-                },
-                new()
-                {
-                    MinHeight = xs * 1.5,
-                    Left = ChartsBText.Run("Middle half", p, xs, p.TextMuted),
-                    Right = ChartsBText.Run($"{Format(stats.Q1)} to {Format(stats.Q3)}", p, xs, p.Foreground)
-                },
-                new()
-                {
-                    MinHeight = xs * 1.5,
-                    Left = ChartsBText.Run("Range", p, xs, p.TextMuted),
-                    Right = ChartsBText.Run($"{Format(stats.Min)} to {Format(stats.Max)}", p, xs, p.Foreground)
-                }
-            };
-            if (_cursor is { } cursor)
+                MarginTop = 2, MinHeight = p.TypeSM * 1.4,
+                Left = ChartsBText.Run("Median", p, xs, p.TextMuted),
+                Right = ChartsBText.Run(Format(stats.Median), p, p.TypeSM, p.Foreground, FontWeight.Medium)
+            });
+            _tipRows.Add(new ChartsBTipRow
             {
-                rows.Add(new ChartsBTipRow
+                MinHeight = xs * 1.5,
+                Left = ChartsBText.Run("Middle half", p, xs, p.TextMuted),
+                Right = ChartsBText.Run($"{Format(stats.Q1)} to {Format(stats.Q3)}", p, xs, p.Foreground)
+            });
+            _tipRows.Add(new ChartsBTipRow
+            {
+                MinHeight = xs * 1.5,
+                Left = ChartsBText.Run("Range", p, xs, p.TextMuted),
+                Right = ChartsBText.Run($"{Format(stats.Min)} to {Format(stats.Max)}", p, xs, p.Foreground)
+            });
+            _tipCursorValue = double.NaN;
+        }
+        var cursorValue = _cursor?.Value;
+        if (seriesChanged || cursorValue != _tipCursorValue)
+        {
+            _tipCursorValue = cursorValue;
+            if (_tipRows.Count > 4)
+            {
+                _tipRows.RemoveAt(4);
+            }
+            if (cursorValue is { } value)
+            {
+                _tipRows.Add(new ChartsBTipRow
                 {
                     MarginTop = 4, MinHeight = xs * 1.5,
-                    Left = ChartsBText.Run($"{ChartsBMath.Percent(stats.FractionAtOrBelow(cursor.Value))} at or below {Format(cursor.Value)}", p, xs, p.TextMuted)
+                    Left = ChartsBText.Run($"{ChartsBMath.Percent(stats.FractionAtOrBelow(value))} at or below {Format(value)}", p, xs, p.TextMuted)
                 });
             }
-            _tooltip.SetRows(rows);
+            _tooltip.SetRows(_tipRows);
         }
         // The tooltip trails the pointer or the keyboard cursor and stays inside the chart.
         var width = Bounds.Width;
@@ -1002,17 +1015,24 @@ public class Ridgeline : Control, IChartsBAccessible, Avalonia.Rendering.ICustom
         for (var value = Math.Ceiling(_lo / step) * step; value <= _hi + 1e-9; value += step)
         {
             var rounded = Math.Round(value * 1e6) / 1e6;
-            _ticks.Add((rounded, ChartsBText.Make(Format(rounded == 0 ? 0 : rounded), p, p.TypeXS, p.TextMuted)));
+            _ticks.Add((rounded, ChartsBText.Label(Format(rounded == 0 ? 0 : rounded), p, p.TypeXS, p.TextMuted)));
         }
         _rowLabels.Clear();
         foreach (var series in _series)
         {
-            _rowLabels[series.Id] = ChartsBText.Trimmed(series.Label, p, p.TypeXS, p.TextSecondary, Gutter - 10);
+            var off = ChartsBText.TrimmedRun(series.Label, p, p.TypeXS, p.TextSecondary, Gutter - 10);
+            var on = ChartsBText.Label(series.Label, p, p.TypeXS, p.Foreground, FontWeight.Medium);
+            if (off.IsConstrained)
+            {
+                // Like the former weight swap on one text: the lifted label is trimmed only when the resting one is.
+                on.Limit(Gutter - 10);
+            }
+            _rowLabels[series.Id] = (off, on);
         }
-        _empty = ChartsBText.Make(EmptyLabel, p, p.TypeSM, p.TextMuted);
-        _scaleLabel = ChartsBText.Make("Median", p, p.TypeXS, p.TextSecondary);
-        _scaleLo = ChartsBText.Make(Format(_lo), p, p.TypeXS, p.TextMuted);
-        _scaleHi = ChartsBText.Make(Format(_hi), p, p.TypeXS, p.TextMuted);
+        _empty = ChartsBText.Label(EmptyLabel, p, p.TypeSM, p.TextMuted);
+        _scaleLabel = ChartsBText.Label("Median", p, p.TypeXS, p.TextSecondary);
+        _scaleLo = ChartsBText.Label(Format(_lo), p, p.TypeXS, p.TextMuted);
+        _scaleHi = ChartsBText.Label(Format(_hi), p, p.TypeXS, p.TextMuted);
     }
 
     public override void Render(DrawingContext context)
@@ -1026,7 +1046,7 @@ public class Ridgeline : Control, IChartsBAccessible, Avalonia.Rendering.ICustom
         var p = _palette;
         if (IsEmpty)
         {
-            context.DrawText(_empty!, new Point((width - _empty!.Width) / 2, (Bounds.Height - _empty.Height) / 2));
+            _empty!.Draw(context, new Point((width - _empty!.TextWidth) / 2, (Bounds.Height - _empty.Height) / 2));
             return;
         }
         using var fade = context.PushOpacity(_reveal.Fade);
@@ -1042,7 +1062,7 @@ public class Ridgeline : Control, IChartsBAccessible, Avalonia.Rendering.ICustom
                 continue;
             }
             context.DrawLine(tickPen, new Point(x, top - RowHeight * 0.5), new Point(x, axisLabelBottom - text.Height - 2));
-            context.DrawText(text, new Point(x - text.Width / 2, axisLabelBottom - text.Height));
+            text.Draw(context, new Point(x - text.TextWidth / 2, axisLabelBottom - text.Height));
         }
         var active = ActiveId;
         if (_reveal.IsRevealed)
@@ -1080,22 +1100,18 @@ public class Ridgeline : Control, IChartsBAccessible, Avalonia.Rendering.ICustom
             if (_cursor is { } cursor && active is not null)
             {
                 var x = XOf(cursor.Value);
-                using (context.PushOpacity(0.35))
-                {
-                    context.DrawLine(p.Pen(p.Foreground, 1), new Point(x, top - RowHeight * 0.5), new Point(x, PlotBottom - AxisHeight));
-                }
+                // One flat line: its 35% rides on the pen instead of an opacity push.
+                context.DrawLine(p.Pen(p.Foreground, 1, 0.35), new Point(x, top - RowHeight * 0.5), new Point(x, PlotBottom - AxisHeight));
             }
         }
         foreach (var series in _series)
         {
-            if (!_rowLabels.TryGetValue(series.Id, out var label) || !_targets.TryGetValue(series.Id, out var target))
+            if (!_rowLabels.TryGetValue(series.Id, out var labels) || !_targets.TryGetValue(series.Id, out var target))
             {
                 continue;
             }
-            var on = series.Id == active;
-            label.SetForegroundBrush(p.Brush(on ? p.Foreground : p.TextSecondary));
-            label.SetFontWeight(on ? FontWeight.Medium : FontWeight.Normal);
-            context.DrawText(label, new Point(0, Baseline(target.Row) - 18 + (18 - label.Height) / 2));
+            var label = series.Id == active ? labels.On : labels.Off;
+            label.Draw(context, new Point(0, Baseline(target.Row) - 18 + (18 - label.Height) / 2));
         }
         if (IsTinted)
         {
@@ -1120,14 +1136,22 @@ public class Ridgeline : Control, IChartsBAccessible, Avalonia.Rendering.ICustom
         var p = _palette;
         var ridge = shape.Color;
         var baseline = Baseline(shape.Row);
+        // The lens curves change only with the drawn shapes (a morph bumps the stamp); the lift is a transform.
+        if (_lens is not { } lens || lens.Stamp != _geometryStamp || lens.Id != _lensId)
+        {
+            lens = (_geometryStamp, _lensId, Curve(shape, baseline, lift, true), Curve(shape, baseline, lift, true, shape.Q1, shape.Q3),
+                Curve(shape, baseline, lift, false));
+            _lens = lens;
+        }
+        var animated = _morphing;
         using (context.PushTransform(Matrix.CreateTranslation(0, -Lift * _lensLift.Value)))
         using (context.PushOpacity(opacity))
         {
-            context.DrawGeometry(Brush(ChartsBMath.MixIn(ridge, 0.18, p.Surface), true), null, Curve(shape, baseline, lift, true));
-            context.DrawGeometry(Brush(ChartsBMath.MixIn(ridge, 0.48, p.Surface), true), null, Curve(shape, baseline, lift, true, shape.Q1, shape.Q3));
+            context.DrawGeometry(Brush(ChartsBMath.MixIn(ridge, 0.18, p.Surface), animated), null, lens.Fill);
+            context.DrawGeometry(Brush(ChartsBMath.MixIn(ridge, 0.48, p.Surface), animated), null, lens.Half);
             var mx = XOf(shape.Median);
             context.DrawLine(p.Pen(p.Foreground, 1.5, PenLineCap.Round), new Point(mx, baseline), new Point(mx, baseline - shape.HeightAt(shape.Median) * lift));
-            context.DrawGeometry(null, PenOf(ridge, 2.25, true), Curve(shape, baseline, lift, false));
+            context.DrawGeometry(null, PenOf(ridge, 2.25, animated), lens.Line);
         }
     }
 
@@ -1192,17 +1216,20 @@ public class Ridgeline : Control, IChartsBAccessible, Avalonia.Rendering.ICustom
     {
         var p = _palette;
         var height = Math.Ceiling(p.TypeXS * 1.5);
-        var widths = new[] { _scaleLabel!.WidthIncludingTrailingWhitespace + 4, _scaleLo!.WidthIncludingTrailingWhitespace, 5 * 18 + 4 * 2.0, _scaleHi!.WidthIncludingTrailingWhitespace };
-        var x = Bounds.Width - widths.Sum() - 3 * 8;
-        context.DrawText(_scaleLabel, new Point(x, y + (height - _scaleLabel.Height) / 2));
-        x += widths[0] + 8;
-        context.DrawText(_scaleLo, new Point(x, y + (height - _scaleLo.Height) / 2));
-        x += widths[1] + 8;
+        var labelWidth = _scaleLabel!.WidthIncludingTrailingWhitespace + 4;
+        var loWidth = _scaleLo!.WidthIncludingTrailingWhitespace;
+        var swatchesWidth = 5 * 18 + 4 * 2.0;
+        var hiWidth = _scaleHi!.WidthIncludingTrailingWhitespace;
+        var x = Bounds.Width - (labelWidth + loWidth + swatchesWidth + hiWidth) - 3 * 8;
+        _scaleLabel.Draw(context, new Point(x, y + (height - _scaleLabel.Height) / 2));
+        x += labelWidth + 8;
+        _scaleLo.Draw(context, new Point(x, y + (height - _scaleLo.Height) / 2));
+        x += loWidth + 8;
         for (var i = 0; i < 5; i++)
         {
             context.DrawRectangle(p.Brush(Tone(i * 0.25)), null, new RoundedRect(new Rect(x + i * 20, y + (height - 10) / 2, 18, 10), 3));
         }
-        x += widths[2] + 8;
-        context.DrawText(_scaleHi, new Point(x, y + (height - _scaleHi.Height) / 2));
+        x += swatchesWidth + 8;
+        _scaleHi.Draw(context, new Point(x, y + (height - _scaleHi.Height) / 2));
     }
 }

@@ -160,6 +160,9 @@ internal sealed class ShortcutRecorderActionButton : AvaloniaButton
 /// </summary>
 internal sealed class ShortcutRecorderLink : AvaloniaButton
 {
+    /// <summary>Set while <see cref="IsQuiet"/> is true (the theme selects on it, not on the property).</summary>
+    public const string QuietPseudoClass = ":quiet";
+
     public static readonly StyledProperty<string?> TextProperty =
         AvaloniaProperty.Register<ShortcutRecorderLink, string?>(nameof(Text));
 
@@ -225,6 +228,10 @@ internal sealed class ShortcutRecorderLink : AvaloniaButton
         base.OnPropertyChanged(change);
         if (change.Property == IsQuietProperty || change.Property == UnderlineBrushProperty || change.Property == UnderlineOffsetProperty)
         {
+            if (change.Property == IsQuietProperty)
+            {
+                PseudoClasses.Set(QuietPseudoClass, IsQuiet);
+            }
             UpdateUnderline();
         }
     }

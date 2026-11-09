@@ -16,11 +16,7 @@
                                    Inlines="{TemplateBinding Inlines}"
                                    LineHeight="{TemplateBinding LineHeight}" />
                     </arc:ExpandableTextViewport>
-                    <arc:ExpandableTextToggle Name="PART_Toggle"
-                                              IsVisible="{TemplateBinding IsOverflowing}"
-                                              IsOpen="{TemplateBinding IsExpanded}"
-                                              MoreText="{TemplateBinding MoreLabel}"
-                                              LessText="{TemplateBinding LessLabel}" />
+                    <!-- PART_Toggle is added after the viewport the first time the text overflows. -->
                 </StackPanel>
             </ControlTemplate>
         </Setter>
@@ -44,11 +40,7 @@
                                           ContentTemplate="{TemplateBinding ContentTemplate}"
                                           TextBlock.LineHeight="{arc:ExpandableTextTokenResource TextLineHeight}" />
                     </arc:ExpandableTextViewport>
-                    <arc:ExpandableTextToggle Name="PART_Toggle"
-                                              IsVisible="{TemplateBinding IsOverflowing}"
-                                              IsOpen="{TemplateBinding IsExpanded}"
-                                              MoreText="{TemplateBinding MoreLabel}"
-                                              LessText="{TemplateBinding LessLabel}" />
+                    <!-- PART_Toggle is added after the viewport the first time the content overflows. -->
                 </StackPanel>
             </ControlTemplate>
         </Setter>
@@ -83,13 +75,6 @@
                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
                         </StackPanel>
                     </Border>
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            Margin="{arc:ExpandableTextTokenResource FocusRingMargin}"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{arc:ExpandableTextTokenResource FocusRingRadius}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
         </Setter>
@@ -106,9 +91,6 @@
         </Style>
         <Style Selector="^:pressed">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
-        </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
         </Style>
 
         <!-- The labels crossfade with a 4px drift and a 2px blur, timed to the opening. -->

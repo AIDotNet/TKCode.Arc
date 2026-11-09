@@ -1,4 +1,5 @@
 using TKCode.Arc.Motion;
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Animation.Easings;
 using Avalonia.Controls;
@@ -109,9 +110,9 @@ internal sealed class SelectValueRoll : Control
             {
                 Remove(outgoing);
             }
-            foreach (var stale in _leaving.ToArray())
+            while (_leaving.Count > 0)
             {
-                Remove(stale);
+                Remove(_leaving[_leaving.Count - 1]);
             }
             return;
         }
@@ -257,9 +258,9 @@ internal sealed class SelectValueRoll : Control
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
-        foreach (var layer in _leaving.ToArray())
+        while (_leaving.Count > 0)
         {
-            Remove(layer);
+            Remove(_leaving[_leaving.Count - 1]);
         }
         if (_current is not null)
         {
@@ -279,7 +280,6 @@ internal sealed class SelectValueRoll : Control
         // The unconstrained layout: it measures the layer and, when the text fits, is also the arranged one.
         private TextLayout? _natural;
         private double _layoutWidth = -1;
-        private BlurEffect? _blur;
         private MotionValue<double>? _progress;
         private MotionValue<Vector>? _offset;
         private Pen? _iconPen;
@@ -332,23 +332,11 @@ internal sealed class SelectValueRoll : Control
 
         public void SetBlur(double radius)
         {
-            if (radius < 0.05)
+            // ArcBlur: cached immutable effects in 0.25px steps instead of a mutable BlurEffect re-sent every frame.
+            var effect = radius < 0.05 ? null : ArcBlur.Get(radius);
+            if (!ReferenceEquals(Effect, effect))
             {
-                if (_blur is not null)
-                {
-                    Effect = null;
-                    _blur = null;
-                }
-                return;
-            }
-            if (_blur is null)
-            {
-                _blur = new BlurEffect { Radius = radius };
-                Effect = _blur;
-            }
-            else
-            {
-                _blur.Radius = radius;
+                Effect = effect;
             }
         }
 

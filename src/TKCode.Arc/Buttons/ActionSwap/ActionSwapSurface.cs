@@ -1,4 +1,3 @@
-using System.Globalization;
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
 using Avalonia;
@@ -6,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Documents;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
+using Avalonia.Media.TextFormatting;
 
 namespace TKCode.Arc;
 
@@ -91,9 +91,11 @@ internal sealed class ActionSwapSurface : Control
     private sealed class Glyph
     {
         public required string Char { get; init; }
-        public FormattedText? Text { get; set; }
+        public TextLayout? Text { get; set; }
         public double Width { get; set; }
         public double TargetX { get; set; }
+        /// <summary>Set once the glyph has a place; before that a move is a first placement, not a glide.</summary>
+        public bool Placed { get; set; }
         public MotionValue<double>? X { get; set; }
         public MotionValue<double>? Enter { get; set; }
         public MotionValue<double>? Exit { get; set; }
@@ -182,15 +184,7 @@ internal sealed class ActionSwapSurface : Control
         {
             _fontDirty = true;
         }
-        else if (change.Property == ForegroundProperty)
-        {
-            // Color only: re-brush the shaped letters, metrics stay.
-            var brush = Foreground ?? Brushes.Black;
-            foreach (var glyph in _glyphs)
-            {
-                glyph.Text?.SetForegroundBrush(brush);
-            }
-        }
+        // Foreground: the letters are drawn in the current brush (AffectsRender), so a color change reshapes nothing.
     }
 
     #region Show
@@ -506,10 +500,18 @@ internal sealed class ActionSwapSurface : Control
         var x = _gap ? LabelGap : 0;
         foreach (var glyph in _glyphs.Where(g => !g.Leaving))
         {
+            var current = glyph.X?.Value ?? glyph.TargetX;
+            var placed = glyph.Placed;
             glyph.TargetX = x;
+            glyph.Placed = true;
             if (glyph.X is null)
             {
-                glyph.X = NewValue(x);
+                // A resting letter needs no motion value: it is created the first time this letter has to glide.
+                if (animate && placed && Math.Abs(current - x) > 0.001)
+                {
+                    glyph.X = NewValue(current);
+                    _ = glyph.X.AnimateTo(x, MotionSpec.Spring(WidthSpring));
+                }
             }
             else if (animate)
             {
@@ -541,8 +543,8 @@ internal sealed class ActionSwapSurface : Control
 
     #region Layout and render
 
-    private FormattedText Shape(string ch) => new(ch, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
-        new Typeface(FontFamily, FontStyle.Normal, FontWeight), FontSize, Foreground ?? Brushes.Black);
+    // TextLayout, not FormattedText: FormattedText re-shapes on every Draw (see ShapedText).
+    private TextLayout Shape(string ch) => ShapedText.Shape(ch, new Typeface(FontFamily, FontStyle.Normal, FontWeight), FontSize);
 
     private void EnsureFont()
     {
@@ -601,6 +603,7 @@ internal sealed class ActionSwapSurface : Control
         var origin = padX + iconWidth;
         var top = (Bounds.Height - _lineHeight) / 2;
         var full = Full;
+        var textBrush = Foreground ?? Brushes.Black;
         foreach (var glyph in _glyphs)
         {
             if (glyph.Text is null)
@@ -638,7 +641,7 @@ internal sealed class ActionSwapSurface : Control
             using (context.PushOpacity(opacity))
             using (effect is null ? default(DrawingContext.PushedState?) : context.PushEffect(effect, bounds))
             {
-                context.DrawText(glyph.Text, new Point(x, top + dy));
+                ShapedText.Draw(context, glyph.Text, textBrush, new Point(x, top + dy));
             }
         }
     }

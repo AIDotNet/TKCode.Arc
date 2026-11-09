@@ -813,6 +813,7 @@ internal sealed class ChatComposerTile : Panel
 }
 
 /// <summary>A tray tile's frame: a 56px rounded picture, or a 168×56 bordered file card.</summary>
+[PseudoClasses(":image")]
 internal sealed class ChatComposerTileFrame : Border
 {
     public static readonly StyledProperty<bool> IsImageProperty =
@@ -821,4 +822,13 @@ internal sealed class ChatComposerTileFrame : Border
     public bool IsImage { get => GetValue(IsImageProperty); set => SetValue(IsImageProperty, value); }
 
     protected override Type StyleKeyOverride => typeof(ChatComposerTileFrame);
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == IsImageProperty)
+        {
+            PseudoClasses.Set(":image", IsImage);
+        }
+    }
 }

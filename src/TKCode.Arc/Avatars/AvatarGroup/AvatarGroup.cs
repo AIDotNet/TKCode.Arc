@@ -29,9 +29,19 @@ namespace TKCode.Arc;
 /// Items may be <see cref="AvatarGroupMember"/>, <see cref="Avatar"/> or plain names.
 /// </summary>
 [TemplatePart(PanelPart, typeof(AvatarGroupPanel))]
+[PseudoClasses(SmallPseudoClass, LargePseudoClass, XLargePseudoClass)]
 public class AvatarGroup : TemplatedControl
 {
     public const string PanelPart = "PART_Panel";
+
+    /// <summary><see cref="Size"/> Small, Large or XLarge as a pseudo-class (Medium has none; the theme selects on these).</summary>
+    public const string SmallPseudoClass = ":small";
+
+    /// <inheritdoc cref="SmallPseudoClass"/>
+    public const string LargePseudoClass = ":large";
+
+    /// <inheritdoc cref="SmallPseudoClass"/>
+    public const string XLargePseudoClass = ":xlarge";
 
     /// <summary>Bound members (<see cref="AvatarGroupMember"/>, <see cref="Avatar"/> or names); takes precedence over <see cref="Items"/>.</summary>
     public static readonly StyledProperty<IEnumerable?> ItemsSourceProperty =
@@ -140,6 +150,15 @@ public class AvatarGroup : TemplatedControl
             }
         };
         AutomationProperties.SetName(this, Label);
+        UpdateSizePseudoClasses();
+    }
+
+    private void UpdateSizePseudoClasses()
+    {
+        var size = Size;
+        PseudoClasses.Set(SmallPseudoClass, size == AvatarSize.Small);
+        PseudoClasses.Set(LargePseudoClass, size == AvatarSize.Large);
+        PseudoClasses.Set(XLargePseudoClass, size == AvatarSize.XLarge);
     }
 
     internal IReadOnlyList<AvatarGroupSlot> Slots => _panel?.Children.OfType<AvatarGroupSlot>().ToList() ?? (IReadOnlyList<AvatarGroupSlot>)Array.Empty<AvatarGroupSlot>();
@@ -181,6 +200,10 @@ public class AvatarGroup : TemplatedControl
                  change.Property == ChipFontSizeProperty || change.Property == DiameterProperty ||
                  change.Property == TipBackgroundProperty || change.Property == TipForegroundProperty)
         {
+            if (change.Property == SizeProperty)
+            {
+                UpdateSizePseudoClasses();
+            }
             foreach (var slot in _slots.Values)
             {
                 StyleSlot(slot);
@@ -492,7 +515,13 @@ public class AvatarGroup : TemplatedControl
         {
             return;
         }
-        var slot = (e.Source as Visual)?.GetSelfAndVisualAncestors().OfType<AvatarGroupSlot>().FirstOrDefault();
+        // A hand-written walk: the LINQ ancestor query allocated an iterator and a delegate on every pointer move.
+        var visual = e.Source as Visual;
+        while (visual is not null && visual is not AvatarGroupSlot)
+        {
+            visual = visual.GetVisualParent();
+        }
+        var slot = visual as AvatarGroupSlot;
         if (!_groupHover || (slot is not null && !ReferenceEquals(slot, _hovered) && !slot.IsLeaving))
         {
             _groupHover = true;

@@ -1,7 +1,7 @@
-using System.Globalization;
 using Avalonia;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
+using Avalonia.Media.TextFormatting;
 
 namespace TKCode.Arc;
 
@@ -187,48 +187,72 @@ internal sealed class ChartPalette
 }
 
 /// <summary>
-/// Formatted text cache keyed by text and style. Charts draw many labels every frame while scrubbing; each
-/// distinct label is shaped once. Cleared when the palette changes.
+/// A cached, laid-out label and the brush to draw it in. Drawing outputs the kept glyphs; nothing is shaped per frame.
+/// </summary>
+internal readonly struct ChartText
+{
+    private readonly ChartsBRun _run;
+    private readonly IBrush _brush;
+
+    public ChartText(ChartsBRun run, IBrush brush)
+    {
+        _run = run;
+        _brush = brush;
+    }
+
+    public double WidthIncludingTrailingWhitespace => _run.WidthIncludingTrailingWhitespace;
+
+    public double Height => _run.Height;
+
+    public double Baseline => _run.Baseline;
+
+    public void Draw(DrawingContext context, Point origin) => _run.Draw(context, origin, _brush);
+}
+
+/// <summary>
+/// Text cache keyed by text and style. Charts draw many labels every frame while scrubbing; each distinct label is
+/// shaped once into a <see cref="TextLayout"/> (a cached <see cref="FormattedText"/> would still re-break and re-shape
+/// on every draw) and drawn in whatever color the frame asks for, so hover and fade colors never add entries. Cleared
+/// when the palette changes.
 /// </summary>
 internal sealed class ChartTextCache
 {
-    private readonly record struct Key(string Text, double Size, ushort Weight, uint Color, int MaxWidth, bool Display, bool Wrap);
+    private readonly record struct Key(string Text, double Size, ushort Weight, int MaxWidth, bool Display, bool Wrap);
 
-    private readonly Dictionary<Key, FormattedText> _texts = new();
+    private readonly Dictionary<Key, ChartsBRun> _texts = new();
     private int _version = -1;
 
-    public FormattedText Get(ChartPalette palette, string text, double size, Color color, bool medium = false,
-                             double maxWidth = 0, bool display = false, bool wrap = false)
+    public ChartText Get(ChartPalette palette, string text, double size, Color color, bool medium = false,
+                         double maxWidth = 0, bool display = false, bool wrap = false)
     {
         if (_version != palette.Version)
         {
-            _texts.Clear();
+            Clear();
             _version = palette.Version;
         }
-        var key = new Key(text, size, medium ? (ushort)500 : (ushort)400, color.ToUInt32(),
-            maxWidth > 0 ? (int)Math.Floor(maxWidth) : 0, display, wrap);
-        if (_texts.TryGetValue(key, out var formatted))
+        var key = new Key(text, size, medium ? (ushort)500 : (ushort)400, maxWidth > 0 ? (int)Math.Floor(maxWidth) : 0, display, wrap);
+        if (!_texts.TryGetValue(key, out var run))
         {
-            return formatted;
-        }
-        if (_texts.Count > 1024)
-        {
-            _texts.Clear();
-        }
-        var typeface = display ? palette.Display : medium ? palette.BodyMedium : palette.Body;
-        formatted = new FormattedText(text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, typeface, size, palette.Brush(color));
-        if (maxWidth > 0)
-        {
-            formatted.MaxTextWidth = Math.Max(1, key.MaxWidth);
-            if (!wrap)
+            if (_texts.Count > 1024)
             {
-                formatted.MaxLineCount = 1;
-                formatted.Trimming = TextTrimming.CharacterEllipsis;
+                Clear();
             }
+            var typeface = display ? palette.Display : medium ? palette.BodyMedium : palette.Body;
+            // Laid out in black; the color comes from the brush passed at draw time.
+            run = maxWidth > 0
+                ? new ChartsBRun(text, typeface, size, Brushes.Black, Math.Max(1, key.MaxWidth), wrap)
+                : new ChartsBRun(text, typeface, size, Brushes.Black, singleLine: false);
+            _texts[key] = run;
         }
-        _texts[key] = formatted;
-        return formatted;
+        return new ChartText(run, palette.Brush(color));
     }
 
-    public void Clear() => _texts.Clear();
+    public void Clear()
+    {
+        foreach (var run in _texts.Values)
+        {
+            run.Dispose();
+        }
+        _texts.Clear();
+    }
 }

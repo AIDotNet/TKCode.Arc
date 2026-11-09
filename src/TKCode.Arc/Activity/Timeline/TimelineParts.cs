@@ -1,10 +1,14 @@
+using System.Globalization;
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Automation.Peers;
 using Avalonia.Automation.Provider;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Input;
 using Avalonia.Media;
 using AvaloniaButton = Avalonia.Controls.Button;
 
@@ -53,6 +57,15 @@ internal sealed class TimelineDayModel(DateOnly day) : TimelineRowModel($"day:{d
 /// <summary>An event row.</summary>
 internal sealed class TimelineEventModel(TimelineEvent item) : TimelineRowModel($"ev:{item.Id}")
 {
+    private DateTimeOffset _dayAt;
+    private TimeZoneInfo? _dayZone;
+    private DateOnly _dayValue;
+    private DateTimeOffset _fullAt;
+    private TimeZoneInfo? _fullZone;
+    private CultureInfo? _fullCulture;
+    private string _full = string.Empty;
+    private string _clock = string.Empty;
+
     public TimelineEvent Item { get; set; } = item;
 
     /// <summary>Last update of its day: no connecting line, and the day's bottom gap follows it.</summary>
@@ -60,6 +73,37 @@ internal sealed class TimelineEventModel(TimelineEvent item) : TimelineRowModel(
 
     /// <summary>The marker and line already revealed (once per event, kept across container reuse).</summary>
     public bool Revealed { get; set; }
+
+    /// <summary>The event's calendar day in <paramref name="zone"/>, converted once per (time, zone).</summary>
+    public DateOnly DayIn(TimeZoneInfo zone)
+    {
+        var at = Item.At;
+        if (_dayZone is null || !ReferenceEquals(zone, _dayZone) || at != _dayAt)
+        {
+            _dayAt = at;
+            _dayZone = zone;
+            _dayValue = ActivityTime.DayOf(at, zone);
+        }
+        return _dayValue;
+    }
+
+    /// <summary>
+    /// The full date and time ("Monday, October 20, 9:41 AM") and the clock time alone, formatted once per (time, zone,
+    /// culture): every realization and refresh of the row reads them.
+    /// </summary>
+    public (string Full, string Clock) FullIn(TimeZoneInfo zone, CultureInfo culture)
+    {
+        var at = Item.At;
+        if (_fullZone is null || !ReferenceEquals(zone, _fullZone) || !ReferenceEquals(culture, _fullCulture) || at != _fullAt)
+        {
+            _fullAt = at;
+            _fullZone = zone;
+            _fullCulture = culture;
+            _clock = ActivityTime.Clock(at, zone, culture);
+            _full = $"{ActivityTime.WeekdayMonthDay(at, zone, culture)}, {_clock}";
+        }
+        return (_full, _clock);
+    }
 }
 
 /// <summary>
@@ -237,10 +281,31 @@ internal sealed class TimelineTrigger : AvaloniaButton
     public const string InteractivePseudoClass = ":interactive";
 
     private bool _isInteractive;
+    // Built the first time the trigger is keyboard focused: a template ring would sit, hidden, in every realized row.
+    private LazyFocusRing? _focusRing;
 
     protected override Type StyleKeyOverride => typeof(TimelineTrigger);
 
     public TimelineRow? Row { get; set; }
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        _focusRing ??= new LazyFocusRing(this, TimelineTokens.Key(TimelineTokenKind.FocusRingMargin), TimelineTokens.Key(TimelineTokenKind.FocusRingRadius));
+        _focusRing.Attach(e.NameScope.Find<Panel>("PART_Root"));
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing?.Update();
+    }
 
     /// <summary>Whether the row can expand (it is a button only then).</summary>
     public bool IsInteractive
@@ -446,7 +511,17 @@ internal sealed class TimelineDayHeader : TemplatedControl
         {
             if (silent)
             {
-                TimelineMotion.Silently(digits, () => digits.Value = _countValue);
+                // IsInstant makes this one change jump (the digits read it when the value changes); a local value, so no
+                // inherited property travels down the subtree.
+                digits.SetValue(Primitives.RollingDigits.IsInstantProperty, true);
+                try
+                {
+                    digits.Value = _countValue;
+                }
+                finally
+                {
+                    digits.ClearValue(Primitives.RollingDigits.IsInstantProperty);
+                }
             }
             else
             {
@@ -486,28 +561,20 @@ internal static class TimelineMotion
     public static readonly TimeSpan ReducedFade = TimeSpan.FromMilliseconds(150);
 
     /// <summary>
-    /// Runs <paramref name="change"/> with motion off for <paramref name="control"/> (a reused row shows its new item at
-    /// once instead of rolling or blurring from the previous one).
+    /// Sets a content swap's content at once (a reused row shows its new item instead of blurring from the previous one).
+    /// The swap's own <see cref="ArcContentSwap.Mode"/> is switched to None for the change (a local value over the
+    /// template's, cleared afterwards): unlike setting the inherited motion level, nothing travels down the subtree.
     /// </summary>
-    public static void Silently(Control control, Action change)
+    public static void SetContentSilently(ArcContentSwap swap, object? content)
     {
-        var had = control.IsSet(ArcMotion.LevelProperty);
-        var previous = control.GetValue(ArcMotion.LevelProperty);
-        control.SetValue(ArcMotion.LevelProperty, ArcMotionLevel.Off);
+        swap.SetValue(ArcContentSwap.ModeProperty, ContentSwapMode.None);
         try
         {
-            change();
+            swap.Content = content;
         }
         finally
         {
-            if (had)
-            {
-                control.SetValue(ArcMotion.LevelProperty, previous);
-            }
-            else
-            {
-                control.ClearValue(ArcMotion.LevelProperty);
-            }
+            swap.ClearValue(ArcContentSwap.ModeProperty);
         }
     }
 }

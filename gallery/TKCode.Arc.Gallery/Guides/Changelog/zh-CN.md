@@ -1,15 +1,35 @@
 ---
 title: 更新日志
-source-hash: aea3d0387eb8
+source-hash: 36f535da03c8
 ---
 
 # 更新日志
 
-TKCode.Arc 的所有重要变更，最新的在前。版本遵循[语义化版本](https://semver.org/)。版本带有 `-preview` 后缀期间，API 在各发布版本之间仍可能变化；升级前请阅读说明，并在项目中固定版本号。同样的列表也保存在仓库的 `CHANGELOG.md` 中。
+TKCode.Arc 的所有重要变更，最新的在前。版本遵循[语义化版本](https://semver.org/)。从 1.0.0 起，破坏性 API 变更只在新的主版本中出现；更早的 `-preview` 版本在各发布版本之间可能变更 API。同样的列表也保存在仓库的 `CHANGELOG.md` 中。
 
-每次发布附带的 NuGet 包：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Foundation`（0.3.2 起）、`TKCode.Arc.Fonts` `TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 、`TKCode.Arc.Special`、`TKCode.Arc.Workflow`、`TKCode.Arc.Dock`（0.4.0-preview.2 起）、`TKCode.Arc.Themes.Pixel`、`TKCode.Arc.Themes.Corners`、`TKCode.Arc.Mobile`、`TKCode.Arc.Terminal`、`TKCode.Arc.Audio`、`TKCode.Arc.Audio.Native`、`TKCode.Arc.Audio.Browser`、`TKCode.Arc.Templates`（0.4.0-preview.6 起）、`TKCode.Arc.Pdf`、`TKCode.Arc.Pdf.Native` 和 `TKCode.Arc.Pdf.Browser`（下一版本起）。
+每次发布附带的 NuGet 包：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Foundation`（0.3.2 起）、`TKCode.Arc.Fonts` `TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 、`TKCode.Arc.Special`、`TKCode.Arc.Workflow`、`TKCode.Arc.Dock`（0.4.0-preview.2 起）、`TKCode.Arc.Themes.Pixel`、`TKCode.Arc.Themes.Corners`、`TKCode.Arc.Mobile`、`TKCode.Arc.Terminal`、`TKCode.Arc.Audio`、`TKCode.Arc.Audio.Native`、`TKCode.Arc.Audio.Browser`、`TKCode.Arc.Templates`（0.4.0-preview.6 起）、`TKCode.Arc.Pdf`、`TKCode.Arc.Pdf.Native` 和 `TKCode.Arc.Pdf.Browser`（1.0.0 起）。
 
 ## 未发布
+
+### 修复
+
+- `TextFilterBox` 与 `NumberFilterBox` 的输入框不再重叠或被裁切：过长的标签或说明会换行，空间较窄时标签移到输入框上方。操作符菜单在符号旁显示名称。
+
+## 1.0.0（2026-11-08）
+
+TKCode.Arc 的首个正式版：以原生 Avalonia 12 控件呈现 Arc 的视觉语言和弹簧动效，并提供页面级区块、数据表格、工作流画布、停靠布局、终端、PDF 查看器和音频播放。目标框架为 `net8.0`、`net10.0` 和 `net11.0`，基于 Avalonia 12.1.4（`TKCode.Arc.Terminal` 为 `net10.0` 和 `net11.0`）。
+
+### 稳定性
+
+从这个版本起，Arc 按语义化版本发布，不再带 `-preview` 后缀：破坏性 API 变更只在新的主版本中出现，并在更新日志中列出。所有包以同一版本一起发布，请让它们保持同一版本。安装时不再需要 `--prerelease`。
+
+### 包
+
+以下 21 个包发布到 NuGet：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Foundation`、`TKCode.Arc.Fonts`、`TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts`、`TKCode.Arc.Special`、`TKCode.Arc.Workflow`、`TKCode.Arc.Dock`、`TKCode.Arc.Terminal`、`TKCode.Arc.Audio`、`TKCode.Arc.Audio.Native`、`TKCode.Arc.Audio.Browser`、`TKCode.Arc.Pdf`、`TKCode.Arc.Pdf.Native`、`TKCode.Arc.Pdf.Browser`、`TKCode.Arc.Themes.Pixel`、`TKCode.Arc.Themes.Corners`、`TKCode.Arc.Mobile`、`TKCode.Arc.Templates`。
+
+### 从 0.4.0-preview.6 升级
+
+对同样发布过 0.4.0-preview.6 且有 `net10.0` 构建的 11 个包（`TKCode.Arc`、`.Core`、`.Foundation`、`.Blocks`、`.AdvancedCharts`、`.Special`、`.Workflow`、`.Dock`、`.Mobile`、`.Terminal`、`.Audio`）做了 API 对比，没有发现破坏性变更。但有一点可能影响你：许多并非一直显示的部件不再放在控件模板中，而是在首次使用时由代码创建。自定义 `ControlTheme` 或查找这些 `PART_` 名称的代码需要处理部件不存在的情况。请从安装命令中去掉 `--prerelease`。
 
 ### 新增
 
@@ -20,6 +40,22 @@ TKCode.Arc 的所有重要变更，最新的在前。版本遵循[语义化版�
 - **PDF**（新包 `TKCode.Arc.Pdf`、`TKCode.Arc.Pdf.Native` 和 `TKCode.Arc.Pdf.Browser`；issue #51）：`PdfViewer` 从文件、字节、流或地址打开 PDF，侧栏带缩略图和目录，支持带计数和高亮的搜索、文字选择和复制、链接（外部链接只接受 `http`、`https` 和 `mailto`）、密码表单或 `PasswordRequested` 事件，以及加载和失败状态。`arc:Pdf.Source` 在普通 `PageViewer` 中只显示页面。桌面上由 PDFium 渲染（`ArcPdfNative.Use()`，在进程内，Windows、Linux 和 macOS 的 x64 与 arm64），浏览器中由 pdf.js 渲染（`await ArcPdfBrowser.UseAsync()`）。没有后端时文档会失败并给出提示，绝不伪造页面。需要了解的限制：没有嵌入中日韩字体的文档依赖本机字体，不支持触屏拖动选择，纯文本网址只有在 PDFium 下才是链接，浏览器包不含 Liberation 字体。文档和示例提供英文、简体中文和繁体中文。
 - **`PageViewer`**（`TKCode.Arc`，媒体；issue #51）：缩放、平移并翻阅图片（`ItemsSource`）或按需渲染的页面（`IPageSource`），可连续或单页显示，带适应模式、工具栏，以及让你在页面上自行绘制和接收指针输入的 `PageLayer`。一个自绘表面只绘制可见页。文档和示例提供英文、简体中文和繁体中文。
 - **模板**（新包 `TKCode.Arc.Templates`）：`dotnet new install TKCode.Arc.Templates` 后，用 `dotnet new tkcode-arc` 创建桌面应用，或用 `dotnet new tkcode-arc-xplat` 创建同时面向桌面和浏览器（WebAssembly）的应用。提供四种布局（`--layout blank|sidebar|header|dock`），以及这些选项：用 CommunityToolkit.Mvvm 的 MVVM（`--mvvm toolkit`）、依赖注入（`--di`）、保存偏好设置（`--settings`，默认开启：外观、强调色、窗口位置和布局状态在下次启动时恢复）、本地化（`--i18n`：English、简体中文和繁體中文的 `.xlf` 文件加语言切换；`--ui-language` 选择界面文字的语言）、Headless 测试项目（`--tests`）、Arc 标题栏（`--custom-titlebar`）、`--framework` 与 `--accent`。项模板可添加页面（`tkcode-arc-page`）、窗口（`tkcode-arc-window`）、可等待结果的对话框（`tkcode-arc-dialog`），以及带 Token 类和主题文件的 Arc 风格控件（`tkcode-arc-control`）。另有三个模板从完整的应用开始，由 Arc 的 Block 组成，示例数据放在服务接口后面，带 MVVM 和依赖注入：`tkcode-arc-admin`（登录、仪表盘、带搜索、筛选、分页和详情抽屉的客户表格、团队与角色、账单、设置、命令面板）、`tkcode-arc-ai-chat`（对话列表加 `AiChat`，回复由示例 responder 流式生成，可换成你的模型客户端；对话在两次运行之间保存）和 `tkcode-arc-devtool`（停靠布局：文件浏览、编辑器标签、属性表格、构建输出和问题列表，打开的文件随布局恢复）。此外还有 `tkcode-arc-workflow`（步骤面板、可撤销的流程画布、小地图和属性检查器、模拟运行、JSON 导入导出）、`tkcode-arc-projects`（看板、甘特时间线、周日历、发布检查清单）和 `tkcode-arc-analytics`（KPI 下钻、收入、留存分组、用量预测、服务状态）。`tkcode-arc-lib` 用于开始编写自己的控件库：示例控件及其设计 Token 和主题、`Use<Name>()` 注册、Headless 测试和示例应用，可直接 `dotnet pack`。新增的 **模板** 指南列出了全部内容；安装指南新增“从模板开始”一节。
+- **`EnumSelector`**（`TKCode.Arc`；issue #56）：将枚举成员列为 `RadioGroup`，`[Flags]` 枚举则列为 `Checkbox`，`SelectedEnum` 支持双向绑定。成员数据来自 Foundation 为标记 `[EnumMetadata]` 的枚举新增的生成器，不使用反射。
+- **`FluidTabControl`、`FluidTabItem`**（`TKCode.Arc`；issue #60）：与滚动联动的标签页。选择标签会平滑滚动到对应区段，滚动时会选中锚线所在区段的标签。
+- **高级图表**（`TKCode.Arc.AdvancedCharts`）：`Sunburst`、`SankeyFlow`、`FunnelChart`、`RadarChart`（issue #66：多边形网格、可调填充透明度）、`RealtimeStream` 和 `RaceBarChart`。文档和示例提供英文、简体中文和繁体中文。
+- **布局面板**（`TKCode.Arc`，新增 Layout 分组）：`WaterfallPanel`（不同高度的卡片排入等宽的列）、`TilePanel`（开始屏幕式磁贴，可跨行跨列并占据第一个空位）和 `CyclicPanel`（首尾无缝循环的列表）。
+- **`TransferBox`**：在两个列表之间移动项目，可逐个、按选择或全部移动，支持全选、搜索，并直接修改绑定的集合。
+- **`NumberFilterBox`、`TextFilterBox`**：各表示一个筛选条件。数字框有复选框、运算符和值，可设容差；文本框支持包含、开头是、结尾是、等于、正则表达式和区分大小写。
+- **Gallery 社区区域**：首页和 README 显示 QQ 群二维码和群号，群号可以复制。
+
+### 变更
+
+- **全库性能优化**：控件中尚未显示的部分（焦点环、Info 徽章层、选择菜单等）改为首次使用时创建，控件很多的表单构建量大幅减少。主题改用伪类而不是属性选择器，每帧绘制的标签复用已排版的 `TextLayout`，表格保留已排版的单元格文本，`TerminalView` 缓存已渲染的行，动效引擎、内容切换、模态呈现、滚动数字、调色板和令牌查找的内存分配也减少了。这些改动的目标是保持动效和外观不变。
+- **图片**：`ArcImageHeader` 从文件头读取图片尺寸，远大于显示区域的图片可以直接解码到该尺寸。
+- **`GanttTimeline`**：缩放 60 个任务时，每帧分配从约 1.8 MB 降到约 100 KB，视图外的行、条和箭头不再绘制。
+- **Gallery 浏览器版启动**：音频和视频模块只在有播放器的页面加载，中文访客在首帧前就取得字体，API 说明在首次显示时按语言加载，侧边栏在页面首次需要时才构建。
+- **Gallery**：更换桌面图标；关于页只在预览构建上显示预览徽章。
+- `tkcode-arc-lib` 模板的初始版本从 `0.1.0-preview.1` 改为 `0.1.0`。
 
 ### 变更
 
@@ -27,10 +63,25 @@ TKCode.Arc 的所有重要变更，最新的在前。版本遵循[语义化版�
 
 ### 修复
 
-- `TextFilterBox` 与 `NumberFilterBox` 的输入框不再重叠或被裁切：过长的标签或说明会换行，空间较窄时标签移到输入框上方。操作符菜单在符号旁显示名称。
+- **`ThemeSwitcher`**（issue #74）：过渡开始前不再闪现新主题。现在从主题开始应用的那一刻起，窗口快照就覆盖整个窗口，四种过渡都已修复。
+- **`Tooltip`**：作为提示内容传入的控件会显示控件本身，不再显示类型名。
+- **`GanttTimeline`**（#72）：在 560 高的区块中，图表不再遮住工具栏和页脚。两个方向的滚动条与图表同步，今日线位于任务条下方，箭头在一天间隔和折叠阶段上走线正确，悬停时高亮行、任务条和箭头。
+- **`SankeyFlow`**：粒子避让的标签列表不再因叠加层单独重绘而不断增长。
+- **高级图表标签**：`RaceBarChart` 的标签在超越时淡出而不是重叠，`SankeyFlow` 的粒子避开文字，`RadarChart` 的内环在浅色背景上保持可见，`Sunburst` 图例占比始终显示一位小数。
+- **`InstallSnippet`**：修复续延未在调度器上运行时高亮会永久挂起的问题。
+- **`InkFluid`**：控制模拟节奏，让 UI 线程可以空闲。
+- **模板**（#70）：修复生成的 `admin`、`devtool`、`workflow`、`ai-chat`、`projects`、`sidebar` 和 `header` 应用中的布局问题，如文字被裁剪、表格列不对齐、顶栏按钮被拉伸。
+- **Gallery 浏览器版**：macOS 浏览器上的中文输入法可以正常组字，此前字母会落入文本框并中断组字。这项修复用模拟组字验证过，尚未在真实的 macOS 输入法上验证。
+- **视频**（在仓库中，尚未发布到 NuGet）：Windows 上没有取帧时（如窗口最小化）播放不再停止，`VideoSurface` 正确读取 Media Foundation 纹理的方向。新增 `Stop`、内嵌文本轨道以及 iOS 和 Android 后端。
 - **`TextReveal`、`InViewTitle`**：中文、日文和韩文可以在字符之间换行。之前没有空格的标题在窄栏中会被裁切。
 - **`TKCode.Arc.Templates` 0.4.0-preview.6 无法安装**：该包发布时模板文件已移动，但指向它们的 `template.json` 没有更新，`dotnet new install` 报错（`MV012: Source ... does not exist`）。请使用此版本或更高版本。
 - **Lucide 图标**：路径以移动命令紧接直线开头的 32 个图标（`UserCog`、`FileCog`、`ServerCog`、`Coins`、`Watch`、`ZapOff` 等）首次显示时抛出 “Invalid double value”：生成器把 `16.53.923` 读成了一个数。现在有测试解析每个图标的路径。
+
+### 已知限制
+
+- `TKCode.Arc.Mobile` 在桌面的手机框架中预览，尚未在 Android 或 iOS 真机上验证。
+- `TKCode.Arc.Video`、`.Video.Native` 和 `.Video.Browser` 保留在仓库中，在 Windows 和真机验证完成前不发布到 NuGet。
+- `PdfViewer`：未嵌入中日韩字体的文档依赖本机字体，不支持触摸拖动选择，纯文本网址只有在 PDFium 下才是链接，浏览器包不含 Liberation 字体。
 
 ## 0.4.0-preview.6（2026-11-08）
 

@@ -102,7 +102,7 @@
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:PropertyGridItem">
-                <Panel>
+                <Panel Name="PART_Host">
                     <Border Name="PART_Root"
                             MinHeight="{arc:PropertyGridItemTokenResource RowHeight}"
                             Padding="{arc:PropertyGridItemTokenResource RowPadding}"
@@ -146,26 +146,12 @@
                                             Background="{arc:ArcDesignTokenResource BorderSubtle}" />
                                 </Border>
                             </Panel>
+                            <!-- The Add and Remove buttons (list rows only) are built by the row the first time it needs them. -->
                             <StackPanel Name="PART_Actions"
                                         DockPanel.Dock="Right"
                                         Orientation="Horizontal"
                                         Spacing="2"
-                                        VerticalAlignment="Center">
-                                <arc:Button Name="PART_Add"
-                                            Classes="property-grid-action"
-                                            Variant="Ghost"
-                                            Size="Small"
-                                            IsVisible="False">
-                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Plus}" Size="16" />
-                                </arc:Button>
-                                <arc:Button Name="PART_Remove"
-                                            Classes="property-grid-action"
-                                            Variant="Ghost"
-                                            Size="Small"
-                                            IsVisible="False">
-                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Minus}" Size="16" />
-                                </arc:Button>
-                            </StackPanel>
+                                        VerticalAlignment="Center" />
                             <ContentPresenter Name="PART_Editor"
                                               Margin="4,0,0,0"
                                               VerticalAlignment="Center"
@@ -173,13 +159,6 @@
                                               VerticalContentAlignment="Center" />
                         </DockPanel>
                     </Border>
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            Margin="{arc:PropertyGridItemTokenResource FocusRingMargin}"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep14}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
         </Setter>
@@ -222,17 +201,6 @@
         <Style Selector="^:invalid /template/ TextBlock#PART_Label">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
         </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
-        </Style>
-        <Style Selector="^ /template/ arc|Button.property-grid-action">
-            <Setter Property="Width" Value="{arc:PropertyGridItemTokenResource ActionSize}" />
-            <Setter Property="Height" Value="{arc:PropertyGridItemTokenResource ActionSize}" />
-            <Setter Property="MinHeight" Value="0" />
-            <Setter Property="Padding" Value="0" />
-            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep10}" />
-        </Style>
-
         <Style Selector="^:motion-full">
             <Style Selector="^ /template/ Border#PART_Root">
                 <Setter Property="Transitions">
@@ -264,7 +232,7 @@
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:PropertyGridCategoryItem">
-                <Panel Margin="{arc:PropertyGridCategoryItemTokenResource HeaderMargin}">
+                <Panel Name="PART_Host" Margin="{arc:PropertyGridCategoryItemTokenResource HeaderMargin}">
                     <Border Name="PART_Root"
                             Height="{arc:PropertyGridCategoryItemTokenResource HeaderHeight}"
                             Padding="{arc:PropertyGridCategoryItemTokenResource HeaderPadding}"
@@ -288,13 +256,6 @@
                                        Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
                         </StackPanel>
                     </Border>
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            Margin="{arc:PropertyGridCategoryItemTokenResource FocusRingMargin}"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep12}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
         </Setter>
@@ -312,9 +273,6 @@
         </Style>
         <Style Selector="^:expanded /template/ arc|ArcGlyph#PART_Chevron">
             <Setter Property="RenderTransform" Value="rotate(90deg)" />
-        </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
         </Style>
 
         <Style Selector="^:motion-full">

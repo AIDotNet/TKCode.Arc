@@ -193,7 +193,7 @@ internal sealed class MixtureOfExpertsTile : MixtureOfExpertsPart
             var countWidth = _count.Bounds.Width;
             var nameWidth = Math.Max(0, w - 10 - 14 - 8 - 8 - countWidth - 10);
             var name = palette.Texts.GetTrimmed(_name, palette.Regular, 14, palette.Foreground, nameWidth);
-            context.DrawText(name, new Point(32, (h - name.Height) / 2));
+            name.Draw(context, new Point(32, (h - name.Height) / 2));
         }
         DrawFocusRing(context, new Rect(0, 0, w, h), Radius);
     }
@@ -263,7 +263,7 @@ internal sealed class MixtureOfExpertsTile : MixtureOfExpertsPart
             if (glyph is null)
             {
                 var letter = palette.Texts.Get(_letter, palette.Medium, 12, color);
-                context.DrawText(letter, new Point(box.X + (box.Width - letter.Width) / 2, box.Y + (box.Height - letter.Height) / 2));
+                letter.Draw(context, new Point(box.X + (box.Width - letter.Width) / 2, box.Y + (box.Height - letter.Height) / 2));
                 return;
             }
             palette.DrawGlyph(context, glyph, box, color);

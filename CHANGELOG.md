@@ -1,14 +1,34 @@
 # Changelog
 
 All notable changes to TKCode.Arc are listed here. Versions follow [Semantic Versioning](https://semver.org/);
-while the version carries a `-preview` suffix the API may still change between releases.
+from 1.0.0 on, breaking API changes come only with a new major version. Earlier `-preview` versions could change the API between releases.
 
 NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Foundation` (from 0.3.2),
 `TKCode.Arc.Fonts`, `TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special`,
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
-`TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from the next version).
+`TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0).
 
 ## Unreleased
+
+### Fixed
+
+- `TextFilterBox` and `NumberFilterBox` no longer overlap or cut off their fields: a long label or description wraps, and in a narrow space the label moves above the fields. The operator menu names each operator next to its symbol.
+
+## 1.0.0 - 2026-11-08
+
+The first stable release of TKCode.Arc: Arc's visual language and spring motion as native Avalonia 12 controls, with page-level blocks, a data grid, a workflow canvas, docking, a terminal, a PDF viewer and audio playback around them. It targets `net8.0`, `net10.0` and `net11.0` on Avalonia 12.1.4 (`TKCode.Arc.Terminal`: `net10.0` and `net11.0`).
+
+### Stability
+
+From this version on, Arc follows Semantic Versioning without a `-preview` suffix: breaking API changes come only with a new major version, and the changelog lists them. All packages are released together on one version, so keep them on the same one. Installing no longer needs `--prerelease`.
+
+### Packages
+
+These 21 packages are published to NuGet: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Foundation`, `TKCode.Arc.Fonts`, `TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special`, `TKCode.Arc.Workflow`, `TKCode.Arc.Dock`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`, `TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native`, `TKCode.Arc.Pdf.Browser`, `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Templates`.
+
+### Upgrading from 0.4.0-preview.6
+
+An API comparison of the 11 packages that also shipped in 0.4.0-preview.6 and have a `net10.0` build (`TKCode.Arc`, `.Core`, `.Foundation`, `.Blocks`, `.AdvancedCharts`, `.Special`, `.Workflow`, `.Dock`, `.Mobile`, `.Terminal`, `.Audio`) found no breaking changes. One thing can still affect you: many parts that are not always shown are no longer in the control templates and are created in code on first use. A custom `ControlTheme` or code that looks up one of those `PART_` names should handle it being absent. Remove `--prerelease` from your install commands.
 
 ### Added
 
@@ -33,17 +53,43 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
   (`AnimationDuration`, `EasingFunction`, `IsAnimationEnabled`), scrolling selects the tab of the section on the anchor
   line (`SnapAlignment` Top or Center), with two-way `SelectedItem` / `SelectedIndex`, header, icon and content
   templates, keyboard navigation and live add, remove and move. Docs and demos in English, 简体中文 and 繁體中文.
+- **Advanced charts** (`TKCode.Arc.AdvancedCharts`): `Sunburst`, `SankeyFlow`, `FunnelChart`, `RadarChart` (issue #66: polygon grid, adjustable fill opacity), `RealtimeStream` and `RaceBarChart`. Docs and demos in English, 简体中文 and 繁體中文.
+- **Layout panels** (`TKCode.Arc`, new Layout group): `WaterfallPanel` (cards of different heights flow into equal columns), `TilePanel` (start-screen tiles that span rows and columns and take the first free place) and `CyclicPanel` (a list that loops without a seam).
+- **`TransferBox`**: move items between two lists, one by one, as a selection or all at once, with select all, search and the bound collections edited in place.
+- **`NumberFilterBox`, `TextFilterBox`**: one filter condition each. The number box has a checkbox, an operator and a value with an optional tolerance; the text box has contains, starts with, ends with, equals, a regular expression and case sensitivity.
+- **Gallery community section**: the home page and the READMEs show the QQ group's QR code and number, which can be copied.
 
 ### Changed
 
+- **Performance across the library**: controls create parts that are not showing (focus rings, Info badge layers, select menus and more) on first use, so a form with many controls builds much less. Themes select on pseudo-classes instead of property selectors, labels painted every frame reuse a shaped `TextLayout`, tables keep shaped cell text, `TerminalView` caches rendered rows, and the motion engine, content swap, modal presence, rolling digits, palette and token lookups allocate less. These changes are meant to leave motion and appearance as they were.
+- **Pictures**: `ArcImageHeader` reads a picture's size from its file header, so a picture much larger than its slot decodes straight to the slot's size.
+- **`GanttTimeline`**: zooming 60 tasks allocates about 100 KB per frame instead of 1.8 MB, and rows, bars and arrows outside the view are not drawn.
+- **Gallery startup in the browser**: audio and video modules load only on pages with a player, a visitor reading Chinese gets the font ahead of the first frame, API descriptions load per language when first shown, and the sidebar is built when a page first needs it.
+- **Gallery**: new desktop icons, and the About page shows its preview badge only on preview builds.
+- The `tkcode-arc-lib` template starts at version `0.1.0` instead of `0.1.0-preview.1`.
 - Depends on Avalonia 12.1.5 and StreamMark 0.1.2.
 
 ### Fixed
 
-- `TextFilterBox` and `NumberFilterBox` no longer overlap or cut off their fields: a long label or description wraps, and in a narrow space the label moves above the fields. The operator menu names each operator next to its symbol.
+- **`ThemeSwitcher`** (issue #74): the new theme no longer flashes before the transition starts. The window's snapshot now covers it from the moment the theme begins to apply, in all four variants.
+- **`Tooltip`**: a control passed as the tip is shown itself, not its type name.
+- **`GanttTimeline`** (#72): the chart no longer covers the toolbar and footer in a 560 high block. Scroll bars on both axes stay in step with the chart, the today line runs under the bars, arrows route correctly over one-day gaps and to folded phases, and hover highlights the row, bar and arrows.
+- **`SankeyFlow`**: the list of labels that particles avoid no longer grows while the overlay repaints alone.
+- **Advanced chart labels**: `RaceBarChart` labels fade instead of overlapping when a bar is passed, `SankeyFlow` particles stay off text, `RadarChart` inner rings stay visible on a muted stage, and `Sunburst` legend shares always show one decimal.
+- **`InstallSnippet`**: highlighting could hang forever when its continuation never ran on the dispatcher.
+- **`InkFluid`**: the simulation is paced so the UI thread can go idle.
+- **Templates** (#70): fixed layout problems in the generated `admin`, `devtool`, `workflow`, `ai-chat`, `projects`, `sidebar` and `header` apps, such as clipped text, misaligned table columns and stretched top bar buttons.
+- **Gallery in the browser**: Chinese input methods can compose on macOS browsers, where letters used to land in the text box and end the composition. This was checked with simulated composition, not with a real macOS input method.
+- **Video** (in this repository, not on NuGet yet): Windows playback no longer stops when nothing pulls frames, such as a minimized window, and `VideoSurface` reads Media Foundation textures the right way up. `Stop`, embedded text tracks and iOS and Android backends were added.
 - **`TextReveal`, `InViewTitle`**: Chinese, Japanese and Korean text wraps between characters. A title without spaces was cut off at the edge of a narrow column.
 - **`dotnet new install TKCode.Arc.Templates` failed for 0.4.0-preview.6**: the package was released with its template files moved but not the `template.json` that points at them, so it could not be installed (`MV012: Source ... does not exist`). Use this version or later.
 - **Lucide icons**: 32 icons whose path starts with a move followed directly by a line (`UserCog`, `FileCog`, `ServerCog`, `Coins`, `Watch`, `ZapOff`, ...) threw "Invalid double value" when first shown; the generator read `16.53.923` as one number. A test now parses every icon's path.
+
+### Known limitations
+
+- `TKCode.Arc.Mobile` is previewed in a desktop phone frame and is not yet verified on Android or iOS devices.
+- `TKCode.Arc.Video`, `.Video.Native` and `.Video.Browser` stay in the repository and are not published to NuGet, until Windows and real devices are verified.
+- `PdfViewer`: documents without embedded Chinese, Japanese or Korean fonts depend on the machine's fonts, there is no touch drag selection, plain-text web addresses are links only with PDFium, and the Liberation fonts are not in the browser package.
 
 ## 0.4.0-preview.6 - 2026-11-08
 
@@ -965,6 +1011,7 @@ ArcTheme.Apply(t => t
 
 First preview release.
 
+[1.0.0]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.4.0-preview.6...v1.0.0
 [0.4.0-preview.6]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.4.0-preview.5...v0.4.0-preview.6
 [0.4.0-preview.5]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.4.0-preview.4...v0.4.0-preview.5
 [0.4.0-preview.4]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.4.0-preview.3...v0.4.0-preview.4

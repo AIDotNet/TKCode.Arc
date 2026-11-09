@@ -223,8 +223,10 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
     private ArcGlyph? _lidChevron;
     private RotateTransform? _chevronTurn;
     private MotionValue<double>? _chevronAngle;
+    private LazyFocusRing? _focusRing;
     private Panel? _searchRow;
     private TextBox? _search;
+    private string? _lidPlaceholder;
     private PresenceHost? _clearHost;
     private Border? _face;
     private ScrollViewer? _scroll;
@@ -283,6 +285,10 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
+        // Built the first time the field is keyboard focused, under the trigger. While open the lid stands in for the trigger.
+        _focusRing ??= new LazyFocusRing(this, MorphSelectTokens.Key(MorphSelectTokenKind.FocusRingMargin), MorphSelectTokens.Key(MorphSelectTokenKind.FocusRingRadius));
+        _focusRing.IsAllowed = !IsOpen;
+        _focusRing.Attach(e.NameScope.Find<Control>(TriggerPart)?.Parent as Panel, below: true);
         if (_trigger is not null)
         {
             _trigger.PointerPressed -= OnTriggerPressed;
@@ -333,6 +339,11 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
         {
             var open = change.GetNewValue<bool>();
             PseudoClasses.Set(OpenPseudoClass, open);
+            if (_focusRing is not null)
+            {
+                _focusRing.IsAllowed = !open;
+                _focusRing.Update();
+            }
             if (open)
             {
                 OpenSurface(null, string.Empty);
@@ -440,9 +451,13 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
             _lidValue?.Show(text, icon, placeholder, direction, animate: false);
         }
         _lastIndex = index;
-        if (_search is not null && SearchPlaceholder is null)
+        if (_surface is not null && SearchPlaceholder is null)
         {
-            _search.PlaceholderText = SelectedText ?? "Search";
+            _lidPlaceholder = SelectedText ?? "Search";
+            if (_search is not null)
+            {
+                _search.PlaceholderText = _lidPlaceholder;
+            }
         }
     }
 
@@ -485,13 +500,12 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
         };
         ArcTokens.Bind(_lidChevron, ArcGlyph.ForegroundProperty, ArcDesignTokenKind.TextMuted);
 
-        _searchRow = BuildSearchRow();
         _lid = new Panel
         {
             Height = LidHeight,
             Background = Brushes.Transparent,
             Cursor = new Cursor(StandardCursorType.Hand),
-            Children = { _lidValue, _searchRow, _lidChevron }
+            Children = { _lidValue, _lidChevron }
         };
         _lid.PointerReleased += OnLidReleased;
         _lid.PointerPressed += (_, e) => e.Handled = true;
@@ -541,6 +555,21 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
         _surface.LayoutUpdated += OnSurfaceLayoutUpdated;
         _popup.Child = _surface;
         ApplySurfaceStyle();
+    }
+
+    /// <summary>The search row is built the first time the field opens searchable; between the value and the chevron.</summary>
+    private void EnsureSearchRow()
+    {
+        if (_searchRow is not null || _lid is null)
+        {
+            return;
+        }
+        _searchRow = BuildSearchRow();
+        _lid.Children.Insert(1, _searchRow);
+        if (_lidPlaceholder is not null)
+        {
+            _search!.PlaceholderText = _lidPlaceholder;
+        }
     }
 
     private Panel BuildSearchRow()
@@ -766,6 +795,10 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
         }
         EnsureSurface();
         var surface = _surface!;
+        if (CanSearch)
+        {
+            EnsureSearchRow();
+        }
         _closeGeneration++;
         var canSearch = CanSearch;
         SetQuery(canSearch ? seed : string.Empty, fromInput: false);
@@ -981,10 +1014,21 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
         }
     }
 
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing?.Update();
+    }
+
     private MotionValue<double> CreateSearchFade()
     {
         var value = new MotionValue<double>(this, 0, MotionVectors.Double);
-        var blur = new BlurEffect();
         value.Changed += v =>
         {
             if (_searchRow is null)
@@ -993,14 +1037,11 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
             }
             _searchRow.Opacity = Math.Clamp(v, 0, 1);
             var radius = ArcMotion.IsFull(this) ? 2 * (1 - Math.Clamp(v, 0, 1)) : 0;
-            if (radius < 0.05)
+            // ArcBlur: cached immutable effects in 0.25px steps instead of a mutable BlurEffect re-sent every frame.
+            var effect = radius < 0.05 ? null : ArcBlur.Get(radius);
+            if (!ReferenceEquals(_searchRow.Effect, effect))
             {
-                _searchRow.Effect = null;
-            }
-            else
-            {
-                blur.Radius = radius;
-                _searchRow.Effect = blur;
+                _searchRow.Effect = effect;
             }
         };
         return value;

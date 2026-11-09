@@ -37,7 +37,7 @@ internal sealed partial class GanttChart
     private DragMode _releaseMode;
     private string? _releaseId;
     private bool _keyboardFocus;
-    private DispatcherTimer? _autoScroll;
+    private LiveLoop? _autoScroll;
     private double _pointerX;
 
     private int RowAt(double y)
@@ -305,41 +305,40 @@ internal sealed partial class GanttChart
         SetHover(null);
     }
 
+    /// <summary>The interval of the timer the auto-scroll used to run on; a frame now scrolls by the same amount per elapsed time.</summary>
+    private const double AutoScrollTick = 0.016;
+
     private void EnsureAutoScroll()
     {
-        if (_autoScroll is not null)
-        {
-            return;
-        }
-        _autoScroll = new DispatcherTimer(TimeSpan.FromMilliseconds(16), DispatcherPriority.Render, (_, _) =>
-        {
-            if (_drag is null)
-            {
-                StopAutoScroll();
-                return;
-            }
-            var left = ColumnWidth + AutoScrollZone;
-            var right = Bounds.Width - AutoScrollZone;
-            var dx = _pointerX < left ? -(left - _pointerX) / 4 : _pointerX > right ? (_pointerX - right) / 4 : 0;
-            dx = Math.Clamp(dx, -14, 14);
-            if (Math.Abs(dx) < 0.1)
-            {
-                return;
-            }
-            var before = _scrollX;
-            _scrollX += dx;
-            ClampScroll();
-            _drag.Delta += _scrollX - before;
-            InvalidateVisual();
-        });
+        // A frame loop rather than a 16 ms timer: it is aligned with rendering and stops when the chart leaves the tree.
+        // It is a function of the drag, not decoration, so it runs at every motion level and whatever the viewport says.
+        _autoScroll ??= new LiveLoop(this, AutoScrollStep) { MinimumLevel = ArcMotionLevel.Off, TracksViewport = false };
         _autoScroll.Start();
     }
 
-    private void StopAutoScroll()
+    private bool AutoScrollStep(double dt)
     {
-        _autoScroll?.Stop();
-        _autoScroll = null;
+        if (_drag is null)
+        {
+            return false;
+        }
+        var left = ColumnWidth + AutoScrollZone;
+        var right = Bounds.Width - AutoScrollZone;
+        var dx = _pointerX < left ? -(left - _pointerX) / 4 : _pointerX > right ? (_pointerX - right) / 4 : 0;
+        dx = Math.Clamp(dx, -14, 14);
+        if (Math.Abs(dx) < 0.1)
+        {
+            return true;
+        }
+        var before = _scrollX;
+        _scrollX += dx * (dt / AutoScrollTick);
+        ClampScroll();
+        _drag.Delta += _scrollX - before;
+        InvalidateVisual();
+        return true;
     }
+
+    private void StopAutoScroll() => _autoScroll?.Stop();
 
     protected override void OnPointerWheelChanged(PointerWheelEventArgs e)
     {

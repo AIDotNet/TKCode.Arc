@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
 using Avalonia;
@@ -6,6 +7,7 @@ using Avalonia.Automation.Peers;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using AvaloniaButton = Avalonia.Controls.Button;
 
@@ -122,6 +124,7 @@ public class ActionButton : AvaloniaButton
     private ButtonsLiveRegion? _status;
     private PausableTimer? _resetTimer;
     private int _run;
+    private LazyFocusRing? _focusRing;
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
@@ -129,6 +132,22 @@ public class ActionButton : AvaloniaButton
         _icon = e.NameScope.Find<ButtonsGlyphSwap>(IconPart);
         _status = e.NameScope.Find<ButtonsLiveRegion>(StatusPart);
         _icon?.Show(CreateIcon(State), default, default);
+        // The ring (4px outside, like Button's) is built the first time the button is keyboard focused, as the last
+        // child of the template's root panel, where the template used to keep a hidden Border.
+        _focusRing ??= new LazyFocusRing(this, ButtonTokens.Key(ButtonTokenKind.FocusRingMargin), ActionButtonTokens.Key(ActionButtonTokenKind.FocusRingRadius));
+        _focusRing.Attach(VisualChildren.Count > 0 ? VisualChildren[0] as Panel : null);
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing?.Update();
     }
 
     protected override void OnInitialized()

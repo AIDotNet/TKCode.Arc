@@ -176,7 +176,7 @@ public class CommentThread : TemplatedControl
     private bool _narrow;
     private bool _committing;
     private Regex? _mentionPattern;
-    private string? _mentionKey;
+    private IReadOnlyList<CommentAuthor>? _patternPeople;
     private CommentThreadText? _titleText;
     private IReadOnlyList<CommentAuthor> _mentionable = Array.Empty<CommentAuthor>();
 
@@ -448,11 +448,10 @@ public class CommentThread : TemplatedControl
         var total = CommentThreadTree.Count(list);
         var participants = CommentThreadTree.Authors(list);
         _mentionable = People ?? CommentThreadTree.Authors(list, CurrentUser);
-        var names = string.Join("\u0001", _mentionable.Select(person => person.Name));
-        if (names != _mentionKey)
+        if (!SameNames(_mentionable, _patternPeople))
         {
             // Bodies keep their runs while the pattern is the same instance.
-            _mentionKey = names;
+            _patternPeople = _mentionable;
             _mentionPattern = CommentThreadBody.CreatePattern(_mentionable.Select(person => person.Name));
         }
 
@@ -545,6 +544,23 @@ public class CommentThread : TemplatedControl
             PseudoClasses.Set(ResolvedPseudoClass, IsResolved);
         }
         _rendered = _autoHeight is not null;
+    }
+
+    /// <summary>Whether two people lists carry the same names in the same order (the mention pattern depends on nothing else).</summary>
+    private static bool SameNames(IReadOnlyList<CommentAuthor> people, IReadOnlyList<CommentAuthor>? previous)
+    {
+        if (previous is null || previous.Count != people.Count)
+        {
+            return false;
+        }
+        for (var i = 0; i < people.Count; i++)
+        {
+            if (!string.Equals(people[i].Name, previous[i].Name, StringComparison.Ordinal))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     /// <summary>Shows <paramref name="comments"/> in <paramref name="panel"/>, reusing views by id, then their replies.</summary>

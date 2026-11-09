@@ -53,7 +53,7 @@
         <Style Selector="^ /template/ ContentPresenter#PART_Extra">
             <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeMD}" />
         </Style>
-        <Style Selector="^[Size=Small]">
+        <Style Selector="^:small">
             <Style Selector="^ /template/ arc|Checkbox#PART_Toggle">
                 <Setter Property="Margin" Value="0,-4,0,0" />
             </Style>
@@ -61,7 +61,7 @@
                 <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
             </Style>
         </Style>
-        <Style Selector="^[Size=Large]">
+        <Style Selector="^:large">
             <Style Selector="^ /template/ arc|Checkbox#PART_Toggle">
                 <Setter Property="Margin" Value="0,3,0,0" />
             </Style>

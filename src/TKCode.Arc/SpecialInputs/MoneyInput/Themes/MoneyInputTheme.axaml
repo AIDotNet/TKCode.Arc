@@ -160,7 +160,7 @@
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:MoneyInputChip">
-                <Panel>
+                <Panel Name="PART_Host">
                     <Border Name="PART_Surface"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
@@ -172,13 +172,6 @@
                                           VerticalAlignment="Center"
                                           Content="{TemplateBinding Content}" />
                     </Border>
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            Margin="{arc:MoneyInputTokenResource FocusRingMargin}"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
         </Setter>
@@ -208,9 +201,6 @@
             <Setter Property="Opacity" Value="{arc:MoneyInputTokenResource ChipMutedOpacity}" />
             <Setter Property="Cursor" Value="No" />
         </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
-        </Style>
 
         <!-- Colors on fast + standard; the press scale rides Arc's CSS spring. Reduced motion: no transitions (Arc). -->
         <Style Selector="^:motion-full">
@@ -231,7 +221,7 @@
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:MoneyInputCurrencyButton">
-                <Panel>
+                <Panel Name="PART_Host">
                     <Border Name="PART_Surface"
                             Background="{TemplateBinding Background}"
                             CornerRadius="{TemplateBinding CornerRadius}"
@@ -249,13 +239,6 @@
                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
                         </StackPanel>
                     </Border>
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            Margin="{arc:MoneyInputTokenResource FocusRingMargin}"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
         </Setter>
@@ -282,9 +265,6 @@
         </Style>
         <Style Selector="^:disabled">
             <Setter Property="Cursor" Value="No" />
-        </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
         </Style>
 
         <Style Selector="^:motion-full">

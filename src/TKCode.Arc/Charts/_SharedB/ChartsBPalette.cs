@@ -100,6 +100,33 @@ internal sealed class ChartsBPalette
         return brush;
     }
 
+    /// <summary>
+    /// A cached brush for a resting color drawn at <paramref name="opacity"/>: what the color looks like under a
+    /// <c>PushOpacity</c> of that value (the renderer multiplies a brush's opacity into the paint the same way), without
+    /// the opacity push. For flat single fills only; overlapping draws need the push.
+    /// </summary>
+    public IImmutableSolidColorBrush Brush(Color color, double opacity)
+    {
+        if (opacity >= 1)
+        {
+            return Brush(color);
+        }
+        var key = (color, opacity);
+        if (!_fadedBrushes.TryGetValue(key, out var brush))
+        {
+            if (_fadedBrushes.Count > 512)
+            {
+                _fadedBrushes.Clear();
+            }
+            brush = new ImmutableSolidColorBrush(color, opacity);
+            _fadedBrushes[key] = brush;
+        }
+        return brush;
+    }
+
+    private readonly Dictionary<(Color, double), IImmutableSolidColorBrush> _fadedBrushes = new();
+    private readonly Dictionary<(Color, double, double, PenLineCap), IPen> _fadedPens = new();
+
     /// <summary>A cached pen for a resting color.</summary>
     public IPen Pen(Color color, double thickness, PenLineCap cap = PenLineCap.Flat)
     {
@@ -112,6 +139,26 @@ internal sealed class ChartsBPalette
             }
             pen = new ImmutablePen(Brush(color), thickness, null, cap, PenLineJoin.Round);
             _pens[key] = pen;
+        }
+        return pen;
+    }
+
+    /// <summary>A cached pen whose brush carries <paramref name="opacity"/> (see <see cref="Brush(Color, double)"/>).</summary>
+    public IPen Pen(Color color, double thickness, double opacity, PenLineCap cap = PenLineCap.Flat)
+    {
+        if (opacity >= 1)
+        {
+            return Pen(color, thickness, cap);
+        }
+        var key = (color, thickness, opacity, cap);
+        if (!_fadedPens.TryGetValue(key, out var pen))
+        {
+            if (_fadedPens.Count > 256)
+            {
+                _fadedPens.Clear();
+            }
+            pen = new ImmutablePen(Brush(color, opacity), thickness, null, cap, PenLineJoin.Round);
+            _fadedPens[key] = pen;
         }
         return pen;
     }

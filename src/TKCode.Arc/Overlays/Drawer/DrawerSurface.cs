@@ -20,11 +20,15 @@ public enum DrawerSide
 /// padding and radius (<c>:narrow</c>).
 /// </summary>
 [TemplatePart(HeaderPart, typeof(Control))]
-[PseudoClasses(NarrowPseudoClass)]
+[PseudoClasses(NarrowPseudoClass, LeftPseudoClass, TopPseudoClass, RightPseudoClass, BottomPseudoClass)]
 public class DrawerSurface : ModalSurface
 {
     public const string HeaderPart = "PART_Header";
     public const string NarrowPseudoClass = ":narrow";
+    public const string LeftPseudoClass = ":left";
+    public const string TopPseudoClass = ":top";
+    public const string RightPseudoClass = ":right";
+    public const string BottomPseudoClass = ":bottom";
 
     public static readonly StyledProperty<DrawerSide> SideProperty =
         AvaloniaProperty.Register<DrawerSurface, DrawerSide>(nameof(Side), DrawerSide.Right);
@@ -65,10 +69,35 @@ public class DrawerSurface : ModalSurface
             NarrowViewportGutterProperty, NarrowBreakpointProperty);
     }
 
+    public DrawerSurface()
+    {
+        UpdateSidePseudoClasses();
+    }
+
     protected override void OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
         Header = e.NameScope.Find<Control>(HeaderPart);
+    }
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == SideProperty)
+        {
+            UpdateSidePseudoClasses();
+        }
+    }
+
+    // The theme selects on :left / :right / :top / :bottom: a property selector (^[Side=Right]) costs an activator and a
+    // boxed comparison per style, ten of them per surface.
+    private void UpdateSidePseudoClasses()
+    {
+        var side = Side;
+        PseudoClasses.Set(LeftPseudoClass, side == DrawerSide.Left);
+        PseudoClasses.Set(TopPseudoClass, side == DrawerSide.Top);
+        PseudoClasses.Set(RightPseudoClass, side == DrawerSide.Right);
+        PseudoClasses.Set(BottomPseudoClass, side == DrawerSide.Bottom);
     }
 
     protected override Size MeasureOverride(Size availableSize)

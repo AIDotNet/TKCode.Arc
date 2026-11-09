@@ -3,6 +3,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
 using Avalonia.Media;
+using Avalonia.Media.TextFormatting;
 
 namespace TKCode.Arc;
 
@@ -20,7 +21,8 @@ internal sealed class CalendarWeekdayRow : Control
     public FontWeight FontWeight { get => GetValue(FontWeightProperty); set => SetValue(FontWeightProperty, value); }
 
     private readonly string[] _names = new string[7];
-    private FormattedText?[] _texts = new FormattedText?[7];
+    // TextLayout: a cached FormattedText re-shapes on every DrawText; the layouts are kept until the names or the font change.
+    private readonly TextLayout?[] _texts = new TextLayout?[7];
 
     static CalendarWeekdayRow()
     {
@@ -46,7 +48,7 @@ internal sealed class CalendarWeekdayRow : Control
         }
         if (changed)
         {
-            _texts = new FormattedText?[7];
+            ClearTexts();
             InvalidateVisual();
         }
     }
@@ -57,7 +59,16 @@ internal sealed class CalendarWeekdayRow : Control
         if (change.Property == FontFamilyProperty || change.Property == FontSizeProperty || change.Property == FontWeightProperty ||
             change.Property == ForegroundProperty)
         {
-            _texts = new FormattedText?[7];
+            ClearTexts();
+        }
+    }
+
+    private void ClearTexts()
+    {
+        for (var i = 0; i < _texts.Length; i++)
+        {
+            _texts[i]?.Dispose();
+            _texts[i] = null;
         }
     }
 
@@ -77,9 +88,9 @@ internal sealed class CalendarWeekdayRow : Control
             {
                 continue;
             }
-            var text = _texts[i] ??= new FormattedText(_names[i], CultureInfo.CurrentCulture, FlowDirection.LeftToRight, typeface, FontSize, Foreground);
+            var text = _texts[i] ??= new TextLayout(_names[i], typeface, FontSize, Foreground);
             var x = i * (cell + CalendarMonthPane.Gap) + (cell - text.Width) / 2;
-            context.DrawText(text, new Point(x, (Bounds.Height - text.Height) / 2));
+            text.Draw(context, new Point(x, (Bounds.Height - text.Height) / 2));
         }
     }
 }

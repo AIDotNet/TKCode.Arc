@@ -756,6 +756,9 @@ internal sealed class AgentStatusFace : AgentStatusInked
         }
     }
 
+    private ImmutableLinearGradientBrush? _labelMask;
+    private double _labelMaskStop;
+
     public override void Render(DrawingContext context)
     {
         EnsurePalette();
@@ -778,9 +781,15 @@ internal sealed class AgentStatusFace : AgentStatusInked
             if (fade > 0.01 && slot > 0)
             {
                 var p = Math.Max(0, 1 - fade / slot);
-                mask = context.PushOpacityMask(new ImmutableLinearGradientBrush(
-                    [new ImmutableGradientStop(0, Colors.Black), new ImmutableGradientStop(p, Colors.Black), new ImmutableGradientStop(1, Color.FromArgb(0, 0, 0, 0))],
-                    startPoint: new RelativePoint(0, 0, RelativeUnit.Relative), endPoint: new RelativePoint(1, 0, RelativeUnit.Relative)), clip);
+                // p only moves with the label's width, so the shimmer's frames reuse one brush.
+                if (_labelMask is null || _labelMaskStop != p)
+                {
+                    _labelMaskStop = p;
+                    _labelMask = new ImmutableLinearGradientBrush(
+                        [new ImmutableGradientStop(0, Colors.Black), new ImmutableGradientStop(p, Colors.Black), new ImmutableGradientStop(1, Color.FromArgb(0, 0, 0, 0))],
+                        startPoint: new RelativePoint(0, 0, RelativeUnit.Relative), endPoint: new RelativePoint(1, 0, RelativeUnit.Relative));
+                }
+                mask = context.PushOpacityMask(_labelMask, clip);
             }
             foreach (var unit in _leaving)
             {

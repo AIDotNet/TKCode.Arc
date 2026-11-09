@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
 using Avalonia;
@@ -406,9 +407,25 @@ internal sealed class GalaxyGroupRow : GalaxyToggle
 
     internal GalaxyBar? Bar => _bar;
 
+    private LazyFocusRing? _focusRing;
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing?.Update();
+    }
+
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
+        _focusRing ??= new LazyFocusRing(this, CustomerGalaxyTokens.Key(CustomerGalaxyTokenKind.FocusRingMargin), CustomerGalaxyTokens.Key(CustomerGalaxyTokenKind.RowFocusRadius));
+        _focusRing.Attach(e.NameScope.Find<Panel>("PART_RingHost"));
         _value = e.NameScope.Find<ShowpieceNumber>(ValuePart);
         _bar = e.NameScope.Find<GalaxyBar>(BarPart);
         ApplyValue();

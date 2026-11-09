@@ -1,4 +1,5 @@
 using TKCode.Arc.Motion;
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
@@ -192,7 +193,7 @@ internal sealed class PhoneInputFace : Control
         private readonly PhoneInputFace _owner;
         private readonly TranslateTransform _shift = new();
         private readonly List<MotionValue<double>> _values = new();
-        private BlurEffect? _blur;
+        private double _blur;
         private TextLayout? _flag;
         private TextLayout? _dial;
 
@@ -208,7 +209,7 @@ internal sealed class PhoneInputFace : Control
 
         public double OffsetY => _shift.Y;
 
-        public double Blur => _blur?.Radius ?? 0;
+        public double Blur => _blur;
 
         public double ContentWidth
         {
@@ -241,13 +242,13 @@ internal sealed class PhoneInputFace : Control
         {
             if (radius < 0.05)
             {
-                _blur = null;
+                _blur = 0;
                 Effect = null;
                 return;
             }
-            _blur ??= new BlurEffect();
-            _blur.Radius = radius;
-            Effect = _blur;
+            // Quantized, cached blur (ArcBlur): no per-frame filter rebuild.
+            _blur = radius;
+            Effect = ArcBlur.Get(radius);
         }
 
         public void Invalidate()

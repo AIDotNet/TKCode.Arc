@@ -165,7 +165,7 @@ internal sealed class GallerySettingsView : UserControl
         var names = new StackPanel { Spacing = 2, VerticalAlignment = VerticalAlignment.Center };
         names.Children.Add(GallerySite.Text(GalleryShellLangResourceKind.AboutAppName, ArcDesignTokenKind.Foreground, 24, FontWeight.Medium));
         names.Children.Add(GallerySite.Text(GalleryShellLangResourceKind.AboutAppDescription, ArcDesignTokenKind.TextSecondary, 14));
-        var badge = new Badge { Tone = BadgeTone.Warning, VerticalAlignment = VerticalAlignment.Center };
+        var badge = new Badge { Tone = BadgeTone.Warning, VerticalAlignment = VerticalAlignment.Center, IsVisible = GalleryHost.Version.Contains('-') };
         GalleryText.Bind(badge, ContentControl.ContentProperty, GalleryShellLangResourceKind.AboutPreview);
         var row = new Grid { ColumnDefinitions = new ColumnDefinitions("Auto,*,Auto"), ColumnSpacing = 16 };
         // The artwork's corners are not transparent, so the frame rounds them.

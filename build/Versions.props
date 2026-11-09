@@ -1,6 +1,6 @@
 <Project>
     <PropertyGroup>
-        <ArcVersion>0.4.0-preview.6</ArcVersion>
+        <ArcVersion>1.0.0</ArcVersion>
         <AvaloniaVersion>12.1.5</AvaloniaVersion>
     </PropertyGroup>
 </Project>

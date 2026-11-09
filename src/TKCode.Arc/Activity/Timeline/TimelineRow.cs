@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
 using Avalonia;
@@ -66,9 +67,18 @@ internal sealed class TimelineRow : TemplatedControl
     private TextBlock? _meta;
     private ArcContentSwap? _time;
     private ArcGlyph? _chevron;
+    // Built the first time a row needs them: the tone tint of the marker (success / danger system events) and the
+    // detail host (expandable events). Most rows have neither.
+    private Border? _markerTone;
+    private IDisposable? _markerToneFill;
+    private TimelineTone _markerToneKind;
     private TimelineGrowHost? _detail;
-    private Control? _detailBody;
+    private Border? _detailBody;
     private Decorator? _detailHost;
+    private IDisposable? _detailPadding;
+    private bool _detailNarrow;
+    private string? _nameFull;
+    private TimelineEvent? _nameItem;
 
     private readonly ScaleTransform _markerScale = new(0.4, 0.4);
     private readonly ScaleTransform _segmentScale = new(1, 0);
@@ -153,9 +163,15 @@ internal sealed class TimelineRow : TemplatedControl
         _meta = e.NameScope.Find<TextBlock>(MetaPart);
         _time = e.NameScope.Find<ArcContentSwap>(TimePart);
         _chevron = e.NameScope.Find<ArcGlyph>(ChevronPart);
-        _detail = e.NameScope.Find<TimelineGrowHost>(DetailPart);
-        _detailBody = e.NameScope.Find<Control>(DetailBodyPart);
-        _detailHost = e.NameScope.Find<Decorator>(DetailHostPart);
+        // The code-built parts belong to the old template's panels: a new template starts them over.
+        _markerTone = null;
+        _markerToneFill?.Dispose();
+        _markerToneFill = null;
+        _detail = null;
+        _detailBody = null;
+        _detailHost = null;
+        _detailPadding?.Dispose();
+        _detailPadding = null;
 
         if (_marker is not null)
         {
@@ -170,10 +186,6 @@ internal sealed class TimelineRow : TemplatedControl
         if (_content is not null)
         {
             _content.RenderTransform = _contentShift;
-        }
-        if (_detailBody is not null)
-        {
-            _detailBody.RenderTransform = _detailShift;
         }
         if (_time is not null)
         {
@@ -261,19 +273,21 @@ internal sealed class TimelineRow : TemplatedControl
         var item = model.Item;
         var owner = Owner;
         var expandable = item.HasDetail;
+        var narrow = owner?.IsNarrow == true;
         PseudoClasses.Set(ExpandablePseudoClass, expandable);
         PseudoClasses.Set(LastPseudoClass, model.IsLastOfDay);
         var hasAvatar = !string.IsNullOrWhiteSpace(item.Avatar);
         PseudoClasses.Set(AvatarPseudoClass, hasAvatar);
         PseudoClasses.Set(SuccessPseudoClass, !hasAvatar && item.Tone == TimelineTone.Success);
         PseudoClasses.Set(DangerPseudoClass, !hasAvatar && item.Tone == TimelineTone.Danger);
-        PseudoClasses.Set(NarrowPseudoClass, owner?.IsNarrow == true);
+        PseudoClasses.Set(NarrowPseudoClass, narrow);
         _trigger.IsInteractive = expandable;
         _segment!.IsVisible = !model.IsLastOfDay;
         Padding = new Thickness(0, 0, 0, model.IsLastOfDay ? owner?.DayGap ?? 12 : 0);
 
         UpdateTitle(item);
         UpdateMarker(item, hasAvatar);
+        UpdateMarkerTone(item, hasAvatar);
         if (owner is not null)
         {
             var (label, full) = owner.TimeLabels(model);
@@ -282,8 +296,13 @@ internal sealed class TimelineRow : TemplatedControl
 
         // Expansion follows the timeline's set; a reused row jumps to it.
         _expanded = expandable && owner?.IsExpanded(item.Id) == true;
+        if (expandable)
+        {
+            EnsureDetail();
+        }
+        UpdateDetailPadding(narrow);
         SetDetailContent(expandable ? item.Detail : null);
-        _detail!.Set(_expanded, null);
+        _detail?.Set(_expanded, null);
         TurnChevron(animate: false);
         if (_detailBody is not null)
         {
@@ -368,6 +387,71 @@ internal sealed class TimelineRow : TemplatedControl
         }
     }
 
+    /// <summary>The tone tint behind a system event's marker (12% success or danger), only while the row shows one.</summary>
+    private void UpdateMarkerTone(TimelineEvent item, bool hasAvatar)
+    {
+        var tone = hasAvatar ? TimelineTone.Neutral : item.Tone;
+        if (tone == TimelineTone.Neutral)
+        {
+            if (_markerTone is not null)
+            {
+                _markerTone.IsVisible = false;
+            }
+            return;
+        }
+        if (_markerTone is null)
+        {
+            if (_marker is null)
+            {
+                return;
+            }
+            _markerTone = new Border { Name = "PART_MarkerTone" };
+            ArcTokens.Bind(_markerTone, Border.CornerRadiusProperty, ArcDesignTokenKind.RadiusPill);
+            _markerTone.Bind(OpacityProperty, _markerTone.GetResourceObservable(TimelineTokens.Key(TimelineTokenKind.ToneTintOpacity)));
+            // Over the fill, under the content and the ring, as in the template.
+            _marker.Children.Insert(Math.Min(1, _marker.Children.Count), _markerTone);
+            _markerToneKind = TimelineTone.Neutral;
+        }
+        if (_markerToneKind != tone)
+        {
+            _markerToneKind = tone;
+            _markerToneFill?.Dispose();
+            _markerToneFill = ArcTokens.Bind(_markerTone, Border.BackgroundProperty,
+                tone == TimelineTone.Success ? ArcDesignTokenKind.Success : ArcDesignTokenKind.Danger);
+        }
+        _markerTone.IsVisible = true;
+    }
+
+    /// <summary>The detail host under the trigger (grow host, padded body, content decorator), built for expandable rows.</summary>
+    private void EnsureDetail()
+    {
+        if (_detail is not null || _trigger?.Parent is not StackPanel stack)
+        {
+            return;
+        }
+        _detailHost = new Decorator { Name = DetailHostPart };
+        ArcTokens.Bind(_detailHost, TextElement.FontSizeProperty, ArcDesignTokenKind.TypeSM);
+        ArcTokens.Bind(_detailHost, TextElement.ForegroundProperty, ArcDesignTokenKind.TextSecondary);
+        _detailBody = new Border { Name = DetailBodyPart, Child = _detailHost, RenderTransform = _detailShift };
+        _detail = new TimelineGrowHost { Name = DetailPart, Child = _detailBody };
+        _detailNarrow = false;
+        _detailPadding = _detailBody.Bind(Border.PaddingProperty, _detailBody.GetResourceObservable(TimelineTokens.Key(TimelineTokenKind.DetailPadding)));
+        stack.Children.Add(_detail);
+    }
+
+    /// <summary>The detail body's padding follows the narrow layout (the theme did this through the row's :narrow).</summary>
+    private void UpdateDetailPadding(bool narrow)
+    {
+        if (_detailBody is null || narrow == _detailNarrow)
+        {
+            return;
+        }
+        _detailNarrow = narrow;
+        _detailPadding?.Dispose();
+        var kind = narrow ? TimelineTokenKind.DetailPaddingNarrow : TimelineTokenKind.DetailPadding;
+        _detailPadding = _detailBody.Bind(Border.PaddingProperty, _detailBody.GetResourceObservable(TimelineTokens.Key(kind)));
+    }
+
     private void SetDetailContent(object? detail)
     {
         if (_detailHost is null)
@@ -412,27 +496,41 @@ internal sealed class TimelineRow : TemplatedControl
             }
             else
             {
-                TimelineMotion.Silently(_time, () => _time.Content = label);
+                TimelineMotion.SetContentSilently(_time, label);
             }
         }
-        Tooltip.SetTip(_time, full);
+        if (!ReferenceEquals(Tooltip.GetTip(_time), full))
+        {
+            Tooltip.SetTip(_time, full);
+        }
         UpdateAccessibleName();
     }
 
     /// <summary>Re-reads layout-affecting flags (last of day, narrow) after the rows changed.</summary>
     public void Refresh()
     {
+        if (Owner is { } owner)
+        {
+            Refresh(owner.Days());
+        }
+    }
+
+    /// <inheritdoc cref="Refresh()"/>
+    public void Refresh(in Timeline.DayContext days)
+    {
         if (Model is not { } model || _trigger is null)
         {
             return;
         }
+        var narrow = Owner?.IsNarrow == true;
         PseudoClasses.Set(LastPseudoClass, model.IsLastOfDay);
-        PseudoClasses.Set(NarrowPseudoClass, Owner?.IsNarrow == true);
+        PseudoClasses.Set(NarrowPseudoClass, narrow);
+        UpdateDetailPadding(narrow);
         _segment!.IsVisible = !model.IsLastOfDay;
         Padding = new Thickness(0, 0, 0, model.IsLastOfDay ? Owner?.DayGap ?? 12 : 0);
         if (Owner is { } owner)
         {
-            var (label, full) = owner.TimeLabels(model);
+            var (label, full) = owner.TimeLabels(model, days);
             SetTime(label, full, animate: true);
         }
     }
@@ -444,6 +542,12 @@ internal sealed class TimelineRow : TemplatedControl
             return;
         }
         var item = model.Item;
+        if (ReferenceEquals(item, _nameItem) && ReferenceEquals(_timeFull, _nameFull))
+        {
+            return;
+        }
+        _nameItem = item;
+        _nameFull = _timeFull;
         var title = string.IsNullOrEmpty(item.Actor) ? item.Title : $"{item.Actor} {item.Title}";
         var name = string.IsNullOrEmpty(item.Meta) ? $"{title}, {_timeFull}" : $"{title}, {item.Meta}, {_timeFull}";
         AutomationProperties.SetName(_trigger, name);

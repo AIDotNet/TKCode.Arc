@@ -107,7 +107,7 @@
         <Style Selector="^:pointerover /template/ Border#PART_Hover">
             <Setter Property="Opacity" Value="{arc:TeamSwitcherTokenResource HoverOpacity}" />
         </Style>
-        <Style Selector="^[IsExpanded=True] /template/ Border#PART_Hover">
+        <Style Selector="^:expanded /template/ Border#PART_Hover">
             <Setter Property="Opacity" Value="{arc:TeamSwitcherTokenResource HoverOpacity}" />
         </Style>
         <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">

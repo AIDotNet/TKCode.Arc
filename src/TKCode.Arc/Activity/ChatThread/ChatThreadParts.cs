@@ -1,7 +1,12 @@
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
+using Avalonia.Controls.Metadata;
+using Avalonia.Controls.Primitives;
+using Avalonia.Input;
 using Avalonia.Media;
 using AvaloniaButton = Avalonia.Controls.Button;
 
@@ -40,8 +45,11 @@ internal enum ChatThreadButtonRole
 
 /// <summary>
 /// The small buttons of <see cref="ChatThread"/> and <see cref="ChatComposer"/>: one Avalonia button whose theme gives
-/// each <see cref="Role"/> Arc's geometry, colors, hover and press feedback, and a focus ring.
+/// each <see cref="Role"/> Arc's geometry, colors, hover and press feedback, and a focus ring. The role and the two
+/// states are pseudo-classes (the theme selects on those, not on the properties: a property selector costs every
+/// recycled row an activator per style).
 /// </summary>
+[PseudoClasses(":react", ":emoji", ":retry", ":pill", ":attach", ":send", ":remove", ":file", ":image", ":ready", ":open")]
 internal sealed class ChatThreadButton : AvaloniaButton
 {
     public static readonly StyledProperty<ChatThreadButtonRole> RoleProperty =
@@ -60,6 +68,82 @@ internal sealed class ChatThreadButton : AvaloniaButton
     public bool IsOpen { get => GetValue(IsOpenProperty); set => SetValue(IsOpenProperty, value); }
 
     protected override Type StyleKeyOverride => typeof(ChatThreadButton);
+
+    // Arc's ring sits 2px outside every chat button (no token holds it): the ring's margin is set when it is created,
+    // and the key the ring would read it from names no resource.
+    private static readonly Thickness s_focusRingMargin = new(-2);
+    private static readonly object s_noMarginToken = new();
+
+    // The ring is built the first time the button is keyboard focused (most never are).
+    private LazyFocusRing? _focusRing;
+
+    public ChatThreadButton()
+    {
+        UpdateRolePseudoClasses();
+    }
+
+    private void UpdateRolePseudoClasses()
+    {
+        var role = Role;
+        PseudoClasses.Set(":react", role == ChatThreadButtonRole.React);
+        PseudoClasses.Set(":emoji", role == ChatThreadButtonRole.Emoji);
+        PseudoClasses.Set(":retry", role == ChatThreadButtonRole.Retry);
+        PseudoClasses.Set(":pill", role == ChatThreadButtonRole.Pill);
+        PseudoClasses.Set(":attach", role == ChatThreadButtonRole.Attach);
+        PseudoClasses.Set(":send", role == ChatThreadButtonRole.Send);
+        PseudoClasses.Set(":remove", role == ChatThreadButtonRole.Remove);
+        PseudoClasses.Set(":file", role == ChatThreadButtonRole.File);
+        PseudoClasses.Set(":image", role == ChatThreadButtonRole.Image);
+    }
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == RoleProperty)
+        {
+            UpdateRolePseudoClasses();
+        }
+        else if (change.Property == IsReadyProperty)
+        {
+            PseudoClasses.Set(":ready", IsReady);
+        }
+        else if (change.Property == IsOpenProperty)
+        {
+            PseudoClasses.Set(":open", IsOpen);
+        }
+    }
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        _focusRing ??= new LazyFocusRing(this, s_noMarginToken, ArcDesignTokens.Key(ArcDesignTokenKind.RadiusPill));
+        _focusRing.Attach(e.NameScope.Find<Panel>("PART_Root"));
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        UpdateFocusRing();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        UpdateFocusRing();
+    }
+
+    private void UpdateFocusRing()
+    {
+        if (_focusRing is null)
+        {
+            return;
+        }
+        _focusRing.Update();
+        if (_focusRing.Ring is { } ring && ring.Margin != s_focusRingMargin)
+        {
+            ring.Margin = s_focusRingMargin;
+        }
+    }
 
     /// <summary>A button showing a Lucide glyph.</summary>
     public static ChatThreadButton WithGlyph(ChatThreadButtonRole role, Geometry glyph, double size, double stroke, string name)
@@ -177,10 +261,17 @@ internal sealed class ChatThreadTypingDots : Control
 /// <summary>
 /// Hosts a bubble's text and sizes it like a CSS bubble: as wide as its longest line, up to the width it is given
 /// (Arc's <c>max-width: 100%</c>). Markdown documents report the full available width, so the body measures its child
-/// unconstrained first to learn its natural width.
+/// unconstrained first to learn its natural width. That width depends only on the document the view shows, so it is
+/// kept per applied snapshot: a list relayout (or a streaming frame that changed nothing) measures the document once.
 /// </summary>
 internal sealed class ChatThreadBubbleBody : Decorator
 {
+    private Markdown? _naturalFor;
+    private object? _naturalSnapshot;
+    private double _naturalFontSize;
+    private FontFamily? _naturalFontFamily;
+    private double _natural;
+
     protected override Size MeasureOverride(Size availableSize)
     {
         if (Child is not { } child)
@@ -189,16 +280,34 @@ internal sealed class ChatThreadBubbleBody : Decorator
         }
         var padding = Padding;
         var inner = availableSize.Deflate(padding);
-        if (child is Markdown && double.IsFinite(inner.Width))
+        if (child is Markdown markdown && double.IsFinite(inner.Width))
         {
-            child.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-            var natural = child.DesiredSize.Width;
+            var natural = NaturalWidth(markdown);
             var width = natural > 0 && double.IsFinite(natural) ? Math.Min(Math.Ceiling(natural), inner.Width) : inner.Width;
             child.Measure(new Size(width, double.PositiveInfinity));
             return new Size(Math.Min(width, child.DesiredSize.Width), child.DesiredSize.Height).Inflate(padding);
         }
         child.Measure(inner);
         return child.DesiredSize.Inflate(padding);
+    }
+
+    private double NaturalWidth(Markdown markdown)
+    {
+        var snapshot = markdown.View?.Snapshot;
+        if (snapshot is not null && ReferenceEquals(markdown, _naturalFor) && ReferenceEquals(snapshot, _naturalSnapshot) &&
+            markdown.FontSize.Equals(_naturalFontSize) && Equals(markdown.FontFamily, _naturalFontFamily))
+        {
+            return _natural;
+        }
+        markdown.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+        var natural = markdown.DesiredSize.Width;
+        // Before the view has a snapshot the width is the empty document's: not worth remembering.
+        _naturalFor = snapshot is null ? null : markdown;
+        _naturalSnapshot = snapshot;
+        _naturalFontSize = markdown.FontSize;
+        _naturalFontFamily = markdown.FontFamily;
+        _natural = natural;
+        return natural;
     }
 }
 

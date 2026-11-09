@@ -132,7 +132,7 @@
         <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:SiteNavButton">
-                <Panel>
+                <Panel Name="PART_RingHost">
                     <Border Name="PART_Frame"
                             Background="Transparent"
                             CornerRadius="{TemplateBinding CornerRadius}"
@@ -154,24 +154,12 @@
                                           RenderTransformOrigin="50%,50%" />
                         </StackPanel>
                     </Border>
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            Margin="-2"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
         </Setter>
         <Style Selector="^:capsule">
             <Setter Property="Height" Value="{arc:SiteHeaderTokenResource NavItemHeightCentered}" />
             <Setter Property="Padding" Value="{arc:SiteHeaderTokenResource NavItemPaddingCentered}" />
-            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
-        </Style>
-        <Style Selector="^ /template/ Border#PART_FocusRing">
-            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep14}" />
-        </Style>
-        <Style Selector="^:capsule /template/ Border#PART_FocusRing">
             <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
         </Style>
         <Style Selector="^:fine-hover">
@@ -188,9 +176,6 @@
         </Style>
         <Style Selector="^:expanded /template/ arc|ArcGlyph#PART_Chevron">
             <Setter Property="RenderTransform" Value="rotate(180deg)" />
-        </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
         </Style>
         <Style Selector="^:motion-full">
             <Setter Property="Transitions">
@@ -220,7 +205,7 @@
         <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:SiteBrandButton">
-                <Panel>
+                <Panel Name="PART_RingHost">
                     <Border Background="Transparent"
                             CornerRadius="{TemplateBinding CornerRadius}"
                             Padding="{TemplateBinding Padding}">
@@ -229,19 +214,9 @@
                                           Content="{TemplateBinding Content}"
                                           ContentTemplate="{TemplateBinding ContentTemplate}" />
                     </Border>
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            Margin="-2"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep14}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
         </Setter>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
-        </Style>
     </ControlTheme>
 
     <!-- The bar's and the sheet's actions: 36 high (44 in the sheet), pressed scale .97. -->
@@ -262,7 +237,7 @@
         <Setter Property="RenderTransformOrigin" Value="50%,50%" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:SiteActionButton">
-                <Panel>
+                <Panel Name="PART_RingHost">
                     <Border Name="PART_Frame"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
@@ -274,13 +249,6 @@
                                    Text="{TemplateBinding Label}"
                                    LetterSpacing="{arc:SiteHeaderTokenResource LabelLetterSpacing}" />
                     </Border>
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            Margin="-2"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep20}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
         </Setter>
@@ -304,9 +272,6 @@
         </Style>
         <Style Selector="^:pressed">
             <Setter Property="RenderTransform" Value="scale(0.97)" />
-        </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
         </Style>
         <Style Selector="^:motion-full">
             <Setter Property="Transitions">
@@ -333,7 +298,7 @@
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:SiteMenuButton">
-                <Panel>
+                <Panel Name="PART_RingHost">
                     <Border Name="PART_Frame"
                             Background="{TemplateBinding Background}"
                             CornerRadius="{TemplateBinding CornerRadius}">
@@ -345,21 +310,11 @@
                                           Size="{arc:SiteHeaderTokenResource MenuGlyphSize}"
                                           Stroke="{arc:SiteHeaderTokenResource MenuGlyphStroke}" />
                     </Border>
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            Margin="-2"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep14}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
         </Setter>
         <Style Selector="^:pressed">
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
-        </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
         </Style>
         <Style Selector="^:motion-full">
             <Setter Property="Transitions">

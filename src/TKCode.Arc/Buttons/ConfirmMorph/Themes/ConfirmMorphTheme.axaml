@@ -360,7 +360,7 @@
         <Style Selector="^:has-undo /template/ StackPanel#PART_DoneStatus">
             <Setter Property="Margin" Value="{arc:ConfirmMorphTokenResource StatusInset}" />
         </Style>
-        <Style Selector="^[Tone=Neutral]">
+        <Style Selector="^:neutral">
             <Style Selector="^ /template/ Button#PART_Confirm">
                 <Setter Property="Theme" Value="{StaticResource ConfirmMorphConfirmNeutralTheme}" />
             </Style>

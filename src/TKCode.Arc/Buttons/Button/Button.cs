@@ -163,6 +163,8 @@ public class Button : AvaloniaButton
     private ArcSpinner? _spinner;
     private LazyFocusRing? _focusRing;
     private bool _templated;
+    private object _ringMarginKey = ButtonTokens.Key(ButtonTokenKind.FocusRingMargin);
+    private object _ringRadiusKey = ButtonTokens.Key(ButtonTokenKind.FocusRingRadius);
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
@@ -175,8 +177,32 @@ public class Button : AvaloniaButton
         {
             EnsureSpinner();
         }
-        _focusRing ??= new LazyFocusRing(this, ButtonTokens.Key(ButtonTokenKind.FocusRingMargin), ButtonTokens.Key(ButtonTokenKind.FocusRingRadius));
+        _focusRing ??= new LazyFocusRing(this, _ringMarginKey, _ringRadiusKey);
         _focusRing.Attach(AddExtra, RemoveExtra);
+    }
+
+    /// <summary>
+    /// Resource keys of the focus ring's margin and corner radius, for a host that reuses the button with its own theme
+    /// (a split button half has a ring with two round corners). The ring is rebuilt with the new keys when it is next shown.
+    /// </summary>
+    internal void SetFocusRingKeys(object marginKey, object radiusKey)
+    {
+        if (Equals(_ringMarginKey, marginKey) && Equals(_ringRadiusKey, radiusKey))
+        {
+            return;
+        }
+        _ringMarginKey = marginKey;
+        _ringRadiusKey = radiusKey;
+        if (_focusRing is null)
+        {
+            return;
+        }
+        _focusRing.Attach(null, null);
+        _focusRing = new LazyFocusRing(this, marginKey, radiusKey);
+        if (_templated)
+        {
+            _focusRing.Attach(AddExtra, RemoveExtra);
+        }
     }
 
     /// <summary>Hosts a code-built part (spinner, focus ring) over the template; it is laid out over the whole button.</summary>

@@ -1,4 +1,5 @@
 using TKCode.Arc.Motion;
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
@@ -18,7 +19,6 @@ internal sealed class SliderBubble : Border
     private readonly MotionValue<double> _scale;
     private readonly MotionValue<double> _lift;
     private readonly MotionValue<double> _blur;
-    private BlurEffect? _blurEffect;
     private double _x;
     private double _y;
     private double _angle;
@@ -135,19 +135,11 @@ internal sealed class SliderBubble : Border
 
     private void UpdateBlur(double radius)
     {
-        if (radius <= 0.05)
+        // ArcBlur: cached immutable effects in 0.25px steps instead of a mutable BlurEffect re-sent every frame.
+        var effect = radius <= 0.05 ? null : ArcBlur.Get(radius);
+        if (!ReferenceEquals(Effect, effect))
         {
-            if (Effect is not null)
-            {
-                Effect = null;
-            }
-            return;
-        }
-        _blurEffect ??= new BlurEffect();
-        _blurEffect.Radius = radius;
-        if (!ReferenceEquals(Effect, _blurEffect))
-        {
-            Effect = _blurEffect;
+            Effect = effect;
         }
     }
 }

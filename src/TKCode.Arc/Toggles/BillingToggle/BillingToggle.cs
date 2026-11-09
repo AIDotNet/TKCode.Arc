@@ -46,9 +46,13 @@ public sealed class BillingToggleValueChangedEventArgs : RoutedEventArgs
 /// <see cref="BillingPrice"/> for prices that roll to the new amount.
 /// </summary>
 [TemplatePart(ThumbPart, typeof(GlidingIndicator))]
+[PseudoClasses(LargePseudoClass)]
 public class BillingToggle : SelectingItemsControl
 {
     public const string ThumbPart = "PART_Thumb";
+
+    /// <summary>Set while <see cref="Size"/> is Large (the theme selects on it, not on the property).</summary>
+    public const string LargePseudoClass = ":large";
 
     /// <summary>Arc's <c>glide</c>: <c>{ type: "spring", visualDuration: 0.34, bounce: 0 }</c> (critically damped).</summary>
     internal static readonly SpringSpec ThumbGlide = SpringSpec.FromVisual(0.34, 0);
@@ -147,6 +151,7 @@ public class BillingToggle : SelectingItemsControl
         SelectionChanged += (_, _) => _host.OnSelectionChanged();
         ItemsView.CollectionChanged += (_, _) => EnsureSelection();
         AutomationProperties.SetName(this, DefaultLabel);
+        PseudoClasses.Set(LargePseudoClass, Size == BillingToggleSize.Large);
     }
 
     protected override Type StyleKeyOverride => typeof(BillingToggle);
@@ -247,6 +252,7 @@ public class BillingToggle : SelectingItemsControl
         }
         else if (change.Property == SizeProperty)
         {
+            PseudoClasses.Set(LargePseudoClass, Size == BillingToggleSize.Large);
             ForEachOption(option => option.IsLarge = Size == BillingToggleSize.Large);
         }
         else if (change.Property == BadgeAccentProperty || change.Property == BadgeInkProperty ||

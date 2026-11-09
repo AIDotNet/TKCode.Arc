@@ -160,6 +160,38 @@ public class ThemeSwitcherTests
         }
     }
 
+    [AvaloniaTheory]
+    [InlineData(ThemeSwitcherVariant.Reveal)]
+    [InlineData(ThemeSwitcherVariant.Eclipse)]
+    [InlineData(ThemeSwitcherVariant.Split)]
+    [InlineData(ThemeSwitcherVariant.Rise)]
+    public void The_Snapshot_Covers_The_Window_While_The_Theme_Applies(ThemeSwitcherVariant variant)
+    {
+        // Issue #74: with an empty clip until the reveal started, the new theme showed before the old one came back.
+        var trigger = new Border { Width = 40, Height = 20 };
+        var window = new Window { Content = trigger, Width = 400, Height = 300 };
+        Motion.ArcMotion.SetLevel(window, Motion.ArcMotionLevel.Full);
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+        try
+        {
+            var layer = Avalonia.Controls.Primitives.OverlayLayer.GetOverlayLayer(trigger);
+            layer.ShouldNotBeNull();
+            Rect? drawn = null;
+            var run = ThemeSwitcherTransition.RunAsync(trigger, variant, () =>
+            {
+                drawn = layer.Children.OfType<ThemeSwitcherSnapshot>().Single().DrawnArea;
+                return Task.CompletedTask;
+            });
+            drawn.ShouldBe(new Rect(layer.Bounds.Size));
+            TestHelpers.PumpUntil(() => run.IsCompleted).ShouldBeTrue();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     [AvaloniaFact]
     public async Task Theme_Change_Keeps_The_Rest_Of_The_Theme_And_Toggles_Dark()
     {

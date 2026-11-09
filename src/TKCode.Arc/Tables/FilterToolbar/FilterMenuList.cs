@@ -1,4 +1,3 @@
-using System.Globalization;
 using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
 using Avalonia;
@@ -8,6 +7,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
+using Avalonia.Media.TextFormatting;
 
 namespace TKCode.Arc;
 
@@ -40,11 +40,19 @@ internal sealed class FilterMenuList : Control
     private const double IconExtent = 16;
     private const double MetaGlyph = 15;
 
+    private static readonly Cursor s_hand = new(StandardCursorType.Hand);
+
     private readonly Row[] _rows;
     private readonly double _rowHeight;
     private readonly double _radius;
-    private FormattedText?[] _labels = [];
-    private FormattedText?[] _metas = [];
+    private readonly bool _hasIcons;
+    private TextLayout?[] _labels = [];
+    private TextLayout?[] _metas = [];
+    private double[] _labelWidths = [];
+    private double[] _metaWidths = [];
+    private IBrush? _labelBrush;
+    private IBrush? _metaBrush;
+    private Typeface _typeface;
     private int _textKey = -1;
     private MotionValue<Rect>? _highlight;
     private MotionValue<double>? _highlightOpacity;
@@ -75,8 +83,9 @@ internal sealed class FilterMenuList : Control
         _rows = rows.ToArray();
         _rowHeight = rowHeight;
         _radius = radius;
+        _hasIcons = Array.Exists(_rows, r => r.Icon is not null);
         Current = Math.Max(0, Array.FindIndex(_rows, r => r.Checked));
-        Cursor = new Cursor(StandardCursorType.Hand);
+        Cursor = s_hand;
         FocusAdorner = null;
         ArcTokens.Bind(this, ForegroundProperty, ArcDesignTokenKind.Foreground);
         ArcTokens.Bind(this, SecondaryForegroundProperty, ArcDesignTokenKind.TextSecondary);
@@ -349,40 +358,73 @@ internal sealed class FilterMenuList : Control
 
     #region Rendering
 
-    private void EnsureText()
+    private void EnsureText(IBrush labelBrush, IBrush metaBrush)
     {
         var key = HashCode.Combine(FontFamily, FontSize, SmallFontSize);
-        if (_textKey == key && _labels.Length == _rows.Length)
+        if (_textKey == key && _labels.Length == _rows.Length && ReferenceEquals(_labelBrush, labelBrush) && ReferenceEquals(_metaBrush, metaBrush))
         {
             return;
         }
+        // Layouts are rebuilt only when the font or the brushes change; their widths are set lazily per row in Render.
         _textKey = key;
-        var typeface = new Typeface(FontFamily);
-        _labels = new FormattedText?[_rows.Length];
-        _metas = new FormattedText?[_rows.Length];
-        for (var i = 0; i < _rows.Length; i++)
+        _labelBrush = labelBrush;
+        _metaBrush = metaBrush;
+        _typeface = new Typeface(FontFamily);
+        DisposeText();
+        _labels = new TextLayout?[_rows.Length];
+        _metas = new TextLayout?[_rows.Length];
+        _labelWidths = new double[_rows.Length];
+        _metaWidths = new double[_rows.Length];
+    }
+
+    private void DisposeText()
+    {
+        foreach (var label in _labels)
         {
-            _labels[i] = new FormattedText(_rows[i].Label, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, typeface, FontSize, null)
-            {
-                MaxLineCount = 1,
-                Trimming = TextTrimming.CharacterEllipsis
-            };
-            if (_rows[i].Meta is { Length: > 0 } meta)
-            {
-                var text = new FormattedText(meta, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, typeface, SmallFontSize, null)
-                {
-                    MaxLineCount = 1,
-                    Trimming = TextTrimming.CharacterEllipsis
-                };
-                text.SetFontFeatures(TablePalette.TabularNumbers);
-                _metas[i] = text;
-            }
+            label?.Dispose();
         }
+        foreach (var meta in _metas)
+        {
+            meta?.Dispose();
+        }
+    }
+
+    private TextLayout LabelAt(int index, double maxWidth)
+    {
+        maxWidth = Math.Max(1, maxWidth);
+        var label = _labels[index];
+        if (label is null || Math.Abs(_labelWidths[index] - maxWidth) > 0.5)
+        {
+            label?.Dispose();
+            _labelWidths[index] = maxWidth;
+            label = TablesBDrawing.Layout(_rows[index].Label, _typeface, FontSize, _labelBrush, maxWidth, 1);
+            _labels[index] = label;
+        }
+        return label;
+    }
+
+    private TextLayout? MetaAt(int index, double maxWidth)
+    {
+        if (_rows[index].Meta is not { Length: > 0 } text)
+        {
+            return null;
+        }
+        maxWidth = Math.Max(1, maxWidth);
+        var meta = _metas[index];
+        if (meta is null || Math.Abs(_metaWidths[index] - maxWidth) > 0.5)
+        {
+            meta?.Dispose();
+            _metaWidths[index] = maxWidth;
+            meta = TablesBDrawing.Layout(text, _typeface, SmallFontSize, _metaBrush, maxWidth, 1, features: TablePalette.TabularNumbers);
+            _metas[index] = meta;
+        }
+        return meta;
     }
 
     public override void Render(DrawingContext context)
     {
-        EnsureText();
+        var foregroundBrush = Foreground ?? Brushes.Black;
+        EnsureText(foregroundBrush, MutedForeground ?? Brushes.Gray);
         var width = Bounds.Width;
         // Transparent fill so the empty part of a row takes pointer input too.
         context.DrawRectangle(Brushes.Transparent, null, new Rect(Bounds.Size));
@@ -413,15 +455,13 @@ internal sealed class FilterMenuList : Control
                 }
             }
         }
-        var hasIcons = _rows.Any(r => r.Icon is not null);
-        var foregroundBrush = Foreground ?? Brushes.Black;
         for (var i = 0; i < _rows.Length; i++)
         {
             var row = _rows[i];
             var top = i * _rowHeight;
             var midY = top + _rowHeight / 2;
             var x = RowInset;
-            if (hasIcons)
+            if (_hasIcons)
             {
                 if (row.Icon is { } icon)
                 {
@@ -452,20 +492,14 @@ internal sealed class FilterMenuList : Control
                 }
             }
             var labelRoom = metaRight - x;
-            if (_metas[i] is { } meta)
+            if (MetaAt(i, (right - x) / 2) is { } meta)
             {
-                meta.MaxTextWidth = Math.Max(1, (right - x) / 2);
-                meta.SetForegroundBrush(MutedForeground ?? Brushes.Gray);
                 var metaWidth = Math.Min(meta.WidthIncludingTrailingWhitespace, (right - x) / 2);
-                context.DrawText(meta, new Point(metaRight - metaWidth, midY - meta.Height / 2));
+                meta.Draw(context, new Point(metaRight - metaWidth, midY - meta.Height / 2));
                 labelRoom = metaRight - metaWidth - 10 - x;
             }
-            if (_labels[i] is { } label)
-            {
-                label.MaxTextWidth = Math.Max(1, labelRoom);
-                label.SetForegroundBrush(foregroundBrush);
-                context.DrawText(label, new Point(x, midY - label.Height / 2));
-            }
+            var label = LabelAt(i, labelRoom);
+            label.Draw(context, new Point(x, midY - label.Height / 2));
         }
     }
 

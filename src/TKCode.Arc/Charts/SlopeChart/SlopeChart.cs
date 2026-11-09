@@ -112,9 +112,9 @@ public class SlopeChart : Control, IChartsBAccessible, Avalonia.Rendering.ICusto
     private BindingBase? _startBinding;
     private BindingBase? _endBinding;
     private ChartsBAutomationPeer? _peer;
-    private FormattedText? _startHead;
-    private FormattedText? _endHead;
-    private FormattedText? _empty;
+    private ChartsBRun? _startHead;
+    private ChartsBRun? _endHead;
+    private ChartsBRun? _empty;
     private int _textVersion = -1;
     private double _layoutWidth = -1;
     private string? _tipKey;
@@ -140,11 +140,11 @@ public class SlopeChart : Control, IChartsBAccessible, Avalonia.Rendering.ICusto
         public string RankText = "=";
         public string? RankPrevious;
         public int RankDirection = 1;
-        public FormattedText? Name;
-        public FormattedText? StartValue;
-        public FormattedText? EndValue;
-        public FormattedText? Rank;
-        public FormattedText? RankOld;
+        public ChartsBRun? Name;
+        public ChartsBRun? StartValue;
+        public ChartsBRun? EndValue;
+        public ChartsBRun? Rank;
+        public ChartsBRun? RankOld;
         public int Version = -1;
         public bool Revealed;
     }
@@ -914,9 +914,9 @@ public class SlopeChart : Control, IChartsBAccessible, Avalonia.Rendering.ICusto
         }
         _textVersion = _palette.Version;
         var p = _palette;
-        _startHead = ChartsBText.Make(StartLabel, p, p.TypeSM, p.TextMuted);
-        _endHead = ChartsBText.Make(EndLabel, p, p.TypeSM, p.TextMuted);
-        _empty = ChartsBText.Make(EmptyLabel, p, p.TypeSM, p.TextMuted);
+        _startHead = ChartsBText.Label(StartLabel, p, p.TypeSM, p.TextMuted);
+        _endHead = ChartsBText.Label(EndLabel, p, p.TypeSM, p.TextMuted);
+        _empty = ChartsBText.Label(EmptyLabel, p, p.TypeSM, p.TextMuted);
         foreach (var row in _rows.Values)
         {
             row.Version = -1;
@@ -935,12 +935,12 @@ public class SlopeChart : Control, IChartsBAccessible, Avalonia.Rendering.ICusto
         var size = narrow ? p.TypeXS : p.TypeSM;
         var gap = narrow ? 6 : 8;
         var accent = row.Item.Key == HighlightKey;
-        row.StartValue = ChartsBText.Make(Format(row.Item.Start), p, size, p.Foreground, accent ? FontWeight.Medium : FontWeight.Normal);
-        row.EndValue = ChartsBText.Make(Format(row.Item.End), p, size, p.Foreground, accent ? FontWeight.Medium : FontWeight.Normal);
+        row.StartValue = ChartsBText.Label(Format(row.Item.Start), p, size, p.Foreground, accent ? FontWeight.Medium : FontWeight.Normal);
+        row.EndValue = ChartsBText.Label(Format(row.Item.End), p, size, p.Foreground, accent ? FontWeight.Medium : FontWeight.Normal);
         var nameRoom = Math.Max(0, x0 - 10 - row.StartValue.WidthIncludingTrailingWhitespace - gap);
-        row.Name = ChartsBText.Trimmed(row.Item.Label, p, size, p.TextSecondary, nameRoom);
-        row.Rank = ChartsBText.Make(row.RankText, p, p.TypeXS, p.TextMuted);
-        row.RankOld = row.RankPrevious is null ? null : ChartsBText.Make(row.RankPrevious, p, p.TypeXS, p.TextMuted);
+        row.Name = ChartsBText.TrimmedRun(row.Item.Label, p, size, p.TextSecondary, nameRoom);
+        row.Rank = ChartsBText.Label(row.RankText, p, p.TypeXS, p.TextMuted);
+        row.RankOld = row.RankPrevious is null ? null : ChartsBText.Label(row.RankPrevious, p, p.TypeXS, p.TextMuted);
     }
 
     public override void Render(DrawingContext context)
@@ -954,14 +954,14 @@ public class SlopeChart : Control, IChartsBAccessible, Avalonia.Rendering.ICusto
         var p = _palette;
         if (_data.Count == 0)
         {
-            context.DrawText(_empty!, new Point((width - _empty!.Width) / 2, (Bounds.Height - _empty.Height) / 2));
+            _empty!.Draw(context, new Point((width - _empty!.TextWidth) / 2, (Bounds.Height - _empty.Height) / 2));
             return;
         }
         using var fade = context.PushOpacity(_reveal.Fade);
         var (x0, x1) = Columns(width);
         var plot = PlotHeightResolved;
-        context.DrawText(_startHead!, new Point(x0 - _startHead!.Width / 2, (20 - _startHead.Height) / 2));
-        context.DrawText(_endHead!, new Point(x1 - _endHead!.Width / 2, (20 - _endHead.Height) / 2));
+        _startHead!.Draw(context, new Point(x0 - _startHead!.TextWidth / 2, (20 - _startHead.Height) / 2));
+        _endHead!.Draw(context, new Point(x1 - _endHead!.TextWidth / 2, (20 - _endHead.Height) / 2));
         var axis = p.Pen(p.Border, 1);
         context.DrawLine(axis, new Point(Math.Round(x0) + 0.5, Head), new Point(Math.Round(x0) + 0.5, Head + plot));
         context.DrawLine(axis, new Point(Math.Round(x1) + 0.5, Head), new Point(Math.Round(x1) + 0.5, Head + plot));
@@ -1011,8 +1011,8 @@ public class SlopeChart : Control, IChartsBAccessible, Avalonia.Rendering.ICusto
         var p = _palette;
         var gap = Narrow ? 6 : 8;
         var labelOpacity = 1 - 0.7 * dim;
-        var nameColor = accent ? p.Foreground : ChartsBMath.Lerp(p.TextSecondary, p.Foreground, row.Emphasis.Value);
-        row.Name!.SetForegroundBrush(p.Brush(nameColor));
+        // The name's hover color is a brush swap on the laid-out run, not a relayout.
+        var nameBrush = p.Brush(accent ? p.Foreground : ChartsBMath.Lerp(p.TextSecondary, p.Foreground, row.Emphasis.Value));
         if (row.StartLabel.Value > 0.001)
         {
             using (context.PushOpacity(row.StartLabel.Value * labelOpacity))
@@ -1020,9 +1020,9 @@ public class SlopeChart : Control, IChartsBAccessible, Avalonia.Rendering.ICusto
                 var right = x0 - 10;
                 var value = row.StartValue!;
                 var valueX = right - value.WidthIncludingTrailingWhitespace;
-                context.DrawText(value, new Point(valueX, Head + g.L0 - value.Height / 2));
+                value.Draw(context, new Point(valueX, Head + g.L0 - value.Height / 2));
                 var name = row.Name!;
-                context.DrawText(name, new Point(valueX - gap - name.WidthIncludingTrailingWhitespace, Head + g.L0 - name.Height / 2));
+                name.Draw(context, new Point(valueX - gap - name.WidthIncludingTrailingWhitespace, Head + g.L0 - name.Height / 2), nameBrush);
             }
         }
         if (row.EndLabel.Value > 0.001)
@@ -1031,7 +1031,7 @@ public class SlopeChart : Control, IChartsBAccessible, Avalonia.Rendering.ICusto
             {
                 var value = row.EndValue!;
                 var x = x1 + 10;
-                context.DrawText(value, new Point(x, Head + g.L1 - value.Height / 2));
+                value.Draw(context, new Point(x, Head + g.L1 - value.Height / 2));
                 if (IsRankVisible)
                 {
                     DrawRank(context, row, x + value.WidthIncludingTrailingWhitespace + gap, Head + g.L1);
@@ -1065,22 +1065,21 @@ public class SlopeChart : Control, IChartsBAccessible, Avalonia.Rendering.ICusto
             x += 10;
         }
         var rank = row.Rank!;
-        rank.SetForegroundBrush(p.Brush(color));
+        var rankBrush = p.Brush(color);
         var roll = row.RankRoll.Value;
         var shift = 6 * row.RankDirection;
-        using (context.PushClip(new Rect(x - 1, centerY - rank.Height / 2 - 1, Math.Max(rank.Width, row.RankOld?.Width ?? 0) + 2, rank.Height + 2)))
+        using (context.PushClip(new Rect(x - 1, centerY - rank.Height / 2 - 1, Math.Max(rank.TextWidth, row.RankOld?.TextWidth ?? 0) + 2, rank.Height + 2)))
         {
             if (roll < 0.999 && row.RankOld is { } old)
             {
                 using (context.PushOpacity(1 - roll))
                 {
-                    old.SetForegroundBrush(p.Brush(color));
-                    context.DrawText(old, new Point(x, centerY - old.Height / 2 - shift * roll));
+                    old.Draw(context, new Point(x, centerY - old.Height / 2 - shift * roll), rankBrush);
                 }
             }
             using (context.PushOpacity(ChartsBMath.Clamp(roll, 0, 1)))
             {
-                context.DrawText(rank, new Point(x, centerY - rank.Height / 2 + shift * (1 - roll)));
+                rank.Draw(context, new Point(x, centerY - rank.Height / 2 + shift * (1 - roll)), rankBrush);
             }
         }
     }

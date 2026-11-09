@@ -89,6 +89,8 @@ internal sealed class AgentCursorTextView : Control
     private double _layoutWidth = double.NaN;
     private bool _layoutDirty = true;
     private Color _accent = Colors.Gray;
+    private ImmutableSolidColorBrush? _tintBrush;
+    private ImmutableSolidColorBrush? _selectionBrush;
     private double _tintStrength = 1;
     private (int Start, int Length) _flag;
     private MotionValue<double>? _textFade;
@@ -461,7 +463,11 @@ internal sealed class AgentCursorTextView : Control
         _drawn.Clear();
         if (_tints.Count > 0 && _tintStrength > 0)
         {
-            var tint = new ImmutableSolidColorBrush(_accent, TintOpacity);
+            if (_tintBrush is null || _tintBrush.Color != _accent || _tintBrush.Opacity != TintOpacity)
+            {
+                _tintBrush = new ImmutableSolidColorBrush(_accent, TintOpacity);
+            }
+            var tint = _tintBrush;
             var radius = TintCornerRadius.TopLeft;
             foreach (var t in _tints)
             {
@@ -475,7 +481,11 @@ internal sealed class AgentCursorTextView : Control
         }
         if (_selection.Length > 0)
         {
-            _selection.Background = new ImmutableSolidColorBrush(_accent, SelectionOpacity);
+            if (_selectionBrush is null || _selectionBrush.Color != _accent || _selectionBrush.Opacity != SelectionOpacity)
+            {
+                _selectionBrush = new ImmutableSolidColorBrush(_accent, SelectionOpacity);
+            }
+            _selection.Background = _selectionBrush;
             _selection.CornerRadius = TintCornerRadius.TopLeft;
             _selection.Outset = new Thickness(TintOutset.Left, 0);
             _drawn.Add(_selection);

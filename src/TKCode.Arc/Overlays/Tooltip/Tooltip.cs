@@ -293,17 +293,21 @@ public class Tooltip : ContentControl
     }
 }
 
-/// <summary>Wraps string tooltip content in a wrapping text block limited to the bubble's text width.</summary>
+/// <summary>
+/// Wraps string tooltip content in a wrapping text block limited to the bubble's text width. A control passes through
+/// as itself: a presenter that has a template sends controls through it too, and with no match falls back to
+/// the default template, which would show the control's type name.
+/// </summary>
 internal sealed class TooltipTextTemplate : Avalonia.Controls.Templates.IDataTemplate
 {
     public double MaxTextWidth { get; set; } = 206;
 
-    public Control? Build(object? param) => new TextBlock
+    public Control? Build(object? param) => param as Control ?? new TextBlock
     {
         Text = param as string ?? Convert.ToString(param, System.Globalization.CultureInfo.CurrentCulture),
         TextWrapping = Avalonia.Media.TextWrapping.Wrap,
         MaxWidth = MaxTextWidth
     };
 
-    public bool Match(object? data) => data is string or IFormattable;
+    public bool Match(object? data) => data is string or IFormattable or Control;
 }
