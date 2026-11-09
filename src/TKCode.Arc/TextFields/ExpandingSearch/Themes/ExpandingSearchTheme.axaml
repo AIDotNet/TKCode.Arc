@@ -20,6 +20,7 @@
             <ControlTemplate TargetType="arc:ExpandingSearchInput">
                 <Border Background="Transparent" Padding="{TemplateBinding Padding}">
                     <ScrollViewer Name="PART_ScrollViewer"
+                                  Theme="{DynamicResource FieldScrollViewerTheme}"
                                   HorizontalScrollBarVisibility="Hidden"
                                   VerticalScrollBarVisibility="Disabled"
                                   VerticalAlignment="Center">
@@ -134,10 +135,10 @@
         <Setter Property="ClipToBounds" Value="False" />
         <Setter Property="MinWidth" Value="{arc:ArcDesignTokenResource ControlSizeMD}" />
 
-        <Style Selector="^[Anchor=Start] /template/ Panel#PART_ShellHost">
+        <Style Selector="^:anchor-start /template/ Panel#PART_ShellHost">
             <Setter Property="HorizontalAlignment" Value="Left" />
         </Style>
-        <Style Selector="^[Anchor=Start] /template/ Border#PART_PanelAnchor">
+        <Style Selector="^:anchor-start /template/ Border#PART_PanelAnchor">
             <Setter Property="HorizontalAlignment" Value="Left" />
         </Style>
 

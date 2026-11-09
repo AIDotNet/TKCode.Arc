@@ -1,4 +1,3 @@
-using System.Globalization;
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
 using Avalonia;
@@ -11,6 +10,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
+using Avalonia.Media.TextFormatting;
 using AvaloniaButton = Avalonia.Controls.Button;
 
 namespace TKCode.Arc;
@@ -161,7 +161,9 @@ internal sealed class ShortcutRecorderButton : AvaloniaButton
     {
         public required string Id { get; init; }
         public string Label { get; set; } = string.Empty;
-        public FormattedText? Text { get; set; }
+        // TextLayout, not FormattedText: FormattedText.Draw re-shapes on every Draw and a cap redraws every frame while
+        // it pops in, is held or leaves; a layout keeps its shaped line (rebuilt only when its ink colour changes).
+        public TextLayout? Text { get; set; }
         public double Width { get; set; }
         public double TargetX { get; set; }
         public required MotionValue<double> X { get; init; }
@@ -192,6 +194,8 @@ internal sealed class ShortcutRecorderButton : AvaloniaButton
 
         public void Dispose()
         {
+            Text?.Dispose();
+            Text = null;
             X.Dispose();
             Pop.Dispose();
             Fade.Dispose();
@@ -208,7 +212,7 @@ internal sealed class ShortcutRecorderButton : AvaloniaButton
         public required string Key { get; init; }
         public string Text { get; set; } = string.Empty;
         public bool IsPrompt { get; init; }
-        public FormattedText? Shaped { get; set; }
+        public TextLayout? Shaped { get; set; }
         public double X { get; set; }
         public required MotionValue<double> Enter { get; init; }
         public required MotionValue<double> Exit { get; init; }
@@ -339,6 +343,7 @@ internal sealed class ShortcutRecorderButton : AvaloniaButton
                 if (cap.Label != token.Label)
                 {
                     cap.Label = token.Label;
+                    cap.Text?.Dispose();
                     cap.Text = null;
                     ShapeCap(cap);
                 }
@@ -381,6 +386,7 @@ internal sealed class ShortcutRecorderButton : AvaloniaButton
             else if (_hint.Text != text)
             {
                 _hint.Text = text;
+                _hint.Shaped?.Dispose();
                 _hint.Shaped = null;
                 ShapeHint(_hint);
             }
@@ -662,11 +668,13 @@ internal sealed class ShortcutRecorderButton : AvaloniaButton
         _shapeDirty = false;
         foreach (var cap in _caps)
         {
+            cap.Text?.Dispose();
             cap.Text = null;
             ShapeCap(cap);
         }
         if (_hint is not null)
         {
+            _hint.Shaped?.Dispose();
             _hint.Shaped = null;
             ShapeHint(_hint);
         }
@@ -676,10 +684,7 @@ internal sealed class ShortcutRecorderButton : AvaloniaButton
     {
         if (cap.Text is null)
         {
-            var text = new FormattedText(cap.Label, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, CapTypeface,
-                KeyCapFontSize, cap.Ink ?? KeyCapForeground);
-            text.SetFontFeatures(s_tabular);
-            cap.Text = text;
+            cap.Text = new TextLayout(cap.Label, CapTypeface, KeyCapFontSize, cap.Ink ?? KeyCapForeground, fontFeatures: s_tabular);
         }
         var padding = KeyCapPadding;
         cap.Width = Math.Max(KeyCapMinWidth, cap.Text.WidthIncludingTrailingWhitespace + padding.Left + padding.Right + 2);
@@ -687,8 +692,8 @@ internal sealed class ShortcutRecorderButton : AvaloniaButton
 
     private void ShapeHint(Hint hint)
     {
-        hint.Shaped ??= new FormattedText(hint.Text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight,
-            new Typeface(FontFamily), PlaceholderFontSize, hint.IsPrompt ? PromptForeground : PlaceholderForeground);
+        hint.Shaped ??= new TextLayout(hint.Text, new Typeface(FontFamily), PlaceholderFontSize,
+            hint.IsPrompt ? PromptForeground : PlaceholderForeground);
     }
 
     protected override Size MeasureOverride(Size availableSize)
@@ -773,7 +778,7 @@ internal sealed class ShortcutRecorderButton : AvaloniaButton
         using (context.PushOpacity(opacity))
         using (PushBlur(context, blur, new Rect(origin, new Size(text.WidthIncludingTrailingWhitespace, text.Height))))
         {
-            context.DrawText(text, origin);
+            text.Draw(context, origin);
         }
     }
 
@@ -818,6 +823,12 @@ internal sealed class ShortcutRecorderButton : AvaloniaButton
         var warn = Math.Clamp(cap.Warn.Value, 0, 1);
         var edge = KeyCapBottomEdge - (KeyCapBottomEdge - 1) * press;
         UpdateCapBrushes(cap, press, warn);
+        if (cap.Text is null)
+        {
+            // The ink colour changed (a press or warning tween): the label is laid out again with the new brush.
+            ShapeCap(cap);
+            text = cap.Text!;
+        }
 
         // The slot scales around its centre; the held cap drops a pixel inside it.
         var matrix = Matrix.CreateTranslation(-w / 2, -h / 2 + cap.Drop.Value)
@@ -836,7 +847,7 @@ internal sealed class ShortcutRecorderButton : AvaloniaButton
             var contentHeight = h - 1 - edge - KeyCapPadding.Bottom;
             var tx = (w - text.WidthIncludingTrailingWhitespace) / 2;
             var ty = contentTop + (contentHeight - text.Height) / 2;
-            context.DrawText(text, new Point(tx, ty));
+            text.Draw(context, new Point(tx, ty));
         }
     }
 
@@ -891,7 +902,9 @@ internal sealed class ShortcutRecorderButton : AvaloniaButton
         {
             cap.TextColor = ink;
             cap.Ink = new ImmutableSolidColorBrush(ink);
-            cap.Text?.SetForegroundBrush(cap.Ink);
+            // The brush is baked into the layout; DrawCap lays the label out again with the new ink.
+            cap.Text?.Dispose();
+            cap.Text = null;
         }
     }
 

@@ -122,15 +122,15 @@
         <Style Selector="^:focus-visible">
             <Setter Property="UnderlineBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
         </Style>
-        <Style Selector="^[IsQuiet=True]">
+        <Style Selector="^:quiet">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
             <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
         </Style>
-        <Style Selector="^[IsQuiet=True]:hover">
+        <Style Selector="^:quiet:hover">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         </Style>
         <!-- Arc gives the quiet link no focus answer at all; it takes its hover colour so keyboard focus is visible. -->
-        <Style Selector="^[IsQuiet=True]:focus-visible">
+        <Style Selector="^:quiet:focus-visible">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         </Style>
         <Style Selector="^:motion-full">

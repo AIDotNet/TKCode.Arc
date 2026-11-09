@@ -10,7 +10,7 @@
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
         <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
-        <Style Selector="^[Kind=Error]">
+        <Style Selector="^:error">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
         </Style>
     </ControlTheme>

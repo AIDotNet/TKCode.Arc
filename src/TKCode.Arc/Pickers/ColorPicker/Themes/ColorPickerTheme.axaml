@@ -13,12 +13,6 @@
                            Description="{TemplateBinding Description}"
                            ErrorMessage="{TemplateBinding ErrorMessage}">
                     <Panel HorizontalAlignment="Left">
-                        <Border Name="PART_FocusRing"
-                                IsVisible="False"
-                                IsHitTestVisible="False"
-                                Margin="{arc:ColorPickerTokenResource TriggerFocusRingMargin}"
-                                BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                                BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                         <Border Name="PART_Trigger"
                                 BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                 Background="{arc:ColorPickerTokenResource PanelFill}"
@@ -72,9 +66,6 @@
             <Setter Property="Width" Value="{arc:ColorPickerTokenResource ChipDiameter}" />
             <Setter Property="Height" Value="{arc:ColorPickerTokenResource ChipDiameter}" />
         </Style>
-        <Style Selector="^ /template/ Border#PART_FocusRing">
-            <Setter Property="CornerRadius" Value="{arc:ColorPickerTokenResource TriggerFocusRingRadius}" />
-        </Style>
         <Style Selector="^[Size=Small]">
             <Style Selector="^ /template/ Border#PART_Trigger">
                 <Setter Property="Height" Value="{arc:ColorPickerTokenResource TriggerHeightSM}" />
@@ -85,18 +76,12 @@
                 <Setter Property="Width" Value="{arc:ColorPickerTokenResource ChipDiameterSM}" />
                 <Setter Property="Height" Value="{arc:ColorPickerTokenResource ChipDiameterSM}" />
             </Style>
-            <Style Selector="^ /template/ Border#PART_FocusRing">
-                <Setter Property="CornerRadius" Value="{arc:ColorPickerTokenResource TriggerFocusRingRadiusSM}" />
-            </Style>
             <Style Selector="^ /template/ TextBlock#PART_TriggerName">
                 <Setter Property="IsVisible" Value="False" />
             </Style>
         </Style>
         <Style Selector="^ /template/ Border#PART_Trigger:pointerover">
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
-        </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
         </Style>
         <Style Selector="^:disabled /template/ Border#PART_Trigger">
             <Setter Property="Opacity" Value="0.5" />
@@ -364,13 +349,6 @@
                                           VerticalAlignment="Center"
                                           Content="{TemplateBinding Content}" />
                     </Border>
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            Margin="2"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{arc:ColorPickerTokenResource FormatFocusRingRadius}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
         </Setter>
@@ -383,9 +361,6 @@
         <Setter Property="VerticalAlignment" Value="Stretch" />
         <Style Selector="^:pointerover">
             <Setter Property="Background" Value="{arc:ColorPickerTokenResource FormatHoverFill}" />
-        </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
         </Style>
         <Style Selector="^:motion-full">
             <Setter Property="Transitions">
@@ -407,13 +382,6 @@
                                   HorizontalAlignment="Center"
                                   VerticalAlignment="Center"
                                   Foreground="{TemplateBinding Foreground}" />
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            Margin="-4"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{arc:ColorPickerTokenResource AddFocusRingRadius}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
         </Setter>
@@ -432,9 +400,6 @@
         </Style>
         <Style Selector="^:pressed">
             <Setter Property="RenderTransform" Value="scale(0.92)" />
-        </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
         </Style>
         <Style Selector="^:motion-full">
             <Setter Property="Transitions">

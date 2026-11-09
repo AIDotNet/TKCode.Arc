@@ -1,3 +1,4 @@
+using Avalonia.Media;
 using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Primitives;
 using Avalonia;
@@ -172,6 +173,7 @@ public class Select : SelectingItemsControl, ISelectOptionHost, ISelectFieldAuto
     private Border? _surface;
     private ScrollViewer? _scroll;
     private SelectOptionView? _options;
+    private DockPanel? _menuDock;
     private Border? _scrollUp;
     private Border? _scrollDown;
     private TextBlock? _announcer;
@@ -253,6 +255,7 @@ public class Select : SelectingItemsControl, ISelectOptionHost, ISelectFieldAuto
         _scrollUp = e.NameScope.Find<Border>(ScrollUpPart);
         _scrollDown = e.NameScope.Find<Border>(ScrollDownPart);
         _announcer = e.NameScope.Find<TextBlock>(AnnouncerPart);
+        _menuDock = null;
 
         if (_trigger is not null)
         {
@@ -268,17 +271,7 @@ public class Select : SelectingItemsControl, ISelectOptionHost, ISelectFieldAuto
             _popup.Closed += OnPopupClosed;
             _popup.Opened += OnPopupOpened;
         }
-        if (_scroll is not null)
-        {
-            _scroll.ScrollChanged += OnScrollChanged;
-            UpdateScrollMaxHeight();
-        }
-        if (_options is not null)
-        {
-            _options.Host = this;
-            _optionsDirty = true;
-        }
-        AttachScrollButtons();
+        WireMenu();
         UpdateValue(animate: false);
         if (IsOpen)
         {
@@ -375,6 +368,50 @@ public class Select : SelectingItemsControl, ISelectOptionHost, ISelectFieldAuto
 
     // ---------------------------------------------------------------- popup
 
+    /// <summary>Builds the menu on the first open (a template that declares its own PART_Options keeps it).</summary>
+    private void EnsureMenu()
+    {
+        if (_options is not null || _popup is null)
+        {
+            return;
+        }
+        _options = SelectMenuParts.Options(SelectCheckMode.ScaleIn)
+            .Token(SelectOptionView.RowHeightProperty, SelectTokens.Key(SelectTokenKind.OptionHeight))
+            .Token(SelectOptionView.RowCornerRadiusProperty, SelectTokens.Key(SelectTokenKind.OptionCornerRadius))
+            .Token(SelectOptionView.RowPaddingProperty, SelectTokens.Key(SelectTokenKind.OptionPadding))
+            .Token(SelectOptionView.CheckInsetProperty, SelectTokens.Key(SelectTokenKind.IndicatorInset))
+            .Token(SelectOptionView.DisabledOpacityProperty, SelectTokens.Key(SelectTokenKind.OptionDisabledOpacity));
+        _options.GlideHighlight = true;
+        _scroll = new ScrollViewer
+        {
+            Name = ScrollPart,
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+            VerticalScrollBarVisibility = ScrollBarVisibility.Hidden,
+            Content = _options
+        }.Token(ScrollViewer.PaddingProperty, SelectTokens.Key(SelectTokenKind.ViewportPadding));
+        _menuDock = new DockPanel { Children = { _scroll } };
+        _surface = SelectMenuParts.Surface(_menuDock)
+            .Token(Border.PaddingProperty, SelectTokens.Key(SelectTokenKind.MenuPadding))
+            .Token(Border.CornerRadiusProperty, SelectTokens.Key(SelectTokenKind.MenuCornerRadius));
+        _popup.Child = _surface;
+        WireMenu();
+    }
+
+    private void WireMenu()
+    {
+        if (_scroll is not null)
+        {
+            _scroll.ScrollChanged += OnScrollChanged;
+            UpdateScrollMaxHeight();
+        }
+        if (_options is not null)
+        {
+            _options.Host = this;
+            _optionsDirty = true;
+        }
+        AttachScrollButtons();
+    }
+
     private void OpenPopup()
     {
         if (!IsEffectivelyEnabled || _popup is null)
@@ -385,6 +422,7 @@ public class Select : SelectingItemsControl, ISelectOptionHost, ISelectFieldAuto
             }
             return;
         }
+        EnsureMenu();
         _typeahead.Reset();
         EnsureOptions();
         UpdateSurfaceWidth();
@@ -682,12 +720,14 @@ public class Select : SelectingItemsControl, ISelectOptionHost, ISelectFieldAuto
 
     private void AttachScrollButtons()
     {
-        foreach (var button in new[] { _scrollUp, _scrollDown })
+        AttachScrollButton(_scrollUp);
+        AttachScrollButton(_scrollDown);
+    }
+
+    private void AttachScrollButton(Border? button)
+    {
+        if (button is not null)
         {
-            if (button is null)
-            {
-                continue;
-            }
             button.PointerEntered += OnScrollButtonEntered;
             button.PointerExited += OnScrollButtonExited;
         }
@@ -695,15 +735,38 @@ public class Select : SelectingItemsControl, ISelectOptionHost, ISelectFieldAuto
 
     private void DetachScrollButtons()
     {
-        foreach (var button in new[] { _scrollUp, _scrollDown })
+        DetachScrollButton(_scrollUp);
+        DetachScrollButton(_scrollDown);
+    }
+
+    private void DetachScrollButton(Border? button)
+    {
+        if (button is not null)
         {
-            if (button is null)
-            {
-                continue;
-            }
             button.PointerEntered -= OnScrollButtonEntered;
             button.PointerExited -= OnScrollButtonExited;
         }
+    }
+
+    /// <summary>A scroll button, built the first time the list can scroll that way (most lists never do).</summary>
+    private Border? CreateScrollButton(bool up)
+    {
+        if (_menuDock is null || _scroll is null)
+        {
+            return null;
+        }
+        var button = new Border
+        {
+            Name = up ? ScrollUpPart : ScrollDownPart,
+            IsVisible = false,
+            Background = Brushes.Transparent,
+            Child = SelectMenuParts.Glyph(up ? ArcIcons.ChevronUp : ArcIcons.ChevronDown)
+        }.Token(HeightProperty, SelectTokens.Key(SelectTokenKind.ScrollButtonHeight));
+        DockPanel.SetDock(button, up ? Dock.Top : Dock.Bottom);
+        // Before the list: it takes the room that is left.
+        _menuDock.Children.Insert(_menuDock.Children.IndexOf(_scroll), button);
+        AttachScrollButton(button);
+        return button;
     }
 
     private void OnScrollChanged(object? sender, ScrollChangedEventArgs e) => UpdateScrollButtons();
@@ -716,13 +779,23 @@ public class Select : SelectingItemsControl, ISelectOptionHost, ISelectFieldAuto
         }
         var offset = _scroll.Offset.Y;
         var max = Math.Max(0, _scroll.Extent.Height - _scroll.Viewport.Height);
+        var showUp = offset > 0.5;
+        var showDown = max - offset > 0.5;
+        if (showUp)
+        {
+            _scrollUp ??= CreateScrollButton(up: true);
+        }
+        if (showDown)
+        {
+            _scrollDown ??= CreateScrollButton(up: false);
+        }
         if (_scrollUp is not null)
         {
-            _scrollUp.IsVisible = offset > 0.5;
+            _scrollUp.IsVisible = showUp;
         }
         if (_scrollDown is not null)
         {
-            _scrollDown.IsVisible = max - offset > 0.5;
+            _scrollDown.IsVisible = showDown;
         }
         if ((_autoScrollDirection < 0 && offset <= 0.5) || (_autoScrollDirection > 0 && max - offset <= 0.5))
         {

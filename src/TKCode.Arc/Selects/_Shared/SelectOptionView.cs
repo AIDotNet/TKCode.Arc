@@ -171,6 +171,7 @@ internal sealed class SelectOptionView : Control
     private int _pressed = -1;
     private Pen? _checkPen;
     private Pen? _iconPen;
+    private Pen? _chevronPen;
 
     private struct Row
     {
@@ -695,10 +696,13 @@ internal sealed class SelectOptionView : Control
             return;
         }
         var scale = rect.Width / 24.0;
-        var pen = new Pen(brush, 2, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round);
+        if (_chevronPen is null || !ReferenceEquals(_chevronPen.Brush, brush))
+        {
+            _chevronPen = new Pen(brush, 2, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round);
+        }
         using (context.PushTransform(Matrix.CreateScale(scale, scale) * Matrix.CreateTranslation(rect.X, rect.Y)))
         {
-            context.DrawGeometry(null, pen, ArcIcons.ChevronRight);
+            context.DrawGeometry(null, _chevronPen, ArcIcons.ChevronRight);
         }
     }
 

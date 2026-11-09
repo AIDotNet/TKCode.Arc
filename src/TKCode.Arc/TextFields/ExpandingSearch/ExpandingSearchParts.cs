@@ -26,6 +26,9 @@ internal sealed class ExpandingSearchTrigger : AvaloniaButton
 /// <summary>One result row: an optional 18px icon, the title with its match in medium weight, and a meta line.</summary>
 internal sealed class ExpandingSearchOption : Border
 {
+    // One platform cursor for every row, not one per row.
+    private static readonly Cursor s_hand = new(StandardCursorType.Hand);
+
     public ExpandingSearchOption(ExpandingSearchItem item, string query, int index)
     {
         Item = item;
@@ -34,7 +37,7 @@ internal sealed class ExpandingSearchOption : Border
         MinHeight = 48;
         Padding = new Thickness(12, 6);
         this.BindCornerRadius(ArcDesignTokenKind.RadiusStep20);
-        Cursor = new Cursor(StandardCursorType.Hand);
+        Cursor = s_hand;
         var row = new DockPanel { VerticalAlignment = VerticalAlignment.Center };
         if (item.Icon is { } icon)
         {

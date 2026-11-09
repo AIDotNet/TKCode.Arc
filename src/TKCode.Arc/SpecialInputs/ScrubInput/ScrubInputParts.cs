@@ -7,7 +7,9 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
+using TKCode.Arc.Primitives;
 using AvaloniaButton = Avalonia.Controls.Button;
 using AvaloniaTextBox = Avalonia.Controls.TextBox;
 
@@ -232,9 +234,32 @@ internal sealed class ScrubInputUnitButton : AvaloniaButton
 
     protected override Type StyleKeyOverride => typeof(ScrubInputUnitButton);
 
+    // The unit is rarely keyboard focused (only when it cycles): the ring is built on the first :focus-visible.
+    private FieldFocusRing? _focusRing;
+
     public ScrubInputUnitButton()
     {
         ApplyCycling();
+    }
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        _focusRing ??= new FieldFocusRing(this, ScrubInputTokens.Key(ScrubInputTokenKind.UnitFocusRingMargin),
+            ScrubInputTokens.Key(ScrubInputTokenKind.UnitFocusRingRadius));
+        _focusRing.Attach(e.NameScope.Find<Panel>("PART_Host"));
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing?.Update();
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -291,7 +316,6 @@ internal sealed class ScrubInputUnitSwap : Control
 
     private readonly TextBlock[] _layers = new TextBlock[2];
     private readonly TranslateTransform[] _offsets = new TranslateTransform[2];
-    private readonly BlurEffect[] _blurs = new BlurEffect[2];
     private int _current;
     private bool _exiting;
     private MotionValue<double>? _enter;
@@ -304,7 +328,6 @@ internal sealed class ScrubInputUnitSwap : Control
         for (var i = 0; i < 2; i++)
         {
             _offsets[i] = new TranslateTransform();
-            _blurs[i] = new BlurEffect { Radius = 0 };
             _layers[i] = new TextBlock
             {
                 RenderTransform = _offsets[i],
@@ -410,17 +433,11 @@ internal sealed class ScrubInputUnitSwap : Control
     private void Apply(int layer, double y, double blur)
     {
         _offsets[layer].Y = y;
-        if (blur > 0.01)
+        // Quantized, cached blur (ArcBlur; null when it rounds to zero): no per-frame filter rebuild.
+        var effect = blur > 0.01 ? ArcBlur.Get(blur) : null;
+        if (!ReferenceEquals(_layers[layer].Effect, effect))
         {
-            _blurs[layer].Radius = blur;
-            if (_layers[layer].Effect is null)
-            {
-                _layers[layer].Effect = _blurs[layer];
-            }
-        }
-        else if (_layers[layer].Effect is not null)
-        {
-            _layers[layer].Effect = null;
+            _layers[layer].Effect = effect;
         }
     }
 

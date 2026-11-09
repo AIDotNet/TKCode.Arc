@@ -86,7 +86,7 @@
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:TagInputRemoveButton">
-                <Panel>
+                <Panel Name="PART_Host">
                     <Border Name="PART_Surface"
                             Background="{TemplateBinding Background}"
                             CornerRadius="{TemplateBinding CornerRadius}" />
@@ -96,12 +96,6 @@
                                   StrokeThickness="{arc:TagInputTokenResource RemoveGlyphStroke}"
                                   HorizontalAlignment="Center"
                                   VerticalAlignment="Center" />
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            BorderThickness="{arc:TagInputTokenResource RemoveFocusRingThickness}"
-                            CornerRadius="{TemplateBinding CornerRadius}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
         </Setter>
@@ -128,9 +122,6 @@
         <Style Selector="^:focus-visible">
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
-            <Style Selector="^ /template/ Border#PART_FocusRing">
-                <Setter Property="IsVisible" Value="True" />
-            </Style>
         </Style>
 
         <!-- Colours on fast + standard ease; reduced motion has no transitions (Arc). The press scale is code-driven. -->
@@ -150,6 +141,7 @@
             <ControlTemplate TargetType="arc:TagInputEditor">
                 <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
                     <ScrollViewer Name="PART_ScrollViewer"
+                                  Theme="{DynamicResource FieldScrollViewerTheme}"
                                   HorizontalScrollBarVisibility="Hidden"
                                   VerticalScrollBarVisibility="Disabled">
                         <TextPresenter Name="PART_TextPresenter"

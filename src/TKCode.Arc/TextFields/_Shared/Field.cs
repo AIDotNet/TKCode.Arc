@@ -22,7 +22,7 @@ namespace TKCode.Arc;
 [TemplatePart(LabelPart, typeof(TextBlock))]
 [TemplatePart(DescriptionPart, typeof(FieldMessage))]
 [TemplatePart(ErrorPart, typeof(FieldMessage))]
-[PseudoClasses(InvalidPseudoClass)]
+[PseudoClasses(InvalidPseudoClass, SmallPseudoClass, LargePseudoClass)]
 public class Field : ContentControl
 {
     public const string LabelPart = "PART_Label";
@@ -31,6 +31,12 @@ public class Field : ContentControl
 
     /// <summary>Set while <see cref="IsInvalid"/> is true.</summary>
     public const string InvalidPseudoClass = ":invalid";
+
+    /// <summary><see cref="Size"/> Small or Large as a pseudo-class (Medium has none); the theme selects on these, not on the property.</summary>
+    public const string SmallPseudoClass = ":small";
+
+    /// <inheritdoc cref="SmallPseudoClass"/>
+    public const string LargePseudoClass = ":large";
 
     /// <summary>The visible label (Arc: required). Also the accessible name of the content.</summary>
     public static readonly StyledProperty<string?> LabelProperty =
@@ -86,6 +92,18 @@ public class Field : ContentControl
     private static bool CoerceIsInvalid(AvaloniaObject target, bool value)
         => value || !string.IsNullOrEmpty(((Field)target).ErrorMessage);
 
+    public Field()
+    {
+        UpdateSizePseudoClasses();
+    }
+
+    private void UpdateSizePseudoClasses()
+    {
+        var size = Size;
+        PseudoClasses.Set(SmallPseudoClass, size == ControlSize.Small);
+        PseudoClasses.Set(LargePseudoClass, size == ControlSize.Large);
+    }
+
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
@@ -116,6 +134,10 @@ public class Field : ContentControl
         else if (change.Property == LabelProperty || change.Property == DescriptionProperty || change.Property == ContentProperty)
         {
             UpdateContentAutomation();
+        }
+        else if (change.Property == SizeProperty)
+        {
+            UpdateSizePseudoClasses();
         }
     }
 

@@ -1,3 +1,5 @@
+using Avalonia.Media;
+using TKCode.Arc.DesignTokens;
 using System.Collections;
 using TKCode.Arc.Primitives;
 using Avalonia;
@@ -168,6 +170,7 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
 
     private readonly SelectEntrySource _entries;
     private readonly List<int> _visible = new();
+    private LazyFocusRing? _focusRing;
     private readonly List<object?> _order = new();
     private IReadOnlyList<object?> _selectedValues = Array.Empty<object?>();
     private string _query = string.Empty;
@@ -181,6 +184,8 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
     private SelectOptionView? _options;
     private Decorator? _searchHost;
     private TextBox? _search;
+    private DockPanel? _menuDock;
+    private Border? _searchRow;
     private PresenceHost? _emptyHost;
     private TextBlock? _announcer;
     private bool _syncingSearch;
@@ -235,6 +240,9 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
+        // Built the first time the field is keyboard focused, under the trigger in the field's panel.
+        _focusRing ??= new LazyFocusRing(this, MultiSelectTokens.Key(MultiSelectTokenKind.FocusRingMargin), MultiSelectTokens.Key(MultiSelectTokenKind.FocusRingRadius));
+        _focusRing.Attach(e.NameScope.Find<Control>(TriggerPart)?.Parent as Panel, below: true);
         if (_trigger is not null)
         {
             _trigger.PointerPressed -= OnTriggerPressed;
@@ -257,7 +265,10 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
         {
             _search.RemoveHandler(KeyDownEvent, OnSearchKeyDown);
             _search.PropertyChanged -= OnSearchPropertyChanged;
-            _searchHost!.Child = null;
+            if (_searchHost is not null)
+            {
+                _searchHost.Child = null;
+            }
             _search = null;
         }
 
@@ -270,6 +281,7 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
         _scroll = e.NameScope.Find<ScrollViewer>(ScrollPart);
         _options = e.NameScope.Find<SelectOptionView>(OptionsPart);
         _searchHost = e.NameScope.Find<Decorator>(SearchHostPart);
+        _searchRow = null;
         _emptyHost = e.NameScope.Find<PresenceHost>(EmptyHostPart);
         _announcer = e.NameScope.Find<TextBlock>(AnnouncerPart);
 
@@ -294,14 +306,7 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
         {
             _options.Host = this;
         }
-        if (_searchHost is not null)
-        {
-            _search = SelectInputBox.Create();
-            _search.AddHandler(KeyDownEvent, OnSearchKeyDown, RoutingStrategies.Tunnel);
-            _search.PropertyChanged += OnSearchPropertyChanged;
-            _search.PlaceholderText = SearchPlaceholder;
-            _searchHost.Child = _search;
-        }
+        _menuDock = null;
         if (_scroll is not null)
         {
             _scroll.MaxHeight = MaxDropDownHeight;
@@ -340,6 +345,14 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
         else if (change.Property == IsSearchableProperty)
         {
             PseudoClasses.Set(SearchablePseudoClass, IsSearchable);
+            if (IsOpen)
+            {
+                EnsureSearch();
+            }
+            if (_searchRow is not null)
+            {
+                _searchRow.IsVisible = IsSearchable;
+            }
         }
         else if (change.Property == SearchPlaceholderProperty && _search is not null)
         {
@@ -415,11 +428,13 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
 
     private void RebuildOrder()
     {
-        var selected = Selection.SelectedItems;
+        // Sets: selecting all of a long list was quadratic.
+        var selected = new HashSet<object?>(Selection.SelectedItems);
         _order.RemoveAll(item => !selected.Contains(item));
-        foreach (var item in selected)
+        var ordered = new HashSet<object?>(_order);
+        foreach (var item in Selection.SelectedItems)
         {
-            if (!_order.Contains(item))
+            if (ordered.Add(item))
             {
                 _order.Add(item);
             }
@@ -454,6 +469,83 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
 
     // ---------------------------------------------------------------- popup
 
+    /// <summary>Builds the menu on the first open (a template that declares its own PART_Options keeps it).</summary>
+    private void EnsureMenu()
+    {
+        if (_options is not null || _popup is null)
+        {
+            return;
+        }
+        _options = SelectMenuParts.Options(SelectCheckMode.Draw)
+            .Token(SelectOptionView.RowHeightProperty, MultiSelectTokens.Key(MultiSelectTokenKind.OptionHeight))
+            .Token(SelectOptionView.RowCornerRadiusProperty, MultiSelectTokens.Key(MultiSelectTokenKind.OptionCornerRadius))
+            .Token(SelectOptionView.RowPaddingProperty, MultiSelectTokens.Key(MultiSelectTokenKind.OptionPadding))
+            .Token(SelectOptionView.DisabledOpacityProperty, MultiSelectTokens.Key(MultiSelectTokenKind.OptionDisabledOpacity));
+        _options.ContentSpacing = 12;
+        _scroll = new ScrollViewer
+        {
+            Name = ScrollPart,
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+            MaxHeight = MaxDropDownHeight,
+            Content = _options
+        };
+        var empty = new TextBlock { Padding = new Thickness(12), TextWrapping = TextWrapping.Wrap }
+            .Token(TextBlock.ForegroundProperty, ArcDesignTokenKind.TextMuted);
+        empty.Bind(TextBlock.TextProperty, this.GetObservable(EmptyTextProperty));
+        _emptyHost = new PresenceHost { Name = EmptyHostPart, Mode = PresenceMode.Rise, Offset = 4, IsPresent = false, Child = empty };
+        DockPanel.SetDock(_emptyHost, Dock.Bottom);
+        _menuDock = new DockPanel { Children = { _emptyHost, _scroll } };
+        _surface = SelectMenuParts.Surface(_menuDock)
+            .Token(Border.PaddingProperty, MultiSelectTokens.Key(MultiSelectTokenKind.MenuPadding))
+            .Token(Border.CornerRadiusProperty, ArcDesignTokenKind.RadiusPanel);
+        _popup.Child = _surface;
+        _options.Host = this;
+    }
+
+    /// <summary>The search box exists only for a searchable field, from its first open.</summary>
+    private void EnsureSearch()
+    {
+        if (_search is not null || !IsSearchable)
+        {
+            return;
+        }
+        if (_searchHost is null)
+        {
+            if (_menuDock is null)
+            {
+                return;
+            }
+            var glyph = new ArcGlyph
+            {
+                Data = ArcIcons.Search,
+                Size = 16,
+                Margin = new Thickness(0, 0, 8, 0),
+                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
+            }.Token(ArcGlyph.ForegroundProperty, ArcDesignTokenKind.TextMuted);
+            DockPanel.SetDock(glyph, Dock.Left);
+            _searchHost = new Decorator { Name = SearchHostPart, VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center };
+            _searchRow = new Border
+            {
+                Name = "PART_SearchRow",
+                Margin = new Thickness(0, 0, 0, 5),
+                Child = new DockPanel { Children = { glyph, _searchHost } }
+            }
+                .Token(HeightProperty, MultiSelectTokens.Key(MultiSelectTokenKind.SearchRowHeight))
+                .Token(Border.PaddingProperty, MultiSelectTokens.Key(MultiSelectTokenKind.OptionPadding))
+                .Token(Border.BorderThicknessProperty, ArcDesignTokenKind.EdgeThicknessBottom)
+                .Token(Border.BorderBrushProperty, ArcDesignTokenKind.BorderSubtle);
+            DockPanel.SetDock(_searchRow, Dock.Top);
+            // First in the dock, as the template had it: the row takes the top before the empty state and the list.
+            _menuDock.Children.Insert(0, _searchRow);
+        }
+        _search = SelectInputBox.Create();
+        _search.AddHandler(KeyDownEvent, OnSearchKeyDown, RoutingStrategies.Tunnel);
+        _search.PropertyChanged += OnSearchPropertyChanged;
+        _search.PlaceholderText = SearchPlaceholder;
+        _searchHost.Child = _search;
+    }
+
     private void OpenPopup()
     {
         if (!IsEffectivelyEnabled || _popup is null)
@@ -464,6 +556,8 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
             }
             return;
         }
+        EnsureMenu();
+        EnsureSearch();
         if (_surface is not null && _trigger is not null && _trigger.Bounds.Width > 0)
         {
             _surface.Width = _trigger.Bounds.Width;
@@ -696,9 +790,16 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
     {
     }
 
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
     protected override void OnLostFocus(FocusChangedEventArgs e)
     {
         base.OnLostFocus(e);
+        _focusRing?.Update();
         PseudoClasses.Set(PressedPseudoClass, false);
     }
 

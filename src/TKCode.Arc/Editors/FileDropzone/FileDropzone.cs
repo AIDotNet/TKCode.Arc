@@ -434,10 +434,20 @@ public class FileDropzone : TemplatedControl
         try
         {
             await using var stream = await file.OpenReadAsync();
-            var buffer = new MemoryStream();
-            await stream.CopyToAsync(buffer);
-            buffer.Position = 0;
-            var bitmap = await Task.Run(() => Bitmap.DecodeToWidth(buffer, 80));
+            Bitmap bitmap;
+            if (stream.CanSeek)
+            {
+                // The decoder reads the file itself; copying a whole photo into memory first only to scale it to 80px
+                // cost a large-object allocation per image.
+                bitmap = await Task.Run(() => Bitmap.DecodeToWidth(stream, 80));
+            }
+            else
+            {
+                var buffer = new MemoryStream();
+                await stream.CopyToAsync(buffer);
+                buffer.Position = 0;
+                bitmap = await Task.Run(() => Bitmap.DecodeToWidth(buffer, 80));
+            }
             if (Items.Contains(item))
             {
                 item.OwnsPreview = true;

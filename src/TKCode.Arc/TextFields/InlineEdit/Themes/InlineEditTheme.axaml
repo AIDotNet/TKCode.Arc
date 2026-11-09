@@ -27,6 +27,7 @@
             <ControlTemplate TargetType="arc:InlineEditEditor">
                 <Border Background="Transparent" BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}" BorderBrush="Transparent" Padding="{TemplateBinding Padding}">
                     <ScrollViewer Name="PART_ScrollViewer"
+                                  Theme="{DynamicResource FieldScrollViewerTheme}"
                                   HorizontalScrollBarVisibility="Hidden"
                                   VerticalScrollBarVisibility="Disabled">
                         <Panel>
@@ -70,7 +71,7 @@
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:InlineEditActionButton">
-                <Panel>
+                <Panel Name="PART_Host">
                     <Border Name="PART_Surface"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
@@ -80,13 +81,6 @@
                                           VerticalContentAlignment="Center"
                                           Content="{TemplateBinding Content}" />
                     </Border>
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            Margin="-4"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
         </Setter>
@@ -104,7 +98,7 @@
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         </Style>
-        <Style Selector="^[IsPrimary=True]">
+        <Style Selector="^:primary">
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
             <Setter Property="BorderBrush" Value="Transparent" />
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
@@ -113,9 +107,6 @@
                 <Setter Property="BorderBrush" Value="Transparent" />
                 <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
             </Style>
-        </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
         </Style>
         <Style Selector="^:motion-full">
             <Setter Property="RenderTransform" Value="scale(1)" />
@@ -214,7 +205,7 @@
             <Setter Property="LineHeight" Value="{arc:InlineEditTokenResource TitleLineHeight}" />
             <Setter Property="TextWrapping" Value="NoWrap" />
         </Style>
-        <Style Selector="^[Variant=Body]">
+        <Style Selector="^:body">
             <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
             <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
@@ -234,7 +225,7 @@
         </Style>
 
         <!-- Multiline: the box fills the line, text wraps, and the actions stack beside the first line. -->
-        <Style Selector="^[IsMultiline=True]">
+        <Style Selector="^:multiline">
             <Style Selector="^ /template/ Border#PART_Line">
                 <Setter Property="HorizontalAlignment" Value="Stretch" />
                 <Setter Property="Padding" Value="{arc:InlineEditTokenResource MultilineLinePadding}" />
@@ -252,11 +243,11 @@
             <Setter Property="Opacity" Value="0" />
             <Setter Property="IsHitTestVisible" Value="False" />
         </Style>
-        <Style Selector="^:editing[IsMultiline=False] /template/ arc|InlineEditDisplay#PART_Display">
+        <Style Selector="^:editing:not(:multiline) /template/ arc|InlineEditDisplay#PART_Display">
             <Setter Property="Padding" Value="{arc:InlineEditTokenResource TitleEditingPadding}" />
             <Setter Property="MinWidth" Value="{arc:InlineEditTokenResource TitleEditingMinWidth}" />
         </Style>
-        <Style Selector="^:editing[IsMultiline=False][Variant=Body] /template/ arc|InlineEditDisplay#PART_Display">
+        <Style Selector="^:editing:not(:multiline):body /template/ arc|InlineEditDisplay#PART_Display">
             <Setter Property="Padding" Value="{arc:InlineEditTokenResource BodyEditingPadding}" />
             <Setter Property="MinWidth" Value="{arc:InlineEditTokenResource BodyEditingMinWidth}" />
         </Style>

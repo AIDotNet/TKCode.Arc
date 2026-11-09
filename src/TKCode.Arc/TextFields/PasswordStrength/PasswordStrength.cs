@@ -121,6 +121,9 @@ public class PasswordStrength : PasswordField
     private FieldSwapText? _word;
     private Panel? _rulesPanel;
     private TextBlock? _status;
+    // Interpolating the pseudo-class names on every keystroke allocated five strings.
+    private static readonly string[] s_levelClasses = [":level-0", ":level-1", ":level-2", ":level-3", ":level-4"];
+
     private readonly List<RuleRow> _rows = new();
     private CancellationTokenSource? _scoring;
     private double _rank;
@@ -255,7 +258,7 @@ public class PasswordStrength : PasswordField
         StrengthLabel = label;
         for (var level = 0; level <= 4; level++)
         {
-            PseudoClasses.Set($":level-{level}", score.Level == level);
+            PseudoClasses.Set(s_levelClasses[level], score.Level == level);
         }
         _meter?.SetLevel(score.Level, _previousLevel, score.Level > 0 ? label : messages.NoPassword);
         if (_word is not null)

@@ -81,6 +81,10 @@ internal sealed class CascaderColumnsPanel : Control
 
     private readonly List<CascaderColumn> _columns = new();
     private readonly List<double> _widths = new();
+    private readonly Dictionary<string, double> _labelWidths = new();
+    private double _labelWidthsSize = double.NaN;
+    private Typeface _labelWidthsTypeface;
+    private Pen? _dividerPen;
     private MotionValue<double>? _width;
     private double _targetWidth;
     private bool _animate;
@@ -163,6 +167,12 @@ internal sealed class CascaderColumnsPanel : Control
         var typeface = new Typeface(TextElement.GetFontFamily(this), FontStyle.Normal, FontWeight.Normal);
         var fixedWidth = ColumnWidth;
         var gap = ColumnGap;
+        if (fontSize != _labelWidthsSize || typeface != _labelWidthsTypeface)
+        {
+            _labelWidths.Clear();
+            _labelWidthsSize = fontSize;
+            _labelWidthsTypeface = typeface;
+        }
         _widths.Clear();
         var total = 0.0;
         var height = 0.0;
@@ -170,7 +180,7 @@ internal sealed class CascaderColumnsPanel : Control
         {
             var column = _columns[i];
             var width = double.IsNaN(fixedWidth)
-                ? column.MeasureContentWidth(MinColumnWidth, MaxColumnWidth, fontSize, typeface, RowPadding)
+                ? column.MeasureContentWidth(MinColumnWidth, MaxColumnWidth, fontSize, typeface, RowPadding, _labelWidths)
                 : fixedWidth;
             _widths.Add(width);
             column.Measure(new Size(width, double.PositiveInfinity));
@@ -218,7 +228,11 @@ internal sealed class CascaderColumnsPanel : Control
             return;
         }
         var x = 0.0;
-        var pen = new Pen(brush, 1);
+        if (_dividerPen is null || !ReferenceEquals(_dividerPen.Brush, brush))
+        {
+            _dividerPen = new Pen(brush, 1);
+        }
+        var pen = _dividerPen;
         for (var i = 0; i < _columns.Count - 1; i++)
         {
             x += (i < _widths.Count ? _widths[i] : 0) + ColumnGap / 2;

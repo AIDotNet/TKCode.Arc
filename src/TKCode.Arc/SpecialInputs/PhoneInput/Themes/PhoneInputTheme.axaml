@@ -111,6 +111,7 @@
                                 <!-- The number and its guide share one box; the valid check sits 12px from the right edge. -->
                                 <Panel Name="PART_NumberArea">
                                     <ScrollViewer Name="PART_ScrollViewer"
+                                                  Theme="{DynamicResource FieldScrollViewerTheme}"
                                                   Margin="{arc:PhoneInputTokenResource NumberPadding}"
                                                   VerticalAlignment="Center"
                                                   HorizontalScrollBarVisibility="Hidden"

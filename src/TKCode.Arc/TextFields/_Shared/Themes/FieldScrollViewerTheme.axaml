@@ -1,0 +1,42 @@
+<!--
+    The scroller of a single-line field editor (Input, PasswordField, SearchField, PasswordStrength, PhoneInput and the
+    editors inside ExpandingSearch, InlineEdit, TagInput and ScrubInput). Those templates set HorizontalScrollBarVisibility
+    Hidden and VerticalScrollBarVisibility Disabled, so no scroll bar ever shows: this theme keeps only the
+    ScrollContentPresenter the TextBox contract needs (PART_ScrollViewer's Offset, caret BringIntoView and the scroll
+    gesture), instead of the base theme's Grid with two ScrollBar templates (about 16 nodes per field that never draw).
+    Textarea and other scrolling editors keep the base ScrollViewer theme. Referenced as a DynamicResource: the key lives
+    in this file, which the theme provider loads on the first lookup.
+-->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.FieldScrollViewerTheme">
+    <ControlTheme x:Key="FieldScrollViewerTheme" TargetType="ScrollViewer">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="ScrollViewer">
+                <ScrollContentPresenter Name="PART_ContentPresenter"
+                                        Background="{TemplateBinding Background}"
+                                        Content="{TemplateBinding Content}"
+                                        ContentTemplate="{TemplateBinding ContentTemplate}"
+                                        Padding="{TemplateBinding Padding}"
+                                        HorizontalSnapPointsType="{TemplateBinding HorizontalSnapPointsType}"
+                                        VerticalSnapPointsType="{TemplateBinding VerticalSnapPointsType}"
+                                        HorizontalSnapPointsAlignment="{TemplateBinding HorizontalSnapPointsAlignment}"
+                                        VerticalSnapPointsAlignment="{TemplateBinding VerticalSnapPointsAlignment}"
+                                        IsScrollChainingEnabled="{TemplateBinding IsScrollChainingEnabled}"
+                                        ScrollViewer.IsScrollInertiaEnabled="{TemplateBinding IsScrollInertiaEnabled}">
+                    <ScrollContentPresenter.GestureRecognizers>
+                        <ScrollGestureRecognizer CanHorizontallyScroll="{Binding CanHorizontallyScroll, ElementName=PART_ContentPresenter}"
+                                                 CanVerticallyScroll="{Binding CanVerticallyScroll, ElementName=PART_ContentPresenter}"
+                                                 IsScrollInertiaEnabled="{Binding (ScrollViewer.IsScrollInertiaEnabled), ElementName=PART_ContentPresenter}"
+                                                 Offset="{Binding Offset, ElementName=PART_ContentPresenter}"
+                                                 Viewport="{Binding Viewport, ElementName=PART_ContentPresenter}"
+                                                 Extent="{Binding Extent, ElementName=PART_ContentPresenter}" />
+                    </ScrollContentPresenter.GestureRecognizers>
+                </ScrollContentPresenter>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

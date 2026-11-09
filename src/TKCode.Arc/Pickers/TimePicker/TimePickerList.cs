@@ -1,11 +1,10 @@
-using System.Globalization;
 using TKCode.Arc.Motion;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
 using Avalonia.Input;
 using Avalonia.Media;
-using Avalonia.Media.Immutable;
+using Avalonia.Media.TextFormatting;
 using Avalonia.VisualTree;
 
 namespace TKCode.Arc;
@@ -46,7 +45,9 @@ internal sealed class TimePickerList : Control
     public double RowInset { get => GetValue(RowInsetProperty); set => SetValue(RowInsetProperty, value); }
     public double DotDiameter { get => GetValue(DotDiameterProperty); set => SetValue(DotDiameterProperty, value); }
 
-    private readonly Dictionary<int, FormattedText> _texts = new();
+    // TextLayout: the rows are drawn on every scroll frame and highlight fade, and a cached FormattedText re-shapes on
+    // each DrawText.
+    private readonly Dictionary<int, TextLayout> _texts = new();
     private Func<int, string>? _label;
     private int _count;
     private MotionValue<double>? _activeFade;
@@ -82,7 +83,7 @@ internal sealed class TimePickerList : Control
     {
         _count = count;
         _label = label;
-        _texts.Clear();
+        ClearTexts();
         ActiveIndex = Math.Min(ActiveIndex, count - 1);
         InvalidateMeasure();
         InvalidateVisual();
@@ -159,9 +160,18 @@ internal sealed class TimePickerList : Control
         base.OnPropertyChanged(change);
         if (change.Property == FontFamilyProperty || change.Property == FontSizeProperty || change.Property == ForegroundProperty)
         {
-            _texts.Clear();
+            ClearTexts();
             InvalidateVisual();
         }
+    }
+
+    private void ClearTexts()
+    {
+        foreach (var text in _texts.Values)
+        {
+            text.Dispose();
+        }
+        _texts.Clear();
     }
 
     protected override Size MeasureOverride(Size availableSize)
@@ -214,12 +224,11 @@ internal sealed class TimePickerList : Control
         return index < _count ? index : -1;
     }
 
-    private FormattedText TextAt(int index)
+    private TextLayout TextAt(int index)
     {
         if (!_texts.TryGetValue(index, out var text))
         {
-            text = new FormattedText(LabelAt(index), CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
-                new Typeface(FontFamily), FontSize, Foreground ?? Brushes.Black);
+            text = new TextLayout(LabelAt(index), new Typeface(FontFamily), FontSize, Foreground ?? Brushes.Black);
             _texts[index] = text;
         }
         return text;
@@ -253,7 +262,7 @@ internal sealed class TimePickerList : Control
         {
             var text = TextAt(i);
             var y = i * RowHeight + (RowHeight - text.Height) / 2;
-            context.DrawText(text, new Point(RowInset, y));
+            text.Draw(context, new Point(RowInset, y));
         }
         if (SelectedIndex >= first && SelectedIndex <= last && Foreground is { } dot)
         {

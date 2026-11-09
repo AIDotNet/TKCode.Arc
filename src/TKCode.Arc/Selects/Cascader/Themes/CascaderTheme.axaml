@@ -84,13 +84,6 @@
                                                      PlaceholderForeground="{arc:ArcDesignTokenResource TextMuted}" />
                             </DockPanel>
                         </Border>
-                        <Border Name="PART_FocusRing"
-                                IsVisible="False"
-                                IsHitTestVisible="False"
-                                Margin="{arc:CascaderTokenResource FocusRingMargin}"
-                                BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                                CornerRadius="{arc:CascaderTokenResource FocusRingRadius}"
-                                BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                         <arc:ArcPopup Name="PART_Popup"
                                       Placement="Bottom"
                                       MarginToAnchor="4"
@@ -99,29 +92,7 @@
                                       IsExitInstant="True"
                                       IsLightDismissEnabled="True"
                                       TakesFocusFromNativeControl="False"
-                                      WindowManagerAddShadowHint="False">
-                            <Border Name="PART_Surface"
-                                    Padding="{arc:CascaderTokenResource MenuPadding}"
-                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
-                                    CornerRadius="{arc:CascaderTokenResource MenuCornerRadius}"
-                                    Background="{arc:ArcDesignTokenResource SurfaceRaised}"
-                                    BorderBrush="{arc:ArcDesignTokenResource Border}">
-                                <arc:CascaderColumnsPanel Name="PART_Columns"
-                                                          RowHeight="{arc:CascaderTokenResource OptionHeight}"
-                                                          RowCornerRadius="{arc:CascaderTokenResource OptionCornerRadius}"
-                                                          RowPadding="{arc:CascaderTokenResource OptionPadding}"
-                                                          ChevronInset="{arc:CascaderTokenResource ChevronInset}"
-                                                          DisabledOpacity="{arc:CascaderTokenResource OptionDisabledOpacity}"
-                                                          MinColumnWidth="{arc:CascaderTokenResource MinColumnWidth}"
-                                                          MaxColumnWidth="{arc:CascaderTokenResource MaxColumnWidth}"
-                                                          ColumnGap="{arc:CascaderTokenResource ColumnGap}"
-                                                          HighlightBrush="{arc:ArcDesignTokenResource SurfaceMuted}"
-                                                          PathBrush="{arc:ArcDesignTokenResource SurfaceMuted}"
-                                                          Foreground="{arc:ArcDesignTokenResource Foreground}"
-                                                          MutedForeground="{arc:ArcDesignTokenResource TextMuted}"
-                                                          DividerBrush="{arc:ArcDesignTokenResource Border}" />
-                            </Border>
-                        </arc:ArcPopup>
+                                      WindowManagerAddShadowHint="False" />
                     </Panel>
                     <TextBlock Name="PART_Description"
                                Text="{TemplateBinding Description}"
@@ -151,9 +122,6 @@
         </Style>
         <Style Selector="^:focus-visible /template/ Border#PART_Trigger">
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
-        </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
         </Style>
         <Style Selector="^:open /template/ arc|ArcGlyph#PART_Chevron">
             <Setter Property="RenderTransform" Value="rotate(180deg)" />

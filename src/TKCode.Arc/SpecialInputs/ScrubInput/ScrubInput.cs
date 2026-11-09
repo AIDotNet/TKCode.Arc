@@ -90,9 +90,12 @@ public sealed class ScrubInputValueChangedEventArgs : RoutedEventArgs
 [TemplatePart(UnitPart, typeof(ScrubInputUnitButton))]
 [TemplatePart(TagPart, typeof(Border))]
 [TemplatePart(TagTextPart, typeof(TextBlock))]
-[PseudoClasses(ScrubbingPseudoClass, InvalidPseudoClass, HoverPseudoClass, HandleHoverPseudoClass, TextLabelPseudoClass)]
+[PseudoClasses(ScrubbingPseudoClass, InvalidPseudoClass, HoverPseudoClass, HandleHoverPseudoClass, TextLabelPseudoClass, SmallPseudoClass)]
 public class ScrubInput : TemplatedControl
 {
+    /// <summary>Set while <see cref="Size"/> is <see cref="ControlSize.Small"/> (the theme selects on it, not on the property).</summary>
+    public const string SmallPseudoClass = ":small";
+
     internal const string ShellPart = "PART_Shell";
     internal const string HandlePart = "PART_Handle";
     internal const string BodyPart = "PART_Body";
@@ -354,6 +357,11 @@ public class ScrubInput : TemplatedControl
         FocusableProperty.OverrideDefaultValue<ScrubInput>(false);
     }
 
+    public ScrubInput()
+    {
+        PseudoClasses.Set(SmallPseudoClass, Size == ControlSize.Small);
+    }
+
     #region Derived values
 
     /// <summary>The step used with Alt: <see cref="FineStep"/> or a tenth of <see cref="Step"/>.</summary>
@@ -585,6 +593,10 @@ public class ScrubInput : TemplatedControl
     {
         base.OnPropertyChanged(change);
         var property = change.Property;
+        if (property == SizeProperty)
+        {
+            PseudoClasses.Set(SmallPseudoClass, Size == ControlSize.Small);
+        }
         if (property == ValueProperty)
         {
             SyncText();

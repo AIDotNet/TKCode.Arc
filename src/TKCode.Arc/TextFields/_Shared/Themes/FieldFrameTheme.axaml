@@ -49,11 +49,11 @@
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="ClipToBounds" Value="False" />
 
-        <Style Selector="^[Size=Small]">
+        <Style Selector="^:small">
             <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
             <Setter Property="Padding" Value="{arc:FieldFrameTokenResource InlinePaddingSM}" />
         </Style>
-        <Style Selector="^[Size=Large]">
+        <Style Selector="^:large">
             <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeLG}" />
             <Setter Property="Padding" Value="{arc:FieldFrameTokenResource InlinePaddingLG}" />
         </Style>

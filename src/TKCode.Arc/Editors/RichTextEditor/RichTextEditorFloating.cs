@@ -739,7 +739,6 @@ internal sealed class RichTextEditorToolbar : RichTextEditorFloatingSurface
     {
         private static readonly SpringSpec s_morphSpring = SpringSpec.FromVisual(0.42, 0.12);
         private readonly TranslateTransform _translate = new();
-        private readonly Avalonia.Media.BlurEffect _blur = new() { Radius = 0 };
         private readonly MotionValue<double> _x;
         private readonly MotionValue<double> _fade;
         private int _generation;
@@ -754,9 +753,8 @@ internal sealed class RichTextEditorToolbar : RichTextEditorFloatingSurface
             _fade.Changed += value =>
             {
                 content.Opacity = value;
-                var radius = (1 - value) * 2;
-                _blur.Radius = radius;
-                content.Effect = radius > 0.05 && _blurring ? _blur : null;
+                // Quantized, cached blur (ArcBlur; null under 0.125px): no per-frame filter rebuild.
+                content.Effect = _blurring ? ArcBlur.Get((1 - value) * 2) : null;
             };
         }
 

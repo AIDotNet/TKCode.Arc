@@ -35,6 +35,9 @@ internal sealed class CascaderColumn : Decorator, ISelectOptionHost, ISelectOpti
     private readonly List<int> _all = new();
     private readonly SelectEntrySource _entries;
     private MotionValue<double>? _reveal;
+    private TranslateTransform? _revealShift;
+    private bool _revealSlides;
+    private byte[]? _branchFlags;
     private double _contentWidth = -1;
 
     public CascaderColumn(ICascaderColumnOwner owner, int level, object? parent, IReadOnlyList<object> nodes,
@@ -101,7 +104,9 @@ internal sealed class CascaderColumn : Decorator, ISelectOptionHost, ISelectOpti
     public bool IsEnabledAt(int position) => _entries.IsEnabledAt(position);
 
     /// <summary>The widest label plus the row padding, clamped to the column limits. Measured once per column.</summary>
-    public double MeasureContentWidth(double min, double max, double fontSize, Typeface typeface, Thickness rowPadding)
+    // widths: label widths already shaped for this font (a width only depends on the text and the font), shared by the
+    // panel's columns. Columns are recreated on every open and expand; shaping 500 labels each time is a visible hitch.
+    public double MeasureContentWidth(double min, double max, double fontSize, Typeface typeface, Thickness rowPadding, Dictionary<string, double> widths)
     {
         if (_contentWidth >= 0)
         {
@@ -116,15 +121,28 @@ internal sealed class CascaderColumn : Decorator, ISelectOptionHost, ISelectOpti
             {
                 continue;
             }
-            var layout = new TextLayout(text, typeface, fontSize, null);
-            widest = Math.Max(widest, layout.WidthIncludingTrailingWhitespace);
+            if (!widths.TryGetValue(text, out var width))
+            {
+                using var layout = new TextLayout(text, typeface, fontSize, null);
+                width = layout.WidthIncludingTrailingWhitespace;
+                widths[text] = width;
+            }
+            widest = Math.Max(widest, width);
         }
         _contentWidth = Math.Clamp(widest + rowPadding.Left + rowPadding.Right, min, Math.Max(min, max));
         return _contentWidth;
     }
 
     /// <summary>Redraws the rows after the path or the selection changed.</summary>
-    public void Refresh() => Options.InvalidateRows();
+    public void Refresh()
+    {
+        // The owner's data may have changed along with the path; the flags are read again on the next draw.
+        if (_branchFlags is not null)
+        {
+            Array.Clear(_branchFlags);
+        }
+        Options.InvalidateRows();
+    }
 
     /// <summary>
     /// Fades the column in (and slides it 8px in from the left at full motion). Why code: the column is created
@@ -132,12 +150,26 @@ internal sealed class CascaderColumn : Decorator, ISelectOptionHost, ISelectOpti
     /// </summary>
     public void PlayReveal(bool slide)
     {
-        _reveal ??= new MotionValue<double>(this, 0, MotionVectors.Double);
-        _reveal.Changed += value =>
+        if (_reveal is null)
         {
-            Opacity = value;
-            RenderTransform = slide ? new TranslateTransform((value - 1) * 8, 0) : null;
-        };
+            _reveal = new MotionValue<double>(this, 0, MotionVectors.Double);
+            _revealShift = new TranslateTransform();
+            _reveal.Changed += value =>
+            {
+                Opacity = value;
+                if (_revealSlides)
+                {
+                    _revealShift!.X = (value - 1) * 8;
+                }
+            };
+        }
+        _revealSlides = slide;
+        RenderTransform = slide ? _revealShift : null;
+        if (slide)
+        {
+            // Where the first Changed would have put it: nothing is drawn (opacity 0) until the delayed tween starts.
+            _revealShift!.X = (_reveal.Value - 1) * 8;
+        }
         Opacity = 0;
         _ = _reveal.AnimateTo(1, MotionSpec.Tween(slide ? ArcMotionPresets.Standard : TimeSpan.FromMilliseconds(120),
             ArcEasings.Enter, slide ? TimeSpan.FromMilliseconds(40) : default));
@@ -146,8 +178,20 @@ internal sealed class CascaderColumn : Decorator, ISelectOptionHost, ISelectOpti
     bool ISelectOptionHost.IsEntrySelected(int entryIndex) =>
         entryIndex >= 0 && entryIndex < Nodes.Count && _owner.IsSelectedNode(Nodes[entryIndex]);
 
-    bool ISelectOptionBranchHost.IsBranch(int entryIndex) =>
-        entryIndex >= 0 && entryIndex < Nodes.Count && _owner.IsBranchNode(Nodes[entryIndex]);
+    // Rows ask on every draw (each frame of the gliding highlight): 0 = not read yet, 1 = branch, 2 = leaf.
+    bool ISelectOptionBranchHost.IsBranch(int entryIndex)
+    {
+        if (entryIndex < 0 || entryIndex >= Nodes.Count)
+        {
+            return false;
+        }
+        var flags = _branchFlags ??= new byte[Nodes.Count];
+        if (flags[entryIndex] == 0)
+        {
+            flags[entryIndex] = _owner.IsBranchNode(Nodes[entryIndex]) ? (byte)1 : (byte)2;
+        }
+        return flags[entryIndex] == 1;
+    }
 
     bool ISelectOptionBranchHost.IsOnPath(int entryIndex) =>
         entryIndex >= 0 && entryIndex < Nodes.Count && _owner.IsPathNode(Level, Nodes[entryIndex]);

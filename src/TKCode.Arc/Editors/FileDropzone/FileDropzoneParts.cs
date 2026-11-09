@@ -9,6 +9,7 @@ using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
 using AvaloniaButton = Avalonia.Controls.Button;
@@ -188,7 +189,6 @@ internal sealed class FileDropzoneRowHost : Decorator
     private readonly MotionValue<double> _scale;
     private readonly MotionValue<double> _fade;
     private readonly MatrixTransform _transform = new();
-    private readonly BlurEffect _blur = new() { Radius = 0 };
     private bool _blurs;
 
     public FileDropzoneRowHost(FileDropzoneRow row)
@@ -216,9 +216,8 @@ internal sealed class FileDropzoneRowHost : Decorator
     {
         _transform.Matrix = Matrix.CreateScale(_scale.Value, _scale.Value) * Matrix.CreateTranslation(0, _y.Value);
         Row.Opacity = _fade.Value;
-        var blur = _blurs ? (1 - _fade.Value) * 4 : 0;
-        _blur.Radius = blur;
-        Row.Effect = blur > 0.05 ? _blur : null;
+        // Quantized, cached blur (ArcBlur; null under 0.125px): no per-frame filter rebuild.
+        Row.Effect = _blurs ? ArcBlur.Get((1 - _fade.Value) * 4) : null;
     }
 
     /// <summary>Opens a row added in this session, after <paramref name="delay"/> (Arc staggers a batch).</summary>
@@ -337,12 +336,57 @@ internal sealed class FileDropzoneProgressBarAutomationPeer(FileDropzoneProgress
 internal sealed class FileDropzoneTrigger : AvaloniaButton
 {
     protected override Type StyleKeyOverride => typeof(FileDropzoneTrigger);
+
+    // The focus ring (3px outside the zone, following its corner radius) is built on the first :focus-visible.
+    private FieldFocusRing? _focusRing;
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        _focusRing ??= new FieldFocusRing(this, null, ArcDesignTokens.Key(ArcDesignTokenKind.RadiusPill), margin: new Thickness(-3),
+            radiusProperty: CornerRadiusProperty);
+        _focusRing.Attach(e.NameScope.Find<Panel>("PART_Host"));
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing?.Update();
+    }
 }
 
 /// <summary>The Retry and Remove buttons of a row (Retry is a pill with a label; Remove a round icon).</summary>
 internal sealed class FileDropzoneActionButton : AvaloniaButton
 {
     protected override Type StyleKeyOverride => typeof(FileDropzoneActionButton);
+
+    // Two buttons per file row: the pill focus ring (3px outside) is built on the first :focus-visible, not per row.
+    private FieldFocusRing? _focusRing;
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        _focusRing ??= new FieldFocusRing(this, null, ArcDesignTokens.Key(ArcDesignTokenKind.RadiusPill), margin: new Thickness(-3));
+        _focusRing.Attach(e.NameScope.Find<Panel>("PART_Host"));
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing?.Update();
+    }
 }
 
 /// <summary>

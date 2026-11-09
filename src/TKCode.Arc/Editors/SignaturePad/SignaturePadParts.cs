@@ -8,6 +8,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using TKCode.Arc.Motion;
+using TKCode.Arc.Primitives;
 
 namespace TKCode.Arc;
 
@@ -53,7 +54,6 @@ internal sealed class SignaturePadCanvas : Control
     private readonly TextBlock _hint = new() { IsHitTestVisible = false };
     private readonly TextBlock _signer = new() { IsHitTestVisible = false };
     private readonly MatrixTransform _hintTransform = new();
-    private readonly BlurEffect _hintBlur = new() { Radius = 0 };
     private readonly MotionValue<double> _hintProgress;
     private bool _hintShown = true;
     private bool _hintBlurs;
@@ -180,8 +180,8 @@ internal sealed class SignaturePadCanvas : Control
         {
             var scale = 0.97 + 0.03 * p;
             _hintTransform.Matrix = Matrix.CreateScale(scale, scale) * Matrix.CreateTranslation(0, (1 - p) * 6);
-            _hintBlur.Radius = (1 - p) * 4;
-            _hint.Effect = p < 0.999 ? _hintBlur : null;
+            // Quantized, cached blur (ArcBlur): no per-frame filter rebuild.
+            _hint.Effect = p < 0.999 ? ArcBlur.Get((1 - p) * 4) : null;
         }
         else
         {

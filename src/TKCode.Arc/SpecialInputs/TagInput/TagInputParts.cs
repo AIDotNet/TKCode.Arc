@@ -10,6 +10,7 @@ using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Media.TextFormatting;
 using Avalonia.VisualTree;
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
 using AvaloniaButton = Avalonia.Controls.Button;
 using AvaloniaTextBox = Avalonia.Controls.TextBox;
@@ -92,8 +93,6 @@ internal sealed class TagInputChipFill : Control
     internal ScaleTransform ScaleTransform { get; }
 
     internal TranslateTransform ShiftTransform { get; }
-
-    internal BlurEffect? Blur { get; set; }
 
     public override void Render(DrawingContext context)
     {
@@ -296,7 +295,6 @@ internal sealed class TagInputChip : Control
     private MotionValue<double>? _fade;
     private MotionValue<double>? _blur;
     private MotionValue<double>? _pulse;
-    private BlurEffect? _blurEffect;
     private double _presenceScale = 1;
     private double _pulseScale = 1;
     private bool _pressed;
@@ -643,10 +641,10 @@ internal sealed class TagInputChip : Control
             Fill.Effect = null;
             return;
         }
-        _blurEffect ??= new BlurEffect();
-        _blurEffect.Radius = radius;
-        Effect = _blurEffect;
-        Fill.Effect = ArcBlur.Get(radius);
+        // Quantized, cached blur (ArcBlur) for the chip and its fill alike: no per-frame filter rebuild.
+        var effect = ArcBlur.Get(radius);
+        Effect = effect;
+        Fill.Effect = effect;
     }
 
     /// <summary>The tag reads as plain text; its remove button is the only control inside.</summary>
@@ -686,9 +684,33 @@ internal sealed class TagInputRemoveButton : AvaloniaButton
     private MotionValue<double>? _scale;
     private bool _picked;
 
+    // One button per tag: the focus ring (RemoveFocusRingThickness, the button's own corner radius, no outset) is built on
+    // the first :focus-visible instead of a hidden Border in every chip.
+    private FieldFocusRing? _focusRing;
+
     public TagInputRemoveButton()
     {
         RenderTransform = _press;
+    }
+
+    protected override void OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        _focusRing ??= new FieldFocusRing(this, null, ArcDesignTokens.Key(ArcDesignTokenKind.RadiusPill), margin: default(Thickness),
+            thicknessKey: TagInputTokens.Key(TagInputTokenKind.RemoveFocusRingThickness), radiusProperty: CornerRadiusProperty);
+        _focusRing.Attach(e.NameScope.Find<Panel>("PART_Host"));
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing?.Update();
     }
 
     public double PressScale { get => GetValue(PressScaleProperty); set => SetValue(PressScaleProperty, value); }

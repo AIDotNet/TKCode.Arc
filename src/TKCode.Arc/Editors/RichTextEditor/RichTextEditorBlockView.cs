@@ -74,6 +74,13 @@ internal sealed class RichTextEditorBlockView : IDisposable
     /// <summary>Superscript and subscript text, drawn over the room the layout keeps for it (positions relative to the text origin).</summary>
     public List<(TextLayout Layout, Point At)>? ScriptRuns { get; set; }
 
+    /// <summary>Find highlights relative to the text origin, computed for <see cref="MatchSource"/> on <see cref="MatchLayout"/>.</summary>
+    public List<Rect>? MatchRects { get; set; }
+
+    public object? MatchSource { get; set; }
+
+    public TextLayout? MatchLayout { get; set; }
+
     private double[]? _lineTops;
 
     /// <summary>Maps a block offset to the layout's text position (shifted past preedit text).</summary>

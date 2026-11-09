@@ -512,12 +512,15 @@ internal sealed class MentionInputSuggestionRow : Control
     private Pen? _hashPen;
     private IBrush? _hashPenBrush;
 
+    // One platform cursor for every row, not one per row.
+    private static readonly Cursor s_hand = new(StandardCursorType.Hand);
+
     public MentionInputSuggestionRow(MentionInputSuggestionList list, int index)
     {
         _list = list;
         Index = index;
         Focusable = false;
-        Cursor = new Cursor(StandardCursorType.Hand);
+        Cursor = s_hand;
     }
 
     internal int Index { get; }

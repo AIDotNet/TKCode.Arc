@@ -26,13 +26,6 @@
                                                Height="{arc:ArcDesignTokenResource ControlSizeMD}"
                                                MaxContentWidth="{arc:MorphSelectTokenResource TriggerMaxWidth}">
                             <Panel>
-                                <Border Name="PART_FocusRing"
-                                        IsVisible="False"
-                                        IsHitTestVisible="False"
-                                        Margin="{arc:MorphSelectTokenResource FocusRingMargin}"
-                                        BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                                        CornerRadius="{arc:MorphSelectTokenResource FocusRingRadius}"
-                                        BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                                 <!-- One material for both states; the 1px border is drawn inside, so padding is 1px less. -->
                                 <Border Name="PART_Trigger"
                                         Height="{arc:ArcDesignTokenResource ControlSizeMD}"
@@ -87,13 +80,6 @@
         <Style Selector="^:not(:open):not(:disabled) /template/ Border#PART_Trigger:pointerover">
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
-        </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
-        </Style>
-        <!-- While the surface is open its lid stands in for the trigger. -->
-        <Style Selector="^:open /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="False" />
         </Style>
         <Style Selector="^:disabled /template/ Border#PART_Trigger">
             <Setter Property="Opacity" Value="{arc:MorphSelectTokenResource DisabledOpacity}" />

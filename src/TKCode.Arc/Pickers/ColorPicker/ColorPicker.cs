@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using System.Globalization;
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
@@ -12,6 +13,7 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using Avalonia.Media.Immutable;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 
@@ -244,8 +246,12 @@ public class ColorPicker : TemplatedControl, IPickerAutomation
     private IDisposable? _morphTimer;
     private bool _morphing;
     private string _shownText = string.Empty;
-    private readonly SolidColorBrush _sampleBackground = new(Colors.White);
-    private readonly SolidColorBrush _sampleForeground = new(Colors.Black);
+    private LazyFocusRing? _focusRing;
+    private Panel? _ringHost;
+    private ImmutableSolidColorBrush? _sampleBackground;
+    private ImmutableSolidColorBrush? _sampleForeground;
+    private bool _textsPosted;
+    private Action? _flushTexts;
 
     static ColorPicker()
     {
@@ -291,9 +297,35 @@ public class ColorPicker : TemplatedControl, IPickerAutomation
 
     #region Template
 
+    /// <summary>
+    /// The ring is built the first time the field is keyboard focused, under the trigger. Its radius token depends on
+    /// <see cref="Size"/>, so a size change replaces it (the old ring leaves the panel, the new one builds on demand).
+    /// </summary>
+    private void AttachFocusRing()
+    {
+        _focusRing?.Attach(null, null);
+        _focusRing = new LazyFocusRing(this, ColorPickerTokens.Key(ColorPickerTokenKind.TriggerFocusRingMargin),
+            ColorPickerTokens.Key(Size == ControlSize.Small ? ColorPickerTokenKind.TriggerFocusRingRadiusSM : ColorPickerTokenKind.TriggerFocusRingRadius));
+        _focusRing.Attach(_ringHost, below: true);
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing?.Update();
+    }
+
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
+        _ringHost = e.NameScope.Find<Control>(TriggerPart)?.Parent as Panel;
+        AttachFocusRing();
         if (_trigger is not null)
         {
             _trigger.PointerPressed -= OnTriggerPressed;
@@ -334,7 +366,14 @@ public class ColorPicker : TemplatedControl, IPickerAutomation
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-        if (change.Property == ColorProperty)
+        if (change.Property == SizeProperty)
+        {
+            if (_ringHost is not null)
+            {
+                AttachFocusRing();
+            }
+        }
+        else if (change.Property == ColorProperty)
         {
             var oldColor = change.GetOldValue<Color>();
             var newColor = change.GetNewValue<Color>();
@@ -428,10 +467,6 @@ public class ColorPicker : TemplatedControl, IPickerAutomation
         {
             chip.Color = color;
         }
-        if (_panel.HeadHex is { } hex)
-        {
-            hex.Text = HexValue;
-        }
         var shown = IsLoaded && _popup?.IsOpen == true && animate;
         _panel.Area?.SetColors(_hsva.H, opaque, color);
         _panel.Area?.SetValue(new Point(_hsva.S, 1 - _hsva.V), shown);
@@ -439,10 +474,6 @@ public class ColorPicker : TemplatedControl, IPickerAutomation
         _panel.Hue?.SetValue(new Point(_hsva.H / 360, 0), shown);
         _panel.Alpha?.SetColors(_hsva.H, opaque, color);
         _panel.Alpha?.SetValue(new Point(_hsva.A, 0), shown);
-        if (_draft is null)
-        {
-            SyncInput();
-        }
         var ratio = ContrastRatio;
         var grade = ColorPickerMath.Level(ratio);
         _panel.Ratio?.SetRatio(ratio, shown);
@@ -450,19 +481,63 @@ public class ColorPicker : TemplatedControl, IPickerAutomation
         _panel.SetGrade(grade);
         if (_panel.Sample is { } sample)
         {
-            _sampleBackground.Color = ContrastBackground;
-            sample.Background = _sampleBackground;
+            sample.Background = PickerDrawing.Brush(ref _sampleBackground, ContrastBackground);
         }
         if (_panel.SampleText is { } aa)
         {
-            _sampleForeground.Color = color;
-            aa.Foreground = _sampleForeground;
+            aa.Foreground = PickerDrawing.Brush(ref _sampleForeground, color);
+        }
+        _panel.Swatches?.SetCurrentHex(HexValue, shown);
+        if (IsPadActive)
+        {
+            // Pointer events arrive far above the frame rate; the color and the thumbs have already moved.
+            RequestTextUpdate();
+        }
+        else
+        {
+            UpdateVisualTexts();
+        }
+    }
+
+    private bool IsPadActive => _panel is { } panel &&
+                                (panel.Area?.IsActive == true || panel.Hue?.IsActive == true || panel.Alpha?.IsActive == true);
+
+    private void RequestTextUpdate()
+    {
+        if (_textsPosted)
+        {
+            return;
+        }
+        _textsPosted = true;
+        _flushTexts ??= () =>
+        {
+            _textsPosted = false;
+            UpdateVisualTexts();
+        };
+        Dispatcher.UIThread.Post(_flushTexts, DispatcherPriority.Render);
+    }
+
+    /// <summary>The hex, the value field and the spoken texts that follow the color.</summary>
+    private void UpdateVisualTexts()
+    {
+        if (_panel is null)
+        {
+            return;
+        }
+        if (_panel.HeadHex is { } hex)
+        {
+            hex.Text = HexValue;
+        }
+        if (_draft is null)
+        {
+            SyncInput();
         }
         if (_panel.ContrastText is { } live)
         {
+            var ratio = ContrastRatio;
+            var grade = ColorPickerMath.Level(ratio);
             live.Text = $"Contrast {ratio.ToString("0.00", CultureInfo.InvariantCulture)} to 1, {(grade == "Fails" ? "fails" : $"passes {grade}")}";
         }
-        _panel.Swatches?.SetCurrentHex(HexValue, shown);
         if (_panel.AddButton is { } add)
         {
             AutomationProperties.SetName(add, $"Save {HexValue}");

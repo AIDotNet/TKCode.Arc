@@ -23,7 +23,7 @@ namespace TKCode.Arc;
 /// </remarks>
 [TemplatePart(PrefixPart, typeof(ContentPresenter))]
 [TemplatePart(SuffixPart, typeof(ContentPresenter))]
-[PseudoClasses(FocusActivePseudoClass, InvalidPseudoClass, ReadOnlyPseudoClass)]
+[PseudoClasses(FocusActivePseudoClass, InvalidPseudoClass, ReadOnlyPseudoClass, SmallPseudoClass, LargePseudoClass)]
 public class FieldFrame : ContentControl
 {
     public const string PrefixPart = "PART_Prefix";
@@ -31,6 +31,12 @@ public class FieldFrame : ContentControl
 
     /// <summary>Set while the field has focus (see <see cref="IsFocusActive"/>).</summary>
     public const string FocusActivePseudoClass = ":focus-active";
+
+    /// <summary><see cref="Size"/> Small or Large as a pseudo-class (Medium has none); the theme selects on these, not on the property.</summary>
+    public const string SmallPseudoClass = ":small";
+
+    /// <inheritdoc cref="SmallPseudoClass"/>
+    public const string LargePseudoClass = ":large";
 
     /// <summary>Set while <see cref="IsInvalid"/> is true.</summary>
     public const string InvalidPseudoClass = ":invalid";
@@ -86,6 +92,18 @@ public class FieldFrame : ContentControl
 
     private ContentPresenter? _prefix;
     private ContentPresenter? _suffix;
+
+    public FieldFrame()
+    {
+        UpdateSizePseudoClasses();
+    }
+
+    private void UpdateSizePseudoClasses()
+    {
+        var size = Size;
+        PseudoClasses.Set(SmallPseudoClass, size == ControlSize.Small);
+        PseudoClasses.Set(LargePseudoClass, size == ControlSize.Large);
+    }
 
     /// <summary>Content placed before the editor.</summary>
     public object? Prefix
@@ -180,6 +198,10 @@ public class FieldFrame : ContentControl
         else if (change.Property == IsReadOnlyProperty)
         {
             PseudoClasses.Set(ReadOnlyPseudoClass, IsReadOnly);
+        }
+        else if (change.Property == SizeProperty)
+        {
+            UpdateSizePseudoClasses();
         }
     }
 }

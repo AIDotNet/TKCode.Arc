@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
 using Avalonia;
 using Avalonia.Controls;
@@ -21,12 +22,47 @@ internal sealed class InlineEditEditor : AvaloniaTextBox
 /// <summary>The 28px round save (primary: foreground fill) and cancel (outlined) buttons shown while editing.</summary>
 internal sealed class InlineEditActionButton : AvaloniaButton
 {
+    /// <summary>Set while <see cref="IsPrimary"/> is true (the theme selects on it, not on the property).</summary>
+    public const string PrimaryPseudoClass = ":primary";
+
     public static readonly StyledProperty<bool> IsPrimaryProperty =
         AvaloniaProperty.Register<InlineEditActionButton, bool>(nameof(IsPrimary));
 
     public bool IsPrimary { get => GetValue(IsPrimaryProperty); set => SetValue(IsPrimaryProperty, value); }
 
     protected override Type StyleKeyOverride => typeof(InlineEditActionButton);
+
+    // Most action buttons are never keyboard focused: the focus ring (a pill 4px outside the face) is built on the first
+    // :focus-visible instead of a hidden Border in every template.
+    private FieldFocusRing? _focusRing;
+
+    protected override void OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        _focusRing ??= new FieldFocusRing(this, null, ArcDesignTokens.Key(ArcDesignTokenKind.RadiusPill), margin: new Thickness(-4));
+        _focusRing.Attach(e.NameScope.Find<Panel>("PART_Host"));
+    }
+
+    protected override void OnGotFocus(Avalonia.Input.FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
+    protected override void OnLostFocus(Avalonia.Input.FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing?.Update();
+    }
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == IsPrimaryProperty)
+        {
+            PseudoClasses.Set(PrimaryPseudoClass, IsPrimary);
+        }
+    }
 }
 
 /// <summary>The underlined "Try again" link in a failed-save message.</summary>

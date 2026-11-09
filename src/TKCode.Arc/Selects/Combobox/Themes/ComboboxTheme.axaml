@@ -100,40 +100,7 @@
                                   EnterScale="0.97"
                                   IsLightDismissEnabled="True"
                                   TakesFocusFromNativeControl="False"
-                                  WindowManagerAddShadowHint="False">
-                        <Border Name="PART_Surface"
-                                Padding="{arc:ComboboxTokenResource PopoverPadding}"
-                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
-                                CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
-                                Background="{arc:ArcDesignTokenResource SurfaceRaised}"
-                                BorderBrush="{arc:ArcDesignTokenResource Border}">
-                            <arc:SpringSizeDecorator Axis="Height" Spring="Smooth" IsExpanded="True">
-                                <StackPanel>
-                                    <ScrollViewer Name="PART_Scroll"
-                                                  HorizontalScrollBarVisibility="Disabled"
-                                                  VerticalScrollBarVisibility="Auto">
-                                        <arc:SelectOptionView Name="PART_Options"
-                                                              RowHeight="{arc:ComboboxTokenResource OptionHeight}"
-                                                              RowCornerRadius="{arc:ComboboxTokenResource OptionCornerRadius}"
-                                                              RowPadding="{arc:ComboboxTokenResource OptionPadding}"
-                                                              ContentSpacing="12"
-                                                              CheckMode="Static"
-                                                              DisabledOpacity="{arc:ComboboxTokenResource OptionDisabledOpacity}"
-                                                              HighlightBrush="{arc:ArcDesignTokenResource SurfaceMuted}"
-                                                              Foreground="{arc:ArcDesignTokenResource Foreground}"
-                                                              CheckForeground="{arc:ArcDesignTokenResource Foreground}" />
-                                    </ScrollViewer>
-                                    <arc:PresenceHost Name="PART_EmptyHost" Mode="Rise" Offset="4" IsPresent="False">
-                                        <TextBlock Text="{TemplateBinding EmptyText}"
-                                                   Padding="{arc:ComboboxTokenResource EmptyPadding}"
-                                                   TextWrapping="Wrap"
-                                                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
-                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
-                                    </arc:PresenceHost>
-                                </StackPanel>
-                            </arc:SpringSizeDecorator>
-                        </Border>
-                    </arc:ArcPopup>
+                                  WindowManagerAddShadowHint="False" />
                 </StackPanel>
             </ControlTemplate>
         </Setter>

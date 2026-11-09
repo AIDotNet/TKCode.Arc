@@ -13,13 +13,6 @@
                            Description="{TemplateBinding Description}"
                            ErrorMessage="{TemplateBinding ErrorMessage}">
                     <Panel HorizontalAlignment="Left">
-                        <Border Name="PART_FocusRing"
-                                IsVisible="False"
-                                IsHitTestVisible="False"
-                                Margin="{arc:DateRangePickerTokenResource TriggerFocusRingMargin}"
-                                BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                                CornerRadius="{arc:DateRangePickerTokenResource TriggerFocusRingRadius}"
-                                BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                         <Border Name="PART_Trigger"
                                 Height="{arc:ArcDesignTokenResource ControlSizeMD}"
                                 Padding="{arc:DateRangePickerTokenResource TriggerInset}"
@@ -88,9 +81,6 @@
         <Style Selector="^:not(:open) /template/ Border#PART_Trigger:pointerover">
             <Setter Property="Background" Value="{arc:DateRangePickerTokenResource TriggerHoverFill}" />
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
-        </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
         </Style>
         <Style Selector="^:disabled /template/ Border#PART_Trigger">
             <Setter Property="Opacity" Value="0.5" />

@@ -16,9 +16,13 @@ namespace TKCode.Arc;
 /// Arc's textarea does not grow with its content, so neither does this one; it scrolls instead.
 /// </summary>
 [TemplatePart(ResizeGripPart, typeof(Control))]
+[PseudoClasses(ResizablePseudoClass)]
 public class Textarea : FieldTextBox
 {
     public const string ResizeGripPart = "PART_ResizeGrip";
+
+    /// <summary>Set while <see cref="IsResizable"/> is true (the theme selects on it, not on the property).</summary>
+    public const string ResizablePseudoClass = ":resizable";
 
     /// <summary>Shows the corner grip that drags the field taller (Arc: <c>resize: vertical</c>). Default true.</summary>
     public static readonly StyledProperty<bool> IsResizableProperty =
@@ -54,6 +58,11 @@ public class Textarea : FieldTextBox
         TextWrappingProperty.OverrideDefaultValue<Textarea>(TextWrapping.Wrap);
     }
 
+    public Textarea()
+    {
+        PseudoClasses.Set(ResizablePseudoClass, IsResizable);
+    }
+
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         if (_grip is not null)
@@ -81,6 +90,10 @@ public class Textarea : FieldTextBox
         if (change.Property == FrameMinHeightProperty)
         {
             ApplyFrameMinHeight();
+        }
+        else if (change.Property == IsResizableProperty)
+        {
+            PseudoClasses.Set(ResizablePseudoClass, IsResizable);
         }
     }
 

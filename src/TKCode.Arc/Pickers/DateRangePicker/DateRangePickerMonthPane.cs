@@ -4,6 +4,8 @@ using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Media;
+using Avalonia.Media.Immutable;
+using Avalonia.Media.TextFormatting;
 
 namespace TKCode.Arc;
 
@@ -36,11 +38,16 @@ internal sealed class DateRangePickerMonthPane : Control
     private readonly Band[] _bands = new Band[6];
     private readonly EndDisc _start;
     private readonly EndDisc _end;
-    private readonly FormattedText?[] _weekdays = new FormattedText?[7];
-    private FormattedText? _title;
+    // TextLayout: the title and weekday heads are drawn on every frame of the band and disc springs, and a cached
+    // FormattedText re-shapes on each DrawText.
+    private readonly TextLayout?[] _weekdays = new TextLayout?[7];
+    private TextLayout? _title;
     private string _titleText = string.Empty;
     private string[] _weekdayNames = new string[7];
     private int _textVersion = -1;
+    private CultureInfo? _textCulture;
+    private ImmutableSolidColorBrush? _titleBrush;
+    private ImmutableSolidColorBrush? _weekdayBrush;
     private DateOnly _gridStart;
     private double _cell = 36;
 
@@ -105,7 +112,7 @@ internal sealed class DateRangePickerMonthPane : Control
         Month = month;
         _gridStart = CalendarMath.GridStart(month, firstDay);
         var motion = animate && !monthChanged && IsLoaded && ArcMotion.IsFull(this);
-        UpdateTexts(month, culture);
+        UpdateTexts(month, culture, monthChanged);
         for (var i = 0; i < Cells; i++)
         {
             var date = _gridStart.AddDays(i);
@@ -127,17 +134,24 @@ internal sealed class DateRangePickerMonthPane : Control
         InvalidateVisual();
     }
 
-    private void UpdateTexts(DateOnly month, CultureInfo culture)
+    private void UpdateTexts(DateOnly month, CultureInfo culture, bool monthChanged)
     {
-        var title = month.ToDateTime(TimeOnly.MinValue).ToString(culture.DateTimeFormat.YearMonthPattern, culture);
         var palette = Palette;
         var fontChanged = _textVersion != palette.Version;
+        // The strings only depend on the month, the culture and the first weekday (part of monthChanged); a hover in
+        // the range preview reconfigures the pane without changing any of them.
+        if (!monthChanged && !fontChanged && _title is not null && ReferenceEquals(culture, _textCulture))
+        {
+            return;
+        }
+        _textCulture = culture;
+        var title = month.ToDateTime(TimeOnly.MinValue).ToString(culture.DateTimeFormat.YearMonthPattern, culture);
         if (title != _titleText || fontChanged || _title is null)
         {
             _titleText = title;
-            _title = new FormattedText(title, culture, FlowDirection.LeftToRight,
-                new Typeface(palette.FontFamily, FontStyle.Normal, palette.MediumWeight), palette.FontSize,
-                new SolidColorBrush(palette.Foreground));
+            _title?.Dispose();
+            _title = new TextLayout(title, new Typeface(palette.FontFamily, FontStyle.Normal, palette.MediumWeight), palette.FontSize,
+                PickerDrawing.Brush(ref _titleBrush, palette.Foreground));
         }
         for (var i = 0; i < 7; i++)
         {
@@ -147,9 +161,9 @@ internal sealed class DateRangePickerMonthPane : Control
             if (name != _weekdayNames[i] || fontChanged || _weekdays[i] is null)
             {
                 _weekdayNames[i] = name;
-                _weekdays[i] = new FormattedText(name, culture, FlowDirection.LeftToRight,
-                    new Typeface(palette.FontFamily, FontStyle.Normal, palette.RegularWeight), palette.SmallFontSize,
-                    new SolidColorBrush(palette.Muted));
+                _weekdays[i]?.Dispose();
+                _weekdays[i] = new TextLayout(name, new Typeface(palette.FontFamily, FontStyle.Normal, palette.RegularWeight), palette.SmallFontSize,
+                    PickerDrawing.Brush(ref _weekdayBrush, palette.Muted));
             }
         }
         _textVersion = palette.Version;
@@ -239,13 +253,13 @@ internal sealed class DateRangePickerMonthPane : Control
         var width = _cell * 7;
         if (_title is { } title)
         {
-            context.DrawText(title, new Point((width - title.Width) / 2, (TitleHeight - title.Height) / 2));
+            title.Draw(context, new Point((width - title.Width) / 2, (TitleHeight - title.Height) / 2));
         }
         for (var i = 0; i < 7; i++)
         {
             if (_weekdays[i] is { } weekday)
             {
-                context.DrawText(weekday, new Point(i * _cell + (_cell - weekday.Width) / 2, TitleHeight + (WeekdayHeight - weekday.Height) / 2));
+                weekday.Draw(context, new Point(i * _cell + (_cell - weekday.Width) / 2, TitleHeight + (WeekdayHeight - weekday.Height) / 2));
             }
         }
         var palette = Palette;

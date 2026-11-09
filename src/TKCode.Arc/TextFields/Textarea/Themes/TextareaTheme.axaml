@@ -109,18 +109,18 @@
             <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
             <Setter Property="LineHeight" Value="{arc:FieldTokenResource LabelLineHeight}" />
         </Style>
-        <Style Selector="^[Size=Small] /template/ TextBlock#PART_Label">
+        <Style Selector="^:small /template/ TextBlock#PART_Label">
             <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
             <Setter Property="LineHeight" Value="{arc:FieldTokenResource LabelLineHeightSM}" />
         </Style>
-        <Style Selector="^[Size=Large]">
+        <Style Selector="^:large">
             <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
             <Setter Property="LineHeight" Value="{arc:FieldTextBoxTokenResource TextLineHeightLG}" />
         </Style>
         <Style Selector="^:disabled /template/ arc|FieldFrame#PART_Frame">
             <Setter Property="Opacity" Value="{arc:TextareaTokenResource DisabledOpacity}" />
         </Style>
-        <Style Selector="^[IsResizable=False] /template/ arc|TextareaResizeGrip#PART_ResizeGrip">
+        <Style Selector="^:not(:resizable) /template/ arc|TextareaResizeGrip#PART_ResizeGrip">
             <Setter Property="IsVisible" Value="False" />
         </Style>
         <Style Selector="^:disabled /template/ arc|TextareaResizeGrip#PART_ResizeGrip">

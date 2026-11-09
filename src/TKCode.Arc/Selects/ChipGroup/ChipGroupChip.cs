@@ -27,6 +27,7 @@ internal sealed class ChipGroupChip : Control
 
     private readonly ChipGroup _owner;
     private readonly TranslateTransform _flipTransform = new();
+    private TextLayout? _natural;
     private TextLayout? _label;
     private TextLayout? _previousLabel;
     private double _labelMaxWidth = -1;
@@ -94,6 +95,7 @@ internal sealed class ChipGroupChip : Control
         var animate = IsMore && IsLoaded && ArcMotion.GetEffectiveLevel(this) != ArcMotionLevel.Off;
         _previousLabel = animate ? _label : null;
         _text = text;
+        _natural = null;
         _label = null;
         _pendingMorph = true;
         if (animate)
@@ -331,6 +333,7 @@ internal sealed class ChipGroupChip : Control
 
     internal void InvalidateText()
     {
+        _natural = null;
         _label = null;
         _previousLabel = null;
         _checkPen = null;
@@ -344,8 +347,9 @@ internal sealed class ChipGroupChip : Control
         var padding = _owner.ChipPadding;
         var slot = _selected && !IsMore ? CheckSlot : 0;
         var room = double.IsFinite(availableSize.Width) ? availableSize.Width - padding * 2 - slot : double.PositiveInfinity;
-        var natural = Build(_text, double.PositiveInfinity);
-        var width = Math.Min(natural.WidthIncludingTrailingWhitespace, Math.Max(0, room));
+        // Kept: picking one chip re-measures every chip of the group.
+        _natural ??= Build(_text, double.PositiveInfinity);
+        var width = Math.Min(_natural.WidthIncludingTrailingWhitespace, Math.Max(0, room));
         if (_label is null || Math.Abs(_labelMaxWidth - width) > 0.5)
         {
             _label = Build(_text, Math.Ceiling(width) + 0.5);

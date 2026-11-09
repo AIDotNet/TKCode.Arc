@@ -553,6 +553,8 @@ internal class TokenTextMirror : Control
         {
             return;
         }
+        // The boxes also follow the editor's token shape (padding, outset, radius, decoration break), which the owner
+        // changes without a new layout, so they are collected per render pass (reused lists, no garbage).
         CollectBoxes(layout);
         foreach (var box in _boxes)
         {
@@ -638,11 +640,27 @@ internal class TokenTextMirror : Control
     /// </summary>
     internal static (double Ascent, double Descent) ContentMetrics(TextPresenter presenter)
     {
-        var metrics = new Typeface(presenter.FontFamily, presenter.FontStyle, presenter.FontWeight, presenter.FontStretch)
-            .GlyphTypeface.Metrics;
-        var scale = presenter.FontSize / Math.Max(1, (double)metrics.DesignEmHeight);
-        return (-metrics.Ascent * scale, metrics.Descent * scale);
+        // Asked on every layout and render; the glyph typeface lookup is cached for the font last seen.
+        var typeface = new Typeface(presenter.FontFamily, presenter.FontStyle, presenter.FontWeight, presenter.FontStretch);
+        var size = presenter.FontSize;
+        lock (s_metricsLock)
+        {
+            if (!typeface.Equals(s_metricsTypeface) || size != s_metricsSize)
+            {
+                var metrics = typeface.GlyphTypeface.Metrics;
+                var scale = size / Math.Max(1, (double)metrics.DesignEmHeight);
+                s_metrics = (-metrics.Ascent * scale, metrics.Descent * scale);
+                s_metricsTypeface = typeface;
+                s_metricsSize = size;
+            }
+            return s_metrics;
+        }
     }
+
+    private static readonly object s_metricsLock = new();
+    private static Typeface? s_metricsTypeface;
+    private static double s_metricsSize;
+    private static (double Ascent, double Descent) s_metrics;
 
     /// <summary>Top of the content area on the line holding <paramref name="rect"/>.</summary>
     private static double ContentTop(IReadOnlyList<TextLine> lines, Rect rect, double ascent)
