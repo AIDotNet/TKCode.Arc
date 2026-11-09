@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """Builds every Arc Gallery icon from the master logo.
 
-    python3 tools/branding/build_icons.py [<source.png>]
+    python3 tools/branding/build_icons.py [<source.png>] [--desktop-only]
 
-With a source image (an icon tile on a flat pure magenta #FF00FF background, as the image generator returns it) the
-magenta is keyed out and tools/branding/logo-master.png is rewritten. Without one the existing master is reused.
+With a source image the tile is cut out and tools/branding/logo-master.png is rewritten. Without one the existing master
+is reused. A source is an icon tile on a flat pure magenta #FF00FF background, as the image generator returns it, or on
+white with a soft shadow, like gallery/TKCode.Arc.Gallery/Assets/icon.png (the top bar brand mark and window icon, which
+is hand-supplied artwork and not written here). With --desktop-only the browser icons are left alone.
 Writes:
-  gallery/TKCode.Arc.Gallery/Assets/logo.png                     top bar brand mark and window icon (256px)
   gallery/TKCode.Arc.Gallery.Desktop/Assets/AppIcon.ico          Windows executable icon
   gallery/TKCode.Arc.Gallery.Desktop/Assets/AppIcon.icns         macOS app bundle icon, with a soft shadow (tools/macos/bundle.sh)
   gallery/TKCode.Arc.Gallery.Browser/wwwroot/favicon.png         browser tab icon (64px)
@@ -18,11 +19,78 @@ from collections import deque
 from pathlib import Path
 
 import numpy as np
-from PIL import Image, ImageFilter
+from PIL import Image, ImageDraw, ImageFilter
 
 REPO = Path(__file__).resolve().parents[2]
 MASTER = REPO / "tools/branding/logo-master.png"
 SIZE = 1024
+
+
+def is_magenta_backed(source: Path) -> bool:
+    red, green, blue = Image.open(source).convert("RGB").getpixel((0, 0))
+    return min(red, blue) - green > 178
+
+
+def square_tile(image: Image.Image) -> Image.Image:
+    """Crops to the tile and centers it, undistorted, on a transparent square of the master's size."""
+    box = image.getchannel("A").point(lambda a: 255 if a > 8 else 0).getbbox()
+    image = image.crop(box)
+    side = max(image.size)
+    square = Image.new("RGBA", (side, side), (0, 0, 0, 0))
+    square.paste(image, ((side - image.width) // 2, (side - image.height) // 2))
+    return square.resize((SIZE, SIZE), Image.LANCZOS)
+
+
+def cut_white_background(source: Path) -> Image.Image:
+    """Cuts the tile out of a white background and drops everything outside it, the baked shadow included.
+
+    The tile is nearly as light as the shadow, so no color key separates them. Its outline is fitted as a superellipse:
+    the sides, the top and the corner shape are measured on the upper half, where no shadow falls, and the bottom is the
+    tile's dark lip.
+    """
+    image = Image.open(source).convert("RGB")
+    # A palette source is dithered: the blur averages the dots back into gradients.
+    smooth = image.filter(ImageFilter.GaussianBlur(1.2))
+    blue = np.asarray(image.filter(ImageFilter.GaussianBlur(2.5)).getchannel("B"), dtype=np.float32)
+    height, width = blue.shape
+
+    off_white = blue < 244
+    upper = off_white[:height // 2]
+    columns = np.nonzero(upper.any(axis=0))[0]
+    left, right = columns.min(), columns.max()
+    top = np.nonzero(upper.any(axis=1))[0].min()
+    middle = blue[height // 2:, (left + right) // 2 - 100:(left + right) // 2 + 100] < 218
+    # The last row where most of the middle of the tile is lip.
+    bottom = height // 2 + np.nonzero(middle.mean(axis=1) > 0.5)[0].max()
+    cx, cy, a, b = (left + right) / 2, (top + bottom) / 2, (right - left) / 2, (bottom - top) / 2
+
+    # The exponents that best follow a corner: the top edge is where the white ends, the bottom edge is the last of the lip.
+    xs = np.arange(left + a * 0.15, left + a / 2, dtype=int)
+    top_edge = off_white[:height // 2, xs].argmax(axis=0)
+    lip = blue[:, xs] < 218
+    lip[:round(cy)] = False
+    bottom_edge = height - 1 - lip[::-1].argmax(axis=0)
+
+    def fit(edge: np.ndarray) -> float:
+        u, v = np.abs((xs - cx) / a), np.abs((edge - cy) / b)
+        return min(np.arange(2.5, 8, 0.05), key=lambda n: np.abs(u ** n + v ** n - 1).sum())
+
+    top_exponent, bottom_exponent = fit(top_edge), fit(bottom_edge)
+    print(f"tile x {left}..{right}, y {top}..{bottom}, exponents {top_exponent:.2f} and {bottom_exponent:.2f}")
+
+    # Two pixels in, so the edge carries no white blurred in from the outside.
+    a, b = a - 2, b - 2
+    scale = 4
+    points = []
+    for t in np.linspace(0, 2 * np.pi, 2880, endpoint=False):
+        # Screen coordinates: a positive sine is the lower half.
+        exponent = bottom_exponent if np.sin(t) > 0 else top_exponent
+        points.append(((cx + a * np.sign(np.cos(t)) * abs(np.cos(t)) ** (2 / exponent)) * scale,
+                       (cy + b * np.sign(np.sin(t)) * abs(np.sin(t)) ** (2 / exponent)) * scale))
+    mask = Image.new("L", (width * scale, height * scale), 0)
+    ImageDraw.Draw(mask).polygon(points, fill=255)
+    smooth.putalpha(mask.resize((width, height), Image.LANCZOS))
+    return square_tile(smooth)
 
 
 def cut_background(source: Path) -> Image.Image:
@@ -66,14 +134,7 @@ def cut_background(source: Path) -> Image.Image:
     magenta_color = np.array([255, 0, 255], dtype=np.float32)
     out[edge] = (rgb[edge] - (1 - alpha[edge, None]) * magenta_color) / alpha[edge, None]
     rgba = np.dstack([np.clip(out, 0, 255), alpha * 255]).round().astype(np.uint8)
-    image = Image.fromarray(rgba, "RGBA")
-
-    box = image.getchannel("A").point(lambda a: 255 if a > 8 else 0).getbbox()
-    image = image.crop(box)
-    side = max(image.size)
-    square = Image.new("RGBA", (side, side), (0, 0, 0, 0))
-    square.paste(image, ((side - image.width) // 2, (side - image.height) // 2))
-    return square.resize((SIZE, SIZE), Image.LANCZOS)
+    return square_tile(Image.fromarray(rgba, "RGBA"))
 
 
 def padded(master: Image.Image, scale: float, shadow: bool = False) -> Image.Image:
@@ -99,15 +160,19 @@ def save(image: Image.Image, path: str, size: int) -> None:
 
 
 def main() -> None:
-    if len(sys.argv) > 1:
-        master = cut_background(Path(sys.argv[1]))
+    arguments = sys.argv[1:]
+    desktop_only = "--desktop-only" in arguments
+    sources = [argument for argument in arguments if argument != "--desktop-only"]
+    if sources:
+        source = Path(sources[0])
+        master = cut_background(source) if is_magenta_backed(source) else cut_white_background(source)
         master.save(MASTER, optimize=True)
         print(f"{MASTER.relative_to(REPO)} ({SIZE}px)")
     master = Image.open(MASTER).convert("RGBA")
 
-    save(master, "gallery/TKCode.Arc.Gallery/Assets/logo.png", 256)
-    save(master, "gallery/TKCode.Arc.Gallery.Browser/wwwroot/favicon.png", 64)
-    save(padded(master, 0.92), "gallery/TKCode.Arc.Gallery.Browser/wwwroot/apple-touch-icon.png", 180)
+    if not desktop_only:
+        save(master, "gallery/TKCode.Arc.Gallery.Browser/wwwroot/favicon.png", 64)
+        save(padded(master, 0.92), "gallery/TKCode.Arc.Gallery.Browser/wwwroot/apple-touch-icon.png", 180)
 
     desktop = REPO / "gallery/TKCode.Arc.Gallery.Desktop/Assets"
     desktop.mkdir(parents=True, exist_ok=True)
