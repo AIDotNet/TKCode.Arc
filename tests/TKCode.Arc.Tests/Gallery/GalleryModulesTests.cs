@@ -2,8 +2,11 @@ using TKCode.Arc.Gallery;
 using TKCode.Arc.Gallery.Catalog;
 using TKCode.Arc.Gallery.Localization;
 using TKCode.Arc.Gallery.Shell;
+using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
+using TKCode.Arc.Motion;
 
 namespace TKCode.Arc.Tests.Gallery;
 
@@ -146,6 +149,46 @@ public class GalleryModulesTests
                 GalleryModules.IsReady(Entry("DotGrid")).ShouldBeTrue();
                 GalleryModules.EnsureAsync(Entry("DotGrid")).Result.ShouldBeTrue();
                 loader.Asked.Count.ShouldBe(1);
+            }
+            finally
+            {
+                window.Close();
+                Dispatcher.UIThread.RunJobs();
+            }
+        }
+        finally
+        {
+            new ArcBuilder().UseArcGallery();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Home_Page_Attached_Twice_While_The_Components_Load_Gets_One_Dot_Field()
+    {
+        var loader = new PendingLoader();
+        new ArcBuilder().UseArcGallery(loader);
+        try
+        {
+            var shell = new GalleryShell();
+            var home = new GalleryHomeView(shell);
+            var host = new ContentControl { Content = home };
+            var window = TestHelpers.Show(host, ArcMotionLevel.Full);
+            try
+            {
+                Dispatcher.UIThread.RunJobs();
+                host.Content = null;
+                Dispatcher.UIThread.RunJobs();
+                host.Content = home;
+                Dispatcher.UIThread.RunJobs();
+                home.HasDotField.ShouldBeFalse("still loading");
+
+                loader.Pending.SetResult(true);
+                Dispatcher.UIThread.RunJobs();
+                window.UpdateLayout();
+                Dispatcher.UIThread.RunJobs();
+
+                home.HasDotField.ShouldBeTrue();
+                home.GetVisualDescendants().OfType<DotGrid>().Count().ShouldBe(1, "a second field would draw over the hero");
             }
             finally
             {
