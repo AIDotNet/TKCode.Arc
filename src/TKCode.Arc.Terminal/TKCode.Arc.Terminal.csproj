@@ -16,6 +16,7 @@
         <!-- The terminal test suites stay with the TKCode app, which owns the native build and the pty host. -->
         <InternalsVisibleTo Include="TKCode.Terminal.Core.Tests" />
         <InternalsVisibleTo Include="TKCode.Terminal.Avalonia.Tests" />
+        <InternalsVisibleTo Include="TKCode.Arc.Tests" />
     </ItemGroup>
     <!-- libghostty-vt per RID. The binaries are not committed: tools/terminal/sync-native.sh copies them in from the TKCode build. -->
     <ItemGroup>
