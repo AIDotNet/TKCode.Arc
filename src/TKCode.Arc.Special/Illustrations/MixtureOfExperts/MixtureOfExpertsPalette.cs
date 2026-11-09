@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Animation.Easings;
 using Avalonia.Collections;
 using Avalonia.Media;
+using Avalonia.Media.TextFormatting;
 using Avalonia.Media.Immutable;
 using TKCode.Arc.Motion;
 
@@ -143,7 +144,7 @@ internal sealed class MixtureOfExpertsPalette
     }
 
     /// <summary>A one-line text at 14 px (or <paramref name="size"/>), cached.</summary>
-    public FormattedText Text(string text, Color color, bool medium = false, double size = 14)
+    public TextLayout Text(string text, Color color, bool medium = false, double size = 14)
         => Texts.Get(text, medium ? Medium : Regular, size, color);
 
     private static Color ColorOf(IBrush? brush, Color fallback) => brush is ISolidColorBrush solid

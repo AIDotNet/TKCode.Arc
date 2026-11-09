@@ -3,6 +3,7 @@ using Avalonia.Automation;
 using Avalonia.Automation.Peers;
 using Avalonia.Automation.Provider;
 using Avalonia.Controls;
+using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Media;
@@ -37,8 +38,11 @@ internal enum ModelMenuRowKind
 /// Rows draw no hover or focus state of their own: the panel's single highlight shows where the pointer or the
 /// keyboard is.
 /// </summary>
+[PseudoClasses(CheckedPseudoClass)]
 internal abstract class ModelMenuItem : TemplatedControl
 {
+    public const string CheckedPseudoClass = ":checked";
+
     /// <summary>True on the row of the selected model or effort level: it shows a check.</summary>
     public static readonly StyledProperty<bool> IsCheckedProperty =
         AvaloniaProperty.Register<ModelMenuItem, bool>(nameof(IsChecked));
@@ -58,6 +62,15 @@ internal abstract class ModelMenuItem : TemplatedControl
 
     /// <summary>The name typeahead matches (the visible name).</summary>
     public abstract string? TypeaheadText { get; }
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == IsCheckedProperty)
+        {
+            PseudoClasses.Set(CheckedPseudoClass, change.GetNewValue<bool>());
+        }
+    }
 
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
@@ -181,6 +194,7 @@ internal sealed class ModelMenuItemAutomationPeer : ControlAutomationPeer, IInvo
 /// A model: two lines with an 18px mark when featured, one line with a 16px mark and its tag in "More models"; in the
 /// inline (composer) layout 48px with a 16px mark, a regular name, a muted line and a check in the text color.
 /// </summary>
+[PseudoClasses(":compact", ":inline", ":simple")]
 internal sealed class ModelMenuModelRow : ModelMenuItem
 {
     public static readonly StyledProperty<bool> IsCompactProperty =
@@ -238,6 +252,18 @@ internal sealed class ModelMenuModelRow : ModelMenuItem
         if (change.Property == ModelNameProperty)
         {
             AutomationProperties.SetName(this, ModelName);
+        }
+        else if (change.Property == IsCompactProperty)
+        {
+            PseudoClasses.Set(":compact", change.GetNewValue<bool>());
+        }
+        else if (change.Property == IsInlineProperty)
+        {
+            PseudoClasses.Set(":inline", change.GetNewValue<bool>());
+        }
+        else if (change.Property == IsSimpleProperty)
+        {
+            PseudoClasses.Set(":simple", change.GetNewValue<bool>());
         }
     }
 }
@@ -349,6 +375,7 @@ internal sealed class ModelMenuActionRow : ModelMenuItem
 /// The line between the featured models and the Effort / More models rows (and under a page's back row); in the inline
 /// layout it reaches the panel's edges (margin 5 −5).
 /// </summary>
+[PseudoClasses(":inline")]
 internal sealed class ModelMenuSeparator : TemplatedControl
 {
     public static readonly StyledProperty<bool> IsInlineProperty =
@@ -362,6 +389,15 @@ internal sealed class ModelMenuSeparator : TemplatedControl
 
     public bool IsInline { get => GetValue(IsInlineProperty); set => SetValue(IsInlineProperty, value); }
 
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == IsInlineProperty)
+        {
+            PseudoClasses.Set(":inline", change.GetNewValue<bool>());
+        }
+    }
+
     protected override AutomationPeer OnCreateAutomationPeer() => new SeparatorPeer(this);
 
     private sealed class SeparatorPeer(ModelMenuSeparator owner) : ControlAutomationPeer(owner)
@@ -373,6 +409,7 @@ internal sealed class ModelMenuSeparator : TemplatedControl
 }
 
 /// <summary>A provider heading in "More models", or the note of a menu without models (class <c>empty</c>).</summary>
+[PseudoClasses(":first")]
 internal sealed class ModelMenuGroupHeader : TemplatedControl
 {
     public static readonly StyledProperty<string?> TextProperty =
@@ -389,6 +426,15 @@ internal sealed class ModelMenuGroupHeader : TemplatedControl
 
     public string? Text { get => GetValue(TextProperty); set => SetValue(TextProperty, value); }
     public bool IsFirst { get => GetValue(IsFirstProperty); set => SetValue(IsFirstProperty, value); }
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == IsFirstProperty)
+        {
+            PseudoClasses.Set(":first", change.GetNewValue<bool>());
+        }
+    }
 
     protected override AutomationPeer OnCreateAutomationPeer() => new HeaderPeer(this);
 

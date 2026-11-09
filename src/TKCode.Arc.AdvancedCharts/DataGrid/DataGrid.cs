@@ -564,7 +564,17 @@ public partial class DataGrid : TemplatedControl
     private TextBlock? _announcer;
     private ArcLanguageManager? _languages;
 
-    internal DataGridPalette Palette { get; } = new();
+    internal DataGridPalette Palette
+    {
+        get
+        {
+            FlushPalette();
+            return _palette;
+        }
+    }
+
+    private readonly DataGridPalette _palette = new();
+    private bool _paletteDirty;
 
     private DataGridRenderPalette? _renderPalette;
 
@@ -829,7 +839,7 @@ public partial class DataGrid : TemplatedControl
                  property == WarningBrushProperty || property == WarningSubtleBrushProperty || property == DangerBrushProperty ||
                  property == DangerSubtleBrushProperty)
         {
-            UpdatePalette();
+            RequestPaletteUpdate();
         }
         else if (property == RowHeightCompactProperty || property == RowHeightStandardProperty || property == RowHeightComfortableProperty ||
                  property == HeaderRowHeightProperty || property == FilterRowHeightProperty || property == TotalsRowHeightProperty ||
@@ -841,16 +851,39 @@ public partial class DataGrid : TemplatedControl
         }
     }
 
+    /// <summary>
+    /// A theme change sets some 30 of these properties in a row, and each update rebuilds every brush and drops all cached
+    /// text. Normal priority runs before the next layout and render pass; reading <see cref="Palette"/> flushes earlier.
+    /// </summary>
+    private void RequestPaletteUpdate()
+    {
+        if (_paletteDirty)
+        {
+            return;
+        }
+        _paletteDirty = true;
+        Dispatcher.UIThread.Post(FlushPalette, DispatcherPriority.Normal);
+    }
+
+    private void FlushPalette()
+    {
+        if (_paletteDirty)
+        {
+            UpdatePalette();
+        }
+    }
+
     private void UpdatePalette()
     {
+        _paletteDirty = false;
         static Color ColorOf(IBrush? brush) => brush is ISolidColorBrush solid ? solid.Color : Colors.Transparent;
         var surface = ColorOf(Background);
-        Palette.Update(surface, ColorOf(SurfaceRaisedBrush), ColorOf(SurfaceMutedBrush), ColorOf(BorderBrush), ColorOf(SubtleBorderBrush),
+        _palette.Update(surface, ColorOf(SurfaceRaisedBrush), ColorOf(SurfaceMutedBrush), ColorOf(BorderBrush), ColorOf(SubtleBorderBrush),
             ColorOf(StrongBorderBrush), ColorOf(Foreground), ColorOf(SecondaryForeground), ColorOf(MutedForeground), ColorOf(AccentBrush),
             ColorOf(ControlOnBrush), ColorOf(ControlGlyphBrush), FocusRingBrush is ISolidColorBrush ring ? ring.Color : null,
             SelectionFillOpacity, CheckedRowFillOpacity, WashOpacity, IsDark(surface), FontFamily, FontSize, SmallFontSize, MediumWeight,
             ColorOf(StripeCellBrush), ColorOf(StripeGutterBrush));
-        Palette.UpdateTones(ColorOf(AccentBrush), ColorOf(AccentSubtleBrush), ColorOf(SuccessBrush), ColorOf(SuccessSubtleBrush),
+        _palette.UpdateTones(ColorOf(AccentBrush), ColorOf(AccentSubtleBrush), ColorOf(SuccessBrush), ColorOf(SuccessSubtleBrush),
             ColorOf(WarningBrush), ColorOf(WarningSubtleBrush), ColorOf(DangerBrush), ColorOf(DangerSubtleBrush));
         Viewport.InvalidateText();
     }

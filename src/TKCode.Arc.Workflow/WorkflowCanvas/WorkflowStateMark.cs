@@ -70,7 +70,7 @@ internal sealed class WorkflowStateMark : Control
     /// <summary>One turn of the running ring in seconds (Arc <c>animation: spin .7s linear infinite</c>).</summary>
     private const double TurnSeconds = 0.7;
 
-    private readonly LiveLoop _spin;
+    private LiveLoop? _spin;
     private MotionValue<double>? _swap;
     private Mark _current;
     private Mark? _outgoing;
@@ -100,7 +100,6 @@ internal sealed class WorkflowStateMark : Control
     public WorkflowStateMark()
     {
         _current = new Mark(WorkflowNodeState.Idle, null);
-        _spin = new LiveLoop(this, Spin);
     }
 
     public WorkflowNodeState State
@@ -276,11 +275,12 @@ internal sealed class WorkflowStateMark : Control
     {
         if (_current.State == WorkflowNodeState.Running || _outgoing?.State == WorkflowNodeState.Running)
         {
+            _spin ??= new LiveLoop(this, Spin);
             _spin.Start();
         }
         else
         {
-            _spin.Stop();
+            _spin?.Stop();
         }
     }
 

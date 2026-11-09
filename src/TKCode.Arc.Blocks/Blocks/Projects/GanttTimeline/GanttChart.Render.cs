@@ -1,6 +1,7 @@
 using System.Globalization;
 using Avalonia;
 using Avalonia.Media;
+using Avalonia.Media.Immutable;
 
 namespace TKCode.Arc;
 
@@ -32,6 +33,9 @@ internal sealed partial class GanttChart
     private readonly Dictionary<(string Task, string Dependency), ArrowShape> _arrows = [];
     private StreamGeometry? _chevronOpen;
     private StreamGeometry? _chevronClosed;
+    private static readonly ImmutableDashStyle s_snapDash = new([3, 3], 0);
+    private IPen? _snapPen;
+    private IBrush? _snapPenBrush;
 
     private sealed record ArrowShape(double X1, double Y1, double X2, double Y2, StreamGeometry Geometry);
 
@@ -50,6 +54,17 @@ internal sealed partial class GanttChart
         return pen;
     }
 
+    /// <summary>The dashed outline of the snap target, remade only when the text brush changes.</summary>
+    private IPen SnapPen()
+    {
+        if (_snapPen is null || !ReferenceEquals(_snapPenBrush, TextBrush))
+        {
+            _snapPenBrush = TextBrush;
+            _snapPen = new Pen(_snapPenBrush, 1, s_snapDash);
+        }
+        return _snapPen;
+    }
+
     private string NumberText(int value)
     {
         if (!_numberText.TryGetValue(value, out var text))
@@ -61,10 +76,10 @@ internal sealed partial class GanttChart
     }
 
     /// <summary>The text whole when it fits; otherwise trimmed to a width on a coarse step, so a bar that changes width every frame does not lay its name out every frame.</summary>
-    private FormattedText TextFit(string text, double size, IBrush? brush, FontWeight weight, double room)
+    private AnalyticsText TextFit(string text, double size, FontWeight weight, double room)
     {
-        var whole = Text(text, size, brush, weight);
-        return whole.Width <= room ? whole : Text(text, size, brush, weight, Math.Max(1, Math.Floor(room / TextFitStep) * TextFitStep));
+        var whole = Text(text, size, weight);
+        return whole.Width <= room ? whole : Text(text, size, weight, Math.Max(1, Math.Floor(room / TextFitStep) * TextFitStep));
     }
 
     private double RowY(int index, GanttRow row)
@@ -149,7 +164,7 @@ internal sealed partial class GanttChart
             DrawToday(ctx, colW, hh, h);
         }
         DrawColumn(ctx, colW, hh, h);
-        var line = new Pen(GridBrush, 1);
+        var line = PenOf(GridBrush, 1);
         ctx.DrawLine(line, new Point(0, hh - 0.5), new Point(w, hh - 0.5));
         ctx.DrawLine(line, new Point(colW - 0.5, 0), new Point(colW - 0.5, h));
     }
@@ -181,14 +196,14 @@ internal sealed partial class GanttChart
             var x0 = XOf(cursor);
             var x1 = XOf(next);
             var label = big ? NumberText(cursor.Year) : s_monthText[cursor.Month - 1];
-            var ft = Text(label, 12, SecondaryBrush);
+            var ft = Text(label, 12);
             var lx = Math.Max(x0, _scrollX) + 8;
             lx = Math.Min(lx, x1 - ft.Width - 8);
             // A label shows whole or not at all, and never under the today pill.
             var whole = lx >= _scrollX && lx + ft.Width <= _scrollX + ViewWidth;
             if (whole && lx >= x0 - 1 && !pill.Intersects(new Rect(lx, TierOneY, ft.Width, ft.Height)))
             {
-                ctx.DrawText(ft, new Point(lx, TierOneY));
+                DrawText(ctx, ft, SecondaryBrush, new Point(lx, TierOneY));
             }
             cursor = next;
         }
@@ -214,9 +229,9 @@ internal sealed partial class GanttChart
             {
                 continue;
             }
-            var ft = Text(label, 13, muted);
+            var ft = Text(label, 13);
             var tx = _zoom == GanttZoom.Day ? x + (dw - ft.Width) / 2 : x + 6;
-            ctx.DrawText(ft, new Point(tx, TierTwoY));
+            DrawText(ctx, ft, muted, new Point(tx, TierTwoY));
         }
     }
 
@@ -352,16 +367,16 @@ internal sealed partial class GanttChart
             var percent = s_percentText[(int)Math.Round(p * 100)];
             if (rect.Width >= 96)
             {
-                var pct = Text(percent, 13, SecondaryBrush);
+                var pct = Text(percent, 13);
                 var room = rect.Width - BarTextInset * 2 - pct.Width - 8;
-                var ft = TextFit(t.Name, 13, TextBrush, FontWeight.Medium, room);
-                ctx.DrawText(ft, new Point(rect.X + BarTextInset, cy - ft.Height / 2));
-                ctx.DrawText(pct, new Point(rect.Right - BarTextInset - pct.Width, cy - pct.Height / 2));
+                var ft = TextFit(t.Name, 13, FontWeight.Medium, room);
+                DrawText(ctx, ft, TextBrush, new Point(rect.X + BarTextInset, cy - ft.Height / 2));
+                DrawText(ctx, pct, SecondaryBrush, new Point(rect.Right - BarTextInset - pct.Width, cy - pct.Height / 2));
             }
             else if (rect.Width >= 36)
             {
-                var pct = TextFit(percent, 12, SecondaryBrush, FontWeight.Normal, rect.Width - 8);
-                ctx.DrawText(pct, new Point(rect.X + (rect.Width - pct.Width) / 2, cy - pct.Height / 2));
+                var pct = TextFit(percent, 12, FontWeight.Normal, rect.Width - 8);
+                DrawText(ctx, pct, SecondaryBrush, new Point(rect.X + (rect.Width - pct.Width) / 2, cy - pct.Height / 2));
             }
         }
         // The edge goes over the fill, so a filled bar keeps its outline.
@@ -387,10 +402,10 @@ internal sealed partial class GanttChart
         var label = d.Task.IsMilestone || s == e
             ? s.ToString("MMM d", CultureInfo.InvariantCulture)
             : s.ToString("MMM d", CultureInfo.InvariantCulture) + " – " + e.ToString("MMM d", CultureInfo.InvariantCulture);
-        var ft = Text(label, 11, TodayTextBrush, FontWeight.Medium);
+        var ft = Text(label, 11, FontWeight.Medium);
         var pill = new Rect(bar.X, bar.Y - 22, ft.Width + 14, 18);
         ctx.DrawRectangle(TodayBrush, null, new RoundedRect(pill, 9));
-        ctx.DrawText(ft, new Point(pill.X + 7, pill.Y + (pill.Height - ft.Height) / 2));
+        DrawText(ctx, ft, TodayTextBrush, new Point(pill.X + 7, pill.Y + (pill.Height - ft.Height) / 2));
     }
 
     private void DrawSnapTarget(DrawingContext ctx, DragState d)
@@ -413,8 +428,7 @@ internal sealed partial class GanttChart
         var x0 = XOf(s);
         var x1 = XOf(d.Task.IsMilestone ? s.AddDays(1) : e.AddDays(1));
         var rect = new Rect(x0, idx * GanttModel.RowHeight + BarTop, Math.Max(2, x1 - x0), BarHeight);
-        var pen = new Pen(TextBrush, 1, new DashStyle([3, 3], 0));
-        ctx.DrawRectangle(null, pen, new RoundedRect(rect, BarRadius));
+        ctx.DrawRectangle(null, SnapPen(), new RoundedRect(rect, BarRadius));
     }
 
     private bool IsHot(string id) => _selectedId == id || _hoverId == id;
@@ -428,7 +442,7 @@ internal sealed partial class GanttChart
 
     private Rect TodayPill(double x)
     {
-        var ft = Text("Today", 12, TodayTextBrush, FontWeight.Medium);
+        var ft = Text("Today", 12, FontWeight.Medium);
         return new Rect(x - (ft.Width + 16) / 2, 6, ft.Width + 16, 18);
     }
 
@@ -441,10 +455,10 @@ internal sealed partial class GanttChart
             return;
         }
         ctx.DrawLine(PenOf(TodayBrush, 1), new Point(x, 22), new Point(x, hh));
-        var ft = Text("Today", 12, TodayTextBrush, FontWeight.Medium);
+        var ft = Text("Today", 12, FontWeight.Medium);
         var pill = TodayPill(x);
         ctx.DrawRectangle(TodayBrush, null, new RoundedRect(pill, 9));
-        ctx.DrawText(ft, new Point(pill.X + 8, pill.Y + (pill.Height - ft.Height) / 2));
+        DrawText(ctx, ft, TodayTextBrush, new Point(pill.X + 8, pill.Y + (pill.Height - ft.Height) / 2));
     }
 
     private void DrawArrows(DrawingContext ctx)
@@ -607,7 +621,7 @@ internal sealed partial class GanttChart
     private void DrawColumn(DrawingContext ctx, double colW, double hh, double h)
     {
         ctx.DrawRectangle(SurfaceBrush, null, new Rect(0, 0, colW - 1, h));
-        var tasks = Text("Tasks", 13, MutedBrush);
+        var tasks = Text("Tasks", 13);
         using (ctx.PushClip(new Rect(0, hh, colW - 1, Math.Max(0, h - hh))))
         {
             var gridPen = PenOf(GridBrush, 1);
@@ -630,10 +644,10 @@ internal sealed partial class GanttChart
                     if (row.Group is { } g)
                     {
                         DrawChevron(ctx, 19, cy, row.IsCollapsed);
-                        var count = Text(NumberText(row.GroupTaskCount), 12, MutedBrush);
-                        var name = Text(g.Name, 14, TextBrush, FontWeight.Medium, colW - 36 - count.Width - 30);
-                        ctx.DrawText(name, new Point(36, cy - name.Height / 2));
-                        ctx.DrawText(count, new Point(colW - 16 - count.Width, cy - count.Height / 2));
+                        var count = Text(NumberText(row.GroupTaskCount), 12);
+                        var name = Text(g.Name, 14, FontWeight.Medium, colW - 36 - count.Width - 30);
+                        DrawText(ctx, name, TextBrush, new Point(36, cy - name.Height / 2));
+                        DrawText(ctx, count, MutedBrush, new Point(colW - 16 - count.Width, cy - count.Height / 2));
                     }
                     else if (row.Task is { } t)
                     {
@@ -648,15 +662,15 @@ internal sealed partial class GanttChart
                             ctx.DrawEllipse(AvatarBrush(p), null, new Point(left + 11, cy), 11, 11);
                             left += 32;
                         }
-                        var ft = Text(t.Name, 14, IsHot(t.Id) ? TextBrush : SecondaryBrush, FontWeight.Normal, colW - left - 12);
-                        ctx.DrawText(ft, new Point(left, cy - ft.Height / 2));
+                        var ft = Text(t.Name, 14, FontWeight.Normal, colW - left - 12);
+                        DrawText(ctx, ft, IsHot(t.Id) ? TextBrush : SecondaryBrush, new Point(left, cy - ft.Height / 2));
                     }
                 }
                 ctx.DrawLine(gridPen, new Point(0, y + GanttModel.RowHeight - 0.5), new Point(colW, y + GanttModel.RowHeight - 0.5));
             }
         }
         ctx.DrawRectangle(SurfaceBrush, null, new Rect(0, 0, colW - 1, hh - 1));
-        ctx.DrawText(tasks, new Point(16, TierTwoY));
+        DrawText(ctx, tasks, MutedBrush, new Point(16, TierTwoY));
     }
 
     private void DrawChevron(DrawingContext ctx, double cx, double cy, bool collapsed)

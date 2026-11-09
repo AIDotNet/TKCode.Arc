@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Documents;
 using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia.Media.TextFormatting;
 using Avalonia.Media.Immutable;
 using TKCode.Arc.Motion;
 
@@ -117,14 +118,14 @@ internal sealed class AskYourDataChart : Control
     private static readonly Easing s_linear = new LinearEasing();
     private static readonly Easing s_rise = new SplineEasing(0.22, 1, 0.36, 1);
 
-    private readonly List<(FormattedText Text, double Y)> _ticks = new();
-    private readonly List<(FormattedText Text, double X)> _xLabels = new();
+    private readonly List<(TextLayout Text, double Y)> _ticks = new();
+    private readonly List<(TextLayout Text, double X)> _xLabels = new();
     private readonly List<StreamGeometry> _lines = new();
     private readonly List<Point[]> _points = new();
     private readonly List<IPen> _linePens = new();
     private readonly List<IBrush> _seriesBrushes = new();
-    private readonly List<(FormattedText Label, FormattedText Value, IBrush Swatch)> _tipRows = new();
-    private FormattedText? _tipTitle;
+    private readonly List<(TextLayout Label, TextLayout Value, IBrush Swatch)> _tipRows = new();
+    private TextLayout? _tipTitle;
     private Size _tipSize;
     private MotionValue<double>? _build;
     private bool _layoutValid;
@@ -330,15 +331,23 @@ internal sealed class AskYourDataChart : Control
         } ?? Brushes.Gray;
     }
 
-    private FormattedText Text(string text, IBrush? brush, FontWeight weight = FontWeight.Normal) =>
-        new(text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new Typeface(FontFamily, FontStyle.Normal, weight), FontSize,
-            brush ?? Brushes.Gray);
+    // TextLayout: the build animation redraws these on every frame, and a FormattedText re-shapes on every Draw.
+    private TextLayout Text(string text, IBrush? brush, FontWeight weight = FontWeight.Normal) =>
+        new(text, new Typeface(FontFamily, FontStyle.Normal, weight), FontSize, brush ?? Brushes.Gray);
 
     /// <summary>Lays out the scale, the labels and the line paths for one size and result.</summary>
     private void BuildLayout(Size size)
     {
         _layoutValid = true;
         _layoutSize = size;
+        foreach (var (text, _) in _ticks)
+        {
+            text.Dispose();
+        }
+        foreach (var (text, _) in _xLabels)
+        {
+            text.Dispose();
+        }
         _ticks.Clear();
         _xLabels.Clear();
         _lines.Clear();
@@ -358,7 +367,7 @@ internal sealed class AskYourDataChart : Control
         var format = Format;
         var (top, step) = AskYourDataFormat.NiceScale(AskYourDataFormat.DataMaximum(result, StackedBars));
         _top = top;
-        var tickTexts = new List<(FormattedText, double)>();
+        var tickTexts = new List<(TextLayout, double)>();
         var gutter = 0.0;
         for (var v = 0.0; v <= top + step / 2; v += step)
         {
@@ -413,7 +422,13 @@ internal sealed class AskYourDataChart : Control
 
     private void BuildTooltip()
     {
+        foreach (var (label, value, _) in _tipRows)
+        {
+            label.Dispose();
+            value.Dispose();
+        }
         _tipRows.Clear();
+        _tipTitle?.Dispose();
         _tipTitle = null;
         if (_active is not { } i || Result is not { HasData: true } result || i >= result.Categories.Count)
         {
@@ -463,12 +478,12 @@ internal sealed class AskYourDataChart : Control
             {
                 context.DrawLine(_gridPen, new Point(_plot.Left, snapped), new Point(_plot.Right, snapped));
             }
-            context.DrawText(text, new Point(_plot.Left - GutterGap - text.Width, y - text.Height / 2));
+            text.Draw(context, new Point(_plot.Left - GutterGap - text.Width, y - text.Height / 2));
         }
         foreach (var (text, x) in _xLabels)
         {
             var left = Math.Clamp(x - text.Width / 2, 0, Math.Max(0, bounds.Width - text.Width));
-            context.DrawText(text, new Point(left, _plot.Bottom + 6));
+            text.Draw(context, new Point(left, _plot.Bottom + 6));
         }
         var t = _build?.Value ?? BuildSeconds;
         if (Kind == AskYourDataChartKind.Line)
@@ -567,13 +582,13 @@ internal sealed class AskYourDataChart : Control
         var box = new Rect(x, _plot.Top, _tipSize.Width, _tipSize.Height);
         context.DrawRectangle(TooltipBackground, _tipPen, box, 10, 10);
         var y = box.Top + TipPad;
-        context.DrawText(_tipTitle!, new Point(box.Left + TipPad, y + (TipRow - _tipTitle!.Height) / 2));
+        _tipTitle!.Draw(context, new Point(box.Left + TipPad, y + (TipRow - _tipTitle!.Height) / 2));
         foreach (var (label, value, swatch) in _tipRows)
         {
             y += TipRow;
             context.DrawRectangle(swatch, null, new Rect(box.Left + TipPad, y + TipRow / 2 - 4, 8, 8), 2, 2);
-            context.DrawText(label, new Point(box.Left + TipPad + 14, y + (TipRow - label.Height) / 2));
-            context.DrawText(value, new Point(box.Right - TipPad - value.Width, y + (TipRow - value.Height) / 2));
+            label.Draw(context, new Point(box.Left + TipPad + 14, y + (TipRow - label.Height) / 2));
+            value.Draw(context, new Point(box.Right - TipPad - value.Width, y + (TipRow - value.Height) / 2));
         }
     }
 

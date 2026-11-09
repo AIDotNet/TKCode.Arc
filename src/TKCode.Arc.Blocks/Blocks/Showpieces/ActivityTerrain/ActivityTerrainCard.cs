@@ -166,8 +166,26 @@ internal sealed class ActivityTerrainCardBars : Control
     public ActivityTerrainCardBars()
     {
         Height = BarHeight;
-        ResourcesChanged += (_, _) => InvalidateVisual();
-        ActualThemeVariantChanged += (_, _) => InvalidateVisual();
+        ResourcesChanged += (_, _) => ColorsChanged();
+        ActualThemeVariantChanged += (_, _) => ColorsChanged();
+    }
+
+    // The card follows the pointer: Render reads the token colors once, not on every frame.
+    private ImmutableSolidColorBrush? _restBrush;
+    private ImmutableSolidColorBrush? _currentBrush;
+
+    private void ColorsChanged()
+    {
+        _restBrush = null;
+        _currentBrush = null;
+        InvalidateVisual();
+    }
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        _restBrush = null;
+        _currentBrush = null;
     }
 
     /// <summary>The share of 22px each bar shows now (tests).</summary>
@@ -195,6 +213,10 @@ internal sealed class ActivityTerrainCardBars : Control
             _to[h] = max > 0 ? Math.Max(MinimumShare, value / max) : MinimumShare;
         }
         _hour = hour;
+        if (_tone != tone)
+        {
+            _currentBrush = null;
+        }
         _tone = tone;
         _progress ??= CreateProgress();
         if (!_hasDay)
@@ -231,8 +253,8 @@ internal sealed class ActivityTerrainCardBars : Control
         {
             return;
         }
-        var rest = new ImmutableSolidColorBrush(ArcTokens.GetColor(this, ArcDesignTokenKind.BorderStrong));
-        var current = new ImmutableSolidColorBrush(ArcTokens.GetColor(this, _tone switch
+        var rest = _restBrush ??= new ImmutableSolidColorBrush(ArcTokens.GetColor(this, ArcDesignTokenKind.BorderStrong));
+        var current = _currentBrush ??= new ImmutableSolidColorBrush(ArcTokens.GetColor(this, _tone switch
         {
             ActivityTerrainTone.Success => ArcDesignTokenKind.Success,
             ActivityTerrainTone.Warning => ArcDesignTokenKind.Warning,

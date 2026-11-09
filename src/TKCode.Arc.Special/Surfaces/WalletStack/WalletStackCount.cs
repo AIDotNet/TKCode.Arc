@@ -1,6 +1,7 @@
 using System.Globalization;
 using Avalonia;
 using Avalonia.Media;
+using Avalonia.Media.TextFormatting;
 using TKCode.Arc.Motion;
 
 namespace TKCode.Arc;
@@ -33,7 +34,7 @@ internal sealed class WalletStackCount : Avalonia.Controls.Control
     private string? _previous;
     private int _direction = 1;
     private int _value;
-    private FormattedText? _beforeText, _afterText, _currentText, _previousText;
+    private TextLayout? _beforeText, _afterText, _currentText, _previousText;
 
     static WalletStackCount()
     {
@@ -82,7 +83,9 @@ internal sealed class WalletStackCount : Avalonia.Controls.Control
         {
             _direction = value >= _value ? 1 : -1;
             _previous = _current;
+            _previousText?.Dispose();
             _previousText = _currentText;
+            _currentText = null;
             _progress.Jump(0);
             _ = _progress.AnimateTo(1, MotionSpec.Tween(TimeSpan.FromMilliseconds(700), s_ease));
         }
@@ -97,14 +100,27 @@ internal sealed class WalletStackCount : Avalonia.Controls.Control
             _after = after;
             _current = number;
             _value = value;
-            _beforeText = _afterText = _currentText = null;
+            DropText(previous: false);
             InvalidateMeasure();
         }
         InvalidateVisual();
     }
 
-    private FormattedText Format(string text) => new(text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
-        new Typeface(FontFamily), FontSize, Ink ?? Brushes.Gray) { };
+    // TextLayout: this draws 3-4 texts on every frame of the 700 ms roll, and a FormattedText re-shapes on every Draw.
+    private TextLayout Format(string text) => new(text, new Typeface(FontFamily), FontSize, Ink ?? Brushes.Gray);
+
+    private void DropText(bool previous)
+    {
+        _beforeText?.Dispose();
+        _afterText?.Dispose();
+        _currentText?.Dispose();
+        _beforeText = _afterText = _currentText = null;
+        if (previous)
+        {
+            _previousText?.Dispose();
+            _previousText = null;
+        }
+    }
 
     private void EnsureText()
     {
@@ -118,7 +134,7 @@ internal sealed class WalletStackCount : Avalonia.Controls.Control
         base.OnPropertyChanged(change);
         if (change.Property == InkProperty || change.Property == FontFamilyProperty || change.Property == FontSizeProperty)
         {
-            _beforeText = _afterText = _currentText = _previousText = null;
+            DropText(previous: true);
         }
     }
 
@@ -135,7 +151,7 @@ internal sealed class WalletStackCount : Avalonia.Controls.Control
         var lineHeight = FontSize * 1.4;
         var top = (Bounds.Height - lineHeight) / 2 + (lineHeight - _currentText!.Height) / 2;
         var x = Bounds.Width - _afterText!.WidthIncludingTrailingWhitespace;
-        context.DrawText(_afterText, new Point(x, top));
+        _afterText.Draw(context, new Point(x, top));
         x -= _currentText.WidthIncludingTrailingWhitespace;
         var p = Math.Clamp(_progress.Value, 0, 1);
         var travel = ArcMotion.IsFull(this) ? Roll : 0;
@@ -145,18 +161,18 @@ internal sealed class WalletStackCount : Avalonia.Controls.Control
             using (context.PushOpacity(1 - p))
             {
                 var px = x + _currentText.WidthIncludingTrailingWhitespace - _previousText.WidthIncludingTrailingWhitespace;
-                context.DrawText(_previousText, new Point(px, top - travel * p * _direction));
+                _previousText.Draw(context, new Point(px, top - travel * p * _direction));
             }
             using (context.PushOpacity(p))
             {
-                context.DrawText(_currentText, new Point(x, top + travel * (1 - p) * _direction));
+                _currentText.Draw(context, new Point(x, top + travel * (1 - p) * _direction));
             }
         }
         else
         {
-            context.DrawText(_currentText, new Point(x, top));
+            _currentText.Draw(context, new Point(x, top));
         }
         x -= _beforeText!.WidthIncludingTrailingWhitespace;
-        context.DrawText(_beforeText, new Point(x, top));
+        _beforeText.Draw(context, new Point(x, top));
     }
 }

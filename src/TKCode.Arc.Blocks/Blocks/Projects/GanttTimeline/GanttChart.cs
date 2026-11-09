@@ -1,4 +1,3 @@
-using System.Globalization;
 using Avalonia;
 using Avalonia.Automation.Peers;
 using Avalonia.Controls;
@@ -41,7 +40,8 @@ internal sealed partial class GanttChart : Control
     public static readonly StyledProperty<IBrush?> TodayTextBrushProperty = AvaloniaProperty.Register<GanttChart, IBrush?>(nameof(TodayTextBrush));
     public static readonly StyledProperty<IBrush?> FocusBrushProperty = AvaloniaProperty.Register<GanttChart, IBrush?>(nameof(FocusBrush));
 
-    private readonly Dictionary<(string Text, double Size, FontWeight Weight, double Max, IBrush? Brush), FormattedText> _textCache = [];
+    // TextLayout cache: FormattedText re-shapes its text on every Draw, and a frame of a zoom or a drag draws ~130 labels.
+    private readonly AnalyticsTextCache _text = new(600);
     private readonly Dictionary<(string Key, double? Hue), IBrush> _avatars = [];
     private readonly MotionValue<double> _dayWidth;
     private readonly MotionValue<double> _layoutT;
@@ -57,7 +57,6 @@ internal sealed partial class GanttChart : Control
     private string? _selectedId;
     private string? _focusId;
     private Dictionary<string, Snapshot> _before = [];
-    private bool _jumpNext = true;
     private bool _viewportReady;
     private double _anchorDays;
     private bool _zooming;
@@ -197,10 +196,6 @@ internal sealed partial class GanttChart : Control
         {
             _layoutT.Jump(1);
         }
-        if (firstTime)
-        {
-            _jumpNext = true;
-        }
         InvalidateVisual();
     }
 
@@ -320,29 +315,19 @@ internal sealed partial class GanttChart : Control
 
     protected override AutomationPeer OnCreateAutomationPeer() => new GanttChartPeer(this);
 
-    private FormattedText Text(string text, double size, IBrush? brush, FontWeight weight = FontWeight.Normal, double maxWidth = double.PositiveInfinity)
+    /// <summary>One line, cut with an ellipsis at <paramref name="maxWidth"/> when given; the brush goes to <see cref="AnalyticsText.Draw"/>.</summary>
+    private AnalyticsText Text(string text, double size, FontWeight weight = FontWeight.Normal, double maxWidth = double.PositiveInfinity)
     {
-        var family = TextElement.GetFontFamily(this);
-        var key = (text, size, weight, double.IsInfinity(maxWidth) ? maxWidth : Math.Round(maxWidth), brush);
-        if (_textCache.TryGetValue(key, out var cached))
+        var typeface = new Typeface(TextElement.GetFontFamily(this), FontStyle.Normal, weight);
+        return double.IsInfinity(maxWidth) ? _text.Get(text, typeface, size) : _text.GetTrimmed(text, typeface, size, Math.Max(1, Math.Round(maxWidth)));
+    }
+
+    private static void DrawText(DrawingContext ctx, AnalyticsText text, IBrush? brush, Point origin)
+    {
+        if (brush is not null)
         {
-            return cached;
+            text.Draw(ctx, brush, origin);
         }
-        if (_textCache.Count > 600)
-        {
-            _textCache.Clear();
-        }
-        var ft = new FormattedText(text, CultureInfo.CurrentUICulture, FlowDirection.LeftToRight, new Typeface(family, FontStyle.Normal, weight), size, brush)
-        {
-            MaxLineCount = 1,
-            Trimming = TextTrimming.CharacterEllipsis,
-        };
-        if (!double.IsInfinity(maxWidth))
-        {
-            ft.MaxTextWidth = Math.Max(1, maxWidth);
-        }
-        _textCache[key] = ft;
-        return ft;
     }
 
     private static string AvatarKey(ProjectPerson p) => string.IsNullOrEmpty(p.Key) ? p.Name : p.Key;

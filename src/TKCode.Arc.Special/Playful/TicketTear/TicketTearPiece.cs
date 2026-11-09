@@ -139,8 +139,6 @@ internal sealed class TicketTearFlap : Control
 
         geometry.BuildFlap(_points, hinge, true);
         var shape = MapToGeometry();
-        geometry.BuildFlap(_points, hinge, false);
-        var outline = MapToGeometry();
 
         if (ShadowBrush is { } shadow && motion.Angle > 0.001)
         {
@@ -164,7 +162,9 @@ internal sealed class TicketTearFlap : Control
             }
             if (owner.EdgePen is { } pen)
             {
-                context.DrawGeometry(null, pen, outline);
+                // Only an edge needs the outline without the fibers.
+                geometry.BuildFlap(_points, hinge, false);
+                context.DrawGeometry(null, pen, MapToGeometry());
             }
         }
     }

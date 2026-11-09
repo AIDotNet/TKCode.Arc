@@ -103,6 +103,7 @@ public class VoiceOrb : Control
     private WriteableBitmap? _back;
     private bool _paletteDirty = true;
     private bool _textureDirty = true;
+    private (int Side, double Flow, double Twist, double Band, double BandAngle, double Saturation) _textureInputs = (-1, 0, 0, 0, 0, 0);
     private VoiceOrbTexture.Palette _palette;
     private IBrush? _haloBrush;
     private IBrush? _bandGlowBrush;
@@ -379,14 +380,21 @@ public class VoiceOrb : Control
         var size = Size;
         _model.Outline(size, _radii);
         UpdateOutline();
-        if (_paletteDirty)
+        var paletteChanged = _paletteDirty;
+        if (paletteChanged)
         {
             RebuildPalette();
         }
         var side = VoiceOrbTexture.SideFor(size);
         _texture.Ensure(side);
-        _texture.Render(_model, _palette);
-        _textureDirty = true;
+        // The texture depends on these and the palette alone; the outline above changes every frame regardless.
+        var inputs = (side, _model.Flow, _model.Twist, _model.BandStrength, _model.BandAngle, _model.SaturationFactor);
+        if (paletteChanged || inputs != _textureInputs)
+        {
+            _textureInputs = inputs;
+            _texture.Render(_model, _palette);
+            _textureDirty = true;
+        }
         InvalidateVisual();
     }
 

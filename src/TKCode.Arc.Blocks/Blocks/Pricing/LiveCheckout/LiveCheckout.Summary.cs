@@ -97,7 +97,9 @@ public partial class LiveCheckout
         _linesHost?.Children.Clear();
         if (_summary is not null)
         {
-            _summary.RenderTransform = _flipTransform;
+            _summary.RenderTransform = Part<LiveCheckoutShell>(e, ShellPart) is { } shell
+                ? new TransformGroup { Children = { _flipTransform, shell.StickTransform } }
+                : _flipTransform;
             _flip = new MotionValue<Vector>(_summary, default, MotionVectors.Vector);
             _flip.Changed += v =>
             {

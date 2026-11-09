@@ -36,7 +36,7 @@ internal enum AgentMemoryButtonKind
 /// The small buttons of the memory card, one look per <see cref="Kind"/>: an optional Lucide glyph or text content. Hover
 /// uses <c>:hover</c>, set for mouse and pen only (Arc's <c>(hover: hover) and (pointer: fine)</c>).
 /// </summary>
-[PseudoClasses(HoverPseudoClass)]
+[PseudoClasses(HoverPseudoClass, ":row-action", ":search", ":link", ":source")]
 internal sealed class AgentMemoryButton : AvaloniaButton
 {
     public const string HoverPseudoClass = ":hover";
@@ -53,6 +53,11 @@ internal sealed class AgentMemoryButton : AvaloniaButton
     /// <summary>For a button that opens something (the search toggle): whether it is open (<c>aria-expanded</c>); null for others.</summary>
     public static readonly StyledProperty<bool?> ExpandedProperty =
         AvaloniaProperty.Register<AgentMemoryButton, bool?>(nameof(Expanded));
+
+    public AgentMemoryButton()
+    {
+        UpdateKindPseudoClasses();
+    }
 
     public AgentMemoryButtonKind Kind { get => GetValue(KindProperty); set => SetValue(KindProperty, value); }
 
@@ -71,6 +76,20 @@ internal sealed class AgentMemoryButton : AvaloniaButton
         {
             peer.RaiseExpanded(change.GetOldValue<bool?>() == true, change.GetNewValue<bool?>() == true);
         }
+        else if (change.Property == KindProperty)
+        {
+            UpdateKindPseudoClasses();
+        }
+    }
+
+    // The theme styles each Kind through a pseudo-class (cheaper than a property selector on every row's buttons).
+    private void UpdateKindPseudoClasses()
+    {
+        var kind = Kind;
+        PseudoClasses.Set(":row-action", kind == AgentMemoryButtonKind.RowAction);
+        PseudoClasses.Set(":search", kind == AgentMemoryButtonKind.Search);
+        PseudoClasses.Set(":link", kind == AgentMemoryButtonKind.Link);
+        PseudoClasses.Set(":source", kind == AgentMemoryButtonKind.Source);
     }
 
     protected override void OnPointerEntered(PointerEventArgs e)

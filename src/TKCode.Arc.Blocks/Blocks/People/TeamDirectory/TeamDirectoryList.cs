@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
@@ -216,9 +217,38 @@ internal sealed class TeamDirectoryRow : ToggleButton
         // The block owns the pressed state.
     }
 
+    private LazyFocusRing? _focusRing;
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing?.Update();
+    }
+
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
+        // The ring's -4 margin has no token: the local value set here wins over the resource binding of LazyFocusRing.
+        _focusRing ??= new LazyFocusRing(this, ArcDesignTokens.Key(ArcDesignTokenKind.FocusEdgeThickness), ArcDesignTokens.Key(ArcDesignTokenKind.RadiusStep14));
+        var ringHost = e.NameScope.Find<Panel>("PART_RingHost");
+        if (ringHost is null)
+        {
+            _focusRing.Attach(null, null);
+        }
+        else
+        {
+            _focusRing.Attach(ring =>
+            {
+                ring.Margin = new Thickness(-4);
+                ringHost.Children.Add(ring);
+            }, ring => ringHost.Children.Remove(ring));
+        }
         _avatar = e.NameScope.Find<Avatar>(AvatarPart);
         _name = e.NameScope.Find<TextBlock>(NamePart);
         _role = e.NameScope.Find<TextBlock>(RolePart);

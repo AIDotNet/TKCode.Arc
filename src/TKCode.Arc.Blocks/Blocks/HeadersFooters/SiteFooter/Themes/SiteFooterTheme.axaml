@@ -244,28 +244,28 @@
         <Setter Property="LetterSpacing" Value="{arc:SiteFooterTokenResource BodyLetterSpacing}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
         <Setter Property="TextWrapping" Value="Wrap" />
-        <Style Selector="^[Kind=Heading]">
+        <Style Selector="^:heading">
             <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource DisplayFontFamily}" />
             <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
             <Setter Property="LineHeight" Value="{arc:SiteFooterTokenResource HeadingLineHeight}" />
             <Setter Property="LetterSpacing" Value="{arc:SiteFooterTokenResource HeadingLetterSpacing}" />
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         </Style>
-        <Style Selector="^[Kind=Tagline]">
+        <Style Selector="^:tagline">
             <Setter Property="MaxWidth" Value="{arc:SiteFooterTokenResource TaglineMaxWidth}" />
             <Setter Property="HorizontalAlignment" Value="Left" />
         </Style>
-        <Style Selector="^[Kind=Copyright]">
+        <Style Selector="^:copyright">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
         </Style>
-        <Style Selector="^[Kind=Message]">
+        <Style Selector="^:message">
             <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
             <Setter Property="LineHeight" Value="{arc:SiteFooterTokenResource MessageHeight}" />
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
-            <Style Selector="^[Tone=Error]">
+            <Style Selector="^:tone-error">
                 <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
             </Style>
-            <Style Selector="^[Tone=Success]">
+            <Style Selector="^:tone-success">
                 <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
             </Style>
         </Style>
@@ -339,16 +339,16 @@
         <Style Selector="^ /template/ Ellipse.tone">
             <Setter Property="Fill" Value="{arc:ArcDesignTokenResource Success}" />
         </Style>
-        <Style Selector="^[Tone=Warning] /template/ Ellipse.tone">
+        <Style Selector="^:tone-warning /template/ Ellipse.tone">
             <Setter Property="Fill" Value="{arc:ArcDesignTokenResource Warning}" />
         </Style>
-        <Style Selector="^[Tone=Danger] /template/ Ellipse.tone">
+        <Style Selector="^:tone-danger /template/ Ellipse.tone">
             <Setter Property="Fill" Value="{arc:ArcDesignTokenResource Danger}" />
         </Style>
-        <Style Selector="^[Kind=Status] /template/ Panel#PART_Dot">
+        <Style Selector="^:status /template/ Panel#PART_Dot">
             <Setter Property="IsVisible" Value="True" />
         </Style>
-        <Style Selector="^[Kind=Brand]">
+        <Style Selector="^:brand">
             <Setter Property="Padding" Value="0" />
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
             <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
@@ -499,7 +499,7 @@
         <Setter Property="Cursor" Value="IBeam" />
         <Setter Property="MinWidth" Value="0" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Style Selector="^[IsDone=True]">
+        <Style Selector="^:done">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
         </Style>
     </ControlTheme>

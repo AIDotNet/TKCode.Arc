@@ -176,7 +176,7 @@ internal sealed class AgentStatusSegments : AgentStatusInked
             var segment = _segments[i];
             var rect = new Rect(i * (segmentWidth + SegmentGap), 0, segmentWidth, SegmentHeight);
             var round = new RoundedRect(rect, SegmentHeight / 2);
-            context.DrawRectangle(new ImmutableSolidColorBrush(segment.Tinted ? tint : border), null, round);
+            context.DrawRectangle(BrushOf(segment.Tinted ? tint : border), null, round);
             var amount = Math.Clamp(segment.Amount.Value(_now), 0, 1);
             if (amount > 0.001)
             {
@@ -184,11 +184,28 @@ internal sealed class AgentStatusSegments : AgentStatusInked
                 var fill = new Rect(rect.X, rect.Y, Math.Max(SegmentHeight, rect.Width * amount), SegmentHeight);
                 using (context.PushClip(rect))
                 {
-                    context.DrawRectangle(new ImmutableSolidColorBrush(color), null, new RoundedRect(fill, SegmentHeight / 2));
+                    context.DrawRectangle(BrushOf(color), null, new RoundedRect(fill, SegmentHeight / 2));
                 }
             }
         }
     }
+
+    // Five inks at most; theme changes only add a few more before the cap clears them.
+    private ImmutableSolidColorBrush BrushOf(Color color)
+    {
+        if (!_brushes.TryGetValue(color, out var brush))
+        {
+            if (_brushes.Count >= 32)
+            {
+                _brushes.Clear();
+            }
+            brush = new ImmutableSolidColorBrush(color);
+            _brushes[color] = brush;
+        }
+        return brush;
+    }
+
+    private readonly Dictionary<Color, ImmutableSolidColorBrush> _brushes = new();
 
     protected override AutomationPeer OnCreateAutomationPeer() => new SegmentsPeer(this);
 

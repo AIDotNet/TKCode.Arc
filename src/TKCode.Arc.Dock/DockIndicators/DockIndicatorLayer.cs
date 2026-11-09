@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using TKCode.Arc.DesignTokens;
@@ -162,7 +163,10 @@ internal sealed class DockIndicatorLayer : Control
         {
             Reveal(ref _compassReveal, slot => slot <= DockCompassSlot.AreaBottom);
         }
-        InvalidateArrange();
+        if (changed)
+        {
+            InvalidateArrange();
+        }
     }
 
     /// <summary>Shows the four edge buttons along <paramref name="area"/> (the whole layout), or hides them (null).</summary>
@@ -373,7 +377,7 @@ internal sealed class DockIndicatorLayer : Control
     public void ShowInsertionLine(Rect? rect)
     {
         _line.IsVisible = rect is not null;
-        if (rect is { } r)
+        if (rect is { } r && r != _lineRect)
         {
             _lineRect = r;
             InvalidateArrange();
@@ -393,19 +397,50 @@ internal sealed class DockIndicatorLayer : Control
         }
         if (_ghost is null)
         {
-            _ghost = new DockDragGhost();
+            _ghost = new DockDragGhost { RenderTransform = _ghostShift, IsVisible = false };
             VisualChildren.Add(_ghost);
             LogicalChildren.Add(_ghost);
         }
         var main = lead ?? panes[0];
         _ghost.Title = main.ToString();
         _ghost.Icon = main.Icon;
-        _ghost.Extra = panes.Count > 1 ? $"+{panes.Count - 1}" : null;
-        _ghost.IsVisible = true;
-        var offset = Token(DockIndicatorTokenKind.GhostOffset, 12);
-        _ghostAt = new Point(at.X + offset, at.Y + offset);
-        InvalidateArrange();
+        if (panes.Count != _ghostCount)
+        {
+            _ghostCount = panes.Count;
+            _ghost.Extra = panes.Count > 1 ? $"+{panes.Count - 1}" : null;
+        }
+        if (!_ghost.IsVisible)
+        {
+            _ghost.IsVisible = true;
+            _ghostOffset = Token(DockIndicatorTokenKind.GhostOffset, 12);
+            InvalidateArrange();
+        }
+        _ghostAt = new Point(at.X + _ghostOffset, at.Y + _ghostOffset);
+        // Following the pointer is a transform; the ghost is laid out only when it appears or its text changes.
+        PlaceGhost(Bounds.Size);
     }
+
+    /// <summary>
+    /// Trails the pointer to the right and below; flips to the other side near the layer's right or bottom edge. Rounded
+    /// the way layout rounds an arranged position, so the ghost's text lands on the same pixels.
+    /// </summary>
+    private void PlaceGhost(Size layer)
+    {
+        if (_ghost is null)
+        {
+            return;
+        }
+        var size = _ghost.DesiredSize;
+        var x = _ghostAt.X + size.Width > layer.Width ? _ghostAt.X - 2 * _ghostOffset - size.Width : _ghostAt.X;
+        var y = _ghostAt.Y + size.Height > layer.Height ? _ghostAt.Y - 2 * _ghostOffset - size.Height : _ghostAt.Y;
+        var scale = LayoutHelper.GetLayoutScale(this);
+        _ghostShift.X = LayoutHelper.RoundLayoutValue(Math.Max(0, x), scale);
+        _ghostShift.Y = LayoutHelper.RoundLayoutValue(Math.Max(0, y), scale);
+    }
+
+    private readonly TranslateTransform _ghostShift = new();
+    private int _ghostCount = -1;
+    private double _ghostOffset = 12;
 
     /// <summary>Hides every indicator (end of the drag, or the pointer left this host).</summary>
     public void Clear(bool animate = true)
@@ -443,12 +478,8 @@ internal sealed class DockIndicatorLayer : Control
         }
         if (_ghost is not null)
         {
-            // Trails the pointer to the right and below; flips to the other side near the layer's right or bottom edge.
-            var size = _ghost.DesiredSize;
-            var offset = Token(DockIndicatorTokenKind.GhostOffset, 12);
-            var x = _ghostAt.X + size.Width > finalSize.Width ? _ghostAt.X - 2 * offset - size.Width : _ghostAt.X;
-            var y = _ghostAt.Y + size.Height > finalSize.Height ? _ghostAt.Y - 2 * offset - size.Height : _ghostAt.Y;
-            _ghost.Arrange(new Rect(new Point(Math.Max(0, x), Math.Max(0, y)), size));
+            _ghost.Arrange(new Rect(_ghost.DesiredSize));
+            PlaceGhost(finalSize);
         }
         return finalSize;
     }

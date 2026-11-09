@@ -403,7 +403,7 @@
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:TeamDirectoryRow">
-                <Panel>
+                <Panel Name="PART_RingHost">
                     <Border Background="{TemplateBinding Background}"
                             CornerRadius="{arc:TeamDirectoryTokenResource RowRadius}"
                             Padding="{arc:TeamDirectoryTokenResource RowPadding}">
@@ -425,21 +425,11 @@
                             </StackPanel>
                         </Grid>
                     </Border>
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            Margin="-4"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep14}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
         </Setter>
         <Style Selector="^:pointerover">
             <Setter Property="Background" Value="{arc:TeamDirectoryTokenResource RowHoverBackground}" />
-        </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
         </Style>
         <Style Selector="^:motion-full">
             <Setter Property="Transitions">

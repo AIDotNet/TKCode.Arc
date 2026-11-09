@@ -834,6 +834,7 @@ internal sealed class DataGridViewport : Control, ILogicalScrollable
         var row = -1;
         var column = -1;
         var interactive = false;
+        var repaints = false;
         if (!_touchMode && position.Y >= BodyTop && position.Y < BodyTop + BodyHeight &&
             HitTest(position, clamp: false) is { Gutter: false, Group: null } hit && _grid.VisibleColumn(hit.Column).EffectiveRenderer is { } renderer &&
             PointerContext(hit, position) is { } context)
@@ -841,6 +842,7 @@ internal sealed class DataGridViewport : Control, ILogicalScrollable
             row = hit.Row;
             column = hit.Column;
             interactive = renderer.IsInteractiveAt(context);
+            repaints = renderer.PaintsPointer;
         }
         var moved = row != _hoverCellRow || column != _hoverCellColumn;
         if (moved && _hoverCellRow >= 0)
@@ -851,7 +853,7 @@ internal sealed class DataGridViewport : Control, ILogicalScrollable
         _hoverCellColumn = column;
         _hoverPoint = position;
         _overInteractive = interactive;
-        if (row >= 0)
+        if (row >= 0 && (moved || repaints))
         {
             LayerOfColumn(column).InvalidateVisual();
         }

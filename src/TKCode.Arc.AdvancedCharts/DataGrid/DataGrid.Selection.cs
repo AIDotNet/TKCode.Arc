@@ -11,6 +11,13 @@ public partial class DataGrid
     private DataGridCellAddress _anchor;
     private DataGridCellAddress _focus;
     private readonly List<string> _keyboardFolded = new();
+    private (int Filled, int Numbers, decimal Sum, string Prefix, string Suffix) _stats;
+    private bool _statsValid;
+    private int _statsView;
+    private int _statsEdit = -1;
+    private int _statsColumns;
+    private DataGridCellRange _statsRange;
+    private System.Globalization.CultureInfo? _statsCulture;
 
     /// <summary>The anchor of the selection (clamped to the grid).</summary>
     internal DataGridCellAddress Anchor => Clamp(_anchor);
@@ -406,6 +413,13 @@ public partial class DataGrid
             return (0, 0, 0, string.Empty, string.Empty);
         }
         var range = Range;
+        // Remote data changes as blocks arrive, so only local rows are cached.
+        var cacheable = !HasDataSource;
+        if (cacheable && _statsValid && _statsView == _viewVersion && _statsEdit == _editVersion && _statsColumns == _columnsVersion &&
+            _statsRange.Equals(range) && ReferenceEquals(_statsCulture, EffectiveCulture))
+        {
+            return _stats;
+        }
         var accumulator = new DataGridAggregates.Accumulator();
         DataGridColumnType? kind = null;
         var mixed = false;
@@ -436,7 +450,34 @@ public partial class DataGrid
         }
         var prefix = !mixed && kind == DataGridColumnType.Currency ? symbol : string.Empty;
         var suffix = !mixed && kind == DataGridColumnType.Percent ? EffectiveCulture.NumberFormat.PercentSymbol : string.Empty;
-        return (accumulator.Filled, accumulator.Numbers, accumulator.Sum, prefix, suffix);
+        var result = (accumulator.Filled, accumulator.Numbers, accumulator.Sum, prefix, suffix);
+        if (cacheable)
+        {
+            _stats = result;
+            _statsValid = true;
+            _statsView = _viewVersion;
+            _statsEdit = _editVersion;
+            _statsColumns = _columnsVersion;
+            _statsRange = range;
+            _statsCulture = EffectiveCulture;
+        }
+        return result;
+    }
+
+    /// <summary>Whether a source row is displayed inside the selected range (true when that cannot be told yet).</summary>
+    private bool IsSourceRowSelected(int sourceIndex)
+    {
+        if (_viewDirty)
+        {
+            return true;
+        }
+        var map = _view.DisplayOfSource;
+        if (sourceIndex < 0 || sourceIndex >= map.Length)
+        {
+            return true;
+        }
+        var row = map[sourceIndex];
+        return row >= _statsRange.Row0 && row <= _statsRange.Row1;
     }
 
     /// <summary>A spreadsheet address of the selection (A1 or A1:C5), in visible columns and display rows.</summary>

@@ -125,6 +125,8 @@ internal sealed class DockTabShift
 
     public double Value => _value.Value;
 
+    public bool IsAnimating => _value.IsAnimating;
+
     public void Jump(double x) => _value.Jump(x);
 
     public void SpringTo(double x) => _ = _value.AnimateTo(x, MotionSpec.Spring(ArcSpring.Snappy));

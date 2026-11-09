@@ -25,7 +25,7 @@ namespace TKCode.Arc;
 /// footer's navigate event.
 /// </summary>
 [TemplatePart(RingPart, typeof(Border))]
-[PseudoClasses(HoverPseudoClass)]
+[PseudoClasses(HoverPseudoClass, ":brand", ":status", ":tone-warning", ":tone-danger")]
 internal sealed class SiteFooterLinkButton : AvaloniaButton
 {
     public const string RingPart = "PART_FocusRing";
@@ -50,6 +50,12 @@ internal sealed class SiteFooterLinkButton : AvaloniaButton
     private bool _isExternal;
     private SiteFooterLink? _watched;
 
+    public SiteFooterLinkButton()
+    {
+        UpdateKindPseudoClasses();
+        UpdateTonePseudoClasses();
+    }
+
     public SiteFooterLink? Link { get => GetValue(LinkProperty); set => SetValue(LinkProperty, value); }
 
     public SiteFooterNavigationKind Kind { get => GetValue(KindProperty); set => SetValue(KindProperty, value); }
@@ -71,6 +77,29 @@ internal sealed class SiteFooterLinkButton : AvaloniaButton
         {
             Watch(change.GetNewValue<SiteFooterLink?>());
         }
+        else if (change.Property == KindProperty)
+        {
+            UpdateKindPseudoClasses();
+        }
+        else if (change.Property == ToneProperty)
+        {
+            UpdateTonePseudoClasses();
+        }
+    }
+
+    // The theme reads Kind and Tone through pseudo-classes: the footer's links are on every page.
+    private void UpdateKindPseudoClasses()
+    {
+        var kind = Kind;
+        PseudoClasses.Set(":brand", kind == SiteFooterNavigationKind.Brand);
+        PseudoClasses.Set(":status", kind == SiteFooterNavigationKind.Status);
+    }
+
+    private void UpdateTonePseudoClasses()
+    {
+        var tone = Tone;
+        PseudoClasses.Set(":tone-warning", tone == SiteStatusTone.Warning);
+        PseudoClasses.Set(":tone-danger", tone == SiteStatusTone.Danger);
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -164,6 +193,7 @@ internal enum SiteFooterLabelKind
 }
 
 /// <summary>A text of the footer, styled by <see cref="Kind"/> (and <see cref="Tone"/> for messages).</summary>
+[PseudoClasses(":heading", ":tagline", ":copyright", ":message", ":tone-error", ":tone-success")]
 internal sealed class SiteFooterLabel : TextBlock
 {
     public static readonly StyledProperty<SiteFooterLabelKind> KindProperty =
@@ -172,11 +202,46 @@ internal sealed class SiteFooterLabel : TextBlock
     public static readonly StyledProperty<SiteFooterMessageTone> ToneProperty =
         AvaloniaProperty.Register<SiteFooterLabel, SiteFooterMessageTone>(nameof(Tone));
 
+    public SiteFooterLabel()
+    {
+        UpdateKindPseudoClasses();
+        UpdateTonePseudoClasses();
+    }
+
     public SiteFooterLabelKind Kind { get => GetValue(KindProperty); set => SetValue(KindProperty, value); }
 
     public SiteFooterMessageTone Tone { get => GetValue(ToneProperty); set => SetValue(ToneProperty, value); }
 
     protected override Type StyleKeyOverride => typeof(SiteFooterLabel);
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == KindProperty)
+        {
+            UpdateKindPseudoClasses();
+        }
+        else if (change.Property == ToneProperty)
+        {
+            UpdateTonePseudoClasses();
+        }
+    }
+
+    private void UpdateKindPseudoClasses()
+    {
+        var kind = Kind;
+        PseudoClasses.Set(":heading", kind == SiteFooterLabelKind.Heading);
+        PseudoClasses.Set(":tagline", kind == SiteFooterLabelKind.Tagline);
+        PseudoClasses.Set(":copyright", kind == SiteFooterLabelKind.Copyright);
+        PseudoClasses.Set(":message", kind == SiteFooterLabelKind.Message);
+    }
+
+    private void UpdateTonePseudoClasses()
+    {
+        var tone = Tone;
+        PseudoClasses.Set(":tone-error", tone == SiteFooterMessageTone.Error);
+        PseudoClasses.Set(":tone-success", tone == SiteFooterMessageTone.Success);
+    }
 }
 
 /// <summary>
@@ -524,6 +589,7 @@ internal sealed class SiteFooterMark : Control
 /// around it shows the focus, not the box itself.
 /// </summary>
 [TemplatePart(TextPresenterPart, typeof(TextPresenter))]
+[PseudoClasses(":done")]
 internal sealed class SiteFooterInput : AvaloniaTextBox
 {
     public const string TextPresenterPart = "PART_TextPresenter";
@@ -547,6 +613,15 @@ internal sealed class SiteFooterInput : AvaloniaTextBox
     {
         base.OnApplyTemplate(e);
         Presenter = e.NameScope.Find<TextPresenter>(TextPresenterPart);
+    }
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == IsDoneProperty)
+        {
+            PseudoClasses.Set(":done", change.GetNewValue<bool>());
+        }
     }
 }
 

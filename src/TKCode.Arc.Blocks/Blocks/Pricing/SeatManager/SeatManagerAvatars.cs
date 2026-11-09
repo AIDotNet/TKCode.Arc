@@ -136,13 +136,49 @@ internal sealed class SeatManagerAvatars : Control
         return new Size(Ring + n * d - (n - 1) * Overlap + Ring, d);
     }
 
+    private IBrush? _edgeSource;
+    private ImmutablePen? _edgePen;
+    private readonly List<EllipseGeometry> _faceClips = [];
+
+    /// <summary>The edge pen, kept while the brush stays (a mutable brush can change in place, so it is read every time).</summary>
+    private ImmutablePen? EdgePen()
+    {
+        var brush = EdgeBrush;
+        if (brush is null)
+        {
+            _edgeSource = null;
+            _edgePen = null;
+        }
+        else if (_edgePen is null || !ReferenceEquals(_edgeSource, brush) || brush is not IImmutableBrush)
+        {
+            _edgeSource = brush;
+            _edgePen = new ImmutablePen(brush.ToImmutable(), 1);
+        }
+        return _edgePen;
+    }
+
+    private EllipseGeometry FaceClip(int index, Rect inner)
+    {
+        while (_faceClips.Count <= index)
+        {
+            _faceClips.Add(new EllipseGeometry(inner));
+        }
+        var clip = _faceClips[index];
+        if (clip.Rect != inner)
+        {
+            clip = new EllipseGeometry(inner);
+            _faceClips[index] = clip;
+        }
+        return clip;
+    }
+
     public override void Render(DrawingContext context)
     {
         var d = Diameter;
         var step = d - Overlap;
         var ring = Ring;
         var x = ring;
-        var edge = EdgeBrush is { } e ? new ImmutablePen(e.ToImmutable(), 1) : null;
+        var edge = EdgePen();
         for (var i = 0; i < CircleCount; i++)
         {
             var center = new Point(x + d / 2, d / 2);
@@ -157,7 +193,7 @@ internal sealed class SeatManagerAvatars : Control
                 var inner = new Rect(x + 1, 1, d - 2, d - 2);
                 if (face.Member.Avatar is { } image)
                 {
-                    using (context.PushGeometryClip(new EllipseGeometry(inner)))
+                    using (context.PushGeometryClip(FaceClip(i, inner)))
                     {
                         context.DrawImage(image, new Rect(image.Size), inner);
                     }

@@ -1,4 +1,5 @@
 // Ported from Arc's free site-header block (MIT, Copyright (c) 2026 Elia Kuratli): the interactive parts of site-header.tsx.
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
 using Avalonia;
@@ -43,6 +44,52 @@ internal abstract class SiteHeaderButtonBase : AvaloniaButton
 
     /// <summary>True while a mouse or pen is over the button.</summary>
     public bool IsFineHover { get; private set; }
+
+    private LazyFocusRing? _focusRing;
+    private Panel? _ringHost;
+
+    /// <summary>
+    /// The radius of a focus ring built the first time it shows (the buttons of the bar, on every page); null when the
+    /// template declares its ring (the buttons of the panel and the sheet, which only exist while those are open).
+    /// </summary>
+    protected virtual ArcDesignTokenKind? LazyRingRadius => null;
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        _ringHost = e.NameScope.Find<Panel>("PART_RingHost");
+        ResetFocusRing();
+    }
+
+    /// <summary>Builds the ring anew at its next show (or now, if it is showing): its radius changed.</summary>
+    protected void ResetFocusRing()
+    {
+        _focusRing?.Attach(null, null);
+        if (_ringHost is not { } host || LazyRingRadius is not { } radius)
+        {
+            _focusRing = null;
+            return;
+        }
+        // The ring's -2 margin has no token: the local value set here wins over the resource binding of LazyFocusRing.
+        _focusRing = new LazyFocusRing(this, ArcDesignTokens.Key(ArcDesignTokenKind.FocusEdgeThickness), ArcDesignTokens.Key(radius));
+        _focusRing.Attach(ring =>
+        {
+            ring.Margin = new Thickness(-2);
+            host.Children.Add(ring);
+        }, ring => host.Children.Remove(ring));
+    }
+
+    protected override void OnGotFocus(FocusChangedEventArgs e)
+    {
+        base.OnGotFocus(e);
+        _focusRing?.Update();
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        _focusRing?.Update();
+    }
 
     /// <summary>Raised on every pointer enter of a mouse or pen (the header's hover intent).</summary>
     public event EventHandler<PointerEventArgs>? FinePointerEntered;
@@ -128,6 +175,8 @@ internal abstract class SiteHeaderButtonBase : AvaloniaButton
 /// <summary>A navigation item of the bar: a label, with a chevron when it opens a panel.</summary>
 internal sealed class SiteNavButton : SiteHeaderButtonBase
 {
+    protected override ArcDesignTokenKind? LazyRingRadius => IsCapsule ? ArcDesignTokenKind.RadiusPill : ArcDesignTokenKind.RadiusStep14;
+
     public static readonly StyledProperty<string> LabelProperty = AvaloniaProperty.Register<SiteNavButton, string>(nameof(Label), string.Empty);
 
     public static readonly StyledProperty<bool> HasChevronProperty = AvaloniaProperty.Register<SiteNavButton, bool>(nameof(HasChevron));
@@ -151,6 +200,7 @@ internal sealed class SiteNavButton : SiteHeaderButtonBase
         else if (change.Property == IsCapsuleProperty)
         {
             PseudoClasses.Set(":capsule", IsCapsule);
+            ResetFocusRing();
         }
     }
 }
@@ -158,11 +208,15 @@ internal sealed class SiteNavButton : SiteHeaderButtonBase
 /// <summary>The brand: mark and name (the header puts them in <see cref="ContentControl.Content"/>).</summary>
 internal sealed class SiteBrandButton : SiteHeaderButtonBase
 {
+    protected override ArcDesignTokenKind? LazyRingRadius => ArcDesignTokenKind.RadiusStep14;
+
 }
 
 /// <summary>An action of the bar or the sheet: primary or secondary.</summary>
 internal sealed class SiteActionButton : SiteHeaderButtonBase
 {
+    protected override ArcDesignTokenKind? LazyRingRadius => ArcDesignTokenKind.RadiusStep20;
+
     public static readonly StyledProperty<bool> IsPrimaryProperty = AvaloniaProperty.Register<SiteActionButton, bool>(nameof(IsPrimary));
 
     public static readonly StyledProperty<bool> IsInSheetProperty = AvaloniaProperty.Register<SiteActionButton, bool>(nameof(IsInSheet));
@@ -197,6 +251,8 @@ internal sealed class SiteActionButton : SiteHeaderButtonBase
 /// <summary>The menu button of narrow layouts: a 40px square with the swapping menu / close icon.</summary>
 internal sealed class SiteMenuButton : SiteHeaderButtonBase
 {
+    protected override ArcDesignTokenKind? LazyRingRadius => ArcDesignTokenKind.RadiusStep14;
+
 }
 
 /// <summary>A link of a mega panel: icon, title and description.</summary>

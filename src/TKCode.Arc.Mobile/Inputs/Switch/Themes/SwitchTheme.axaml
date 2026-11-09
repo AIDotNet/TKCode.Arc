@@ -23,16 +23,15 @@
                                 CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
                                 Background="{arc:ArcDesignTokenResource ControlOn}" />
                         <Panel Margin="{arcm:SwitchTokenResource TrackInset}">
-                            <Border Name="PART_Thumb"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    RenderTransformOrigin="0%,50%"
-                                    RenderTransform="scale(1)"
-                                    Margin="{TemplateBinding ThumbMargin}"
-                                    Width="{arcm:SwitchTokenResource ThumbSize}"
-                                    Height="{arcm:SwitchTokenResource ThumbSize}"
-                                    CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
-                                    BoxShadow="{arc:ArcDesignTokenResource ControlThumbShadow}" />
+                            <Panel Name="PART_ThumbSlide" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <Border Name="PART_Thumb"
+                                        RenderTransformOrigin="0%,50%"
+                                        RenderTransform="scale(1)"
+                                        Width="{arcm:SwitchTokenResource ThumbSize}"
+                                        Height="{arcm:SwitchTokenResource ThumbSize}"
+                                        CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                        BoxShadow="{arc:ArcDesignTokenResource ControlThumbShadow}" />
+                            </Panel>
                         </Panel>
                     </Panel>
                 </Panel>

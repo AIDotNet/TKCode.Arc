@@ -40,7 +40,6 @@ internal sealed class SelectionGlider
         }
         _attached = true;
         _owner.SelectionChanged += OnSelectionChanged;
-        _owner.LayoutUpdated += OnLayoutUpdated;
         _glider.Loaded += OnGliderLoaded;
         Update(false);
     }
@@ -54,14 +53,59 @@ internal sealed class SelectionGlider
         }
         _attached = false;
         _owner.SelectionChanged -= OnSelectionChanged;
-        _owner.LayoutUpdated -= OnLayoutUpdated;
+        Track(null, null);
         _glider.Loaded -= OnGliderLoaded;
         _last = null;
     }
 
     private void OnSelectionChanged(object? sender, SelectionChangedEventArgs e) => Update(true);
 
-    private void OnLayoutUpdated(object? sender, EventArgs e) => Update(false);
+    /// <summary>The owner's ArrangeOverride calls this after arranging its children (instead of a LayoutUpdated subscription).</summary>
+    public void OnOwnerArranged()
+    {
+        if (_attached)
+        {
+            Update(false);
+        }
+    }
+
+    // A panel inside the owner can move the selected item without the owner arranging again, so those two are watched too.
+    private void Track(Control? container, Control? host)
+    {
+        if (ReferenceEquals(container, _trackedContainer) && ReferenceEquals(host, _trackedHost))
+        {
+            return;
+        }
+        if (_trackedContainer is not null)
+        {
+            _trackedContainer.PropertyChanged -= OnTrackedChanged;
+        }
+        if (_trackedHost is not null && !ReferenceEquals(_trackedHost, _trackedContainer))
+        {
+            _trackedHost.PropertyChanged -= OnTrackedChanged;
+        }
+        _trackedContainer = container;
+        _trackedHost = host;
+        if (container is not null)
+        {
+            container.PropertyChanged += OnTrackedChanged;
+        }
+        if (host is not null && !ReferenceEquals(host, container))
+        {
+            host.PropertyChanged += OnTrackedChanged;
+        }
+    }
+
+    private void OnTrackedChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+    {
+        if (e.Property == Visual.BoundsProperty || e.Property == Visual.IsVisibleProperty)
+        {
+            Update(false);
+        }
+    }
+
+    private Control? _trackedContainer;
+    private Control? _trackedHost;
 
     private void OnGliderLoaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e) => Update(false);
 
@@ -75,6 +119,7 @@ internal sealed class SelectionGlider
         var index = _owner.SelectedIndex;
         var container = index >= 0 ? _owner.ContainerFromIndex(index) : null;
         var host = container is null ? null : _target(container);
+        Track(container, host);
         if (host is null)
         {
             if (_last is not null)

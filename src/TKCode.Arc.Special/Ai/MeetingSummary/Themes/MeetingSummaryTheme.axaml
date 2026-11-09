@@ -431,7 +431,7 @@
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         </Style>
-        <Style Selector="^[IsExpanded=True]">
+        <Style Selector="^:expanded">
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         </Style>

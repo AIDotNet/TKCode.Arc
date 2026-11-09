@@ -117,6 +117,13 @@ internal sealed class PageCurlSurface : Panel
     private static readonly double[] s_flapCastOffsets = [0.6, 1.4, 2.4, 3.6, 5, 6.8, 9];
 
     private readonly PageCurlPage[] _pool = new PageCurlPage[PoolSize];
+    private StreamGeometry? _sheetFlapGeometry;
+    private StreamGeometry? _mirrorFlapGeometry;
+    private Pen? _chevronPen;
+    private IBrush? _chevronPenBrush;
+    private StreamGeometry? _chevronGeometry;
+    private Point _chevronAt;
+    private int _chevronSide;
     private readonly PageCurlFx _book;
     private readonly PageCurlFx _under;
     private readonly PageCurlFx _mid;
@@ -646,6 +653,8 @@ internal sealed class PageCurlSurface : Panel
         _progress = 0;
         _sheetFlapCount = 0;
         _mirrorFlapCount = 0;
+        _sheetFlapGeometry = null;
+        _mirrorFlapGeometry = null;
         if (_haveCurl)
         {
             _fold = PageCurlGeometry.Fold(corner, pointer, _w);
@@ -765,13 +774,33 @@ internal sealed class PageCurlSurface : Panel
         {
             if (SheetOf(_wanted[i]) is null)
             {
-                var free = _pool.First(sheet => sheet.PageNumber == 0);
-                free.Show(_wanted[i], _owner!.PageAt(_wanted[i]), _owner.PageTemplate);
+                foreach (var free in _pool)
+                {
+                    if (free.PageNumber == 0)
+                    {
+                        free.Show(_wanted[i], _owner!.PageAt(_wanted[i]), _owner.PageTemplate);
+                        break;
+                    }
+                }
             }
         }
     }
 
-    private PageCurlPage? SheetOf(int page) => page == 0 ? null : _pool.FirstOrDefault(sheet => sheet.PageNumber == page);
+    private PageCurlPage? SheetOf(int page)
+    {
+        if (page == 0)
+        {
+            return null;
+        }
+        foreach (var sheet in _pool)
+        {
+            if (sheet.PageNumber == page)
+            {
+                return sheet;
+            }
+        }
+        return null;
+    }
 
     private void Place(int page, Matrix matrix, Geometry? clip, int z, bool resting, double opacity)
     {
@@ -814,8 +843,18 @@ internal sealed class PageCurlSurface : Panel
         var n = PageCount;
         var right = PageCurlGeometry.RightPage(_shown, n) != 0;
         var x = right ? _bookX + 2 * _w - _hint.DesiredSize.Width : _bookX;
-        _hint.RenderTransform = new TranslateTransform(x, 0);
+        if (_hint.RenderTransform is not TranslateTransform shift)
+        {
+            _hint.RenderTransform = shift = new TranslateTransform();
+        }
+        shift.X = x;
     }
+
+    // The flap polygons change once per Update but are drawn by three layers (the cast shadow seven times): built once a
+    // frame, on first use, and never reopened, because the compositor may still hold the previous frame's geometry.
+    private StreamGeometry SheetFlapGeometry => _sheetFlapGeometry ??= Polygon(_sheetFlap, _sheetFlapCount, 0, 0);
+
+    private StreamGeometry MirrorFlapGeometry => _mirrorFlapGeometry ??= Polygon(_mirrorFlap, _mirrorFlapCount, 0, 0);
 
     private static StreamGeometry Polygon(Point[] points, int count, double dx, double dy)
     {
@@ -907,7 +946,7 @@ internal sealed class PageCurlSurface : Panel
             var fade = Math.Clamp((1 - _progress) * 3, 0, 1);
             if (fade > 0.01)
             {
-                context.DrawGeometry(AlongFold(s_foldShadeStops, -reach, fade), null, Polygon(_sheetFlap, _sheetFlapCount, 0, 0));
+                context.DrawGeometry(AlongFold(s_foldShadeStops, -reach, fade), null, SheetFlapGeometry);
             }
         }
     }
@@ -924,7 +963,10 @@ internal sealed class PageCurlSurface : Panel
         {
             foreach (var offset in s_flapCastOffsets)
             {
-                context.DrawGeometry(s_flapCast, null, Polygon(_mirrorFlap, _mirrorFlapCount, 0.25 * offset * lift, offset * lift));
+                using (context.PushTransform(Matrix.CreateTranslation(0.25 * offset * lift, offset * lift)))
+                {
+                    context.DrawGeometry(s_flapCast, null, MirrorFlapGeometry);
+                }
             }
         }
     }
@@ -936,7 +978,7 @@ internal sealed class PageCurlSurface : Panel
             // The lit curl: a shade right at the crease, a bright band where the paper bends toward the light, then the
             // flat back of the page.
             var reach = Math.Clamp(Distance(_fold.Mid, _fold.Pointer) * 0.7, 18, 0.32 * _w);
-            context.DrawGeometry(AlongFold(s_curlStops, reach), null, Polygon(_mirrorFlap, _mirrorFlapCount, 0, 0));
+            context.DrawGeometry(AlongFold(s_curlStops, reach), null, MirrorFlapGeometry);
         }
 
         if (_chevronDir != 0 && _chevron.Value > 0.01 && _mode == TurnMode.Rest && !_haveCurl)
@@ -965,17 +1007,26 @@ internal sealed class PageCurlSurface : Panel
             var fill = ChevronFill;
             var stroke = ChevronStroke;
             context.DrawEllipse(fill, null, center, 15, 15);
-            var pen = new Pen(stroke, 1.75, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round);
-            var s = dir > 0 ? 1 : -1;
-            var geometry = new StreamGeometry();
-            using (var g = geometry.Open())
+            if (_chevronPen is null || !ReferenceEquals(_chevronPenBrush, stroke))
             {
-                g.BeginFigure(new Point(center.X - 3 * s, center.Y - 6), false);
-                g.LineTo(new Point(center.X + 3 * s, center.Y));
-                g.LineTo(new Point(center.X - 3 * s, center.Y + 6));
-                g.EndFigure(false);
+                _chevronPen = new Pen(stroke, 1.75, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round);
+                _chevronPenBrush = stroke;
             }
-            context.DrawGeometry(null, pen, geometry);
+            var s = dir > 0 ? 1 : -1;
+            if (_chevronGeometry is null || _chevronAt != center || _chevronSide != s)
+            {
+                _chevronGeometry = new StreamGeometry();
+                using (var g = _chevronGeometry.Open())
+                {
+                    g.BeginFigure(new Point(center.X - 3 * s, center.Y - 6), false);
+                    g.LineTo(new Point(center.X + 3 * s, center.Y));
+                    g.LineTo(new Point(center.X - 3 * s, center.Y + 6));
+                    g.EndFigure(false);
+                }
+                _chevronAt = center;
+                _chevronSide = s;
+            }
+            context.DrawGeometry(null, _chevronPen, _chevronGeometry);
         }
     }
 

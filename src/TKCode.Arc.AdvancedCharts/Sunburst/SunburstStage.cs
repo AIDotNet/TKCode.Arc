@@ -426,6 +426,7 @@ internal sealed class SunburstStage : Avalonia.Controls.Control, Avalonia.Render
     public void SetActive(SunburstEntry? node, Point? pointer, bool tooltip = true)
     {
         var changed = !ReferenceEquals(node, _active);
+        var repaint = changed || tooltip != _showTip;
         _active = node;
         _pointer = pointer;
         _showTip = tooltip;
@@ -443,8 +444,11 @@ internal sealed class SunburstStage : Avalonia.Controls.Control, Avalonia.Render
             _reading = node is null ? null : _owner.Describe(node);
             _peer?.Announce();
         }
-        SyncTooltip();
-        InvalidateVisual();
+        SyncTooltip(repaint);
+        if (repaint)
+        {
+            InvalidateVisual();
+        }
     }
 
     private (SunburstEntry? Node, bool Center) HitTest(Point point)
@@ -737,13 +741,17 @@ internal sealed class SunburstStage : Avalonia.Controls.Control, Avalonia.Render
 
     // ---- tooltip -----------------------------------------------------------------------------------------------
 
-    private void SyncTooltip()
+    /// <param name="repaintStage">False when only the tooltip moved: it draws on the overlay, so the rings stay as they are.</param>
+    private void SyncTooltip(bool repaintStage = true)
     {
         if (_active is not { } node || !_showTip || Bounds.Width <= 0 || !IsVisibleInLayout(node))
         {
             _tooltip.Hide();
             _owner.Overlay.InvalidateVisual();
-            InvalidateVisual();
+            if (repaintStage)
+            {
+                InvalidateVisual();
+            }
             return;
         }
         var p = _owner.Palette;
@@ -791,7 +799,10 @@ internal sealed class SunburstStage : Avalonia.Controls.Control, Avalonia.Render
         }
         _tooltip.Show(new Point(ChartsBMath.Clamp(left, 0, Math.Max(0, bounds.Width - size.Width)), ChartsBMath.Clamp(top, 0, Math.Max(0, bounds.Height - size.Height))));
         _owner.Overlay.InvalidateVisual();
-        InvalidateVisual();
+        if (repaintStage)
+        {
+            InvalidateVisual();
+        }
     }
 
     internal bool IsTooltipOpen => _tooltip.IsOpen;

@@ -646,7 +646,8 @@ public partial class DockLayout
             var other = i < from ? i : i - 1;
             var shift = i > from && other < index ? -room : i < from && other >= index ? room : 0;
             var motion = DockTabShift.Of(session.Tabs[i]);
-            if (Math.Abs(motion.Value - shift) > 0.01 || shift == 0)
+            // A tab resting on its target needs no spring (each one would cost a task and a scheduler round trip per move).
+            if (motion.IsAnimating || Math.Abs(motion.Value - shift) > 0.01)
             {
                 motion.SpringTo(shift);
             }

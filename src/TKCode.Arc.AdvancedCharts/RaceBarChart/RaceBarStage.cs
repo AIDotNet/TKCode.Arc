@@ -46,6 +46,10 @@ internal sealed class RaceBarStage : Control, IChartsBAccessible, Avalonia.Rende
     private string? _tipValue;
     private double _tipBarEnd;
 
+    private const int MaxValueLayouts = 512;
+
+    private readonly Dictionary<(string Text, bool Strong), TextLayout> _valueLayouts = new();
+
     private sealed class RowText
     {
         public TextLayout? Name;
@@ -139,11 +143,15 @@ internal sealed class RaceBarStage : Control, IChartsBAccessible, Avalonia.Rende
         {
             row.Name?.Dispose();
             row.NameOnBar?.Dispose();
-            row.Value?.Dispose();
             row.Name = row.NameOnBar = row.Value = null;
             row.ValueString = null;
             row.ValueKey = long.MinValue;
         }
+        foreach (var layout in _valueLayouts.Values)
+        {
+            layout.Dispose();
+        }
+        _valueLayouts.Clear();
         foreach (var label in _tickLabels.Values)
         {
             label.Dispose();
@@ -258,8 +266,19 @@ internal sealed class RaceBarStage : Control, IChartsBAccessible, Avalonia.Rende
             return;
         }
         row.ValueString = text;
-        row.Value?.Dispose();
-        row.Value = Layout(text, p, p.TypeSM, strong ? p.Foreground : p.TextSecondary, strong ? FontWeight.SemiBold : FontWeight.Medium, tabular: true);
+        // A race passes the same few readings on many rows and on every replay, so the layouts are shared by text.
+        var cacheKey = (text, strong);
+        if (!_valueLayouts.TryGetValue(cacheKey, out var layout))
+        {
+            if (_valueLayouts.Count >= MaxValueLayouts)
+            {
+                // Rows may still draw these, so they are dropped rather than disposed.
+                _valueLayouts.Clear();
+            }
+            layout = Layout(text, p, p.TypeSM, strong ? p.Foreground : p.TextSecondary, strong ? FontWeight.SemiBold : FontWeight.Medium, tabular: true);
+            _valueLayouts[cacheKey] = layout;
+        }
+        row.Value = layout;
     }
 
     /// <summary>A number that changes when the leading digits of <paramref name="value"/> change (the exact bits on a whole period).</summary>

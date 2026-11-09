@@ -1,4 +1,4 @@
-using Avalonia.Threading;
+using TKCode.Arc.Motion;
 
 namespace TKCode.Arc;
 
@@ -22,7 +22,10 @@ public sealed class AgentTimelineLiveDriver : IDisposable
     private readonly List<(AgentTimelineSpan Source, AgentTimelineSpan? Copy)> _spans;
     private readonly List<AgentTimelineHandoff> _handoffs;
     private readonly double _length;
-    private DispatcherTimer? _timer;
+    private const double UpdateInterval = 0.1;
+
+    private LiveLoop? _loop;
+    private double _sinceUpdate;
     private AgentTimeline? _target;
     private DateTimeOffset _startedAt;
     private int _nextHandoff;
@@ -81,16 +84,29 @@ public sealed class AgentTimelineLiveDriver : IDisposable
         timeline.Run = LiveRun;
         timeline.IsLive = true;
         Update();
-        _timer = new DispatcherTimer(TimeSpan.FromMilliseconds(100), DispatcherPriority.Background, (_, _) => Update());
-        _timer.Start();
+        // Elapsed comes from the wall clock, so a pause while hidden catches up on the first tick back.
+        _sinceUpdate = 0;
+        _loop = new LiveLoop(timeline, Tick) { MinimumLevel = ArcMotionLevel.Off };
+        _loop.Start();
     }
 
     /// <summary>Stops feeding events (the timeline stays in live mode until you turn it off).</summary>
     public void Stop()
     {
-        _timer?.Stop();
-        _timer = null;
+        _loop?.Dispose();
+        _loop = null;
         _target = null;
+    }
+
+    private bool Tick(double dt)
+    {
+        _sinceUpdate += dt;
+        if (_sinceUpdate >= UpdateInterval)
+        {
+            _sinceUpdate = 0;
+            Update();
+        }
+        return _target is not null;
     }
 
     /// <summary>Delivers every event up to now; at the end of the run, turns live mode off (tests call it directly).</summary>

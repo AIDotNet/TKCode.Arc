@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
+using Avalonia.Media;
 
 namespace TKCode.Arc;
 
@@ -20,6 +21,8 @@ internal sealed class LiveCheckoutShell : Panel
     private Rect? _formExitRect;
     private double _viewportTop = double.NegativeInfinity;
     private bool _isPaid;
+    private double _arrangedHeight;
+    private readonly TranslateTransform _stick = new();
 
     public LiveCheckoutShell()
     {
@@ -31,7 +34,7 @@ internal sealed class LiveCheckoutShell : Panel
                 _viewportTop = top;
                 if (!IsNarrow && !_isPaid)
                 {
-                    InvalidateArrange();
+                    UpdateStick();
                 }
             }
         };
@@ -88,8 +91,26 @@ internal sealed class LiveCheckoutShell : Panel
         }
     }
 
-    /// <summary>The summary's sticky offset at the last arrange (tests).</summary>
+    /// <summary>The summary's sticky offset now (tests).</summary>
     public double StickyOffset { get; private set; }
+
+    /// <summary>
+    /// Goes on the summary's RenderTransform: scrolling moves the sticky summary without a layout pass (the owner combines
+    /// it with the summary's own glide).
+    /// </summary>
+    internal TranslateTransform StickTransform => _stick;
+
+    // Sticky: follow the top of the visible area (plus the gap), but stay inside the shell.
+    private void UpdateStick()
+    {
+        if (Summary is not { } summary)
+        {
+            return;
+        }
+        var sticky = double.IsNegativeInfinity(_viewportTop) ? 0 : _viewportTop + StickyTop;
+        StickyOffset = Math.Clamp(sticky, 0, Math.Max(0, _arrangedHeight - summary.DesiredSize.Height));
+        _stick.Y = StickyOffset;
+    }
 
     /// <summary>Keeps the form at its current place, out of the layout, while it leaves.</summary>
     public void BeginFormExit()
@@ -146,6 +167,8 @@ internal sealed class LiveCheckoutShell : Panel
         var form = Form;
         var summary = Summary;
         StickyOffset = 0;
+        _stick.Y = 0;
+        _arrangedHeight = finalSize.Height;
         if (_isPaid)
         {
             var w = IsNarrow ? width : Math.Min(SummaryWidth, width);
@@ -167,11 +190,8 @@ internal sealed class LiveCheckoutShell : Panel
         form?.Arrange(new Rect(0, 0, formWidth, form.DesiredSize.Height));
         if (summary is not null)
         {
-            var h = summary.DesiredSize.Height;
-            // Sticky: follow the top of the visible area (plus the gap), but stay inside the shell.
-            var sticky = double.IsNegativeInfinity(_viewportTop) ? 0 : _viewportTop + StickyTop;
-            StickyOffset = Math.Clamp(sticky, 0, Math.Max(0, finalSize.Height - h));
-            summary.Arrange(new Rect(width - SummaryWidth, StickyOffset, SummaryWidth, h));
+            summary.Arrange(new Rect(width - SummaryWidth, 0, SummaryWidth, summary.DesiredSize.Height));
+            UpdateStick();
         }
         return finalSize;
     }

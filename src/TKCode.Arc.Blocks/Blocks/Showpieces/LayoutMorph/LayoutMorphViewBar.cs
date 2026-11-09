@@ -109,8 +109,10 @@ internal sealed class LayoutMorphViewBar : TemplatedControl
         if (_panel is not null)
         {
             _panel.Children.Clear();
+            _panel.Arranged -= ArmPill;
             _panel.LayoutUpdated -= OnPanelLayoutUpdated;
         }
+        _pillArmed = false;
         _panel = e.NameScope.Find<LayoutMorphViewBarPanel>(OptionsPart);
         _pill = e.NameScope.Find<GlidingIndicator>(PillPart);
         _pillPlaced = false;
@@ -118,7 +120,7 @@ internal sealed class LayoutMorphViewBar : TemplatedControl
         {
             _panel.IsUniform = IsCompact;
             _panel.Children.AddRange(_options);
-            _panel.LayoutUpdated += OnPanelLayoutUpdated;
+            _panel.Arranged += ArmPill;
         }
     }
 
@@ -142,6 +144,7 @@ internal sealed class LayoutMorphViewBar : TemplatedControl
                 _panel.IsUniform = IsCompact;
             }
             _pillPlaced = false;
+            ArmPill();
         }
     }
 
@@ -204,7 +207,27 @@ internal sealed class LayoutMorphViewBar : TemplatedControl
         base.OnKeyDown(e);
     }
 
-    private void OnPanelLayoutUpdated(object? sender, EventArgs e) => MovePill(animate: false, onlyIfMisplaced: true);
+    private bool _pillArmed;
+
+    // The options only move when the panel arranges them: wait for the end of that pass, and listen to no other pass.
+    private void ArmPill()
+    {
+        if (!_pillArmed && _panel is not null)
+        {
+            _pillArmed = true;
+            _panel.LayoutUpdated += OnPanelLayoutUpdated;
+        }
+    }
+
+    private void OnPanelLayoutUpdated(object? sender, EventArgs e)
+    {
+        if (_panel is not null)
+        {
+            _panel.LayoutUpdated -= OnPanelLayoutUpdated;
+        }
+        _pillArmed = false;
+        MovePill(animate: false, onlyIfMisplaced: true);
+    }
 
     private void MovePill(bool animate, bool onlyIfMisplaced = false)
     {
@@ -323,6 +346,9 @@ internal sealed class LayoutMorphViewBarPanel : Panel
         return new Size(width + gaps, height);
     }
 
+    /// <summary>Raised when the options were arranged.</summary>
+    public event Action? Arranged;
+
     protected override Size ArrangeOverride(Size finalSize)
     {
         var n = Children.Count;
@@ -339,6 +365,7 @@ internal sealed class LayoutMorphViewBarPanel : Panel
             child.Arrange(new Rect(x, 0, w, finalSize.Height));
             x += w + Spacing;
         }
+        Arranged?.Invoke();
         return finalSize;
     }
 }

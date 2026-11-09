@@ -270,6 +270,7 @@ public partial class DataGrid
 
     private void OnStoreReset()
     {
+        _statsValid = false;
         PruneErrors();
         InvalidateOptions();
         InvalidateView();
@@ -279,7 +280,13 @@ public partial class DataGrid
 
     private void OnStoreRowChanged(int sourceIndex)
     {
+        // A row outside the selection leaves the cached selection stats correct.
+        var statsCurrent = _statsEdit == _editVersion && !IsSourceRowSelected(sourceIndex);
         _editVersion++;
+        if (statsCurrent)
+        {
+            _statsEdit = _editVersion;
+        }
         InvalidateOptions();
         Viewport.InvalidateLayers();
         UpdateStats();

@@ -25,6 +25,13 @@ public class Tabbar : ListBox
     protected override Control CreateContainerForItemOverride(object? item, int index, object? recycleKey)
         => new TabbarItem();
 
+    protected override Size ArrangeOverride(Size finalSize)
+    {
+        var size = base.ArrangeOverride(finalSize);
+        _glider?.OnOwnerArranged();
+        return size;
+    }
+
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);

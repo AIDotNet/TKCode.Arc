@@ -45,6 +45,8 @@ internal sealed class DataGridToneMap
 /// </summary>
 public sealed class BadgeRenderer : DataGridCellRenderer
 {
+    internal override bool PaintsPointer => false;
+
     private const double Padding = 8;
     private const double MaxHeight = 22;
     private readonly DataGridToneMap _map = new();
@@ -101,6 +103,8 @@ public sealed class BadgeRenderer : DataGridCellRenderer
 /// </summary>
 public sealed class ProgressRenderer : DataGridCellRenderer
 {
+    internal override bool PaintsPointer => false;
+
     private const double TextWidth = 48;
     private const double Gap = 8;
     private const double BarHeight = 6;
@@ -241,6 +245,8 @@ public sealed class LinkRenderer : DataGridCellRenderer
 /// </summary>
 public sealed class IconTextRenderer : DataGridCellRenderer
 {
+    internal override bool PaintsPointer => false;
+
     private const double IconSize = 16;
     private const double Gap = 6;
     private readonly Dictionary<string, Geometry> _icons = new(StringComparer.OrdinalIgnoreCase);
@@ -308,6 +314,8 @@ public sealed class IconTextRenderer : DataGridCellRenderer
 /// </summary>
 public sealed class CheckboxRenderer : DataGridCellRenderer
 {
+    internal override bool PaintsPointer => false;
+
     private const double Size = 16;
     private const double HitPadding = 6;
 

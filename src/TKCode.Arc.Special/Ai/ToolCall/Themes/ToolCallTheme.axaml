@@ -294,7 +294,7 @@
         <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
             <Setter Property="RenderTransform" Value="rotate(0deg)" />
         </Style>
-        <Style Selector="^[IsExpanded=True] /template/ arc|ArcGlyph#PART_Chevron">
+        <Style Selector="^:expanded /template/ arc|ArcGlyph#PART_Chevron">
             <Setter Property="RenderTransform" Value="rotate(180deg)" />
         </Style>
         <Style Selector="^:pointerover">
