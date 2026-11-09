@@ -48,6 +48,7 @@ const toBytes = text => {
     }
     return bytes;
 };
+const fetched = new Map();
 dotnetRuntime.setModuleImports('arc-lazy', {
     // An assembly the publish left out of the boot list (LazyAssemblies.cs), or null when there is none. Synchronous: the runtime
     // asks while it resolves a type. The "MZ" check rejects anything that is not a PE file.
@@ -66,7 +67,24 @@ dotnetRuntime.setModuleImports('arc-lazy', {
         return text.startsWith('\0asm') ? toBytes(text) : null;
     },
     // A file of the site, such as the Chinese font (CjkFont.cs): the layout asks for a glyph in the middle of measuring.
-    file: path => toBytes(readFile(path))
+    file: path => toBytes(readFile(path)),
+    // The same, ahead of the layout (CjkFont.cs): fetchFile() ends when the file is in or cannot be had, takeFile() hands over its
+    // bytes once, or none.
+    fetchFile: async path => {
+        try {
+            const response = await fetch(path);
+            if (response.ok && !/^text\/html\b/.test(response.headers.get('content-type') ?? '')) {
+                fetched.set(path, new Uint8Array(await response.arrayBuffer()));
+            }
+        } catch {
+            // Offline or blocked: the layout asks again when it needs the file.
+        }
+    },
+    takeFile: path => {
+        const bytes = fetched.get(path) ?? new Uint8Array(0);
+        fetched.delete(path);
+        return bytes;
+    }
 });
 
 // The open page in the address bar (BrowserRouter.cs). Addresses are relative to the document's base, so the site can sit in a

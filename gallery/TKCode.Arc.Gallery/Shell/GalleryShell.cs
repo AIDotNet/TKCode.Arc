@@ -26,7 +26,11 @@ public sealed class GalleryShell : Grid
 
     private readonly GalleryTheme _theme = new();
     private readonly ContentControl _pageHost = new() { HorizontalContentAlignment = HorizontalAlignment.Stretch, VerticalContentAlignment = VerticalAlignment.Stretch };
-    private readonly GallerySidebar _sidebar = new() { Width = SidebarWidth };
+    // Built when a page first needs it: the home page, where most visits start, has no sidebar. See Sidebar.
+    private GallerySidebar? _sidebar;
+    // Holds the sidebar's place before the page: a panel appends a late child to its visual children, and their order is the tab
+    // order and the drawing order.
+    private readonly Decorator _sidebarHost = new();
     private readonly GallerySponsorBanner _banner = new();
     private readonly StackPanel _chrome = new();
     private readonly Grid _body = new() { ColumnDefinitions = new ColumnDefinitions("Auto,*"), RowDefinitions = new RowDefinitions("Auto,*") };
@@ -54,12 +58,11 @@ public sealed class GalleryShell : Grid
         _chrome.Children.Add(_banner);
         _chrome.Children.Add(topBar);
 
-        _sidebar.EntrySelected += OnEntrySelected;
         Grid.SetColumn(_pageHost, 1);
         Grid.SetRow(_pageHost, 1);
-        Grid.SetRow(_sidebar, 1);
+        Grid.SetRow(_sidebarHost, 1);
         Grid.SetColumnSpan(_browseBar, 2);
-        _body.Children.Add(_sidebar);
+        _body.Children.Add(_sidebarHost);
         _body.Children.Add(_pageHost);
         _body.Children.Add(BuildBrowseBar());
         Grid.SetRow(_body, 1);
@@ -81,7 +84,20 @@ public sealed class GalleryShell : Grid
 
     public GalleryTheme Appearance => _theme;
 
-    public GallerySidebar Sidebar => _sidebar;
+    /// <summary>The component sidebar; hidden until a page with a sidebar opens. Built the first time it is needed.</summary>
+    public GallerySidebar Sidebar
+    {
+        get
+        {
+            if (_sidebar is null)
+            {
+                _sidebar = new GallerySidebar { IsVisible = false };
+                _sidebar.EntrySelected += OnEntrySelected;
+                PlaceSidebar(_sidebar);
+            }
+            return _sidebar;
+        }
+    }
 
     public GalleryTopBar TopBar { get; }
 
@@ -117,7 +133,7 @@ public sealed class GalleryShell : Grid
         _drawer.IsOpen = false;
         if (route.Kind == GalleryRouteKind.StreamMark)
         {
-            _sidebar.IsVisible = false;
+            HideSidebar();
             ReleaseFocusFromPage();
             _pageHost.Content = _streamMark ??= new GalleryStreamMarkView(this);
             SetRoute(GalleryRoute.StreamMark);
@@ -125,7 +141,7 @@ public sealed class GalleryShell : Grid
         }
         if (route.Kind == GalleryRouteKind.Projects)
         {
-            _sidebar.IsVisible = false;
+            HideSidebar();
             ReleaseFocusFromPage();
             _pageHost.Content = _projects ??= new GalleryProjectsView(this);
             SetRoute(GalleryRoute.Projects);
@@ -133,7 +149,7 @@ public sealed class GalleryShell : Grid
         }
         if (route.Kind == GalleryRouteKind.ComponentsIndex)
         {
-            _sidebar.IsVisible = false;
+            HideSidebar();
             ReleaseFocusFromPage();
             _pageHost.Content = _components ??= new GalleryComponentsView(this);
             SetRoute(GalleryRoute.ComponentsIndex);
@@ -141,7 +157,7 @@ public sealed class GalleryShell : Grid
         }
         if (route.Kind == GalleryRouteKind.Settings)
         {
-            _sidebar.IsVisible = false;
+            HideSidebar();
             ReleaseFocusFromPage();
             var settings = _settings ??= new GallerySettingsView(this);
             settings.Show(route.Page ?? GallerySettingsView.AboutPage);
@@ -151,7 +167,7 @@ public sealed class GalleryShell : Grid
         }
         if (route.Kind == GalleryRouteKind.Demo)
         {
-            _sidebar.IsVisible = false;
+            HideSidebar();
             var demo = _demo ??= new DemoAppView(this);
             var page = demo.Resolve(route.Page);
             if (_pageHost.Content != demo)
@@ -165,7 +181,7 @@ public sealed class GalleryShell : Grid
         }
         if (route.Kind == GalleryRouteKind.Friends)
         {
-            _sidebar.IsVisible = false;
+            HideSidebar();
             ReleaseFocusFromPage();
             _pageHost.Content = _friends ??= new GalleryFriendsView();
             SetRoute(GalleryRoute.Friends);
@@ -173,18 +189,27 @@ public sealed class GalleryShell : Grid
         }
         if (route.Entry is not { } entry)
         {
-            _sidebar.IsVisible = false;
+            HideSidebar();
             ReleaseFocusFromPage();
             _pageHost.Content = _home ??= new GalleryHomeView(this);
             SetRoute(GalleryRoute.Home);
             return;
         }
-        if (_route == route && _pageHost.Content is not null && _sidebar.IsVisible)
+        if (_route == route && _pageHost.Content is not null && _sidebar is { IsVisible: true })
         {
             return;
         }
-        _sidebar.IsVisible = true;
-        _sidebar.Select(entry);
+        var sidebar = Sidebar;
+        sidebar.IsVisible = true;
+        sidebar.Select(entry);
+    }
+
+    private void HideSidebar()
+    {
+        if (_sidebar is not null)
+        {
+            _sidebar.IsVisible = false;
+        }
     }
 
     /// <summary>Opens the home page at its recommendation of the desktop app (the site only).</summary>
@@ -217,22 +242,41 @@ public sealed class GalleryShell : Grid
         _isNarrow = narrow;
         if (narrow)
         {
-            _body.Children.Remove(_sidebar);
-            _sidebar.Width = double.NaN;
-            _sidebar.BorderThickness = default;
-            _drawer.Content = _sidebar;
+            if (_sidebar is not null)
+            {
+                _sidebarHost.Child = null;
+                PlaceSidebar(_sidebar);
+            }
         }
         else
         {
             _drawer.IsOpen = false;
-            _drawer.Content = null;
-            _sidebar.Width = SidebarWidth;
-            _sidebar.BorderThickness = new Thickness(0, 0, 1, 0);
-            _body.Children.Insert(0, _sidebar);
+            if (_sidebar is not null)
+            {
+                _drawer.Content = null;
+                PlaceSidebar(_sidebar);
+            }
         }
         Grid.SetColumn(_pageHost, narrow ? 0 : 1);
         Grid.SetColumnSpan(_pageHost, narrow ? 2 : 1);
         SyncBrowseBar();
+    }
+
+    /// <summary>Puts the sidebar where the page's width wants it: in the drawer on a narrow page, beside the page otherwise.</summary>
+    private void PlaceSidebar(GallerySidebar sidebar)
+    {
+        if (_isNarrow)
+        {
+            sidebar.Width = double.NaN;
+            sidebar.BorderThickness = default;
+            _drawer.Content = sidebar;
+        }
+        else
+        {
+            sidebar.Width = SidebarWidth;
+            sidebar.BorderThickness = new Thickness(0, 0, 1, 0);
+            _sidebarHost.Child = sidebar;
+        }
     }
 
     private Control BuildBrowseBar()
@@ -290,10 +334,10 @@ public sealed class GalleryShell : Grid
         if (_isNarrow)
         {
             _drawer.IsOpen = true;
-            Dispatcher.UIThread.Post(_sidebar.FocusSearch, DispatcherPriority.Background);
+            Dispatcher.UIThread.Post(Sidebar.FocusSearch, DispatcherPriority.Background);
             return;
         }
-        _sidebar.FocusSearch();
+        Sidebar.FocusSearch();
     }
 
     /// <summary>Cmd/Ctrl+K: moves the focus to the sidebar search.</summary>

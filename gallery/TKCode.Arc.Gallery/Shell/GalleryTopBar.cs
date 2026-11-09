@@ -55,6 +55,9 @@ public sealed class GalleryTopBar : Border
     private readonly Button? _gear;
     private double _navWidth = 420;
     private double _brandWidth = 150;
+    // The header's menu and brand, from its template.
+    private Control? _navList;
+    private Control? _brandSlot;
     private readonly GalleryShell _shell;
     private readonly Dictionary<Button, IDisposable> _compactTips = new();
     private ArcPopup? _popup;
@@ -63,6 +66,10 @@ public sealed class GalleryTopBar : Border
     // The width and level of the last fit; a new language forgets them (its labels may be shorter).
     private double _fittedInner = double.PositiveInfinity;
     private int _fittedLevel = -1;
+    // What the last fit counted on besides the width (see NeedsFit).
+    private double _fittedNav;
+    private double _fittedBrand;
+    private double _fittedButtons;
 
     public GalleryTopBar(GalleryTheme theme, GalleryShell shell)
     {
@@ -89,6 +96,11 @@ public sealed class GalleryTopBar : Border
         }
         BuildComponentsMenu(shell);
         GalleryText.Bind(_header, Avalonia.Automation.AutomationProperties.NameProperty, GalleryShellLangResourceKind.GoHome);
+        _header.TemplateApplied += (_, e) =>
+        {
+            _navList = e.NameScope.Find<Control>(SiteHeader.NavListPart);
+            _brandSlot = e.NameScope.Find<Control>("PART_BrandSlot");
+        };
         _header.Navigate += (_, e) =>
         {
             switch (e.Kind)
@@ -213,9 +225,38 @@ public sealed class GalleryTopBar : Border
         var inner = Math.Min(availableSize.Width, HeaderMaxWidth) - 2 * SideMargin;
         if (double.IsFinite(inner) && inner > 0)
         {
-            Fit(inner);
+            RememberWidths();
+            if (NeedsFit(inner))
+            {
+                Fit(inner);
+            }
         }
-        return base.MeasureOverride(availableSize);
+        var size = base.MeasureOverride(availableSize);
+        _fittedNav = _navWidth;
+        _fittedBrand = _brandWidth;
+        _fittedButtons = ButtonsWidth(measure: false);
+        return size;
+    }
+
+    /// <summary>
+    /// Whether anything <see cref="Fit"/> depends on moved since it last ran. A fit measures every button again, and this is asked
+    /// on each frame of a width spring in the bar, so it reads only what the buttons last reported. A label that changed has
+    /// already reported its new width, or has yet to be measured.
+    /// </summary>
+    private bool NeedsFit(double inner)
+    {
+        if (inner != _fittedInner || _fitLevel != _fittedLevel || _navWidth != _fittedNav || _brandWidth != _fittedBrand)
+        {
+            return true;
+        }
+        foreach (var child in _right.Children)
+        {
+            if (child is Button { IsVisible: true, Content: Control { IsMeasureValid: false } })
+            {
+                return true;
+            }
+        }
+        return ButtonsWidth(measure: false) != _fittedButtons;
     }
 
     /// <summary>
@@ -266,17 +307,7 @@ public sealed class GalleryTopBar : Border
 
     private bool Fits(double inner)
     {
-        var right = 0.0;
-        var shown = 0;
-        foreach (var child in _right.Children)
-        {
-            if (child.IsVisible)
-            {
-                right += SettledWidth((Button)child);
-                shown++;
-            }
-        }
-        right += Math.Max(0, shown - 1) * _right.Spacing;
+        var right = ButtonsWidth(measure: true);
         RememberWidths();
         if (_fitLevel >= 2)
         {
@@ -290,33 +321,45 @@ public sealed class GalleryTopBar : Border
     /// <summary>Takes the widths of the header's brand and menu while they are shown (the header hides the menu when it folds).</summary>
     private void RememberWidths()
     {
-        foreach (var part in _header.GetVisualDescendants().OfType<Control>())
+        if (_navList is { IsVisible: true } nav && nav.DesiredSize.Width > 0)
         {
-            if (!part.IsVisible)
+            _navWidth = nav.DesiredSize.Width;
+        }
+        if (_brandSlot is { IsVisible: true } brand && brand.DesiredSize.Width > 0)
+        {
+            _brandWidth = brand.DesiredSize.Width;
+        }
+    }
+
+    /// <summary>The width of the buttons that are shown, with the spacing between them.</summary>
+    private double ButtonsWidth(bool measure)
+    {
+        var right = 0.0;
+        var shown = 0;
+        foreach (var child in _right.Children)
+        {
+            if (child.IsVisible)
             {
-                continue;
-            }
-            if (part.Name == "PART_NavList" && part.DesiredSize.Width > 0)
-            {
-                _navWidth = part.DesiredSize.Width;
-            }
-            else if (part.Name == "PART_BrandSlot" && part.DesiredSize.Width > 0)
-            {
-                _brandWidth = part.DesiredSize.Width;
+                right += SettledWidth((Button)child, measure);
+                shown++;
             }
         }
+        return right + Math.Max(0, shown - 1) * _right.Spacing;
     }
 
     /// <summary>
     /// The width a button settles at: its content's natural width plus padding and border. The button itself would report
     /// the width its spring has reached so far.
     /// </summary>
-    private static double SettledWidth(Button button)
+    private static double SettledWidth(Button button, bool measure)
     {
         var content = 0.0;
         if (button.Content is Control control)
         {
-            control.Measure(Size.Infinity);
+            if (measure)
+            {
+                control.Measure(Size.Infinity);
+            }
             content = control.DesiredSize.Width;
         }
         var chrome = button.Padding.Left + button.Padding.Right + button.BorderThickness.Left + button.BorderThickness.Right;

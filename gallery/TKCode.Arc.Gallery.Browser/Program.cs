@@ -49,12 +49,24 @@ internal sealed partial class Program
         }
         // The language chosen in the top bar is kept in local storage; until there is one, the browser's languages decide.
         GalleryLanguages.Store = new BrowserLanguageStore();
-        // Media players make sound through an HTML audio element each; if the module cannot load they keep time silently.
-        await ArcAudioBrowser.UseAsync();
-        // Video players draw the frames of one HTML video element each into the canvas; if the module cannot load they show a test picture.
-        await ArcVideoBrowser.UseAsync();
+        // Media players make sound through an HTML audio element each, and video players draw the frames of one HTML video element
+        // each into the canvas; if the modules cannot load they keep time silently and show a test picture. Only the pages with a
+        // player import them (the imports held back the first frame of every visit).
+        GalleryModules.MediaBackend = static async () =>
+        {
+            var audio = await ArcAudioBrowser.UseAsync();
+            var video = await ArcVideoBrowser.UseAsync();
+            return audio && video;
+        };
         // The PDF page imports pdf.js (about 110 KB compressed, and a worker of 310 KB when a document opens) before it builds its demos: other visits never fetch it.
         GalleryModules.PdfBackend = static () => ArcPdfBrowser.UseAsync();
+        // A visitor who reads Chinese needs the font for the first frame: fetched here, the page keeps breathing meanwhile; asked
+        // for by the first text layout, the request would stop it.
+        var language = GalleryLanguages.Initial(BrowserLanguageStore.Preferred());
+        if (language == LanguageTags.ZhCN || language == LanguageTags.ZhTW)
+        {
+            await CjkFontCollection.PreloadAsync();
+        }
         await BuildAvaloniaApp().StartBrowserAppAsync("out");
     }
 

@@ -51,10 +51,14 @@ public sealed class PhoneFrame : UserControl
     public static readonly StyledProperty<Control?> ScreenProperty =
         AvaloniaProperty.Register<PhoneFrame, Control?>(nameof(Screen));
 
-    private readonly GallerySegmented _devices;
-    private readonly GallerySegmented _orientation;
-    private readonly Switch _keyboardSwitch;
-    private readonly WrapPanel _toolbar;
+    // The toolbar and the keyboard are built when they first show: a Mobile page has a frame per demo, a frame with no
+    // toolbar has no use for one, and the keyboard is 33 keys that most visits never bring up.
+    private GallerySegmented? _devices;
+    private GallerySegmented? _orientation;
+    private Switch? _keyboardSwitch;
+    private WrapPanel? _toolbar;
+    // Holds the toolbar's place above the phone (a panel appends a late child to its visual children, which set the tab order).
+    private readonly Decorator _toolbarHost = new() { IsVisible = false };
     private readonly Border _bezel;
     private readonly Border _screen;
     private readonly Grid _screenGrid;
@@ -63,32 +67,12 @@ public sealed class PhoneFrame : UserControl
     private readonly TextBlock _time;
     private readonly Border _cutout;
     private readonly Border _homeIndicator;
-    private readonly Border _keyboard;
+    private Border? _keyboard;
     private readonly global::TKCode.Arc.Mobile.KeyboardInsetSource _keyboardSource = new();
     private bool _syncing;
 
     public PhoneFrame()
     {
-        _devices = new GallerySegmented(GalleryShellLangResourceKind.PhoneDeviceIPhone, GalleryShellLangResourceKind.PhoneDevicePixel,
-            GalleryShellLangResourceKind.PhoneDeviceSmall, GalleryShellLangResourceKind.PhoneDeviceTablet);
-        _devices.SelectionChanged += index => Device = PhoneDevice.Presets[index];
-        GalleryText.Bind(_devices, AutomationProperties.NameProperty, GalleryShellLangResourceKind.PhoneDevice);
-        _orientation = new GallerySegmented(GalleryShellLangResourceKind.PhonePortrait, GalleryShellLangResourceKind.PhoneLandscape);
-        _orientation.SelectionChanged += index => IsLandscape = index == 1;
-        _keyboardSwitch = new Switch { VerticalAlignment = VerticalAlignment.Center };
-        GalleryText.Bind(_keyboardSwitch, ContentControl.ContentProperty, GalleryShellLangResourceKind.PhoneKeyboard);
-        _keyboardSwitch.IsCheckedChanged += (_, _) =>
-        {
-            if (!_syncing)
-            {
-                IsKeyboardVisible = _keyboardSwitch.IsChecked == true;
-            }
-        };
-        _toolbar = new WrapPanel { Orientation = Orientation.Horizontal, ItemSpacing = 16, LineSpacing = 8, HorizontalAlignment = HorizontalAlignment.Center };
-        _toolbar.Children.Add(_devices);
-        _toolbar.Children.Add(_orientation);
-        _toolbar.Children.Add(_keyboardSwitch);
-
         _host = new Border();
         _time = new TextBlock { FontSize = 15, FontWeight = FontWeight.SemiBold, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
         ArcTokens.Bind(_time, TextBlock.ForegroundProperty, ArcDesignTokenKind.Foreground);
@@ -114,13 +98,8 @@ public sealed class PhoneFrame : UserControl
         content.Children.Add(_cutout);
         content.Children.Add(_homeIndicator);
 
-        _keyboard = BuildKeyboard();
-        // The keyboard covers the bottom of the screen like a real one; the page under it lays out above it because the
-        // frame reports its height as the keyboard inset source (the same path as a platform's input pane).
-        _keyboard.VerticalAlignment = VerticalAlignment.Bottom;
         _screenGrid = new Grid();
         _screenGrid.Children.Add(content);
-        _screenGrid.Children.Add(_keyboard);
         TKCode.Arc.Mobile.Page.SetKeyboardInsetSource(_host, _keyboardSource);
 
         _screen = new Border { ClipToBounds = true, Child = _screenGrid };
@@ -139,7 +118,7 @@ public sealed class PhoneFrame : UserControl
         GalleryText.Bind(note, TextBlock.TextProperty, GalleryShellLangResourceKind.PhoneSimulationNote);
 
         var root = new StackPanel { Spacing = 16 };
-        root.Children.Add(_toolbar);
+        root.Children.Add(_toolbarHost);
         root.Children.Add(scaled);
         root.Children.Add(note);
         Content = root;
@@ -238,6 +217,7 @@ public sealed class PhoneFrame : UserControl
         base.OnAttachedToLogicalTree(e);
         // A demo's view may fill in its page after it was handed over.
         ApplySafeArea();
+        SyncToolbar();
     }
 
     /// <summary>Brings every part of the frame in line with the properties.</summary>
@@ -248,7 +228,6 @@ public sealed class PhoneFrame : UserControl
         var size = ScreenSize;
         _screen.Width = size.Width;
         _screen.Height = size.Height;
-        _toolbar.IsVisible = ShowToolbar;
         _time.Text = StatusTime;
         AutomationProperties.SetName(this, device.Name);
 
@@ -266,8 +245,19 @@ public sealed class PhoneFrame : UserControl
         _statusBar.ColumnDefinitions[1].Width = new GridLength(hasCutout ? device.CutoutWidth : 0);
         _homeIndicator.IsVisible = !IsKeyboardVisible && area.Bottom >= 20;
 
-        _keyboard.IsVisible = IsKeyboardVisible;
-        _keyboard.Height = device.KeyboardHeight(landscape);
+        if (IsKeyboardVisible && _keyboard is null)
+        {
+            // The keyboard covers the bottom of the screen like a real one; the page under it lays out above it because the
+            // frame reports its height as the keyboard inset source (the same path as a platform's input pane).
+            _keyboard = BuildKeyboard();
+            _keyboard.VerticalAlignment = VerticalAlignment.Bottom;
+            _screenGrid.Children.Add(_keyboard);
+        }
+        if (_keyboard is not null)
+        {
+            _keyboard.IsVisible = IsKeyboardVisible;
+            _keyboard.Height = device.KeyboardHeight(landscape);
+        }
 
         ApplySafeArea();
         _keyboardSource.Set(IsKeyboardVisible ? device.KeyboardHeight(landscape) : 0);
@@ -295,18 +285,55 @@ public sealed class PhoneFrame : UserControl
         page.SafeArea = Device.SafeArea(IsLandscape);
     }
 
+    private void BuildToolbar()
+    {
+        _devices = new GallerySegmented(GalleryShellLangResourceKind.PhoneDeviceIPhone, GalleryShellLangResourceKind.PhoneDevicePixel,
+            GalleryShellLangResourceKind.PhoneDeviceSmall, GalleryShellLangResourceKind.PhoneDeviceTablet);
+        _devices.SelectionChanged += index => Device = PhoneDevice.Presets[index];
+        GalleryText.Bind(_devices, AutomationProperties.NameProperty, GalleryShellLangResourceKind.PhoneDevice);
+        _orientation = new GallerySegmented(GalleryShellLangResourceKind.PhonePortrait, GalleryShellLangResourceKind.PhoneLandscape);
+        _orientation.SelectionChanged += index => IsLandscape = index == 1;
+        var keyboardSwitch = _keyboardSwitch = new Switch { VerticalAlignment = VerticalAlignment.Center };
+        GalleryText.Bind(keyboardSwitch, ContentControl.ContentProperty, GalleryShellLangResourceKind.PhoneKeyboard);
+        keyboardSwitch.IsCheckedChanged += (_, _) =>
+        {
+            if (!_syncing)
+            {
+                IsKeyboardVisible = keyboardSwitch.IsChecked == true;
+            }
+        };
+        _toolbar = new WrapPanel { Orientation = Orientation.Horizontal, ItemSpacing = 16, LineSpacing = 8, HorizontalAlignment = HorizontalAlignment.Center };
+        _toolbar.Children.Add(_devices);
+        _toolbar.Children.Add(_orientation);
+        _toolbar.Children.Add(keyboardSwitch);
+        _toolbarHost.Child = _toolbar;
+    }
+
+    /// <summary>
+    /// Shows the toolbar, set to the properties. Waits for the frame to join a tree: a frame made with
+    /// <c>new PhoneFrame { ShowToolbar = false }</c> passes through the default first and never needs one.
+    /// </summary>
     private void SyncToolbar()
     {
+        if (_toolbar is null)
+        {
+            if (!ShowToolbar || ((ILogical)this).LogicalParent is null)
+            {
+                return;
+            }
+            BuildToolbar();
+        }
+        _toolbar!.IsVisible = _toolbarHost.IsVisible = ShowToolbar;
         _syncing = true;
         try
         {
             var preset = PhoneDevice.Presets.ToList().IndexOf(Device);
             if (preset >= 0)
             {
-                _devices.SelectedIndex = preset;
+                _devices!.SelectedIndex = preset;
             }
-            _orientation.SelectedIndex = IsLandscape ? 1 : 0;
-            _keyboardSwitch.IsChecked = IsKeyboardVisible;
+            _orientation!.SelectedIndex = IsLandscape ? 1 : 0;
+            _keyboardSwitch!.IsChecked = IsKeyboardVisible;
         }
         finally
         {

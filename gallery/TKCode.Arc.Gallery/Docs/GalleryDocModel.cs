@@ -45,7 +45,7 @@ public sealed record GalleryApiType(string Name, string Package, string? Summary
 public sealed record GalleryApiBinding(Type Owner, AvaloniaProperty?[] Properties);
 
 /// <param name="Key"><c>Type</c> or <c>DeclaringType.Member</c>.</param>
-public sealed record GalleryApiTranslation(string Language, string Key, string Text);
+public sealed record GalleryApiTranslation(string Key, string Text);
 
 /// <summary>A screenshot in a docs page: <c>![Caption](images/Name.png)</c>.</summary>
 /// <param name="Light">The light-theme capture; the dark one is <c>Name.dark.png</c> beside it.</param>

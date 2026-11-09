@@ -19,6 +19,7 @@ public sealed class GalleryToc : Border
     private readonly List<GalleryNavRow> _rows = new();
     private readonly Panel _host = new();
     private readonly GlidingIndicator _indicator = new() { IsHitTestVisible = false, Spring = ArcSpring.Snappy };
+    private readonly GalleryBoundsWatch _follow;
     private int _active = -1;
     private Rect _lastRect;
 
@@ -40,7 +41,7 @@ public sealed class GalleryToc : Border
         _indicator.CornerRadius = new CornerRadius(1);
         _host.Children.Add(rail);
         _host.Children.Add(_indicator);
-        _host.LayoutUpdated += (_, _) => Sync(animate: false);
+        _follow = new GalleryBoundsWatch(_host, () => Sync(animate: false));
 
         var title = GalleryUi.Text(string.Empty, ArcDesignTokenKind.Foreground, 13, FontWeight.Medium);
         GalleryText.Bind(title, TextBlock.TextProperty, GalleryShellLangResourceKind.OnThisPage);
@@ -98,6 +99,7 @@ public sealed class GalleryToc : Border
         {
             _rows[i].IsSelected = i == index;
         }
+        _follow.Watch(_rows[index]);
         Sync(animate: !first);
     }
 

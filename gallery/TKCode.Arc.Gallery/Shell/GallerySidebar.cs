@@ -34,6 +34,9 @@ public sealed class GallerySidebar : Border
         public required TextBlock Count { get; init; }
         public required SpringSizeDecorator Items { get; init; }
         public required Border Rail { get; init; }
+        /// <summary>Where the entries' rows go once the group has opened.</summary>
+        public required StackPanel RowHost { get; init; }
+        public bool HasRows { get; set; }
         public bool UserExpanded { get; set; }
         public bool Visible { get; set; } = true;
         public Group? Parent { get; set; }
@@ -64,7 +67,8 @@ public sealed class GallerySidebar : Border
     {
         public required GalleryEntry Entry { get; init; }
         public required Group Group { get; init; }
-        public required GalleryNavRow Row { get; init; }
+        /// <summary>Null until its group first opens: most groups stay closed, and the list has several hundred entries.</summary>
+        public GalleryNavRow? Row { get; set; }
         public required bool Implemented { get; init; }
         public bool Visible { get; set; } = true;
     }
@@ -73,6 +77,8 @@ public sealed class GallerySidebar : Border
     private readonly List<Item> _items = new();
     private readonly Dictionary<string, Item> _byClass = new();
     private readonly Panel _content = new();
+    private readonly GalleryBoundsWatch _follow;
+    private readonly StackPanel _list = new() { Margin = new Thickness(8, 4, 8, 28) };
     private readonly GlidingIndicator _indicator = new() { IsHitTestVisible = false, Spring = ArcSpring.Snappy };
     private readonly GallerySearchBox _search = new();
     private readonly Border _searchBox = new();
@@ -84,6 +90,7 @@ public sealed class GallerySidebar : Border
     private IDisposable? _searchBorder;
     private Item? _selected;
     private Rect _lastRect;
+    private bool _placingNewRow;
 
     public event Action<GalleryEntry>? EntrySelected;
 
@@ -113,6 +120,13 @@ public sealed class GallerySidebar : Border
 
     public GallerySidebar()
     {
+        _follow = new GalleryBoundsWatch(_content, () =>
+        {
+            if (!_placingNewRow)
+            {
+                SyncIndicator(animate: false);
+            }
+        });
         // The footer counts the whole Components section: Arc's components and the extras. Blocks and the Special
         // components are listed in their own sections and stay out of it (as they do on uiarc.dev).
         var components = GalleryCatalog.ComponentEntries.ToList();
@@ -120,7 +134,7 @@ public sealed class GallerySidebar : Border
         _clear = BuildClearButton();
         _shortcut = BuildShortcutHint();
 
-        var list = new StackPanel { Margin = new Thickness(8, 4, 8, 28) };
+        var list = _list;
         // The sections follow uiarc.dev's sidebar order: Docs, Components, Blocks.
         list.Children.Add(BuildSection(GalleryShellLangResourceKind.Category_Docs, ArcIcons.FileText, [GalleryCatalog.Docs], flatten: true));
         // Arc's groups, then the extras group (both are part of the section, so both count in the footer).
@@ -139,7 +153,6 @@ public sealed class GallerySidebar : Border
         _content.Children.Add(list);
         // Drawn over the list so the bar covers the rail line it rides on.
         _content.Children.Add(_indicator);
-        _content.LayoutUpdated += (_, _) => SyncIndicator(animate: false);
 
         var scroll = new ScrollViewer
         {
@@ -367,6 +380,14 @@ public sealed class GallerySidebar : Border
         }
 
         var stack = new StackPanel { Margin = new Thickness(0, 2, 0, 6) };
+        // Rows that arrive late come before the subgroups, which takes a panel of their own: a panel appends a late child to its
+        // visual children wherever it goes in the list, and their order is the tab order.
+        var rowHost = stack;
+        if (category.Subcategories is { Length: > 0 } && category.Entries.Length > 0)
+        {
+            rowHost = new StackPanel();
+            stack.Children.Add(rowHost);
+        }
         var rail = GalleryUi.Rail(stack, RailInset);
         var items = new SpringSizeDecorator { Axis = SpringSizeAxis.Height, IsExpanded = false, Spring = ArcSpring.Smooth, Child = rail };
         var root = new StackPanel();
@@ -381,15 +402,15 @@ public sealed class GallerySidebar : Border
             Chevron = chevron,
             Count = count,
             Items = items,
-            Rail = rail
+            Rail = rail,
+            RowHost = rowHost
         };
         foreach (var entry in category.Entries)
         {
-            var item = BuildItem(group, entry);
+            var item = new Item { Entry = entry, Group = group, Implemented = GalleryPages.IsImplemented(entry.ClassName) };
             group.Entries.Add(item);
             _items.Add(item);
             _byClass[entry.ClassName] = item;
-            stack.Children.Add(item.Row);
         }
         // Subgroups are built first, so they come before this group in _groups.
         foreach (var subcategory in category.Subcategories ?? Array.Empty<GalleryCategory>())
@@ -409,9 +430,26 @@ public sealed class GallerySidebar : Border
         return group;
     }
 
-    private Item BuildItem(Group group, GalleryEntry entry)
+    /// <summary>Builds the rows of <paramref name="group"/>'s entries, above its subgroups, the first time it opens.</summary>
+    private void EnsureRows(Group group)
     {
-        var implemented = GalleryPages.IsImplemented(entry.ClassName);
+        if (group.HasRows)
+        {
+            return;
+        }
+        group.HasRows = true;
+        foreach (var item in group.Entries)
+        {
+            item.Row = BuildRow(item);
+            item.Row.IsVisible = item.Visible;
+            group.RowHost.Children.Add(item.Row);
+        }
+    }
+
+    private GalleryNavRow BuildRow(Item item)
+    {
+        var entry = item.Entry;
+        var implemented = item.Implemented;
         var content = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto") };
         content.Children.Add(new TextBlock { Text = entry.Title, TextTrimming = TextTrimming.CharacterEllipsis, VerticalAlignment = VerticalAlignment.Center });
         if (entry.IsNew)
@@ -434,9 +472,8 @@ public sealed class GallerySidebar : Border
             : new GalleryNavRow(content, entry.Title, rest: ArcDesignTokenKind.TextMuted, hover: ArcDesignTokenKind.TextSecondary);
         // One tab stop per group: arrows move between items.
         row.IsTabStop = false;
-        var item = new Item { Entry = entry, Group = group, Row = row, Implemented = implemented };
         row.Click += () => Select(entry);
-        return item;
+        return row;
     }
 
     private Control BuildFooter(int implemented, int total)
@@ -507,14 +544,17 @@ public sealed class GallerySidebar : Border
         {
             return;
         }
-        if (_selected is { } previous)
+        if (_selected is { Row: { } previous })
         {
-            previous.Row.IsSelected = false;
-            previous.Row.IsTabStop = false;
+            previous.IsSelected = false;
+            previous.IsTabStop = false;
         }
         _selected = item;
-        item.Row.IsSelected = true;
-        item.Row.IsTabStop = true;
+        var newRows = !item.Group.HasRows;
+        EnsureRows(item.Group);
+        var row = item.Row!;
+        row.IsSelected = true;
+        row.IsTabStop = true;
         // Open the selected item's group and every group above it, and the section they sit in.
         var top = item.Group;
         for (var group = item.Group; group is not null; group = group.Parent)
@@ -528,8 +568,17 @@ public sealed class GallerySidebar : Border
             section.Body.IsExpanded = true;
             section.Chevron.RenderTransform = null;
         }
+        WatchSelected(item);
+        // A row built just now has no place yet, and both the reveal and the bar's glide below start from it. (A sidebar that
+        // has not been laid out at all gets it in its first layout pass, and the bar snaps there.)
+        if (newRows && Bounds.Height > 0)
+        {
+            _placingNewRow = true;
+            UpdateLayout();
+            _placingNewRow = false;
+        }
         // Reveal the row with room around it so it never lands under the fade at the bottom of the list.
-        item.Row.BringIntoView(new Rect(0, -12, Math.Max(item.Row.Bounds.Width, 1), Math.Max(item.Row.Bounds.Height, 1) + 44));
+        row.BringIntoView(new Rect(0, -12, Math.Max(row.Bounds.Width, 1), Math.Max(row.Bounds.Height, 1) + 44));
         SyncIndicator(animate: true);
         if (settle)
         {
@@ -565,20 +614,40 @@ public sealed class GallerySidebar : Border
         _search.SelectAll();
     }
 
+    /// <summary>
+    /// Keeps the bar on <paramref name="item"/>'s row while the list moves it: what sets the row's place in the list are its
+    /// bounds in its group, those of the groups above it in their sections, of the section, and of the list as a whole.
+    /// </summary>
+    private void WatchSelected(Item item)
+    {
+        var watched = new List<Control> { item.Row!, _list };
+        Group? top = null;
+        for (var group = item.Group; group is not null; group = group.Parent)
+        {
+            watched.Add(group.Root);
+            top = group;
+        }
+        if (top?.Section is { } section)
+        {
+            watched.Add(section.Root);
+        }
+        _follow.Watch(watched.ToArray());
+    }
+
     private void SyncIndicator(bool animate)
     {
-        if (_selected is not { } item || !item.Visible || !item.Group.IsOpen || item.Row.Bounds.Height <= 0)
+        if (_selected is not { Row: { } row } item || !item.Visible || !item.Group.IsOpen || row.Bounds.Height <= 0)
         {
             _indicator.Hide(animate: false);
             _lastRect = default;
             return;
         }
-        if (item.Row.TranslatePoint(default, _content) is not { } origin ||
+        if (row.TranslatePoint(default, _content) is not { } origin ||
             item.Group.Rail.TranslatePoint(default, _content) is not { } railOrigin)
         {
             return;
         }
-        var rect = new Rect(railOrigin.X - 0.5, origin.Y + 7, 2, Math.Max(0, item.Row.Bounds.Height - 14));
+        var rect = new Rect(railOrigin.X - 0.5, origin.Y + 7, 2, Math.Max(0, row.Bounds.Height - 14));
         if (!animate && rect == _lastRect)
         {
             return;
@@ -608,7 +677,10 @@ public sealed class GallerySidebar : Border
             {
                 var visible = Matches(item, query, mode);
                 item.Visible = visible;
-                item.Row.IsVisible = visible;
+                if (item.Row is { } row)
+                {
+                    row.IsVisible = visible;
+                }
                 matches += visible ? 1 : 0;
             }
             group.Matches = matches + group.Children.Sum(c => c.Matches);
@@ -660,6 +732,10 @@ public sealed class GallerySidebar : Border
     private void Refresh(Group group)
     {
         var open = IsFiltering ? group.Visible : group.UserExpanded;
+        if (open)
+        {
+            EnsureRows(group);
+        }
         group.Items.IsExpanded = open;
         group.Chevron.RenderTransform = open ? new RotateTransform(90) : null;
     }
@@ -727,7 +803,7 @@ public sealed class GallerySidebar : Border
         Select(open[next].Entry, settle: true);
         if (focusItem)
         {
-            open[next].Row.Focus(NavigationMethod.Directional);
+            open[next].Row!.Focus(NavigationMethod.Directional);
         }
     }
 
