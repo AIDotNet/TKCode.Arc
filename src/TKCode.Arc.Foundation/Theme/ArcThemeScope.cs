@@ -28,6 +28,14 @@ public static class ArcThemeScope
     private static readonly AttachedProperty<ScopeHost?> HostProperty =
         AvaloniaProperty.RegisterAttached<StyledElement, ScopeHost?>("Host", typeof(ArcThemeScope));
 
+    /// <summary>
+    /// The element whose scope an element is inside (inherited; null outside every scope). Token readers that cache a
+    /// value per resource root (Core's motion level) key their cache by this element instead of the window, so a
+    /// subtree with its own tokens is read from its scope.
+    /// </summary>
+    public static readonly AttachedProperty<StyledElement?> RootProperty =
+        AvaloniaProperty.RegisterAttached<StyledElement, StyledElement?>("Root", typeof(ArcThemeScope), inherits: true);
+
     static ArcThemeScope()
     {
         AppearanceProperty.Changed.AddClassHandler<StyledElement>((element, _) => Update(element));
@@ -46,6 +54,9 @@ public static class ArcThemeScope
     /// <summary>Fixes the whole theme state of <paramref name="element"/>'s subtree; null removes the scope.</summary>
     public static void SetState(StyledElement element, ArcThemeState? value) => element.SetValue(StateProperty, value);
 
+    /// <summary>The element whose scope <paramref name="element"/> is inside, or null outside every scope.</summary>
+    public static StyledElement? GetRoot(StyledElement element) => element.GetValue(RootProperty);
+
     private static void Update(StyledElement element)
     {
         var host = element.GetValue(HostProperty);
@@ -55,6 +66,7 @@ public static class ArcThemeScope
             {
                 host.Dispose();
                 element.ClearValue(HostProperty);
+                element.ClearValue(RootProperty);
             }
             return;
         }
@@ -62,6 +74,7 @@ public static class ArcThemeScope
         {
             host = new ScopeHost(element);
             element.SetValue(HostProperty, host);
+            element.SetValue(RootProperty, element);
         }
         host.Refresh();
     }

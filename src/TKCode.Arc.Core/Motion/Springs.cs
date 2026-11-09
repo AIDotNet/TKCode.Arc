@@ -253,19 +253,9 @@ public sealed class ArcSpringEasing : Easing
         return 1 + x;
     }
 
-    private static readonly Dictionary<ArcSpring, ArcSpringEasing> s_cache = new();
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<ArcSpring, ArcSpringEasing> s_cache = new();
 
     /// <summary>Returns a cached easing for a preset.</summary>
     public static ArcSpringEasing For(ArcSpring spring)
-    {
-        lock (s_cache)
-        {
-            if (!s_cache.TryGetValue(spring, out var easing))
-            {
-                easing = new ArcSpringEasing(ArcMotionPresets.Get(spring));
-                s_cache[spring] = easing;
-            }
-            return easing;
-        }
-    }
+        => s_cache.GetOrAdd(spring, static s => new ArcSpringEasing(ArcMotionPresets.Get(s)));
 }

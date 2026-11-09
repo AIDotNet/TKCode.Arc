@@ -168,6 +168,9 @@ public class ArcContentSwap : Control
 
     private Layer? _current;
     private readonly List<Layer> _exiting = new();
+    // Layers whose content left: a swap takes its incoming layer from here instead of building a new presenter (the
+    // common case holds two layers in turn), so a label that changes often allocates no presenter per change.
+    private readonly List<Layer> _free = new();
 
     static ArcContentSwap()
     {
@@ -175,14 +178,38 @@ public class ArcContentSwap : Control
         AffectsMeasure<ArcContentSwap>(MeasuresExitingProperty);
     }
 
+    private enum LayerMotion
+    {
+        None,
+        Enter,
+        Exit,
+        PopEnter,
+        PopExit
+    }
+
     private sealed class Layer
     {
         public required ContentPresenter Presenter { get; init; }
         public required TranslateTransform Translate { get; init; }
         /// <summary>The layer blurs while it moves; the effect itself is a cached <see cref="ArcBlur"/> step set per frame.</summary>
-        public bool Blurs { get; set; }
-        public MotionValue<double>? Progress { get; set; }
-        public Rect LastRect { get; set; }
+        public bool Blurs;
+        /// <summary>The layer's one progress value, kept for its life; <see cref="Motion"/> and the fields below say what a step does.</summary>
+        public MotionValue<double>? Progress;
+        /// <summary>The Pop enter's scale spring.</summary>
+        public MotionValue<double>? Grow;
+        public ScaleTransform? Scale;
+        public Rect LastRect;
+        /// <summary>Bumped when the layer is taken and when it is released, so a stale exit completion does not remove a reused layer.</summary>
+        public int Generation;
+        public LayerMotion Motion;
+        public bool Full;
+        public bool Horizontal;
+        public bool Blur;
+        public double FromOffset;
+        public double BlurRadius;
+        public double StartOpacity;
+        public double Start;
+        public double ToOffset;
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -212,20 +239,46 @@ public class ArcContentSwap : Control
         }
     }
 
-    private Layer CreateLayer(object? content)
+    /// <summary>A layer for new content: a released one made as new, else a fresh presenter. Added on top of the others.</summary>
+    private Layer AcquireLayer(object? content)
     {
-        var translate = new TranslateTransform();
-        var presenter = new ContentPresenter
+        Layer layer;
+        if (_free.Count > 0)
         {
-            Content = content,
-            ContentTemplate = content is null ? null : ContentTemplate,
-            RenderTransform = translate,
-            HorizontalContentAlignment = HorizontalContentAlignment,
-            VerticalContentAlignment = VerticalContentAlignment
-        };
-        LogicalChildren.Add(presenter);
-        VisualChildren.Add(presenter);
-        return new Layer { Presenter = presenter, Translate = translate };
+            layer = _free[^1];
+            _free.RemoveAt(_free.Count - 1);
+            layer.Generation++;
+            layer.Progress?.Stop();
+            layer.Grow?.Stop();
+            layer.Motion = LayerMotion.None;
+            layer.Blurs = false;
+            layer.Translate.X = 0;
+            layer.Translate.Y = 0;
+            var presenter = layer.Presenter;
+            presenter.Opacity = 1;
+            presenter.Effect = null;
+            presenter.RenderTransform = layer.Translate;
+            presenter.HorizontalContentAlignment = HorizontalContentAlignment;
+            presenter.VerticalContentAlignment = VerticalContentAlignment;
+            // Detached, so nothing is built until the presenter joins the tree below (content first, template after).
+            SetContent(presenter, content);
+        }
+        else
+        {
+            var translate = new TranslateTransform();
+            var presenter = new ContentPresenter
+            {
+                Content = content,
+                ContentTemplate = content is null ? null : ContentTemplate,
+                RenderTransform = translate,
+                HorizontalContentAlignment = HorizontalContentAlignment,
+                VerticalContentAlignment = VerticalContentAlignment
+            };
+            layer = new Layer { Presenter = presenter, Translate = translate };
+        }
+        LogicalChildren.Add(layer.Presenter);
+        VisualChildren.Add(layer.Presenter);
+        return layer;
     }
 
     /// <summary>
@@ -253,13 +306,17 @@ public class ArcContentSwap : Control
 
     private void RemoveLayer(Layer layer)
     {
-        layer.Progress?.Dispose();
+        layer.Generation++;
+        layer.Motion = LayerMotion.None;
+        layer.Progress?.Stop();
+        layer.Grow?.Stop();
         // A removed presenter keeps its child until its content changes, and a control has one parent: without this the
         // content could never be shown again (a kept view that the swap shows, hides and shows again).
         SetContent(layer.Presenter, null);
         LogicalChildren.Remove(layer.Presenter);
         VisualChildren.Remove(layer.Presenter);
         _exiting.Remove(layer);
+        _free.Add(layer);
         if (MeasuresExiting)
         {
             InvalidateMeasure();
@@ -272,14 +329,17 @@ public class ArcContentSwap : Control
         // layer; a control has one parent, so that layer goes first.
         if (content is Control control)
         {
-            foreach (var layer in _exiting.Where(layer => ReferenceEquals(layer.Presenter.Content, control)).ToList())
+            for (var i = _exiting.Count - 1; i >= 0; i--)
             {
-                RemoveLayer(layer);
+                if (ReferenceEquals(_exiting[i].Presenter.Content, control))
+                {
+                    RemoveLayer(_exiting[i]);
+                }
             }
         }
         if (_current is null)
         {
-            _current = CreateLayer(content);
+            _current = AcquireLayer(content);
             InvalidateMeasure();
             return;
         }
@@ -291,7 +351,7 @@ public class ArcContentSwap : Control
         }
         var outgoing = _current;
         _exiting.Add(outgoing);
-        _current = CreateLayer(content);
+        _current = AcquireLayer(content);
         var full = level == ArcMotionLevel.Full && Mode != ContentSwapMode.Fade;
         var dir = Direction >= 0 ? 1 : -1;
         if (Mode == ContentSwapMode.Pop)
@@ -320,9 +380,103 @@ public class ArcContentSwap : Control
         InvalidateMeasure();
     }
 
+    private static readonly Avalonia.Animation.Easings.Easing s_linear = new Avalonia.Animation.Easings.LinearEasing();
+
+    /// <summary>The layer's progress value at 0 with no motion assigned, ready for a run (one value per layer, no closure per swap).</summary>
+    private MotionValue<double> BeginProgress(Layer layer)
+    {
+        if (layer.Progress is null)
+        {
+            var progress = new MotionValue<double>(this, 0, MotionVectors.Double);
+            progress.Changed += p => OnProgress(layer, p);
+            layer.Progress = progress;
+            return progress;
+        }
+        // Motion None first: the jump raises Changed, and the previous run's step must not apply to the new state.
+        layer.Motion = LayerMotion.None;
+        layer.Progress.Jump(0);
+        return layer.Progress;
+    }
+
+    private static void OnProgress(Layer layer, double p)
+    {
+        var presenter = layer.Presenter;
+        switch (layer.Motion)
+        {
+            case LayerMotion.Enter:
+                presenter.Opacity = p;
+                if (layer.Full)
+                {
+                    SetOffset(layer, layer.Horizontal, layer.FromOffset * (1 - p));
+                    var radius = layer.BlurRadius * (1 - p);
+                    if (radius < 0.05)
+                    {
+                        presenter.Effect = null;
+                    }
+                    else if (layer.Blurs)
+                    {
+                        presenter.Effect = ArcBlur.Get(radius);
+                    }
+                }
+                break;
+            case LayerMotion.Exit:
+                presenter.Opacity = layer.StartOpacity * (1 - p);
+                if (layer.Full)
+                {
+                    SetOffset(layer, layer.Horizontal, layer.Start + (layer.ToOffset - layer.Start) * p);
+                    if (layer.Blur && layer.Blurs)
+                    {
+                        presenter.Effect = ArcBlur.Get(2 * p);
+                    }
+                }
+                break;
+            case LayerMotion.PopEnter:
+                presenter.Opacity = p;
+                if (layer.Blurs)
+                {
+                    var radius = 4 * (1 - p);
+                    if (radius < 0.05)
+                    {
+                        presenter.Effect = null;
+                    }
+                    else
+                    {
+                        presenter.Effect = ArcBlur.Get(radius);
+                    }
+                }
+                break;
+            case LayerMotion.PopExit:
+                presenter.Opacity = layer.StartOpacity * (1 - p);
+                if (layer.Full)
+                {
+                    var s = 1 - 0.4 * p;
+                    layer.Scale!.ScaleX = s;
+                    layer.Scale.ScaleY = s;
+                    if (layer.Blurs)
+                    {
+                        presenter.Effect = ArcBlur.Get(4 * p);
+                    }
+                }
+                break;
+        }
+    }
+
+    /// <summary>Removes the layer once its exit ran, unless it was removed (or taken again) in the meantime.</summary>
+    private async Task RemoveWhenDone(Layer layer, Task<bool> exit)
+    {
+        var generation = layer.Generation;
+        // The value completes its task from the frame on the UI thread, so the continuation needs no thread-pool hop.
+        await exit;
+        if (layer.Generation == generation && _exiting.Contains(layer))
+        {
+            RemoveLayer(layer);
+        }
+    }
+
     private void StartEnter(Layer layer, bool full, double fromOffset, bool horizontal = false, bool blur = true,
         TimeSpan? duration = null, Avalonia.Animation.Easings.Easing? easing = null, TimeSpan delay = default)
     {
+        var progress = BeginProgress(layer);
         layer.Presenter.Opacity = 0;
         var blurRadius = full && blur ? 4.0 : 0;
         if (full)
@@ -334,28 +488,14 @@ public class ArcContentSwap : Control
                 layer.Presenter.Effect = ArcBlur.Get(blurRadius);
             }
         }
-        var progress = new MotionValue<double>(this, 0, MotionVectors.Double);
-        layer.Progress = progress;
-        progress.Changed += p =>
-        {
-            layer.Presenter.Opacity = p;
-            if (full)
-            {
-                SetOffset(layer, horizontal, fromOffset * (1 - p));
-                var radius = blurRadius * (1 - p);
-                if (radius < 0.05)
-                {
-                    layer.Presenter.Effect = null;
-                }
-                else if (layer.Blurs)
-                {
-                    layer.Presenter.Effect = ArcBlur.Get(radius);
-                }
-            }
-        };
+        layer.Full = full;
+        layer.Horizontal = horizontal;
+        layer.FromOffset = fromOffset;
+        layer.BlurRadius = blurRadius;
+        layer.Motion = LayerMotion.Enter;
         var spec = full
             ? MotionSpec.Tween(duration ?? ArcMotionPresets.Standard, easing ?? ArcEasings.Enter, delay)
-            : MotionSpec.Tween(ArcMotionPresets.Instant, new Avalonia.Animation.Easings.LinearEasing());
+            : MotionSpec.Tween(ArcMotionPresets.Instant, s_linear);
         _ = progress.AnimateTo(1, spec);
     }
 
@@ -396,9 +536,18 @@ public class ArcContentSwap : Control
 
     private static readonly SpringSpec PopSpring = SpringSpec.FromVisual(0.5, 0.06);
 
+    private static ScaleTransform EnsureScale(Layer layer, double scale)
+    {
+        var transform = layer.Scale ??= new ScaleTransform();
+        transform.ScaleX = scale;
+        transform.ScaleY = scale;
+        return transform;
+    }
+
     private void StartPopEnter(Layer layer, bool full)
     {
-        var scale = new ScaleTransform(full ? 0.6 : 1, full ? 0.6 : 1);
+        var fade = BeginProgress(layer);
+        var scale = EnsureScale(layer, full ? 0.6 : 1);
         layer.Presenter.RenderTransformOrigin = RelativePoint.Center;
         layer.Presenter.RenderTransform = scale;
         layer.Presenter.Opacity = 0;
@@ -407,100 +556,71 @@ public class ArcContentSwap : Control
             layer.Blurs = true;
             layer.Presenter.Effect = ArcBlur.Get(4);
         }
-        var fade = new MotionValue<double>(this, 0, MotionVectors.Double);
-        layer.Progress = fade;
-        fade.Changed += p =>
-        {
-            layer.Presenter.Opacity = p;
-            if (layer.Blurs)
-            {
-                var radius = 4 * (1 - p);
-                if (radius < 0.05)
-                {
-                    layer.Presenter.Effect = null;
-                }
-                else
-                {
-                    layer.Presenter.Effect = ArcBlur.Get(radius);
-                }
-            }
-        };
+        layer.Motion = LayerMotion.PopEnter;
         _ = fade.AnimateTo(1, full
             ? MotionSpec.Tween(TimeSpan.FromSeconds(0.36), ArcEasings.Enter, TimeSpan.FromSeconds(0.03))
-            : MotionSpec.Tween(ArcMotionPresets.Instant, new Avalonia.Animation.Easings.LinearEasing()));
+            : MotionSpec.Tween(ArcMotionPresets.Instant, s_linear));
         if (full)
         {
-            var grow = new MotionValue<double>(this, 0.6, MotionVectors.Double);
-            grow.Changed += v =>
+            if (layer.Grow is null)
             {
-                scale.ScaleX = v;
-                scale.ScaleY = v;
-            };
-            _ = grow.AnimateTo(1, MotionSpec.Spring(PopSpring));
+                var grow = new MotionValue<double>(this, 0.6, MotionVectors.Double);
+                grow.Changed += v =>
+                {
+                    if (layer.Scale is { } s)
+                    {
+                        s.ScaleX = v;
+                        s.ScaleY = v;
+                    }
+                };
+                layer.Grow = grow;
+            }
+            else
+            {
+                layer.Grow.Jump(0.6);
+            }
+            _ = layer.Grow.AnimateTo(1, MotionSpec.Spring(PopSpring));
         }
     }
 
     private void StartPopExit(Layer layer, bool full)
     {
-        layer.Progress?.Stop();
-        var scale = new ScaleTransform(1, 1);
+        var startOpacity = layer.Presenter.Opacity;
+        var progress = BeginProgress(layer);
+        var scale = EnsureScale(layer, 1);
         layer.Presenter.RenderTransformOrigin = RelativePoint.Center;
         layer.Presenter.RenderTransform = scale;
         if (full)
         {
             layer.Blurs = true;
         }
-        var startOpacity = layer.Presenter.Opacity;
-        var progress = new MotionValue<double>(this, 0, MotionVectors.Double);
-        layer.Progress = progress;
-        progress.Changed += p =>
-        {
-            layer.Presenter.Opacity = startOpacity * (1 - p);
-            if (full)
-            {
-                var s = 1 - 0.4 * p;
-                scale.ScaleX = s;
-                scale.ScaleY = s;
-                if (layer.Blurs)
-                {
-                    layer.Presenter.Effect = ArcBlur.Get(4 * p);
-                }
-            }
-        };
-        progress.AnimateTo(1, full
-                ? MotionSpec.Tween(TimeSpan.FromSeconds(0.24), ArcEasings.Standard)
-                : MotionSpec.Tween(ArcMotionPresets.Instant, new Avalonia.Animation.Easings.LinearEasing()))
-            .ContinueWith(_ => Dispatcher.Post(() => RemoveLayer(layer)), TaskScheduler.Default);
+        layer.StartOpacity = startOpacity;
+        layer.Full = full;
+        layer.Motion = LayerMotion.PopExit;
+        _ = RemoveWhenDone(layer, progress.AnimateTo(1, full
+            ? MotionSpec.Tween(TimeSpan.FromSeconds(0.24), ArcEasings.Standard)
+            : MotionSpec.Tween(ArcMotionPresets.Instant, s_linear)));
     }
 
     private void StartExit(Layer layer, bool full, double toOffset, bool horizontal = false, bool blur = true, TimeSpan? duration = null)
     {
-        layer.Progress?.Stop();
         var startOpacity = layer.Presenter.Opacity;
+        var progress = BeginProgress(layer);
         if (full && blur)
         {
             layer.Blurs = true;
         }
-        var start = horizontal ? layer.Translate.X : layer.Translate.Y;
-        var progress = new MotionValue<double>(this, 0, MotionVectors.Double);
-        layer.Progress = progress;
-        progress.Changed += p =>
-        {
-            layer.Presenter.Opacity = startOpacity * (1 - p);
-            if (full)
-            {
-                SetOffset(layer, horizontal, start + (toOffset - start) * p);
-                if (blur && layer.Blurs)
-                {
-                    layer.Presenter.Effect = ArcBlur.Get(2 * p);
-                }
-            }
-        };
+        layer.Start = horizontal ? layer.Translate.X : layer.Translate.Y;
+        layer.StartOpacity = startOpacity;
+        layer.Full = full;
+        layer.Horizontal = horizontal;
+        layer.Blur = blur;
+        layer.ToOffset = toOffset;
+        layer.Motion = LayerMotion.Exit;
         var spec = full
             ? MotionSpec.Tween(duration ?? ArcMotionPresets.Fast, ArcEasings.Standard)
-            : MotionSpec.Tween(ArcMotionPresets.Instant, new Avalonia.Animation.Easings.LinearEasing());
-        progress.AnimateTo(1, spec).ContinueWith(_ => Dispatcher.Post(() => RemoveLayer(layer)),
-            TaskScheduler.Default);
+            : MotionSpec.Tween(ArcMotionPresets.Instant, s_linear);
+        _ = RemoveWhenDone(layer, progress.AnimateTo(1, spec));
     }
 
     protected override Size MeasureOverride(Size availableSize)
@@ -557,12 +677,13 @@ public class ArcContentSwap : Control
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
-        foreach (var layer in _exiting.ToArray())
+        for (var i = _exiting.Count - 1; i >= 0; i--)
         {
-            RemoveLayer(layer);
+            RemoveLayer(_exiting[i]);
         }
         if (_current is not null)
         {
+            _current.Motion = LayerMotion.None;
             _current.Progress?.Stop();
             _current.Presenter.Opacity = 1;
             _current.Presenter.Effect = null;

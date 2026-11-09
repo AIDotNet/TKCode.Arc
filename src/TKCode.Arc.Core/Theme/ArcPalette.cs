@@ -38,38 +38,44 @@ public readonly record struct ArcAccentColors(
 /// </summary>
 public static class ArcPalette
 {
+    // The tables hold parsed colors: Resolve runs on every theme computation, so the literals are parsed once here.
     private readonly record struct PresetRow(
-        string Accent, string Strong, string Subtle, string Foreground,
-        string ControlOn, string ThumbOn, string Glyph, string Fill);
+        Color Accent, Color Strong, Color Subtle, Color Foreground,
+        Color ControlOn, Color ThumbOn, Color Glyph, Color Fill);
 
-    private sealed record Preset(ArcAccentPreset Kind, string Seed, PresetRow Light, PresetRow Dark);
+    private sealed record Preset(ArcAccentPreset Kind, Color Seed, PresetRow Light, PresetRow Dark);
+
+    private static PresetRow Row(string accent, string strong, string subtle, string foreground,
+                                 string controlOn, string thumbOn, string glyph, string fill)
+        => new(Color.Parse(accent), Color.Parse(strong), Color.Parse(subtle), Color.Parse(foreground),
+            Color.Parse(controlOn), Color.Parse(thumbOn), Color.Parse(glyph), Color.Parse(fill));
 
     private static readonly Preset[] s_presets =
     [
-        new(ArcAccentPreset.Neutral, "#353535",
-            new("#353535", "#1F1F1F", "#1A353535", "#FFFFFF", "#1D1D1D", "#FFFFFF", "#FFFFFF", "#1D1D1D"),
-            new("#BEBEBE", "#E1E1E1", "#21BEBEBE", "#141414", "#E8E8E8", "#141414", "#141414", "#868686")),
-        new(ArcAccentPreset.Violet, "#7747FF",
-            new("#7747FF", "#5528CE", "#217747FF", "#FFFFFF", "#7747FF", "#FFFFFF", "#FFFFFF", "#7747FF"),
-            new("#A78BFF", "#C7B7FF", "#387747FF", "#141414", "#8A66FF", "#FFFFFF", "#FFFFFF", "#8A66FF")),
-        new(ArcAccentPreset.Blue, "#0562EF",
-            new("#0562EF", "#074DB7", "#1F0562EF", "#FFFFFF", "#0562EF", "#FFFFFF", "#FFFFFF", "#0562EF"),
-            new("#6BA3FF", "#A4C7FF", "#380562EF", "#141414", "#3B82F6", "#FFFFFF", "#FFFFFF", "#3B82F6")),
-        new(ArcAccentPreset.Green, "#0DB879",
-            new("#0DB879", "#087C54", "#210DB879", "#102016", "#10A870", "#FFFFFF", "#FFFFFF", "#10A870"),
-            new("#53DCA6", "#93EFD0", "#330DB879", "#102016", "#1FAE78", "#FFFFFF", "#FFFFFF", "#1FAE78")),
-        new(ArcAccentPreset.Amber, "#F3AD20",
-            new("#F3AD20", "#9C6300", "#29F3AD20", "#20190D", "#EDA11A", "#FFFFFF", "#2A1C03", "#EDA11A"),
-            new("#FFCB62", "#FFE0A1", "#33F3AD20", "#20190D", "#E8A52A", "#FFFFFF", "#241803", "#E8A52A")),
-        new(ArcAccentPreset.Orange, "#F48120",
-            new("#F48120", "#AA4700", "#21F48120", "#17130F", "#F07818", "#FFFFFF", "#FFFFFF", "#F07818"),
-            new("#FFAD5E", "#FFD0A0", "#33F48120", "#17130F", "#EF873A", "#FFFFFF", "#FFFFFF", "#EF873A")),
-        new(ArcAccentPreset.Coral, "#F15F55",
-            new("#F15F55", "#B92C27", "#24F15F55", "#21110F", "#EC564B", "#FFFFFF", "#FFFFFF", "#EC564B"),
-            new("#FF9386", "#FFC1BA", "#33F15F55", "#21110F", "#EC6A60", "#FFFFFF", "#FFFFFF", "#EC6A60")),
-        new(ArcAccentPreset.Rose, "#ED4E9D",
-            new("#ED4E9D", "#AE2570", "#24ED4E9D", "#250F1B", "#E64494", "#FFFFFF", "#FFFFFF", "#E64494"),
-            new("#FF8BC5", "#FFC0DF", "#33ED4E9D", "#250F1B", "#E457A0", "#FFFFFF", "#FFFFFF", "#E457A0"))
+        new(ArcAccentPreset.Neutral, Color.Parse("#353535"),
+            Row("#353535", "#1F1F1F", "#1A353535", "#FFFFFF", "#1D1D1D", "#FFFFFF", "#FFFFFF", "#1D1D1D"),
+            Row("#BEBEBE", "#E1E1E1", "#21BEBEBE", "#141414", "#E8E8E8", "#141414", "#141414", "#868686")),
+        new(ArcAccentPreset.Violet, Color.Parse("#7747FF"),
+            Row("#7747FF", "#5528CE", "#217747FF", "#FFFFFF", "#7747FF", "#FFFFFF", "#FFFFFF", "#7747FF"),
+            Row("#A78BFF", "#C7B7FF", "#387747FF", "#141414", "#8A66FF", "#FFFFFF", "#FFFFFF", "#8A66FF")),
+        new(ArcAccentPreset.Blue, Color.Parse("#0562EF"),
+            Row("#0562EF", "#074DB7", "#1F0562EF", "#FFFFFF", "#0562EF", "#FFFFFF", "#FFFFFF", "#0562EF"),
+            Row("#6BA3FF", "#A4C7FF", "#380562EF", "#141414", "#3B82F6", "#FFFFFF", "#FFFFFF", "#3B82F6")),
+        new(ArcAccentPreset.Green, Color.Parse("#0DB879"),
+            Row("#0DB879", "#087C54", "#210DB879", "#102016", "#10A870", "#FFFFFF", "#FFFFFF", "#10A870"),
+            Row("#53DCA6", "#93EFD0", "#330DB879", "#102016", "#1FAE78", "#FFFFFF", "#FFFFFF", "#1FAE78")),
+        new(ArcAccentPreset.Amber, Color.Parse("#F3AD20"),
+            Row("#F3AD20", "#9C6300", "#29F3AD20", "#20190D", "#EDA11A", "#FFFFFF", "#2A1C03", "#EDA11A"),
+            Row("#FFCB62", "#FFE0A1", "#33F3AD20", "#20190D", "#E8A52A", "#FFFFFF", "#241803", "#E8A52A")),
+        new(ArcAccentPreset.Orange, Color.Parse("#F48120"),
+            Row("#F48120", "#AA4700", "#21F48120", "#17130F", "#F07818", "#FFFFFF", "#FFFFFF", "#F07818"),
+            Row("#FFAD5E", "#FFD0A0", "#33F48120", "#17130F", "#EF873A", "#FFFFFF", "#FFFFFF", "#EF873A")),
+        new(ArcAccentPreset.Coral, Color.Parse("#F15F55"),
+            Row("#F15F55", "#B92C27", "#24F15F55", "#21110F", "#EC564B", "#FFFFFF", "#FFFFFF", "#EC564B"),
+            Row("#FF9386", "#FFC1BA", "#33F15F55", "#21110F", "#EC6A60", "#FFFFFF", "#FFFFFF", "#EC6A60")),
+        new(ArcAccentPreset.Rose, Color.Parse("#ED4E9D"),
+            Row("#ED4E9D", "#AE2570", "#24ED4E9D", "#250F1B", "#E64494", "#FFFFFF", "#FFFFFF", "#E64494"),
+            Row("#FF8BC5", "#FFC0DF", "#33ED4E9D", "#250F1B", "#E457A0", "#FFFFFF", "#FFFFFF", "#E457A0"))
     ];
 
     // Series colors for the neutral accent come from Arc's explicit CSS fallback values.
@@ -77,11 +83,26 @@ public static class ArcPalette
     private static readonly Color[] s_neutralSeriesDark = [Color.Parse("#55ADFF"), Color.Parse("#9C37BE"), Color.Parse("#E66E00"), Color.Parse("#00A861")];
 
     private static readonly Color AtomUIDefaultPrimary = Color.Parse("#1677FF");
+    private static readonly Color DarkDerivedForeground = Color.Parse("#141414");
+
+    /// <summary>Preset by the RGB of its seed; the default seed maps to Arc's default (neutral).</summary>
+    private static readonly Dictionary<uint, Preset> s_seeds = BuildSeedLookup();
 
     private static readonly Lazy<Dictionary<uint, Preset>> s_darkDerived = new(BuildDarkDerivedLookup);
 
+    private static Dictionary<uint, Preset> BuildSeedLookup()
+    {
+        var map = new Dictionary<uint, Preset>(s_presets.Length + 1);
+        foreach (var preset in s_presets)
+        {
+            map.TryAdd(Key(preset.Seed), preset);
+        }
+        map.TryAdd(Key(AtomUIDefaultPrimary), s_presets[0]);
+        return map;
+    }
+
     /// <summary>Seed color of a preset (equal to its light accent).</summary>
-    public static Color GetSeed(ArcAccentPreset preset) => Color.Parse(s_presets[(int)preset].Seed);
+    public static Color GetSeed(ArcAccentPreset preset) => s_presets[(int)preset].Seed;
 
     /// <summary>Resolves the accent colors for <paramref name="seed"/> in the given appearance.</summary>
     public static ArcAccentColors Resolve(Color seed, bool isDark)
@@ -97,16 +118,9 @@ public static class ArcPalette
     private static Preset? MatchPreset(Color seed)
     {
         var key = Key(seed);
-        foreach (var preset in s_presets)
+        if (s_seeds.TryGetValue(key, out var preset))
         {
-            if (Key(Color.Parse(preset.Seed)) == key)
-            {
-                return preset;
-            }
-        }
-        if (key == Key(AtomUIDefaultPrimary))
-        {
-            return s_presets[0];
+            return preset;
         }
         return s_darkDerived.Value.TryGetValue(key, out var derived) ? derived : null;
     }
@@ -116,7 +130,7 @@ public static class ArcPalette
         var map = new Dictionary<uint, Preset>();
         foreach (var preset in s_presets)
         {
-            var derived = ArcPaletteGenerator.Generate(Color.Parse(preset.Seed), isDark: true)[5];
+            var derived = ArcPaletteGenerator.Generate(preset.Seed, isDark: true)[5];
             map.TryAdd(Key(derived), preset);
         }
         var defaultDerived = ArcPaletteGenerator.Generate(AtomUIDefaultPrimary, isDark: true)[5];
@@ -126,24 +140,30 @@ public static class ArcPalette
 
     private static uint Key(Color c) => (uint)((c.R << 16) | (c.G << 8) | c.B);
 
+    // The preset name a resolved accent reports (the enum name in lower case), built once.
+    private static readonly string[] s_presetNames =
+    [
+        "neutral", "violet", "blue", "green", "amber", "orange", "coral", "rose"
+    ];
+
     private static ArcAccentColors FromPreset(Preset preset, bool isDark)
     {
         var row = isDark ? preset.Dark : preset.Light;
-        var accent = Color.Parse(row.Accent);
+        var accent = row.Accent;
         var series = preset.Kind == ArcAccentPreset.Neutral
             ? (isDark ? s_neutralSeriesDark : s_neutralSeriesLight)
             : ComputeSeries(accent, isDark);
         return new ArcAccentColors(
             accent,
-            Color.Parse(row.Strong),
-            Color.Parse(row.Subtle),
-            Color.Parse(row.Foreground),
-            Color.Parse(row.ControlOn),
-            Color.Parse(row.ThumbOn),
-            Color.Parse(row.Glyph),
-            Color.Parse(row.Fill),
+            row.Strong,
+            row.Subtle,
+            row.Foreground,
+            row.ControlOn,
+            row.ThumbOn,
+            row.Glyph,
+            row.Fill,
             series[0], series[1], series[2], series[3],
-            preset.Kind.ToString().ToLowerInvariant());
+            s_presetNames[(int)preset.Kind]);
     }
 
     private static ArcAccentColors Derive(Color seed, bool isDark)
@@ -177,7 +197,7 @@ public static class ArcPalette
         var white = Colors.White;
         var foreground = Oklch.Contrast(white, accent) >= 4.5
             ? white
-            : isDark ? Color.Parse("#141414") : Oklch.ToColor(0.2, Math.Min(c, 0.02), h);
+            : isDark ? DarkDerivedForeground : Oklch.ToColor(0.2, Math.Min(c, 0.02), h);
         var controlOnL = Oklch.FromColor(controlOn).L;
         var glyph = controlOnL >= 0.75 ? Oklch.ToColor(0.2, Math.Min(c, 0.04), h) : white;
         var series = ComputeSeries(accent, isDark);

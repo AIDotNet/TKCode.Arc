@@ -188,8 +188,11 @@ public class ArcPopup : Popup
 
     public ArcPopup()
     {
-        ArcTokens.Bind(this, PopupRootShadowProperty, ArcDesignTokenKind.ShadowFloating, Avalonia.Data.BindingPriority.Style);
-        ArcTokens.Bind(this, OverlayHostShadowProperty, ArcDesignTokenKind.ShadowFloating, Avalonia.Data.BindingPriority.Style);
+        // Both shadows default to the one token through one resource observable: it subscribes to the popup's resource
+        // events once and resolves the token once per change for both properties.
+        var floating = this.GetResourceObservable(ArcDesignTokenKind.ShadowFloating);
+        Bind(PopupRootShadowProperty, floating, Avalonia.Data.BindingPriority.Style);
+        Bind(OverlayHostShadowProperty, floating, Avalonia.Data.BindingPriority.Style);
         SetCurrentValue(RequestedPlacementProperty, PlacementMode.Bottom);
         SetCurrentValue(PlacementProperty, PlacementMode.Custom);
         CustomPopupPlacementCallback = HandlePlacement;

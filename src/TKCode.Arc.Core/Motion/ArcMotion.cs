@@ -36,10 +36,11 @@ public sealed class ArcMotion
     private static readonly AttachedProperty<bool> ActiveProperty =
         AvaloniaProperty.RegisterAttached<ArcMotion, Control, bool>("Active");
 
-    // True while the token-source events below are attached. A control whose inherited level is Off is Off whatever the
-    // MotionMode token says, so it stays unsubscribed and never pays for the lookup or the two event subscriptions.
-    private static readonly AttachedProperty<bool> SubscribedProperty =
-        AvaloniaProperty.RegisterAttached<ArcMotion, Control, bool>("Subscribed");
+    // The token source a tracking control is registered with while the MotionMode token can still change its effective
+    // level. A control whose inherited level is Off is Off whatever the token says, so it stays unregistered and never
+    // pays for the lookup.
+    private static readonly AttachedProperty<TokenSource?> SourceProperty =
+        AvaloniaProperty.RegisterAttached<ArcMotion, Control, TokenSource?>("Source");
 
     private static readonly AttachedProperty<int> SettlingProperty =
         AvaloniaProperty.RegisterAttached<ArcMotion, Control, int>("Settling");
@@ -50,6 +51,12 @@ public sealed class ArcMotion
         LevelProperty.Changed.AddClassHandler<Control>((c, _) =>
         {
             // The inherited level decides whether the MotionMode token can still change the effective level.
+            EnsureTokenTracking(c);
+            Refresh(c);
+        });
+        // A theme scope that appears or goes around a tracking control moves it to the source that holds its tokens.
+        ArcThemeScope.RootProperty.Changed.AddClassHandler<Control>((c, _) =>
+        {
             EnsureTokenTracking(c);
             Refresh(c);
         });
@@ -79,37 +86,92 @@ public sealed class ArcMotion
         return (ArcMotionLevel)Math.Min((int)level, (int)tokenLevel);
     }
 
-    // MotionMode is an application-wide token, so the walk up the resource scopes it needs is done once per TopLevel and
-    // kept until the resources or the theme variant change. Code-driven motion asks for the level on every retarget.
-    private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<TopLevel, ThemeLevelCache> s_themeLevels = new();
+    // MotionMode is published per resource root: the application (read through the TopLevel) or an ArcThemeScope element
+    // for its subtree. The walk up the resource scopes it needs is done once per root and kept until the root's
+    // resources or theme variant change; the tracking controls under a root register with it and are refreshed together
+    // by the root's one pair of event subscriptions. Code-driven motion asks for the level on every retarget.
+    private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<StyledElement, TokenSource> s_sources = new();
 
-    private sealed class ThemeLevelCache
+    private sealed class TokenSource
     {
-        public ArcMotionLevel Level;
-        public bool Valid;
+        private readonly StyledElement _root;
+        private ArcMotionLevel _level;
+        private bool _valid;
 
-        public void Invalidate() => Valid = false;
+        public TokenSource(StyledElement root) => _root = root;
+
+        /// <summary>The tracking controls registered with this root (they leave on unload, so plain references).</summary>
+        public HashSet<Control> Tracking { get; } = new();
+
+        public ArcMotionLevel Level
+        {
+            get
+            {
+                if (!_valid)
+                {
+                    _level = _root.TryFindResource(ArcDesignTokenKind.MotionMode, _root.ActualThemeVariant, out var mode)
+                        ? Parse(mode as string)
+                        : ArcMotionLevel.Full;
+                    _valid = true;
+                }
+                return _level;
+            }
+        }
+
+        public void Invalidate() => _valid = false;
+    }
+
+    private static readonly EventHandler<ResourcesChangedEventArgs> s_onSourceResourcesChanged = (sender, _) => OnSourceChanged(sender);
+    private static readonly EventHandler s_onSourceVariantChanged = (sender, _) => OnSourceChanged(sender);
+
+    /// <summary>The element whose resources hold <paramref name="control"/>'s MotionMode: its theme scope, else its TopLevel.</summary>
+    private static StyledElement? ResourceRoot(Control control)
+        => ArcThemeScope.GetRoot(control) ?? (StyledElement?)TopLevel.GetTopLevel(control);
+
+    private static TokenSource SourceFor(StyledElement root)
+    {
+        if (!s_sources.TryGetValue(root, out var source))
+        {
+            source = new TokenSource(root);
+            s_sources.Add(root, source);
+            root.ResourcesChanged += s_onSourceResourcesChanged;
+            root.ActualThemeVariantChanged += s_onSourceVariantChanged;
+        }
+        return source;
+    }
+
+    private static void OnSourceChanged(object? sender)
+    {
+        if (sender is not StyledElement root || !s_sources.TryGetValue(root, out var source))
+        {
+            return;
+        }
+        source.Invalidate();
+        if (source.Tracking.Count == 0)
+        {
+            return;
+        }
+        // A snapshot: refreshing a control's pseudo-classes may load or unload controls that change the set.
+        var controls = new Control[source.Tracking.Count];
+        source.Tracking.CopyTo(controls);
+        var level = source.Level;
+        foreach (var control in controls)
+        {
+            if (control.GetValue(ActiveProperty) && ReferenceEquals(control.GetValue(SourceProperty), source))
+            {
+                control.SetValue(TokenLevelProperty, level);
+                Refresh(control);
+            }
+        }
     }
 
     private static ArcMotionLevel ThemeLevel(Control control)
     {
-        if (TopLevel.GetTopLevel(control) is not { } top)
+        if (ResourceRoot(control) is not { } root)
         {
             return control.TryFindResource(ArcDesignTokenKind.MotionMode, out var detached) ? Parse(detached as string) : ArcMotionLevel.Full;
         }
-        if (!s_themeLevels.TryGetValue(top, out var cache))
-        {
-            cache = new ThemeLevelCache();
-            s_themeLevels.Add(top, cache);
-            top.ResourcesChanged += (_, _) => cache.Invalidate();
-            top.ActualThemeVariantChanged += (_, _) => cache.Invalidate();
-        }
-        if (!cache.Valid)
-        {
-            cache.Level = top.TryFindResource(ArcDesignTokenKind.MotionMode, out var mode) ? Parse(mode as string) : ArcMotionLevel.Full;
-            cache.Valid = true;
-        }
-        return cache.Level;
+        return SourceFor(root).Level;
     }
 
     /// <summary>True when spatial motion (springs, travel, scale) should run.</summary>
@@ -144,10 +206,6 @@ public sealed class ArcMotion
     // Controls loaded in one pass are activated together by a single posted job instead of one post each.
     private static readonly List<Control> s_pending = new();
     private static bool s_flushPosted;
-
-    // Shared handlers: a tracking control costs two event subscriptions, not an observable, an observer and a disposable.
-    private static readonly EventHandler<ResourcesChangedEventArgs> s_onResourcesChanged = (sender, _) => OnTokenSourceChanged(sender);
-    private static readonly EventHandler s_onThemeVariantChanged = (sender, _) => OnTokenSourceChanged(sender);
 
     private static void OnLoaded(object? sender, RoutedEventArgs e)
     {
@@ -196,11 +254,10 @@ public sealed class ArcMotion
 
     private static void Deactivate(Control control)
     {
-        if (control.GetValue(SubscribedProperty))
+        if (control.GetValue(SourceProperty) is { } source)
         {
-            control.SetValue(SubscribedProperty, false);
-            control.ResourcesChanged -= s_onResourcesChanged;
-            control.ActualThemeVariantChanged -= s_onThemeVariantChanged;
+            source.Tracking.Remove(control);
+            control.ClearValue(SourceProperty);
         }
         control.SetValue(ActiveProperty, false);
         var pseudo = (IPseudoClasses)control.Classes;
@@ -209,51 +266,38 @@ public sealed class ArcMotion
     }
 
     /// <summary>
-    /// Connects the MotionMode token (one resource lookup plus the two change events) only while the token can still
-    /// change the effective level. A tracking control whose inherited <see cref="LevelProperty"/> is Off is Off whatever
-    /// the token says, so it keeps neither: the common "motion off" run (the benchmark, screenshot passes) allocates no
-    /// subscription and no lookup per control. When the inherited level goes Off the events are let go again, and when it
-    /// comes back the token is re-read, so an enabled run behaves exactly as before.
+    /// Registers the control with the token source of its resource root (its theme scope, else its TopLevel) only while
+    /// the MotionMode token can still change the effective level; the source reads the token once per root and refreshes
+    /// every registered control when its resources or theme variant change, so a tracking control holds no event
+    /// subscription and makes no lookup of its own. A tracking control whose inherited <see cref="LevelProperty"/> is Off
+    /// is Off whatever the token says, so it stays unregistered: the common "motion off" run (the benchmark, screenshot
+    /// passes) pays nothing per control. When the inherited level goes Off it leaves the source again, and when it comes
+    /// back (or its scope changes) the token is re-read, so an enabled run behaves exactly as before.
     /// </summary>
     private static void EnsureTokenTracking(Control control)
     {
         var needed = control.GetValue(ActiveProperty)
             && control.GetValue(TracksProperty)
             && control.GetValue(LevelProperty) != ArcMotionLevel.Off;
-        if (needed == control.GetValue(SubscribedProperty))
+        var current = control.GetValue(SourceProperty);
+        TokenSource? wanted = null;
+        if (needed && ResourceRoot(control) is { } root)
+        {
+            wanted = SourceFor(root);
+        }
+        if (ReferenceEquals(current, wanted))
         {
             return;
         }
-        if (needed)
+        current?.Tracking.Remove(control);
+        if (wanted is null)
         {
-            control.SetValue(SubscribedProperty, true);
-            control.ResourcesChanged += s_onResourcesChanged;
-            control.ActualThemeVariantChanged += s_onThemeVariantChanged;
-            ReadTokenLevel(control);
+            control.ClearValue(SourceProperty);
+            return;
         }
-        else
-        {
-            control.SetValue(SubscribedProperty, false);
-            control.ResourcesChanged -= s_onResourcesChanged;
-            control.ActualThemeVariantChanged -= s_onThemeVariantChanged;
-        }
-    }
-
-    private static void OnTokenSourceChanged(object? sender)
-    {
-        if (sender is Control control && control.GetValue(ActiveProperty))
-        {
-            ReadTokenLevel(control);
-            Refresh(control);
-        }
-    }
-
-    private static void ReadTokenLevel(Control control)
-    {
-        var level = control.TryFindResource(ArcDesignTokenKind.MotionMode, control.ActualThemeVariant, out var mode)
-            ? Parse(mode as string)
-            : ArcMotionLevel.Full;
-        control.SetValue(TokenLevelProperty, level);
+        control.SetValue(SourceProperty, wanted);
+        wanted.Tracking.Add(control);
+        control.SetValue(TokenLevelProperty, wanted.Level);
     }
 
     /// <summary>

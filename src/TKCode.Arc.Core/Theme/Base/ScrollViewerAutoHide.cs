@@ -11,8 +11,9 @@ namespace TKCode.Arc;
 /// When the base theme's overlay scroll bars show (<c>ScrollViewerBaseTheme.axaml</c>; design/architecture/foundation.md
 /// 14.2), ScrollArea's default: while a mouse is over the viewer, while the offset changes (wheel, keyboard, touch,
 /// code) and <see cref="HideDelay"/> after the last change, and while a bar's thumb is dragged. With
-/// <see cref="ScrollViewer.AllowAutoHide"/> false the bars always show. The theme reads <see cref="IsShownProperty"/>;
-/// the fade itself is ControlTheme transitions.
+/// <see cref="ScrollViewer.AllowAutoHide"/> false the bars always show. The theme reads the
+/// <see cref="BarsShownPseudoClass"/> (<see cref="IsShownProperty"/> says the same for code); the fade itself is
+/// ControlTheme transitions.
 /// </summary>
 /// <remarks>
 /// Code because a ControlTheme cannot express two of the triggers: "for a while after the offset last changed" needs a
@@ -29,9 +30,16 @@ internal static class ScrollViewerAutoHide
     public static readonly AttachedProperty<bool> IsEnabledProperty =
         AvaloniaProperty.RegisterAttached<ScrollViewer, bool>("IsEnabled", typeof(ScrollViewerAutoHide));
 
-    /// <summary>True while the viewer's bars show (written here, read by the theme).</summary>
+    /// <summary>True while the viewer's bars show (written here; the theme reads <see cref="BarsShownPseudoClass"/>).</summary>
     public static readonly AttachedProperty<bool> IsShownProperty =
         AvaloniaProperty.RegisterAttached<ScrollViewer, bool>("IsShown", typeof(ScrollViewerAutoHide));
+
+    /// <summary>
+    /// Pseudo-class set on the viewer while its bars show. The theme selects it (<c>^:bars-shown /template/ ScrollBar</c>)
+    /// rather than <see cref="IsShownProperty"/>: a property selector costs every viewer an activator that subscribes to the
+    /// property and boxes its value to compare, a pseudo-class is a class list check.
+    /// </summary>
+    public const string BarsShownPseudoClass = ":bars-shown";
 
     private static readonly AttachedProperty<Tracker?> TrackerProperty =
         AvaloniaProperty.RegisterAttached<ScrollViewer, Tracker?>("Tracker", typeof(ScrollViewerAutoHide));
@@ -64,6 +72,7 @@ internal static class ScrollViewerAutoHide
         else
         {
             viewer.ClearValue(IsShownProperty);
+            ((IPseudoClasses)viewer.Classes).Set(BarsShownPseudoClass, false);
         }
     }
 
@@ -212,6 +221,7 @@ internal static class ScrollViewerAutoHide
             if (GetIsShown(_viewer) != shown)
             {
                 SetIsShown(_viewer, shown);
+                ((IPseudoClasses)_viewer.Classes).Set(BarsShownPseudoClass, shown);
             }
         }
     }

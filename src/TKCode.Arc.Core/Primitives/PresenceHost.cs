@@ -80,8 +80,10 @@ public class PresenceHost : Decorator
     public event EventHandler? Exited;
 
     private MotionValue<double>? _progress;
-    private readonly ScaleTransform _scale = new();
-    private readonly TranslateTransform _translate = new();
+    // Built the first time the host moves (a hidden start or a run): most hosts only ever show or hide, and an identity
+    // transform group would cost them three transforms and their change subscriptions. Once built it stays, in this shape.
+    private ScaleTransform? _scale;
+    private TranslateTransform? _translate;
     private bool _initialized;
 
     static PresenceHost()
@@ -89,9 +91,14 @@ public class PresenceHost : Decorator
         AffectsMeasure<PresenceHost>(CollapseProperty);
     }
 
-    public PresenceHost()
+    private void EnsureTransform()
     {
-        RenderTransform = new TransformGroup { Children = { _scale, _translate } };
+        if (_scale is null)
+        {
+            _scale = new ScaleTransform();
+            _translate = new TranslateTransform();
+            RenderTransform = new TransformGroup { Children = { _scale, _translate } };
+        }
     }
 
     /// <summary>Current presence (0 hidden, 1 shown; may overshoot on springs).</summary>
@@ -142,6 +149,7 @@ public class PresenceHost : Decorator
             return;
         }
         _progress ??= CreateProgress(present ? 0 : 1);
+        EnsureTransform();
         var level = ArcMotion.GetEffectiveLevel(this);
         if (present && child is not null)
         {
@@ -220,10 +228,17 @@ public class PresenceHost : Decorator
                 dx = -(1 - Math.Clamp(p, 0, 1)) * Offset;
                 break;
         }
-        _scale.ScaleX = scale;
-        _scale.ScaleY = scale;
-        _translate.X = dx;
-        _translate.Y = dy;
+        if (_scale is null && (scale != 1 || dx != 0 || dy != 0))
+        {
+            EnsureTransform();
+        }
+        if (_scale is not null)
+        {
+            _scale.ScaleX = scale;
+            _scale.ScaleY = scale;
+            _translate!.X = dx;
+            _translate.Y = dy;
+        }
         if (Collapse != PresenceCollapse.None)
         {
             InvalidateMeasure();

@@ -74,6 +74,20 @@ public class StrokeDrawGlyph : Control
 
     private Pen? _pen;
     private IBrush? _penBrush;
+    private Geometry? _lengthOf;
+    private double _length;
+
+    // Geometry.ContourLength measures the path on every call (a platform path measure per frame while the stroke
+    // draws); the glyph data is immutable, so the length is read once per geometry.
+    private double ContourLength(Geometry data)
+    {
+        if (!ReferenceEquals(_lengthOf, data))
+        {
+            _length = data.ContourLength;
+            _lengthOf = data;
+        }
+        return _length;
+    }
 
     protected override Size MeasureOverride(Size availableSize) => new(Size, Size);
 
@@ -100,7 +114,7 @@ public class StrokeDrawGlyph : Control
                 context.DrawGeometry(null, pen, data);
                 return;
             }
-            var length = data.ContourLength;
+            var length = ContourLength(data);
             if (length > 0 && data.TryGetSegment(0, length * progress, true, out var segment) && segment is not null)
             {
                 context.DrawGeometry(null, pen, segment);
