@@ -91,6 +91,7 @@ public sealed class GallerySidebar : Border
     private Item? _selected;
     private Rect _lastRect;
     private bool _placingNewRow;
+    private IEnumerator<bool>? _buildSteps;
 
     public event Action<GalleryEntry>? EntrySelected;
 
@@ -118,7 +119,12 @@ public sealed class GallerySidebar : Border
         }
     }
 
-    public GallerySidebar()
+    public GallerySidebar() : this(deferred: false)
+    {
+    }
+
+    /// <param name="deferred">Leave the groups to <see cref="BuildStep"/>, so a host can build them between frames.</param>
+    internal GallerySidebar(bool deferred)
     {
         _follow = new GalleryBoundsWatch(_content, () =>
         {
@@ -135,18 +141,9 @@ public sealed class GallerySidebar : Border
         _shortcut = BuildShortcutHint();
 
         var list = _list;
-        // The sections follow uiarc.dev's sidebar order: Docs, Components, Blocks.
-        list.Children.Add(BuildSection(GalleryShellLangResourceKind.Category_Docs, ArcIcons.FileText, [GalleryCatalog.Docs], flatten: true));
-        // Arc's groups, then the extras group (both are part of the section, so both count in the footer).
-        list.Children.Add(BuildSection(GalleryShellLangResourceKind.Components, ArcIcons.LayoutGrid, GalleryCatalog.AllCategories.ToArray()));
-        list.Children.Add(BuildSection(GalleryShellLangResourceKind.Category_Blocks, ArcIcons.Box, GalleryCatalog.Blocks.Subcategories!, isBlockGroups: true));
-        // The Special components section (uiarc.dev's fourth section).
-        list.Children.Add(BuildSection(GalleryShellLangResourceKind.Category_Special, ArcIcons.Sparkles, GalleryCatalog.Special));
-        // The Mobile section: the TKCode.Arc.Mobile components, listed flat (their demos run inside a phone frame).
-        list.Children.Add(BuildSection(GalleryShellLangResourceKind.Category_Mobile, ArcIcons.Smartphone, [GalleryCatalog.Mobile], flatten: true));
         _empty.Margin = new Thickness(16, 12);
         _empty.IsVisible = false;
-        list.Children.Add(_empty);
+        _buildSteps = BuildSections().GetEnumerator();
 
         ArcTokens.Bind(_indicator, GlidingIndicator.FillProperty, ArcDesignTokenKind.Foreground);
         _indicator.CornerRadius = new CornerRadius(1);
@@ -201,11 +198,71 @@ public sealed class GallerySidebar : Border
                 ApplyFilter();
             }
         };
-        ApplyFilter();
         GalleryText.Track(this, UpdateEmptyText);
+        if (!deferred)
+        {
+            CompleteBuild();
+        }
+    }
+
+    /// <summary>
+    /// Builds the next group; false once the list is complete. Run while the sidebar is attached and hidden, each group also gets
+    /// its styles in this step, so no single step blocks the browser for long.
+    /// </summary>
+    internal bool BuildStep()
+    {
+        if (_buildSteps is not { } steps)
+        {
+            return false;
+        }
+        if (steps.MoveNext())
+        {
+            return true;
+        }
+        steps.Dispose();
+        _buildSteps = null;
+        ApplyFilter();
+        return false;
+    }
+
+    /// <summary>Builds whatever <see cref="BuildStep"/> has not reached yet.</summary>
+    internal void CompleteBuild()
+    {
+        while (BuildStep())
+        {
+        }
     }
 
     #region Building
+
+    private IEnumerable<bool> BuildSections()
+    {
+        // The sections follow uiarc.dev's sidebar order: Docs, Components, Blocks.
+        foreach (var step in BuildSection(GalleryShellLangResourceKind.Category_Docs, ArcIcons.FileText, [GalleryCatalog.Docs], flatten: true))
+        {
+            yield return step;
+        }
+        // Arc's groups, then the extras group (both are part of the section, so both count in the footer).
+        foreach (var step in BuildSection(GalleryShellLangResourceKind.Components, ArcIcons.LayoutGrid, GalleryCatalog.AllCategories.ToArray()))
+        {
+            yield return step;
+        }
+        foreach (var step in BuildSection(GalleryShellLangResourceKind.Category_Blocks, ArcIcons.Box, GalleryCatalog.Blocks.Subcategories!, isBlockGroups: true))
+        {
+            yield return step;
+        }
+        // The Special components section (uiarc.dev's fourth section).
+        foreach (var step in BuildSection(GalleryShellLangResourceKind.Category_Special, ArcIcons.Sparkles, GalleryCatalog.Special))
+        {
+            yield return step;
+        }
+        // The Mobile section: the TKCode.Arc.Mobile components, listed flat (their demos run inside a phone frame).
+        foreach (var step in BuildSection(GalleryShellLangResourceKind.Category_Mobile, ArcIcons.Smartphone, [GalleryCatalog.Mobile], flatten: true))
+        {
+            yield return step;
+        }
+        _list.Children.Add(_empty);
+    }
 
     private Control BuildSearchBox()
     {
@@ -291,7 +348,7 @@ public sealed class GallerySidebar : Border
     /// A collapsible sidebar section and the groups under it. A flattened section (Docs) shows its one group's rows
     /// without that group's own header, which would repeat the section's title.
     /// </summary>
-    private Control BuildSection(GalleryShellLangResourceKind titleKind, Geometry icon, GalleryCategory[] categories,
+    private IEnumerable<bool> BuildSection(GalleryShellLangResourceKind titleKind, Geometry icon, GalleryCategory[] categories,
         bool isBlockGroups = false, bool flatten = false)
     {
         var chevron = new ArcGlyph { Data = ArcIcons.ChevronDown, Size = 14 };
@@ -303,6 +360,8 @@ public sealed class GallerySidebar : Border
         var root = new StackPanel { Children = { header, body } };
 
         var section = new Section { Root = root, Header = header, Chevron = chevron, Count = count, Body = body };
+        _sections.Add(section);
+        _list.Children.Add(root);
         foreach (var category in categories)
         {
             var group = BuildGroup(category, isBlockGroups);
@@ -314,6 +373,7 @@ public sealed class GallerySidebar : Border
             }
             section.Groups.Add(group);
             stack.Children.Add(group.Root);
+            yield return true;
         }
         header.Click += () =>
         {
@@ -321,8 +381,6 @@ public sealed class GallerySidebar : Border
             chevron.RenderTransform = body.IsExpanded ? null : new RotateTransform(-90);
             SyncIndicator(animate: false);
         };
-        _sections.Add(section);
-        return root;
     }
 
     private static GalleryNavRow BuildSectionHeader(Geometry icon, GalleryShellLangResourceKind titleKind, ArcGlyph chevron, TextBlock count)

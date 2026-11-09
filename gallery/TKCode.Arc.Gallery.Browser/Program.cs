@@ -67,6 +67,8 @@ internal sealed partial class Program
         {
             await CjkFontCollection.PreloadAsync();
         }
+        // The sidebar is built in small steps after the first frame, so the first click on a component does not pay for it.
+        GalleryShell.PreparesSidebarWhenIdle = true;
         await BuildAvaloniaApp().StartBrowserAppAsync("out");
     }
 

@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Gallery.Catalog;
 using TKCode.Arc.Gallery.DemoApp;
@@ -28,6 +29,11 @@ public sealed class GalleryShell : Grid
     private readonly ContentControl _pageHost = new() { HorizontalContentAlignment = HorizontalAlignment.Stretch, VerticalContentAlignment = VerticalAlignment.Stretch };
     // Built when a page first needs it: the home page, where most visits start, has no sidebar. See Sidebar.
     private GallerySidebar? _sidebar;
+    private bool _preparing;
+    // Long enough for the first frame and the home page's first work to finish; the slices leave the browser most of each frame.
+    private static readonly TimeSpan SidebarPreparationStart = TimeSpan.FromMilliseconds(500);
+    private static readonly TimeSpan SidebarPreparationSlice = TimeSpan.FromMilliseconds(10);
+    private static readonly TimeSpan SidebarPreparationGap = TimeSpan.FromMilliseconds(32);
     // Holds the sidebar's place before the page: a panel appends a late child to its visual children, and their order is the tab
     // order and the drawing order.
     private readonly Decorator _sidebarHost = new();
@@ -78,7 +84,11 @@ public sealed class GalleryShell : Grid
         // A key press goes to the focused element and up through its parents. The home page has nothing to focus, and a window
         // or a browser page hands a press with no focus to the root, so the shell takes the focus: Cmd/Ctrl+K works from the start.
         Focusable = true;
-        AttachedToVisualTree += (_, _) => Dispatcher.UIThread.Post(() => Focus());
+        AttachedToVisualTree += (_, _) =>
+        {
+            Dispatcher.UIThread.Post(() => Focus());
+            ScheduleSidebarPreparation();
+        };
         Navigate(initial ?? GalleryRoute.Home);
     }
 
@@ -91,13 +101,62 @@ public sealed class GalleryShell : Grid
         {
             if (_sidebar is null)
             {
-                _sidebar = new GallerySidebar { IsVisible = false };
-                _sidebar.EntrySelected += OnEntrySelected;
-                PlaceSidebar(_sidebar);
+                CreateSidebar(deferred: false);
             }
+            // Asked for while it is still being prepared: the rest is built now.
+            _sidebar!.CompleteBuild();
             return _sidebar;
         }
     }
+
+    /// <summary>
+    /// Whether a shell prepares its sidebar in small steps after its first frame. The WebAssembly host turns this on: there, building
+    /// the sidebar on the first click holds up that click for most of a second. Other hosts build it when it is first needed.
+    /// </summary>
+    public static bool PreparesSidebarWhenIdle { get; set; }
+
+    private void CreateSidebar(bool deferred)
+    {
+        _sidebar = new GallerySidebar(deferred) { IsVisible = false };
+        _sidebar.EntrySelected += OnEntrySelected;
+        PlaceSidebar(_sidebar);
+    }
+
+    private void ScheduleSidebarPreparation()
+    {
+        if (!PreparesSidebarWhenIdle || _preparing || _sidebar is not null)
+        {
+            return;
+        }
+        _preparing = true;
+        DispatcherTimer.RunOnce(PrepareSidebarStep, SidebarPreparationStart, DispatcherPriority.Background);
+    }
+
+    /// <summary>Builds sidebar groups for one short slice of time, then lets the page and its input run.</summary>
+    private void PrepareSidebarStep()
+    {
+        if (!IsAttachedToVisualTree())
+        {
+            _preparing = false;
+            return;
+        }
+        if (_sidebar is null)
+        {
+            CreateSidebar(deferred: true);
+        }
+        var slice = Stopwatch.StartNew();
+        var more = true;
+        while (more && slice.Elapsed < SidebarPreparationSlice)
+        {
+            more = _sidebar!.BuildStep();
+        }
+        if (more)
+        {
+            DispatcherTimer.RunOnce(PrepareSidebarStep, SidebarPreparationGap, DispatcherPriority.Background);
+        }
+    }
+
+    private bool IsAttachedToVisualTree() => TopLevel.GetTopLevel(this) is not null;
 
     public GalleryTopBar TopBar { get; }
 

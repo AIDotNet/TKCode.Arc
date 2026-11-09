@@ -45,6 +45,31 @@ public class GalleryLazyShellTests
     }
 
     [AvaloniaFact]
+    public void A_Sidebar_Built_In_Steps_Lists_The_Same_Groups_As_One_Built_At_Once()
+    {
+        var whole = new GallerySidebar();
+        var stepped = new GallerySidebar(deferred: true);
+        stepped.VisibleEntries.Count.ShouldBeLessThan(whole.VisibleEntries.Count);
+        var steps = 0;
+        while (stepped.BuildStep())
+        {
+            steps++;
+        }
+        steps.ShouldBeGreaterThan(20, "one step per group, so the work spreads over many frames");
+        stepped.VisibleEntries.ShouldBe(whole.VisibleEntries);
+        stepped.BuildStep().ShouldBeFalse();
+    }
+
+    [AvaloniaFact]
+    public void Asking_For_A_Sidebar_Still_Being_Built_Finishes_It()
+    {
+        var sidebar = new GallerySidebar(deferred: true);
+        sidebar.BuildStep().ShouldBeTrue();
+        sidebar.CompleteBuild();
+        sidebar.VisibleEntries.ShouldBe(new GallerySidebar().VisibleEntries);
+    }
+
+    [AvaloniaFact]
     public void A_Sidebar_First_Needed_On_A_Narrow_Page_Goes_Into_The_Drawer()
     {
         var shell = new GalleryShell();
