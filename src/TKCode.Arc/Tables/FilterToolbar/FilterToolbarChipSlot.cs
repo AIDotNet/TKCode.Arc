@@ -1,4 +1,5 @@
 using TKCode.Arc.Motion;
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
@@ -27,7 +28,6 @@ internal sealed class FilterToolbarChipSlot : Decorator
     private readonly TranslateTransform _glide = new();
     private readonly ScaleTransform _scale = new();
     private readonly TranslateTransform _rise = new();
-    private readonly BlurEffect _blur = new();
     private MotionValue<double>? _presence;
     private MotionValue<double>? _reveal;
     private MotionValue<double>? _pop;
@@ -205,14 +205,11 @@ internal sealed class FilterToolbarChipSlot : Decorator
             _rise.Y = (1 - reveal) * 4.2 * (_entering ? 1 : -1);
         }
         var radius = (1 - reveal) * (_entering ? 4 : 2);
-        if (radius > 0.05)
+        // ArcBlur: quantized, shared, immutable effects instead of a mutable BlurEffect whose radius changes every frame.
+        var effect = radius > 0.05 ? ArcBlur.Get(radius) : null;
+        if (!ReferenceEquals(child.Effect, effect))
         {
-            _blur.Radius = radius;
-            child.Effect = _blur;
-        }
-        else if (child.Effect is not null)
-        {
-            child.Effect = null;
+            child.Effect = effect;
         }
         ClipToBounds = LayoutFactor < 0.999;
     }

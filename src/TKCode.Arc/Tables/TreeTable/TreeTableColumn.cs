@@ -141,11 +141,20 @@ public class TreeTableColumn : AvaloniaObject
 
     internal bool HasSortValue => _sortValueSelector is not null || _valueSelector is not null || _binding is not null;
 
+    /// <summary>Raised when the column's values, sort, track or cell structure changed: the table rebuilds header and rows.</summary>
     internal event EventHandler? DefinitionChanged;
+
+    /// <summary>Raised when only the header text changed: the header cell relabels itself without a rebuild.</summary>
+    internal event EventHandler? HeaderChanged;
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
+        if (change.Property == HeaderProperty)
+        {
+            HeaderChanged?.Invoke(this, EventArgs.Empty);
+            return;
+        }
         OnDefinitionChanged();
     }
 

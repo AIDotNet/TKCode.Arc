@@ -1,4 +1,3 @@
-using System.Globalization;
 using TKCode.Arc.Motion;
 using Avalonia;
 using Avalonia.Automation;
@@ -26,7 +25,10 @@ internal sealed class TableRow : Control
     private MotionValue<double>? _offset;
     private MotionValue<double>? _hover;
     private MotionValue<double>? _selected;
-    private FormattedText?[] _texts = [];
+    // Cell text shaped once per width and brush (TablesBText); a cached FormattedText re-shaped on every Draw.
+    private TablesBText?[] _texts = [];
+    private string?[] _textValues = [];
+    private IBrush?[] _textBrushes = [];
     private double[] _maxWidths = [];
     private bool[] _emptyTexts = [];
     private int _textVersion = -1;
@@ -489,7 +491,9 @@ internal sealed class TableRow : Control
         var count = _table.ColumnCount;
         if (_texts.Length != count)
         {
-            _texts = new FormattedText?[count];
+            _texts = new TablesBText?[count];
+            _textValues = new string?[count];
+            _textBrushes = new IBrush?[count];
             _maxWidths = new double[count];
             _emptyTexts = new bool[count];
             _textVersion = -1;
@@ -503,33 +507,44 @@ internal sealed class TableRow : Control
         _compactSize = default;
         for (var i = 0; i < count; i++)
         {
+            _texts[i] = null;
             if (Item is null || i < _cells.Length && _cells[i] is not null)
             {
-                _texts[i] = null;
+                _textValues[i] = null;
                 continue;
             }
             var text = _table.CellText(SourceIndex, i);
-            _texts[i] = _table.CreateCellText(text, i, layout.Compact);
+            _textValues[i] = text;
             _emptyTexts[i] = text.Length == 0;
             _maxWidths[i] = -1;
         }
     }
 
-    private FormattedText? TextAt(int column, double maxWidth)
+    /// <summary>The shaped text of a cell at <paramref name="maxWidth"/> with <paramref name="brush"/>; rebuilt only when either changes.</summary>
+    private TablesBText? TextAt(int column, double maxWidth, IBrush brush)
     {
-        var text = _texts[column];
-        if (text is null)
+        var value = _textValues[column];
+        if (value is null)
         {
             return null;
         }
         maxWidth = Math.Max(1, maxWidth);
-        if (Math.Abs(_maxWidths[column] - maxWidth) > 0.5)
+        var text = _texts[column];
+        if (text is null || Math.Abs(_maxWidths[column] - maxWidth) > 0.5 || !ReferenceEquals(_textBrushes[column], brush))
         {
             _maxWidths[column] = maxWidth;
-            text.MaxTextWidth = maxWidth;
+            _textBrushes[column] = brush;
+            text = _table.CreateCellLayout(value, column, _textCompact, brush, maxWidth);
+            _texts[column] = text;
         }
         return text;
     }
+
+    /// <summary>Compact rows: the first column, the lead number and the sorted value at full contrast, the rest secondary.</summary>
+    private IBrush CompactBrush(int column, TablePalette palette) =>
+        column == 0 || _table.IsCompactLeadNumeric(column) || column == _table.SortedColumnIndex
+            ? palette.ForegroundBrush
+            : palette.TextSecondaryBrush;
 
     public override void Render(DrawingContext context)
     {
@@ -573,16 +588,15 @@ internal sealed class TableRow : Control
             {
                 var lead = _table.LeadingPadding(i);
                 var inner = layout.ColumnWidth(i) - lead - _table.CellInlinePadding;
-                if (TextAt(i, inner) is not { } text)
+                if (TextAt(i, inner, palette.ForegroundBrush) is not { } text)
                 {
                     continue;
                 }
-                text.SetForegroundBrush(palette.ForegroundBrush);
                 // Wrapped numbers are right-aligned inside the cell width by the text itself.
                 var x = _table.IsNumericColumn(i) && !_table.WrapsAt(i, compact: false)
                     ? layout.ColumnX(i) + layout.ColumnWidth(i) - _table.CellInlinePadding - Math.Min(text.WidthIncludingTrailingWhitespace, inner)
                     : layout.ColumnX(i) + lead;
-                context.DrawText(text, new Point(x, Math.Round((size.Height - text.Height) / 2)));
+                text.Draw(context, new Point(x, Math.Round((size.Height - text.Height) / 2)));
             }
         }
         if (_table.IsSelectable)
@@ -606,6 +620,7 @@ internal sealed class TableRow : Control
     private void LayoutCompact(Size size)
     {
         EnsureTexts();
+        var palette = _table.Palette;
         var count = _texts.Length;
         if (_compactSlots.Length != count)
         {
@@ -655,7 +670,7 @@ internal sealed class TableRow : Control
         if (count > 0)
         {
             _compactSlots[0] = new CompactSlot { X = left, Y = top, Width = primaryWidth, Height = primaryHeight, Visible = true };
-            TextAt(0, primaryWidth);
+            TextAt(0, primaryWidth, CompactBrush(0, palette));
         }
         var x = left;
         var y = top + primaryHeight + 2;
@@ -692,7 +707,7 @@ internal sealed class TableRow : Control
             {
                 return Math.Min(cell.DesiredSize.Width, room);
             }
-            return TextAt(column, room) is { } text ? Math.Min(text.WidthIncludingTrailingWhitespace, room) : 0;
+            return TextAt(column, room, CompactBrush(column, palette)) is { } text ? Math.Min(text.WidthIncludingTrailingWhitespace, room) : 0;
         }
 
         // Height of a wrapped cell at the given width (empty detail text takes no block).
@@ -702,7 +717,7 @@ internal sealed class TableRow : Control
             {
                 return cell.DesiredSize.Height;
             }
-            if (TextAt(column, width) is not { } text || (column > 0 && _emptyTexts[column]))
+            if (TextAt(column, width, CompactBrush(column, palette)) is not { } text || (column > 0 && _emptyTexts[column]))
             {
                 return 0;
             }
@@ -718,17 +733,15 @@ internal sealed class TableRow : Control
         {
             LayoutCompact(size);
         }
-        var sorted = _table.SortedColumnIndex;
         for (var i = 0; i < _texts.Length; i++)
         {
             var slot = _compactSlots[i];
-            if (!slot.Visible || _texts[i] is not { } text)
+            // Same width as the slot was laid out with; the brush follows the sorted column.
+            if (!slot.Visible || _maxWidths[i] < 0 || TextAt(i, _maxWidths[i], CompactBrush(i, palette)) is not { } text)
             {
                 continue;
             }
-            var emphasized = i == 0 || _table.IsCompactLeadNumeric(i) || i == sorted;
-            text.SetForegroundBrush(emphasized ? palette.ForegroundBrush : palette.TextSecondaryBrush);
-            context.DrawText(text, new Point(slot.X, slot.Y + (slot.Height - text.Height) / 2));
+            text.Draw(context, new Point(slot.X, slot.Y + (slot.Height - text.Height) / 2));
         }
     }
 

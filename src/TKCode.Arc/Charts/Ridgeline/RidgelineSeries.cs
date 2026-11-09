@@ -112,19 +112,46 @@ internal sealed class RidgelineStats
         return (double)count / N;
     }
 
+    /// <summary>Index of the first value at or above <paramref name="x"/> (the array length when none is).</summary>
+    private static int LowerBound(double[] sorted, double x)
+    {
+        int lo = 0, hi = sorted.Length;
+        while (lo < hi)
+        {
+            var mid = (lo + hi) >> 1;
+            if (sorted[mid] < x)
+            {
+                lo = mid + 1;
+            }
+            else
+            {
+                hi = mid;
+            }
+        }
+        return lo;
+    }
+
     /// <summary>Samples a Gaussian kernel density across [lo, hi] into <paramref name="ys"/>.</summary>
     public void Density(double lo, double hi, double bandwidth, double[] xs, double[] ys)
     {
         var samples = xs.Length;
         var norm = 1 / (Math.Max(1, N) * bandwidth * Math.Sqrt(2 * Math.PI));
+        var sorted = Sorted;
         for (var i = 0; i < samples; i++)
         {
             var x = lo + (hi - lo) * i / (samples - 1);
             var sum = 0.0;
-            foreach (var value in Sorted)
+            // Only values within five bandwidths contribute; the values are sorted, so the window is a binary search
+            // and one forward scan (the same terms in the same order as a full pass, so the sums are identical).
+            var from = LowerBound(sorted, x - 5 * bandwidth);
+            for (var k = from; k < sorted.Length; k++)
             {
-                var u = (x - value) / bandwidth;
-                if (u > -5 && u < 5)
+                var u = (x - sorted[k]) / bandwidth;
+                if (u <= -5)
+                {
+                    break;
+                }
+                if (u < 5)
                 {
                     sum += Math.Exp(-0.5 * u * u);
                 }

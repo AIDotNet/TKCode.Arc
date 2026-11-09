@@ -26,8 +26,8 @@ internal sealed class WaffleLegendItem : Avalonia.Controls.Control, Avalonia.Ren
     private readonly MotionValue<double> _emphasis;
     private readonly MotionValue<double> _press;
     private WaffleCategory? _item;
-    private FormattedText? _label;
-    private FormattedText? _value;
+    private ChartsBRun? _label;
+    private ChartsBRun? _value;
     private string? _valueText;
     private double _labelWidth = -1;
     private int _version = -1;
@@ -205,7 +205,7 @@ internal sealed class WaffleLegendItem : Avalonia.Controls.Control, Avalonia.Ren
         if (_value is null || _valueText != shareText || _version != palette.Version)
         {
             _valueText = shareText;
-            _value = ChartsBText.Make(shareText, palette, valueSize, palette.Foreground, FontWeight.Medium);
+            _value = ChartsBText.Label(shareText, palette, valueSize, palette.Foreground, FontWeight.Medium);
         }
         var valueWidth = Math.Max(_value.WidthIncludingTrailingWhitespace, valueSize * 3.2);
         var labelRoom = Math.Max(0, size.Width - Padding * 2 - 20 - 10 - valueWidth);
@@ -213,7 +213,7 @@ internal sealed class WaffleLegendItem : Avalonia.Controls.Control, Avalonia.Ren
         {
             _version = palette.Version;
             _labelWidth = labelRoom;
-            _label = ChartsBText.Trimmed(_item.Label, palette, palette.TypeSM, palette.TextSecondary, labelRoom);
+            _label = ChartsBText.TrimmedRun(_item.Label, palette, palette.TypeSM, palette.TextSecondary, labelRoom);
         }
         var scale = 1 - 0.02 * _press.Value;
         var center = new Rect(size).Center;
@@ -227,9 +227,10 @@ internal sealed class WaffleLegendItem : Avalonia.Controls.Control, Avalonia.Ren
         }
         ChartsBTooltip.DrawSwatch(context, palette, new Rect(Padding, (size.Height - 10) / 2, 10, 10), _owner.ColorOf(_item.Key),
             _owner.ShapeOf(_item.Key));
-        _label.SetForegroundBrush(palette.Brush(ChartsBMath.Lerp(palette.TextSecondary, palette.Foreground, _emphasis.Value)));
-        context.DrawText(_label, new Point(Padding + 20, (size.Height - _label.Height) / 2));
-        context.DrawText(_value, new Point(size.Width - Padding - _value.WidthIncludingTrailingWhitespace, (size.Height - _value.Height) / 2));
+        // The emphasis color is a brush swap on the laid-out label, not a relayout.
+        _label.Draw(context, new Point(Padding + 20, (size.Height - _label.Height) / 2),
+            palette.Brush(ChartsBMath.Lerp(palette.TextSecondary, palette.Foreground, _emphasis.Value)));
+        _value.Draw(context, new Point(size.Width - Padding - _value.WidthIncludingTrailingWhitespace, (size.Height - _value.Height) / 2));
         if (IsFocused && Classes.Contains(":focus-visible"))
         {
             context.DrawRectangle(null, palette.Pen(palette.FocusRing, 2), new RoundedRect(new Rect(size).Inflate(2), 14));

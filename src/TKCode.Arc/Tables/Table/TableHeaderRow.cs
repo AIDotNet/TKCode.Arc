@@ -108,6 +108,7 @@ internal sealed class TableHeaderRow : Control
     private const double PillGap = 4;
     private const double StripInset = 8;
     private const double PinnedWidth = 40;
+    private static readonly Cursor s_hand = new(StandardCursorType.Hand);
 
     private readonly Table _table;
     private readonly List<TableHeaderCell> _cells = new();
@@ -155,7 +156,7 @@ internal sealed class TableHeaderRow : Control
             _cells.Add(new TableHeaderCell(_table, i)
             {
                 Focusable = column.IsSortable,
-                Cursor = column.IsSortable ? new Cursor(StandardCursorType.Hand) : null
+                Cursor = column.IsSortable ? s_hand : null
             });
         }
         foreach (var cell in _cells)

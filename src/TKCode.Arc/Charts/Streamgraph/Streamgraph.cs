@@ -833,7 +833,7 @@ public class Streamgraph : ChartBase
                     var series = _layers[s];
                     var color = SeriesColor(series);
                     var isActive = active == series.Key;
-                    var fill = isActive ? color : ChartPalette.Mix(color, 0.82, palette.Surface);
+                    var fill = isActive ? color : Tint(color, palette);
                     using (context.PushOpacity(isActive ? 1 : 1 - 0.66 * isolate))
                     {
                         context.DrawGeometry(palette.Brush(fill), gap, geometry);
@@ -867,9 +867,29 @@ public class Streamgraph : ChartBase
         if (data.IsEmpty || VisibleSeriesCount() == 0)
         {
             var message = Texts.Get(palette, data.IsEmpty ? EmptyLabel : "Choose a layer to show", palette.SizeSM, palette.TextMuted);
-            context.DrawText(message, new Point((width - message.WidthIncludingTrailingWhitespace) / 2, (height - message.Height) / 2));
+            message.Draw(context, new Point((width - message.WidthIncludingTrailingWhitespace) / 2, (height - message.Height) / 2));
         }
         _tooltip?.Render(context, palette, Texts);
+    }
+
+    private readonly Dictionary<uint, Color> _tints = new();
+    private int _tintVersion = -1;
+
+    /// <summary>The resting layer fill (the series color at 82% in the surface), mixed once per color and palette version.</summary>
+    private Color Tint(Color color, ChartPalette palette)
+    {
+        if (_tintVersion != palette.Version)
+        {
+            _tintVersion = palette.Version;
+            _tints.Clear();
+        }
+        var key = color.ToUInt32();
+        if (!_tints.TryGetValue(key, out var tint))
+        {
+            tint = ChartPalette.Mix(color, 0.82, palette.Surface);
+            _tints[key] = tint;
+        }
+        return tint;
     }
 
     /// <summary>Direct labels with a surface halo, so they read over any layer.</summary>
@@ -896,7 +916,11 @@ public class Streamgraph : ChartBase
             var text = Texts.Get(palette, series.Name, palette.SizeXS, palette.Foreground, medium: true);
             if (!_halos.TryGetValue(series.Name, out var outline))
             {
-                outline = text.BuildGeometry(default) ?? new StreamGeometry();
+                // The halo outline comes from a one-off FormattedText (built once per label and palette); the label
+                // itself is the cached layout.
+                var shaped = new FormattedText(series.Name, System.Globalization.CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
+                    palette.BodyMedium, palette.SizeXS, palette.Brush(palette.Foreground));
+                outline = shaped.BuildGeometry(default) ?? new StreamGeometry();
                 _halos[series.Name] = outline;
             }
             var origin = new Point(Math.Round(place.X - text.WidthIncludingTrailingWhitespace / 2), Math.Round(place.Y - text.Height / 2));
@@ -904,7 +928,7 @@ public class Streamgraph : ChartBase
             using (context.PushTransform(Matrix.CreateTranslation(origin.X, origin.Y)))
             {
                 context.DrawGeometry(null, halo, outline);
-                context.DrawText(text, default);
+                text.Draw(context, default);
             }
         }
     }

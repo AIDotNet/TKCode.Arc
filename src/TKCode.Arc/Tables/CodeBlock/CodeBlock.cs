@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Text;
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
 using Avalonia;
 using Avalonia.Automation;
@@ -248,6 +249,7 @@ public class CodeBlock : TemplatedControl
         _text = e.NameScope.Find<CodeBlockText>(TextPart);
         _copy = e.NameScope.Find<CopyButton>(CopyPart);
         _expand = e.NameScope.Find<CodeBlockExpandButton>(ExpandPart);
+        _codeRing.Attach(e.NameScope.Find<Panel>("PART_CodeLayers"));
         if (_text is not null)
         {
             _text.Palette = _palette;
@@ -272,8 +274,16 @@ public class CodeBlock : TemplatedControl
 
     private void OnExpandClick(object? sender, RoutedEventArgs e) => SetCurrentValue(IsExpandedProperty, !IsExpanded);
 
+    // The code's focus ring (PART_CodeFocusRing) is built the first time the code gets keyboard focus instead of sitting
+    // hidden in every block's template.
+    private readonly TablesBFocusRing _codeRing = new(new Thickness(4), CodeBlockTokens.Key(CodeBlockTokenKind.FocusRingRadius), "PART_CodeFocusRing");
+
     private void OnTextClassesChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        => PseudoClasses.Set(CodeFocusPseudoClass, _text?.Classes.Contains(":focus-visible") == true);
+    {
+        var visible = _text?.Classes.Contains(":focus-visible") == true;
+        PseudoClasses.Set(CodeFocusPseudoClass, visible);
+        _codeRing.Update(visible);
+    }
 
     private void OnTextPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
     {

@@ -704,16 +704,16 @@ public class JsonViewer : TemplatedControl
     private void MoveTo(string id, bool focus, RevealMode reveal)
     {
         _activeRaw = id;
+        var previous = _active;
         var (active, folded) = ResolveActive();
         _active = active;
         if (_panel is not null && active is not null)
         {
             _panel.PinnedKey = active;
             _panel.SetHighlight(active, animate: !folded);
-            foreach (var row in _panel.RealizedRows)
-            {
-                row.Refresh();
-            }
+            // Only the row that lost the current state and the one that gained it read it (tab stop, actions, name).
+            RefreshRow(previous);
+            RefreshRow(active);
         }
         UpdateCurrent();
         if (focus)
@@ -855,11 +855,21 @@ public class JsonViewer : TemplatedControl
             return;
         }
         var count = _search.Matches.Count;
+        var previousMatch = CurrentMatch;
         _matchIndex = ((Math.Min(_matchIndex, count - 1) + step) % count + count) % count;
         UpdateMatchSummary();
         _activeRaw = _search.Matches[_matchIndex];
-        RefreshRows();
+        // The row that was the current match repaints; MoveTo refreshes the old and the new current row.
+        RefreshRow(previousMatch);
         MoveTo(_search.Matches[_matchIndex], focus: false, RevealMode.Center);
+    }
+
+    private void RefreshRow(string? id)
+    {
+        if (id is not null && _panel?.RowFor(id) is { } row)
+        {
+            row.Refresh();
+        }
     }
 
     private void RefreshRows()

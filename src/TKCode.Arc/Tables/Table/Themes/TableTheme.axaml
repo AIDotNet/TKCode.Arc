@@ -15,66 +15,13 @@
                         Padding="{TemplateBinding BorderThickness}"
                         CornerRadius="{TemplateBinding CornerRadius}"
                         ClipToBounds="True">
-                    <Grid RowDefinitions="*,Auto">
+                    <!-- PART_Loading (the veil, spinner and message over the body) and PART_Footer (the count line with
+                         PART_Clear) are built by the table the first time IsLoading / IsSelectable is true; most tables
+                         never show them, and the two subtrees were about 25 template nodes per instance. -->
+                    <Grid Name="PART_Body" RowDefinitions="*,Auto">
                         <ScrollViewer Name="PART_ScrollViewer"
                                       HorizontalScrollBarVisibility="Auto"
                                       VerticalScrollBarVisibility="Auto" />
-                        <Panel Name="PART_Loading"
-                               IsVisible="{TemplateBinding IsLoading}"
-                               Margin="{arc:TableTokenResource LoadingInset}">
-                            <Border Background="{TemplateBinding Background}" Opacity="0.6" />
-                            <StackPanel Orientation="Horizontal"
-                                        Spacing="10"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center">
-                                <arc:ArcSpinner Width="18" Height="18" VerticalAlignment="Center" />
-                                <TextBlock Text="{TemplateBinding LoadingMessage}"
-                                           VerticalAlignment="Center"
-                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
-                                           FontSize="{TemplateBinding FontSize}" />
-                            </StackPanel>
-                        </Panel>
-                        <Border Name="PART_Footer"
-                                Grid.Row="1"
-                                IsVisible="{TemplateBinding IsSelectable}"
-                                Height="{arc:TableTokenResource FooterHeight}"
-                                Padding="{arc:TableTokenResource FooterInset}"
-                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
-                                BorderBrush="{TemplateBinding BorderBrush}">
-                            <Grid ColumnDefinitions="*,Auto">
-                                <Border Name="PART_CountHost"
-                                        VerticalAlignment="Center"
-                                        HorizontalAlignment="Left"
-                                        ClipToBounds="False">
-                                    <StackPanel Orientation="Horizontal" Spacing="{arc:TableTokenResource CountGap}">
-                                        <arc:SpringSizeDecorator Axis="Width" Spring="Morph">
-                                            <arc:ArcContentSwap Mode="Roll"
-                                                                Direction="{TemplateBinding CountDirection}"
-                                                                Content="{TemplateBinding CountText}" />
-                                        </arc:SpringSizeDecorator>
-                                        <arc:SpringSizeDecorator Axis="Width" Spring="Morph">
-                                            <arc:ArcContentSwap Mode="Roll"
-                                                                Direction="{TemplateBinding NounDirection}"
-                                                                Content="{TemplateBinding CountNoun}" />
-                                        </arc:SpringSizeDecorator>
-                                    </StackPanel>
-                                </Border>
-                                <arc:PresenceHost Grid.Column="1"
-                                                  IsPresent="{TemplateBinding HasSelection}"
-                                                  Mode="Scale"
-                                                  EnterScale="0.96"
-                                                  Spring="Snappy"
-                                                  VerticalAlignment="Center">
-                                    <arc:Button Name="PART_Clear"
-                                                Variant="Ghost"
-                                                Content="{TemplateBinding ClearSelectionLabel}"
-                                                Foreground="{arc:ArcDesignTokenResource Foreground}"
-                                                MinHeight="{arc:TableTokenResource ClearButtonHeight}"
-                                                Height="{arc:TableTokenResource ClearButtonHeight}"
-                                                Padding="{arc:TableTokenResource ClearButtonInset}" />
-                                </arc:PresenceHost>
-                            </Grid>
-                        </Border>
                         <TextBlock Name="PART_Announcer"
                                    Grid.RowSpan="2"
                                    Width="1"
@@ -131,12 +78,5 @@
         <Setter Property="SelectColumnWidth" Value="{arc:TableTokenResource SelectColumnWidth}" />
         <Setter Property="MinTableWidth" Value="{arc:TableTokenResource MinTableWidth}" />
         <Setter Property="CompactBreakpoint" Value="{arc:TableTokenResource CompactBreakpoint}" />
-
-        <Style Selector="^ /template/ Border#PART_CountHost">
-            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
-        </Style>
-        <Style Selector="^:has-selection /template/ Border#PART_CountHost">
-            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
-        </Style>
     </ControlTheme>
 </ResourceDictionary>

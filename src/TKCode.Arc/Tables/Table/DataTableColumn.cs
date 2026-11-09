@@ -191,11 +191,21 @@ public class DataTableColumn : AvaloniaObject
     /// <summary>The id used for <see cref="Table.SortKey"/>.</summary>
     public string EffectiveKey => Key ?? SortMemberPath ?? Header;
 
+    /// <summary>Raised when the column's values, sort or cell structure changed: the table rebuilds its columns and rows.</summary>
     internal event EventHandler? DefinitionChanged;
+
+    /// <summary>Raised when only the header text or the track width changed: the table re-measures without rebuilding rows.</summary>
+    internal event EventHandler<AvaloniaProperty>? AppearanceChanged;
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
+        if (change.Property == HeaderProperty || change.Property == WidthProperty)
+        {
+            // A bound header or width used to rebuild the whole table (rows, sort, every wrapped row height).
+            AppearanceChanged?.Invoke(this, change.Property);
+            return;
+        }
         OnDefinitionChanged();
     }
 

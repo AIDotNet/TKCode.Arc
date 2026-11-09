@@ -20,17 +20,31 @@ internal sealed class ChartPlot : Control, Avalonia.Rendering.ICustomHitTest
     public bool HitTest(Point point) => new Rect(Bounds.Size).Contains(point);
 
     private ChartBase? _owner;
-    private readonly ChartAnnouncer _announcer = new();
+    // The live region is mounted with the first announcement: most plots (every Sparkline in a table) never announce,
+    // and a mounted node costs 5–10 KB.
+    private ChartAnnouncer? _announcer;
 
     public ChartPlot()
     {
         ClipToBounds = false;
-        VisualChildren.Add(_announcer);
-        LogicalChildren.Add(_announcer);
     }
 
     /// <summary>Sends text to the polite live region (Arc's <c>aria-live="polite"</c>).</summary>
-    internal void Announce(string text) => AutomationProperties.SetName(_announcer, text);
+    internal void Announce(string text)
+    {
+        if (_announcer is null)
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                return;
+            }
+            _announcer = new ChartAnnouncer();
+            VisualChildren.Add(_announcer);
+            LogicalChildren.Add(_announcer);
+            InvalidateMeasure();
+        }
+        AutomationProperties.SetName(_announcer, text);
+    }
 
     internal ChartBase? Owner
     {
@@ -56,13 +70,13 @@ internal sealed class ChartPlot : Control, Avalonia.Rendering.ICustomHitTest
         }
         _owner.EnsureData();
         var width = _owner.MeasurePlotWidth(this, double.IsInfinity(availableSize.Width) ? 400 : availableSize.Width);
-        _announcer.Measure(new Size(1, 1));
+        _announcer?.Measure(new Size(1, 1));
         return new Size(width, _owner.MeasurePlotHeight(this, width));
     }
 
     protected override Size ArrangeOverride(Size finalSize)
     {
-        _announcer.Arrange(new Rect(0, 0, 1, 1));
+        _announcer?.Arrange(new Rect(0, 0, 1, 1));
         return finalSize;
     }
 

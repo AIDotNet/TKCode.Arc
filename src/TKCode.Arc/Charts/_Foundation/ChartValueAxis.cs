@@ -172,7 +172,7 @@ internal sealed class ChartValueAxis
                     continue;
                 }
                 using var make = context.PushOpacity(avoid);
-                context.DrawText(text, new Point(labelX, y - text.Height / 2));
+                text.Draw(context, new Point(labelX, y - text.Height / 2));
             }
         }
     }

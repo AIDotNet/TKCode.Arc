@@ -38,13 +38,9 @@
                 <Setter Property="arc:ArcMotion.Tracks" Value="True" />
                 <Setter Property="Template">
                     <ControlTemplate TargetType="arc:ReorderableListItem">
-                        <Panel>
-                            <!-- The lifted shadow lives on its own layer and fades in, so a moving row never repaints a growing shadow. -->
-                            <Border Name="PART_Lift"
-                                    Opacity="0"
-                                    IsHitTestVisible="False"
-                                    CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
-                                    BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}" />
+                        <!-- The lifted shadow (PART_Lift) is built by the item under PART_Row on the first lift: it lives on its
+                             own layer and fades in, so a moving row never repaints a growing shadow. -->
+                        <Panel Name="PART_Layers">
                             <Border Name="PART_Row"
                                     Background="{arc:ArcDesignTokenResource Surface}"
                                     BorderBrush="{arc:ArcDesignTokenResource Border}"
@@ -93,9 +89,6 @@
                 <Style Selector="^ /template/ arc|ArcGlyph#PART_Grip">
                     <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
                 </Style>
-                <Style Selector="^:lifted /template/ Border#PART_Lift">
-                    <Setter Property="Opacity" Value="1" />
-                </Style>
                 <Style Selector="^:lifted /template/ arc|ReorderableListHandle#PART_Handle">
                     <Setter Property="Background" Value="{arc:ArcDesignTokenResource Border}" />
                 </Style>
@@ -107,20 +100,7 @@
                 </Style>
 
                 <Style Selector="^:motion-full">
-                    <Style Selector="^ /template/ Border#PART_Lift">
-                        <Setter Property="Transitions">
-                            <Transitions>
-                                <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
-                            </Transitions>
-                        </Setter>
-                    </Style>
-                    <Style Selector="^:lifted /template/ Border#PART_Lift">
-                        <Setter Property="Transitions">
-                            <Transitions>
-                                <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
-                            </Transitions>
-                        </Setter>
-                    </Style>
+                    <!-- PART_Lift's opacity tweens (Fast in, Standard out) are set by the item with the layer. -->
                     <Style Selector="^ /template/ arc|ReorderableListHandle#PART_Handle">
                         <Setter Property="Transitions">
                             <Transitions>

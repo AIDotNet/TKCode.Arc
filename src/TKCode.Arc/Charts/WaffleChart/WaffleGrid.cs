@@ -32,7 +32,7 @@ internal sealed class WaffleGrid : Avalonia.Controls.Control, Avalonia.Rendering
     private (string Key, int Slot)? _pointer;
     private string? _tipKey;
     private ChartsBAutomationPeer? _peer;
-    private FormattedText? _empty;
+    private ChartsBRun? _empty;
     private int _emptyVersion = -1;
     private string? _emptyText;
     private string? _reading;
@@ -661,9 +661,9 @@ internal sealed class WaffleGrid : Avalonia.Controls.Control, Avalonia.Rendering
             {
                 _emptyVersion = palette.Version;
                 _emptyText = _owner.EmptyLabel;
-                _empty = ChartsBText.Make(_owner.EmptyLabel, palette, palette.TypeSM, palette.TextMuted);
+                _empty = ChartsBText.Label(_owner.EmptyLabel, palette, palette.TypeSM, palette.TextMuted);
             }
-            context.DrawText(_empty, new Point((Bounds.Width - _empty.Width) / 2, (Bounds.Height - _empty.Height) / 2));
+            _empty.Draw(context, new Point((Bounds.Width - _empty.TextWidth) / 2, (Bounds.Height - _empty.Height) / 2));
             return;
         }
         if (!_reveal.IsRevealed)
@@ -698,12 +698,12 @@ internal sealed class WaffleGrid : Avalonia.Controls.Control, Avalonia.Rendering
                 cursor = rect;
             }
             var scaled = pose.Scale >= 0.999 ? rect : rect.CenterRect(new Rect(0, 0, size * pose.Scale, size * pose.Scale));
-            var brush = _clock.IsRunning ? new ImmutableSolidColorBrush(pose.Color) : palette.Brush(pose.Color);
-            using (context.PushOpacity(opacity))
+            if (pose.Frame > 0.01)
             {
-                context.DrawRectangle(brush, null, new RoundedRect(scaled, scaled.Width * pose.Round));
-                if (pose.Frame > 0.01)
+                var brush = _clock.IsRunning ? new ImmutableSolidColorBrush(pose.Color) : palette.Brush(pose.Color);
+                using (context.PushOpacity(opacity))
                 {
+                    context.DrawRectangle(brush, null, new RoundedRect(scaled, scaled.Width * pose.Round));
                     // Framed: a 0.75px ring of the surface 2.5px inside the edge, the second, color-free channel.
                     var inset = 2.875 * pose.Scale;
                     var ring = scaled.Deflate(inset);
@@ -713,6 +713,13 @@ internal sealed class WaffleGrid : Avalonia.Controls.Control, Avalonia.Rendering
                             new RoundedRect(ring, Math.Max(0, ring.Width * pose.Round)));
                     }
                 }
+            }
+            else
+            {
+                // A flat square: its opacity rides on the brush (the renderer folds a pushed opacity into the paint the
+                // same way); only framed cells, where the ring overlaps the fill, keep the opacity push.
+                var brush = _clock.IsRunning ? new ImmutableSolidColorBrush(pose.Color, opacity) : palette.Brush(pose.Color, opacity);
+                context.DrawRectangle(brush, null, new RoundedRect(scaled, scaled.Width * pose.Round));
             }
         }
         if (cursor is { } c)

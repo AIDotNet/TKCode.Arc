@@ -645,7 +645,7 @@ public class LineChart : ChartBase
             else
             {
                 var message = Texts.Get(palette, data.IsEmpty ? EmptyLabel : "Choose a series to show", palette.SizeSM, palette.TextMuted);
-                context.DrawText(message, new Point((width - message.WidthIncludingTrailingWhitespace) / 2, (height - message.Height) / 2));
+                message.Draw(context, new Point((width - message.WidthIncludingTrailingWhitespace) / 2, (height - message.Height) / 2));
             }
         }
 

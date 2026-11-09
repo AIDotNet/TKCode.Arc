@@ -53,7 +53,8 @@
                                             <Setter Property="FocusAdorner" Value="{x:Null}" />
                                             <Setter Property="Template">
                                                 <ControlTemplate TargetType="arc:FilterToolbarSearchBox">
-                                                    <Panel>
+                                                    <!-- PART_FocusRing (Margin -3) is built here by the box on its first keyboard focus. -->
+                                                    <Panel Name="PART_Layers">
                                                         <Border Name="PART_Field"
                                                                 Background="{TemplateBinding Background}"
                                                                 BorderBrush="{TemplateBinding BorderBrush}"
@@ -89,13 +90,6 @@
                                                                 </Panel>
                                                             </DockPanel>
                                                         </Border>
-                                                        <Border Name="PART_FocusRing"
-                                                                IsVisible="False"
-                                                                IsHitTestVisible="False"
-                                                                Margin="-3"
-                                                                BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                                                                CornerRadius="{arc:FilterToolbarTokenResource SearchFocusRingRadius}"
-                                                                BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                                                     </Panel>
                                                 </ControlTemplate>
                                             </Setter>
@@ -118,9 +112,6 @@
                                             </Style>
                                             <Style Selector="^:focus /template/ Border#PART_Field">
                                                 <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
-                                            </Style>
-                                            <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-                                                <Setter Property="IsVisible" Value="True" />
                                             </Style>
                                         </ControlTheme>
                                     </arc:FilterToolbarSearchBox.Theme>

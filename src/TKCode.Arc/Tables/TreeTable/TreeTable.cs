@@ -259,6 +259,7 @@ public class TreeTable : TemplatedControl
     private readonly Dictionary<object, List<object>> _childKeys = new();
     private readonly Dictionary<object, List<object>?> _kids = new();
     private readonly List<object> _allKeys = new();
+    private readonly List<object> _rootKeys = new();
     private readonly List<object> _expandableKeys = new();
     private readonly Dictionary<TreeTableColumn, TableBindingProbe> _probes = new();
     private readonly HashSet<INotifyCollectionChanged> _watched = new();
@@ -274,6 +275,8 @@ public class TreeTable : TemplatedControl
     private double _width = double.NaN;
     private object? _focusKey;
     private object? _hoverKey;
+    private object? _tabKey;
+    private object? _branch;
     private int _expandedVersion;
     private int _arrivedAt = -1;
     private bool _syncing;
@@ -451,6 +454,7 @@ public class TreeTable : TemplatedControl
             foreach (TreeTableColumn column in e.OldItems)
             {
                 column.DefinitionChanged -= OnColumnDefinitionChanged;
+                column.HeaderChanged -= OnColumnHeaderChanged;
                 _probes.Remove(column);
             }
         }
@@ -459,6 +463,7 @@ public class TreeTable : TemplatedControl
             foreach (TreeTableColumn column in e.NewItems)
             {
                 column.DefinitionChanged += OnColumnDefinitionChanged;
+                column.HeaderChanged += OnColumnHeaderChanged;
             }
         }
         RebuildColumns();
@@ -471,6 +476,23 @@ public class TreeTable : TemplatedControl
             _probes.Remove(column);
         }
         RebuildColumns();
+    }
+
+    private void OnColumnHeaderChanged(object? sender, EventArgs e)
+    {
+        if (_header is null || sender is not TreeTableColumn column)
+        {
+            return;
+        }
+        // The header is also the default sort key and the fallback row label; the cell relabels, nothing else rebuilds.
+        foreach (var cell in _header.Cells)
+        {
+            if (ReferenceEquals(cell.Column, column))
+            {
+                cell.HeaderChanged();
+            }
+        }
+        UpdateHeaderSort(false);
     }
 
     internal object? ValueOf(TreeTableColumn column, object item)
@@ -581,6 +603,7 @@ public class TreeTable : TemplatedControl
             _childKeys.Clear();
             _kids.Clear();
             _allKeys.Clear();
+            _rootKeys.Clear();
             _expandableKeys.Clear();
             var roots = ItemsSource is { } source ? source.Cast<object>().ToList() : new List<object>();
             Watch(ItemsSource);
@@ -592,8 +615,10 @@ public class TreeTable : TemplatedControl
             _rowLines.Clear();
             _byKey.Clear();
             Walk(roots, 1, null, []);
-            foreach (var line in _lines)
+            for (var i = 0; i < _lines.Count; i++)
             {
+                var line = _lines[i];
+                line.Index = i;
                 if (line.Kind == TreeTableLineKind.Row)
                 {
                     _rowLines.Add(line);
@@ -655,6 +680,10 @@ public class TreeTable : TemplatedControl
             _itemByKey[key] = item;
             _parentOf[key] = parentKey;
             _allKeys.Add(key);
+            if (parentKey is null)
+            {
+                _rootKeys.Add(key);
+            }
             var kids = KidsOf(item, key);
             if (kids is { Count: > 0 })
             {
@@ -746,13 +775,10 @@ public class TreeTable : TemplatedControl
         {
             return;
         }
-        var active = _hoverKey ?? _focusKey;
-        object? branch = null;
-        if (active is not null && _byKey.TryGetValue(active, out var activeLine))
-        {
-            branch = activeLine.Expanded ? active : activeLine.ParentKey;
-        }
+        var branch = ComputeBranch();
+        _branch = branch;
         var tab = _focusKey is not null && _byKey.ContainsKey(_focusKey) ? _focusKey : _rowLines.FirstOrDefault()?.Key;
+        _tabKey = tab;
         foreach (var row in _host.Rows)
         {
             if (row.IsExiting)
@@ -776,6 +802,77 @@ public class TreeTable : TemplatedControl
         UpdateHeaderSort(animate);
     }
 
+    /// <summary>The branch whose guides are highlighted: the hovered (else focused) row when it is open, otherwise its parent.</summary>
+    private object? ComputeBranch()
+    {
+        var active = _hoverKey ?? _focusKey;
+        if (active is not null && _byKey.TryGetValue(active, out var activeLine))
+        {
+            return activeLine.Expanded ? active : activeLine.ParentKey;
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// Hover and focus only move the guide highlight (and the tab stop), so they touch the rows under the old and the new
+    /// branch instead of syncing every row: moving the pointer across a 1000-row tree used to format 1000 labels and
+    /// repaint 1000 chevrons per row change.
+    /// </summary>
+    private void UpdateActiveBranch()
+    {
+        var branch = ComputeBranch();
+        if (Equals(branch, _branch))
+        {
+            return;
+        }
+        var previous = _branch;
+        _branch = branch;
+        RefreshGuides(previous);
+        RefreshGuides(branch);
+    }
+
+    private void RefreshGuides(object? branchKey)
+    {
+        if (branchKey is null || _host is null || !_byKey.TryGetValue(branchKey, out var branchLine))
+        {
+            return;
+        }
+        for (var i = branchLine.Index + 1; i < _lines.Count; i++)
+        {
+            var line = _lines[i];
+            if (line.Depth <= branchLine.Depth)
+            {
+                break;
+            }
+            if (_host.RowFor(line.Key) is { IsExiting: false } row)
+            {
+                row.Guides?.Update(line.Ancestors, line.Depth, _branch);
+            }
+        }
+    }
+
+    private void UpdateTabStop()
+    {
+        if (_host is null)
+        {
+            return;
+        }
+        var tab = _focusKey is not null && _byKey.ContainsKey(_focusKey) ? _focusKey : _rowLines.FirstOrDefault()?.Key;
+        if (Equals(tab, _tabKey))
+        {
+            return;
+        }
+        if (_tabKey is not null && _host.RowFor(_tabKey) is { } previous)
+        {
+            previous.IsTabStop = false;
+        }
+        _tabKey = tab;
+        if (tab is not null && _host.RowFor(tab) is { Line.Kind: TreeTableLineKind.Row } next)
+        {
+            next.IsTabStop = true;
+        }
+    }
+
     private void UpdateHeaderSort(bool animate)
     {
         if (_header is null)
@@ -797,13 +894,35 @@ public class TreeTable : TemplatedControl
         {
             return 2;
         }
-        return _allKeys.Any(_selected.Contains) ? 1 : 0;
+        if (_selected.Count == 0)
+        {
+            return 0;
+        }
+        for (var i = 0; i < _allKeys.Count; i++)
+        {
+            if (_selected.Contains(_allKeys[i]))
+            {
+                return 1;
+            }
+        }
+        return 0;
     }
 
     private bool IsEverythingSelected()
     {
-        var roots = ItemsSource is { } source ? source.Cast<object>().ToList() : new List<object>();
-        return roots.Count > 0 && roots.All(r => _selected.Contains(KeyOf(r)));
+        // The indexed root keys stand in for re-enumerating (and copying) the source on every sync.
+        if (_rootKeys.Count == 0)
+        {
+            return false;
+        }
+        for (var i = 0; i < _rootKeys.Count; i++)
+        {
+            if (!_selected.Contains(_rootKeys[i]))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     private void RebuildColumns()
@@ -1100,7 +1219,8 @@ public class TreeTable : TemplatedControl
         if (row.Line.Kind == TreeTableLineKind.Row && !Equals(_focusKey, row.Key))
         {
             _focusKey = row.Key;
-            SyncState(animate: false);
+            UpdateTabStop();
+            UpdateActiveBranch();
         }
     }
 
@@ -1119,7 +1239,7 @@ public class TreeTable : TemplatedControl
         {
             return;
         }
-        SyncState(animate: false);
+        UpdateActiveBranch();
     }
 
     internal void OnRowClicked(TreeTableRow row)
@@ -1148,7 +1268,8 @@ public class TreeTable : TemplatedControl
             _focusKey = key;
             row.Focus(NavigationMethod.Directional);
             row.BringIntoView();
-            SyncState(animate: false);
+            UpdateTabStop();
+            UpdateActiveBranch();
         }
     }
 
@@ -1323,6 +1444,8 @@ public class TreeTable : TemplatedControl
         {
             column.DefinitionChanged -= OnColumnDefinitionChanged;
             column.DefinitionChanged += OnColumnDefinitionChanged;
+            column.HeaderChanged -= OnColumnHeaderChanged;
+            column.HeaderChanged += OnColumnHeaderChanged;
         }
         ReadKeys(ExpandedKeys, _expanded);
         ReadKeys(SelectedKeys, _selected);

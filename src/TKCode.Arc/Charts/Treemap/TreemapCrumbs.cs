@@ -33,8 +33,9 @@ internal sealed class TreemapCrumbs : Avalonia.Controls.Control, Avalonia.Render
         public required string Id;
         public required MotionValue<double> X;
         public required MotionValue<double> Presence;
-        public FormattedText? Text;
-        public FormattedText? Separator;
+        public ChartsBRun? Text;
+        public ChartsBRun? Separator;
+        public IBrush? Brush;
         public bool IsCurrent;
         public bool Leaving;
         public double Width;
@@ -132,9 +133,10 @@ internal sealed class TreemapCrumbs : Avalonia.Controls.Control, Avalonia.Render
             var crumb = live[i];
             crumb.IsCurrent = i == live.Count - 1;
             var label = _owner.Flat.TryGetValue(crumb.Id, out var node) ? node.Label : crumb.Id;
-            crumb.Text = ChartsBText.Make(label, p, p.TypeSM, crumb.IsCurrent ? p.Foreground : p.TextSecondary,
+            crumb.Text = ChartsBText.Label(label, p, p.TypeSM, crumb.IsCurrent ? p.Foreground : p.TextSecondary,
                 crumb.IsCurrent ? FontWeight.Medium : FontWeight.Normal);
-            crumb.Separator = i > 0 ? ChartsBText.Make("/", p, p.TypeSM, p.BorderStrong) : null;
+            crumb.Brush = null;
+            crumb.Separator = i > 0 ? ChartsBText.Label("/", p, p.TypeSM, p.BorderStrong) : null;
         }
         // Lay crumbs out left to right; existing crumbs glide to their new place on the smooth spring.
         var x = 0.0;
@@ -196,7 +198,7 @@ internal sealed class TreemapCrumbs : Avalonia.Controls.Control, Avalonia.Render
         if (hover != _hover)
         {
             _hover = hover;
-            Cursor = hover >= 0 ? new Cursor(StandardCursorType.Hand) : Cursor.Default;
+            Cursor = hover >= 0 ? ChartsBMath.HandCursor : Cursor.Default;
             InvalidateVisual();
         }
     }
@@ -285,19 +287,21 @@ internal sealed class TreemapCrumbs : Avalonia.Controls.Control, Avalonia.Render
                 if (crumb.Separator is { } separator)
                 {
                     var sx = x - separator.WidthIncludingTrailingWhitespace - SeparatorPadding;
-                    context.DrawText(separator, new Point(sx, (CrumbHeight - separator.Height) / 2));
+                    separator.Draw(context, new Point(sx, (CrumbHeight - separator.Height) / 2));
                 }
                 var box = new Rect(x, 0, crumb.Width, CrumbHeight);
+                // A crumb's hover color is a brush swap on the laid-out text, not a relayout; a leaving crumb keeps
+                // the brush it was last drawn with, as its text used to.
                 if (!crumb.IsCurrent && index >= 0)
                 {
                     if (index == _hover)
                     {
                         context.DrawRectangle(p.Brush(ChartsBMath.Alpha(p.Foreground, 0.05)), null, new RoundedRect(box, 10));
-                        crumb.Text.SetForegroundBrush(p.Brush(p.Foreground));
+                        crumb.Brush = p.Brush(p.Foreground);
                     }
                     else
                     {
-                        crumb.Text.SetForegroundBrush(p.Brush(p.TextSecondary));
+                        crumb.Brush = p.Brush(p.TextSecondary);
                     }
                     if (index == _focus && IsFocused && Classes.Contains(":focus-visible"))
                     {
@@ -305,7 +309,8 @@ internal sealed class TreemapCrumbs : Avalonia.Controls.Control, Avalonia.Render
                     }
                 }
                 var pad = crumb.IsCurrent ? SeparatorPadding : ButtonPadding - 2;
-                context.DrawText(crumb.Text, new Point(x + pad, (CrumbHeight - crumb.Text.Height) / 2));
+                crumb.Text.Draw(context, new Point(x + pad, (CrumbHeight - crumb.Text.Height) / 2),
+                    crumb.Brush ?? p.Brush(crumb.IsCurrent ? p.Foreground : p.TextSecondary));
             }
         }
     }

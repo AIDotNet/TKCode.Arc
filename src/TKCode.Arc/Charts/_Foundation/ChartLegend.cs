@@ -202,7 +202,7 @@ internal sealed class ChartLegendItem : Control, Avalonia.Rendering.ICustomHitTe
         return value;
     }
 
-    private FormattedText? Text(Color color)
+    private ChartText? Text(Color color)
     {
         var owner = Owner;
         if (owner is null)
@@ -384,15 +384,14 @@ internal sealed class ChartLegendItem : Control, Avalonia.Rendering.ICustomHitTe
         var lift = Math.Max(owner.LegendHoverText ? hover : 0, active);
         var restColor = ChartPalette.Lerp(palette.TextSecondary, palette.TextMuted, ChartPalette.Step(offFade));
         var labelColor = ChartPalette.Lerp(restColor, palette.Foreground, ChartPalette.Step(lift * (1 - offFade)));
-        var text = Text(labelColor);
-        if (text is null)
+        if (Text(labelColor) is not { } text)
         {
             return;
         }
         var origin = new Point(x, (size.Height - text.Height) / 2);
         using (context.PushOpacity(1 - 0.28 * offFade))
         {
-            context.DrawText(text, origin);
+            text.Draw(context, origin);
             if (offFade > 0.01)
             {
                 var strikeY = Math.Round(origin.Y + text.Height * 0.55) + 0.5;

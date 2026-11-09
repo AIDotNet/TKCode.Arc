@@ -223,7 +223,7 @@ internal sealed class ChartTooltip
                 {
                     var text = texts.Get(palette, line.Text, palette.SizeXS, palette.TextSecondary, maxWidth: inner);
                     var h = palette.SizeXS * 1.4;
-                    context.DrawText(text, new Point(x, y + (h - text.Height) / 2));
+                    text.Draw(context, new Point(x, y + (h - text.Height) / 2));
                     y += h + 2;
                     break;
                 }
@@ -247,8 +247,8 @@ internal sealed class ChartTooltip
                     var nameColor = line.Emphasis > 0 ? palette.Foreground : palette.TextSecondary;
                     var nameWidth = Math.Max(1, valueX - 16 - (x + 18) + 1);
                     var name = texts.Get(palette, line.Text, palette.SizeSM, nameColor, maxWidth: nameWidth);
-                    context.DrawText(name, new Point(x + 18, y + (h - name.Height) / 2));
-                    context.DrawText(value, new Point(valueX, y + (h - value.Height) / 2));
+                    name.Draw(context, new Point(x + 18, y + (h - name.Height) / 2));
+                    value.Draw(context, new Point(valueX, y + (h - value.Height) / 2));
                     y += h;
                     break;
                 }
@@ -256,7 +256,7 @@ internal sealed class ChartTooltip
                 {
                     var text = texts.Get(palette, line.Text, palette.SizeBase, palette.Foreground, medium: true, maxWidth: inner, wrap: true);
                     var h = Math.Max(palette.SizeBase * 1.4, text.Height);
-                    context.DrawText(text, new Point(x, y + (h - text.Height) / 2));
+                    text.Draw(context, new Point(x, y + (h - text.Height) / 2));
                     y += h;
                     break;
                 }
@@ -266,7 +266,7 @@ internal sealed class ChartTooltip
                     var h = palette.SizeXS * 1.4;
                     context.DrawEllipse(palette.Brush(line.Swatch), null, new Point(x + 3.5, y + h / 2), 3.5, 3.5);
                     var text = texts.Get(palette, line.Text, palette.SizeXS, palette.Foreground, maxWidth: inner - 13);
-                    context.DrawText(text, new Point(x + 13, y + (h - text.Height) / 2));
+                    text.Draw(context, new Point(x + 13, y + (h - text.Height) / 2));
                     y += h;
                     break;
                 }
@@ -274,7 +274,7 @@ internal sealed class ChartTooltip
                 {
                     var text = texts.Get(palette, line.Text, palette.SizeXS, palette.TextMuted, maxWidth: inner, wrap: true);
                     var h = Math.Max(palette.SizeXS * 1.4, text.Height);
-                    context.DrawText(text, new Point(x, y + (h - text.Height) / 2));
+                    text.Draw(context, new Point(x, y + (h - text.Height) / 2));
                     y += h;
                     break;
                 }

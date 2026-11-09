@@ -111,8 +111,6 @@ public class BarChart : ChartBase
         public bool Leaving { get; set; }
         public bool Grown { get; set; }
         public double FirstDelay { get; set; }
-        public StreamGeometry? Geometry { get; set; }
-        public Rect GeometryKey { get; set; }
     }
 
     private readonly Dictionary<string, Bar> _bars = new();
@@ -134,6 +132,7 @@ public class BarChart : ChartBase
     private readonly Dictionary<string, double> _fitting = new();
     private double _fittingWidth = -1;
     private ChartData? _fittingData;
+    private (int Version, Color Resting, Color Dimmed) _shades = (-1, default, default);
 
     static BarChart()
     {
@@ -652,10 +651,13 @@ public class BarChart : ChartBase
         }
 
         // Bars: a soft step of the accent; while scrubbing the rest step back and the scrubbed bar takes the full accent.
-        var restShare = palette.IsDark ? 0.76 : 0.62;
-        var dimShare = palette.IsDark ? 0.34 : 0.24;
-        var rest = ChartPalette.Mix(palette.Accent, restShare, palette.Surface);
-        var dim = ChartPalette.Mix(palette.Accent, dimShare, palette.Surface);
+        if (_shades.Version != palette.Version)
+        {
+            // Two Oklab mixes per palette version, not per frame.
+            _shades = (palette.Version, ChartPalette.Mix(palette.Accent, palette.IsDark ? 0.76 : 0.62, palette.Surface),
+                ChartPalette.Mix(palette.Accent, palette.IsDark ? 0.34 : 0.24, palette.Surface));
+        }
+        var (_, rest, dim) = _shades;
         var slot = width * UnitShare.Value;
         var barWidth = Math.Min(slot * Fill, MaxBarWidth);
         using (context.PushClip(new Rect(0, -1, width, height + 1)))
@@ -671,14 +673,13 @@ public class BarChart : ChartBase
                 }
                 var center = CenterOf(width, bar.Place.Value);
                 var key = new Rect(Math.Round(center - barWidth / 2, 2), height, Math.Round(barWidth, 2), Math.Round(barHeight, 2));
-                if (bar.Geometry is null || bar.GeometryKey != key)
-                {
-                    bar.Geometry = ChartGeometry.Bar(key.X, key.Width, key.Height, height);
-                    bar.GeometryKey = key;
-                }
                 var baseColor = ChartPalette.Lerp(rest, dim, ChartPalette.Step(scrub));
                 var color = ChartPalette.Lerp(baseColor, palette.Accent, ChartPalette.Step(bar.Highlight.Value));
-                context.DrawGeometry(palette.Brush(color), null, bar.Geometry);
+                // The column shape of ChartGeometry.Bar (square base, data end rounded by at most 4px, half the width
+                // and the height) as a RoundedRect: no geometry to rebuild on every frame of a growing bar.
+                var r = Math.Min(4, Math.Min(key.Width / 2, key.Height));
+                context.DrawRectangle(palette.Brush(color), null,
+                    new RoundedRect(new Rect(key.X, height - key.Height, key.Width, key.Height), r, r, 0, 0));
             }
         }
         context.DrawLine(palette.Pen(palette.BorderStrong, 1), new Point(0, height - 0.5), new Point(width, height - 0.5));
@@ -691,7 +692,7 @@ public class BarChart : ChartBase
                 if (ShowYAxis)
                 {
                     var label = Texts.Get(palette, MeanLabel(Math.Round(Mean.Value)), palette.SizeXS, palette.Foreground, medium: true);
-                    context.DrawText(label, new Point(width + 10, meanY - label.Height / 2));
+                    label.Draw(context, new Point(width + 10, meanY - label.Height / 2));
                 }
             }
         }
@@ -703,7 +704,7 @@ public class BarChart : ChartBase
         if (data.IsEmpty)
         {
             var message = Texts.Get(palette, EmptyLabel, palette.SizeSM, palette.TextMuted);
-            context.DrawText(message, new Point((width - message.WidthIncludingTrailingWhitespace) / 2, (height - message.Height) / 2));
+            message.Draw(context, new Point((width - message.WidthIncludingTrailingWhitespace) / 2, (height - message.Height) / 2));
         }
     }
 
@@ -759,7 +760,7 @@ public class BarChart : ChartBase
             }
             var label = Texts.Get(palette, text, palette.SizeXS, palette.TextMuted);
             var x = CenterOf(width, bar.Place.Value) - label.WidthIncludingTrailingWhitespace / 2 + shift;
-            context.DrawText(label, new Point(Math.Round(x), height + 8));
+            label.Draw(context, new Point(Math.Round(x), height + 8));
         }
     }
 

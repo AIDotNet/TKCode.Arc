@@ -36,6 +36,9 @@ internal sealed class TreeTableLine
     public int Size { get; init; } = 1;
     public bool Expandable { get; init; }
     public bool Expanded { get; init; }
+
+    /// <summary>Index in the table's line list (pre-order), so a branch's descendants are the lines after it with a greater depth.</summary>
+    public int Index { get; set; }
 }
 
 /// <summary>Draws the indent guides of a tree cell: one hairline through each ancestor's chevron column.</summary>
@@ -107,6 +110,7 @@ internal sealed class TreeTableRow : Grid
     private MotionValue<double>? _height;
     private MotionValue<double>? _fade;
     private MotionValue<double>? _shift;
+    private TranslateTransform? _slide;
     private object? _item;
     private bool _selected;
     private TreeTableLineKind _kind;
@@ -121,7 +125,7 @@ internal sealed class TreeTableRow : Grid
         Focusable = true;
         IsTabStop = false;
         FocusAdorner = null;
-        Cursor = new Cursor(StandardCursorType.Arrow);
+        Cursor = Cursor.Default;
         RowDefinitions.Add(new RowDefinition(owner.RowHeight, GridUnitType.Pixel));
         VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top;
     }
@@ -189,6 +193,11 @@ internal sealed class TreeTableRow : Grid
             AutomationProperties.SetSizeOfSet(this, line.Size);
             AutomationProperties.SetItemStatus(this, line.Expandable ? line.Expanded ? "expanded" : "collapsed" : string.Empty);
         }
+        // The checkbox label depends on the item, position and size only, all set here; Sync no longer formats it per call.
+        if (_check is not null)
+        {
+            AutomationProperties.SetName(_check, _owner.RowLabelFor(this));
+        }
     }
 
     /// <summary>True for the odd rows of a table with <see cref="TreeTable.IsStriped"/> (by visible order).</summary>
@@ -209,7 +218,6 @@ internal sealed class TreeTableRow : Grid
             _syncingCheck = true;
             _check.CheckedState = check;
             _syncingCheck = false;
-            AutomationProperties.SetName(_check, _owner.RowLabelFor(this));
         }
         _guides?.Update(Line.Ancestors, Line.Depth, activeBranch);
         if (_chevron is not null && Line.Kind == TreeTableLineKind.Row)
@@ -577,11 +585,14 @@ internal sealed class TreeTableRow : Grid
         }
         if (_shift is null)
         {
+            // One transform per row, moved in place: a new TranslateTransform per frame would re-publish the render transform.
+            _slide = new TranslateTransform();
+            RenderTransform = _slide;
             _shift = new MotionValue<double>(this, 0, MotionVectors.Double);
-            _shift.Changed += value => RenderTransform = new TranslateTransform(0, value);
+            _shift.Changed += value => _slide.Y = value;
         }
         _shift.Jump(delta);
-        RenderTransform = new TranslateTransform(0, delta);
+        _slide!.Y = delta;
         _ = _shift.AnimateTo(0, MotionSpec.Spring(ArcMotionPresets.Morph));
     }
 

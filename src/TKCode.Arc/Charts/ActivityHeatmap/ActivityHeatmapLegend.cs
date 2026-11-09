@@ -23,10 +23,10 @@ internal sealed class ActivityHeatmapLegend : Avalonia.Controls.Control, ICharts
 
     private readonly ActivityHeatmap _owner;
     private readonly MotionValue<double> _roll;
-    private FormattedText? _less;
-    private FormattedText? _more;
-    private FormattedText? _caption;
-    private FormattedText? _oldCaption;
+    private ChartsBRun? _less;
+    private ChartsBRun? _more;
+    private ChartsBRun? _caption;
+    private ChartsBRun? _oldCaption;
     private string _captionText = string.Empty;
     private int _version = -1;
     private int _focus;
@@ -83,7 +83,7 @@ internal sealed class ActivityHeatmapLegend : Avalonia.Controls.Control, ICharts
         var animate = IsLoaded && ArcMotion.GetEffectiveLevel(this) != ArcMotionLevel.Off && _caption is not null;
         _oldCaption = animate ? _caption : null;
         _captionText = text;
-        _caption = text.Length == 0 ? null : ChartsBText.Make(text, palette, palette.TypeXS, palette.TextSecondary);
+        _caption = text.Length == 0 ? null : ChartsBText.Label(text, palette, palette.TypeXS, palette.TextSecondary);
         if (animate)
         {
             _roll.Jump(0);
@@ -105,11 +105,11 @@ internal sealed class ActivityHeatmapLegend : Avalonia.Controls.Control, ICharts
             return;
         }
         _version = palette.Version;
-        _less = ChartsBText.Make("Less", palette, palette.TypeXS, palette.TextMuted);
-        _more = ChartsBText.Make("More", palette, palette.TypeXS, palette.TextMuted);
+        _less = ChartsBText.Label("Less", palette, palette.TypeXS, palette.TextMuted);
+        _more = ChartsBText.Label("More", palette, palette.TypeXS, palette.TextMuted);
         if (_captionText.Length > 0)
         {
-            _caption = ChartsBText.Make(_captionText, palette, palette.TypeXS, palette.TextSecondary);
+            _caption = ChartsBText.Label(_captionText, palette, palette.TypeXS, palette.TextSecondary);
         }
     }
 
@@ -165,7 +165,7 @@ internal sealed class ActivityHeatmapLegend : Avalonia.Controls.Control, ICharts
             return;
         }
         _hover = level;
-        Cursor = level >= 0 ? new Cursor(StandardCursorType.Hand) : Cursor.Default;
+        Cursor = level >= 0 ? ChartsBMath.HandCursor : Cursor.Default;
         Preview(level >= 0 ? level : null);
     }
 
@@ -245,7 +245,7 @@ internal sealed class ActivityHeatmapLegend : Avalonia.Controls.Control, ICharts
         var palette = _owner.Palette;
         var height = Bounds.Height;
         var x = ScaleLeft;
-        context.DrawText(_less!, new Point(x, (height - _less!.Height) / 2));
+        _less!.Draw(context, new Point(x, (height - _less!.Height) / 2));
         var swatches = SwatchesLeft;
         for (var level = 0; level < 5; level++)
         {
@@ -260,7 +260,7 @@ internal sealed class ActivityHeatmapLegend : Avalonia.Controls.Control, ICharts
                 context.DrawRectangle(null, palette.Pen(palette.FocusRing, 2), new RoundedRect(box.Inflate(2), 6));
             }
         }
-        context.DrawText(_more!, new Point(swatches + 5 * SwatchWidth + Gap, (height - _more!.Height) / 2));
+        _more!.Draw(context, new Point(swatches + 5 * SwatchWidth + Gap, (height - _more!.Height) / 2));
         var room = Math.Max(0, ScaleLeft - 12);
         using (context.PushClip(new Rect(0, -4, room, height + 8)))
         {
@@ -270,14 +270,14 @@ internal sealed class ActivityHeatmapLegend : Avalonia.Controls.Control, ICharts
             {
                 using (context.PushOpacity(1 - ChartsBMath.Clamp(roll * 2, 0, 1)))
                 {
-                    context.DrawText(old, new Point(0, (height - old.Height) / 2 - shift * roll));
+                    old.Draw(context, new Point(0, (height - old.Height) / 2 - shift * roll));
                 }
             }
             if (_caption is { } caption)
             {
                 using (context.PushOpacity(roll))
                 {
-                    context.DrawText(caption, new Point(0, (height - caption.Height) / 2 + shift * (1 - roll)));
+                    caption.Draw(context, new Point(0, (height - caption.Height) / 2 + shift * (1 - roll)));
                 }
             }
         }

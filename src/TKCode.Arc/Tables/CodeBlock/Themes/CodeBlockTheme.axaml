@@ -36,7 +36,8 @@
                                                           Language="{TemplateBinding DisplayLanguage}" />
                             </DockPanel>
                         </Border>
-                        <Panel>
+                        <!-- PART_CodeFocusRing (Margin 4) is built here by the block the first time the code gets keyboard focus. -->
+                        <Panel Name="PART_CodeLayers">
                             <arc:SpringSizeDecorator Name="PART_Size"
                                                      Axis="Height"
                                                      Spring="Smooth"
@@ -66,13 +67,6 @@
                                     </Grid>
                                 </arc:CodeBlockViewport>
                             </arc:SpringSizeDecorator>
-                            <Border Name="PART_CodeFocusRing"
-                                    IsVisible="False"
-                                    IsHitTestVisible="False"
-                                    Margin="4"
-                                    BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                                    CornerRadius="{arc:CodeBlockTokenResource FocusRingRadius}"
-                                    BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                         </Panel>
                         <arc:CodeBlockExpandButton Name="PART_Expand"
                                                    IsVisible="{TemplateBinding CanCollapse}"
@@ -118,10 +112,6 @@
             <Setter Property="LineHeight" Value="{arc:CodeBlockTokenResource CodeLineHeight}" />
         </Style>
 
-        <Style Selector="^:code-focus-visible /template/ Border#PART_CodeFocusRing">
-            <Setter Property="IsVisible" Value="True" />
-        </Style>
-
         <!-- Narrow blocks (Arc: max-width 420px): smaller padding and text, icon-only copy. -->
         <Style Selector="^:compact">
             <Style Selector="^ /template/ Border#PART_Header">
@@ -157,7 +147,8 @@
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:CodeBlockExpandButton">
-                <Panel>
+                <!-- PART_FocusRing (Margin 4) is built here by the button on its first keyboard focus. -->
+                <Panel Name="PART_Layers">
                     <Border Name="PART_Frame"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
@@ -186,13 +177,6 @@
                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
                         </StackPanel>
                     </Border>
-                    <Border Name="PART_FocusRing"
-                            IsVisible="False"
-                            IsHitTestVisible="False"
-                            Margin="4"
-                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="{arc:CodeBlockTokenResource ExpandFocusRingRadius}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
         </Setter>
@@ -215,9 +199,6 @@
         </Style>
         <Style Selector="^:expanded /template/ arc|ArcGlyph#PART_Chevron">
             <Setter Property="RenderTransform" Value="rotate(180deg)" />
-        </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
         </Style>
 
         <Style Selector="^:motion-full">

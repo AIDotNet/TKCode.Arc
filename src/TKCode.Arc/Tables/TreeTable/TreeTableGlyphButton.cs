@@ -31,6 +31,8 @@ internal sealed class TreeTableGlyphButton : Control
     private bool _pressed;
     private bool _handlesKeys;
     private IBrush? _foreground;
+    private Pen? _pen;
+    private IBrush? _penBrush;
 
     public TreeTableGlyphButton(TreeTable owner, double extent, double radius, bool isTabStop)
     {
@@ -40,7 +42,7 @@ internal sealed class TreeTableGlyphButton : Control
         _handlesKeys = isTabStop;
         Focusable = isTabStop;
         IsTabStop = isTabStop;
-        Cursor = new Cursor(StandardCursorType.Arrow);
+        Cursor = Cursor.Default;
         Width = extent;
         Height = extent;
         FocusAdorner = null;
@@ -55,6 +57,10 @@ internal sealed class TreeTableGlyphButton : Control
         get => _foreground;
         set
         {
+            if (ReferenceEquals(_foreground, value))
+            {
+                return;
+            }
             _foreground = value;
             InvalidateVisual();
         }
@@ -124,7 +130,13 @@ internal sealed class TreeTableGlyphButton : Control
         var brush = _foreground ?? palette.TextMuted;
         if (brush is not null)
         {
-            var pen = new Pen(brush, GlyphStroke, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round);
+            if (_pen is null || !ReferenceEquals(_penBrush, brush))
+            {
+                _penBrush = brush;
+                // Theme brushes may be mutable, so the pen is a cached Pen per brush rather than a new one per frame.
+                _pen = new Pen(brush, GlyphStroke, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round);
+            }
+            var pen = _pen;
             var press = _pressed && ArcMotion.IsFull(this) ? 0.94 : 1;
             var swap = _swap?.Value ?? 1;
             if (_previous is not null && swap < 1)

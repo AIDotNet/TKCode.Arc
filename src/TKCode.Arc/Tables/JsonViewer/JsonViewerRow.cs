@@ -159,6 +159,7 @@ internal sealed class JsonViewerRow : TablesTreeRow
     private readonly CopyState[] _actionState = new CopyState[2];
     private readonly PausableTimer?[] _actionReset = new PausableTimer?[2];
     private bool _hovered;
+    private static readonly Cursor s_hand = new(StandardCursorType.Hand);
     private int _hoverAction = -1;
     private int _pressedAction = -1;
     private bool _pressed;
@@ -333,7 +334,7 @@ internal sealed class JsonViewerRow : TablesTreeRow
         if (action != _hoverAction)
         {
             _hoverAction = action;
-            Cursor = action >= 0 ? new Cursor(StandardCursorType.Hand) : Cursor.Default;
+            Cursor = action >= 0 ? s_hand : Cursor.Default;
             InvalidateVisual();
         }
     }

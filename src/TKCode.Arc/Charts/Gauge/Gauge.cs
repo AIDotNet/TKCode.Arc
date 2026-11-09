@@ -81,7 +81,7 @@ public class Gauge : Control
     private bool _filled;
     private bool _toneInitialized;
     private int _shownPercent;
-    private FormattedText? _unit;
+    private ChartsBRun? _unit;
     private int _unitVersion = -1;
     private double _digitBaseline;
     private Rect _dial;
@@ -413,13 +413,13 @@ public class Gauge : Control
 
     protected override AutomationPeer OnCreateAutomationPeer() => _peer = new ChartsBAutomationPeerGauge(this);
 
-    private FormattedText Unit()
+    private ChartsBRun Unit()
     {
         if (_unit is null || _unitVersion != _palette.Version)
         {
             _unitVersion = _palette.Version;
             var size = _digits.FontSize > 0 ? _digits.FontSize : 36;
-            _unit = ChartsBText.Make("%", _palette, size * 0.5, _palette.TextSecondary);
+            _unit = ChartsBText.Label("%", _palette, size * 0.5, _palette.TextSecondary);
             var zero = new FormattedText("0", CultureInfo.InvariantCulture, FlowDirection.LeftToRight,
                 new Typeface(_digits.FontFamily, FontStyle.Normal, _digits.FontWeight), size, null);
             _digitBaseline = zero.Baseline;
@@ -525,7 +525,7 @@ public class Gauge : Control
                 }
             }
         }
-        context.DrawText(Unit(), _unitOrigin);
+        Unit().Draw(context, _unitOrigin);
     }
 
     /// <summary>The ring path from its lower left end, clockwise, in the 100 × 90 view box (radius 42 around 50, 50).</summary>
