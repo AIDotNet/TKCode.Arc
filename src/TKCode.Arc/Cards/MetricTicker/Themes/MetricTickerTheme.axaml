@@ -25,7 +25,16 @@
                         Padding="{TemplateBinding Padding}">
                     <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{arc:MetricTickerTokenResource ButtonGap}">
                         <arc:MetricTickerStrip Name="PART_Strip" VerticalAlignment="Center" />
-                        <arc:ExplainerIconButton Name="PART_PauseButton" Grid.Column="1" VerticalAlignment="Center" />
+                        <arc:Button Name="PART_PauseButton"
+                                    Grid.Column="1"
+                                    VerticalAlignment="Center"
+                                    Variant="Secondary"
+                                    Size="Small"
+                                    Width="36"
+                                    Height="36"
+                                    MinWidth="36"
+                                    Padding="0"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusStep18}" />
                     </Grid>
                 </Border>
             </ControlTemplate>

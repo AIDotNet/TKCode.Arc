@@ -7,7 +7,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 
-namespace TKCode.Arc.Tests.Special.Widgets;
+namespace TKCode.Arc.Tests.Special.Data;
 
 /// <summary>The booking pill: segments and their pickers, the flow from place to dates to guests, the rules and the texts.</summary>
 public class BookingPillTests

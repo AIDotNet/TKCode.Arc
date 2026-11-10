@@ -5,7 +5,7 @@ using Avalonia.Headless.XUnit;
 using Avalonia.Media;
 using Avalonia.Threading;
 
-namespace TKCode.Arc.Tests.Special.Widgets;
+namespace TKCode.Arc.Tests.Special.Data;
 
 /// <summary>Activity rings: progress past the goal, the legend, the goal event, layout and automation.</summary>
 public class ActivityRingsTests

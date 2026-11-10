@@ -8,7 +8,7 @@ using Avalonia.Threading;
 using TKCode.Arc.Motion;
 using AvaloniaButton = Avalonia.Controls.Button;
 
-namespace TKCode.Arc.Tests.Special.Data;
+namespace TKCode.Arc.Tests.Avatars;
 
 /// <summary>The presence stack: order, the limit and the chip, joins and leaves, the list, keyboard and motion.</summary>
 public class PresenceStackTests

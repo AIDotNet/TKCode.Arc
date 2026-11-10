@@ -6,7 +6,7 @@ using Avalonia.Threading;
 using TKCode.Arc.Motion;
 using AvaloniaButton = Avalonia.Controls.Button;
 
-namespace TKCode.Arc.Tests.Special.Data;
+namespace TKCode.Arc.Tests.Cards;
 
 /// <summary>The metric ticker: changes and trends, the two layouts, rolling values, scrolling and pausing.</summary>
 public class MetricTickerTests

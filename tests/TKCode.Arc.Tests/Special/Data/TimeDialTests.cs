@@ -6,7 +6,7 @@ using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Avalonia.Threading;
 
-namespace TKCode.Arc.Tests.Special.Widgets;
+namespace TKCode.Arc.Tests.Special.Data;
 
 /// <summary>The time dial: angles and snapping, keys, dragging round the face, AM and PM, and automation.</summary>
 public class TimeDialTests

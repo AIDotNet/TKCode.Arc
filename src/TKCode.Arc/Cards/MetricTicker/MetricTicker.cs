@@ -302,10 +302,7 @@ public class MetricTicker : TemplatedControl
         var name = IsPaused ? PlayLabel : PauseLabel;
         AutomationProperties.SetName(_pause, name);
         Tooltip.SetTip(_pause, name);
-        if (_pause is ExplainerIconButton icon)
-        {
-            icon.Icon = IsPaused ? ArcIcons.Play : ArcIcons.Pause;
-        }
+        _pause.Content = new ArcGlyph { Data = IsPaused ? ArcIcons.Play : ArcIcons.Pause, Size = 16 };
     }
 
     private void UpdatePseudoClasses()

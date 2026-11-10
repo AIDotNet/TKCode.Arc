@@ -23,11 +23,12 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
   - Glass: `GlassCard`, `GlassMenu`, `GlassSegmented` and `GlassTabBar`, frosted surfaces that blur a chosen backdrop (`arc:GlassBackdrop.Source`), with opaque fallbacks under reduced transparency.
   - Navigation: `MorphNav`, `LiquidTabBar`, `OrbitMenu`, `ActionMorph` and `ShareSheet`.
   - Photos: `ProductGallery`, `LightboxGallery`, `PhotoGrid` and `CoverFlow`.
-  - Widgets: `BookingPill`, `ActivityRings`, `TimeDial`, `DateReel` and `KeycapKeyboard`.
+  - Data: `BookingPill`, `ActivityRings`, `TimeDial` and `DateReel`; Widgets: `KeycapKeyboard`.
   - Inputs: `EmojiPicker` (Unicode 16.0 emoji with CLDR names), `AvatarUpload`, `ConfirmPopover` and `UndoToast`.
   - Publishing: `MegaMenuMorph`, `TocProgress` and `ShareAccess`.
-  - Data: `SplitBar`, `MetricTicker` and `PresenceStack`; and the explainers `DnsResolution`, `ModelTraining` and `BranchGraph`.
+  - The explainers `DnsResolution`, `ModelTraining` and `BranchGraph`.
   - Playful and Cursor: `SandText`, `TypewriterTerminal`, `PrizeWheel`, `MagnifyDock` and `ImageTrail`.
+- `SplitBar` (Charts), `MetricTicker` (Cards) and `PresenceStack` (Avatars) in `TKCode.Arc`, designed the same independent way, in the groups where Arc lists them.
 - `TKCode.Arc.Blocks` gains blocks designed the same independent way:
   - AI: `AgentRun`, `ResearchRun`, `AiInlineEdit`, `AgentTasks`, `AgentApprovals`, `AgentRoutines`, `AgentOrchestrator`, `AgentBuilder`, `AgentGallery`, `McpServers`, `KnowledgeBase`, `EvalSuite`, `AiInsightCard`, `AiFeatureLaunch`, `AiSearchBar`, `AiSetupWizard`, `CatchUp` and `SmartScheduler`.
   - Support and content: `SupportConversation`, `SupportWidget`, `InboxTriage`, `FeedbackBoard`, `HelpCenter`, `FeatureVoting` and `ActivityFeed`.
@@ -37,6 +38,10 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
   - App shell, auth and settings: `DocsSidebar`, `InboxSidebar`, `SelectionToolbar`, `TwoFactorSetup` (with a QR encoder and TOTP check of its own), `OnboardingSurvey` and `MagicLinkSignIn`.
 - `BackToTop` (issue #67): a round button that appears once a list, log or feed has scrolled past a threshold and smoothly scrolls it back to the top, placed over the container yourself or added to a corner of its viewport with `arc:BackToTop.IsAttached`.
 - `Sidebar.ExpandedWidth` (Blocks): the width of the open sidebar (default 240), which the collapse springs from and back to ([#92](https://github.com/AIDotNet/TKCode.Arc/issues/92)).
+
+### Changed
+
+- `GhostMascot`, `CubeMascot`, `AiMascot`, `LiquidTabBar`, `AiSpark` and `RadarChart` allocate far less per frame and look the same: moving paths are rebuilt once per drawn frame instead of being edited point by point (a ghost's frame step went from about 6 KB to none, a cube's from about 10 KB to none), their brushes and pens are immutable, and an `AiMascot` resting in the error state redraws only when it blinks.
 
 ### Fixed
 

@@ -6,7 +6,7 @@ using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Avalonia.Threading;
 
-namespace TKCode.Arc.Tests.Special.Widgets;
+namespace TKCode.Arc.Tests.Special.Data;
 
 /// <summary>The date reel: wheel arithmetic, the day wheel following the month, range, keys, wheel and automation.</summary>
 public class DateReelTests

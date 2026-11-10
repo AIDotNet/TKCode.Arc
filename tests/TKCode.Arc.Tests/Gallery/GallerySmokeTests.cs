@@ -16,7 +16,7 @@ public class GallerySmokeTests
     [AvaloniaFact]
     public void Catalog_Lists_All_Components()
     {
-        GalleryCatalog.Count.ShouldBe(119);
+        GalleryCatalog.Count.ShouldBe(122);
         GalleryCatalog.Categories.Length.ShouldBe(22);
         // PageViewer sits in Arc's Media group but has no Arc original to link to (design/components/pdf/pdf.md, section 1).
         GalleryCatalog.Categories.ShouldAllBe(c => c.IsArc && c.Entries.Where(e => e.ClassName != "PageViewer").All(e => e.IsArc && e.ArcUrl != null));

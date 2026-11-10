@@ -674,9 +674,9 @@ internal sealed class SplitBarSlot
 
     public SplitBarSegment Segment { get; }
 
-    public ExplainerValue Share;
+    public SplitBarValue Share;
 
-    public ExplainerValue Dim;
+    public SplitBarValue Dim;
 
     public double TargetShare { get; set; }
 

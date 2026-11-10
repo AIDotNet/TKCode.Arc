@@ -138,12 +138,14 @@ public static partial class GalleryCatalog
             new("Avatar", "Avatar", "avatar", 1, "A compact identity marker for people and accounts."),
             new("AvatarGroup", "Avatar group", "avatar-group", 2, "Show a team or set of contributors in a small space."),
             new("Badge", "Badge", "badge", 3, "A small label for status, category, or metadata."),
+            new("PresenceStack", "Presence stack", "presence-stack", 3, "The people viewing a page right now as overlapping avatars in their own colors: newcomers grow in at the front, leavers shrink away, and the rest fold into a +N chip.", AddedOn: "2026-11-09"),
         ]),
         new("Cards", "Cards", "卡片",
         [
             new("Card", "Card", "card", 5, "A contained group of related content and actions."),
             new("MetricCard", "Metric card", "metric-card", 2, "A compact summary for a number that needs context."),
             new("EmptyState", "Empty state", "empty-state", 3, "A useful next step when there is nothing to show yet."),
+            new("MetricTicker", "Metric ticker", "metric-ticker", 3, "A strip of live metrics that scrolls like a stock ticker or stays in columns, rolling each value digit by digit and showing how much it moved and in which direction.", AddedOn: "2026-11-09"),
         ]),
         new("Charts", "Charts", "图表",
         [
@@ -160,6 +162,7 @@ public static partial class GalleryCatalog
             new("AnimatedCounter", "Animated counter", "animated-counter", 1, "Give changing totals a clear sense of movement."),
             new("Ridgeline", "Ridgeline", "ridgeline", 8, "Overlapping distributions, one ridge per group: hover to lift a ridge and read its quartiles, switch datasets and every curve morphs."),
             new("Treemap", "Treemap", "treemap", 8, "A squarified treemap: click to drill and the tiles grow to fill the view, with a breadcrumb back and metrics that morph every tile."),
+            new("SplitBar", "Split bar", "split-bar", 8, "One bar split into parts by their share of a total, with a legend of labels, values and percentages; the parts spring to their new shares as the data changes.", AddedOn: "2026-11-09"),
         ]),
         new("Tables", "Tables", "表格与数据",
         [

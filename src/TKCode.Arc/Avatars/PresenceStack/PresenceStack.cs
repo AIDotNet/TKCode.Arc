@@ -29,7 +29,7 @@ namespace TKCode.Arc;
 [TemplatePart(PanelPart, typeof(PresenceStackPanel))]
 [TemplatePart(CountPart, typeof(RollingDigits))]
 [TemplatePart(ListPopupPart, typeof(Popup))]
-[TemplatePart(AnnouncerPart, typeof(ExplainerAnnouncer))]
+[TemplatePart(AnnouncerPart, typeof(AvatarsLiveRegion))]
 [PseudoClasses(EmptyPseudoClass, OverflowingPseudoClass)]
 public class PresenceStack : TemplatedControl
 {
@@ -104,7 +104,7 @@ public class PresenceStack : TemplatedControl
     private PresenceStackPanel? _panel;
     private RollingDigits? _count;
     private Popup? _popup;
-    private ExplainerAnnouncer? _announcer;
+    private AvatarsLiveRegion? _announcer;
     private StackPanel? _list;
     private int _viewerCount;
     private bool _attached;
@@ -182,7 +182,7 @@ public class PresenceStack : TemplatedControl
     internal PresenceStackPanel? Panel => _panel;
 
     /// <summary>The live region (tests).</summary>
-    internal ExplainerAnnouncer? Announcer => _announcer;
+    internal AvatarsLiveRegion? Announcer => _announcer;
 
     /// <summary>The list's rows while it is open (tests).</summary>
     internal StackPanel? ListPanel => _list;
@@ -232,7 +232,7 @@ public class PresenceStack : TemplatedControl
         _panel = e.NameScope.Find<PresenceStackPanel>(PanelPart);
         _count = e.NameScope.Find<RollingDigits>(CountPart);
         _popup = e.NameScope.Find<Popup>(ListPopupPart);
-        _announcer = e.NameScope.Find<ExplainerAnnouncer>(AnnouncerPart);
+        _announcer = e.NameScope.Find<AvatarsLiveRegion>(AnnouncerPart);
         if (_panel is not null)
         {
             _panel.Overflow.Click += OnOverflowClick;

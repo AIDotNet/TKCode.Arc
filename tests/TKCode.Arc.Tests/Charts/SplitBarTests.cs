@@ -8,7 +8,7 @@ using Avalonia.Threading;
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
 
-namespace TKCode.Arc.Tests.Special.Data;
+namespace TKCode.Arc.Tests.Charts;
 
 /// <summary>The split bar: shares, the remainder, the legend, springs, keyboard and the invoked event.</summary>
 public class SplitBarTests
