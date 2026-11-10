@@ -1,0 +1,79 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.StickyGroupedListDemo">
+    <UserControl.Styles>
+        <!-- Each letter's header sticks inside its own group, so the next group pushes it away. -->
+        <Style Selector="Border.letter">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+            <Setter Property="BorderThickness" Value="0,0,0,1" />
+            <Setter Property="Padding" Value="16,6" />
+            <Setter Property="arc:Sticky.IsEnabled" Value="True" />
+        </Style>
+        <Style Selector="Border.letter > TextBlock">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="Border.letter[(arc|Sticky.IsStuck)=True] > TextBlock">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="StackPanel.rows > TextBlock">
+            <Setter Property="Margin" Value="16,9" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+    </UserControl.Styles>
+    <Border Height="300"
+            Width="280"
+            CornerRadius="14"
+            BorderThickness="1"
+            ClipToBounds="True"
+            BorderBrush="{arc:ArcDesignTokenResource Border}"
+            Background="{arc:ArcDesignTokenResource Surface}">
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+            <StackPanel>
+                <StackPanel>
+                    <Border Classes="letter"><TextBlock Text="A" /></Border>
+                    <StackPanel Classes="rows">
+                        <TextBlock Text="Ada Fischer" />
+                        <TextBlock Text="Amir Haddad" />
+                        <TextBlock Text="Aoife Byrne" />
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel>
+                    <Border Classes="letter"><TextBlock Text="B" /></Border>
+                    <StackPanel Classes="rows">
+                        <TextBlock Text="Bea Lindqvist" />
+                        <TextBlock Text="Bruno Costa" />
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel>
+                    <Border Classes="letter"><TextBlock Text="C" /></Border>
+                    <StackPanel Classes="rows">
+                        <TextBlock Text="Camille Roux" />
+                        <TextBlock Text="Chen Wei" />
+                        <TextBlock Text="Clara Novak" />
+                        <TextBlock Text="Cyrus Farahani" />
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel>
+                    <Border Classes="letter"><TextBlock Text="D" /></Border>
+                    <StackPanel Classes="rows">
+                        <TextBlock Text="Dalia Mansour" />
+                        <TextBlock Text="Diego Herrera" />
+                        <TextBlock Text="Dmitri Volkov" />
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel>
+                    <Border Classes="letter"><TextBlock Text="E" /></Border>
+                    <StackPanel Classes="rows">
+                        <TextBlock Text="Elif Demir" />
+                        <TextBlock Text="Emeka Obi" />
+                        <TextBlock Text="Esther Park" />
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </Border>
+</UserControl>
