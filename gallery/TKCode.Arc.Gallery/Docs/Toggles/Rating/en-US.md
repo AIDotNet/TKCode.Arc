@@ -60,6 +60,15 @@ you give it `ValueLabels`.
 
 <Demo name="Required" />
 
+### Custom icons
+
+`Icon` replaces the star with any shape drawn in a 24 × 24 box, such as `{x:Static arc:ArcIcons.Heart}` or path data;
+the stroke, fill, colors and motion stay the same. `EmptyIcon` sets a different shape for the part of a step that is
+not filled. Half values keep working with any shape: the left half of `Icon` is drawn over the right half of
+`EmptyIcon`.
+
+<Demo name="Icons" />
+
 ## API reference
 
 <!-- api: Rating -->
