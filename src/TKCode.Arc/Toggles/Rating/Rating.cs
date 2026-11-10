@@ -11,6 +11,7 @@ using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Media;
 
 namespace TKCode.Arc;
 
@@ -28,7 +29,8 @@ public sealed class RatingValueChangedEventArgs : RoutedEventArgs
 
 /// <summary>
 /// Arc rating: a row of stars for a score from 1 to N. Pointing previews a value, a press or drag commits it, and a
-/// rolling word beside the stars says what the value means. Half stars, clearing and a read-only display are options.
+/// rolling word beside the stars says what the value means. Half stars, clearing, a read-only display and other shapes
+/// (<see cref="Icon"/>, <see cref="EmptyIcon"/>) are options.
 /// The arrow keys move by one step, Home and End jump, the number keys choose a star, and Backspace or Delete clear.
 /// </summary>
 [TemplatePart(StarsPart, typeof(RatingStars))]
@@ -93,6 +95,20 @@ public class Rating : TemplatedControl
     public static readonly StyledProperty<string> EmptyLabelProperty =
         AvaloniaProperty.Register<Rating, string>(nameof(EmptyLabel), "Not rated");
 
+    /// <summary>
+    /// The shape of each star, drawn in a 24 × 24 box like the Lucide icons of <see cref="ArcIcons"/>, for example
+    /// <c>{x:Static arc:ArcIcons.Heart}</c> or path data. Null draws a star.
+    /// </summary>
+    public static readonly StyledProperty<Geometry?> IconProperty =
+        AvaloniaProperty.Register<Rating, Geometry?>(nameof(Icon));
+
+    /// <summary>
+    /// The shape of the part of a star that is not filled, in the same 24 × 24 box. Null uses <see cref="Icon"/>. A half
+    /// value shows the left half of <see cref="Icon"/> over the right half of this shape.
+    /// </summary>
+    public static readonly StyledProperty<Geometry?> EmptyIconProperty =
+        AvaloniaProperty.Register<Rating, Geometry?>(nameof(EmptyIcon));
+
     /// <summary>Raised when a person commits a new value; 0 means the rating was cleared.</summary>
     public static readonly RoutedEvent<RatingValueChangedEventArgs> ValueChangedEvent =
         RoutedEvent.Register<Rating, RatingValueChangedEventArgs>(nameof(ValueChanged), RoutingStrategies.Bubble);
@@ -136,6 +152,12 @@ public class Rating : TemplatedControl
 
     /// <inheritdoc cref="EmptyLabelProperty"/>
     public string EmptyLabel { get => GetValue(EmptyLabelProperty); set => SetValue(EmptyLabelProperty, value); }
+
+    /// <inheritdoc cref="IconProperty"/>
+    public Geometry? Icon { get => GetValue(IconProperty); set => SetValue(IconProperty, value); }
+
+    /// <inheritdoc cref="EmptyIconProperty"/>
+    public Geometry? EmptyIcon { get => GetValue(EmptyIconProperty); set => SetValue(EmptyIconProperty, value); }
 
     private sealed class Gesture
     {

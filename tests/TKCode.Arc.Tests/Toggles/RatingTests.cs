@@ -6,6 +6,7 @@ using Avalonia.Automation.Provider;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
+using Avalonia.Media;
 using Avalonia.Threading;
 
 namespace TKCode.Arc.Tests.Toggles;
@@ -305,6 +306,50 @@ public class RatingTests
             Press(window, PhysicalKey.Digit4);
             TestHelpers.PumpUntil(() => Stars(rating).FillOf(3) == 1 && Math.Abs(Stars(rating).ScaleOf(3) - 1) < 0.001, 3000).ShouldBeTrue();
             rating.Value.ShouldBe(4);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Stars_Default_To_The_Star_Shape()
+    {
+        var rating = new Rating { Value = 2 };
+        var window = TestHelpers.Show(rating);
+        try
+        {
+            var stars = Stars(rating);
+            stars.FilledShape.ShouldBeSameAs(ArcIcons.Star);
+            stars.EmptyShape.ShouldBeSameAs(ArcIcons.Star);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Icon_Replaces_Both_Shapes_And_EmptyIcon_Only_The_Empty_Part()
+    {
+        var rating = new Rating { Value = 2.5, AllowHalf = true, Icon = ArcIcons.Heart };
+        var window = TestHelpers.Show(rating);
+        try
+        {
+            var stars = Stars(rating);
+            stars.FilledShape.ShouldBeSameAs(ArcIcons.Heart);
+            stars.EmptyShape.ShouldBeSameAs(ArcIcons.Heart);
+
+            var outline = Geometry.Parse("M4 4h16v16H4z");
+            rating.EmptyIcon = outline;
+            stars.FilledShape.ShouldBeSameAs(ArcIcons.Heart);
+            stars.EmptyShape.ShouldBeSameAs(outline);
+            window.CaptureRenderedFrame();
+
+            rating.Icon = null;
+            stars.FilledShape.ShouldBeSameAs(ArcIcons.Star);
+            stars.EmptyShape.ShouldBeSameAs(outline);
         }
         finally
         {
