@@ -1,7 +1,7 @@
 ---
 title: 評分
 summary: 一種簡單、無障礙的方式，用來收集數字化的評價。
-source-hash: cb6723e70254
+source-hash: ec85978b6dba
 ---
 
 <Demo name="Feedback" />
@@ -50,6 +50,13 @@ source-hash: cb6723e70254
 再次選擇目前的值會清除評分，Backspace 和 Delete 也一樣。答案必須保留時設定 `AllowClear="False"`。`Maximum` 設定星星數量；不是五顆整星的量表顯示為「7 out of 10」，除非提供 `ValueLabels`。
 
 <Demo name="Required" />
+
+### 自訂圖示
+
+`Icon` 把星星換成任意在 24 × 24 框內繪製的圖形，例如 `{x:Static arc:ArcIcons.Heart}` 或路徑資料；描邊、填充、顏色和動效保持不變。
+`EmptyIcon` 為未填充的部分設定另一個圖形。任何圖形都支援半星：左半邊畫 `Icon`，右半邊畫 `EmptyIcon`。
+
+<Demo name="Icons" />
 
 ## API 參考
 

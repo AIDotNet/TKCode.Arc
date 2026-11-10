@@ -24,7 +24,9 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate x:DataType="demos:DashboardTile">
-                    <Border Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                    <Border Background="{arc:ArcDesignTokenResource Surface}"
+                            BorderBrush="{arc:ArcDesignTokenResource Border}"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                             CornerRadius="{arc:ArcDesignTokenResource RadiusStep12}"
                             Padding="12">
                         <StackPanel Spacing="2">

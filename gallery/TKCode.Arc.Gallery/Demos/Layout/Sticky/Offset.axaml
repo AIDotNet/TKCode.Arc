@@ -1,0 +1,51 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.StickyOffsetDemo">
+    <UserControl.Styles>
+        <Style Selector="Border.row">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
+            <Setter Property="Padding" Value="14,12" />
+        </Style>
+        <Style Selector="Border.row > TextBlock">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+    </UserControl.Styles>
+    <!-- The summary pill stops 12px below the viewport's top edge instead of touching it. -->
+    <Border Height="300"
+            MaxWidth="460"
+            CornerRadius="16"
+            BorderThickness="1"
+            ClipToBounds="True"
+            BorderBrush="{arc:ArcDesignTokenResource Border}"
+            Background="{arc:ArcDesignTokenResource Background}">
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+            <StackPanel Margin="16" Spacing="10">
+                <TextBlock Text="Checkout"
+                           FontSize="{arc:ArcDesignTokenResource TypeLG}"
+                           FontWeight="Medium"
+                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                <Border arc:Sticky.IsEnabled="True"
+                        arc:Sticky.Offset="12"
+                        HorizontalAlignment="Center"
+                        Padding="14,8"
+                        CornerRadius="999"
+                        BoxShadow="{arc:ArcDesignTokenResource ShadowRaised}"
+                        Background="{arc:ArcDesignTokenResource Foreground}">
+                    <TextBlock Text="3 items · $148.00"
+                               FontWeight="Medium"
+                               Foreground="{arc:ArcDesignTokenResource Background}" />
+                </Border>
+                <Border Classes="row"><TextBlock Text="Shipping address" /></Border>
+                <Border Classes="row"><TextBlock Text="Delivery options" /></Border>
+                <Border Classes="row"><TextBlock Text="Payment method" /></Border>
+                <Border Classes="row"><TextBlock Text="Gift message" /></Border>
+                <Border Classes="row"><TextBlock Text="Promo code" /></Border>
+                <Border Classes="row"><TextBlock Text="Review and pay" /></Border>
+            </StackPanel>
+        </ScrollViewer>
+    </Border>
+</UserControl>

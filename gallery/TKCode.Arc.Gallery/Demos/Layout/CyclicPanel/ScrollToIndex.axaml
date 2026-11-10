@@ -4,9 +4,10 @@
              x:Class="TKCode.Arc.Gallery.Demos.CyclicPanelScrollToIndexDemo">
     <UserControl.Styles>
         <Style Selector="arc|CyclicPanel > Border">
-            <Setter Property="Margin" Value="0,2" />
             <Setter Property="Padding" Value="16,0" />
-            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
             <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep8}" />
         </Style>
         <Style Selector="arc|CyclicPanel > Border > TextBlock">
@@ -15,7 +16,7 @@
     </UserControl.Styles>
     <Grid ColumnDefinitions="220,Auto" ColumnSpacing="24" HorizontalAlignment="Center">
         <Grid>
-            <arc:CyclicPanel x:Name="Months" Height="240" VisibleItemCount="5">
+            <arc:CyclicPanel x:Name="Months" Height="240" VisibleItemCount="5" Spacing="4">
                 <Border><TextBlock Text="0 · January" /></Border>
                 <Border><TextBlock Text="1 · February" /></Border>
                 <Border><TextBlock Text="2 · March" /></Border>

@@ -56,6 +56,12 @@ internal sealed class RatingStars : Control
     public static readonly StyledProperty<IBrush?> FocusBrushProperty =
         AvaloniaProperty.Register<RatingStars, IBrush?>(nameof(FocusBrush));
 
+    public static readonly StyledProperty<Geometry?> IconProperty =
+        AvaloniaProperty.Register<RatingStars, Geometry?>(nameof(Icon));
+
+    public static readonly StyledProperty<Geometry?> EmptyIconProperty =
+        AvaloniaProperty.Register<RatingStars, Geometry?>(nameof(EmptyIcon));
+
     private sealed class Star
     {
         public double Fill;
@@ -80,7 +86,7 @@ internal sealed class RatingStars : Control
     {
         AffectsMeasure<RatingStars>(CellSizeProperty, CellGapProperty);
         AffectsRender<RatingStars>(GlyphSizeProperty, KeptOpacityProperty, CellRadiusProperty, EmptyBrushProperty,
-            SoftBrushProperty, FillBrushProperty, FocusBrushProperty);
+            SoftBrushProperty, FillBrushProperty, FocusBrushProperty, IconProperty, EmptyIconProperty);
     }
 
     public double CellSize { get => GetValue(CellSizeProperty); set => SetValue(CellSizeProperty, value); }
@@ -92,8 +98,16 @@ internal sealed class RatingStars : Control
     public IBrush? SoftBrush { get => GetValue(SoftBrushProperty); set => SetValue(SoftBrushProperty, value); }
     public IBrush? FillBrush { get => GetValue(FillBrushProperty); set => SetValue(FillBrushProperty, value); }
     public IBrush? FocusBrush { get => GetValue(FocusBrushProperty); set => SetValue(FocusBrushProperty, value); }
+    public Geometry? Icon { get => GetValue(IconProperty); set => SetValue(IconProperty, value); }
+    public Geometry? EmptyIcon { get => GetValue(EmptyIconProperty); set => SetValue(EmptyIconProperty, value); }
 
     internal Rating? Owner { get; set; }
+
+    /// <summary>The shape drawn for the filled part of a star.</summary>
+    internal Geometry FilledShape => Icon ?? ArcIcons.Star;
+
+    /// <summary>The shape drawn for the part of a star that is not filled.</summary>
+    internal Geometry EmptyShape => EmptyIcon ?? FilledShape;
 
     /// <summary>The cell that shows the keyboard focus ring, or -1.</summary>
     internal int FocusedCell
@@ -307,7 +321,10 @@ internal sealed class RatingStars : Control
         base.Render(context);
         // The whole row answers the pointer, gaps included.
         context.FillRectangle(Brushes.Transparent, new Rect(Bounds.Size));
-        var geometry = ArcIcons.Star;
+        // The filled part of a star uses the icon; the empty part uses the empty icon, so a half value shows the left half
+        // of one over the right half of the other.
+        var filled = FilledShape;
+        var empty = EmptyShape;
         var centerY = Bounds.Height / 2;
         var unit = GlyphSize / GlyphBox;
         for (var i = 0; i < _stars.Length; i++)
@@ -328,14 +345,14 @@ internal sealed class RatingStars : Control
                 {
                     using (context.PushOpacity(1 - _rated))
                     {
-                        context.DrawGeometry(null, _emptyPen, geometry);
+                        context.DrawGeometry(null, _emptyPen, empty);
                     }
                 }
                 if (_rated > 0)
                 {
                     using (context.PushOpacity(_rated))
                     {
-                        context.DrawGeometry(SoftBrush, _softPen, geometry);
+                        context.DrawGeometry(SoftBrush, _softPen, empty);
                     }
                 }
                 if (star.Kept > 0)
@@ -343,14 +360,14 @@ internal sealed class RatingStars : Control
                     using (context.PushClip(new Rect(0, 0, GlyphBox * star.Kept, GlyphBox)))
                     using (context.PushOpacity(KeptOpacity))
                     {
-                        context.DrawGeometry(FillBrush, _fillPen, geometry);
+                        context.DrawGeometry(FillBrush, _fillPen, filled);
                     }
                 }
                 if (star.Fill > 0)
                 {
                     using (context.PushClip(new Rect(0, 0, GlyphBox * star.Fill, GlyphBox)))
                     {
-                        context.DrawGeometry(FillBrush, _fillPen, geometry);
+                        context.DrawGeometry(FillBrush, _fillPen, filled);
                     }
                 }
             }

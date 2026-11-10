@@ -12,7 +12,8 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 
 ### Added
 
-- `Rating`: a row of stars for a score, with half stars, clearing, a read-only display and a rolling word for the value.
+- `Sticky`: attached properties that keep any element of a scrolling page at the top once it scrolls there, like CSS `position: sticky`, with an offset, an `IsStuck` state to style and a `StuckChanged` event; it never leaves its parent, so group headers push each other away (#84).
+- `Rating`: a row of stars for a score, with half stars, clearing, a read-only display, a rolling word for the value and custom shapes (`Icon`, `EmptyIcon`).
 - `ToggleGroup` and `SlotText`: a flat row of toggle buttons, with one gliding fill in single mode and per-option fills that join between pressed neighbours in multiple mode; and text and numbers that spin into their new value on staggered reels.
 - `RangeHistogramSlider` and `RulerSlider`: a two-thumb range over a histogram of the data, with lit bars cut at each thumb and release snapping to bar edges; and a tape of ticks under a fixed needle, with flick momentum, tick snapping, rubber-banded ends and a rolling readout.
 - `OnboardingChecklist`: a getting started checklist with a progress ring and rolling count, steps that run an async action or are checked by hand, inline errors with retry, a completed group that reopens steps and a hideable body.
