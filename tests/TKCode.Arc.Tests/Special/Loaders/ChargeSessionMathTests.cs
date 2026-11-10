@@ -318,6 +318,12 @@ public class ChargeSessionMathTests
         flow.DistanceOf(0).ShouldBe(end - 30, 1e-9);
         flow.DistanceOf(1).ShouldBe(end - 94, 1e-9);
         flow.OpacityOf(0, end).ShouldBe(1);
+        // The reduced-motion breath sets the resting packets' opacity; laying them out again starts from 1.
+        flow.StaticOpacity = 0.5;
+        flow.OpacityOf(0, end).ShouldBe(0.5);
+        flow.OpacityOf(1, end).ShouldBe(0.5);
+        flow.LayOut(end, visible: true);
+        flow.OpacityOf(0, end).ShouldBe(1);
         flow.LayOut(end, visible: false);
         flow.Count.ShouldBe(0);
     }

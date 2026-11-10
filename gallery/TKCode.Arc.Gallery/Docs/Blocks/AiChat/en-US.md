@@ -234,7 +234,7 @@ Every word comes from `Labels` (`AiChatLabels`): replace the instance to transla
 | Reasoning, tool details | Height spring, fades | 120 ms fades | Immediate |
 | Following the bottom | Chases the end | Jumps to the end | Jumps to the end |
 | Conversation switch | 100 / 160 ms crossfade | 120 ms crossfade | Immediate |
-| Shimmer, spinner | Moving | Still | Still |
+| Shimmer, spinner | Moving | Shimmer still; spinner breathes in opacity | Still |
 
 ## Responsive behavior
 

@@ -2,8 +2,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
              x:Class="TKCode.Arc.Gallery.Demos.MorphLoaderReducedMotionDemo">
-    <!-- Under reduced motion each state is one static shape and changes swap at once, color included. The status is
-         still announced, and the check and cross still tell the result apart without color. -->
+    <!-- Under reduced motion each state is one still shape and changes swap at once, color included; while loading the
+         shape breathes in opacity so it still reads as busy. The status is still announced, and the check and cross
+         still tell the result apart without color. -->
     <StackPanel Spacing="24" HorizontalAlignment="Center" Margin="0,32" arc:ArcMotion.Level="Reduced">
         <arc:MorphLoader x:Name="Loader" Size="48" Variant="Square" />
         <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">

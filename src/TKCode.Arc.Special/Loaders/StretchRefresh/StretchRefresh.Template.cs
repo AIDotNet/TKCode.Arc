@@ -72,6 +72,7 @@ public partial class StretchRefresh
     private LiveLoop? _spinLoop;
     private RotateTransform? _spin;
     private double _runTime;
+    private double _runPulse;
     private IDisposable? _viewport;
     private bool _markFull;
 
@@ -83,6 +84,9 @@ public partial class StretchRefresh
 
     /// <summary>The header glyph's rotation while refreshing (tests).</summary>
     internal double SpinAngle => _spin?.Angle ?? 0;
+
+    /// <summary>The running segment's reduced-motion breath (1 at full motion and at rest; tests).</summary>
+    internal double RunPulse => _meter?.RunPulse ?? 1;
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
@@ -144,26 +148,50 @@ public partial class StretchRefresh
         _markScale = Value(owner, 1, WriteMark);
         if (_meter is not null)
         {
-            // The running segment: a pure function of its running time (no allocation per frame).
+            // The running segment: a pure function of its running time (no allocation per frame). Under reduced motion
+            // it rests in the middle of the track and breathes in opacity instead of running, so the refresh still reads
+            // as busy (the level is read per frame: one card, and only while it refreshes).
             _runLoop = new LiveLoop(_meter, dt =>
             {
-                _runTime += dt;
-                _meter.RunPosition = StretchRefreshMath.RunPosition(_runTime);
+                if (ArcMotion.IsFull(_meter))
+                {
+                    _runTime += dt;
+                    _meter.RunPosition = StretchRefreshMath.RunPosition(_runTime);
+                    _meter.RunPulse = 1;
+                }
+                else
+                {
+                    _runPulse = ArcBusyPulse.Advance(_runPulse, dt);
+                    _meter.RunPosition = StretchRefreshMath.RunTravel / 2;
+                    _meter.RunPulse = ArcBusyPulse.Opacity(_runPulse);
+                }
                 _meter.InvalidateVisual();
                 return true;
-            });
+            }) { MinimumLevel = ArcMotionLevel.Reduced };
         }
         if (_headerIcon is not null)
         {
-            // The header glyph turns once per 0.85 s, linear, while the work runs (decoration: Full motion only).
+            // The header glyph turns once per 0.85 s, linear, while the work runs; under reduced motion it holds still and
+            // breathes in opacity with the segment.
             _spinLoop = new LiveLoop(_headerIcon, dt =>
             {
-                if (_spin is not null)
+                if (ArcMotion.IsFull(_headerIcon))
                 {
-                    _spin.Angle = (_spin.Angle + dt * 360 / 0.85) % 360;
+                    if (_spin is not null)
+                    {
+                        _spin.Angle = (_spin.Angle + dt * 360 / 0.85) % 360;
+                    }
+                    if (_spinGlyph is not null && _spinGlyph.Opacity < 1)
+                    {
+                        _spinGlyph.Opacity = 1;
+                    }
+                }
+                else if (_spinGlyph is not null)
+                {
+                    _spinGlyph.Opacity = ArcBusyPulse.Opacity(_runPulse);
                 }
                 return true;
-            });
+            }) { MinimumLevel = ArcMotionLevel.Reduced };
             _headerIcon.Show(IdleGlyphKey, CreateSpinGlyph(), animate: false);
         }
         _subtitle?.ShowText(Subtitle, animate: false);

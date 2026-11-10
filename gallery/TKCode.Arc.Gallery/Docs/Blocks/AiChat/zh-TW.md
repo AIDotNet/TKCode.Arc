@@ -1,7 +1,7 @@
 ---
 title: AI 對話
 summary: 會填滿其容器的助理對話：上方有標題選單、模型按鈕與新對話按鈕，對話串中有串流的 Markdown 回覆、可收合的推理、工具膠囊、編號引用與訊息動作，底部是訊息框。
-source-hash: 66b43bec959f
+source-hash: 60d832abca2c
 ---
 
 <Demo name="Preview" />
@@ -213,7 +213,7 @@ public sealed class MyResponder : IAiChatResponder
 | 推理、工具細節 | 高度彈簧，淡入淡出 | 120 ms 淡入淡出 | 立即 |
 | 跟隨底部 | 追到末端 | 跳到末端 | 跳到末端 |
 | 會話切換 | 100 / 160 ms 交叉淡化 | 120 ms 交叉淡化 | 立即 |
-| 閃爍、轉圈 | 移動 | 靜止 | 靜止 |
+| 閃爍、轉圈 | 移動 | 閃爍靜止；轉圈以透明度呼吸 | 靜止 |
 
 ## 響應式
 

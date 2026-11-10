@@ -192,7 +192,7 @@ lines as they need; the columns stay.
 ### Reduced motion
 
 Reduced and off motion keep every state, label, focus move and announcement, and drop everything that travels: rows,
-activity lines, the failure block and the footer change height at once, the arc does not turn, the check appears
+activity lines, the failure block and the footer change height at once, the arc does not turn (under reduced motion it breathes in opacity while the step runs), the check appears
 complete, the shimmer rests, an inserted step gets no wash and a suggestion's words appear together. The simulation runs
 the same timeline.
 
@@ -322,7 +322,7 @@ The enums:
 |---|---|---|---|
 | Heights and positions | Spring | At once | At once |
 | Status swaps | Crossfade with a 3px rise | Short crossfade | At once |
-| Spinner and shimmer | Turn and sweep | Still | Still |
+| Spinner and shimmer | Turn and sweep | Spinner breathes in opacity; shimmer still | Still |
 | Check | Draws over 200ms | Shown complete | Shown complete |
 | Inserted step | Slides in with a wash | Appears | Appears |
 | Streamed suggestion | Chunks fade in | All words at once | All words at once |

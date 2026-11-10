@@ -222,6 +222,7 @@ internal sealed class AgentPlanGlyph : Control
                 break;
             case AgentPlanGlyphKind.Active:
                 context.DrawGeometry(null, _trackPen, s_ring);
+                using (_spin.PushPulse(context))
                 using (context.PushTransform(_spin.Turn(C)))
                 {
                     context.DrawGeometry(null, _arcPen, s_arc);

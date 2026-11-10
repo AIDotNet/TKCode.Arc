@@ -77,6 +77,9 @@ internal sealed class StretchRefreshMeter : Control
 
     public double RunOpacity { get; set; }
 
+    /// <summary>The running segment's reduced-motion breath, multiplied into <see cref="RunOpacity"/> (1 otherwise).</summary>
+    public double RunPulse { get; set; } = 1;
+
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
@@ -115,10 +118,11 @@ internal sealed class StretchRefreshMeter : Control
                     context.DrawRectangle(Faded(FillBrush(), FillOpacity, ref _fillFaded, ref _fillFadedKey, ref _fillFadedSource), null,
                         new RoundedRect(new Rect((w - fw) / 2, 0, fw, h), radius));
                 }
-                if (RunOpacity > 0.001 && ArmedInk is { } run)
+                var runOpacity = RunOpacity * RunPulse;
+                if (runOpacity > 0.001 && ArmedInk is { } run)
                 {
                     var rw = w * StretchRefreshMath.RunWidth;
-                    context.DrawRectangle(Faded(run, RunOpacity, ref _runFaded, ref _runFadedKey, ref _runFadedSource), null,
+                    context.DrawRectangle(Faded(run, runOpacity, ref _runFaded, ref _runFadedKey, ref _runFadedSource), null,
                         new RoundedRect(new Rect(RunPosition * rw, 0, rw, h), radius));
                 }
             }

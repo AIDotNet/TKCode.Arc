@@ -8,8 +8,10 @@ namespace TKCode.Arc.Primitives;
 
 /// <summary>
 /// P21 loading ring: a 1.5px ring with one open quarter, spinning once every 0.7s (linear).
-/// Spins on a Core <see cref="LiveLoop"/> only while attached, visible and in view at full motion, keeping its phase
-/// when it pauses; static under reduced motion. The ring geometry and pen are cached, so a frame allocates nothing.
+/// Runs on a Core <see cref="LiveLoop"/> only while attached, visible and in view, keeping its phase when it pauses.
+/// At full motion it spins; under reduced motion it rests at its angle and breathes in opacity
+/// (<see cref="ArcBusyPulse"/>) so it still reads as busy; with motion off it is still. The ring geometry and pen are
+/// cached, so a frame allocates nothing.
 /// </summary>
 public class ArcSpinner : Control
 {
@@ -37,11 +39,19 @@ public class ArcSpinner : Control
     /// <summary>Current rotation in degrees.</summary>
     public double Angle => _angle;
 
-    /// <summary>True while frames are being delivered (attached, visible, in view, full motion).</summary>
-    public bool IsSpinning => _loop.IsRunning;
+    /// <summary>True while the ring turns (frames delivered at full motion: attached, visible, in view).</summary>
+    public bool IsSpinning => _loop.IsRunning && _full;
+
+    /// <summary>True while the resting ring breathes in opacity instead of turning (reduced motion).</summary>
+    public bool IsPulsing => _loop.IsRunning && !_full;
+
+    /// <summary>The ring's opacity now: 1 unless it is pulsing under reduced motion.</summary>
+    public double PulseOpacity => IsPulsing ? ArcBusyPulse.Opacity(_pulse) : 1;
 
     private readonly LiveLoop _loop;
     private double _angle;
+    private double _pulse;
+    private bool _full = true;
     private StreamGeometry? _ring;
     private Size _ringSize;
     private double _ringThickness;
@@ -58,15 +68,47 @@ public class ArcSpinner : Control
     public ArcSpinner()
     {
         // An infinite Avalonia Animation cannot be started with RunAsync (it throws), and a loop must pause when unseen.
-        _loop = new LiveLoop(this, Step);
+        // It also runs under reduced motion, where it breathes instead of turning (a busy ring must not freeze).
+        _loop = new LiveLoop(this, Step) { MinimumLevel = ArcMotionLevel.Reduced };
+        _loop.RunningChanged += OnRunningChanged;
+        // The motion level can come from the theme's resources: re-read it when they change.
+        ResourcesChanged += (_, _) => RefreshLevel();
         _loop.Start();
     }
 
     private bool Step(double seconds)
     {
-        _angle = (_angle + seconds / TurnSeconds * 360) % 360;
+        if (_full)
+        {
+            _angle = (_angle + seconds / TurnSeconds * 360) % 360;
+        }
+        else
+        {
+            _pulse = ArcBusyPulse.Advance(_pulse, seconds);
+        }
         InvalidateVisual();
         return true;
+    }
+
+    private void OnRunningChanged(bool running)
+    {
+        if (running)
+        {
+            RefreshLevel();
+        }
+        InvalidateVisual();
+    }
+
+    // Read once per level change, not per frame (the level lookup walks up to the resource root).
+    private void RefreshLevel()
+    {
+        var full = ArcMotion.IsFull(this);
+        if (full == _full)
+        {
+            return;
+        }
+        _full = full;
+        InvalidateVisual();
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -75,6 +117,10 @@ public class ArcSpinner : Control
         if (change.Property == ForegroundProperty || change.Property == ThicknessProperty)
         {
             _pen = null;
+        }
+        else if (change.Property == ArcMotion.LevelProperty || change.Property == ArcMotion.TokenLevelProperty)
+        {
+            RefreshLevel();
         }
     }
 
@@ -95,6 +141,8 @@ public class ArcSpinner : Control
         }
         _pen ??= new Pen(brush, t);
         var center = new Point(size.Width / 2, size.Height / 2);
+        var opacity = PulseOpacity;
+        using (opacity < 1 ? context.PushOpacity(opacity) : default(DrawingContext.PushedState?))
         using (context.PushTransform(Matrix.CreateTranslation(-center.X, -center.Y) *
                                      Matrix.CreateRotation(_angle * Math.PI / 180.0) *
                                      Matrix.CreateTranslation(center.X, center.Y)))

@@ -115,8 +115,9 @@ state.
 ### Reduced motion
 
 Under reduced motion each state is a single static shape (three dots, four bars, the four arcs of the ring, a closed
-square, a check, a cross) and every change swaps at once, color included. Announcements are unchanged, and the result
-is never shown by color alone.
+square, a check, a cross) and every change swaps at once, color included. While loading, the still shape breathes in
+opacity (from full to 45 % and back every 1.8 s) so it still shows that work is in progress; with motion off it does
+not. Announcements are unchanged, and the result is never shown by color alone.
 
 <Demo name="ReducedMotion" />
 
@@ -214,7 +215,7 @@ The loader has no keyboard interaction. In the preview bench every shape option 
 
 | Change | Full | Reduced | Off |
 |---|---|---|---|
-| Loading loop | Animated | Static shape | Static shape |
+| Loading loop | Animated | Still shape that breathes in opacity (1.8 s) | Static shape |
 | Shape change | Morphs | Instant | Instant |
 | Result | Folds, turns upright and pops | Instant | Instant |
 | Color | 240ms | Instant | Instant |

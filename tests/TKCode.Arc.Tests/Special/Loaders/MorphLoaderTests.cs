@@ -204,6 +204,84 @@ public class MorphLoaderTests
     }
 
     [AvaloniaFact]
+    public void Reduced_motion_breathes_the_still_shape_while_loading_and_rests_on_a_result()
+    {
+        var clock = new ManualFrameClock();
+        using var installed = clock.Install();
+        var loader = new MorphLoader { Variant = MorphLoaderVariant.Dots, Foreground = Brushes.Black };
+        var window = TestHelpers.Show(loader, ArcMotionLevel.Reduced);
+        try
+        {
+            Pump();
+            loader.IsLooping.ShouldBeFalse();
+            loader.IsPulsing.ShouldBeTrue();
+            var strokes = loader.Engine.Strokes.ToArray();
+            Run(clock, 900);
+            // Half a breath in: the dim end of the pulse, and nothing moved, turned or scaled.
+            loader.PulseOpacity.ShouldBeLessThan(0.5);
+            loader.PulseOpacity.ShouldBeGreaterThanOrEqualTo(ArcBusyPulse.MinOpacity - 1e-9);
+            loader.Engine.Strokes.ToArray().ShouldBe(strokes);
+            loader.Engine.Rotation.ShouldBe(0);
+            loader.Engine.Scale.ShouldBe(1);
+            Run(clock, 900);
+            loader.PulseOpacity.ShouldBeGreaterThan(0.95);
+
+            // A result shows its end state at once, fully opaque.
+            loader.Status = MorphLoaderStatus.Success;
+            loader.IsPulsing.ShouldBeFalse();
+            loader.PulseOpacity.ShouldBe(1);
+            loader.Status = MorphLoaderStatus.Loading;
+            loader.IsPulsing.ShouldBeTrue();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Motion_off_keeps_the_loading_shape_still_and_opaque()
+    {
+        var clock = new ManualFrameClock();
+        using var installed = clock.Install();
+        var loader = new MorphLoader { Foreground = Brushes.Black };
+        var window = TestHelpers.Show(loader, ArcMotionLevel.Off);
+        try
+        {
+            Pump();
+            Run(clock, 900);
+            loader.IsLooping.ShouldBeFalse();
+            loader.IsPulsing.ShouldBeFalse();
+            loader.PulseOpacity.ShouldBe(1);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Full_motion_loops_without_the_reduced_pulse()
+    {
+        var clock = new ManualFrameClock();
+        using var installed = clock.Install();
+        var loader = new MorphLoader { Foreground = Brushes.Black };
+        var window = TestHelpers.Show(loader, ArcMotionLevel.Full);
+        try
+        {
+            Pump();
+            Run(clock, 300);
+            loader.IsLooping.ShouldBeTrue();
+            loader.IsPulsing.ShouldBeFalse();
+            loader.PulseOpacity.ShouldBe(1);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void Status_is_announced_politely_with_the_labels()
     {
         var loader = new MorphLoader();

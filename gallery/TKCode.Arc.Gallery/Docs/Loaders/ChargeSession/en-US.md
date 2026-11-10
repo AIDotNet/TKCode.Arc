@@ -147,7 +147,9 @@ proportions at every width, while the pill, the labels and the touch target keep
 <Demo name="ReducedMotion" />
 
 Under reduced motion the session holds still at its start: the packets rest at even spacing along the path to show the
-direction of the flow, the figures show full power, and Stop, Resume and the limit change everything at once.
+direction of the flow and, while charging, breathe together in opacity (every 1.8 s) so the card still reads as busy;
+the figures show full power, and Stop, Resume and the limit change everything at once. With motion off the packets
+rest without breathing.
 
 ### Content guidelines
 
@@ -239,7 +241,7 @@ also turns to the muted surface with a dark border.
 
 | Change | Full | Reduced | Off |
 |---|---|---|---|
-| Session and packets | Run | Hold still; packets rest evenly along the path while charging | As reduced |
+| Session and packets | Run | Hold still; packets rest evenly along the path and breathe in opacity while charging | Hold still; packets rest evenly, no breathing |
 | Stop, resume, new session | Power drains or ramps | At once | At once |
 | Pill held, button pressed | Spring scale, color fade | Color change at once | Color change at once |
 | Figures | Update every frame | Current values | Current values |

@@ -20,6 +20,8 @@ public sealed partial class ChargeSession
     private readonly ChargeSessionModel _model = new();
     private readonly ChargeSessionFlow _flow = new();
     private readonly LiveLoop _loop;
+    private ArcMotionLevel _level = ArcMotionLevel.Full;
+    private double _pulse;
     private bool _initialized;
     private bool _applyingLimit;
     private CultureInfo _culture = CultureInfo.GetCultureInfo("en-US");
@@ -72,9 +74,13 @@ public sealed partial class ChargeSession
     public ChargeSession()
     {
         // One loop advances the session and the packets: their state is a function of frame time, which a
-        // ControlTheme transition cannot express. It idles once the flow has drained, offscreen and below full motion.
-        _loop = new LiveLoop(this, StepFrame) { MinimumLevel = ArcMotionLevel.Full };
+        // ControlTheme transition cannot express. It idles once the flow has drained, offscreen and with motion off.
+        // Under reduced motion it only breathes the resting packets' opacity (StepPulse), so a charging card still
+        // reads as busy.
+        _loop = new LiveLoop(this, StepFrame) { MinimumLevel = ArcMotionLevel.Reduced };
         PseudoClasses.Set(ChargingPseudoClass, true);
+        // The motion level can also come from the theme's resources.
+        ResourcesChanged += (_, _) => OnLevelMaybeChanged();
     }
 
     /// <summary>Stops charging: the power drains, the last packets land and the session waits for <see cref="Resume"/>.</summary>
@@ -130,6 +136,10 @@ public sealed partial class ChargeSession
         {
             return false;
         }
+        if (_level == ArcMotionLevel.Reduced)
+        {
+            return StepPulse(dt);
+        }
         var previous = _model.State;
         var transition = _model.Step(dt, Speed);
         _flow.Step(dt, _model.Availability, ChargeSessionScene.PathEnd(_model.Charge));
@@ -139,6 +149,32 @@ public sealed partial class ChargeSession
         }
         Refresh();
         return _model.IsMoving || !_flow.IsIdle;
+    }
+
+    /// <summary>
+    /// Reduced motion: the session holds still and the packets rest evenly along the path; while charging they breathe
+    /// together in opacity (<see cref="ArcBusyPulse"/>) and nothing travels.
+    /// </summary>
+    private bool StepPulse(double dt)
+    {
+        if (_model.State != ChargeSessionState.Charging || _flow.Count == 0)
+        {
+            _flow.StaticOpacity = 1;
+            _scene?.Update();
+            return false;
+        }
+        _pulse = ArcBusyPulse.Advance(_pulse, dt);
+        _flow.StaticOpacity = ArcBusyPulse.Opacity(_pulse);
+        _scene?.Update();
+        return true;
+    }
+
+    private void OnLevelMaybeChanged()
+    {
+        if (_initialized && ArcMotion.GetEffectiveLevel(this) != _level)
+        {
+            EnsureRunning();
+        }
     }
 
     private void Initialize()
@@ -169,14 +205,15 @@ public sealed partial class ChargeSession
         {
             return;
         }
-        if (!IsMotionFull)
+        _level = ArcMotion.GetEffectiveLevel(this);
+        if (_level != ArcMotionLevel.Full)
         {
             // Reduced motion holds the session still: availability at its target, packets evenly spaced while charging.
             _model.Settle();
             _flow.LayOut(ChargeSessionScene.PathEnd(_model.Charge), _model.State == ChargeSessionState.Charging);
             Refresh();
-            // Start only records the wish to run: the loop's MinimumLevel is Full, so it stays parked (no frames) below
-            // full motion and resumes by itself if the level goes back to Full.
+            // Under reduced motion the loop breathes the packets (StepPulse); with motion off its MinimumLevel keeps it
+            // parked (no frames). Either way it resumes the simulation by itself if the level goes back to Full.
             if (!IsPaused)
             {
                 _loop.Start();

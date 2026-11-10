@@ -18,6 +18,8 @@ namespace TKCode.Arc;
 /// danger tone for a result (<see cref="Tone"/>), never changes its footprint, and is announced as a polite status
 /// unless <see cref="IsDecorative"/> is set.
 /// </summary>
+// Under reduced motion the loading shape holds still and breathes in opacity (so it still reads as busy) and results
+// switch at once; with motion off it is still.
 [PseudoClasses(LoadingPseudoClass, SuccessPseudoClass, ErrorPseudoClass)]
 public class MorphLoader : Control
 {
@@ -76,6 +78,8 @@ public class MorphLoader : Control
 
     private readonly MorphLoaderEngine _engine = new();
     private readonly LiveLoop _loop;
+    private LiveLoop? _pulseLoop;
+    private double _pulse;
     private readonly SolidColorBrush _ink = new(Colors.Black);
     private readonly Pen[] _pens = new Pen[MorphLoaderShapes.StrokeCount];
     private readonly Point[] _points = new Point[24];
@@ -142,6 +146,10 @@ public class MorphLoader : Control
     // Test hooks.
     internal MorphLoaderEngine Engine => _engine;
     internal bool IsLooping => _loop.IsRunning;
+    internal bool IsPulsing => _pulseLoop?.IsRunning == true;
+
+    /// <summary>The opacity of the whole drawing: 1 unless the resting shape breathes under reduced motion.</summary>
+    internal double PulseOpacity => IsPulsing ? ArcBusyPulse.Opacity(_pulse) : 1;
     internal Color InkColor => _ink.Color;
 
     /// <summary>The accessible name now: the label for the current status.</summary>
@@ -250,6 +258,8 @@ public class MorphLoader : Control
                      Matrix.CreateTranslation(c, c) *
                      Matrix.CreateScale(unit, unit) *
                      Matrix.CreateTranslation((bounds.Width - side) / 2, (bounds.Height - side) / 2);
+        var opacity = PulseOpacity;
+        using (opacity < 1 ? context.PushOpacity(opacity) : default(DrawingContext.PushedState?))
         using (context.PushTransform(matrix))
         {
             var strokes = _engine.Strokes;
@@ -410,6 +420,29 @@ public class MorphLoader : Control
         {
             _loop.Stop();
         }
+        if (_level == ArcMotionLevel.Reduced && Status == MorphLoaderStatus.Loading)
+        {
+            if (_pulseLoop is null)
+            {
+                // Reduced motion drops the morph, spin and pop but keeps opacity: the still shape breathes so the loader
+                // still says "busy". A ControlTheme transition cannot loop forever, and this pauses off screen.
+                _pulseLoop = new LiveLoop(this, OnPulseFrame) { MinimumLevel = ArcMotionLevel.Reduced };
+                _pulseLoop.RunningChanged += _ => InvalidateVisual();
+            }
+            _pulseLoop.Start();
+        }
+        else
+        {
+            // A result, full motion or motion off: the drawing rests at full opacity.
+            _pulseLoop?.Stop();
+        }
+    }
+
+    private bool OnPulseFrame(double seconds)
+    {
+        _pulse = ArcBusyPulse.Advance(_pulse, seconds);
+        InvalidateVisual();
+        return true;
     }
 
     private bool OnFrame(double seconds)

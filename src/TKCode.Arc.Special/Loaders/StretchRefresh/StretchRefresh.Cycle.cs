@@ -148,9 +148,11 @@ public partial class StretchRefresh
         _ = _fillOpacity?.AnimateTo(0, MotionSpec.Tween(ArcMotionPresets.Fast, EaseOut));
         _ = _runOpacity?.AnimateTo(1, MotionSpec.Tween(ArcMotionPresets.Fast, EaseOut));
         _runTime = 0;
+        _runPulse = 0;
         if (_meter is not null)
         {
             _meter.RunPosition = 0;
+            _meter.RunPulse = 1;
         }
         _runLoop?.Start();
         _status?.ShowText(Labels.Refreshing);
@@ -169,6 +171,14 @@ public partial class StretchRefresh
         _ = _trackScale?.AnimateTo(StretchRefreshMath.ShrunkStretch, MotionSpec.Tween(ArcMotionPresets.Exit, ArcEasings.Standard));
         _ = _trackOpacity?.AnimateTo(0, MotionSpec.Tween(ArcMotionPresets.Exit, ArcEasings.Standard));
         _spinLoop?.Stop();
+        if (_meter is not null)
+        {
+            _meter.RunPulse = 1;
+        }
+        if (_spinGlyph is not null)
+        {
+            _spinGlyph.Opacity = 1;
+        }
         ShowMark(failed);
         _status?.ShowText(text);
         if (_headerIcon is not null)
@@ -253,6 +263,10 @@ public partial class StretchRefresh
     {
         _spin ??= new RotateTransform();
         _spin.Angle = 0;
+        if (_spinGlyph is not null)
+        {
+            _spinGlyph.Opacity = 1;
+        }
         return _spinGlyph ??= new ArcGlyph
         {
             Data = ArcIcons.RotateCw,

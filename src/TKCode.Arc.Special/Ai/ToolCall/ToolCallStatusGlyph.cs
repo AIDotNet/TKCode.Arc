@@ -292,6 +292,7 @@ internal sealed class ToolCallStatusGlyph : Control
         }
         context.DrawEllipse(null, _trackPen, new Point(8, 8), 6, 6);
         // s_arc: a quarter of the r = 6 circle from 12 o'clock clockwise, turned by the spin.
+        using (_spin.PushPulse(context))
         using (context.PushTransform(_spin.Turn(new Point(8, 8))))
         {
             context.DrawGeometry(null, Pen(brush, 1.75, _pens), s_arc);

@@ -149,8 +149,9 @@ Input and Output drop their indent. Below about 370px the meta goes. Wide JSON a
 
 ### Reduced motion
 
-At the Reduced and Off levels the stagger, the spinner, the shimmer travel and every spring stop: panels, rows and
-statuses change at once. Labels, announcements, focus and all content stay.
+At the Reduced and Off levels the stagger, the spinner's turn, the shimmer travel and every spring stop: panels, rows
+and statuses change at once. Under reduced motion a running row's spinner holds still and breathes in opacity, so the
+call still reads as busy. Labels, announcements, focus and all content stay.
 
 ### Content guidelines
 

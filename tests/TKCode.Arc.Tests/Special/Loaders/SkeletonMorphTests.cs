@@ -548,7 +548,7 @@ public class SkeletonMorphTests
     }
 
     [AvaloniaFact]
-    public void Reduced_motion_crossfades_without_pulse_stagger_stretch_or_blur()
+    public void Reduced_motion_keeps_the_opacity_pulse_and_crossfades_without_stagger_stretch_or_blur()
     {
         var clock = new ManualFrameClock();
         using var installed = clock.Install();
@@ -556,8 +556,11 @@ public class SkeletonMorphTests
         var window = ShowCard(card, ArcMotionLevel.Reduced);
         try
         {
+            // The pulse is opacity only, which reduced motion keeps: the skeletons still read as loading.
             Frames(clock, window, 42);
-            card.Bio.Placeholder!.Opacity.ShouldBe(1);
+            card.Region.IsPulsing.ShouldBeTrue();
+            card.Bio.Placeholder!.Opacity.ShouldBeLessThan(0.9);
+            card.Bio.Placeholder.Opacity.ShouldBeGreaterThan(0.5);
             card.Region.IsLoading = false;
             Frames(clock, window, 1);
             foreach (var block in card.Blocks)
@@ -573,6 +576,26 @@ public class SkeletonMorphTests
             Frames(clock, window, 8);
             card.Name.Placeholder.IsVisible.ShouldBeFalse();
             card.Name.ContentHost.Opacity.ShouldBe(1);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Motion_off_keeps_the_skeletons_still_and_opaque()
+    {
+        var clock = new ManualFrameClock();
+        using var installed = clock.Install();
+        var card = BuildCard(loading: true);
+        var window = ShowCard(card, ArcMotionLevel.Off);
+        try
+        {
+            Frames(clock, window, 42);
+            card.Region.IsPulsing.ShouldBeFalse();
+            card.Region.CurrentPulse.ShouldBe(1);
+            card.Bio.Placeholder!.Opacity.ShouldBe(1);
         }
         finally
         {
