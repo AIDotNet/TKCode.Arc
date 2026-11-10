@@ -60,6 +60,9 @@ public class GalleryTextSourceTests
     {
         var language = GalleryText.CurrentLanguage;
         var expected = GalleryDocs.Get("Button", language).ShouldNotBeNull();
+        // Read now, from the gallery's resources: it is put together when it is first asked for.
+        var expectedCopy = expected.CopyMarkdown;
+        expectedCopy.ShouldContain("<arc:Button");
         var path = $"Docs/Buttons/Button/{expected.Language}.md";
         var original = GalleryTexts.Source;
         var file = original.ReadAsync(path).Result.ShouldNotBeNull();
@@ -78,13 +81,101 @@ public class GalleryTextSourceTests
                 Dispatcher.UIThread.RunJobs();
                 view.Docs.Text.ShouldBe(expected.Markdown);
 
+                // The page is shown; "Copy page" waits for the files of the page's demos, each asked for once.
+                var copyPage = view.CopyPage.ShouldNotBeNull();
+                copyPage.Value.ShouldBeNull();
+                var files = GalleryDocs.DemoIds("Button", language).SelectMany(id => GalleryDemos.Get(id)!.Files).ToList();
+                files.ShouldNotBeEmpty();
+                pending.Asked.Keys.Where(k => k != path).ShouldBe(files.Select(f => f.ContentPath), ignoreOrder: true);
+                foreach (var demoFile in files)
+                {
+                    pending.Asked[demoFile.ContentPath].SetResult(original.ReadAsync(demoFile.ContentPath).Result);
+                }
+                Dispatcher.UIThread.RunJobs();
+                copyPage.Value.ShouldBe(expectedCopy);
+                var requests = pending.Requests;
+                requests.ShouldBe(1 + files.Count);
+
                 // Leaving the visual tree and coming back (as navigation does) shows the page it has, without asking again.
                 window.Content = null;
                 Dispatcher.UIThread.RunJobs();
                 window.Content = view;
                 Dispatcher.UIThread.RunJobs();
-                pending.Requests.ShouldBe(1);
+                pending.Requests.ShouldBe(requests);
                 view.Docs.Text.ShouldBe(expected.Markdown);
+                copyPage.Value.ShouldBe(expectedCopy);
+            }
+            finally
+            {
+                window.Close();
+                Dispatcher.UIThread.RunJobs();
+            }
+        }
+        finally
+        {
+            GalleryTexts.Source = original;
+        }
+    }
+
+    [AvaloniaFact]
+    public void Every_Demo_File_Is_A_Resource_Of_The_Content_Assembly()
+    {
+        var files = GalleryDemos.All.SelectMany(d => d.Files).ToList();
+        files.Count.ShouldBeGreaterThan(1000);
+        files.Where(f => !AssetLoader.Exists(new Uri($"avares://TKCode.Arc.Gallery.Content/{f.ContentPath}")))
+             .Select(f => f.Path)
+             .ShouldBeEmpty();
+
+        // Read as written: LF line endings and nothing after the last line, whatever the checkout's line endings are.
+        var variants = GalleryDemos.Get("Button.Variants").ShouldNotBeNull().Files[0];
+        variants.ContentPath.ShouldBe("Demos/Buttons/Button/Variants.axaml.txt");
+        variants.Source.ShouldStartWith("<UserControl");
+        variants.Source.ShouldNotContain("\r");
+        variants.Source.ShouldEndWith("</UserControl>");
+        variants.ReadAsync().Result.ShouldBe(variants.Source);
+    }
+
+    [AvaloniaFact]
+    public void A_Demo_File_That_Arrives_Later_Fills_The_Code_Tab_And_A_Missing_One_Is_Asked_Again()
+    {
+        var demo = GalleryDemos.Get("DateRangePicker.Booking").ShouldNotBeNull();
+        var original = GalleryTexts.Source;
+        var sources = demo.Files.Select(f => f.Source).ToList();
+        sources.Count.ShouldBe(2);
+        var pending = new PendingSource();
+        GalleryTexts.Source = pending;
+        try
+        {
+            var view = new GalleryDemoView(demo.Id);
+            var window = TestHelpers.Show(view);
+            try
+            {
+                view.Realize();
+                Dispatcher.UIThread.RunJobs();
+                pending.Requests.ShouldBe(0, "the source is read when the Code tab is opened");
+
+                view.ShowCode(true);
+                Dispatcher.UIThread.RunJobs();
+                view.Code.Select(c => c.FileName).ShouldBe(demo.Files.Select(f => f.Path));
+                view.Code.ShouldAllBe(c => string.IsNullOrEmpty(c.Code));
+                pending.Asked.Keys.ShouldBe(demo.Files.Select(f => f.ContentPath), ignoreOrder: true);
+
+                // The first file arrives with CRLF line endings; the second cannot be read.
+                pending.Asked[demo.Files[0].ContentPath].SetResult(sources[0].Replace("\n", "\r\n") + "\r\n");
+                pending.Asked[demo.Files[1].ContentPath].SetResult(null);
+                Dispatcher.UIThread.RunJobs();
+                view.Code[0].Code.ShouldBe(sources[0]);
+                view.Code[1].Code.ShouldBeNullOrEmpty();
+
+                // Opening the tab again asks for the missing file only.
+                pending.Asked.Remove(demo.Files[1].ContentPath);
+                view.ShowCode(false);
+                view.ShowCode(true);
+                Dispatcher.UIThread.RunJobs();
+                pending.Requests.ShouldBe(3);
+                pending.Asked[demo.Files[1].ContentPath].SetResult(sources[1]);
+                Dispatcher.UIThread.RunJobs();
+                view.Code[1].Code.ShouldBe(sources[1]);
             }
             finally
             {

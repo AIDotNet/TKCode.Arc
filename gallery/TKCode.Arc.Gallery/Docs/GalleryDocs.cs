@@ -111,7 +111,7 @@ public static partial class GalleryDocs
         var shown = WithScreenshots(body, $"Docs/{page.Folder}");
         return new GalleryDoc(className, page.Language, language, page.Title, page.Summary,
             DemoTag().Replace(shown, match => DemoBlock(className, match, shown)),
-            DemoTag().Replace(body, match => DemoSource(className, match.Groups[1].Value)),
+            body,
             page.IsOutdated);
     }
 
@@ -199,11 +199,67 @@ public static partial class GalleryDocs
         return $"<demo name=\"{DemoId(className, match.Groups[1].Value)}\"{(hero ? " hero=\"true\"" : string.Empty)}></demo>";
     }
 
-    /// <summary>A demo in copied Markdown: its files as code blocks (AXAML, then the code-behind).</summary>
-    private static string DemoSource(string className, string name)
-        => GalleryDemos.Get(DemoId(className, name)) is { } demo
-            ? string.Join("\n\n", demo.Files.Select(f => $"```{(f.Language == "axaml" ? "xml" : f.Language)}\n{f.Source}\n```"))
-            : string.Empty;
+    /// <summary><paramref name="body"/> with each demo replaced by its files as code blocks (AXAML, then the code-behind).</summary>
+    internal static string WithDemoSources(string className, string body)
+        => DemoTag().Replace(body, match => GalleryDemos.Get(DemoId(className, match.Groups[1].Value)) is { } demo
+            ? string.Join("\n\n", demo.Files.Select(f => CodeBlockOf(f, f.Source)))
+            : string.Empty);
+
+    /// <summary>
+    /// <see cref="WithDemoSources"/> once the files have been read (all asked for at once, each read once); null when one
+    /// cannot be read.
+    /// </summary>
+    internal static ValueTask<string?> WithDemoSourcesAsync(string className, string body)
+    {
+        var reads = new List<(GalleryDemoFile File, ValueTask<string?> Text)>();
+        foreach (Match match in DemoTag().Matches(body))
+        {
+            if (GalleryDemos.Get(DemoId(className, match.Groups[1].Value)) is { } demo)
+            {
+                foreach (var file in demo.Files)
+                {
+                    if (!reads.Exists(r => ReferenceEquals(r.File, file)))
+                    {
+                        reads.Add((file, file.ReadAsync()));
+                    }
+                }
+            }
+        }
+        if (reads.TrueForAll(r => r.Text.IsCompletedSuccessfully))
+        {
+            var texts = new Dictionary<GalleryDemoFile, string?>(ReferenceEqualityComparer.Instance);
+            foreach (var (file, text) in reads)
+            {
+                texts[file] = text.Result;
+            }
+            return new ValueTask<string?>(Fill(className, body, texts));
+        }
+        return Await(className, body, reads);
+
+        static async ValueTask<string?> Await(string className, string body, List<(GalleryDemoFile File, ValueTask<string?> Text)> reads)
+        {
+            var texts = new Dictionary<GalleryDemoFile, string?>(ReferenceEqualityComparer.Instance);
+            foreach (var (file, text) in reads)
+            {
+                texts[file] = await text;
+            }
+            return Fill(className, body, texts);
+        }
+
+        static string? Fill(string className, string body, Dictionary<GalleryDemoFile, string?> texts)
+        {
+            if (texts.ContainsValue(null))
+            {
+                return null;
+            }
+            return DemoTag().Replace(body, match => GalleryDemos.Get(DemoId(className, match.Groups[1].Value)) is { } demo
+                ? string.Join("\n\n", demo.Files.Select(f => CodeBlockOf(f, texts[f]!)))
+                : string.Empty);
+        }
+    }
+
+    private static string CodeBlockOf(GalleryDemoFile file, string source)
+        => $"```{(file.Language == "axaml" ? "xml" : file.Language)}\n{source}\n```";
 
     private static string DemoId(string className, string name) => name.Contains('.', StringComparison.Ordinal) ? name : $"{className}.{name}";
 

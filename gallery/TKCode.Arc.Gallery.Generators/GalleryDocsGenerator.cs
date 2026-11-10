@@ -19,7 +19,8 @@ namespace TKCode.Arc.Gallery.Generators;
 /// <item>the API description translations (<c>Docs/Api/&lt;language&gt;.xlf</c>, <c>GalleryDocKind=ApiTranslation</c>).</item>
 /// </list>
 /// It also builds <c>GalleryDemoData</c>: every demo (<c>Demos/&lt;Category&gt;/&lt;Component&gt;/&lt;Name&gt;.axaml</c> and its
-/// code-behind), with the files the demo's Code tab shows.
+/// code-behind), with the paths of the files the demo's Code tab shows (not their text, which the gallery reads when
+/// it is shown, like a page's Markdown).
 /// Outdated or missing translations, unknown types or demos and undocumented members are reported as GDOC diagnostics.
 /// </summary>
 [Generator(LanguageNames.CSharp)]
@@ -149,12 +150,13 @@ public sealed class GalleryDocsGenerator : IIncrementalGenerator
             var (demo, codeBehind) = entry;
             code.Append("        new(").Append(Literal(demo.Component)).Append(", ").Append(Literal(demo.Name))
                 .Append(", static () => new global::").Append(demo.ClassName).AppendLine("(),");
-            code.Append("            [new(").Append(Literal(demo.RelativePath)).Append(", \"axaml\", ").Append(Literal(demo.Source)).Append(')');
+            // The files' paths only: their text is read when a Code tab or "Copy page" needs it (GalleryDemoFile), from the
+            // content assembly or, in the WebAssembly host, from the server.
+            code.Append("            [new(").Append(Literal(demo.RelativePath)).Append(", \"axaml\")");
             if (codeBehind is not null)
             {
                 code.AppendLine(",");
-                code.Append("             new(").Append(Literal(demo.RelativePath + ".cs")).Append(", \"cs\", ")
-                    .Append(Literal(DemoFile.TextOf(codeBehind))).Append(')');
+                code.Append("             new(").Append(Literal(demo.RelativePath + ".cs")).Append(", \"cs\")");
             }
             code.AppendLine("]),");
         });

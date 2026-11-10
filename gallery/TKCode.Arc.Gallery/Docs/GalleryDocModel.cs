@@ -54,9 +54,37 @@ public sealed record GalleryScreenshot(string Name, string Caption, Uri Light);
 /// <summary>A page ready to show: Markdown with its API references and demos filled in, in <see cref="Language"/>.</summary>
 /// <param name="RequestedLanguage">The language asked for; the page falls back to en-US when it has no translation.</param>
 /// <param name="Markdown">What the page shows: each demo is a <c>&lt;demo&gt;</c> block that renders live.</param>
-/// <param name="CopyMarkdown">What "Copy page" copies: each demo is its files (AXAML, then code-behind) in code blocks.</param>
+/// <param name="CopySource">The page before its demos are filled in: what <see cref="CopyMarkdown"/> is made from.</param>
 public sealed record GalleryDoc(string ClassName, string Language, string RequestedLanguage, string Title, string Summary,
-                                string Markdown, string CopyMarkdown, bool IsOutdated)
+                                string Markdown, string CopySource, bool IsOutdated)
 {
+    private string? _copyMarkdown;
+
+    /// <summary>
+    /// What "Copy page" copies: each demo is its files (AXAML, then code-behind) in code blocks. For callers that cannot
+    /// wait (tests, tools): it fails when <see cref="GalleryTexts.Source"/> fetches the demos' files.
+    /// </summary>
+    public string CopyMarkdown => _copyMarkdown ??= GalleryDocs.WithDemoSources(ClassName, CopySource);
+
+    /// <summary>
+    /// <see cref="CopyMarkdown"/> once the demos' files have been read: at once from the gallery's resources, later when
+    /// the WebAssembly host fetches them. Null when one of them cannot be read.
+    /// </summary>
+    public ValueTask<string?> CopyMarkdownAsync()
+    {
+        if (_copyMarkdown is { } ready)
+        {
+            return new ValueTask<string?>(ready);
+        }
+        var pending = GalleryDocs.WithDemoSourcesAsync(ClassName, CopySource);
+        if (pending.IsCompletedSuccessfully)
+        {
+            return new ValueTask<string?>(_copyMarkdown = pending.Result);
+        }
+        return Await(pending);
+
+        async ValueTask<string?> Await(ValueTask<string?> filling) => _copyMarkdown = await filling;
+    }
+
     public bool IsFallback => !string.Equals(Language, RequestedLanguage, StringComparison.OrdinalIgnoreCase);
 }

@@ -2,10 +2,42 @@ using Avalonia.Controls;
 
 namespace TKCode.Arc.Gallery.Docs;
 
-/// <summary>A file of a demo as its Code tab shows it.</summary>
+/// <summary>
+/// A file of a demo as its Code tab shows it. Its text is not part of the gallery assembly: it is read from
+/// <see cref="GalleryTexts"/> when a Code tab or "Copy page" needs it (every demo's source was several megabytes that a
+/// visitor who looks at a few examples never read).
+/// </summary>
 /// <param name="Path">Relative to the gallery project, such as <c>Demos/Buttons/Button/Variants.axaml</c>.</param>
 /// <param name="Language">The highlighting language: <c>axaml</c> or <c>cs</c>.</param>
-public sealed record GalleryDemoFile(string Path, string Language, string Source);
+public sealed record GalleryDemoFile(string Path, string Language)
+{
+    /// <summary>
+    /// Where <see cref="GalleryTexts"/> has the file: its path plus <c>.txt</c>, so the build does not compile it as XAML
+    /// or C# a second time and a server sends it as text.
+    /// </summary>
+    public string ContentPath => Path + ".txt";
+
+    /// <summary>
+    /// The file's text for callers that cannot wait (tests, tools); empty when it cannot be read. It fails when
+    /// <see cref="GalleryTexts.Source"/> fetches the text: a view uses <see cref="ReadAsync"/>.
+    /// </summary>
+    public string Source => Normalize(GalleryTexts.Read(ContentPath)) ?? string.Empty;
+
+    /// <summary>
+    /// The file's text, or null when it cannot be read: at once from the gallery's resources, later when the WebAssembly
+    /// host fetches it.
+    /// </summary>
+    public ValueTask<string?> ReadAsync()
+    {
+        var pending = GalleryTexts.Source.ReadAsync(ContentPath);
+        return pending.IsCompletedSuccessfully ? new ValueTask<string?>(Normalize(pending.Result)) : Await(pending);
+
+        static async ValueTask<string?> Await(ValueTask<string?> pending) => Normalize(await pending);
+    }
+
+    // As the file is written, with LF line endings and no blank lines after it.
+    private static string? Normalize(string? text) => text?.Replace("\r\n", "\n", StringComparison.Ordinal).TrimEnd('\n');
+}
 
 /// <summary>
 /// A live example: <c>Demos/&lt;Category&gt;/&lt;Component&gt;/&lt;Name&gt;.axaml</c> and its code-behind, if it has one.

@@ -54,6 +54,7 @@ public sealed class GalleryPageView : Grid
     // The docs page.
     private readonly Markdown? _docs;
     private readonly CopyButton? _copyPage;
+    private bool _copyLoading;
     private MarkdownView? _docsView;
     private DocumentSnapshot? _outlineSnapshot;
     // The language whose docs page is shown or on its way: the constructor, attaching and attaching again all refresh, and
@@ -104,6 +105,9 @@ public sealed class GalleryPageView : Grid
 
     /// <summary>The docs page's Markdown (null on a page with a plain body).</summary>
     public Markdown? Docs => _docs;
+
+    /// <summary>The "Copy page" button of a docs page (tests).</summary>
+    internal CopyButton? CopyPage => _copyPage;
 
     /// <summary>The titles "On this page" lists.</summary>
     public IReadOnlyList<string> SectionTitles { get; private set; } = [];
@@ -385,10 +389,19 @@ public sealed class GalleryPageView : Grid
             docs.Text = "> " + GalleryText.Get(GalleryShellLangResourceKind.PageLoadFailed);
             _docsLanguage = null;
         }
-        else if (docs.Text != doc.Markdown)
+        else if (docs.Text != doc.Markdown || (copyPage.Value is null && !_copyLoading))
         {
             docs.Text = doc.Markdown;
-            copyPage.Value = doc.CopyMarkdown;
+            // "Copy page" holds the demos' files too: at hand in the gallery's resources, fetched by the WebAssembly host
+            // (the button copies once they are here; a page whose files cannot be read is asked again on the next refresh).
+            copyPage.Value = null;
+            _copyLoading = true;
+            var copy = await doc.CopyMarkdownAsync();
+            _copyLoading = false;
+            if (language == _docsLanguage && docs.Text == doc.Markdown)
+            {
+                copyPage.Value = copy;
+            }
         }
     }
 

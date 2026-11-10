@@ -17,6 +17,14 @@
         <AvaloniaResource Include="../TKCode.Arc.Gallery/Guides/**/*.md" Link="Guides/%(RecursiveDir)%(Filename)%(Extension)" />
     </ItemGroup>
 
+    <!-- The source of every demo, which its Code tab and "Copy page" show (GalleryDemoFile): Demos/<Category>/<Component>/<Name>.axaml
+         and its code-behind, each under its own path plus .txt, so they are plain text here and not compiled as XAML again.
+         They were string constants of the gallery assembly: several megabytes that every host loaded at startup. -->
+    <ItemGroup>
+        <AvaloniaResource Include="../TKCode.Arc.Gallery/Demos/**/*.axaml" Link="Demos/%(RecursiveDir)%(Filename)%(Extension).txt" />
+        <AvaloniaResource Include="../TKCode.Arc.Gallery/Demos/**/*.axaml.cs" Link="Demos/%(RecursiveDir)%(Filename)%(Extension).txt" />
+    </ItemGroup>
+
     <!-- The outlines of the Choropleth explorer demos (public domain: US Census cartographic boundaries, Natural Earth admin-1),
          read and parsed on demand by ChoroplethExplorerDemoData; the block itself contains no map. The WebAssembly host serves
          them as files (wwwroot/content/Demos/...) and reads one when its area is first shown. -->

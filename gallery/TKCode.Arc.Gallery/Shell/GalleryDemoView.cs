@@ -230,6 +230,17 @@ public sealed class GalleryDemoView : StackPanel
                 _code = CreateCode(_demo!);
                 _body.Children.Add(_code);
             }
+            else if (code)
+            {
+                // A file that could not be read the last time is asked for again.
+                foreach (var block in Code)
+                {
+                    if (block.Tag is GalleryDemoFile file)
+                    {
+                        Fill(block, file);
+                    }
+                }
+            }
             _stage.IsVisible = !code;
             if (_code is not null)
             {
@@ -560,7 +571,6 @@ public sealed class GalleryDemoView : StackPanel
         {
             var code = new CodeBlock
             {
-                Code = file.Source,
                 Language = file.Language,
                 FileName = file.Path,
                 ShowLineNumbers = true,
@@ -570,8 +580,27 @@ public sealed class GalleryDemoView : StackPanel
             GalleryText.Bind(code, CodeBlock.CopyLabelProperty, GalleryShellLangResourceKind.CopyCode);
             GalleryText.Bind(code, CodeBlock.ShowAllLinesFormatProperty, GalleryShellLangResourceKind.ShowAllLines);
             GalleryText.Bind(code, CodeBlock.ShowFewerLinesLabelProperty, GalleryShellLangResourceKind.ShowFewerLines);
+            Fill(code, file);
             files.Children.Add(code);
         }
         return files;
+    }
+
+    /// <summary>
+    /// Shows <paramref name="file"/> in <paramref name="code"/>: at once from the gallery's resources, when it arrives in
+    /// the WebAssembly host. A file that cannot be read stays marked on the viewer, to be asked for again.
+    /// </summary>
+    private static async void Fill(CodeBlock code, GalleryDemoFile file)
+    {
+        code.Tag = null;
+        var text = await file.ReadAsync();
+        if (text is null)
+        {
+            code.Tag = file;
+        }
+        else
+        {
+            code.Code = text;
+        }
     }
 }
