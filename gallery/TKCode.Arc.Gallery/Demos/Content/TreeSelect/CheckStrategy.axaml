@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TreeSelectCheckStrategyDemo">
+    <StackPanel HorizontalAlignment="Center" Width="380" Spacing="12">
+        <arc:SegmentedControl x:Name="Strategy" HorizontalAlignment="Center" SelectedValue="Leaves">
+            <arc:SegmentedOption Value="Leaves" Label="Leaves" />
+            <arc:SegmentedOption Value="Parents" Label="Parents" />
+            <arc:SegmentedOption Value="All" Label="All" />
+        </arc:SegmentedControl>
+        <arc:TreeSelect x:Name="People"
+                        Label="Invite"
+                        Placeholder="Select teams or people"
+                        SelectionMode="Multiple"
+                        ExpandDepth="-1"
+                        MaxVisibleChips="2" />
+        <TextBlock x:Name="Result" FontSize="12" Opacity="0.7" TextWrapping="Wrap" />
+    </StackPanel>
+</UserControl>

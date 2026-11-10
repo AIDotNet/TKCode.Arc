@@ -12,6 +12,7 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 
 ### Added
 
+- `TreeSelect`: a select field over a tree that picks one node or checks several, with three-state checkboxes that check whole branches, a `CheckStrategy` for what is reported (leaves, parents or all), a search typed in the field that keeps the path to every match, chips, and virtualized rows for thousands of nodes (#80).
 - `Sticky`: attached properties that keep any element of a scrolling page at the top once it scrolls there, like CSS `position: sticky`, with an offset, an `IsStuck` state to style and a `StuckChanged` event; it never leaves its parent, so group headers push each other away (#84).
 - `Rating`: a row of stars for a score, with half stars, clearing, a read-only display, a rolling word for the value and custom shapes (`Icon`, `EmptyIcon`).
 - `ToggleGroup` and `SlotText`: a flat row of toggle buttons, with one gliding fill in single mode and per-option fills that join between pressed neighbours in multiple mode; and text and numbers that spin into their new value on staggered reels.

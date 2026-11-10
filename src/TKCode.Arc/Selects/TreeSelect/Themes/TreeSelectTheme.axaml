@@ -1,0 +1,221 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.TreeSelectTheme">
+    <ControlTheme x:Key="{x:Type arc:TreeSelect}" TargetType="arc:TreeSelect">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TreeSelect">
+                <StackPanel Spacing="{arc:ArcDesignTokenResource Space2}">
+                    <TextBlock Name="PART_Label"
+                               Text="{TemplateBinding Label}"
+                               IsVisible="{TemplateBinding Label, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                    <Panel>
+                        <TextBlock Name="PART_Announcer"
+                                   Width="1"
+                                   Height="1"
+                                   Opacity="0"
+                                   IsHitTestVisible="False"
+                                   HorizontalAlignment="Left"
+                                   VerticalAlignment="Top"
+                                   AutomationProperties.LiveSetting="Polite" />
+                        <Border Name="PART_Trigger"
+                                MinHeight="{arc:ArcDesignTokenResource ControlSizeMD}"
+                                Padding="{arc:TreeSelectTokenResource TriggerPadding}"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
+                                Background="{arc:ArcDesignTokenResource Surface}"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                Cursor="Hand">
+                            <DockPanel>
+                                <arc:ArcGlyph Name="PART_Chevron"
+                                              DockPanel.Dock="Right"
+                                              Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                              Size="16"
+                                              Margin="12,0,0,0"
+                                              VerticalAlignment="Center"
+                                              RenderTransformOrigin="50%,50%"
+                                              RenderTransform="rotate(0deg)"
+                                              Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                <arc:PresenceHost Name="PART_ClearHost"
+                                                  DockPanel.Dock="Right"
+                                                  Mode="Pop"
+                                                  EnterScale="0.6"
+                                                  Spring="Snappy"
+                                                  Margin="8,0,0,0"
+                                                  VerticalAlignment="Center">
+                                    <Button Name="PART_Clear"
+                                            Width="{arc:TreeSelectTokenResource ClearButtonSize}"
+                                            Height="{arc:TreeSelectTokenResource ClearButtonSize}"
+                                            Padding="0"
+                                            Background="Transparent"
+                                            Cursor="Hand"
+                                            ClipToBounds="False">
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Panel>
+                                                    <Border Name="PART_ClearRing"
+                                                            Margin="-3"
+                                                            CornerRadius="{arc:TreeSelectTokenResource ClearRingRadius}"
+                                                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                                                            BorderBrush="{TemplateBinding BorderBrush}" />
+                                                    <Border Background="{TemplateBinding Background}" CornerRadius="{arc:TreeSelectTokenResource ClearGlyphRadius}">
+                                                        <arc:ArcGlyph Data="{x:Static arc:SelectGlyphs.X}"
+                                                                      Size="16"
+                                                                      HorizontalAlignment="Center"
+                                                                      VerticalAlignment="Center"
+                                                                      Foreground="{TemplateBinding Foreground}" />
+                                                    </Border>
+                                                </Panel>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                </arc:PresenceHost>
+                                <Panel MinHeight="{arc:TreeSelectTokenResource ValueMinHeight}" VerticalAlignment="Center" ClipToBounds="True">
+                                    <arc:SelectValueRoll Name="PART_Value"
+                                                         VerticalAlignment="Center"
+                                                         EnterTravel="0.35"
+                                                         ExitTravel="0.3"
+                                                         Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                         PlaceholderForeground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    <arc:TreeSelectValueRow Name="PART_ValueRow"
+                                                            Spacing="{arc:TreeSelectTokenResource ChipSpacing}"
+                                                            SearchMinWidth="{arc:TreeSelectTokenResource SearchMinWidth}">
+                                        <arc:MultiSelectChipRow Name="PART_Chips"
+                                                                IsVisible="False"
+                                                                HorizontalAlignment="Left"
+                                                                VerticalAlignment="Center"
+                                                                ChipMaxWidth="{arc:TreeSelectTokenResource ChipMaxWidth}"
+                                                                ChipPadding="{arc:TreeSelectTokenResource ChipPadding}"
+                                                                ChipSpacing="{arc:TreeSelectTokenResource ChipSpacing}"
+                                                                ChipFontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                                ChipBackground="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                                                ChipBorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                                                ChipForeground="{arc:ArcDesignTokenResource Foreground}"
+                                                                MoreForeground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                        <Decorator Name="PART_SearchHost" VerticalAlignment="Center" />
+                                    </arc:TreeSelectValueRow>
+                                </Panel>
+                            </DockPanel>
+                        </Border>
+                        <arc:ArcPopup Name="PART_Popup"
+                                      Placement="Bottom"
+                                      MarginToAnchor="4"
+                                      EnterOffset="6"
+                                      EnterScale="0.97"
+                                      IsExitInstant="True"
+                                      IsLightDismissEnabled="True"
+                                      TakesFocusFromNativeControl="False"
+                                      WindowManagerAddShadowHint="False" />
+                    </Panel>
+                    <TextBlock Name="PART_Description"
+                               Text="{TemplateBinding Description}"
+                               IsVisible="{TemplateBinding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                               TextWrapping="Wrap"
+                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="MinWidth" Value="200" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+
+        <!-- Row colors and metrics of the self-drawn menu rows. -->
+        <Setter Property="RowForeground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="MutedForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="IconForeground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="CheckOnBrush" Value="{arc:ArcDesignTokenResource ControlOn}" />
+        <Setter Property="CheckGlyphBrush" Value="{arc:ArcDesignTokenResource ControlGlyph}" />
+        <Setter Property="CheckBorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="CheckSurfaceBrush" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="MatchBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="HighlightBrush" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="RowHeight" Value="{arc:TreeSelectTokenResource RowHeight}" />
+        <Setter Property="RowGap" Value="{arc:TreeSelectTokenResource RowGap}" />
+        <Setter Property="RowRadius" Value="{arc:TreeSelectTokenResource RowRadius}" />
+        <Setter Property="IndentWidth" Value="{arc:TreeSelectTokenResource IndentWidth}" />
+        <Setter Property="RowInlinePadding" Value="{arc:TreeSelectTokenResource RowInlinePadding}" />
+        <Setter Property="ContentGap" Value="{arc:TreeSelectTokenResource ContentGap}" />
+        <Setter Property="CheckboxSize" Value="{arc:TreeSelectTokenResource CheckboxSize}" />
+        <Setter Property="CheckboxRadius" Value="{arc:TreeSelectTokenResource CheckboxRadius}" />
+        <Setter Property="CheckStrokeThickness" Value="{arc:TreeSelectTokenResource CheckStrokeThickness}" />
+        <Setter Property="IconSize" Value="{arc:TreeSelectTokenResource IconSize}" />
+        <Setter Property="RowDisabledOpacity" Value="{arc:TreeSelectTokenResource RowDisabledOpacity}" />
+        <Setter Property="MatchRadius" Value="{arc:TreeSelectTokenResource MatchRadius}" />
+
+        <!-- Hover, press and open answer in color only: the trigger anchors the menu and never scales. -->
+        <Style Selector="^ /template/ Border#PART_Trigger:pointerover">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Trigger:pointerover arc|MultiSelectChipRow">
+            <Setter Property="ChipBackground" Value="{arc:ArcDesignTokenResource Surface}" />
+        </Style>
+        <Style Selector="^:pressed /template/ Border#PART_Trigger, ^:open /template/ Border#PART_Trigger">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:open /template/ arc|MultiSelectChipRow#PART_Chips">
+            <Setter Property="ChipBackground" Value="{arc:ArcDesignTokenResource Surface}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_Trigger">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:open /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="RenderTransform" Value="rotate(180deg)" />
+        </Style>
+        <Style Selector="^ /template/ Button#PART_Clear">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+        </Style>
+        <Style Selector="^ /template/ Button#PART_Clear:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        </Style>
+        <Style Selector="^ /template/ Button#PART_Clear:focus-visible">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+        </Style>
+        <Style Selector="^:readonly /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Opacity" Value="0.5" />
+        </Style>
+        <Style Selector="^:disabled /template/ Border#PART_Trigger">
+            <Setter Property="Opacity" Value="{arc:TreeSelectTokenResource DisabledOpacity}" />
+            <Setter Property="Cursor" Value="No" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ Border#PART_Trigger">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Background" />
+                        <arc:ArcBrushTransition Property="BorderBrush" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Button#PART_Clear">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Background" />
+                        <arc:ArcBrushTransition Property="Foreground" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

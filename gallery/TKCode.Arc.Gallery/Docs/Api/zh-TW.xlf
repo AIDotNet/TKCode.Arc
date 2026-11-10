@@ -36964,6 +36964,138 @@
         <source>Number of selected rows in the right list.</source>
         <target>右側清單中選取的列數。</target>
       </trans-unit>
+      <trans-unit id="TreeSelect">
+        <source>A select field over a tree: pick one node, or check several with three-state checkboxes, in a dropdown that shows the hierarchy as an indented, virtualized tree (only the visible rows are built, so thousands of nodes stay fast). Typing in the field filters the tree, keeps every ancestor of a match, opens down to it and marks the matched text. The field, menu surface and clear button follow `Cascader`; the chips of the multiple mode follow `MultiSelect`; the rows follow `TreeView`; the checkboxes draw like `Checkbox`. Nodes are any objects: `ChildrenSelector` gives the children, `TextSelector` the label and `ValueSelector` the value, which must be unique across the tree. Everything goes through delegates, so nothing is reflected. Checking a parent checks its enabled descendants; a parent whose children are partly checked shows a dash. Disabled nodes keep their state when a parent changes. `CheckStrategy` decides which checked nodes `SelectedItems` and `SelectedValues` report. Keyboard: Enter, Space and Down open; typing searches; Up and Down move the highlight, Right opens a parent or enters it, Left closes it or goes to the parent, Home and End jump; Enter picks (single) or toggles the check (multiple), Space toggles the check while the search is empty; Escape clears the search, then closes; Backspace in an empty search removes the last chip.</source>
+        <target>樹上的選擇欄位：在下拉選單中選擇一個節點，或用三態核取方塊勾選多個節點；選單以縮排、虛擬化的樹顯示層級（只建立可見的列，數千個節點也流暢）。在欄位中輸入會篩選樹，保留每個符合項目的所有祖先、展開到符合處並標示符合的文字。欄位、選單表面和清除按鈕與 `Cascader` 一致；多選模式的標籤與 `MultiSelect` 一致；列與 `TreeView` 一致；核取方塊的繪製與 `Checkbox` 一致。節點可以是任意物件：`ChildrenSelector` 提供子節點，`TextSelector` 提供標籤，`ValueSelector` 提供值，值在整棵樹中必須唯一。一切都透過委派完成，不使用反射。勾選父節點會勾選其可用的子孫；子節點部分勾選的父節點顯示短橫線。父節點變化時停用節點保持原狀態。`CheckStrategy` 決定 `SelectedItems` 與 `SelectedValues` 回報哪些已勾選的節點。鍵盤：Enter、Space 與 Down 開啟；輸入字元即搜尋；Up 與 Down 移動醒目提示，Right 展開父節點或進入其中，Left 收合或回到父節點，Home 與 End 跳到兩端；Enter 選取（單選）或切換勾選（多選），搜尋為空時 Space 切換勾選；Escape 先清除搜尋再關閉；搜尋為空時 Backspace 刪除最後一個標籤。</target>
+      </trans-unit>
+      <trans-unit id="TreeSelect.CheckStrategy">
+        <source>Which checked nodes a multi-select field reports: leaves only, fully checked parents in place of their subtree, or all.</source>
+        <target>多選欄位回報哪些已勾選的節點：只回報葉節點、以全選的父節點代替其子樹，或全部回報。</target>
+      </trans-unit>
+      <trans-unit id="TreeSelect.ChildrenSelector">
+        <source>Children of a node; same shape as the one of `Cascader` and `TreeView`. Null or empty means a leaf.</source>
+        <target>節點的子節點；簽章與 `Cascader`、`TreeView` 的相同。為 null 或空表示葉節點。</target>
+      </trans-unit>
+      <trans-unit id="TreeSelect.Description">
+        <source>Muted hint under the trigger; also the accessible help text.</source>
+        <target>觸發器下方的淡化提示；也是協助工具說明文字。</target>
+      </trans-unit>
+      <trans-unit id="TreeSelect.DisabledSelector">
+        <source>Returns true for nodes that are shown dimmed and cannot be picked or checked; a disabled parent still opens.</source>
+        <target>對顯示為淡化、不能選取或勾選的節點傳回 true；停用的父節點仍可展開。</target>
+      </trans-unit>
+      <trans-unit id="TreeSelect.ExpandDepth">
+        <source>Levels open when the data arrives: 0 keeps every parent closed, 1 opens the roots, -1 opens everything.</source>
+        <target>資料到達時展開的層數：0 保持所有父節點收合，1 展開根節點，-1 全部展開。</target>
+      </trans-unit>
+      <trans-unit id="TreeSelect.FilterPredicate">
+        <source>Returns true when a node matches the search text; when null, a node matches when its label contains the text, ignoring case.</source>
+        <target>節點符合搜尋文字時傳回 true；為 null 時，標籤包含該文字（不區分大小寫）即符合。</target>
+      </trans-unit>
+      <trans-unit id="TreeSelect.IconSelector">
+        <source>Optional icon of a node (24x24 stroked glyph, drawn at 16px before the label); no icon when null.</source>
+        <target>節點的選用圖示（24x24 描邊圖形，以 16px 繪製在標籤前）；為 null 時沒有圖示。</target>
+      </trans-unit>
+      <trans-unit id="TreeSelect.IsClearable">
+        <source>Whether a clear button shows while something is selected.</source>
+        <target>有選取項目時是否顯示清除按鈕。</target>
+      </trans-unit>
+      <trans-unit id="TreeSelect.IsOpen">
+        <source>Whether the menu is open (two-way).</source>
+        <target>選單是否開啟（雙向）。</target>
+      </trans-unit>
+      <trans-unit id="TreeSelect.IsReadOnly">
+        <source>The menu opens for looking, but the selection cannot be changed or cleared.</source>
+        <target>選單可以開啟檢視，但選擇不能變更或清除。</target>
+      </trans-unit>
+      <trans-unit id="TreeSelect.IsSearchable">
+        <source>Whether typing in the open field filters the tree.</source>
+        <target>在開啟的欄位中輸入是否篩選樹。</target>
+      </trans-unit>
+      <trans-unit id="TreeSelect.ItemsSource">
+        <source>The root nodes. Inline `TreeViewItem` nodes need no selectors: their header, items, icon and disabled state are read.</source>
+        <target>根節點。內嵌的 `TreeViewItem` 節點不需要選擇器：會讀取其標題、子項目、圖示和停用狀態。</target>
+      </trans-unit>
+      <trans-unit id="TreeSelect.Label">
+        <source>Visible label above the trigger; also the accessible name.</source>
+        <target>觸發器上方的可見標籤；也是協助工具名稱。</target>
+      </trans-unit>
+      <trans-unit id="TreeSelect.LeafOnly">
+        <source>In single mode, only leaves can be picked: a click on a parent opens or closes it.</source>
+        <target>單選模式下只能選取葉節點：點選父節點只會展開或收合它。</target>
+      </trans-unit>
+      <trans-unit id="TreeSelect.MaxDropDownHeight">
+        <source>Tallest the menu gets before the tree scrolls.</source>
+        <target>選單在樹開始捲動之前的最大高度。</target>
+      </trans-unit>
+      <trans-unit id="TreeSelect.MaxVisibleChips">
+        <source>Chips shown in a multi-select field before the rest fold into "+N".</source>
+        <target>多選欄位中顯示的標籤數，其餘摺疊為 "+N"。</target>
+      </trans-unit>
+      <trans-unit id="TreeSelect.PathSeparator">
+        <source>Text between the nodes of the full path.</source>
+        <target>完整路徑中節點之間的文字。</target>
+      </trans-unit>
+      <trans-unit id="TreeSelect.Placeholder">
+        <source>Muted text shown while nothing is selected.</source>
+        <target>未選擇任何內容時顯示的淡化文字。</target>
+      </trans-unit>
+      <trans-unit id="TreeSelect.SearchText">
+        <source>The search text typed in the field (two-way); cleared when the menu closes.</source>
+        <target>在欄位中輸入的搜尋文字（雙向）；選單關閉時清除。</target>
+      </trans-unit>
+      <trans-unit id="TreeSelect.SelectedItem">
+        <source>The selected node of a single-select field (two-way), or null.</source>
+        <target>單選欄位選取的節點（雙向），或 null。</target>
+      </trans-unit>
+      <trans-unit id="TreeSelect.SelectedItems">
+        <source>The selected nodes in tree order: the checked nodes that `CheckStrategy` reports, or the single selected node.</source>
+        <target>依樹的順序排列的選取節點：`CheckStrategy` 回報的已勾選節點，或單選時選取的節點。</target>
+      </trans-unit>
+      <trans-unit id="TreeSelect.SelectedText">
+        <source>The text of the field: the selected node's label or full path (single), or the checked labels joined by commas (multiple).</source>
+        <target>欄位顯示的文字：選取節點的標籤或完整路徑（單選），或以逗號連接的已勾選標籤（多選）。</target>
+      </trans-unit>
+      <trans-unit id="TreeSelect.SelectedValue">
+        <source>Value of the selected node of a single-select field (two-way). A value the data does not contain (yet) is kept and resolved when the data arrives.</source>
+        <target>單選欄位選取節點的值（雙向）。資料中（尚）不存在的值會保留，並在資料到達時解析。</target>
+      </trans-unit>
+      <trans-unit id="TreeSelect.SelectedValues">
+        <source>Values of `SelectedItems` (two-way). Setting it checks the nodes with these values (a parent's value checks its enabled descendants); values written before the data arrives are applied when it does.</source>
+        <target>`SelectedItems` 的值（雙向）。設定它會勾選具有這些值的節點（父節點的值會勾選其可用的子孫）；資料到達之前寫入的值會在資料到達時生效。</target>
+      </trans-unit>
+      <trans-unit id="TreeSelect.SelectionChanged">
+        <source>Raised when `SelectedItems` changes: by the user, by a binding or by clearing.</source>
+        <target>`SelectedItems` 變化時引發：由使用者、繫結或清除引起。</target>
+      </trans-unit>
+      <trans-unit id="TreeSelect.SelectionMode">
+        <source>Pick one node (`Single`) or check several (`Multiple`).</source>
+        <target>選擇一個節點（`Single`）或勾選多個節點（`Multiple`）。</target>
+      </trans-unit>
+      <trans-unit id="TreeSelect.ShowFullPath">
+        <source>In single mode, show the whole path in the field (true) or only the selected node (false).</source>
+        <target>單選模式下，在欄位中顯示完整路徑（true）或只顯示選取的節點（false）。</target>
+      </trans-unit>
+      <trans-unit id="TreeSelect.TextSelector">
+        <source>Label of a node; when null, `ToString()`. Searching matches this text.</source>
+        <target>節點的標籤；為 null 時使用 `ToString()`。搜尋比對的就是這段文字。</target>
+      </trans-unit>
+      <trans-unit id="TreeSelect.ValueSelector">
+        <source>Value of a node; it must be unique across the tree. When null, the node itself is the value.</source>
+        <target>節點的值；在整棵樹中必須唯一。為 null 時節點本身就是值。</target>
+      </trans-unit>
+      <trans-unit id="TreeSelectCheckStrategy">
+        <source>Which checked nodes a `TreeSelect` in `Multiple` reports.</source>
+        <target>`Multiple` 模式的 `TreeSelect` 回報哪些已勾選的節點。</target>
+      </trans-unit>
+      <trans-unit id="TreeSelectMode">
+        <source>Whether a `TreeSelect` picks one node or checks several.</source>
+        <target>`TreeSelect` 是選擇一個節點還是勾選多個節點。</target>
+      </trans-unit>
+      <trans-unit id="TreeSelectSelectionChangedEventArgs">
+        <source>Data of `SelectionChanged`.</source>
+        <target>`SelectionChanged` 的資料。</target>
+      </trans-unit>
       <trans-unit id="TreeTable">
         <source>A table whose rows nest. Rows expand and collapse on a spring with indent guides, parents carry tri-state checkboxes (`IsSelectable`), sorting reorders siblings without breaking the hierarchy, and children can load on first expand (`ChildrenLoader`). The first column shown holds the tree. Keyboard follows the treegrid pattern: ↑/↓ move, → opens or enters, ← closes or goes to the parent, Home/End, PageUp/PageDown move ten rows, `*` opens all siblings, Space selects, Enter toggles a parent or activates a leaf, Ctrl/Cmd+A selects all. Rows come from `ItemsSource` and `ChildrenSelector`; each row is identified by `KeySelector` (the item itself when not set), which is what `ExpandedKeys` and `SelectedKeys` hold. Like Arc, rows are not virtualized: every visible row exists and animates, so keep an expanded tree to a few hundred rows and load deeper levels on demand.</source>
         <target>列可以巢狀的表格。列在彈簧上展開和收合並帶有縮排參考線，父列帶有三態核取方塊（`IsSelectable`），排序會重排同層列而不破壞階層，子列可以在第一次展開時載入（`ChildrenLoader`）。顯示出來的第一欄承載樹。鍵盤遵循樹狀格線模式：↑/↓ 移動，→ 展開或進入，← 收合或轉到父層，Home/End，PageUp/PageDown 移動十列，`*` 展開所有同層列，Space 選取，Enter 切換父列或啟動葉節點，Ctrl/Cmd+A 全選。列來自 `ItemsSource` 和 `ChildrenSelector`；每一列由 `KeySelector` 識別（未設定時為列項目本身），`ExpandedKeys` 和 `SelectedKeys` 儲存的就是這些索引鍵。與 Arc 一樣，列不做虛擬化：每個可見列都存在並帶有動畫，因此展開的樹請保持在幾百列以內，更深的層級按需載入。</target>
