@@ -35,6 +35,8 @@ internal sealed class CtaBalancedText : TextBlock
     static CtaBalancedText()
     {
         AffectsMeasure<CtaBalancedText>(IsBalancedProperty, MaxCharsProperty, LeadingProperty, TrackingProperty);
+        // CSS never clips a line box: with a tight leading the glyphs reach past it (see RenderTextLayout).
+        ClipToBoundsProperty.OverrideDefaultValue<CtaBalancedText>(false);
     }
 
     protected override Type StyleKeyOverride => typeof(TextBlock);
@@ -61,6 +63,37 @@ internal sealed class CtaBalancedText : TextBlock
         if (change.Property == TrackingProperty || change.Property == FontSizeProperty)
         {
             LetterSpacing = Tracking * FontSize;
+        }
+    }
+
+    /// <summary>
+    /// Draws each line where CSS puts it. When the line height is shorter than the font's ascent + descent, CSS shares the
+    /// difference above and below the glyphs (half-leading), while Avalonia keeps the baseline at the ascent and cuts the
+    /// whole difference from the bottom, so a display title with leading 1.1 sat low and lost its descenders.
+    /// </summary>
+    protected override void RenderTextLayout(DrawingContext context, Point origin)
+    {
+        var lineHeight = LineHeight;
+        if (double.IsNaN(lineHeight) || lineHeight <= 0)
+        {
+            base.RenderTextLayout(context, origin);
+            return;
+        }
+        var y = origin.Y;
+        foreach (var line in TextLayout.TextLines)
+        {
+            double ascent = 0, descent = 0;
+            foreach (var run in line.TextRuns)
+            {
+                if (run is ShapedTextRun shaped)
+                {
+                    ascent = Math.Max(ascent, -shaped.TextMetrics.Ascent);
+                    descent = Math.Max(descent, shaped.TextMetrics.Descent);
+                }
+            }
+            var shift = ascent + descent > 0 ? ascent + (lineHeight - ascent - descent) / 2 - line.Baseline : 0;
+            line.Draw(context, new Point(origin.X, y + shift));
+            y += line.Height;
         }
     }
 
