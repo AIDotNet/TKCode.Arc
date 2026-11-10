@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Media;
+using Avalonia.VisualTree;
 
 namespace TKCode.Arc.Primitives;
 
@@ -66,6 +67,31 @@ public sealed class ArcPopupFrame : Border
             _scale = value;
             _transform.LayoutTransform = value == 1.0 ? null : new ScaleTransform(value, value);
             SyncCornerRadius();
+        }
+    }
+
+    /// <summary>
+    /// In the window's overlay layer the shadow is painted past the host's bounds, so nothing between this frame and its
+    /// <see cref="OverlayPopupHost"/> may clip. Arc's base theme makes the host's template unclipped, but it steps aside
+    /// when the app uses FluentTheme or SimpleTheme, whose host template (a <see cref="LayoutTransformControl"/>) clips by
+    /// default: the shadow would be cut to a hard rectangle, darkening the corners below the rounded ones. The host is
+    /// created for each opening, so the values set here do not outlive it.
+    /// </summary>
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        // A native popup window has no overlay host above the frame (it is the root), so this only acts in the overlay layer.
+        if (this.FindAncestorOfType<OverlayPopupHost>() is not { } host)
+        {
+            return;
+        }
+        for (var visual = this.GetVisualParent(); visual is not null; visual = visual.GetVisualParent())
+        {
+            visual.ClipToBounds = false;
+            if (ReferenceEquals(visual, host))
+            {
+                break;
+            }
         }
     }
 

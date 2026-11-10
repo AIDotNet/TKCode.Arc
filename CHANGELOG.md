@@ -37,6 +37,7 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 
 ### Fixed
 
+- `Dialog`, `Drawer` and `BottomSheet` panels and `Tooltip` bubbles (the `ArcWindow` title bar buttons' included) no longer show dark square corners below their rounded ones ([#75](https://github.com/AIDotNet/TKCode.Arc/issues/75)): the panels clipped their own floating shadow to a rectangle, and popups in the overlay layer had it clipped by the FluentTheme or SimpleTheme popup host.
 - `Table` no longer throws "Invalid Arrange rectangle" when its compact phone layout is narrower than the row's insets: hosted cells get zero width instead of a negative one.
 - `ChatThread` message bubbles now follow the theme's corner style (square, scaled) instead of keeping fixed 18 and 6 px corners.
 - `TextFilterBox` and `NumberFilterBox` no longer overlap or cut off their fields: a long label or description wraps, and in a narrow space the label moves above the fields. The operator menu names each operator next to its symbol.
