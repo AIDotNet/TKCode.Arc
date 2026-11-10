@@ -6,16 +6,16 @@
         <StreamMarkVersion>0.1.2</StreamMarkVersion>
     </PropertyGroup>
     <ItemGroup>
-        <PackageVersion Include="Avalonia" Version="[$(AvaloniaVersion)]" />
-        <PackageVersion Include="Avalonia.Browser" Version="[$(AvaloniaVersion)]" />
-        <PackageVersion Include="Avalonia.Desktop" Version="[$(AvaloniaVersion)]" />
-        <PackageVersion Include="Avalonia.iOS" Version="[$(AvaloniaVersion)]" />
-        <PackageVersion Include="Avalonia.Android" Version="[$(AvaloniaVersion)]" />
-        <PackageVersion Include="Avalonia.Headless" Version="[$(AvaloniaVersion)]" />
-        <PackageVersion Include="Avalonia.Headless.XUnit" Version="[$(AvaloniaVersion)]" />
-        <PackageVersion Include="Avalonia.Markup.Xaml.Loader" Version="[$(AvaloniaVersion)]" />
-        <PackageVersion Include="Avalonia.Fonts.Inter" Version="[$(AvaloniaVersion)]" />
-        <PackageVersion Include="Avalonia.Diagnostics" Version="[$(AvaloniaVersion)]" />
+        <PackageVersion Include="Avalonia" Version="$(AvaloniaVersionRange)" />
+        <PackageVersion Include="Avalonia.Browser" Version="$(AvaloniaVersionRange)" />
+        <PackageVersion Include="Avalonia.Desktop" Version="$(AvaloniaVersionRange)" />
+        <PackageVersion Include="Avalonia.iOS" Version="$(AvaloniaVersionRange)" />
+        <PackageVersion Include="Avalonia.Android" Version="$(AvaloniaVersionRange)" />
+        <PackageVersion Include="Avalonia.Headless" Version="$(AvaloniaVersionRange)" />
+        <PackageVersion Include="Avalonia.Headless.XUnit" Version="$(AvaloniaVersionRange)" />
+        <PackageVersion Include="Avalonia.Markup.Xaml.Loader" Version="$(AvaloniaVersionRange)" />
+        <PackageVersion Include="Avalonia.Fonts.Inter" Version="$(AvaloniaVersionRange)" />
+        <PackageVersion Include="Avalonia.Diagnostics" Version="$(AvaloniaVersionRange)" />
         <!-- StreamMark is pinned exactly (ADR 0011, written while it was in alpha). Highlighting.TextMate brings Avalonia and Core. -->
         <PackageVersion Include="TKCode.StreamMark.Core" Version="[$(StreamMarkVersion)]" />
         <PackageVersion Include="TKCode.StreamMark.Avalonia" Version="[$(StreamMarkVersion)]" />
@@ -29,7 +29,7 @@
         <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
         <PackageVersion Include="Shouldly" Version="4.3.0" />
         <!-- Base theme tests: ArcBaseTheme must yield to these themes. -->
-        <PackageVersion Include="Avalonia.Themes.Fluent" Version="[$(AvaloniaVersion)]" />
-        <PackageVersion Include="Avalonia.Themes.Simple" Version="[$(AvaloniaVersion)]" />
+        <PackageVersion Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersionRange)" />
+        <PackageVersion Include="Avalonia.Themes.Simple" Version="$(AvaloniaVersionRange)" />
     </ItemGroup>
 </Project>

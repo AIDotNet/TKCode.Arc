@@ -1,6 +1,6 @@
 ---
 title: 安装
-source-hash: 5f2d2d01e192
+source-hash: b17ed0a26705
 ---
 
 # 安装
@@ -12,11 +12,11 @@ source-hash: 5f2d2d01e192
 | 项目 | 版本 | 说明 |
 |---|---|---|
 | .NET | `net10.0` 或 `net11.0` | 这些包同时面向两个目标框架。 |
-| Avalonia | `12.1.5` | 固定为库构建时所用的确切版本。 |
+| Avalonia | `12.1.5` 或更高的 12.x | 包的依赖为 `[12.1.5, 13.0.0)`：构建时所用的版本或任何更高的 Avalonia 12 版本。 |
 | TKCode.Arc.Foundation | 与 Arc 相同 | MIT；主题、令牌、语言与包注册的运行时，随 `TKCode.Arc` 一起引入。 |
 | 字体（可选） | `Avalonia.Fonts.Inter` | Arc 的正文使用 Inter；Geist 来自 `TKCode.Arc.Fonts`。 |
 
-Avalonia 固定为确切版本。除 Avalonia 之外，每个 Arc 包只依赖 Arc 自己的 MIT 包。请在你的应用中使用相同的 Avalonia 版本；版本混用会导致还原警告，并在运行时出现样式缺失或类型加载错误。
+Arc 接受 Avalonia 12.1.5 及任何更高的 12.x 版本，因此你可以在 12 版本内升级 Avalonia，无需等待 Arc 发布新版。除 Avalonia 之外，每个 Arc 包只依赖 Arc 自己的 MIT 包。请让应用中的所有 Avalonia 包使用同一个版本；版本混用会导致还原警告，并在运行时出现样式缺失或类型加载错误。
 
 ## 从模板开始
 
@@ -264,7 +264,7 @@ PDF 示例需要 PDFium 和 pdf.js，它们没有提交到仓库。请运行一�
 | 标题与代码使用系统字体 | 没有注册字体 | 在 `AppBuilder` 上调用 `WithInterFont()` 和 `WithArcFonts()`。 |
 | 数字或日期格式错误，或格式化时抛出异常 | 启用了 `InvariantGlobalization` | 从项目文件中移除它。 |
 | `'Button' is an ambiguous reference` | `TKCode.Arc` 与 `Avalonia.Controls` 同时被导入 | 为其中一个设置别名，如上所示。 |
-| 关于 Avalonia 版本的还原警告 | 其他包引入了不同版本的 Avalonia | 在应用中显式引用 Avalonia `12.1.5`。 |
+| 关于 Avalonia 版本的还原警告 | 其他包引入了不同版本的 Avalonia，或引入了 Avalonia 13 | 在应用中显式引用同一个 Avalonia 12 版本（12.1.5 或更高）。 |
 | 找不到 Blocks、`DataGrid` 或 Special 类型 | 没有引用该包或没有注册 | 添加 `TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 或 `TKCode.Arc.Special`，并在 `UseArc(...)` 中调用 `UseArcBlocks()`、`UseArcAdvancedCharts()` 或 `UseArcSpecial()`。 |
 
 ## 下一步

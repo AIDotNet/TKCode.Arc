@@ -14,6 +14,7 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 
 ### Fixed
 
+- The packages no longer pin Avalonia to one exact version ([#97](https://github.com/AIDotNet/TKCode.Arc/issues/97)): they accept Avalonia 12.1.5 or any later 12.x release, so an app can update Avalonia within version 12 without waiting for an Arc release.
 - `TextFilterBox` and `NumberFilterBox` no longer overlap or cut off their fields: a long label or description wraps, and in a narrow space the label moves above the fields. The operator menu names each operator next to its symbol.
 
 ## 1.0.0 (2026-11-08)

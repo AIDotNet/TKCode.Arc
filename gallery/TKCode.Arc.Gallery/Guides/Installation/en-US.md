@@ -12,13 +12,14 @@ takes about five minutes on a new project and does not change how the rest of yo
 | Item | Version | Notes |
 |---|---|---|
 | .NET | `net10.0` or `net11.0` | The packages target both. |
-| Avalonia | `12.1.5` | Pinned to the exact version the library is built against. |
+| Avalonia | `12.1.5` or later 12.x | The packages ask for `[12.1.5, 13.0.0)`: the version they are built against or any later Avalonia 12 release. |
 | TKCode.Arc.Foundation | same as Arc | MIT; the theme, token, language and package runtime. Comes with `TKCode.Arc`. |
 | Fonts (optional) | `Avalonia.Fonts.Inter` | Arc's body text uses Inter; Geist comes from `TKCode.Arc.Fonts`. |
 
-Avalonia is pinned to an exact version. Besides Avalonia, every Arc package depends only
-on MIT packages of its own. Use the same Avalonia version in your application; mixing versions leads to restore
-warnings and, at run time, to missing styles or type load errors.
+Arc accepts Avalonia 12.1.5 and any later 12.x release, so you can update Avalonia within version 12 without waiting
+for an Arc release. Besides Avalonia, every Arc package depends only on MIT packages of its own. Use one Avalonia
+version for all Avalonia packages in your application; mixing versions leads to restore warnings and, at run time, to
+missing styles or type load errors.
 
 ## Start from a template
 
@@ -303,7 +304,7 @@ build has no pdf.js to import.
 | Headings and code use the system font | The fonts are not registered | Call `WithInterFont()` and `WithArcFonts()` on the `AppBuilder`. |
 | Wrong number or date formats, or exceptions while formatting | `InvariantGlobalization` is enabled | Remove it from the project file. |
 | `'Button' is an ambiguous reference` | `TKCode.Arc` and `Avalonia.Controls` are both imported | Alias one of them, as shown above. |
-| Restore warnings about Avalonia versions | Another package pulls a different Avalonia | Reference Avalonia `12.1.5` explicitly in the application. |
+| Restore warnings about Avalonia versions | Another package pulls a different Avalonia, or Avalonia 13 | Reference one Avalonia 12 version (12.1.5 or later) explicitly in the application. |
 | Blocks, `DataGrid` or Special types are not found | The package is not referenced or not registered | Add `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts` or `TKCode.Arc.Special` and call `UseArcBlocks()`, `UseArcAdvancedCharts()` or `UseArcSpecial()` in `UseArc(...)`. |
 
 ## Next steps

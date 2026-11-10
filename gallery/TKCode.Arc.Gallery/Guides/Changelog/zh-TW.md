@@ -1,6 +1,6 @@
 ---
 title: 更新日誌
-source-hash: 36f535da03c8
+source-hash: 8fce0f5de0e2
 ---
 
 # 更新日誌
@@ -13,6 +13,7 @@ TKCode.Arc 的所有重要變更，最新的在前。版本遵循[語意化版�
 
 ### 修復
 
+- 各個套件不再把 Avalonia 鎖定為一個確切版本（[#97](https://github.com/AIDotNet/TKCode.Arc/issues/97)）：現在接受 Avalonia 12.1.5 及任何更高的 12.x 版本，應用程式可以在 12 版本內升級 Avalonia，無需等待 Arc 發布新版。
 - `TextFilterBox` 與 `NumberFilterBox` 的輸入框不再重疊或被裁切：過長的標籤或說明會換行，空間較窄時標籤移到輸入框上方。運算子選單在符號旁顯示名稱。
 
 ## 1.0.0（2026-11-08）
