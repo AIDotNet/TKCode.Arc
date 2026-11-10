@@ -34,6 +34,7 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
   - Analytics, people and projects: `CallInsights`, `LeadScoring`, `AccountHealth`, `GoalTracker`, `PivotBuilder` and `TaskBreakdown`.
   - Marketing: `HeroSignup`, `TeamShowcase`, `StudioPerspectives`, `ScrollStory`, `SpotlightGrid` and `FeatureBento`.
   - App shell, auth and settings: `DocsSidebar`, `InboxSidebar`, `SelectionToolbar`, `TwoFactorSetup` (with a QR encoder and TOTP check of its own), `OnboardingSurvey` and `MagicLinkSignIn`.
+- `BackToTop` (issue #67): a round button that appears once a list, log or feed has scrolled past a threshold and smoothly scrolls it back to the top, placed over the container yourself or added to a corner of its viewport with `arc:BackToTop.IsAttached`.
 
 ### Fixed
 

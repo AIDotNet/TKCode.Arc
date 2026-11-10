@@ -174,6 +174,9 @@ public static partial class GalleryCatalog
             new("CyclicPanel", "Cyclic panel", "cyclic-panel", 0,
                 "A list that loops without a seam: after the last item comes the first, scrolled by wheel, touchpad or code, with the visible items reported.",
                 IsArc: false, AddedOn: "2026-11-07"),
+            new("BackToTop", "Back to top", "back-to-top", 0,
+                "A round button that appears once a long list, log or feed has scrolled past a threshold and smoothly scrolls it back to the top.",
+                IsArc: false, AddedOn: "2026-11-10"),
         ], IsArc: false),
         new("Content", "Extras", "扩展",
         [

@@ -29,7 +29,7 @@ public class GallerySmokeTests
             + GalleryCatalog.Blocks.AllEntries.Count() + GalleryCatalog.Special.Sum(c => c.Entries.Length) + GalleryCatalog.Mobile.Entries.Length);
         GalleryCatalog.AllEntries.Select(e => e.ClassName).ShouldBeUnique();
         // The sidebar footer counts the whole Components section, extras included.
-        GalleryCatalog.ComponentCount.ShouldBe(GalleryCatalog.Count + 25);
+        GalleryCatalog.ComponentCount.ShouldBe(GalleryCatalog.Count + 26);
         GalleryCatalog.ComponentEntries.Count().ShouldBe(GalleryCatalog.ComponentCount);
     }
 

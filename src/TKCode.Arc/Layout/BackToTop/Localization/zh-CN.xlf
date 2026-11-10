@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="2.1" srcLang="en-US" trgLang="zh-CN" xmlns="urn:oasis:names:tc:xliff:document:2.0">
+  <file id="TKCode.Arc.Localization.BackToTopLangResourceKind">
+    <unit id="BackToTop">
+      <segment>
+        <source>Back to top</source>
+        <target state="translated">回到顶部</target>
+      </segment>
+    </unit>
+  </file>
+</xliff>
