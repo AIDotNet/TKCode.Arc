@@ -1,6 +1,6 @@
 name: CI
 
-# verify:  build and test on pushes to main and on pull requests.
+# verify:  build and test (Linux) on pushes to main and on pull requests; macOS is ci-macos.yml.
 # templates: creates, builds and starts every dotnet new template case (pushes to main, pull requests).
 # pack:    packs every TKCode.Arc package (the id lists below) (v* tag, or a manual run).
 # nuget:   pushes them to nuget.org (v* tag, or a manual run with "publish" on).
@@ -48,15 +48,13 @@ defaults:
 
 jobs:
   verify:
-    name: Build and test (${{ matrix.os }})
+    # Linux only: macOS runs the same build and tests in ci-macos.yml, apart from this workflow, so a long wait for a
+    # macOS runner (or a cancelled macOS job) never holds up or cancels pull requests, main or a release.
+    name: Build and test (ubuntu-latest)
     if: github.event_name != 'workflow_dispatch' && !startsWith(github.ref, 'refs/tags/')
-    runs-on: ${{ matrix.os }}
-    # macOS: about 15 minutes of build and 35 or more of the headless control tests (which grow with every component).
-    timeout-minutes: 75
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macos-latest]
+    runs-on: ubuntu-latest
+    # About 10 minutes of build and 30 or more of the headless control tests (which grow with every component).
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v7
 

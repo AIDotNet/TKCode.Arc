@@ -1,0 +1,59 @@
+name: CI (macOS)
+
+# The build and tests of ci.yml's "Build and test" job, on macOS. Kept apart from ci.yml so that macOS runners, which can
+# queue for a long time or not be acquired at all, never hold up or cancel pull requests, main or a release: a failure
+# here shows as its own red run and is looked at on its own.
+#
+# Runs on pushes to main and by hand (Actions > CI (macOS) > Run workflow, for any branch).
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# A newer push to main replaces a run that is still queued or testing.
+concurrency:
+  group: ci-macos-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_NOLOGO: "true"
+  DOTNET_CLI_TELEMETRY_OPTOUT: "true"
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: "true"
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  verify:
+    name: Build and test (macos-latest)
+    runs-on: macos-latest
+    # About 15 minutes of build and 35 or more of the headless control tests (which grow with every component).
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          # global.json pins the .NET 11 SDK; the test projects run on .NET 10.
+          global-json-file: global.json
+          dotnet-version: 10.0.x
+
+      - uses: actions/cache@v6
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', 'Directory.Packages.props', 'build/Versions.props', 'global.json') }}
+          restore-keys: nuget-${{ runner.os }}-
+
+      - name: Build
+        run: dotnet build TKCode.Arc.slnx
+
+      - name: Test (Core)
+        run: dotnet test tests/TKCode.Arc.Core.Tests --no-build
+
+      - name: Test (controls, headless Avalonia)
+        run: dotnet test tests/TKCode.Arc.Tests --no-build
