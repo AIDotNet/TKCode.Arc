@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="2.1" srcLang="en-US" xmlns="urn:oasis:names:tc:xliff:document:2.0">
+  <file id="TKCode.Arc.Localization.SidebarLangResourceKind">
+    <unit id="CollapseSidebar">
+      <segment>
+        <source>Collapse sidebar</source>
+      </segment>
+    </unit>
+    <unit id="ExpandSidebar">
+      <segment>
+        <source>Expand sidebar</source>
+      </segment>
+    </unit>
+    <unit id="Filter">
+      <segment>
+        <source>Filter</source>
+      </segment>
+    </unit>
+    <unit id="NoMatches">
+      <segment>
+        <source>No matches</source>
+      </segment>
+    </unit>
+    <unit id="Sidebar">
+      <segment>
+        <source>Sidebar</source>
+      </segment>
+    </unit>
+    <unit id="Unread">
+      <segment>
+        <source>unread</source>
+      </segment>
+    </unit>
+  </file>
+</xliff>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="2.1" srcLang="en-US" trgLang="zh-TW" xmlns="urn:oasis:names:tc:xliff:document:2.0">
+  <file id="TKCode.Arc.Localization.SidebarLangResourceKind">
+    <unit id="CollapseSidebar">
+      <segment>
+        <source>Collapse sidebar</source>
+        <target state="translated">收合側邊欄</target>
+      </segment>
+    </unit>
+    <unit id="ExpandSidebar">
+      <segment>
+        <source>Expand sidebar</source>
+        <target state="translated">展開側邊欄</target>
+      </segment>
+    </unit>
+    <unit id="Filter">
+      <segment>
+        <source>Filter</source>
+        <target state="translated">篩選</target>
+      </segment>
+    </unit>
+    <unit id="NoMatches">
+      <segment>
+        <source>No matches</source>
+        <target state="translated">沒有相符項目</target>
+      </segment>
+    </unit>
+    <unit id="Sidebar">
+      <segment>
+        <source>Sidebar</source>
+        <target state="translated">側邊欄</target>
+      </segment>
+    </unit>
+    <unit id="Unread">
+      <segment>
+        <source>unread</source>
+        <target state="translated">未讀</target>
+      </segment>
+    </unit>
+  </file>
+</xliff>

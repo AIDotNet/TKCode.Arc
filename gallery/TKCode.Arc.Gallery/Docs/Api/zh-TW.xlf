@@ -26933,8 +26933,8 @@
         <target>數字超出 `Minimum` 和 `Maximum` 時不通過；空值和其他型別通過。</target>
       </trans-unit>
       <trans-unit id="Rating">
-        <source>Arc rating: a row of stars for a score from 1 to N. Pointing previews a value, a press or drag commits it, and a rolling word beside the stars says what the value means. Half stars, clearing and a read-only display are options. The arrow keys move by one step, Home and End jump, the number keys choose a star, and Backspace or Delete clear.</source>
-        <target>Arc 評分：一排星星，用於 1 到 N 的打分。指向時預覽分值，按下或拖曳時提交，星星旁捲動的文字說明分值的含義。半星、清除和唯讀顯示都是可選項。方向鍵按一檔移動，Home 和 End 跳到兩端，數字鍵選擇星星，Backspace 或 Delete 清除。</target>
+        <source>Arc rating: a row of stars for a score from 1 to N. Pointing previews a value, a press or drag commits it, and a rolling word beside the stars says what the value means. Half stars, clearing, a read-only display and other shapes (`Icon`, `EmptyIcon`) are options. The arrow keys move by one step, Home and End jump, the number keys choose a star, and Backspace or Delete clear.</source>
+        <target>Arc 評分：一排星星，用於 1 到 N 的打分。指向時預覽分值，按下或拖曳時提交，星星旁捲動的文字說明分值的含義。半星、清除、唯讀顯示和其他形狀（`Icon`、`EmptyIcon`）都是可選項。方向鍵按一檔移動，Home 和 End 跳到兩端，數字鍵選擇星星，Backspace 或 Delete 清除。</target>
       </trans-unit>
       <trans-unit id="Rating.AllowClear">
         <source>Lets choosing the current value again clear it; Backspace and Delete clear from the keyboard.</source>
@@ -26948,9 +26948,17 @@
         <source>A hint under the stars.</source>
         <target>星星下方的提示。</target>
       </trans-unit>
+      <trans-unit id="Rating.EmptyIcon">
+        <source>The shape of the part of a star that is not filled, in the same 24 × 24 box. Null uses `Icon`. A half value shows the left half of `Icon` over the right half of this shape.</source>
+        <target>星星未填充部分的形狀，同樣在 24 × 24 的框內。為 null 時使用 `Icon`。半值時左半邊顯示 `Icon`，右半邊顯示這個形狀。</target>
+      </trans-unit>
       <trans-unit id="Rating.EmptyLabel">
         <source>The text shown beside empty stars.</source>
         <target>星星為空時旁邊顯示的文字。</target>
+      </trans-unit>
+      <trans-unit id="Rating.Icon">
+        <source>The shape of each star, drawn in a 24 × 24 box like the Lucide icons of `ArcIcons`, for example `{x:Static arc:ArcIcons.Heart}` or path data. Null draws a star.</source>
+        <target>每顆星的形狀，在 24 × 24 的框內繪製，與 `ArcIcons` 中的 Lucide 圖示一致，例如 `{x:Static arc:ArcIcons.Heart}` 或路徑資料。為 null 時繪製星星。</target>
       </trans-unit>
       <trans-unit id="Rating.IsReadOnly">
         <source>Shows the value without taking input.</source>
@@ -31181,16 +31189,20 @@
         <target>側邊欄展開時收合按鈕的位置：頭部列（預設）或篩選框旁邊。在窄欄上它一律位於頂端。</target>
       </trans-unit>
       <trans-unit id="Sidebar.CollapseButtonText">
-        <source>Accessible name and tooltip of the collapse button while the sidebar is open.</source>
-        <target>側邊欄展開時，收合按鈕的無障礙名稱與工具提示。</target>
+        <source>Accessible name and tooltip of the collapse button while the sidebar is open. Unset, it is the localized "Collapse sidebar", which follows the Arc language.</source>
+        <target>側邊欄展開時，收合按鈕的無障礙名稱與工具提示。未設定時為在地化的「收合側邊欄」，並跟隨 Arc 語言。</target>
       </trans-unit>
       <trans-unit id="Sidebar.ExpandButtonText">
-        <source>Accessible name and tooltip of the collapse button while the sidebar is the rail.</source>
-        <target>側邊欄為窄欄時，收合按鈕的無障礙名稱與工具提示。</target>
+        <source>Accessible name and tooltip of the collapse button while the sidebar is the rail. Unset, it is the localized "Expand sidebar", which follows the Arc language.</source>
+        <target>側邊欄為窄欄時，收合按鈕的無障礙名稱與工具提示。未設定時為在地化的「展開側邊欄」，並跟隨 Arc 語言。</target>
+      </trans-unit>
+      <trans-unit id="Sidebar.ExpandedWidth">
+        <source>Width of the open sidebar (default 240, the theme's `ExpandedWidth` token); collapsing springs from it to the 64px rail and expanding springs back to it. Set this, not `Width`, to make the sidebar narrower or wider: the sidebar drives its own `Width` to animate the collapse, so a `Width` set on it fixes it at that width and it no longer collapses. The header, filter, rows and footer keep this width's layout while the width springs.</source>
+        <target>展開時側邊欄的寬度（預設 240，即主題的 `ExpandedWidth` 權杖）；收合時從它以彈簧過渡到 64px 窄欄，展開時再回到它。要讓側邊欄更窄或更寬，請設定此屬性而不是 `Width`：側邊欄自行驅動 `Width` 來呈現收合動畫，在它上面設定的 `Width` 會把寬度固定下來，側邊欄也就不再收合。寬度變化期間，頭部、篩選欄位、各列與底部維持此寬度下的配置。</target>
       </trans-unit>
       <trans-unit id="Sidebar.FilterPlaceholder">
-        <source>Placeholder and accessible name of the filter box.</source>
-        <target>篩選框的預留文字與無障礙名稱。</target>
+        <source>Placeholder and accessible name of the filter box. Unset, it is the localized "Filter", which follows the Arc language.</source>
+        <target>篩選欄位的預留位置文字與無障礙名稱。未設定時為在地化的「篩選」，並跟隨 Arc 語言。</target>
       </trans-unit>
       <trans-unit id="Sidebar.FilterText">
         <source>The filter text (two-way). Pages whose label contains it stay; a parent with a matching page opens.</source>
@@ -31237,16 +31249,16 @@
         <target>項目鍵的屬性路徑，`SelectedKey` 與其比對。</target>
       </trans-unit>
       <trans-unit id="Sidebar.Label">
-        <source>Name of the navigation landmark.</source>
-        <target>導覽地標的名稱。</target>
+        <source>Name of the navigation landmark. Unset, it is the localized "Sidebar", which follows the Arc language.</source>
+        <target>導覽地標的名稱。未設定時為在地化的「側邊欄」，並跟隨 Arc 語言。</target>
       </trans-unit>
       <trans-unit id="Sidebar.LabelMember">
         <source>The property path of an item's label (for items that are not `SidebarItem`s).</source>
         <target>項目標籤的屬性路徑（用於不是 `SidebarItem` 的項目）。</target>
       </trans-unit>
       <trans-unit id="Sidebar.NoMatchesText">
-        <source>Text shown when the filter matches no page.</source>
-        <target>篩選沒有符合的頁面時顯示的文字。</target>
+        <source>Text shown when the filter matches no page. Unset, it is the localized "No matches", which follows the Arc language.</source>
+        <target>篩選沒有符合的頁面時顯示的文字。未設定時為在地化的「沒有相符項目」，並跟隨 Arc 語言。</target>
       </trans-unit>
       <trans-unit id="Sidebar.ResizeMode">
         <source>How the width change between the open sidebar and the rail reaches the page next to it: `Overlay` (default) or `Push`.</source>
@@ -31269,8 +31281,8 @@
         <target>產生每個繫結列末尾的內容。該控制項以項目的資料（`ItemsSource` 中的物件）作為 `DataContext`，因此範本可以繫結到你自己的欄位，例如僅當 `CanAdd` 為 true 時顯示新增按鈕。項目上已設定的 `TrailingIcon` 優先。</target>
       </trans-unit>
       <trans-unit id="Sidebar.UnreadText">
-        <source>Added to the accessible name of a page that has `IsUnread` ("Inbox, unread").</source>
-        <target>附加到帶有 `IsUnread` 的頁面的無障礙名稱中（“Inbox, unread”）。</target>
+        <source>Added to the accessible name of a page that has `IsUnread` ("Inbox, unread"). Unset, it is the localized "unread", which follows the Arc language.</source>
+        <target>附加到帶有 `IsUnread` 的頁面的無障礙名稱中（“Inbox, unread”）。未設定時為在地化的「未讀」，並跟隨 Arc 語言。</target>
       </trans-unit>
       <trans-unit id="SidebarItem">
         <source>One page of a `Sidebar`: a row with an icon, a label and an optional count. An item with `Items` is a parent: it opens and closes its child pages instead of being selected (one level of nesting).</source>

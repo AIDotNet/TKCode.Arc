@@ -1382,4 +1382,187 @@ public class SidebarTests
             window.Close();
         }
     }
+
+    private static T TemplatePart<T>(Sidebar sidebar, string name) where T : Control
+        => sidebar.GetVisualDescendants().OfType<T>().First(c => c.Name == name);
+
+    /// <summary>The header row's content must be laid out at the sidebar's real width, so centred content is centred.</summary>
+    private static void HeaderFollowsTheWidth(Sidebar sidebar, double width)
+    {
+        var host = TemplatePart<SidebarOpenWidthHost>(sidebar, "PART_HeaderHost");
+        var presenter = TemplatePart<Avalonia.Controls.Presenters.ContentPresenter>(sidebar, "PART_HeaderPresenter");
+        var row = TemplatePart<Control>(sidebar, Sidebar.HeaderRowPart);
+        // The header row spans the pane less its 12px margins; the header gets what the collapse button leaves.
+        row.Bounds.Width.ShouldBe(width - 24, 0.5);
+        presenter.Bounds.Width.ShouldBe(host.Bounds.Width, 0.5);
+        host.Clip.ShouldBeNull();
+        var mark = (Control)sidebar.Header!;
+        var markCenter = mark.TranslatePoint(new Point(mark.Bounds.Width / 2, 0), host)!.Value.X;
+        markCenter.ShouldBe(host.Bounds.Width / 2, 0.5);
+    }
+
+    // Issue #92: the open width is ExpandedWidth; Width follows it, so a narrower sidebar still collapses to the rail and
+    // comes back at its own width, and the header and rows lay out at that width.
+    [AvaloniaTheory]
+    [InlineData(SidebarResizeMode.Overlay)]
+    [InlineData(SidebarResizeMode.Push)]
+    public void A_Custom_ExpandedWidth_Collapses_To_The_Rail_And_Expands_Back_To_It(SidebarResizeMode mode)
+    {
+        var s = new Sample();
+        s.Sidebar.ResizeMode = mode;
+        s.Sidebar.ExpandedWidth = 200;
+        s.Sidebar.Header = new Border { Width = 40, Height = 24, HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center };
+        var (window, _) = ShowBeside(s.Sidebar, ArcMotionLevel.Off);
+        try
+        {
+            Pump(2);
+            s.Sidebar.Bounds.Width.ShouldBe(200);
+            s.Sidebar.PaneWidth.ShouldBe(200);
+            Row(s.Sidebar, s.Inbox).Bounds.Width.ShouldBe(176);
+            HeaderFollowsTheWidth(s.Sidebar, 200);
+
+            s.Sidebar.IsCollapsed = true;
+            Pump(2);
+            s.Sidebar.Bounds.Width.ShouldBe(64);
+            s.Sidebar.PaneWidth.ShouldBe(64);
+
+            s.Sidebar.IsCollapsed = false;
+            Pump(2);
+            s.Sidebar.Bounds.Width.ShouldBe(200);
+            Row(s.Sidebar, s.Inbox).Bounds.Width.ShouldBe(176);
+            HeaderFollowsTheWidth(s.Sidebar, 200);
+
+            // Changed on the rail: the sidebar stays the rail and opens at the new width.
+            s.Sidebar.IsCollapsed = true;
+            Pump(2);
+            s.Sidebar.ExpandedWidth = 280;
+            Pump(2);
+            s.Sidebar.Bounds.Width.ShouldBe(64);
+            s.Sidebar.IsCollapsed = false;
+            Pump(2);
+            s.Sidebar.Bounds.Width.ShouldBe(280);
+            Row(s.Sidebar, s.Inbox).Bounds.Width.ShouldBe(256);
+            HeaderFollowsTheWidth(s.Sidebar, 280);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Custom_ExpandedWidth_Springs_To_The_Rail_And_Back_Under_Full_Motion()
+    {
+        var s = new Sample();
+        s.Sidebar.ResizeMode = SidebarResizeMode.Push;
+        s.Sidebar.ExpandedWidth = 200;
+        var (window, _) = ShowBeside(s.Sidebar, ArcMotionLevel.Full);
+        try
+        {
+            Pump(3);
+            s.Sidebar.Bounds.Width.ShouldBe(200);
+            s.Sidebar.IsCollapsed = true;
+            Settle();
+            s.Sidebar.Bounds.Width.ShouldBe(64, 0.5);
+            s.Sidebar.IsCollapsed = false;
+            Settle();
+            s.Sidebar.Bounds.Width.ShouldBe(200, 0.5);
+            Row(s.Sidebar, s.Inbox).Bounds.Width.ShouldBe(176, 0.5);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    // A Width set on the sidebar fixes it (ExpandedWidth is the open width): its parts then lay out at that width rather
+    // than the theme's, and once it is cleared the sidebar collapses again.
+    [AvaloniaFact]
+    public void A_Width_Set_On_The_Sidebar_Lays_The_Header_Out_At_That_Width_And_Clearing_It_Restores_The_Collapse()
+    {
+        var s = new Sample();
+        s.Sidebar.Width = 200;
+        s.Sidebar.Header = new Border { Width = 40, Height = 24, HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center };
+        var (window, _) = ShowBeside(s.Sidebar, ArcMotionLevel.Off);
+        try
+        {
+            Pump(2);
+            s.Sidebar.Bounds.Width.ShouldBe(200);
+            s.Sidebar.MeasureDeficit.ShouldBe(0);
+            Row(s.Sidebar, s.Inbox).Bounds.Width.ShouldBe(176);
+            HeaderFollowsTheWidth(s.Sidebar, 200);
+
+            s.Sidebar.ClearValue(Sidebar.WidthProperty);
+            Pump(2);
+            s.Sidebar.Bounds.Width.ShouldBe(240);
+            s.Sidebar.IsCollapsed = true;
+            Pump(2);
+            s.Sidebar.Bounds.Width.ShouldBe(64);
+            s.Sidebar.MeasureDeficit.ShouldBe(176);
+            s.Sidebar.IsCollapsed = false;
+            Pump(2);
+            s.Sidebar.Bounds.Width.ShouldBe(240);
+            HeaderFollowsTheWidth(s.Sidebar, 240);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Built_In_Text_Follows_The_Arc_Language_Unless_It_Is_Set()
+    {
+        var s = new Sample();
+        s.Inbox.IsUnread = true;
+        s.Sidebar.IsFilterVisible = true;
+        var window = Show(s.Sidebar);
+        var languages = Localization.ArcLanguageManager.Current!;
+        try
+        {
+            var collapse = TemplatePart<SidebarIconButton>(s.Sidebar, Sidebar.CollapseButtonPart);
+            Tooltip.GetTip(collapse).ShouldBe("Collapse sidebar");
+            AutomationProperties.GetName(collapse).ShouldBe("Collapse sidebar");
+            AutomationProperties.GetName(s.Sidebar).ShouldBe("Sidebar");
+
+            languages.Set(Localization.LanguageTags.ZhCN);
+            Dispatcher.UIThread.RunJobs();
+            Tooltip.GetTip(collapse).ShouldBe("收起侧边栏");
+            AutomationProperties.GetName(collapse).ShouldBe("收起侧边栏");
+            AutomationProperties.GetName(s.Sidebar).ShouldBe("侧边栏");
+            s.Sidebar.FilterPlaceholder.ShouldBe("筛选");
+            s.Sidebar.NoMatchesText.ShouldBe("没有匹配");
+            AutomationProperties.GetName(Row(s.Sidebar, s.Inbox)).ShouldBe("Inbox, 12, 未读");
+
+            s.Sidebar.IsCollapsed = true;
+            Dispatcher.UIThread.RunJobs();
+            Tooltip.GetTip(collapse).ShouldBe("展开侧边栏");
+
+            languages.Set(Localization.LanguageTags.ZhTW);
+            Dispatcher.UIThread.RunJobs();
+            Tooltip.GetTip(collapse).ShouldBe("展開側邊欄");
+            AutomationProperties.GetName(collapse).ShouldBe("展開側邊欄");
+            s.Sidebar.IsCollapsed = false;
+            Dispatcher.UIThread.RunJobs();
+            Tooltip.GetTip(collapse).ShouldBe("收合側邊欄");
+            s.Sidebar.FilterPlaceholder.ShouldBe("篩選");
+
+            // An explicit value wins over the language, and clearing it brings the localized text back.
+            s.Sidebar.CollapseButtonText = "Hide navigation";
+            Dispatcher.UIThread.RunJobs();
+            Tooltip.GetTip(collapse).ShouldBe("Hide navigation");
+            languages.Set(Localization.LanguageTags.ZhCN);
+            Dispatcher.UIThread.RunJobs();
+            Tooltip.GetTip(collapse).ShouldBe("Hide navigation");
+            AutomationProperties.GetName(collapse).ShouldBe("Hide navigation");
+            s.Sidebar.ClearValue(Sidebar.CollapseButtonTextProperty);
+            Dispatcher.UIThread.RunJobs();
+            Tooltip.GetTip(collapse).ShouldBe("收起侧边栏");
+        }
+        finally
+        {
+            languages.Set(Localization.LanguageTags.EnUS);
+            window.Close();
+        }
+    }
 }

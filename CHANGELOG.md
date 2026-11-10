@@ -36,6 +36,7 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
   - Marketing: `HeroSignup`, `TeamShowcase`, `StudioPerspectives`, `ScrollStory`, `SpotlightGrid` and `FeatureBento`.
   - App shell, auth and settings: `DocsSidebar`, `InboxSidebar`, `SelectionToolbar`, `TwoFactorSetup` (with a QR encoder and TOTP check of its own), `OnboardingSurvey` and `MagicLinkSignIn`.
 - `BackToTop` (issue #67): a round button that appears once a list, log or feed has scrolled past a threshold and smoothly scrolls it back to the top, placed over the container yourself or added to a corner of its viewport with `arc:BackToTop.IsAttached`.
+- `Sidebar.ExpandedWidth` (Blocks): the width of the open sidebar (default 240), which the collapse springs from and back to ([#92](https://github.com/AIDotNet/TKCode.Arc/issues/92)).
 
 ### Fixed
 
@@ -43,6 +44,8 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 - `Dialog`, `Drawer` and `BottomSheet` panels and `Tooltip` bubbles (the `ArcWindow` title bar buttons' included) no longer show dark square corners below their rounded ones ([#75](https://github.com/AIDotNet/TKCode.Arc/issues/75)): the panels clipped their own floating shadow to a rectangle, and popups in the overlay layer had it clipped by the FluentTheme or SimpleTheme popup host.
 - `Table` no longer throws "Invalid Arrange rectangle" when its compact phone layout is narrower than the row's insets: hosted cells get zero width instead of a negative one.
 - `ChatThread` message bubbles now follow the theme's corner style (square, scaled) instead of keeping fixed 18 and 6 px corners.
+- `Sidebar` (Blocks) collapses again when it is made narrower or wider, and its header and rows lay out at its actual width, so centred header content stays centred ([#92](https://github.com/AIDotNet/TKCode.Arc/issues/92)). Set the new `ExpandedWidth` instead of `Width`: a `Width` set on the sidebar fixes it at that width.
+- `Sidebar` (Blocks) built-in text follows the Arc language ([#92](https://github.com/AIDotNet/TKCode.Arc/issues/92)): the collapse button's tooltip and name, the filter placeholder, the no-matches text, the landmark name and the "unread" note now come in English, Simplified Chinese and Traditional Chinese and change with `ArcLanguage.Set`; a value set on `CollapseButtonText`, `ExpandButtonText`, `FilterPlaceholder`, `NoMatchesText`, `Label` or `UnreadText` still wins.
 - `TextFilterBox` and `NumberFilterBox` no longer overlap or cut off their fields: a long label or description wraps, and in a narrow space the label moves above the fields. The operator menu names each operator next to its symbol.
 - Loading indicators no longer freeze under reduced motion ([#93](https://github.com/AIDotNet/TKCode.Arc/issues/93)): `MorphLoader`, the loading spinner of `Button` and every other control that uses the Core `ArcSpinner`, the `StretchRefresh` running line, the `ChargeSession` packets and the tool, plan and generation spinners hold still and breathe in opacity (1 → 0.45 → 1 every 1.8 s, the new Core `ArcBusyPulse`), and `Skeleton` and `SkeletonMorph` keep their opacity pulse. Nothing travels, turns, scales or blurs; full motion is unchanged, and with motion off they stay still.
 

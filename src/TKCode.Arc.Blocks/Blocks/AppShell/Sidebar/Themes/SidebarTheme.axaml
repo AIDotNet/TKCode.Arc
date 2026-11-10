@@ -119,8 +119,16 @@
             </ControlTemplate>
         </Setter>
 
-        <Setter Property="OpenWidth" Value="{arc:SidebarTokenResource ExpandedWidth}" />
-        <Setter Property="Width" Value="{arc:SidebarTokenResource ExpandedWidth}" />
+        <!-- The open width is a property, so an app changes it without breaking the collapse: Width follows it, and the rail below. -->
+        <Setter Property="ExpandedWidth" Value="{arc:SidebarTokenResource ExpandedWidth}" />
+        <Setter Property="Width" Value="{Binding ExpandedWidth, RelativeSource={RelativeSource Self}}" />
+        <!-- Built-in text in the Arc language; a value set on the sidebar wins. -->
+        <Setter Property="Label" Value="{arc:SidebarLangResource Sidebar}" />
+        <Setter Property="FilterPlaceholder" Value="{arc:SidebarLangResource Filter}" />
+        <Setter Property="NoMatchesText" Value="{arc:SidebarLangResource NoMatches}" />
+        <Setter Property="CollapseButtonText" Value="{arc:SidebarLangResource CollapseSidebar}" />
+        <Setter Property="ExpandButtonText" Value="{arc:SidebarLangResource ExpandSidebar}" />
+        <Setter Property="UnreadText" Value="{arc:SidebarLangResource Unread}" />
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="Background" Value="{arc:SidebarTokenResource PaneFill}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
