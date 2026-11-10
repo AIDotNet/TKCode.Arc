@@ -8,6 +8,18 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0), `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` (from 1.1.0-preview.1).
 
+## Unreleased
+
+### Fixed
+
+- **Sidebar under NativeAOT** ([#100](https://github.com/AIDotNet/TKCode.Arc/issues/100)): `TKCode.Arc.Blocks` no
+  longer produces trim analysis warnings (IL2026 / IL3053) when an app uses `Sidebar`. New `LabelMemberBinding`,
+  `KeyMemberBinding`, `IconMemberBinding`, `BadgeMemberBinding`, `IsEnabledMemberBinding` and `ChildrenMemberBinding`
+  map `ItemsSource` data with compiled bindings, e.g.
+  `LabelMemberBinding="{Binding Title, DataType={x:Type local:MenuNode}}"`.
+  The string `*Member` paths keep working but resolve with reflection; trimmed and NativeAOT apps should move to the
+  `*MemberBinding` properties.
+
 ## 1.1.0-preview.1 - 2026-11-10
 
 The first preview of 1.1.0: TreeSelect, Sticky, Rating, BackToTop and new sliders in `TKCode.Arc`, glass, navigation, photo and data components in `TKCode.Arc.Special`, 58 new blocks, the video packages on NuGet, and Avalonia updates within version 12 without a new Arc release. There are no breaking changes from 1.0.0. Install it with `--version 1.1.0-preview.1` (or `--prerelease`); the API added in this version may still change before 1.1.0.

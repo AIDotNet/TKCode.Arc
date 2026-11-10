@@ -1,7 +1,7 @@
 ---
 title: 侧边栏
 summary: 工作区导航，包含分组、嵌套页面、数量和滑动的选中标记；可收起为图标窄栏。
-source-hash: b9e163cf3c04
+source-hash: b923fa300830
 ---
 
 <Demo name="Preview" />
@@ -206,7 +206,7 @@ inbox.Badge = unreadCount > 0 ? unreadCount.ToString(CultureInfo.InvariantCultur
 
 ### 绑定数据
 
-`ItemsSource` 用你自己的数据生成行，因此菜单可以来自视图模型（权限列表、服务端返回的菜单），并在数据变化时随之更新。每个对象成为一个无标题分组中的一行，该分组位于 XAML 中编写的分组之前。用 `*Member` 名称映射字段，用 `TrailingTemplate` 在行尾绘制额外内容：它的控件以你的对象作为 `DataContext`，因此可以绑定到你自己的字段。
+`ItemsSource` 用你自己的数据生成行，因此菜单可以来自视图模型（权限列表、服务端返回的菜单），并在数据变化时随之更新。每个对象成为一个无标题分组中的一行，该分组位于 XAML 中编写的分组之前。用 `*MemberBinding` 绑定映射字段，用 `TrailingTemplate` 在行尾绘制额外内容：它的控件以你的对象作为 `DataContext`，因此可以绑定到你自己的字段。
 
 <Demo name="ItemsSource" />
 
@@ -222,9 +222,9 @@ public class MenuNode
 
 ```xml
 <arc:Sidebar ItemsSource="{Binding Menus}"
-             KeyMember="Key"
-             LabelMember="Title"
-             ChildrenMember="Children"
+             KeyMemberBinding="{Binding Key}"
+             LabelMemberBinding="{Binding Title}"
+             ChildrenMemberBinding="{Binding Children}"
              SelectedKey="{Binding SelectedKey, Mode=TwoWay}">
     <arc:Sidebar.TrailingTemplate>
         <DataTemplate>
@@ -234,9 +234,9 @@ public class MenuNode
 </arc:Sidebar>
 ```
 
-- `LabelMember`、`KeyMember`、`IconMember`、`BadgeMember`、`IsEnabledMember` 和 `ChildrenMember` 是属性路径。行会跟随对象上的 `INotifyPropertyChanged`，以及 `ItemsSource` 和子级集合上的 `INotifyCollectionChanged`，列表变化时保留各行的展开状态。
+- `LabelMemberBinding`、`KeyMemberBinding`、`IconMemberBinding`、`BadgeMemberBinding`、`IsEnabledMemberBinding` 和 `ChildrenMemberBinding` 用编译绑定读取字段，裁剪和 NativeAOT 下都安全。使用编译绑定时，为每个绑定指定项的类型：`{Binding Title, DataType={x:Type local:MenuNode}}`，示例即是如此。字符串形式的 `*Member` 路径（`LabelMember="Title"` 等）仍然可用，但走反射，只适合不裁剪的应用；两者都设置时以 `*MemberBinding` 为准。行会跟随对象上的 `INotifyPropertyChanged`，以及 `ItemsSource` 和子级集合上的 `INotifyCollectionChanged`，列表变化时保留各行的展开状态。
 - 你的对象保存在 `SidebarItem.Tag` 中，因此 `SelectedItem.Tag`（或 `ItemInvoked` 的 `Item.Tag`）就是所选页面的数据。
-- 想在子类上放自己的字段？把 `SidebarItem` 的子类放进 `ItemsSource`，它们会被原样使用：不需要 `*Member` 名称，`TrailingTemplate` 仍以该项作为 `DataContext`。
+- 想在子类上放自己的字段？把 `SidebarItem` 的子类放进 `ItemsSource`，它们会被原样使用：不需要 `*MemberBinding`，`TrailingTemplate` 仍以该项作为 `DataContext`。
 - 项上已设置的 `TrailingIcon` 优先于 `TrailingTemplate`。
 
 ### 图标窄栏

@@ -288,8 +288,8 @@ inbox.Badge = unreadCount > 0 ? unreadCount.ToString(CultureInfo.InvariantCultur
 
 `ItemsSource` builds the rows from your own data, so the menu can come from a view model (a permission list, a menu the
 server returns) and follow it when it changes. Each object becomes a row in a header-less section placed before the
-sections written in XAML. Map the fields with the `*Member` names, and draw extra content at the end of a row with
-`TrailingTemplate`: its control gets your object as `DataContext`, so it can bind to your own fields.
+sections written in XAML. Map the fields with the `*MemberBinding` bindings, and draw extra content at the end of a row
+with `TrailingTemplate`: its control gets your object as `DataContext`, so it can bind to your own fields.
 
 <Demo name="ItemsSource" />
 
@@ -305,9 +305,9 @@ public class MenuNode
 
 ```xml
 <arc:Sidebar ItemsSource="{Binding Menus}"
-             KeyMember="Key"
-             LabelMember="Title"
-             ChildrenMember="Children"
+             KeyMemberBinding="{Binding Key}"
+             LabelMemberBinding="{Binding Title}"
+             ChildrenMemberBinding="{Binding Children}"
              SelectedKey="{Binding SelectedKey, Mode=TwoWay}">
     <arc:Sidebar.TrailingTemplate>
         <DataTemplate>
@@ -317,13 +317,16 @@ public class MenuNode
 </arc:Sidebar>
 ```
 
-- `LabelMember`, `KeyMember`, `IconMember`, `BadgeMember`, `IsEnabledMember` and `ChildrenMember` are property paths. The
-  rows follow `INotifyPropertyChanged` on your object and `INotifyCollectionChanged` on `ItemsSource` and on the
-  children, and keep their expanded state when the list changes.
+- `LabelMemberBinding`, `KeyMemberBinding`, `IconMemberBinding`, `BadgeMemberBinding`, `IsEnabledMemberBinding` and
+  `ChildrenMemberBinding` read the fields with compiled bindings, so they stay trimming and NativeAOT safe. Under
+  compiled bindings, give each one the item type: `{Binding Title, DataType={x:Type local:MenuNode}}`, as the demo does. The string
+  `*Member` paths (`LabelMember="Title"`, ...) still work but use reflection: use them only in apps that are not trimmed;
+  a `*MemberBinding` wins when both are set. The rows follow `INotifyPropertyChanged` on your object and
+  `INotifyCollectionChanged` on `ItemsSource` and on the children, and keep their expanded state when the list changes.
 - Your object is kept in `SidebarItem.Tag`, so `SelectedItem.Tag` (or the `Item.Tag` of `ItemInvoked`) is the data of
   the chosen page.
 - Prefer your own fields on a subclass? Put `SidebarItem` subclasses in `ItemsSource` and they are used as they are: no
-  `*Member` names are needed, and `TrailingTemplate` still gets the item as `DataContext`.
+  `*MemberBinding` is needed, and `TrailingTemplate` still gets the item as `DataContext`.
 - A `TrailingIcon` that is already set on an item wins over `TrailingTemplate`.
 
 ### Icon rail
