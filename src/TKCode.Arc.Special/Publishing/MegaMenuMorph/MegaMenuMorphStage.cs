@@ -416,6 +416,11 @@ internal sealed class MegaMenuMorphStage : Control
         _swap?.Stop();
         _presence?.Jump(0);
         _panel = default;
+        // Forget the extent too: the next opening measures the hidden stage at no size, and a Show to the same place
+        // must still re-measure it and re-place the popup. A kept extent made SetExtent see no change, so the popup
+        // stayed an empty host at the window's top-left while the panel drew there.
+        _extent = default;
+        InvalidateMeasure();
         InvalidateVisual();
     }
 
@@ -473,7 +478,7 @@ internal sealed class MegaMenuMorphStage : Control
         _extent = extent;
         InvalidateMeasure();
         _pages.InvalidateArrange();
-        if (moved && Popup is { } popup)
+        if (Popup is { } popup && (moved || popup.HorizontalOffset != extent.X))
         {
             popup.HorizontalOffset = extent.X;
         }

@@ -30,7 +30,9 @@ public sealed class ArcPopupFrame : Border
 
     public ArcPopupFrame()
     {
-        _transform = new LayoutTransformControl { Child = _slot };
+        // LayoutTransformControl clips by default; surfaces that draw their own shadow past their bounds (MegaMenuMorph's
+        // springing panel) must reach the shadow room around them.
+        _transform = new LayoutTransformControl { Child = _slot, ClipToBounds = false };
         Child = _transform;
     }
 
