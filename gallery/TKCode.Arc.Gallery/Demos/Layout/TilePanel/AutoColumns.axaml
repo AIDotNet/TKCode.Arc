@@ -4,7 +4,9 @@
              x:Class="TKCode.Arc.Gallery.Demos.TilePanelAutoColumnsDemo">
     <UserControl.Styles>
         <Style Selector="arc|TilePanel > Border">
-            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
             <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
         </Style>
     </UserControl.Styles>

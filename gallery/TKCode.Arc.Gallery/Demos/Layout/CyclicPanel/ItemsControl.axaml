@@ -11,7 +11,9 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate x:DataType="x:String">
-                    <Border Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                    <Border Background="{arc:ArcDesignTokenResource Surface}"
+                            BorderBrush="{arc:ArcDesignTokenResource Border}"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                             CornerRadius="{arc:ArcDesignTokenResource RadiusStep12}"
                             Padding="16,0">
                         <TextBlock Text="{Binding}" VerticalAlignment="Center" />

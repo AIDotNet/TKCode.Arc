@@ -4,9 +4,10 @@
              x:Class="TKCode.Arc.Gallery.Demos.CyclicPanelPreviewDemo">
     <UserControl.Styles>
         <Style Selector="arc|CyclicPanel > Border">
-            <Setter Property="Margin" Value="0,3" />
             <Setter Property="Padding" Value="16,0" />
-            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
             <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
         </Style>
         <Style Selector="arc|CyclicPanel > Border > TextBlock">
@@ -15,7 +16,7 @@
         </Style>
     </UserControl.Styles>
     <StackPanel Spacing="12" Width="280">
-        <arc:CyclicPanel x:Name="Wheel" Height="280" VisibleItemCount="5">
+        <arc:CyclicPanel x:Name="Wheel" Height="280" VisibleItemCount="5" Spacing="6">
             <Border><TextBlock Text="Item 0" /></Border>
             <Border><TextBlock Text="Item 1" /></Border>
             <Border><TextBlock Text="Item 2" /></Border>
