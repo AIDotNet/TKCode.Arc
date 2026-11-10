@@ -4,43 +4,66 @@ using Avalonia.Media;
 namespace TKCode.Arc;
 
 /// <summary>
-/// A closed polygon of a fixed number of slots for <see cref="CubeMascot"/>, built once and moved in place each frame.
-/// With a corner rounding each slot is a line into the corner and a quadratic curve around it (the silhouette); without
-/// it the curves collapse onto the corners (the faces). Unused slots repeat the last point, so a 4-sided hull fits in an
-/// 8-slot path. Drawing never allocates.
+/// A closed polygon of a fixed number of slots for <see cref="CubeMascot"/>. With a corner rounding each slot is a line
+/// into the corner and a quadratic curve around it (the silhouette); without it the curves collapse onto the corners (the
+/// faces). Unused slots repeat the last point, so a 4-sided hull fits in an 8-slot path.
+/// <para>
+/// A frame moves the points in an array; the path is built from them when it is next drawn, and only if a point moved,
+/// so a face that is turned away or a cube that holds still builds nothing. A path object edited in place would raise a
+/// property change for every point and be rebuilt for the renderer all the same.
+/// </para>
 /// </summary>
 internal sealed class CubeMascotShape
 {
-    private readonly PathFigure _figure = new() { IsClosed = true, IsFilled = true };
-    private readonly LineSegment[] _lines;
-    private readonly QuadraticBezierSegment[] _curves;
+    // Three points per slot: where the line ends, the curve's control point and where the curve ends.
+    private readonly Point[] _points;
+    private readonly int _slots;
+    private Point _start;
+    private StreamGeometry? _geometry;
+    private bool _set;
 
     public CubeMascotShape(int slots)
     {
-        _lines = new LineSegment[slots];
-        _curves = new QuadraticBezierSegment[slots];
-        for (var i = 0; i < slots; i++)
-        {
-            _lines[i] = new LineSegment();
-            _curves[i] = new QuadraticBezierSegment();
-            _figure.Segments!.Add(_lines[i]);
-            _figure.Segments.Add(_curves[i]);
-        }
-        Geometry.Figures!.Add(_figure);
+        _slots = slots;
+        _points = new Point[slots * 3];
     }
 
-    /// <summary>The path.</summary>
-    public PathGeometry Geometry { get; } = new();
+    /// <summary>The path for the points now.</summary>
+    public Geometry Geometry
+    {
+        get
+        {
+            if (_geometry is { } geometry)
+            {
+                return geometry;
+            }
+            geometry = new StreamGeometry();
+            using (var context = geometry.Open())
+            {
+                context.SetFillRule(FillRule.EvenOdd);
+                context.BeginFigure(_start, true);
+                for (var i = 0; i < _points.Length; i += 3)
+                {
+                    context.LineTo(_points[i]);
+                    context.QuadraticBezierTo(_points[i + 1], _points[i + 2]);
+                }
+                context.EndFigure(true);
+            }
+            _geometry = geometry;
+            return geometry;
+        }
+    }
 
     /// <summary>Moves the path onto <paramref name="count"/> points of <paramref name="points"/>, each corner rounded by up to <paramref name="rounding"/> px.</summary>
     public void Set(ReadOnlySpan<Point> points, int count, double rounding)
     {
-        var slots = _lines.Length;
+        var slots = _slots;
         count = Math.Min(count, slots);
         if (count < 3)
         {
             return;
         }
+        var moved = !_set;
         Point first = default;
         Point last = default;
         for (var i = 0; i < slots; i++)
@@ -48,8 +71,7 @@ internal sealed class CubeMascotShape
             if (i >= count)
             {
                 // Unused slots stay where the path already is: zero-length segments.
-                Move(_lines[i], last);
-                Move(_curves[i], last, last);
+                moved |= Move(i * 3, last) | Move(i * 3 + 1, last) | Move(i * 3 + 2, last);
                 continue;
             }
             var corner = points[i];
@@ -69,13 +91,18 @@ internal sealed class CubeMascotShape
             {
                 first = into;
             }
-            Move(_lines[i], into);
-            Move(_curves[i], corner, outOf);
+            moved |= Move(i * 3, into) | Move(i * 3 + 1, corner) | Move(i * 3 + 2, outOf);
             last = outOf;
         }
-        if (_figure.StartPoint != first)
+        if (_start != first)
         {
-            _figure.StartPoint = first;
+            _start = first;
+            moved = true;
+        }
+        _set = true;
+        if (moved)
+        {
+            _geometry = null;
         }
     }
 
@@ -104,23 +131,13 @@ internal sealed class CubeMascotShape
         return new Point(corner.X + dx * d, corner.Y + dy * d);
     }
 
-    private static void Move(LineSegment line, Point point)
+    private bool Move(int index, Point point)
     {
-        if (line.Point != point)
+        if (_points[index] == point)
         {
-            line.Point = point;
+            return false;
         }
-    }
-
-    private static void Move(QuadraticBezierSegment curve, Point control, Point end)
-    {
-        if (curve.Point1 != control)
-        {
-            curve.Point1 = control;
-        }
-        if (curve.Point2 != end)
-        {
-            curve.Point2 = end;
-        }
+        _points[index] = point;
+        return true;
     }
 }

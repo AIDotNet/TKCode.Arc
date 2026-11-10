@@ -4,6 +4,7 @@ using Avalonia.Automation.Peers;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using Avalonia.Media.Immutable;
 using Avalonia.VisualTree;
 using TKCode.Arc.Motion;
 
@@ -143,21 +144,27 @@ public class CubeMascot : Control
     private readonly CubeMascotScene _scene = new();
     private readonly CubeMascotShape _hull = new(8);
     private readonly CubeMascotShape[] _faces = [new(4), new(4), new(4), new(4), new(4), new(4)];
-    private readonly PathGeometry _mouth = new();
-    private readonly PathFigure _mouthFigure = new() { IsClosed = false, IsFilled = false };
-    private readonly QuadraticBezierSegment _mouthCurve = new();
+    private readonly AiCurve _mouth = new();
     private readonly double[] _pose = new double[CubeMascotPose.Count];
     private readonly double[] _target = new double[CubeMascotPose.Count];
     private readonly double[] _from = new double[CubeMascotPose.Count];
-    private readonly SolidColorBrush[] _faceBrushes =
-        [new(Colors.Gray), new(Colors.Gray), new(Colors.Gray), new(Colors.Gray), new(Colors.Gray), new(Colors.Gray)];
-    private readonly SolidColorBrush _baseBrush = new(Colors.Gray);
-    private readonly SolidColorBrush _inkBrush = new(Colors.White);
-    private readonly SolidColorBrush _lineBrush = new(Colors.Gray);
-    private readonly SolidColorBrush _shadowBrush = new(Colors.Black);
-    private readonly SolidColorBrush _sparkleBrush = new(Colors.Gray);
-    private readonly Pen _inkPen;
-    private readonly Pen _linePen;
+    // Brushes and pens are immutable and replaced only when their color or weight changes: a face that keeps its shade
+    // keeps its brush, and nothing here raises a change notification during a frame.
+    private readonly IImmutableSolidColorBrush[] _faceBrushes =
+        [Brushes.Gray, Brushes.Gray, Brushes.Gray, Brushes.Gray, Brushes.Gray, Brushes.Gray];
+    private readonly double[] _faceLight = [double.NaN, double.NaN, double.NaN, double.NaN, double.NaN, double.NaN];
+    private IImmutableSolidColorBrush _baseBrush = Brushes.Gray;
+    private IImmutableSolidColorBrush _inkBrush = Brushes.White;
+    private IImmutableSolidColorBrush _lineBrush = Brushes.Gray;
+    private IImmutableSolidColorBrush _shadowBrush = Brushes.Black;
+    private IImmutableSolidColorBrush _sparkleBrush = Brushes.Gray;
+    private ImmutablePen _inkPen;
+    private ImmutablePen _linePen;
+    private double _inkThickness = 0.055;
+    private double _lineThickness = 2;
+    private Point _mouthStart;
+    private Point _mouthControl;
+    private Point _mouthEnd;
     private readonly Point[] _lineFrom = new Point[4];
     private readonly Point[] _lineTo = new Point[4];
     private readonly double[] _lineOpacity = new double[4];
@@ -228,10 +235,8 @@ public class CubeMascot : Control
     /// <summary>Creates a cube mascot; with no status it plays through every state on a loop.</summary>
     public CubeMascot()
     {
-        _inkPen = new Pen(_inkBrush, 0.055, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round);
-        _linePen = new Pen(_lineBrush, 2, lineCap: PenLineCap.Round);
-        _mouthFigure.Segments!.Add(_mouthCurve);
-        _mouth.Figures!.Add(_mouthFigure);
+        _inkPen = InkPen();
+        _linePen = LinePen();
         _loop = new LiveLoop(this, Step);
         // The motion level can also come from the theme's resources (a motion token): re-read it when they change.
         ResourcesChanged += (_, _) => RefreshLevel();
@@ -677,10 +682,17 @@ public class CubeMascot : Control
             if (_scene.Facing[f] > 0.001)
             {
                 _faces[f].SetQuad(_scene.Corners, CubeMascotScene.FaceCorners(f));
-                Recolor(_faceBrushes[f], Shade(_scene.Light[f]));
+                var light = _scene.Light[f];
+                if (light != _faceLight[f])
+                {
+                    // The shade is a function of the light alone (the colors reset it), so a face that holds its angle
+                    // skips the color mix.
+                    _faceLight[f] = light;
+                    Recolor(ref _faceBrushes[f], Shade(light));
+                }
             }
         }
-        Recolor(_baseBrush, _front);
+        Recolor(ref _baseBrush, _front);
 
         // The painted face: visible on the side at the front, fading on a side that turns away, opening on one that arrives.
         var blink = double.IsNaN(_blinkStart) ? 0 : CubeMascotPose.Blink(_clock - _blinkStart);
@@ -697,9 +709,10 @@ public class CubeMascot : Control
         _gazeX = _pose[CubeMascotPose.GazeX];
         _gazeY = _pose[CubeMascotPose.GazeY];
         var thickness = _compact ? 0.075 : 0.055;
-        if (_inkPen.Thickness != thickness)
+        if (_inkThickness != thickness)
         {
-            _inkPen.Thickness = thickness;
+            _inkThickness = thickness;
+            _inkPen = InkPen();
         }
         UpdateMouth();
 
@@ -713,9 +726,10 @@ public class CubeMascot : Control
         _ink = ground ? Math.Clamp(_pose[CubeMascotPose.Ink], 0, 1) : 0;
         UpdateLines(origin);
         var lineThickness = Math.Max(1, _unit * 0.07);
-        if (_linePen.Thickness != lineThickness)
+        if (_lineThickness != lineThickness)
         {
-            _linePen.Thickness = lineThickness;
+            _lineThickness = lineThickness;
+            _linePen = LinePen();
         }
 
         // The sparkle: grows and turns in when done, then twinkles slowly.
@@ -733,22 +747,15 @@ public class CubeMascot : Control
         const double half = 0.075;
         var dx = _gazeX * 0.5;
         var dy = _gazeY * 0.5;
-        var start = new Point(-half + dx, y + dy);
-        if (_mouthFigure.StartPoint != start)
-        {
-            _mouthFigure.StartPoint = start;
-        }
-        var control = new Point(dx, y + dy + 0.11 * _mouthCurveAmount);
-        var end = new Point(half + dx, y + dy);
-        if (_mouthCurve.Point1 != control)
-        {
-            _mouthCurve.Point1 = control;
-        }
-        if (_mouthCurve.Point2 != end)
-        {
-            _mouthCurve.Point2 = end;
-        }
+        // The curve itself is built when a face draws it, and only if it moved.
+        _mouthStart = new Point(-half + dx, y + dy);
+        _mouthControl = new Point(dx, y + dy + 0.11 * _mouthCurveAmount);
+        _mouthEnd = new Point(half + dx, y + dy);
     }
+
+    private ImmutablePen InkPen() => new(_inkBrush, _inkThickness, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round);
+
+    private ImmutablePen LinePen() => new(_lineBrush, _lineThickness, lineCap: PenLineCap.Round);
 
     // Four lines in flight: each slides out from under the face along the ground for 1.44s, fading in and out.
     private void UpdateLines(Point origin)
@@ -804,18 +811,28 @@ public class CubeMascot : Control
             : ColorOf(FrontBrush, _body);
         _top = TopBrush is null ? Oklch.MixOklab(_body, Colors.White, TopLift) : ColorOf(TopBrush, _body);
         _side = SideBrush is null ? Oklch.MixOklab(_body, Colors.Black, SideShade) : ColorOf(SideBrush, _body);
-        Recolor(_inkBrush, ColorOf(FaceBrush, Colors.White));
-        Recolor(_lineBrush, ColorOf(LineBrush, Colors.Gray));
-        Recolor(_shadowBrush, ColorOf(ShadowBrush, ColorOf(ShadowTone, Colors.Black)));
-        Recolor(_sparkleBrush, ColorOf(SparkleBrush, _body));
+        // The faces' shades come from these colors: mix them again on the next compose.
+        Array.Fill(_faceLight, double.NaN);
+        if (Recolor(ref _inkBrush, ColorOf(FaceBrush, Colors.White)))
+        {
+            _inkPen = InkPen();
+        }
+        if (Recolor(ref _lineBrush, ColorOf(LineBrush, Colors.Gray)))
+        {
+            _linePen = LinePen();
+        }
+        Recolor(ref _shadowBrush, ColorOf(ShadowBrush, ColorOf(ShadowTone, Colors.Black)));
+        Recolor(ref _sparkleBrush, ColorOf(SparkleBrush, _body));
     }
 
-    private static void Recolor(SolidColorBrush brush, Color color)
+    private static bool Recolor(ref IImmutableSolidColorBrush brush, Color color)
     {
-        if (brush.Color != color)
+        if (brush.Color == color)
         {
-            brush.Color = color;
+            return false;
         }
+        brush = new ImmutableSolidColorBrush(color);
+        return true;
     }
 
     private static Color ColorOf(IBrush? brush, Color fallback) => brush switch
@@ -904,7 +921,7 @@ public class CubeMascot : Control
         var ey = (compact ? -0.03 : -0.05) + _gazeY;
         var ew = compact ? 0.15 : 0.1;
         var eh = compact ? 0.28 : 0.21;
-        var line = _inkPen.Thickness;
+        var line = _inkThickness;
         var open = _eyeOpen * eyes;
         // Open pills pass through a closed line into the squint (and back), never a jump.
         var pill = Math.Max(0, open - _squint);
@@ -941,7 +958,7 @@ public class CubeMascot : Control
         }
         if (!compact)
         {
-            context.DrawGeometry(null, _inkPen, _mouth);
+            context.DrawGeometry(null, _inkPen, _mouth.Get(_mouthStart, _mouthControl, _mouthEnd));
         }
     }
 

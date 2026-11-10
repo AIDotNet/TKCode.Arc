@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Media;
+using Avalonia.Media.Immutable;
 
 namespace TKCode.Arc;
 
@@ -26,43 +27,46 @@ public partial class GhostMascot
     private const double EyeRadiusY = 4.4;
     private const int SwirlSegments = 20;
 
-    private readonly SolidColorBrush _bodyBrush = new(Colors.Gray);
-    private readonly SolidColorBrush _eyeBrush = new(Colors.White);
-    private readonly SolidColorBrush _markBrush = new(Colors.Gray);
-    private readonly SolidColorBrush _shadeBrush = new(Colors.Transparent);
-    private readonly SolidColorBrush _groundBrush = new(Colors.Transparent);
-    private readonly SolidColorBrush _hairlineBrush = new(Colors.Transparent);
+    // A four-point star (unit half size), filled; shared by every ghost (never changed).
+    private static readonly Geometry s_star = BuildStar();
+
+    // The sheet's outline: the start, the two head arcs' ends, then three points for each of the 14 curves (right side,
+    // right corner, the hem's ten pieces, left corner, left side).
+    private const int OutlineHem = 9;
+    private const int OutlinePoints = 3 + 3 * (HemSegments + 4);
+
+    private readonly Point[] _outline = new Point[OutlinePoints];
+    private readonly AiCurve _happyLeft = new();
+    private readonly AiCurve _happyRight = new();
+    private readonly AiCurve _smile = new();
+    private StreamGeometry? _body;
+    private bool _outlineReady;
+
+    private IImmutableSolidColorBrush _bodyBrush = Brushes.Gray;
+    private IImmutableSolidColorBrush _eyeBrush = Brushes.White;
+    private IImmutableSolidColorBrush _markBrush = Brushes.Gray;
+    private IImmutableSolidColorBrush _shadeBrush = Brushes.Transparent;
+    private IImmutableSolidColorBrush _groundBrush = Brushes.Transparent;
+    private IImmutableSolidColorBrush _hairlineBrush = Brushes.Transparent;
     private bool _hasHairline;
 
-    private Pen _hairlinePen = null!;
-    private Pen _markPen = null!;
-    private Pen _shaftPen = null!;
-    private Pen _nibPen = null!;
-    private Pen _featurePen = null!;
+    private ImmutablePen _hairlinePen = null!;
+    private ImmutablePen _markPen = null!;
+    private ImmutablePen _shaftPen = null!;
+    private ImmutablePen _nibPen = null!;
+    private ImmutablePen _featurePen = null!;
+    private bool _drawingReady;
 
-    private PathGeometry _body = null!;
-    private PathFigure _bodyFigure = null!;
-    private ArcSegment _headLeft = null!;
-    private ArcSegment _headRight = null!;
-    private BezierSegment _rightSide = null!;
-    private BezierSegment _rightCorner = null!;
-    private BezierSegment[] _hem = null!;
-    private BezierSegment _leftCorner = null!;
-    private BezierSegment _leftSide = null!;
-
-    private PathGeometry _star = null!;
-    private PathGeometry _happyLeft = null!;
-    private PathGeometry _happyRight = null!;
-    private PathGeometry _smile = null!;
-    private QuadraticBezierSegment _happyLeftCurve = null!;
-    private QuadraticBezierSegment _happyRightCurve = null!;
-    private QuadraticBezierSegment _smileCurve = null!;
+    private GhostMascotLayout _layout = GhostMascotLayout.Regular;
 
     /// <summary>The drawing in use: compact under 56px, regular from there up.</summary>
-    internal GhostMascotLayout Layout => IsCompact ? GhostMascotLayout.Compact : GhostMascotLayout.Regular;
+    internal GhostMascotLayout Layout => _layout;
 
-    /// <summary>The sheet's path (test hook).</summary>
-    internal PathGeometry BodyGeometry => _body;
+    /// <summary>The sheet's path for the pose now (test hook).</summary>
+    internal Geometry BodyGeometry => Body();
+
+    /// <summary>Where piece <paramref name="index"/> of the hem ends (0 is the rightmost; test hook).</summary>
+    internal Point HemEnd(int index) => _outline[OutlineHem + 3 * index + 2];
 
     internal Color BodyColor => _bodyBrush.Color;
     internal Color EyeColor => _eyeBrush.Color;
@@ -71,85 +75,54 @@ public partial class GhostMascot
 
     private void CreateDrawing()
     {
-        _hairlinePen = new Pen(_hairlineBrush, 1);
-        _markPen = new Pen(_markBrush, 1.7, lineCap: PenLineCap.Round);
-        _shaftPen = new Pen(_markBrush, 2.6, lineCap: PenLineCap.Round);
-        _nibPen = new Pen(_markBrush, 1.1, lineCap: PenLineCap.Round);
-        _featurePen = new Pen(_eyeBrush, 1.6, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round);
-
-        _headLeft = new ArcSegment { Size = new Size(HeadRadius, HeadRadius), SweepDirection = SweepDirection.Clockwise };
-        _headRight = new ArcSegment { Size = new Size(HeadRadius, HeadRadius), SweepDirection = SweepDirection.Clockwise };
-        _rightSide = new BezierSegment();
-        _rightCorner = new BezierSegment();
-        _leftCorner = new BezierSegment();
-        _leftSide = new BezierSegment();
-        _hem = new BezierSegment[HemSegments];
-        _bodyFigure = new PathFigure { IsClosed = true, IsFilled = true };
-        _bodyFigure.Segments!.Add(_headLeft);
-        _bodyFigure.Segments.Add(_headRight);
-        _bodyFigure.Segments.Add(_rightSide);
-        _bodyFigure.Segments.Add(_rightCorner);
-        for (var i = 0; i < HemSegments; i++)
-        {
-            _hem[i] = new BezierSegment();
-            _bodyFigure.Segments.Add(_hem[i]);
-        }
-        _bodyFigure.Segments.Add(_leftCorner);
-        _bodyFigure.Segments.Add(_leftSide);
-        _body = new PathGeometry();
-        _body.Figures!.Add(_bodyFigure);
-
-        // A four-point star (unit half size), filled.
-        var star = new PathFigure { StartPoint = new Point(0, -1), IsClosed = true, IsFilled = true };
-        star.Segments!.Add(new QuadraticBezierSegment { Point1 = new Point(0.14, -0.14), Point2 = new Point(1, 0) });
-        star.Segments.Add(new QuadraticBezierSegment { Point1 = new Point(0.14, 0.14), Point2 = new Point(0, 1) });
-        star.Segments.Add(new QuadraticBezierSegment { Point1 = new Point(-0.14, 0.14), Point2 = new Point(-1, 0) });
-        star.Segments.Add(new QuadraticBezierSegment { Point1 = new Point(-0.14, -0.14), Point2 = new Point(0, -1) });
-        _star = new PathGeometry();
-        _star.Figures!.Add(star);
-
-        (_happyLeft, _happyLeftCurve) = StrokeCurve();
-        (_happyRight, _happyRightCurve) = StrokeCurve();
-        (_smile, _smileCurve) = StrokeCurve();
-        UpdatePens();
+        _drawingReady = true;
+        UpdateDrawingLayout();
         UpdateColors();
     }
 
-    private static (PathGeometry Geometry, QuadraticBezierSegment Curve) StrokeCurve()
+    private static Geometry BuildStar()
     {
-        var curve = new QuadraticBezierSegment();
-        var figure = new PathFigure { IsClosed = false, IsFilled = false };
-        figure.Segments!.Add(curve);
-        var geometry = new PathGeometry();
-        geometry.Figures!.Add(figure);
-        return (geometry, curve);
+        var geometry = new StreamGeometry();
+        using (var context = geometry.Open())
+        {
+            context.SetFillRule(FillRule.EvenOdd);
+            context.BeginFigure(new Point(0, -1), true);
+            context.QuadraticBezierTo(new Point(0.14, -0.14), new Point(1, 0));
+            context.QuadraticBezierTo(new Point(0.14, 0.14), new Point(0, 1));
+            context.QuadraticBezierTo(new Point(-0.14, 0.14), new Point(-1, 0));
+            context.QuadraticBezierTo(new Point(-0.14, -0.14), new Point(0, -1));
+            context.EndFigure(true);
+        }
+        return geometry;
     }
+
+    /// <summary>Picks the drawing for the size (read once per change, not per frame).</summary>
+    private void UpdateDrawingLayout() => _layout = IsCompact ? GhostMascotLayout.Compact : GhostMascotLayout.Regular;
 
     /// <summary>Stroke weights follow the drawing (heavier in the compact one) and the hairline stays 1px at any size.</summary>
     private void UpdatePens()
     {
-        if (_markPen is null)
+        if (!_drawingReady)
         {
             return;
         }
         var layout = Layout;
         var unit = Math.Max(0.01, Size / 100 * layout.Frame);
-        _hairlinePen.Thickness = GetValue(HairlineWidthProperty) / unit;
-        _markPen.Thickness = 1.7 * layout.Stroke;
-        _shaftPen.Thickness = 2.8 * layout.Stroke;
-        _nibPen.Thickness = 1.1 * layout.Stroke;
-        _featurePen.Thickness = 1.6 * layout.Stroke;
+        _hairlinePen = new ImmutablePen(_hairlineBrush, GetValue(HairlineWidthProperty) / unit);
+        _markPen = new ImmutablePen(_markBrush, 1.7 * layout.Stroke, lineCap: PenLineCap.Round);
+        _shaftPen = new ImmutablePen(_markBrush, 2.8 * layout.Stroke, lineCap: PenLineCap.Round);
+        _nibPen = new ImmutablePen(_markBrush, 1.1 * layout.Stroke, lineCap: PenLineCap.Round);
+        _featurePen = new ImmutablePen(_eyeBrush, 1.6 * layout.Stroke, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round);
     }
 
-    /// <summary>Moves the sheet's and the face's path points to the pose now (frames and property changes, never Render).</summary>
+    /// <summary>Moves the sheet's outline to the pose now (frames and property changes, never Render).</summary>
     private void Sync()
     {
-        if (_body is null)
+        if (!_drawingReady)
         {
             return;
         }
         UpdateBody();
-        UpdateFace();
     }
 
     private void UpdateBody()
@@ -163,10 +136,12 @@ public partial class GhostMascot
         const double cx = 50;
         var left = cx - HeadRadius;
         var right = cx + HeadRadius;
+        var at = 0;
+        var moved = !_outlineReady;
 
-        _bodyFigure.StartPoint = new Point(left, HeadCenterY);
-        _headLeft.Point = new Point(cx, HeadCenterY - HeadRadius);
-        _headRight.Point = new Point(right, HeadCenterY);
+        Put(new Point(left, HeadCenterY));
+        Put(new Point(cx, HeadCenterY - HeadRadius));
+        Put(new Point(right, HeadCenterY));
 
         var xr = cx + half;
         var xl = cx - half;
@@ -177,15 +152,15 @@ public partial class GhostMascot
         var sideRight = yr - HemCorner;
         var sideLeft = yl - HemCorner;
 
-        _rightSide.Point1 = new Point(right, HeadCenterY + 14);
-        _rightSide.Point2 = new Point(xr, sideRight - 12);
-        _rightSide.Point3 = new Point(xr, sideRight);
+        Put(new Point(right, HeadCenterY + 14));
+        Put(new Point(xr, sideRight - 12));
+        Put(new Point(xr, sideRight));
 
         // The rounded corner leaves the side going straight down and meets the hem along its slope (heading left).
         var nr = Math.Sqrt(1 + mr * mr);
-        _rightCorner.Point1 = new Point(xr, sideRight + 0.55 * HemCorner);
-        _rightCorner.Point2 = new Point(hemRight + 0.55 * HemCorner / nr, yr + 0.55 * HemCorner * mr / nr);
-        _rightCorner.Point3 = new Point(hemRight, yr);
+        Put(new Point(xr, sideRight + 0.55 * HemCorner));
+        Put(new Point(hemRight + 0.55 * HemCorner / nr, yr + 0.55 * HemCorner * mr / nr));
+        Put(new Point(hemRight, yr));
 
         // The hem from right to left: cubic Hermite pieces through samples of the two waves, exact in x.
         var x0 = hemRight;
@@ -197,48 +172,65 @@ public partial class GhostMascot
             var x1 = i == HemSegments - 1 ? hemLeft : x0 + step;
             var (y1, m1) = GhostMascotPose.Hem(x1, baseline, amp, phase);
             var h = x1 - x0;
-            var segment = _hem[i];
-            segment.Point1 = new Point(x0 + h / 3, y0 + m0 * h / 3);
-            segment.Point2 = new Point(x1 - h / 3, y1 - m1 * h / 3);
-            segment.Point3 = new Point(x1, y1);
+            Put(new Point(x0 + h / 3, y0 + m0 * h / 3));
+            Put(new Point(x1 - h / 3, y1 - m1 * h / 3));
+            Put(new Point(x1, y1));
             x0 = x1;
             y0 = y1;
             m0 = m1;
         }
 
         var nl = Math.Sqrt(1 + ml * ml);
-        _leftCorner.Point1 = new Point(hemLeft - 0.55 * HemCorner / nl, yl - 0.55 * HemCorner * ml / nl);
-        _leftCorner.Point2 = new Point(xl, sideLeft + 0.55 * HemCorner);
-        _leftCorner.Point3 = new Point(xl, sideLeft);
+        Put(new Point(hemLeft - 0.55 * HemCorner / nl, yl - 0.55 * HemCorner * ml / nl));
+        Put(new Point(xl, sideLeft + 0.55 * HemCorner));
+        Put(new Point(xl, sideLeft));
 
-        _leftSide.Point1 = new Point(xl, sideLeft - 12);
-        _leftSide.Point2 = new Point(left, HeadCenterY + 14);
-        _leftSide.Point3 = new Point(left, HeadCenterY);
+        Put(new Point(xl, sideLeft - 12));
+        Put(new Point(left, HeadCenterY + 14));
+        Put(new Point(left, HeadCenterY));
+
+        _outlineReady = true;
+        if (moved)
+        {
+            // The path is built by the next render, once, however many times the pose moved before it.
+            _body = null;
+        }
+
+        void Put(Point point)
+        {
+            if (_outline[at] != point)
+            {
+                _outline[at] = point;
+                moved = true;
+            }
+            at++;
+        }
     }
 
-    private void UpdateFace()
+    /// <summary>The sheet's path for the outline now: two arcs over the head, then the sides, corners and hem as cubics.</summary>
+    private StreamGeometry Body()
     {
-        var layout = Layout;
-        var (lx, rx, ey, _, _) = EyeGeometry(layout);
-        var arcRx = EyeRadiusX * layout.EyeScale * 1.1;
-        var arcRy = EyeRadiusY * layout.EyeScale;
-        SetArc(_happyLeft, _happyLeftCurve, lx, ey, arcRx, arcRy);
-        SetArc(_happyRight, _happyRightCurve, rx, ey, arcRx, arcRy);
-
-        var smile = _pose[GhostMascotPose.Smile];
-        var mx = (lx + rx) / 2;
-        var my = ey + EyeRadiusY * layout.EyeScale + 3;
-        var half = 3.6 * Math.Min(1.25, layout.EyeScale);
-        _smile.Figures![0].StartPoint = new Point(mx - half, my);
-        _smileCurve.Point1 = new Point(mx, my + 3.4 * smile);
-        _smileCurve.Point2 = new Point(mx + half, my);
-    }
-
-    private static void SetArc(PathGeometry geometry, QuadraticBezierSegment curve, double cx, double cy, double rx, double ry)
-    {
-        geometry.Figures![0].StartPoint = new Point(cx - rx, cy + ry * 0.3);
-        curve.Point1 = new Point(cx, cy - ry * 1.2);
-        curve.Point2 = new Point(cx + rx, cy + ry * 0.3);
+        if (_body is { } body)
+        {
+            return body;
+        }
+        var points = _outline;
+        var geometry = new StreamGeometry();
+        using (var context = geometry.Open())
+        {
+            var radius = new Size(HeadRadius, HeadRadius);
+            context.SetFillRule(FillRule.EvenOdd);
+            context.BeginFigure(points[0], true);
+            context.ArcTo(points[1], radius, 0, false, SweepDirection.Clockwise);
+            context.ArcTo(points[2], radius, 0, false, SweepDirection.Clockwise);
+            for (var i = 3; i < OutlinePoints; i += 3)
+            {
+                context.CubicBezierTo(points[i], points[i + 1], points[i + 2]);
+            }
+            context.EndFigure(true);
+        }
+        _body = geometry;
+        return geometry;
     }
 
     /// <summary>The eyes now (body coordinates): left and right centers, their height and radii, gaze included.</summary>
@@ -261,7 +253,8 @@ public partial class GhostMascot
         return (layout.LineStart + (layout.LineEnd - layout.LineStart) * pen, layout.LineY - lift);
     }
 
-    // Colors are set on property changes, never in Render: the brushes are reused and only recolored.
+    // Colors are set on property changes, never in Render: a brush (and a pen that uses it) is replaced only when its
+    // color changes.
     private void UpdateColors()
     {
         var accent = ColorOf(GetValue(AccentInkProperty), Color.FromRgb(0x77, 0x47, 0xFF));
@@ -313,20 +306,26 @@ public partial class GhostMascot
             ? ColorOf(groundBrush, Colors.Transparent)
             : Oklch.WithAlpha(foreground, Math.Clamp(GetValue(GroundOpacityProperty), 0, 1));
 
-        Recolor(_bodyBrush, body);
-        Recolor(_eyeBrush, eye);
-        Recolor(_markBrush, mark);
-        Recolor(_shadeBrush, shade);
-        Recolor(_groundBrush, ground);
-        Recolor(_hairlineBrush, hairline);
+        var pens = Recolor(ref _eyeBrush, eye);
+        pens |= Recolor(ref _markBrush, mark);
+        pens |= Recolor(ref _hairlineBrush, hairline);
+        Recolor(ref _bodyBrush, body);
+        Recolor(ref _shadeBrush, shade);
+        Recolor(ref _groundBrush, ground);
+        if (pens || _markPen is null)
+        {
+            UpdatePens();
+        }
     }
 
-    private static void Recolor(SolidColorBrush brush, Color color)
+    private static bool Recolor(ref IImmutableSolidColorBrush brush, Color color)
     {
-        if (brush.Color != color)
+        if (brush.Color == color)
         {
-            brush.Color = color;
+            return false;
         }
+        brush = new ImmutableSolidColorBrush(color);
+        return true;
     }
 
     private static Color ColorOf(IBrush? brush, Color fallback) => brush switch
@@ -371,14 +370,15 @@ public partial class GhostMascot
             {
                 using (context.PushOpacity(Math.Clamp(_pose[GhostMascotPose.Opacity], 0, 1)))
                 {
-                    context.DrawGeometry(_bodyBrush, null, _body);
-                    using (context.PushGeometryClip(_body))
+                    var body = Body();
+                    context.DrawGeometry(_bodyBrush, null, body);
+                    using (context.PushGeometryClip(body))
                     {
                         context.DrawEllipse(_shadeBrush, null, new Point(66, 66), 18, 25);
                     }
                     if (_hasHairline)
                     {
-                        context.DrawGeometry(null, _hairlinePen, _body);
+                        context.DrawGeometry(null, _hairlinePen, body);
                     }
                 }
                 DrawFace(context, layout);
@@ -418,21 +418,30 @@ public partial class GhostMascot
         }
         if (happy > 0.02)
         {
+            var arcRx = EyeRadiusX * layout.EyeScale * 1.1;
+            var arcRy = EyeRadiusY * layout.EyeScale;
             using (context.PushOpacity(happy))
             {
-                context.DrawGeometry(null, _featurePen, _happyLeft);
-                context.DrawGeometry(null, _featurePen, _happyRight);
+                context.DrawGeometry(null, _featurePen, HappyArc(_happyLeft, lx, ey, arcRx, arcRy));
+                context.DrawGeometry(null, _featurePen, HappyArc(_happyRight, rx, ey, arcRx, arcRy));
             }
         }
         var smile = _pose[GhostMascotPose.Smile];
         if (smile > 0.02)
         {
+            var mx = (lx + rx) / 2;
+            var my = ey + EyeRadiusY * layout.EyeScale + 3;
+            var half = 3.6 * Math.Min(1.25, layout.EyeScale);
+            var curve = _smile.Get(new Point(mx - half, my), new Point(mx, my + 3.4 * smile), new Point(mx + half, my));
             using (context.PushOpacity(Math.Clamp(smile, 0, 1)))
             {
-                context.DrawGeometry(null, _featurePen, _smile);
+                context.DrawGeometry(null, _featurePen, curve);
             }
         }
     }
+
+    private static Geometry HappyArc(AiCurve curve, double cx, double cy, double rx, double ry) =>
+        curve.Get(new Point(cx - rx, cy + ry * 0.3), new Point(cx, cy - ry * 1.2), new Point(cx + rx, cy + ry * 0.3));
 
     private void DrawEye(DrawingContext context, double x, double y, double radiusX, double radiusY, double degrees)
     {
@@ -500,13 +509,13 @@ public partial class GhostMascot
                   Matrix.CreateTranslation(center.X, center.Y);
         using (context.PushTransform(big))
         {
-            context.DrawGeometry(_markBrush, null, _star);
+            context.DrawGeometry(_markBrush, null, s_star);
         }
         var small = Matrix.CreateScale(size * 0.45 * twinkleSmall, size * 0.45 * twinkleSmall) * Matrix.CreateRotation(-turn) *
                     Matrix.CreateTranslation(center.X + layout.SparkleSize * 0.9, center.Y + layout.SparkleSize * 1.5);
         using (context.PushTransform(small))
         {
-            context.DrawGeometry(_markBrush, null, _star);
+            context.DrawGeometry(_markBrush, null, s_star);
         }
     }
 

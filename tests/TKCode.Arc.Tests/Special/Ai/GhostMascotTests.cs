@@ -288,21 +288,17 @@ public class GhostMascotTests
     {
         var (ghost, _) = Open(ArcMotionLevel.Full, g => g.Status = GhostMascotStatus.Idle);
         var geometry = ghost.BodyGeometry;
-        var figure = geometry.Figures![0];
-        figure.Segments!.Count.ShouldBe(16);
-        var hem = (BezierSegment)figure.Segments[6];
-        var before = hem.Point3;
-        Run(ghost, 0.4);
+        var before = ghost.HemEnd(2);
+        // A ghost that has not moved keeps its path.
         ghost.BodyGeometry.ShouldBeSameAs(geometry);
-        geometry.Figures[0].Segments![6].ShouldBeSameAs(hem);
-        hem.Point3.ShouldNotBe(before);
+        Run(ghost, 0.4);
+        ghost.HemEnd(2).ShouldNotBe(before);
+        ghost.BodyGeometry.ShouldNotBeSameAs(geometry);
         // The hem runs from right to left in equal steps, near the hem line.
-        for (var i = 4; i < 13; i++)
+        for (var i = 0; i < 9; i++)
         {
-            var segment = (BezierSegment)figure.Segments[i];
-            var next = (BezierSegment)figure.Segments[i + 1];
-            next.Point3.X.ShouldBeLessThan(segment.Point3.X);
-            segment.Point3.Y.ShouldBeInRange(70, 86);
+            ghost.HemEnd(i + 1).X.ShouldBeLessThan(ghost.HemEnd(i).X);
+            ghost.HemEnd(i).Y.ShouldBeInRange(70, 86);
         }
     }
 

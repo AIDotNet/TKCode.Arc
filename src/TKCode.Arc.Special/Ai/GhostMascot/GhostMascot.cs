@@ -274,6 +274,7 @@ public partial class GhostMascot : Control
         }
         else if (property == SizeProperty || property == CompactSizeProperty || property == HairlineWidthProperty)
         {
+            UpdateDrawingLayout();
             UpdatePens();
             Sync();
             UpdatePseudoClasses();

@@ -8,8 +8,9 @@ namespace TKCode.Arc;
 /// <summary>
 /// The selection drop of a <see cref="LiquidTabBar"/>, drawn in one piece behind the tabs. Its two ends move on two
 /// springs: the end facing the new tab is quick and the other one lags, so the drop stretches toward the new tab, thins
-/// and pinches at its waist while it is long, then gathers itself and settles. The shape is one path whose points are
-/// moved in place each frame, so a frame allocates nothing and lays nothing out.
+/// and pinches at its waist while it is long, then gathers itself and settles. A frame only moves the shape's six numbers;
+/// the path is built from them by the next render (once, and only if one moved), so a frame lays nothing out and
+/// raises no change notifications.
 /// </summary>
 /// <remarks>
 /// Code-driven because the shape depends on two springs at once (the distance between the ends sets the squash and the
@@ -33,16 +34,9 @@ internal sealed class LiquidTabBarBlob : Control
     public static readonly StyledProperty<double> WaistPinchProperty =
         AvaloniaProperty.Register<LiquidTabBarBlob, double>(nameof(WaistPinch), 0.2);
 
-    private readonly PathGeometry _geometry = new();
-    private readonly PathFigure _figure = new() { IsClosed = true, IsFilled = true };
-    private readonly QuadraticBezierSegment _top = new();
-    private readonly ArcSegment _topRight = new() { SweepDirection = SweepDirection.Clockwise };
-    private readonly LineSegment _right = new();
-    private readonly ArcSegment _bottomRight = new() { SweepDirection = SweepDirection.Clockwise };
-    private readonly QuadraticBezierSegment _bottom = new();
-    private readonly ArcSegment _bottomLeft = new() { SweepDirection = SweepDirection.Clockwise };
-    private readonly LineSegment _left = new();
-    private readonly ArcSegment _topLeft = new() { SweepDirection = SweepDirection.Clockwise };
+    // The shape: its box, corner radius and waist pinch. The path is built from them when it is next drawn.
+    private double _shapeLeft, _shapeRight, _shapeTop, _shapeBottom, _shapeRadius, _shapePinch;
+    private StreamGeometry? _geometry;
 
     private MotionValue<double>? _leftEdge;
     private MotionValue<double>? _rightEdge;
@@ -57,19 +51,6 @@ internal sealed class LiquidTabBarBlob : Control
     {
         AffectsRender<LiquidTabBarBlob>(FillProperty);
         IsHitTestVisibleProperty.OverrideDefaultValue<LiquidTabBarBlob>(false);
-    }
-
-    public LiquidTabBarBlob()
-    {
-        _figure.Segments!.Add(_top);
-        _figure.Segments.Add(_topRight);
-        _figure.Segments.Add(_right);
-        _figure.Segments.Add(_bottomRight);
-        _figure.Segments.Add(_bottom);
-        _figure.Segments.Add(_bottomLeft);
-        _figure.Segments.Add(_left);
-        _figure.Segments.Add(_topLeft);
-        _geometry.Figures!.Add(_figure);
     }
 
     public IBrush? Fill { get => GetValue(FillProperty); set => SetValue(FillProperty, value); }
@@ -187,23 +168,17 @@ internal sealed class LiquidTabBarBlob : Control
         var r = Math.Max(0, Math.Min(CornerRadius.TopLeft, Math.Min(height / 2, width / 2)));
         var pinch = Math.Clamp(WaistPinch, 0, 0.45) * height * s;
         var mid = (left + right) / 2;
-        var size = new Size(r, r);
-
-        _figure.StartPoint = new Point(left + r, top);
-        _top.Point1 = new Point(mid, top + 2 * pinch);
-        _top.Point2 = new Point(right - r, top);
-        _topRight.Size = size;
-        _topRight.Point = new Point(right, top + r);
-        _right.Point = new Point(right, bottom - r);
-        _bottomRight.Size = size;
-        _bottomRight.Point = new Point(right - r, bottom);
-        _bottom.Point1 = new Point(mid, bottom - 2 * pinch);
-        _bottom.Point2 = new Point(left + r, bottom);
-        _bottomLeft.Size = size;
-        _bottomLeft.Point = new Point(left, bottom - r);
-        _left.Point = new Point(left, top + r);
-        _topLeft.Size = size;
-        _topLeft.Point = new Point(left + r, top);
+        if (_geometry is null || left != _shapeLeft || right != _shapeRight || top != _shapeTop || bottom != _shapeBottom
+            || r != _shapeRadius || pinch != _shapePinch)
+        {
+            _shapeLeft = left;
+            _shapeRight = right;
+            _shapeTop = top;
+            _shapeBottom = bottom;
+            _shapeRadius = r;
+            _shapePinch = pinch;
+            _geometry = null;
+        }
         InvalidateVisual();
     }
 
@@ -213,7 +188,31 @@ internal sealed class LiquidTabBarBlob : Control
         {
             return;
         }
-        context.DrawGeometry(fill, null, _geometry);
+        context.DrawGeometry(fill, null, _geometry ??= BuildShape());
+    }
+
+    // A rounded bar whose top and bottom edges bend toward the waist: curve, corner, side, corner, curve, corner, side, corner.
+    private StreamGeometry BuildShape()
+    {
+        var (left, right, top, bottom, r, pinch) = (_shapeLeft, _shapeRight, _shapeTop, _shapeBottom, _shapeRadius, _shapePinch);
+        var mid = (left + right) / 2;
+        var size = new Size(r, r);
+        var geometry = new StreamGeometry();
+        using (var path = geometry.Open())
+        {
+            path.SetFillRule(FillRule.EvenOdd);
+            path.BeginFigure(new Point(left + r, top), true);
+            path.QuadraticBezierTo(new Point(mid, top + 2 * pinch), new Point(right - r, top));
+            path.ArcTo(new Point(right, top + r), size, 0, false, SweepDirection.Clockwise);
+            path.LineTo(new Point(right, bottom - r));
+            path.ArcTo(new Point(right - r, bottom), size, 0, false, SweepDirection.Clockwise);
+            path.QuadraticBezierTo(new Point(mid, bottom - 2 * pinch), new Point(left + r, bottom));
+            path.ArcTo(new Point(left, bottom - r), size, 0, false, SweepDirection.Clockwise);
+            path.LineTo(new Point(left, top + r));
+            path.ArcTo(new Point(left + r, top), size, 0, false, SweepDirection.Clockwise);
+            path.EndFigure(true);
+        }
+        return geometry;
     }
 
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)

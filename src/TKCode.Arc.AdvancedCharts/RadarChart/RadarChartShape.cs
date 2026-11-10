@@ -4,13 +4,14 @@ using Avalonia.Media;
 namespace TKCode.Arc;
 
 /// <summary>
-/// One profile on screen: vertices in unit coordinates (the outer ring has radius 1) and a closed geometry that is
-/// updated in place, so a morph moves points and builds no geometry objects.
+/// One profile on screen: vertices in unit coordinates (the outer ring has radius 1) and a closed geometry. A morph
+/// only moves the vertices; the path is built from them when the profile is next drawn (once, and only if the web or
+/// a vertex moved), so a frame raises no change notifications and a chart at rest builds nothing.
 /// </summary>
 internal sealed class RadarChartShape
 {
-    private readonly PathFigure _figure = new() { IsClosed = true, IsFilled = true };
-    private readonly LineSegment[] _segments;
+    private readonly Point[] _points;
+    private StreamGeometry? _geometry;
 
     public RadarChartShape(RadarSeries series, int index, int axisCount)
     {
@@ -23,13 +24,7 @@ internal sealed class RadarChartShape
         NowX = new double[axisCount];
         NowY = new double[axisCount];
         Values = new double[axisCount];
-        _segments = new LineSegment[Math.Max(0, axisCount - 1)];
-        for (var i = 0; i < _segments.Length; i++)
-        {
-            _segments[i] = new LineSegment();
-            _figure.Segments!.Add(_segments[i]);
-        }
-        Geometry.Figures!.Add(_figure);
+        _points = new Point[axisCount];
     }
 
     public RadarSeries Series { get; }
@@ -47,7 +42,7 @@ internal sealed class RadarChartShape
     /// <summary>The raw values per axis (NaN when missing), as read for the tooltip.</summary>
     public double[] Values { get; }
 
-    public PathGeometry Geometry { get; } = new();
+    public Geometry Geometry => _geometry ??= Build();
 
     public IBrush? Fill { get; set; }
     public IPen? Pen { get; set; }
@@ -60,11 +55,34 @@ internal sealed class RadarChartShape
         {
             return;
         }
-        _figure.StartPoint = new Point(center.X + NowX[0] * radius, center.Y + NowY[0] * radius);
-        for (var i = 0; i < _segments.Length; i++)
+        for (var i = 0; i < _points.Length; i++)
         {
-            _segments[i].Point = new Point(center.X + NowX[i + 1] * radius, center.Y + NowY[i + 1] * radius);
+            var point = new Point(center.X + NowX[i] * radius, center.Y + NowY[i] * radius);
+            if (_points[i] != point)
+            {
+                _points[i] = point;
+                _geometry = null;
+            }
         }
+    }
+
+    private StreamGeometry Build()
+    {
+        var geometry = new StreamGeometry();
+        using (var path = geometry.Open())
+        {
+            path.SetFillRule(FillRule.EvenOdd);
+            if (_points.Length > 0)
+            {
+                path.BeginFigure(_points[0], true);
+                for (var i = 1; i < _points.Length; i++)
+                {
+                    path.LineTo(_points[i]);
+                }
+                path.EndFigure(true);
+            }
+        }
+        return geometry;
     }
 
     /// <summary>Sets the vertices <paramref name="t"/> of the way from their start to their target (a spring may pass 1).</summary>

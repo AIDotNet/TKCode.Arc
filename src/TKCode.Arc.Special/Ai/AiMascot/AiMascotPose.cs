@@ -253,6 +253,15 @@ internal struct AiMascotPose
         LineOpacity += pose.LineOpacity * w;
     }
 
+    /// <summary>Whether every value equals <paramref name="other"/>'s: the two poses draw the same frame.</summary>
+    public readonly bool Same(in AiMascotPose other) =>
+        BodyX == other.BodyX && BodyY == other.BodyY && ScaleX == other.ScaleX && ScaleY == other.ScaleY && Tilt == other.Tilt
+        && GazeX == other.GazeX && GazeY == other.GazeY && GazeStiffness == other.GazeStiffness
+        && EyeOpen == other.EyeOpen && EyeWide == other.EyeWide && Squint == other.Squint && Brows == other.Brows
+        && DotX == other.DotX && DotY == other.DotY && DotR == other.DotR && DotOpacity == other.DotOpacity
+        && DotBack == other.DotBack && DotInk == other.DotInk && Sparkle == other.Sparkle && SparkleTurn == other.SparkleTurn
+        && LineFrom == other.LineFrom && LineTo == other.LineTo && LineOpacity == other.LineOpacity;
+
     /// <summary>The pose between <paramref name="a"/> (k = 0) and <paramref name="b"/> (k = 1).</summary>
     public static AiMascotPose Lerp(in AiMascotPose a, in AiMascotPose b, double k)
     {

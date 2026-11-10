@@ -77,6 +77,11 @@ internal sealed class AiMascotCanvas : Control
     private bool _penCompact;
     private double _borderScale;
 
+    // What the last render drew, so a frame that would draw the same again (a settled error between blinks) is skipped.
+    private AiMascotPose _drawnPose;
+    private double _drawnGazeX, _drawnGazeY, _drawnBlink;
+    private bool _drawn;
+
     static AiMascotCanvas()
     {
         AffectsRender<AiMascotCanvas>(AccentInkProperty, AccentForegroundInkProperty, ForegroundInkProperty, BackgroundInkProperty,
@@ -119,6 +124,9 @@ internal sealed class AiMascotCanvas : Control
 
     /// <summary>The ease out of the still pose (0 on the first paint and under reduced motion, 1 once live).</summary>
     internal double LiveMix => _liveMix;
+
+    /// <summary>How many loop frames asked for a redraw (a frame equal to the one on screen does not).</summary>
+    internal int FramesRequested { get; private set; }
 
     /// <summary>Whether frames are being delivered.</summary>
     internal bool IsLooping => _loop.IsRunning;
@@ -255,7 +263,13 @@ internal sealed class AiMascotCanvas : Control
             StepSpring(ref _gazeX, ref _gazeVX, target.GazeX, stiffness, dt);
             StepSpring(ref _gazeY, ref _gazeVY, target.GazeY, stiffness, dt);
         }
-        InvalidateVisual();
+        // The loop keeps time, but only a frame that differs from the one on screen is drawn.
+        if (!_drawn || _gazeX != _drawnGazeX || _gazeY != _drawnGazeY || BlinkOpen(_t, _blinkA, _blinkB) != _drawnBlink
+            || !target.Same(_drawnPose))
+        {
+            FramesRequested++;
+            InvalidateVisual();
+        }
         return true;
     }
 
@@ -345,8 +359,14 @@ internal sealed class AiMascotCanvas : Control
             }
             var status = (AiMascotStatus)i;
             var since = _t - _entered[i];
-            var still = AiMascotPose.Of(status, _t, since, false, _glanceX, _glanceY, frame);
-            var state = mix > 0 ? AiMascotPose.Lerp(still, AiMascotPose.Of(status, _t, since, true, _glanceX, _glanceY, frame), mix) : still;
+            // Fully live or fully still, only that pose is needed; in between the two are mixed.
+            var state = mix >= 1
+                ? AiMascotPose.Of(status, _t, since, true, _glanceX, _glanceY, frame)
+                : AiMascotPose.Of(status, _t, since, false, _glanceX, _glanceY, frame);
+            if (mix > 0 && mix < 1)
+            {
+                state = AiMascotPose.Lerp(state, AiMascotPose.Of(status, _t, since, true, _glanceX, _glanceY, frame), mix);
+            }
             pose.Add(state, w);
             if (status is not (AiMascotStatus.Thinking or AiMascotStatus.Writing))
             {
@@ -523,6 +543,7 @@ internal sealed class AiMascotCanvas : Control
         base.Render(context);
         // The whole square takes the pointer, so the eyes can follow it anywhere over the mascot.
         context.FillRectangle(Brushes.Transparent, new Rect(Bounds.Size));
+        _drawn = false;
         if (_owner is null)
         {
             return;
@@ -542,6 +563,14 @@ internal sealed class AiMascotCanvas : Control
         var gazeX = full && _gazeReady ? _gazeX : pose.GazeX;
         var gazeY = full && _gazeReady ? _gazeY : pose.GazeY;
         var blink = full ? BlinkOpen(_t, _blinkA, _blinkB) : 1;
+        if (full)
+        {
+            _drawnPose = pose;
+            _drawnGazeX = gazeX;
+            _drawnGazeY = gazeY;
+            _drawnBlink = blink;
+            _drawn = _gazeReady;
+        }
         var origin = Origin(size);
         var root = Matrix.CreateTranslation(-frame.Crop.X, -frame.Crop.Y) * Matrix.CreateScale(scale, scale)
                    * Matrix.CreateTranslation(origin.X, origin.Y);
