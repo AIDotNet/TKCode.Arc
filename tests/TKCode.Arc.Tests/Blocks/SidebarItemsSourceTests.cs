@@ -3,6 +3,9 @@ using System.ComponentModel;
 using TKCode.Arc.Motion;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
+using Avalonia.Data;
+using Avalonia.Data.Core;
+using Avalonia.Markup.Xaml.MarkupExtensions.CompiledBindings;
 using Avalonia.Headless.XUnit;
 using Avalonia.Threading;
 
@@ -66,6 +69,43 @@ public class SidebarItemsSourceTests
 
         parent.Title = "Renamed";
         items[0].Label.ShouldBe("Renamed");
+    }
+
+    private static BindingBase Compiled(string name, Func<MenuNode, object?> get, Type type)
+    {
+        var info = new ClrPropertyInfo(name, o => get((MenuNode)o), null, type);
+        var path = new CompiledBindingPathBuilder()
+            .Property(info, PropertyInfoAccessorFactory.CreateInpcPropertyAccessor)
+            .Build();
+        return new CompiledBinding(path);
+    }
+
+    [AvaloniaFact]
+    public void Member_bindings_map_without_string_paths_and_win_over_them()
+    {
+        var parent = new MenuNode { Key = "p", Title = "Parent", Children = { new MenuNode { Key = "c", Title = "Child" } } };
+        var sidebar = new Sidebar
+        {
+            LabelMember = nameof(MenuNode.Key),
+            KeyMemberBinding = Compiled(nameof(MenuNode.Key), n => n.Key, typeof(string)),
+            LabelMemberBinding = Compiled(nameof(MenuNode.Title), n => n.Title, typeof(string)),
+            ChildrenMemberBinding = Compiled(nameof(MenuNode.Children), n => n.Children, typeof(ObservableCollection<MenuNode>)),
+            ItemsSource = new ObservableCollection<MenuNode> { parent }
+        };
+
+        var item = sidebar.Sections[0].Items[0];
+        item.Key.ShouldBe("p");
+        item.Label.ShouldBe("Parent");
+        item.Items.Count.ShouldBe(1);
+        item.Items[0].Label.ShouldBe("Child");
+
+        parent.Title = "Renamed";
+        item.Label.ShouldBe("Renamed");
+        parent.Children.Add(new MenuNode { Key = "d", Title = "Second" });
+        item.Items.Count.ShouldBe(2);
+
+        sidebar.LabelMemberBinding = null;
+        sidebar.Sections[0].Items[0].Label.ShouldBe("p");
     }
 
     [AvaloniaFact]

@@ -1,7 +1,7 @@
 ---
 title: 側邊欄
 summary: 工作區導覽，包含群組、巢狀頁面、數量與滑動的選取標記；可收合為圖示窄欄。
-source-hash: b9e163cf3c04
+source-hash: b923fa300830
 ---
 
 <Demo name="Preview" />
@@ -206,7 +206,7 @@ inbox.Badge = unreadCount > 0 ? unreadCount.ToString(CultureInfo.InvariantCultur
 
 ### 繫結資料
 
-`ItemsSource` 以你自己的資料產生列，因此選單可以來自檢視模型（權限清單、伺服器回傳的選單），並在資料變動時隨之更新。每個物件成為一個無標題群組中的一列，該群組位於 XAML 中撰寫的群組之前。用 `*Member` 名稱對應欄位，用 `TrailingTemplate` 在列尾繪製額外內容：它的控制項以你的物件作為 `DataContext`，因此可以繫結到你自己的欄位。
+`ItemsSource` 以你自己的資料產生列，因此選單可以來自檢視模型（權限清單、伺服器回傳的選單），並在資料變動時隨之更新。每個物件成為一個無標題群組中的一列，該群組位於 XAML 中撰寫的群組之前。用 `*MemberBinding` 繫結對應欄位，用 `TrailingTemplate` 在列尾繪製額外內容：它的控制項以你的物件作為 `DataContext`，因此可以繫結到你自己的欄位。
 
 <Demo name="ItemsSource" />
 
@@ -222,9 +222,9 @@ public class MenuNode
 
 ```xml
 <arc:Sidebar ItemsSource="{Binding Menus}"
-             KeyMember="Key"
-             LabelMember="Title"
-             ChildrenMember="Children"
+             KeyMemberBinding="{Binding Key}"
+             LabelMemberBinding="{Binding Title}"
+             ChildrenMemberBinding="{Binding Children}"
              SelectedKey="{Binding SelectedKey, Mode=TwoWay}">
     <arc:Sidebar.TrailingTemplate>
         <DataTemplate>
@@ -234,9 +234,9 @@ public class MenuNode
 </arc:Sidebar>
 ```
 
-- `LabelMember`、`KeyMember`、`IconMember`、`BadgeMember`、`IsEnabledMember` 與 `ChildrenMember` 是屬性路徑。列會跟隨物件上的 `INotifyPropertyChanged`，以及 `ItemsSource` 與子層集合上的 `INotifyCollectionChanged`，清單變動時保留各列的展開狀態。
+- `LabelMemberBinding`、`KeyMemberBinding`、`IconMemberBinding`、`BadgeMemberBinding`、`IsEnabledMemberBinding` 與 `ChildrenMemberBinding` 以編譯繫結讀取欄位，在修剪與 NativeAOT 下都安全。使用編譯繫結時，為每個繫結指定項目的型別：`{Binding Title, DataType={x:Type local:MenuNode}}`，範例即是如此。字串形式的 `*Member` 路徑（`LabelMember="Title"` 等）仍可使用，但透過反射，只適合不修剪的應用程式；兩者都設定時以 `*MemberBinding` 為準。列會跟隨物件上的 `INotifyPropertyChanged`，以及 `ItemsSource` 與子層集合上的 `INotifyCollectionChanged`，清單變動時保留各列的展開狀態。
 - 你的物件保存在 `SidebarItem.Tag` 中，因此 `SelectedItem.Tag`（或 `ItemInvoked` 的 `Item.Tag`）就是所選頁面的資料。
-- 想在子類別上放自己的欄位？把 `SidebarItem` 的子類別放進 `ItemsSource`，它們會被原樣使用：不需要 `*Member` 名稱，`TrailingTemplate` 仍以該項作為 `DataContext`。
+- 想在子類別上放自己的欄位？把 `SidebarItem` 的子類別放進 `ItemsSource`，它們會被原樣使用：不需要 `*MemberBinding`，`TrailingTemplate` 仍以該項作為 `DataContext`。
 - 項目上已設定的 `TrailingIcon` 優先於 `TrailingTemplate`。
 
 ### 圖示窄欄

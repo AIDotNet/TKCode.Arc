@@ -31177,12 +31177,20 @@
         <target>應用程式的主導覽（TKCode 原創設計）：頂部區域放標誌或工作區切換器，接著是可選的篩選框、含圖示與計數並可支援一層巢狀頁面的頁面分區，以及顯示已登入使用者的底部區域。選取的頁面背後有一塊柔和色塊，圖示變為強調色，色塊會以輕快的彈簧動畫在各列之間滑動；父層頁面以高度彈簧動畫展開其子頁面，並附有旋轉的 V 形箭頭。側邊欄會以寬度彈簧動畫收合為 64px 的圖示窄欄：文字與計數淡出，計數變為圓點，每個頁面在右側顯示工具提示，父層頁面則以選單形式顯示其子頁面。鍵盤操作（WAI-ARIA 樹狀模型）：清單只佔一個 Tab 停駐點；↑ / ↓、Home / End 移動焦點，→ 展開父層或進入其中，← 收合或返回父層，Enter / Space 選擇，輸入字母可依頁面開頭字母跳轉，焦點位於側邊欄內時 Cmd / Ctrl+B 可收合或展開側邊欄。</target>
       </trans-unit>
       <trans-unit id="Sidebar.BadgeMember">
-        <source>The property path of an item's badge text.</source>
-        <target>項目徽章文字的屬性路徑。</target>
+        <source>The property path of an item's badge text. Resolved with reflection, so trimmed and NativeAOT apps use `BadgeMemberBinding` instead, which wins when both are set.</source>
+        <target>項目徽章文字的屬性路徑。透過反射解析，因此修剪與 NativeAOT 應用程式請改用 `BadgeMemberBinding`，兩者都設定時以它為準。</target>
+      </trans-unit>
+      <trans-unit id="Sidebar.BadgeMemberBinding">
+        <source>Binding that reads an item's badge text; it wins over `BadgeMember`.</source>
+        <target>讀取項目徽章文字的繫結；優先於 `BadgeMember`。</target>
       </trans-unit>
       <trans-unit id="Sidebar.ChildrenMember">
-        <source>The property path of an item's child items (a collection of the same kind of data).</source>
-        <target>項目子項的屬性路徑（同類資料的集合）。</target>
+        <source>The property path of an item's child items (a collection of the same kind of data). Resolved with reflection, so trimmed and NativeAOT apps use `ChildrenMemberBinding` instead, which wins when both are set.</source>
+        <target>項目子項目的屬性路徑（同類資料的集合）。透過反射解析，因此修剪與 NativeAOT 應用程式請改用 `ChildrenMemberBinding`，兩者都設定時以它為準。</target>
+      </trans-unit>
+      <trans-unit id="Sidebar.ChildrenMemberBinding">
+        <source>Binding that reads an item's child items (a collection of the same kind of data); it wins over `ChildrenMember`.</source>
+        <target>讀取項目子項目的繫結（同類資料的集合）；優先於 `ChildrenMember`。</target>
       </trans-unit>
       <trans-unit id="Sidebar.CollapseButtonPlacement">
         <source>Where the collapse button sits while the sidebar is open: in the header row (default) or beside the filter box. On the rail it always sits at the top.</source>
@@ -31217,8 +31225,12 @@
         <target>頂部內容（標誌與標題、工作區切換器）；收合按鈕位於頭部列時，顯示在它旁邊。在窄欄上，收合按鈕顯示時此區域會隱藏。</target>
       </trans-unit>
       <trans-unit id="Sidebar.IconMember">
-        <source>The property path of an item's icon (a geometry or a control).</source>
-        <target>項目圖示的屬性路徑（幾何圖形或控制項）。</target>
+        <source>The property path of an item's icon (a geometry or a control). Resolved with reflection, so trimmed and NativeAOT apps use `IconMemberBinding` instead, which wins when both are set.</source>
+        <target>項目圖示的屬性路徑（幾何圖形或控制項）。透過反射解析，因此修剪與 NativeAOT 應用程式請改用 `IconMemberBinding`，兩者都設定時以它為準。</target>
+      </trans-unit>
+      <trans-unit id="Sidebar.IconMemberBinding">
+        <source>Binding that reads an item's icon (a geometry or a control); it wins over `IconMember`.</source>
+        <target>讀取項目圖示的繫結（幾何圖形或控制項）；優先於 `IconMember`。</target>
       </trans-unit>
       <trans-unit id="Sidebar.IsCollapseButtonVisible">
         <source>Shows the collapse / expand button (PanelLeft icon). Its place is `CollapseButtonPlacement`.</source>
@@ -31229,8 +31241,12 @@
         <target>側邊欄是否為 64px 圖示窄欄（雙向）。寬度在兩種狀態之間以彈簧動畫變化。</target>
       </trans-unit>
       <trans-unit id="Sidebar.IsEnabledMember">
-        <source>The property path of an item's enabled state (a bool).</source>
-        <target>項目啟用狀態的屬性路徑（bool）。</target>
+        <source>The property path of an item's enabled state (a bool). Resolved with reflection, so trimmed and NativeAOT apps use `IsEnabledMemberBinding` instead, which wins when both are set.</source>
+        <target>項目啟用狀態的屬性路徑（bool）。透過反射解析，因此修剪與 NativeAOT 應用程式請改用 `IsEnabledMemberBinding`，兩者都設定時以它為準。</target>
+      </trans-unit>
+      <trans-unit id="Sidebar.IsEnabledMemberBinding">
+        <source>Binding that reads an item's enabled state (a bool); it wins over `IsEnabledMember`.</source>
+        <target>讀取項目啟用狀態的繫結（bool）；優先於 `IsEnabledMember`。</target>
       </trans-unit>
       <trans-unit id="Sidebar.IsFilterVisible">
         <source>Shows the filter box under the header (it becomes a search button on the rail).</source>
@@ -31241,20 +31257,28 @@
         <target>選擇頁面時觸發（點擊、Enter 或 Space 鍵，或在窄欄選單中選擇頁面），即使該頁面已是目前選取的頁面也會觸發。</target>
       </trans-unit>
       <trans-unit id="Sidebar.ItemsSource">
-        <source>The pages as data. Each item becomes a row in a header-less section placed before the sections declared in `Sections`. An item that is a `SidebarItem` (or a subclass with your own fields) is used as it is; any other object is mapped through the `*Member` names, and its object is kept in `Tag`. Collection changes are followed when the source is an `INotifyCollectionChanged`.</source>
-        <target>以資料形式提供的頁面。每一項成為一個無標題群組中的一列，該群組位於 `Sections` 中宣告的群組之前。屬於 `SidebarItem`（或帶有你自己欄位的子類別）的項目原樣使用；其他物件透過 `*Member` 名稱對應，物件本身保存在 `Tag` 中。當資料來源是 `INotifyCollectionChanged` 時會跟隨集合變動。</target>
+        <source>The pages as data. Each item becomes a row in a header-less section placed before the sections declared in `Sections`. An item that is a `SidebarItem` (or a subclass with your own fields) is used as it is; any other object is mapped through the `*MemberBinding` bindings (or the `*Member` paths), and its object is kept in `Tag`. Collection changes are followed when the source is an `INotifyCollectionChanged`.</source>
+        <target>以資料形式提供的頁面。每一項成為一個無標題群組中的一列，該群組位於 `Sections` 中宣告的群組之前。屬於 `SidebarItem`（或帶有你自己欄位的子類別）的項目原樣使用；其他物件透過 `*MemberBinding` 繫結（或 `*Member` 路徑）對應，物件本身保存在 `Tag` 中。當資料來源是 `INotifyCollectionChanged` 時會跟隨集合變動。</target>
       </trans-unit>
       <trans-unit id="Sidebar.KeyMember">
-        <source>The property path of an item's key, which `SelectedKey` matches against.</source>
-        <target>項目鍵的屬性路徑，`SelectedKey` 與其比對。</target>
+        <source>The property path of an item's key, which `SelectedKey` matches against. Resolved with reflection, so trimmed and NativeAOT apps use `KeyMemberBinding` instead, which wins when both are set.</source>
+        <target>項目鍵的屬性路徑，`SelectedKey` 與其比對。透過反射解析，因此修剪與 NativeAOT 應用程式請改用 `KeyMemberBinding`，兩者都設定時以它為準。</target>
+      </trans-unit>
+      <trans-unit id="Sidebar.KeyMemberBinding">
+        <source>Binding that reads an item's key, which `SelectedKey` matches against; it wins over `KeyMember`.</source>
+        <target>讀取項目鍵的繫結，`SelectedKey` 與其比對；優先於 `KeyMember`。</target>
       </trans-unit>
       <trans-unit id="Sidebar.Label">
         <source>Name of the navigation landmark. Unset, it is the localized "Sidebar", which follows the Arc language.</source>
         <target>導覽地標的名稱。未設定時為在地化的「側邊欄」，並跟隨 Arc 語言。</target>
       </trans-unit>
       <trans-unit id="Sidebar.LabelMember">
-        <source>The property path of an item's label (for items that are not `SidebarItem`s).</source>
-        <target>項目標籤的屬性路徑（用於不是 `SidebarItem` 的項目）。</target>
+        <source>The property path of an item's label (for items that are not `SidebarItem`s). Resolved with reflection, so trimmed and NativeAOT apps use `LabelMemberBinding` instead, which wins when both are set.</source>
+        <target>項目標籤的屬性路徑（用於不是 `SidebarItem` 的項目）。透過反射解析，因此修剪與 NativeAOT 應用程式請改用 `LabelMemberBinding`，兩者都設定時以它為準。</target>
+      </trans-unit>
+      <trans-unit id="Sidebar.LabelMemberBinding">
+        <source>Binding that reads an item's label, e.g. `{Binding Title, DataType=local:MenuNode}` (for items that are not `SidebarItem`s). A compiled binding stays trimming and NativeAOT safe; it wins over `LabelMember`.</source>
+        <target>讀取項目標籤的繫結，例如 `{Binding Title, DataType=local:MenuNode}`（用於不是 `SidebarItem` 的項目）。編譯繫結在修剪與 NativeAOT 下都安全；優先於 `LabelMember`。</target>
       </trans-unit>
       <trans-unit id="Sidebar.NoMatchesText">
         <source>Text shown when the filter matches no page. Unset, it is the localized "No matches", which follows the Arc language.</source>

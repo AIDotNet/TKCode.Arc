@@ -12,9 +12,9 @@
             <arc:Sidebar x:Name="Nav"
                          BorderThickness="0"
                          IsCollapseButtonVisible="False"
-                         KeyMember="Key"
-                         LabelMember="Title"
-                         ChildrenMember="Children"
+                         KeyMemberBinding="{Binding Key, DataType={x:Type demo:SidebarMenuNode}}"
+                         LabelMemberBinding="{Binding Title, DataType={x:Type demo:SidebarMenuNode}}"
+                         ChildrenMemberBinding="{Binding Children, DataType={x:Type demo:SidebarMenuNode}}"
                          SelectedKey="home">
                 <arc:Sidebar.TrailingTemplate>
                     <DataTemplate x:DataType="demo:SidebarMenuNode">
