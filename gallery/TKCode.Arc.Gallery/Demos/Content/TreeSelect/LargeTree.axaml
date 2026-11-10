@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TreeSelectLargeTreeDemo">
+    <StackPanel HorizontalAlignment="Center" Width="380" Spacing="8">
+        <arc:TreeSelect x:Name="Modules"
+                        Label="Modules"
+                        Description="40 packages and 6,000 files, all open: only the rows on screen are built."
+                        Placeholder="Select modules"
+                        SelectionMode="Multiple"
+                        ExpandDepth="-1"
+                        MaxDropDownHeight="360" />
+        <TextBlock x:Name="Result" FontSize="12" Opacity="0.7" TextWrapping="Wrap" />
+    </StackPanel>
+</UserControl>

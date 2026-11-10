@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TreeSelectPreviewDemo">
+    <StackPanel HorizontalAlignment="Center" Width="380" Spacing="8">
+        <arc:TreeSelect x:Name="Files"
+                        Label="Files to review"
+                        Description="Type to search, for example &quot;app&quot;."
+                        Placeholder="Select files"
+                        SelectionMode="Multiple"
+                        ExpandDepth="1" />
+        <TextBlock x:Name="Result" FontSize="12" Opacity="0.7" TextWrapping="Wrap" />
+    </StackPanel>
+</UserControl>

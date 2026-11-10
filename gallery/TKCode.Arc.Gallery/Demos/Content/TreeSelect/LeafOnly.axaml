@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TreeSelectLeafOnlyDemo">
+    <StackPanel HorizontalAlignment="Center" Width="340" Spacing="8">
+        <arc:TreeSelect x:Name="Entry"
+                        Label="Entry file"
+                        Description="Folders only open; pick a file."
+                        Placeholder="Select a file"
+                        LeafOnly="True" />
+    </StackPanel>
+</UserControl>

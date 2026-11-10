@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="2.1" srcLang="en-US" trgLang="zh-CN" xmlns="urn:oasis:names:tc:xliff:document:2.0">
+  <file id="TKCode.Arc.Localization.TreeSelectLangResourceKind">
+    <unit id="Checked">
+      <segment>
+        <source>checked</source>
+        <target state="translated">已勾选</target>
+      </segment>
+    </unit>
+    <unit id="Clear">
+      <segment>
+        <source>Clear selection</source>
+        <target state="translated">清除选择</target>
+      </segment>
+    </unit>
+    <unit id="Level">
+      <segment>
+        <source>level {0}</source>
+        <target state="translated">第 {0} 级</target>
+      </segment>
+    </unit>
+    <unit id="NoMatches">
+      <segment>
+        <source>No matches</source>
+        <target state="translated">无匹配项</target>
+      </segment>
+    </unit>
+    <unit id="NotChecked">
+      <segment>
+        <source>not checked</source>
+        <target state="translated">未勾选</target>
+      </segment>
+    </unit>
+    <unit id="PartiallyChecked">
+      <segment>
+        <source>partially checked</source>
+        <target state="translated">部分勾选</target>
+      </segment>
+    </unit>
+    <unit id="Selected">
+      <segment>
+        <source>selected</source>
+        <target state="translated">已选中</target>
+      </segment>
+    </unit>
+    <unit id="SelectedCount">
+      <segment>
+        <source>{0} selected</source>
+        <target state="translated">已选 {0} 项</target>
+      </segment>
+    </unit>
+  </file>
+</xliff>

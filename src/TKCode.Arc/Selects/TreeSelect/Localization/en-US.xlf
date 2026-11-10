@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="2.1" srcLang="en-US" xmlns="urn:oasis:names:tc:xliff:document:2.0">
+  <file id="TKCode.Arc.Localization.TreeSelectLangResourceKind">
+    <unit id="Checked">
+      <segment>
+        <source>checked</source>
+      </segment>
+    </unit>
+    <unit id="Clear">
+      <segment>
+        <source>Clear selection</source>
+      </segment>
+    </unit>
+    <unit id="Level">
+      <segment>
+        <source>level {0}</source>
+      </segment>
+    </unit>
+    <unit id="NoMatches">
+      <segment>
+        <source>No matches</source>
+      </segment>
+    </unit>
+    <unit id="NotChecked">
+      <segment>
+        <source>not checked</source>
+      </segment>
+    </unit>
+    <unit id="PartiallyChecked">
+      <segment>
+        <source>partially checked</source>
+      </segment>
+    </unit>
+    <unit id="Selected">
+      <segment>
+        <source>selected</source>
+      </segment>
+    </unit>
+    <unit id="SelectedCount">
+      <segment>
+        <source>{0} selected</source>
+      </segment>
+    </unit>
+  </file>
+</xliff>
