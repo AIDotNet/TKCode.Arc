@@ -1035,6 +1035,15 @@
       "CardCornerRadius": "0",
       "MarkCornerRadius": "0"
     },
+    "TreeSelect": {
+      "CheckboxRadius": "0",
+      "ClearGlyphRadius": "0",
+      "ClearRingRadius": "0",
+      "FocusRingRadius": "0",
+      "MatchRadius": "0",
+      "MenuCornerRadius": "0",
+      "RowRadius": "0"
+    },
     "TreeTable": {
       "TableCornerRadius": "0"
     },
@@ -2129,6 +2138,15 @@
     "TrainingRun": {
       "CardCornerRadius": "0",
       "MarkCornerRadius": "0"
+    },
+    "TreeSelect": {
+      "CheckboxRadius": "0",
+      "ClearGlyphRadius": "0",
+      "ClearRingRadius": "0",
+      "FocusRingRadius": "0",
+      "MatchRadius": "0",
+      "MenuCornerRadius": "0",
+      "RowRadius": "0"
     },
     "TreeTable": {
       "TableCornerRadius": "0"
