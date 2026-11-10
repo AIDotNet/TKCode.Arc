@@ -36,9 +36,15 @@ Read `design/engineering/implementation-guide.md` before writing a component: fi
 
 ## Verify
 
+Do not run the full test suites locally (a full `TKCode.Arc.Tests` or `~Gallery` run takes 8 minutes or more, and much longer when several builds share the machine); CI runs them. Build what you touched and run only the tests for the code you changed:
+
 ```bash
-dotnet build TKCode.Arc.slnx
-dotnet test tests/TKCode.Arc.Core.Tests
-dotnet test tests/TKCode.Arc.Foundation.Tests
-dotnet test tests/TKCode.Arc.Tests
+dotnet build src/TKCode.Arc -c Debug                    # or the package you changed
+dotnet build gallery/TKCode.Arc.Gallery.Desktop         # when docs, demos or the catalog changed: no GDOC warnings
+dotnet test tests/TKCode.Arc.Tests --filter "FullyQualifiedName~<Component>Tests"
+# docs, demos or catalog changed: add the matching classes, e.g.
+#   |FullyQualifiedName~GalleryDocsTests|FullyQualifiedName~GalleryDemosTests|FullyQualifiedName~GalleryNewBadgeTests
+#   |FullyQualifiedName~GallerySmokeTests.Catalog_Lists_All_Components
 ```
+
+Run a whole suite only when asked, or for a change that reaches across the library (Core, Foundation, generators, the base theme).
