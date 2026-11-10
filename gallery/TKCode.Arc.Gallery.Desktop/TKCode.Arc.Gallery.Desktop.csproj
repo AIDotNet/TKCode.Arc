@@ -13,6 +13,7 @@
              Avalonia 12.1 adds its !AvaloniaResources blob, so a -p:PublishAot=true publish embeds no compiled XAML and fails
              at startup with "No precompiled XAML found". -->
         <UseOptimizedPublish>false</UseOptimizedPublish>
+        <CETCompat>false</CETCompat>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Avalonia.Desktop" />
