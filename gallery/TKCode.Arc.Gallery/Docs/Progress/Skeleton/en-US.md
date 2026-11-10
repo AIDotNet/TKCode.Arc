@@ -283,11 +283,12 @@ button that the person was using keeps its focus when the content arrives.
 
 - The text lines and the avatar pulse from top to bottom in a calm wave. The wave runs about 20 seconds and then stops.
 - When loading ends, the placeholder fades out, the content rises 4 px into place and the height springs to the content.
-- Reduced motion stops the pulse, swaps the placeholder for the content with a short fade and does not animate the height.
+- Reduced motion keeps the pulse, which changes opacity only, so the placeholder still reads as loading. It swaps the
+  placeholder for the content with a short fade and does not animate the height. Off stops the pulse.
 
 | Change | Full | Reduced | Off |
 |---|---|---|---|
-| Placeholder pulse | Each block pulses in turn, 90 ms after the one above, on a 1.8 s cycle, 11 times (about 20 s), then rests | Stops | Stops |
+| Placeholder pulse | Each block pulses in turn, 90 ms after the one above, on a 1.8 s cycle, 11 times (about 20 s), then rests | The same pulse | Stops |
 | Loading ends | The placeholder fades out quickly and the content rises 4 px into place | A short fade between the placeholder and the content | Immediate |
 | Height change | The height springs from the placeholder to the content | Not animated | Immediate |
 
@@ -296,8 +297,8 @@ button that the person was using keeps its focus when the content arrives.
 The pulse is a finite wave, so a long load stops moving after about 20 seconds and the placeholder stays on screen. Do
 not add a second moving element beside a skeleton, such as a shimmering banner or a spinner, because the page then has
 two signs of loading that compete. A load that takes longer than the wave should show a status line that says what the
-page is waiting for, and the placeholder can stay as it is. Reduced motion needs no extra code: the pulse stops and the
-content swaps with a fade.
+page is waiting for, and the placeholder can stay as it is. Reduced motion needs no extra code: the pulse keeps going and
+the content swaps with a fade.
 
 ## Responsive behavior
 

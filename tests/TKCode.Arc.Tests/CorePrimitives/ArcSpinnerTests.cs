@@ -7,11 +7,11 @@ using Avalonia.Threading;
 
 namespace TKCode.Arc.Tests.CorePrimitives;
 
-/// <summary>Core <see cref="ArcSpinner"/>: the loading ring turns (0.7s a turn) only at full motion.</summary>
+/// <summary>Core <see cref="ArcSpinner"/>: the loading ring turns (0.7s a turn) at full motion and breathes under reduced motion.</summary>
 public class ArcSpinnerTests
 {
     [AvaloniaFact]
-    public void Turns_At_Full_Motion_And_Rests_Under_Reduced_Motion()
+    public void Turns_At_Full_Motion_Breathes_Under_Reduced_Motion_And_Rests_With_Motion_Off()
     {
         var clock = new ManualFrameClock();
         using var _ = clock.Install();
@@ -24,10 +24,24 @@ public class ArcSpinnerTests
             CoreFrames.Run(clock, 21); // 0.35s: half a turn
             spinner.Angle.ShouldBe(180, 8);
 
+            // Reduced motion: the ring holds its angle and breathes in opacity instead, so it still reads as busy.
             ArcMotion.SetLevel(window, ArcMotionLevel.Reduced);
             Dispatcher.UIThread.RunJobs();
             spinner.IsSpinning.ShouldBeFalse();
+            spinner.IsPulsing.ShouldBeTrue();
             var rest = spinner.Angle;
+            CoreFrames.Run(clock, 54); // 0.9s: the bottom of the breath
+            spinner.Angle.ShouldBe(rest);
+            spinner.PulseOpacity.ShouldBe(ArcBusyPulse.MinOpacity, 0.02);
+            CoreFrames.Run(clock, 54);
+            spinner.PulseOpacity.ShouldBeGreaterThan(0.95);
+
+            // Motion off: still and fully opaque.
+            ArcMotion.SetLevel(window, ArcMotionLevel.Off);
+            Dispatcher.UIThread.RunJobs();
+            spinner.IsSpinning.ShouldBeFalse();
+            spinner.IsPulsing.ShouldBeFalse();
+            spinner.PulseOpacity.ShouldBe(1);
             CoreFrames.Run(clock, 30);
             spinner.Angle.ShouldBe(rest);
 

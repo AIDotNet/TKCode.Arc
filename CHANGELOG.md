@@ -44,6 +44,7 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 - `Table` no longer throws "Invalid Arrange rectangle" when its compact phone layout is narrower than the row's insets: hosted cells get zero width instead of a negative one.
 - `ChatThread` message bubbles now follow the theme's corner style (square, scaled) instead of keeping fixed 18 and 6 px corners.
 - `TextFilterBox` and `NumberFilterBox` no longer overlap or cut off their fields: a long label or description wraps, and in a narrow space the label moves above the fields. The operator menu names each operator next to its symbol.
+- Loading indicators no longer freeze under reduced motion ([#93](https://github.com/AIDotNet/TKCode.Arc/issues/93)): `MorphLoader`, the loading spinner of `Button` and every other control that uses the Core `ArcSpinner`, the `StretchRefresh` running line, the `ChargeSession` packets and the tool, plan and generation spinners hold still and breathe in opacity (1 → 0.45 → 1 every 1.8 s, the new Core `ArcBusyPulse`), and `Skeleton` and `SkeletonMorph` keep their opacity pulse. Nothing travels, turns, scales or blurs; full motion is unchanged, and with motion off they stay still.
 
 ## 1.0.0 - 2026-11-08
 

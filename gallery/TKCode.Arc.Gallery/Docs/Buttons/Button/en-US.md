@@ -348,13 +348,14 @@ Companion types used on this page:
 - Label changes rise in from a soft blur, and the width springs to the new label. The spinner turns continuously while
   loading.
 - Reduced motion removes the press scale and the width spring. Labels and the spinner fade with a short crossfade,
-  and the spinner stops turning. Off replaces the label and the state at once.
+  and the spinner stops turning and breathes in opacity instead, so a loading button still reads as busy. Off replaces
+  the label and the state at once, and the spinner stays still.
 
 | Change | Full | Reduced | Off |
 |---|---|---|---|
 | Press | Content scales to 97 percent (96 for icon buttons, 98.5 for wide ones), then springs back | No press scale | No press scale |
 | Label changes | The new text rises from a soft blur, the old text fades up, the width springs to fit | Instant crossfade | Immediate |
-| Loading starts or ends | The label fades under the spinner, which turns every 0.7 seconds | Crossfade, and the spinner stops turning | Immediate |
+| Loading starts or ends | The label fades under the spinner, which turns every 0.7 seconds | Crossfade; the spinner holds still and breathes in opacity (1.8 s) | Immediate; the spinner is still |
 | Hover, press, disabled colours | The colours crossfade on a fast curve | Instant | Immediate |
 
 ## Responsive behavior

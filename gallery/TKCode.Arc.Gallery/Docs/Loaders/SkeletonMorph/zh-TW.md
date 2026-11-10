@@ -1,7 +1,7 @@
 ---
 title: Skeleton morph
 summary: 載入中的佔位會逐區塊伸展成真實內容，同時卡片平滑地調整到新的高度。
-source-hash: 34a99315450f
+source-hash: 431adcc738cf
 ---
 
 <Demo name="Preview" />
@@ -85,7 +85,7 @@ private async Task ShowAsync(Func<Task<object>> load)
 
 ### 減少動態效果
 
-在減少動態效果下，骨架不會脈動，也不會伸展或模糊，每個區塊會在 120 ms 內同時交叉淡入其內容。區域的高度會立即改變。
+在減少動態效果下，骨架保留透明度脈動（因此仍看得出正在載入），但不會伸展或模糊，每個區塊會在 120 ms 內同時交叉淡入其內容。區域的高度會立即改變。關閉動態效果時骨架不會脈動。
 
 <Demo name="ReducedMotion" />
 
@@ -154,7 +154,7 @@ private async Task ShowAsync(Func<Task<object>> load)
 
 | 變化 | 完整 | 減少 | 關閉 |
 |---|---|---|---|
-| 脈動 | 1 ↔ 0.55，1.4 s | 無 | 無 |
+| 脈動 | 1 ↔ 0.55，1.4 s | 1 ↔ 0.55，1.4 s | 無 |
 | 解析順序 | 彼此相隔 40 ms | 同時全部 | 同時全部 |
 | 骨架到內容 | 以彈簧伸展並淡出 | 120 ms 交叉淡化 | 即時 |
 | 內容 | 從 4 px 模糊淡入 | 120 ms 淡入 | 即時 |

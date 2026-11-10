@@ -8,8 +8,9 @@ namespace TKCode.Arc;
 
 /// <summary>
 /// The running tool's icon: Lucide LoaderCircle turning once every 900ms, linear (Arc's CSS spin). It turns on a Core
-/// <see cref="LiveLoop"/> only while it is mounted, visible, in view and at full motion; reduced motion and Off show the
-/// glyph at rest. The pen is cached, so a frame allocates nothing.
+/// <see cref="LiveLoop"/> only while it is mounted, visible, in view and at full motion; under reduced motion the glyph
+/// holds still and breathes in opacity (<see cref="ArcBusyPulse"/>) so it still reads as busy, and Off shows it at rest.
+/// The pen is cached, so a frame allocates nothing.
 /// </summary>
 internal sealed class AiToolSpinner : Control
 {
@@ -26,6 +27,8 @@ internal sealed class AiToolSpinner : Control
 
     private readonly LiveLoop _loop;
     private double _angle;
+    private double _pulse;
+    private bool _full = true;
     private Pen? _pen;
 
     static AiToolSpinner()
@@ -37,7 +40,17 @@ internal sealed class AiToolSpinner : Control
 
     public AiToolSpinner()
     {
-        _loop = new LiveLoop(this, Step);
+        _loop = new LiveLoop(this, Step) { MinimumLevel = ArcMotionLevel.Reduced };
+        _loop.RunningChanged += running =>
+        {
+            if (running)
+            {
+                RefreshLevel();
+            }
+            InvalidateVisual();
+        };
+        // The motion level can come from the theme's resources: re-read it when they change.
+        ResourcesChanged += (_, _) => RefreshLevel();
         _loop.Start();
     }
 
@@ -50,14 +63,38 @@ internal sealed class AiToolSpinner : Control
     /// <summary>The rotation in degrees.</summary>
     internal double Angle => _angle;
 
-    /// <summary>Whether frames arrive (mounted, visible, in view, full motion).</summary>
-    internal bool IsSpinning => _loop.IsRunning;
+    /// <summary>Whether the glyph turns (frames arrive at full motion while mounted, visible and in view).</summary>
+    internal bool IsSpinning => _loop.IsRunning && _full;
+
+    /// <summary>Whether the resting glyph breathes in opacity instead (reduced motion).</summary>
+    internal bool IsPulsing => _loop.IsRunning && !_full;
+
+    /// <summary>The glyph's opacity now: 1 unless it breathes under reduced motion.</summary>
+    internal double PulseOpacity => IsPulsing ? ArcBusyPulse.Opacity(_pulse) : 1;
 
     private bool Step(double seconds)
     {
-        _angle = (_angle + seconds / TurnSeconds * 360) % 360;
+        if (_full)
+        {
+            _angle = (_angle + seconds / TurnSeconds * 360) % 360;
+        }
+        else
+        {
+            _pulse = ArcBusyPulse.Advance(_pulse, seconds);
+        }
         InvalidateVisual();
         return true;
+    }
+
+    // Read once per level change, not per frame (the level lookup walks up to the resource root).
+    private void RefreshLevel()
+    {
+        var full = ArcMotion.IsFull(this);
+        if (full != _full)
+        {
+            _full = full;
+            InvalidateVisual();
+        }
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -66,6 +103,10 @@ internal sealed class AiToolSpinner : Control
         if (change.Property == ForegroundProperty)
         {
             _pen = null;
+        }
+        else if (change.Property == ArcMotion.LevelProperty)
+        {
+            RefreshLevel();
         }
     }
 
@@ -83,6 +124,8 @@ internal sealed class AiToolSpinner : Control
         var center = new Point(Bounds.Width / 2, Bounds.Height / 2);
         var matrix = Matrix.CreateTranslation(-12, -12) * Matrix.CreateRotation(_angle * Math.PI / 180.0)
                      * Matrix.CreateScale(scale, scale) * Matrix.CreateTranslation(center.X, center.Y);
+        var opacity = PulseOpacity;
+        using (opacity < 1 ? context.PushOpacity(opacity) : default(DrawingContext.PushedState?))
         using (context.PushTransform(matrix))
         {
             context.DrawGeometry(null, _pen, ArcIcons.LoaderCircle);

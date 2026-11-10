@@ -1,7 +1,7 @@
 ---
 title: Skeleton morph
 summary: 加载占位会逐块伸展为真实内容，同时卡片缓动至新的高度。
-source-hash: 34a99315450f
+source-hash: 431adcc738cf
 ---
 
 <Demo name="Preview" />
@@ -85,7 +85,7 @@ private async Task ShowAsync(Func<Task<object>> load)
 
 ### 减少动效
 
-在减少动效下，骨架不脉冲，没有伸展或模糊，每个块在 120 ms 内同时交叉淡化为其内容。区域的高度立即变化。
+在减少动效下，骨架保留透明度脉冲（因此仍能看出正在加载），但没有伸展或模糊，每个块在 120 ms 内同时交叉淡化为其内容。区域的高度立即变化。关闭动效时骨架不脉冲。
 
 <Demo name="ReducedMotion" />
 
@@ -154,7 +154,7 @@ private async Task ShowAsync(Func<Task<object>> load)
 
 | 变化 | 完整 | 减少 | 关闭 |
 |---|---|---|---|
-| 脉冲 | 1 ↔ 0.55，1.4 s | 无 | 无 |
+| 脉冲 | 1 ↔ 0.55，1.4 s | 1 ↔ 0.55，1.4 s | 无 |
 | 解析顺序 | 每块相隔 40 ms | 同时完成 | 同时完成 |
 | 骨架到内容 | 弹簧伸展并淡出 | 120 ms 交叉淡化 | 瞬间 |
 | 内容 | 从 4 px 模糊中淡入 | 120 ms 淡入 | 瞬间 |

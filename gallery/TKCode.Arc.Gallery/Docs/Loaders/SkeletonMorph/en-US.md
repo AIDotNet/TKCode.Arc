@@ -105,8 +105,9 @@ and follow its `IsLoading`.
 
 ### Reduced motion
 
-With reduced motion the skeletons do not pulse, nothing stretches or blurs, and every block crossfades to its content in
-120 ms at the same time. The height of the region changes at once.
+With reduced motion the skeletons keep their opacity pulse (so they still read as loading), but nothing stretches or
+blurs, and every block crossfades to its content in 120 ms at the same time. The height of the region changes at once.
+With motion off the skeletons do not pulse.
 
 <Demo name="ReducedMotion" />
 
@@ -187,7 +188,7 @@ they cannot be reached with `Tab`.
 
 | Change | Full | Reduced | Off |
 |---|---|---|---|
-| Pulse | 1 ↔ 0.55, 1.4 s | None | None |
+| Pulse | 1 ↔ 0.55, 1.4 s | 1 ↔ 0.55, 1.4 s | None |
 | Resolve order | 40 ms apart | All at once | All at once |
 | Skeleton to content | Stretch on a spring and fade | 120 ms crossfade | Instant |
 | Content | Fade in from a 4 px blur | 120 ms fade | Instant |

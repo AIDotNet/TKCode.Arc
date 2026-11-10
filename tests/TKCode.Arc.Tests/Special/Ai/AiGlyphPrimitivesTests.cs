@@ -1,4 +1,8 @@
 using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Headless.XUnit;
+using Avalonia.Threading;
+using TKCode.Arc.Motion;
 
 namespace TKCode.Arc.Tests.Special.Ai;
 
@@ -69,5 +73,45 @@ public class AiGlyphPrimitivesTests
         arc.Bounds.Right.ShouldBe(14, 0.01);
         arc.Bounds.Top.ShouldBe(2, 0.01);
         arc.Bounds.Bottom.ShouldBe(8, 0.01);
+    }
+
+    [AvaloniaFact]
+    public void Owned_Spin_Turns_At_Full_Motion_Breathes_Under_Reduced_And_Rests_With_Motion_Off()
+    {
+        var clock = new ManualFrameClock();
+        using var _ = clock.Install();
+        var owner = new Border { Width = 16, Height = 16 };
+        var frames = 0;
+        using var spin = new AiSpin(owner, 0.8, () => frames++);
+        var window = TestHelpers.Show(new StackPanel { Children = { owner } }, ArcMotionLevel.Full);
+        try
+        {
+            spin.Start();
+            Dispatcher.UIThread.RunJobs();
+            clock.Advance(TimeSpan.FromMilliseconds(400), TimeSpan.FromMilliseconds(1000.0 / 60));
+            spin.IsRunning.ShouldBeTrue();
+            spin.Angle.ShouldBe(180, 12);
+            spin.Opacity.ShouldBe(1);
+
+            ArcMotion.SetLevel(window, ArcMotionLevel.Reduced);
+            Dispatcher.UIThread.RunJobs();
+            var rest = spin.Angle;
+            clock.Advance(TimeSpan.FromMilliseconds(900), TimeSpan.FromMilliseconds(1000.0 / 60));
+            spin.IsRunning.ShouldBeFalse();
+            spin.IsPulsing.ShouldBeTrue();
+            spin.Angle.ShouldBe(rest);
+            spin.Opacity.ShouldBeLessThan(0.6);
+
+            ArcMotion.SetLevel(window, ArcMotionLevel.Off);
+            Dispatcher.UIThread.RunJobs();
+            clock.Advance(TimeSpan.FromMilliseconds(300), TimeSpan.FromMilliseconds(1000.0 / 60));
+            spin.IsPulsing.ShouldBeFalse();
+            spin.Opacity.ShouldBe(1);
+            spin.Angle.ShouldBe(rest);
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 }

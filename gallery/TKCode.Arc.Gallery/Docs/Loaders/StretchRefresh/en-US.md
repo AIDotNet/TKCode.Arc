@@ -108,7 +108,8 @@ card drops its border and corners so it can sit edge to edge.
 <Demo name="ReducedMotion" />
 
 Under reduced motion the sheet still follows the pull and the rows still spread, so the gesture keeps its feel; the line
-does not over-stretch or run, the sheet jumps to its resting places, text changes and new rows only fade, and the sheet
+does not over-stretch or run (while refreshing, its segment rests mid-line and breathes in opacity, and the header
+glyph breathes with it), the sheet jumps to its resting places, text changes and new rows only fade, and the sheet
 returns and the cycle ends together 1.2 s after the result.
 
 ### Content guidelines
@@ -211,7 +212,7 @@ The enums:
 | Pull and row spread | Follows the pull | Follows the pull | Follows the pull |
 | Armed over-stretch | Spring to 1.12 | None | None |
 | Sheet to rest and back | Springs | Jumps | Jumps |
-| Running segment and spinning glyph | Animated | Still | Still |
+| Running segment and spinning glyph | Animated | Rest in place and breathe in opacity (1.8 s) | Still |
 | Text changes | Rise and blur | Fade | Replaced |
 | New rows | Drop, grow and unblur | Fade | Appear |
 | Rows that stay | Slide | Jump | Jump |

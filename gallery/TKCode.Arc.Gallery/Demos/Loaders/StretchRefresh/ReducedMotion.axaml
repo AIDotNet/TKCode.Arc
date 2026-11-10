@@ -3,7 +3,8 @@
              xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
              x:Class="TKCode.Arc.Gallery.Demos.StretchRefreshReducedMotionDemo">
     <!-- Reduced motion: the sheet still follows the pull and the rows still spread, but the line does not over-stretch
-         or run, the sheet jumps instead of springing, and new rows only fade in. -->
+         or run (its segment rests mid-line and breathes in opacity while refreshing), the sheet jumps instead of
+         springing, and new rows only fade in. -->
     <arc:StretchRefresh x:Name="Feed"
                         arc:ArcMotion.Level="Reduced"
                         MaxWidth="376"

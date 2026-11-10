@@ -525,7 +525,28 @@ public class StretchRefreshTests
         f.Release(f.FeedPoint());
         Assert.Equal(60, c.PullOffset);
         clock.Advance(TimeSpan.FromMilliseconds(400), Frame);
-        Assert.Equal(0, c.Meter.RunPosition);
+        // The segment does not run and the glyph does not turn: the segment rests mid-track and breathes instead.
+        Assert.Equal(StretchRefreshMath.RunTravel / 2, c.Meter.RunPosition);
+        Assert.Equal(0, c.SpinAngle);
+        Assert.True(c.RunPulse < 0.95);
+        clock.Advance(TimeSpan.FromMilliseconds(500), Frame);
+        Assert.True(c.RunPulse < 0.6);
+        Assert.Equal(StretchRefreshMath.RunTravel / 2, c.Meter.RunPosition);
+        Assert.Equal(0, c.SpinAngle);
+    }
+
+    [AvaloniaFact]
+    public void Motion_off_keeps_the_running_segment_still_and_opaque()
+    {
+        var clock = new ManualFrameClock();
+        using var _ = clock.Install();
+        var f = Open(ArcMotionLevel.Off);
+        var c = f.Control;
+        f.Pull(400);
+        f.Release(f.FeedPoint());
+        clock.Advance(TimeSpan.FromMilliseconds(900), Frame);
+        Assert.Equal(0, c.Meter!.RunPosition);
+        Assert.Equal(1, c.RunPulse);
         Assert.Equal(0, c.SpinAngle);
     }
 }

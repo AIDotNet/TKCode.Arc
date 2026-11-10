@@ -309,16 +309,53 @@ public class ChargeSessionTests
         var (window, card) = Show(new ChargeSession(), ArcMotionLevel.Reduced);
         try
         {
+            var distances = Enumerable.Range(0, ChargeSessionFlow.PoolSize).Select(card.Flow.DistanceOf).ToArray();
             clock.Advance(TimeSpan.FromSeconds(2), Frame);
             card.Charge.ShouldBe(28);
             card.Power.ShouldBe(180);
             card.Flow.IsStatic.ShouldBeTrue();
             card.Flow.Count.ShouldBeGreaterThan(3);
+            // The packets do not travel, but they breathe together so the card still reads as charging.
+            Enumerable.Range(0, ChargeSessionFlow.PoolSize).Select(card.Flow.DistanceOf).ToArray().ShouldBe(distances);
+            card.Loop.IsRunning.ShouldBeTrue();
+            var opacities = new List<double>();
+            for (var i = 0; i < 6; i++)
+            {
+                clock.Advance(TimeSpan.FromMilliseconds(300), Frame);
+                opacities.Add(card.Flow.StaticOpacity);
+            }
+            opacities.Min().ShouldBeLessThan(0.6);
+            opacities.Max().ShouldBeGreaterThan(0.9);
+            card.Charge.ShouldBe(28);
             card.Stop();
             card.Power.ShouldBe(0);
             card.Flow.Count.ShouldBe(0);
+            clock.Advance(TimeSpan.FromMilliseconds(100), Frame);
+            card.Loop.IsRunning.ShouldBeFalse();
             card.Resume();
             card.Power.ShouldBe(180);
+            clock.Advance(TimeSpan.FromMilliseconds(100), Frame);
+            card.Loop.IsRunning.ShouldBeTrue();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Motion_off_holds_the_session_and_its_packets_still()
+    {
+        var clock = new ManualFrameClock();
+        using var _ = clock.Install();
+        var (window, card) = Show(new ChargeSession(), ArcMotionLevel.Off);
+        try
+        {
+            clock.Advance(TimeSpan.FromSeconds(2), Frame);
+            card.Charge.ShouldBe(28);
+            card.Flow.IsStatic.ShouldBeTrue();
+            card.Loop.IsRunning.ShouldBeFalse();
+            card.Flow.StaticOpacity.ShouldBe(1);
         }
         finally
         {

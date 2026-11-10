@@ -51,6 +51,9 @@ internal sealed class ChargeSessionFlow
     /// <summary>Whether the packets are laid out at rest (reduced motion) rather than moving.</summary>
     public bool IsStatic => _static;
 
+    /// <summary>The opacity of packets laid out at rest (the reduced-motion pulse; 1 otherwise).</summary>
+    public double StaticOpacity { get; set; } = 1;
+
     /// <summary>Nothing in flight and the flash gone: the flow needs no more frames.</summary>
     public bool IsIdle => Count == 0 && Flash <= 0;
 
@@ -83,7 +86,7 @@ internal sealed class ChargeSessionFlow
         }
         if (_static)
         {
-            return 1;
+            return StaticOpacity;
         }
         return OpacityAt(_distance[index], end - _distance[index]);
     }
@@ -168,6 +171,7 @@ internal sealed class ChargeSessionFlow
         Count = 0;
         Flash = 0;
         _static = false;
+        StaticOpacity = 1;
     }
 
     private void Emit(double distance)

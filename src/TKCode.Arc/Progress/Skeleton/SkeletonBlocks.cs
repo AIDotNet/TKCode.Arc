@@ -10,7 +10,8 @@ namespace TKCode.Arc;
 /// The placeholder shapes of a <see cref="Skeleton"/>, drawn directly: an optional round avatar and 1–6 text lines
 /// (first 16px tall at 48%, last at 72%, the rest full width, 12px apart). Each block pulses a beat (90ms) after the
 /// one above it: opacity 1 → 0.52 → 1 every 1.8s on the in-out curve, 11 times (about 20s), then rests (P21). The
-/// loop runs only while attached, visible, on screen and at full motion; reduced motion keeps the blocks still.
+/// pulse changes opacity only, so it also runs under reduced motion (a placeholder must still read as loading); the loop
+/// runs only while attached, visible, on screen and with motion on, and motion off keeps the blocks still.
 /// </summary>
 internal sealed class SkeletonBlocks : Control
 {
@@ -58,10 +59,10 @@ internal sealed class SkeletonBlocks : Control
 
     public SkeletonBlocks()
     {
-        // P21: the Core loop pauses itself while detached, hidden, off screen or below full motion; it finishes
-        // after the last pulse.
-        _loop = new LiveLoop(this, Step);
-        // Stopping redraws the blocks at rest (reduced motion keeps them still).
+        // P21: the Core loop pauses itself while detached, hidden, off screen or with motion off; it finishes after the
+        // last pulse. Opacity is all it changes, which reduced motion keeps.
+        _loop = new LiveLoop(this, Step) { MinimumLevel = ArcMotionLevel.Reduced };
+        // Stopping redraws the blocks at rest (motion off keeps them still).
         _loop.RunningChanged += _ => InvalidateVisual();
         _loop.Start();
     }
@@ -111,8 +112,8 @@ internal sealed class SkeletonBlocks : Control
         {
             return;
         }
-        // A running loop is at full motion by definition: no walk up to the TopLevel on every frame of the pulse.
-        var pulsing = _loop.IsRunning || ArcMotion.GetEffectiveLevel(this) == ArcMotionLevel.Full;
+        // A running loop has motion on by definition: no walk up to the TopLevel on every frame of the pulse.
+        var pulsing = _loop.IsRunning || ArcMotion.GetEffectiveLevel(this) != ArcMotionLevel.Off;
         var width = Bounds.Width;
         var index = 0;
         var x = 0.0;

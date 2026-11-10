@@ -2,7 +2,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
              x:Class="TKCode.Arc.Gallery.Demos.SkeletonMorphReducedMotionDemo">
-    <!-- Reduced motion: the skeletons hold still, and every block crossfades to its content in 120 ms at once. -->
+    <!-- Reduced motion: the skeletons keep their opacity pulse but nothing stretches or blurs, and every block
+         crossfades to its content in 120 ms at once. -->
     <StackPanel Margin="16,32" Spacing="16" Width="320" HorizontalAlignment="Center" arc:ArcMotion.Level="Reduced">
         <arc:Switch Content="Loading" IsChecked="{Binding #Weather.IsLoading, Mode=TwoWay}" />
         <arc:SkeletonMorph x:Name="Weather" Classes="card" IsLoading="True" LoadingLabel="Loading forecast">

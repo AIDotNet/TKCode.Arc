@@ -88,7 +88,7 @@ public class SkeletonTests
     }
 
     [AvaloniaFact]
-    public void Pulse_Runs_Only_At_Full_Motion_While_Visible()
+    public void Pulse_Runs_With_Motion_On_While_Visible()
     {
         var clock = new ManualFrameClock();
         using var _ = clock.Install();
@@ -98,7 +98,11 @@ public class SkeletonTests
         {
             var blocks = TestHelpers.Descendant<SkeletonBlocks>(skeleton);
             blocks.IsPulsing.ShouldBeTrue();
+            // The pulse is opacity only, which reduced motion keeps: a placeholder must still read as loading.
             ArcMotion.SetLevel(window, ArcMotionLevel.Reduced);
+            Dispatcher.UIThread.RunJobs();
+            blocks.IsPulsing.ShouldBeTrue();
+            ArcMotion.SetLevel(window, ArcMotionLevel.Off);
             Dispatcher.UIThread.RunJobs();
             blocks.IsPulsing.ShouldBeFalse();
             ArcMotion.SetLevel(window, ArcMotionLevel.Full);

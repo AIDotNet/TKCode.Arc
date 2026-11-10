@@ -209,7 +209,7 @@ stats.Labels = new GenerationStatsLabels
 | A number changes | Glides to the new value over about 100ms in tabular digits; a drop cuts straight to it | At once | At once |
 | Status changes | Old word and icon fade out in 100ms, the new ones fade in over 160ms rising 2px | Short crossfade | At once |
 | Done | The check draws itself once | Drawn whole | Drawn whole |
-| Waiting, streaming | The spinner turns once every 800ms | Holds still | Holds still |
+| Waiting, streaming | The spinner turns once every 800ms | Holds still and breathes in opacity (1.8 s) | Holds still |
 | Breakdown or error row | Height on a 0.26s critically damped spring, content fades over 160ms; nothing bounces | At once | At once |
 | Details chevron | Turns on the same spring | At once | At once |
 | Simulated runs | Play in a loop while on screen; hold while the breakdown is open | Stop on a settled run | Stop on a settled run |

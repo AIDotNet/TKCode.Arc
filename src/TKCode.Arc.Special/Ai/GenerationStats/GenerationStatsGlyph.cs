@@ -188,6 +188,7 @@ internal sealed class GenerationStatsGlyph : Control
             _trackPen = new ImmutablePen(new ImmutableSolidColorBrush(color, 0.2), 1.75);
         }
         context.DrawEllipse(null, _trackPen, new Point(8, 8), 6, 6);
+        using (_spin.PushPulse(context))
         using (context.PushTransform(_spin.Turn(new Point(8, 8))))
         {
             context.DrawGeometry(null, Pen(arc, 1.75, _pens), s_arc);

@@ -117,7 +117,7 @@ public class SkeletonMorph : ContentControl
         AutomationProperties.ControlTypeOverrideProperty.OverrideDefaultValue<SkeletonMorph>(AutomationControlType.Group);
     }
 
-    /// <summary>The current breath of the skeletons (1 at rest and below full motion).</summary>
+    /// <summary>The current breath of the skeletons (1 at rest and with motion off).</summary>
     internal double CurrentPulse => _pulse;
 
     /// <summary>True while the pulse loop asks for frames (tests read it).</summary>
@@ -302,8 +302,9 @@ public class SkeletonMorph : ContentControl
         if (_pulseLoop is null)
         {
             // A LiveLoop, not a ControlTheme animation: the pulse drives a self-drawn layer in many blocks from one clock,
-            // and must stop per block the moment that block mounts its content.
-            _pulseLoop = new LiveLoop(this, StepPulse);
+            // and must stop per block the moment that block mounts its content. It changes opacity only, which reduced
+            // motion keeps, so it runs there too (a skeleton must still read as loading); motion off parks it.
+            _pulseLoop = new LiveLoop(this, StepPulse) { MinimumLevel = ArcMotionLevel.Reduced };
             _pulseLoop.RunningChanged += OnPulseRunningChanged;
         }
         _pulseLoop.Start();
@@ -337,11 +338,11 @@ public class SkeletonMorph : ContentControl
 
     private void OnPulseRunningChanged(bool running)
     {
-        if (running || ArcMotion.IsFull(this))
+        if (running || ArcMotion.GetEffectiveLevel(this) != ArcMotionLevel.Off)
         {
             return;
         }
-        // Reduced or no motion: skeletons rest at full opacity.
+        // No motion: skeletons rest at full opacity.
         _pulse = 1;
         foreach (var block in _blocks)
         {

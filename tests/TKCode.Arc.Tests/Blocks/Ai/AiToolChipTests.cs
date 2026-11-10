@@ -267,7 +267,7 @@ public class AiToolChipTests
     }
 
     [AvaloniaFact]
-    public void Spinner_Turns_At_Full_Motion_Only()
+    public void Spinner_Turns_At_Full_Motion_And_Breathes_Under_Reduced_Motion()
     {
         var clock = new ManualFrameClock();
         using var _ = clock.Install();
@@ -285,6 +285,20 @@ public class AiToolChipTests
             var spinner = TestHelpers.Descendant<AiToolSpinner>(rig.Content, "PART_Spinner");
             rig.Frames(200);
             spinner.IsSpinning.ShouldBeFalse();
+            spinner.Angle.ShouldBe(0);
+            // It holds still but breathes in opacity, so the running tool still reads as busy.
+            spinner.IsPulsing.ShouldBeTrue();
+            rig.Frames(700);
+            spinner.PulseOpacity.ShouldBeLessThan(0.6);
+            spinner.Angle.ShouldBe(0);
+        }
+        using (var rig = new AiReplyRig(Chip(AiReplySamples.Search(AiChatToolStatus.Running)), ArcMotionLevel.Off, clock))
+        {
+            var spinner = TestHelpers.Descendant<AiToolSpinner>(rig.Content, "PART_Spinner");
+            rig.Frames(900);
+            spinner.IsSpinning.ShouldBeFalse();
+            spinner.IsPulsing.ShouldBeFalse();
+            spinner.PulseOpacity.ShouldBe(1);
             spinner.Angle.ShouldBe(0);
         }
     }
