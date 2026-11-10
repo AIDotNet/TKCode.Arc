@@ -224,6 +224,10 @@ public class MegaMenuMorph : TemplatedControl
         {
             _popup.PlacementTarget = this;
             _popup.Closed += OnPopupClosed;
+            // No light dismiss: its transparent layer would cover the bar while the panel is open, so the trigger under
+            // the pointer would lose it, the panel would close and reopen on the next move, over and over. Presses
+            // outside the bar and the panel close it through WatchPresses instead.
+            _popup.IsLightDismissEnabled = false;
             _popup.IsMotionEnabled = false;
             _popup.OverlayHostShadow = default;
             _popup.PopupRootShadow = default;
