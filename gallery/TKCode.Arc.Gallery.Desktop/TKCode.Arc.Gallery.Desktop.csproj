@@ -13,6 +13,8 @@
              Avalonia 12.1 adds its !AvaloniaResources blob, so a -p:PublishAot=true publish embeds no compiled XAML and fails
              at startup with "No precompiled XAML found". -->
         <UseOptimizedPublish>false</UseOptimizedPublish>
+        <!-- .NET 9+ marks the apphost CET-compatible (hardware shadow stacks), so the gallery would not start on Windows 10
+             builds before 21H2 or without recent updates (#76). The gallery is a demo app, so it opts out. -->
         <CETCompat>false</CETCompat>
     </PropertyGroup>
     <ItemGroup>
