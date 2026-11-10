@@ -41,8 +41,9 @@ edge of the window for the whole session, so people learn where each page lives 
 
 Put `SidebarSection` elements inside the sidebar and `SidebarItem` elements inside the sections. A section without a
 `Header` has no heading, which suits the first group (Home, Inbox). Give every page a `Key` and bind `SelectedKey` to
-your route. The sidebar takes its width from the theme (240 open, 64 as a rail), so place it in a `DockPanel` or an
-`Auto` grid column and do not set `Width`.
+your route. The sidebar is 240 wide when open and 64 as a rail; place it in a `DockPanel` or an `Auto` grid column.
+To make the open sidebar narrower or wider, set `ExpandedWidth` (for example `ExpandedWidth="200"`), not `Width`: the
+collapse springs between `ExpandedWidth` and the rail, and the header, filter, rows and footer lay out at that width.
 
 ```xml
 <DockPanel xmlns="https://github.com/avaloniaui"
@@ -102,7 +103,7 @@ bar toggling the sidebar, and the signed-in person in the footer. The layouts be
     side margins and keeps its open-width layout on the rail, clipped to the rail's width.
 
 The pane is a hair darker than the page next to it (a mix of the surface and the muted surface color) with a 1 px
-border on the right. The open sidebar is 240 px wide and the rail is 64 px; both come from the theme. `Background`,
+border on the right. The open sidebar is 240 px wide (`ExpandedWidth`) and the rail is 64 px. `Background`,
 `BorderThickness` and `CornerRadius` are ordinary properties, so a sidebar can also float as a rounded card.
 
 ### Layouts
@@ -563,8 +564,8 @@ is safe and changing the key is not.
   is hard to scan and to navigate with the arrow keys.
 - Long labels. The label shares a 216 px row with the icon and the count, the rail tooltip shows the same text, and the
   filter matches it, so a short, distinct label is easier to find in every mode.
-- Setting `Width` on the sidebar. The theme sets the open and rail widths, and the collapse springs between them; a
-  local width overrides both and stops the collapse from changing the width.
+- Setting `Width` on the sidebar. The sidebar drives its own width to spring between `ExpandedWidth` and the rail; a
+  `Width` set on it fixes the width, so collapsing no longer changes it. Set `ExpandedWidth` instead.
 - Sharing one control between rows as an icon. A control can sit in one row only; give each item its own, or use a
   geometry.
 
@@ -600,13 +601,16 @@ one of its rows or in its filter. Click a row first, or bind `IsCollapsed` to a 
 
 ## Accessibility
 
-- The sidebar is a navigation landmark named by `Label` ("Sidebar" by default). Use a specific name such as "Main
+- The sidebar is a navigation landmark named by `Label` (the localized "Sidebar" by default). Use a specific name such as "Main
   navigation" when a page has more than one navigation region.
 - The pages form a tree. Each row is named by its label, its count and "unread" when it has `IsUnread` ("Inbox, 12"),
-  reports whether it is selected, and a parent reports whether it is expanded. `UnreadText` localizes the word.
+  reports whether it is selected, and a parent reports whether it is expanded. The word follows the Arc language;
+  `UnreadText` replaces it.
 - A collapsible section heading is a disclosure button; other headings are text and are not in the tab order.
 - The collapse buttons and the rail's search button are named by `CollapseButtonText`, `ExpandButtonText` and
-  `FilterPlaceholder`. Override them to localize. A button that is hidden (the one in the header while the other sits
+  `FilterPlaceholder`. Left unset, they and `NoMatchesText` use the built-in English, Simplified Chinese or
+  Traditional Chinese text of the Arc language (`UseLanguages`) and follow a language change; a value you set wins. A
+  button that is hidden (the one in the header while the other sits
   beside the filter) takes no focus.
 - On the rail each page keeps its label as a tooltip, so people who use a pointer can still read the names of the
   icons. A parent's menu opens from the keyboard with Right or Enter and lists its pages as radio items.
@@ -659,7 +663,7 @@ page, or on the first page when none is selected.
 
 ## Responsive behavior
 
-- `Sidebar` has no breakpoint of its own. It is `ExpandedWidth` wide (240 px) and becomes the 64 px icon rail
+- `Sidebar` has no breakpoint of its own. It is `ExpandedWidth` wide (240 px by default) and becomes the 64 px icon rail
   (`RailWidth`) when `IsCollapsed` is true, so the app decides when to collapse it.
 - Rows keep their open layout while the sidebar narrows, and the content is clipped (ClipsWhenNarrow) instead of
   wrapping. `ResizeMode` (default `Overlay`) decides how the width change reaches the page beside it.
