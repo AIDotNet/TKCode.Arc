@@ -31181,16 +31181,20 @@
         <target>侧边栏展开时收起按钮的位置：头部行（默认）或筛选框旁边。在窄栏上它总是位于顶部。</target>
       </trans-unit>
       <trans-unit id="Sidebar.CollapseButtonText">
-        <source>Accessible name and tooltip of the collapse button while the sidebar is open.</source>
-        <target>侧边栏展开时，收起按钮的无障碍名称和工具提示。</target>
+        <source>Accessible name and tooltip of the collapse button while the sidebar is open. Unset, it is the localized "Collapse sidebar", which follows the Arc language.</source>
+        <target>侧边栏展开时，收起按钮的无障碍名称和工具提示。不设置时为本地化的“收起侧边栏”，并跟随 Arc 语言。</target>
       </trans-unit>
       <trans-unit id="Sidebar.ExpandButtonText">
-        <source>Accessible name and tooltip of the collapse button while the sidebar is the rail.</source>
-        <target>侧边栏为窄栏时，收起按钮的无障碍名称和工具提示。</target>
+        <source>Accessible name and tooltip of the collapse button while the sidebar is the rail. Unset, it is the localized "Expand sidebar", which follows the Arc language.</source>
+        <target>侧边栏为窄栏时，收起按钮的无障碍名称和工具提示。不设置时为本地化的“展开侧边栏”，并跟随 Arc 语言。</target>
+      </trans-unit>
+      <trans-unit id="Sidebar.ExpandedWidth">
+        <source>Width of the open sidebar (default 240, the theme's `ExpandedWidth` token); collapsing springs from it to the 64px rail and expanding springs back to it. Set this, not `Width`, to make the sidebar narrower or wider: the sidebar drives its own `Width` to animate the collapse, so a `Width` set on it fixes it at that width and it no longer collapses. The header, filter, rows and footer keep this width's layout while the width springs.</source>
+        <target>展开时侧边栏的宽度（默认 240，即主题的 `ExpandedWidth` 令牌）；收起时从它以弹簧过渡到 64px 窄栏，展开时再回到它。要让侧边栏更窄或更宽，请设置此属性而不是 `Width`：侧边栏自己驱动 `Width` 来呈现收起动画，在它上面设置的 `Width` 会把宽度固定下来，侧边栏也就不再收起。宽度变化期间，头部、筛选框、各行和底部保持此宽度下的布局。</target>
       </trans-unit>
       <trans-unit id="Sidebar.FilterPlaceholder">
-        <source>Placeholder and accessible name of the filter box.</source>
-        <target>筛选框的占位文字与无障碍名称。</target>
+        <source>Placeholder and accessible name of the filter box. Unset, it is the localized "Filter", which follows the Arc language.</source>
+        <target>筛选框的占位文字与无障碍名称。不设置时为本地化的“筛选”，并跟随 Arc 语言。</target>
       </trans-unit>
       <trans-unit id="Sidebar.FilterText">
         <source>The filter text (two-way). Pages whose label contains it stay; a parent with a matching page opens.</source>
@@ -31237,16 +31241,16 @@
         <target>项目键的属性路径，`SelectedKey` 与其匹配。</target>
       </trans-unit>
       <trans-unit id="Sidebar.Label">
-        <source>Name of the navigation landmark.</source>
-        <target>导航地标的名称。</target>
+        <source>Name of the navigation landmark. Unset, it is the localized "Sidebar", which follows the Arc language.</source>
+        <target>导航地标的名称。不设置时为本地化的“侧边栏”，并跟随 Arc 语言。</target>
       </trans-unit>
       <trans-unit id="Sidebar.LabelMember">
         <source>The property path of an item's label (for items that are not `SidebarItem`s).</source>
         <target>项目标签的属性路径（用于不是 `SidebarItem` 的项）。</target>
       </trans-unit>
       <trans-unit id="Sidebar.NoMatchesText">
-        <source>Text shown when the filter matches no page.</source>
-        <target>筛选无匹配页面时显示的文本。</target>
+        <source>Text shown when the filter matches no page. Unset, it is the localized "No matches", which follows the Arc language.</source>
+        <target>筛选无匹配页面时显示的文本。不设置时为本地化的“没有匹配”，并跟随 Arc 语言。</target>
       </trans-unit>
       <trans-unit id="Sidebar.ResizeMode">
         <source>How the width change between the open sidebar and the rail reaches the page next to it: `Overlay` (default) or `Push`.</source>
@@ -31269,8 +31273,8 @@
         <target>生成每个绑定行末尾的内容。该控件以项的数据（`ItemsSource` 中的对象）作为 `DataContext`，因此模板可以绑定到你自己的字段，例如仅当 `CanAdd` 为 true 时显示新增按钮。项上已设置的 `TrailingIcon` 优先。</target>
       </trans-unit>
       <trans-unit id="Sidebar.UnreadText">
-        <source>Added to the accessible name of a page that has `IsUnread` ("Inbox, unread").</source>
-        <target>附加到带有 `IsUnread` 的页面的无障碍名称中（“Inbox, unread”）。</target>
+        <source>Added to the accessible name of a page that has `IsUnread` ("Inbox, unread"). Unset, it is the localized "unread", which follows the Arc language.</source>
+        <target>附加到带有 `IsUnread` 的页面的无障碍名称中（“Inbox, unread”）。不设置时为本地化的“未读”，并跟随 Arc 语言。</target>
       </trans-unit>
       <trans-unit id="SidebarItem">
         <source>One page of a `Sidebar`: a row with an icon, a label and an optional count. An item with `Items` is a parent: it opens and closes its child pages instead of being selected (one level of nesting).</source>

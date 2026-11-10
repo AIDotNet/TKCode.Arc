@@ -101,11 +101,11 @@ public partial class Sidebar : TemplatedControl
     public static readonly StyledProperty<string> FilterTextProperty =
         AvaloniaProperty.Register<Sidebar, string>(nameof(FilterText), string.Empty, defaultBindingMode: BindingMode.TwoWay);
 
-    /// <summary>Placeholder and accessible name of the filter box.</summary>
+    /// <summary>Placeholder and accessible name of the filter box. Unset, it is the localized "Filter", which follows the Arc language.</summary>
     public static readonly StyledProperty<string> FilterPlaceholderProperty =
         AvaloniaProperty.Register<Sidebar, string>(nameof(FilterPlaceholder), "Filter");
 
-    /// <summary>Text shown when the filter matches no page.</summary>
+    /// <summary>Text shown when the filter matches no page. Unset, it is the localized "No matches", which follows the Arc language.</summary>
     public static readonly StyledProperty<string> NoMatchesTextProperty =
         AvaloniaProperty.Register<Sidebar, string>(nameof(NoMatchesText), "No matches");
 
@@ -117,11 +117,11 @@ public partial class Sidebar : TemplatedControl
     public static readonly StyledProperty<SidebarCollapseButtonPlacement> CollapseButtonPlacementProperty =
         AvaloniaProperty.Register<Sidebar, SidebarCollapseButtonPlacement>(nameof(CollapseButtonPlacement));
 
-    /// <summary>Accessible name and tooltip of the collapse button while the sidebar is open.</summary>
+    /// <summary>Accessible name and tooltip of the collapse button while the sidebar is open. Unset, it is the localized "Collapse sidebar", which follows the Arc language.</summary>
     public static readonly StyledProperty<string> CollapseButtonTextProperty =
         AvaloniaProperty.Register<Sidebar, string>(nameof(CollapseButtonText), "Collapse sidebar");
 
-    /// <summary>Accessible name and tooltip of the collapse button while the sidebar is the rail.</summary>
+    /// <summary>Accessible name and tooltip of the collapse button while the sidebar is the rail. Unset, it is the localized "Expand sidebar", which follows the Arc language.</summary>
     public static readonly StyledProperty<string> ExpandButtonTextProperty =
         AvaloniaProperty.Register<Sidebar, string>(nameof(ExpandButtonText), "Expand sidebar");
 
@@ -129,11 +129,11 @@ public partial class Sidebar : TemplatedControl
     public static readonly StyledProperty<SidebarResizeMode> ResizeModeProperty =
         AvaloniaProperty.Register<Sidebar, SidebarResizeMode>(nameof(ResizeMode), SidebarResizeMode.Overlay);
 
-    /// <summary>Added to the accessible name of a page that has <see cref="SidebarItem.IsUnread"/> ("Inbox, unread").</summary>
+    /// <summary>Added to the accessible name of a page that has <see cref="SidebarItem.IsUnread"/> ("Inbox, unread"). Unset, it is the localized "unread", which follows the Arc language.</summary>
     public static readonly StyledProperty<string> UnreadTextProperty =
         AvaloniaProperty.Register<Sidebar, string>(nameof(UnreadText), "unread");
 
-    /// <summary>Name of the navigation landmark.</summary>
+    /// <summary>Name of the navigation landmark. Unset, it is the localized "Sidebar", which follows the Arc language.</summary>
     public static readonly StyledProperty<string> LabelProperty =
         AvaloniaProperty.Register<Sidebar, string>(nameof(Label), "Sidebar");
 
@@ -145,9 +145,14 @@ public partial class Sidebar : TemplatedControl
     public static readonly RoutedEvent<SidebarItemInvokedEventArgs> ItemInvokedEvent =
         RoutedEvent.Register<Sidebar, SidebarItemInvokedEventArgs>(nameof(ItemInvoked), RoutingStrategies.Bubble);
 
-    /// <summary>Width of the open sidebar (from the theme): rows keep this layout while the width springs to the rail.</summary>
-    internal static readonly StyledProperty<double> OpenWidthProperty =
-        AvaloniaProperty.Register<Sidebar, double>(nameof(OpenWidth), double.NaN);
+    /// <summary>
+    /// Width of the open sidebar (default 240, the theme's <c>ExpandedWidth</c> token); collapsing springs from it to the
+    /// 64px rail and expanding springs back to it. Set this, not <c>Width</c>, to make the sidebar narrower or wider: the
+    /// sidebar drives its own <c>Width</c> to animate the collapse, so a <c>Width</c> set on it fixes it at that width and
+    /// it no longer collapses. The header, filter, rows and footer keep this width's layout while the width springs.
+    /// </summary>
+    public static readonly StyledProperty<double> ExpandedWidthProperty =
+        AvaloniaProperty.Register<Sidebar, double>(nameof(ExpandedWidth), double.NaN);
 
     /// <inheritdoc cref="SelectedItemProperty"/>
     public SidebarItem? SelectedItem
@@ -276,10 +281,11 @@ public partial class Sidebar : TemplatedControl
         set => SetValue(SelectCommandProperty, value);
     }
 
-    internal double OpenWidth
+    /// <inheritdoc cref="ExpandedWidthProperty"/>
+    public double ExpandedWidth
     {
-        get => GetValue(OpenWidthProperty);
-        set => SetValue(OpenWidthProperty, value);
+        get => GetValue(ExpandedWidthProperty);
+        set => SetValue(ExpandedWidthProperty, value);
     }
 
     /// <summary>The sections of pages, in order (the XAML content).</summary>
@@ -326,6 +332,7 @@ public partial class Sidebar : TemplatedControl
     private bool _dirtyAll;
     private bool _rebuildAll;
     private bool _syncingKey;
+    private bool _widthIsLocal;
 
     static Sidebar()
     {
@@ -355,14 +362,17 @@ public partial class Sidebar : TemplatedControl
     /// </summary>
     internal double PaneWidth => ResizeMode == SidebarResizeMode.Overlay && _paneWidth is { } motion ? motion.Value : Width;
 
-    /// <summary>How far the layout width falls short of the open width (what the rows are measured and arranged with).</summary>
+    /// <summary>
+    /// How far the layout width falls short of the open width (what the rows are measured and arranged with). A
+    /// <c>Width</c> set on the sidebar itself fixes its width, so its parts then lay out at that width.
+    /// </summary>
     internal double MeasureDeficit
     {
         get
         {
-            var open = OpenWidth;
+            var open = ExpandedWidth;
             var width = Width;
-            if (double.IsNaN(open) || double.IsNaN(width) || open <= 0)
+            if (_widthIsLocal || double.IsNaN(open) || double.IsNaN(width) || open <= 0)
             {
                 return 0;
             }
@@ -638,7 +648,17 @@ public partial class Sidebar : TemplatedControl
         }
         else if (change.Property == WidthProperty)
         {
+            if (change.Priority != BindingPriority.Animation)
+            {
+                // A width the app sets on the sidebar wins over the theme's open and rail widths (see ExpandedWidth).
+                _widthIsLocal = change.Priority == BindingPriority.LocalValue;
+            }
             OnLayoutWidthChanged(change.GetNewValue<double>());
+        }
+        else if (change.Property == ExpandedWidthProperty)
+        {
+            // On the rail the layout width stays, but the parts keep the open width's layout: measure them again.
+            InvalidateOpenWidthHosts();
         }
         else if (change.Property == ResizeModeProperty)
         {
@@ -666,6 +686,14 @@ public partial class Sidebar : TemplatedControl
         else if (change.Property == LabelProperty)
         {
             AutomationProperties.SetName(this, change.GetNewValue<string>());
+        }
+    }
+
+    private void InvalidateOpenWidthHosts()
+    {
+        foreach (var host in this.GetVisualDescendants().OfType<SidebarOpenWidthHost>())
+        {
+            host.InvalidateMeasure();
         }
     }
 
