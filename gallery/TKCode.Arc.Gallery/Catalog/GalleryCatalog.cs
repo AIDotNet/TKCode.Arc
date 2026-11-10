@@ -177,6 +177,9 @@ public static partial class GalleryCatalog
             new("Sticky", "Sticky", "sticky", 0,
                 "Keep any element of a scrolling page at the top once it scrolls there, like CSS sticky: toolbars stay in view and group headers push each other away.",
                 IsArc: false, AddedOn: "2026-11-10"),
+            new("BackToTop", "Back to top", "back-to-top", 0,
+                "A round button that appears once a long list, log or feed has scrolled past a threshold and smoothly scrolls it back to the top.",
+                IsArc: false, AddedOn: "2026-11-10"),
         ], IsArc: false),
         new("Content", "Extras", "扩展",
         [

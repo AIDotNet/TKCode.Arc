@@ -1,0 +1,92 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.BackToTopTheme">
+    <ControlTheme x:Key="{x:Type arc:BackToTop}" TargetType="arc:BackToTop">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:BackToTop">
+                <!-- The frame carries the raised shadow and the show / hide pose; the library Button owns the hover, press
+                     scale and focus ring. -->
+                <arc:BackToTopPresenter Name="PART_Presenter"
+                                        CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                        BoxShadow="{arc:ArcDesignTokenResource ShadowRaised}">
+                    <arc:BackToTopButton Name="PART_Button"
+                                         Variant="Secondary"
+                                         Padding="0"
+                                         CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                         HorizontalContentAlignment="Center"
+                                         VerticalContentAlignment="Center">
+                        <arc:ArcGlyph Name="PART_Icon" Data="{x:Static arc:ArcIcons.ArrowUp}" />
+                    </arc:BackToTopButton>
+                </arc:BackToTopPresenter>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="HorizontalAlignment" Value="Right" />
+        <Setter Property="VerticalAlignment" Value="Bottom" />
+        <Setter Property="ClipToBounds" Value="False" />
+
+        <!-- Sizes: circles of 36 / 44 / 50 with 16 / 18 / 20 arrows. -->
+        <Style Selector="^ /template/ arc|Button#PART_Button">
+            <Setter Property="Width" Value="{arc:ArcDesignTokenResource ControlSizeMD}" />
+            <Setter Property="Height" Value="{arc:ArcDesignTokenResource ControlSizeMD}" />
+            <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeMD}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Icon">
+            <Setter Property="Size" Value="{arc:BackToTopTokenResource IconSizeMD}" />
+        </Style>
+        <Style Selector="^:small">
+            <Style Selector="^ /template/ arc|Button#PART_Button">
+                <Setter Property="Width" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+                <Setter Property="Height" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+                <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Icon">
+                <Setter Property="Size" Value="{arc:BackToTopTokenResource IconSizeSM}" />
+            </Style>
+        </Style>
+        <Style Selector="^:large">
+            <Style Selector="^ /template/ arc|Button#PART_Button">
+                <Setter Property="Width" Value="{arc:ArcDesignTokenResource ControlSizeLG}" />
+                <Setter Property="Height" Value="{arc:ArcDesignTokenResource ControlSizeLG}" />
+                <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeLG}" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Icon">
+                <Setter Property="Size" Value="{arc:BackToTopTokenResource IconSizeLG}" />
+            </Style>
+        </Style>
+
+        <!-- Hidden: transparent, a little smaller and lower. Shown: in place. -->
+        <Style Selector="^ /template/ arc|BackToTopPresenter#PART_Presenter">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="Scale" Value="{arc:BackToTopTokenResource HiddenScale}" />
+            <Setter Property="OffsetY" Value="{arc:BackToTopTokenResource HiddenOffset}" />
+        </Style>
+        <Style Selector="^:shown /template/ arc|BackToTopPresenter#PART_Presenter">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="Scale" Value="1" />
+            <Setter Property="OffsetY" Value="0" />
+        </Style>
+
+        <Style Selector="^:motion-full /template/ arc|BackToTopPresenter#PART_Presenter">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    <arc:SpringDoubleTransition Property="Scale" Spring="Snappy" />
+                    <arc:SpringDoubleTransition Property="OffsetY" Spring="Snappy" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <!-- Reduced motion only fades: no scale, no shift. -->
+        <Style Selector="^:motion-reduced /template/ arc|BackToTopPresenter#PART_Presenter">
+            <Setter Property="Scale" Value="1" />
+            <Setter Property="OffsetY" Value="0" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

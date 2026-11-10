@@ -5064,6 +5064,46 @@
         <source>A framed picture: the square image to upload and the part of the original it was cut from.</source>
         <target>取景后的照片：要上传的正方形图片，以及它在原图中剪出的部分。</target>
       </trans-unit>
+      <trans-unit id="BackToTop">
+        <source>A round button that appears once a long list, log or feed has scrolled past `Threshold` and smoothly scrolls it back to the top when pressed. Place it yourself over the scroll container (usually in the same Grid cell) and point `Target` at it, or set `BackToTop.IsAttached="True"` on the container to have the button placed in a corner of its viewport for you.</source>
+        <target>长列表、日志或信息流向下滚动超过 `Threshold` 后出现的圆形按钮，点击后平滑滚回顶部。可以自己把它放在滚动容器上方（通常在同一个 Grid 单元格里）并把 `Target` 指向容器，也可以在容器上设置 `BackToTop.IsAttached="True"`，由库把按钮放在视口的一角。</target>
+      </trans-unit>
+      <trans-unit id="BackToTop.Inset">
+        <source>Attached to a scroll container with `BackToTop.IsAttached`: the distance from the viewport's edges (default 16).</source>
+        <target>附加到设置了 `BackToTop.IsAttached` 的滚动容器：按钮与视口边缘的距离（默认 16）。</target>
+      </trans-unit>
+      <trans-unit id="BackToTop.IsAttached">
+        <source>Attached to a scroll container: adds a back-to-top button in a corner of its viewport (in the container's adorner layer, so it does not scroll with the content).</source>
+        <target>附加到滚动容器：在其视口的一角加一个回到顶部按钮（放在容器的装饰层里，因此不随内容滚动）。</target>
+      </trans-unit>
+      <trans-unit id="BackToTop.IsShown">
+        <source>Whether the button is showing: the target can scroll and is scrolled further down than `Threshold`.</source>
+        <target>按钮是否显示：目标可以滚动，且向下滚动超过 `Threshold`。</target>
+      </trans-unit>
+      <trans-unit id="BackToTop.Label">
+        <source>The accessible name and tooltip; null uses the localized "Back to top".</source>
+        <target>无障碍名称与提示；为 null 时使用本地化的"回到顶部"。</target>
+      </trans-unit>
+      <trans-unit id="BackToTop.Placement">
+        <source>Attached to a scroll container with `BackToTop.IsAttached`: the viewport corner the button sits in.</source>
+        <target>附加到设置了 `BackToTop.IsAttached` 的滚动容器：按钮所在的视口角落。</target>
+      </trans-unit>
+      <trans-unit id="BackToTop.ScrolledToTop">
+        <source>Raised when a smooth scroll started by the button or `ScrollToTop` has reached the top; not raised when the user interrupts it.</source>
+        <target>由按钮或 `ScrollToTop` 发起的平滑滚动到达顶部时触发；被用户打断时不触发。</target>
+      </trans-unit>
+      <trans-unit id="BackToTop.Size">
+        <source>The button size: Small 36, Medium 44 (default) or Large 50 pixels across.</source>
+        <target>按钮尺寸：直径 Small 36、Medium 44（默认）或 Large 50 像素。</target>
+      </trans-unit>
+      <trans-unit id="BackToTop.Target">
+        <source>The scroll container to bring back to the top: a ScrollViewer (ScrollArea is one), or a control whose template holds one (Timeline, Table, TreeView, a templated ListBox).</source>
+        <target>要滚回顶部的滚动容器：ScrollViewer（ScrollArea 就是一种），或模板里含有 ScrollViewer 的控件（Timeline、Table、TreeView、带模板的 ListBox）。</target>
+      </trans-unit>
+      <trans-unit id="BackToTop.Threshold">
+        <source>How far, in pixels, the content must be scrolled down before the button appears (default 200; negative counts as 0). Also an attached property for a container with `BackToTop.IsAttached`.</source>
+        <target>内容需要向下滚动多少像素按钮才出现（默认 200；负数按 0 处理）。也是附加属性，用于设置了 `BackToTop.IsAttached` 的容器。</target>
+      </trans-unit>
       <trans-unit id="Badge">
         <source>A small pill for status, category or metadata (Arc Badge): a tone, an optional leading icon and a short label. It is a standalone inline label, not a count overlay. When a string or number label changes while the badge stays mounted, the new text rises out of a soft blur, the old one lifts away, and the pill width springs to fit (P2, P5); a new icon pops in from 0.6. Other content is shown as is. Reduced motion crossfades and the width jumps.</source>
         <target>用于状态、分类或元数据的小型药丸标签（Arc Badge）：包含一种色调、可选的前置图标和简短文字。它是独立的行内标签，而不是数量角标。当字符串或数字标签在徽章保持挂载时发生变化，新文字从柔和模糊中升起，旧文字向上移出，药丸宽度以弹簧适配（P2、P5）；新图标从 0.6 倍大小弹出。其他内容按原样显示。减少动效模式下改为交叉淡入，宽度直接跳变。</target>

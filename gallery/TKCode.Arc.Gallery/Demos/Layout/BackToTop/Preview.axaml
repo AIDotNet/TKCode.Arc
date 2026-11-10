@@ -1,0 +1,41 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.BackToTopPreviewDemo">
+    <StackPanel Spacing="12" MaxWidth="520">
+        <Border BorderThickness="1"
+                CornerRadius="{arc:ArcDesignTokenResource RadiusStep18}"
+                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                Background="{arc:ArcDesignTokenResource Surface}"
+                ClipToBounds="True">
+            <!-- The button sits over the list in the same cell and watches the ScrollViewer it targets. -->
+            <Grid Height="320">
+                <ScrollViewer x:Name="Log">
+                    <ItemsControl x:Name="Entries">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <Border Padding="16,10"
+                                        BorderThickness="0,0,0,1"
+                                        BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                                    <TextBlock Text="{Binding}"
+                                               FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+                <arc:BackToTop x:Name="Top"
+                               Target="{Binding #Log}"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Bottom"
+                               Margin="16" />
+            </Grid>
+        </Border>
+        <TextBlock x:Name="Status"
+                   Text="Scrolled into the log: the button takes you back."
+                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

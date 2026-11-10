@@ -1,0 +1,49 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.BackToTopThresholdAndPlacementDemo">
+    <StackPanel Spacing="12" MaxWidth="520">
+        <WrapPanel ItemSpacing="12" LineSpacing="8">
+            <arc:SegmentedControl x:Name="Corner" SelectedIndex="0">
+                <x:String>Bottom right</x:String>
+                <x:String>Bottom left</x:String>
+                <x:String>Top right</x:String>
+                <x:String>Top left</x:String>
+            </arc:SegmentedControl>
+            <arc:SegmentedControl x:Name="Distance" SelectedIndex="1">
+                <x:String>0 px</x:String>
+                <x:String>200 px</x:String>
+                <x:String>600 px</x:String>
+            </arc:SegmentedControl>
+        </WrapPanel>
+        <Border BorderThickness="1"
+                CornerRadius="{arc:ArcDesignTokenResource RadiusStep18}"
+                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                Background="{arc:ArcDesignTokenResource Surface}"
+                ClipToBounds="True">
+            <ScrollViewer x:Name="Feed"
+                          Height="280"
+                          arc:BackToTop.IsAttached="True"
+                          arc:BackToTop.Inset="12">
+                <ItemsControl x:Name="Posts">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <Border Padding="16,12"
+                                    BorderThickness="0,0,0,1"
+                                    BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                                <TextBlock Text="{Binding}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                           TextWrapping="Wrap"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Border>
+        <TextBlock x:Name="Offset"
+                   Text="Scrolled 0 px"
+                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>
