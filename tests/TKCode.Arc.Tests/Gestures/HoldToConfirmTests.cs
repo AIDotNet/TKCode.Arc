@@ -91,7 +91,9 @@ public class HoldToConfirmTests
     [AvaloniaFact]
     public void Pointer_Hold_Confirms_And_Sliding_Away_Cancels()
     {
-        var button = new HoldToConfirm { HoldDuration = TimeSpan.FromMilliseconds(80) };
+        // A long hold for the cancel half: with a short one, a stalled runner can finish the hold before the
+        // IsHolding check runs (Complete clears IsHolding), so the test would fail on timing alone.
+        var button = new HoldToConfirm { HoldDuration = TimeSpan.FromSeconds(5) };
         var window = TestHelpers.Show(button);
         try
         {
@@ -106,6 +108,7 @@ public class HoldToConfirmTests
             Pump(150);
             button.IsConfirmed.ShouldBeFalse();
 
+            button.HoldDuration = TimeSpan.FromMilliseconds(80);
             window.MouseDown(center, MouseButton.Left);
             WaitFor(() => button.IsConfirmed).ShouldBeTrue();
             window.MouseUp(center, MouseButton.Left);
