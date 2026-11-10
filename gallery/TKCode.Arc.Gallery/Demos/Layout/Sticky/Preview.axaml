@@ -1,0 +1,106 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.StickyPreviewDemo">
+    <UserControl.Styles>
+        <!-- The filter bar is flat in place and gains an edge and a shadow while it is stuck. -->
+        <Style Selector="Border.toolbar">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0,0,0,1" />
+            <Setter Property="Padding" Value="20,10" />
+        </Style>
+        <Style Selector="Border.toolbar[(arc|Sticky.IsStuck)=True]">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowResting}" />
+        </Style>
+        <Style Selector="Border.toolbar:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.15" />
+                    <BoxShadowsTransition Property="BoxShadow" Duration="0:0:0.15" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Border.note">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
+            <Setter Property="Padding" Value="14,12" />
+        </Style>
+        <Style Selector="Border.note TextBlock.title">
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="Border.note TextBlock.body">
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+    </UserControl.Styles>
+    <!-- A scrolling page: scroll it and the filter bar stays at the top. -->
+    <Border Height="340"
+            MaxWidth="560"
+            CornerRadius="16"
+            BorderThickness="1"
+            ClipToBounds="True"
+            BorderBrush="{arc:ArcDesignTokenResource Border}"
+            Background="{arc:ArcDesignTokenResource Surface}">
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+            <StackPanel>
+                <StackPanel Margin="20,20,20,8" Spacing="4">
+                    <TextBlock Text="Release notes"
+                               FontSize="{arc:ArcDesignTokenResource TypeXL}"
+                               FontWeight="Medium"
+                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                    <TextBlock Text="Everything that shipped this month. Scroll down: the filter bar stays in view."
+                               TextWrapping="Wrap"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                </StackPanel>
+                <Border Classes="toolbar" arc:Sticky.IsEnabled="True" arc:ArcMotion.Tracks="True">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                        <arc:SegmentedControl HorizontalAlignment="Left" SelectedValue="all">
+                            <arc:SegmentedOption Value="all" Label="All" />
+                            <arc:SegmentedOption Value="features" Label="Features" />
+                            <arc:SegmentedOption Value="fixes" Label="Fixes" />
+                        </arc:SegmentedControl>
+                        <arc:Button Grid.Column="1" Content="Subscribe" Variant="Secondary" Size="Small" VerticalAlignment="Center" />
+                    </Grid>
+                </Border>
+                <StackPanel Margin="20,12,20,20" Spacing="10">
+                    <Border Classes="note">
+                        <StackPanel Spacing="4">
+                            <TextBlock Classes="title" Text="Shared workspaces" />
+                            <TextBlock Classes="body" Text="Invite your team to a workspace and edit the same boards together, with presence and comments." />
+                        </StackPanel>
+                    </Border>
+                    <Border Classes="note">
+                        <StackPanel Spacing="4">
+                            <TextBlock Classes="title" Text="Faster search" />
+                            <TextBlock Classes="body" Text="Search now answers as you type, even in archives with tens of thousands of items." />
+                        </StackPanel>
+                    </Border>
+                    <Border Classes="note">
+                        <StackPanel Spacing="4">
+                            <TextBlock Classes="title" Text="Export to CSV" />
+                            <TextBlock Classes="body" Text="Any table view can be downloaded as CSV, with the filters and column order you see." />
+                        </StackPanel>
+                    </Border>
+                    <Border Classes="note">
+                        <StackPanel Spacing="4">
+                            <TextBlock Classes="title" Text="Fixed: reminders in other time zones" />
+                            <TextBlock Classes="body" Text="Reminders set while travelling now fire at the local time you picked." />
+                        </StackPanel>
+                    </Border>
+                    <Border Classes="note">
+                        <StackPanel Spacing="4">
+                            <TextBlock Classes="title" Text="Fixed: drag and drop between boards" />
+                            <TextBlock Classes="body" Text="Cards dropped on a collapsed column now land at the end of it instead of the start." />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </Border>
+</UserControl>

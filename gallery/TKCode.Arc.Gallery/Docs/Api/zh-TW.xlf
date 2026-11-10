@@ -33948,6 +33948,30 @@
         <source>Raised once a sticker has settled somewhere new, with every placement.</source>
         <target>貼紙在新位置落定後觸發一次，帶上每張貼紙的位置。</target>
       </trans-unit>
+      <trans-unit id="Sticky">
+        <source>Keeps an element in scrolling content at the top of the viewport once it scrolls there, like CSS `position: sticky; top: N`: `arc:Sticky.IsEnabled="True"` (and optionally `arc:Sticky.Offset`). The element moves with a render translation only, so the content's layout and height never change, and it never leaves its parent: when the parent's bottom edge reaches it, it scrolls away with the parent, so the next sticky header in a grouped list pushes the previous one out. While stuck, `arc:Sticky.IsStuck` is true (select it with `[(arc|Sticky.IsStuck)=True]` to add a shadow or background) and the element's ZIndex is raised to `arc:Sticky.ZIndex`. Only vertical scrolling is followed. The element must not have a RenderTransform of its own.</source>
+        <target>讓捲動內容中的元素捲到檢視區頂端後停住，就像 CSS `position: sticky; top: N`：`arc:Sticky.IsEnabled="True"`（可選 `arc:Sticky.Offset`）。元素只透過轉譯位移移動，所以內容的版面配置與高度從不改變；它也不會離開父容器：父容器的下緣抵達它時，它隨父容器一起捲走，因此分組清單中下一個吸頂標題會把上一個推走。吸頂期間 `arc:Sticky.IsStuck` 為 true（用 `[(arc|Sticky.IsStuck)=True]` 選中它來加上陰影或底色），元素的 ZIndex 提升為 `arc:Sticky.ZIndex`。只跟隨縱向捲動。元素不能有自己的 RenderTransform。</target>
+      </trans-unit>
+      <trans-unit id="Sticky.IsEnabled">
+        <source>Makes the element stick to the top of its scrolling viewport; off by default.</source>
+        <target>讓元素吸附在所在捲動檢視區的頂端；預設關閉。</target>
+      </trans-unit>
+      <trans-unit id="Sticky.IsStuck">
+        <source>True while the element is held at the top of the viewport (read-only; style it with `[(arc|Sticky.IsStuck)=True]`).</source>
+        <target>元素停在檢視區頂端期間為 true（唯讀；用 `[(arc|Sticky.IsStuck)=True]` 設定樣式）。</target>
+      </trans-unit>
+      <trans-unit id="Sticky.Offset">
+        <source>Distance in pixels between the viewport's top edge and the stuck element; default 0.</source>
+        <target>吸頂時元素與檢視區上緣之間的距離（像素）；預設 0。</target>
+      </trans-unit>
+      <trans-unit id="Sticky.StuckChanged">
+        <source>Raised on the element (bubbling) when `IsStuck` changes.</source>
+        <target>`IsStuck` 變化時在元素上引發（冒泡）。</target>
+      </trans-unit>
+      <trans-unit id="Sticky.ZIndex">
+        <source>The element's ZIndex while it is stuck, so it draws over the content scrolling under it; default 1.</source>
+        <target>吸頂期間元素的 ZIndex，讓它繪製在下方捲過的內容之上；預設 1。</target>
+      </trans-unit>
       <trans-unit id="Streamgraph">
         <source>Arc's streamgraph: layers stacked on a wiggle baseline, flowing over time. Hovering a layer isolates it and reads every layer at that moment; switching ranges blends every layer from the shape on screen on a shared 161-point grid, a hidden layer thins to nothing while the others close over it, and the first time the chart is seen the whole stream swells out of a hairline along its center. Motion is code-driven (a per-sample spring array and `MotionValue`) because every layer edge is recomputed from the stack each frame inside one self-drawn plot.</source>
         <target>Arc 的串流圖：各圖層堆疊在擺動基線上，隨時間流動。懸停某一圖層會將其單獨突出，並讀取該時刻每個圖層的數值；切換範圍時，所有圖層會從螢幕上的形狀出發，在共用的 161 點網格上過渡融合，隱藏的圖層會收縮至消失，其餘圖層隨之閉合；圖表首次出現時，整個串流從中線處的細線舒展開。動畫由程式碼驅動（每個取樣點的彈簧陣列加 `MotionValue`），因為每個圖層邊緣都要在單一自繪繪圖區內逐格根據堆疊結果重新計算。</target>
