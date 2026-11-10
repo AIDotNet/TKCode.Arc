@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentBuilderNewAgentDemo">
+    <!-- A new agent: your own catalog of models and tools, no sources yet, nothing published. -->
+    <arc:AgentBuilder x:Name="Builder" Margin="0,12" />
+</UserControl>

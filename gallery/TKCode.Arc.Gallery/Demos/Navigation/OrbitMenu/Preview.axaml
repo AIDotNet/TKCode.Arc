@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.OrbitMenuPreviewDemo">
+    <!-- Press the plus: the actions fan out over the top. With the keyboard, the arrows walk around the ring and Escape folds it. -->
+    <Grid RowDefinitions="*,Auto" Height="260">
+        <arc:OrbitMenu Label="Create" VerticalAlignment="Bottom" Margin="0,0,0,24" ActionInvoked="OnActionInvoked">
+            <arc:OrbitMenuAction Glyph="{x:Static arc:ArcIcons.Camera}" Label="Photo" />
+            <arc:OrbitMenuAction Glyph="{x:Static arc:ArcIcons.Mic}" Label="Voice note" />
+            <arc:OrbitMenuAction Glyph="{x:Static arc:ArcIcons.PenLine}" Label="Text note" />
+            <arc:OrbitMenuAction Glyph="{x:Static arc:ArcIcons.Paperclip}" Label="Attachment" />
+        </arc:OrbitMenu>
+        <TextBlock x:Name="Status" Grid.Row="1" Text="Nothing created yet" HorizontalAlignment="Center"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </Grid>
+</UserControl>

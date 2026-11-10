@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.OnboardingChecklistWorkspaceDemo">
+    <arc:OnboardingChecklist x:Name="Checklist" Title="Set up your workspace" MaxWidth="520">
+        <arc:OnboardingChecklistStep Id="project"
+                                     Title="Create a project"
+                                     Description="Projects group your pages, members and billing in one place."
+                                     ActionLabel="Create project" />
+        <arc:OnboardingChecklistStep Id="team"
+                                     Title="Invite your team"
+                                     Description="Add the people who will review and publish with you."
+                                     ActionLabel="Send invites" />
+        <arc:OnboardingChecklistStep Id="domain"
+                                     Title="Connect a domain"
+                                     Description="Point your own address at the workspace. It can take a few minutes."
+                                     ActionLabel="Connect domain" />
+        <arc:OnboardingChecklistStep Id="tour"
+                                     Title="Take the two minute tour"
+                                     Description="Check this off when you have seen the basics." />
+    </arc:OnboardingChecklist>
+</UserControl>

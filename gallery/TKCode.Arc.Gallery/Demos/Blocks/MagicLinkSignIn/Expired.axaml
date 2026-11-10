@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MagicLinkSignInExpiredDemo">
+    <StackPanel Spacing="12" MaxWidth="420">
+        <arc:MagicLinkSignIn x:Name="SignIn" Email="mara@lumenfield.example" ResendDelay="0:0:10" />
+        <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+            <arc:Button Variant="Ghost" Size="Small" Content="Open an expired link" Click="OnExpire" />
+            <arc:Button Variant="Ghost" Size="Small" Content="Make sending fail" Click="OnFail" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

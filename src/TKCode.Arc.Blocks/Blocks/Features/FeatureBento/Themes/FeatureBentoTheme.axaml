@@ -1,0 +1,155 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.FeatureBentoTheme">
+
+    <!--
+        The bento grid: a centered heading (accent eyebrow, display 36 title, 18 secondary description) 48 above six
+        columns of 240-high rows, 16 apart. Below 860 (:compact) two columns and a 28 title, below 520 (:narrow) one
+        column of 260-high rows.
+    -->
+    <ControlTheme x:Key="{x:Type arc:FeatureBento}" TargetType="arc:FeatureBento">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="Padding" Value="{arc:FeatureBentoTokenResource SectionPadding}" />
+        <Setter Property="AutomationProperties.Name" Value="{Binding Title, RelativeSource={RelativeSource Self}}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:FeatureBento">
+                <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                    <StackPanel MaxWidth="{arc:FeatureBentoTokenResource ContentMaxWidth}">
+                        <StackPanel Name="PART_Header"
+                                    HorizontalAlignment="Center"
+                                    MaxWidth="{arc:FeatureBentoTokenResource HeaderMaxWidth}"
+                                    Margin="{arc:FeatureBentoTokenResource HeaderMargin}"
+                                    Spacing="{arc:FeatureBentoTokenResource HeaderGap}">
+                            <TextBlock Text="{TemplateBinding Eyebrow}"
+                                       IsVisible="{TemplateBinding Eyebrow, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                       HorizontalAlignment="Center"
+                                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       Foreground="{arc:ArcDesignTokenResource AccentStrong}" />
+                            <TextBlock Name="PART_Title"
+                                       Text="{TemplateBinding Title}"
+                                       IsVisible="{TemplateBinding Title, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                       AutomationProperties.HeadingLevel="2"
+                                       TextAlignment="Center"
+                                       TextWrapping="Wrap"
+                                       FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            <TextBlock Text="{TemplateBinding Description}"
+                                       IsVisible="{TemplateBinding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                       TextAlignment="Center"
+                                       TextWrapping="Wrap"
+                                       FontSize="{arc:ArcDesignTokenResource TypeLG}"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </StackPanel>
+                        <arc:FeatureBentoPanel Name="PART_Panel" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ TextBlock#PART_Title">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type3XL}" />
+            <Setter Property="LineHeight" Value="{arc:FeatureBentoTokenResource TitleLineHeight}" />
+        </Style>
+        <Style Selector="^ /template/ arc|FeatureBentoPanel#PART_Panel">
+            <Setter Property="ColumnCount" Value="6" />
+            <Setter Property="RowHeight" Value="{arc:FeatureBentoTokenResource RowHeight}" />
+            <Setter Property="Gap" Value="{arc:FeatureBentoTokenResource Gap}" />
+        </Style>
+        <Style Selector="^:no-header /template/ StackPanel#PART_Header">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:compact">
+            <Setter Property="Padding" Value="{arc:FeatureBentoTokenResource CompactSectionPadding}" />
+            <Style Selector="^ /template/ TextBlock#PART_Title">
+                <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type2XL}" />
+                <Setter Property="LineHeight" Value="{arc:FeatureBentoTokenResource CompactTitleLineHeight}" />
+            </Style>
+            <Style Selector="^ /template/ arc|FeatureBentoPanel#PART_Panel">
+                <Setter Property="ColumnCount" Value="2" />
+            </Style>
+        </Style>
+        <Style Selector="^:narrow /template/ arc|FeatureBentoPanel#PART_Panel">
+            <Setter Property="ColumnCount" Value="1" />
+            <Setter Property="RowHeight" Value="{arc:FeatureBentoTokenResource NarrowRowHeight}" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A card: Surface with a 1px Border edge and radius 24, 24 padding. The drawing fills what the text leaves (the
+        accent, the foreground for the terminal, Border for guide lines, SurfaceRaised for the small panels), then the
+        title (16 medium) and the description (14 / 21 secondary). Hover strengthens the edge to BorderStrong.
+    -->
+    <ControlTheme x:Key="{x:Type arc:FeatureBentoCard}" TargetType="arc:FeatureBentoCard">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep24}" />
+        <Setter Property="Padding" Value="{arc:FeatureBentoTokenResource CardPadding}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:FeatureBentoCard">
+                <Panel Name="PART_RingHost">
+                    <Border Name="PART_Face"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}"
+                            ClipToBounds="True">
+                        <DockPanel>
+                            <StackPanel DockPanel.Dock="Bottom" Spacing="6">
+                                <TextBlock Text="{TemplateBinding Title}"
+                                           TextWrapping="Wrap"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <TextBlock Text="{TemplateBinding Description}"
+                                           TextWrapping="Wrap"
+                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                           LineHeight="{arc:FeatureBentoTokenResource DescriptionLineHeight}"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            </StackPanel>
+                            <arc:FeatureBentoArtView Name="PART_Art"
+                                                     Margin="{arc:FeatureBentoTokenResource ArtMargin}"
+                                                     Art="{TemplateBinding Art}"
+                                                     AccentBrush="{arc:ArcDesignTokenResource Accent}"
+                                                     InkBrush="{arc:ArcDesignTokenResource Foreground}"
+                                                     LineBrush="{arc:ArcDesignTokenResource Border}"
+                                                     PanelBrush="{arc:ArcDesignTokenResource SurfaceRaised}"
+                                                     MonoFont="{arc:ArcDesignTokenResource MonoFontFamily}"
+                                                     CommandText="{Binding CommandText, RelativeSource={RelativeSource AncestorType=arc:FeatureBento}, FallbackValue='$ ship deploy --prod'}"
+                                                     ResultText="{Binding ResultText, RelativeSource={RelativeSource AncestorType=arc:FeatureBento}, FallbackValue='✓ live in 38s'}" />
+                        </DockPanel>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

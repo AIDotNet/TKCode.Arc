@@ -1,0 +1,72 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.RatingTheme">
+    <ControlTheme x:Key="{x:Type arc:Rating}" TargetType="arc:Rating">
+        <!-- The stars draw their own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:Rating">
+                <StackPanel Spacing="{arc:RatingTokenResource FieldGap}">
+                    <TextBlock Name="PART_Label"
+                               Text="{TemplateBinding Label}"
+                               IsVisible="{TemplateBinding Label, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                               TextWrapping="Wrap" />
+                    <WrapPanel ItemSpacing="{arc:RatingTokenResource ValueGap}" LineSpacing="{arc:RatingTokenResource RowGap}">
+                        <arc:RatingStars Name="PART_Stars" VerticalAlignment="Center" />
+                        <arc:RatingRollingText Name="PART_Value"
+                                               Spacing="4"
+                                               VerticalAlignment="Center"
+                                               IsVisible="{TemplateBinding ShowValue}" />
+                    </WrapPanel>
+                    <TextBlock Name="PART_Description"
+                               Text="{TemplateBinding Description}"
+                               IsVisible="{TemplateBinding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                               TextWrapping="Wrap" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|RatingStars#PART_Stars">
+            <Setter Property="CellSize" Value="{arc:RatingTokenResource CellSizeMD}" />
+            <Setter Property="GlyphSize" Value="{arc:RatingTokenResource GlyphSizeMD}" />
+            <Setter Property="CellGap" Value="{arc:RatingTokenResource CellGap}" />
+            <Setter Property="CellRadius" Value="{arc:RatingTokenResource CellRadius}" />
+            <Setter Property="KeptOpacity" Value="{arc:RatingTokenResource KeptOpacity}" />
+            <Setter Property="EmptyBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="SoftBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="FillBrush" Value="{arc:ArcDesignTokenResource Warning}" />
+            <Setter Property="FocusBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+        </Style>
+        <Style Selector="^ /template/ arc|RatingRollingText#PART_Value">
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:unrated /template/ arc|RatingRollingText#PART_Value">
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:small /template/ arc|RatingStars#PART_Stars">
+            <Setter Property="CellSize" Value="{arc:RatingTokenResource CellSizeSM}" />
+            <Setter Property="GlyphSize" Value="{arc:RatingTokenResource GlyphSizeSM}" />
+        </Style>
+        <Style Selector="^:large /template/ arc|RatingStars#PART_Stars">
+            <Setter Property="CellSize" Value="{arc:RatingTokenResource CellSizeLG}" />
+            <Setter Property="GlyphSize" Value="{arc:RatingTokenResource GlyphSizeLG}" />
+        </Style>
+        <Style Selector="^:disabled /template/ arc|RatingStars#PART_Stars">
+            <Setter Property="Opacity" Value="{arc:RatingTokenResource DisabledOpacity}" />
+        </Style>
+        <Style Selector="^:disabled /template/ arc|RatingRollingText#PART_Value">
+            <Setter Property="Opacity" Value="{arc:RatingTokenResource DisabledOpacity}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.KeycapKeyboardShortcutDemo">
+    <!-- Shortcut lights up one combination. Mac labels, the function row and a smaller key size; clicks are off. -->
+    <arc:KeycapKeyboard Platform="Mac"
+                        Shortcut="⇧⌘P"
+                        ShowsFunctionRow="True"
+                        IsClickable="False"
+                        Tracking="None"
+                        KeySize="36"
+                        Label="Command palette shortcut"
+                        HorizontalAlignment="Center" />
+</UserControl>

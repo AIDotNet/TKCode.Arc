@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.DocsSidebarPreviewDemo">
+    <Border Height="600"
+            CornerRadius="22"
+            BorderThickness="1"
+            ClipToBounds="True"
+            BorderBrush="{arc:ArcDesignTokenResource Border}"
+            Background="{arc:ArcDesignTokenResource Background}">
+        <DockPanel>
+            <arc:DocsSidebar x:Name="Docs" DockPanel.Dock="Left" />
+            <StackPanel Margin="40,44" Spacing="10" MaxWidth="420" HorizontalAlignment="Left">
+                <TextBlock Text="{Binding #Docs.CurrentPage.Title, FallbackValue=Docs}"
+                           FontSize="{arc:ArcDesignTokenResource Type2XL}"
+                           FontWeight="Medium"
+                           TextWrapping="Wrap" />
+                <TextBlock Text="Pick a page, search with / or Ctrl+K, or switch the version. The current page stays marked and in view."
+                           TextWrapping="Wrap"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            </StackPanel>
+        </DockPanel>
+    </Border>
+</UserControl>

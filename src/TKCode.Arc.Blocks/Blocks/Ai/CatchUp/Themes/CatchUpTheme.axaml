@@ -1,0 +1,262 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.CatchUpTheme">
+
+    <!--
+        The catch-up card (an original TKCode design): a Surface card at most 600 wide with a 1px Border, the panel radius
+        and the resting shadow. The title, when the person left and how much is unread, with "Mark all as read" on the
+        right; the recap in a muted box, which lifts into "You are all caught up" once everything is read; the group
+        filter; then the groups with their items. At 440 wide or less (:compact) the paddings tighten and the button
+        moves under the title.
+    -->
+    <ControlTheme x:Key="{x:Type arc:CatchUp}" TargetType="arc:CatchUp">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Padding" Value="{arc:CatchUpTokenResource CardPadding}" />
+        <Setter Property="CompactWidth" Value="{arc:CatchUpTokenResource CompactWidth}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CatchUp">
+                <Border Name="PART_Card"
+                        MaxWidth="{arc:CatchUpTokenResource CardMaxWidth}"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
+                        Padding="{TemplateBinding Padding}">
+                    <StackPanel Spacing="{arc:CatchUpTokenResource SectionGap}">
+                        <Grid Name="PART_Header" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                            <StackPanel Spacing="2" VerticalAlignment="Center">
+                                <TextBlock Name="PART_Title"
+                                           FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeLG}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           TextWrapping="Wrap"
+                                           AutomationProperties.HeadingLevel="2" />
+                                <TextBlock Name="PART_Unread"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                           TextWrapping="Wrap" />
+                            </StackPanel>
+                            <arc:Button Name="PART_MarkAll"
+                                        Grid.Column="1"
+                                        Margin="12,0,0,0"
+                                        VerticalAlignment="Center"
+                                        Variant="Secondary"
+                                        Size="Small" />
+                        </Grid>
+                        <arc:SpringSizeDecorator Axis="Height" Spring="Smooth">
+                            <arc:ArcContentSwap Name="PART_Recap"
+                                                Mode="Lift"
+                                                MeasuresExiting="True"
+                                                HorizontalContentAlignment="Stretch" />
+                        </arc:SpringSizeDecorator>
+                        <arc:SegmentedControl Name="PART_Filter" HorizontalAlignment="Left" />
+                        <StackPanel Name="PART_List" Spacing="2" />
+                        <arc:AiAnnouncer Name="PART_Announcer" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:compact">
+            <Setter Property="Padding" Value="{arc:CatchUpTokenResource CompactCardPadding}" />
+            <Style Selector="^ /template/ arc|Button#PART_MarkAll">
+                <Setter Property="Grid.Row" Value="1" />
+                <Setter Property="Grid.Column" Value="0" />
+                <Setter Property="Margin" Value="0,10,0,0" />
+                <Setter Property="HorizontalAlignment" Value="Left" />
+            </Style>
+        </Style>
+        <Style Selector="^ /template/ TextBlock.catchup-heading">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="Margin" Value="10,12,0,4" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.catchup-empty">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="Margin" Value="10,12" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The recap: a SurfaceMuted box (RadiusStep14, 14 padding) with a sparkle, or a green double check once caught up. -->
+    <ControlTheme x:Key="{x:Type arc:CatchUpRecap}" TargetType="arc:CatchUpRecap">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CatchUpRecap">
+                <Border Name="PART_Box"
+                        Padding="{arc:CatchUpTokenResource RecapPadding}"
+                        CornerRadius="{arc:ArcDesignTokenResource RadiusStep14}"
+                        Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+                    <Grid ColumnDefinitions="Auto,*">
+                        <Panel Margin="0,2,10,0" VerticalAlignment="Top">
+                            <arc:ArcGlyph Name="PART_Sparkle" Data="{x:Static arc:ArcIcons.Sparkles}"
+                                          Size="{arc:CatchUpTokenResource GlyphSize}"
+                                          Foreground="{arc:ArcDesignTokenResource Accent}" />
+                            <arc:ArcGlyph Name="PART_Done" Data="{x:Static arc:ArcIcons.CheckCheck}"
+                                          Size="{arc:CatchUpTokenResource GlyphSize}"
+                                          Foreground="{arc:ArcDesignTokenResource Success}"
+                                          IsVisible="False" />
+                        </Panel>
+                        <TextBlock Grid.Column="1"
+                                   Text="{TemplateBinding Text}"
+                                   LineHeight="{arc:CatchUpTokenResource BodyLineHeight}"
+                                   TextWrapping="Wrap" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:caught-up">
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Sparkle">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Done">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Box">
+                <Setter Property="Background" Value="{arc:ArcDesignTokenResource SuccessSubtle}" />
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- An item row: the face (open) and the read button; :unread shows the dot and full-strength text. -->
+    <ControlTheme x:Key="{x:Type arc:CatchUpRow}" TargetType="arc:CatchUpRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CatchUpRow">
+                <Grid ColumnDefinitions="*,Auto">
+                    <arc:CatchUpOpenButton Name="PART_Open" />
+                    <arc:Button Name="PART_Toggle"
+                                Grid.Column="1"
+                                Margin="4,0,0,0"
+                                VerticalAlignment="Center"
+                                Variant="Ghost"
+                                Size="Small"
+                                Width="{arc:CatchUpTokenResource IconButtonSize}"
+                                Height="{arc:CatchUpTokenResource IconButtonSize}"
+                                MinHeight="0"
+                                Padding="0">
+                        <arc:ArcGlyph Name="PART_ToggleGlyph"
+                                      Size="{arc:CatchUpTokenResource GlyphSize}"
+                                      Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                    </arc:Button>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!--
+        The face of an item: 10px padding, RadiusStep14, a 32px leading mark (the author's avatar, or the group glyph in
+        a soft accent disc), the title (14, medium), the detail (12 / 16.8, secondary, two lines at most) and where and
+        when (12, muted), with the 8px unread dot on the right while it is unread.
+    -->
+    <ControlTheme x:Key="{x:Type arc:CatchUpOpenButton}" TargetType="arc:CatchUpOpenButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="{arc:CatchUpTokenResource RowPadding}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CatchUpOpenButton">
+                <Panel Name="PART_Root">
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep14}"
+                            Padding="{TemplateBinding Padding}">
+                        <Grid ColumnDefinitions="Auto,*,Auto">
+                            <Panel Width="{arc:CatchUpTokenResource MarkSize}"
+                                   Height="{arc:CatchUpTokenResource MarkSize}"
+                                   Margin="0,0,12,0"
+                                   VerticalAlignment="Top">
+                                <Border Name="PART_GlyphDisc"
+                                        CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                        Background="{arc:ArcDesignTokenResource AccentSubtle}"
+                                        IsVisible="{TemplateBinding Author, Converter={x:Static StringConverters.IsNullOrEmpty}}">
+                                    <arc:ArcGlyph Data="{TemplateBinding Glyph}"
+                                                  Size="{arc:CatchUpTokenResource GlyphSize}"
+                                                  Foreground="{arc:ArcDesignTokenResource AccentStrong}"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center" />
+                                </Border>
+                                <arc:Avatar DisplayName="{TemplateBinding Author}"
+                                            Size="Small"
+                                            IsVisible="{TemplateBinding Author, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                            AutomationProperties.AccessibilityView="Raw" />
+                            </Panel>
+                            <StackPanel Name="PART_Copy" Grid.Column="1" Spacing="2">
+                                <TextBlock Text="{TemplateBinding Title}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           TextWrapping="Wrap" />
+                                <TextBlock Text="{TemplateBinding Detail}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           LineHeight="16.8"
+                                           MaxLines="2"
+                                           TextTrimming="CharacterEllipsis"
+                                           TextWrapping="Wrap"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                           IsVisible="{TemplateBinding Detail, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                                <TextBlock Text="{TemplateBinding Meta}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                           TextTrimming="CharacterEllipsis"
+                                           IsVisible="{TemplateBinding Meta, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                            </StackPanel>
+                            <Border Name="PART_Dot"
+                                    Grid.Column="2"
+                                    Width="{arc:CatchUpTokenResource DotSize}"
+                                    Height="{arc:CatchUpTokenResource DotSize}"
+                                    Margin="12,6,0,0"
+                                    VerticalAlignment="Top"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                    Background="{arc:ArcDesignTokenResource Accent}" />
+                        </Grid>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Border#PART_Dot">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:unread /template/ Border#PART_Dot">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Copy">
+            <Setter Property="Opacity" Value="{arc:CatchUpTokenResource ReadOpacity}" />
+        </Style>
+        <Style Selector="^:unread /template/ StackPanel#PART_Copy">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Border#PART_Dot, ^ /template/ StackPanel#PART_Copy">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

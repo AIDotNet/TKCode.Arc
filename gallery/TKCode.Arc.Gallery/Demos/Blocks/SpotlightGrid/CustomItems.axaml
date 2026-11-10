@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SpotlightGridCustomItemsDemo">
+    <!-- The grid alone, two columns, with the app's own features. -->
+    <arc:SpotlightGrid Eyebrow="{x:Null}" Title="{x:Null}" Description="{x:Null}" MaxColumns="2">
+        <arc:SpotlightGridItem Title="Scheduled sends" Icon="{x:Static arc:ArcIcons.Clock}"
+                               Description="Write now, deliver at nine in each reader's own time zone." />
+        <arc:SpotlightGridItem Title="Segments" Icon="{x:Static arc:ArcIcons.Filter}" Badge="Beta"
+                               Description="Send the right issue to the right readers without a second list." />
+        <arc:SpotlightGridItem Title="Reply tracking" Icon="{x:Static arc:ArcIcons.MessageSquare}"
+                               Description="Replies land in one shared inbox, threaded by issue." />
+        <arc:SpotlightGridItem Title="Exports" Icon="{x:Static arc:ArcIcons.Download}"
+                               Description="Every number on every chart, one click away as a CSV." />
+    </arc:SpotlightGrid>
+</UserControl>

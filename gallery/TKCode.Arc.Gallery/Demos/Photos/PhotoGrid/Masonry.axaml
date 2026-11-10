@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.PhotoGridMasonryDemo">
+    <!-- Masonry columns: each photo goes to the shortest column. A selected photo spans every column. -->
+    <arc:PhotoGrid MaxWidth="760"
+                   Layout="Masonry"
+                   ColumnWidth="170"
+                   Spacing="8"
+                   Label="Walking trip photos"
+                   ItemsSource="{x:Static demos:PhotosDemoData.GridPhotos}" />
+</UserControl>

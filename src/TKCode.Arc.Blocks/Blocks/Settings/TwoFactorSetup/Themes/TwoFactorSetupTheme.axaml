@@ -1,0 +1,283 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.TwoFactorSetupTheme">
+    <!--
+        Two-factor setup: a card with a heading, a four-step progress and a stage that slides between step views while
+        its height follows on a spring. The step views live in the hidden store and are moved onto the stage one at a
+        time, so each is built once. The buttons sit under the stage.
+    -->
+    <ControlTheme x:Key="{x:Type arc:TwoFactorSetup}" TargetType="arc:TwoFactorSetup">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TwoFactorSetup">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <StackPanel>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
+                            <Border Width="{arc:TwoFactorSetupTokenResource HeaderTile}"
+                                    Height="{arc:TwoFactorSetupTokenResource HeaderTile}"
+                                    VerticalAlignment="Top"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusStep12}"
+                                    Background="{arc:ArcDesignTokenResource AccentSubtle}">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ShieldCheck}"
+                                              Size="20"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              Foreground="{arc:ArcDesignTokenResource Accent}" />
+                            </Border>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock Name="PART_Heading"
+                                           FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           TextWrapping="Wrap"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <TextBlock Name="PART_HeadingDescription"
+                                           Margin="0,2,0,0"
+                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                           LineHeight="{arc:TwoFactorSetupTokenResource BodyLineHeight}"
+                                           TextWrapping="Wrap"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            </StackPanel>
+                        </Grid>
+
+                        <arc:Stepper Name="PART_Stepper"
+                                     Margin="{arc:TwoFactorSetupTokenResource StepperMargin}"
+                                     Details="Current" />
+
+                        <arc:SpringSizeDecorator Name="PART_StageSize" Axis="Height" CrossClipOverflow="16">
+                            <arc:ArcContentSwap Name="PART_Stage"
+                                                Mode="Slide"
+                                                HorizontalContentAlignment="Stretch"
+                                                VerticalContentAlignment="Top" />
+                        </arc:SpringSizeDecorator>
+
+                        <DockPanel Name="PART_Actions" Classes="tfs-actions">
+                            <arc:Button Name="PART_PrimaryButton" Classes="tfs-primary" />
+                            <arc:Button Name="PART_BackButton" Variant="Ghost" Classes="tfs-secondary" />
+                        </DockPanel>
+                        <arc:AuthAnnouncer Name="PART_Announcer" />
+
+                        <Panel Name="PART_StepStore" IsVisible="False">
+                            <!-- Method -->
+                            <StackPanel Name="PART_MethodStep">
+                                <TextBlock Name="PART_MethodTitle" Classes="tfs-title" />
+                                <arc:RadioCards Name="PART_Methods" Layout="List" IsRequired="True" Margin="{arc:TwoFactorSetupTokenResource BodyMargin}" />
+                            </StackPanel>
+
+                            <!-- Connect: authenticator app -->
+                            <StackPanel Name="PART_ScanStep">
+                                <TextBlock Name="PART_ScanTitle" Classes="tfs-title" />
+                                <Grid Name="PART_ScanLayout"
+                                      Margin="{arc:TwoFactorSetupTokenResource BodyMargin}"
+                                      ColumnDefinitions="Auto,*"
+                                      RowDefinitions="Auto,Auto">
+                                    <Border Name="PART_QrTile"
+                                            VerticalAlignment="Top"
+                                            HorizontalAlignment="Left"
+                                            Width="{arc:TwoFactorSetupTokenResource QrSize}"
+                                            Height="{arc:TwoFactorSetupTokenResource QrSize}"
+                                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep16}"
+                                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                            BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                            Background="{arc:TwoFactorSetupTokenResource QrPaper}">
+                                        <arc:TwoFactorSetupQrCode Name="PART_Qr"
+                                                                  Margin="6"
+                                                                  Ink="{arc:TwoFactorSetupTokenResource QrInk}" />
+                                    </Border>
+                                    <StackPanel Name="PART_ScanText" Grid.Column="1">
+                                        <ItemsControl Name="PART_Instructions">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Spacing="{arc:TwoFactorSetupTokenResource InstructionGap}" />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate x:DataType="arc:TwoFactorSetupInstruction">
+                                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                                        <Border Width="{arc:TwoFactorSetupTokenResource InstructionDisc}"
+                                                                Height="{arc:TwoFactorSetupTokenResource InstructionDisc}"
+                                                                VerticalAlignment="Top"
+                                                                CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                                                Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+                                                            <TextBlock Text="{Binding Number}"
+                                                                       HorizontalAlignment="Center"
+                                                                       VerticalAlignment="Center"
+                                                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                                        </Border>
+                                                        <TextBlock Grid.Column="1"
+                                                                   Text="{Binding Text}"
+                                                                   TextWrapping="Wrap"
+                                                                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                                   LineHeight="{arc:TwoFactorSetupTokenResource BodyLineHeight}"
+                                                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                        <TextBlock Name="PART_ManualKeyLabel"
+                                                   Margin="0,18,0,6"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                        <Border Padding="{arc:TwoFactorSetupTokenResource WellInset}"
+                                                CornerRadius="{arc:ArcDesignTokenResource RadiusStep14}"
+                                                Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+                                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                                <SelectableTextBlock Name="PART_Key"
+                                                                     VerticalAlignment="Center"
+                                                                     TextWrapping="Wrap"
+                                                                     FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                                                                     FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                                     Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                                <arc:CopyButton Name="PART_CopyKey"
+                                                                Grid.Column="1"
+                                                                IsIconOnly="True"
+                                                                VerticalAlignment="Center" />
+                                            </Grid>
+                                        </Border>
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+
+                            <!-- Connect: text message -->
+                            <StackPanel Name="PART_PhoneStep">
+                                <TextBlock Name="PART_PhoneTitle" Classes="tfs-title" />
+                                <arc:Input Name="PART_Phone" Margin="{arc:TwoFactorSetupTokenResource BodyMargin}" />
+                            </StackPanel>
+
+                            <!-- Verify -->
+                            <StackPanel Name="PART_VerifyStep">
+                                <TextBlock Name="PART_VerifyTitle" Classes="tfs-title" />
+                                <TextBlock Name="PART_VerifyDescription" Classes="tfs-description" />
+                                <arc:OtpInput Name="PART_Code" Margin="{arc:TwoFactorSetupTokenResource BodyMargin}" HorizontalAlignment="Left" />
+                                <arc:Button Name="PART_ResendButton"
+                                            Variant="Ghost"
+                                            Size="Small"
+                                            Margin="-10,10,0,0"
+                                            HorizontalAlignment="Left" />
+                            </StackPanel>
+
+                            <!-- Backup codes -->
+                            <StackPanel Name="PART_BackupStep">
+                                <TextBlock Name="PART_BackupTitle" Classes="tfs-title" />
+                                <TextBlock Name="PART_BackupDescription" Classes="tfs-description" />
+                                <Border Margin="{arc:TwoFactorSetupTokenResource BodyMargin}"
+                                        Padding="{arc:TwoFactorSetupTokenResource WellInset}"
+                                        CornerRadius="{arc:ArcDesignTokenResource RadiusStep16}"
+                                        Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+                                    <ItemsControl Name="PART_Codes">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <UniformGrid Columns="2"
+                                                             ColumnSpacing="{arc:TwoFactorSetupTokenResource CodeColumnGap}"
+                                                             RowSpacing="{arc:TwoFactorSetupTokenResource CodeRowGap}" />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="x:String">
+                                                <TextBlock Text="{Binding}"
+                                                           FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </Border>
+                                <WrapPanel Margin="0,12,0,0" ItemSpacing="8" LineSpacing="8">
+                                    <arc:CopyButton Name="PART_CopyCodes" />
+                                    <arc:Button Name="PART_DownloadButton" Variant="Secondary" Size="Small" />
+                                </WrapPanel>
+                                <arc:Checkbox Name="PART_SavedCheck" Margin="0,18,0,0" />
+                            </StackPanel>
+
+                            <!-- Done -->
+                            <StackPanel Name="PART_DoneStep" Margin="0,8,0,0">
+                                <Border HorizontalAlignment="Center"
+                                        Width="{arc:TwoFactorSetupTokenResource ResultMark}"
+                                        Height="{arc:TwoFactorSetupTokenResource ResultMark}"
+                                        CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                        Background="{arc:ArcDesignTokenResource SuccessSubtle}">
+                                    <arc:StrokeDrawGlyph Name="PART_DoneGlyph"
+                                                         Data="{x:Static arc:ArcIcons.Check}"
+                                                         Size="{arc:TwoFactorSetupTokenResource ResultGlyph}"
+                                                         StrokeThickness="2.25"
+                                                         HorizontalAlignment="Center"
+                                                         VerticalAlignment="Center"
+                                                         Foreground="{arc:ArcDesignTokenResource Success}" />
+                                </Border>
+                                <TextBlock Name="PART_DoneTitle" Classes="tfs-title" TextAlignment="Center" Margin="0,18,0,0" />
+                                <TextBlock Name="PART_DoneDescription" Classes="tfs-description" TextAlignment="Center" />
+                            </StackPanel>
+                        </Panel>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Padding" Value="{arc:TwoFactorSetupTokenResource FrameInset}" />
+        <Setter Property="MaxWidth" Value="{arc:TwoFactorSetupTokenResource PreferredWidth}" />
+        <Setter Property="NarrowWidth" Value="{arc:TwoFactorSetupTokenResource NarrowWidth}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="ClipToBounds" Value="False" />
+
+        <Style Selector="^ /template/ Border#PART_Frame">
+            <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowResting}" />
+        </Style>
+
+        <Style Selector="^ /template/ TextBlock.tfs-title">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeLG}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="LineHeight" Value="{arc:TwoFactorSetupTokenResource TitleLineHeight}" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Focusable" Value="True" />
+            <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
+            <Setter Property="FocusAdorner" Value="{x:Null}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.tfs-description">
+            <Setter Property="Margin" Value="{arc:TwoFactorSetupTokenResource DescriptionMargin}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Setter Property="LineHeight" Value="{arc:TwoFactorSetupTokenResource BodyLineHeight}" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+
+        <Style Selector="^ /template/ DockPanel.tfs-actions">
+            <Setter Property="LastChildFill" Value="False" />
+            <Setter Property="Margin" Value="{arc:TwoFactorSetupTokenResource ActionsMargin}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.tfs-primary">
+            <Setter Property="DockPanel.Dock" Value="Right" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.tfs-secondary">
+            <Setter Property="DockPanel.Dock" Value="Right" />
+            <Setter Property="Margin" Value="0,0,8,0" />
+        </Style>
+
+        <Style Selector="^:narrow">
+            <Setter Property="Padding" Value="{arc:TwoFactorSetupTokenResource FrameInsetNarrow}" />
+            <Style Selector="^ /template/ arc|Button.tfs-primary">
+                <Setter Property="DockPanel.Dock" Value="Top" />
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+            </Style>
+            <Style Selector="^ /template/ arc|Button.tfs-secondary">
+                <Setter Property="DockPanel.Dock" Value="Top" />
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                <Setter Property="Margin" Value="0,8,0,0" />
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

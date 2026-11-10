@@ -1,0 +1,64 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.DocsSidebarTheme">
+    <!--
+        Docs sidebar: a Sidebar with the product name and a version switcher in its header, the search box, and the
+        sections of pages built from DocsSidebar.Sections.
+    -->
+    <ControlTheme x:Key="{x:Type arc:DocsSidebar}" TargetType="arc:DocsSidebar">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:DocsSidebar">
+                <arc:Sidebar Name="PART_Sidebar"
+                             IsFilterVisible="True"
+                             IsCollapseButtonVisible="False"
+                             Footer="{TemplateBinding Footer}">
+                    <arc:Sidebar.Header>
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8" Margin="6,0,0,0">
+                            <Border Width="{arc:DocsSidebarTokenResource MarkSize}"
+                                    Height="{arc:DocsSidebarTokenResource MarkSize}"
+                                    VerticalAlignment="Center"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusStep7}"
+                                    Background="{arc:ArcDesignTokenResource Accent}">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.BookOpen}"
+                                              Size="13"
+                                              StrokeThickness="2"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              Foreground="{arc:ArcDesignTokenResource AccentForeground}" />
+                            </Border>
+                            <TextBlock Name="PART_Title"
+                                       Grid.Column="1"
+                                       VerticalAlignment="Center"
+                                       TextTrimming="CharacterEllipsis">
+                                <Run Name="PART_ProductRun" FontWeight="{arc:ArcDesignTokenResource WeightMedium}" Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <Run Name="PART_DocsRun" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </TextBlock>
+                            <arc:DropdownMenu Name="PART_VersionMenu" Grid.Column="2" Side="Bottom" Alignment="End">
+                                <arc:DropdownMenu.Trigger>
+                                    <arc:Button Name="PART_VersionButton"
+                                                Variant="Secondary"
+                                                Size="Small"
+                                                IsPressScaleEnabled="False"
+                                                Padding="{arc:DocsSidebarTokenResource VersionPadding}"
+                                                CornerRadius="{arc:ArcDesignTokenResource RadiusPill}">
+                                        <StackPanel Orientation="Horizontal" Spacing="4">
+                                            <TextBlock Name="PART_VersionText" FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                                          Size="13"
+                                                          StrokeThickness="2"
+                                                          VerticalAlignment="Center"
+                                                          Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                        </StackPanel>
+                                    </arc:Button>
+                                </arc:DropdownMenu.Trigger>
+                            </arc:DropdownMenu>
+                        </Grid>
+                    </arc:Sidebar.Header>
+                </arc:Sidebar>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="HorizontalAlignment" Value="Left" />
+    </ControlTheme>
+</ResourceDictionary>

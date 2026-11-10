@@ -1,0 +1,185 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.MorphNavTheme">
+
+    <!--
+        One raised surface for both states. Its size follows the pill or the panel on a spring while the other fades
+        (the old one keeps its room until it has faded), and its corners and shadow move with it. The surface clips its
+        content; the pill's keyboard ring lives in the pill, around its own box.
+    -->
+    <ControlTheme x:Key="{x:Type arc:MorphNav}" TargetType="arc:MorphNav">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep22}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MorphNav">
+                <Panel>
+                    <Border Name="PART_Surface"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            ClipToBounds="True"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            BoxShadow="{arc:ArcDesignTokenResource ShadowResting}">
+                        <arc:SpringSizeDecorator Name="PART_Size" Axis="Both" Spring="Morph" ClipOverflow="0" CrossClipOverflow="0">
+                            <Panel>
+                                <arc:PresenceHost Name="PART_PillHost"
+                                                  Mode="Fade"
+                                                  IsPresent="True"
+                                                  HorizontalAlignment="Left"
+                                                  VerticalAlignment="Top">
+                                    <arc:MorphNavPill Name="PART_Pill"
+                                                      Mark="{TemplateBinding Mark}"
+                                                      Title="{TemplateBinding Title}" />
+                                </arc:PresenceHost>
+                                <arc:PresenceHost Name="PART_PanelHost"
+                                                  Mode="Fade"
+                                                  IsPresent="False"
+                                                  HorizontalAlignment="Left"
+                                                  VerticalAlignment="Top">
+                                    <StackPanel Spacing="{arc:MorphNavTokenResource PanelSpacing}"
+                                                Margin="{arc:MorphNavTokenResource PanelPadding}">
+                                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10" Margin="10,0,0,0">
+                                            <arc:ArcGlyph Data="{TemplateBinding Mark}"
+                                                          Size="18"
+                                                          Foreground="{TemplateBinding Foreground}"
+                                                          IsVisible="{TemplateBinding Mark, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                                          VerticalAlignment="Center" />
+                                            <TextBlock Grid.Column="1"
+                                                       Text="{TemplateBinding Title}"
+                                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                       TextTrimming="CharacterEllipsis"
+                                                       VerticalAlignment="Center" />
+                                            <arc:Button Name="PART_Close"
+                                                        Grid.Column="2"
+                                                        Variant="Ghost"
+                                                        Size="Small">
+                                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}" />
+                                            </arc:Button>
+                                        </Grid>
+                                        <arc:MorphNavColumns Name="PART_Sections"
+                                                             MinColumnWidth="{arc:MorphNavTokenResource MinColumnWidth}"
+                                                             Gap="{arc:MorphNavTokenResource ColumnGap}" />
+                                        <ContentPresenter Name="PART_Footer"
+                                                          Content="{TemplateBinding Footer}"
+                                                          IsVisible="{TemplateBinding Footer, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                                    </StackPanel>
+                                </arc:PresenceHost>
+                            </Panel>
+                        </arc:SpringSizeDecorator>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:open">
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        </Style>
+        <Style Selector="^:open /template/ Border#PART_Surface">
+            <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowFloating}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:SpringCornerRadiusTransition Property="CornerRadius" Spring="Morph" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Surface">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBoxShadowsTransition Property="BoxShadow" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The pill: mark, title, a hairline, the current page and the menu glyph; hover tints it. -->
+    <ControlTheme x:Key="{x:Type arc:MorphNavPill}" TargetType="arc:MorphNavPill">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Height" Value="{arc:MorphNavTokenResource PillHeight}" />
+        <Setter Property="Padding" Value="{arc:MorphNavTokenResource PillPadding}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MorphNavPill">
+                <Panel Name="PART_Root">
+                    <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="{arc:MorphNavTokenResource PillSpacing}"
+                                    VerticalAlignment="Center">
+                            <arc:ArcGlyph Data="{TemplateBinding Mark}"
+                                          Size="18"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          IsVisible="{TemplateBinding Mark, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                          VerticalAlignment="Center" />
+                            <TextBlock Text="{TemplateBinding Title}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       IsVisible="{TemplateBinding Title, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                       VerticalAlignment="Center" />
+                            <Border Width="1"
+                                    Height="16"
+                                    Background="{arc:ArcDesignTokenResource Border}"
+                                    IsVisible="{TemplateBinding Current, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                    VerticalAlignment="Center" />
+                            <TextBlock Text="{TemplateBinding Current}"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                       IsVisible="{TemplateBinding Current, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                       VerticalAlignment="Center" />
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Menu}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:MorphNavTokenResource LinkHoverColor}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A link: text and its line, a muted glyph tile, a hover tint; the current page keeps the tint. -->
+    <ControlTheme x:Key="{x:Type arc:MorphNavLinkRow}" TargetType="arc:MorphNavLinkRow">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SecondaryForeground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="HoverBrush" Value="{arc:MorphNavTokenResource LinkHoverColor}" />
+        <Setter Property="TileBrush" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="FocusRingBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
+        <Setter Property="TileCornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep9}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="SecondaryFontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="RowHeight" Value="{arc:MorphNavTokenResource LinkHeight}" />
+        <Setter Property="TallRowHeight" Value="{arc:MorphNavTokenResource LinkTallHeight}" />
+        <Setter Property="Inset" Value="{arc:MorphNavTokenResource LinkInset}" />
+        <Setter Property="TileSize" Value="{arc:MorphNavTokenResource LinkTileSize}" />
+        <Setter Property="GlyphSize" Value="{arc:MorphNavTokenResource LinkGlyphSize}" />
+        <Style Selector="^:current">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

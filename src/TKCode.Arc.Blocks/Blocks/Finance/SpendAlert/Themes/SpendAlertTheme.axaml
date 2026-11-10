@@ -1,0 +1,197 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.SpendAlertTheme">
+    <!--
+        Spend alert: the banner (shown while an alert is raised), the title with its status pill, the spent figures, the
+        meter with the alert ticks, and the editor (budget field and one row per alert, built in code).
+    -->
+    <ControlTheme x:Key="{x:Type arc:SpendAlert}" TargetType="arc:SpendAlert">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Padding" Value="{arc:SpendAlertTokenResource BlockPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SpendAlert">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Panel>
+                        <StackPanel Spacing="{arc:SpendAlertTokenResource SectionGap}">
+                            <arc:SpendAlertBanner Name="PART_Banner">
+                                <DockPanel>
+                                    <arc:ArcGlyph Name="PART_BannerGlyph" DockPanel.Dock="Left" Size="18" VerticalAlignment="Top" Margin="0,1,10,0" />
+                                    <arc:Button Name="PART_Dismiss" DockPanel.Dock="Right" Variant="Ghost" Size="Small" VerticalAlignment="Center" Margin="10,0,0,0" />
+                                    <StackPanel Spacing="2">
+                                        <TextBlock Name="PART_BannerTitle" TextWrapping="Wrap" FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                        <TextBlock Name="PART_BannerBody" TextWrapping="Wrap" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    </StackPanel>
+                                </DockPanel>
+                            </arc:SpendAlertBanner>
+                            <DockPanel>
+                                <arc:SpendAlertPill Name="PART_Pill" DockPanel.Dock="Right" VerticalAlignment="Top" Margin="12,0,0,0">
+                                    <TextBlock Name="PART_PillText" FontSize="{arc:ArcDesignTokenResource TypeXS}" FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                </arc:SpendAlertPill>
+                                <StackPanel Spacing="2">
+                                    <TextBlock Name="PART_Title"
+                                               TextWrapping="Wrap"
+                                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                    <TextBlock Name="PART_Period" TextWrapping="Wrap" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                </StackPanel>
+                            </DockPanel>
+                            <StackPanel Spacing="4">
+                                <WrapPanel>
+                                    <TextBlock Name="PART_Spent"
+                                               Margin="0,0,8,0"
+                                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                               FontSize="{arc:ArcDesignTokenResource Type3XL}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               FontFeatures="+tnum" />
+                                    <TextBlock Name="PART_SpentWord" VerticalAlignment="Bottom" Margin="0,0,0,7" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                </WrapPanel>
+                                <TextBlock Name="PART_OfBudget" TextWrapping="Wrap" FontFeatures="+tnum" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            </StackPanel>
+                            <StackPanel Spacing="8">
+                                <arc:SpendAlertMeter Name="PART_Meter"
+                                                     BarHeight="{arc:SpendAlertTokenResource BarHeight}"
+                                                     LabelBand="{arc:SpendAlertTokenResource LabelBand}" />
+                                <DockPanel>
+                                    <TextBlock Name="PART_Pace" DockPanel.Dock="Right" TextWrapping="Wrap" TextAlignment="Right" Margin="12,0,0,0"
+                                               FontFeatures="+tnum" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    <TextBlock Name="PART_Left" TextWrapping="Wrap" FontFeatures="+tnum" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                </DockPanel>
+                            </StackPanel>
+                            <Border BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}" BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}" Padding="0,16,0,0">
+                                <StackPanel Spacing="12">
+                                    <DockPanel>
+                                        <arc:NumberField Name="PART_Budget" DockPanel.Dock="Right" Width="160" Margin="12,0,0,0" VerticalAlignment="Top" />
+                                        <StackPanel Spacing="2">
+                                            <TextBlock Name="PART_AlertsHeading" FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                            <TextBlock Name="PART_AlertsHint" TextWrapping="Wrap" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                        </StackPanel>
+                                    </DockPanel>
+                                    <StackPanel Name="PART_Rows" Spacing="8" />
+                                    <arc:Button Name="PART_Add" Variant="Secondary" Size="Small" HorizontalAlignment="Left" />
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                        <arc:FinanceAnnouncer Name="PART_Announcer" IsAssertive="True" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|SpendAlertMeter#PART_Meter">
+            <Setter Property="TrackBrush" Value="{arc:ArcDesignTokenResource ControlTrack}" />
+            <Setter Property="FillBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="WarningBrush" Value="{arc:ArcDesignTokenResource Warning}" />
+            <Setter Property="DangerBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+            <Setter Property="PaceBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+            <Setter Property="TickBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="LabelBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="LabelFontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LabelFontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        </Style>
+        <Style Selector="^ /template/ arc|SpendAlertBanner#PART_Banner">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:alerting /template/ arc|SpendAlertBanner#PART_Banner">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|NumberField#PART_Budget">
+            <Setter Property="DockPanel.Dock" Value="Bottom" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Margin" Value="0,10,0,0" />
+        </Style>
+        <Style Selector="^:compact /template/ TextBlock#PART_Pace">
+            <Setter Property="DockPanel.Dock" Value="Bottom" />
+            <Setter Property="TextAlignment" Value="Left" />
+            <Setter Property="Margin" Value="0,4,0,0" />
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|SpendAlertMeter#PART_Meter">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:SpringDoubleTransition Property="Fraction" Spring="Smooth" />
+                    <arc:SpringDoubleTransition Property="Projected" Spring="Smooth" />
+                    <arc:SpringDoubleTransition Property="Scale" Spring="Smooth" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The banner: warning or danger tint; it rises 6px and fades in (fade only with reduced motion). -->
+    <ControlTheme x:Key="{x:Type arc:SpendAlertBanner}" TargetType="arc:SpendAlertBanner">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep16}" />
+        <Setter Property="Padding" Value="{arc:SpendAlertTokenResource BannerPadding}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource WarningSubtle}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Warning}" />
+        <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Opacity" Value="0" />
+        <Setter Property="RenderTransform" Value="translateY(6px)" />
+        <Style Selector="^.danger">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource DangerSubtle}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^.shown">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="RenderTransform" Value="translateY(0px)" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="RenderTransform" Value="translateY(0px)" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:SpendAlertPill}" TargetType="arc:SpendAlertPill">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Padding" Value="10,3" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SuccessSubtle}" />
+        <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        <Style Selector="^.at-risk">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^.warning">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource WarningSubtle}" />
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Warning}" />
+        </Style>
+        <Style Selector="^.over">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource DangerSubtle}" />
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

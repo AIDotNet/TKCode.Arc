@@ -1,0 +1,90 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.DnsResolutionTheme">
+
+    <!-- The card: header (title, status, two-line caption), the stage, and the footer with playback and speed. -->
+    <ControlTheme x:Key="{x:Type arc:DnsResolution}" TargetType="arc:DnsResolution">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="MaxWidth" Value="760" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:DnsResolution">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="False">
+                    <Grid RowDefinitions="Auto,Auto">
+                        <StackPanel Margin="{TemplateBinding BodyPadding}">
+                            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                                <TextBlock Text="{TemplateBinding Title}"
+                                           MinHeight="{arc:DnsResolutionTokenResource HeaderRowHeight}"
+                                           VerticalAlignment="Center"
+                                           FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           LineHeight="{arc:DnsResolutionTokenResource TitleLineHeight}"
+                                           Padding="0,2"
+                                           TextTrimming="CharacterEllipsis"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <arc:ExplainerStatus Name="PART_Status" Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center" />
+                                <arc:ArcContentSwap Name="PART_Caption"
+                                                    Grid.Row="1"
+                                                    Grid.ColumnSpan="2"
+                                                    Mode="Crossfade"
+                                                    HorizontalContentAlignment="Left"
+                                                    VerticalContentAlignment="Top"
+                                                    Margin="{arc:DnsResolutionTokenResource CaptionMargin}"
+                                                    MinHeight="{arc:DnsResolutionTokenResource CaptionMinHeight}" />
+                                <arc:ExplainerAnnouncer Name="PART_Announcer" Grid.Row="1" />
+                            </Grid>
+                            <arc:DnsResolutionStage Name="PART_Stage" Margin="0,20,0,0" />
+                        </StackPanel>
+                        <Border Grid.Row="1"
+                                Margin="0,20,0,0"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                Padding="{TemplateBinding FooterPadding}"
+                                IsVisible="{TemplateBinding AreControlsVisible}">
+                            <arc:AgentLoopFooterPanel>
+                                <StackPanel Orientation="Horizontal" Spacing="{arc:DnsResolutionTokenResource ButtonGap}" VerticalAlignment="Center">
+                                    <arc:ExplainerIconButton Name="PART_PlayButton" />
+                                    <arc:ExplainerIconButton Name="PART_StepButton" />
+                                    <arc:ExplainerIconButton Name="PART_RestartButton" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Spacing="{arc:DnsResolutionTokenResource SpeedGap}" VerticalAlignment="Center">
+                                    <TextBlock Name="PART_SpeedLabel" VerticalAlignment="Center" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    <arc:SegmentedControl Name="PART_Speed" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </arc:AgentLoopFooterPanel>
+                        </Border>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- The diagram's inks: queries in the accent, referrals in series 2, answers in the success color. -->
+    <ControlTheme x:Key="{x:Type arc:DnsResolutionStage}" TargetType="arc:DnsResolutionStage">
+        <Setter Property="QueryInk" Value="{arc:ArcDesignTokenResource Series1}" />
+        <Setter Property="ReferralInk" Value="{arc:ArcDesignTokenResource Series2}" />
+        <Setter Property="AnswerInk" Value="{arc:ArcDesignTokenResource Success}" />
+        <Setter Property="MissInk" Value="{arc:ArcDesignTokenResource Warning}" />
+        <Setter Property="NodeFill" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="NodeBorder" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="LineInk" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="TextInk" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SecondaryInk" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="MutedInk" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="NodeRadius" Value="{arc:ArcDesignTokenResource RadiusStep14}" />
+    </ControlTheme>
+</ResourceDictionary>

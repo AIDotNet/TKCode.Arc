@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LightboxGalleryOpenFromCodeDemo">
+    <!-- Open(index) opens the lightbox from your own button; OpenIndex reports the photo on show, or -1 once closed. -->
+    <StackPanel Spacing="12" MaxWidth="520" HorizontalAlignment="Center">
+        <arc:LightboxGallery x:Name="Gallery" Columns="4" Label="Walking trip photos" />
+        <WrapPanel HorizontalAlignment="Center">
+            <arc:Button Variant="Secondary" Size="Small" Margin="4" Content="Open the night sky" Click="OnOpen" />
+        </WrapPanel>
+        <TextBlock x:Name="Readout"
+                   Text="The lightbox is closed."
+                   FontSize="12"
+                   HorizontalAlignment="Center"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

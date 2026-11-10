@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AvatarUploadPreviewDemo">
+    <!-- Drop an image on the circle or pick one, frame it, then Save: the upload below is simulated. -->
+    <StackPanel Spacing="20" HorizontalAlignment="Center" Margin="0,32">
+        <arc:AvatarUpload x:Name="Upload" />
+        <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Center">
+            <arc:Button Variant="Ghost" Size="Small" Content="Try a sample photo" Click="OnSample" />
+            <arc:Switch x:Name="Fail" Content="Fail the next upload" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

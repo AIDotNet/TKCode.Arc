@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SupportConversationPreviewDemo">
+    <!-- The sample conversation: reply, switch to an internal note, type / for saved replies, change the status. -->
+    <arc:SupportConversation />
+</UserControl>

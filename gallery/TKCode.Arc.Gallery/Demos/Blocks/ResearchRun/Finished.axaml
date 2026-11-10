@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ResearchRunFinishedDemo">
+    <StackPanel Spacing="12" Margin="0,12">
+        <!-- Your own finished research: the process folds into one line above the report. Citations raise SourceInvoked. -->
+        <arc:ResearchRun x:Name="Run" Phase="Done" Elapsed="0:2:31" />
+        <TextBlock x:Name="Log" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" MaxWidth="560" Opacity="0.7" />
+    </StackPanel>
+</UserControl>

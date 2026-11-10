@@ -151,6 +151,12 @@
         <target state="translated">趣味</target>
       </segment>
     </unit>
+    <unit id="Category_Widgets">
+      <segment>
+        <source>Widgets</source>
+        <target state="translated">小组件</target>
+      </segment>
+    </unit>
     <unit id="Category_Ai">
       <segment>
         <source>AI</source>
@@ -175,10 +181,40 @@
         <target state="translated">表面</target>
       </segment>
     </unit>
+    <unit id="Category_Glass">
+      <segment>
+        <source>Glass</source>
+        <target state="translated">玻璃</target>
+      </segment>
+    </unit>
+    <unit id="Category_Photos">
+      <segment>
+        <source>Photos</source>
+        <target state="translated">照片</target>
+      </segment>
+    </unit>
+    <unit id="Category_Publishing">
+      <segment>
+        <source>Publishing</source>
+        <target state="translated">内容发布</target>
+      </segment>
+    </unit>
+    <unit id="Category_Inputs">
+      <segment>
+        <source>Inputs</source>
+        <target state="translated">输入</target>
+      </segment>
+    </unit>
     <unit id="Category_Cursor">
       <segment>
         <source>Cursor</source>
         <target state="translated">光标</target>
+      </segment>
+    </unit>
+    <unit id="Category_Data">
+      <segment>
+        <source>Data</source>
+        <target state="translated">数据</target>
       </segment>
     </unit>
     <unit id="Category_Editors">

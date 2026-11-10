@@ -1,0 +1,56 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ActivityRingsWeekDemo">
+    <!-- Small rings without a legend make a week at a glance; a style sets their size for every day at once. -->
+    <UserControl.Styles>
+        <Style Selector="arc|ActivityRings.day">
+            <Setter Property="Diameter" Value="48" />
+            <Setter Property="RingThickness" Value="5" />
+            <Setter Property="RingGap" Value="1.5" />
+            <Setter Property="IsLegendVisible" Value="False" />
+        </Style>
+        <Style Selector="TextBlock.day">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+    </UserControl.Styles>
+    <UniformGrid Rows="1" MaxWidth="460" HorizontalAlignment="Center">
+        <StackPanel Spacing="6" Margin="4">
+            <arc:ActivityRings Classes="day" Label="Monday">
+                <arc:ActivityRing Label="Move" Value="510" Goal="520" />
+                <arc:ActivityRing Label="Exercise" Value="35" Goal="30" />
+            </arc:ActivityRings>
+            <TextBlock Classes="day" Text="Mon" />
+        </StackPanel>
+        <StackPanel Spacing="6" Margin="4">
+            <arc:ActivityRings Classes="day" Label="Tuesday">
+                <arc:ActivityRing Label="Move" Value="260" Goal="520" />
+                <arc:ActivityRing Label="Exercise" Value="12" Goal="30" />
+            </arc:ActivityRings>
+            <TextBlock Classes="day" Text="Tue" />
+        </StackPanel>
+        <StackPanel Spacing="6" Margin="4">
+            <arc:ActivityRings Classes="day" Label="Wednesday">
+                <arc:ActivityRing Label="Move" Value="640" Goal="520" />
+                <arc:ActivityRing Label="Exercise" Value="48" Goal="30" />
+            </arc:ActivityRings>
+            <TextBlock Classes="day" Text="Wed" />
+        </StackPanel>
+        <StackPanel Spacing="6" Margin="4">
+            <arc:ActivityRings Classes="day" Label="Thursday">
+                <arc:ActivityRing Label="Move" Value="410" Goal="520" />
+                <arc:ActivityRing Label="Exercise" Value="30" Goal="30" />
+            </arc:ActivityRings>
+            <TextBlock Classes="day" Text="Thu" />
+        </StackPanel>
+        <StackPanel Spacing="6" Margin="4">
+            <arc:ActivityRings Classes="day" Label="Friday">
+                <arc:ActivityRing Label="Move" Value="120" Goal="520" />
+                <arc:ActivityRing Label="Exercise" Value="5" Goal="30" />
+            </arc:ActivityRings>
+            <TextBlock Classes="day" Text="Fri" />
+        </StackPanel>
+    </UniformGrid>
+</UserControl>

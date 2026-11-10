@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.EvalSuitePreviewDemo">
+    <!-- No properties: the sample suite of 14 cases, v12 against v13, with a simulated run behind Run suite. -->
+    <arc:EvalSuite Margin="0,12" />
+</UserControl>

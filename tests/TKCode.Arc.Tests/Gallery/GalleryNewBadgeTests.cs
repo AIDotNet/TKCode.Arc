@@ -38,7 +38,7 @@ public class GalleryNewBadgeTests
     [Fact]
     public void The_Arc_Component_Count_Includes_Tree_Table()
     {
-        GalleryCatalog.Count.ShouldBe(113);
+        GalleryCatalog.Count.ShouldBe(119);
         GalleryCatalog.Categories.Length.ShouldBe(22);
     }
 

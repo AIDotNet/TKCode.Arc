@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.ImageTrailDenseDemo">
+    <!-- Small square pictures close together that leave quickly: a tighter, busier trail. -->
+    <arc:ImageTrail Label="Studio snapshots"
+                    Height="260"
+                    MaxWidth="560"
+                    ImageSize="84"
+                    Spacing="36"
+                    Lifetime="0:0:0.5"
+                    MaxImages="10"
+                    Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                    Sources="{x:Static demos:ImageTrailDemoData.Squares}">
+        <TextBlock Text="Studio snapshots"
+                   FontSize="18"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </arc:ImageTrail>
+</UserControl>

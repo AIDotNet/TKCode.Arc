@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentBuilderNarrowDemo">
+    <!-- Breakpoints follow the builder's own width: under 760 the test chat moves below the settings, under 520 the paddings tighten. -->
+    <arc:AgentBuilder Width="480" Margin="0,12" HorizontalAlignment="Center" />
+</UserControl>

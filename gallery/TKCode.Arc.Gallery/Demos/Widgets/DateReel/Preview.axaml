@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.DateReelPreviewDemo">
+    <!-- Drag or flick a wheel, scroll over it, tap a row above or below, or focus a wheel and use the arrow keys. -->
+    <StackPanel Spacing="16" Width="300" HorizontalAlignment="Center">
+        <arc:DateReel x:Name="Reel" SelectedDate="2026-03-14" SelectedDateChanged="OnDateChanged" />
+        <TextBlock x:Name="Readout"
+                   Text="Saturday, March 14, 2026"
+                   FontSize="12"
+                   HorizontalAlignment="Center"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

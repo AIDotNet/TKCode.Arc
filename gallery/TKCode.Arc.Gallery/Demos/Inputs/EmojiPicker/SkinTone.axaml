@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.EmojiPickerSkinToneDemo">
+    <!-- SkinTone is two-way: the picker's hand button and these buttons change the same value. Without the preview
+         line the picker is shorter. -->
+    <StackPanel Spacing="16" HorizontalAlignment="Center" Margin="0,24">
+        <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+            <arc:Button Variant="Secondary" Size="Small" Content="Default" Click="OnDefault" />
+            <arc:Button Variant="Secondary" Size="Small" Content="Light" Click="OnLight" />
+            <arc:Button Variant="Secondary" Size="Small" Content="Medium" Click="OnMedium" />
+            <arc:Button Variant="Secondary" Size="Small" Content="Dark" Click="OnDark" />
+        </StackPanel>
+        <arc:EmojiPicker x:Name="Picker" SkinTone="Medium" IsPreviewVisible="False" SearchText="hand" />
+        <TextBlock HorizontalAlignment="Center"
+                   Text="{Binding #Picker.SkinTone, StringFormat='Skin tone: {0}'}"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

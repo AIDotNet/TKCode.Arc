@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SpendAlertPreviewDemo">
+    <!-- A dining budget 18 days into the month; each press adds the next invented purchase. Crossing 80% raises the banner. -->
+    <StackPanel Spacing="12" MaxWidth="640">
+        <arc:SpendAlert x:Name="Alert" />
+        <arc:Button x:Name="Purchase" Content="Add a purchase" Variant="Secondary" HorizontalAlignment="Left" />
+    </StackPanel>
+</UserControl>

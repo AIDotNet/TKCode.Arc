@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MegaMenuMorphReducedMotionDemo">
+    <!-- Reduced motion: the panel jumps to the next item and its content cross-fades; nothing slides. -->
+    <arc:MegaMenuMorph arc:ArcMotion.Level="Reduced" HorizontalAlignment="Center" Margin="0,16,0,200">
+        <arc:MegaMenuMorphItem Header="Learn">
+            <StackPanel Width="260" Spacing="4">
+                <arc:MegaMenuMorphLink Title="Courses" Icon="{x:Static arc:ArcIcons.BookOpen}" />
+                <arc:MegaMenuMorphLink Title="Workshops" Icon="{x:Static arc:ArcIcons.Users}" />
+            </StackPanel>
+        </arc:MegaMenuMorphItem>
+        <arc:MegaMenuMorphItem Header="Build">
+            <Grid Width="420" ColumnDefinitions="*,*" ColumnSpacing="4">
+                <arc:MegaMenuMorphLink Title="Starter kits" Description="Ready to run" Icon="{x:Static arc:ArcIcons.Package}" />
+                <arc:MegaMenuMorphLink Grid.Column="1" Title="Command line" Description="Scripts and tools" Icon="{x:Static arc:ArcIcons.Terminal}" />
+            </Grid>
+        </arc:MegaMenuMorphItem>
+        <arc:MegaMenuMorphItem Header="About" />
+    </arc:MegaMenuMorph>
+</UserControl>

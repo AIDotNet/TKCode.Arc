@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.HeroSectionEditorialDemo">
+    <!-- The Minimal design: large type over a mesh, with customers along the bottom edge. -->
+    <Border CornerRadius="20" ClipToBounds="True" BorderThickness="1" BorderBrush="{arc:ArcDesignTokenResource Border}">
+        <arc:HeroSection Variant="Minimal" />
+    </Border>
+</UserControl>

@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.GlassCardNoBackdropDemo">
+    <!-- No GlassBackdrop.Source: a translucent tinted pane, the stripes behind it showing through without blur. -->
+    <Panel Height="220" ClipToBounds="True">
+        <StackPanel VerticalAlignment="Center" Spacing="14">
+            <Border Height="18" Background="#4C7DD9" />
+            <Border Height="18" Background="#E3A63B" />
+            <Border Height="18" Background="#47A57A" />
+            <Border Height="18" Background="#C8506B" />
+        </StackPanel>
+        <arc:GlassCard Width="300" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <StackPanel Spacing="6">
+                <TextBlock Text="Release notes" FontSize="18" FontWeight="SemiBold" />
+                <TextBlock Text="Version 4.2 is ready to install." Opacity="0.8" />
+            </StackPanel>
+        </arc:GlassCard>
+    </Panel>
+</UserControl>

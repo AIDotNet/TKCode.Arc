@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.OnboardingChecklistPartlyDoneDemo">
+    <arc:OnboardingChecklist x:Name="Checklist" Title="Finish your profile" MaxWidth="520">
+        <arc:OnboardingChecklistStep Id="name" Title="Add your name" />
+        <arc:OnboardingChecklistStep Id="photo" Title="Upload a photo" />
+        <arc:OnboardingChecklistStep Id="bio" Title="Write a short bio" Description="Two lines are plenty." />
+    </arc:OnboardingChecklist>
+</UserControl>

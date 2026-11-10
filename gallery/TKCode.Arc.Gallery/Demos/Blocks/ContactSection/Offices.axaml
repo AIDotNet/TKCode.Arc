@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ContactSectionOfficesDemo">
+    <Border CornerRadius="20" ClipToBounds="True" BorderThickness="1" BorderBrush="{arc:ArcDesignTokenResource Border}">
+        <arc:ContactSection Variant="Offices" Title="Find us" Description="Each card shows the local time and whether the office is open.">
+            <arc:ContactSection.Offices>
+                <arc:ContactOffice City="Oslo" TimeZone="Europe/Oslo" Address="Eksempelgata 3,0150 Oslo" Email="oslo@example.com" />
+                <arc:ContactOffice City="Tokyo" TimeZone="Asia/Tokyo" Address="1-2-3 Sample,Tokyo 100-0000" Email="tokyo@example.com" OpenHour="10" CloseHour="19" />
+            </arc:ContactSection.Offices>
+        </arc:ContactSection>
+    </Border>
+</UserControl>

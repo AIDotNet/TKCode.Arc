@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.RatingRequiredDemo">
+    <StackPanel Spacing="16" HorizontalAlignment="Center">
+        <arc:Rating Label="Required answer" AllowClear="False" Value="3" />
+        <arc:Rating Label="Out of ten" Maximum="10" Size="Small" Value="7" />
+        <arc:Rating Label="Closed survey" IsEnabled="False" Value="2" />
+    </StackPanel>
+</UserControl>

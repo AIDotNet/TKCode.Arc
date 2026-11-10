@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ShareAccessPreviewDemo">
+    <!-- An invented document and team. Invite an address, change someone's role, open the link to the organization. -->
+    <StackPanel Spacing="12" Margin="0,16" HorizontalAlignment="Center">
+        <arc:ShareAccess x:Name="Share"
+                         Width="500"
+                         DocumentName="Spring trail plan"
+                         OrganizationName="Fernhollow"
+                         Link="https://notes.example/d/7hq2-spring-trail-plan"
+                         CurrentUserEmail="mira.holt@fernhollow.example"
+                         PeopleInvited="OnInvited"
+                         RoleChanged="OnRoleChanged"
+                         AccessRemoved="OnRemoved"
+                         LinkAccessChanged="OnLinkChanged"
+                         DoneRequested="OnDone">
+            <arc:ShareAccess.People>
+                <arc:ShareAccessPerson Name="Mira Holt" Email="mira.holt@fernhollow.example" Role="Owner" />
+                <arc:ShareAccessPerson Name="Tobias Brandt" Email="tobias@fernhollow.example" Role="Editor" />
+                <arc:ShareAccessPerson Name="Ines Okafor" Email="ines.okafor@fernhollow.example" Role="Commenter" />
+                <arc:ShareAccessPerson Email="guest.ranger@trailmail.example" Role="Viewer" IsPending="True" />
+            </arc:ShareAccess.People>
+        </arc:ShareAccess>
+        <TextBlock x:Name="Status"
+                   HorizontalAlignment="Center"
+                   TextWrapping="Wrap"
+                   FontSize="13"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                   Text="Changes stay on this page." />
+    </StackPanel>
+</UserControl>

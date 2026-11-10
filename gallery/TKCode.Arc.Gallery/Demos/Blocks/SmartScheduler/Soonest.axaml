@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SmartSchedulerSoonestDemo">
+    <StackPanel Margin="0,12" Spacing="12">
+        <!-- Other limits: as soon as possible, after 10, 45 minutes, breaks. SlotBooked reports the booked times. -->
+        <arc:SmartScheduler x:Name="Scheduler" ConstraintsText="As soon as possible, after 10am, 45 min, breaks around it" />
+        <TextBlock x:Name="Log" />
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.WalletCardFinishesDemo">
+    <!-- Two narrow cards: the Ocean finish, and the Accent finish that follows the theme's accent. -->
+    <StackPanel Spacing="20" HorizontalAlignment="Center" Width="420">
+        <arc:WalletCard x:Name="Ocean" Finish="Ocean" IssuerName="Fernhill" HolderName="Teo Ruiz"
+                        CardNumber="5312 0094 1180 2207" Expiry="03/28" SecurityCode="904"
+                        Balance="612.40" MonthlyLimit="800" SpentThisMonth="845.10" />
+        <arc:WalletCard Finish="Accent" IssuerName="Fernhill" HolderName="Ana Sato" CardNumber="4000 1234 5678 9010"
+                        Expiry="11/30" Balance="12480.00" IsFrozen="True" />
+    </StackPanel>
+</UserControl>

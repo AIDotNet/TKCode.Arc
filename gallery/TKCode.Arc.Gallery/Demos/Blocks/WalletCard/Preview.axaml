@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.WalletCardPreviewDemo">
+    <!-- The sample cardholder and a week of purchases; freezing waits 0.7 s for the simulated card service. -->
+    <arc:WalletCard x:Name="Card" />
+</UserControl>

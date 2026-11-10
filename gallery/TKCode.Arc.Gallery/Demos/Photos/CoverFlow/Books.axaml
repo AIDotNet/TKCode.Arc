@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.CoverFlowBooksDemo">
+    <!-- Book covers: taller covers, a gentler turn and no floor reflection. -->
+    <arc:CoverFlow Label="Reading list"
+                   CoverWidth="140"
+                   CoverAspectRatio="0.6667"
+                   TiltAngle="40"
+                   ShowsReflection="False"
+                   SelectedIndex="2"
+                   ItemsSource="{x:Static demos:PhotosDemoData.Books}" />
+</UserControl>

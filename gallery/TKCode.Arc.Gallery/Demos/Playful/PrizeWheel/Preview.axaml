@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PrizeWheelPreviewDemo">
+    <!-- Click the wheel, or Tab to it and press Enter. Larger slices are likelier: the odds decide the slice widths. -->
+    <StackPanel Spacing="18" HorizontalAlignment="Center">
+        <arc:PrizeWheel x:Name="Wheel"
+                        Label="Daily prize wheel"
+                        Width="320"
+                        Height="320"
+                        SpinCompleted="OnSpinCompleted">
+            <arc:PrizeWheelSegment Label="5% off" Weight="4" />
+            <arc:PrizeWheelSegment Label="Free shipping" Weight="3" />
+            <arc:PrizeWheelSegment Label="Sticker" Weight="3" />
+            <arc:PrizeWheelSegment Label="10% off" Weight="2" />
+            <arc:PrizeWheelSegment Label="Mug" Weight="1.5" />
+            <arc:PrizeWheelSegment Label="Gift card" Weight="1" />
+        </arc:PrizeWheel>
+        <TextBlock x:Name="Readout"
+                   Text="Spin to win a little something."
+                   HorizontalAlignment="Center"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

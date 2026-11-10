@@ -1,0 +1,341 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.EvalSuiteTheme">
+
+    <!-- The case list: rows drawn in code on token colors; the keyboard ring is drawn around the cursor row. -->
+    <ControlTheme x:Key="{x:Type arc:EvalSuiteCaseList}" TargetType="arc:EvalSuiteCaseList">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SecondaryBrush" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="MutedBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="SuccessBrush" Value="{arc:ArcDesignTokenResource Success}" />
+        <Setter Property="DangerBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+        <Setter Property="WarningBrush" Value="{arc:ArcDesignTokenResource Warning}" />
+        <Setter Property="AccentBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="HoverBrush" Value="{arc:EvalSuiteTokenResource RowHoverBackground}" />
+        <Setter Property="SelectedBrush" Value="{arc:EvalSuiteTokenResource RowSelectedBackground}" />
+        <Setter Property="DividerBrush" Value="{arc:EvalSuiteTokenResource RowDivider}" />
+        <Setter Property="FocusBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+        <Setter Property="RowRadius" Value="{arc:ArcDesignTokenResource RadiusStep10}" />
+        <Setter Property="ChipRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="RowHeight" Value="{arc:EvalSuiteTokenResource RowHeight}" />
+        <Setter Property="RowInset" Value="{arc:EvalSuiteTokenResource RowInset}" />
+        <Setter Property="StatusColumnWidth" Value="{arc:EvalSuiteTokenResource StatusColumnWidth}" />
+        <Setter Property="CheckColumnWidth" Value="{arc:EvalSuiteTokenResource CheckColumnWidth}" />
+        <Setter Property="VerdictColumnWidth" Value="{arc:EvalSuiteTokenResource VerdictColumnWidth}" />
+        <Setter Property="ChipHeight" Value="{arc:EvalSuiteTokenResource ChipHeight}" />
+        <Setter Property="RevealDuration" Value="{arc:EvalSuiteTokenResource RevealDuration}" />
+        <Style Selector="^[IsCompact=True]">
+            <Setter Property="RowInset" Value="{arc:EvalSuiteTokenResource CompactRowInset}" />
+            <Setter Property="VerdictColumnWidth" Value="{arc:EvalSuiteTokenResource CompactVerdictColumnWidth}" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:EvalSuiteCaseHeader}" TargetType="arc:EvalSuiteCaseHeader">
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="Height" Value="{arc:EvalSuiteTokenResource HeaderHeight}" />
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:EvalSuiteChip}" TargetType="arc:EvalSuiteChip">
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SecondaryBrush" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="MutedBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="SuccessBrush" Value="{arc:ArcDesignTokenResource Success}" />
+        <Setter Property="DangerBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+        <Setter Property="WarningBrush" Value="{arc:ArcDesignTokenResource Warning}" />
+        <Setter Property="AccentBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="ChipHeight" Value="{arc:EvalSuiteTokenResource ChipHeight}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </ControlTheme>
+
+    <!--
+        The suite: a card at most 960 wide (Surface, 1px Border, RadiusPanel). Header (title, subtitle with the run state,
+        Run on the right; the baseline and candidate choices under it with an arrow between), a thin progress bar while
+        running, three summary tiles (two pass rates and the change), the filter pills, the column titles and the case
+        list, and the open case below a rule. At 620 and less (:compact) the paddings tighten, the tiles and the outputs
+        stack and the check column hides.
+    -->
+    <ControlTheme x:Key="{x:Type arc:EvalSuite}" TargetType="arc:EvalSuite">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="MaxWidth" Value="{arc:EvalSuiteTokenResource CardMaxWidth}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="CompactWidth" Value="{arc:EvalSuiteTokenResource CompactWidth}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:EvalSuite">
+                <Panel Name="PART_Host">
+                    <Border Name="PART_Card"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            TextElement.FontFamily="{TemplateBinding FontFamily}"
+                            TextElement.FontSize="{TemplateBinding FontSize}"
+                            TextElement.Foreground="{TemplateBinding Foreground}"
+                            ClipToBounds="True"
+                            AutomationProperties.LandmarkType="Region">
+                        <StackPanel>
+                            <!-- Header -->
+                            <Border Name="PART_HeaderBox" Padding="{arc:EvalSuiteTokenResource HeaderPadding}">
+                                <StackPanel Spacing="14">
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <StackPanel Spacing="2" VerticalAlignment="Center">
+                                            <TextBlock Name="PART_Title"
+                                                       FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                                       FontSize="{arc:ArcDesignTokenResource TypeLG}"
+                                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                       TextTrimming="CharacterEllipsis"
+                                                       AutomationProperties.HeadingLevel="2" />
+                                            <TextBlock Name="PART_Subtitle"
+                                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                       TextWrapping="Wrap"
+                                                       AutomationProperties.LiveSetting="Polite" />
+                                        </StackPanel>
+                                        <arc:Button Name="PART_Run"
+                                                    Grid.Column="1"
+                                                    Variant="Primary"
+                                                    Size="Small"
+                                                    Margin="12,0,0,0"
+                                                    VerticalAlignment="Center" />
+                                    </Grid>
+                                    <Grid Name="PART_Pickers" ColumnDefinitions="220,Auto,220" HorizontalAlignment="Left">
+                                        <arc:Select Name="PART_BaselinePicker" Size="Small" MinWidth="0" />
+                                        <arc:ArcGlyph Grid.Column="1"
+                                                      Data="{x:Static arc:ArcIcons.ArrowRight}"
+                                                      Size="16"
+                                                      Margin="10,0,10,10"
+                                                      VerticalAlignment="Bottom"
+                                                      Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                        <arc:Select Name="PART_CandidatePicker" Grid.Column="2" Size="Small" MinWidth="0" />
+                                    </Grid>
+                                    <arc:Progress Name="PART_Progress" IsVisible="False" IsValueVisible="False" />
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Summary tiles -->
+                            <Border Name="PART_SummaryBox" Classes="section">
+                                <Grid Name="PART_Tiles">
+                                    <Border Name="PART_BaselineTile" Classes="tile">
+                                        <StackPanel Spacing="2">
+                                            <TextBlock Name="PART_BaselineCaption" Classes="caption" />
+                                            <arc:RollingDigits Name="PART_BaselineRate" Classes="rate" Suffix="%"
+                                                               AutomationProperties.AccessibilityView="Raw" />
+                                            <TextBlock Name="PART_BaselineCount" Classes="note" />
+                                        </StackPanel>
+                                    </Border>
+                                    <Border Name="PART_CandidateTile" Classes="tile">
+                                        <StackPanel Spacing="2">
+                                            <TextBlock Name="PART_CandidateCaption" Classes="caption" />
+                                            <arc:RollingDigits Name="PART_CandidateRate" Classes="rate" Suffix="%"
+                                                               AutomationProperties.AccessibilityView="Raw" />
+                                            <TextBlock Name="PART_CandidateCount" Classes="note" />
+                                        </StackPanel>
+                                    </Border>
+                                    <Border Name="PART_DeltaTile" Classes="tile">
+                                        <StackPanel Spacing="2">
+                                            <TextBlock Name="PART_DeltaCaption" Classes="caption" />
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <arc:ArcGlyph Name="PART_DeltaGlyph" Size="20" VerticalAlignment="Center" />
+                                                <arc:RollingDigits Name="PART_Delta" Classes="rate"
+                                                                   AutomationProperties.AccessibilityView="Raw" />
+                                            </StackPanel>
+                                            <TextBlock Name="PART_DeltaNote" Classes="note" />
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+                            </Border>
+
+                            <!-- Filters -->
+                            <Border Name="PART_FilterBox" Classes="section" Margin="0,14,0,4">
+                                <arc:PillFilterBar Name="PART_Filters" HorizontalAlignment="Left" />
+                            </Border>
+
+                            <!-- Column titles and the list -->
+                            <arc:EvalSuiteCaseHeader Name="PART_Header" />
+                            <ScrollViewer Name="PART_Scroll"
+                                          MaxHeight="{arc:EvalSuiteTokenResource ListMaxHeight}"
+                                          HorizontalScrollBarVisibility="Disabled"
+                                          VerticalScrollBarVisibility="Auto">
+                                <arc:EvalSuiteCaseList Name="PART_List" Margin="0,0,0,8" />
+                            </ScrollViewer>
+
+                            <!-- The open case -->
+                            <arc:SpringSizeDecorator Name="PART_DetailHost" Axis="Height" CrossClipOverflow="12">
+                                <Border Name="PART_DetailBox"
+                                        BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
+                                        BorderBrush="{arc:ArcDesignTokenResource Border}">
+                                    <StackPanel Name="PART_Detail" Spacing="12" Margin="0,16,0,20">
+                                        <Grid ColumnDefinitions="*,Auto,Auto" Classes="detail-row">
+                                            <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                                                <TextBlock Name="PART_DetailTitle"
+                                                           VerticalAlignment="Center"
+                                                           FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                           TextTrimming="CharacterEllipsis"
+                                                           AutomationProperties.HeadingLevel="3" />
+                                                <arc:EvalSuiteChip Name="PART_DetailStatus" />
+                                            </StackPanel>
+                                            <arc:SegmentedControl Name="PART_DetailMode" Grid.Column="1" Margin="12,0,8,0"
+                                                                  VerticalAlignment="Center" />
+                                            <arc:Button Name="PART_Close"
+                                                        Grid.Column="2"
+                                                        Variant="Ghost"
+                                                        Size="Small"
+                                                        Padding="0"
+                                                        Width="{arc:ArcDesignTokenResource ControlSizeSM}"
+                                                        VerticalAlignment="Center">
+                                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}" Size="16" />
+                                            </arc:Button>
+                                        </Grid>
+                                        <Border Classes="detail-row">
+                                            <Border Name="PART_InputBox"
+                                                    Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                                    CornerRadius="{arc:ArcDesignTokenResource RadiusStep12}"
+                                                    Padding="12,10">
+                                                <StackPanel Spacing="4">
+                                                    <TextBlock Name="PART_InputCaption" Classes="caption" />
+                                                    <SelectableTextBlock Name="PART_DetailInput" TextWrapping="Wrap"
+                                                                         SelectionBrush="{arc:ArcDesignTokenResource AccentSubtle}" />
+                                                    <TextBlock Name="PART_DetailCheck" Classes="note" TextWrapping="Wrap" />
+                                                </StackPanel>
+                                            </Border>
+                                        </Border>
+                                        <Border Classes="detail-row">
+                                            <Panel>
+                                                <Grid Name="PART_Outputs" ColumnDefinitions="*,*" ColumnSpacing="12" RowSpacing="12">
+                                                    <Border Name="PART_BaselineBox" Classes="output">
+                                                        <StackPanel Spacing="8">
+                                                            <Grid ColumnDefinitions="*,Auto">
+                                                                <TextBlock Name="PART_BaselineOutputTitle" Classes="caption" VerticalAlignment="Center" />
+                                                                <arc:EvalSuiteChip Name="PART_BaselineVerdict" Grid.Column="1" />
+                                                            </Grid>
+                                                            <SelectableTextBlock Name="PART_BaselineOutput" Classes="output" />
+                                                            <TextBlock Name="PART_BaselineReason" Classes="note" TextWrapping="Wrap" />
+                                                        </StackPanel>
+                                                    </Border>
+                                                    <Border Name="PART_CandidateBox" Classes="output" Grid.Column="1">
+                                                        <StackPanel Spacing="8">
+                                                            <Grid ColumnDefinitions="*,Auto">
+                                                                <TextBlock Name="PART_CandidateOutputTitle" Classes="caption" VerticalAlignment="Center" />
+                                                                <arc:EvalSuiteChip Name="PART_CandidateVerdict" Grid.Column="1" />
+                                                            </Grid>
+                                                            <SelectableTextBlock Name="PART_CandidateOutput" Classes="output" />
+                                                            <TextBlock Name="PART_CandidateReason" Classes="note" TextWrapping="Wrap" />
+                                                        </StackPanel>
+                                                    </Border>
+                                                </Grid>
+                                                <Border Name="PART_DiffBox" Classes="output" IsVisible="False">
+                                                    <StackPanel Spacing="8">
+                                                        <TextBlock Name="PART_DiffSummary" Classes="caption" />
+                                                        <arc:AiDiffText Name="PART_Diff" Appearance="Studio" />
+                                                    </StackPanel>
+                                                </Border>
+                                            </Panel>
+                                        </Border>
+                                    </StackPanel>
+                                </Border>
+                            </arc:SpringSizeDecorator>
+                        </StackPanel>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ Border.section">
+            <Setter Property="Padding" Value="{arc:EvalSuiteTokenResource SectionPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Grid#PART_Tiles">
+            <Setter Property="ColumnSpacing" Value="{arc:EvalSuiteTokenResource TileGap}" />
+            <Setter Property="RowSpacing" Value="{arc:EvalSuiteTokenResource TileGap}" />
+        </Style>
+        <Style Selector="^ /template/ Border.tile">
+            <Setter Property="Padding" Value="{arc:EvalSuiteTokenResource TilePadding}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep14}" />
+        </Style>
+        <Style Selector="^ /template/ Border.output">
+            <Setter Property="Padding" Value="12" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep14}" />
+        </Style>
+        <Style Selector="^ /template/ :is(Control).detail-row">
+            <Setter Property="Margin" Value="{arc:EvalSuiteTokenResource SectionPadding}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.caption">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.note">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ SelectableTextBlock.output">
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="LineHeight" Value="21" />
+            <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        </Style>
+        <Style Selector="^ /template/ SelectableTextBlock.output.empty">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ arc|RollingDigits.rate">
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource DisplayFontFamily}" />
+            <Setter Property="FontSize" Value="{arc:EvalSuiteTokenResource RateFontSize}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_DeltaGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:up /template/ arc|ArcGlyph#PART_DeltaGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:down /template/ arc|ArcGlyph#PART_DeltaGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:diff /template/ Grid#PART_Outputs">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:diff /template/ Border#PART_DiffBox">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:compact">
+            <Style Selector="^ /template/ Border#PART_HeaderBox">
+                <Setter Property="Padding" Value="{arc:EvalSuiteTokenResource CompactHeaderPadding}" />
+            </Style>
+            <Style Selector="^ /template/ Border.section">
+                <Setter Property="Padding" Value="{arc:EvalSuiteTokenResource CompactSectionPadding}" />
+            </Style>
+            <Style Selector="^ /template/ :is(Control).detail-row">
+                <Setter Property="Margin" Value="{arc:EvalSuiteTokenResource CompactSectionPadding}" />
+            </Style>
+            <Style Selector="^ /template/ Grid#PART_Pickers">
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

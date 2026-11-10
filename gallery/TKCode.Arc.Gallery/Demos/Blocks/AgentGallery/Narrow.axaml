@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentGalleryNarrowDemo">
+    <!-- The gallery follows its own width: at 380 the search sits under the title and the cards take one column. -->
+    <StackPanel Width="380" Margin="0,12" Spacing="8" HorizontalAlignment="Center">
+        <TextBlock Text="380 wide" HorizontalAlignment="Center" Opacity="0.7" />
+        <arc:AgentGallery SelectedCategoryKey="coding" />
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ActivityRingsOverflowDemo">
+    <!-- Past the goal a ring keeps going round: the new lap lies over the first, with a shade under its head. -->
+    <arc:ActivityRings Label="A big day" HorizontalAlignment="Center">
+        <arc:ActivityRing Label="Move" Value="790" Goal="520" Unit="kcal" />
+        <arc:ActivityRing Label="Exercise" Value="64" Goal="30" Unit="min" />
+        <arc:ActivityRing Label="Stand" Value="7" Goal="12" Unit="hr" />
+    </arc:ActivityRings>
+</UserControl>

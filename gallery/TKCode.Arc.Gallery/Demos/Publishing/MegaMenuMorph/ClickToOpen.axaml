@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MegaMenuMorphClickToOpenDemo">
+    <!-- Panels open on click or tap only; once one is open, moving to a neighbour still morphs it there. -->
+    <arc:MegaMenuMorph OpensOnHover="False" HorizontalAlignment="Center" Margin="0,16,0,200">
+        <arc:MegaMenuMorphItem Header="Shop">
+            <StackPanel Width="240" Spacing="4">
+                <arc:MegaMenuMorphLink Title="New arrivals" Icon="{x:Static arc:ArcIcons.Sparkles}" />
+                <arc:MegaMenuMorphLink Title="Gift cards" Icon="{x:Static arc:ArcIcons.CreditCard}" />
+            </StackPanel>
+        </arc:MegaMenuMorphItem>
+        <arc:MegaMenuMorphItem Header="Help">
+            <StackPanel Width="320" Spacing="4">
+                <arc:MegaMenuMorphLink Title="Shipping" Description="Where your parcel is" Icon="{x:Static arc:ArcIcons.Package}" />
+                <arc:MegaMenuMorphLink Title="Returns" Description="Thirty days, no questions" Icon="{x:Static arc:ArcIcons.RotateCcw}" />
+                <arc:MegaMenuMorphLink Title="Contact" Description="We answer within a day" Icon="{x:Static arc:ArcIcons.Mail}" />
+            </StackPanel>
+        </arc:MegaMenuMorphItem>
+        <arc:MegaMenuMorphItem Header="Stores" />
+    </arc:MegaMenuMorph>
+</UserControl>

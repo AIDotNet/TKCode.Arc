@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.ProductGalleryThumbnailsLeftDemo">
+    <!-- Thumbnails down the left side, a wider stage and a stronger zoom for reading the glaze. -->
+    <arc:ProductGallery MaxWidth="560"
+                        HorizontalAlignment="Center"
+                        ThumbnailPlacement="Left"
+                        AspectRatio="1.25"
+                        ZoomScale="2.5"
+                        Label="Speckled stoneware mug"
+                        ItemsSource="{x:Static demos:PhotosDemoData.OatMug}" />
+</UserControl>

@@ -1,0 +1,162 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.LightboxGalleryTheme">
+
+    <!-- The gallery itself is only its grid of tiles; the lightbox is built on first open. -->
+    <ControlTheme x:Key="{x:Type arc:LightboxGallery}" TargetType="arc:LightboxGallery">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Spacing" Value="{arc:LightboxGalleryTokenResource TileSpacing}" />
+        <Setter Property="Backdrop" Value="{arc:LightboxGalleryTokenResource BackdropColor}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:LightboxGallery">
+                <arc:LightboxGalleryGrid Name="PART_Grid" />
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- A tile: the picture cropped into a rounded face that leans in a little under the pointer. -->
+    <ControlTheme x:Key="{x:Type arc:LightboxGalleryTile}" TargetType="arc:LightboxGalleryTile">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep16}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:LightboxGalleryTile">
+                <Panel Name="PART_Root">
+                    <Border Name="PART_Face"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            ClipToBounds="True">
+                        <arc:ArcImage Name="PART_Image"
+                                      Source="{TemplateBinding Source}"
+                                      Stretch="UniformToFill"
+                                      RenderTransformOrigin="50%,50%" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|ArcImage#PART_Image">
+            <Setter Property="RenderTransform" Value="scale(1)" />
+        </Style>
+        <Style Selector="^:pointerover /template/ arc|ArcImage#PART_Image">
+            <Setter Property="RenderTransform" Value="scale(1.04)" />
+        </Style>
+        <Style Selector="^:pressed /template/ Border#PART_Face">
+            <Setter Property="Opacity" Value="0.92" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ arc|ArcImage#PART_Image">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Considered" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Style Selector="^:pointerover /template/ arc|ArcImage#PART_Image">
+                <Setter Property="RenderTransform" Value="scale(1)" />
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The lightbox on the window's overlay layer: the picture area under everything, and over it the top bar (counter,
+        zoom out, zoom in, close), the side arrows and the caption. The chrome panel has no background, so drags and
+        clicks beside the buttons reach the picture area. On a narrow window the picture runs edge to edge and the side
+        arrows give way to swiping. The status line is read by screen readers and never seen.
+    -->
+    <ControlTheme x:Key="{x:Type arc:LightboxGalleryView}" TargetType="arc:LightboxGalleryView">
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:LightboxGalleryView">
+                <Panel>
+                    <arc:LightboxGalleryViewport Name="PART_Viewport" />
+                    <Panel Name="PART_Chrome">
+                        <Grid ColumnDefinitions="*,Auto"
+                              VerticalAlignment="Top"
+                              Margin="{arc:LightboxGalleryTokenResource BarPadding}">
+                            <TextBlock Name="PART_Counter"
+                                       VerticalAlignment="Center"
+                                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                       FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                                       FontFeatures="tnum"
+                                       IsHitTestVisible="False"
+                                       Foreground="{arc:LightboxGalleryTokenResource ChromeMutedColor}" />
+                            <StackPanel Grid.Column="1"
+                                        Orientation="Horizontal"
+                                        Spacing="{arc:LightboxGalleryTokenResource BarSpacing}">
+                                <arc:PhotosIconButton Name="PART_ZoomOut" Glyph="{x:Static arc:ArcIcons.ZoomOut}" />
+                                <arc:PhotosIconButton Name="PART_ZoomIn" Glyph="{x:Static arc:ArcIcons.ZoomIn}" />
+                                <arc:PhotosIconButton Name="PART_Close" Glyph="{x:Static arc:ArcIcons.X}" />
+                            </StackPanel>
+                        </Grid>
+                        <arc:PhotosIconButton Name="PART_Previous"
+                                              Glyph="{x:Static arc:ArcIcons.ChevronLeft}"
+                                              HorizontalAlignment="Left"
+                                              VerticalAlignment="Center"
+                                              Margin="{arc:LightboxGalleryTokenResource ArrowMargin}" />
+                        <arc:PhotosIconButton Name="PART_Next"
+                                              Glyph="{x:Static arc:ArcIcons.ChevronRight}"
+                                              HorizontalAlignment="Right"
+                                              VerticalAlignment="Center"
+                                              Margin="{arc:LightboxGalleryTokenResource ArrowMargin}" />
+                        <TextBlock Name="PART_Caption"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Bottom"
+                                   TextAlignment="Center"
+                                   TextWrapping="Wrap"
+                                   MaxLines="2"
+                                   TextTrimming="CharacterEllipsis"
+                                   IsHitTestVisible="False"
+                                   Margin="{arc:LightboxGalleryTokenResource CaptionMargin}"
+                                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                   FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                                   Foreground="{arc:LightboxGalleryTokenResource ChromeTextColor}" />
+                    </Panel>
+                    <TextBlock Name="PART_Status"
+                               Width="1"
+                               Height="1"
+                               Opacity="0"
+                               IsHitTestVisible="False"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               AutomationProperties.LiveSetting="Polite" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|LightboxGalleryViewport#PART_Viewport">
+            <Setter Property="PhotoMargin" Value="{arc:LightboxGalleryTokenResource PhotoMargin}" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:zoomed /template/ arc|LightboxGalleryViewport#PART_Viewport">
+            <Setter Property="Cursor" Value="SizeAll" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|LightboxGalleryViewport#PART_Viewport">
+            <Setter Property="PhotoMargin" Value="{arc:LightboxGalleryTokenResource PhotoMarginCompact}" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|PhotosIconButton#PART_Previous">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|PhotosIconButton#PART_Next">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:single /template/ arc|PhotosIconButton#PART_Previous">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:single /template/ arc|PhotosIconButton#PART_Next">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:single /template/ TextBlock#PART_Counter">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

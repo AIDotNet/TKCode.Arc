@@ -1,0 +1,30 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MorphNavPreviewDemo">
+    <!-- Press the pill. The panel grows over the page from the pill; pick a link and it folds back, showing the page you are on. -->
+    <Panel Height="440" MaxWidth="680">
+        <StackPanel Spacing="10" Margin="24,84,24,0">
+            <TextBlock Text="Field notes" FontSize="28" FontWeight="Medium"
+                       FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}" />
+            <TextBlock Text="A quiet place for the observations you gather on walks: birds, weather, the light on the river."
+                       TextWrapping="Wrap" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        </StackPanel>
+        <arc:MorphNav Title="Lantern" Mark="{x:Static arc:ArcIcons.Sparkles}" Margin="0,16,0,0">
+            <arc:MorphNavSection Header="Notebook">
+                <arc:MorphNavLink Text="Today" Description="What you saw this morning" Glyph="{x:Static arc:ArcIcons.Sun}" />
+                <arc:MorphNavLink Text="Archive" Description="Every walk, by month" Glyph="{x:Static arc:ArcIcons.Archive}" />
+                <arc:MorphNavLink Text="Map" Description="Where each note was made" Glyph="{x:Static arc:ArcIcons.Globe}" />
+            </arc:MorphNavSection>
+            <arc:MorphNavSection Header="Together">
+                <arc:MorphNavLink Text="Circles" Description="Groups you walk with" Glyph="{x:Static arc:ArcIcons.Users}" />
+                <arc:MorphNavLink Text="Messages" Description="Notes others sent you" Glyph="{x:Static arc:ArcIcons.MessageCircle}" />
+            </arc:MorphNavSection>
+            <arc:MorphNavSection Header="Help">
+                <arc:MorphNavLink Text="Getting started" />
+                <arc:MorphNavLink Text="Field guide" />
+                <arc:MorphNavLink Text="Contact" />
+            </arc:MorphNavSection>
+        </arc:MorphNav>
+    </Panel>
+</UserControl>

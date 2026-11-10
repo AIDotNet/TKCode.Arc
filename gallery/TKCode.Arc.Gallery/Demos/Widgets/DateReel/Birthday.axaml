@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.DateReelBirthdayDemo">
+    <!-- Day first with short month names, three rows, and a range: the wheels turn back from a date outside it. -->
+    <arc:DateReel Width="260"
+                  HorizontalAlignment="Center"
+                  Order="DayMonthYear"
+                  UsesFullMonthNames="False"
+                  VisibleItemCount="3"
+                  MinDate="1930-01-01"
+                  MaxDate="2012-12-31"
+                  SelectedDate="1994-06-21"
+                  DayLabel="Birth day"
+                  MonthLabel="Birth month"
+                  YearLabel="Birth year" />
+</UserControl>

@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ComparisonTablePreviewDemo">
+    <Border BorderThickness="1"
+            CornerRadius="20"
+            ClipToBounds="True"
+            BorderBrush="{arc:ArcDesignTokenResource Border}">
+        <arc:ComparisonTable x:Name="Table" MaxTableHeight="520" />
+    </Border>
+</UserControl>

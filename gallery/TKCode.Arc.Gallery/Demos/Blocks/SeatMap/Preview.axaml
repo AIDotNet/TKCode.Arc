@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SeatMapPreviewDemo">
+    <!-- An invented concert hall with three tiers; about a third of the seats are sold. -->
+    <arc:SeatMap x:Name="Map" />
+</UserControl>

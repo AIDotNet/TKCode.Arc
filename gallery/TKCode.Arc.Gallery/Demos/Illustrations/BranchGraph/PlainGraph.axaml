@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.BranchGraphPlainGraphDemo">
+    <!-- A plain graph: the whole history at once, newest on top, no playback controls. -->
+    <arc:BranchGraph Title="Release branch"
+                     StartsFinished="True"
+                     IsNewestFirst="True"
+                     AreControlsVisible="False">
+        <arc:BranchGraphCommit Id="5e1a20" Branch="main" Message="Start the 2.0 cycle" Author="Rhea" />
+        <arc:BranchGraphCommit Id="6f2b31" Branch="release/2.0" Message="Freeze features for 2.0" Author="Rhea" />
+        <arc:BranchGraphCommit Id="7a3c42" Branch="main" Message="Add dark mode settings" Author="Sam" />
+        <arc:BranchGraphCommit Id="8b4d53" Branch="release/2.0" Message="Fix crash on startup" Author="Rhea" Tag="v2.0.0" />
+        <arc:BranchGraphCommit Id="9c5e64" Branch="main" Message="Merge release/2.0" Parents="7a3c42, 8b4d53" Author="Sam" />
+    </arc:BranchGraph>
+</UserControl>

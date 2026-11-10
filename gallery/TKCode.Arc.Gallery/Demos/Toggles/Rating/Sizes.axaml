@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.RatingSizesDemo">
+    <StackPanel Spacing="16" HorizontalAlignment="Center">
+        <arc:Rating Label="Small" Size="Small" Value="3" />
+        <arc:Rating Label="Medium" Value="3" />
+        <arc:Rating Label="Large" Size="Large" Value="3" />
+    </StackPanel>
+</UserControl>

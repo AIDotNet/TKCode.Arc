@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.OnboardingChecklistFailingActionDemo">
+    <arc:OnboardingChecklist x:Name="Checklist" Title="Connect your store" MaxWidth="520">
+        <arc:OnboardingChecklistStep Id="payments"
+                                     Title="Connect payments"
+                                     Description="The first try fails, so you can see the message. The second one works."
+                                     ActionLabel="Connect" />
+        <arc:OnboardingChecklistStep Id="products"
+                                     Title="Add a product"
+                                     Description="One is enough to open the store." />
+    </arc:OnboardingChecklist>
+</UserControl>

@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TimeDialClock24Demo">
+    <!-- A 24-hour readout snapping to quarter hours, and a smaller dial: it takes the size it is given. -->
+    <StackPanel Orientation="Horizontal" Spacing="24" HorizontalAlignment="Center">
+        <arc:TimeDial Label="Departure" Value="18:45:00" Is24Hour="True" Step="0:15:00" Width="200" Height="200" />
+        <arc:TimeDial Label="Return" Value="22:00:00" Is24Hour="True" Step="0:15:00" Width="160" Height="160" />
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,36 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ShareSheetPreviewDemo">
+    <!-- On a wide window it opens as a popover; in the phone preview it rises from the bottom. Shared tells you who was picked. -->
+    <StackPanel Spacing="14" HorizontalAlignment="Center">
+        <arc:ShareSheet Subtitle="Autumn hike photos" Link="https://example.com/a/autumn-hike" Shared="OnShared"
+                        HorizontalAlignment="Center">
+            <arc:Button Variant="Secondary">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Share}" VerticalAlignment="Center" />
+                    <TextBlock Text="Share" VerticalAlignment="Center" />
+                </StackPanel>
+            </arc:Button>
+            <arc:ShareSheet.People>
+                <arc:ShareSheetTarget Name="Mira Okafor" Detail="mira@example.com" />
+                <arc:ShareSheetTarget Name="Tomas Reyes" Detail="tomas@example.com" />
+                <arc:ShareSheetTarget Name="Ana Lind" Detail="ana@example.com" />
+                <arc:ShareSheetTarget Name="Kofi Mensah" Detail="kofi@example.com" />
+                <arc:ShareSheetTarget Name="Hana Sato" Detail="hana@example.com" />
+            </arc:ShareSheet.People>
+            <arc:ShareSheet.Destinations>
+                <arc:ShareSheetTarget Name="Email" Glyph="{x:Static arc:ArcIcons.Mail}" />
+                <arc:ShareSheetTarget Name="Messages" Glyph="{x:Static arc:ArcIcons.MessageCircle}" />
+                <arc:ShareSheetTarget Name="Team space" Glyph="{x:Static arc:ArcIcons.Users}" />
+                <arc:ShareSheetTarget Name="Save to folder" Glyph="{x:Static arc:ArcIcons.Folder}" />
+            </arc:ShareSheet.Destinations>
+            <arc:ShareSheet.Actions>
+                <arc:ShareSheetAction Label="Embed in a page" Glyph="{x:Static arc:ArcIcons.Code}" />
+                <arc:ShareSheetAction Label="Download a copy" Glyph="{x:Static arc:ArcIcons.Download}" />
+            </arc:ShareSheet.Actions>
+        </arc:ShareSheet>
+        <TextBlock x:Name="Status" Text="Not shared yet" HorizontalAlignment="Center"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

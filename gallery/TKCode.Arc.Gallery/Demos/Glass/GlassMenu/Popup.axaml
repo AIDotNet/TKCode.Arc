@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.GlassMenuPopupDemo">
+    <!-- The menu opens from the button: click, or focus it and press Down, Enter or Space. Escape closes it. -->
+    <Panel Height="320" ClipToBounds="True" arc:GlassBackdrop.Source="{Binding #Scene}">
+        <Canvas Name="Scene">
+            <Canvas.Background>
+                <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                    <GradientStop Color="#F6D5B8" Offset="0" />
+                    <GradientStop Color="#B9C9E8" Offset="1" />
+                </LinearGradientBrush>
+            </Canvas.Background>
+            <Ellipse Canvas.Left="210" Canvas.Top="70" Width="190" Height="190" Fill="#C2577A" />
+            <Ellipse Canvas.Left="380" Canvas.Top="150" Width="140" Height="140" Fill="#3F7CAC" />
+        </Canvas>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,40,0,0" Spacing="12">
+            <arc:Button Name="Trigger" Content="Arrange" Variant="Secondary">
+                <arc:GlassMenu.Menu>
+                    <arc:GlassMenu>
+                        <arc:GlassMenuItem Content="Bring to front" Icon="{x:Static arc:ArcIcons.Layers}" Shortcut="Ctrl+]" />
+                        <arc:GlassMenuItem Content="Send to back" Icon="{x:Static arc:ArcIcons.Layers3}" Shortcut="Ctrl+[" />
+                        <arc:GlassMenuSeparator />
+                        <arc:GlassMenuItem Content="Group" Icon="{x:Static arc:ArcIcons.Box}" Shortcut="Ctrl+G" />
+                        <arc:GlassMenuItem Content="Lock" Icon="{x:Static arc:ArcIcons.Lock}" />
+                    </arc:GlassMenu>
+                </arc:GlassMenu.Menu>
+            </arc:Button>
+            <TextBlock Name="Log" HorizontalAlignment="Center" Text="Pick a command" Opacity="0.75" />
+        </StackPanel>
+    </Panel>
+</UserControl>

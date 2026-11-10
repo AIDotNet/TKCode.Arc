@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentOrchestratorProgrammaticDemo">
+    <!-- Your own agents and no script: each press of "Post next" posts one message from code. -->
+    <StackPanel Spacing="12" Margin="0,12">
+        <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+            <arc:Button x:Name="NextButton" Content="Post next" Click="OnNext" />
+            <arc:Button Content="Start over" Variant="Ghost" Click="OnReset" />
+        </StackPanel>
+        <arc:AgentOrchestrator x:Name="Orchestrator" Title="Team offsite" Goal="Plan a two-day team offsite for 14 people">
+            <arc:OrchestratorAgent Id="lead" Name="Atlas" Role="Planner" Model="Aurora Prime 3" />
+            <arc:OrchestratorAgent Id="venue" Name="Scout" Role="Venues" Model="Aurora Swift 2" />
+            <arc:OrchestratorAgent Id="budget" Name="Ledger" Role="Budget" Model="Aurora Swift 2" />
+        </arc:AgentOrchestrator>
+    </StackPanel>
+</UserControl>

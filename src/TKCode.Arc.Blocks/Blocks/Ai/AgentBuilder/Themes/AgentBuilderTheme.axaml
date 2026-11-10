@@ -1,0 +1,453 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.AgentBuilderTheme">
+
+    <!--
+        The agent builder: two cards on a grid that the control lays out by its own width (beside each other from 760,
+        the chat card under the settings below it). Settings card: Surface, 1px Border, RadiusPanel, sections split by 1px
+        BorderSubtle lines (header, identity, instructions, model, tools, knowledge) and a save bar on a muted strip at the
+        bottom. Chat card: the same frame, clipped, holding the stale note (it grows in when the draft changes) and the
+        test chat. Section paddings are 24 / 20, 16 / 16 below 520 (:compact).
+    -->
+    <ControlTheme x:Key="{x:Type arc:AgentBuilder}" TargetType="arc:AgentBuilder">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="StackWidth" Value="{arc:AgentBuilderTokenResource StackWidth}" />
+        <Setter Property="CompactWidth" Value="{arc:AgentBuilderTokenResource CompactWidth}" />
+        <Setter Property="ColumnGap" Value="{arc:AgentBuilderTokenResource ColumnGap}" />
+        <Setter Property="ChatShare" Value="{arc:AgentBuilderTokenResource ChatShare}" />
+        <Setter Property="ChatMinWidth" Value="{arc:AgentBuilderTokenResource ChatMinWidth}" />
+        <Setter Property="ChatMinHeight" Value="{arc:AgentBuilderTokenResource ChatMinHeight}" />
+        <Setter Property="StackedChatHeight" Value="{arc:AgentBuilderTokenResource StackedChatHeight}" />
+        <Setter Property="SimulatedSave" Value="{arc:AgentBuilderTokenResource SimulatedSave}" />
+        <Setter Property="SimulatedIndex" Value="{arc:AgentBuilderTokenResource SimulatedIndex}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AgentBuilder">
+                <Grid Name="PART_Layout">
+                    <!-- Settings -->
+                    <Border Name="PART_SettingsCard"
+                            VerticalAlignment="Top"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            TextElement.FontSize="{TemplateBinding FontSize}"
+                            TextElement.Foreground="{TemplateBinding Foreground}"
+                            AutomationProperties.LandmarkType="Form">
+                        <StackPanel>
+                            <!-- Header: avatar, name with the status badge, description, Publish -->
+                            <Border Classes="section">
+                                <Grid ColumnDefinitions="Auto,*,Auto">
+                                    <Border Name="PART_Avatar"
+                                            Width="{arc:AgentBuilderTokenResource AvatarSize}"
+                                            Height="{arc:AgentBuilderTokenResource AvatarSize}"
+                                            VerticalAlignment="Center"
+                                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                            AutomationProperties.AccessibilityView="Raw">
+                                        <TextBlock Name="PART_Initial"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"
+                                                   FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeLG}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   Foreground="{arc:ArcDesignTokenResource Surface}" />
+                                    </Border>
+                                    <StackPanel Grid.Column="1" Margin="12,0" VerticalAlignment="Center" Spacing="2">
+                                        <arc:ArcShrinkRow Spacing="8">
+                                            <TextBlock Name="PART_Title"
+                                                       VerticalAlignment="Center"
+                                                       arc:ArcShrinkRow.IsShrinkable="True"
+                                                       FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                                       FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                       TextTrimming="CharacterEllipsis"
+                                                       AutomationProperties.HeadingLevel="2" />
+                                            <arc:Badge Name="PART_Status" Size="Small" VerticalAlignment="Center" />
+                                        </arc:ArcShrinkRow>
+                                        <TextBlock Name="PART_Subtitle"
+                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                   TextTrimming="CharacterEllipsis" />
+                                    </StackPanel>
+                                    <arc:Button Name="PART_Publish"
+                                                Grid.Column="2"
+                                                Variant="Primary"
+                                                Size="Small"
+                                                VerticalAlignment="Center" />
+                                </Grid>
+                            </Border>
+
+                            <!-- Identity -->
+                            <Border Classes="section rule">
+                                <StackPanel Spacing="{arc:AgentBuilderTokenResource SectionGap}">
+                                    <TextBlock Name="PART_IdentityTitle" Classes="heading" />
+                                    <arc:Input Name="PART_NameInput" />
+                                    <arc:Input Name="PART_DescriptionInput" />
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Instructions -->
+                            <Border Classes="section rule">
+                                <StackPanel Spacing="{arc:AgentBuilderTokenResource SectionGap}">
+                                    <StackPanel Spacing="2">
+                                        <TextBlock Name="PART_InstructionsTitle" Classes="heading" />
+                                        <TextBlock Name="PART_InstructionsHint" Classes="hint" />
+                                    </StackPanel>
+                                    <arc:Textarea Name="PART_Instructions"
+                                                  IsLabelVisible="False"
+                                                  FrameHeight="{arc:AgentBuilderTokenResource InstructionsHeight}" />
+                                    <TextBlock Name="PART_InstructionsCount"
+                                               Classes="hint"
+                                               Margin="0,-6,0,0"
+                                               HorizontalAlignment="Right" />
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Model -->
+                            <Border Classes="section rule">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <StackPanel VerticalAlignment="Center" Spacing="2">
+                                        <TextBlock Name="PART_ModelTitle" Classes="heading" />
+                                        <TextBlock Name="PART_ModelHint" Classes="hint" />
+                                    </StackPanel>
+                                    <arc:ModelPicker Name="PART_Model"
+                                                     Grid.Column="1"
+                                                     Margin="16,0,0,0"
+                                                     VerticalAlignment="Center"
+                                                     IsSummaryVisible="False" />
+                                </Grid>
+                            </Border>
+
+                            <!-- Tools -->
+                            <Border Classes="section rule">
+                                <StackPanel Spacing="{arc:AgentBuilderTokenResource SectionGap}">
+                                    <StackPanel Spacing="2">
+                                        <Grid ColumnDefinitions="*,Auto">
+                                            <TextBlock Name="PART_ToolsTitle" Classes="heading" />
+                                            <TextBlock Name="PART_ToolsCount" Grid.Column="1" Classes="hint" VerticalAlignment="Center" />
+                                        </Grid>
+                                        <TextBlock Name="PART_ToolsHint" Classes="hint" />
+                                    </StackPanel>
+                                    <StackPanel Name="PART_ToolList" Margin="-10,0" />
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Knowledge -->
+                            <Border Classes="section rule">
+                                <StackPanel Spacing="{arc:AgentBuilderTokenResource SectionGap}">
+                                    <StackPanel Spacing="2">
+                                        <Grid ColumnDefinitions="*,Auto">
+                                            <TextBlock Name="PART_KnowledgeTitle" Classes="heading" />
+                                            <TextBlock Name="PART_KnowledgeCount" Grid.Column="1" Classes="hint" VerticalAlignment="Center" />
+                                        </Grid>
+                                        <TextBlock Name="PART_KnowledgeHint" Classes="hint" />
+                                    </StackPanel>
+                                    <StackPanel Name="PART_SourceList" Margin="-10,0" />
+                                    <TextBlock Name="PART_NoSources" Classes="hint" />
+                                    <Grid ColumnDefinitions="*,Auto,Auto">
+                                        <arc:Input Name="PART_LinkInput" Size="Small" IsLabelVisible="False" />
+                                        <arc:Button Name="PART_AddLink"
+                                                    Grid.Column="1"
+                                                    Margin="8,0,0,0"
+                                                    Variant="Secondary"
+                                                    Size="Small"
+                                                    VerticalAlignment="Top" />
+                                        <arc:Button Name="PART_Upload"
+                                                    Grid.Column="2"
+                                                    Margin="8,0,0,0"
+                                                    Variant="Ghost"
+                                                    Size="Small"
+                                                    VerticalAlignment="Top" />
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Save bar -->
+                            <Border Name="PART_SaveBar"
+                                    Classes="section"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
+                                    BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                    Background="{arc:AgentBuilderTokenResource ChatHeaderBackground}"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusStep25Bottom}">
+                                <Grid ColumnDefinitions="*,Auto,Auto">
+                                    <arc:ArcContentSwap Name="PART_SaveStatus"
+                                                        Mode="Label"
+                                                        VerticalAlignment="Center"
+                                                        HorizontalContentAlignment="Left"
+                                                        TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                        TextBlock.TextTrimming="CharacterEllipsis"
+                                                        AutomationProperties.LiveSetting="Polite" />
+                                    <arc:Button Name="PART_Discard" Grid.Column="1" Margin="8,0,0,0" Variant="Ghost" Size="Small" />
+                                    <arc:Button Name="PART_Save" Grid.Column="2" Margin="8,0,0,0" Variant="Secondary" Size="Small" />
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Test chat -->
+                    <Border Name="PART_ChatCard"
+                            VerticalAlignment="Stretch"
+                            ClipToBounds="True"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            AutomationProperties.LandmarkType="Region">
+                        <DockPanel>
+                            <arc:PresenceHost Name="PART_StaleHost" DockPanel.Dock="Top" Mode="Fade" Collapse="Height">
+                                <Border Name="PART_Stale"
+                                        Padding="16,8,12,8"
+                                        Background="{arc:ArcDesignTokenResource WarningSubtle}"
+                                        BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}"
+                                        BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                                    <Grid ColumnDefinitions="Auto,*,Auto">
+                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.TriangleAlert}"
+                                                      Size="16"
+                                                      VerticalAlignment="Center"
+                                                      Foreground="{arc:ArcDesignTokenResource Warning}" />
+                                        <TextBlock Name="PART_StaleText"
+                                                   Grid.Column="1"
+                                                   Margin="8,0"
+                                                   VerticalAlignment="Center"
+                                                   TextWrapping="Wrap" />
+                                        <arc:Button Name="PART_Restart" Grid.Column="2" Variant="Secondary" Size="Small" />
+                                    </Grid>
+                                </Border>
+                            </arc:PresenceHost>
+                            <arc:AiChat Name="PART_Chat" Background="{TemplateBinding Background}" />
+                        </DockPanel>
+                    </Border>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ Border.section">
+            <Setter Property="Padding" Value="{arc:AgentBuilderTokenResource SectionPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ Border.section">
+            <Setter Property="Padding" Value="{arc:AgentBuilderTokenResource CompactSectionPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border.rule">
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessTop}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.heading">
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="AutomationProperties.HeadingLevel" Value="3" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.hint">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+
+        <Style Selector="^:tone-1 /template/ Border#PART_Avatar">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Series1}" />
+        </Style>
+        <Style Selector="^:tone-2 /template/ Border#PART_Avatar">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Series2}" />
+        </Style>
+        <Style Selector="^:tone-3 /template/ Border#PART_Avatar">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Series3}" />
+        </Style>
+        <Style Selector="^:tone-4 /template/ Border#PART_Avatar">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Series4}" />
+        </Style>
+
+        <Style Selector="^:motion-full /template/ Border#PART_Avatar">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ Border#PART_Avatar">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A tool row: a 32px rounded square with the 16px glyph, the name over a muted line, and the switch. The row tints on
+        hover; the glyph square takes the accent tint while the tool is on.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AgentBuilderToolRow}" TargetType="arc:AgentBuilderToolRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="{arc:AgentBuilderTokenResource RowPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep14}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AgentBuilderToolRow">
+                <Border Background="{TemplateBinding Background}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <Border Name="PART_IconBox"
+                                Width="{arc:AgentBuilderTokenResource IconBoxSize}"
+                                Height="{arc:AgentBuilderTokenResource IconBoxSize}"
+                                VerticalAlignment="Center"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusStep10}">
+                            <arc:ArcGlyph Name="PART_Glyph" Size="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="12,0" VerticalAlignment="Center" Spacing="1">
+                            <TextBlock Name="PART_Name" TextTrimming="CharacterEllipsis" Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            <TextBlock Name="PART_Description"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                       TextWrapping="Wrap" />
+                        </StackPanel>
+                        <arc:Switch Name="PART_Switch" Grid.Column="2" VerticalAlignment="Center" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Border#PART_IconBox">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:on /template/ Border#PART_IconBox">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        </Style>
+        <Style Selector="^:on /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        </Style>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:AgentBuilderTokenResource RowHoverBackground}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_IconBox">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A knowledge source row: the file or globe glyph in a 32px square, the name over the status line, then the status
+        mark (a 16px ring while indexing, a check when ready, Retry when it failed) and the Remove button.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AgentBuilderSourceRow}" TargetType="arc:AgentBuilderSourceRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="{arc:AgentBuilderTokenResource RowPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep14}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AgentBuilderSourceRow">
+                <Border Background="{TemplateBinding Background}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+                        <Border Width="{arc:AgentBuilderTokenResource IconBoxSize}"
+                                Height="{arc:AgentBuilderTokenResource IconBoxSize}"
+                                VerticalAlignment="Center"
+                                Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusStep10}">
+                            <arc:ArcGlyph Name="PART_Glyph"
+                                          Size="16"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="12,0" VerticalAlignment="Center" Spacing="1">
+                            <TextBlock Name="PART_Name" TextTrimming="CharacterEllipsis" Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            <TextBlock Name="PART_Detail" FontSize="{arc:ArcDesignTokenResource TypeXS}" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <Panel Grid.Column="2" VerticalAlignment="Center">
+                            <arc:ArcRing Name="PART_Ring"
+                                         Width="16"
+                                         Height="16"
+                                         Thickness="2"
+                                         IsRoundCap="True"
+                                         ChaseRate="0.18"
+                                         IsVisible="False"
+                                         Foreground="{arc:ArcDesignTokenResource Accent}"
+                                         TrackBrush="{arc:ArcDesignTokenResource BorderSubtle}" />
+                            <arc:ArcGlyph Name="PART_Ready"
+                                          Data="{x:Static arc:ArcIcons.CircleCheck}"
+                                          Size="16"
+                                          IsVisible="False"
+                                          Foreground="{arc:ArcDesignTokenResource Success}" />
+                            <arc:Button Name="PART_Retry" Variant="Secondary" Size="Small" IsVisible="False" />
+                        </Panel>
+                        <arc:AiChatIconButton Name="PART_Remove"
+                                              Grid.Column="3"
+                                              Margin="6,0,0,0"
+                                              Width="30"
+                                              Height="30"
+                                              VerticalAlignment="Center"
+                                              Glyph="{x:Static arc:ArcIcons.Trash2}"
+                                              arc:Tooltip.Side="Top" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ TextBlock#PART_Detail">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:failed /template/ TextBlock#PART_Detail">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:indexing /template/ arc|ArcRing#PART_Ring">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:ready /template/ arc|ArcGlyph#PART_Ready">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:failed /template/ arc|Button#PART_Retry">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:AgentBuilderTokenResource RowHoverBackground}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

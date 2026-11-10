@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.EvalSuiteNarrowDemo">
+    <!-- At 620 wide or less the tiles and the outputs stack and the check column hides. -->
+    <arc:EvalSuite Width="400" Margin="0,12" HorizontalAlignment="Center" SelectedCaseId="price" />
+</UserControl>

@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ConfirmPopoverAsyncDemo">
+    <!-- ConfirmHandler runs the work while the button spins; it closes on success and stays open on failure. -->
+    <StackPanel Spacing="12" HorizontalAlignment="Center" Margin="0,32">
+        <arc:Switch x:Name="Fail" Content="Make the next attempt fail" HorizontalAlignment="Center" />
+        <arc:ConfirmPopover x:Name="Confirm"
+                            HorizontalAlignment="Center"
+                            Title="Revoke this API key?"
+                            Message="Apps that use it stop working at once."
+                            ConfirmText="Revoke key"
+                            Confirmed="OnConfirmed">
+            <arc:ConfirmPopover.Trigger>
+                <arc:Button Variant="Danger" Content="Revoke key" />
+            </arc:ConfirmPopover.Trigger>
+        </arc:ConfirmPopover>
+        <TextBlock x:Name="Log" HorizontalAlignment="Center" Text="Key ending in 4F2A is active."
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

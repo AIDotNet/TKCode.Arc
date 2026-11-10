@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.InboxTriageNarrowDemo">
+    <!-- A narrow column without the key hints; the undo bar stays for 10 seconds. -->
+    <arc:InboxTriage Title="Triage"
+                     ShowsShortcuts="False"
+                     UndoDuration="0:0:10"
+                     MaxWidth="380"
+                     HorizontalAlignment="Center" />
+</UserControl>

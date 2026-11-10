@@ -1,0 +1,381 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.AiSearchBarTheme">
+
+    <!--
+        The answering search bar (an original TKCode design): a Surface panel at most 720 wide with a 1px Border, the
+        panel radius and the resting shadow. On top the field (search glyph, clear button) and the Ask button; under a
+        line, one of four bodies: the suggested questions (:idle), a shimmering line with placeholder lines (:searching),
+        the answer with its citations, source cards, follow-up questions and the results (:answered), or the error with
+        a retry button (:failed). Each body fades in over 160ms.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiSearchBar}" TargetType="arc:AiSearchBar">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Padding" Value="{arc:AiSearchBarTokenResource PanelPadding}" />
+        <Setter Property="CompactWidth" Value="{arc:AiSearchBarTokenResource CompactWidth}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiSearchBar">
+                <Border Name="PART_Card"
+                        MaxWidth="{arc:AiSearchBarTokenResource BarMaxWidth}"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        BoxShadow="{arc:ArcDesignTokenResource ShadowResting}">
+                    <StackPanel>
+                        <Grid Name="PART_SearchRow" ColumnDefinitions="*,Auto" Margin="{TemplateBinding Padding}">
+                            <arc:Input Name="PART_Input"
+                                       Text="{TemplateBinding Query, Mode=TwoWay}"
+                                       IsLabelVisible="False">
+                                <arc:Input.Prefix>
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Sparkles}"
+                                                  Size="{arc:AiSearchBarTokenResource GlyphSize}"
+                                                  Foreground="{arc:ArcDesignTokenResource Accent}" />
+                                </arc:Input.Prefix>
+                                <arc:Input.Suffix>
+                                    <arc:Button Name="PART_Clear" Classes="search-icon" Variant="Ghost" Size="Small">
+                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}" Size="{arc:AiSearchBarTokenResource SmallGlyphSize}" />
+                                    </arc:Button>
+                                </arc:Input.Suffix>
+                            </arc:Input>
+                            <arc:Button Name="PART_Submit" Grid.Column="1" Margin="8,0,0,0" Variant="Primary" />
+                        </Grid>
+                        <Border Name="PART_Divider"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
+                                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}" />
+
+                        <StackPanel Name="PART_IdleBody" Spacing="{arc:AiSearchBarTokenResource HeadingGap}" Margin="{TemplateBinding Padding}">
+                            <TextBlock Name="PART_SuggestionsHeading" Classes="search-heading" />
+                            <WrapPanel Name="PART_Suggestions"
+                                       ItemSpacing="{arc:AiSearchBarTokenResource ItemGap}"
+                                       LineSpacing="{arc:AiSearchBarTokenResource ItemGap}" />
+                        </StackPanel>
+
+                        <StackPanel Name="PART_SearchingBody" Spacing="12" Margin="{TemplateBinding Padding}">
+                            <arc:TextShimmer Name="PART_SearchingText"
+                                             FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                             FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                            <arc:Skeleton Lines="3" />
+                        </StackPanel>
+
+                        <StackPanel Name="PART_AnswerBody" Spacing="{arc:AiSearchBarTokenResource SectionGap}" Margin="{TemplateBinding Padding}">
+                            <StackPanel Spacing="{arc:AiSearchBarTokenResource HeadingGap}">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Sparkles}"
+                                                  Size="{arc:AiSearchBarTokenResource SmallGlyphSize}"
+                                                  Foreground="{arc:ArcDesignTokenResource AccentStrong}"
+                                                  VerticalAlignment="Center" />
+                                    <TextBlock Name="PART_AnswerHeading"
+                                               Classes="search-heading"
+                                               Foreground="{arc:ArcDesignTokenResource AccentStrong}"
+                                               VerticalAlignment="Center"
+                                               AutomationProperties.HeadingLevel="2" />
+                                </StackPanel>
+                                <TextBlock Name="PART_AnswerText"
+                                           FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                           LineHeight="{arc:AiSearchBarTokenResource AnswerLineHeight}"
+                                           TextWrapping="Wrap" />
+                            </StackPanel>
+                            <StackPanel Name="PART_SourcesSection" Spacing="{arc:AiSearchBarTokenResource HeadingGap}">
+                                <TextBlock Name="PART_SourcesHeading" Classes="search-heading" AutomationProperties.HeadingLevel="3" />
+                                <WrapPanel Name="PART_Sources"
+                                           ItemSpacing="{arc:AiSearchBarTokenResource ItemGap}"
+                                           LineSpacing="{arc:AiSearchBarTokenResource ItemGap}" />
+                            </StackPanel>
+                            <StackPanel Name="PART_FollowUpsSection" Spacing="{arc:AiSearchBarTokenResource HeadingGap}">
+                                <TextBlock Name="PART_FollowUpsHeading" Classes="search-heading" AutomationProperties.HeadingLevel="3" />
+                                <WrapPanel Name="PART_FollowUps"
+                                           ItemSpacing="{arc:AiSearchBarTokenResource ItemGap}"
+                                           LineSpacing="{arc:AiSearchBarTokenResource ItemGap}" />
+                            </StackPanel>
+                            <StackPanel Spacing="{arc:AiSearchBarTokenResource HeadingGap}">
+                                <TextBlock Name="PART_ResultsHeading" Classes="search-heading" AutomationProperties.HeadingLevel="3" />
+                                <StackPanel Name="PART_Results" Spacing="2" />
+                            </StackPanel>
+                        </StackPanel>
+
+                        <StackPanel Name="PART_FailedBody" Spacing="12" Margin="{TemplateBinding Padding}">
+                            <TextBlock Name="PART_Error"
+                                       Text="{TemplateBinding ErrorText}"
+                                       Foreground="{arc:ArcDesignTokenResource Danger}"
+                                       TextWrapping="Wrap" />
+                            <arc:Button Name="PART_Retry" HorizontalAlignment="Left" Variant="Secondary" Size="Small" />
+                        </StackPanel>
+                        <arc:AiAnnouncer Name="PART_Announcer" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:compact">
+            <Setter Property="Padding" Value="{arc:AiSearchBarTokenResource CompactPanelPadding}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.search-heading">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_SuggestionsHeading, ^ /template/ TextBlock#PART_SourcesHeading, ^ /template/ TextBlock#PART_FollowUpsHeading, ^ /template/ TextBlock#PART_ResultsHeading">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.search-empty">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.search-icon">
+            <Setter Property="Width" Value="28" />
+            <Setter Property="Height" Value="28" />
+            <Setter Property="MinHeight" Value="0" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+
+        <!-- One body at a time; the divider shows whenever there is a body below the field. -->
+        <Style Selector="^ /template/ StackPanel#PART_IdleBody, ^ /template/ StackPanel#PART_SearchingBody, ^ /template/ StackPanel#PART_AnswerBody, ^ /template/ StackPanel#PART_FailedBody, ^ /template/ Border#PART_Divider">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:idle:has-suggestions">
+            <Style Selector="^ /template/ StackPanel#PART_IdleBody, ^ /template/ Border#PART_Divider">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+        </Style>
+        <Style Selector="^:searching">
+            <Style Selector="^ /template/ StackPanel#PART_SearchingBody, ^ /template/ Border#PART_Divider">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+        </Style>
+        <Style Selector="^:answered">
+            <Style Selector="^ /template/ StackPanel#PART_AnswerBody, ^ /template/ Border#PART_Divider">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+        </Style>
+        <Style Selector="^:failed">
+            <Style Selector="^ /template/ StackPanel#PART_FailedBody, ^ /template/ Border#PART_Divider">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_SourcesSection, ^ /template/ StackPanel#PART_FollowUpsSection">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:has-sources /template/ StackPanel#PART_SourcesSection">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:has-follow-ups /template/ StackPanel#PART_FollowUpsSection">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <!-- The clear button only shows while there is something to clear. -->
+        <Style Selector="^ /template/ arc|Button#PART_Clear">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:answered /template/ arc|Button#PART_Clear, ^:failed /template/ arc|Button#PART_Clear, ^:searching /template/ arc|Button#PART_Clear">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ StackPanel#PART_AnswerBody, ^ /template/ StackPanel#PART_IdleBody">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- A question chip: a pill (SurfaceMuted, 12 / 6 padding) with a small sparkle and the question. -->
+    <ControlTheme x:Key="{x:Type arc:AiSearchBarChip}" TargetType="arc:AiSearchBarChip">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Padding" Value="{arc:AiSearchBarTokenResource ChipPadding}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiSearchBarChip">
+                <Panel Name="PART_Root">
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Sparkles}"
+                                          Size="12"
+                                          Foreground="{arc:ArcDesignTokenResource Accent}"
+                                          VerticalAlignment="Center" />
+                            <TextBlock Text="{TemplateBinding Title}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       Foreground="{TemplateBinding Foreground}"
+                                       VerticalAlignment="Center"
+                                       TextTrimming="CharacterEllipsis" />
+                        </StackPanel>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A citation: an 18px pill (soft accent) with the source's number in 10px tabular figures. -->
+    <ControlTheme x:Key="{x:Type arc:AiSearchBarCitation}" TargetType="arc:AiSearchBarCitation">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Margin" Value="2,0" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiSearchBarCitation">
+                <Panel Name="PART_Root">
+                    <Border Background="{TemplateBinding Background}"
+                            Height="{arc:AiSearchBarTokenResource CitationHeight}"
+                            MinWidth="{arc:AiSearchBarTokenResource CitationHeight}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Padding="{arc:AiSearchBarTokenResource CitationPadding}">
+                        <TextBlock Text="{TemplateBinding Number}"
+                                   FontSize="{arc:AiSearchBarTokenResource CitationFontSize}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   FontFeatures="tnum"
+                                   Foreground="{arc:ArcDesignTokenResource AccentStrong}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- A source card: number disc, title (12, medium) and location (12, muted), RadiusStep14, 1px Border. -->
+    <ControlTheme x:Key="{x:Type arc:AiSearchBarSourceCard}" TargetType="arc:AiSearchBarSourceCard">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="MaxWidth" Value="{arc:AiSearchBarTokenResource SourceMaxWidth}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="Padding" Value="{arc:AiSearchBarTokenResource SourcePadding}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiSearchBarSourceCard">
+                <Panel Name="PART_Root">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{arc:ArcDesignTokenResource Border}"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep14}"
+                            Padding="{TemplateBinding Padding}">
+                        <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto">
+                            <Border Grid.RowSpan="2"
+                                    Width="{arc:AiSearchBarTokenResource NumberSize}"
+                                    Height="{arc:AiSearchBarTokenResource NumberSize}"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                    Background="{arc:ArcDesignTokenResource AccentSubtle}">
+                                <TextBlock Text="{TemplateBinding Number}"
+                                           FontSize="{arc:AiSearchBarTokenResource CitationFontSize}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           Foreground="{arc:ArcDesignTokenResource AccentStrong}"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center" />
+                            </Border>
+                            <TextBlock Grid.Column="1"
+                                       Text="{TemplateBinding Title}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       TextTrimming="CharacterEllipsis" />
+                            <TextBlock Grid.Column="1"
+                                       Grid.Row="1"
+                                       Text="{TemplateBinding Detail}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                       TextTrimming="CharacterEllipsis" />
+                        </Grid>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A result row: the title in the accent color, the location and the snippet under it; it tints on hover. -->
+    <ControlTheme x:Key="{x:Type arc:AiSearchBarResultRow}" TargetType="arc:AiSearchBarResultRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="{arc:AiSearchBarTokenResource ResultPadding}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiSearchBarResultRow">
+                <Panel Name="PART_Root">
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep14}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Spacing="2">
+                            <arc:ArcShrinkRow Spacing="8">
+                                <TextBlock Text="{TemplateBinding Title}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           Foreground="{arc:ArcDesignTokenResource AccentStrong}"
+                                           TextTrimming="CharacterEllipsis"
+                                           arc:ArcShrinkRow.IsShrinkable="True" />
+                                <TextBlock Text="{TemplateBinding Detail}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                           VerticalAlignment="Center"
+                                           TextTrimming="CharacterEllipsis"
+                                           arc:ArcShrinkRow.IsShrinkable="True" />
+                            </arc:ArcShrinkRow>
+                            <TextBlock Text="{TemplateBinding Number}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       LineHeight="{arc:AiSearchBarTokenResource SmallLineHeight}"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                       TextWrapping="Wrap"
+                                       IsVisible="{TemplateBinding Number, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                        </StackPanel>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

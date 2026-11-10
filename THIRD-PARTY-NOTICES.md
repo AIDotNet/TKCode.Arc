@@ -20,6 +20,10 @@ pricing, cart drawer, checkout summary, live checkout, seat manager, credit top-
 original TKCode designs that take the behavior and look Arc publishes as a design reference; their code, copy,
 sample data and images are written from scratch (the Showpieces' land outlines come from Natural Earth, below).
 
+Other components and blocks in `TKCode.Arc.Special` and `TKCode.Arc.Blocks` share a name with an Arc Pro
+item but are independent TKCode designs: they were built from the general idea the name describes, without
+looking at the Arc Pro pages, docs, previews, source or assets, so their look and behavior are our own.
+
 ```
 MIT License
 
@@ -66,6 +70,13 @@ DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN AC
 CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
 OR PERFORMANCE OF THIS SOFTWARE.
 ```
+
+## Unicode emoji data — `TKCode.Arc.Special` (EmojiPicker)
+
+`EmojiPicker` embeds a table built by `tools/emoji/generate_emoji.py` from Unicode `emoji-test.txt` 16.0
+(https://unicode.org/Public/emoji/16.0/emoji-test.txt) and the English CLDR annotations
+(`cldr-json`, `cldr-annotations-full/annotations/en/annotations.json`). Both are Copyright © Unicode, Inc.,
+distributed under the Unicode License v3 (https://www.unicode.org/license.txt).
 
 ## Natural Earth — land outlines
 

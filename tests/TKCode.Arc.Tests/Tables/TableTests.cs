@@ -5,6 +5,7 @@ using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using Avalonia;
 
 namespace TKCode.Arc.Tests.Tables;
@@ -217,6 +218,32 @@ public class TableTests
             rows[0].Bounds.Height.ShouldBe(64, 0.01);
             rows[1].Bounds.Height.ShouldBeGreaterThan(64);
             ShouldStack(table);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Very_Narrow_Compact_Table_Arranges_Hosted_Cells_Without_Negative_Widths()
+    {
+        ObservableCollection<Project> items = [new("Atlas", "Mina", 1200, "Active")];
+        var table = new Table { ItemsSource = items, Width = 12 };
+        table.Columns.Add(DataTableColumn.Create<Project>("Name", p => p.Name));
+        var budget = DataTableColumn.Create<Project>("Budget", p => p.Budget, key: "Budget");
+        budget.IsNumeric = true;
+        budget.CellTemplate = new Avalonia.Controls.Templates.FuncDataTemplate<Project>(
+            (_, _) => new TextBlock { [!TextBlock.TextProperty] = new Binding(nameof(Project.Budget)) });
+        table.Columns.Add(budget);
+        table.Columns.Add(DataTableColumn.Create<Project>("Owner", p => p.Owner));
+        var window = Show(table);
+        try
+        {
+            table.Layout.Compact.ShouldBeTrue();
+            var cells = RowsByDisplay(table)[0].GetVisualDescendants().OfType<TextBlock>().ToList();
+            cells.ShouldNotBeEmpty();
+            cells.ShouldAllBe(c => c.Bounds.Width >= 0);
         }
         finally
         {

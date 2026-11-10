@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.GlassSegmentedPreviewDemo">
+    <!-- Click a segment, or press the selected one and drag the lens across. Arrows move the selection too. -->
+    <Panel Height="240" ClipToBounds="True" arc:GlassBackdrop.Source="{Binding #Scene}">
+        <Canvas Name="Scene">
+            <Canvas.Background>
+                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                    <GradientStop Color="#203A43" Offset="0" />
+                    <GradientStop Color="#2C5364" Offset="1" />
+                </LinearGradientBrush>
+            </Canvas.Background>
+            <Ellipse Canvas.Left="70" Canvas.Top="70" Width="150" Height="150" Fill="#FFB547" />
+            <Ellipse Canvas.Left="280" Canvas.Top="20" Width="120" Height="120" Fill="#FF6F61" />
+            <Ellipse Canvas.Left="430" Canvas.Top="110" Width="170" Height="170" Fill="#7FD1AE" />
+        </Canvas>
+        <arc:GlassSegmented HorizontalAlignment="Center" VerticalAlignment="Center" SelectedIndex="1">
+            <arc:GlassSegment Content="Day" />
+            <arc:GlassSegment Content="Week" />
+            <arc:GlassSegment Content="Month" />
+            <arc:GlassSegment Content="Year" />
+        </arc:GlassSegmented>
+    </Panel>
+</UserControl>

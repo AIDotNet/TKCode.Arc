@@ -1,0 +1,46 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.PrizeWheelTheme">
+
+    <!--
+        The wheel draws itself: slices alternating between two surfaces with hairline edges, pegs on a raised rim, a hub
+        that names the action, and a flapper pointer at the top. The winning slice fills with the accent once the wheel
+        rests. A polite live region announces the prize; the focus ring is created on the first keyboard focus.
+    -->
+    <ControlTheme x:Key="{x:Type arc:PrizeWheel}" TargetType="arc:PrizeWheel">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:PrizeWheel">
+                <Panel Name="PART_Root">
+                    <arc:PrizeWheelFace Name="PART_Face"
+                                        Foreground="{TemplateBinding Foreground}"
+                                        FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                                        SliceFill="{arc:ArcDesignTokenResource Surface}"
+                                        AlternateSliceFill="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                        WinnerFill="{arc:ArcDesignTokenResource Accent}"
+                                        WinnerForeground="{arc:ArcDesignTokenResource AccentForeground}"
+                                        RimFill="{arc:ArcDesignTokenResource SurfaceRaised}"
+                                        LineBrush="{arc:ArcDesignTokenResource Border}"
+                                        PegFill="{arc:ArcDesignTokenResource BorderStrong}"
+                                        PointerFill="{arc:ArcDesignTokenResource Foreground}"
+                                        HubFill="{arc:ArcDesignTokenResource SurfaceRaised}"
+                                        RimWidth="{arc:PrizeWheelTokenResource RimWidth}"
+                                        PointerLength="{arc:PrizeWheelTokenResource PointerLength}" />
+                    <TextBlock Name="PART_Status"
+                               Width="1"
+                               Height="1"
+                               Opacity="0"
+                               IsHitTestVisible="False"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               AutomationProperties.LiveSetting="Polite" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

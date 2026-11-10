@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.ImageTrailPreviewDemo">
+    <!-- Move across the surface, or Tab in and use the arrow keys. The headline stays under the trail. -->
+    <arc:ImageTrail Label="Field notes, autumn"
+                    Height="360"
+                    MaxWidth="720"
+                    Cursor="Cross"
+                    BorderThickness="1"
+                    Background="{arc:ArcDesignTokenResource Surface}"
+                    BorderBrush="{arc:ArcDesignTokenResource Border}"
+                    Sources="{x:Static demos:ImageTrailDemoData.Photos}">
+        <StackPanel Spacing="6" HorizontalAlignment="Center">
+            <TextBlock Text="Field notes"
+                       FontSize="40"
+                       FontWeight="SemiBold"
+                       HorizontalAlignment="Center"
+                       FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}" />
+            <TextBlock Text="Twelve walks, one season"
+                       HorizontalAlignment="Center"
+                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        </StackPanel>
+    </arc:ImageTrail>
+</UserControl>

@@ -1,0 +1,134 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.UndoToastTheme">
+    <!-- Ring with the seconds left, the message, Undo and dismiss, on a floating surface. -->
+    <ControlTheme x:Key="{x:Type arc:UndoToast}" TargetType="arc:UndoToast">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:UndoToast">
+                <Panel Name="PART_Root" IsVisible="False">
+                    <Border Name="PART_Surface"
+                            MinWidth="{arc:UndoToastTokenResource MinToastWidth}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}"
+                            BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}">
+                        <DockPanel>
+                            <Panel Name="PART_Countdown"
+                                   DockPanel.Dock="Left"
+                                   Width="{arc:UndoToastTokenResource RingSize}"
+                                   Height="{arc:UndoToastTokenResource RingSize}"
+                                   VerticalAlignment="Center"
+                                   AutomationProperties.AccessibilityView="Raw">
+                                <arc:ArcRing Name="PART_Ring"
+                                             Value="1"
+                                             Thickness="{arc:UndoToastTokenResource RingThickness}"
+                                             TrackBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                             Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                <TextBlock Name="PART_Seconds"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           FontSize="{arc:UndoToastTokenResource SecondsFontSize}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           FontFeatures="+tnum"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            </Panel>
+                            <StackPanel DockPanel.Dock="Right"
+                                        Orientation="Horizontal"
+                                        VerticalAlignment="Center"
+                                        Spacing="{arc:UndoToastTokenResource ActionsSpacing}">
+                                <arc:Button Name="PART_Undo"
+                                            Classes="undo-toast-undo"
+                                            Variant="Ghost"
+                                            Size="Small">
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Undo2}"
+                                                      Size="{arc:UndoToastTokenResource UndoGlyphSize}"
+                                                      StrokeThickness="2"
+                                                      VerticalAlignment="Center" />
+                                        <TextBlock Text="{TemplateBinding UndoText}" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </arc:Button>
+                                <arc:Button Name="PART_Close"
+                                            Classes="undo-toast-close"
+                                            Variant="Ghost">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}"
+                                                  Size="{arc:UndoToastTokenResource CloseGlyphSize}"
+                                                  StrokeThickness="2" />
+                                </arc:Button>
+                            </StackPanel>
+                            <TextBlock Name="PART_Message"
+                                       Text="{TemplateBinding Message}"
+                                       Margin="{arc:UndoToastTokenResource MessageMargin}"
+                                       LineHeight="{arc:UndoToastTokenResource MessageLineHeight}"
+                                       VerticalAlignment="Center"
+                                       TextWrapping="Wrap"
+                                       MaxLines="2"
+                                       TextTrimming="CharacterEllipsis"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                        </DockPanel>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="MaxToastWidth" Value="{arc:UndoToastTokenResource MaxToastWidth}" />
+        <Setter Property="Padding" Value="{arc:UndoToastTokenResource SurfacePadding}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+
+        <Style Selector="^ /template/ Panel#PART_Countdown">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:countdown /template/ Panel#PART_Countdown">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <!-- A held countdown shows in the ring's color. -->
+        <Style Selector="^ /template/ arc|ArcRing#PART_Ring">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:paused /template/ arc|ArcRing#PART_Ring">
+            <Setter Property="Opacity" Value="0.5" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.undo-toast-undo">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.undo-toast-close">
+            <Setter Property="Width" Value="{arc:UndoToastTokenResource CloseSize}" />
+            <Setter Property="Height" Value="{arc:UndoToastTokenResource CloseSize}" />
+            <Setter Property="MinHeight" Value="{arc:UndoToastTokenResource CloseSize}" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.undo-toast-close:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+
+        <Style Selector="^:motion-full /template/ arc|ArcRing#PART_Ring">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ arc|ArcRing#PART_Ring">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

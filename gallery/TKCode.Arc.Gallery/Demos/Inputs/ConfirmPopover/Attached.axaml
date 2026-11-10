@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ConfirmPopoverAttachedDemo">
+    <!-- Attached to an existing button. An action that is not destructive uses the accent and starts on its own button. -->
+    <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Center" Margin="0,32">
+        <arc:Button Variant="Secondary" Content="Discard draft">
+            <arc:ConfirmPopover.Attach>
+                <arc:ConfirmPopover Title="Discard this draft?" ConfirmText="Discard" Placement="Top" />
+            </arc:ConfirmPopover.Attach>
+        </arc:Button>
+        <arc:Button Variant="Primary" Content="Publish">
+            <arc:ConfirmPopover.Attach>
+                <arc:ConfirmPopover Title="Publish to the help center?"
+                                    Message="Readers see it right away."
+                                    ConfirmText="Publish"
+                                    IsDestructive="False"
+                                    InitialFocus="Confirm"
+                                    Icon="{x:Static arc:ArcIcons.Send}"
+                                    Placement="Top" />
+            </arc:ConfirmPopover.Attach>
+        </arc:Button>
+    </StackPanel>
+</UserControl>

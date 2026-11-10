@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentRunCompletedDemo">
+    <!-- Your own finished run: steps, state, time, cost and tokens are properties. -->
+    <arc:AgentRun x:Name="Run" Margin="0,12" State="Completed" Elapsed="0:1:12" AgentName="Patchwork" />
+</UserControl>

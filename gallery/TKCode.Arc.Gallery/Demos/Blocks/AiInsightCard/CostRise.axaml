@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AiInsightCardCostRiseDemo">
+    <!-- A cost metric: a rise is bad news, so IsIncreaseGood="False" turns the pill and the band red. -->
+    <arc:AiInsightCard x:Name="Card"
+                       Margin="0,12"
+                       Title="Cloud spend per day"
+                       Value="$4,380"
+                       Change="18.2"
+                       IsIncreaseGood="False"
+                       PeriodText="vs. last week"
+                       Summary="Spend rose 18% in four days. Almost all of it is the image resizing job, which now runs on every upload instead of once a night."
+                       NextStep="Move image resizing back to the nightly batch and cap the job at 200 workers."
+                       Footnote="From the billing export · updated 12 min ago" />
+</UserControl>

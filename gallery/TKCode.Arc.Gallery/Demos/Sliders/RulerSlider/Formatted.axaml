@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.RulerSliderFormattedDemo">
+    <arc:RulerSlider x:Name="Budget"
+                     Label="Monthly budget"
+                     Minimum="0"
+                     Maximum="5000"
+                     SmallChange="50"
+                     LargeChange="1000"
+                     MajorEvery="5"
+                     Value="1500"
+                     MaxWidth="460" />
+</UserControl>

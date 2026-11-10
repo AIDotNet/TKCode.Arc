@@ -1,0 +1,213 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ProductGalleryTheme">
+
+    <!--
+        The stage (a rounded, clipped frame on the muted surface) with its arrows and counter laid over it, and the
+        thumbnail strip docked under it or down its left side. The arrows show while the pointer is over the gallery or
+        focus is inside it; the counter hides while the picture is zoomed. The status line is read by screen readers and
+        never seen. The focus ring (added in code) surrounds the stage.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ProductGallery}" TargetType="arc:ProductGallery">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ProductGallery">
+                <DockPanel>
+                    <ScrollViewer Name="PART_ThumbScroller"
+                                  DockPanel.Dock="Bottom"
+                                  HorizontalScrollBarVisibility="Auto"
+                                  VerticalScrollBarVisibility="Disabled">
+                        <StackPanel Name="PART_Thumbs"
+                                    Orientation="Horizontal"
+                                    Spacing="{arc:ProductGalleryTokenResource ThumbSpacing}"
+                                    Margin="3"
+                                    KeyboardNavigation.TabNavigation="Once" />
+                    </ScrollViewer>
+                    <Panel Name="PART_StageHost" VerticalAlignment="Top">
+                        <Border Name="PART_StageFrame"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="{TemplateBinding CornerRadius}"
+                                ClipToBounds="True">
+                            <arc:ProductGalleryStage Name="PART_Stage"
+                                                     Gap="{arc:ProductGalleryTokenResource SlideGap}" />
+                        </Border>
+                        <arc:PhotosIconButton Name="PART_Previous"
+                                              Glyph="{x:Static arc:ArcIcons.ChevronLeft}"
+                                              IsTabStop="False"
+                                              HorizontalAlignment="Left"
+                                              VerticalAlignment="Center"
+                                              Margin="{arc:ProductGalleryTokenResource OverlayMargin}" />
+                        <arc:PhotosIconButton Name="PART_Next"
+                                              Glyph="{x:Static arc:ArcIcons.ChevronRight}"
+                                              IsTabStop="False"
+                                              HorizontalAlignment="Right"
+                                              VerticalAlignment="Center"
+                                              Margin="{arc:ProductGalleryTokenResource OverlayMargin}" />
+                        <Border Name="PART_CounterPill"
+                                IsHitTestVisible="False"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Bottom"
+                                Margin="{arc:ProductGalleryTokenResource OverlayMargin}"
+                                Padding="{arc:ProductGalleryTokenResource CounterPadding}"
+                                Background="{arc:ArcDesignTokenResource SurfaceRaised}"
+                                BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusPill}">
+                            <TextBlock Name="PART_Counter"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                                       FontFeatures="tnum"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </Border>
+                        <TextBlock Name="PART_Status"
+                                   Width="1"
+                                   Height="1"
+                                   Opacity="0"
+                                   IsHitTestVisible="False"
+                                   HorizontalAlignment="Left"
+                                   VerticalAlignment="Top"
+                                   AutomationProperties.LiveSetting="Polite" />
+                    </Panel>
+                </DockPanel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ ScrollViewer#PART_ThumbScroller">
+            <Setter Property="Margin" Value="{arc:ProductGalleryTokenResource StripMargin}" />
+        </Style>
+        <Style Selector="^:thumbs-left /template/ ScrollViewer#PART_ThumbScroller">
+            <Setter Property="DockPanel.Dock" Value="Left" />
+            <Setter Property="Margin" Value="{arc:ProductGalleryTokenResource StripMarginLeft}" />
+            <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
+            <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+        </Style>
+        <Style Selector="^:thumbs-left /template/ StackPanel#PART_Thumbs">
+            <Setter Property="Orientation" Value="Vertical" />
+        </Style>
+        <Style Selector="^:single /template/ ScrollViewer#PART_ThumbScroller">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:single /template/ Border#PART_CounterPill">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+
+        <!-- The arrows are there while the hand or the keyboard is in the gallery. -->
+        <Style Selector="^ /template/ arc|PhotosIconButton">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:pointerover /template/ arc|PhotosIconButton">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:focus-within /template/ arc|PhotosIconButton">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:single /template/ arc|PhotosIconButton">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_CounterPill">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:zoomed /template/ Border#PART_CounterPill">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:zoomed /template/ arc|PhotosIconButton">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:zoomed /template/ arc|ProductGalleryStage#PART_Stage">
+            <Setter Property="Cursor" Value="Cross" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ arc|PhotosIconButton">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Border#PART_CounterPill">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Style Selector="^ /template/ arc|PhotosIconButton">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- A thumbnail: the picture clipped to a rounded square, with an accent ring while it is the one on the stage. -->
+    <ControlTheme x:Key="{x:Type arc:ProductGalleryThumb}" TargetType="arc:ProductGalleryThumb">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Width" Value="{arc:ProductGalleryTokenResource ThumbSize}" />
+        <Setter Property="Height" Value="{arc:ProductGalleryTokenResource ThumbSize}" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ProductGalleryThumb">
+                <Panel Name="PART_Root">
+                    <Border Name="PART_Face"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            ClipToBounds="True">
+                        <arc:ArcImage Source="{TemplateBinding Source}" Stretch="UniformToFill" />
+                    </Border>
+                    <Border Name="PART_Ring"
+                            IsHitTestVisible="False"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            BorderThickness="{arc:ProductGalleryTokenResource ThumbRingThickness}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Border#PART_Ring">
+            <Setter Property="BorderBrush" Value="Transparent" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Face">
+            <Setter Property="Opacity" Value="{arc:ProductGalleryTokenResource IdleThumbOpacity}" />
+        </Style>
+        <Style Selector="^:pointerover /template/ Border#PART_Face">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:selected /template/ Border#PART_Face">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:selected /template/ Border#PART_Ring">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ Border#PART_Ring">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Face">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+</ResourceDictionary>

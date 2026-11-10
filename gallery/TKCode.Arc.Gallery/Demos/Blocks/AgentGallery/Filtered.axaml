@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentGalleryFilteredDemo">
+    <!-- The category, search and sort are two-way properties: this one starts on Data, sorted by rating. -->
+    <arc:AgentGallery Margin="0,12"
+                      SelectedCategoryKey="data"
+                      Sort="TopRated"
+                      Title="Data agents"
+                      Subtitle="Agents that read, chart and check your numbers" />
+</UserControl>

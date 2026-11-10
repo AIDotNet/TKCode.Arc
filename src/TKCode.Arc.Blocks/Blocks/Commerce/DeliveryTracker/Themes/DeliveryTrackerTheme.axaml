@@ -1,0 +1,122 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.DeliveryTrackerTheme">
+    <!-- Delivery tracker: the order line and arrival, the steps, then the route beside the history (stacked when narrow). -->
+    <ControlTheme x:Key="{x:Type arc:DeliveryTracker}" TargetType="arc:DeliveryTracker">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Padding" Value="{arc:DeliveryTrackerTokenResource BlockPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="CompactThreshold" Value="{arc:DeliveryTrackerTokenResource CompactThreshold}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:DeliveryTracker">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Panel>
+                        <StackPanel Spacing="{arc:DeliveryTrackerTokenResource SectionGap}">
+                            <DockPanel>
+                                <arc:Badge Name="PART_Delayed" DockPanel.Dock="Right" Tone="Warning" VerticalAlignment="Top" />
+                                <StackPanel Spacing="4">
+                                    <TextBlock Name="PART_OrderLine" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    <TextBlock Name="PART_ArrivalHeading" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    <WrapPanel>
+                                        <TextBlock Name="PART_Arrival"
+                                                   Margin="0,0,12,0"
+                                                   FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                                   FontSize="{arc:ArcDesignTokenResource Type2XL}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                        <TextBlock Name="PART_Window"
+                                                   VerticalAlignment="Bottom"
+                                                   Margin="0,0,0,4"
+                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    </WrapPanel>
+                                </StackPanel>
+                            </DockPanel>
+                            <arc:DeliveryTrackerSteps Name="PART_Steps" />
+                            <DockPanel>
+                                <Panel Name="PART_RouteColumn" DockPanel.Dock="Left">
+                                    <arc:DeliveryTrackerRoute Name="PART_Route" Height="{arc:DeliveryTrackerTokenResource RouteHeight}" />
+                                </Panel>
+                                <StackPanel Spacing="10">
+                                    <TextBlock Name="PART_HistoryTitle" FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                    <StackPanel Name="PART_History" />
+                                    <TextBlock Name="PART_NoHistory" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                </StackPanel>
+                            </DockPanel>
+                        </StackPanel>
+                        <arc:FinanceAnnouncer Name="PART_Announcer" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|DeliveryTrackerSteps#PART_Steps">
+            <Setter Property="TrackBrush" Value="{arc:ArcDesignTokenResource ControlTrack}" />
+            <Setter Property="FillBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="GlyphBrush" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+            <Setter Property="SurfaceBrush" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="TextBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="MutedBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="LabelFontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LabelFontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        </Style>
+        <Style Selector="^ /template/ arc|DeliveryTrackerRoute#PART_Route">
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep20}" />
+            <Setter Property="GroundBrush" Value="{arc:DeliveryTrackerTokenResource GroundColor}" />
+            <Setter Property="StreetBrush" Value="{arc:DeliveryTrackerTokenResource StreetColor}" />
+            <Setter Property="RouteBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="AheadBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="MarkerForeground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+            <Setter Property="EndBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        </Style>
+        <Style Selector="^ /template/ Panel#PART_RouteColumn">
+            <Setter Property="Width" Value="{arc:DeliveryTrackerTokenResource RouteWidth}" />
+            <Setter Property="Margin" Value="{arc:DeliveryTrackerTokenResource RouteMargin}" />
+        </Style>
+        <Style Selector="^:compact /template/ Panel#PART_RouteColumn">
+            <Setter Property="DockPanel.Dock" Value="Top" />
+            <Setter Property="Width" Value="NaN" />
+            <Setter Property="Margin" Value="{arc:DeliveryTrackerTokenResource RouteStackedMargin}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ arc|DeliveryTrackerSteps#PART_Steps">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:SpringDoubleTransition Property="Fill" Spring="Smooth" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ arc|DeliveryTrackerRoute#PART_Route">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:SpringDoubleTransition Property="Progress" Spring="Gentle" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- A history row: time, a dot on a rail, the title and the place. -->
+    <ControlTheme x:Key="{x:Type arc:DeliveryTrackerDot}" TargetType="arc:DeliveryTrackerDot">
+        <Setter Property="Width" Value="10" />
+        <Setter Property="Height" Value="10" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Style Selector="^.latest">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^.exception">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Warning}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

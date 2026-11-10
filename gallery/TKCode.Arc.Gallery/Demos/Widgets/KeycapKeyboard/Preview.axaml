@@ -1,0 +1,28 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.KeycapKeyboardPreviewDemo">
+    <!-- Hold Ctrl (focus the keyboard first) or click it: the keys show what they do with it. Clicking a key raises KeyInvoked. -->
+    <StackPanel Spacing="14" MaxWidth="700" HorizontalAlignment="Center">
+        <arc:KeycapKeyboard x:Name="Keys" Platform="Windows" Label="Editor shortcuts" KeyInvoked="OnKeyInvoked">
+            <arc:KeycapBinding Gesture="Ctrl+C" Label="Copy" />
+            <arc:KeycapBinding Gesture="Ctrl+V" Label="Paste" />
+            <arc:KeycapBinding Gesture="Ctrl+X" Label="Cut" />
+            <arc:KeycapBinding Gesture="Ctrl+Z" Label="Undo" />
+            <arc:KeycapBinding Gesture="Ctrl+Y" Label="Redo" />
+            <arc:KeycapBinding Gesture="Ctrl+S" Label="Save" />
+            <arc:KeycapBinding Gesture="Ctrl+F" Label="Find" />
+            <arc:KeycapBinding Gesture="Ctrl+A" Label="All" />
+            <arc:KeycapBinding Gesture="Ctrl+Shift+P" Label="Run" />
+            <arc:KeycapBinding Gesture="Ctrl+Shift+F" Label="Search" />
+            <arc:KeycapBinding Gesture="Ctrl+Shift+Z" Label="Redo" />
+            <arc:KeycapBinding Gesture="Alt+Up" Label="Move up" />
+            <arc:KeycapBinding Gesture="Alt+Down" Label="Move down" />
+        </arc:KeycapKeyboard>
+        <TextBlock x:Name="Readout"
+                   Text="Hold Ctrl, Ctrl+Shift or Alt."
+                   FontSize="12"
+                   HorizontalAlignment="Center"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

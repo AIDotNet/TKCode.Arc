@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ActionMorphOptionsDemo">
+    <!-- The primary face, opening into a few options that apply as soon as one is picked. -->
+    <arc:ActionMorph Label="Remind me" Glyph="{x:Static arc:ArcIcons.Bell}" Variant="Primary" HorizontalAlignment="Center"
+                     ShowsCloseButton="False">
+        <StackPanel Spacing="2">
+            <arc:Button Content="In an hour" Variant="Ghost" Size="Small" HorizontalAlignment="Stretch" arc:ActionMorph.Closes="True" />
+            <arc:Button Content="This evening" Variant="Ghost" Size="Small" HorizontalAlignment="Stretch" arc:ActionMorph.Closes="True" />
+            <arc:Button Content="Tomorrow morning" Variant="Ghost" Size="Small" HorizontalAlignment="Stretch" arc:ActionMorph.Closes="True" />
+        </StackPanel>
+    </arc:ActionMorph>
+</UserControl>

@@ -1,0 +1,189 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.AiFeatureLaunchTheme">
+
+    <!--
+        The launch card (an original TKCode design): a SurfaceRaised card at most 420 wide with a 1px Border, the panel
+        radius and the raised shadow, wrapped in a PresenceHost that scales it away and folds its height when it closes.
+        The demo fills the top inside an 8px frame (RadiusStep18, SurfaceMuted) with the pause and close buttons on its
+        corners; under it the "New" badge and the title, the description, the highlights and the buttons.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiFeatureLaunch}" TargetType="arc:AiFeatureLaunch">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Padding" Value="{arc:AiFeatureLaunchTokenResource CardPadding}" />
+        <Setter Property="CompactWidth" Value="{arc:AiFeatureLaunchTokenResource CompactWidth}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiFeatureLaunch">
+                <arc:PresenceHost Name="PART_Presence"
+                                  Mode="Scale"
+                                  Collapse="Height"
+                                  IsPresent="{TemplateBinding IsOpen}">
+                    <Border Name="PART_Card"
+                            MaxWidth="{arc:AiFeatureLaunchTokenResource CardMaxWidth}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            BoxShadow="{arc:ArcDesignTokenResource ShadowRaised}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel>
+                            <Panel Name="PART_Stage" IsVisible="{TemplateBinding IsDemoVisible}">
+                                <Border Name="PART_DemoFrame"
+                                        Height="{arc:AiFeatureLaunchTokenResource DemoHeight}"
+                                        CornerRadius="{arc:ArcDesignTokenResource RadiusStep18}"
+                                        Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                        ClipToBounds="True"
+                                        AutomationProperties.Name="{TemplateBinding DemoDescription}"
+                                        AutomationProperties.ControlTypeOverride="Image">
+                                    <Panel>
+                                        <arc:AiFeatureLaunchDemo Name="PART_Demo"
+                                                                 IsPlaying="{TemplateBinding IsDemoPlaying}"
+                                                                 PageBrush="{arc:ArcDesignTokenResource Surface}"
+                                                                 InkBrush="{arc:ArcDesignTokenResource Border}"
+                                                                 AccentBrush="{arc:ArcDesignTokenResource Accent}"
+                                                                 AccentSoftBrush="{arc:ArcDesignTokenResource AccentSubtle}"
+                                                                 CardBrush="{arc:ArcDesignTokenResource SurfaceRaised}"
+                                                                 CardBorderBrush="{arc:ArcDesignTokenResource Border}"
+                                                                 PageRadius="{arc:ArcDesignTokenResource RadiusStep10}"
+                                                                 CardRadius="{arc:ArcDesignTokenResource RadiusStep12}"
+                                                                 LineRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                                                 AutomationProperties.AccessibilityView="Raw" />
+                                        <ContentPresenter Name="PART_CustomDemo"
+                                                          Content="{TemplateBinding Demo}"
+                                                          HorizontalContentAlignment="Stretch"
+                                                          VerticalContentAlignment="Stretch" />
+                                    </Panel>
+                                </Border>
+                                <arc:Button Name="PART_Play"
+                                            Classes="launch-icon"
+                                            Variant="Secondary"
+                                            Size="Small"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Bottom">
+                                    <arc:ArcGlyph Name="PART_PlayGlyph" Size="{arc:AiFeatureLaunchTokenResource GlyphSize}" />
+                                </arc:Button>
+                                <arc:Button Name="PART_Close"
+                                            Classes="launch-icon"
+                                            Variant="Secondary"
+                                            Size="Small"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Top">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}" Size="{arc:AiFeatureLaunchTokenResource GlyphSize}" />
+                                </arc:Button>
+                            </Panel>
+                            <StackPanel Name="PART_Body" Spacing="{arc:AiFeatureLaunchTokenResource BodyGap}">
+                                <WrapPanel Orientation="Horizontal" ItemSpacing="8" LineSpacing="4">
+                                    <Border Name="PART_Badge"
+                                            VerticalAlignment="Center"
+                                            Padding="{arc:AiFeatureLaunchTokenResource BadgePadding}"
+                                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                            Background="{arc:ArcDesignTokenResource AccentSubtle}">
+                                        <StackPanel Orientation="Horizontal" Spacing="4">
+                                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Sparkles}"
+                                                          Size="12"
+                                                          Foreground="{arc:ArcDesignTokenResource AccentStrong}"
+                                                          VerticalAlignment="Center" />
+                                            <TextBlock Name="PART_BadgeText"
+                                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                       Foreground="{arc:ArcDesignTokenResource AccentStrong}"
+                                                       VerticalAlignment="Center" />
+                                        </StackPanel>
+                                    </Border>
+                                    <TextBlock Name="PART_Title"
+                                               Text="{TemplateBinding Title}"
+                                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeLG}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               VerticalAlignment="Center"
+                                               TextWrapping="Wrap"
+                                               AutomationProperties.HeadingLevel="2" />
+                                </WrapPanel>
+                                <TextBlock Name="PART_Description"
+                                           Text="{TemplateBinding Description}"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                           LineHeight="{arc:AiFeatureLaunchTokenResource BodyLineHeight}"
+                                           TextWrapping="Wrap"
+                                           IsVisible="{TemplateBinding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                                <StackPanel Name="PART_Highlights" Spacing="{arc:AiFeatureLaunchTokenResource HighlightGap}" />
+                                <arc:AiFeatureLaunchFooter Name="PART_Footer" Margin="0,4,0,0">
+                                    <arc:Button Name="PART_Later"
+                                                Variant="Ghost"
+                                                Size="Small"
+                                                IsVisible="{TemplateBinding IsLaterVisible}" />
+                                    <arc:Button Name="PART_Try" Variant="Primary" Size="Small" />
+                                </arc:AiFeatureLaunchFooter>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </arc:PresenceHost>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ StackPanel#PART_Body">
+            <Setter Property="Margin" Value="{arc:AiFeatureLaunchTokenResource BodyPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ StackPanel#PART_Body">
+            <Setter Property="Margin" Value="{arc:AiFeatureLaunchTokenResource CompactBodyPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|AiFeatureLaunchFooter#PART_Footer">
+            <Setter Property="IsStacked" Value="True" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.launch-icon">
+            <Setter Property="Width" Value="{arc:AiFeatureLaunchTokenResource IconButtonSize}" />
+            <Setter Property="Height" Value="{arc:AiFeatureLaunchTokenResource IconButtonSize}" />
+            <Setter Property="MinHeight" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="{arc:AiFeatureLaunchTokenResource IconButtonMargin}" />
+        </Style>
+
+        <!-- Your own demo replaces the built-in one, and the pause button goes with it. -->
+        <Style Selector="^ /template/ ContentPresenter#PART_CustomDemo">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:custom-demo">
+            <Style Selector="^ /template/ ContentPresenter#PART_CustomDemo">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^ /template/ arc|AiFeatureLaunchDemo#PART_Demo">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ arc|Button#PART_Play">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- A highlight: a 16px check in the accent color, 10 before the text (14 / 21, wrapping). -->
+    <ControlTheme x:Key="{x:Type arc:AiFeatureLaunchHighlight}" TargetType="arc:AiFeatureLaunchHighlight">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiFeatureLaunchHighlight">
+                <Grid ColumnDefinitions="Auto,*">
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Check}"
+                                  Size="{arc:AiFeatureLaunchTokenResource GlyphSize}"
+                                  Foreground="{arc:ArcDesignTokenResource Accent}"
+                                  Margin="0,2,0,0"
+                                  VerticalAlignment="Top" />
+                    <TextBlock Grid.Column="1"
+                               Margin="{arc:AiFeatureLaunchTokenResource HighlightTextMargin}"
+                               Text="{TemplateBinding Text}"
+                               LineHeight="{arc:AiFeatureLaunchTokenResource BodyLineHeight}"
+                               TextWrapping="Wrap" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

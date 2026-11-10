@@ -684,7 +684,7 @@ internal sealed class ChatThreadMessageView : TemplatedControl
         _bubble.IsMine = row.Mine;
         _bubble.IsFailed = message.Status == ChatMessageStatus.Failed;
         _bubble.HorizontalAlignment = row.Mine ? HorizontalAlignment.Right : HorizontalAlignment.Left;
-        _bubble.CornerRadius = ChatThreadBubble.Corners(row.Mine, row.First, row.Last, BubbleRadius, BubbleTightRadius);
+        _bubble.SetShape(row.Mine, row.First, row.Last, BubbleRadius, BubbleTightRadius);
         var tip = hasText ? Tip(message.CreatedAt, thread) : null;
         if (!ReferenceEquals(Tooltip.GetTip(_bubble), tip))
         {

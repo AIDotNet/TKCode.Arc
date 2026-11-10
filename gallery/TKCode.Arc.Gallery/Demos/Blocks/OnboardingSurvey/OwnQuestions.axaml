@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.OnboardingSurveyOwnQuestionsDemo">
+    <arc:OnboardingSurvey CanSkipSurvey="False">
+        <arc:OnboardingSurveyQuestion Id="use" Title="Where will you use Quillstack most?">
+            <arc:OnboardingSurveyOption Label="At work" Icon="{x:Static arc:ArcIcons.Laptop}" />
+            <arc:OnboardingSurveyOption Label="At school" Icon="{x:Static arc:ArcIcons.BookOpen}" />
+            <arc:OnboardingSurveyOption Label="For myself" Icon="{x:Static arc:ArcIcons.User}" />
+        </arc:OnboardingSurveyQuestion>
+        <arc:OnboardingSurveyQuestion Id="formats" Title="What do you write?" Kind="MultipleChoice" MaxSelections="2">
+            <arc:OnboardingSurveyOption Label="Meeting notes" />
+            <arc:OnboardingSurveyOption Label="Long-form drafts" />
+            <arc:OnboardingSurveyOption Label="Checklists" />
+            <arc:OnboardingSurveyOption Label="Journals" />
+        </arc:OnboardingSurveyQuestion>
+        <arc:OnboardingSurveyQuestion Id="source"
+                                      Title="How did you hear about us?"
+                                      Kind="Text"
+                                      IsOptional="True"
+                                      MaxLength="120"
+                                      Placeholder="A friend, a podcast..." />
+    </arc:OnboardingSurvey>
+</UserControl>

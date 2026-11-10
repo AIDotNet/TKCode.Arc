@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.LightboxGalleryWideTilesDemo">
+    <!-- Three columns of 3:2 tiles; the lightbox still shows each photo whole, in its own proportions. -->
+    <arc:LightboxGallery MaxWidth="640"
+                         Columns="3"
+                         TileAspectRatio="1.5"
+                         MaxZoom="6"
+                         Label="Walking trip photos"
+                         ItemsSource="{x:Static demos:PhotosDemoData.Landscapes}" />
+</UserControl>

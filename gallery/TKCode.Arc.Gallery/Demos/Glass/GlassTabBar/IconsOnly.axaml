@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.GlassTabBarIconsOnlyDemo">
+    <!-- ShowLabels="False": a lower bar of icons; the labels remain the tabs' names. Badges mark news and counts. -->
+    <Panel Height="200" ClipToBounds="True" arc:GlassBackdrop.Source="{Binding #Scene}">
+        <Canvas Name="Scene">
+            <Canvas.Background>
+                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                    <GradientStop Color="#FDE2C4" Offset="0" />
+                    <GradientStop Color="#C7E3F2" Offset="1" />
+                </LinearGradientBrush>
+            </Canvas.Background>
+            <Ellipse Canvas.Left="170" Canvas.Top="90" Width="140" Height="140" Fill="#E76F51" />
+            <Ellipse Canvas.Left="330" Canvas.Top="110" Width="110" Height="110" Fill="#2A9D8F" />
+        </Canvas>
+        <arc:GlassTabBar ShowLabels="False" Margin="0,0,0,24" SelectedIndex="2">
+            <arc:GlassTab Content="Inbox" Icon="{x:Static arc:ArcIcons.Inbox}" Badge="3" />
+            <arc:GlassTab Content="Calendar" Icon="{x:Static arc:ArcIcons.Calendar}" />
+            <arc:GlassTab Content="Messages" Icon="{x:Static arc:ArcIcons.MessageCircle}" Badge="" />
+            <arc:GlassTab Content="Files" Icon="{x:Static arc:ArcIcons.Folder}" />
+            <arc:GlassTab Content="Settings" Icon="{x:Static arc:ArcIcons.Settings}" />
+        </arc:GlassTabBar>
+    </Panel>
+</UserControl>

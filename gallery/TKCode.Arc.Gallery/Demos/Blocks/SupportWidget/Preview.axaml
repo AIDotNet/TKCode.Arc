@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SupportWidgetPreviewDemo">
+    <!-- A page with the widget open in its corner. Press the round button to close and open it. -->
+    <Border Height="700"
+            CornerRadius="20"
+            ClipToBounds="True"
+            BorderThickness="1"
+            BorderBrush="{arc:ArcDesignTokenResource Border}"
+            Background="{arc:ArcDesignTokenResource Background}">
+        <Panel>
+            <StackPanel Margin="32" Spacing="8">
+                <TextBlock Text="Book a class" FontSize="28" FontWeight="SemiBold" Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                <TextBlock Text="The page under the widget. The widget answers on its own in this preview."
+                           TextWrapping="Wrap"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            </StackPanel>
+            <arc:SupportWidget TeamName="Studio support" IsOpen="True" />
+        </Panel>
+    </Border>
+</UserControl>

@@ -1,0 +1,113 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.InvoiceStudioTheme">
+    <!--
+        Invoice studio: the form (built in code) beside the printed preview (a sheet of paper, rebuilt after each edit). In a
+        narrow block a switch over them shows one at a time.
+    -->
+    <ControlTheme x:Key="{x:Type arc:InvoiceStudio}" TargetType="arc:InvoiceStudio">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Padding" Value="{arc:InvoiceStudioTokenResource BlockPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="CompactThreshold" Value="{arc:InvoiceStudioTokenResource CompactThreshold}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:InvoiceStudio">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Panel>
+                        <DockPanel>
+                            <arc:SegmentedControl Name="PART_ViewSwitch" DockPanel.Dock="Top" HorizontalAlignment="Left" Margin="0,0,0,16" />
+                            <Panel Name="PART_PreviewColumn"
+                                   DockPanel.Dock="Right"
+>
+                                <arc:InvoiceStudioPaper Name="PART_Paper" VerticalAlignment="Top" />
+                            </Panel>
+                            <StackPanel Name="PART_Form" Spacing="18" />
+                        </DockPanel>
+                        <arc:FinanceAnnouncer Name="PART_Announcer" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Panel#PART_PreviewColumn">
+            <Setter Property="Width" Value="{arc:InvoiceStudioTokenResource PreviewWidth}" />
+            <Setter Property="Margin" Value="{arc:InvoiceStudioTokenResource PreviewMargin}" />
+        </Style>
+        <Style Selector="^:compact /template/ Panel#PART_PreviewColumn">
+            <Setter Property="DockPanel.Dock" Value="Top" />
+            <Setter Property="Width" Value="NaN" />
+            <Setter Property="Margin" Value="0" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The printed sheet: paper and ink colors that stay the same in both themes, a resting shadow. -->
+    <ControlTheme x:Key="{x:Type arc:InvoiceStudioPaper}" TargetType="arc:InvoiceStudioPaper">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="{arc:InvoiceStudioTokenResource PaperColor}" />
+        <Setter Property="BorderBrush" Value="{arc:InvoiceStudioTokenResource RuleColor}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
+        <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowRaised}" />
+        <Setter Property="Padding" Value="{arc:InvoiceStudioTokenResource PaperPadding}" />
+        <Setter Property="TextElement.Foreground" Value="{arc:InvoiceStudioTokenResource InkColor}" />
+        <Setter Property="TextElement.FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:InvoiceStudioInk}" TargetType="arc:InvoiceStudioInk">
+        <Setter Property="Foreground" Value="{arc:InvoiceStudioTokenResource InkColor}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Style Selector="^.muted">
+            <Setter Property="Foreground" Value="{arc:InvoiceStudioTokenResource InkMutedColor}" />
+        </Style>
+        <Style Selector="^.strong">
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        </Style>
+        <Style Selector="^.heading">
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource DisplayFontFamily}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXL}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        </Style>
+        <Style Selector="^.total">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        </Style>
+        <Style Selector="^.number">
+            <Setter Property="FontFeatures" Value="+tnum" />
+            <Setter Property="TextAlignment" Value="Right" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:InvoiceStudioRule}" TargetType="arc:InvoiceStudioRule">
+        <Setter Property="BorderBrush" Value="{arc:InvoiceStudioTokenResource RuleColor}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessTop}" />
+        <Setter Property="Margin" Value="0,10" />
+    </ControlTheme>
+
+    <!-- A form line: a hairline below each line; the amount in tabular figures. -->
+    <ControlTheme x:Key="{x:Type arc:InvoiceStudioLineRow}" TargetType="arc:InvoiceStudioLineRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessBottom}" />
+        <Setter Property="Padding" Value="0,8" />
+        <Setter Property="Opacity" Value="1" />
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

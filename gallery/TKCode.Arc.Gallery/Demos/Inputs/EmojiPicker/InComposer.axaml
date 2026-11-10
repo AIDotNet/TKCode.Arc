@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.EmojiPickerInComposerDemo">
+    <!-- The picker in a popover next to a message field: a pick goes in at the caret and the popover closes. -->
+    <Grid ColumnDefinitions="*,Auto" Width="360" HorizontalAlignment="Center" Margin="0,32">
+        <arc:Input x:Name="Message" Placeholder="Write a reply" />
+        <arc:Popover x:Name="EmojiPopover" Grid.Column="1" Placement="Top" Alignment="End" Margin="8,0,0,0"
+                     AutomationProperties.Name="Emoji">
+            <arc:Popover.Trigger>
+                <arc:Button Variant="Ghost" AutomationProperties.Name="Add emoji">
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.SmilePlus}" Size="18" StrokeThickness="2" />
+                </arc:Button>
+            </arc:Popover.Trigger>
+            <!-- The popover's surface is the chrome, so the picker drops its own. -->
+            <arc:EmojiPicker x:Name="Picker"
+                             Background="Transparent"
+                             BorderThickness="0"
+                             Padding="0"
+                             EmojiSelected="OnEmojiSelected" />
+        </arc:Popover>
+    </Grid>
+</UserControl>

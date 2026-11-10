@@ -1,0 +1,653 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ChangelogFeedTheme">
+
+    <!--
+        Ported from Arc's free changelog-feed block (MIT, Copyright (c) 2026 Elia Kuratli): changelog-feed.module.css.
+
+        A clipped panel at most 920 wide: the header (32 28 20), the toolbar (6 28 20), the month bar (at least 60 high, a rule
+        above and below), and a list that scrolls in 560 and fades over its last 36. The block follows its own width: :compact at
+        640, :tiny at 480.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ChangelogFeed}" TargetType="arc:ChangelogFeed">
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="MaxWidth" Value="{arc:ChangelogFeedTokenResource FeedMaxWidth}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ChangelogFeed">
+                <Panel>
+                    <Border ClipToBounds="True"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <StackPanel>
+                            <Grid Name="PART_Header" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                                <StackPanel Spacing="8">
+                                    <TextBlock Text="{TemplateBinding Title}"
+                                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                               FontSize="{arc:ArcDesignTokenResource Type3XL}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightRegular}"
+                                               LineHeight="39.6"
+                                               LetterSpacing="-1.08"
+                                               TextWrapping="Wrap"
+                                               AutomationProperties.HeadingLevel="2" />
+                                    <TextBlock Text="{TemplateBinding Subtitle}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                               LineHeight="19.6"
+                                               LetterSpacing="-0.14"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                               TextWrapping="Wrap" />
+                                </StackPanel>
+                                <arc:ChangelogSubscribe Name="PART_Subscribe" Grid.Column="1" VerticalAlignment="Top" />
+                            </Grid>
+                            <DockPanel Name="PART_Toolbar">
+                                <StackPanel Name="PART_Shown"
+                                            DockPanel.Dock="Right"
+                                            Orientation="Horizontal"
+                                            Spacing="4"
+                                            VerticalAlignment="Center"
+                                            TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                            TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}">
+                                    <arc:BlockSwap Name="PART_ShownCount" ClipToBounds="True" />
+                                    <arc:SpringSizeDecorator Axis="Width" Spring="Smooth">
+                                        <arc:BlockSwap Name="PART_ShownWord" />
+                                    </arc:SpringSizeDecorator>
+                                </StackPanel>
+                                <WrapPanel Name="PART_Chips" ItemSpacing="8" LineSpacing="8" />
+                            </DockPanel>
+                            <Border Name="PART_MonthBar"
+                                    BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}">
+                                <DockPanel>
+                                    <Border DockPanel.Dock="Right"
+                                            Padding="3"
+                                            VerticalAlignment="Center"
+                                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                            Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+                                        <arc:GlidingPillBar Name="PART_MonthNav"
+                                                            Look="Raised"
+                                                            IndicatorFill="{arc:ArcDesignTokenResource Surface}"
+                                                            IndicatorStroke="{arc:ArcDesignTokenResource Border}"
+                                                            IndicatorShadow="{arc:ArcDesignTokenResource ShadowResting}" />
+                                    </Border>
+                                    <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                                        <arc:SpringSizeDecorator Axis="Width" Spring="Smooth" VerticalAlignment="Center">
+                                            <arc:BlockSwap Name="PART_MonthText"
+                                                           TextElement.FontSize="{arc:ArcDesignTokenResource TypeLG}"
+                                                           TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                        </arc:SpringSizeDecorator>
+                                        <StackPanel Name="PART_MonthCountRow"
+                                                    Orientation="Horizontal"
+                                                    Spacing="4"
+                                                    VerticalAlignment="Center"
+                                                    TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                    TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}">
+                                            <arc:BlockSwap Name="PART_MonthCount" ClipToBounds="True" />
+                                            <TextBlock Name="PART_MonthWord" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </DockPanel>
+                            </Border>
+                            <Border BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}">
+                                <ScrollViewer Name="PART_Scroller"
+                                              Focusable="True"
+                                              HorizontalScrollBarVisibility="Disabled"
+                                              VerticalScrollBarVisibility="Auto">
+                                    <ScrollViewer.OpacityMask>
+                                        <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                                            <GradientStop Offset="0" Color="#FF000000" />
+                                            <GradientStop Offset="0.9357" Color="#FF000000" />
+                                            <GradientStop Offset="1" Color="#00000000" />
+                                        </LinearGradientBrush>
+                                    </ScrollViewer.OpacityMask>
+                                    <arc:ChangelogFlowPanel Name="PART_Flow" />
+                                </ScrollViewer>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                    <arc:SiteAnnouncer Name="PART_Announcer" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Grid#PART_Header">
+            <Setter Property="Margin" Value="28,32,28,20" />
+            <Setter Property="ColumnSpacing" Value="24" />
+        </Style>
+        <Style Selector="^ /template/ DockPanel#PART_Toolbar">
+            <Setter Property="Margin" Value="28,6,28,20" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_MonthBar">
+            <Setter Property="MinHeight" Value="60" />
+            <Setter Property="Padding" Value="28,10" />
+        </Style>
+        <Style Selector="^ /template/ ScrollViewer#PART_Scroller">
+            <Setter Property="Height" Value="{arc:ChangelogFeedTokenResource ScrollerHeight}" />
+        </Style>
+        <Style Selector="^:compact">
+            <Style Selector="^ /template/ Grid#PART_Header">
+                <Setter Property="Margin" Value="20,26,20,26" />
+                <Setter Property="ColumnSpacing" Value="0" />
+                <Setter Property="RowSpacing" Value="18" />
+            </Style>
+            <Style Selector="^ /template/ arc|ChangelogSubscribe#PART_Subscribe">
+                <Setter Property="Grid.Column" Value="0" />
+                <Setter Property="Grid.Row" Value="1" />
+                <Setter Property="HorizontalAlignment" Value="Left" />
+            </Style>
+            <Style Selector="^ /template/ DockPanel#PART_Toolbar">
+                <Setter Property="Margin" Value="20,4,20,18" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_MonthBar">
+                <Setter Property="Padding" Value="20,10" />
+            </Style>
+            <Style Selector="^ /template/ ScrollViewer#PART_Scroller">
+                <Setter Property="Height" Value="{arc:ChangelogFeedTokenResource ScrollerHeightNarrow}" />
+            </Style>
+        </Style>
+        <Style Selector="^:tiny">
+            <Style Selector="^ /template/ StackPanel#PART_Shown">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_MonthCountRow">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ arc|BlockSwap#PART_MonthText">
+                <Setter Property="TextElement.FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:ChangelogFlowPanel}" TargetType="arc:ChangelogFlowPanel" />
+
+    <!-- An entry: a row and the panel that opens under it, on the surface with a subtle rule below. -->
+    <ControlTheme x:Key="{x:Type arc:ChangelogEntryView}" TargetType="arc:ChangelogEntryView">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ChangelogEntryView">
+                <Border Background="{arc:ArcDesignTokenResource Surface}"
+                        BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                        BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}">
+                    <StackPanel>
+                        <arc:ChangelogRowButton Name="PART_Row" HorizontalAlignment="Stretch">
+                            <Grid Name="PART_RowGrid" ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto">
+                                <StackPanel Name="PART_Meta" Spacing="8" Margin="0,1,0,0">
+                                    <TextBlock Name="PART_Date"
+                                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                               LineHeight="20"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    <Border HorizontalAlignment="Left"
+                                            Padding="7,1"
+                                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep7}"
+                                            BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}">
+                                        <TextBlock Name="PART_Version"
+                                                   FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   LineHeight="18"
+                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    </Border>
+                                </StackPanel>
+                                <StackPanel Name="PART_BodyColumn" Grid.Column="1" Spacing="6">
+                                    <StackPanel Orientation="Horizontal" Spacing="7">
+                                        <Border Name="PART_KindDot"
+                                                Width="7"
+                                                Height="7"
+                                                VerticalAlignment="Center"
+                                                CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" />
+                                        <TextBlock Name="PART_Kind"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   LineHeight="20"
+                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    </StackPanel>
+                                    <TextBlock Name="PART_Title"
+                                               FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               LineHeight="22.4"
+                                               LetterSpacing="-0.16"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                               TextWrapping="Wrap" />
+                                    <TextBlock Name="PART_Summary"
+                                               HorizontalAlignment="Left"
+                                               MaxWidth="{arc:ChangelogFeedTokenResource TextMaxWidth}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                               LineHeight="19.6"
+                                               LetterSpacing="-0.14"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                               TextWrapping="Wrap" />
+                                </StackPanel>
+                                <arc:ArcGlyph Name="PART_Chevron"
+                                              Grid.Column="2"
+                                              Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                              Size="16"
+                                              Width="20"
+                                              Height="20"
+                                              VerticalAlignment="Top"
+                                              Margin="0,1,0,0"
+                                              RenderTransform="none" />
+                            </Grid>
+                        </arc:ChangelogRowButton>
+                        <arc:BlockCollapse Name="PART_Panel" IsExpanded="False" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ StackPanel#PART_Meta">
+            <Setter Property="Width" Value="104" />
+        </Style>
+        <Style Selector="^ /template/ Grid#PART_RowGrid">
+            <Setter Property="ColumnSpacing" Value="24" />
+            <Setter Property="RowSpacing" Value="4" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:open /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="RenderTransform" Value="rotate(180deg)" />
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:new /template/ Border#PART_KindDot">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:improved /template/ Border#PART_KindDot">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:fixed /template/ Border#PART_KindDot">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <!-- In a compact block the date and version sit in one line above the text. -->
+        <Style Selector="^:compact">
+            <Style Selector="^ /template/ arc|ChangelogRowButton#PART_Row">
+                <Setter Property="Padding" Value="20,18" />
+            </Style>
+            <Style Selector="^ /template/ Grid#PART_RowGrid">
+                <Setter Property="ColumnSpacing" Value="12" />
+                <Setter Property="RowSpacing" Value="10" />
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_Meta">
+                <Setter Property="Width" Value="NaN" />
+                <Setter Property="Orientation" Value="Horizontal" />
+                <Setter Property="Spacing" Value="10" />
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="Grid.ColumnSpan" Value="2" />
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_BodyColumn">
+                <Setter Property="Grid.Column" Value="0" />
+                <Setter Property="Grid.Row" Value="1" />
+                <Setter Property="Grid.ColumnSpan" Value="3" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+                <Setter Property="Margin" Value="0" />
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:ChangelogPanelInner}" TargetType="arc:ChangelogPanelInner">
+        <Setter Property="Padding" Value="{arc:ChangelogFeedTokenResource PanelInset}" />
+        <Style Selector="^.compact">
+            <Setter Property="Padding" Value="{arc:ChangelogFeedTokenResource PanelInsetNarrow}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The row: padding 22 28, full width, its fill fades in on hover in 240 ms. -->
+    <ControlTheme x:Key="{x:Type arc:ChangelogRowButton}" TargetType="arc:ChangelogRowButton">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Padding" Value="28,22" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ChangelogRowButton">
+                <Panel Name="PART_Root">
+                    <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Content="{TemplateBinding Content}" HorizontalContentAlignment="Stretch" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:fine-hover">
+            <Setter Property="Background" Value="{arc:ChangelogFeedTokenResource RowHoverBackground}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A chip: 34 high, a 1px edge, padding 0 13 0 12. The dot (7) springs to a 16 mark with a tick when on, and the chip takes the foreground color. -->
+    <ControlTheme x:Key="{x:Type arc:ChangelogChip}" TargetType="arc:ChangelogChip">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Height" Value="34" />
+        <Setter Property="Padding" Value="12,0,13,0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="RenderTransform" Value="none" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ChangelogChip">
+                <Panel Name="PART_Root">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                            <Border Name="PART_Mark"
+                                    Width="7"
+                                    Height="7"
+                                    VerticalAlignment="Center"
+                                    ClipToBounds="True"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusPill}">
+                                <arc:ArcGlyph Name="PART_Tick"
+                                              Data="{x:Static arc:ArcIcons.Check}"
+                                              Size="11"
+                                              StrokeThickness="2.6"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              Opacity="0"
+                                              RenderTransform="scale(0.4)" />
+                            </Border>
+                            <TextBlock Text="{TemplateBinding Label}" VerticalAlignment="Center" />
+                            <TextBlock Name="PART_Count"
+                                       Text="{TemplateBinding Count}"
+                                       VerticalAlignment="Center"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightRegular}" />
+                        </StackPanel>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ TextBlock#PART_Count">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:new /template/ Border#PART_Mark">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:new /template/ arc|ArcGlyph#PART_Tick">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        </Style>
+        <Style Selector="^:improved /template/ Border#PART_Mark">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:improved /template/ arc|ArcGlyph#PART_Tick">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:fixed /template/ Border#PART_Mark">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:fixed /template/ arc|ArcGlyph#PART_Tick">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
+        </Style>
+        <Style Selector="^:pointerover:not(:checked)">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.97)" />
+        </Style>
+        <Style Selector="^:checked">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
+            <Style Selector="^ /template/ Border#PART_Mark">
+                <Setter Property="Width" Value="16" />
+                <Setter Property="Height" Value="16" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Tick">
+                <Setter Property="Opacity" Value="1" />
+                <Setter Property="RenderTransform" Value="none" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_Count">
+                <Setter Property="Foreground" Value="{arc:ChangelogFeedTokenResource ChipCountOn}" />
+            </Style>
+        </Style>
+        <Style Selector="^:checked:improved /template/ Border#PART_Mark">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Background}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Standard" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Standard" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Mark">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:SpringDoubleTransition Property="Width" Spring="Morph" />
+                    <arc:SpringDoubleTransition Property="Height" Spring="Morph" />
+                    <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph#PART_Tick">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:SpringDoubleTransition Property="Opacity" Spring="Snappy" />
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- Show all: 34 high, padding 0 8, plain text. -->
+    <ControlTheme x:Key="{x:Type arc:ChangelogClearButton}" TargetType="arc:ChangelogClearButton">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Height" Value="34" />
+        <Setter Property="Padding" Value="8,0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ChangelogClearButton">
+                <Panel Name="PART_Root" Background="Transparent">
+                    <ContentPresenter Padding="{TemplateBinding Padding}"
+                                      Content="{TemplateBinding Content}"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      VerticalContentAlignment="Center" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:fine-hover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:ChangelogHangingNote}" TargetType="arc:ChangelogHangingNote" />
+
+    <!-- The pill: 38 high with a 1px edge; the foreground color idle, the surface with a strong edge while editing, muted once done, a danger edge on an error. -->
+    <ControlTheme x:Key="{x:Type arc:ChangelogSubscribe}" TargetType="arc:ChangelogSubscribe">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Margin" Value="0,2,0,0" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ChangelogSubscribe">
+                <Panel>
+                    <Border Name="PART_Shake" HorizontalAlignment="Right">
+                        <Border Name="PART_Pill"
+                                Height="38"
+                                ClipToBounds="True"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusPill}">
+                            <arc:SpringSizeDecorator Axis="Width" Spring="Morph">
+                                <arc:BlockSwap Name="PART_Swap"
+                                               VerticalContentAlignment="Stretch"
+                                               TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                               TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                            </arc:SpringSizeDecorator>
+                        </Border>
+                    </Border>
+                    <arc:ChangelogHangingNote Name="PART_NoteHost" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                        <arc:BlockSwap Name="PART_Note" />
+                    </arc:ChangelogHangingNote>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Border#PART_Pill">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Background}" />
+        </Style>
+        <Style Selector="^:editing /template/ Border#PART_Pill">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:done /template/ Border#PART_Pill">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:error /template/ Border#PART_Pill">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_Shake">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|ChangelogHangingNote#PART_NoteHost">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Pill">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The pill's idle face: the height of the pill, padding 0 17 0 15. -->
+    <ControlTheme x:Key="{x:Type arc:ChangelogSubscribeIdle}" TargetType="arc:ChangelogSubscribeIdle">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="Padding" Value="15,0,17,0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ChangelogSubscribeIdle">
+                <Panel Name="PART_Root" Background="Transparent">
+                    <ContentPresenter Padding="{TemplateBinding Padding}"
+                                      Content="{TemplateBinding Content}"
+                                      VerticalContentAlignment="Center" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- The round arrow: 28, the foreground color, a press to .94 in 120 ms. -->
+    <ControlTheme x:Key="{x:Type arc:ChangelogSubmitButton}" TargetType="arc:ChangelogSubmitButton">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Width" Value="28" />
+        <Setter Property="Height" Value="28" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="RenderTransform" Value="none" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ChangelogSubmitButton">
+                <Panel Name="PART_Root">
+                    <Border Background="{TemplateBinding Background}" CornerRadius="{TemplateBinding CornerRadius}">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          HorizontalContentAlignment="Center"
+                                          VerticalContentAlignment="Center" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.94)" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- Undo: 26 high, padding 0 10, extra small; hover shows the surface. -->
+    <ControlTheme x:Key="{x:Type arc:ChangelogUndoButton}" TargetType="arc:ChangelogUndoButton">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Height" Value="26" />
+        <Setter Property="Padding" Value="10,0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ChangelogUndoButton">
+                <Panel Name="PART_Root">
+                    <Border Background="{TemplateBinding Background}" CornerRadius="{TemplateBinding CornerRadius}">
+                        <ContentPresenter Padding="{TemplateBinding Padding}"
+                                          Content="{TemplateBinding Content}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          VerticalContentAlignment="Center" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:fine-hover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

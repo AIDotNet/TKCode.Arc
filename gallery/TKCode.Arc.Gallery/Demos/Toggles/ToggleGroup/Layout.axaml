@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ToggleGroupLayoutDemo">
+    <arc:ToggleGroup Label="Layout" SelectedValue="list" HorizontalAlignment="Center">
+        <arc:ToggleGroupOption Value="list" Icon="{x:Static arc:ArcIcons.List}" Label="List view">List</arc:ToggleGroupOption>
+        <arc:ToggleGroupOption Value="grid" Icon="{x:Static arc:ArcIcons.LayoutGrid}" Label="Grid view">Grid</arc:ToggleGroupOption>
+        <arc:ToggleGroupOption Value="rows" Icon="{x:Static arc:ArcIcons.Rows2}" Label="Rows view">Rows</arc:ToggleGroupOption>
+    </arc:ToggleGroup>
+</UserControl>

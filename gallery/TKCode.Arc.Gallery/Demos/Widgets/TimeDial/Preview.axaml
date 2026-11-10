@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TimeDialPreviewDemo">
+    <!-- Drag the handle round, or focus the dial and use the arrow keys. Carry it past 12 to switch AM and PM, or click the readout. -->
+    <StackPanel Spacing="16" HorizontalAlignment="Center">
+        <arc:TimeDial x:Name="Dial" Label="Wake-up time" Value="7:30:00" ValueCommitted="OnCommitted" />
+        <TextBlock x:Name="Readout"
+                   Text="Alarm set for 7:30 AM."
+                   FontSize="12"
+                   HorizontalAlignment="Center"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

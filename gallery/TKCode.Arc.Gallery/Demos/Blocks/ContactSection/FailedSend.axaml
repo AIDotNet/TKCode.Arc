@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ContactSectionFailedSendDemo">
+    <!-- A handler that fails: the form stays and shows the error, so nothing the person typed is lost. -->
+    <Border CornerRadius="20" ClipToBounds="True" BorderThickness="1" BorderBrush="{arc:ArcDesignTokenResource Border}">
+        <arc:ContactSection x:Name="Section" Title="Report a problem" Description="This example's server is always down." />
+    </Border>
+</UserControl>

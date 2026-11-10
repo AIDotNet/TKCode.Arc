@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LiquidTabBarViscosityDemo">
+    <!-- Viscosity sets how far the back of the drop lags: 0 barely stretches, 1 pulls a long drop. Jump from the first tab to the last. -->
+    <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="16" RowSpacing="14" HorizontalAlignment="Center">
+        <TextBlock Text="0" VerticalAlignment="Center" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        <arc:LiquidTabBar Grid.Column="1" Viscosity="0">
+            <arc:LiquidTabBarItem Content="Day" />
+            <arc:LiquidTabBarItem Content="Week" />
+            <arc:LiquidTabBarItem Content="Month" />
+            <arc:LiquidTabBarItem Content="Year" />
+        </arc:LiquidTabBar>
+        <TextBlock Grid.Row="1" Text="0.5" VerticalAlignment="Center" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        <arc:LiquidTabBar Grid.Row="1" Grid.Column="1">
+            <arc:LiquidTabBarItem Content="Day" />
+            <arc:LiquidTabBarItem Content="Week" />
+            <arc:LiquidTabBarItem Content="Month" />
+            <arc:LiquidTabBarItem Content="Year" />
+        </arc:LiquidTabBar>
+        <TextBlock Grid.Row="2" Text="1" VerticalAlignment="Center" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        <arc:LiquidTabBar Grid.Row="2" Grid.Column="1" Viscosity="1">
+            <arc:LiquidTabBarItem Content="Day" />
+            <arc:LiquidTabBarItem Content="Week" />
+            <arc:LiquidTabBarItem Content="Month" />
+            <arc:LiquidTabBarItem Content="Year" />
+        </arc:LiquidTabBar>
+    </Grid>
+</UserControl>

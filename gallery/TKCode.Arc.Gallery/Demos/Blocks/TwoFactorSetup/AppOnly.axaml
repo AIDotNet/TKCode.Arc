@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TwoFactorSetupAppOnlyDemo">
+    <StackPanel Spacing="12" MaxWidth="560">
+        <arc:TwoFactorSetup x:Name="Setup"
+                            Issuer="Ferrylane"
+                            AccountName="tomas@ferrylane.example"
+                            IsTextMessageAvailable="False" />
+        <TextBlock x:Name="Hint" TextWrapping="Wrap" FontSize="{arc:ArcDesignTokenResource TypeXS}" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

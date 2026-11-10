@@ -1,0 +1,213 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.AvatarUploadTheme">
+    <!-- The circle with the title, status and buttons beside it; the framing step takes its place while a picture is framed. -->
+    <ControlTheme x:Key="{x:Type arc:AvatarUpload}" TargetType="arc:AvatarUpload">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AvatarUpload">
+                <Panel>
+                    <DockPanel Name="PART_Summary">
+                        <Panel DockPanel.Dock="Left"
+                               Width="{TemplateBinding Size}"
+                               Height="{TemplateBinding Size}"
+                               VerticalAlignment="Center">
+                            <arc:AvatarUploadStage Name="PART_Stage"
+                                                   Image="{TemplateBinding Source}"
+                                                   Fill="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                                   GlyphBrush="{arc:ArcDesignTokenResource TextMuted}"
+                                                   Scrim="{arc:ArcDesignTokenResource Scrim}"
+                                                   ScrimGlyphBrush="{arc:ArcDesignTokenResource ControlThumb}" />
+                            <arc:ArcRing Name="PART_Ring"
+                                         Margin="{arc:AvatarUploadTokenResource RingMargin}"
+                                         Thickness="{arc:AvatarUploadTokenResource RingThickness}"
+                                         ChaseRate="0.18"
+                                         IsRoundCap="True"
+                                         TrackBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                         Foreground="{arc:ArcDesignTokenResource Accent}"
+                                         IsHitTestVisible="False" />
+                        </Panel>
+                        <StackPanel Margin="{arc:AvatarUploadTokenResource TextMargin}"
+                                    VerticalAlignment="Center"
+                                    Spacing="{arc:AvatarUploadTokenResource TextSpacing}">
+                            <TextBlock Text="{TemplateBinding Label}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       TextWrapping="Wrap" />
+                            <TextBlock Name="PART_Status"
+                                       Text="{TemplateBinding StatusText}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       TextWrapping="Wrap"
+                                       AutomationProperties.LiveSetting="Polite" />
+                            <WrapPanel Margin="{arc:AvatarUploadTokenResource ActionsMargin}"
+                                       ItemSpacing="{arc:AvatarUploadTokenResource ActionsSpacing}"
+                                       LineSpacing="{arc:AvatarUploadTokenResource ActionsSpacing}">
+                                <arc:Button Name="PART_Pick" Variant="Secondary" Size="Small" />
+                                <arc:Button Name="PART_Remove" Variant="Ghost" Size="Small" />
+                                <arc:Button Name="PART_Retry" Variant="Secondary" Size="Small" />
+                                <arc:Button Name="PART_CancelUpload" Variant="Ghost" Size="Small" />
+                            </WrapPanel>
+                        </StackPanel>
+                    </DockPanel>
+                    <StackPanel Name="PART_Editor"
+                                Width="{arc:AvatarUploadTokenResource CropSize}"
+                                HorizontalAlignment="Left"
+                                Spacing="{arc:AvatarUploadTokenResource EditorSpacing}">
+                        <arc:AvatarUploadCropper Name="PART_Cropper"
+                                                 Height="{arc:AvatarUploadTokenResource CropSize}"
+                                                 Inset="{arc:AvatarUploadTokenResource CropInset}"
+                                                 Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                                 Scrim="{arc:ArcDesignTokenResource Scrim}"
+                                                 Ring="{arc:ArcDesignTokenResource ControlThumb}"
+                                                 FocusRing="{arc:ArcDesignTokenResource FocusRing}" />
+                        <Grid ColumnDefinitions="Auto,*,Auto">
+                            <arc:Button Name="PART_ZoomOut" Classes="avatar-upload-zoom" Variant="Ghost" Size="Small">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ZoomOut}" Size="{arc:AvatarUploadTokenResource ZoomGlyphSize}" StrokeThickness="2" />
+                            </arc:Button>
+                            <arc:Slider Name="PART_Zoom"
+                                        Grid.Column="1"
+                                        Minimum="1"
+                                        Maximum="4"
+                                        Value="1"
+                                        SmallChange="0.25"
+                                        LargeChange="0.5"
+                                        VerticalAlignment="Center"
+                                        Margin="4,0" />
+                            <arc:Button Name="PART_ZoomIn" Grid.Column="2" Classes="avatar-upload-zoom" Variant="Ghost" Size="Small">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ZoomIn}" Size="{arc:AvatarUploadTokenResource ZoomGlyphSize}" StrokeThickness="2" />
+                            </arc:Button>
+                        </Grid>
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Right"
+                                    Spacing="{arc:AvatarUploadTokenResource ActionsSpacing}">
+                            <arc:Button Name="PART_CancelEdit" Variant="Secondary" Size="Small" />
+                            <arc:Button Name="PART_Save" Variant="Primary" Size="Small" />
+                        </StackPanel>
+                    </StackPanel>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Non-triggered values of the parts; the states below change them. -->
+        <Style Selector="^ /template/ DockPanel#PART_Summary">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Editor">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^ /template/ arc|AvatarUploadCropper#PART_Cropper">
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        </Style>
+        <Style Selector="^ /template/ arc|AvatarUploadStage#PART_Stage">
+            <Setter Property="Edge" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+            <Setter Property="IsDashed" Value="False" />
+            <Setter Property="ScrimAmount" Value="0" />
+            <Setter Property="IsScrimGlyphVisible" Value="True" />
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcRing#PART_Ring">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Status">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button#PART_Pick">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button#PART_Remove">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button#PART_Retry">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button#PART_CancelUpload">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.avatar-upload-zoom">
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Width" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+
+        <!-- No picture: a dashed circle that invites a drop. -->
+        <Style Selector="^:empty /template/ arc|AvatarUploadStage#PART_Stage">
+            <Setter Property="Edge" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="IsDashed" Value="True" />
+        </Style>
+        <Style Selector="^:empty /template/ arc|Button#PART_Pick">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <!-- A picture: change or remove it; the camera shows over it under the pointer. -->
+        <Style Selector="^:done /template/ arc|Button#PART_Pick">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:done /template/ arc|Button#PART_Remove">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:done /template/ arc|AvatarUploadStage#PART_Stage:pointerover">
+            <Setter Property="ScrimAmount" Value="1" />
+        </Style>
+        <!-- Uploading: the new picture under a light scrim, the ring around it. -->
+        <Style Selector="^:uploading /template/ arc|AvatarUploadStage#PART_Stage">
+            <Setter Property="ScrimAmount" Value="0.4" />
+            <Setter Property="IsScrimGlyphVisible" Value="False" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:uploading /template/ arc|ArcRing#PART_Ring">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:uploading /template/ arc|Button#PART_CancelUpload">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:failed /template/ arc|AvatarUploadStage#PART_Stage">
+            <Setter Property="Edge" Value="{arc:ArcDesignTokenResource Danger}" />
+            <Setter Property="ScrimAmount" Value="0.4" />
+            <Setter Property="IsScrimGlyphVisible" Value="False" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:failed /template/ arc|Button#PART_Retry">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:failed /template/ arc|Button#PART_CancelUpload">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:error /template/ TextBlock#PART_Status">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <!-- A file over the field: the circle takes the accent. -->
+        <Style Selector="^:dragover /template/ arc|AvatarUploadStage#PART_Stage">
+            <Setter Property="Edge" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+            <Setter Property="IsDashed" Value="True" />
+        </Style>
+        <Style Selector="^:editing /template/ DockPanel#PART_Summary">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:editing /template/ StackPanel#PART_Editor">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full /template/ arc|AvatarUploadStage#PART_Stage">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="ScrimAmount" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Edge" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Fill" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ arc|AvatarUploadStage#PART_Stage">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="ScrimAmount" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

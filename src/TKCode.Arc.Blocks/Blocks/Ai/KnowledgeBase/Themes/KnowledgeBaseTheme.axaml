@@ -1,0 +1,628 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.KnowledgeBaseTheme">
+
+    <!--
+        The card: at most 960 wide and centered, 1px Border, RadiusPanel, Surface, no shadow, like the other AI cards.
+        From the top: the header (title, subtitle, totals with the indexing note, Add files), the drop zone, and the body:
+        the document list and the search preview. From 760 wide (:wide) the preview sits beside the list behind a 1px
+        line; below, it follows the list. Below 480 (:compact) the paddings tighten.
+    -->
+    <ControlTheme x:Key="{x:Type arc:KnowledgeBase}" TargetType="arc:KnowledgeBase">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="WideWidth" Value="{arc:KnowledgeBaseTokenResource WideWidth}" />
+        <Setter Property="CompactWidth" Value="{arc:KnowledgeBaseTokenResource CompactWidth}" />
+        <Setter Property="SearchDelay" Value="{arc:KnowledgeBaseTokenResource SearchDelay}" />
+        <Setter Property="PipelineStep" Value="{arc:KnowledgeBaseTokenResource PipelineStep}" />
+        <Setter Property="PreviewLength" Value="{arc:KnowledgeBaseTokenResource PreviewLength}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:KnowledgeBase">
+                <Border Name="PART_Card"
+                        MaxWidth="{arc:KnowledgeBaseTokenResource CardMaxWidth}"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        TextElement.FontSize="{TemplateBinding FontSize}"
+                        TextElement.Foreground="{TemplateBinding Foreground}"
+                        AutomationProperties.LandmarkType="Region">
+                    <StackPanel>
+                        <Grid Name="PART_Header" ColumnDefinitions="*,Auto">
+                            <StackPanel>
+                                <TextBlock Name="PART_Title"
+                                           FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           LineHeight="20"
+                                           LetterSpacing="-0.176"
+                                           TextWrapping="Wrap"
+                                           AutomationProperties.HeadingLevel="2" />
+                                <TextBlock Name="PART_Subtitle"
+                                           Margin="0,2,0,0"
+                                           LineHeight="20"
+                                           LetterSpacing="-0.14"
+                                           TextWrapping="Wrap"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                <WrapPanel Margin="0,8,0,0">
+                                    <TextBlock Name="PART_Totals"
+                                               Margin="0,0,12,0"
+                                               VerticalAlignment="Center"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                               LineHeight="18"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    <StackPanel Name="PART_Indexing" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                                        <arc:ArcSpinner Width="12"
+                                                        Height="12"
+                                                        Thickness="1.5"
+                                                        VerticalAlignment="Center"
+                                                        Foreground="{arc:ArcDesignTokenResource Accent}" />
+                                        <TextBlock Name="PART_IndexingText"
+                                                   VerticalAlignment="Center"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   LineHeight="18"
+                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    </StackPanel>
+                                </WrapPanel>
+                            </StackPanel>
+                            <arc:Button Name="PART_Add"
+                                        Grid.Column="1"
+                                        Margin="16,0,0,0"
+                                        VerticalAlignment="Top"
+                                        Variant="Secondary"
+                                        Size="Small">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Upload}" Size="16" VerticalAlignment="Center" />
+                                    <TextBlock Name="PART_AddText" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </arc:Button>
+                        </Grid>
+
+                        <Border Name="PART_DropZone"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusStep18}"
+                                Padding="{arc:KnowledgeBaseTokenResource DropZonePadding}">
+                            <Grid ColumnDefinitions="Auto,*">
+                                <arc:ArcGlyph Name="PART_DropGlyph"
+                                              Data="{x:Static arc:ArcIcons.CloudUpload}"
+                                              Size="20"
+                                              VerticalAlignment="Center" />
+                                <StackPanel Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center">
+                                    <TextBlock Name="PART_DropText"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               LineHeight="20"
+                                               TextTrimming="CharacterEllipsis" />
+                                    <arc:ArcContentSwap Name="PART_DropNote"
+                                                        Mode="Label"
+                                                        HorizontalContentAlignment="Left"
+                                                        TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                        TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+
+                        <Border Name="PART_BodyFrame"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}">
+                            <Grid Name="PART_Body" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                                <StackPanel Name="PART_ListPane" Margin="{arc:KnowledgeBaseTokenResource PanePadding}">
+                                    <Grid ColumnDefinitions="Auto,*" Margin="8,4,8,8">
+                                        <TextBlock Name="PART_ListHeading"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                   AutomationProperties.HeadingLevel="3" />
+                                        <TextBlock Name="PART_ListCount"
+                                                   Grid.Column="1"
+                                                   Margin="6,0,0,0"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                   AutomationProperties.AccessibilityView="Raw" />
+                                    </Grid>
+                                    <arc:ScrollArea Name="PART_ListScroll"
+                                                    Focusable="False"
+                                                    FadeLength="0"
+                                                    MaxHeight="{arc:KnowledgeBaseTokenResource ListMaxHeight}">
+                                        <ItemsControl Name="PART_List">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <VirtualizingStackPanel />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                        </ItemsControl>
+                                    </arc:ScrollArea>
+                                    <StackPanel Name="PART_Empty" Margin="16,20,16,24" Spacing="6" HorizontalAlignment="Center">
+                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.BookOpen}"
+                                                      Size="22"
+                                                      HorizontalAlignment="Center"
+                                                      Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                        <TextBlock Name="PART_EmptyTitle"
+                                                   HorizontalAlignment="Center"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                        <TextBlock Name="PART_EmptyText"
+                                                   MaxWidth="320"
+                                                   HorizontalAlignment="Center"
+                                                   TextAlignment="Center"
+                                                   TextWrapping="Wrap"
+                                                   LineHeight="20"
+                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <Border Name="PART_SearchPane" BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                                    <StackPanel Spacing="12">
+                                        <StackPanel Spacing="2">
+                                            <TextBlock Name="PART_SearchHeading"
+                                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                       LineHeight="20"
+                                                       AutomationProperties.HeadingLevel="3" />
+                                            <TextBlock Name="PART_SearchHint"
+                                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                       LineHeight="18"
+                                                       TextWrapping="Wrap"
+                                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                        </StackPanel>
+                                        <arc:Input Name="PART_Search" IsLabelVisible="False" Size="Small">
+                                            <arc:Input.Prefix>
+                                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Search}"
+                                                              Size="16"
+                                                              Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                            </arc:Input.Prefix>
+                                        </arc:Input>
+                                        <Grid ColumnDefinitions="Auto,*">
+                                            <arc:ArcSpinner Name="PART_SearchSpinner"
+                                                            Width="12"
+                                                            Height="12"
+                                                            Margin="0,0,6,0"
+                                                            Thickness="1.5"
+                                                            VerticalAlignment="Center"
+                                                            IsVisible="{TemplateBinding IsSearching}"
+                                                            Foreground="{arc:ArcDesignTokenResource Accent}" />
+                                            <arc:ArcContentSwap Name="PART_SearchStatus"
+                                                                Grid.Column="1"
+                                                                Mode="Label"
+                                                                HorizontalContentAlignment="Left"
+                                                                TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                                TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                        </Grid>
+                                        <StackPanel Name="PART_Passages" Spacing="8" />
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                        </Border>
+                        <arc:AiAnnouncer Name="PART_Announcer" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Values that change with a state are styles, not template values (template values would win). -->
+        <Style Selector="^ /template/ Grid#PART_Header">
+            <Setter Property="Margin" Value="{arc:KnowledgeBaseTokenResource HeaderPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_DropZone">
+            <Setter Property="Margin" Value="{arc:KnowledgeBaseTokenResource DropZoneMargin}" />
+            <Setter Property="Background" Value="{arc:KnowledgeBaseTokenResource DropZoneBackground}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_DropGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Indexing">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Empty">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_SearchPane">
+            <Setter Property="Grid.Row" Value="1" />
+            <Setter Property="Grid.Column" Value="0" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessTop}" />
+            <Setter Property="Padding" Value="{arc:KnowledgeBaseTokenResource SearchPadding}" />
+        </Style>
+
+        <Style Selector="^:wide /template/ Border#PART_SearchPane">
+            <Setter Property="Grid.Row" Value="0" />
+            <Setter Property="Grid.Column" Value="1" />
+            <Setter Property="Width" Value="{arc:KnowledgeBaseTokenResource SearchColumnWidth}" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessLeft}" />
+        </Style>
+        <Style Selector="^:compact">
+            <Style Selector="^ /template/ Grid#PART_Header">
+                <Setter Property="Margin" Value="{arc:KnowledgeBaseTokenResource CompactHeaderPadding}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_DropZone">
+                <Setter Property="Margin" Value="{arc:KnowledgeBaseTokenResource CompactDropZoneMargin}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_SearchPane">
+                <Setter Property="Padding" Value="{arc:KnowledgeBaseTokenResource CompactSearchPadding}" />
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_ListPane">
+                <Setter Property="Margin" Value="4,8" />
+            </Style>
+        </Style>
+        <Style Selector="^:indexing /template/ StackPanel#PART_Indexing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:empty">
+            <Style Selector="^ /template/ StackPanel#PART_Empty">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^ /template/ arc|ScrollArea#PART_ListScroll">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+        </Style>
+        <Style Selector="^:dragging">
+            <Style Selector="^ /template/ Border#PART_DropZone">
+                <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+                <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_DropGlyph">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+            </Style>
+        </Style>
+        <Style Selector="^:readonly">
+            <Style Selector="^ /template/ Border#PART_DropZone">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ arc|Button#PART_Add">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:motion-full /template/ Border#PART_DropZone">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ Border#PART_DropZone">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A document row: 60 high, 8 10 padding, RadiusStep14, tinted on hover and when a search result points at it. The
+        kind mark (32, RadiusStep10, SurfaceMuted), the name over a line of facts or the error, the stage with a 16px
+        ring, then Retry, Re-index and Delete (32px ghost icon buttons). Delete swaps the row for a question.
+    -->
+    <ControlTheme x:Key="{x:Type arc:KnowledgeBaseDocumentRow}" TargetType="arc:KnowledgeBaseDocumentRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep14}" />
+        <Setter Property="Padding" Value="{arc:KnowledgeBaseTokenResource RowPadding}" />
+        <Setter Property="MinHeight" Value="{arc:KnowledgeBaseTokenResource RowMinHeight}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:KnowledgeBaseDocumentRow">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}"
+                        AutomationProperties.AccessibilityView="Raw">
+                    <Panel VerticalAlignment="Center">
+                        <Grid Name="PART_Main" ColumnDefinitions="Auto,*,Auto,Auto">
+                            <Border Name="PART_Mark"
+                                    Width="{arc:KnowledgeBaseTokenResource MarkSize}"
+                                    Height="{arc:KnowledgeBaseTokenResource MarkSize}"
+                                    VerticalAlignment="Center"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusStep10}"
+                                    Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+                                <arc:ArcGlyph Name="PART_KindGlyph"
+                                              Size="16"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            </Border>
+                            <StackPanel Grid.Column="1" Margin="12,0" VerticalAlignment="Center" Spacing="1">
+                                <TextBlock Name="PART_Name"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           LineHeight="20"
+                                           LetterSpacing="-0.14"
+                                           TextTrimming="CharacterEllipsis" />
+                                <TextBlock Name="PART_Meta"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           LineHeight="17"
+                                           TextTrimming="CharacterEllipsis"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                <TextBlock Name="PART_Error"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           LineHeight="17"
+                                           TextWrapping="Wrap"
+                                           Foreground="{arc:ArcDesignTokenResource Danger}" />
+                            </StackPanel>
+                            <StackPanel Name="PART_Status"
+                                        Grid.Column="2"
+                                        Orientation="Horizontal"
+                                        Spacing="6"
+                                        VerticalAlignment="Center">
+                                <Panel Width="{arc:KnowledgeBaseTokenResource RingSize}"
+                                       Height="{arc:KnowledgeBaseTokenResource RingSize}"
+                                       VerticalAlignment="Center">
+                                    <arc:ArcRing Name="PART_Ring"
+                                                 Thickness="2"
+                                                 ChaseRate="0.15"
+                                                 Foreground="{arc:ArcDesignTokenResource Accent}"
+                                                 TrackBrush="{arc:KnowledgeBaseTokenResource TrackColor}" />
+                                    <arc:ArcGlyph Name="PART_StatusGlyph" Size="16" />
+                                </Panel>
+                                <TextBlock Name="PART_StatusText"
+                                           VerticalAlignment="Center"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           FontFeatures="+tnum" />
+                            </StackPanel>
+                            <StackPanel Name="PART_Actions"
+                                        Grid.Column="3"
+                                        Margin="8,0,0,0"
+                                        Orientation="Horizontal"
+                                        Spacing="2"
+                                        VerticalAlignment="Center">
+                                <arc:Button Name="PART_Retry" Margin="0,0,4,0" Variant="Secondary" Size="Small" />
+                                <arc:Button Name="PART_Reindex"
+                                            Width="{arc:KnowledgeBaseTokenResource IconButtonSize}"
+                                            Height="{arc:KnowledgeBaseTokenResource IconButtonSize}"
+                                            MinHeight="0"
+                                            Padding="0"
+                                            Variant="Ghost"
+                                            Size="Small">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.RefreshCw}" Size="16" />
+                                </arc:Button>
+                                <arc:Button Name="PART_Delete"
+                                            Width="{arc:KnowledgeBaseTokenResource IconButtonSize}"
+                                            Height="{arc:KnowledgeBaseTokenResource IconButtonSize}"
+                                            MinHeight="0"
+                                            Padding="0"
+                                            Variant="Ghost"
+                                            Size="Small">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Trash2}" Size="16" />
+                                </arc:Button>
+                            </StackPanel>
+                        </Grid>
+                        <Grid Name="PART_Confirm" ColumnDefinitions="*,Auto,Auto">
+                            <TextBlock Name="PART_ConfirmText"
+                                       Margin="4,0,12,0"
+                                       VerticalAlignment="Center"
+                                       LineHeight="20"
+                                       TextWrapping="Wrap" />
+                            <arc:Button Name="PART_Cancel" Grid.Column="1" Variant="Ghost" Size="Small" VerticalAlignment="Center" />
+                            <arc:Button Name="PART_ConfirmDelete"
+                                        Grid.Column="2"
+                                        Margin="6,0,0,0"
+                                        Variant="Danger"
+                                        Size="Small"
+                                        VerticalAlignment="Center" />
+                        </Grid>
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ TextBlock#PART_Error">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button#PART_Retry">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcRing#PART_Ring">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_StatusText">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_StatusGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ Grid#PART_Confirm">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:KnowledgeBaseTokenResource RowHoverBackground}" />
+        </Style>
+        <Style Selector="^:located">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        </Style>
+        <Style Selector="^:ready /template/ arc|ArcGlyph#PART_StatusGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:busy">
+            <Style Selector="^ /template/ arc|ArcRing#PART_Ring">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_StatusText">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            </Style>
+        </Style>
+        <Style Selector="^:failed">
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_StatusGlyph">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_StatusText">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_Error">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^ /template/ arc|Button#PART_Retry">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^ /template/ arc|Button#PART_Reindex">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+        </Style>
+        <Style Selector="^:compact /template/ TextBlock#PART_StatusText">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:readonly /template/ StackPanel#PART_Actions">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:confirming">
+            <Setter Property="Background" Value="{arc:KnowledgeBaseTokenResource RowHoverBackground}" />
+            <Style Selector="^ /template/ Grid#PART_Main">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ Grid#PART_Confirm">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Grid#PART_Confirm">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Grid#PART_Confirm">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A search result: a button framed by a 1px BorderSubtle line, RadiusStep14, 10 12 padding. The rank, the document
+        name and the chunk on one line with the score and its bar at the end; the passage under it with the matches
+        marked. Hover tints it; keyboard focus draws the focus ring 3px outside.
+    -->
+    <ControlTheme x:Key="{x:Type arc:KnowledgeBasePassageView}" TargetType="arc:KnowledgeBasePassageView">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep14}" />
+        <Setter Property="Padding" Value="12,10" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:KnowledgeBasePassageView">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Spacing="6">
+                            <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+                                <TextBlock Name="PART_Rank"
+                                           Margin="0,0,8,0"
+                                           VerticalAlignment="Center"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           FontFeatures="+tnum"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                <arc:ArcShrinkRow Grid.Column="1" Spacing="6" VerticalAlignment="Center">
+                                    <TextBlock Name="PART_Document"
+                                               arc:ArcShrinkRow.IsShrinkable="True"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Name="PART_Chunk"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                </arc:ArcShrinkRow>
+                                <TextBlock Name="PART_Score"
+                                           Grid.Column="2"
+                                           Margin="8,0,6,0"
+                                           VerticalAlignment="Center"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           FontFeatures="+tnum"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                <arc:KnowledgeBaseScoreBar Name="PART_ScoreBar"
+                                                           Grid.Column="3"
+                                                           Width="{arc:KnowledgeBaseTokenResource ScoreBarWidth}"
+                                                           Height="4"
+                                                           VerticalAlignment="Center"
+                                                           Fill="{arc:ArcDesignTokenResource Accent}"
+                                                           Track="{arc:KnowledgeBaseTokenResource TrackColor}" />
+                            </Grid>
+                            <arc:KnowledgeBasePassageText Name="PART_Text" />
+                        </StackPanel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            Margin="-3"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep17}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:KnowledgeBaseTokenResource RowHoverBackground}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The passage under a result: 13px over 19, wrapped, at most four lines; marks tinted from the accent. -->
+    <ControlTheme x:Key="{x:Type arc:KnowledgeBasePassageText}" TargetType="arc:KnowledgeBasePassageText">
+        <Setter Property="AccentBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="LineHeight" Value="19" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        <Setter Property="MaxLines" Value="4" />
+        <Setter Property="IsHitTestVisible" Value="False" />
+    </ControlTheme>
+</ResourceDictionary>

@@ -1,0 +1,166 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ProductListingTheme">
+    <!--
+        Product listing: the header (title, count, sort, cart), the filters column (folded behind a button in a narrow
+        block) and the responsive grid of cards built in code.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ProductListing}" TargetType="arc:ProductListing">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Padding" Value="{arc:ProductListingTokenResource BlockPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="CompactThreshold" Value="{arc:ProductListingTokenResource CompactThreshold}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ProductListing">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Panel>
+                        <DockPanel>
+                            <DockPanel DockPanel.Dock="Top" Margin="0,0,0,20">
+                                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="8" VerticalAlignment="Bottom">
+                                    <arc:Button Name="PART_FiltersToggle" Variant="Secondary" Size="Small" />
+                                    <arc:Select Name="PART_Sort" MinWidth="180" />
+                                    <arc:Button Name="PART_Cart" Variant="Ghost" Size="Small" />
+                                </StackPanel>
+                                <StackPanel Spacing="2" VerticalAlignment="Bottom" Margin="0,0,16,0">
+                                    <TextBlock Name="PART_Title"
+                                               TextWrapping="Wrap"
+                                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXL}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                    <TextBlock Name="PART_Count" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                </StackPanel>
+                            </DockPanel>
+                            <StackPanel Name="PART_Filters" DockPanel.Dock="Left" Spacing="22">
+                                <arc:ChipGroup Name="PART_Categories" IsMultiple="True" />
+                                <StackPanel Spacing="6">
+                                    <arc:Slider Name="PART_PriceRange" IsRange="True" />
+                                    <TextBlock Name="PART_PriceReadout" FontFeatures="+tnum" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                </StackPanel>
+                                <DockPanel>
+                                    <arc:Switch Name="PART_InStock" DockPanel.Dock="Right" />
+                                    <TextBlock Name="PART_InStockLabel" VerticalAlignment="Center" TextWrapping="Wrap" />
+                                </DockPanel>
+                                <arc:Button Name="PART_Clear" Variant="Ghost" Size="Small" HorizontalAlignment="Left" />
+                            </StackPanel>
+                            <Panel>
+                                <arc:ProductListingGrid Name="PART_Grid" />
+                                <StackPanel Name="PART_Empty" Spacing="12" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,48">
+                                    <TextBlock Name="PART_EmptyText" HorizontalAlignment="Center" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    <arc:Button Name="PART_EmptyClear" Variant="Secondary" Size="Small" HorizontalAlignment="Center" />
+                                </StackPanel>
+                            </Panel>
+                        </DockPanel>
+                        <arc:FinanceAnnouncer Name="PART_Announcer" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ StackPanel#PART_Filters">
+            <Setter Property="Width" Value="{arc:ProductListingTokenResource FiltersWidth}" />
+            <Setter Property="Margin" Value="{arc:ProductListingTokenResource FiltersMargin}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ProductListingGrid#PART_Grid">
+            <Setter Property="MinItemWidth" Value="{arc:ProductListingTokenResource MinCardWidth}" />
+            <Setter Property="Gap" Value="{arc:ProductListingTokenResource CardGap}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button#PART_FiltersToggle">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:compact">
+            <Style Selector="^ /template/ arc|Button#PART_FiltersToggle">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_Filters">
+                <Setter Property="DockPanel.Dock" Value="Top" />
+                <Setter Property="Width" Value="NaN" />
+                <Setter Property="Margin" Value="0,0,0,20" />
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+        </Style>
+        <Style Selector="^:compact:filters-open /template/ StackPanel#PART_Filters">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+
+    <!-- A card's clickable area: no chrome, a focus ring around the picture and texts on keyboard focus. -->
+    <ControlTheme x:Key="{x:Type arc:ProductListingCardButton}" TargetType="arc:ProductListingCardButton">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ProductListingCardButton">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            Margin="-4"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep20}"
+                            Opacity="0"
+                            IsHitTestVisible="False" />
+                    <ContentPresenter Background="{TemplateBinding Background}"
+                                      Content="{TemplateBinding Content}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The picture frame: rounded and clipped; it lifts a little under the pointer. -->
+    <ControlTheme x:Key="{x:Type arc:ProductListingPicture}" TargetType="arc:ProductListingPicture">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep16}" />
+        <Setter Property="ClipToBounds" Value="True" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="RenderTransform" Value="scale(1)" />
+        <Style Selector="^.hover">
+            <Setter Property="RenderTransform" Value="scale(1.015)" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:ProductListingCard}" TargetType="arc:ProductListingCard">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:ProductListingSwatch}" TargetType="arc:ProductListingSwatch">
+        <Setter Property="Width" Value="12" />
+        <Setter Property="Height" Value="12" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+    </ControlTheme>
+</ResourceDictionary>

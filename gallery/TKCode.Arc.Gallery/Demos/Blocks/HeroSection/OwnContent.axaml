@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.HeroSectionOwnContentDemo">
+    <!-- A title switches to your own content, at its natural height. -->
+    <Border CornerRadius="20" ClipToBounds="True" BorderThickness="1" BorderBrush="{arc:ArcDesignTokenResource Border}">
+        <arc:HeroSection Title="Ship your docs today"
+                         Description="One command turns a folder of Markdown into a searchable site."
+                         InstallCommand="npm create quickdocs">
+            <arc:HeroSection.Announcement>
+                <arc:HeroAction Label="Version 3 is out" />
+            </arc:HeroSection.Announcement>
+            <arc:HeroSection.PrimaryAction>
+                <arc:HeroAction Label="Get started" ConfirmedLabel="Opening the guide" />
+            </arc:HeroSection.PrimaryAction>
+            <arc:HeroSection.SecondaryAction>
+                <arc:HeroAction Label="View the source" Href="https://example.com/source" IsExternal="True" />
+            </arc:HeroSection.SecondaryAction>
+        </arc:HeroSection>
+    </Border>
+</UserControl>

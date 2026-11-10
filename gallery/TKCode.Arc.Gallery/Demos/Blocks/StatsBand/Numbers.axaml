@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.StatsBandNumbersDemo">
+    <!-- Without pictures it is a plain numbers band, here in the hairline grid. -->
+    <Border CornerRadius="20" ClipToBounds="True" BorderThickness="1" BorderBrush="{arc:ArcDesignTokenResource Border}">
+        <arc:StatsBand Layout="Divided">
+            <arc:StatsBand.Stats>
+                <arc:StatsBandStat Value="12" Suffix="+" Label="Years in business" />
+                <arc:StatsBandStat Value="310" Label="People on the team" />
+                <arc:StatsBandStat Value="9500" Prefix="$" Label="Average first order" />
+            </arc:StatsBand.Stats>
+        </arc:StatsBand>
+    </Border>
+</UserControl>

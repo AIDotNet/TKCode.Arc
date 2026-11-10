@@ -1,0 +1,18 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.SlotTextTheme">
+    <ControlTheme x:Key="{x:Type arc:SlotText}" TargetType="arc:SlotText">
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <!-- A reel's window reaches past the line, so its glyphs fade at the edges instead of being cut. -->
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="LineHeightEm" Value="{arc:SlotTextTokenResource LineHeightEm}" />
+        <Setter Property="CellPitchEm" Value="{arc:SlotTextTokenResource CellPitchEm}" />
+        <Setter Property="WindowInsetYEm" Value="{arc:SlotTextTokenResource WindowInsetYEm}" />
+        <Setter Property="WindowInsetXEm" Value="{arc:SlotTextTokenResource WindowInsetXEm}" />
+        <Setter Property="EdgeFadeEm" Value="{arc:SlotTextTokenResource EdgeFadeEm}" />
+    </ControlTheme>
+</ResourceDictionary>

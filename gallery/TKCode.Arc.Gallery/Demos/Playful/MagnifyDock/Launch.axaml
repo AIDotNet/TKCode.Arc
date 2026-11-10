@@ -1,0 +1,40 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MagnifyDockLaunchDemo">
+    <!--
+        Smaller icons, a gentler lens and a wider reach. ItemLaunched reports each launch; Quit all clears the running
+        dots, which launches set because MarksLaunched is on.
+    -->
+    <StackPanel Spacing="16" HorizontalAlignment="Center">
+        <arc:MagnifyDock x:Name="Dock"
+                         Label="Tools"
+                         ItemSize="40"
+                         Magnification="1.5"
+                         Reach="190"
+                         ItemLaunched="OnItemLaunched">
+            <arc:MagnifyDockItem Label="Search">
+                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Search}" Size="20" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </arc:MagnifyDockItem>
+            <arc:MagnifyDockItem Label="Inbox">
+                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Inbox}" Size="20" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </arc:MagnifyDockItem>
+            <arc:MagnifyDockItem Label="Charts">
+                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChartBar}" Size="20" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </arc:MagnifyDockItem>
+            <arc:MagnifyDockItem Label="Database">
+                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Database}" Size="20" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </arc:MagnifyDockItem>
+            <arc:MagnifyDockItem Label="Archive">
+                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Archive}" Size="20" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </arc:MagnifyDockItem>
+        </arc:MagnifyDock>
+        <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Center">
+            <TextBlock x:Name="Readout"
+                       Text="Nothing open yet"
+                       VerticalAlignment="Center"
+                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            <arc:Button Content="Quit all" Variant="Ghost" Size="Small" Click="OnQuitAll" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

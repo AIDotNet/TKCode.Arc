@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ShareAccessInviteHandlerDemo">
+    <!-- The invite goes through a handler first: the button spins for a moment, and any address with "blocked" is refused. -->
+    <arc:ShareAccess x:Name="Share"
+                     Width="480"
+                     Margin="0,16"
+                     HorizontalAlignment="Center"
+                     DocumentName="Budget 2027 draft"
+                     OrganizationName="Fernhollow"
+                     LinkScope="Organization"
+                     LinkRole="Commenter"
+                     InviteRole="Viewer"
+                     Link="https://notes.example/d/b27-draft">
+        <arc:ShareAccess.People>
+            <arc:ShareAccessPerson Name="Rafael Lin" Email="rafael@fernhollow.example" Role="Owner" />
+        </arc:ShareAccess.People>
+    </arc:ShareAccess>
+</UserControl>

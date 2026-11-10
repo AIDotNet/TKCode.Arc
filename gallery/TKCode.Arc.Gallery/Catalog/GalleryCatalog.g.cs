@@ -69,11 +69,15 @@ public static partial class GalleryCatalog
             new("RadioGroup", "Radio group", "radio-group", 3, "Choose one option from a visible set."),
             new("Switch", "Switch", "switch", 0, "A tactile toggle for settings that take effect immediately."),
             new("SegmentedControl", "Segmented control", "segmented-control", 3, "Switch between a small set of related views."),
+            new("ToggleGroup", "Toggle group", "toggle-group", 3, "A row of toggle buttons for one choice or for several independent options.", AddedOn: "2026-11-09"),
+            new("Rating", "Rating", "rating", 3, "A simple, accessible way to capture a numeric opinion.", AddedOn: "2026-11-09"),
         ]),
         new("Sliders", "Sliders", "滑块",
         [
             new("Slider", "Slider", "slider", 7, "Pick a value or a range on a track that follows your finger."),
             new("ElasticSlider", "Elastic slider", "elastic-slider", 7, "A slider that stretches like rubber past its ends, with a swaying value tag and detents the thumb clicks into."),
+            new("RangeHistogramSlider", "Range histogram slider", "range-histogram-slider", 7, "A price range over a live histogram of the data, lighting the bars inside the range and settling on bar edges.", AddedOn: "2026-11-09"),
+            new("RulerSlider", "Ruler slider", "ruler-slider", 7, "A tape of ticks that slides under a fixed needle, with momentum, snapping, and a rolling readout.", AddedOn: "2026-11-09"),
         ]),
         new("Pickers", "Pickers", "选取器",
         [
@@ -127,6 +131,7 @@ public static partial class GalleryCatalog
             new("Stepper", "Stepper", "stepper", 4, "Show where a person is in a multi-step flow and what is done."),
             new("Countdown", "Countdown", "countdown", 7, "A launch countdown with rolling digits that morphs into a live state at zero."),
             new("UsageMeter", "Usage meter", "usage-meter", 3, "Show what fills an allowance and how close it is to the limit."),
+            new("OnboardingChecklist", "Onboarding checklist", "onboarding-checklist", 5, "Guide a new workspace through setup, one step at a time.", AddedOn: "2026-11-09"),
         ]),
         new("Avatars", "Avatars", "头像与徽标",
         [
@@ -185,6 +190,7 @@ public static partial class GalleryCatalog
             new("InViewTitle", "In-view title", "in-view-title", 3, "Bring a section title in as it scrolls into view."),
             new("TextMorph", "Text morph", "text-morph", 1, "Morph a label into its next state, letter by letter."),
             new("TextShimmer", "Text shimmer", "text-shimmer", 3, "Show ongoing work with a calm light across the words."),
+            new("SlotText", "Slot text", "slot-text", 3, "Text and numbers that spin into their new value like slot machine reels.", AddedOn: "2026-11-09"),
         ]),
     ];
 }

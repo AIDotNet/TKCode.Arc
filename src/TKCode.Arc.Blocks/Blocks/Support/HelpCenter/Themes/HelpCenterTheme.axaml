@@ -1,0 +1,39 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.HelpCenterTheme">
+
+    <!--
+        Help center: a panel (Background, 1px Border, RadiusPanel) with 28 padding. The breadcrumb, the hero with the
+        search field and the sliding page (home, category, search results or article) are built in code and placed in
+        PART_Host. Give it a height so its pages scroll inside it.
+    -->
+    <ControlTheme x:Key="{x:Type arc:HelpCenter}" TargetType="arc:HelpCenter">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Padding" Value="{arc:HelpCenterTokenResource CenterPadding}" />
+        <Setter Property="NarrowWidth" Value="{arc:HelpCenterTokenResource NarrowWidth}" />
+        <Setter Property="TocWidth" Value="{arc:HelpCenterTokenResource TocWidth}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:HelpCenter">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True"
+                        Padding="{TemplateBinding Padding}">
+                    <Decorator Name="PART_Host" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

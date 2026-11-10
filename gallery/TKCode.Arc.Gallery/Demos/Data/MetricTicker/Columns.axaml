@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MetricTickerColumnsDemo">
+    <StackPanel Spacing="16" MaxWidth="720">
+        <arc:MetricTicker x:Name="Ticker" Mode="Roll" Label="Store today">
+            <arc:MetricTickerItem Label="Revenue" Value="18420" Prefix="$" />
+            <arc:MetricTickerItem Label="Orders" Value="312" />
+            <arc:MetricTickerItem Label="Conversion" Value="3.8" Decimals="1" Suffix="%" ChangeFormat="Absolute" />
+            <arc:MetricTickerItem Label="Refunds" Value="6" IsHigherBetter="False" ChangeFormat="Absolute" />
+        </arc:MetricTicker>
+        <arc:Button Content="New order" Variant="Secondary" Size="Small" Click="OnNewOrder" HorizontalAlignment="Left" />
+    </StackPanel>
+</UserControl>

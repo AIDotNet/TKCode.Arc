@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.EmojiPickerPreviewDemo">
+    <!-- Type to search, use the tabs or scroll; the arrow keys move through the grid and Enter picks. -->
+    <StackPanel Spacing="16" HorizontalAlignment="Center" Margin="0,24">
+        <arc:EmojiPicker x:Name="Picker" EmojiSelected="OnEmojiSelected" />
+        <TextBlock x:Name="Picked"
+                   HorizontalAlignment="Center"
+                   Text="Nothing picked yet"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

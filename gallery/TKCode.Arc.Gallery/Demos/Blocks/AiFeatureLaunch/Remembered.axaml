@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AiFeatureLaunchRememberedDemo">
+    <StackPanel Margin="0,12" Spacing="12" HorizontalAlignment="Center" Width="400">
+        <!-- Dismissed tells why it closed; the button brings it back for this demo. -->
+        <arc:AiFeatureLaunch x:Name="Launch"
+                             Title="Smart replies"
+                             Description="Draft a reply in your own tone from the last few messages. You always review before it is sent." />
+        <TextBlock x:Name="Log" HorizontalAlignment="Center" />
+        <arc:Button x:Name="ShowAgain" Content="Show again" Variant="Secondary" Size="Small" HorizontalAlignment="Center" />
+    </StackPanel>
+</UserControl>

@@ -14,9 +14,9 @@ namespace TKCode.Arc.Tests.Gallery;
 public class GallerySmokeTests
 {
     [AvaloniaFact]
-    public void Catalog_Lists_All_113_Components()
+    public void Catalog_Lists_All_Components()
     {
-        GalleryCatalog.Count.ShouldBe(113);
+        GalleryCatalog.Count.ShouldBe(119);
         GalleryCatalog.Categories.Length.ShouldBe(22);
         // PageViewer sits in Arc's Media group but has no Arc original to link to (design/components/pdf/pdf.md, section 1).
         GalleryCatalog.Categories.ShouldAllBe(c => c.IsArc && c.Entries.Where(e => e.ClassName != "PageViewer").All(e => e.IsArc && e.ArcUrl != null));
@@ -25,12 +25,12 @@ public class GallerySmokeTests
         GalleryCatalog.Extras.ShouldAllBe(c => !c.IsArc && c.Entries.All(e => !e.IsArc && e.ArcUrl == null));
         GalleryCatalog.Special.ShouldAllBe(c => !c.IsArc && c.Entries.All(e => !e.IsArc && e.ArcUrl == null));
         // Blocks and Special components are listed under their own sections and not counted either.
-        GalleryCatalog.AllEntries.Count().ShouldBe(113 + GalleryCatalog.Extras.Sum(c => c.Entries.Length) + GalleryCatalog.Docs.Entries.Length
+        GalleryCatalog.AllEntries.Count().ShouldBe(GalleryCatalog.Count + GalleryCatalog.Extras.Sum(c => c.Entries.Length) + GalleryCatalog.Docs.Entries.Length
             + GalleryCatalog.Blocks.AllEntries.Count() + GalleryCatalog.Special.Sum(c => c.Entries.Length) + GalleryCatalog.Mobile.Entries.Length);
         GalleryCatalog.AllEntries.Select(e => e.ClassName).ShouldBeUnique();
-        // The sidebar footer counts the whole Components section, extras included: 113 + 25 = 138.
-        GalleryCatalog.ComponentCount.ShouldBe(138);
-        GalleryCatalog.ComponentEntries.Count().ShouldBe(138);
+        // The sidebar footer counts the whole Components section, extras included.
+        GalleryCatalog.ComponentCount.ShouldBe(GalleryCatalog.Count + 25);
+        GalleryCatalog.ComponentEntries.Count().ShouldBe(GalleryCatalog.ComponentCount);
     }
 
     [AvaloniaFact]

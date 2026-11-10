@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SupportWidgetClosedDemo">
+    <!-- Closed: only the launcher shows in the corner. -->
+    <Border Height="200"
+            CornerRadius="20"
+            BorderThickness="1"
+            BorderBrush="{arc:ArcDesignTokenResource Border}"
+            Background="{arc:ArcDesignTokenResource Background}">
+        <arc:SupportWidget TeamName="Studio support" Greeting="Welcome back" />
+    </Border>
+</UserControl>

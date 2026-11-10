@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.InboxTriagePreviewDemo">
+    <!-- The sample inbox. Swipe a row, or click it and use J, K, E, S, A, L and Z. -->
+    <arc:InboxTriage Title="Support inbox" HorizontalAlignment="Center" />
+</UserControl>

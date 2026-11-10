@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MetricTickerLiveTickerDemo">
+    <arc:MetricTicker x:Name="Ticker" Label="Service metrics" MaxWidth="720">
+        <arc:MetricTickerItem Label="Requests / s" Value="1240" />
+        <arc:MetricTickerItem Label="p95 latency" Value="182" Suffix=" ms" IsHigherBetter="False" />
+        <arc:MetricTickerItem Label="Error rate" Value="0.42" Decimals="2" Suffix="%" IsHigherBetter="False" ChangeFormat="Absolute" />
+        <arc:MetricTickerItem Label="Active users" Value="8312" />
+        <arc:MetricTickerItem Label="Queue depth" Value="37" IsHigherBetter="False" ChangeFormat="Absolute" />
+        <arc:MetricTickerItem Label="Cache hit rate" Value="93.1" Decimals="1" Suffix="%" ChangeFormat="Absolute" />
+    </arc:MetricTicker>
+</UserControl>

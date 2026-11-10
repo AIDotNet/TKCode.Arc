@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentRunFailedDemo">
+    <StackPanel Spacing="12" Margin="0,12">
+        <!-- A run that failed on a step: the step shows its error, the foot the reason, and Retry raises RetryRequested. -->
+        <arc:AgentRun x:Name="Run" State="Failed" Elapsed="0:0:41" Goal="Rename the billing tables and update every query" />
+        <TextBlock x:Name="Log" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" MaxWidth="560" Opacity="0.7" />
+    </StackPanel>
+</UserControl>

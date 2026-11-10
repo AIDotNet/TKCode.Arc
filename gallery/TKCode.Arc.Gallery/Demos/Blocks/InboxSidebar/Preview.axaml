@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.InboxSidebarPreviewDemo">
+    <Border Height="600"
+            CornerRadius="22"
+            BorderThickness="1"
+            ClipToBounds="True"
+            BorderBrush="{arc:ArcDesignTokenResource Border}"
+            Background="{arc:ArcDesignTokenResource Background}">
+        <DockPanel>
+            <arc:InboxSidebar x:Name="Mail" DockPanel.Dock="Left" ComposeRequested="OnCompose" CreateLabelRequested="OnCreateLabel" />
+            <StackPanel Margin="40,44" Spacing="10" MaxWidth="420" HorizontalAlignment="Left">
+                <TextBlock Text="{Binding #Mail.SelectedKey}" FontSize="{arc:ArcDesignTokenResource Type2XL}" FontWeight="Medium" />
+                <TextBlock Text="Collapse the sidebar with the panel button: the icons, label dots and unread dots stay on the rail."
+                           TextWrapping="Wrap"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            </StackPanel>
+        </DockPanel>
+    </Border>
+</UserControl>

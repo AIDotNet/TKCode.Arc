@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SpendAlertReadOnlyDemo">
+    <!-- Without the editor: a narrow summary card over budget, its alerts fixed by the app. -->
+    <arc:SpendAlert Width="400" HorizontalAlignment="Center" IsEditable="False"
+                    Title="Ride shares" Period="November · day 24 of 30" Budget="120" Spent="131.60"
+                    DaysElapsed="24" DaysInPeriod="30">
+        <arc:SpendThreshold Share="0.75" />
+        <arc:SpendThreshold Share="1" />
+    </arc:SpendAlert>
+</UserControl>

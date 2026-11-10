@@ -1,0 +1,275 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.AgentApprovalsTheme">
+
+    <!--
+        The queue: Surface, 1px Border, RadiusPanel. The list (300 wide, SurfaceMuted) on the left; the selected request
+        on the right: glyph and title, who asked and when, the risk badge and its reason, Why, Details, a note field, the
+        extra check of a high-risk request, and Deny / Approve. At 680 wide or less (:compact) the list sits on top.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AgentApprovals}" TargetType="arc:AgentApprovals">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="MaxWidth" Value="{arc:AgentApprovalsTokenResource MaxWidth}" />
+        <Setter Property="CompactWidth" Value="{arc:AgentApprovalsTokenResource CompactWidth}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Padding" Value="{arc:AgentApprovalsTokenResource SectionPadding}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AgentApprovals">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True"
+                        TextElement.FontSize="{TemplateBinding FontSize}"
+                        TextElement.Foreground="{TemplateBinding Foreground}">
+                    <Panel>
+                        <Grid Name="PART_Layout" ColumnDefinitions="Auto,*" RowDefinitions="Auto,*">
+                            <!-- List -->
+                            <Border Name="PART_ListBox"
+                                    Padding="12"
+                                    Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                    BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                                <StackPanel Spacing="10">
+                                    <StackPanel Spacing="2" Margin="8,4,8,0">
+                                        <TextBlock Name="PART_Title"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   AutomationProperties.HeadingLevel="2" />
+                                        <TextBlock Name="PART_Count"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   FontFeatures="tnum"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    </StackPanel>
+                                    <StackPanel Name="PART_List" Spacing="4" />
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Detail -->
+                            <Border Name="PART_DetailBox" Padding="{TemplateBinding Padding}">
+                                <Panel>
+                                    <StackPanel Name="PART_Detail" Spacing="16">
+                                        <Grid ColumnDefinitions="Auto,*">
+                                            <Border Width="{arc:AgentApprovalsTokenResource GlyphBoxSize}"
+                                                    Height="{arc:AgentApprovalsTokenResource GlyphBoxSize}"
+                                                    Margin="0,0,12,0"
+                                                    VerticalAlignment="Top"
+                                                    CornerRadius="{arc:ArcDesignTokenResource RadiusStep10}"
+                                                    Background="{arc:ArcDesignTokenResource AccentSubtle}">
+                                                <arc:ArcGlyph Name="PART_DetailGlyph" Size="16" Foreground="{arc:ArcDesignTokenResource Accent}"
+                                                              HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            </Border>
+                                            <StackPanel Grid.Column="1" Spacing="4">
+                                                <TextBlock Name="PART_DetailTitle"
+                                                           FontSize="{arc:ArcDesignTokenResource TypeLG}"
+                                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                           LineHeight="24"
+                                                           TextWrapping="Wrap"
+                                                           AutomationProperties.HeadingLevel="3" />
+                                                <TextBlock Name="PART_Asked"
+                                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                            </StackPanel>
+                                        </Grid>
+                                        <Border Name="PART_Risk"
+                                                Padding="12,10"
+                                                CornerRadius="{arc:ArcDesignTokenResource RadiusStep12}">
+                                            <Grid ColumnDefinitions="Auto,*">
+                                                <arc:ArcGlyph Name="PART_RiskGlyph" Data="{x:Static arc:ArcIcons.ShieldCheck}" Size="16"
+                                                              Margin="0,1,10,0" VerticalAlignment="Top" />
+                                                <StackPanel Grid.Column="1" Spacing="2">
+                                                    <TextBlock Name="PART_RiskText" FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                                    <TextBlock Name="PART_RiskNote" FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" TextWrapping="Wrap" />
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                        <StackPanel Spacing="6">
+                                            <TextBlock Name="PART_WhyHeading" Classes="heading" />
+                                            <SelectableTextBlock Name="PART_Context" LineHeight="21" TextWrapping="Wrap"
+                                                                 Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                        </StackPanel>
+                                        <StackPanel Spacing="8">
+                                            <TextBlock Name="PART_DetailsHeading" Classes="heading" />
+                                            <Grid Name="PART_Details" ColumnDefinitions="Auto,*" />
+                                        </StackPanel>
+                                        <arc:Input Name="PART_Reason" />
+                                        <arc:Checkbox Name="PART_Confirm" IsVisible="False" />
+                                        <Grid ColumnDefinitions="*,Auto,Auto">
+                                            <TextBlock Name="PART_Status"
+                                                       IsVisible="False"
+                                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                       VerticalAlignment="Center"
+                                                       TextWrapping="Wrap"
+                                                       Margin="0,0,12,0" />
+                                            <arc:Button Name="PART_Deny" Grid.Column="1" Variant="Secondary" Margin="0,0,8,0" />
+                                            <arc:Button Name="PART_Approve" Grid.Column="2" Variant="Primary" />
+                                        </Grid>
+                                    </StackPanel>
+                                    <StackPanel Name="PART_Empty" Spacing="10" IsVisible="False"
+                                                HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,40">
+                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.CircleCheck}" Size="28" HorizontalAlignment="Center"
+                                                      Foreground="{arc:ArcDesignTokenResource Success}" />
+                                        <TextBlock Name="PART_EmptyText" TextAlignment="Center" TextWrapping="Wrap" MaxWidth="280"
+                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    </StackPanel>
+                                </Panel>
+                            </Border>
+                        </Grid>
+                        <arc:AiAnnouncer Name="PART_Announcer" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Border#PART_ListBox">
+            <Setter Property="Width" Value="{arc:AgentApprovalsTokenResource ListWidth}" />
+            <Setter Property="Grid.RowSpan" Value="2" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessRight}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_DetailBox">
+            <Setter Property="Grid.Column" Value="1" />
+            <Setter Property="Grid.RowSpan" Value="2" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.heading">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Risk">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SuccessSubtle}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_RiskGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:medium-risk /template/ Border#PART_Risk">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource WarningSubtle}" />
+        </Style>
+        <Style Selector="^:medium-risk /template/ arc|ArcGlyph#PART_RiskGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Warning}" />
+            <Setter Property="Data" Value="{x:Static arc:ArcIcons.Shield}" />
+        </Style>
+        <Style Selector="^:high-risk /template/ Border#PART_Risk">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource DangerSubtle}" />
+        </Style>
+        <Style Selector="^:high-risk /template/ arc|ArcGlyph#PART_RiskGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+            <Setter Property="Data" Value="{x:Static arc:ArcIcons.TriangleAlert}" />
+        </Style>
+        <Style Selector="^:high-risk /template/ arc|Checkbox#PART_Confirm">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:status-error /template/ TextBlock#PART_Status">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:empty /template/ StackPanel#PART_Detail">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:empty /template/ StackPanel#PART_Empty">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_ListBox">
+            <Setter Property="Width" Value="NaN" />
+            <Setter Property="Grid.RowSpan" Value="1" />
+            <Setter Property="Grid.ColumnSpan" Value="2" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessBottom}" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_DetailBox">
+            <Setter Property="Grid.Column" Value="0" />
+            <Setter Property="Grid.ColumnSpan" Value="2" />
+            <Setter Property="Grid.Row" Value="1" />
+            <Setter Property="Grid.RowSpan" Value="1" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Risk">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A request row: glyph box, title, agent and time, and a risk dot. -->
+    <ControlTheme x:Key="{x:Type arc:AgentApprovalsRow}" TargetType="arc:AgentApprovalsRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="{arc:AgentApprovalsTokenResource RowPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep14}" />
+        <Setter Property="RingRadius" Value="RadiusStep17" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AgentApprovalsRow">
+                <Panel Name="PART_RingHost">
+                    <Border Name="PART_Face"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <Grid ColumnDefinitions="Auto,*">
+                            <arc:ArcGlyph Data="{TemplateBinding Glyph}" Size="16" Margin="0,2,10,0" VerticalAlignment="Top"
+                                          Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            <StackPanel Grid.Column="1" Spacing="3">
+                                <TextBlock Text="{TemplateBinding Title}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           LineHeight="19"
+                                           MaxLines="2"
+                                           TextWrapping="Wrap"
+                                           TextTrimming="CharacterEllipsis" />
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <Ellipse Name="PART_RiskDot" Width="6" Height="6" VerticalAlignment="Center" />
+                                    <TextBlock Text="{TemplateBinding RiskText}" FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    <TextBlock Text="{TemplateBinding Meta}" FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" TextTrimming="CharacterEllipsis" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Ellipse#PART_RiskDot">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:medium /template/ Ellipse#PART_RiskDot">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource Warning}" />
+        </Style>
+        <Style Selector="^:high /template/ Ellipse#PART_RiskDot">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:hover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        </Style>
+        <Style Selector="^:selected">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        </Style>
+        <Style Selector="^:selected /template/ Border#PART_Face">
+            <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowResting}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

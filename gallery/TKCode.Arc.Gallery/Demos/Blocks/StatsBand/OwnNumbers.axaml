@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.StatsBandOwnNumbersDemo">
+    <!-- Your own numbers: units in Suffix, large counts in Compact, and a line of context on hover. -->
+    <Border CornerRadius="20" ClipToBounds="True" BorderThickness="1" BorderBrush="{arc:ArcDesignTokenResource Border}">
+        <arc:StatsBand>
+            <arc:StatsBand.Stats>
+                <arc:StatsBandStat Value="84200" Notation="Compact" Decimals="1" Label="Orders shipped" Detail="Since January" Context="Up from 61K last year">
+                    <arc:StatsBandStat.Visual>
+                        <arc:StatsBandTrend Values="12,18,17,25,29,31,38,42,47,55" />
+                    </arc:StatsBandStat.Visual>
+                </arc:StatsBandStat>
+                <arc:StatsBandStat Value="4.9" Decimals="1" Suffix="/5" Label="Average rating" Detail="From 2,300 reviews" />
+                <arc:StatsBandStat Value="36" Suffix="h" Label="Median delivery" Detail="Door to door" Context="Down from 52 hours in spring">
+                    <arc:StatsBandStat.Visual>
+                        <arc:StatsBandDistribution Bins="2,6,14,22,17,9,5,3,2,1" Maximum="100" Marker="36" />
+                    </arc:StatsBandStat.Visual>
+                </arc:StatsBandStat>
+            </arc:StatsBand.Stats>
+        </arc:StatsBand>
+    </Border>
+</UserControl>

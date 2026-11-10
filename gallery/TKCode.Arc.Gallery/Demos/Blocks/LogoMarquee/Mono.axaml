@@ -1,0 +1,8 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LogoMarqueeMonoDemo">
+    <arc:LogoMarquee Tone="Mono"
+                     Title="Teams of every size build with us"
+                     Description="A quieter row, every mark in the text color." />
+</UserControl>

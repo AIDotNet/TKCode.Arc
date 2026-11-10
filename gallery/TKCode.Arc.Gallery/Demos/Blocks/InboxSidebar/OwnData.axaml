@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.InboxSidebarOwnDataDemo">
+    <Border Height="520"
+            CornerRadius="22"
+            BorderThickness="1"
+            ClipToBounds="True"
+            BorderBrush="{arc:ArcDesignTokenResource Border}"
+            Background="{arc:ArcDesignTokenResource Background}">
+        <DockPanel>
+            <arc:InboxSidebar x:Name="Mail"
+                              DockPanel.Dock="Left"
+                              MailboxName="Support desk"
+                              AccountName="Tomas Okonkwo"
+                              AccountEmail="help@ferrylane.example"
+                              StorageUsed="41"
+                              StorageTotal="50"
+                              CanCreateLabels="False"
+                              SelectedKey="open" />
+            <StackPanel Margin="32" Spacing="12" HorizontalAlignment="Left">
+                <TextBlock Text="A new ticket arrives every few seconds." Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                <arc:Button Variant="Secondary" Size="Small" Content="Mark all read" HorizontalAlignment="Left" Click="OnMarkRead" />
+            </StackPanel>
+        </DockPanel>
+    </Border>
+</UserControl>

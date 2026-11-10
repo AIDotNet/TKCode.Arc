@@ -1,0 +1,58 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.MetricTickerTheme">
+
+    <!-- A bordered strip: the window of metrics and, while it scrolls, the round pause button. -->
+    <ControlTheme x:Key="{x:Type arc:MetricTicker}" TargetType="arc:MetricTicker">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Padding" Value="{arc:MetricTickerTokenResource StripPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MetricTicker">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{arc:MetricTickerTokenResource ButtonGap}">
+                        <arc:MetricTickerStrip Name="PART_Strip" VerticalAlignment="Center" />
+                        <arc:ExplainerIconButton Name="PART_PauseButton" Grid.Column="1" VerticalAlignment="Center" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:MetricTickerStrip}" TargetType="arc:MetricTickerStrip">
+        <Setter Property="FadeWidth" Value="{arc:MetricTickerTokenResource FadeWidth}" />
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:MetricTickerRow}" TargetType="arc:MetricTickerRow">
+        <Setter Property="ItemGap" Value="{arc:MetricTickerTokenResource ItemGap}" />
+        <Setter Property="RowGap" Value="{arc:MetricTickerTokenResource RowGap}" />
+        <Setter Property="MinColumnWidth" Value="{arc:MetricTickerTokenResource MinColumnWidth}" />
+        <Setter Property="SeparatorBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+    </ControlTheme>
+
+    <!-- A metric: good news in the success color, bad news in the danger color, a flash of the matching tint on change. -->
+    <ControlTheme x:Key="{x:Type arc:MetricTickerCell}" TargetType="arc:MetricTickerCell">
+        <Setter Property="UpBrush" Value="{arc:ArcDesignTokenResource Success}" />
+        <Setter Property="DownBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+        <Setter Property="FlatBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="UpTint" Value="{arc:ArcDesignTokenResource SuccessSubtle}" />
+        <Setter Property="DownTint" Value="{arc:ArcDesignTokenResource DangerSubtle}" />
+        <Setter Property="TintRadius" Value="{arc:ArcDesignTokenResource RadiusStep10}" />
+        <Setter Property="Padding" Value="{arc:MetricTickerTokenResource CellPadding}" />
+        <Setter Property="ValueFontSize" Value="{arc:MetricTickerTokenResource ValueFontSize}" />
+        <Setter Property="StackedValueFontSize" Value="{arc:MetricTickerTokenResource StackedValueFontSize}" />
+    </ControlTheme>
+</ResourceDictionary>

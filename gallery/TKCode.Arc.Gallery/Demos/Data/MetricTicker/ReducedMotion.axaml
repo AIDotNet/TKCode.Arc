@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MetricTickerReducedMotionDemo">
+    <!-- Under reduced motion a scrolling ticker stands still in columns; values still update. -->
+    <arc:MetricTicker arc:ArcMotion.Level="Reduced" MaxWidth="720">
+        <arc:MetricTickerItem Label="Build time" Value="4.2" Decimals="1" Suffix=" min" IsHigherBetter="False" />
+        <arc:MetricTickerItem Label="Deploys today" Value="14" />
+        <arc:MetricTickerItem Label="Open incidents" Value="1" IsHigherBetter="False" ChangeFormat="Absolute" />
+    </arc:MetricTicker>
+</UserControl>

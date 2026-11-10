@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.StudioPerspectivesCustomQuotesDemo">
+    <!-- The app's own quotes, a longer interval, and no automatic advance until the reader presses play. -->
+    <arc:StudioPerspectives Title="What our readers say" Interval="0:0:10" IsAutoAdvance="False">
+        <arc:StudioPerspectivesQuote Text="The Friday digest is the only newsletter I read on the day it arrives."
+                                     Name="Clara Nyberg" Role="Editor" Company="Paper Lantern" />
+        <arc:StudioPerspectivesQuote Text="Short, opinionated and always useful. It changed how our team writes changelogs."
+                                     Name="Marcus Oyelaran" Role="Product Lead" Company="Tidewater Labs" />
+    </arc:StudioPerspectives>
+</UserControl>

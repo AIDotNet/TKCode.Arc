@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TeamShowcaseCustomTeamDemo">
+    <!-- The app's own people, three columns at most, no eyebrow. -->
+    <arc:TeamShowcase Eyebrow="{x:Null}"
+                      Title="Meet the support crew"
+                      Description="Real humans, around the clock."
+                      MaxColumns="3"
+                      AllLabel="All shifts">
+        <arc:TeamShowcaseMember Name="Ines Carvalho" Role="Support Lead" Department="Day shift" Location="Porto"
+                                Bio="Answers the hard tickets and writes the help articles that stop them coming back." />
+        <arc:TeamShowcaseMember Name="Tomasz Wilk" Role="Support Engineer" Department="Night shift" Location="Kraków"
+                                Bio="Reads stack traces for fun and knows every edge case of the billing page." />
+        <arc:TeamShowcaseMember Name="Aiko Mori" Role="Support Specialist" Department="Day shift" Location="Sapporo"
+                                Bio="Turns a frustrated email into a thank-you note, usually within the hour." />
+        <arc:TeamShowcaseMember Name="Femi Adeyemi" Role="Escalations" Department="Night shift" Location="Lagos"
+                                Bio="Takes the tickets nobody else could close, and closes them." />
+    </arc:TeamShowcase>
+</UserControl>

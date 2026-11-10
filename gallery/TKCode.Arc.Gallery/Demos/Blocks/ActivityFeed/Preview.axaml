@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ActivityFeedPreviewDemo">
+    <!-- The sample workspace; a new item arrives every few seconds. Pause to collect them behind the pill. -->
+    <arc:ActivityFeed x:Name="Feed" Title="Workspace activity" HorizontalAlignment="Center" />
+</UserControl>

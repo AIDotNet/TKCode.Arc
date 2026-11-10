@@ -1,0 +1,35 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.GlassPaneTheme">
+
+    <!--
+        The glass material: the blur, the tints and the light come from GlassPaneToken; the opaque fallback (reduced
+        transparency) is the raised surface with the ordinary border. Owners set the corners and the shadow.
+    -->
+    <ControlTheme x:Key="{x:Type arc:GlassPane}" TargetType="arc:GlassPane">
+        <Setter Property="ReduceTransparency" Value="{arc:ArcDesignTokenResource ReduceTransparency}" />
+        <Setter Property="BlurRadius" Value="{arc:GlassPaneTokenResource BlurRadius}" />
+        <Setter Property="Tint" Value="{arc:GlassPaneTokenResource Tint}" />
+        <Setter Property="FallbackTint" Value="{arc:GlassPaneTokenResource FallbackTint}" />
+        <Setter Property="EdgeLight" Value="{arc:GlassPaneTokenResource EdgeLight}" />
+        <Setter Property="EdgeShade" Value="{arc:GlassPaneTokenResource EdgeShade}" />
+        <Setter Property="Glaze" Value="{arc:GlassPaneTokenResource Glaze}" />
+        <Setter Property="Sheen" Value="{arc:GlassPaneTokenResource Sheen}" />
+        <Setter Property="SheenRadius" Value="{arc:GlassPaneTokenResource SheenRadius}" />
+        <Setter Property="SolidFill" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="SolidStroke" Value="{arc:ArcDesignTokenResource Border}" />
+    </ControlTheme>
+
+    <!-- The selection lens: brighter glass with a rim; opaque surface and border under reduced transparency. -->
+    <ControlTheme x:Key="{x:Type arc:GlassLens}" TargetType="arc:GlassLens">
+        <Setter Property="ReduceTransparency" Value="{arc:ArcDesignTokenResource ReduceTransparency}" />
+        <Setter Property="Fill" Value="{arc:GlassPaneTokenResource LensFill}" />
+        <Setter Property="Rim" Value="{arc:GlassPaneTokenResource LensRim}" />
+        <Setter Property="SolidFill" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="SolidStroke" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowResting}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+    </ControlTheme>
+</ResourceDictionary>

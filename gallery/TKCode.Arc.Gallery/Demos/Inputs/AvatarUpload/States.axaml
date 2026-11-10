@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AvatarUploadStatesDemo">
+    <!-- A field with a picture already, a smaller one without, and one driven by the app: ReportProgress,
+         CompleteUpload and FailUpload. -->
+    <StackPanel Spacing="28" HorizontalAlignment="Center" Margin="0,32">
+        <arc:AvatarUpload x:Name="WithPicture" Label="Team logo" Description="Square images look best" />
+        <arc:AvatarUpload Size="64" Label="Photo" Description="Optional" />
+        <StackPanel Spacing="12">
+            <arc:AvatarUpload x:Name="Manual" Size="64" Label="Manual upload" />
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <arc:Button Variant="Secondary" Size="Small" Content="Progress 40%" Click="OnProgress" />
+                <arc:Button Variant="Secondary" Size="Small" Content="Complete" Click="OnComplete" />
+                <arc:Button Variant="Secondary" Size="Small" Content="Fail" Click="OnFail" />
+            </StackPanel>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

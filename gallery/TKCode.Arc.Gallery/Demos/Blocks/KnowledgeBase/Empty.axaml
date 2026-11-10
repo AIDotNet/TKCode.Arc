@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.KnowledgeBaseEmptyDemo">
+    <!-- A real, empty knowledge base: pick or drop .md, .txt, .csv, .json or .html files and the built-in pipeline indexes their text. -->
+    <arc:KnowledgeBase IsSampleData="False" AssistantName="Pip" Margin="0,12" />
+</UserControl>

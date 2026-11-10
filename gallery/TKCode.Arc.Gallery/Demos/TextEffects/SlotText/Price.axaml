@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SlotTextPriceDemo">
+    <StackPanel Spacing="16" HorizontalAlignment="Center">
+        <arc:SlotText x:Name="Amount" FontSize="44" FontWeight="SemiBold" HorizontalAlignment="Center" />
+        <arc:Button Content="Change price" Variant="Secondary" HorizontalAlignment="Center" Click="OnChange" />
+    </StackPanel>
+</UserControl>

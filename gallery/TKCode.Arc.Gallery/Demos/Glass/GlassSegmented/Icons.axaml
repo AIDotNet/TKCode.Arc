@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.GlassSegmentedIconsDemo">
+    <!-- Segments with icons; the third one is disabled, so arrows skip it. -->
+    <Panel Height="180" ClipToBounds="True" arc:GlassBackdrop.Source="{Binding #Scene}">
+        <Canvas Name="Scene" Background="#EDE6DA">
+            <Rectangle Canvas.Left="40" Canvas.Top="30" Width="200" Height="120" RadiusX="20" RadiusY="20" Fill="#D97B57" />
+            <Rectangle Canvas.Left="300" Canvas.Top="60" Width="260" Height="90" RadiusX="20" RadiusY="20" Fill="#5B7FA6" />
+        </Canvas>
+        <arc:GlassSegmented HorizontalAlignment="Center" VerticalAlignment="Center">
+            <arc:GlassSegment Content="Light" Icon="{x:Static arc:ArcIcons.Sun}" />
+            <arc:GlassSegment Content="Dark" Icon="{x:Static arc:ArcIcons.Moon}" />
+            <arc:GlassSegment Content="Auto" Icon="{x:Static arc:ArcIcons.SunMoon}" IsEnabled="False" />
+            <arc:GlassSegment Content="Screen" Icon="{x:Static arc:ArcIcons.Monitor}" />
+        </arc:GlassSegmented>
+    </Panel>
+</UserControl>

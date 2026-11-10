@@ -1,0 +1,38 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.DateReelTheme">
+
+    <!--
+        A band marks the middle row; the wheels turn over it. The wheels draw their rows themselves and are placed in the
+        grid by the control in the chosen order.
+    -->
+    <ControlTheme x:Key="{x:Type arc:DateReel}" TargetType="arc:DateReel">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="ItemHeight" Value="{arc:DateReelTokenResource ItemHeight}" />
+        <Setter Property="ColumnPadding" Value="{arc:DateReelTokenResource ColumnPadding}" />
+        <Setter Property="ColumnSpacing" Value="{arc:DateReelTokenResource ColumnSpacing}" />
+        <Setter Property="EdgeFade" Value="{arc:DateReelTokenResource EdgeFade}" />
+        <Setter Property="FlickDecay" Value="{arc:DateReelTokenResource FlickDecay}" />
+        <Setter Property="PageRows" Value="{arc:DateReelTokenResource PageRows}" />
+        <Setter Property="FocusBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+        <Setter Property="BandCornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeLG}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:DateReel">
+                <Panel Margin="{TemplateBinding Padding}">
+                    <Border Height="{TemplateBinding ItemHeight}"
+                            VerticalAlignment="Center"
+                            IsHitTestVisible="False"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding BandCornerRadius}" />
+                    <Grid Name="PART_Columns" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

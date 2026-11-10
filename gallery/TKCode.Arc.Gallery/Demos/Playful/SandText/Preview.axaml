@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SandTextPreviewDemo">
+    <!-- Click the headline, or Tab to it and press Enter, to blow it away; do it again to gather it back. -->
+    <StackPanel Spacing="14" HorizontalAlignment="Center">
+        <arc:SandText Text="Nothing stays" HorizontalAlignment="Center" />
+        <TextBlock Text="Click the words to scatter them, and again to bring them back."
+                   HorizontalAlignment="Center"
+                   TextWrapping="Wrap"
+                   TextAlignment="Center"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

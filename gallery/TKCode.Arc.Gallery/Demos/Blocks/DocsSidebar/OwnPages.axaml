@@ -1,0 +1,41 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.DocsSidebarOwnPagesDemo">
+    <Border Height="520"
+            CornerRadius="22"
+            BorderThickness="1"
+            ClipToBounds="True"
+            BorderBrush="{arc:ArcDesignTokenResource Border}"
+            Background="{arc:ArcDesignTokenResource Background}">
+        <DockPanel>
+            <arc:DocsSidebar x:Name="Docs"
+                             DockPanel.Dock="Left"
+                             ProductName="Quillstack"
+                             CurrentKey="sync/conflicts"
+                             PageInvoked="OnPageInvoked">
+                <arc:DocsSidebarSection Title="Basics">
+                    <arc:DocsSidebarPage Key="basics/welcome" Title="Welcome" />
+                    <arc:DocsSidebarPage Key="basics/notebooks" Title="Notebooks" />
+                    <arc:DocsSidebarPage Key="basics/sharing" Title="Sharing" />
+                </arc:DocsSidebarSection>
+                <arc:DocsSidebarSection Title="Sync">
+                    <arc:DocsSidebarPage Key="sync/overview" Title="How sync works" />
+                    <arc:DocsSidebarPage Key="sync/offline" Title="Working offline" />
+                    <arc:DocsSidebarPage Key="sync/conflicts" Title="Resolving conflicts" Badge="New" />
+                </arc:DocsSidebarSection>
+                <arc:DocsSidebarSection Title="Account" IsExpanded="False">
+                    <arc:DocsSidebarPage Key="account/plans" Title="Plans" />
+                    <arc:DocsSidebarPage Key="account/export" Title="Export your data" />
+                </arc:DocsSidebarSection>
+            </arc:DocsSidebar>
+            <StackPanel Margin="36,40" Spacing="16" HorizontalAlignment="Left" MaxWidth="380">
+                <TextBlock Text="{Binding #Docs.CurrentPage.Title, FallbackValue=Docs}" FontSize="{arc:ArcDesignTokenResource TypeXL}" FontWeight="Medium" />
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <arc:Button Variant="Secondary" Size="Small" Content="Previous" Click="OnPreviousClick" />
+                    <arc:Button Variant="Secondary" Size="Small" Content="Next" Click="OnNextClick" />
+                </StackPanel>
+            </StackPanel>
+        </DockPanel>
+    </Border>
+</UserControl>

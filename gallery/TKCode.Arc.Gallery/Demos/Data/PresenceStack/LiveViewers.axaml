@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PresenceStackLiveViewersDemo">
+    <StackPanel Spacing="20">
+        <arc:PresenceStack x:Name="Stack" MaxVisibleCount="4" />
+        <WrapPanel ItemSpacing="12" LineSpacing="12">
+            <arc:Button Content="Someone joins" Variant="Secondary" Size="Small" Click="OnJoin" />
+            <arc:Button Content="Someone leaves" Variant="Secondary" Size="Small" Click="OnLeave" />
+            <arc:Button Content="Toggle idle" Variant="Ghost" Size="Small" Click="OnIdle" />
+        </WrapPanel>
+    </StackPanel>
+</UserControl>

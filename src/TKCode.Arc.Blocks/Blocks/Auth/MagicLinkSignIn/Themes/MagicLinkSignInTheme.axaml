@@ -1,0 +1,151 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.MagicLinkSignInTheme">
+    <!--
+        Magic link sign-in: one card whose stage swaps between the email form, "check your inbox" and the expired link,
+        each a column of an icon tile, a title, a sentence and its controls. The card's height follows on a spring. The
+        state views live in the hidden store and are moved onto the stage one at a time.
+    -->
+    <ControlTheme x:Key="{x:Type arc:MagicLinkSignIn}" TargetType="arc:MagicLinkSignIn">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MagicLinkSignIn">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <StackPanel>
+                        <arc:SpringSizeDecorator Name="PART_StageSize" Axis="Height" CrossClipOverflow="16">
+                            <arc:ArcContentSwap Name="PART_Stage"
+                                                Mode="Lift"
+                                                HorizontalContentAlignment="Stretch"
+                                                VerticalContentAlignment="Top" />
+                        </arc:SpringSizeDecorator>
+                        <arc:AuthAnnouncer Name="PART_Announcer" />
+
+                        <Panel Name="PART_Store" IsVisible="False">
+                            <!-- Email -->
+                            <StackPanel Name="PART_EmailView">
+                                <Border Classes="mls-tile" Background="{arc:ArcDesignTokenResource AccentSubtle}">
+                                    <arc:ArcGlyph Classes="mls-glyph" Data="{x:Static arc:ArcIcons.Mail}" Foreground="{arc:ArcDesignTokenResource Accent}" />
+                                </Border>
+                                <TextBlock Name="PART_EmailTitle" Classes="mls-title" />
+                                <TextBlock Name="PART_EmailDescription" Classes="mls-description" />
+                                <arc:Input Name="PART_Email" Margin="{arc:MagicLinkSignInTokenResource BodyMargin}" />
+                                <arc:Button Name="PART_SendButton" Classes="mls-wide" Margin="0,14,0,0" />
+                                <TextBlock Name="PART_Note" Classes="mls-note" />
+                            </StackPanel>
+
+                            <!-- Sent -->
+                            <StackPanel Name="PART_SentView">
+                                <Border Classes="mls-tile" Background="{arc:ArcDesignTokenResource SuccessSubtle}">
+                                    <arc:ArcGlyph Name="PART_SentGlyph" Classes="mls-glyph" Data="{x:Static arc:ArcIcons.Send}" Foreground="{arc:ArcDesignTokenResource Success}" />
+                                </Border>
+                                <TextBlock Name="PART_SentTitle" Classes="mls-title" />
+                                <TextBlock Name="PART_SentDescription" Classes="mls-description" />
+                                <TextBlock Name="PART_SentHint" Classes="mls-note" />
+                                <StackPanel Margin="{arc:MagicLinkSignInTokenResource BodyMargin}" Spacing="{arc:MagicLinkSignInTokenResource ButtonGap}">
+                                    <arc:Button Name="PART_ResendButton" Classes="mls-wide" Variant="Secondary">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <arc:ArcRing Name="PART_ResendRing"
+                                                         Width="{arc:MagicLinkSignInTokenResource RingSize}"
+                                                         Height="{arc:MagicLinkSignInTokenResource RingSize}"
+                                                         Thickness="{arc:MagicLinkSignInTokenResource RingThickness}"
+                                                         VerticalAlignment="Center"
+                                                         TrackBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                                         Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                            <TextBlock Name="PART_ResendText" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                    </arc:Button>
+                                    <arc:Button Name="PART_ChangeButton" Classes="mls-wide" Variant="Ghost" />
+                                </StackPanel>
+                            </StackPanel>
+
+                            <!-- Expired -->
+                            <StackPanel Name="PART_ExpiredView">
+                                <Border Classes="mls-tile" Background="{arc:ArcDesignTokenResource WarningSubtle}">
+                                    <arc:ArcGlyph Classes="mls-glyph" Data="{x:Static arc:ArcIcons.Hourglass}" Foreground="{arc:ArcDesignTokenResource Warning}" />
+                                </Border>
+                                <TextBlock Name="PART_ExpiredTitle" Classes="mls-title" />
+                                <TextBlock Name="PART_ExpiredDescription" Classes="mls-description" />
+                                <StackPanel Margin="{arc:MagicLinkSignInTokenResource BodyMargin}" Spacing="{arc:MagicLinkSignInTokenResource ButtonGap}">
+                                    <arc:Button Name="PART_SendNewButton" Classes="mls-wide" />
+                                    <arc:Button Name="PART_ExpiredChangeButton" Classes="mls-wide" Variant="Ghost" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Panel>
+
+                        <TextBlock Name="PART_Error"
+                                   IsVisible="False"
+                                   Margin="0,12,0,0"
+                                   TextWrapping="Wrap"
+                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                   Foreground="{arc:ArcDesignTokenResource Danger}" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Padding" Value="{arc:MagicLinkSignInTokenResource FrameInset}" />
+        <Setter Property="MaxWidth" Value="{arc:MagicLinkSignInTokenResource PreferredWidth}" />
+        <Setter Property="NarrowWidth" Value="{arc:MagicLinkSignInTokenResource NarrowWidth}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="ClipToBounds" Value="False" />
+
+        <Style Selector="^ /template/ Border#PART_Frame">
+            <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowResting}" />
+        </Style>
+        <Style Selector="^ /template/ Border.mls-tile">
+            <Setter Property="Width" Value="{arc:MagicLinkSignInTokenResource IconTile}" />
+            <Setter Property="Height" Value="{arc:MagicLinkSignInTokenResource IconTile}" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep14}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph.mls-glyph">
+            <Setter Property="Size" Value="{arc:MagicLinkSignInTokenResource IconGlyph}" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.mls-title">
+            <Setter Property="Margin" Value="{arc:MagicLinkSignInTokenResource TitleMargin}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXL}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="LineHeight" Value="{arc:MagicLinkSignInTokenResource TitleLineHeight}" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="Focusable" Value="True" />
+            <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
+            <Setter Property="FocusAdorner" Value="{x:Null}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.mls-description">
+            <Setter Property="Margin" Value="{arc:MagicLinkSignInTokenResource DescriptionMargin}" />
+            <Setter Property="LineHeight" Value="{arc:MagicLinkSignInTokenResource BodyLineHeight}" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.mls-note">
+            <Setter Property="Margin" Value="0,12,0,0" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="18" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.mls-wide">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+        </Style>
+
+        <Style Selector="^:narrow">
+            <Setter Property="Padding" Value="{arc:MagicLinkSignInTokenResource FrameInsetNarrow}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

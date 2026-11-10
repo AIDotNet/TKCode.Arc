@@ -1,0 +1,299 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.BlogGridTheme">
+
+    <!--
+        Ported from Arc's free blog-grid block (MIT, Copyright (c) 2026 Elia Kuratli): blog-grid.module.css.
+
+        The content is at most 1180 wide with padding 64 24 (48 16 at 680 and less). The index has 32 between its parts; the
+        page and the pagination share one measured box whose height springs when the filter or the page changes.
+    -->
+    <ControlTheme x:Key="{x:Type arc:BlogGrid}" TargetType="arc:BlogGrid">
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:BlogGrid">
+                <Panel Background="{TemplateBinding Background}">
+                    <Border Name="PART_Inner" MaxWidth="{arc:BlogGridTokenResource ContentMaxWidth}">
+                        <arc:BlogStage Name="PART_Stage">
+                            <StackPanel Name="PART_Index" Spacing="32">
+                                <StackPanel Name="PART_Header"
+                                            Spacing="12"
+                                            HorizontalAlignment="Left"
+                                            MaxWidth="{arc:BlogGridTokenResource HeaderMaxWidth}">
+                                    <TextBlock Name="PART_Title"
+                                               Text="{TemplateBinding Title}"
+                                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               FontSize="{TemplateBinding TitleFontSize}"
+                                               TextWrapping="Wrap"
+                                               AutomationProperties.HeadingLevel="2" />
+                                    <TextBlock Name="PART_Description"
+                                               Text="{TemplateBinding Description}"
+                                               IsVisible="{TemplateBinding HasDescription}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                               LineHeight="22.4"
+                                               LetterSpacing="-0.16"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                               TextWrapping="Wrap" />
+                                </StackPanel>
+                                <ScrollViewer Name="PART_FiltersHost"
+                                              HorizontalScrollBarVisibility="Hidden"
+                                              VerticalScrollBarVisibility="Disabled">
+                                    <arc:GlidingPillBar Name="PART_Filters" Look="Solid" HorizontalAlignment="Left" />
+                                </ScrollViewer>
+                                <arc:SpringSizeDecorator Axis="Height" Spring="Smooth" ClipOverflow="0">
+                                    <StackPanel Spacing="32">
+                                        <arc:BlockSwap Name="PART_Page" HorizontalContentAlignment="Stretch" />
+                                        <arc:BlockSwap Name="PART_Pagination" HorizontalContentAlignment="Stretch" />
+                                    </StackPanel>
+                                </arc:SpringSizeDecorator>
+                            </StackPanel>
+                            <Panel Name="PART_ReaderHost" IsVisible="False" />
+                        </arc:BlogStage>
+                    </Border>
+                    <arc:SiteAnnouncer Name="PART_Announcer" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Border#PART_Inner">
+            <Setter Property="Padding" Value="{arc:BlogGridTokenResource ContentInset}" />
+        </Style>
+        <Style Selector="^:small /template/ Border#PART_Inner">
+            <Setter Property="Padding" Value="{arc:BlogGridTokenResource ContentInsetSmall}" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:BlogStage}" TargetType="arc:BlogStage" />
+
+    <ControlTheme x:Key="{x:Type arc:BlogCardGrid}" TargetType="arc:BlogCardGrid" />
+
+    <ControlTheme x:Key="{x:Type arc:BlogAspectFrame}" TargetType="arc:BlogAspectFrame">
+        <Setter Property="ClipToBounds" Value="True" />
+    </ControlTheme>
+
+    <!-- One link: the cover (3:2, radius 20) and the body 16 under it; hovering zooms the picture 3% in 480 ms and quiets the title in 160 ms, pressing scales the cover to .99. -->
+    <ControlTheme x:Key="{x:Type arc:BlogCard}" TargetType="arc:BlogCard">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:BlogCard">
+                <Panel Name="PART_Root" Background="Transparent">
+                    <Grid Name="PART_Layout" RowDefinitions="Auto,Auto">
+                        <arc:BlogAspectFrame Name="PART_Frame"
+                                             Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                             CornerRadius="{arc:ArcDesignTokenResource RadiusStep20}">
+                            <Decorator Name="PART_ImageHost" RenderTransformOrigin="50%,50%" RenderTransform="none" />
+                        </arc:BlogAspectFrame>
+                        <StackPanel Name="PART_Body" Grid.Row="1" Spacing="8">
+                            <WrapPanel ItemSpacing="6">
+                                <TextBlock Name="PART_Category"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           LineHeight="16.8"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <TextBlock Text="·"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           LineHeight="16.8"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                           AutomationProperties.AccessibilityView="Raw" />
+                                <TextBlock Name="PART_Date"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           LineHeight="16.8"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </WrapPanel>
+                            <TextBlock Name="PART_Title" TextWrapping="Wrap" />
+                            <TextBlock Name="PART_Excerpt"
+                                       TextWrapping="Wrap"
+                                       TextTrimming="CharacterEllipsis"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            <arc:ArcShrinkRow Spacing="8" Margin="0,8,0,0">
+                                <Border Name="PART_Avatar"
+                                        Width="{arc:BlogGridTokenResource AvatarSize}"
+                                        Height="{arc:BlogGridTokenResource AvatarSize}"
+                                        ClipToBounds="True"
+                                        CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                        Background="{arc:ArcDesignTokenResource SurfaceMuted}" />
+                                <TextBlock Name="PART_Author"
+                                           arc:ArcShrinkRow.IsShrinkable="True"
+                                           VerticalAlignment="Center"
+                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                           TextTrimming="CharacterEllipsis" />
+                                <TextBlock Text="·"
+                                           VerticalAlignment="Center"
+                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                           AutomationProperties.AccessibilityView="Raw" />
+                                <TextBlock Name="PART_ReadTime"
+                                           VerticalAlignment="Center"
+                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </arc:ArcShrinkRow>
+                        </StackPanel>
+                    </Grid>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ TextBlock#PART_Title">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeLG}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="LineHeight" Value="23.4" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Excerpt">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="LineHeight" Value="21" />
+            <Setter Property="MaxLines" Value="2" />
+        </Style>
+        <Style Selector="^:fine-hover:not(:featured) /template/ TextBlock#PART_Title">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:fine-hover /template/ Decorator#PART_ImageHost">
+            <Setter Property="RenderTransform" Value="scale(1.03)" />
+        </Style>
+        <Style Selector="^:pressed /template/ arc|BlogAspectFrame#PART_Frame">
+            <Setter Property="RenderTransform" Value="scale(0.99)" />
+        </Style>
+        <Style Selector="^ /template/ arc|BlogAspectFrame#PART_Frame">
+            <Setter Property="RenderTransform" Value="none" />
+        </Style>
+        <!-- The featured post: the cover at 16:10 with radius 26, a display title, three lines of base text. -->
+        <Style Selector="^:featured">
+            <Style Selector="^ /template/ arc|BlogAspectFrame#PART_Frame">
+                <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_Body">
+                <Setter Property="Spacing" Value="12" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_Title">
+                <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource DisplayFontFamily}" />
+                <Setter Property="LineHeight" Value="NaN" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_Excerpt">
+                <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+                <Setter Property="LineHeight" Value="24" />
+                <Setter Property="MaxLines" Value="3" />
+            </Style>
+        </Style>
+        <Style Selector="^:featured:stacked /template/ arc|BlogAspectFrame#PART_Frame">
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep20}" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Decorator#PART_ImageHost">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Considered" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|BlogAspectFrame#PART_Frame">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ TextBlock#PART_Title">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- Previous and Next: 36 high, small medium text, a color change in 160 ms and a press to .97 in 120 ms; disabled is muted at 50%. -->
+    <ControlTheme x:Key="{x:Type arc:BlogPageStepButton}" TargetType="arc:BlogPageStepButton">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Height" Value="36" />
+        <Setter Property="MinWidth" Value="36" />
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="RenderTransform" Value="none" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:BlogPageStepButton">
+                <Panel Name="PART_Root" Background="Transparent">
+                    <ContentPresenter Padding="{TemplateBinding Padding}"
+                                      Content="{TemplateBinding Content}"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      HorizontalContentAlignment="Center"
+                                      VerticalContentAlignment="Center" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:fine-hover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.97)" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="Opacity" Value="0.5" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- All posts: 36 high, padding 0 12 0 8; hover fills with the muted surface. -->
+    <ControlTheme x:Key="{x:Type arc:BlogBackButton}" TargetType="arc:BlogBackButton">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Height" Value="36" />
+        <Setter Property="Padding" Value="8,0,12,0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:BlogBackButton">
+                <Panel Name="PART_Root">
+                    <Border Background="{TemplateBinding Background}" CornerRadius="{TemplateBinding CornerRadius}">
+                        <ContentPresenter Padding="{TemplateBinding Padding}"
+                                          Content="{TemplateBinding Content}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          VerticalContentAlignment="Center" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:fine-hover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

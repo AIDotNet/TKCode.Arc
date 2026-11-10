@@ -1,0 +1,74 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.RulerSliderTheme">
+    <ControlTheme x:Key="{x:Type arc:RulerSlider}" TargetType="arc:RulerSlider">
+        <!-- The focus ring is the control's own (built on first use); suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:RulerSlider">
+                <StackPanel Spacing="{arc:RulerSliderTokenResource RowGap}">
+                    <TextBlock Name="PART_Label"
+                               Text="{TemplateBinding Label}"
+                               IsVisible="{TemplateBinding Label, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                               HorizontalAlignment="Center"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                    <StackPanel Name="PART_Readout"
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                Margin="{arc:RulerSliderTokenResource ReadoutMargin}">
+                        <arc:SliderNumberText Name="PART_ReadoutValue"
+                                              VerticalAlignment="Bottom"
+                                              TextElement.FontSize="{arc:ArcDesignTokenResource Type2XL}"
+                                              TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                        <TextBlock Name="PART_Unit"
+                                   Text="{TemplateBinding Unit}"
+                                   IsVisible="{TemplateBinding Unit, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                   VerticalAlignment="Bottom"
+                                   Margin="{arc:RulerSliderTokenResource UnitMargin}"
+                                   FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                    </StackPanel>
+                    <Panel Name="PART_Viewport" Height="{arc:RulerSliderTokenResource ViewportHeight}">
+                        <Border Name="PART_Surface"
+                                Background="{arc:ArcDesignTokenResource Surface}"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusControl}" />
+                        <!-- The tape is the whole control: drag, flick or tap it. -->
+                        <arc:RulerTape Name="PART_Tape"
+                                       Margin="{arc:ArcDesignTokenResource EdgeThickness}"
+                                       Cursor="Hand"
+                                       TickBrush="{arc:RulerSliderTokenResource TickColor}"
+                                       MajorTickBrush="{arc:RulerSliderTokenResource MajorTickColor}"
+                                       NeedleBrush="{arc:ArcDesignTokenResource Accent}"
+                                       LabelBrush="{arc:ArcDesignTokenResource TextMuted}"
+                                       LabelFontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                                       LabelFontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       LabelTop="{arc:RulerSliderTokenResource LabelTop}"
+                                       LabelLineHeight="{arc:RulerSliderTokenResource LabelLineHeight}"
+                                       SmallTickHeight="{arc:RulerSliderTokenResource SmallTickHeight}"
+                                       HalfTickHeight="{arc:RulerSliderTokenResource HalfTickHeight}"
+                                       MajorTickHeight="{arc:RulerSliderTokenResource MajorTickHeight}"
+                                       TickWidth="{arc:RulerSliderTokenResource TickWidth}"
+                                       NeedleWidth="{arc:RulerSliderTokenResource NeedleWidth}"
+                                       NeedleHeight="{arc:RulerSliderTokenResource NeedleHeight}"
+                                       NeedleRadius="{arc:ArcDesignTokenResource RadiusPill}" />
+                    </Panel>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{arc:RulerSliderTokenResource DisabledOpacity}" />
+            <Style Selector="^ /template/ arc|RulerTape#PART_Tape">
+                <Setter Property="Cursor" Value="No" />
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

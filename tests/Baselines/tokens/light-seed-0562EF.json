@@ -22,12 +22,33 @@
       "TriggerPadding": "0,8,0,8",
       "TriggerPaddingLG": "0,20,0,20"
     },
+    "AccountHealth": {
+      "CompactPadding": "16,16,16,16",
+      "CompactWidth": "720",
+      "HealthyFrom": "75",
+      "Padding": "24,24,24,24",
+      "TilePadding": "16,16,16,16",
+      "TrendHeight": "40",
+      "UsagePlotHeight": "160",
+      "WatchFrom": "50"
+    },
     "ActionButton": {
       "DisabledOpacity": "0.7",
       "FocusRingRadius": "22,22,22,22",
       "IconSlotExtent": "17",
       "InlinePadding": "20,0,20,0",
       "LabelIconGap": "8"
+    },
+    "ActionMorph": {
+      "FaceHeight": "36",
+      "FacePadding": "14,0,16,0",
+      "FaceSpacing": "8",
+      "FocusRingMargin": "-3,-3,-3,-3",
+      "GlyphSize": "16",
+      "HoverTint": "#120B0B0B",
+      "PanelMinWidth": "240",
+      "PanelPadding": "12,10,8,10",
+      "PanelSpacing": "8"
     },
     "ActionSwap": {
       "DangerEdge": "#FFEABDB8",
@@ -45,6 +66,11 @@
       "WarningEdge": "#FFD7C3AD",
       "WarningEdgeHover": "#FFCCAC89",
       "WarningFill": "#FFF5EDE4"
+    },
+    "ActivityFeed": {
+      "FeedMaxHeight": "560",
+      "FeedMaxWidth": "640",
+      "FeedPadding": "20,20,20,20"
     },
     "ActivityHeatmap": {
       "CellGap": "3",
@@ -64,6 +90,21 @@
       "CommentRingOpacity": "0.45",
       "EmojiFontFamily": "compositefont:Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji, $Default#Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji, $Default",
       "FocusRingMargin": "-4,-4,-4,-4"
+    },
+    "ActivityRings": {
+      "Diameter": "168",
+      "FillBounce": "0.18",
+      "FillDuration": "900ms",
+      "LegendRingSize": "16",
+      "LegendRingThickness": "3",
+      "LegendRowSpacing": "12",
+      "LegendSpacing": "24",
+      "OverlapShadowColor": "#59000000",
+      "RingGap": "3",
+      "RingStagger": "90ms",
+      "RingThickness": "15",
+      "SideLegendMinWidth": "340",
+      "TrackOpacity": "0.16"
     },
     "ActivityTerrain": {
       "BlockPadding": "20,16,20,20",
@@ -97,6 +138,34 @@
       "TitleSize": "16",
       "TitleTracking": "-0.48",
       "TotalSize": "28"
+    },
+    "AgentApprovals": {
+      "CompactWidth": "680",
+      "GlyphBoxSize": "32",
+      "ListWidth": "300",
+      "MaxWidth": "920",
+      "RowPadding": "10,10,10,10",
+      "SectionPadding": "20,20,20,20"
+    },
+    "AgentBuilder": {
+      "AvatarSize": "40",
+      "ChatHeaderBackground": "#73F8F8F8",
+      "ChatMinHeight": "560",
+      "ChatMinWidth": "340",
+      "ChatShare": "0.46",
+      "ColumnGap": "16",
+      "CompactSectionPadding": "16,16,16,16",
+      "CompactWidth": "520",
+      "IconBoxSize": "32",
+      "InstructionsHeight": "176",
+      "RowHoverBackground": "#B2F8F8F8",
+      "RowPadding": "10,8,10,8",
+      "SectionGap": "12",
+      "SectionPadding": "24,20,24,20",
+      "SimulatedIndex": "2400ms",
+      "SimulatedSave": "600ms",
+      "StackWidth": "760",
+      "StackedChatHeight": "540"
     },
     "AgentCursor": {
       "ActionHeight": "30",
@@ -140,6 +209,32 @@
       "TintOutset": "2,1,2,1",
       "TitleLineHeight": "30",
       "TitleMargin": "0,0,0,0"
+    },
+    "AgentGallery": {
+      "CardGap": "12",
+      "CardHoverBackground": "#99F8F8F8",
+      "CardMinWidth": "248",
+      "CardPadding": "16,16,16,16",
+      "CompactDetailPadding": "12,4,16,20",
+      "CompactGridPadding": "12,12,12,16",
+      "CompactHeaderPadding": "16,16,16,12",
+      "CompactSectionPadding": "12,0,12,0",
+      "CompactWidth": "600",
+      "DetailMarkSize": "56",
+      "DetailMaxWidth": "720",
+      "DetailPadding": "20,4,24,28",
+      "DetailRise": "8",
+      "FocusRingOutset": "-3,-3,-3,-3",
+      "FrameMaxWidth": "1120",
+      "GridPadding": "20,12,20,24",
+      "HeaderPadding": "24,24,24,16",
+      "MarkSize": "40",
+      "MarkTintAlpha": "0.14",
+      "MaxColumns": "4",
+      "ResultsFadeFrom": "0.25",
+      "SearchWidth": "280",
+      "SectionPadding": "20,0,20,0",
+      "TagBackground": "#FFF8F8F8"
     },
     "AgentHandoff": {
       "ActionHeight": "28",
@@ -252,6 +347,33 @@
       "ToolbarHeight": "52",
       "ToolbarPadding": "8,0,60,0"
     },
+    "AgentOrchestrator": {
+      "ActiveEdgeWidth": "1.5",
+      "CardMaxWidth": "960",
+      "CompactGraphPadding": "16,8,16,16",
+      "CompactHeaderPadding": "16,14,12,10",
+      "CompactSectionPadding": "16,14,16,14",
+      "CompactWidth": "640",
+      "DetailWidth": "300",
+      "EdgeWidth": "1",
+      "GraphBackground": "#59F8F8F8",
+      "GraphPadding": "20,12,20,20",
+      "HeaderPadding": "20,16,16,12",
+      "LeadWidth": "248",
+      "LogHeight": "260",
+      "NodeGap": "12",
+      "NodeHeight": "112",
+      "NodeHoverBackground": "#99F8F8F8",
+      "NodeMaxWidth": "208",
+      "NodeMinWidth": "156",
+      "PacketDuration": "900ms",
+      "PacketHaloRadius": "9",
+      "PacketRadius": "4",
+      "RankGap": "72",
+      "SectionPadding": "20,16,20,16",
+      "TreeIndent": "28",
+      "TreeNodeHeight": "76"
+    },
     "AgentPlan": {
       "CardMaxWidth": "560",
       "FooterPadding": "20,11,20,12",
@@ -262,6 +384,31 @@
       "NarrowFooterPadding": "16,11,16,12",
       "NarrowHeaderPadding": "16,16,16,15",
       "NarrowListPadding": "4,6,4,6"
+    },
+    "AgentRoutines": {
+      "CompactWidth": "560",
+      "HistoryHeight": "16",
+      "MaxWidth": "760",
+      "RowPadding": "20,14,20,14"
+    },
+    "AgentRun": {
+      "ClockInterval": "250ms",
+      "CodePadding": "12,10,12,10",
+      "CompactSectionPadding": "16,14,16,14",
+      "CompactWidth": "480",
+      "EnterOffset": "6",
+      "MarkerGlyphSize": "13",
+      "MarkerSize": "24",
+      "MaxWidth": "720",
+      "ProgressGap": "3",
+      "ProgressHeight": "4",
+      "RailThickness": "1.5",
+      "RailWidth": "28",
+      "SectionPadding": "20,16,20,16",
+      "StepHeaderHeight": "32",
+      "StepHeaderPadding": "8,4,8,4",
+      "StepMargin": "0,0,0,6",
+      "TimelineMaxHeight": "420"
     },
     "AgentStatus": {
       "ActiveSegmentMix": "0.24",
@@ -281,6 +428,16 @@
       "PillCornerRadius": "20,20,20,20",
       "PillHeight": "40",
       "ShimmerBaseColor": "#FF797979"
+    },
+    "AgentTasks": {
+      "BoardPadding": "20,20,20,20",
+      "CardGap": "8",
+      "CardPadding": "12,12,12,12",
+      "ChipPadding": "10,3,10,3",
+      "ColumnMargin": "6,6,6,6",
+      "ColumnPadding": "8,8,8,8",
+      "CompactWidth": "720",
+      "ProgressHeight": "4"
     },
     "AgentTimeline": {
       "BodyLineHeight": "19.6",
@@ -305,6 +462,9 @@
       "TitleLetterSpacing": "-0.16",
       "TitleLineHeight": "17.6",
       "TrackPadding": "12,0,24,0"
+    },
+    "AiAgentButton": {
+      "RingMargin": "-3,-3,-3,-3"
     },
     "AiAnswer": {
       "AnswerMargin": "0,20,0,0",
@@ -464,12 +624,96 @@
       "ToolbarMargin": "0,2,0,0",
       "UploadDoneHold": "900ms"
     },
+    "AiFeatureLaunch": {
+      "BadgePadding": "8,2,8,2",
+      "BodyGap": "12",
+      "BodyLineHeight": "21",
+      "BodyPadding": "12,16,12,12",
+      "CardMaxWidth": "420",
+      "CardPadding": "8,8,8,8",
+      "CompactBodyPadding": "8,14,8,8",
+      "CompactWidth": "360",
+      "DemoHeight": "184",
+      "GlyphSize": "16",
+      "HighlightGap": "8",
+      "HighlightTextMargin": "10,0,0,0",
+      "IconButtonMargin": "8,8,8,8",
+      "IconButtonSize": "32"
+    },
+    "AiInlineEdit": {
+      "BarPadding": "16,12,16,12",
+      "ChangeButtonSize": "20",
+      "ChangeGlyphSize": "12",
+      "DocumentPadding": "24,20,24,20",
+      "LineHeight": "26",
+      "MaxWidth": "680"
+    },
+    "AiInsightCard": {
+      "AreaOpacity": "0.55",
+      "BodyLineHeight": "21",
+      "CardMaxWidth": "640",
+      "CardPadding": "20,20,20,20",
+      "ChangePadding": "8,2,8,2",
+      "ChartHeight": "148",
+      "CompactCardPadding": "16,16,16,16",
+      "CompactWidth": "420",
+      "DotRadius": "4",
+      "EyebrowGap": "6",
+      "EyebrowGlyphSize": "14",
+      "EyebrowPadding": "8,3,8,3",
+      "GlyphSize": "16",
+      "HeadingGap": "6",
+      "IconButtonSize": "32",
+      "LineThickness": "2",
+      "NextStepPadding": "14,14,14,14",
+      "RowFocusMargin": "-2,-2,-2,-2",
+      "RowGap": "4",
+      "RowPadding": "12,10,12,10",
+      "SectionGap": "18",
+      "ShareBarHeight": "4",
+      "ShareBarWidth": "72",
+      "SmallLineHeight": "16.8"
+    },
     "AiMascot": {
       "BlendDuration": "420ms",
       "CompactBelow": "56",
       "GroundColor": "#1A0B0B0B",
       "LineColor": "#FFC4C4C4",
       "ShadeColor": "#24000000"
+    },
+    "AiSearchBar": {
+      "AnswerLineHeight": "24",
+      "BarMaxWidth": "720",
+      "ChipPadding": "12,6,12,6",
+      "CitationFontSize": "10",
+      "CitationHeight": "18",
+      "CitationPadding": "6,0,6,0",
+      "CompactPanelPadding": "16,16,16,16",
+      "CompactWidth": "440",
+      "FocusMargin": "-2,-2,-2,-2",
+      "GlyphSize": "16",
+      "HeadingGap": "8",
+      "ItemGap": "8",
+      "NumberSize": "20",
+      "PanelPadding": "20,20,20,20",
+      "ResultPadding": "12,10,12,10",
+      "SectionGap": "20",
+      "SmallGlyphSize": "14",
+      "SmallLineHeight": "16.8",
+      "SourceMaxWidth": "260",
+      "SourcePadding": "10,8,10,8"
+    },
+    "AiSetupWizard": {
+      "CardPadding": "24,24,24,24",
+      "CheckGap": "10",
+      "CheckGlyphSize": "18",
+      "ColumnGap": "32",
+      "CompactCardPadding": "16,16,16,16",
+      "CompactWidth": "640",
+      "PageMinHeight": "360",
+      "SectionGap": "20",
+      "StepperWidth": "220",
+      "WizardMaxWidth": "860"
     },
     "AiSidePanel": {
       "AnswerLineHeight": "21.7",
@@ -911,6 +1155,18 @@
       "NamePadding": "8,4,8,4",
       "StackOverlap": "6"
     },
+    "AvatarUpload": {
+      "ActionsMargin": "0,10,0,0",
+      "ActionsSpacing": "8",
+      "CropInset": "20",
+      "CropSize": "256",
+      "EditorSpacing": "12",
+      "RingMargin": "-5,-5,-5,-5",
+      "RingThickness": "3",
+      "TextMargin": "20,0,0,0",
+      "TextSpacing": "2",
+      "ZoomGlyphSize": "16"
+    },
     "Badge": {
       "ContentGapMD": "5",
       "ContentGapSM": "4",
@@ -1024,6 +1280,27 @@
       "ShockOpacity": "0.6",
       "ShockWidth": "6"
     },
+    "BlogGrid": {
+      "AvatarSize": "24",
+      "ContentInset": "24,64,24,64",
+      "ContentInsetSmall": "16,48,16,48",
+      "ContentMaxWidth": "1180",
+      "HeaderMaxWidth": "600"
+    },
+    "BookingPill": {
+      "DayCellSize": "40",
+      "DividerHeight": "28",
+      "FocusRingMargin": "-3,-3,-3,-3",
+      "GlyphSize": "18",
+      "OpenGrow": "0.3",
+      "PanelPadding": "16,16,16,16",
+      "PanelWidth": "340",
+      "PillHeight": "64",
+      "PillPadding": "6,6,6,6",
+      "PopupGap": "10",
+      "SearchSize": "48",
+      "SegmentPadding": "22,8,16,8"
+    },
     "BottomSheet": {
       "ScrimColor": "#570D0D0D"
     },
@@ -1047,6 +1324,17 @@
       "PanelMaxWidth": "576",
       "SheetMargin": "0,0,0,-160",
       "SheetPadding": "0,0,0,160"
+    },
+    "BranchGraph": {
+      "ButtonGap": "6",
+      "CaptionMargin": "0,4,0,0",
+      "CaptionMinHeight": "39.2",
+      "HeaderRowHeight": "22.4",
+      "LaneGap": "18",
+      "RowHeight": "32",
+      "SectionGap": "20",
+      "SpeedGap": "12",
+      "TitleLineHeight": "17.6"
     },
     "Breadcrumb": {
       "CrumbGap": "6",
@@ -1187,6 +1475,22 @@
       "NavigationMargin": "0,0,-6,0",
       "TodayButtonPadding": "11,0,11,0",
       "WeekdaysMargin": "0,0,0,6"
+    },
+    "CallInsights": {
+      "CompactPadding": "16,16,16,16",
+      "CompactWidth": "760",
+      "FocusRingMargin": "-2,-2,-2,-2",
+      "LaneGap": "4",
+      "LaneHeight": "10",
+      "LinePadding": "10,8,10,8",
+      "Padding": "24,24,24,24",
+      "RowHoverBackground": "#FFFBFBFB",
+      "SectionGap": "20",
+      "SentimentHeight": "72",
+      "SideWidth": "300",
+      "TalkBarHeight": "10",
+      "TrackBackground": "#FFFCFCFC",
+      "TranscriptHeight": "380"
     },
     "CancelFlow": {
       "ActionsMargin": "0,28,0,0",
@@ -1350,6 +1654,32 @@
       "OptionHeight": "36",
       "OptionPadding": "11,0,34,0",
       "TriggerPadding": "12,0,12,0"
+    },
+    "CatchUp": {
+      "BodyLineHeight": "21",
+      "CardMaxWidth": "600",
+      "CardPadding": "20,20,20,20",
+      "CompactCardPadding": "16,16,16,16",
+      "CompactWidth": "440",
+      "DotSize": "8",
+      "FocusMargin": "-2,-2,-2,-2",
+      "GlyphSize": "16",
+      "IconButtonSize": "32",
+      "MarkSize": "32",
+      "ReadOpacity": "0.72",
+      "RecapPadding": "14,14,14,14",
+      "RowPadding": "10,10,10,10",
+      "SectionGap": "16"
+    },
+    "ChangelogFeed": {
+      "ChipCountOn": "#9EFFFFFF",
+      "FeedMaxWidth": "920",
+      "PanelInset": "156,0,72,28",
+      "PanelInsetNarrow": "20,0,20,24",
+      "RowHoverBackground": "#99F8F8F8",
+      "ScrollerHeight": "560",
+      "ScrollerHeightNarrow": "520",
+      "TextMaxWidth": "484"
     },
     "ChargeSession": {
       "AxisLabelGap": "6",
@@ -1908,6 +2238,22 @@
       "ToggleMargin": "-6,2,0,0",
       "TogglePadding": "6,0,8,0"
     },
+    "ComparisonTable": {
+      "BandHoverOpacity": "0.09",
+      "BandOpacity": "0.06",
+      "BandRadius": "20,20,20,20",
+      "CheckCircle": "#140B0B0B",
+      "ContentInset": "24,64,24,64",
+      "ContentInsetStacked": "16,48,16,48",
+      "ContentMaxWidth": "1080",
+      "CtaDoneBackground": "#24007824",
+      "HeadBackground": "#F0FFFFFF",
+      "HeadMinHeight": "84",
+      "HeadMinHeightStacked": "72",
+      "IntroMaxWidth": "560",
+      "RowHoverBackground": "#060B0B0B",
+      "RowMinHeight": "56"
+    },
     "ConfirmMorph": {
       "AnswerFocusColor": "#140B0B0B",
       "AnswerHoverColor": "#120B0B0B",
@@ -1931,6 +2277,17 @@
       "TriggerHoverColor": "#0D0B0B0B",
       "TriggerInset": "14,0,16,0",
       "TriggerPressColor": "#170B0B0B"
+    },
+    "ConfirmPopover": {
+      "ActionsMargin": "0,16,0,0",
+      "ActionsSpacing": "8",
+      "MarkGlyphSize": "16",
+      "MarkSize": "32",
+      "MessageLineHeight": "20",
+      "PanelWidth": "272",
+      "TextMargin": "12,0,0,0",
+      "TextSpacing": "2",
+      "TitleLineHeight": "20"
     },
     "ConnectedScatter": {
       "BlockPadding": "24,24,24,24",
@@ -1998,6 +2355,13 @@
       "StatusGlyphSize": "13",
       "StatusLineHeight": "16",
       "TitleLineHeight": "24"
+    },
+    "ContactSection": {
+      "ChannelPadding": "16,12,16,12",
+      "ContentMaxWidth": "1120",
+      "OfficePadding": "24,24,24,24",
+      "StatusDotSize": "7",
+      "TopicPadding": "16,0,16,0"
     },
     "ContextMenu": {
       "AnchorGap": "8",
@@ -2087,6 +2451,20 @@
       "CompactPadding": "12,0,12,0",
       "CompleteBackground": "#FFEBF3EB",
       "CompleteBorder": "#FFA3C2A4"
+    },
+    "CoverFlow": {
+      "CaptionSpacing": "2",
+      "CenterGap": "0.62",
+      "FocusRingMargin": "-3,-3,-3,-3",
+      "MaxShade": "0.3",
+      "Perspective": "650",
+      "ReflectionGap": "3",
+      "ReflectionHeight": "0.32",
+      "ReflectionOpacity": "0.26",
+      "ShadeColor": "#FF000000",
+      "SideScale": "0.86",
+      "SideSpacing": "52",
+      "StagePadding": "0,28,0,12"
     },
     "CreditTopUp": {
       "AddPadding": "24,16,24,8",
@@ -2339,6 +2717,25 @@
       "TriggerRadius": "18,18,18,18",
       "ValueLineHeight": "19.599999999999998"
     },
+    "DateReel": {
+      "ColumnPadding": "10",
+      "ColumnSpacing": "4",
+      "EdgeFade": "0.85",
+      "FlickDecay": "0.995",
+      "ItemHeight": "36",
+      "PageRows": "5"
+    },
+    "DeliveryTracker": {
+      "BlockPadding": "24,24,24,24",
+      "CompactThreshold": "720",
+      "GroundColor": "#FFF4F4F4",
+      "RouteHeight": "220",
+      "RouteMargin": "0,0,24,0",
+      "RouteStackedMargin": "0,0,0,20",
+      "RouteWidth": "380",
+      "SectionGap": "22",
+      "StreetColor": "#FFE6E6E6"
+    },
     "DesignToCode": {
       "ActionHeight": "36",
       "ActionPadding": "14,0,14,0",
@@ -2448,6 +2845,15 @@
       "WaveformHeight": "18",
       "WaveformMargin": "8,0,8,0"
     },
+    "DnsResolution": {
+      "ButtonGap": "6",
+      "CaptionMargin": "0,4,0,0",
+      "CaptionMinHeight": "39.2",
+      "HeaderRowHeight": "22.4",
+      "SectionGap": "20",
+      "SpeedGap": "12",
+      "TitleLineHeight": "17.6"
+    },
     "DockAutoHide": {
       "ButtonGap": "4",
       "ButtonPadding": "10,0,10,0",
@@ -2516,6 +2922,10 @@
       "ItemGap": "6",
       "ModifiedDotSize": "6",
       "TabGap": "2"
+    },
+    "DocsSidebar": {
+      "MarkSize": "22",
+      "VersionPadding": "10,0,8,0"
     },
     "DocumentExtraction": {
       "BarHeight": "48",
@@ -2606,6 +3016,25 @@
       "TickDiameter": "4",
       "TrackThickness": "8"
     },
+    "EmojiPicker": {
+      "CellSize": "36",
+      "EmojiFontFamily": "compositefont:Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji, $Default#Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji, $Default",
+      "EmojiFontSize": "22",
+      "GridHeight": "288",
+      "HeaderFontSize": "12",
+      "HeaderHeight": "28",
+      "PanelPadding": "8,8,8,8",
+      "PanelWidth": "352",
+      "PreviewEmojiSize": "24",
+      "PreviewHeight": "40",
+      "PreviewNameMargin": "10,0,0,0",
+      "RowSpacing": "6",
+      "TabGlyphSize": "18",
+      "TabSize": "32",
+      "ToneCellSize": "32",
+      "ToneFontSize": "18",
+      "TonesMargin": "6,0,0,0"
+    },
     "EmptyState": {
       "ActionMargin": "0,20,0,0",
       "DescriptionLineHeight": "19.599999999999998",
@@ -2673,6 +3102,31 @@
       "RowMinHeight": "64",
       "ScopeColumnWidth": "92",
       "SideInset": "24"
+    },
+    "EvalSuite": {
+      "CardMaxWidth": "960",
+      "CheckColumnWidth": "96",
+      "ChipHeight": "24",
+      "CompactHeaderPadding": "16,16,16,12",
+      "CompactRowInset": "12",
+      "CompactSectionPadding": "16,0,16,0",
+      "CompactVerdictColumnWidth": "60",
+      "CompactWidth": "620",
+      "HeaderHeight": "32",
+      "HeaderPadding": "20,20,20,16",
+      "ListMaxHeight": "448",
+      "RateFontSize": "28",
+      "RevealDuration": "240ms",
+      "RowDivider": "#FFF3F3F3",
+      "RowHeight": "56",
+      "RowHoverBackground": "#B2F8F8F8",
+      "RowInset": "20",
+      "RowSelectedBackground": "#0F0B0B0B",
+      "SectionPadding": "20,0,20,0",
+      "StatusColumnWidth": "124",
+      "TileGap": "12",
+      "TilePadding": "14,12,14,12",
+      "VerdictColumnWidth": "92"
     },
     "ExpandableCard": {
       "ChevronMargin": "20,0,0,0",
@@ -2756,6 +3210,39 @@
       "TickRadius": "1.5,1.5,1.5,1.5",
       "TickThickness": "3"
     },
+    "FaqSection": {
+      "AnswerPadding": "4,0,40,20",
+      "AnswerPaddingNarrow": "4,0,8,20",
+      "CategoryHeight": "40",
+      "ColumnsMaxWidth": "1120",
+      "ContactPadding": "20,16,20,16",
+      "HintPadding": "4,0,40,16",
+      "StackMaxWidth": "720",
+      "TriggerMinHeight": "64",
+      "TriggerPadding": "4,16,4,16"
+    },
+    "FeatureBento": {
+      "ArtMargin": "0,0,0,18",
+      "CardPadding": "24,24,24,24",
+      "CompactSectionPadding": "16,48,16,48",
+      "CompactTitleLineHeight": "34",
+      "ContentMaxWidth": "1120",
+      "DescriptionLineHeight": "21",
+      "Gap": "16",
+      "HeaderGap": "12",
+      "HeaderMargin": "0,0,0,48",
+      "HeaderMaxWidth": "640",
+      "NarrowRowHeight": "260",
+      "RowHeight": "240",
+      "SectionPadding": "24,80,24,80",
+      "TitleLineHeight": "44"
+    },
+    "FeatureVoting": {
+      "BarHeight": "6",
+      "CardMaxWidth": "420",
+      "CardPadding": "20,20,20,20",
+      "IndicatorSize": "20"
+    },
     "FeedbackActions": {
       "ActionGap": "2",
       "ChipFontSize": "13",
@@ -2776,6 +3263,11 @@
       "StatusGlyphSize": "14",
       "ThanksBadgeSize": "22",
       "ThanksGlyphSize": "14"
+    },
+    "FeedbackBoard": {
+      "BoardPadding": "24,24,24,24",
+      "DetailWidth": "380",
+      "StackedWidth": "760"
     },
     "Field": {
       "LabelLineHeight": "19.599999999999998",
@@ -3013,10 +3505,138 @@
       "TextFontSize": "14",
       "TextLineHeight": "22"
     },
+    "GlassCard": {
+      "CardPadding": "24,24,24,24",
+      "TiltDepth": "1200"
+    },
+    "GlassMenu": {
+      "AnchorGap": "8",
+      "MenuMinWidth": "220",
+      "MenuPadding": "6,6,6,6"
+    },
+    "GlassMenuItem": {
+      "IconMargin": "0,0,10,0",
+      "IconSize": "16",
+      "ItemHeight": "36",
+      "ItemPadding": "10,0,10,0",
+      "ShortcutMargin": "16,0,0,0"
+    },
+    "GlassMenuSeparator": {
+      "LineThickness": "1",
+      "SeparatorMargin": "10,5,10,5"
+    },
+    "GlassPane": {
+      "BlurRadius": "22",
+      "EdgeLight": "#E6FFFFFF",
+      "EdgeShade": "#1A0B0B0B",
+      "FallbackTint": "#D6FFFFFF",
+      "Glaze": "#52FFFFFF",
+      "LensFill": "#96FFFFFF",
+      "LensRim": "#FFFFFFFF",
+      "Sheen": "#78FFFFFF",
+      "SheenRadius": "180",
+      "Tint": "#75FFFFFF"
+    },
+    "GlassSegment": {
+      "FocusRingMargin": "-2,-2,-2,-2",
+      "IconGap": "6",
+      "IconSize": "16",
+      "SegmentHeight": "34",
+      "SegmentPadding": "14,0,14,0"
+    },
+    "GlassSegmented": {
+      "DisabledOpacity": "0.5",
+      "LensSwell": "2",
+      "SegmentGap": "2",
+      "TrackInset": "4,4,4,4"
+    },
+    "GlassTab": {
+      "BadgeDotSize": "8",
+      "BadgeFontSize": "10",
+      "BadgeHeight": "16",
+      "BadgeMargin": "0,-4,-10,0",
+      "BadgePadding": "4,0,4,0",
+      "CompactTabHeight": "44",
+      "FocusRingMargin": "-2,-2,-2,-2",
+      "IconSize": "22",
+      "LabelFontSize": "11",
+      "LabelGap": "2",
+      "TabHeight": "52",
+      "TabMinWidth": "64",
+      "TabPadding": "12,0,12,0"
+    },
+    "GlassTabBar": {
+      "BarInset": "5,5,5,5",
+      "LensSwell": "3"
+    },
+    "GoalTracker": {
+      "AvatarDiameter": "24",
+      "BarHeight": "6",
+      "CardPadding": "16,16,16,16",
+      "CompactPadding": "16,16,16,16",
+      "CompactWidth": "640",
+      "Padding": "24,24,24,24",
+      "TimelineGutter": "200",
+      "TimelineRowHeight": "30"
+    },
     "GravityWell": {
       "FocusRingMargin": "-4,-4,-4,-4",
       "RingMargin": "-2,-2,-2,-2",
       "RingThickness": "2,2,2,2"
+    },
+    "HelpCenter": {
+      "CenterPadding": "28,28,28,28",
+      "NarrowWidth": "720",
+      "TocWidth": "200"
+    },
+    "HeroSection": {
+      "CanvasDot": "#210B0B0B",
+      "CanvasWire": "#2B0B0B0B",
+      "ChromeFill": "#FFFBFBFB",
+      "DashboardMesh1": "#FFFFE6D8",
+      "DashboardMesh2": "#FFE3DCFF",
+      "DashboardMesh3": "#FFDBE4FF",
+      "DashboardMesh4": "#FFF0E0FF",
+      "DashboardMesh5": "#FFE0EEFC",
+      "EditorialMesh1": "#FFBDD3EC",
+      "EditorialMesh2": "#FFC3C6FF",
+      "EditorialMesh3": "#FFFFD0B0",
+      "EditorialMesh4": "#FFF6BFD6",
+      "EditorialMesh5": "#FFCFE8DC",
+      "EditorialMesh6": "#FFFFF3DC",
+      "EditorialMeshBase": "#FFF2EDE7",
+      "NodePadding": "14,0,14,0",
+      "NodeRadius": "14,14,14,14",
+      "SidebarFill": "#FFFCFCFC",
+      "WindowLight": "#240B0B0B"
+    },
+    "HeroSignup": {
+      "ActionMargin": "0,36,0,0",
+      "CompactSectionPadding": "20,80,20,72",
+      "CompactTitleLineHeight": "42",
+      "ContentMaxWidth": "820",
+      "DescriptionLineHeight": "28",
+      "DescriptionMargin": "0,18,0,0",
+      "DescriptionMaxWidth": "600",
+      "DoneBadge": "36",
+      "DonePadding": "16,14,16,14",
+      "DotColor": "#FFC4C4C4",
+      "DotRadius": "1",
+      "DotSpacing": "22",
+      "EyebrowDot": "6",
+      "EyebrowPadding": "12,5,12,5",
+      "FaceDiameter": "30",
+      "FaceOverlap": "9",
+      "FormGap": "10",
+      "FormMaxWidth": "500",
+      "GlowOpacity": "0.16",
+      "NarrowSectionPadding": "16,56,16,48",
+      "NarrowTitleLineHeight": "34",
+      "ProofMargin": "0,30,0,0",
+      "SectionPadding": "24,112,24,96",
+      "TitleLetterSpacing": "-1.2",
+      "TitleLineHeight": "58",
+      "TitleMargin": "0,22,0,0"
     },
     "HoldToConfirm": {
       "DangerBorder": "#FFE9B0AB",
@@ -3171,8 +3791,23 @@
       "ShimmerLight": "#D9FFFFFF",
       "SurfaceTone": "#FFEEEEEE"
     },
+    "ImageTrail": {
+      "FocusRingMargin": "-4,-4,-4,-4",
+      "SurfaceMinHeight": "240"
+    },
     "InViewTitle": {
       "TitleLeading": "1.1"
+    },
+    "InboxSidebar": {
+      "ComposePadding": "12,0,12,0",
+      "HeaderGap": "12",
+      "LabelDot": "8",
+      "ToggleSize": "32"
+    },
+    "InboxTriage": {
+      "BlockMaxWidth": "560",
+      "BlockPadding": "20,20,20,20",
+      "ListMaxHeight": "520"
     },
     "InkFluid": {
       "FieldMinHeight": "240"
@@ -3359,6 +3994,17 @@
       "TitleLetterSpacing": "-0.48",
       "TitleLineHeight": "17.6"
     },
+    "InvoiceStudio": {
+      "BlockPadding": "24,24,24,24",
+      "CompactThreshold": "900",
+      "InkColor": "#FF1D1D1F",
+      "InkMutedColor": "#FF6B6B70",
+      "PaperColor": "#FFFDFCFA",
+      "PaperPadding": "28,30,28,30",
+      "PreviewMargin": "28,0,0,0",
+      "PreviewWidth": "380",
+      "RuleColor": "#FFE4E2DD"
+    },
     "JourneyFlow": {
       "BigNumberSize": "28",
       "BodyLineHeight": "18.2",
@@ -3485,6 +4131,40 @@
       "TriggerHeight": "36",
       "TriggerPadding": "12,0,12,0"
     },
+    "KeycapKeyboard": {
+      "KeyDepth": "3",
+      "KeyGap": "5",
+      "KeySize": "44",
+      "KeySkirtColor": "#FFCACACA",
+      "PlatePadding": "10,10,10,10"
+    },
+    "KnowledgeBase": {
+      "CardMaxWidth": "960",
+      "CompactDropZoneMargin": "16,0,16,12",
+      "CompactHeaderPadding": "16,16,16,12",
+      "CompactSearchPadding": "16,12,16,12",
+      "CompactWidth": "480",
+      "DropZoneBackground": "#8CF8F8F8",
+      "DropZoneMargin": "20,0,20,16",
+      "DropZonePadding": "16,12,16,12",
+      "HeaderPadding": "20,20,20,16",
+      "IconButtonSize": "32",
+      "ListMaxHeight": "420",
+      "MarkSize": "32",
+      "PanePadding": "12,12,12,12",
+      "PipelineStep": "260ms",
+      "PreviewLength": "240",
+      "RingSize": "16",
+      "RowHoverBackground": "#B2F8F8F8",
+      "RowMinHeight": "60",
+      "RowPadding": "8,10,8,10",
+      "ScoreBarWidth": "40",
+      "SearchColumnWidth": "340",
+      "SearchDelay": "180ms",
+      "SearchPadding": "20,16,20,16",
+      "TrackColor": "#1A0B0B0B",
+      "WideWidth": "760"
+    },
     "KpiDrilldown": {
       "BreakdownChangeWidth": "88",
       "BreakdownPercentWidth": "44",
@@ -3557,6 +4237,31 @@
       "ToolbarMargin": "0,0,0,12",
       "ToolbarMinHeight": "44"
     },
+    "LeadScoring": {
+      "CellBarHeight": "4",
+      "CellBarWidth": "56",
+      "CompactPadding": "16,16,16,16",
+      "CompactWidth": "860",
+      "DetailWidth": "320",
+      "Padding": "24,24,24,24",
+      "RingDiameter": "64",
+      "RingThickness": "6",
+      "TableHeight": "440"
+    },
+    "LightboxGallery": {
+      "ArrowMargin": "16,16,16,16",
+      "BackdropColor": "#F00B0B0D",
+      "BarPadding": "16,12,16,12",
+      "BarSpacing": "8",
+      "CaptionMargin": "24,0,24,18",
+      "ChromeMutedColor": "#A6FFFFFF",
+      "ChromeTextColor": "#F2FFFFFF",
+      "FocusRingMargin": "-3,-3,-3,-3",
+      "PhotoMargin": "72,64,72,64",
+      "PhotoMarginCompact": "0,56,0,56",
+      "TileHoverScale": "1.04",
+      "TileSpacing": "8"
+    },
     "LineChart": {
       "AxisRowHeight": "26",
       "GutterWidth": "48",
@@ -3605,6 +4310,16 @@
       "ToolbarPadding": "18,10,12,12",
       "ToolbarPaddingCompact": "14,8,10,10",
       "TryHideBreakpoint": "360"
+    },
+    "LiquidTabBar": {
+      "FocusRingMargin": "-2,-2,-2,-2",
+      "GlyphSize": "16",
+      "ItemHeight": "36",
+      "ItemPadding": "16,0,16,0",
+      "ItemSpacing": "6",
+      "Pinch": "0.2",
+      "Squash": "0.22",
+      "TrackPadding": "4,4,4,4"
     },
     "LiveCheckout": {
       "CheckDelay": "320ms",
@@ -3807,6 +4522,38 @@
       "ViewportOutset": "-12,0,-12,0",
       "WideBreakpoint": "1100"
     },
+    "LogoMarquee": {
+      "DescriptionMaxWidth": "324",
+      "IntroInset": "40,40,40,36",
+      "IntroInsetNarrow": "20,28,20,24",
+      "ItemGap": "56",
+      "ItemGapNarrow": "40",
+      "MarkSize": "22",
+      "MarkSizeNarrow": "20",
+      "NameGap": "10",
+      "TitleMaxWidth": "540",
+      "TravelDuration": "39000ms"
+    },
+    "MagicLinkSignIn": {
+      "BodyLineHeight": "20",
+      "BodyMargin": "0,22,0,0",
+      "ButtonGap": "8",
+      "DescriptionMargin": "0,6,0,0",
+      "FrameInset": "32,32,32,28",
+      "FrameInsetNarrow": "22,24,22,20",
+      "IconGlyph": "20",
+      "IconTile": "44",
+      "NarrowWidth": "360",
+      "PreferredWidth": "420",
+      "RingSize": "14",
+      "RingThickness": "2",
+      "TitleLineHeight": "28",
+      "TitleMargin": "0,18,0,0"
+    },
+    "MagnifyDock": {
+      "ItemFocusRingMargin": "-3,-3,-3,-3",
+      "PressedOpacity": "0.8"
+    },
     "Markdown": {
       "BlockGap": "12",
       "BodyLeading": "1.65"
@@ -3837,6 +4584,27 @@
       "WatchRowPadding": "12,8,12,8",
       "WatchRowRadius": "18,18,18,18",
       "WideThreshold": "1080"
+    },
+    "McpServers": {
+      "BodyPadding": "60,2,16,16",
+      "CardMaxWidth": "720",
+      "CompactBodyPadding": "12,2,12,14",
+      "CompactFormPadding": "16,16,16,16",
+      "CompactHeaderPadding": "16,18,16,14",
+      "CompactListPadding": "6,0,6,8",
+      "CompactWidth": "520",
+      "ConnectedPulse": "2400ms",
+      "ConnectingPulse": "900ms",
+      "FormPadding": "24,20,24,20",
+      "HeaderPadding": "24,22,24,16",
+      "ListPadding": "12,0,12,12",
+      "LogMaxHeight": "160",
+      "MarkSize": "36",
+      "RowHeaderPadding": "12,10,12,10",
+      "RowHoverBackground": "#B2F8F8F8",
+      "RowOpenBackground": "#66F8F8F8",
+      "StatusDotSize": "8",
+      "StatusHaloSpread": "5"
     },
     "MediaButton": {
       "CompactInlinePadding": "12,0,12,0",
@@ -3942,6 +4710,27 @@
       "TitleFontSize": "15",
       "TitleLineHeight": "22",
       "TitleMargin": "12,0,12,0"
+    },
+    "MegaMenuMorph": {
+      "ChevronGap": "6",
+      "ChevronSize": "14",
+      "FocusRingMargin": "-3,-3,-3,-3",
+      "PanelGap": "10",
+      "PanelMaxWidth": "760",
+      "PanelPadding": "12,12,12,12",
+      "SlideDistance": "36",
+      "TriggerGap": "2",
+      "TriggerHeight": "36",
+      "TriggerPadding": "14,0,14,0",
+      "ViewportMargin": "12"
+    },
+    "MegaMenuMorphLink": {
+      "FocusRingMargin": "-2,-2,-2,-2",
+      "IconMargin": "0,0,12,0",
+      "IconSize": "18",
+      "IconTileSize": "36",
+      "LinkPadding": "10,10,10,10",
+      "TextGap": "2"
     },
     "MentionInput": {
       "ChannelTokenFill": "#120B0B0B",
@@ -4050,6 +4839,17 @@
       "SurfaceRadius": "16",
       "TabRowHeight": "32",
       "TwoColumnWidth": "760"
+    },
+    "MetricTicker": {
+      "ButtonGap": "8",
+      "CellPadding": "8,4,8,4",
+      "FadeWidth": "28",
+      "ItemGap": "24",
+      "MinColumnWidth": "150",
+      "RowGap": "8",
+      "StackedValueFontSize": "22",
+      "StripPadding": "12,6,6,6",
+      "ValueFontSize": "14"
     },
     "MetricsDashboard": {
       "ActionsGap": "8",
@@ -4300,6 +5100,15 @@
       "SummaryMaxWidth": "440",
       "SwapEnterDuration": "160ms"
     },
+    "ModelTraining": {
+      "ButtonGap": "6",
+      "CaptionMargin": "0,4,0,0",
+      "CaptionMinHeight": "39.2",
+      "HeaderRowHeight": "22.4",
+      "SectionGap": "20",
+      "SpeedGap": "12",
+      "TitleLineHeight": "17.6"
+    },
     "MoneyInput": {
       "AmountLetterSpacing": "-1.08",
       "AmountLineHeight": "43.199999999999996",
@@ -4344,6 +5153,24 @@
       "DefaultSize": "24",
       "DefaultStrokeWidth": "2.5",
       "DotWidth": "4"
+    },
+    "MorphNav": {
+      "ColumnGap": "12",
+      "FocusRingMargin": "2,2,2,2",
+      "LinkGlyphSize": "16",
+      "LinkHeight": "36",
+      "LinkHoverColor": "#0F0B0B0B",
+      "LinkInset": "8",
+      "LinkTallHeight": "52",
+      "LinkTileSize": "32",
+      "MinColumnWidth": "176",
+      "PanelGutter": "16",
+      "PanelPadding": "16,10,16,16",
+      "PanelSpacing": "12",
+      "PanelWidth": "600",
+      "PillHeight": "44",
+      "PillPadding": "16,0,14,0",
+      "PillSpacing": "10"
     },
     "MorphSelect": {
       "ChevronMargin": "0,0,12,0",
@@ -4627,6 +5454,38 @@
       "OperatorWidth": "84",
       "ValueWidth": "168"
     },
+    "OnboardingChecklist": {
+      "ActionGap": "8",
+      "ActionMargin": "0,12,0,0",
+      "ActionPadding": "16,0,12,0",
+      "BodyLineHeight": "19.6",
+      "BodyPadding": "8,8,8,8",
+      "CheckSize": "22",
+      "CheckThickness": "1.5,1.5,1.5,1.5",
+      "ColumnGap": "12",
+      "DescriptionMargin": "0,-4,0,0",
+      "DescriptionMaxWidth": "368",
+      "ErrorPadding": "0,8,0,0",
+      "FocusRingMargin": "-2,-2,-2,-2",
+      "GlyphSize": "16",
+      "GroupMargin": "0,2,0,0",
+      "GroupMinHeight": "44",
+      "GroupPadding": "64,0,12,0",
+      "HeaderPadding": "20,20,20,20",
+      "HeadingGap": "1",
+      "HeadingLetterSpacing": "-0.16",
+      "HeadingLineHeight": "22.4",
+      "HideGap": "4",
+      "HidePadding": "12,0,8,0",
+      "HoverBackground": "#99F8F8F8",
+      "LeadSize": "40",
+      "PanelPadding": "0,0,0,12",
+      "RingSize": "37",
+      "RingThickness": "3",
+      "SpinnerSize": "14",
+      "StepPadding": "12,4,12,4",
+      "TitleMinHeight": "40"
+    },
     "OnboardingIllustration": {
       "ActionFocusRingRadius": "16,16,16,16",
       "ActionGap": "8",
@@ -4672,6 +5531,22 @@
       "TitleLetterSpacing": "-0.18",
       "TitleLineHeight": "19.8"
     },
+    "OnboardingSurvey": {
+      "ActionsMargin": "0,26,0,0",
+      "BodyLineHeight": "20",
+      "BodyMargin": "0,18,0,0",
+      "DescriptionMargin": "0,6,0,0",
+      "FrameInset": "28,28,28,28",
+      "FrameInsetNarrow": "20,22,20,22",
+      "NarrowWidth": "440",
+      "OptionGap": "12",
+      "PreferredWidth": "540",
+      "ProgressMargin": "0,10,0,22",
+      "ResultGlyph": "28",
+      "ResultMark": "56",
+      "TextHeight": "112",
+      "TitleLineHeight": "28"
+    },
     "OrbitLogos": {
       "CardPadding": "20,20,20,20",
       "CategoryHeight": "34",
@@ -4680,6 +5555,15 @@
       "DotSize": "10",
       "FocusRingMargin": "-4,-4,-4,-4",
       "TagPadding": "10,4,10,4"
+    },
+    "OrbitMenu": {
+      "ActionGlyphSize": "18",
+      "ActionSize": "44",
+      "LaunchScale": "0.4",
+      "OrbitRadius": "88",
+      "TriggerFocusRingMargin": "-4,-4,-4,-4",
+      "TriggerGlyphSize": "22",
+      "TriggerSize": "52"
     },
     "OtpInput": {
       "DisabledOpacity": "0.48",
@@ -4824,6 +5708,14 @@
       "ValidMargin": "0,0,12,0",
       "ValidSlotSize": "18"
     },
+    "PhotoGrid": {
+      "FocusRingMargin": "-3,-3,-3,-3",
+      "MinColumnWidth": "220",
+      "PhotoSpacing": "6",
+      "SelectedMaxHeight": "520",
+      "SelectedRingThickness": "2,2,2,2",
+      "TargetRowHeight": "200"
+    },
     "PiiRedaction": {
       "BoxCornerRadius": "14,14,14,14",
       "BoxPadding": "14,12,14,12",
@@ -4864,6 +5756,12 @@
       "TextFontSize": "14",
       "TextLineHeight": "22",
       "TitleFontSize": "15"
+    },
+    "PivotBuilder": {
+      "CompactPadding": "16,16,16,16",
+      "CompactWidth": "760",
+      "Padding": "24,24,24,24",
+      "PanelPadding": "16,16,16,16"
     },
     "PixelMascot": {
       "OutlineColor": "#FF0B0B0B",
@@ -4937,6 +5835,12 @@
       "PanelMinWidth": "192",
       "PanelPadding": "16,16,16,16"
     },
+    "PresenceStack": {
+      "ChipFontSize": "11",
+      "CountGap": "8",
+      "IdleOpacity": "0.45",
+      "Overlap": "10"
+    },
     "PricingCalculator": {
       "BadgeHeight": "22",
       "BillingGrooveColor": "#0F0B0B0B",
@@ -4966,6 +5870,41 @@
       "TrackFillColor": "#FF1E1E1E",
       "TrackRestColor": "#FFE6E6E6",
       "TrackThickness": "6"
+    },
+    "PrizeWheel": {
+      "FocusRingMargin": "-6,-6,-6,-6",
+      "PointerLength": "32",
+      "RimWidth": "12"
+    },
+    "ProductDetail": {
+      "BlockPadding": "24,24,24,24",
+      "CompactThreshold": "820",
+      "GalleryMargin": "0,0,32,0",
+      "GalleryStackedMargin": "0,0,0,24",
+      "GalleryWidth": "400",
+      "SizeButtonWidth": "52",
+      "SwatchSize": "30",
+      "ThumbSize": "68"
+    },
+    "ProductGallery": {
+      "CounterPadding": "10,4,10,4",
+      "FocusRingMargin": "-3,-3,-3,-3",
+      "IdleThumbOpacity": "0.72",
+      "OverlayMargin": "12,12,12,12",
+      "SlideGap": "16",
+      "StripMargin": "0,12,0,0",
+      "StripMarginLeft": "0,0,12,0",
+      "ThumbRingThickness": "2,2,2,2",
+      "ThumbSize": "64",
+      "ThumbSpacing": "8"
+    },
+    "ProductListing": {
+      "BlockPadding": "24,24,24,24",
+      "CardGap": "20",
+      "CompactThreshold": "760",
+      "FiltersMargin": "0,0,28,0",
+      "FiltersWidth": "220",
+      "MinCardWidth": "160"
     },
     "ProfilePage": {
       "AboutWidth": "248",
@@ -5343,6 +6282,35 @@
       "RowGap": "8",
       "RowInset": "12,12,12,12"
     },
+    "RangeHistogramSlider": {
+      "BarColor": "#1C0B0B0B",
+      "BarGap": "2",
+      "ChartHeight": "76",
+      "DisabledOpacity": "0.5",
+      "GuideColor": "#660B0B0B",
+      "GuideOverhang": "2",
+      "LabelLineHeight": "19.6",
+      "ReadoutGap": "4.2",
+      "ReadoutMargin": "16,0,0,0",
+      "RowGap": "12",
+      "ThumbDiameter": "22",
+      "TrackThickness": "4"
+    },
+    "Rating": {
+      "CellGap": "2",
+      "CellRadius": "12,12,12,12",
+      "CellSizeLG": "44",
+      "CellSizeMD": "36",
+      "CellSizeSM": "28",
+      "DisabledOpacity": "0.5",
+      "FieldGap": "6",
+      "GlyphSizeLG": "30",
+      "GlyphSizeMD": "24",
+      "GlyphSizeSM": "18",
+      "KeptOpacity": "0.3",
+      "RowGap": "2",
+      "ValueGap": "8"
+    },
     "Reactions": {
       "AddButtonWidth": "38",
       "CaptionHeight": "22",
@@ -5570,6 +6538,18 @@
       "SubjectLineHeight": "22",
       "TrackPadding": "2,2,2,2"
     },
+    "ResearchRun": {
+      "CitationHeight": "18",
+      "CompactSectionPadding": "16,14,16,14",
+      "CompactWidth": "640",
+      "MaxWidth": "860",
+      "MeterHeight": "2",
+      "SectionGap": "20",
+      "SectionPadding": "20,16,20,16",
+      "SourcePadding": "10,8,10,8",
+      "StageConnectorWidth": "28",
+      "StageDotSize": "10"
+    },
     "ResizablePanel": {
       "DefaultMinWidth": "80"
     },
@@ -5761,6 +6741,28 @@
       "TitleLetterSpacing": "-0.16",
       "TitleLineHeight": "17.6"
     },
+    "RulerSlider": {
+      "DisabledOpacity": "0.5",
+      "FocusRingMargin": "-4,-4,-4,-4",
+      "HalfTickHeight": "20",
+      "LabelLineHeight": "16.8",
+      "LabelTop": "36",
+      "MajorTickColor": "#7A0B0B0B",
+      "MajorTickHeight": "28",
+      "NeedleHeight": "36",
+      "NeedleWidth": "2",
+      "ReadoutMargin": "0,0,0,12",
+      "RowGap": "4",
+      "SmallTickHeight": "12",
+      "TickColor": "#330B0B0B",
+      "TickWidth": "1",
+      "UnitMargin": "8.4,0,0,3",
+      "ViewportHeight": "72"
+    },
+    "SandText": {
+      "DefaultFontSize": "52",
+      "FocusRingMargin": "-6,-4,-6,-4"
+    },
     "SankeyFlow": {
       "FigureGap": "10",
       "NodeGap": "14",
@@ -5771,6 +6773,24 @@
     "ScrollArea": {
       "FocusRingMargin": "0,0,0,0",
       "TrackThickness": "11"
+    },
+    "ScrollStory": {
+      "ColumnGap": "56",
+      "CompactSectionPadding": "16,48,16,48",
+      "CompactTitleLineHeight": "34",
+      "ContentMaxWidth": "1120",
+      "HeaderGap": "12",
+      "HeaderMargin": "0,0,0,32",
+      "HeaderMaxWidth": "640",
+      "InactiveOpacity": "0.35",
+      "InlineSceneHeight": "200",
+      "SectionPadding": "24,80,24,80",
+      "StackedGap": "40",
+      "StageAspect": "0.8",
+      "StepBodyLineHeight": "27",
+      "StepMinHeight": "380",
+      "StepTitleLineHeight": "34",
+      "TitleLineHeight": "44"
     },
     "ScrubInput": {
       "BodyPadding": "0,0,10,0",
@@ -5922,6 +6942,14 @@
       "TitleSize": "16",
       "WarningInk": "#FF9F6202"
     },
+    "SeatMap": {
+      "BlockPadding": "24,24,24,24",
+      "CompactThreshold": "780",
+      "LegendDot": "12",
+      "SummaryMargin": "28,0,0,0",
+      "SummaryStackedMargin": "0,20,0,0",
+      "SummaryWidth": "300"
+    },
     "SecuritySettings": {
       "CompactMeterMargin": "0,14,0,0",
       "CompactThreshold": "560",
@@ -5977,6 +7005,14 @@
       "CheckGlyphSize": "16",
       "GlyphStrokeWidth": "1.75",
       "OptionIconSize": "20"
+    },
+    "SelectionToolbar": {
+      "BarMargin": "16,0,16,18",
+      "BarPadding": "6,6,6,6",
+      "CompactWidth": "560",
+      "CountPadding": "10,0,6,0",
+      "EnterOffset": "16",
+      "SeparatorHeight": "20"
     },
     "SemanticZoom": {
       "CardAvatarSize": "18",
@@ -6140,6 +7176,35 @@
       "BodyLineHeight": "19.599999999999998",
       "ContentMargin": "0,24,0,0",
       "DescriptionMargin": "0,4,0,0"
+    },
+    "ShareAccess": {
+      "AvatarGap": "12",
+      "DialogMaxWidth": "520",
+      "DialogPadding": "24,24,24,24",
+      "HeadingGap": "8",
+      "InlineGap": "8",
+      "InviteRoleWidth": "136",
+      "LinkRoleWidth": "128",
+      "ListMaxHeight": "260",
+      "NarrowDialogPadding": "16,16,16,16",
+      "NarrowWidth": "460",
+      "RowHeight": "52",
+      "ScopeIconSize": "18",
+      "ScopeTileSize": "36",
+      "SectionGap": "22"
+    },
+    "ShareSheet": {
+      "AvatarSize": "48",
+      "AvatarTintOpacity": "0.16",
+      "GroupSpacing": "14",
+      "HoverColor": "#0F0B0B0B",
+      "NameGap": "6",
+      "PopoverWidth": "320",
+      "RowHeight": "40",
+      "RowInset": "10",
+      "TileGlyphSize": "20",
+      "TileHeight": "82",
+      "TileWidth": "68"
     },
     "SheetStack": {
       "DepthDimStep": "0.5",
@@ -6486,6 +7551,13 @@
       "NarrowBreakpoint": "440",
       "RowPitch": "44"
     },
+    "SlotText": {
+      "CellPitchEm": "1.6",
+      "EdgeFadeEm": "0.24",
+      "LineHeightEm": "1.15",
+      "WindowInsetXEm": "0.08",
+      "WindowInsetYEm": "0.22"
+    },
     "SmallMultiples": {
       "CardRadius": "20,20,20,20",
       "ControlGap": "12",
@@ -6541,6 +7613,21 @@
       "WellGap": "10",
       "WellHeadingFontSize": "12",
       "WellPadding": "12,12,12,12"
+    },
+    "SmartScheduler": {
+      "CardPadding": "24,24,24,24",
+      "ChipPadding": "10,3,10,3",
+      "ColumnGap": "28",
+      "CompactCardPadding": "16,16,16,16",
+      "CompactWidth": "760",
+      "FocusMargin": "-2,-2,-2,-2",
+      "FormWidth": "300",
+      "HeadingGap": "8",
+      "OptionPadding": "12,10,12,10",
+      "RankSize": "24",
+      "SchedulerMaxWidth": "1040",
+      "SectionGap": "20",
+      "WeekHeight": "396"
     },
     "SocialProofToast": {
       "BadgeGap": "4",
@@ -6679,6 +7766,24 @@
       "TrackThickness": "3",
       "UpcomingOpacity": "0.58"
     },
+    "SpendAlert": {
+      "BannerPadding": "14,12,14,12",
+      "BannerRise": "6",
+      "BarHeight": "12",
+      "BlockPadding": "24,24,24,24",
+      "LabelBand": "18",
+      "SectionGap": "20"
+    },
+    "SplitBar": {
+      "BarHeight": "12",
+      "DimOpacity": "0.35",
+      "DotSize": "8",
+      "HighlightLift": "2",
+      "LegendItemGap": "20",
+      "LegendLineGap": "8",
+      "SectionGap": "12",
+      "SegmentGap": "3"
+    },
     "SplitButton": {
       "DisabledOpacity": "0.52",
       "EndRadius": "0,17,17,0",
@@ -6703,6 +7808,22 @@
       "StartRingRadius": "21,4,4,21",
       "TriggerExtentPrimary": "38",
       "TriggerExtentSecondary": "32"
+    },
+    "SpotlightGrid": {
+      "CardPadding": "24,24,24,24",
+      "CardTitleMargin": "0,20,0,6",
+      "CompactSectionPadding": "16,48,16,48",
+      "CompactTitleLineHeight": "34",
+      "ContentMaxWidth": "1120",
+      "DescriptionLineHeight": "21",
+      "Gap": "16",
+      "HeaderGap": "12",
+      "HeaderMargin": "0,0,0,48",
+      "HeaderMaxWidth": "640",
+      "IconTile": "40",
+      "SectionPadding": "24,80,24,80",
+      "SpotlightRadius": "240",
+      "TitleLineHeight": "44"
     },
     "StarterPrompts": {
       "AppFontSize": "12",
@@ -6753,6 +7874,13 @@
       "TitleMargin": "0,10,0,0",
       "ToolbarMargin": "0,22,0,0",
       "TwoColumnMinWidth": "560"
+    },
+    "StatsBand": {
+      "CaptionMargin": "0,2,0,0",
+      "ContentMaxWidth": "1120",
+      "FigureMargin": "0,0,0,20",
+      "VisualHeight": "56",
+      "VisualMargin": "0,32,0,0"
     },
     "Stepper": {
       "CaptionMargin": "0,12,0,0",
@@ -6815,6 +7943,24 @@
       "PhotoMaxWidth": "240",
       "SuccessColor": "#FF00774E"
     },
+    "StudioPerspectives": {
+      "BarGap": "6",
+      "BarHeight": "3",
+      "ButtonWidth": "40",
+      "CompactQuoteLineHeight": "31",
+      "CompactSectionPadding": "16,48,16,48",
+      "ContentMaxWidth": "880",
+      "MarkMargin": "0,28,0,0",
+      "MarkSize": "36",
+      "PersonGap": "14",
+      "PersonMargin": "0,36,0,0",
+      "PortraitSize": "48",
+      "ProgressMargin": "0,32,0,0",
+      "QuoteLetterSpacing": "-0.6",
+      "QuoteLineHeight": "46",
+      "QuoteMargin": "0,16,0,0",
+      "SectionPadding": "24,80,24,80"
+    },
     "Sunburst": {
       "FigureGap": "12",
       "HoleRatio": "0.3",
@@ -6825,6 +7971,17 @@
       "LegendRowRadius": "8",
       "SegmentCorner": "3",
       "SegmentGap": "2"
+    },
+    "SupportConversation": {
+      "DefaultHeight": "620",
+      "NarrowWidth": "820",
+      "SidePanelWidth": "300"
+    },
+    "SupportWidget": {
+      "CornerMargin": "20,20,20,20",
+      "LauncherSize": "56",
+      "PanelHeight": "560",
+      "PanelWidth": "380"
     },
     "SwipeActions": {
       "ListInset": "0,0,0,-1"
@@ -6917,6 +8074,12 @@
       "RemoveGlyphSize": "14",
       "RemoveGlyphStroke": "2",
       "RemovePressScale": "0.96"
+    },
+    "TaskBreakdown": {
+      "CompactPadding": "16,16,16,16",
+      "CompactWidth": "600",
+      "Padding": "24,24,24,24",
+      "PanelPadding": "16,16,16,16"
     },
     "TeamDirectory": {
       "BioMaxWidth": "426.5",
@@ -7079,6 +8242,28 @@
       "TwoTierWidth": "420",
       "YouGap": "8"
     },
+    "TeamShowcase": {
+      "BioBackground": "#F0FFFFFF",
+      "BioMargin": "8,8,8,8",
+      "BioPadding": "14,12,14,12",
+      "ColumnGap": "20",
+      "CompactGridMargin": "0,28,0,0",
+      "CompactRowGap": "24",
+      "CompactSectionPadding": "20,56,20,56",
+      "CompactTitleLineHeight": "34",
+      "ContentMaxWidth": "1120",
+      "DescriptionLineHeight": "28",
+      "FilterMargin": "0,32,0,0",
+      "GridMargin": "0,40,0,0",
+      "HeaderGap": "12",
+      "HeaderMaxWidth": "640",
+      "NameMargin": "0,14,0,2",
+      "NarrowColumnGap": "14",
+      "NarrowSectionPadding": "16,40,16,40",
+      "RowGap": "32",
+      "SectionPadding": "24,80,24,80",
+      "TitleLineHeight": "44"
+    },
     "TeamSwitcher": {
       "ActionGlyphSize": "16",
       "ActionHeight": "40",
@@ -7212,6 +8397,19 @@
     "TilePanel": {
       "MinCellSize": "96",
       "Spacing": "8"
+    },
+    "TimeDial": {
+      "DialSize": "240",
+      "FocusRingGap": "3",
+      "GrabSlack": "18",
+      "HandlePressScale": "1.12",
+      "HandleRadius": "13",
+      "HandleShadowColor": "#2E000000",
+      "MajorTickLength": "9",
+      "MinorTickLength": "4",
+      "TickGap": "12",
+      "TrackInset": "16",
+      "TrackThickness": "10"
     },
     "TimePicker": {
       "AffixGap": "9",
@@ -7347,6 +8545,38 @@
       "IconSlotWidth": "18",
       "MaxListWidth": "360",
       "NarrowActionSlotMargin": "0,8,0,0"
+    },
+    "TocProgress": {
+      "CompactHeight": "40",
+      "CompactPadding": "10,0,14,0",
+      "CompactRingSize": "20",
+      "CompactRingThickness": "2.5",
+      "DotSize": "8",
+      "FocusRingMargin": "12,0,-4,0",
+      "HeaderGap": "12",
+      "LevelIndent": "14",
+      "PopupPadding": "16,14,16,14",
+      "PopupWidth": "300",
+      "RailGutter": "20",
+      "RailThickness": "2",
+      "RowLineHeight": "20",
+      "RowPadding": "0,5,4,5"
+    },
+    "ToggleGroup": {
+      "DisabledOpacity": "0.52",
+      "FillMix": "0.11",
+      "FocusRingMargin": "-2,-2,-2,-2",
+      "FocusRingRadius": "17,17,17,17",
+      "GroupPadding": "3,3,3,3",
+      "IconGap": "6",
+      "IconSizeMD": "16",
+      "IconSizeSM": "14",
+      "ItemDisabledOpacity": "0.45",
+      "ItemGap": "2",
+      "ItemInsetMD": "10,0,10,0",
+      "ItemInsetSM": "8,0,8,0",
+      "ItemSizeMD": "36",
+      "ItemSizeSM": "28"
     },
     "TokenTextEditor": {
       "EditorLetterSpacing": "-0.16",
@@ -7566,6 +8796,53 @@
       "TitleLineHeight": "20",
       "ToolGlyphSize": "16",
       "ToolSize": "28"
+    },
+    "TwoFactorSetup": {
+      "ActionsMargin": "0,26,0,0",
+      "BodyLineHeight": "20",
+      "BodyMargin": "0,18,0,0",
+      "CodeColumnGap": "24",
+      "CodeRowGap": "8",
+      "DescriptionMargin": "0,6,0,0",
+      "FrameInset": "28,28,28,28",
+      "FrameInsetNarrow": "20,22,20,22",
+      "HeaderTile": "40",
+      "InstructionDisc": "20",
+      "InstructionGap": "10",
+      "NarrowWidth": "460",
+      "PreferredWidth": "560",
+      "QrGap": "24",
+      "QrInk": "#FF0B0B0B",
+      "QrPaper": "#FFFFFFFF",
+      "QrSize": "176",
+      "ResultGlyph": "28",
+      "ResultMark": "56",
+      "StepperMargin": "0,22,0,24",
+      "TitleLineHeight": "26",
+      "WellInset": "16,14,16,14"
+    },
+    "TypewriterTerminal": {
+      "DotSize": "11",
+      "FocusRingMargin": "-4,-4,-4,-4",
+      "LineSpacing": "1.65",
+      "ScreenPadding": "18,14,18,18",
+      "TextSize": "13",
+      "TitleBarHeight": "40",
+      "TitleBarPadding": "14,0,8,0"
+    },
+    "UndoToast": {
+      "ActionsSpacing": "4",
+      "CloseGlyphSize": "16",
+      "CloseSize": "28",
+      "MaxToastWidth": "416",
+      "MessageLineHeight": "20",
+      "MessageMargin": "12,0,12,0",
+      "MinToastWidth": "280",
+      "RingSize": "28",
+      "RingThickness": "2.5",
+      "SecondsFontSize": "11",
+      "SurfacePadding": "10,8,8,8",
+      "UndoGlyphSize": "14"
     },
     "UpgradePrompt": {
       "BadgeGlyphSize": "18",
@@ -7830,6 +9107,21 @@
       "CellGap": "3",
       "GridMaxSize": "300",
       "SideLegendBreakpoint": "420"
+    },
+    "WalletCard": {
+      "BlockPadding": "24,24,24,24",
+      "CompactThreshold": "680",
+      "FaceColumnMargin": "0,0,32,0",
+      "FaceColumnStackedMargin": "0,0,0,24",
+      "FaceMaxWidth": "360",
+      "FaceMutedTextColor": "#AAFFFFFF",
+      "FacePadding": "22,20,22,20",
+      "FaceTextColor": "#F5FFFFFF",
+      "FrostColor": "#94FFFFFF",
+      "MerchantDiameter": "36",
+      "MeterHeight": "6",
+      "RowHeight": "56",
+      "RowPadding": "10,8,10,8"
     },
     "WalletStack": {
       "AllCardsPadding": "10,0,12,0",

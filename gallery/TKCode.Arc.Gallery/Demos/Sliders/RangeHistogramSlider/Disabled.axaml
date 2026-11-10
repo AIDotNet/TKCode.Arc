@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.RangeHistogramSliderDisabledDemo">
+    <arc:RangeHistogramSlider x:Name="Sizes"
+                              Label="Team size"
+                              Bins="12"
+                              LowerValue="10"
+                              UpperValue="40"
+                              IsEnabled="False"
+                              MaxWidth="460" />
+</UserControl>

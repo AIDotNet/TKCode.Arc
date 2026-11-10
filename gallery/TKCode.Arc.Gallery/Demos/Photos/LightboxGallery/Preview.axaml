@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.LightboxGalleryPreviewDemo">
+    <!-- Open a tile. In the lightbox: arrows or a swipe move, the wheel or a double click zooms, Escape closes. -->
+    <arc:LightboxGallery MaxWidth="640"
+                         MinTileWidth="140"
+                         Label="Walking trip photos"
+                         ItemsSource="{x:Static demos:PhotosDemoData.Landscapes}" />
+</UserControl>

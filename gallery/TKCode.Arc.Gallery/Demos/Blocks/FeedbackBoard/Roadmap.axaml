@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.FeedbackBoardRoadmapDemo">
+    <!-- A read-only roadmap view: only planned requests, trending first, no form. -->
+    <arc:FeedbackBoard Title="Roadmap"
+                       Description="What we are planning next."
+                       StatusFilter="Planned"
+                       SortOrder="Trending"
+                       CanSubmit="False" />
+</UserControl>

@@ -1,0 +1,125 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ShareSheetTheme">
+
+    <!-- The trigger stands in for the sheet in the layout; the panel opens in a popover or a bottom sheet. -->
+    <ControlTheme x:Key="{x:Type arc:ShareSheet}" TargetType="arc:ShareSheet">
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ShareSheet">
+                <ContentPresenter Name="PART_ContentPresenter"
+                                  Content="{TemplateBinding Content}"
+                                  ContentTemplate="{TemplateBinding ContentTemplate}" />
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!--
+        The panel: a header (the sheet shows its own title instead), the link and its copy button, the people strip, the
+        destinations strip and the action rows under a hairline. The strips scroll sideways and hide their bar at rest.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ShareSheetPanel}" TargetType="arc:ShareSheetPanel">
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Width" Value="{arc:ShareSheetTokenResource PopoverWidth}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ShareSheetPanel">
+                <StackPanel Spacing="{arc:ShareSheetTokenResource GroupSpacing}">
+                    <StackPanel Name="PART_Header" Spacing="2">
+                        <TextBlock Text="{TemplateBinding Title}"
+                                   FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                        <TextBlock Text="{TemplateBinding Subtitle}"
+                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                   TextTrimming="CharacterEllipsis"
+                                   IsVisible="{TemplateBinding Subtitle, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                    </StackPanel>
+                    <Grid ColumnDefinitions="*,Auto"
+                          ColumnSpacing="8"
+                          IsVisible="{TemplateBinding Link, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                        <Border Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusStep12}"
+                                Padding="12,0">
+                            <TextBlock Text="{TemplateBinding Link}"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center" />
+                        </Border>
+                        <arc:CopyButton Name="PART_Copy"
+                                        Grid.Column="1"
+                                        Value="{TemplateBinding Link}"
+                                        Label="{TemplateBinding CopyLinkLabel}"
+                                        CopiedLabel="{TemplateBinding CopiedLabel}" />
+                    </Grid>
+                    <StackPanel Spacing="6" IsVisible="{TemplateBinding HasPeople}">
+                        <TextBlock Text="{TemplateBinding PeopleHeader}"
+                                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Margin="-6,0">
+                            <StackPanel Name="PART_People" Orientation="Horizontal" Spacing="2" Margin="6,0" />
+                        </ScrollViewer>
+                    </StackPanel>
+                    <StackPanel Spacing="6" IsVisible="{TemplateBinding HasDestinations}">
+                        <TextBlock Text="{TemplateBinding DestinationsHeader}"
+                                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Margin="-6,0">
+                            <StackPanel Name="PART_Destinations" Orientation="Horizontal" Spacing="2" Margin="6,0" />
+                        </ScrollViewer>
+                    </StackPanel>
+                    <StackPanel IsVisible="{TemplateBinding HasActions}" Spacing="6">
+                        <Border Height="1" Background="{arc:ArcDesignTokenResource BorderSubtle}" />
+                        <StackPanel Name="PART_Actions" Margin="-6,0" />
+                    </StackPanel>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:sheet">
+            <Setter Property="Width" Value="NaN" />
+        </Style>
+        <Style Selector="^:sheet /template/ StackPanel#PART_Header">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+    </ControlTheme>
+
+    <!-- A target: soft series tint for people, a muted tile for destinations, a hover tint over the whole tile. -->
+    <ControlTheme x:Key="{x:Type arc:ShareSheetTile}" TargetType="arc:ShareSheetTile">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="HoverBrush" Value="{arc:ShareSheetTokenResource HoverColor}" />
+        <Setter Property="FocusRingBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+        <Setter Property="TileBrush" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep14}" />
+        <Setter Property="AvatarCornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="TileCornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep14}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="TileWidth" Value="{arc:ShareSheetTokenResource TileWidth}" />
+        <Setter Property="TileHeight" Value="{arc:ShareSheetTokenResource TileHeight}" />
+        <Setter Property="AvatarSize" Value="{arc:ShareSheetTokenResource AvatarSize}" />
+        <Setter Property="GlyphSize" Value="{arc:ShareSheetTokenResource TileGlyphSize}" />
+        <Setter Property="NameGap" Value="{arc:ShareSheetTokenResource NameGap}" />
+        <Setter Property="AvatarTintOpacity" Value="{arc:ShareSheetTokenResource AvatarTintOpacity}" />
+    </ControlTheme>
+
+    <!-- An action row: a glyph and its label, a hover tint. -->
+    <ControlTheme x:Key="{x:Type arc:ShareSheetActionRow}" TargetType="arc:ShareSheetActionRow">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="HoverBrush" Value="{arc:ShareSheetTokenResource HoverColor}" />
+        <Setter Property="FocusRingBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="RowHeight" Value="{arc:ShareSheetTokenResource RowHeight}" />
+        <Setter Property="Inset" Value="{arc:ShareSheetTokenResource RowInset}" />
+    </ControlTheme>
+</ResourceDictionary>

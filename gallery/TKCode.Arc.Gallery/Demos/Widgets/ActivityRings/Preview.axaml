@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ActivityRingsPreviewDemo">
+    <!-- Each button adds to a goal; the ring springs on from where it is and keeps going round past 100 percent. -->
+    <StackPanel Spacing="20" MaxWidth="460" HorizontalAlignment="Center">
+        <arc:ActivityRings x:Name="Rings" Label="Today's goals" GoalReached="OnGoalReached">
+            <arc:ActivityRing Label="Move" Value="380" Goal="520" Unit="kcal" />
+            <arc:ActivityRing Label="Exercise" Value="22" Goal="30" Unit="min" />
+            <arc:ActivityRing Label="Stand" Value="9" Goal="12" Unit="hr" />
+        </arc:ActivityRings>
+        <WrapPanel HorizontalAlignment="Center">
+            <arc:Button Variant="Secondary" Size="Small" Margin="4" Content="Walk to the shop" Click="OnWalk" />
+            <arc:Button Variant="Secondary" Size="Small" Margin="4" Content="Stretch break" Click="OnStretch" />
+            <arc:Button Variant="Ghost" Size="Small" Margin="4" Content="Replay" Click="OnReplay" />
+        </WrapPanel>
+        <TextBlock x:Name="Readout"
+                   Text="Keep going."
+                   FontSize="12"
+                   HorizontalAlignment="Center"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

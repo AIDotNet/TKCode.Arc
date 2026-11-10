@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.DeliveryTrackerPreviewDemo">
+    <!-- A parcel on its way; each press adds the next scan and moves the van along the route. -->
+    <StackPanel Spacing="12">
+        <arc:DeliveryTracker x:Name="Tracker" />
+        <arc:Button x:Name="Scan" Content="Next scan" Variant="Secondary" HorizontalAlignment="Left" />
+    </StackPanel>
+</UserControl>

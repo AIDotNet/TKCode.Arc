@@ -1,0 +1,17 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.PhotoGridTheme">
+    <!--
+        The grid lays its photos out itself and draws nothing of its own; the theme only gives the layout its defaults.
+        Each photo's rounded face, selection ring and focus ring are built in code from the ArcDesign tokens.
+    -->
+    <ControlTheme x:Key="{x:Type arc:PhotoGrid}" TargetType="arc:PhotoGrid">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Spacing" Value="{arc:PhotoGridTokenResource PhotoSpacing}" />
+        <Setter Property="RowHeight" Value="{arc:PhotoGridTokenResource TargetRowHeight}" />
+        <Setter Property="ColumnWidth" Value="{arc:PhotoGridTokenResource MinColumnWidth}" />
+        <Setter Property="SelectedMaxHeight" Value="{arc:PhotoGridTokenResource SelectedMaxHeight}" />
+    </ControlTheme>
+</ResourceDictionary>

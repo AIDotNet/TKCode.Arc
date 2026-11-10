@@ -1,0 +1,198 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ToggleGroupTheme">
+    <ControlTheme x:Key="{x:Type arc:ToggleGroup}" TargetType="arc:ToggleGroup">
+        <!-- The options draw their own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ToggleGroup">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Panel>
+                        <!-- Single mode: one fill passes under every option. -->
+                        <arc:GlidingIndicator Name="PART_Selection"
+                                              Spring="Morph"
+                                              Fill="{TemplateBinding PressedFill}"
+                                              CornerRadius="{arc:ArcDesignTokenResource RadiusStep15}" />
+                        <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+                <StackPanel Orientation="Horizontal" Spacing="{arc:ToggleGroupTokenResource ItemGap}" />
+            </ItemsPanelTemplate>
+        </Setter>
+        <Setter Property="FillMix" Value="{arc:ToggleGroupTokenResource FillMix}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+        <Setter Property="Padding" Value="{arc:ToggleGroupTokenResource GroupPadding}" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Style Selector="^:small">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        </Style>
+        <Style Selector="^:multiple /template/ arc|GlidingIndicator#PART_Selection">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{arc:ToggleGroupTokenResource DisabledOpacity}" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:ToggleGroupItem}" TargetType="arc:ToggleGroupItem">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ToggleGroupItem">
+                <Panel>
+                    <Border Name="PART_Background" />
+                    <arc:ToggleGroupFill Name="PART_Fill" />
+                    <!-- Only the content gives a small press; the item box never scales, so neighbours stay put. -->
+                    <StackPanel Name="PART_Content"
+                                Orientation="Horizontal"
+                                Spacing="{arc:ToggleGroupTokenResource IconGap}"
+                                Margin="{TemplateBinding Padding}"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
+                        <arc:ArcGlyph Name="PART_Icon"
+                                      Data="{TemplateBinding Icon}"
+                                      IsVisible="{TemplateBinding Icon, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                      VerticalAlignment="Center" />
+                        <ContentPresenter Name="PART_Label"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          IsVisible="{TemplateBinding Content, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                          VerticalAlignment="Center"
+                                          TextWrapping="NoWrap" />
+                    </StackPanel>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Height" Value="{arc:ToggleGroupTokenResource ItemSizeMD}" />
+        <Setter Property="MinWidth" Value="{arc:ToggleGroupTokenResource ItemSizeMD}" />
+        <Setter Property="Padding" Value="{arc:ToggleGroupTokenResource ItemInsetMD}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Style Selector="^ /template/ Border#PART_Background">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep15}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Icon">
+            <Setter Property="Size" Value="{arc:ToggleGroupTokenResource IconSizeMD}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ToggleGroupFill#PART_Fill">
+            <Setter Property="IsVisible" Value="False" />
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="Radius" Value="{arc:ArcDesignTokenResource RadiusStep15}" />
+            <Setter Property="Gap" Value="{arc:ToggleGroupTokenResource ItemGap}" />
+        </Style>
+        <Style Selector="^:small">
+            <Setter Property="Height" Value="{arc:ToggleGroupTokenResource ItemSizeSM}" />
+            <Setter Property="MinWidth" Value="{arc:ToggleGroupTokenResource ItemSizeSM}" />
+            <Setter Property="Padding" Value="{arc:ToggleGroupTokenResource ItemInsetSM}" />
+        </Style>
+        <Style Selector="^:small /template/ arc|ArcGlyph#PART_Icon">
+            <Setter Property="Size" Value="{arc:ToggleGroupTokenResource IconSizeSM}" />
+        </Style>
+        <Style Selector="^:multiple /template/ arc|ToggleGroupFill#PART_Fill">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:selected /template/ arc|ToggleGroupFill#PART_Fill">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:join-start /template/ arc|ToggleGroupFill#PART_Fill">
+            <Setter Property="JoinStart" Value="1" />
+        </Style>
+        <Style Selector="^:join-end /template/ arc|ToggleGroupFill#PART_Fill">
+            <Setter Property="JoinEnd" Value="1" />
+        </Style>
+        <Style Selector="^:selected, ^:hovering, ^:focus-visible">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:hovering:not(:selected) /template/ Border#PART_Background">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:focus-visible:not(:selected) /template/ Border#PART_Background">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{arc:ToggleGroupTokenResource ItemDisabledOpacity}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Setter Property="Cursor" Value="No" />
+        </Style>
+        <Style Selector="^:disabled:selected">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:disabled /template/ Border#PART_Background">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Background">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <!-- Multiple mode: a fill fades and settles in place; a join squares corners and crosses the gap. -->
+        <Style Selector="^:motion-full /template/ arc|ToggleGroupFill#PART_Fill">
+            <Setter Property="RenderTransform" Value="scale(0.86)" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.36" Easing="{x:Static arc:ArcEasings.CssSpring}" />
+                    <arc:ArcDoubleTransition Property="JoinStart" Tween="Standard" />
+                    <arc:ArcDoubleTransition Property="JoinEnd" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full:selected /template/ arc|ToggleGroupFill#PART_Fill">
+            <Setter Property="RenderTransform" Value="scale(1)" />
+        </Style>
+
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ Border#PART_Background">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ arc|ToggleGroupFill#PART_Fill">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

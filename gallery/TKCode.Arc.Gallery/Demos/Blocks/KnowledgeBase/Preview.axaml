@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.KnowledgeBasePreviewDemo">
+    <!-- No documents given: the invented Kestrel Lane library. Battery care.txt indexes as soon as the card is shown. -->
+    <arc:KnowledgeBase AssistantName="Pip" SearchText="refund for a damaged battery" Margin="0,12" />
+</UserControl>

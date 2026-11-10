@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AiSetupWizardNarrowDemo">
+    <!-- At 640 or less the stepper moves above the page. -->
+    <arc:AiSetupWizard Margin="0,12" Width="420" HorizontalAlignment="Center" />
+</UserControl>

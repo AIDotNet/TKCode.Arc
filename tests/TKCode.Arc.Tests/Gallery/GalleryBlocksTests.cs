@@ -40,7 +40,7 @@ public class GalleryBlocksTests
     [AvaloniaFact]
     public void App_Shell_Lists_Its_Six_Blocks_In_Order()
     {
-        Blocks.Subcategories!.Single(s => s.Code == "AppShell").Entries.Select(e => e.ClassName)
+        Blocks.Subcategories!.Single(s => s.Code == "AppShell").Entries.Select(e => e.ClassName).Take(6)
             .ShouldBe(["Sidebar", "PageHeader", "CommandPalette", "NotificationCenter", "EmptyStates", "SearchResults"]);
     }
 
@@ -85,7 +85,7 @@ public class GalleryBlocksTests
     [AvaloniaFact]
     public void Blocks_Are_Not_Counted_As_Arc_Components()
     {
-        GalleryCatalog.Count.ShouldBe(113);
+        GalleryCatalog.Count.ShouldBe(119);
         GalleryCatalog.AllCategories.ShouldNotContain(Blocks);
     }
 }

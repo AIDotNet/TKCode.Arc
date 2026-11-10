@@ -1,0 +1,37 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.SupportConversationTheme">
+
+    <!--
+        Support conversation: a panel (Surface, 1px Border, RadiusPanel, clipped) 620 tall unless its container sets a
+        height. The header, the message thread, the reply / note composer and the customer panel (300 wide, or behind a
+        toggle below 820) are built in code and placed in PART_Host.
+    -->
+    <ControlTheme x:Key="{x:Type arc:SupportConversation}" TargetType="arc:SupportConversation">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Height" Value="{arc:SupportConversationTokenResource DefaultHeight}" />
+        <Setter Property="NarrowWidth" Value="{arc:SupportConversationTokenResource NarrowWidth}" />
+        <Setter Property="SidePanelWidth" Value="{arc:SupportConversationTokenResource SidePanelWidth}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SupportConversation">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <Decorator Name="PART_Host" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

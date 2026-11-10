@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LeadScoringPreviewDemo">
+    <!-- The built-in invented pipeline: filter by stage, band or name, choose a lead, select several rows to move them. -->
+    <arc:LeadScoring Margin="0,12" />
+</UserControl>

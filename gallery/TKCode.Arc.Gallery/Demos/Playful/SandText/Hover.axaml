@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SandTextHoverDemo">
+    <!-- Hover blows the words away while the pointer is over them; each drifts a different way. -->
+    <WrapPanel HorizontalAlignment="Center" ItemSpacing="40" LineSpacing="24">
+        <arc:SandText Text="Rise" Trigger="Hover" Drift="Up" FontSize="40" />
+        <arc:SandText Text="Westward" Trigger="Hover" Drift="Left" FontSize="40" />
+        <arc:SandText Text="Eastward" Trigger="Hover" Drift="Right" FontSize="40" GrainSize="3" />
+    </WrapPanel>
+</UserControl>

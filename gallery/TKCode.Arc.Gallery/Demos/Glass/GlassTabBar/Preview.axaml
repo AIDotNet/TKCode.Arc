@@ -1,0 +1,38 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.GlassTabBarPreviewDemo">
+    <!-- An app shell: the feed scrolls under the floating bar, which blurs the part of the feed it covers. -->
+    <Border Width="360" Height="560" CornerRadius="32" ClipToBounds="True" HorizontalAlignment="Center"
+            Background="{arc:ArcDesignTokenResource Background}"
+            BorderBrush="{arc:ArcDesignTokenResource Border}" BorderThickness="1">
+        <Panel arc:GlassBackdrop.Source="{Binding #Feed}">
+            <ScrollViewer>
+                <StackPanel Name="Feed" Spacing="12" Margin="16,20,16,110">
+                    <TextBlock Text="Discover" FontSize="26" FontWeight="SemiBold" Margin="4,0,0,4" />
+                    <Border Height="180" CornerRadius="20" Background="#E07A5F">
+                        <TextBlock Text="Coastal walks" Margin="16" VerticalAlignment="Bottom" FontSize="20" FontWeight="SemiBold" Foreground="White" />
+                    </Border>
+                    <Border Height="120" CornerRadius="20" Background="#3D405B">
+                        <TextBlock Text="Night markets" Margin="16" VerticalAlignment="Bottom" FontSize="20" FontWeight="SemiBold" Foreground="White" />
+                    </Border>
+                    <Border Height="180" CornerRadius="20" Background="#81B29A">
+                        <TextBlock Text="Lake cabins" Margin="16" VerticalAlignment="Bottom" FontSize="20" FontWeight="SemiBold" Foreground="White" />
+                    </Border>
+                    <Border Height="140" CornerRadius="20" Background="#F2CC8F">
+                        <TextBlock Text="Bakeries" Margin="16" VerticalAlignment="Bottom" FontSize="20" FontWeight="SemiBold" Foreground="#3D405B" />
+                    </Border>
+                    <Border Height="180" CornerRadius="20" Background="#5E81AC">
+                        <TextBlock Text="Ferry routes" Margin="16" VerticalAlignment="Bottom" FontSize="20" FontWeight="SemiBold" Foreground="White" />
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+            <arc:GlassTabBar Margin="0,0,0,18">
+                <arc:GlassTab Content="Home" Icon="{x:Static arc:ArcIcons.House}" />
+                <arc:GlassTab Content="Search" Icon="{x:Static arc:ArcIcons.Search}" />
+                <arc:GlassTab Content="Saved" Icon="{x:Static arc:ArcIcons.Bookmark}" Badge="" />
+                <arc:GlassTab Content="Profile" Icon="{x:Static arc:ArcIcons.User}" />
+            </arc:GlassTabBar>
+        </Panel>
+    </Border>
+</UserControl>

@@ -1,0 +1,44 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.TimeDialTheme">
+
+    <!--
+        The dial draws itself: a raised face, the track with the duration's fill, ticks with four numerals, the readout
+        and the handle with its keyboard ring. There is no template.
+    -->
+    <ControlTheme x:Key="{x:Type arc:TimeDial}" TargetType="arc:TimeDial">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="DialSize" Value="{arc:TimeDialTokenResource DialSize}" />
+        <Setter Property="TrackThickness" Value="{arc:TimeDialTokenResource TrackThickness}" />
+        <Setter Property="TrackInset" Value="{arc:TimeDialTokenResource TrackInset}" />
+        <Setter Property="HandleRadius" Value="{arc:TimeDialTokenResource HandleRadius}" />
+        <Setter Property="HandlePressScale" Value="{arc:TimeDialTokenResource HandlePressScale}" />
+        <Setter Property="MinorTickLength" Value="{arc:TimeDialTokenResource MinorTickLength}" />
+        <Setter Property="MajorTickLength" Value="{arc:TimeDialTokenResource MajorTickLength}" />
+        <Setter Property="TickGap" Value="{arc:TimeDialTokenResource TickGap}" />
+        <Setter Property="FocusRingGap" Value="{arc:TimeDialTokenResource FocusRingGap}" />
+        <Setter Property="GrabSlack" Value="{arc:TimeDialTokenResource GrabSlack}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="TrackBrush" Value="{arc:ArcDesignTokenResource ControlTrack}" />
+        <Setter Property="FillBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="HandleBrush" Value="{arc:ArcDesignTokenResource ControlThumb}" />
+        <Setter Property="HandleShadow" Value="{arc:TimeDialTokenResource HandleShadowColor}" />
+        <Setter Property="TickBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="MutedBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="FocusBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource DisplayFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type3XL}" />
+        <Setter Property="UnitFontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="NumeralFontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.5" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

@@ -1,0 +1,223 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.TeamShowcaseTheme">
+
+    <!--
+        The team section: a centered heading (accent eyebrow, display title, secondary description), the department
+        filter (a segmented control, hidden with fewer than two departments) and the grid of cards. Everything sits in a
+        column at most 1120 wide on the page background. Below 720 (:compact) the title steps down to 28 and the gaps
+        tighten; below 480 (:narrow) the paddings tighten again.
+    -->
+    <ControlTheme x:Key="{x:Type arc:TeamShowcase}" TargetType="arc:TeamShowcase">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="Padding" Value="{arc:TeamShowcaseTokenResource SectionPadding}" />
+        <Setter Property="AutomationProperties.Name" Value="{Binding Title, RelativeSource={RelativeSource Self}}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TeamShowcase">
+                <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                    <StackPanel MaxWidth="{arc:TeamShowcaseTokenResource ContentMaxWidth}">
+                        <StackPanel Name="PART_Header"
+                                    HorizontalAlignment="Center"
+                                    MaxWidth="{arc:TeamShowcaseTokenResource HeaderMaxWidth}"
+                                    Spacing="{arc:TeamShowcaseTokenResource HeaderGap}">
+                            <TextBlock Name="PART_Eyebrow"
+                                       Text="{TemplateBinding Eyebrow}"
+                                       IsVisible="{TemplateBinding Eyebrow, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                       HorizontalAlignment="Center"
+                                       TextAlignment="Center"
+                                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       Foreground="{arc:ArcDesignTokenResource AccentStrong}" />
+                            <TextBlock Name="PART_Title"
+                                       Text="{TemplateBinding Title}"
+                                       IsVisible="{TemplateBinding Title, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                       AutomationProperties.HeadingLevel="2"
+                                       TextAlignment="Center"
+                                       TextWrapping="Wrap"
+                                       FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                       FontSize="{arc:ArcDesignTokenResource Type3XL}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       LineHeight="{arc:TeamShowcaseTokenResource TitleLineHeight}"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            <TextBlock Name="PART_Description"
+                                       Text="{TemplateBinding Description}"
+                                       IsVisible="{TemplateBinding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                       TextAlignment="Center"
+                                       TextWrapping="Wrap"
+                                       FontSize="{arc:ArcDesignTokenResource TypeLG}"
+                                       LineHeight="{arc:TeamShowcaseTokenResource DescriptionLineHeight}"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </StackPanel>
+                        <arc:SegmentedControl Name="PART_Filter"
+                                              HorizontalAlignment="Center"
+                                              Margin="{arc:TeamShowcaseTokenResource FilterMargin}" />
+                        <Panel>
+                            <arc:TeamShowcaseGrid Name="PART_Grid"
+                                                  Margin="{arc:TeamShowcaseTokenResource GridMargin}"
+                                                  MinColumnWidth="{TemplateBinding MinColumnWidth}"
+                                                  MaxColumns="{TemplateBinding MaxColumns}"
+                                                  ColumnGap="{arc:TeamShowcaseTokenResource ColumnGap}"
+                                                  RowGap="{arc:TeamShowcaseTokenResource RowGap}" />
+                            <TextBlock Name="PART_Empty"
+                                       IsVisible="False"
+                                       Text="{TemplateBinding EmptyText}"
+                                       Margin="{arc:TeamShowcaseTokenResource GridMargin}"
+                                       HorizontalAlignment="Center"
+                                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        </Panel>
+                        <arc:SiteAnnouncer Name="PART_Announcer" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:no-filter /template/ arc|SegmentedControl#PART_Filter">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:empty /template/ TextBlock#PART_Empty">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:compact">
+            <Setter Property="Padding" Value="{arc:TeamShowcaseTokenResource CompactSectionPadding}" />
+            <Style Selector="^ /template/ TextBlock#PART_Title">
+                <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type2XL}" />
+                <Setter Property="LineHeight" Value="{arc:TeamShowcaseTokenResource CompactTitleLineHeight}" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_Description">
+                <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+            </Style>
+            <Style Selector="^ /template/ arc|TeamShowcaseGrid#PART_Grid">
+                <Setter Property="Margin" Value="{arc:TeamShowcaseTokenResource CompactGridMargin}" />
+                <Setter Property="RowGap" Value="{arc:TeamShowcaseTokenResource CompactRowGap}" />
+            </Style>
+        </Style>
+        <Style Selector="^:narrow">
+            <Setter Property="Padding" Value="{arc:TeamShowcaseTokenResource NarrowSectionPadding}" />
+            <Style Selector="^ /template/ arc|TeamShowcaseGrid#PART_Grid">
+                <Setter Property="ColumnGap" Value="{arc:TeamShowcaseTokenResource NarrowColumnGap}" />
+            </Style>
+            <Style Selector="^ /template/ arc|SegmentedControl#PART_Filter">
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A person: a square portrait in a 20-radius frame on the muted surface, the name (16 medium) and the role (14
+        muted). The bio panel sits 8 inside the portrait's lower edge, on a 94% raised surface with a subtle border and a
+        14 radius. It is hidden (opacity 0, 8 lower) until :revealed, then fades in on Fast and rises on Snappy while the
+        portrait grows 3%. The keyboard ring (24 radius, 4 outside) is built on first keyboard focus.
+    -->
+    <ControlTheme x:Key="{x:Type arc:TeamShowcaseCard}" TargetType="arc:TeamShowcaseCard">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TeamShowcaseCard">
+                <Panel Name="PART_RingHost" Background="{TemplateBinding Background}">
+                    <StackPanel>
+                        <arc:TeamShowcaseSquare>
+                            <Border Name="PART_Frame"
+                                    ClipToBounds="True"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusStep20}"
+                                    Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+                                <Panel>
+                                    <arc:TeamShowcasePortrait Name="PART_Portrait"
+                                                              Seed="{TemplateBinding Seed}"
+                                                              Image="{TemplateBinding Image}"
+                                                              RenderTransformOrigin="50%,50%" />
+                                    <Border Name="PART_Bio"
+                                            VerticalAlignment="Bottom"
+                                            Margin="{arc:TeamShowcaseTokenResource BioMargin}"
+                                            Padding="{arc:TeamShowcaseTokenResource BioPadding}"
+                                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep14}"
+                                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                            BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                            Background="{arc:TeamShowcaseTokenResource BioBackground}"
+                                            AutomationProperties.AccessibilityView="Raw">
+                                        <StackPanel Spacing="6">
+                                            <TextBlock Text="{TemplateBinding Bio}"
+                                                       TextWrapping="Wrap"
+                                                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                       LineHeight="20"
+                                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                            <TextBlock Text="{TemplateBinding Location}"
+                                                       IsVisible="{TemplateBinding Location, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                        </StackPanel>
+                                    </Border>
+                                </Panel>
+                            </Border>
+                        </arc:TeamShowcaseSquare>
+                        <TextBlock Name="PART_Name"
+                                   Text="{TemplateBinding MemberName}"
+                                   Margin="{arc:TeamShowcaseTokenResource NameMargin}"
+                                   TextTrimming="CharacterEllipsis"
+                                   FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        <TextBlock Name="PART_Role"
+                                   Text="{TemplateBinding Role}"
+                                   TextTrimming="CharacterEllipsis"
+                                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                    </StackPanel>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Border#PART_Bio">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="RenderTransform" Value="translateY(8px)" />
+        </Style>
+        <Style Selector="^ /template/ arc|TeamShowcasePortrait#PART_Portrait">
+            <Setter Property="RenderTransform" Value="scale(1)" />
+        </Style>
+        <Style Selector="^:revealed">
+            <Style Selector="^ /template/ Border#PART_Bio">
+                <Setter Property="Opacity" Value="1" />
+                <Setter Property="RenderTransform" Value="translateY(0px)" />
+            </Style>
+            <Style Selector="^ /template/ arc|TeamShowcasePortrait#PART_Portrait">
+                <Setter Property="RenderTransform" Value="scale(1.03)" />
+            </Style>
+        </Style>
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ Border#PART_Bio">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                        <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ arc|TeamShowcasePortrait#PART_Portrait">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Smooth" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Style Selector="^ /template/ Border#PART_Bio">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

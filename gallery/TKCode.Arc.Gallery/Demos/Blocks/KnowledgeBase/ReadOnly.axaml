@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.KnowledgeBaseReadOnlyDemo">
+    <!-- No Add files, drop zone or row buttons; the search preview still works. 460 wide: one column, compact rows. -->
+    <arc:KnowledgeBase x:Name="Knowledge" IsReadOnly="True" Width="460" SearchText="warranty" Margin="0,12" />
+</UserControl>

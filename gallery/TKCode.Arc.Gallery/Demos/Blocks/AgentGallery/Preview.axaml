@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentGalleryPreviewDemo">
+    <!-- No data: the invented catalog of fourteen agents in six categories, with a simulated 1.2 s install. -->
+    <arc:AgentGallery x:Name="Gallery" Margin="0,12" />
+</UserControl>

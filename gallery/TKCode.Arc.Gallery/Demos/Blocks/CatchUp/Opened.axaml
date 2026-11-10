@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CatchUpOpenedDemo">
+    <StackPanel Margin="0,12" Spacing="12">
+        <!-- ItemInvoked hands back the item's link; opening it marks it read. -->
+        <arc:CatchUp x:Name="Recap" Filter="Mentions" />
+        <TextBlock x:Name="Log" />
+    </StackPanel>
+</UserControl>

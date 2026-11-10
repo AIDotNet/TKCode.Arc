@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.UndoToastPreviewDemo">
+    <!-- Archive a conversation: it leaves the list at once and comes back on Undo (or Ctrl+Z / Cmd+Z). The countdown
+         holds while the pointer or focus is on the toast. -->
+    <Grid Width="380" Height="300" HorizontalAlignment="Center" Margin="0,24">
+        <StackPanel x:Name="List" Spacing="8" />
+        <arc:UndoToast x:Name="Toast" HorizontalAlignment="Center" VerticalAlignment="Bottom" />
+    </Grid>
+</UserControl>

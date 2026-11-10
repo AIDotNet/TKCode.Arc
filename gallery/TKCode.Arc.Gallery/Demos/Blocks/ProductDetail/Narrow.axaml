@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ProductDetailNarrowDemo">
+    <Border Width="400"
+            HorizontalAlignment="Center"
+            ClipToBounds="True"
+            CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}">
+        <!-- At 400px the pictures sit above the information. -->
+        <arc:ProductDetail x:Name="Detail" SelectedColorIndex="2" SelectedSizeIndex="3" />
+    </Border>
+</UserControl>

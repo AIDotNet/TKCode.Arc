@@ -170,3 +170,7 @@ GanttTimeline: Gantt chart, project timeline, schedule chart
 SiteHeader: website header, navbar, top navigation
 SiteFooter: website footer
 NewsletterSignup: email signup, subscribe form
+LogoMarquee: logo cloud, logo strip, trusted by logos
+ComparisonTable: us versus them, competitor comparison, alternatives page
+ChangelogFeed: release notes, product updates, what's new
+BlogGrid: blog index, article list, news page

@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PhotoGridReflowDemo">
+    <!-- The grid follows an ObservableCollection: new photos grow in, removed ones fade, the rest glide. -->
+    <StackPanel Spacing="12" MaxWidth="760">
+        <WrapPanel HorizontalAlignment="Center">
+            <arc:Button Variant="Secondary" Size="Small" Margin="4" Content="Add a photo" Click="OnAdd" />
+            <arc:Button Variant="Secondary" Size="Small" Margin="4" Content="Remove the first" Click="OnRemove" />
+            <arc:Button Variant="Secondary" Size="Small" Margin="4" Content="Shuffle" Click="OnShuffle" />
+            <arc:Button Variant="Ghost" Size="Small" Margin="4" Content="Switch layout" Click="OnLayout" />
+        </WrapPanel>
+        <arc:PhotoGrid x:Name="Grid" RowHeight="120" ColumnWidth="150" Label="New album" />
+    </StackPanel>
+</UserControl>

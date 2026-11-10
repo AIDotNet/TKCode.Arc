@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ContactSectionPreviewDemo">
+    <!-- A switch between the three layouts. Without a handler, the form only pretends to send. -->
+    <StackPanel Spacing="16">
+        <arc:SegmentedControl x:Name="Layouts"
+                              AutomationProperties.Name="Contact layout"
+                              HorizontalAlignment="Center"
+                              SelectedValue="form">
+            <arc:SegmentedOption Value="form" Label="Form" />
+            <arc:SegmentedOption Value="channels" Label="Channels" />
+            <arc:SegmentedOption Value="offices" Label="Offices" />
+        </arc:SegmentedControl>
+        <Border CornerRadius="20" ClipToBounds="True" BorderThickness="1" BorderBrush="{arc:ArcDesignTokenResource Border}">
+            <arc:ContactSection x:Name="Section" />
+        </Border>
+    </StackPanel>
+</UserControl>

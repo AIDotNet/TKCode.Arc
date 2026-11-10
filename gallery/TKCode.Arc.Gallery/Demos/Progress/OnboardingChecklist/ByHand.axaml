@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.OnboardingChecklistByHandDemo">
+    <arc:OnboardingChecklist Title="Before your first release" DoneTitle="Ready to ship" MaxWidth="520">
+        <arc:OnboardingChecklistStep Title="Read the release guide" Description="It covers versioning and how to roll back." />
+        <arc:OnboardingChecklistStep Title="Add a second owner" Description="Someone else should be able to publish too." />
+        <arc:OnboardingChecklistStep Title="Turn on two-step sign-in" />
+    </arc:OnboardingChecklist>
+</UserControl>

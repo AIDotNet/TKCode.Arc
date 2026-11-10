@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ShareAccessNarrowDemo">
+    <!-- Below 460px the role picker and the Invite button move under the address field. -->
+    <arc:ShareAccess Width="340"
+                     Margin="0,16"
+                     HorizontalAlignment="Center"
+                     DocumentName="Packing list"
+                     LinkScope="Anyone"
+                     Link="https://notes.example/d/pack-42">
+        <arc:ShareAccess.People>
+            <arc:ShareAccessPerson Name="Jun Park" Email="jun.park@trailmail.example" Role="Owner" />
+            <arc:ShareAccessPerson Name="Ada Moreno" Email="ada@trailmail.example" Role="Editor" />
+        </arc:ShareAccess.People>
+    </arc:ShareAccess>
+</UserControl>

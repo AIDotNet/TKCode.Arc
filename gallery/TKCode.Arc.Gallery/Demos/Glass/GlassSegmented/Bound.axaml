@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.GlassSegmentedBoundDemo">
+    <!-- Options from ItemsSource; SelectionChanged reports the choice. -->
+    <StackPanel Spacing="14">
+        <Panel Height="150" ClipToBounds="True" arc:GlassBackdrop.Source="{Binding #Scene}">
+            <Canvas Name="Scene">
+                <Canvas.Background>
+                    <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                        <GradientStop Color="#C9D6FF" Offset="0" />
+                        <GradientStop Color="#E2E2E2" Offset="1" />
+                    </LinearGradientBrush>
+                </Canvas.Background>
+                <Ellipse Canvas.Left="140" Canvas.Top="10" Width="130" Height="130" Fill="#7A6FF0" />
+                <Ellipse Canvas.Left="360" Canvas.Top="40" Width="110" Height="110" Fill="#F07AA8" />
+            </Canvas>
+            <arc:GlassSegmented Name="Speed" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </Panel>
+        <TextBlock Name="Result" HorizontalAlignment="Center" Opacity="0.7" />
+    </StackPanel>
+</UserControl>

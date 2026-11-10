@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ProductDetailPreviewDemo">
+    <!-- An invented tote in three colors with four drawn pictures each; XS is sold out and M has two left. -->
+    <arc:ProductDetail x:Name="Detail" />
+</UserControl>

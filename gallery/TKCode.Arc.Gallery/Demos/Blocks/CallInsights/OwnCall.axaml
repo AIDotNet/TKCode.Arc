@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CallInsightsOwnCallDemo">
+    <!-- Your own call: speakers, utterances, moments, topics and next steps given in code; flat on the page. -->
+    <arc:CallInsights x:Name="Call" Margin="0,12" IsFramed="False" Title="Renewal check-in · Alder Print" Subtitle="Thu, 6 min · Jonas Weber with Clara Nunes" />
+</UserControl>

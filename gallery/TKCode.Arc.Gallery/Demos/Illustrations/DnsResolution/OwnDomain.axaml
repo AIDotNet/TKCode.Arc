@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.DnsResolutionOwnDomainDemo">
+    <!-- One lookup only, for a name with a short time to live. -->
+    <arc:DnsResolution Title="Looking up the status page"
+                       Domain="status.paper-kite.io"
+                       Address="198.51.100.7"
+                       TimeToLive="60"
+                       IsRepeatLookupShown="False"
+                       IsLooping="True" />
+</UserControl>

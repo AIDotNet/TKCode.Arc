@@ -1,0 +1,40 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MagnifyDockPreviewDemo">
+    <!-- Sweep the pointer along the dock; click an icon to launch it. Tab in and use the arrow keys, then Enter. -->
+    <UserControl.Styles>
+        <Style Selector="arc|ArcGlyph.dock">
+            <Setter Property="Size" Value="24" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        </Style>
+    </UserControl.Styles>
+    <arc:MagnifyDock Label="Apps" VerticalAlignment="Bottom">
+        <arc:MagnifyDockItem Label="Files" IsRunning="True" Background="{arc:ArcDesignTokenResource Series1}">
+            <arc:ArcGlyph Classes="dock" Data="{x:Static arc:ArcIcons.Folder}" />
+        </arc:MagnifyDockItem>
+        <arc:MagnifyDockItem Label="Mail" Background="{arc:ArcDesignTokenResource Series2}">
+            <arc:ArcGlyph Classes="dock" Data="{x:Static arc:ArcIcons.Mail}" />
+        </arc:MagnifyDockItem>
+        <arc:MagnifyDockItem Label="Calendar" Background="{arc:ArcDesignTokenResource Series3}">
+            <arc:ArcGlyph Classes="dock" Data="{x:Static arc:ArcIcons.Calendar}" />
+        </arc:MagnifyDockItem>
+        <arc:MagnifyDockItem Label="Notes" Background="{arc:ArcDesignTokenResource Series4}">
+            <arc:ArcGlyph Classes="dock" Data="{x:Static arc:ArcIcons.PenLine}" />
+        </arc:MagnifyDockItem>
+        <arc:MagnifyDockItem Label="Music" Background="{arc:ArcDesignTokenResource Accent}">
+            <arc:ArcGlyph Classes="dock" Data="{x:Static arc:ArcIcons.Music}" />
+        </arc:MagnifyDockItem>
+        <arc:MagnifyDockItem Label="Photos" Background="{arc:ArcDesignTokenResource Series1}">
+            <arc:ArcGlyph Classes="dock" Data="{x:Static arc:ArcIcons.Image}" />
+        </arc:MagnifyDockItem>
+        <arc:MagnifyDockItem Label="Terminal" IsRunning="True" Background="{arc:ArcDesignTokenResource Series2}">
+            <arc:ArcGlyph Classes="dock" Data="{x:Static arc:ArcIcons.Terminal}" />
+        </arc:MagnifyDockItem>
+        <arc:MagnifyDockItem Label="Settings" Background="{arc:ArcDesignTokenResource Series3}">
+            <arc:ArcGlyph Classes="dock" Data="{x:Static arc:ArcIcons.Settings}" />
+        </arc:MagnifyDockItem>
+    </arc:MagnifyDock>
+</UserControl>

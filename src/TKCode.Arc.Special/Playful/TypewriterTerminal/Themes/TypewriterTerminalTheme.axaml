@@ -1,0 +1,94 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.TypewriterTerminalTheme">
+
+    <!--
+        A window: a muted title bar with three dots, the title and a Replay button that shows once a script has
+        finished, a hairline, then the text area, which scrolls to follow the newest line when the window is given
+        less height than the whole script. The focus ring is created the first time keyboard focus arrives.
+    -->
+    <ControlTheme x:Key="{x:Type arc:TypewriterTerminal}" TargetType="arc:TypewriterTerminal">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TypewriterTerminal">
+                <Panel Name="PART_Root">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
+                            ClipToBounds="True">
+                        <DockPanel>
+                            <Border DockPanel.Dock="Top"
+                                    Height="{arc:TypewriterTerminalTokenResource TitleBarHeight}"
+                                    Padding="{arc:TypewriterTerminalTokenResource TitleBarPadding}"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}"
+                                    BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                    Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+                                <Grid ColumnDefinitions="Auto,*,Auto">
+                                    <StackPanel Orientation="Horizontal" Spacing="7" VerticalAlignment="Center"
+                                                AutomationProperties.AccessibilityView="Raw">
+                                        <Ellipse Width="{arc:TypewriterTerminalTokenResource DotSize}"
+                                                 Height="{arc:TypewriterTerminalTokenResource DotSize}"
+                                                 Fill="{arc:ArcDesignTokenResource Danger}" Opacity="0.85" />
+                                        <Ellipse Width="{arc:TypewriterTerminalTokenResource DotSize}"
+                                                 Height="{arc:TypewriterTerminalTokenResource DotSize}"
+                                                 Fill="{arc:ArcDesignTokenResource Warning}" Opacity="0.85" />
+                                        <Ellipse Width="{arc:TypewriterTerminalTokenResource DotSize}"
+                                                 Height="{arc:TypewriterTerminalTokenResource DotSize}"
+                                                 Fill="{arc:ArcDesignTokenResource Success}" Opacity="0.85" />
+                                    </StackPanel>
+                                    <TextBlock Grid.Column="1"
+                                               Text="{TemplateBinding Title}"
+                                               Margin="12,0"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               TextTrimming="CharacterEllipsis"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                               FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    <arc:Button Name="PART_Replay"
+                                                Grid.Column="2"
+                                                IsVisible="False"
+                                                Variant="Ghost"
+                                                Size="Small"
+                                                VerticalAlignment="Center"
+                                                AutomationProperties.Name="{TemplateBinding ReplayText}">
+                                        <StackPanel Orientation="Horizontal" Spacing="6">
+                                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.RotateCcw}" Size="14" VerticalAlignment="Center" />
+                                            <TextBlock Text="{TemplateBinding ReplayText}" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                    </arc:Button>
+                                </Grid>
+                            </Border>
+                            <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                                          VerticalScrollBarVisibility="Auto">
+                                <arc:TypewriterTerminalScreen Name="PART_Screen"
+                                                              Margin="{arc:TypewriterTerminalTokenResource ScreenPadding}"
+                                                              FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                                                              FontSize="{arc:TypewriterTerminalTokenResource TextSize}"
+                                                              LineSpacing="{arc:TypewriterTerminalTokenResource LineSpacing}"
+                                                              Foreground="{TemplateBinding Foreground}"
+                                                              PromptBrush="{arc:ArcDesignTokenResource Accent}"
+                                                              MutedBrush="{arc:ArcDesignTokenResource TextMuted}"
+                                                              AccentBrush="{arc:ArcDesignTokenResource Accent}"
+                                                              SuccessBrush="{arc:ArcDesignTokenResource Success}"
+                                                              WarningBrush="{arc:ArcDesignTokenResource Warning}"
+                                                              DangerBrush="{arc:ArcDesignTokenResource Danger}"
+                                                              CaretBrush="{arc:ArcDesignTokenResource TextSecondary}" />
+                            </ScrollViewer>
+                        </DockPanel>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

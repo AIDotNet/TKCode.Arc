@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AiInsightCardPreviewDemo">
+    <!-- No properties: the invented weekly-active-users drop with three causes and a suggested step. -->
+    <arc:AiInsightCard Margin="0,12" />
+</UserControl>

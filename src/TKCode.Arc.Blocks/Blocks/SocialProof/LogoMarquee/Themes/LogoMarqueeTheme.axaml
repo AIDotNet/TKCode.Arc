@@ -1,0 +1,176 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.LogoMarqueeTheme">
+
+    <!--
+        Ported from Arc's free logo-marquee block (MIT, Copyright (c) 2026 Elia Kuratli): logo-marquee.module.css.
+
+        A clipped card: the intro (two columns 1fr and .72fr, 48 apart, bottom aligned), the row between two subtle rules with
+        its sides fading over 7%, and a footer with the pause control. Below 640 wide (:narrow) the intro stacks 12 apart and
+        everything tightens.
+    -->
+    <ControlTheme x:Key="{x:Type arc:LogoMarquee}" TargetType="arc:LogoMarquee">
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:LogoMarquee">
+                <Panel>
+                    <Border ClipToBounds="True"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <StackPanel>
+                            <Grid Name="PART_Intro" ColumnDefinitions="*,0.72*" RowDefinitions="Auto,Auto">
+                                <TextBlock Name="PART_Title"
+                                           Grid.Column="0"
+                                           HorizontalAlignment="Left"
+                                           VerticalAlignment="Bottom"
+                                           Text="{TemplateBinding Title}"
+                                           MaxWidth="{arc:LogoMarqueeTokenResource TitleMaxWidth}"
+                                           FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightRegular}"
+                                           TextWrapping="Wrap"
+                                           AutomationProperties.HeadingLevel="2" />
+                                <TextBlock Name="PART_Description"
+                                           Grid.Column="1"
+                                           HorizontalAlignment="Left"
+                                           VerticalAlignment="Bottom"
+                                           Text="{TemplateBinding Description}"
+                                           MaxWidth="{arc:LogoMarqueeTokenResource DescriptionMaxWidth}"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                           TextWrapping="Wrap" />
+                            </Grid>
+                            <Border Name="PART_Marquee"
+                                    ClipToBounds="True"
+                                    Background="Transparent"
+                                    BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}">
+                                <Border.OpacityMask>
+                                    <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                                        <GradientStop Offset="0" Color="#00000000" />
+                                        <GradientStop Offset="0.07" Color="#FF000000" />
+                                        <GradientStop Offset="0.93" Color="#FF000000" />
+                                        <GradientStop Offset="1" Color="#00000000" />
+                                    </LinearGradientBrush>
+                                </Border.OpacityMask>
+                                <arc:LogoMarqueeTrack Name="PART_Track"
+                                                      Brands="{TemplateBinding EffectiveBrands}"
+                                                      Tone="{TemplateBinding Tone}"
+                                                      TravelDuration="{arc:LogoMarqueeTokenResource TravelDuration}"
+                                                      NameGap="{arc:LogoMarqueeTokenResource NameGap}"
+                                                      FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}" />
+                            </Border>
+                            <Border Name="PART_Footer"
+                                    BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}">
+                                <arc:Button Name="PART_MotionButton"
+                                            Variant="Ghost"
+                                            Size="Small"
+                                            HorizontalAlignment="Right">
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <arc:ArcGlyph Name="PART_MotionGlyph"
+                                                      Size="16"
+                                                      StrokeThickness="1.75"
+                                                      VerticalAlignment="Center" />
+                                        <TextBlock Name="PART_MotionLabel" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </arc:Button>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                    <arc:SiteAnnouncer Name="PART_Announcer" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ Grid#PART_Intro">
+            <Setter Property="Margin" Value="{arc:LogoMarqueeTokenResource IntroInset}" />
+            <Setter Property="ColumnSpacing" Value="48" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Title">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type3XL}" />
+            <Setter Property="LineHeight" Value="39.6" />
+            <Setter Property="LetterSpacing" Value="-1.08" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Description">
+            <Setter Property="Margin" Value="0,0,0,3" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+            <Setter Property="LineHeight" Value="22.4" />
+            <Setter Property="LetterSpacing" Value="-0.16" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Marquee">
+            <Setter Property="Padding" Value="0,32" />
+        </Style>
+        <Style Selector="^ /template/ arc|LogoMarqueeTrack#PART_Track">
+            <Setter Property="ItemGap" Value="{arc:LogoMarqueeTokenResource ItemGap}" />
+            <Setter Property="MarkSize" Value="{arc:LogoMarqueeTokenResource MarkSize}" />
+            <Setter Property="NameFontSize" Value="{arc:ArcDesignTokenResource TypeLG}" />
+            <Setter Property="NameBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="MarkBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Footer">
+            <Setter Property="Padding" Value="16,10" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button#PART_MotionButton">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+
+        <!-- Mono: the marks and names follow the secondary text color. -->
+        <Style Selector="^:mono /template/ arc|LogoMarqueeTrack#PART_Track">
+            <Setter Property="NameBrush" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Setter Property="MarkBrush" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+
+        <Style Selector="^:narrow">
+            <Style Selector="^ /template/ Grid#PART_Intro">
+                <Setter Property="Margin" Value="{arc:LogoMarqueeTokenResource IntroInsetNarrow}" />
+                <Setter Property="ColumnSpacing" Value="0" />
+                <Setter Property="RowSpacing" Value="12" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_Title">
+                <Setter Property="Grid.ColumnSpan" Value="2" />
+                <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type2XL}" />
+                <Setter Property="LineHeight" Value="30.8" />
+                <Setter Property="LetterSpacing" Value="-0.84" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_Description">
+                <Setter Property="Grid.Column" Value="0" />
+                <Setter Property="Grid.ColumnSpan" Value="2" />
+                <Setter Property="Grid.Row" Value="1" />
+                <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+                <Setter Property="LineHeight" Value="19.6" />
+                <Setter Property="LetterSpacing" Value="-0.14" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Marquee">
+                <Setter Property="Padding" Value="0,24" />
+            </Style>
+            <Style Selector="^ /template/ arc|LogoMarqueeTrack#PART_Track">
+                <Setter Property="ItemGap" Value="{arc:LogoMarqueeTokenResource ItemGapNarrow}" />
+                <Setter Property="MarkSize" Value="{arc:LogoMarqueeTokenResource MarkSizeNarrow}" />
+                <Setter Property="NameFontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Footer">
+                <Setter Property="Padding" Value="12,10" />
+            </Style>
+        </Style>
+
+        <!-- Below full motion the row does not move, so there is nothing to pause. -->
+        <Style Selector="^:static /template/ Border#PART_Footer">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:LogoMarqueeTrack}" TargetType="arc:LogoMarqueeTrack">
+        <Setter Property="ClipToBounds" Value="False" />
+    </ControlTheme>
+</ResourceDictionary>

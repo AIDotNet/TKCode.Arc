@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ModelTrainingOwnLossesDemo">
+    <StackPanel Spacing="16">
+        <arc:ModelTraining x:Name="Card"
+                           Title="A rate that is too high"
+                           LearningRate="0.8"
+                           BatchSize="64"
+                           IterationCompleted="OnIterationCompleted" />
+        <TextBlock x:Name="Log"
+                   HorizontalAlignment="Center"
+                   TextWrapping="Wrap"
+                   FontSize="13"
+                   Text="The loss of each finished step is logged here."
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ShareAccessReducedMotionDemo">
+    <!-- Reduced motion: rows and the link role picker fade without moving; labels cross-fade. -->
+    <arc:ShareAccess Width="480"
+                     Margin="0,16"
+                     HorizontalAlignment="Center"
+                     arc:ArcMotion.Level="Reduced"
+                     DocumentName="Workshop notes"
+                     Link="https://notes.example/d/ws-notes">
+        <arc:ShareAccess.People>
+            <arc:ShareAccessPerson Name="Lena Fischer" Email="lena@fernhollow.example" Role="Owner" />
+            <arc:ShareAccessPerson Name="Omar Haddad" Email="omar@fernhollow.example" Role="Viewer" />
+        </arc:ShareAccess.People>
+    </arc:ShareAccess>
+</UserControl>

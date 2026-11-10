@@ -60,12 +60,54 @@ public static partial class GalleryCatalog
         ("2026-10-29", ["DomainVerify", "WebhookTester"]),
         ("2026-11-06", ["GanttTimeline"]),
         ("2026-11-08", ["PlanComparison", "PricingCalculator", "UsagePricing", "CartDrawer", "CheckoutSummary", "LiveCheckout", "SeatManager", "CreditTopUp"]),
+        ("2026-11-09", ["KnowledgeBase"]),
+        ("2026-11-09", ["AgentOrchestrator"]),
+        ("2026-11-09", ["AgentBuilder"]),
+        ("2026-11-09", ["AgentGallery"]),
+        ("2026-11-09", ["McpServers"]),
+        ("2026-11-09", ["EvalSuite"]),
+        ("2026-11-09", ["AiInsightCard"]),
+        ("2026-11-09", ["AiFeatureLaunch"]),
+        ("2026-11-09", ["AiSearchBar"]),
+        ("2026-11-09", ["AiSetupWizard"]),
+        ("2026-11-09", ["CatchUp"]),
+        ("2026-11-09", ["SmartScheduler"]),
+        ("2026-11-09", ["SupportConversation", "SupportWidget", "InboxTriage", "ActivityFeed", "FeedbackBoard", "HelpCenter", "FeatureVoting"]),
+        ("2026-11-09", ["DocsSidebar", "InboxSidebar", "SelectionToolbar", "TwoFactorSetup", "OnboardingSurvey", "MagicLinkSignIn"]),
+        ("2026-11-09", ["AgentRoutines"]),
+        ("2026-11-09", ["AgentApprovals"]),
+        ("2026-11-09", ["SeatMap"]),
+        ("2026-11-09", ["InvoiceStudio"]),
+        ("2026-11-09", ["DeliveryTracker"]),
+        ("2026-11-09", ["AgentTasks"]),
+        ("2026-11-09", ["SpendAlert"]),
+        ("2026-11-09", ["ProductDetail"]),
+        ("2026-11-09", ["PivotBuilder"]),
+        ("2026-11-09", ["AiInlineEdit"]),
+        ("2026-11-09", ["AccountHealth"]),
+        ("2026-11-09", ["WalletCard"]),
+        ("2026-11-09", ["TaskBreakdown"]),
+        ("2026-11-09", ["ResearchRun"]),
+        ("2026-11-09", ["ProductListing"]),
+        ("2026-11-09", ["LeadScoring"]),
+        ("2026-11-09", ["GoalTracker"]),
+        ("2026-11-09", ["CallInsights"]),
+        ("2026-11-09", ["AgentRun"]),
+        ("2026-11-09", ["HeroSignup", "ScrollStory", "SpotlightGrid", "FeatureBento", "TeamShowcase", "StudioPerspectives"]),
+        ("2026-11-09", ["LogoMarquee"]),
+        ("2026-11-09", ["ComparisonTable"]),
+        ("2026-11-09", ["ChangelogFeed"]),
+        ("2026-11-09", ["BlogGrid"]),
+        ("2026-11-09", ["StatsBand"]),
+        ("2026-11-09", ["ContactSection"]),
+        ("2026-11-09", ["FaqSection"]),
+        ("2026-11-09", ["HeroSection"]),
     }.SelectMany(g => g.Classes.Select(c => (c, g.Date))).ToDictionary(e => e.c, e => e.Date);
 
     private static string? AddedOnOf(string className) => s_addedOn.GetValueOrDefault(className);
 
     /// <summary>
-    /// TKCode components with no Arc original, listed after Arc's groups. They are not part of the 112 Arc components
+    /// TKCode components with no Arc original, listed after Arc's groups. They are not part of the Arc components
     /// (<see cref="Categories"/> / <see cref="Count"/>).
     /// </summary>
     public static readonly GalleryCategory[] Extras =
@@ -170,7 +212,7 @@ public static partial class GalleryCatalog
 
     /// <summary>
     /// The groups of the Special components section, listed after Blocks as on uiarc.dev. Their pages live under
-    /// <c>/components/</c> like any component, but they are not part of the 112 Arc components (<see cref="Count"/>).
+    /// <c>/components/</c> like any component, but they are not part of the Arc components (<see cref="Count"/>).
     /// </summary>
     public static readonly GalleryCategory[] Special =
     [
@@ -206,6 +248,36 @@ public static partial class GalleryCatalog
             new("TicketTear", "Ticket tear", "ticket-tear", 0,
                 "An event ticket with a stub you tear off: it rips along the perforation hole by hole, following your hand, then falls away.",
                 IsArc: false, AddedOn: "2026-11-08"),
+            new("SandText", "Sand text", "sand-text", 0,
+                "A line of text that crumbles into grains of sand and drifts off on the wind, then gathers back grain by grain into the same letters.",
+                IsArc: false, AddedOn: "2026-11-09"),
+            new("TypewriterTerminal", "Typewriter terminal", "typewriter-terminal", 0,
+                "A terminal window that plays a script: commands typed at a person's pace, output line by line, and a caret that blinks while it waits.",
+                IsArc: false, AddedOn: "2026-11-09"),
+            new("PrizeWheel", "Prize wheel", "prize-wheel", 0,
+                "A prize wheel with weighted slices: a spin draws the winner by its odds and slows to a stop on it while the pegs flick the pointer.",
+                IsArc: false, AddedOn: "2026-11-09"),
+            new("MagnifyDock", "Magnify dock", "magnify-dock", 0,
+                "An app dock whose icons swell like a lens under the pointer, push their neighbours aside, show their names and bounce when launched.",
+                IsArc: false, AddedOn: "2026-11-09"),
+        ], IsArc: false),
+        new("Widgets", "Widgets", "小组件",
+        [
+            new("BookingPill", "Booking pill", "booking-pill", 0,
+                "A compact booking bar for place, dates and guests: each segment opens its own picker, and the pill widens around the open one while a raised chip glides under it.",
+                IsArc: false, AddedOn: "2026-11-09"),
+            new("ActivityRings", "Activity rings", "activity-rings", 0,
+                "Concentric rings for daily goals that fill on a spring, close at the goal and keep going round past it, with a legend whose numbers roll.",
+                IsArc: false, AddedOn: "2026-11-09"),
+            new("TimeDial", "Time dial", "time-dial", 0,
+                "A round dial for a time of day or a length of time: drag the handle around the face, and it snaps to steps and answers the arrow keys.",
+                IsArc: false, AddedOn: "2026-11-09"),
+            new("DateReel", "Date reel", "date-reel", 0,
+                "A date picker of turning wheels for day, month and year: flick a wheel and it coasts, then comes to rest on a row.",
+                IsArc: false, AddedOn: "2026-11-09"),
+            new("KeycapKeyboard", "Keycap keyboard", "keycap-keyboard", 0,
+                "A keyboard of keycaps that lights up a shortcut, shows what keys do while modifiers are held, and presses keys as you type or click.",
+                IsArc: false, AddedOn: "2026-11-09"),
         ], IsArc: false),
         new("AudioVideo", "Audio and video", "音频与视频",
         [
@@ -240,6 +312,81 @@ public static partial class GalleryCatalog
                 "A message composer that turns a pasted address into a link, shows it loading, then unrolls it into a preview card you can fold back or remove.",
                 IsArc: false, AddedOn: "2026-10-27"),
         ], IsArc: false),
+        new("Glass", "Glass", "玻璃",
+        [
+            new("GlassCard", "Glass card", "glass-card", 0,
+                "A card of frosted glass that blurs what lies behind it, with a soft edge light and a sheen that follows the pointer or a tilt signal.",
+                IsArc: false, AddedOn: "2026-11-09"),
+            new("GlassMenu", "Glass menu", "glass-menu", 0,
+                "A menu on frosted glass whose highlight glides from row to row under the pointer, with a soft glow that follows it along the row.",
+                IsArc: false, AddedOn: "2026-11-09"),
+            new("GlassSegmented", "Glass segmented", "glass-segmented", 0,
+                "A segmented control on frosted glass with a selection lens that stretches as it glides between segments and can be dragged.",
+                IsArc: false, AddedOn: "2026-11-09"),
+            new("GlassTabBar", "Glass tab bar", "glass-tab-bar", 0,
+                "A floating bottom tab bar of frosted glass for app shells, with a selection lens that glides and stretches between tabs.",
+                IsArc: false, AddedOn: "2026-11-09"),
+        ], IsArc: false),
+        new("Photos", "Photos", "照片",
+        [
+            new("ProductGallery", "Product gallery", "product-gallery", 0,
+                "The pictures of a product page: a large picture with a strip of thumbnails, a zoom that follows the mouse over the picture, and a swipe on touch screens.",
+                IsArc: false, AddedOn: "2026-11-09"),
+            new("LightboxGallery", "Lightbox gallery", "lightbox-gallery", 0,
+                "A grid of photos that opens full screen: the tile grows into the lightbox, where arrows and swipes move between photos and the wheel or a pinch zooms in.",
+                IsArc: false, AddedOn: "2026-11-09"),
+            new("PhotoGrid", "Photo grid", "photo-grid", 0,
+                "Photos in justified rows of one height or in masonry columns, where a selected photo opens wide in place and every photo glides to its new spot on resize.",
+                IsArc: false, AddedOn: "2026-11-09"),
+            new("CoverFlow", "Cover flow", "cover-flow", 0,
+                "A row of album or book covers in perspective: the centred cover faces you, the rest turn toward it, and a flick coasts and snaps to a cover.",
+                IsArc: false, AddedOn: "2026-11-09"),
+        ], IsArc: false),
+        new("Publishing", "Publishing", "内容发布",
+        [
+            new("MegaMenuMorph", "Mega menu morph", "mega-menu-morph", 0,
+                "A site navigation bar whose one dropdown panel springs to each item's size and place as the pointer moves along the bar, with the content sliding in from the side it travelled to.",
+                IsArc: false, AddedOn: "2026-11-09"),
+            new("TocProgress", "Table of contents progress", "table-of-contents-progress", 0,
+                "A table of contents for a long article that highlights the section being read, fills a rail down the list as you scroll and jumps to any section; on narrow screens it folds into a progress button.",
+                IsArc: false, AddedOn: "2026-11-09"),
+            new("ShareAccess", "Share access", "share-access", 0,
+                "A document share dialog: invite people by email with a role, change or remove each person's access, choose who else can open the link and copy it.",
+                IsArc: false, AddedOn: "2026-11-09"),
+        ], IsArc: false),
+        new("Inputs", "Inputs", "输入",
+        [
+            new("EmojiPicker", "Emoji picker", "emoji-picker", 0,
+                "Find an emoji by name or browse every category: recently used first, a skin tone for people and hands, and a grid you can move through with the keyboard.",
+                IsArc: false, AddedOn: "2026-11-09"),
+            new("AvatarUpload", "Avatar upload", "avatar-upload", 0,
+                "Drop or pick a photo, move and zoom it under a circle, and watch a ring fill around it while it uploads, with Retry when it fails.",
+                IsArc: false, AddedOn: "2026-11-09"),
+            new("ConfirmPopover", "Confirm popover", "confirm-popover", 0,
+                "A small question next to the button that asked it, for actions such as delete: focus starts on Cancel, Escape backs out, and the work can run before it closes.",
+                IsArc: false, AddedOn: "2026-11-09"),
+            new("UndoToast", "Undo toast", "undo-toast", 0,
+                "A toast for an action that can be taken back, with a countdown ring and an Undo button; the countdown holds while the pointer or focus is on it.",
+                IsArc: false, AddedOn: "2026-11-09"),
+        ], IsArc: false),
+        new("Navigation", "Navigation", "导航",
+        [
+            new("MorphNav", "Morph nav", "morph-nav", 0,
+                "A compact navigation pill that grows into a panel of sections and links on one continuous surface, and folds back into the pill when a link is chosen.",
+                IsArc: false, AddedOn: "2026-11-09"),
+            new("LiquidTabBar", "Liquid tab bar", "liquid-tab-bar", 0,
+                "Tabs on a track whose selection is a drop of color: it stretches toward the new tab, thins at its waist, then gathers itself and settles.",
+                IsArc: false, AddedOn: "2026-11-09"),
+            new("OrbitMenu", "Orbit menu", "orbit-menu", 0,
+                "A round button that fans its actions out around itself on an arc, one after another, with the arrow keys walking around the ring.",
+                IsArc: false, AddedOn: "2026-11-09"),
+            new("ActionMorph", "Action morph", "action-morph", 0,
+                "A button that grows into a small inline panel for its action, such as a field or a few options, and shrinks back into the button when done.",
+                IsArc: false, AddedOn: "2026-11-09"),
+            new("ShareSheet", "Share sheet", "share-sheet", 0,
+                "Share one item: copy its link, pick a person or a destination, or run an action, in a sheet from the bottom on phones and a popover on desktop.",
+                IsArc: false, AddedOn: "2026-11-09"),
+        ], IsArc: false),
         new("Cursor", "Cursor", "光标",
         [
             new("DotGrid", "Dot grid", "dot-grid", 0,
@@ -251,6 +398,21 @@ public static partial class GalleryCatalog
             new("InkFluid", "Ink fluid", "ink-fluid", 0,
                 "A fluid simulation behind your content: the pointer stirs soft ink that swirls and fades, and a slow stir keeps it moving when nobody does.",
                 IsArc: false, AddedOn: "2026-10-27"),
+            new("ImageTrail", "Image trail", "image-trail", 0,
+                "A surface where the pointer leaves a trail of pictures that pop in along its path, rest for a moment and sink away.",
+                IsArc: false, AddedOn: "2026-11-09"),
+        ], IsArc: false),
+        new("Data", "Data", "数据",
+        [
+            new("SplitBar", "Split bar", "split-bar", 0,
+                "One bar split into parts by their share of a total, with a legend of labels, values and percentages; the parts spring to their new shares as the data changes.",
+                IsArc: false, AddedOn: "2026-11-09"),
+            new("MetricTicker", "Metric ticker", "metric-ticker", 0,
+                "A strip of live metrics that scrolls like a stock ticker or stays in columns, rolling each value digit by digit and showing how much it moved and in which direction.",
+                IsArc: false, AddedOn: "2026-11-09"),
+            new("PresenceStack", "Presence stack", "presence-stack", 0,
+                "The people viewing a page right now as overlapping avatars in their own colors: newcomers grow in at the front, leavers shrink away, and the rest fold into a +N chip.",
+                IsArc: false, AddedOn: "2026-11-09"),
         ], IsArc: false),
         new("Ai", "AI", "AI",
         [
@@ -365,12 +527,21 @@ public static partial class GalleryCatalog
             new("ReasoningTree", "Reasoning tree", "reasoning-tree", 0,
                 "A search over candidate thoughts: each is scored, weak branches are pruned, the best expand and the winning path draws in.",
                 IsArc: false, AddedOn: "2026-10-23"),
+            new("DnsResolution", "DNS resolution", "dns-resolution", 0,
+                "A browser asks its resolver for a name, the resolver walks from a root server to the domain's own name server, caches the answer and replies from the cache next time.",
+                IsArc: false, AddedOn: "2026-11-09"),
+            new("ModelTraining", "Model training", "model-training", 0,
+                "A training loop step by step: a batch flows forward to a prediction, the loss is measured and flows back, the weights move and the loss curve falls.",
+                IsArc: false, AddedOn: "2026-11-09"),
+            new("BranchGraph", "Branch graph", "branch-graph", 0,
+                "A git-style history drawn commit by commit: branches split off into their own lanes and merge back, with branch and tag labels and each commit's history on selection.",
+                IsArc: false, AddedOn: "2026-11-09"),
         ], IsArc: false),
     ];
 
     /// <summary>
     /// The Blocks group under Components, with its subgroups and blocks from the TKCode.Arc.Blocks catalog. Not part of
-    /// the 112 Arc components (<see cref="Categories"/> / <see cref="Count"/>). Ports of free Arc blocks link to their
+    /// the Arc components (<see cref="Categories"/> / <see cref="Count"/>). Ports of free Arc blocks link to their
     /// uiarc.dev page; original blocks have none.
     /// </summary>
     public static readonly GalleryCategory Blocks = new("Blocks", "Blocks", "区块", [],
@@ -383,7 +554,7 @@ public static partial class GalleryCatalog
     /// <summary>
     /// The Mobile section of the sidebar: the components of TKCode.Arc.Mobile, whose live demos run inside a phone frame
     /// (<see cref="Shell.PhoneFrame"/>). Their pages live under <c>/components/</c> like the Special components, and they
-    /// are not part of the 112 Arc components (<see cref="Count"/>).
+    /// are not part of the Arc components (<see cref="Count"/>).
     /// </summary>
     public static readonly GalleryCategory Mobile = new(MobileCatalog.Folder, "Mobile", "移动端",
         MobileCatalog.Components.Select(c => new GalleryEntry(c.ClassName, c.Title, c.Slug, 0, c.Description, IsArc: false, AddedOn: AddedOnOf(c.ClassName))).ToArray(),
@@ -404,19 +575,19 @@ public static partial class GalleryCatalog
         new("DocsChangelog", "Changelog", "changelog", 0, "Release notes.", IsArc: false),
     ], IsArc: false);
 
-    /// <summary>The advanced charts group (TKCode.Arc.AdvancedCharts); listed after Charts, but not part of the 112 Arc components.</summary>
+    /// <summary>The advanced charts group (TKCode.Arc.AdvancedCharts); listed after Charts, but not part of the Arc components.</summary>
     public static GalleryCategory AdvancedCharts => Extras[0];
 
-    /// <summary>The workflow group (TKCode.Arc.Workflow); listed after Advanced charts, not part of the 112 Arc components.</summary>
+    /// <summary>The workflow group (TKCode.Arc.Workflow); listed after Advanced charts, not part of the Arc components.</summary>
     public static GalleryCategory Workflow => Extras[1];
 
-    /// <summary>The dock group (TKCode.Arc.Dock); listed after Workflow, not part of the 112 Arc components.</summary>
+    /// <summary>The dock group (TKCode.Arc.Dock); listed after Workflow, not part of the Arc components.</summary>
     public static GalleryCategory Dock => Extras[2];
 
-    /// <summary>The video group (TKCode.Arc.Video); listed after Dock, not part of the 112 Arc components.</summary>
+    /// <summary>The video group (TKCode.Arc.Video); listed after Dock, not part of the Arc components.</summary>
     public static GalleryCategory Video => Extras[3];
 
-    /// <summary>The PDF group (TKCode.Arc.Pdf); listed after Video, not part of the 112 Arc components.</summary>
+    /// <summary>The PDF group (TKCode.Arc.Pdf); listed after Video, not part of the Arc components.</summary>
     public static GalleryCategory Pdf => Extras[4];
 
     /// <summary>The Components section of the sidebar: Arc's groups with Advanced charts, Workflow, Dock, Video and PDF after Charts, then the other extras.</summary>

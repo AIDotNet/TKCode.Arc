@@ -1,0 +1,106 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.PresenceStackTheme">
+
+    <!-- The row of avatars (its width springs), the rolling count, the live region and the list popup. -->
+    <ControlTheme x:Key="{x:Type arc:PresenceStack}" TargetType="arc:PresenceStack">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:PresenceStack">
+                <Panel>
+                    <StackPanel Orientation="Horizontal" Spacing="{arc:PresenceStackTokenResource CountGap}">
+                        <arc:SpringSizeDecorator Axis="Width" ClipOverflow="48" CrossClipOverflow="48" VerticalAlignment="Center">
+                            <arc:PresenceStackPanel Name="PART_Panel" />
+                        </arc:SpringSizeDecorator>
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="4"
+                                    VerticalAlignment="Center"
+                                    IsVisible="{TemplateBinding IsCountVisible}">
+                            <arc:RollingDigits Name="PART_Count"
+                                               VerticalAlignment="Center"
+                                               AutomationProperties.AccessibilityView="Raw"
+                                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            <TextBlock Text="{TemplateBinding CountLabel}"
+                                       VerticalAlignment="Center"
+                                       AutomationProperties.AccessibilityView="Raw"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </StackPanel>
+                    </StackPanel>
+                    <arc:ExplainerAnnouncer Name="PART_Announcer" />
+                    <arc:ArcPopup Name="PART_ListPopup"
+                                  Placement="Bottom"
+                                  MarginToAnchor="8"
+                                  IsLightDismissEnabled="True" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:PresenceStackPanel}" TargetType="arc:PresenceStackPanel">
+        <Setter Property="Overlap" Value="{arc:PresenceStackTokenResource Overlap}" />
+    </ControlTheme>
+
+    <!-- A person: the surface edge, the ring in their color (gray while idle) and the keyboard ring. -->
+    <ControlTheme x:Key="{x:Type arc:PresenceStackSlot}" TargetType="arc:PresenceStackSlot">
+        <Setter Property="SurfaceBrush" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="IdleBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="FocusBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+        <Setter Property="Series1" Value="{arc:ArcDesignTokenResource Series1}" />
+        <Setter Property="Series2" Value="{arc:ArcDesignTokenResource Series2}" />
+        <Setter Property="Series3" Value="{arc:ArcDesignTokenResource Series3}" />
+        <Setter Property="Series4" Value="{arc:ArcDesignTokenResource Series4}" />
+        <Setter Property="IdleOpacity" Value="{arc:PresenceStackTokenResource IdleOpacity}" />
+    </ControlTheme>
+
+    <!-- The "+N" chip: a muted disc with a surface edge, the count in secondary text. -->
+    <ControlTheme x:Key="{x:Type arc:PresenceStackOverflow}" TargetType="arc:PresenceStackOverflow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderThickness" Value="3" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontSize" Value="{arc:PresenceStackTokenResource ChipFontSize}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:PresenceStackOverflow">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            Margin="-2"
+                            BorderThickness="2"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            IsVisible="False" />
+                    <Border Name="PART_Face"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover /template/ Border#PART_Face">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource ControlTrackHover}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

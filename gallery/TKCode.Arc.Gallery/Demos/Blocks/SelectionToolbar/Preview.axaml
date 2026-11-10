@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SelectionToolbarPreviewDemo">
+    <Border Height="440"
+            CornerRadius="22"
+            BorderThickness="1"
+            ClipToBounds="True"
+            BorderBrush="{arc:ArcDesignTokenResource Border}"
+            Background="{arc:ArcDesignTokenResource Surface}">
+        <arc:SelectionToolbar x:Name="Toolbar"
+                              ActionInvoked="OnActionInvoked"
+                              SelectAllRequested="OnSelectAll"
+                              Cleared="OnCleared">
+            <ScrollViewer>
+                <StackPanel x:Name="Rows" Margin="12,12,12,96" Spacing="2" />
+            </ScrollViewer>
+        </arc:SelectionToolbar>
+    </Border>
+</UserControl>

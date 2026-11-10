@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentBuilderPreviewDemo">
+    <!-- No properties: the invented support agent Harbor, with simulated saving, publishing, indexing and test replies. -->
+    <arc:AgentBuilder Margin="0,12" />
+</UserControl>

@@ -1,0 +1,145 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.GlassTabBarTheme">
+
+    <!-- The floating bar: a glass pill with a floating shadow, the lens gliding under equal-width tabs. -->
+    <ControlTheme x:Key="{x:Type arc:GlassTabBar}" TargetType="arc:GlassTabBar">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Bottom" />
+        <Setter Property="Padding" Value="{arc:GlassTabBarTokenResource BarInset}" />
+        <Setter Property="LensSwell" Value="{arc:GlassTabBarTokenResource LensSwell}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:GlassTabBar">
+                <Panel Background="Transparent">
+                    <arc:GlassPane Name="PART_Pane"
+                                   CornerRadius="{TemplateBinding CornerRadius}"
+                                   BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}" />
+                    <Panel Margin="{TemplateBinding Padding}">
+                        <arc:GlassLens Name="PART_Lens" />
+                        <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
+                    </Panel>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+                <UniformGrid Rows="1" />
+            </ItemsPanelTemplate>
+        </Setter>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.5" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:GlassTab}" TargetType="arc:GlassTab">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="MinWidth" Value="{arc:GlassTabTokenResource TabMinWidth}" />
+        <Setter Property="MinHeight" Value="{arc:GlassTabTokenResource TabHeight}" />
+        <Setter Property="Padding" Value="{arc:GlassTabTokenResource TabPadding}" />
+        <Setter Property="FontSize" Value="{arc:GlassTabTokenResource LabelFontSize}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:GlassTab">
+                <Panel Name="PART_Root" Background="Transparent">
+                    <StackPanel Spacing="{arc:GlassTabTokenResource LabelGap}"
+                                Margin="{TemplateBinding Padding}"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
+                        <Panel HorizontalAlignment="Center">
+                            <arc:ArcGlyph Name="PART_Icon"
+                                          Data="{TemplateBinding Icon}"
+                                          Size="{arc:GlassTabTokenResource IconSize}"
+                                          IsVisible="{TemplateBinding Icon, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                            <Border Name="PART_Badge"
+                                    IsVisible="False"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Top"
+                                    Margin="{arc:GlassTabTokenResource BadgeMargin}"
+                                    MinWidth="{arc:GlassTabTokenResource BadgeHeight}"
+                                    Height="{arc:GlassTabTokenResource BadgeHeight}"
+                                    Padding="{arc:GlassTabTokenResource BadgePadding}"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                    Background="{arc:ArcDesignTokenResource Accent}">
+                                <TextBlock Name="PART_BadgeText"
+                                           Text="{TemplateBinding Badge}"
+                                           FontSize="{arc:GlassTabTokenResource BadgeFontSize}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           Foreground="{arc:ArcDesignTokenResource AccentForeground}"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center" />
+                            </Border>
+                        </Panel>
+                        <ContentPresenter Name="PART_Label"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          HorizontalAlignment="Center"
+                                          TextWrapping="NoWrap"
+                                          TextTrimming="CharacterEllipsis" />
+                    </StackPanel>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Icon">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:pointerover, ^:under-lens">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:pointerover /template/ arc|ArcGlyph#PART_Icon, ^:under-lens /template/ arc|ArcGlyph#PART_Icon">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:selected">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:selected /template/ arc|ArcGlyph#PART_Icon">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:badge-dot /template/ Border#PART_Badge">
+            <Setter Property="IsVisible" Value="True" />
+            <Setter Property="MinWidth" Value="{arc:GlassTabTokenResource BadgeDotSize}" />
+            <Setter Property="Height" Value="{arc:GlassTabTokenResource BadgeDotSize}" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+        <Style Selector="^:badge-dot /template/ TextBlock#PART_BadgeText">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:badge-count /template/ Border#PART_Badge">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:compact">
+            <Setter Property="MinHeight" Value="{arc:GlassTabTokenResource CompactTabHeight}" />
+        </Style>
+        <Style Selector="^:compact /template/ ContentPresenter#PART_Label">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.5" />
+            <Setter Property="Cursor" Value="No" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

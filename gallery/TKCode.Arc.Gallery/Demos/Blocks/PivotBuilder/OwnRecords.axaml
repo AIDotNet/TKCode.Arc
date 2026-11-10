@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PivotBuilderOwnRecordsDemo">
+    <!-- Your own records and fields with a starting layout: tickets by team and month, counted and averaged. -->
+    <arc:PivotBuilder x:Name="Pivot" Margin="0,12" />
+</UserControl>

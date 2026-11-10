@@ -1,0 +1,142 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.SpotlightGridTheme">
+
+    <!--
+        The spotlight grid: a centered heading (accent eyebrow, display 36 title, 18 secondary description) 48 above the
+        grid. The surface paints every card's face (Surface) with a 1px Border edge and radius 20, then the light: an
+        accent radial glow (13% at the center) over the faces and an accent radial edge (95% at the center, 0.8 of the
+        reach) along the borders, both moved to the pointer. Below 720 (:compact) the title is 28 and the paddings tighten.
+    -->
+    <ControlTheme x:Key="{x:Type arc:SpotlightGrid}" TargetType="arc:SpotlightGrid">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="Padding" Value="{arc:SpotlightGridTokenResource SectionPadding}" />
+        <Setter Property="AutomationProperties.Name" Value="{Binding Title, RelativeSource={RelativeSource Self}}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SpotlightGrid">
+                <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                    <StackPanel MaxWidth="{arc:SpotlightGridTokenResource ContentMaxWidth}">
+                        <StackPanel Name="PART_Header"
+                                    HorizontalAlignment="Center"
+                                    MaxWidth="{arc:SpotlightGridTokenResource HeaderMaxWidth}"
+                                    Margin="{arc:SpotlightGridTokenResource HeaderMargin}"
+                                    Spacing="{arc:SpotlightGridTokenResource HeaderGap}">
+                            <TextBlock Text="{TemplateBinding Eyebrow}"
+                                       IsVisible="{TemplateBinding Eyebrow, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                       HorizontalAlignment="Center"
+                                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       Foreground="{arc:ArcDesignTokenResource AccentStrong}" />
+                            <TextBlock Name="PART_Title"
+                                       Text="{TemplateBinding Title}"
+                                       IsVisible="{TemplateBinding Title, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                       AutomationProperties.HeadingLevel="2"
+                                       TextAlignment="Center"
+                                       TextWrapping="Wrap"
+                                       FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            <TextBlock Text="{TemplateBinding Description}"
+                                       IsVisible="{TemplateBinding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                       TextAlignment="Center"
+                                       TextWrapping="Wrap"
+                                       FontSize="{arc:ArcDesignTokenResource TypeLG}"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </StackPanel>
+                        <arc:SpotlightGridSurface Name="PART_Surface"
+                                                  MinColumnWidth="{TemplateBinding MinColumnWidth}"
+                                                  MaxColumns="{TemplateBinding MaxColumns}"
+                                                  IsLightEnabled="{TemplateBinding IsSpotlightEnabled}"
+                                                  Gap="{arc:SpotlightGridTokenResource Gap}"
+                                                  SpotlightRadius="{arc:SpotlightGridTokenResource SpotlightRadius}"
+                                                  CornerRadius="{arc:ArcDesignTokenResource RadiusStep20}"
+                                                  FaceBrush="{arc:ArcDesignTokenResource Surface}"
+                                                  EdgeBrush="{arc:ArcDesignTokenResource Border}"
+                                                  LightBrush="{arc:ArcDesignTokenResource Accent}" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ TextBlock#PART_Title">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type3XL}" />
+            <Setter Property="LineHeight" Value="{arc:SpotlightGridTokenResource TitleLineHeight}" />
+        </Style>
+        <Style Selector="^:no-header /template/ StackPanel#PART_Header">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:compact">
+            <Setter Property="Padding" Value="{arc:SpotlightGridTokenResource CompactSectionPadding}" />
+            <Style Selector="^ /template/ TextBlock#PART_Title">
+                <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type2XL}" />
+                <Setter Property="LineHeight" Value="{arc:SpotlightGridTokenResource CompactTitleLineHeight}" />
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A card: 24 padding, a 40 icon tile (muted surface, radius 12, a 20 accent glyph) with the badge (12 medium, accent
+        on the subtle accent, a pill) on the right, the title (16 medium) and the description (14 / 21 secondary). The
+        face, border and light are painted by the surface below; the keyboard ring (24 radius, 4 outside) is built on
+        first keyboard focus.
+    -->
+    <ControlTheme x:Key="{x:Type arc:SpotlightGridCard}" TargetType="arc:SpotlightGridCard">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="{arc:SpotlightGridTokenResource CardPadding}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SpotlightGridCard">
+                <Panel Name="PART_RingHost" Background="{TemplateBinding Background}">
+                    <StackPanel Margin="{TemplateBinding Padding}">
+                        <Grid ColumnDefinitions="Auto,*">
+                            <Border Name="PART_IconTile"
+                                    IsVisible="{TemplateBinding Icon, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                    Width="{arc:SpotlightGridTokenResource IconTile}"
+                                    Height="{arc:SpotlightGridTokenResource IconTile}"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusStep12}"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                    BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                    Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+                                <arc:ArcGlyph Data="{TemplateBinding Icon}"
+                                              Size="20"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              Foreground="{arc:ArcDesignTokenResource AccentStrong}" />
+                            </Border>
+                            <Border Grid.Column="1"
+                                    IsVisible="{TemplateBinding Badge, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Top"
+                                    Padding="8,2"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                    Background="{arc:ArcDesignTokenResource AccentSubtle}">
+                                <TextBlock Text="{TemplateBinding Badge}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           Foreground="{arc:ArcDesignTokenResource AccentStrong}" />
+                            </Border>
+                        </Grid>
+                        <TextBlock Text="{TemplateBinding Title}"
+                                   Margin="{arc:SpotlightGridTokenResource CardTitleMargin}"
+                                   TextWrapping="Wrap"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        <TextBlock Text="{TemplateBinding Description}"
+                                   TextWrapping="Wrap"
+                                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                   LineHeight="{arc:SpotlightGridTokenResource DescriptionLineHeight}"
+                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                    </StackPanel>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

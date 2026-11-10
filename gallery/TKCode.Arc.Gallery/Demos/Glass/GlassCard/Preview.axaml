@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.GlassCardPreviewDemo">
+    <!-- The scene is the backdrop: the card shows a blurred copy of the part it covers. Move the pointer over the card. -->
+    <Panel Height="380" ClipToBounds="True" arc:GlassBackdrop.Source="{Binding #Scene}">
+        <Canvas Name="Scene">
+            <Canvas.Background>
+                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                    <GradientStop Color="#1E2A4A" Offset="0" />
+                    <GradientStop Color="#3B2F5C" Offset="0.55" />
+                    <GradientStop Color="#0F3B45" Offset="1" />
+                </LinearGradientBrush>
+            </Canvas.Background>
+            <Ellipse Canvas.Left="60" Canvas.Top="40" Width="220" Height="220" Fill="#F28C6B" />
+            <Ellipse Canvas.Left="420" Canvas.Top="150" Width="260" Height="260" Fill="#5DC8C0" />
+            <Ellipse Canvas.Left="300" Canvas.Top="-60" Width="160" Height="160" Fill="#F5D46A" />
+            <TextBlock Canvas.Left="40" Canvas.Top="268" Text="Tidewater" FontSize="72" FontWeight="Bold" Foreground="#F4EFE6" />
+        </Canvas>
+        <arc:GlassCard Width="320" MaxTilt="6" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <StackPanel Spacing="10">
+                <TextBlock Text="Evening swim" FontSize="20" FontWeight="SemiBold" />
+                <TextBlock Text="Low tide at 18:40. The north cove stays calm until dark, with water at 19°C."
+                           TextWrapping="Wrap" Opacity="0.8" />
+                <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,6,0,0">
+                    <arc:Button Content="Save spot" Variant="Primary" Size="Small" />
+                    <arc:Button Content="Share" Variant="Ghost" Size="Small" />
+                </StackPanel>
+            </StackPanel>
+        </arc:GlassCard>
+    </Panel>
+</UserControl>

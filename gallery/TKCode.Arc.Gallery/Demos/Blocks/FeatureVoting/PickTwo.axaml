@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.FeatureVotingPickTwoDemo">
+    <!-- Up to two picks, with the results hidden until the vote is sent. -->
+    <arc:FeatureVoting Title="Which two should ship first?"
+                       Description="Pick up to two. Results show after you vote."
+                       MaxVotes="2"
+                       ShowsResultsBeforeVoting="False"
+                       HorizontalAlignment="Center">
+        <arc:FeatureVotingOption Id="widgets" Title="Home screen widgets" Description="Glance at today's plan without opening the app." Votes="128" />
+        <arc:FeatureVotingOption Id="watch" Title="Watch app" Description="Check off tasks from your wrist." Votes="94" />
+        <arc:FeatureVotingOption Id="voice" Title="Voice notes" Description="Record a thought and attach it to a task." Votes="77" />
+    </arc:FeatureVoting>
+</UserControl>

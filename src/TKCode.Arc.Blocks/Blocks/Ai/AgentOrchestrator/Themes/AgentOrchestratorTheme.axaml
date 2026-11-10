@@ -1,0 +1,563 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.AgentOrchestratorTheme">
+
+    <!--
+        The orchestration card, in the AI group's card language: Surface, a 1px Border, RadiusPanel, Inter 14, at most 960
+        wide and centered. Top to bottom: the header (title in the display face 16 / 500 with the run pill, the goal in
+        TextSecondary, the progress line in TextMuted 12; Reset and Run on the right), the graph on a faint muted wash
+        between two rules, and the bottom row with the message log beside the detail panel (300 wide, a rule on its left).
+        At 640 wide or less (:compact) the paddings tighten and the detail panel moves above the log.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AgentOrchestrator}" TargetType="arc:AgentOrchestrator">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="MaxWidth" Value="{arc:AgentOrchestratorTokenResource CardMaxWidth}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="CompactWidth" Value="{arc:AgentOrchestratorTokenResource CompactWidth}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AgentOrchestrator">
+                <Panel Name="PART_Host">
+                    <Border Name="PART_Card"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            ClipToBounds="True"
+                            TextElement.FontSize="{TemplateBinding FontSize}"
+                            TextElement.Foreground="{TemplateBinding Foreground}"
+                            AutomationProperties.LandmarkType="Region">
+                        <StackPanel>
+                            <!-- Header -->
+                            <Border Name="PART_HeaderBox">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <StackPanel Spacing="2" VerticalAlignment="Center">
+                                        <arc:ArcShrinkRow Spacing="8">
+                                            <TextBlock Name="PART_Title"
+                                                       FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                                       FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                       LineHeight="22"
+                                                       LetterSpacing="-0.176"
+                                                       TextTrimming="CharacterEllipsis"
+                                                       VerticalAlignment="Center"
+                                                       arc:ArcShrinkRow.IsShrinkable="True"
+                                                       AutomationProperties.HeadingLevel="2" />
+                                            <arc:AiStatusPill Name="PART_RunPill" VerticalAlignment="Center" />
+                                        </arc:ArcShrinkRow>
+                                        <TextBlock Name="PART_Goal"
+                                                   LineHeight="20"
+                                                   LetterSpacing="-0.14"
+                                                   TextWrapping="Wrap"
+                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                        <TextBlock Name="PART_Progress"
+                                                   Margin="0,2,0,0"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   LineHeight="16.8"
+                                                   TextWrapping="Wrap"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1"
+                                                Orientation="Horizontal"
+                                                Spacing="6"
+                                                Margin="12,0,0,0"
+                                                VerticalAlignment="Top">
+                                        <arc:Button Name="PART_Reset" Variant="Ghost" Size="Small" VerticalAlignment="Center">
+                                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.RotateCcw}" Size="16" StrokeThickness="1.75" />
+                                        </arc:Button>
+                                        <arc:Button Name="PART_Run" Variant="Secondary" Size="Small" VerticalAlignment="Center">
+                                            <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                                                <arc:ArcGlyph Name="PART_RunGlyph" Size="14" StrokeThickness="2" VerticalAlignment="Center" />
+                                                <TextBlock Name="PART_RunText"
+                                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                           VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </arc:Button>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+
+                            <!-- Graph -->
+                            <Border Name="PART_GraphBox"
+                                    Background="{arc:AgentOrchestratorTokenResource GraphBackground}"
+                                    BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}">
+                                <arc:AgentOrchestratorGraph Name="PART_Graph"
+                                                            NodeMaxWidth="{arc:AgentOrchestratorTokenResource NodeMaxWidth}"
+                                                            NodeMinWidth="{arc:AgentOrchestratorTokenResource NodeMinWidth}"
+                                                            LeadWidth="{arc:AgentOrchestratorTokenResource LeadWidth}"
+                                                            NodeHeight="{arc:AgentOrchestratorTokenResource NodeHeight}"
+                                                            TreeNodeHeight="{arc:AgentOrchestratorTokenResource TreeNodeHeight}"
+                                                            NodeGap="{arc:AgentOrchestratorTokenResource NodeGap}"
+                                                            RankGap="{arc:AgentOrchestratorTokenResource RankGap}"
+                                                            TreeIndent="{arc:AgentOrchestratorTokenResource TreeIndent}"
+                                                            EdgeWidth="{arc:AgentOrchestratorTokenResource EdgeWidth}"
+                                                            ActiveEdgeWidth="{arc:AgentOrchestratorTokenResource ActiveEdgeWidth}"
+                                                            PacketRadius="{arc:AgentOrchestratorTokenResource PacketRadius}"
+                                                            PacketHaloRadius="{arc:AgentOrchestratorTokenResource PacketHaloRadius}"
+                                                            PacketDuration="{arc:AgentOrchestratorTokenResource PacketDuration}"
+                                                            EdgeBrush="{arc:ArcDesignTokenResource BorderStrong}"
+                                                            ActiveBrush="{arc:ArcDesignTokenResource Accent}"
+                                                            DoneBrush="{arc:ArcDesignTokenResource Success}"
+                                                            FailedBrush="{arc:ArcDesignTokenResource Danger}"
+                                                            NoteBrush="{arc:ArcDesignTokenResource TextSecondary}" />
+                            </Border>
+
+                            <!-- Log and detail -->
+                            <Grid Name="PART_Bottom"
+                                  ColumnDefinitions="*,Auto"
+                                  RowDefinitions="Auto,Auto">
+                                <Border Name="PART_LogBox"
+                                        BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                        BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}">
+                                    <StackPanel Spacing="8">
+                                        <TextBlock Name="PART_LogHeading"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   LineHeight="20"
+                                                   AutomationProperties.HeadingLevel="3" />
+                                        <Panel Height="{arc:AgentOrchestratorTokenResource LogHeight}">
+                                        <TextBlock Name="PART_LogEmpty"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   LineHeight="16.8"
+                                                   TextWrapping="Wrap"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                        <ScrollViewer Name="PART_LogScroll"
+                                                      HorizontalScrollBarVisibility="Disabled"
+                                                      VerticalScrollBarVisibility="Auto">
+                                            <ItemsControl Name="PART_Log" Margin="0,0,14,0">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <VirtualizingStackPanel />
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                            </ItemsControl>
+                                        </ScrollViewer>
+                                        </Panel>
+                                    </StackPanel>
+                                </Border>
+                                <Border Name="PART_DetailBox"
+                                        Grid.Column="1"
+                                        BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                        BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}">
+                                    <Border Name="PART_DetailRule" BorderBrush="{arc:ArcDesignTokenResource Border}">
+                                        <StackPanel Name="PART_Detail" Spacing="12">
+                                            <StackPanel Spacing="2">
+                                                <arc:ArcShrinkRow Spacing="8">
+                                                    <TextBlock Name="PART_DetailName"
+                                                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                                               FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                               LineHeight="22"
+                                                               TextTrimming="CharacterEllipsis"
+                                                               arc:ArcShrinkRow.IsShrinkable="True"
+                                                               AutomationProperties.HeadingLevel="3" />
+                                                    <TextBlock Name="PART_DetailStatus"
+                                                               Classes="status"
+                                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                               VerticalAlignment="Center" />
+                                                </arc:ArcShrinkRow>
+                                                <TextBlock Name="PART_DetailRole"
+                                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                           LineHeight="16.8"
+                                                           TextWrapping="Wrap"
+                                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                                <TextBlock Name="PART_DetailModel"
+                                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                           LineHeight="16.8"
+                                                           TextWrapping="Wrap"
+                                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                                <TextBlock Name="PART_DetailTraffic"
+                                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                           LineHeight="16.8"
+                                                           TextWrapping="Wrap"
+                                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                            </StackPanel>
+                                            <StackPanel Spacing="2">
+                                                <TextBlock Name="PART_TaskHeading" Classes="label" />
+                                                <TextBlock Name="PART_DetailTask" Classes="value" />
+                                            </StackPanel>
+                                            <StackPanel Spacing="2">
+                                                <TextBlock Name="PART_ActivityHeading" Classes="label" />
+                                                <TextBlock Name="PART_DetailActivity" Classes="value" />
+                                            </StackPanel>
+                                            <StackPanel Spacing="2">
+                                                <TextBlock Name="PART_ResultHeading" Classes="label" />
+                                                <TextBlock Name="PART_DetailResult" Classes="value" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </Border>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ TextBlock#PART_LogEmpty">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_DetailBox">
+            <Setter Property="Width" Value="{arc:AgentOrchestratorTokenResource DetailWidth}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_DetailRule">
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessLeft}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_HeaderBox">
+            <Setter Property="Padding" Value="{arc:AgentOrchestratorTokenResource HeaderPadding}" />
+        </Style>
+        <Style Selector="^ /template/ arc|AgentOrchestratorGraph#PART_Graph">
+            <Setter Property="Margin" Value="{arc:AgentOrchestratorTokenResource GraphPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_LogBox">
+            <Setter Property="Padding" Value="{arc:AgentOrchestratorTokenResource SectionPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_DetailRule">
+            <Setter Property="Padding" Value="{arc:AgentOrchestratorTokenResource SectionPadding}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.label">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="16.8" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.value">
+            <Setter Property="LineHeight" Value="20" />
+            <Setter Property="LetterSpacing" Value="-0.14" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.value.empty">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.status">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.status.active">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.status.done">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.status.failed">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:empty-log /template/ TextBlock#PART_LogEmpty">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:empty-log /template/ ScrollViewer#PART_LogScroll">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+
+        <!-- Compact: tighter paddings; the detail panel above the log, full width, with a rule on top instead of on the left. -->
+        <Style Selector="^:compact /template/ Border#PART_HeaderBox">
+            <Setter Property="Padding" Value="{arc:AgentOrchestratorTokenResource CompactHeaderPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|AgentOrchestratorGraph#PART_Graph">
+            <Setter Property="Margin" Value="{arc:AgentOrchestratorTokenResource CompactGraphPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_LogBox">
+            <Setter Property="Padding" Value="{arc:AgentOrchestratorTokenResource CompactSectionPadding}" />
+            <Setter Property="Grid.Row" Value="1" />
+            <Setter Property="Grid.ColumnSpan" Value="2" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_DetailBox">
+            <Setter Property="Grid.Column" Value="0" />
+            <Setter Property="Grid.ColumnSpan" Value="2" />
+            <Setter Property="Width" Value="NaN" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_DetailRule">
+            <Setter Property="Padding" Value="{arc:AgentOrchestratorTokenResource CompactSectionPadding}" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A node: Surface, a 1px Border, RadiusStep14, padding 12 10. A 26px monogram, the name (500) with a Lead tag on the
+        lead, the role in TextMuted 12, a 16px status icon at the end, then what it does (TextSecondary 12, two lines) and
+        the status word. Selected: an Accent border. Tree rows (:tree) show one line of what it does and no status word.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AgentOrchestratorNode}" TargetType="arc:AgentOrchestratorNode">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep14}" />
+        <Setter Property="Padding" Value="12,10" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AgentOrchestratorNode">
+                <Panel Name="PART_RingHost">
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
+                            Padding="{TemplateBinding Padding}">
+                        <Grid RowDefinitions="Auto,*,Auto">
+                            <Grid ColumnDefinitions="Auto,*,Auto">
+                                <Border Name="PART_Monogram"
+                                        Width="26"
+                                        Height="26"
+                                        VerticalAlignment="Top"
+                                        CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                        Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+                                    <TextBlock Text="{TemplateBinding Initial}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               AutomationProperties.AccessibilityView="Raw" />
+                                </Border>
+                                <StackPanel Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center">
+                                    <arc:ArcShrinkRow Spacing="6">
+                                        <TextBlock Text="{TemplateBinding AgentName}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   LineHeight="18"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   arc:ArcShrinkRow.IsShrinkable="True" />
+                                        <Border Name="PART_LeadTag"
+                                                Padding="6,0"
+                                                VerticalAlignment="Center"
+                                                CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                                Background="{arc:ArcDesignTokenResource AccentSubtle}">
+                                            <TextBlock Text="{TemplateBinding LeadText}"
+                                                       FontSize="11"
+                                                       LineHeight="16"
+                                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                       Foreground="{arc:ArcDesignTokenResource AccentStrong}" />
+                                        </Border>
+                                    </arc:ArcShrinkRow>
+                                    <TextBlock Text="{TemplateBinding Role}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                               LineHeight="16"
+                                               TextTrimming="CharacterEllipsis"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                </StackPanel>
+                                <Panel Grid.Column="2" Width="16" Height="16" Margin="6,1,0,0" VerticalAlignment="Top">
+                                    <arc:ArcSpinner Name="PART_Spinner"
+                                                    Width="14"
+                                                    Height="14"
+                                                    Thickness="1.75"
+                                                    Foreground="{arc:ArcDesignTokenResource Accent}" />
+                                    <arc:ArcGlyph Name="PART_Glyph"
+                                                  Size="16"
+                                                  StrokeThickness="2" />
+                                </Panel>
+                            </Grid>
+                            <TextBlock Name="PART_Doing"
+                                       Grid.Row="1"
+                                       Text="{TemplateBinding Doing}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       LineHeight="16.8"
+                                       TextWrapping="Wrap"
+                                       TextTrimming="CharacterEllipsis" />
+                            <TextBlock Name="PART_Status"
+                                       Grid.Row="2"
+                                       Text="{TemplateBinding StatusText}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       LineHeight="16.8" />
+                        </Grid>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ Border#PART_LeadTag">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcSpinner#PART_Spinner">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Data" Value="{x:Static arc:ArcIcons.Circle}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Doing">
+            <Setter Property="Margin" Value="0,8,0,0" />
+            <Setter Property="MaxLines" Value="2" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Status">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:AgentOrchestratorTokenResource NodeHoverBackground}" />
+        </Style>
+        <Style Selector="^:selected">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:lead /template/ Border#PART_LeadTag">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:empty /template/ TextBlock#PART_Doing">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:tree /template/ TextBlock#PART_Doing">
+            <Setter Property="MaxLines" Value="1" />
+            <Setter Property="Margin" Value="0,6,0,0" />
+        </Style>
+        <Style Selector="^:tree /template/ TextBlock#PART_Status">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+
+        <Style Selector="^:thinking /template/ arc|ArcSpinner#PART_Spinner">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:working /template/ arc|ArcSpinner#PART_Spinner">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:thinking /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:working /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:thinking /template/ TextBlock#PART_Status">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        </Style>
+        <Style Selector="^:working /template/ TextBlock#PART_Status">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        </Style>
+        <Style Selector="^:waiting /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Data" Value="{x:Static arc:ArcIcons.Hourglass}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Warning}" />
+        </Style>
+        <Style Selector="^:waiting /template/ TextBlock#PART_Status">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:done /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Data" Value="{x:Static arc:ArcIcons.CircleCheck}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:done /template/ TextBlock#PART_Status">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:failed">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:failed /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Data" Value="{x:Static arc:ArcIcons.CircleX}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:failed /template/ TextBlock#PART_Status">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:failed:selected">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A log row: an 8px dot in the kind's color, "from → to", the kind word, the run time, and the text below. -->
+    <ControlTheme x:Key="{x:Type arc:AgentOrchestratorLogRow}" TargetType="arc:AgentOrchestratorLogRow">
+        <Setter Property="Padding" Value="0,6" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AgentOrchestratorLogRow">
+                <Grid ColumnDefinitions="Auto,*" Margin="{TemplateBinding Padding}" Background="Transparent">
+                    <Ellipse Name="PART_Dot"
+                             Width="8"
+                             Height="8"
+                             Margin="0,6,10,0"
+                             VerticalAlignment="Top" />
+                    <StackPanel Grid.Column="1" Spacing="1">
+                        <arc:ArcShrinkRow Spacing="6">
+                            <TextBlock Text="{TemplateBinding FromName}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       LineHeight="18"
+                                       VerticalAlignment="Center" />
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ArrowRight}"
+                                          Size="12"
+                                          StrokeThickness="2"
+                                          VerticalAlignment="Center"
+                                          Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            <TextBlock Text="{TemplateBinding ToName}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       LineHeight="18"
+                                       VerticalAlignment="Center" />
+                            <TextBlock Name="PART_Kind"
+                                       Text="{TemplateBinding KindText}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       LineHeight="18"
+                                       VerticalAlignment="Center"
+                                       TextTrimming="CharacterEllipsis"
+                                       arc:ArcShrinkRow.IsShrinkable="True" />
+                        </arc:ArcShrinkRow>
+                        <TextBlock Text="{TemplateBinding Text}"
+                                   LineHeight="20"
+                                   LetterSpacing="-0.14"
+                                   TextWrapping="Wrap"
+                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                    </StackPanel>
+                    <TextBlock Grid.Column="1"
+                               Text="{TemplateBinding TimeText}"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Top"
+                               FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                               FontSize="11"
+                               LineHeight="18"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                               AutomationProperties.AccessibilityView="Raw" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Ellipse#PART_Dot">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Kind">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:delegate /template/ Ellipse#PART_Dot">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:delegate /template/ TextBlock#PART_Kind">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        </Style>
+        <Style Selector="^:result /template/ Ellipse#PART_Dot">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:result /template/ TextBlock#PART_Kind">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:error /template/ Ellipse#PART_Dot">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:error /template/ TextBlock#PART_Kind">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

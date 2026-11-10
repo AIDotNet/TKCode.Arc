@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.McpServersNarrowDemo">
+    <!-- At 520 wide or less the card tightens its paddings; it follows its own width, not the window's. -->
+    <StackPanel Width="380" Margin="0,12" Spacing="8" HorizontalAlignment="Center">
+        <TextBlock Text="380 wide" HorizontalAlignment="Center" Opacity="0.7" />
+        <arc:McpServers x:Name="Block" />
+    </StackPanel>
+</UserControl>

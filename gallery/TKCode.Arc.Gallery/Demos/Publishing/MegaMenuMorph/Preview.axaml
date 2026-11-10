@@ -1,0 +1,66 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MegaMenuMorphPreviewDemo">
+    <!-- A site header for an invented product. Move along the bar: the one panel morphs from item to item. -->
+    <StackPanel Spacing="16" Margin="0,16,0,260">
+        <Border Background="{arc:ArcDesignTokenResource Surface}"
+                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                BorderThickness="1"
+                CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                Padding="16,6"
+                HorizontalAlignment="Center">
+            <StackPanel Orientation="Horizontal" Spacing="20">
+                <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Layers3}" Size="20" Foreground="{arc:ArcDesignTokenResource Accent}" />
+                    <TextBlock Text="Fernhollow" FontWeight="SemiBold" VerticalAlignment="Center" />
+                </StackPanel>
+                <arc:MegaMenuMorph x:Name="Menu" Label="Fernhollow" LinkInvoked="OnLinkInvoked">
+                    <arc:MegaMenuMorphItem Header="Product">
+                        <Grid ColumnDefinitions="260,260" RowDefinitions="Auto,Auto" ColumnSpacing="4" RowSpacing="4">
+                            <arc:MegaMenuMorphLink Title="Boards" Description="Plan work in columns and lanes" Icon="{x:Static arc:ArcIcons.LayoutGrid}" />
+                            <arc:MegaMenuMorphLink Grid.Column="1" Title="Docs" Description="Write specs next to the work" Icon="{x:Static arc:ArcIcons.FileText}" />
+                            <arc:MegaMenuMorphLink Grid.Row="1" Title="Automations" Description="Move cards when things happen" Icon="{x:Static arc:ArcIcons.Zap}" />
+                            <arc:MegaMenuMorphLink Grid.Row="1" Grid.Column="1" Title="Insights" Description="See where the week went" Icon="{x:Static arc:ArcIcons.ChartLine}" />
+                        </Grid>
+                    </arc:MegaMenuMorphItem>
+                    <arc:MegaMenuMorphItem Header="Teams">
+                        <StackPanel Width="300" Spacing="4">
+                            <arc:MegaMenuMorphLink Title="Design" Description="Reviews, handoff and feedback" Icon="{x:Static arc:ArcIcons.Palette}" />
+                            <arc:MegaMenuMorphLink Title="Engineering" Description="Sprints that ship on time" Icon="{x:Static arc:ArcIcons.Code}" />
+                            <arc:MegaMenuMorphLink Title="Operations" Description="Requests with clear owners" Icon="{x:Static arc:ArcIcons.Settings}" />
+                        </StackPanel>
+                    </arc:MegaMenuMorphItem>
+                    <arc:MegaMenuMorphItem Header="Resources">
+                        <Grid ColumnDefinitions="220,220,200" ColumnSpacing="8">
+                            <StackPanel Spacing="4">
+                                <arc:MegaMenuMorphLink Title="Guides" Description="Short walkthroughs" Icon="{x:Static arc:ArcIcons.BookOpen}" />
+                                <arc:MegaMenuMorphLink Title="Templates" Description="Start from a working board" Icon="{x:Static arc:ArcIcons.LayoutTemplate}" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Spacing="4">
+                                <arc:MegaMenuMorphLink Title="Community" Description="Ask and answer" Icon="{x:Static arc:ArcIcons.MessageCircle}" />
+                                <arc:MegaMenuMorphLink Title="Events" Description="Live sessions each month" Icon="{x:Static arc:ArcIcons.CalendarDays}" />
+                            </StackPanel>
+                            <Border Grid.Column="2"
+                                    Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusStep16}"
+                                    Padding="14">
+                                <StackPanel Spacing="6">
+                                    <TextBlock Text="New in spring" FontSize="12" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    <TextBlock Text="Boards now sync with your calendar." TextWrapping="Wrap" FontWeight="Medium" />
+                                    <arc:MegaMenuMorphLink Title="Read the notes" Padding="0,6" HorizontalAlignment="Left" />
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </arc:MegaMenuMorphItem>
+                    <arc:MegaMenuMorphItem Header="Pricing" />
+                </arc:MegaMenuMorph>
+            </StackPanel>
+        </Border>
+        <TextBlock x:Name="Status"
+                   HorizontalAlignment="Center"
+                   FontSize="13"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                   Text="Hover an item, or Tab to the bar and use the arrow keys." />
+    </StackPanel>
+</UserControl>

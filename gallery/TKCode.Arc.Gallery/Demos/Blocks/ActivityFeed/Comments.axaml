@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ActivityFeedCommentsDemo">
+    <!-- Opened on comments only, and paused. -->
+    <arc:ActivityFeed Title="Discussion" KindFilter="Comment" IsLive="False" HorizontalAlignment="Center" />
+</UserControl>

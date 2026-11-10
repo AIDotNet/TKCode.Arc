@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.DeliveryTrackerNarrowDemo">
+    <Border Width="380"
+            HorizontalAlignment="Center"
+            ClipToBounds="True"
+            CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}">
+        <!-- A narrow block delivered late: the route sits above the history. -->
+        <arc:DeliveryTracker x:Name="Tracker" Stage="Delivered" IsDelayed="True" OrderNumber="7730-1182" Carrier="Larkpost"
+                             EstimatedArrival="Delivered today, 6:40 pm" Origin="Riverside hub" Destination="Home" />
+    </Border>
+</UserControl>

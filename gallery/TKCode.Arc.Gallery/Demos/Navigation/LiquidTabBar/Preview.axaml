@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LiquidTabBarPreviewDemo">
+    <!-- Click a tab, or focus the bar and use the arrow keys: the drop reaches for the new tab, stretches, then settles. -->
+    <StackPanel Spacing="20" HorizontalAlignment="Center">
+        <arc:LiquidTabBar HorizontalAlignment="Center">
+            <arc:LiquidTabBarItem Content="Overview" />
+            <arc:LiquidTabBarItem Content="Activity" />
+            <arc:LiquidTabBarItem Content="Members" />
+            <arc:LiquidTabBarItem Content="Settings" />
+        </arc:LiquidTabBar>
+        <arc:LiquidTabBar HorizontalAlignment="Center" SelectedIndex="1">
+            <arc:LiquidTabBarItem Content="Home" Glyph="{x:Static arc:ArcIcons.House}" />
+            <arc:LiquidTabBarItem Content="Search" Glyph="{x:Static arc:ArcIcons.Search}" />
+            <arc:LiquidTabBarItem Content="Saved" Glyph="{x:Static arc:ArcIcons.Bookmark}" />
+            <arc:LiquidTabBarItem Content="Profile" Glyph="{x:Static arc:ArcIcons.User}" />
+        </arc:LiquidTabBar>
+    </StackPanel>
+</UserControl>

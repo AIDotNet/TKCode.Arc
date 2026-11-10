@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ActionMorphPreviewDemo">
+    <!-- The button grows into a field. Create (marked Closes) folds it back; so do Escape, the close button and a press outside. -->
+    <StackPanel Spacing="14" HorizontalAlignment="Center" Width="360">
+        <arc:ActionMorph Label="New list" Collapsed="OnCollapsed">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <arc:Input x:Name="ListName" Placeholder="List name" Width="180" />
+                <arc:Button Content="Create" Variant="Primary" Size="Small" arc:ActionMorph.Closes="True"
+                            VerticalAlignment="Center" Click="OnCreate" />
+            </StackPanel>
+        </arc:ActionMorph>
+        <TextBlock x:Name="Status" Text="Lists: Groceries, Reading" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

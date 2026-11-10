@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AccountHealthOwnAccountDemo">
+    <!-- Your own account: weekly health, one usage metric with a limit, tickets, risks and actions; flat. -->
+    <arc:AccountHealth x:Name="Account" Margin="0,12" IsFramed="False" AccountName="Copperleaf Hotels" Subtitle="Scale plan · $120k a year" />
+</UserControl>

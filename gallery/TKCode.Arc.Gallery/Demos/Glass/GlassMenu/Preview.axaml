@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.GlassMenuPreviewDemo">
+    <!-- An inline menu over a picture: move the pointer over the rows, or Tab in and use the arrow keys. -->
+    <Panel Height="340" ClipToBounds="True" arc:GlassBackdrop.Source="{Binding #Scene}">
+        <Canvas Name="Scene">
+            <Canvas.Background>
+                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                    <GradientStop Color="#2B1E3F" Offset="0" />
+                    <GradientStop Color="#1B4D5C" Offset="1" />
+                </LinearGradientBrush>
+            </Canvas.Background>
+            <Ellipse Canvas.Left="150" Canvas.Top="30" Width="200" Height="200" Fill="#EE9B6D" />
+            <Ellipse Canvas.Left="320" Canvas.Top="170" Width="180" Height="180" Fill="#6DC3EE" />
+            <Rectangle Canvas.Left="40" Canvas.Top="220" Width="160" Height="90" RadiusX="18" RadiusY="18" Fill="#B9E36D" />
+        </Canvas>
+        <arc:GlassMenu HorizontalAlignment="Center" VerticalAlignment="Center">
+            <arc:GlassMenuItem Content="New note" Icon="{x:Static arc:ArcIcons.SquarePen}" Shortcut="Ctrl+N" />
+            <arc:GlassMenuItem Content="Duplicate" Icon="{x:Static arc:ArcIcons.Copy}" Shortcut="Ctrl+D" />
+            <arc:GlassMenuItem Content="Share" Icon="{x:Static arc:ArcIcons.Share}" />
+            <arc:GlassMenuItem Content="Pin to top" Icon="{x:Static arc:ArcIcons.Pin}" IsEnabled="False" />
+            <arc:GlassMenuSeparator />
+            <arc:GlassMenuItem Content="Move to trash" Icon="{x:Static arc:ArcIcons.Trash2}" IsDestructive="True" />
+        </arc:GlassMenu>
+    </Panel>
+</UserControl>

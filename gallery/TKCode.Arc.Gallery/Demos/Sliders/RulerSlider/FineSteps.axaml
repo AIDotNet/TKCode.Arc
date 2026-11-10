@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.RulerSliderFineStepsDemo">
+    <arc:RulerSlider Label="Body weight"
+                     Unit="kg"
+                     Minimum="30"
+                     Maximum="150"
+                     SmallChange="0.5"
+                     MajorEvery="10"
+                     TickSpacing="14"
+                     Value="72.5"
+                     MaxWidth="460" />
+</UserControl>

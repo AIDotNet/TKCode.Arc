@@ -1,0 +1,133 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.StatsBandTheme">
+    <!-- Ported from Arc's free stats-band block (MIT, Copyright (c) 2026 Elia Kuratli): stats-band.module.css. -->
+    <ControlTheme x:Key="{x:Type arc:StatsBand}" TargetType="arc:StatsBand">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:StatsBand">
+                <Border Background="{TemplateBinding Background}">
+                    <Border Name="PART_Body" MaxWidth="{arc:StatsBandTokenResource ContentMaxWidth}">
+                        <StackPanel>
+                            <Grid Name="PART_Header" IsVisible="False" ColumnSpacing="48" RowSpacing="16">
+                                <arc:CtaBalancedText Name="PART_Title"
+                                                     IsBalanced="True"
+                                                     MaxChars="16"
+                                                     HorizontalAlignment="Left"
+                                                     TextWrapping="WrapWithOverflow"
+                                                     VerticalAlignment="Bottom"
+                                                     Leading="{arc:ArcDesignTokenResource LeadingDisplay}"
+                                                     Tracking="{arc:ArcDesignTokenResource TrackingDisplay}"
+                                                     FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                                     FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                     Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <arc:CtaBalancedText Name="PART_Description"
+                                                     MaxChars="34"
+                                                     Leading="1.5"
+                                                     TextWrapping="Wrap"
+                                                     VerticalAlignment="Bottom"
+                                                     FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                                     Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            </Grid>
+                            <Panel>
+                                <UniformGrid Name="PART_Grid" />
+                                <arc:StatsBandRules Name="PART_Rules" RuleBrush="{arc:ArcDesignTokenResource Border}" />
+                            </Panel>
+                        </StackPanel>
+                    </Border>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:StatsBandItem}" TargetType="arc:StatsBandItem">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:StatsBandItem">
+                <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                    <Grid Name="PART_Grid" RowDefinitions="Auto,Auto,Auto,*,Auto">
+                        <arc:StatsBandNumber Name="PART_Number"
+                                             HorizontalAlignment="Left"
+                                             VerticalAlignment="Bottom"
+                                             Margin="{arc:StatsBandTokenResource FigureMargin}"
+                                             FontSize="{TemplateBinding NumberSize}"
+                                             FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                             FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                             Tracking="{arc:ArcDesignTokenResource TrackingDisplay}"
+                                             Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                             UnitBrush="{arc:ArcDesignTokenResource TextMuted}" />
+                        <TextBlock Grid.Row="1"
+                                   Grid.ColumnSpan="2"
+                                   Text="{TemplateBinding Label}"
+                                   TextWrapping="Wrap"
+                                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        <Panel Grid.Row="2" Grid.ColumnSpan="2" Margin="{arc:StatsBandTokenResource CaptionMargin}">
+                            <TextBlock Name="PART_Detail"
+                                       Text="{TemplateBinding Detail}"
+                                       TextWrapping="Wrap"
+                                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            <TextBlock Name="PART_Context"
+                                       Text="{TemplateBinding Context}"
+                                       TextWrapping="Wrap"
+                                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </Panel>
+                        <arc:StatsBandVisualView Name="PART_Visual"
+                                                 Grid.Row="4"
+                                                 Height="{arc:StatsBandTokenResource VisualHeight}"
+                                                 Margin="{arc:StatsBandTokenResource VisualMargin}"
+                                                 InkBrush="{arc:ArcDesignTokenResource TextSecondary}"
+                                                 SoftBrush="{arc:ArcDesignTokenResource BorderStrong}"
+                                                 AccentBrush="{arc:ArcDesignTokenResource Accent}"
+                                                 PageBrush="{arc:ArcDesignTokenResource Background}" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- A stat with both lines swaps them; one with only a context line just shows it. -->
+        <Style Selector="^:swaps /template/ TextBlock#PART_Context">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="RenderTransform" Value="translateY(4px)" />
+        </Style>
+        <Style Selector="^:swaps /template/ TextBlock#PART_Detail">
+            <Setter Property="RenderTransform" Value="translateY(0px)" />
+        </Style>
+        <Style Selector="^:swaps:active /template/ TextBlock#PART_Detail">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="RenderTransform" Value="translateY(-4px)" />
+        </Style>
+        <Style Selector="^:swaps:active /template/ TextBlock#PART_Context">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="RenderTransform" Value="translateY(0px)" />
+        </Style>
+        <Style Selector="^:motion-full /template/ TextBlock#PART_Detail">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ TextBlock#PART_Context">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

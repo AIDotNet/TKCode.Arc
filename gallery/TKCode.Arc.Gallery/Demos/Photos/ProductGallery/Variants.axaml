@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ProductGalleryVariantsDemo">
+    <!-- Picking a glaze swaps ItemsSource; the same view stays on the stage. SelectedIndex is bound both ways. -->
+    <StackPanel Spacing="14" MaxWidth="440" HorizontalAlignment="Center">
+        <arc:ProductGallery x:Name="Gallery" Label="Speckled stoneware mug" />
+        <WrapPanel HorizontalAlignment="Center">
+            <arc:Button Variant="Secondary" Size="Small" Margin="4" Content="Oat" Tag="0" Click="OnGlaze" />
+            <arc:Button Variant="Secondary" Size="Small" Margin="4" Content="Tide" Tag="1" Click="OnGlaze" />
+            <arc:Button Variant="Secondary" Size="Small" Margin="4" Content="Terracotta" Tag="2" Click="OnGlaze" />
+        </WrapPanel>
+        <TextBlock x:Name="Readout"
+                   FontSize="12"
+                   TextWrapping="Wrap"
+                   HorizontalAlignment="Center"
+                   TextAlignment="Center"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

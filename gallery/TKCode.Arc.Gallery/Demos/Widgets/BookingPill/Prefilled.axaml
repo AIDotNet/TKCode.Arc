@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.BookingPillPrefilledDemo">
+    <!-- Every value is a two-way property: here the pill starts filled in, with its own words for the segments. -->
+    <arc:BookingPill x:Name="Pill"
+                     MaxWidth="640"
+                     PlaceLabel="Destination"
+                     DatesLabel="Stay"
+                     GuestsLabel="Party"
+                     SearchText="Find rooms"
+                     Place="Hobart"
+                     Adults="2"
+                     Children="1">
+        <arc:BookingPlace Name="Hobart" Detail="Harbour and hills" />
+        <arc:BookingPlace Name="Lisbon" Detail="Old town by the river" />
+        <arc:BookingPlace Name="Kyoto" Detail="Temples and quiet lanes" />
+    </arc:BookingPill>
+</UserControl>

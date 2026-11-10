@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.BookingPillPreviewDemo">
+    <!-- Open a segment: the pill widens around it and its picker opens below. Picking a place moves on to the dates, then the guests. -->
+    <StackPanel Spacing="16" MaxWidth="720" HorizontalAlignment="Stretch">
+        <arc:BookingPill x:Name="Pill" SearchRequested="OnSearch">
+            <arc:BookingPlace Name="Lisbon" Detail="Old town by the river" />
+            <arc:BookingPlace Name="Kyoto" Detail="Temples and quiet lanes" />
+            <arc:BookingPlace Name="Reykjavik" Detail="Hot springs and long light" />
+            <arc:BookingPlace Name="Oaxaca" Detail="Markets in the valley" />
+            <arc:BookingPlace Name="Hobart" Detail="Harbour and hills" />
+            <arc:BookingPlace Name="Tbilisi" Detail="Balconies and baths" />
+        </arc:BookingPill>
+        <TextBlock x:Name="Readout"
+                   Text="Nothing searched yet."
+                   FontSize="12"
+                   HorizontalAlignment="Center"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

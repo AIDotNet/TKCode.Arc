@@ -1,0 +1,77 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.SelectionToolbarTheme">
+    <!--
+        Selection toolbar: the content (a list or a table) fills the control; a floating pill rises from its bottom edge
+        while anything is selected: the count, "Select all", the bulk actions and a clear button.
+    -->
+    <ControlTheme x:Key="{x:Type arc:SelectionToolbar}" TargetType="arc:SelectionToolbar">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SelectionToolbar">
+                <Panel>
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                      Padding="{TemplateBinding Padding}" />
+                    <arc:PresenceHost Name="PART_BarHost"
+                                      Mode="Rise"
+                                      Offset="{arc:SelectionToolbarTokenResource EnterOffset}"
+                                      IsPresent="False"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Bottom"
+                                      Margin="{arc:SelectionToolbarTokenResource BarMargin}">
+                        <Border Name="PART_Bar"
+                                Padding="{arc:SelectionToolbarTokenResource BarPadding}"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                Background="{arc:ArcDesignTokenResource SurfaceRaised}"
+                                BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}">
+                            <StackPanel Orientation="Horizontal" Spacing="2">
+                                <arc:ArcContentSwap Name="PART_Count"
+                                                    Mode="Roll"
+                                                    VerticalAlignment="Center"
+                                                    Margin="{arc:SelectionToolbarTokenResource CountPadding}"
+                                                    TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                    TextElement.Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <arc:Button Name="PART_SelectAllButton" Variant="Ghost" Size="Small" VerticalAlignment="Center" />
+                                <Border Classes="stb-separator" />
+                                <StackPanel Name="PART_Actions" Orientation="Horizontal" Spacing="2" VerticalAlignment="Center" />
+                                <Border Classes="stb-separator" />
+                                <arc:Button Name="PART_ClearButton"
+                                            Variant="Ghost"
+                                            Size="Small"
+                                            Padding="8,0"
+                                            VerticalAlignment="Center">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}" Size="16" />
+                                </arc:Button>
+                            </StackPanel>
+                        </Border>
+                    </arc:PresenceHost>
+                    <arc:AuthAnnouncer Name="PART_Announcer" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="CompactWidth" Value="{arc:SelectionToolbarTokenResource CompactWidth}" />
+        <Setter Property="ClipToBounds" Value="False" />
+
+        <Style Selector="^ /template/ Border.stb-separator">
+            <Setter Property="Width" Value="1" />
+            <Setter Property="Height" Value="{arc:SelectionToolbarTokenResource SeparatorHeight}" />
+            <Setter Property="Margin" Value="4,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

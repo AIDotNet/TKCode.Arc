@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.RangeHistogramSliderPriceFilterDemo">
+    <arc:RangeHistogramSlider x:Name="Price"
+                              Label="Price per night"
+                              Step="5"
+                              LowerValue="120"
+                              UpperValue="340"
+                              MaxWidth="460" />
+</UserControl>

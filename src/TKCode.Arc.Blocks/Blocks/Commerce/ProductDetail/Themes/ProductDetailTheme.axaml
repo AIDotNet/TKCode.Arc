@@ -1,0 +1,173 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ProductDetailTheme">
+    <!--
+        Product detail: the picture column (main picture and thumbnails) beside the information (name, rating, price,
+        color, size, quantity, add to cart, then details and reviews behind a switch). Stacked in a narrow block.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ProductDetail}" TargetType="arc:ProductDetail">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Padding" Value="{arc:ProductDetailTokenResource BlockPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="CompactThreshold" Value="{arc:ProductDetailTokenResource CompactThreshold}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ProductDetail">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Panel>
+                        <DockPanel>
+                            <StackPanel Name="PART_GalleryColumn" DockPanel.Dock="Left" Spacing="12">
+                                <arc:ProductDetailStage Name="PART_Stage">
+                                    <arc:ProductListingAspect>
+                                        <arc:ProductListingPicture>
+                                            <Image Name="PART_Main" Stretch="UniformToFill" />
+                                        </arc:ProductListingPicture>
+                                    </arc:ProductListingAspect>
+                                </arc:ProductDetailStage>
+                                <WrapPanel Name="PART_Thumbs" ItemSpacing="8" LineSpacing="8" />
+                            </StackPanel>
+                            <StackPanel Name="PART_Info" Spacing="18" />
+                        </DockPanel>
+                        <arc:FinanceAnnouncer Name="PART_Announcer" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ StackPanel#PART_GalleryColumn">
+            <Setter Property="Width" Value="{arc:ProductDetailTokenResource GalleryWidth}" />
+            <Setter Property="Margin" Value="{arc:ProductDetailTokenResource GalleryMargin}" />
+        </Style>
+        <Style Selector="^:compact /template/ StackPanel#PART_GalleryColumn">
+            <Setter Property="DockPanel.Dock" Value="Top" />
+            <Setter Property="Width" Value="NaN" />
+            <Setter Property="Margin" Value="{arc:ProductDetailTokenResource GalleryStackedMargin}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The main picture's frame: focusable for the arrow keys, with the focus ring outside the picture. -->
+    <ControlTheme x:Key="{x:Type arc:ProductDetailStage}" TargetType="arc:ProductDetailStage">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ProductDetailStage">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            Margin="-4"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep20}"
+                            Opacity="0"
+                            IsHitTestVisible="False" />
+                    <ContentPresenter Content="{TemplateBinding Content}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+    </ControlTheme>
+
+    <!-- Option buttons (thumbnails, swatches, sizes): a border that turns strong and accented when selected. -->
+    <ControlTheme x:Key="{x:Type arc:ProductDetailOption}" TargetType="arc:ProductDetailOption">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
+        <Setter Property="Padding" Value="10,0" />
+        <Setter Property="Height" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+        <Setter Property="MinWidth" Value="{arc:ProductDetailTokenResource SizeButtonWidth}" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ProductDetailOption">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            Margin="-4"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep16}"
+                            Opacity="0"
+                            IsHitTestVisible="False" />
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}"
+                            ClipToBounds="True">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^.selected">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        </Style>
+        <Style Selector="^.sold-out">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^.thumb">
+            <Setter Property="Width" Value="{arc:ProductDetailTokenResource ThumbSize}" />
+            <Setter Property="Height" Value="{arc:ProductDetailTokenResource ThumbSize}" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="MinWidth" Value="0" />
+        </Style>
+        <Style Selector="^.thumb.selected">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        </Style>
+        <Style Selector="^.swatch">
+            <Setter Property="Width" Value="{arc:ProductDetailTokenResource SwatchSize}" />
+            <Setter Property="Height" Value="{arc:ProductDetailTokenResource SwatchSize}" />
+            <Setter Property="Padding" Value="3" />
+            <Setter Property="MinWidth" Value="0" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        </Style>
+        <Style Selector="^.swatch /template/ Border#PART_FocusRing">
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A bar of the rating breakdown: a pill track and a fill, both from the theme. -->
+    <ControlTheme x:Key="{x:Type arc:ProductDetailBar}" TargetType="arc:ProductDetailBar">
+        <Setter Property="Height" Value="6" />
+        <Setter Property="TrackBrush" Value="{arc:ArcDesignTokenResource ControlTrack}" />
+        <Setter Property="FillBrush" Value="{arc:ArcDesignTokenResource Warning}" />
+    </ControlTheme>
+</ResourceDictionary>

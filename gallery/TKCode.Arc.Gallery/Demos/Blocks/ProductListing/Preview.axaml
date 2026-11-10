@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ProductListingPreviewDemo">
+    <!-- Twelve invented products with drawn pictures; quick add counts into the cart button. -->
+    <arc:ProductListing x:Name="Listing" />
+</UserControl>

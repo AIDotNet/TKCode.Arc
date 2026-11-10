@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.HeroSignupStartAlignedDemo">
+    <!-- Lined up on the start edge, with its own copy and proof line. -->
+    <arc:HeroSignup Alignment="Start"
+                    Eyebrow="New · Field notes 2.0"
+                    Title="Notes that turn into plans"
+                    Description="Write in plain text, tag what matters, and watch tasks appear on the right board."
+                    ButtonText="Get early access"
+                    ProofText="Used by 900 research teams" />
+</UserControl>

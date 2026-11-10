@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.HelpCenterPreviewDemo">
+    <!-- The sample help center: search, browse a topic, open an article and answer the question at its end. -->
+    <arc:HelpCenter Height="680" />
+</UserControl>

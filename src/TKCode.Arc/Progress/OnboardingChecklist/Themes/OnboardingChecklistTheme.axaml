@@ -1,0 +1,576 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.OnboardingChecklistTheme">
+    <ControlTheme x:Key="{x:Type arc:OnboardingChecklist}" TargetType="arc:OnboardingChecklist">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <!-- The card is as tall as its content, so hiding the body leaves a bar even in a stretching parent. -->
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="TextBlock.LineHeight" Value="{arc:OnboardingChecklistTokenResource BodyLineHeight}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:OnboardingChecklist">
+                <!-- The card holds no padding of its own: the header pads itself, so hiding the body leaves an evenly padded bar. -->
+                <Border Background="{arc:ArcDesignTokenResource Surface}"
+                        BorderBrush="{arc:ArcDesignTokenResource Border}"
+                        BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                        CornerRadius="{arc:ArcDesignTokenResource RadiusSurface}">
+                    <StackPanel>
+                        <Grid ColumnDefinitions="Auto,*,Auto"
+                              ColumnSpacing="{arc:OnboardingChecklistTokenResource ColumnGap}"
+                              Margin="{arc:OnboardingChecklistTokenResource HeaderPadding}">
+                            <Panel Name="PART_Ring"
+                                   Width="{arc:OnboardingChecklistTokenResource LeadSize}"
+                                   Height="{arc:OnboardingChecklistTokenResource LeadSize}"
+                                   VerticalAlignment="Center"
+                                   AutomationProperties.ControlTypeOverride="ProgressBar">
+                                <arc:ArcRing Width="{arc:OnboardingChecklistTokenResource RingSize}"
+                                             Height="{arc:OnboardingChecklistTokenResource RingSize}"
+                                             Thickness="{arc:OnboardingChecklistTokenResource RingThickness}"
+                                             TrackBrush="{arc:ArcDesignTokenResource Border}" />
+                                <arc:ArcRing Name="PART_RingFill"
+                                             Width="{arc:OnboardingChecklistTokenResource RingSize}"
+                                             Height="{arc:OnboardingChecklistTokenResource RingSize}"
+                                             Thickness="{arc:OnboardingChecklistTokenResource RingThickness}"
+                                             Foreground="{arc:ArcDesignTokenResource Accent}" />
+                                <arc:OnboardingChecklistSwap Name="PART_RingTick"
+                                                    Kind="Icon"
+                                                    TextElement.Foreground="{arc:ArcDesignTokenResource Accent}" />
+                            </Panel>
+                            <StackPanel Grid.Column="1"
+                                        VerticalAlignment="Center"
+                                        Spacing="{arc:OnboardingChecklistTokenResource HeadingGap}">
+                                <arc:OnboardingChecklistSwapText Name="PART_Title"
+                                                        TextElement.FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                                        TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                        TextBlock.LineHeight="{arc:OnboardingChecklistTokenResource HeadingLineHeight}"
+                                                        TextBlock.LetterSpacing="{arc:OnboardingChecklistTokenResource HeadingLetterSpacing}" />
+                                <arc:ArcShrinkRow Name="PART_CountRow"
+                                                  TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}">
+                                    <arc:OnboardingChecklistNumber Name="PART_CountNumber" />
+                                    <TextBlock Name="PART_CountText"
+                                               arc:ArcShrinkRow.IsShrinkable="True"
+                                               TextTrimming="CharacterEllipsis" />
+                                </arc:ArcShrinkRow>
+                            </StackPanel>
+                            <arc:OnboardingChecklistHideButton Name="PART_Hide" Grid.Column="2" VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal" Spacing="{arc:OnboardingChecklistTokenResource HideGap}">
+                                    <arc:OnboardingChecklistSwapText Name="PART_HideLabel" TextWrapping="NoWrap" VerticalAlignment="Center" />
+                                    <arc:ArcGlyph Name="PART_HideChevron"
+                                                  Data="{x:Static arc:ArcIcons.ChevronUp}"
+                                                  Size="{arc:OnboardingChecklistTokenResource GlyphSize}"
+                                                  StrokeThickness="1.75"
+                                                  VerticalAlignment="Center"
+                                                  RenderTransformOrigin="50%,50%" />
+                                </StackPanel>
+                            </arc:OnboardingChecklistHideButton>
+                        </Grid>
+                        <arc:OnboardingChecklistFold Name="PART_Body" Kind="Body">
+                            <Border BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
+                                    Padding="{arc:OnboardingChecklistTokenResource BodyPadding}">
+                                <StackPanel>
+                                    <StackPanel Name="PART_OpenList" />
+                                    <arc:OnboardingChecklistFold Name="PART_Group">
+                                        <StackPanel>
+                                            <arc:OnboardingChecklistGroupToggle Name="PART_GroupToggle"
+                                                                                Margin="{arc:OnboardingChecklistTokenResource GroupMargin}">
+                                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{arc:OnboardingChecklistTokenResource ColumnGap}">
+                                                    <arc:ArcShrinkRow VerticalAlignment="Center">
+                                                        <arc:OnboardingChecklistNumber Name="PART_GroupNumber" />
+                                                        <TextBlock Name="PART_GroupText"
+                                                                   arc:ArcShrinkRow.IsShrinkable="True"
+                                                                   TextTrimming="CharacterEllipsis" />
+                                                    </arc:ArcShrinkRow>
+                                                    <arc:ArcGlyph Name="PART_GroupChevron"
+                                                                  Grid.Column="1"
+                                                                  Data="{x:Static arc:ArcIcons.ChevronUp}"
+                                                                  Size="{arc:OnboardingChecklistTokenResource GlyphSize}"
+                                                                  StrokeThickness="1.75"
+                                                                  VerticalAlignment="Center"
+                                                                  RenderTransformOrigin="50%,50%" />
+                                                </Grid>
+                                            </arc:OnboardingChecklistGroupToggle>
+                                            <arc:OnboardingChecklistFold Name="PART_GroupPanel">
+                                                <StackPanel Name="PART_CompletedList" />
+                                            </arc:OnboardingChecklistFold>
+                                        </StackPanel>
+                                    </arc:OnboardingChecklistFold>
+                                </StackPanel>
+                            </Border>
+                        </arc:OnboardingChecklistFold>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|ArcRing#PART_RingFill">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:started /template/ arc|ArcRing#PART_RingFill">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_HideChevron">
+            <Setter Property="RenderTransform" Value="rotate(0deg)" />
+        </Style>
+        <Style Selector="^:body-hidden /template/ arc|ArcGlyph#PART_HideChevron">
+            <Setter Property="RenderTransform" Value="rotate(180deg)" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_GroupChevron">
+            <Setter Property="RenderTransform" Value="rotate(180deg)" />
+        </Style>
+        <Style Selector="^:group-open /template/ arc|ArcGlyph#PART_GroupChevron">
+            <Setter Property="RenderTransform" Value="rotate(0deg)" />
+        </Style>
+        <!-- Narrow cards keep the header on one line: the button keeps its spoken name and shows only the chevron. -->
+        <Style Selector="^:narrow /template/ arc|OnboardingChecklistSwapText#PART_HideLabel">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|OnboardingChecklistHideButton#PART_Hide">
+            <Setter Property="Width" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|ArcRing#PART_RingFill">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:SpringDoubleTransition Property="Value" Spring="Morph" />
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph#PART_HideChevron">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph#PART_GroupChevron">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:OnboardingChecklistHideButton}" TargetType="arc:OnboardingChecklistHideButton">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+        <Setter Property="Padding" Value="{arc:OnboardingChecklistTokenResource HidePadding}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:OnboardingChecklistHideButton">
+                <Panel>
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:hovering">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:OnboardingChecklistGroupToggle}" TargetType="arc:OnboardingChecklistGroupToggle">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="MinHeight" Value="{arc:OnboardingChecklistTokenResource GroupMinHeight}" />
+        <Setter Property="Padding" Value="{arc:OnboardingChecklistTokenResource GroupPadding}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:OnboardingChecklistGroupToggle">
+                <Panel>
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          HorizontalContentAlignment="Stretch"
+                                          VerticalAlignment="Center" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:hovering">
+            <Setter Property="Background" Value="{arc:OnboardingChecklistTokenResource HoverBackground}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:OnboardingChecklistTitleButton}" TargetType="arc:OnboardingChecklistTitleButton">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="MinHeight" Value="{arc:OnboardingChecklistTokenResource TitleMinHeight}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:OnboardingChecklistTitleButton">
+                <Panel Background="{TemplateBinding Background}">
+                    <ContentPresenter Content="{TemplateBinding Content}"
+                                      HorizontalContentAlignment="Stretch"
+                                      VerticalAlignment="Center" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:OnboardingChecklistCheck}" TargetType="arc:OnboardingChecklistCheck">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Width" Value="{arc:OnboardingChecklistTokenResource LeadSize}" />
+        <Setter Property="Height" Value="{arc:OnboardingChecklistTokenResource LeadSize}" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:OnboardingChecklistCheck">
+                <Panel Background="Transparent">
+                    <!-- Only the circle answers a press, so the row and its label never move. -->
+                    <Panel Name="PART_Visual"
+                           Width="{arc:OnboardingChecklistTokenResource CheckSize}"
+                           Height="{arc:OnboardingChecklistTokenResource CheckSize}"
+                           RenderTransformOrigin="50%,50%">
+                        <Border Name="PART_Face"
+                                Background="{arc:ArcDesignTokenResource Surface}"
+                                BorderThickness="{arc:OnboardingChecklistTokenResource CheckThickness}"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" />
+                        <Border Name="PART_Fill"
+                                Background="{arc:ArcDesignTokenResource Accent}"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                RenderTransformOrigin="50%,50%" />
+                        <arc:StrokeDrawGlyph Name="PART_Mark"
+                                             Data="M7.3636 12.2727 10.6364 15.5455 16.6364 9"
+                                             Size="{arc:OnboardingChecklistTokenResource CheckSize}"
+                                             StrokeThickness="1.909"
+                                             Foreground="{arc:ArcDesignTokenResource AccentForeground}" />
+                    </Panel>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Panel#PART_Visual">
+            <Setter Property="RenderTransform" Value="scale(1)" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Face">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:hovering:not(:checked) /template/ Border#PART_Face">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:checked /template/ Border#PART_Face">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Fill">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="RenderTransform" Value="scale(0.6)" />
+        </Style>
+        <Style Selector="^ /template/ arc|StrokeDrawGlyph#PART_Mark">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="Progress" Value="0" />
+        </Style>
+
+        <!-- Transitions come first: a state's transitions must be in place when that state changes the values. -->
+        <Style Selector="^:motion-full /template/ Panel#PART_Visual">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full:pressed /template/ Panel#PART_Visual">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.11" Easing="{x:Static arc:ArcEasings.Standard}" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full:pressed /template/ Panel#PART_Visual">
+            <Setter Property="RenderTransform" Value="scale(0.92)" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Face">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Fill">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full:arming /template/ Border#PART_Fill">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|StrokeDrawGlyph#PART_Mark">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Progress" Tween="Fast" />
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full:arming /template/ arc|StrokeDrawGlyph#PART_Mark">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Progress" Duration="0:0:0.24" Delay="0:0:0.05" Easing="{x:Static arc:ArcEasings.Enter}" />
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.05" Delay="0:0:0.05" />
+                </Transitions>
+            </Setter>
+        </Style>
+
+        <Style Selector="^:checked /template/ Border#PART_Fill">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="RenderTransform" Value="scale(1)" />
+        </Style>
+        <Style Selector="^:checked /template/ arc|StrokeDrawGlyph#PART_Mark">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="Progress" Value="1" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:OnboardingChecklistActionButton}" TargetType="arc:OnboardingChecklistActionButton">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="RenderTransform" Value="scale(1)" />
+        <Setter Property="Margin" Value="{arc:OnboardingChecklistTokenResource ActionMargin}" />
+        <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+        <Setter Property="Padding" Value="{arc:OnboardingChecklistTokenResource ActionPadding}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:OnboardingChecklistActionButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Horizontal" Spacing="{arc:OnboardingChecklistTokenResource ActionGap}">
+                            <ContentPresenter Content="{TemplateBinding Content}" VerticalAlignment="Center" />
+                            <arc:OnboardingChecklistSwap Name="PART_Icon"
+                                                Kind="Icon"
+                                                Width="{arc:OnboardingChecklistTokenResource GlyphSize}"
+                                                Height="{arc:OnboardingChecklistTokenResource GlyphSize}"
+                                                VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:idle">
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+        <Style Selector="^:pending">
+            <Setter Property="Cursor" Value="AppStarting" />
+        </Style>
+        <Style Selector="^:done">
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:idle:hovering /template/ Border#PART_Frame">
+            <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowResting}" />
+        </Style>
+        <!-- Transitions come first: a state's transitions must be in place when that state changes the values. -->
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full:idle:pressed">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.1" Easing="{x:Static arc:ArcEasings.Standard}" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full:idle:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.97)" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Frame">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBoxShadowsTransition Property="BoxShadow" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:OnboardingChecklistStepPanel}" TargetType="arc:OnboardingChecklistStepPanel">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:OnboardingChecklistStepPanel">
+                <StackPanel Margin="{arc:OnboardingChecklistTokenResource PanelPadding}">
+                    <TextBlock Name="PART_Description"
+                               Margin="{arc:OnboardingChecklistTokenResource DescriptionMargin}"
+                               MaxWidth="{arc:OnboardingChecklistTokenResource DescriptionMaxWidth}"
+                               HorizontalAlignment="Left"
+                               TextWrapping="Wrap"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                    <arc:OnboardingChecklistFold Name="PART_ErrorFold">
+                        <TextBlock Name="PART_Error"
+                                   Padding="{arc:OnboardingChecklistTokenResource ErrorPadding}"
+                                   TextWrapping="Wrap"
+                                   Foreground="{arc:ArcDesignTokenResource Danger}" />
+                    </arc:OnboardingChecklistFold>
+                    <arc:OnboardingChecklistActionButton Name="PART_Action" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:OnboardingChecklistStepRow}" TargetType="arc:OnboardingChecklistStepRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:OnboardingChecklistStepRow">
+                <Border Name="PART_Inner"
+                        CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+                        Padding="{arc:OnboardingChecklistTokenResource StepPadding}">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="{arc:OnboardingChecklistTokenResource ColumnGap}">
+                        <arc:OnboardingChecklistCheck Name="PART_Check" />
+                        <StackPanel Grid.Column="1">
+                            <arc:OnboardingChecklistTitleButton Name="PART_Title">
+                                <arc:OnboardingChecklistStrikeText Name="PART_TitleText" TextWrapping="Wrap" />
+                            </arc:OnboardingChecklistTitleButton>
+                            <arc:OnboardingChecklistFold Name="PART_PanelFold" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Border#PART_Inner">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        <Style Selector="^:hovering:not(:current) /template/ Border#PART_Inner">
+            <Setter Property="Background" Value="{arc:OnboardingChecklistTokenResource HoverBackground}" />
+        </Style>
+        <Style Selector="^:current /template/ Border#PART_Inner">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^ /template/ arc|OnboardingChecklistStrikeText#PART_TitleText">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="StrikeProgress" Value="0" />
+        </Style>
+        <!-- Transitions come first: a state's transitions must be in place when that state changes the values. -->
+        <Style Selector="^:motion-full /template/ Border#PART_Inner">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|OnboardingChecklistStrikeText#PART_TitleText">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="StrikeProgress" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full:arming /template/ arc|OnboardingChecklistStrikeText#PART_TitleText">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="StrikeProgress" Duration="0:0:0.48" Delay="0:0:0.08" Easing="{x:Static arc:ArcEasings.Enter}" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:done /template/ arc|OnboardingChecklistStrikeText#PART_TitleText">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="StrikeProgress" Value="1" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:OnboardingChecklistCompletedRow}" TargetType="arc:OnboardingChecklistCompletedRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:OnboardingChecklistCompletedRow">
+                <Border Name="PART_Inner"
+                        CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+                        Padding="{arc:OnboardingChecklistTokenResource StepPadding}">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="{arc:OnboardingChecklistTokenResource ColumnGap}">
+                        <arc:OnboardingChecklistCheck Name="PART_Check" />
+                        <arc:OnboardingChecklistStrikeText Name="PART_TitleText"
+                                                  Grid.Column="1"
+                                                  StrikeProgress="1"
+                                                  VerticalAlignment="Center"
+                                                  TextWrapping="Wrap"
+                                                  FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                  Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Border#PART_Inner">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        <Style Selector="^:hovering /template/ Border#PART_Inner">
+            <Setter Property="Background" Value="{arc:OnboardingChecklistTokenResource HoverBackground}" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Inner">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

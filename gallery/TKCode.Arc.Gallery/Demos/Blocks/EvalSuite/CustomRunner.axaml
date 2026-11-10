@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.EvalSuiteCustomRunnerDemo">
+    <!-- Your own cases and versions, run by your code through RunCaseAsync; the log follows the events. -->
+    <StackPanel Spacing="12" Margin="0,12">
+        <arc:EvalSuite x:Name="Suite" Title="Release note summaries" BaselineVersionId="draft-a" CandidateVersionId="draft-b" />
+        <TextBlock x:Name="Log" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" MaxWidth="560" Opacity="0.8" />
+    </StackPanel>
+</UserControl>

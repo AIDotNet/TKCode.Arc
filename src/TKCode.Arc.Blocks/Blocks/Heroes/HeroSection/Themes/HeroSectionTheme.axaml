@@ -1,0 +1,247 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.HeroSectionTheme">
+    <!--
+        Ported from Arc's free hero-section block (MIT, Copyright (c) 2026 Elia Kuratli): hero-*.module.css. One template holds
+        the backdrops of the three designs; the pseudo-class of the design shows its own, and the scene is built in code.
+    -->
+    <ControlTheme x:Key="{x:Type arc:HeroSection}" TargetType="arc:HeroSection">
+        <Setter Property="ClipToBounds" Value="True" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:HeroSection">
+                <Panel Background="{TemplateBinding Background}">
+                    <arc:HeroMeshView Name="PART_DashboardMesh"
+                                      IsVisible="False"
+                                      Grain="0.18"
+                                      Speed="0.55"
+                                      MeshBase="{arc:ArcDesignTokenResource Background}"
+                                      Mesh1="{arc:HeroSectionTokenResource DashboardMesh1}"
+                                      Mesh2="{arc:HeroSectionTokenResource DashboardMesh2}"
+                                      Mesh3="{arc:HeroSectionTokenResource DashboardMesh3}"
+                                      Mesh4="{arc:HeroSectionTokenResource DashboardMesh4}"
+                                      Mesh5="{arc:HeroSectionTokenResource DashboardMesh5}" />
+                    <arc:HeroMeshView Name="PART_EditorialMesh"
+                                      IsVisible="False"
+                                      Grain="0.55"
+                                      Speed="0.45"
+                                      MeshBase="{arc:HeroSectionTokenResource EditorialMeshBase}"
+                                      Mesh1="{arc:HeroSectionTokenResource EditorialMesh1}"
+                                      Mesh2="{arc:HeroSectionTokenResource EditorialMesh2}"
+                                      Mesh3="{arc:HeroSectionTokenResource EditorialMesh3}"
+                                      Mesh4="{arc:HeroSectionTokenResource EditorialMesh4}"
+                                      Mesh5="{arc:HeroSectionTokenResource EditorialMesh5}"
+                                      Mesh6="{arc:HeroSectionTokenResource EditorialMesh6}" />
+                    <!-- A scrim that keeps body text readable wherever the mesh drifts: the page at 22%, low on the screen. -->
+                    <Border Name="PART_EditorialScrim" IsVisible="False" IsHitTestVisible="False" Opacity="0.22" Background="{arc:ArcDesignTokenResource Background}">
+                        <Border.OpacityMask>
+                            <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                                <GradientStop Offset="0.4" Color="Transparent" />
+                                <GradientStop Offset="1" Color="Black" />
+                            </LinearGradientBrush>
+                        </Border.OpacityMask>
+                    </Border>
+                    <!-- The workflow canvas: the page with 2% of the accent, and its dots. -->
+                    <Border Name="PART_RelayTint" IsVisible="False" IsHitTestVisible="False" Opacity="0.02" Background="{arc:ArcDesignTokenResource Accent}" />
+                    <arc:HeroDotField Name="PART_Dots" IsVisible="False" DotBrush="{arc:HeroSectionTokenResource CanvasDot}" />
+                    <Panel Name="PART_Scene" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:centered /template/ arc|HeroMeshView#PART_DashboardMesh">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:minimal /template/ arc|HeroMeshView#PART_EditorialMesh">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:minimal /template/ Border#PART_EditorialScrim">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:split /template/ Border#PART_RelayTint">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:split /template/ arc|HeroDotField#PART_Dots">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+
+    <!-- A node: the running step takes the accent through a tint and a ring over its resting fill and border. -->
+    <ControlTheme x:Key="{x:Type arc:HeroRelayNode}" TargetType="arc:HeroRelayNode">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Opacity" Value="1" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:HeroRelayNode">
+                <Panel>
+                    <Border Name="PART_Card"
+                            Background="{arc:ArcDesignTokenResource Surface}"
+                            BorderBrush="{arc:ArcDesignTokenResource Border}"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                            CornerRadius="{arc:HeroSectionTokenResource NodeRadius}" />
+                    <Border Name="PART_Tint"
+                            Opacity="0"
+                            IsHitTestVisible="False"
+                            Background="{arc:ArcDesignTokenResource Accent}"
+                            CornerRadius="{arc:HeroSectionTokenResource NodeRadius}" />
+                    <Border Name="PART_Ring"
+                            Opacity="0"
+                            IsHitTestVisible="False"
+                            BorderBrush="{arc:ArcDesignTokenResource Accent}"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                            CornerRadius="{arc:HeroSectionTokenResource NodeRadius}" />
+                    <Grid Name="PART_Layout" Margin="{arc:HeroSectionTokenResource NodePadding}" VerticalAlignment="Center" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                        <arc:ArcGlyph Name="PART_Icon"
+                                      Data="{TemplateBinding Icon}"
+                                      Size="17"
+                                      StrokeThickness="1.75"
+                                      VerticalAlignment="Center"
+                                      Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        <StackPanel Name="PART_Text" Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="{TemplateBinding Title}"
+                                       TextTrimming="CharacterEllipsis"
+                                       FontSize="13"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            <TextBlock Text="{TemplateBinding Sub}"
+                                       TextTrimming="CharacterEllipsis"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        </StackPanel>
+                        <arc:ArcContentSwap Name="PART_State"
+                                            Grid.Column="2"
+                                            Mode="Pop"
+                                            HorizontalContentAlignment="Right"
+                                            VerticalContentAlignment="Center"
+                                            VerticalAlignment="Center" />
+                    </Grid>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Border#PART_Card">
+            <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowResting}" />
+        </Style>
+        <Style Selector="^:running /template/ Border#PART_Tint">
+            <Setter Property="Opacity" Value="0.04" />
+        </Style>
+        <Style Selector="^:running /template/ Border#PART_Ring">
+            <Setter Property="Opacity" Value="0.7" />
+        </Style>
+        <Style Selector="^:skipped">
+            <Setter Property="Opacity" Value="0.5" />
+        </Style>
+        <Style Selector="^:skipped /template/ Border#PART_Card">
+            <Setter Property="BoxShadow" Value="0 0 0 0 Transparent" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Tint">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Ring">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:HeroActionContent}" TargetType="arc:HeroActionContent">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:HeroActionContent">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <arc:ArcGlyph Data="{TemplateBinding LeadingGlyph}"
+                                  IsVisible="{TemplateBinding LeadingGlyph, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                  Size="16"
+                                  StrokeThickness="1.75"
+                                  VerticalAlignment="Center"
+                                  Foreground="{TemplateBinding Foreground}" />
+                    <TextBlock Text="{TemplateBinding Text}" VerticalAlignment="Center" />
+                    <arc:ArcGlyph Name="PART_Trailing"
+                                  Data="{TemplateBinding TrailingGlyph}"
+                                  IsVisible="{TemplateBinding TrailingGlyph, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                  Size="16"
+                                  StrokeThickness="1.75"
+                                  VerticalAlignment="Center"
+                                  Foreground="{TemplateBinding Foreground}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Trailing">
+            <Setter Property="RenderTransform" Value="translateX(0px)" />
+        </Style>
+        <Style Selector="^:lean /template/ arc|ArcGlyph#PART_Trailing">
+            <Setter Property="RenderTransform" Value="translateX(2px)" />
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph#PART_Trailing">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:HeroAnnouncementButton}" TargetType="arc:HeroAnnouncementButton">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="MinHeight" Value="32" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:HeroAnnouncementButton">
+                <Panel>
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Padding="12,4">
+                        <ContentPresenter Content="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}" VerticalContentAlignment="Center" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

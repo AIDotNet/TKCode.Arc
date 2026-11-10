@@ -1,0 +1,75 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.SplitBarTheme">
+
+    <!-- The header (title and rolling sum), the drawn bar and the legend. -->
+    <ControlTheme x:Key="{x:Type arc:SplitBar}" TargetType="arc:SplitBar">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SplitBar">
+                <StackPanel Spacing="{arc:SplitBarTokenResource SectionGap}">
+                    <Grid Name="PART_Header" ColumnDefinitions="*,Auto">
+                        <TextBlock Name="PART_Title"
+                                   Text="{TemplateBinding Title}"
+                                   VerticalAlignment="Center"
+                                   TextTrimming="CharacterEllipsis"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        <StackPanel Grid.Column="1"
+                                    Orientation="Horizontal"
+                                    Spacing="4"
+                                    Margin="12,0,0,0"
+                                    IsVisible="{TemplateBinding IsSumVisible}">
+                            <arc:RollingDigits Name="PART_Sum"
+                                               VerticalAlignment="Center"
+                                               AutomationProperties.AccessibilityView="Raw"
+                                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            <TextBlock Name="PART_OfTotal"
+                                       VerticalAlignment="Center"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        </StackPanel>
+                    </Grid>
+                    <arc:SplitBarTrack Name="PART_Track" />
+                    <WrapPanel Name="PART_Legend"
+                               ItemSpacing="{arc:SplitBarTokenResource LegendItemGap}"
+                               LineSpacing="{arc:SplitBarTokenResource LegendLineGap}"
+                               IsVisible="{TemplateBinding IsLegendVisible}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- The drawn bar: chart series colors for parts without their own, pill-shaped parts over the empty track. -->
+    <ControlTheme x:Key="{x:Type arc:SplitBarTrack}" TargetType="arc:SplitBarTrack">
+        <Setter Property="TrackBrush" Value="{arc:ArcDesignTokenResource ControlTrack}" />
+        <Setter Property="FocusBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+        <Setter Property="Series1" Value="{arc:ArcDesignTokenResource Series1}" />
+        <Setter Property="Series2" Value="{arc:ArcDesignTokenResource Series2}" />
+        <Setter Property="Series3" Value="{arc:ArcDesignTokenResource Series3}" />
+        <Setter Property="Series4" Value="{arc:ArcDesignTokenResource Series4}" />
+        <Setter Property="SegmentRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="BarHeight" Value="{arc:SplitBarTokenResource BarHeight}" />
+        <Setter Property="SegmentGap" Value="{arc:SplitBarTokenResource SegmentGap}" />
+        <Setter Property="HighlightLift" Value="{arc:SplitBarTokenResource HighlightLift}" />
+        <Setter Property="DimOpacity" Value="{arc:SplitBarTokenResource DimOpacity}" />
+        <Setter Property="Cursor" Value="Hand" />
+    </ControlTheme>
+
+    <!-- A legend dot. -->
+    <ControlTheme x:Key="{x:Type arc:SplitBarLegendDot}" TargetType="arc:SplitBarLegendDot">
+        <Setter Property="RingBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="Series1" Value="{arc:ArcDesignTokenResource Series1}" />
+        <Setter Property="Series2" Value="{arc:ArcDesignTokenResource Series2}" />
+        <Setter Property="Series3" Value="{arc:ArcDesignTokenResource Series3}" />
+        <Setter Property="Series4" Value="{arc:ArcDesignTokenResource Series4}" />
+        <Setter Property="DotSize" Value="{arc:SplitBarTokenResource DotSize}" />
+    </ControlTheme>
+</ResourceDictionary>

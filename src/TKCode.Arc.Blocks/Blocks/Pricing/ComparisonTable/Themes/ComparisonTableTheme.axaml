@@ -1,0 +1,209 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ComparisonTableTheme">
+
+    <!--
+        Ported from Arc's free comparison-table block (MIT, Copyright (c) 2026 Elia Kuratli): comparison-table.module.css.
+
+        The content is at most 1080 wide with padding 64 24 and 32 between its parts. Your column's band, your header and the
+        foot share 6% of the accent over the surface; a hovered row raises it to 9%.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ComparisonTable}" TargetType="arc:ComparisonTable">
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ComparisonTable">
+                <Panel Background="{TemplateBinding Background}">
+                    <Border Name="PART_Inner" MaxWidth="{arc:ComparisonTableTokenResource ContentMaxWidth}">
+                        <StackPanel Name="PART_Stack">
+                            <WrapPanel Name="PART_Header">
+                                <StackPanel Name="PART_Intro" Spacing="12" MaxWidth="{arc:ComparisonTableTokenResource IntroMaxWidth}" Margin="0,0,24,0">
+                                    <TextBlock Name="PART_Title"
+                                               Text="{TemplateBinding Title}"
+                                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               FontSize="{TemplateBinding TitleFontSize}"
+                                               TextWrapping="Wrap"
+                                               AutomationProperties.HeadingLevel="2" />
+                                    <TextBlock Name="PART_Description"
+                                               Text="{TemplateBinding Description}"
+                                               IsVisible="{TemplateBinding HasDescription}"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                               LineHeight="22.4"
+                                               LetterSpacing="-0.16"
+                                               TextWrapping="Wrap" />
+                                </StackPanel>
+                                <StackPanel Name="PART_Toggle" Orientation="Horizontal" Spacing="12" VerticalAlignment="Bottom">
+                                    <TextBlock Name="PART_SwitchLabel"
+                                               Text="{TemplateBinding DifferencesLabel}"
+                                               VerticalAlignment="Center"
+                                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               Cursor="Hand" />
+                                    <arc:Switch Name="PART_Switch" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </WrapPanel>
+                            <ScrollViewer Name="PART_PickerScroll"
+                                          HorizontalScrollBarVisibility="Hidden"
+                                          VerticalScrollBarVisibility="Disabled">
+                                <arc:GlidingPillBar Name="PART_Picker" Look="Quiet" HorizontalAlignment="Left" />
+                            </ScrollViewer>
+                            <ScrollViewer Name="PART_Scroller"
+                                          MaxHeight="{TemplateBinding MaxTableHeight}"
+                                          HorizontalScrollBarVisibility="Disabled"
+                                          VerticalScrollBarVisibility="Auto">
+                                <StackPanel Name="PART_Table" ClipToBounds="False">
+                                    <arc:ComparisonRowPanel Name="PART_Head" ZIndex="3" Background="{arc:ComparisonTableTokenResource HeadBackground}" />
+                                    <StackPanel Name="PART_Body" />
+                                    <arc:ComparisonRowPanel Name="PART_Foot" />
+                                </StackPanel>
+                            </ScrollViewer>
+                        </StackPanel>
+                    </Border>
+                    <arc:SiteAnnouncer Name="PART_Announcer" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ Border#PART_Inner">
+            <Setter Property="Padding" Value="{arc:ComparisonTableTokenResource ContentInset}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Stack">
+            <Setter Property="Spacing" Value="32" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_SwitchLabel">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:differences /template/ TextBlock#PART_SwitchLabel">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ComparisonRowPanel#PART_Foot">
+            <Setter Property="Margin" Value="0" />
+        </Style>
+        <Style Selector="^:tight">
+            <Style Selector="^ /template/ Border#PART_Inner">
+                <Setter Property="Padding" Value="{arc:ComparisonTableTokenResource ContentInsetStacked}" />
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_Stack">
+                <Setter Property="Spacing" Value="24" />
+            </Style>
+        </Style>
+        <Style Selector="^ /template/ ScrollViewer#PART_PickerScroll">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:stacked /template/ ScrollViewer#PART_PickerScroll">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:ComparisonRowPanel}" TargetType="arc:ComparisonRowPanel" />
+
+    <!-- The cell's ground; the text inside it is built in code. -->
+    <ControlTheme x:Key="{x:Type arc:ComparisonCellGround}" TargetType="arc:ComparisonCellGround">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="BandBaseBrush" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BandBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="HoverBrush" Value="{arc:ComparisonTableTokenResource RowHoverBackground}" />
+        <Setter Property="RuleBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="BandOpacity" Value="{arc:ComparisonTableTokenResource BandOpacity}" />
+        <Setter Property="BandHoverOpacity" Value="{arc:ComparisonTableTokenResource BandHoverOpacity}" />
+        <Style Selector="^:row-hover">
+            <Setter Property="HoverAmount" Value="1" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="HoverAmount" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <!-- A feature cell: at least 56 high, padding 12 16 12 0. -->
+        <Style Selector="^.feature-cell">
+            <Setter Property="MinHeight" Value="{arc:ComparisonTableTokenResource RowMinHeight}" />
+            <Setter Property="Padding" Value="0,12,16,12" />
+        </Style>
+        <Style Selector="^.head">
+            <Setter Property="MinHeight" Value="{arc:ComparisonTableTokenResource HeadMinHeight}" />
+            <Setter Property="Padding" Value="8,16" />
+        </Style>
+        <Style Selector="^.head.tight">
+            <Setter Property="MinHeight" Value="{arc:ComparisonTableTokenResource HeadMinHeightStacked}" />
+        </Style>
+        <Style Selector="^.foot">
+            <Setter Property="Padding" Value="0,20" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:ComparisonCell}" TargetType="arc:ComparisonCell" BasedOn="{StaticResource {x:Type arc:ComparisonCellGround}}">
+        <Setter Property="OnBrush" Value="{arc:ArcDesignTokenResource ControlOn}" />
+        <Setter Property="GlyphBrush" Value="{arc:ArcDesignTokenResource ControlGlyph}" />
+        <Setter Property="CircleBrush" Value="{arc:ComparisonTableTokenResource CheckCircle}" />
+        <Setter Property="InkBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SecondaryBrush" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="MutedBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:ComparisonLegendMark}" TargetType="arc:ComparisonLegendMark">
+        <Setter Property="InkBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="MutedBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="CircleBrush" Value="{arc:ComparisonTableTokenResource CheckCircle}" />
+    </ControlTheme>
+
+    <!-- A pill: 36 high, padding 0 16, the foreground as fill; done is a faint success fill with success text. It scales to .97 when pressed. -->
+    <ControlTheme x:Key="{x:Type arc:ComparisonCtaButton}" TargetType="arc:ComparisonCtaButton">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Height" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+        <Setter Property="Padding" Value="16,0" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="RenderTransform" Value="none" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ComparisonCtaButton">
+                <Panel Name="PART_Root">
+                    <Border Name="PART_Surface"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}"
+                            ClipToBounds="True">
+                        <arc:SpringSizeDecorator Axis="Width" Spring="Morph" VerticalAlignment="Center">
+                            <arc:BlockSwap Name="PART_Swap" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+                        </arc:SpringSizeDecorator>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:done">
+            <Setter Property="Background" Value="{arc:ComparisonTableTokenResource CtaDoneBackground}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.97)" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Morph" />
+                    <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

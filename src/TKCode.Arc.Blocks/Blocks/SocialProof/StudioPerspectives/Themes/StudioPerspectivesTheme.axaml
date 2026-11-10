@@ -1,0 +1,178 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.StudioPerspectivesTheme">
+
+    <!--
+        The testimonial stage: a column at most 880 wide. A header line (the title in 14 medium muted, the position in mono
+        on the right), the accent quotation mark, the quote (display 36 / 46, swapped with a blur while the height follows
+        on a spring), the person row (portrait, name, byline; swapped with a lift a beat later) with the previous, pause
+        and next buttons, and one progress bar per quote. Below 640 (:compact) the quote is 22 / 31.
+    -->
+    <ControlTheme x:Key="{x:Type arc:StudioPerspectives}" TargetType="arc:StudioPerspectives">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="Padding" Value="{arc:StudioPerspectivesTokenResource SectionPadding}" />
+        <Setter Property="AutomationProperties.Name" Value="{Binding Title, RelativeSource={RelativeSource Self}}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:StudioPerspectives">
+                <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                    <StackPanel MaxWidth="{arc:StudioPerspectivesTokenResource ContentMaxWidth}">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock Name="PART_Title"
+                                       Text="{TemplateBinding Title}"
+                                       AutomationProperties.HeadingLevel="2"
+                                       TextTrimming="CharacterEllipsis"
+                                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            <TextBlock Name="PART_Position"
+                                       Grid.Column="1"
+                                       Text="{TemplateBinding PositionText}"
+                                       AutomationProperties.AccessibilityView="Raw"
+                                       FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        </Grid>
+                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Quote}"
+                                      HorizontalAlignment="Left"
+                                      Margin="{arc:StudioPerspectivesTokenResource MarkMargin}"
+                                      Size="{arc:StudioPerspectivesTokenResource MarkSize}"
+                                      StrokeThickness="1.5"
+                                      Foreground="{arc:ArcDesignTokenResource Accent}" />
+                        <arc:SpringSizeDecorator Axis="Height" Margin="{arc:StudioPerspectivesTokenResource QuoteMargin}">
+                            <arc:ArcContentSwap Name="PART_Quote"
+                                                Mode="BlurSwap"
+                                                MeasuresExiting="True"
+                                                HorizontalContentAlignment="Left"
+                                                VerticalContentAlignment="Top" />
+                        </arc:SpringSizeDecorator>
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16" Margin="{arc:StudioPerspectivesTokenResource PersonMargin}">
+                            <arc:ArcContentSwap Name="PART_Person"
+                                                Mode="Lift"
+                                                EnterDelay="0:0:0.08"
+                                                HorizontalContentAlignment="Left"
+                                                VerticalContentAlignment="Center" />
+                            <StackPanel Name="PART_Controls"
+                                        Grid.Column="1"
+                                        Orientation="Horizontal"
+                                        Spacing="6"
+                                        VerticalAlignment="Center">
+                                <arc:Button Name="PART_Previous"
+                                            Variant="Secondary"
+                                            Size="Small"
+                                            Width="{arc:StudioPerspectivesTokenResource ButtonWidth}"
+                                            Padding="0">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronLeft}" Size="16" />
+                                </arc:Button>
+                                <arc:Button Name="PART_Pause"
+                                            Variant="Ghost"
+                                            Size="Small"
+                                            Width="{arc:StudioPerspectivesTokenResource ButtonWidth}"
+                                            Padding="0">
+                                    <Panel>
+                                        <arc:ArcGlyph Name="PART_PauseGlyph" Data="{x:Static arc:ArcIcons.Pause}" Size="16" />
+                                        <arc:ArcGlyph Name="PART_PlayGlyph" Data="{x:Static arc:ArcIcons.Play}" Size="16" />
+                                    </Panel>
+                                </arc:Button>
+                                <arc:Button Name="PART_Next"
+                                            Variant="Secondary"
+                                            Size="Small"
+                                            Width="{arc:StudioPerspectivesTokenResource ButtonWidth}"
+                                            Padding="0">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronRight}" Size="16" />
+                                </arc:Button>
+                            </StackPanel>
+                        </Grid>
+                        <arc:StudioPerspectivesProgress Name="PART_Progress"
+                                                        Margin="{arc:StudioPerspectivesTokenResource ProgressMargin}"
+                                                        BarHeight="{arc:StudioPerspectivesTokenResource BarHeight}"
+                                                        Gap="{arc:StudioPerspectivesTokenResource BarGap}"
+                                                        TrackBrush="{arc:ArcDesignTokenResource ControlTrack}"
+                                                        DoneBrush="{arc:ArcDesignTokenResource BorderStrong}"
+                                                        FillBrush="{arc:ArcDesignTokenResource Accent}" />
+                        <arc:SiteAnnouncer Name="PART_Announcer" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_PlayGlyph">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:paused">
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_PauseGlyph">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_PlayGlyph">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+        </Style>
+        <Style Selector="^:single">
+            <Style Selector="^ /template/ StackPanel#PART_Controls">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ arc|StudioPerspectivesProgress#PART_Progress">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+        </Style>
+        <Style Selector="^:compact">
+            <Setter Property="Padding" Value="{arc:StudioPerspectivesTokenResource CompactSectionPadding}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The quote: display 36 / 46 (22 / 31 in a compact stage), -0.6 tracking, wrapped. -->
+    <ControlTheme x:Key="{x:Type arc:StudioPerspectivesQuoteView}" TargetType="arc:StudioPerspectivesQuoteView">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:StudioPerspectivesQuoteView">
+                <TextBlock Name="PART_Text"
+                           Text="{TemplateBinding Text}"
+                           TextWrapping="Wrap"
+                           FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                           FontWeight="{arc:ArcDesignTokenResource WeightRegular}"
+                           LetterSpacing="{arc:StudioPerspectivesTokenResource QuoteLetterSpacing}"
+                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ TextBlock#PART_Text">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type3XL}" />
+            <Setter Property="LineHeight" Value="{arc:StudioPerspectivesTokenResource QuoteLineHeight}" />
+        </Style>
+        <Style Selector="^:compact /template/ TextBlock#PART_Text">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXL}" />
+            <Setter Property="LineHeight" Value="{arc:StudioPerspectivesTokenResource CompactQuoteLineHeight}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The person: a round 48 portrait, the name (16 medium) and the byline (14 muted). -->
+    <ControlTheme x:Key="{x:Type arc:StudioPerspectivesPerson}" TargetType="arc:StudioPerspectivesPerson">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:StudioPerspectivesPerson">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="{arc:StudioPerspectivesTokenResource PersonGap}">
+                    <Border Width="{arc:StudioPerspectivesTokenResource PortraitSize}"
+                            Height="{arc:StudioPerspectivesTokenResource PortraitSize}"
+                            ClipToBounds="True"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}">
+                        <arc:TeamShowcasePortrait Seed="{TemplateBinding Seed}" Image="{TemplateBinding Image}" />
+                    </Border>
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                        <TextBlock Text="{TemplateBinding PersonName}"
+                                   TextTrimming="CharacterEllipsis"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        <TextBlock Text="{TemplateBinding Byline}"
+                                   TextTrimming="CharacterEllipsis"
+                                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                    </StackPanel>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

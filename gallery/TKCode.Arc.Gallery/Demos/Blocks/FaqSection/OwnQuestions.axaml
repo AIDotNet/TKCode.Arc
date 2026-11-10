@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.FaqSectionOwnQuestionsDemo">
+    <!-- Your own questions, several answers open at once, and a contact row that opens an address. -->
+    <Border CornerRadius="20" ClipToBounds="True" BorderThickness="1" BorderBrush="{arc:ArcDesignTokenResource Border}">
+        <arc:FaqSection Title="Before you book" Description="Three things people ask first." IsMultiple="True">
+            <arc:FaqSection.Items>
+                <arc:FaqItem Question="Can I move my booking?" Answer="Yes, up to a day before. Open the booking and pick a new time." />
+                <arc:FaqItem Question="Is parking included?" Answer="Every booking includes one space in the garage next door." />
+                <arc:FaqItem Question="Can I bring a guest?" Answer="Bring one guest at no charge. Larger groups need a team booking." />
+            </arc:FaqSection.Items>
+            <arc:FaqSection.Contact>
+                <arc:FaqContact Label="Talk to the front desk" Description="We answer within the hour." Href="mailto:desk@example.com" />
+            </arc:FaqSection.Contact>
+        </arc:FaqSection>
+    </Border>
+</UserControl>

@@ -1,0 +1,218 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.HeroSignupTheme">
+
+    <!--
+        The signup hero: a dot field (strong-border dots fading from the top center, an accent glow above) behind a column
+        at most 820 wide. From the top: the eyebrow pill (an accent dot and 14 medium secondary text in a bordered pill),
+        the headline (display 52 / 58, -1.2 tracking), the copy (18 / 28 secondary, at most 600), the action (at most
+        500: a large field and a large primary button, or the confirmation card in its place) and the proof row (faces
+        and a 14 secondary line). Below 760 (:compact) the headline is 36, below 480 (:narrow) 28 and the field and button
+        stack. :start lines everything up on the start edge.
+    -->
+    <ControlTheme x:Key="{x:Type arc:HeroSignup}" TargetType="arc:HeroSignup">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="Padding" Value="{arc:HeroSignupTokenResource SectionPadding}" />
+        <Setter Property="AutomationProperties.Name" Value="{Binding Title, RelativeSource={RelativeSource Self}}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:HeroSignup">
+                <Panel Background="{TemplateBinding Background}">
+                    <arc:HeroSignupBackdrop Name="PART_Backdrop"
+                                            IsVisible="{TemplateBinding IsBackdropVisible}"
+                                            DotBrush="{arc:HeroSignupTokenResource DotColor}"
+                                            GlowBrush="{arc:ArcDesignTokenResource Accent}"
+                                            GlowOpacity="{arc:HeroSignupTokenResource GlowOpacity}"
+                                            Spacing="{arc:HeroSignupTokenResource DotSpacing}"
+                                            DotRadius="{arc:HeroSignupTokenResource DotRadius}" />
+                    <Border Padding="{TemplateBinding Padding}">
+                        <StackPanel Name="PART_Content" MaxWidth="{arc:HeroSignupTokenResource ContentMaxWidth}">
+                            <Border Name="PART_Eyebrow"
+                                    IsVisible="{TemplateBinding Eyebrow, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                    Padding="{arc:HeroSignupTokenResource EyebrowPadding}"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                    BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                    Background="{arc:ArcDesignTokenResource Surface}">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <Ellipse Width="{arc:HeroSignupTokenResource EyebrowDot}"
+                                             Height="{arc:HeroSignupTokenResource EyebrowDot}"
+                                             VerticalAlignment="Center"
+                                             Fill="{arc:ArcDesignTokenResource Accent}" />
+                                    <TextBlock Text="{TemplateBinding Eyebrow}"
+                                               VerticalAlignment="Center"
+                                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                </StackPanel>
+                            </Border>
+                            <TextBlock Name="PART_Title"
+                                       Text="{TemplateBinding Title}"
+                                       IsVisible="{TemplateBinding Title, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                       AutomationProperties.HeadingLevel="1"
+                                       Margin="{arc:HeroSignupTokenResource TitleMargin}"
+                                       TextWrapping="Wrap"
+                                       FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       LetterSpacing="{arc:HeroSignupTokenResource TitleLetterSpacing}"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            <TextBlock Name="PART_Description"
+                                       Text="{TemplateBinding Description}"
+                                       IsVisible="{TemplateBinding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                       Margin="{arc:HeroSignupTokenResource DescriptionMargin}"
+                                       MaxWidth="{arc:HeroSignupTokenResource DescriptionMaxWidth}"
+                                       TextWrapping="Wrap"
+                                       LineHeight="{arc:HeroSignupTokenResource DescriptionLineHeight}"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            <Panel Name="PART_Action"
+                                   Margin="{arc:HeroSignupTokenResource ActionMargin}"
+                                   MaxWidth="{arc:HeroSignupTokenResource FormMaxWidth}">
+                                <arc:PresenceHost Name="PART_Form" Mode="Fade" IsPresent="True">
+                                    <arc:HeroSignupFormPanel Name="PART_FormRow" Gap="{arc:HeroSignupTokenResource FormGap}">
+                                        <arc:Input Name="PART_Email"
+                                                   Size="Large"
+                                                   Placeholder="{TemplateBinding Placeholder}"
+                                                   Description="{TemplateBinding Note}"
+                                                   AutomationProperties.Name="{TemplateBinding EmailLabel}" />
+                                        <arc:Button Name="PART_Submit"
+                                                    Variant="Primary"
+                                                    Size="Large"
+                                                    Content="{TemplateBinding ButtonText}" />
+                                    </arc:HeroSignupFormPanel>
+                                </arc:PresenceHost>
+                                <arc:PresenceHost Name="PART_Done" Mode="Rise" IsPresent="False">
+                                    <Border Name="PART_DoneCard"
+                                            Padding="{arc:HeroSignupTokenResource DonePadding}"
+                                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep18}"
+                                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                            BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                            Background="{arc:ArcDesignTokenResource Surface}">
+                                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
+                                            <Border Width="{arc:HeroSignupTokenResource DoneBadge}"
+                                                    Height="{arc:HeroSignupTokenResource DoneBadge}"
+                                                    VerticalAlignment="Top"
+                                                    CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                                    Background="{arc:ArcDesignTokenResource SuccessSubtle}">
+                                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Check}"
+                                                              Size="18"
+                                                              StrokeThickness="2"
+                                                              HorizontalAlignment="Center"
+                                                              VerticalAlignment="Center"
+                                                              Foreground="{arc:ArcDesignTokenResource Success}" />
+                                            </Border>
+                                            <StackPanel Grid.Column="1" Spacing="4">
+                                                <TextBlock Name="PART_DoneTitle"
+                                                           Text="{TemplateBinding DoneTitle}"
+                                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                                <TextBlock Name="PART_DoneText"
+                                                           Text="{TemplateBinding DoneText}"
+                                                           TextWrapping="Wrap"
+                                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                                <arc:Button Name="PART_Reset"
+                                                            Margin="-12,6,0,0"
+                                                            HorizontalAlignment="Left"
+                                                            Variant="Ghost"
+                                                            Size="Small"
+                                                            IsTabStop="False"
+                                                            Content="{TemplateBinding ResetText}" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </arc:PresenceHost>
+                            </Panel>
+                            <StackPanel Name="PART_Proof"
+                                        Orientation="Horizontal"
+                                        Spacing="12"
+                                        Margin="{arc:HeroSignupTokenResource ProofMargin}">
+                                <arc:HeroSignupFaces Name="PART_Faces"
+                                                     VerticalAlignment="Center"
+                                                     Diameter="{arc:HeroSignupTokenResource FaceDiameter}"
+                                                     Overlap="{arc:HeroSignupTokenResource FaceOverlap}" />
+                                <TextBlock Text="{TemplateBinding ProofText}"
+                                           VerticalAlignment="Center"
+                                           TextWrapping="Wrap"
+                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            </StackPanel>
+                            <arc:SiteAnnouncer Name="PART_Announcer" />
+                        </StackPanel>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Centered by default; :start lines the column up on the start edge. -->
+        <Style Selector="^ /template/ Border#PART_Eyebrow">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Title">
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type4XL}" />
+            <Setter Property="LineHeight" Value="{arc:HeroSignupTokenResource TitleLineHeight}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Description">
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeLG}" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="^ /template/ Panel#PART_Action">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Proof">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="^:start">
+            <Style Selector="^ /template/ StackPanel#PART_Content">
+                <Setter Property="HorizontalAlignment" Value="Left" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Eyebrow">
+                <Setter Property="HorizontalAlignment" Value="Left" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_Title">
+                <Setter Property="TextAlignment" Value="Left" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_Description">
+                <Setter Property="TextAlignment" Value="Left" />
+                <Setter Property="HorizontalAlignment" Value="Left" />
+            </Style>
+            <Style Selector="^ /template/ Panel#PART_Action">
+                <Setter Property="HorizontalAlignment" Value="Left" />
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_Proof">
+                <Setter Property="HorizontalAlignment" Value="Left" />
+            </Style>
+        </Style>
+        <Style Selector="^:no-proof /template/ StackPanel#PART_Proof">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:compact">
+            <Setter Property="Padding" Value="{arc:HeroSignupTokenResource CompactSectionPadding}" />
+            <Style Selector="^ /template/ TextBlock#PART_Title">
+                <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type3XL}" />
+                <Setter Property="LineHeight" Value="{arc:HeroSignupTokenResource CompactTitleLineHeight}" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_Description">
+                <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+            </Style>
+        </Style>
+        <Style Selector="^:narrow">
+            <Setter Property="Padding" Value="{arc:HeroSignupTokenResource NarrowSectionPadding}" />
+            <Style Selector="^ /template/ TextBlock#PART_Title">
+                <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type2XL}" />
+                <Setter Property="LineHeight" Value="{arc:HeroSignupTokenResource NarrowTitleLineHeight}" />
+            </Style>
+            <Style Selector="^ /template/ arc|HeroSignupFormPanel#PART_FormRow">
+                <Setter Property="IsStacked" Value="True" />
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

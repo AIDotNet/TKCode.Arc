@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.OnboardingChecklistHiddenDemo">
+    <arc:OnboardingChecklist Title="Get started" IsHidden="True" MaxWidth="520">
+        <arc:OnboardingChecklistStep Title="Pick a template" Description="You can change it later." />
+        <arc:OnboardingChecklistStep Title="Publish your first page" />
+    </arc:OnboardingChecklist>
+</UserControl>

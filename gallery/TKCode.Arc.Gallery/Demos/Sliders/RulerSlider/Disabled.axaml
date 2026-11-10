@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.RulerSliderDisabledDemo">
+    <arc:RulerSlider Label="Saved height"
+                     Unit="cm"
+                     Minimum="120"
+                     Maximum="220"
+                     Value="165"
+                     IsEnabled="False"
+                     MaxWidth="460" />
+</UserControl>

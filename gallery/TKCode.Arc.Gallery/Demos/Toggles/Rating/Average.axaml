@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.RatingAverageDemo">
+    <StackPanel Spacing="16" HorizontalAlignment="Center">
+        <arc:Rating Label="Average from 1,284 reviews" Value="4.5" AllowHalf="True" IsReadOnly="True" />
+        <arc:Rating Label="Choose in half stars" Value="2.5" AllowHalf="True" />
+    </StackPanel>
+</UserControl>

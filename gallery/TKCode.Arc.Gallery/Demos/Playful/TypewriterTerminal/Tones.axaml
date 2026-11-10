@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TypewriterTerminalTonesDemo">
+    <!-- A test run that plays once: each line has a tone, and Replay appears in the title bar at the end. -->
+    <arc:TypewriterTerminal Title="test" Prompt="&gt;" TypingSpeed="22" MaxWidth="560">
+        <arc:TypewriterTerminalLine Kind="Command" Text="kiln test --watch=false" />
+        <arc:TypewriterTerminalLine Text="  PASS parses empty orders (4 ms)" Tone="Success" Pause="0:0:0.3" />
+        <arc:TypewriterTerminalLine Text="  PASS rounds totals to the cent (2 ms)" Tone="Success" />
+        <arc:TypewriterTerminalLine Text="  SKIP refunds over 90 days" Tone="Warning" />
+        <arc:TypewriterTerminalLine Text="  FAIL applies the spring coupon" Tone="Danger" Pause="0:0:0.4" />
+        <arc:TypewriterTerminalLine Text="    expected 18.00, received 20.00" Tone="Muted" />
+        <arc:TypewriterTerminalLine Text="Tests: 1 failed, 1 skipped, 2 passed" Pause="0:0:0.3" />
+    </arc:TypewriterTerminal>
+</UserControl>

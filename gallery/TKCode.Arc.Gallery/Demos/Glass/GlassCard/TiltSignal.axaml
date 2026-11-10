@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.GlassCardTiltSignalDemo">
+    <!-- Tilt drives the light while the pointer is elsewhere: here two sliders stand in for a device's orientation. -->
+    <StackPanel Spacing="16">
+        <Panel Height="300" ClipToBounds="True" arc:GlassBackdrop.Source="{Binding #Scene}">
+            <Canvas Name="Scene">
+                <Canvas.Background>
+                    <LinearGradientBrush StartPoint="0%,100%" EndPoint="100%,0%">
+                        <GradientStop Color="#F3E3C7" Offset="0" />
+                        <GradientStop Color="#E9B8A6" Offset="1" />
+                    </LinearGradientBrush>
+                </Canvas.Background>
+                <Rectangle Canvas.Left="80" Canvas.Top="60" Width="180" Height="180" Fill="#2F6F73" RadiusX="24" RadiusY="24" />
+                <Ellipse Canvas.Left="380" Canvas.Top="20" Width="200" Height="200" Fill="#D9573B" />
+                <Ellipse Canvas.Left="250" Canvas.Top="180" Width="120" Height="120" Fill="#3C3A6E" />
+            </Canvas>
+            <arc:GlassCard Name="Card" Width="280" MaxTilt="10" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <StackPanel Spacing="6">
+                    <TextBlock Text="Studio pass" FontSize="18" FontWeight="SemiBold" />
+                    <TextBlock Text="Ines Varga · Level 3 · Room B" Opacity="0.8" />
+                </StackPanel>
+            </arc:GlassCard>
+        </Panel>
+        <Grid ColumnDefinitions="*,*" ColumnSpacing="24" MaxWidth="520">
+            <arc:Slider Name="TiltX" Grid.Column="0" Label="Tilt X" Minimum="-1" Maximum="1" Value="0.6" />
+            <arc:Slider Name="TiltY" Grid.Column="1" Label="Tilt Y" Minimum="-1" Maximum="1" Value="-0.4" />
+        </Grid>
+    </StackPanel>
+</UserControl>

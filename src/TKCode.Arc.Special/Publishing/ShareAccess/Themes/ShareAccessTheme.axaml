@@ -1,0 +1,41 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ShareAccessTheme">
+
+    <!--
+        The share dialog: a raised surface with a hairline edge and the panel radius, fluid up to 520px. Its parts (the
+        heading, the invite row, the people, general access and the footer) are built in code into PART_Root and laid out
+        from the dialog's own width; the theme gives the frame and the narrow padding.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ShareAccess}" TargetType="arc:ShareAccess">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="MaxWidth" Value="{arc:ShareAccessTokenResource DialogMaxWidth}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Padding" Value="{arc:ShareAccessTokenResource DialogPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ShareAccess">
+                <Border Name="PART_Card"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Panel Name="PART_Root" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:narrow">
+            <Setter Property="Padding" Value="{arc:ShareAccessTokenResource NarrowDialogPadding}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

@@ -1,0 +1,40 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TypewriterTerminalControlsDemo">
+    <!--
+        AutoPlay is off, so nothing plays until Play. The window is given less height than the script, so the text
+        scrolls to follow the newest line; LineCompleted reports each line.
+    -->
+    <StackPanel Spacing="12" MaxWidth="560">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+            <arc:Button Content="Play" Variant="Secondary" Click="OnPlay" />
+            <arc:Button Content="Pause" Variant="Ghost" Click="OnPause" />
+            <arc:Button Content="Show all" Variant="Ghost" Click="OnComplete" />
+            <TextBlock x:Name="Status"
+                       Text="Waiting"
+                       VerticalAlignment="Center"
+                       Margin="8,0,0,0"
+                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        </StackPanel>
+        <arc:TypewriterTerminal x:Name="Terminal"
+                                Title="backup"
+                                AutoPlay="False"
+                                Height="220"
+                                LineCompleted="OnLineCompleted"
+                                Completed="OnCompleted">
+            <arc:TypewriterTerminalLine Kind="Command" Text="stash backup --to cold-store" />
+            <arc:TypewriterTerminalLine Text="Scanning 3 volumes" Tone="Muted" />
+            <arc:TypewriterTerminalLine Text="  photos     12.4 GB" Pause="0:0:0.3" />
+            <arc:TypewriterTerminalLine Text="  documents   1.1 GB" />
+            <arc:TypewriterTerminalLine Text="  projects    6.8 GB" />
+            <arc:TypewriterTerminalLine Text="Uploading 20.3 GB..." Tone="Muted" Pause="0:0:0.5" />
+            <arc:TypewriterTerminalLine Text="Verifying checksums" Tone="Muted" Pause="0:0:0.8" />
+            <arc:TypewriterTerminalLine Text="Backup 0412 stored" Tone="Success" Pause="0:0:0.6" />
+            <arc:TypewriterTerminalLine Kind="Command" Text="stash list" />
+            <arc:TypewriterTerminalLine Text="0410  Nov 7   19.9 GB" />
+            <arc:TypewriterTerminalLine Text="0411  Nov 8   20.1 GB" />
+            <arc:TypewriterTerminalLine Text="0412  Nov 9   20.3 GB" Tone="Accent" />
+        </arc:TypewriterTerminal>
+    </StackPanel>
+</UserControl>

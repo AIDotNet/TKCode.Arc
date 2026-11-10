@@ -1,0 +1,96 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ConfirmPopoverTheme">
+    <!-- In place the confirm popover shows only its Trigger; the question opens in a Popover anchored to it. -->
+    <ControlTheme x:Key="{x:Type arc:ConfirmPopover}" TargetType="arc:ConfirmPopover">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ConfirmPopover">
+                <ContentPresenter Name="PART_TriggerPresenter" Content="{TemplateBinding Trigger}" />
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- Mark, question and line under it, then Cancel and the action, right aligned. -->
+    <ControlTheme x:Key="{x:Type arc:ConfirmPopoverPanel}" TargetType="arc:ConfirmPopoverPanel">
+        <Setter Property="Width" Value="{arc:ConfirmPopoverTokenResource PanelWidth}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ConfirmPopoverPanel">
+                <StackPanel>
+                    <Grid ColumnDefinitions="Auto,*">
+                        <Border Name="PART_Mark"
+                                Width="{arc:ConfirmPopoverTokenResource MarkSize}"
+                                Height="{arc:ConfirmPopoverTokenResource MarkSize}"
+                                VerticalAlignment="Top"
+                                IsVisible="False">
+                            <arc:ArcGlyph Name="PART_Glyph"
+                                          Data="{TemplateBinding Icon}"
+                                          Size="{arc:ConfirmPopoverTokenResource MarkGlyphSize}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Name="PART_Text"
+                                    Grid.Column="1"
+                                    VerticalAlignment="Center"
+                                    Spacing="{arc:ConfirmPopoverTokenResource TextSpacing}">
+                            <TextBlock Name="PART_Title"
+                                       Text="{TemplateBinding Title}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       LineHeight="{arc:ConfirmPopoverTokenResource TitleLineHeight}"
+                                       TextWrapping="Wrap" />
+                            <TextBlock Name="PART_Message"
+                                       Text="{TemplateBinding Message}"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                       LineHeight="{arc:ConfirmPopoverTokenResource MessageLineHeight}"
+                                       TextWrapping="Wrap"
+                                       IsVisible="False" />
+                        </StackPanel>
+                    </Grid>
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Right"
+                                Margin="{arc:ConfirmPopoverTokenResource ActionsMargin}"
+                                Spacing="{arc:ConfirmPopoverTokenResource ActionsSpacing}">
+                        <arc:Button Name="PART_Cancel"
+                                    Variant="Secondary"
+                                    Size="Small"
+                                    Content="{TemplateBinding CancelText}" />
+                        <arc:Button Name="PART_Confirm"
+                                    Variant="Danger"
+                                    Size="Small"
+                                    Content="{TemplateBinding ConfirmText}" />
+                    </StackPanel>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Non-triggered values of template parts; the states below change them. -->
+        <Style Selector="^ /template/ Border#PART_Mark">
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Text">
+            <Setter Property="Margin" Value="0" />
+        </Style>
+        <Style Selector="^:destructive /template/ Border#PART_Mark">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource DangerSubtle}" />
+        </Style>
+        <Style Selector="^:destructive /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:has-icon /template/ Border#PART_Mark">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:has-icon /template/ StackPanel#PART_Text">
+            <Setter Property="Margin" Value="{arc:ConfirmPopoverTokenResource TextMargin}" />
+        </Style>
+        <Style Selector="^:has-message /template/ TextBlock#PART_Message">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

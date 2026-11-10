@@ -1,0 +1,8 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.McpServersPreviewDemo">
+    <!-- No properties: four sample servers (one failed, one off) and simulated 1.2 s connections.
+         Try Retry on Orbit calendar, or add a server at https://tools.offline.invalid/mcp to see a failure. -->
+    <arc:McpServers Margin="0,12" />
+</UserControl>

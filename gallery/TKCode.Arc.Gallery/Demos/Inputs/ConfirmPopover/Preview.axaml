@@ -1,0 +1,35 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ConfirmPopoverPreviewDemo">
+    <!-- Delete asks first: focus starts on Cancel, Escape or a press outside backs out. -->
+    <StackPanel Width="360" Spacing="12" HorizontalAlignment="Center" Margin="0,32">
+        <Border x:Name="Row"
+                Padding="14,10"
+                CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
+                Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+            <Grid ColumnDefinitions="*,Auto">
+                <StackPanel VerticalAlignment="Center" Spacing="2">
+                    <TextBlock Text="Quarterly planning notes" FontWeight="Medium" />
+                    <TextBlock Text="Edited by Mira Holt, 2 hours ago" FontSize="12"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                </StackPanel>
+                <arc:ConfirmPopover Grid.Column="1"
+                                    Title="Delete these notes?"
+                                    Message="They are removed for everyone in the workspace."
+                                    ConfirmText="Delete"
+                                    Alignment="End"
+                                    Confirmed="OnConfirmed"
+                                    Cancelled="OnCancelled">
+                    <arc:ConfirmPopover.Trigger>
+                        <arc:Button Variant="Ghost" Size="Small" AutomationProperties.Name="Delete notes">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Trash2}" Size="16" StrokeThickness="2" />
+                        </arc:Button>
+                    </arc:ConfirmPopover.Trigger>
+                </arc:ConfirmPopover>
+            </Grid>
+        </Border>
+        <TextBlock x:Name="Log" HorizontalAlignment="Center" Text="Press the bin to delete the notes."
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

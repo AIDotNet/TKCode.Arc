@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PivotBuilderPreviewDemo">
+    <!-- The built-in invented sales: drag fields between the zones, or press Enter on a chip for its menu. -->
+    <arc:PivotBuilder Margin="0,12" />
+</UserControl>

@@ -10,8 +10,35 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 
 ## Unreleased
 
+### Added
+
+- `Rating`: a row of stars for a score, with half stars, clearing, a read-only display and a rolling word for the value.
+- `ToggleGroup` and `SlotText`: a flat row of toggle buttons, with one gliding fill in single mode and per-option fills that join between pressed neighbours in multiple mode; and text and numbers that spin into their new value on staggered reels.
+- `RangeHistogramSlider` and `RulerSlider`: a two-thumb range over a histogram of the data, with lit bars cut at each thumb and release snapping to bar edges; and a tape of ticks under a fixed needle, with flick momentum, tick snapping, rubber-banded ends and a rolling readout.
+- `OnboardingChecklist`: a getting started checklist with a progress ring and rolling count, steps that run an async action or are checked by hand, inline errors with retry, a completed group that reopens steps and a hideable body.
+- Blocks `HeroSection`, `FaqSection`, `ContactSection` and `StatsBand`: three SaaS heroes over a mesh plus a layout for your own content; FAQs as an accordion, a topic rail or a search that highlights matches; a validated contact form with channels and offices; and headline numbers that count up with a small proving picture.
+- Blocks `BlogGrid`, `ComparisonTable`, `ChangelogFeed` and `LogoMarquee`: a blog index with a filter, pagination and an in-place reader; an us versus them table with a pinned header and a stacked phone view; release notes to filter and open in place; and a continuously moving row of marks with a pause control.
+- `TKCode.Arc.Special` gains components designed independently from their names alone (no Arc Pro pages, docs, source or assets were used), in new groups:
+  - Glass: `GlassCard`, `GlassMenu`, `GlassSegmented` and `GlassTabBar`, frosted surfaces that blur a chosen backdrop (`arc:GlassBackdrop.Source`), with opaque fallbacks under reduced transparency.
+  - Navigation: `MorphNav`, `LiquidTabBar`, `OrbitMenu`, `ActionMorph` and `ShareSheet`.
+  - Photos: `ProductGallery`, `LightboxGallery`, `PhotoGrid` and `CoverFlow`.
+  - Widgets: `BookingPill`, `ActivityRings`, `TimeDial`, `DateReel` and `KeycapKeyboard`.
+  - Inputs: `EmojiPicker` (Unicode 16.0 emoji with CLDR names), `AvatarUpload`, `ConfirmPopover` and `UndoToast`.
+  - Publishing: `MegaMenuMorph`, `TocProgress` and `ShareAccess`.
+  - Data: `SplitBar`, `MetricTicker` and `PresenceStack`; and the explainers `DnsResolution`, `ModelTraining` and `BranchGraph`.
+  - Playful and Cursor: `SandText`, `TypewriterTerminal`, `PrizeWheel`, `MagnifyDock` and `ImageTrail`.
+- `TKCode.Arc.Blocks` gains blocks designed the same independent way:
+  - AI: `AgentRun`, `ResearchRun`, `AiInlineEdit`, `AgentTasks`, `AgentApprovals`, `AgentRoutines`, `AgentOrchestrator`, `AgentBuilder`, `AgentGallery`, `McpServers`, `KnowledgeBase`, `EvalSuite`, `AiInsightCard`, `AiFeatureLaunch`, `AiSearchBar`, `AiSetupWizard`, `CatchUp` and `SmartScheduler`.
+  - Support and content: `SupportConversation`, `SupportWidget`, `InboxTriage`, `FeedbackBoard`, `HelpCenter`, `FeatureVoting` and `ActivityFeed`.
+  - Commerce and finance: `WalletCard`, `SpendAlert`, `InvoiceStudio`, `DeliveryTracker`, `ProductListing`, `ProductDetail` and `SeatMap`.
+  - Analytics, people and projects: `CallInsights`, `LeadScoring`, `AccountHealth`, `GoalTracker`, `PivotBuilder` and `TaskBreakdown`.
+  - Marketing: `HeroSignup`, `TeamShowcase`, `StudioPerspectives`, `ScrollStory`, `SpotlightGrid` and `FeatureBento`.
+  - App shell, auth and settings: `DocsSidebar`, `InboxSidebar`, `SelectionToolbar`, `TwoFactorSetup` (with a QR encoder and TOTP check of its own), `OnboardingSurvey` and `MagicLinkSignIn`.
+
 ### Fixed
 
+- `Table` no longer throws "Invalid Arrange rectangle" when its compact phone layout is narrower than the row's insets: hosted cells get zero width instead of a negative one.
+- `ChatThread` message bubbles now follow the theme's corner style (square, scaled) instead of keeping fixed 18 and 6 px corners.
 - `TextFilterBox` and `NumberFilterBox` no longer overlap or cut off their fields: a long label or description wraps, and in a narrow space the label moves above the fields. The operator menu names each operator next to its symbol.
 
 ## 1.0.0 - 2026-11-08

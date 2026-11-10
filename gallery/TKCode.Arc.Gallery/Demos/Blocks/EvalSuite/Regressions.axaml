@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.EvalSuiteRegressionsDemo">
+    <!-- Declared state: only the regressions, one of them open as a word diff. -->
+    <arc:EvalSuite Margin="0,12" Filter="Regressions" SelectedCaseId="greeting" DetailMode="Diff" />
+</UserControl>

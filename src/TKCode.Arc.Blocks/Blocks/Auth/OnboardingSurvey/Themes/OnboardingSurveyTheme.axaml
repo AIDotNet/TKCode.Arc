@@ -1,0 +1,143 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.OnboardingSurveyTheme">
+    <!--
+        Onboarding survey: a counter with "Skip survey", a progress bar, and a stage that slides between questions while
+        the card's height follows on a spring. The question views are built from the questions; the thank-you is declared
+        in the hidden store. The buttons sit under the stage.
+    -->
+    <ControlTheme x:Key="{x:Type arc:OnboardingSurvey}" TargetType="arc:OnboardingSurvey">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:OnboardingSurvey">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <StackPanel>
+                        <arc:PresenceHost Name="PART_HeaderHost" Mode="Fade" Collapse="Height">
+                            <StackPanel>
+                                <Grid ColumnDefinitions="*,Auto" MinHeight="32">
+                                    <TextBlock Name="PART_Counter"
+                                               VerticalAlignment="Center"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    <arc:Button Name="PART_SkipSurveyButton"
+                                                Grid.Column="1"
+                                                Variant="Ghost"
+                                                Size="Small"
+                                                Margin="0,0,-8,0" />
+                                </Grid>
+                                <arc:Progress Name="PART_Progress" Margin="{arc:OnboardingSurveyTokenResource ProgressMargin}" />
+                            </StackPanel>
+                        </arc:PresenceHost>
+
+                        <arc:SpringSizeDecorator Name="PART_StageSize" Axis="Height" CrossClipOverflow="16">
+                            <arc:ArcContentSwap Name="PART_Stage"
+                                                Mode="Slide"
+                                                HorizontalContentAlignment="Stretch"
+                                                VerticalContentAlignment="Top" />
+                        </arc:SpringSizeDecorator>
+
+                        <DockPanel Name="PART_Actions" Classes="osv-actions">
+                            <arc:Button Name="PART_ContinueButton" Classes="osv-primary" />
+                            <arc:Button Name="PART_SkipQuestionButton" Variant="Ghost" Classes="osv-secondary" />
+                            <arc:Button Name="PART_BackButton" Variant="Ghost" Classes="osv-back" />
+                        </DockPanel>
+                        <arc:AuthAnnouncer Name="PART_Announcer" />
+
+                        <Panel Name="PART_Store" IsVisible="False">
+                            <StackPanel Name="PART_DoneView" Margin="0,8,0,0">
+                                <Border HorizontalAlignment="Center"
+                                        Width="{arc:OnboardingSurveyTokenResource ResultMark}"
+                                        Height="{arc:OnboardingSurveyTokenResource ResultMark}"
+                                        CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                        Background="{arc:ArcDesignTokenResource SuccessSubtle}">
+                                    <arc:StrokeDrawGlyph Name="PART_DoneGlyph"
+                                                         Data="{x:Static arc:ArcIcons.Check}"
+                                                         Size="{arc:OnboardingSurveyTokenResource ResultGlyph}"
+                                                         StrokeThickness="2.25"
+                                                         HorizontalAlignment="Center"
+                                                         VerticalAlignment="Center"
+                                                         Foreground="{arc:ArcDesignTokenResource Success}" />
+                                </Border>
+                                <TextBlock Name="PART_DoneTitle" Classes="osv-title" TextAlignment="Center" Margin="0,18,0,0" />
+                                <TextBlock Name="PART_DoneDescription" Classes="osv-description" TextAlignment="Center" />
+                            </StackPanel>
+                        </Panel>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Padding" Value="{arc:OnboardingSurveyTokenResource FrameInset}" />
+        <Setter Property="MaxWidth" Value="{arc:OnboardingSurveyTokenResource PreferredWidth}" />
+        <Setter Property="NarrowWidth" Value="{arc:OnboardingSurveyTokenResource NarrowWidth}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="ClipToBounds" Value="False" />
+
+        <Style Selector="^ /template/ Border#PART_Frame">
+            <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowResting}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.osv-title">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXL}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="LineHeight" Value="{arc:OnboardingSurveyTokenResource TitleLineHeight}" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Focusable" Value="True" />
+            <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
+            <Setter Property="FocusAdorner" Value="{x:Null}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.osv-description">
+            <Setter Property="Margin" Value="{arc:OnboardingSurveyTokenResource DescriptionMargin}" />
+            <Setter Property="LineHeight" Value="{arc:OnboardingSurveyTokenResource BodyLineHeight}" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+
+        <Style Selector="^ /template/ DockPanel.osv-actions">
+            <Setter Property="LastChildFill" Value="False" />
+            <Setter Property="Margin" Value="{arc:OnboardingSurveyTokenResource ActionsMargin}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.osv-primary">
+            <Setter Property="DockPanel.Dock" Value="Right" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.osv-secondary">
+            <Setter Property="DockPanel.Dock" Value="Right" />
+            <Setter Property="Margin" Value="0,0,8,0" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.osv-back">
+            <Setter Property="DockPanel.Dock" Value="Left" />
+            <Setter Property="Margin" Value="-8,0,0,0" />
+        </Style>
+
+        <Style Selector="^:narrow">
+            <Setter Property="Padding" Value="{arc:OnboardingSurveyTokenResource FrameInsetNarrow}" />
+            <Style Selector="^ /template/ arc|Button.osv-primary">
+                <Setter Property="DockPanel.Dock" Value="Top" />
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+            </Style>
+            <Style Selector="^ /template/ arc|Button.osv-secondary">
+                <Setter Property="DockPanel.Dock" Value="Top" />
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                <Setter Property="Margin" Value="0,8,0,0" />
+            </Style>
+            <Style Selector="^ /template/ arc|Button.osv-back">
+                <Setter Property="DockPanel.Dock" Value="Top" />
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                <Setter Property="Margin" Value="0,8,0,0" />
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

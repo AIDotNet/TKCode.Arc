@@ -1,0 +1,171 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ScrollStoryTheme">
+
+    <!--
+        The scroll story: a centered heading (accent eyebrow, display 36 title, 18 secondary description), then two
+        columns 56 apart: the steps (slots at least 380 tall) and the stage (a window at 0.8 of its width, radius 26, the
+        raised surface with a Border edge and the resting shadow), pinned in view by the layout. Below 760 (:compact) one
+        column; each step shows its own 200-high picture and the stage is hidden.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ScrollStory}" TargetType="arc:ScrollStory">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="Padding" Value="{arc:ScrollStoryTokenResource SectionPadding}" />
+        <Setter Property="AutomationProperties.Name" Value="{Binding Title, RelativeSource={RelativeSource Self}}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ScrollStory">
+                <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                    <StackPanel MaxWidth="{arc:ScrollStoryTokenResource ContentMaxWidth}">
+                        <StackPanel Name="PART_Header"
+                                    HorizontalAlignment="Center"
+                                    MaxWidth="{arc:ScrollStoryTokenResource HeaderMaxWidth}"
+                                    Margin="{arc:ScrollStoryTokenResource HeaderMargin}"
+                                    Spacing="{arc:ScrollStoryTokenResource HeaderGap}">
+                            <TextBlock Text="{TemplateBinding Eyebrow}"
+                                       IsVisible="{TemplateBinding Eyebrow, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                       HorizontalAlignment="Center"
+                                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       Foreground="{arc:ArcDesignTokenResource AccentStrong}" />
+                            <TextBlock Name="PART_Title"
+                                       Text="{TemplateBinding Title}"
+                                       IsVisible="{TemplateBinding Title, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                       AutomationProperties.HeadingLevel="2"
+                                       TextAlignment="Center"
+                                       TextWrapping="Wrap"
+                                       FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            <TextBlock Text="{TemplateBinding Description}"
+                                       IsVisible="{TemplateBinding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                       TextAlignment="Center"
+                                       TextWrapping="Wrap"
+                                       FontSize="{arc:ArcDesignTokenResource TypeLG}"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </StackPanel>
+                        <arc:ScrollStoryLayout Name="PART_Layout"
+                                               StepMinHeight="{arc:ScrollStoryTokenResource StepMinHeight}"
+                                               ColumnGap="{arc:ScrollStoryTokenResource ColumnGap}"
+                                               StackedGap="{arc:ScrollStoryTokenResource StackedGap}"
+                                               StageAspect="{arc:ScrollStoryTokenResource StageAspect}">
+                            <Border Name="PART_StageHost"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+                                    BoxShadow="{arc:ArcDesignTokenResource ShadowResting}">
+                                <arc:ScrollStorySceneView Name="PART_Stage"
+                                                          CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+                                                          WindowBrush="{arc:ArcDesignTokenResource SurfaceRaised}"
+                                                          PanelBrush="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                                          EdgeBrush="{arc:ArcDesignTokenResource Border}"
+                                                          MutedBrush="{arc:ArcDesignTokenResource BorderStrong}"
+                                                          AccentBrush="{arc:ArcDesignTokenResource Accent}"
+                                                          SuccessBrush="{arc:ArcDesignTokenResource Success}" />
+                            </Border>
+                        </arc:ScrollStoryLayout>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ TextBlock#PART_Title">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type3XL}" />
+            <Setter Property="LineHeight" Value="{arc:ScrollStoryTokenResource TitleLineHeight}" />
+        </Style>
+        <Style Selector="^:no-header /template/ StackPanel#PART_Header">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:compact">
+            <Setter Property="Padding" Value="{arc:ScrollStoryTokenResource CompactSectionPadding}" />
+            <Style Selector="^ /template/ TextBlock#PART_Title">
+                <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type2XL}" />
+                <Setter Property="LineHeight" Value="{arc:ScrollStoryTokenResource CompactTitleLineHeight}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_StageHost">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A step: the kicker (14 medium, accent while active), the title (display 28 / 34) and the body (18 / 27
+        secondary). Inactive steps sit at 35% opacity and come up on Standard. Stacked, the step's own picture (200 high,
+        radius 20) sits under the text and every step is fully opaque.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ScrollStoryStepView}" TargetType="arc:ScrollStoryStepView">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Opacity" Value="{arc:ScrollStoryTokenResource InactiveOpacity}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ScrollStoryStepView">
+                <StackPanel Spacing="10">
+                    <TextBlock Name="PART_Kicker"
+                               Text="{TemplateBinding Kicker}"
+                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                    <TextBlock Text="{TemplateBinding Title}"
+                               TextWrapping="Wrap"
+                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                               FontSize="{arc:ArcDesignTokenResource Type2XL}"
+                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                               LineHeight="{arc:ScrollStoryTokenResource StepTitleLineHeight}"
+                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                    <TextBlock Text="{TemplateBinding Body}"
+                               TextWrapping="Wrap"
+                               FontSize="{arc:ArcDesignTokenResource TypeLG}"
+                               LineHeight="{arc:ScrollStoryTokenResource StepBodyLineHeight}"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                    <arc:ScrollStorySceneView Name="PART_Inline"
+                                              IsVisible="False"
+                                              Margin="0,10,0,0"
+                                              Height="{arc:ScrollStoryTokenResource InlineSceneHeight}"
+                                              Scene="{TemplateBinding Scene}"
+                                              Image="{TemplateBinding Image}"
+                                              CornerRadius="{arc:ArcDesignTokenResource RadiusStep20}"
+                                              WindowBrush="{arc:ArcDesignTokenResource SurfaceRaised}"
+                                              PanelBrush="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                              EdgeBrush="{arc:ArcDesignTokenResource Border}"
+                                              MutedBrush="{arc:ArcDesignTokenResource BorderStrong}"
+                                              AccentBrush="{arc:ArcDesignTokenResource Accent}"
+                                              SuccessBrush="{arc:ArcDesignTokenResource Success}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:active">
+            <Setter Property="Opacity" Value="1" />
+            <Style Selector="^ /template/ TextBlock#PART_Kicker">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+            </Style>
+        </Style>
+        <Style Selector="^:stacked">
+            <Setter Property="Opacity" Value="1" />
+            <Style Selector="^ /template/ arc|ScrollStorySceneView#PART_Inline">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+        </Style>
+        <Style Selector="^:focus-visible /template/ TextBlock#PART_Kicker">
+            <Setter Property="TextDecorations" Value="Underline" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

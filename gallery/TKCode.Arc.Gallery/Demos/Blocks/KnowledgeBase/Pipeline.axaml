@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.KnowledgeBasePipelineDemo">
+    <StackPanel Spacing="12" Margin="0,12">
+        <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+            <arc:Button Content="Add three files" Variant="Secondary" Size="Small" Click="OnAdd" />
+            <arc:Button Content="Re-index all" Variant="Ghost" Size="Small" Click="OnReindexAll" />
+        </StackPanel>
+        <!-- IndexHandler stands in for a backend: 0.4 s per step, and the first run of "Pricing" fails until you press Retry. -->
+        <arc:KnowledgeBase x:Name="Knowledge" IsSampleData="False" AssistantName="Pip" MaxConcurrentIndexing="1" />
+    </StackPanel>
+</UserControl>

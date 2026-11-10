@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentOrchestratorNarrowDemo">
+    <!-- 400 wide: the sub-agents stack under the lead and the detail panel sits above the log. -->
+    <arc:AgentOrchestrator Width="400" HorizontalAlignment="Center" Margin="0,12" />
+</UserControl>

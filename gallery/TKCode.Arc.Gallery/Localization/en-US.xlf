@@ -126,6 +126,11 @@
         <source>Playful</source>
       </segment>
     </unit>
+    <unit id="Category_Widgets">
+      <segment>
+        <source>Widgets</source>
+      </segment>
+    </unit>
     <unit id="Category_Ai">
       <segment>
         <source>AI</source>
@@ -146,9 +151,34 @@
         <source>Surfaces</source>
       </segment>
     </unit>
+    <unit id="Category_Glass">
+      <segment>
+        <source>Glass</source>
+      </segment>
+    </unit>
+    <unit id="Category_Photos">
+      <segment>
+        <source>Photos</source>
+      </segment>
+    </unit>
+    <unit id="Category_Publishing">
+      <segment>
+        <source>Publishing</source>
+      </segment>
+    </unit>
+    <unit id="Category_Inputs">
+      <segment>
+        <source>Inputs</source>
+      </segment>
+    </unit>
     <unit id="Category_Cursor">
       <segment>
         <source>Cursor</source>
+      </segment>
+    </unit>
+    <unit id="Category_Data">
+      <segment>
+        <source>Data</source>
       </segment>
     </unit>
     <unit id="Category_Editors">

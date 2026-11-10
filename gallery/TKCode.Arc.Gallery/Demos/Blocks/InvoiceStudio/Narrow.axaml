@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.InvoiceStudioNarrowDemo">
+    <Border Width="520"
+            HorizontalAlignment="Center"
+            ClipToBounds="True"
+            CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}">
+        <!-- At 520px the form and the preview take turns behind a switch, and each line puts its numbers under its description. -->
+        <arc:InvoiceStudio x:Name="Studio" />
+    </Border>
+</UserControl>

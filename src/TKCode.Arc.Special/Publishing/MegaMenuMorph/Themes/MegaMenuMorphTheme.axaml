@@ -1,0 +1,251 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.MegaMenuMorphTheme">
+
+    <!--
+        The bar: a soft pill highlight that glides under the hovered or open trigger, the row of triggers (built in code,
+        one per item) and the popup that floats the morphing panel under the bar. The popup draws no shadow or motion of
+        its own: the stage draws the panel's shadow around the panel's current shape and plays the open and close.
+    -->
+    <ControlTheme x:Key="{x:Type arc:MegaMenuMorph}" TargetType="arc:MegaMenuMorph">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="MaxPanelWidth" Value="{arc:MegaMenuMorphTokenResource PanelMaxWidth}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MegaMenuMorph">
+                <Panel Name="PART_Root">
+                    <arc:GlidingIndicator Name="PART_Highlight"
+                                          IsHitTestVisible="False"
+                                          Fill="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                          CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" />
+                    <StackPanel Name="PART_Bar"
+                                Orientation="Horizontal"
+                                Background="Transparent"
+                                Spacing="{arc:MegaMenuMorphTokenResource TriggerGap}" />
+                    <arc:ArcPopup Name="PART_Popup"
+                                  Placement="BottomEdgeAlignedLeft"
+                                  MarginToAnchor="{arc:MegaMenuMorphTokenResource PanelGap}">
+                        <arc:MegaMenuMorphStage Name="PART_Stage" />
+                    </arc:ArcPopup>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!--
+        The panel stage: a raised surface with a hairline edge, the panel radius and the floating shadow, drawn around
+        the panel's current (springing) rectangle; the pages are clipped to it.
+    -->
+    <ControlTheme x:Key="{x:Type arc:MegaMenuMorphStage}" TargetType="arc:MegaMenuMorphStage">
+        <Setter Property="PanelBackground" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="PanelBorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="PanelCornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="PanelShadow" Value="{arc:ArcDesignTokenResource ShadowFloating}" />
+        <Setter Property="PanelPadding" Value="{arc:MegaMenuMorphTokenResource PanelPadding}" />
+        <Setter Property="SlideDistance" Value="{arc:MegaMenuMorphTokenResource SlideDistance}" />
+        <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="TextElement.FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="TextElement.FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+    </ControlTheme>
+
+    <!--
+        A top-level trigger: a pill with the label in the secondary text color and, for items with a panel, a chevron that
+        turns over while the panel is open. Hover, open, current and keyboard focus bring the label to the full text color.
+    -->
+    <ControlTheme x:Key="{x:Type arc:MegaMenuMorphTrigger}" TargetType="arc:MegaMenuMorphTrigger">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Height" Value="{arc:MegaMenuMorphTokenResource TriggerHeight}" />
+        <Setter Property="Padding" Value="{arc:MegaMenuMorphTokenResource TriggerPadding}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MegaMenuMorphTrigger">
+                <Panel Name="PART_Root">
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Horizontal"
+                                    VerticalAlignment="Center"
+                                    Spacing="{arc:MegaMenuMorphTokenResource ChevronGap}">
+                            <TextBlock Text="{TemplateBinding Header}"
+                                       Foreground="{TemplateBinding Foreground}"
+                                       VerticalAlignment="Center" />
+                            <arc:ArcGlyph Name="PART_Chevron"
+                                          Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                          Size="{arc:MegaMenuMorphTokenResource ChevronSize}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          VerticalAlignment="Center"
+                                          IsVisible="False"
+                                          RenderTransformOrigin="50%,50%"
+                                          RenderTransform="rotate(0deg)" />
+                        </StackPanel>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:has-panel /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:open /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="RenderTransform" Value="rotate(180deg)" />
+        </Style>
+        <Style Selector="^:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:open">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:current">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.5" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A link inside a panel: a row with a quiet icon tile, the title and a one-line description. Hover and keyboard
+        focus lay a muted fill under the row and tint the icon with the accent.
+    -->
+    <ControlTheme x:Key="{x:Type arc:MegaMenuMorphLink}" TargetType="arc:MegaMenuMorphLink">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Padding" Value="{arc:MegaMenuMorphLinkTokenResource LinkPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep14}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MegaMenuMorphLink">
+                <Panel Name="PART_Root">
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <Grid ColumnDefinitions="Auto,*">
+                            <Border Name="PART_IconTile"
+                                    IsVisible="False"
+                                    VerticalAlignment="Top"
+                                    Width="{arc:MegaMenuMorphLinkTokenResource IconTileSize}"
+                                    Height="{arc:MegaMenuMorphLinkTokenResource IconTileSize}"
+                                    Margin="{arc:MegaMenuMorphLinkTokenResource IconMargin}"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusStep10}">
+                                <arc:ArcGlyph Name="PART_Icon"
+                                              Data="{TemplateBinding Icon}"
+                                              Size="{arc:MegaMenuMorphLinkTokenResource IconSize}"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+                            </Border>
+                            <StackPanel Grid.Column="1"
+                                        VerticalAlignment="Center"
+                                        Spacing="{arc:MegaMenuMorphLinkTokenResource TextGap}">
+                                <TextBlock Text="{TemplateBinding Title}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           Foreground="{TemplateBinding Foreground}"
+                                           TextTrimming="CharacterEllipsis" />
+                                <TextBlock Name="PART_Description"
+                                           IsVisible="False"
+                                           Text="{TemplateBinding Description}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           LineHeight="18"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                           TextWrapping="Wrap" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Border#PART_IconTile">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Icon">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:has-icon /template/ Border#PART_IconTile">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:has-description /template/ TextBlock#PART_Description">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:focus-visible">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:pointerover /template/ Border#PART_IconTile">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        </Style>
+        <Style Selector="^:pointerover /template/ arc|ArcGlyph#PART_Icon">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_IconTile">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ arc|ArcGlyph#PART_Icon">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource ControlTrack}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.5" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

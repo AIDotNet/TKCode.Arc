@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ToggleGroupSizesDemo">
+    <StackPanel Spacing="16" HorizontalAlignment="Center">
+        <arc:ToggleGroup Label="Range, small" Size="Small" SelectedValue="week" HorizontalAlignment="Center">
+            <arc:ToggleGroupOption Value="day" Label="Day" />
+            <arc:ToggleGroupOption Value="week" Label="Week" />
+            <arc:ToggleGroupOption Value="month" Label="Month" />
+        </arc:ToggleGroup>
+        <arc:ToggleGroup Label="Range, medium" SelectedValue="week" HorizontalAlignment="Center">
+            <arc:ToggleGroupOption Value="day" Label="Day" />
+            <arc:ToggleGroupOption Value="week" Label="Week" />
+            <arc:ToggleGroupOption Value="month" Label="Month" />
+        </arc:ToggleGroup>
+    </StackPanel>
+</UserControl>

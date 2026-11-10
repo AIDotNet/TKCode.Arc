@@ -628,7 +628,8 @@ internal sealed class TableRow : Control
         }
         _compactSize = size;
         var left = _table.CompactLeft;
-        var right = size.Width - 16;
+        // A row narrower than its own insets has no room: keep every slot at zero width rather than negative.
+        var right = Math.Max(left, size.Width - 16);
         var lead = _table.CompactLeadNumericIndex;
         var line1 = _table.CompactLine1;
         var line2 = _table.CompactLine2;
@@ -705,9 +706,9 @@ internal sealed class TableRow : Control
         {
             if (column < _cells.Length && _cells[column] is { } cell)
             {
-                return Math.Min(cell.DesiredSize.Width, room);
+                return Math.Max(0, Math.Min(cell.DesiredSize.Width, room));
             }
-            return TextAt(column, room, CompactBrush(column, palette)) is { } text ? Math.Min(text.WidthIncludingTrailingWhitespace, room) : 0;
+            return TextAt(column, room, CompactBrush(column, palette)) is { } text ? Math.Max(0, Math.Min(text.WidthIncludingTrailingWhitespace, room)) : 0;
         }
 
         // Height of a wrapped cell at the given width (empty detail text takes no block).

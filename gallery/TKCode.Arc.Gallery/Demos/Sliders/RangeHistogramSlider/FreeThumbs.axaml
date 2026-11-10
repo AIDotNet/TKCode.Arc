@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.RangeHistogramSliderFreeThumbsDemo">
+    <arc:RangeHistogramSlider x:Name="Latency"
+                              Label="Response time"
+                              Bins="48"
+                              SnapToBins="False"
+                              MinStepsBetweenThumbs="20"
+                              LowerThumbName="Fastest response"
+                              UpperThumbName="Slowest response"
+                              MaxWidth="460" />
+</UserControl>

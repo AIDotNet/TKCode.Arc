@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ProductListingNarrowDemo">
+    <Border Width="420"
+            HorizontalAlignment="Center"
+            ClipToBounds="True"
+            CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}">
+        <!-- At 420px the filters fold behind a button and the grid keeps two columns. -->
+        <arc:ProductListing x:Name="Listing" Sort="PriceLowToHigh" />
+    </Border>
+</UserControl>

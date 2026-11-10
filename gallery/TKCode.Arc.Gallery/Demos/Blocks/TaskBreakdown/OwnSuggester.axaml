@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TaskBreakdownOwnSuggesterDemo">
+    <!-- Your own team and suggester (here a short delay standing in for a service); Created writes to the status line. -->
+    <StackPanel Spacing="8" Margin="0,12">
+        <arc:TaskBreakdown x:Name="Breakdown" TaskTitle="Move the blog to the new site" IsSampleDataEnabled="False" />
+        <TextBlock x:Name="Status" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

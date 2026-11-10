@@ -173,10 +173,36 @@ internal sealed class ChatThreadBubble : Border
     public static readonly StyledProperty<bool> IsFailedProperty =
         AvaloniaProperty.Register<ChatThreadBubble, bool>(nameof(IsFailed));
 
+    /// <summary>The theme's RadiusStep18: the corner style scales the bubble's design radii by it (square makes them 0).</summary>
+    public static readonly StyledProperty<CornerRadius> CornerUnitProperty =
+        AvaloniaProperty.Register<ChatThreadBubble, CornerRadius>(nameof(CornerUnit), new CornerRadius(DesignUnit));
+
+    private const double DesignUnit = 18;
+    private (bool Mine, bool First, bool Last, double Radius, double Tight) _shape = (false, true, true, DesignUnit, 6);
+
+    public ChatThreadBubble()
+    {
+        ArcTokens.Bind(this, CornerUnitProperty, TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusStep18);
+    }
+
     public bool IsMine { get => GetValue(IsMineProperty); set => SetValue(IsMineProperty, value); }
     public bool IsFailed { get => GetValue(IsFailedProperty); set => SetValue(IsFailedProperty, value); }
+    public CornerRadius CornerUnit { get => GetValue(CornerUnitProperty); set => SetValue(CornerUnitProperty, value); }
 
     protected override Type StyleKeyOverride => typeof(ChatThreadBubble);
+
+    /// <summary>Sets the bubble's place in its group and its design radii; the corners follow the theme's corner style.</summary>
+    public void SetShape(bool mine, bool first, bool last, double radius, double tight)
+    {
+        _shape = (mine, first, last, radius, tight);
+        ApplyShape();
+    }
+
+    private void ApplyShape()
+    {
+        var scale = CornerUnit.TopLeft / DesignUnit;
+        CornerRadius = Corners(_shape.Mine, _shape.First, _shape.Last, _shape.Radius * scale, _shape.Tight * scale);
+    }
 
     // The theme selects on pseudo-classes: a property selector would cost every recycled bubble an activator per style.
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -189,6 +215,10 @@ internal sealed class ChatThreadBubble : Border
         else if (change.Property == IsFailedProperty)
         {
             PseudoClasses.Set(":failed", IsFailed);
+        }
+        else if (change.Property == CornerUnitProperty)
+        {
+            ApplyShape();
         }
     }
 

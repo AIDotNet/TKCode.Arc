@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.BranchGraphSelectionDemo">
+    <StackPanel Spacing="16">
+        <arc:BranchGraph x:Name="Graph" StartsFinished="True" />
+        <TextBlock x:Name="Info"
+                   HorizontalAlignment="Center"
+                   TextAlignment="Center"
+                   TextWrapping="Wrap"
+                   FontSize="13"
+                   Text="Click a commit, or focus the graph and use the arrow keys."
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

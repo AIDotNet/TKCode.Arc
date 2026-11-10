@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.StatsBandPreviewDemo">
+    <!-- Switching layouts plays the sequence again. -->
+    <StackPanel Spacing="16">
+        <arc:SegmentedControl x:Name="Layouts"
+                              AutomationProperties.Name="Stats layout"
+                              HorizontalAlignment="Center"
+                              SelectedValue="divided">
+            <arc:SegmentedOption Value="divided" Label="Divided" />
+            <arc:SegmentedOption Value="plain" Label="Plain" />
+        </arc:SegmentedControl>
+        <Border CornerRadius="20" ClipToBounds="True" BorderThickness="1" BorderBrush="{arc:ArcDesignTokenResource Border}">
+            <arc:StatsBand x:Name="Band"
+                           Layout="Divided"
+                           Title="Quick, steady and close by"
+                           Description="Measured across every region over the last twelve months." />
+        </Border>
+    </StackPanel>
+</UserControl>

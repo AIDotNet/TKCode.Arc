@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TimeDialDurationDemo">
+    <!-- A length of time: one turn is TurnLength, the track fills from 12 o'clock, and the handle can go round twice to Maximum. -->
+    <arc:TimeDial Mode="Duration"
+                  Label="Focus length"
+                  Value="0:25:00"
+                  Step="0:05:00"
+                  TurnLength="1:00:00"
+                  Maximum="2:00:00"
+                  HorizontalAlignment="Center" />
+</UserControl>

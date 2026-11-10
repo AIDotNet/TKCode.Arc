@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.FaqSectionPreviewDemo">
+    <!-- A switch between the three layouts above a framed section. -->
+    <StackPanel Spacing="16">
+        <arc:SegmentedControl x:Name="Layouts"
+                              AutomationProperties.Name="FAQ layout"
+                              HorizontalAlignment="Center"
+                              SelectedValue="accordion">
+            <arc:SegmentedOption Value="accordion" Label="Accordion" />
+            <arc:SegmentedOption Value="columns" Label="Two column" />
+            <arc:SegmentedOption Value="search" Label="Searchable" />
+        </arc:SegmentedControl>
+        <Border CornerRadius="20" ClipToBounds="True" BorderThickness="1" BorderBrush="{arc:ArcDesignTokenResource Border}">
+            <arc:FaqSection x:Name="Section" />
+        </Border>
+    </StackPanel>
+</UserControl>

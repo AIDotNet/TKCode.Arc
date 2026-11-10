@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentRunPreviewDemo">
+    <!-- No properties: a sample coding run plays live; Stop and Run again work on it. -->
+    <arc:AgentRun Margin="0,12" />
+</UserControl>

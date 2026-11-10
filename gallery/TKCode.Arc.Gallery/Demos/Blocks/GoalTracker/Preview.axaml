@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.GoalTrackerPreviewDemo">
+    <!-- The built-in invented quarter: check in on a key result, filter by team, or switch to the timeline. -->
+    <arc:GoalTracker Margin="0,12" CurrentUser="You" />
+</UserControl>

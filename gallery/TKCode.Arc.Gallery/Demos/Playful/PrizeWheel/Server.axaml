@@ -1,0 +1,37 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PrizeWheelServerDemo">
+    <!--
+        The prize is decided elsewhere (here a fake server call that takes a moment), so the wheel is for show:
+        IsInteractive is off, slices are equal, and SpinTo lands on the answer. Each peg raises Ticked.
+    -->
+    <StackPanel Spacing="16" HorizontalAlignment="Center">
+        <arc:PrizeWheel x:Name="Wheel"
+                        Label="Raffle wheel"
+                        Width="280"
+                        Height="280"
+                        IsInteractive="False"
+                        SizesByWeight="False"
+                        SpinText="Raffle"
+                        Duration="0:0:6"
+                        Turns="7"
+                        Ticked="OnTicked"
+                        SpinCompleted="OnSpinCompleted">
+            <arc:PrizeWheelSegment Label="Ada" />
+            <arc:PrizeWheelSegment Label="Bram" />
+            <arc:PrizeWheelSegment Label="Cleo" />
+            <arc:PrizeWheelSegment Label="Dev" />
+            <arc:PrizeWheelSegment Label="Elif" />
+            <arc:PrizeWheelSegment Label="Femi" />
+            <arc:PrizeWheelSegment Label="Gus" />
+            <arc:PrizeWheelSegment Label="Hana" />
+        </arc:PrizeWheel>
+        <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Center">
+            <arc:Button x:Name="Draw" Content="Draw a winner" Variant="Primary" Click="OnDraw" />
+            <TextBlock x:Name="Readout"
+                       VerticalAlignment="Center"
+                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

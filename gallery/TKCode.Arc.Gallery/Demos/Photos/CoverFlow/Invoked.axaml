@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.CoverFlowInvokedDemo">
+    <!-- ItemInvoked fires when the centred cover is clicked, or on Enter or Space. -->
+    <StackPanel Spacing="8">
+        <arc:CoverFlow x:Name="Flow"
+                       Label="Albums"
+                       CoverWidth="150"
+                       ItemsSource="{x:Static demos:PhotosDemoData.Albums}"
+                       ItemInvoked="OnInvoked" />
+        <TextBlock x:Name="Readout"
+                   Text="Click the centred cover to play it."
+                   FontSize="12"
+                   HorizontalAlignment="Center"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

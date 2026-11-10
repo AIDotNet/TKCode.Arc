@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.HelpCenterNarrowDemo">
+    <!-- In a narrow column the topics stack and the table of contents hides. -->
+    <arc:HelpCenter Height="640" MaxWidth="420" HorizontalAlignment="Center" Title="Need a hand?" />
+</UserControl>

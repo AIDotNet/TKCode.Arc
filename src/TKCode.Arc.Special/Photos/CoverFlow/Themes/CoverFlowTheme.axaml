@@ -1,0 +1,71 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.CoverFlowTheme">
+    <!--
+        The stage of covers with the caption of the centred cover under it. The caption cross-fades as the centre
+        changes. The status line is read by screen readers and never seen; the focus ring (added in code) surrounds the
+        whole row.
+    -->
+    <ControlTheme x:Key="{x:Type arc:CoverFlow}" TargetType="arc:CoverFlow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CoverFlow">
+                <Panel Name="PART_Root" Background="Transparent">
+                    <DockPanel Margin="{arc:CoverFlowTokenResource StagePadding}">
+                        <arc:ArcContentSwap Name="PART_Caption"
+                                            DockPanel.Dock="Bottom"
+                                            Mode="Slide"
+                                            HorizontalContentAlignment="Center"
+                                            HorizontalAlignment="Stretch">
+                            <arc:ArcContentSwap.ContentTemplate>
+                                <DataTemplate x:DataType="arc:CoverFlowItem">
+                                    <StackPanel Spacing="{arc:CoverFlowTokenResource CaptionSpacing}" HorizontalAlignment="Center">
+                                        <TextBlock Text="{Binding Title}"
+                                                   HorizontalAlignment="Center"
+                                                   TextAlignment="Center"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                        <TextBlock Text="{Binding Subtitle}"
+                                                   HorizontalAlignment="Center"
+                                                   TextAlignment="Center"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                   FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </arc:ArcContentSwap.ContentTemplate>
+                        </arc:ArcContentSwap>
+                        <arc:CoverFlowStage Name="PART_Stage"
+                                            Perspective="{arc:CoverFlowTokenResource Perspective}"
+                                            SideSpacing="{arc:CoverFlowTokenResource SideSpacing}"
+                                            CenterGap="{arc:CoverFlowTokenResource CenterGap}"
+                                            SideScale="{arc:CoverFlowTokenResource SideScale}"
+                                            ReflectionHeight="{arc:CoverFlowTokenResource ReflectionHeight}"
+                                            ReflectionGap="{arc:CoverFlowTokenResource ReflectionGap}"
+                                            ReflectionOpacity="{arc:CoverFlowTokenResource ReflectionOpacity}"
+                                            MaxShade="{arc:CoverFlowTokenResource MaxShade}"
+                                            ShadeBrush="{arc:CoverFlowTokenResource ShadeColor}"
+                                            Cursor="Hand" />
+                    </DockPanel>
+                    <TextBlock Name="PART_Status"
+                               Width="1"
+                               Height="1"
+                               Opacity="0"
+                               IsHitTestVisible="False"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               AutomationProperties.LiveSetting="Polite" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

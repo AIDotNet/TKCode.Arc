@@ -1,0 +1,115 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.GlassMenuTheme">
+
+    <!-- The menu: glass with a floating shadow, the highlight gliding under the rows. -->
+    <ControlTheme x:Key="{x:Type arc:GlassMenu}" TargetType="arc:GlassMenu">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="MinWidth" Value="{arc:GlassMenuTokenResource MenuMinWidth}" />
+        <Setter Property="Padding" Value="{arc:GlassMenuTokenResource MenuPadding}" />
+        <Setter Property="AnchorGap" Value="{arc:GlassMenuTokenResource AnchorGap}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep20}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:GlassMenu">
+                <Panel Background="Transparent">
+                    <arc:GlassPane Name="PART_Pane"
+                                   CornerRadius="{TemplateBinding CornerRadius}"
+                                   BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}" />
+                    <Panel Margin="{TemplateBinding Padding}">
+                        <arc:GlassMenuHighlight Name="PART_Highlight"
+                                                CornerRadius="{arc:ArcDesignTokenResource RadiusStep14}" />
+                        <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
+                    </Panel>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+                <StackPanel Orientation="Vertical" />
+            </ItemsPanelTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:GlassMenuHighlight}" TargetType="arc:GlassMenuHighlight">
+        <Setter Property="ReduceTransparency" Value="{arc:ArcDesignTokenResource ReduceTransparency}" />
+        <Setter Property="Fill" Value="{arc:GlassPaneTokenResource LensFill}" />
+        <Setter Property="Glow" Value="{arc:GlassPaneTokenResource Sheen}" />
+        <Setter Property="SolidFill" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:GlassMenuItem}" TargetType="arc:GlassMenuItem">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="MinHeight" Value="{arc:GlassMenuItemTokenResource ItemHeight}" />
+        <Setter Property="Padding" Value="{arc:GlassMenuItemTokenResource ItemPadding}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:GlassMenuItem">
+                <Grid Name="PART_Root"
+                      Background="{TemplateBinding Background}"
+                      Margin="{TemplateBinding Padding}"
+                      ColumnDefinitions="Auto,*,Auto">
+                    <arc:ArcGlyph Name="PART_Icon"
+                                  Grid.Column="0"
+                                  Margin="{arc:GlassMenuItemTokenResource IconMargin}"
+                                  Data="{TemplateBinding Icon}"
+                                  Size="{arc:GlassMenuItemTokenResource IconSize}"
+                                  Foreground="{TemplateBinding Foreground}"
+                                  VerticalAlignment="Center"
+                                  IsVisible="{TemplateBinding Icon, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Grid.Column="1"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                      TextTrimming="CharacterEllipsis" />
+                    <TextBlock Name="PART_Shortcut"
+                               Grid.Column="2"
+                               Margin="{arc:GlassMenuItemTokenResource ShortcutMargin}"
+                               Text="{TemplateBinding Shortcut}"
+                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                               VerticalAlignment="Center"
+                               IsVisible="{TemplateBinding Shortcut, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:highlighted, ^:pressed">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:destructive">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.45" />
+            <Setter Property="Cursor" Value="No" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:GlassMenuSeparator}" TargetType="arc:GlassMenuSeparator">
+        <Setter Property="Margin" Value="{arc:GlassMenuSeparatorTokenResource SeparatorMargin}" />
+        <Setter Property="LineThickness" Value="{arc:GlassMenuSeparatorTokenResource LineThickness}" />
+        <Setter Property="LineBrush" Value="{arc:ArcDesignTokenResource Border}" />
+    </ControlTheme>
+</ResourceDictionary>

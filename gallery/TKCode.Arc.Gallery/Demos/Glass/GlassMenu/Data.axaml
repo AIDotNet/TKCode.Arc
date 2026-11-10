@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.GlassMenuDataDemo">
+    <!-- Rows from ItemsSource; ItemInvoked hands back the data item. Type a letter to jump to a row. -->
+    <StackPanel Spacing="12" HorizontalAlignment="Center">
+        <arc:GlassMenu Name="Sort" />
+        <TextBlock Name="Log" HorizontalAlignment="Center" Text="Sort by…" Opacity="0.75" />
+    </StackPanel>
+</UserControl>

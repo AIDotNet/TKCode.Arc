@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PresenceStackSizesDemo">
+    <StackPanel Spacing="20">
+        <arc:PresenceStack MaxVisibleCount="3">
+            <arc:PresenceStackViewer Name="Iris Mendel" Detail="Reading" />
+            <arc:PresenceStackViewer Name="Jon Kale" IsIdle="True" />
+            <arc:PresenceStackViewer Name="Kim Arden" Detail="Editing" />
+            <arc:PresenceStackViewer Name="Lou Prentiss" />
+            <arc:PresenceStackViewer Name="Mae Holt" />
+        </arc:PresenceStack>
+        <arc:PresenceStack Size="Medium" CountLabel="here now">
+            <arc:PresenceStackViewer Name="Noor Haddad" Brush="{arc:ArcDesignTokenResource Series3}" />
+            <arc:PresenceStackViewer Name="Otto Brandt" Brush="{arc:ArcDesignTokenResource Series1}" />
+        </arc:PresenceStack>
+    </StackPanel>
+</UserControl>

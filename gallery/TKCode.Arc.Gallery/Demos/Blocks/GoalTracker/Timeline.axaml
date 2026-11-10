@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.GoalTrackerTimelineDemo">
+    <!-- Your own goal over a fixed period, opened on the timeline view; each check-in is written to the status line. -->
+    <StackPanel Spacing="8" Margin="0,12">
+        <arc:GoalTracker x:Name="Goals" Title="Support goals" View="Timeline" CurrentUser="Mia" />
+        <TextBlock x:Name="Status" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

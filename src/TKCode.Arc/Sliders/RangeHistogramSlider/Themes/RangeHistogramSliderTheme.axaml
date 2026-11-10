@@ -1,0 +1,65 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.RangeHistogramSliderTheme">
+    <ControlTheme x:Key="{x:Type arc:RangeHistogramSlider}" TargetType="arc:RangeHistogramSlider">
+        <!-- The thumbs draw their own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:RangeHistogramSlider">
+                <Grid RowDefinitions="Auto,*" RowSpacing="{arc:RangeHistogramSliderTokenResource RowGap}" VerticalAlignment="Top">
+                    <DockPanel Name="PART_Header">
+                        <StackPanel Name="PART_Readout"
+                                    DockPanel.Dock="Right"
+                                    Orientation="Horizontal"
+                                    Spacing="{arc:RangeHistogramSliderTokenResource ReadoutGap}"
+                                    Margin="{arc:RangeHistogramSliderTokenResource ReadoutMargin}"
+                                    VerticalAlignment="Center"
+                                    TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}">
+                            <TextBlock Name="PART_ReadoutLow" FontFeatures="tnum" />
+                            <TextBlock Name="PART_ReadoutDash" Text="–" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            <TextBlock Name="PART_ReadoutHigh" FontFeatures="tnum" />
+                        </StackPanel>
+                        <TextBlock Name="PART_Label"
+                                   Text="{TemplateBinding Label}"
+                                   VerticalAlignment="Center"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   LineHeight="{arc:RangeHistogramSliderTokenResource LabelLineHeight}"
+                                   TextTrimming="CharacterEllipsis" />
+                    </DockPanel>
+                    <!-- The chart and the track are one press target; both are inset by half a thumb. -->
+                    <arc:RangeHistogramRail Name="PART_Rail"
+                                            Grid.Row="1"
+                                            ChartHeight="{arc:RangeHistogramSliderTokenResource ChartHeight}"
+                                            RowHeight="{arc:ArcDesignTokenResource ControlSizeSM}"
+                                            Cursor="Hand"
+                                            BarBrush="{arc:RangeHistogramSliderTokenResource BarColor}"
+                                            GuideBrush="{arc:RangeHistogramSliderTokenResource GuideColor}"
+                                            GuideOverhang="{arc:RangeHistogramSliderTokenResource GuideOverhang}"
+                                            BarGap="{arc:RangeHistogramSliderTokenResource BarGap}"
+                                            BarTopRadius="{arc:ArcDesignTokenResource RadiusStep3}"
+                                            BarBottomRadius="{arc:ArcDesignTokenResource RadiusStep1}"
+                                            TrackBrush="{arc:ArcDesignTokenResource ControlTrack}"
+                                            FillBrush="{arc:ArcDesignTokenResource ControlFill}"
+                                            ThumbBrush="{arc:ArcDesignTokenResource ControlThumb}"
+                                            ThumbShadow="{arc:ArcDesignTokenResource ControlThumbShadow}"
+                                            RingBrush="{arc:ArcDesignTokenResource FocusRing}"
+                                            ThumbDiameter="{arc:RangeHistogramSliderTokenResource ThumbDiameter}"
+                                            TrackThickness="{arc:RangeHistogramSliderTokenResource TrackThickness}" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{arc:RangeHistogramSliderTokenResource DisabledOpacity}" />
+            <Style Selector="^ /template/ arc|RangeHistogramRail#PART_Rail">
+                <Setter Property="Cursor" Value="No" />
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

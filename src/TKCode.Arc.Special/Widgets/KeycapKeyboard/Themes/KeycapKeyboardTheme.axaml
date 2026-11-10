@@ -1,0 +1,38 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.KeycapKeyboardTheme">
+
+    <!--
+        The keyboard draws its plate and every keycap itself: a side a step darker than the face, the face that sinks as
+        the key goes down, the lit shortcut in the accent and shown bindings on the subtle accent. There is no template.
+    -->
+    <ControlTheme x:Key="{x:Type arc:KeycapKeyboard}" TargetType="arc:KeycapKeyboard">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="KeySize" Value="{arc:KeycapKeyboardTokenResource KeySize}" />
+        <Setter Property="KeyGap" Value="{arc:KeycapKeyboardTokenResource KeyGap}" />
+        <Setter Property="KeyDepth" Value="{arc:KeycapKeyboardTokenResource KeyDepth}" />
+        <Setter Property="Padding" Value="{arc:KeycapKeyboardTokenResource PlatePadding}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="KeyCornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep8}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="KeyFace" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="KeyHoverFace" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="KeySkirt" Value="{arc:KeycapKeyboardTokenResource KeySkirtColor}" />
+        <Setter Property="KeyEdge" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="HighlightFace" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="HighlightSkirt" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        <Setter Property="HighlightText" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        <Setter Property="BindingFace" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="BindingText" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        <Setter Property="MutedText" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FocusBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.5" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

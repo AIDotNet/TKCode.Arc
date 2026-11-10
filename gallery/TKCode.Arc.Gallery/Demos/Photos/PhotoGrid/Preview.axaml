@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.PhotoGridPreviewDemo">
+    <!-- Justified rows of one height. Click a photo to open it wide in place; resize the window to see the rows reflow. -->
+    <arc:PhotoGrid MaxWidth="760"
+                   RowHeight="150"
+                   Label="Walking trip photos"
+                   ItemsSource="{x:Static demos:PhotosDemoData.GridPhotos}" />
+</UserControl>

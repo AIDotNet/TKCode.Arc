@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ToggleGroupDisabledDemo">
+    <StackPanel Spacing="16" HorizontalAlignment="Center">
+        <arc:ToggleGroup Label="Filters" Mode="Multiple" SelectedValues="open,mine" HorizontalAlignment="Center">
+            <arc:ToggleGroupOption Value="open" Label="Open" />
+            <arc:ToggleGroupOption Value="mine" Label="Mine" />
+            <arc:ToggleGroupOption Value="archived" Label="Archived" IsDisabled="True" />
+            <arc:ToggleGroupOption Value="draft" Label="Draft" />
+        </arc:ToggleGroup>
+        <arc:ToggleGroup Label="Locked" IsEnabled="False" SelectedValue="left" HorizontalAlignment="Center">
+            <arc:ToggleGroupOption Value="left" Label="Left" />
+            <arc:ToggleGroupOption Value="right" Label="Right" />
+        </arc:ToggleGroup>
+    </StackPanel>
+</UserControl>

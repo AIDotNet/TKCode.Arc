@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AiInlineEditPreviewDemo">
+    <!-- No properties: the sample paragraph and a built-in stand-in rewriter. Select words, then Edit with AI or Ctrl+K. -->
+    <arc:AiInlineEdit Margin="0,12" SelectionStart="117" SelectionLength="210" />
+</UserControl>

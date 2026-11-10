@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SlotTextTimingDemo">
+    <StackPanel Spacing="16" HorizontalAlignment="Center">
+        <Grid ColumnDefinitions="Auto,24,Auto,24,Auto" HorizontalAlignment="Center">
+            <arc:SlotText x:Name="Default" Grid.Column="0" FontSize="28" FontWeight="Medium" />
+            <arc:SlotText x:Name="Straight" Grid.Column="2" FontSize="28" FontWeight="Medium" Spins="0" />
+            <arc:SlotText x:Name="Slow" Grid.Column="4" FontSize="28" FontWeight="Medium"
+                          Duration="0:0:1.6" Stagger="0:0:0.16" Spins="2" />
+        </Grid>
+        <arc:Button Content="Add 137" Variant="Secondary" HorizontalAlignment="Center" Click="OnAdd" />
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TypewriterTerminalPreviewDemo">
+    <!-- A looping install script. Tab in: Space pauses, End shows everything, Home starts over. -->
+    <arc:TypewriterTerminal Title="~/projects/lantern" IsLooping="True" MaxWidth="560">
+        <arc:TypewriterTerminalLine Kind="Command" Text="lantern init my-site" />
+        <arc:TypewriterTerminalLine Text="Creating a new site in ./my-site" Tone="Muted" />
+        <arc:TypewriterTerminalLine Text="Installing 14 packages..." Tone="Muted" Pause="0:0:0.6" />
+        <arc:TypewriterTerminalLine Text="Ready in 2.3s" Tone="Success" Pause="0:0:0.9" />
+        <arc:TypewriterTerminalLine Kind="Command" Text="cd my-site &amp;&amp; lantern dev" />
+        <arc:TypewriterTerminalLine Text="Local:   http://localhost:4321" Tone="Accent" />
+        <arc:TypewriterTerminalLine Text="Watching for changes" Tone="Muted" />
+    </arc:TypewriterTerminal>
+</UserControl>

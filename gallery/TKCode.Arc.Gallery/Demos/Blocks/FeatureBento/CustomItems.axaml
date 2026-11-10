@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.FeatureBentoCustomItemsDemo">
+    <!-- The app's own cards: a large chart beside two small cards, then a wide one. -->
+    <arc:FeatureBento Eyebrow="{x:Null}" Title="Observability, built in" Description="{x:Null}"
+                      CommandText="$ trace --service api" ResultText="✓ 3 slow spans found">
+        <arc:FeatureBentoItem Title="Request rate" Art="Pulse" Size="Large"
+                              Description="Every route, every region, one chart." />
+        <arc:FeatureBentoItem Title="Tracing" Art="Typing" Size="Small"
+                              Description="Follow a request across services." />
+        <arc:FeatureBentoItem Title="Load" Art="Bars" Size="Small"
+                              Description="CPU and memory per service." />
+        <arc:FeatureBentoItem Title="Replication" Art="Sync" Size="Wide"
+                              Description="Read replicas that stay within a second of the primary." />
+    </arc:FeatureBento>
+</UserControl>

@@ -1,0 +1,48 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ActivityRingsTheme">
+
+    <!--
+        The rings are one self-drawn canvas; the legend rows are built in code (a small ArcRing, the name and a
+        RollingDigits value). The layout puts the legend beside the rings when there is room and under them when not.
+        The announcer reads a goal that has just been reached.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ActivityRings}" TargetType="arc:ActivityRings">
+        <Setter Property="Diameter" Value="{arc:ActivityRingsTokenResource Diameter}" />
+        <Setter Property="RingThickness" Value="{arc:ActivityRingsTokenResource RingThickness}" />
+        <Setter Property="RingGap" Value="{arc:ActivityRingsTokenResource RingGap}" />
+        <Setter Property="TrackOpacity" Value="{arc:ActivityRingsTokenResource TrackOpacity}" />
+        <Setter Property="OverlapShadow" Value="{arc:ActivityRingsTokenResource OverlapShadowColor}" />
+        <Setter Property="FillDuration" Value="{arc:ActivityRingsTokenResource FillDuration}" />
+        <Setter Property="FillBounce" Value="{arc:ActivityRingsTokenResource FillBounce}" />
+        <Setter Property="RingStagger" Value="{arc:ActivityRingsTokenResource RingStagger}" />
+        <Setter Property="LegendRingSize" Value="{arc:ActivityRingsTokenResource LegendRingSize}" />
+        <Setter Property="LegendRingThickness" Value="{arc:ActivityRingsTokenResource LegendRingThickness}" />
+        <Setter Property="Series1" Value="{arc:ArcDesignTokenResource Series1}" />
+        <Setter Property="Series2" Value="{arc:ArcDesignTokenResource Series2}" />
+        <Setter Property="Series3" Value="{arc:ArcDesignTokenResource Series3}" />
+        <Setter Property="Series4" Value="{arc:ArcDesignTokenResource Series4}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ActivityRings">
+                <Panel>
+                    <arc:ActivityRingsLayout Name="PART_Layout"
+                                             Margin="{TemplateBinding Padding}"
+                                             Spacing="{arc:ActivityRingsTokenResource LegendSpacing}"
+                                             SideMinWidth="{arc:ActivityRingsTokenResource SideLegendMinWidth}">
+                        <arc:ActivityRingsCanvas Name="PART_Canvas" />
+                        <StackPanel Name="PART_Legend"
+                                    MinWidth="160"
+                                    IsVisible="{TemplateBinding IsLegendVisible}"
+                                    Spacing="{arc:ActivityRingsTokenResource LegendRowSpacing}" />
+                    </arc:ActivityRingsLayout>
+                    <arc:ExplainerAnnouncer Name="PART_Live" Width="1" Height="1" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

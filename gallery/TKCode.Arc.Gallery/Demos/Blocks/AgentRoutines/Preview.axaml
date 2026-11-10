@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentRoutinesPreviewDemo">
+    <!-- No properties: four sample routines; Run now plays a short stand-in run and adds it to the history. -->
+    <arc:AgentRoutines Margin="0,12" />
+</UserControl>

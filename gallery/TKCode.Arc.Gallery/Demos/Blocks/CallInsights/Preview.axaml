@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CallInsightsPreviewDemo">
+    <!-- The built-in invented call: press play, drag the timeline, search the transcript or choose a topic. -->
+    <arc:CallInsights Margin="0,12" />
+</UserControl>

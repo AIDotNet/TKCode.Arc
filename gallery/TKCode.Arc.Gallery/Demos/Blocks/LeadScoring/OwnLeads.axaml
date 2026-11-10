@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LeadScoringOwnLeadsDemo">
+    <!-- Your own stages and leads, with a hot threshold of 70; every move is written to the status line. -->
+    <StackPanel Spacing="8" Margin="0,12">
+        <arc:LeadScoring x:Name="Board" Title="Event sign-ups" HotThreshold="70" />
+        <TextBlock x:Name="Status" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

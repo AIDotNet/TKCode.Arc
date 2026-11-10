@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentApprovalsBackendDemo">
+    <StackPanel Spacing="12" Margin="0,12">
+        <!-- Each decision goes through DecisionHandler first: the button waits, and a throw keeps the request. -->
+        <arc:AgentApprovals x:Name="Queue" />
+        <TextBlock x:Name="Log" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" MaxWidth="560" Opacity="0.7" />
+        <arc:Button x:Name="Reset" HorizontalAlignment="Center" Variant="Ghost" Size="Small" Content="Put the requests back" />
+    </StackPanel>
+</UserControl>
