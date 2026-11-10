@@ -43,6 +43,7 @@ public static partial class LlmsSite
     private static readonly HashSet<string> s_onNuGet = [
         "TKCode.Arc", "TKCode.Arc.Core", "TKCode.Arc.Fonts", "TKCode.Arc.Icons.Lucide", "TKCode.Arc.Blocks", "TKCode.Arc.AdvancedCharts",
         "TKCode.Arc.Special", "TKCode.Arc.Workflow", "TKCode.Arc.Themes.Pixel", "TKCode.Arc.Themes.Corners", "TKCode.Arc.Mobile",
+        "TKCode.Arc.Dock", "TKCode.Arc.Terminal", "TKCode.Arc.Audio", "TKCode.Arc.Pdf", "TKCode.Arc.Video",
     ];
 
     /// <summary>The builder call that registers each package's controls.</summary>
@@ -55,6 +56,7 @@ public static partial class LlmsSite
         ["TKCode.Arc.Workflow"] = "UseArcWorkflow()",
         ["TKCode.Arc.Dock"] = "UseArcDock()",
         ["TKCode.Arc.Pdf"] = "UseArcPdf()",
+        ["TKCode.Arc.Video"] = "UseArcVideo()",
         ["TKCode.Arc.Special"] = "UseArcSpecial()",
     };
 

@@ -6,12 +6,15 @@ from 1.0.0 on, breaking API changes come only with a new major version. Earlier 
 NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Foundation` (from 0.3.2),
 `TKCode.Arc.Fonts`, `TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special`,
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
-`TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0).
+`TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0), `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` (from 1.1.0-preview.1).
 
-## Unreleased
+## 1.1.0-preview.1 - 2026-11-10
+
+The first preview of 1.1.0: TreeSelect, Sticky, Rating, BackToTop and new sliders in `TKCode.Arc`, glass, navigation, photo and data components in `TKCode.Arc.Special`, 58 new blocks, the video packages on NuGet, and Avalonia updates within version 12 without a new Arc release. There are no breaking changes from 1.0.0. Install it with `--version 1.1.0-preview.1` (or `--prerelease`); the API added in this version may still change before 1.1.0.
 
 ### Added
 
+- `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` are published to NuGet: `VideoPlayer` and `VideoSurface` over Media Foundation, AVFoundation or GStreamer on desktop and the browser's video element in WebAssembly (`UseArcVideo()`, `ArcVideoNative.Use()`, `ArcVideoBrowser.UseAsync()`).
 - `TreeSelect`: a select field over a tree that picks one node or checks several, with three-state checkboxes that check whole branches, a `CheckStrategy` for what is reported (leaves, parents or all), a search typed in the field that keeps the path to every match, chips, and virtualized rows for thousands of nodes (#80).
 - `Sticky`: attached properties that keep any element of a scrolling page at the top once it scrolls there, like CSS `position: sticky`, with an offset, an `IsStuck` state to style and a `StuckChanged` event; it never leaves its parent, so group headers push each other away (#84).
 - `Rating`: a row of stars for a score, with half stars, clearing, a read-only display, a rolling word for the value and custom shapes (`Icon`, `EmptyIcon`).

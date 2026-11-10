@@ -8,14 +8,37 @@ All notable changes to TKCode.Arc, newest first. Versions follow [Semantic Versi
 between releases. The same list is kept in `CHANGELOG.md` in the repository.
 
 NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Foundation` (from 0.3.2), `TKCode.Arc.Fonts` and
-`TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special`, `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`, `TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0).
+`TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special`, `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`, `TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0), `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` (from 1.1.0-preview.1).
 
-## Unreleased
+## 1.1.0-preview.1 (2026-11-10)
+
+The first preview of 1.1.0: new controls in `TKCode.Arc`, new groups in `TKCode.Arc.Special`, 58 new blocks, the video packages on NuGet, and Avalonia updates within version 12 without a new Arc release. There are no breaking changes from 1.0.0. Install it with `--version 1.1.0-preview.1` (or `--prerelease`); the API added in this version may still change before 1.1.0.
+
+### Added
+
+- **Video on NuGet**: `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` are published. `VideoPlayer` and `VideoSurface` play through Media Foundation, AVFoundation or GStreamer on desktop and the browser's video element in WebAssembly (`UseArcVideo()`, `ArcVideoNative.Use()`, `ArcVideoBrowser.UseAsync()`).
+- **`TreeSelect`** ([#80](https://github.com/AIDotNet/TKCode.Arc/issues/80)): a select field over a tree that picks one node or checks several, with three-state checkboxes, a `CheckStrategy` for what is reported, a search that keeps the path to every match, chips, and virtualized rows for thousands of nodes.
+- **`Sticky`** ([#84](https://github.com/AIDotNet/TKCode.Arc/issues/84)): attached properties that keep any element at the top of a scrolling page once it scrolls there, like CSS `position: sticky`, with an offset, an `IsStuck` state and a `StuckChanged` event.
+- **`BackToTop`** ([#67](https://github.com/AIDotNet/TKCode.Arc/issues/67)): a round button that appears once a list or feed has scrolled past a threshold and smoothly scrolls it back, placed yourself or attached to a corner with `arc:BackToTop.IsAttached`.
+- **More controls**: `Rating` (half stars, clearing, read-only, custom shapes), `ToggleGroup` and `SlotText`, `RangeHistogramSlider` and `RulerSlider`, `OnboardingChecklist`, and `SplitBar` (Charts), `MetricTicker` (Cards) and `PresenceStack` (Avatars).
+- **Special components** (`TKCode.Arc.Special`, designed independently from their names alone) in new groups: Glass (`GlassCard`, `GlassMenu`, `GlassSegmented`, `GlassTabBar`), Navigation (`MorphNav`, `LiquidTabBar`, `OrbitMenu`, `ActionMorph`, `ShareSheet`), Photos (`ProductGallery`, `LightboxGallery`, `PhotoGrid`, `CoverFlow`), Data (`BookingPill`, `ActivityRings`, `TimeDial`, `DateReel`), Widgets (`KeycapKeyboard`), Inputs (`EmojiPicker`, `AvatarUpload`, `ConfirmPopover`, `UndoToast`), Publishing (`MegaMenuMorph`, `TocProgress`, `ShareAccess`), the explainers `DnsResolution`, `ModelTraining` and `BranchGraph`, and `SandText`, `TypewriterTerminal`, `PrizeWheel`, `MagnifyDock` and `ImageTrail`.
+- **Blocks** (`TKCode.Arc.Blocks`): marketing sections (`HeroSection`, `FaqSection`, `ContactSection`, `StatsBand`, `BlogGrid`, `ComparisonTable`, `ChangelogFeed`, `LogoMarquee`, `HeroSignup`, `TeamShowcase`, `StudioPerspectives`, `ScrollStory`, `SpotlightGrid`, `FeatureBento`); AI (`AgentRun`, `ResearchRun`, `AiInlineEdit`, `AgentTasks`, `AgentApprovals`, `AgentRoutines`, `AgentOrchestrator`, `AgentBuilder`, `AgentGallery`, `McpServers`, `KnowledgeBase`, `EvalSuite`, `AiInsightCard`, `AiFeatureLaunch`, `AiSearchBar`, `AiSetupWizard`, `CatchUp`, `SmartScheduler`); support (`SupportConversation`, `SupportWidget`, `InboxTriage`, `FeedbackBoard`, `HelpCenter`, `FeatureVoting`, `ActivityFeed`); commerce and finance (`WalletCard`, `SpendAlert`, `InvoiceStudio`, `DeliveryTracker`, `ProductListing`, `ProductDetail`, `SeatMap`); analytics and projects (`CallInsights`, `LeadScoring`, `AccountHealth`, `GoalTracker`, `PivotBuilder`, `TaskBreakdown`); app shell and auth (`DocsSidebar`, `InboxSidebar`, `SelectionToolbar`, `TwoFactorSetup`, `OnboardingSurvey`, `MagicLinkSignIn`).
+- **`Sidebar.ExpandedWidth`** (Blocks, [#92](https://github.com/AIDotNet/TKCode.Arc/issues/92)): the width of the open sidebar, which the collapse springs from and back to.
+
+### Changed
+
+- `GhostMascot`, `CubeMascot`, `AiMascot`, `LiquidTabBar`, `AiSpark` and `RadarChart` allocate far less per frame and look the same.
 
 ### Fixed
 
 - The packages no longer pin Avalonia to one exact version ([#97](https://github.com/AIDotNet/TKCode.Arc/issues/97)): they accept Avalonia 12.1.5 or any later 12.x release, so an app can update Avalonia within version 12 without waiting for an Arc release.
-- `TextFilterBox` and `NumberFilterBox` no longer overlap or cut off their fields: a long label or description wraps, and in a narrow space the label moves above the fields. The operator menu names each operator next to its symbol.
+- Loading indicators no longer freeze under reduced motion ([#93](https://github.com/AIDotNet/TKCode.Arc/issues/93)): spinners and running lines hold still and breathe in opacity instead.
+- `Dialog`, `Drawer`, `BottomSheet` and `Tooltip` no longer show dark square corners below their rounded ones ([#75](https://github.com/AIDotNet/TKCode.Arc/issues/75)).
+- `Sidebar` (Blocks) collapses again when resized, keeps centred header content centred, and its built-in text follows the Arc language ([#92](https://github.com/AIDotNet/TKCode.Arc/issues/92)). Set `ExpandedWidth` instead of `Width`.
+- `MegaMenuMorph` no longer opens and closes over and over while the pointer rests on a trigger.
+- `TextFilterBox` and `NumberFilterBox` no longer overlap or cut off their fields: a long label wraps, and in a narrow space the label moves above the fields.
+- `Table` no longer throws "Invalid Arrange rectangle" in a compact phone layout narrower than the row's insets, and `ChatThread` bubbles follow the theme's corner style.
+- The Windows gallery app starts again on Windows 10 builds before 21H2 (#76).
 
 ## 1.0.0 (2026-11-08)
 

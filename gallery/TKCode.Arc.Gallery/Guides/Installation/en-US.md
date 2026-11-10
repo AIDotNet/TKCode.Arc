@@ -42,9 +42,9 @@ them all. The steps below add Arc to an existing project and explain what the te
 ## 1. Add the packages
 
 ```bash
-dotnet add package TKCode.Arc --version 1.0.0
-dotnet add package TKCode.Arc.Fonts --version 1.0.0           # optional: Geist and Geist Mono
-dotnet add package TKCode.Arc.Icons.Lucide --version 1.0.0    # optional: the full Lucide set
+dotnet add package TKCode.Arc --version 1.1.0-preview.1
+dotnet add package TKCode.Arc.Fonts --version 1.1.0-preview.1           # optional: Geist and Geist Mono
+dotnet add package TKCode.Arc.Icons.Lucide --version 1.1.0-preview.1    # optional: the full Lucide set
 dotnet add package Avalonia.Fonts.Inter --version 12.1.5                 # optional: Inter for body text
 ```
 
@@ -53,9 +53,9 @@ package management, add the versions to `Directory.Packages.props` once and keep
 
 ```xml
 <ItemGroup>
-    <PackageVersion Include="TKCode.Arc" Version="1.0.0" />
-    <PackageVersion Include="TKCode.Arc.Fonts" Version="1.0.0" />
-    <PackageVersion Include="TKCode.Arc.Icons.Lucide" Version="1.0.0" />
+    <PackageVersion Include="TKCode.Arc" Version="1.1.0-preview.1" />
+    <PackageVersion Include="TKCode.Arc.Fonts" Version="1.1.0-preview.1" />
+    <PackageVersion Include="TKCode.Arc.Icons.Lucide" Version="1.1.0-preview.1" />
     <PackageVersion Include="Avalonia.Fonts.Inter" Version="12.1.5" />
 </ItemGroup>
 ```
@@ -195,14 +195,14 @@ icon that is not compiled in draws nothing and logs a warning naming the line to
 AI explainers) are separate packages. Add the ones you need and register them inside `UseArc(...)`:
 
 ```bash
-dotnet add package TKCode.Arc.Blocks --version 1.0.0
-dotnet add package TKCode.Arc.AdvancedCharts --version 1.0.0
-dotnet add package TKCode.Arc.Special --version 1.0.0
-dotnet add package TKCode.Arc.Workflow --version 1.0.0
-dotnet add package TKCode.Arc.Dock --version 1.0.0    # optional: IDE-style dock layout (UseArcDock())
-dotnet add package TKCode.Arc.Themes.Pixel --version 1.0.0    # optional: pixel-art theme (UseArcPixelTheme())
-dotnet add package TKCode.Arc.Themes.Corners --version 1.0.0    # optional: global corner style (UseArcCorners())
-dotnet add package TKCode.Arc.Mobile --version 1.0.0    # optional: touch-first controls, not yet verified on devices (UseArcMobile())
+dotnet add package TKCode.Arc.Blocks --version 1.1.0-preview.1
+dotnet add package TKCode.Arc.AdvancedCharts --version 1.1.0-preview.1
+dotnet add package TKCode.Arc.Special --version 1.1.0-preview.1
+dotnet add package TKCode.Arc.Workflow --version 1.1.0-preview.1
+dotnet add package TKCode.Arc.Dock --version 1.1.0-preview.1    # optional: IDE-style dock layout (UseArcDock())
+dotnet add package TKCode.Arc.Themes.Pixel --version 1.1.0-preview.1    # optional: pixel-art theme (UseArcPixelTheme())
+dotnet add package TKCode.Arc.Themes.Corners --version 1.1.0-preview.1    # optional: global corner style (UseArcCorners())
+dotnet add package TKCode.Arc.Mobile --version 1.1.0-preview.1    # optional: touch-first controls, not yet verified on devices (UseArcMobile())
 ```
 
 ```csharp
@@ -226,9 +226,9 @@ twice does nothing.
 app for one platform, or `TKCode.Arc.Pdf.Browser` with pdf.js in WebAssembly:
 
 ```bash
-dotnet add package TKCode.Arc.Pdf --version 1.0.0
-dotnet add package TKCode.Arc.Pdf.Native --version 1.0.0     # desktop
-dotnet add package TKCode.Arc.Pdf.Browser --version 1.0.0    # browser
+dotnet add package TKCode.Arc.Pdf --version 1.1.0-preview.1
+dotnet add package TKCode.Arc.Pdf.Native --version 1.1.0-preview.1     # desktop
+dotnet add package TKCode.Arc.Pdf.Browser --version 1.1.0-preview.1    # browser
 ```
 
 ```csharp
@@ -236,6 +236,23 @@ dotnet add package TKCode.Arc.Pdf.Browser --version 1.0.0    # browser
 
 ArcPdfNative.Use();                                 // desktop, before the app starts
 await ArcPdfBrowser.UseAsync();                     // browser, before the app starts
+```
+
+### Video
+
+`TKCode.Arc.Video` (`VideoPlayer`, `VideoSurface`) plays through the platform's own player, chosen by a backend: `TKCode.Arc.Video.Native` on desktop (Media Foundation, AVFoundation or GStreamer, so no codecs ship with the app) or `TKCode.Arc.Video.Browser` in WebAssembly:
+
+```bash
+dotnet add package TKCode.Arc.Video --version 1.1.0-preview.1
+dotnet add package TKCode.Arc.Video.Native --version 1.1.0-preview.1     # desktop
+dotnet add package TKCode.Arc.Video.Browser --version 1.1.0-preview.1    # browser
+```
+
+```csharp
+.UseArc(arc => arc.UseArcControls().UseArcVideo())    // TKCode.Arc.Video
+
+ArcVideoNative.Use();                                 // desktop, before the app starts
+await ArcVideoBrowser.UseAsync();                     // browser, before the app starts
 ```
 
 ### Languages

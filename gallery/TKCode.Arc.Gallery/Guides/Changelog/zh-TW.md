@@ -1,20 +1,43 @@
 ---
 title: 更新日誌
-source-hash: 8fce0f5de0e2
+source-hash: 8957d71dabbb
 ---
 
 # 更新日誌
 
 TKCode.Arc 的所有重要變更，最新的在前。版本遵循[語意化版本](https://semver.org/)。從 1.0.0 起，破壞性 API 變更只在新的主版本中出現；更早的 `-preview` 版本在各發行版本之間可能變更 API。同一份清單也保存在儲存庫的 `CHANGELOG.md` 中。
 
-每次發行附帶的 NuGet 套件：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Foundation`（0.3.2 起）、`TKCode.Arc.Fonts` 、`TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 、`TKCode.Arc.Special`、`TKCode.Arc.Workflow`、`TKCode.Arc.Dock`（0.4.0-preview.2 起）、`TKCode.Arc.Themes.Pixel`、`TKCode.Arc.Themes.Corners`、`TKCode.Arc.Mobile`、`TKCode.Arc.Terminal`、`TKCode.Arc.Audio`、`TKCode.Arc.Audio.Native`、`TKCode.Arc.Audio.Browser`、`TKCode.Arc.Templates`（0.4.0-preview.6 起）、`TKCode.Arc.Pdf`、`TKCode.Arc.Pdf.Native` 和 `TKCode.Arc.Pdf.Browser`（1.0.0 起）。
+每次發行附帶的 NuGet 套件：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Foundation`（0.3.2 起）、`TKCode.Arc.Fonts` 、`TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 、`TKCode.Arc.Special`、`TKCode.Arc.Workflow`、`TKCode.Arc.Dock`（0.4.0-preview.2 起）、`TKCode.Arc.Themes.Pixel`、`TKCode.Arc.Themes.Corners`、`TKCode.Arc.Mobile`、`TKCode.Arc.Terminal`、`TKCode.Arc.Audio`、`TKCode.Arc.Audio.Native`、`TKCode.Arc.Audio.Browser`、`TKCode.Arc.Templates`（0.4.0-preview.6 起）、`TKCode.Arc.Pdf`、`TKCode.Arc.Pdf.Native` 和 `TKCode.Arc.Pdf.Browser`（1.0.0 起），`TKCode.Arc.Video`、`TKCode.Arc.Video.Native` 和 `TKCode.Arc.Video.Browser`（1.1.0-preview.1 起）。
 
-## 未發行
+## 1.1.0-preview.1（2026-11-10）
+
+1.1.0 的首個預覽版：`TKCode.Arc` 新增控制項，`TKCode.Arc.Special` 新增分組，新增 58 個區塊，影片套件發布到 NuGet，並且無需等待 Arc 新版即可在 Avalonia 12 內升級。與 1.0.0 相比沒有破壞性變更。安裝時使用 `--version 1.1.0-preview.1`（或 `--prerelease`）；本版本新增的 API 在 1.1.0 之前仍可能變化。
+
+### 新增
+
+- **影片發布到 NuGet**：發布 `TKCode.Arc.Video`、`TKCode.Arc.Video.Native` 和 `TKCode.Arc.Video.Browser`。`VideoPlayer` 和 `VideoSurface` 在桌面上透過 Media Foundation、AVFoundation 或 GStreamer 播放，在 WebAssembly 中使用瀏覽器的 video 元素（`UseArcVideo()`、`ArcVideoNative.Use()`、`ArcVideoBrowser.UseAsync()`）。
+- **`TreeSelect`**（[#80](https://github.com/AIDotNet/TKCode.Arc/issues/80)）：基於樹的選擇框，可單選一個節點或勾選多個，支援三態核取方塊、決定回傳哪些節點的 `CheckStrategy`、保留每個符合項路徑的搜尋、標籤，以及可容納數千節點的虛擬化列。
+- **`Sticky`**（[#84](https://github.com/AIDotNet/TKCode.Arc/issues/84)）：附加屬性，讓捲動頁面中的任意元素捲到頂端後固定在那裡，類似 CSS `position: sticky`，支援位移、`IsStuck` 狀態和 `StuckChanged` 事件。
+- **`BackToTop`**（[#67](https://github.com/AIDotNet/TKCode.Arc/issues/67)）：清單或動態消息捲動超過門檻後出現的圓形按鈕，點擊後平滑捲回頂端；可自行放置，也可用 `arc:BackToTop.IsAttached` 附加到角落。
+- **更多控制項**：`Rating`（半星、清除、唯讀、自訂形狀）、`ToggleGroup` 與 `SlotText`、`RangeHistogramSlider` 與 `RulerSlider`、`OnboardingChecklist`，以及 `SplitBar`（圖表）、`MetricTicker`（卡片）和 `PresenceStack`（頭像）。
+- **特殊元件**（`TKCode.Arc.Special`，僅根據名稱獨立設計）新增分組：玻璃（`GlassCard`、`GlassMenu`、`GlassSegmented`、`GlassTabBar`）、導覽（`MorphNav`、`LiquidTabBar`、`OrbitMenu`、`ActionMorph`、`ShareSheet`）、相片（`ProductGallery`、`LightboxGallery`、`PhotoGrid`、`CoverFlow`）、資料（`BookingPill`、`ActivityRings`、`TimeDial`、`DateReel`）、小工具（`KeycapKeyboard`）、輸入（`EmojiPicker`、`AvatarUpload`、`ConfirmPopover`、`UndoToast`）、出版（`MegaMenuMorph`、`TocProgress`、`ShareAccess`），講解動畫 `DnsResolution`、`ModelTraining` 和 `BranchGraph`，以及 `SandText`、`TypewriterTerminal`、`PrizeWheel`、`MagnifyDock` 和 `ImageTrail`。
+- **區塊**（`TKCode.Arc.Blocks`）：行銷區塊（`HeroSection`、`FaqSection`、`ContactSection`、`StatsBand`、`BlogGrid`、`ComparisonTable`、`ChangelogFeed`、`LogoMarquee`、`HeroSignup`、`TeamShowcase`、`StudioPerspectives`、`ScrollStory`、`SpotlightGrid`、`FeatureBento`）；AI（`AgentRun`、`ResearchRun`、`AiInlineEdit`、`AgentTasks`、`AgentApprovals`、`AgentRoutines`、`AgentOrchestrator`、`AgentBuilder`、`AgentGallery`、`McpServers`、`KnowledgeBase`、`EvalSuite`、`AiInsightCard`、`AiFeatureLaunch`、`AiSearchBar`、`AiSetupWizard`、`CatchUp`、`SmartScheduler`）；支援（`SupportConversation`、`SupportWidget`、`InboxTriage`、`FeedbackBoard`、`HelpCenter`、`FeatureVoting`、`ActivityFeed`）；商務與金融（`WalletCard`、`SpendAlert`、`InvoiceStudio`、`DeliveryTracker`、`ProductListing`、`ProductDetail`、`SeatMap`）；分析與專案（`CallInsights`、`LeadScoring`、`AccountHealth`、`GoalTracker`、`PivotBuilder`、`TaskBreakdown`）；應用程式外殼與驗證（`DocsSidebar`、`InboxSidebar`、`SelectionToolbar`、`TwoFactorSetup`、`OnboardingSurvey`、`MagicLinkSignIn`）。
+- **`Sidebar.ExpandedWidth`**（區塊，[#92](https://github.com/AIDotNet/TKCode.Arc/issues/92)）：側邊欄展開時的寬度，收合動畫從這裡彈出並彈回。
+
+### 變更
+
+- `GhostMascot`、`CubeMascot`、`AiMascot`、`LiquidTabBar`、`AiSpark` 和 `RadarChart` 每幀的記憶體配置大幅減少，外觀不變。
 
 ### 修復
 
 - 各個套件不再把 Avalonia 鎖定為一個確切版本（[#97](https://github.com/AIDotNet/TKCode.Arc/issues/97)）：現在接受 Avalonia 12.1.5 及任何更高的 12.x 版本，應用程式可以在 12 版本內升級 Avalonia，無需等待 Arc 發布新版。
-- `TextFilterBox` 與 `NumberFilterBox` 的輸入框不再重疊或被裁切：過長的標籤或說明會換行，空間較窄時標籤移到輸入框上方。運算子選單在符號旁顯示名稱。
+- 減少動態效果時載入指示器不再凍結（[#93](https://github.com/AIDotNet/TKCode.Arc/issues/93)）：旋轉圖示和流動線條保持靜止，改為透明度呼吸。
+- `Dialog`、`Drawer`、`BottomSheet` 和 `Tooltip` 的圓角下方不再露出深色直角（[#75](https://github.com/AIDotNet/TKCode.Arc/issues/75)）。
+- `Sidebar`（區塊）調整大小後可以再次收合，標題中置中的內容保持置中，內建文字跟隨 Arc 語言（[#92](https://github.com/AIDotNet/TKCode.Arc/issues/92)）。請設定 `ExpandedWidth` 而不是 `Width`。
+- 指標停留在觸發項上時，`MegaMenuMorph` 不再反覆開啟和關閉。
+- `TextFilterBox` 與 `NumberFilterBox` 的輸入框不再重疊或被裁切：過長的標籤會換行，空間較窄時標籤移到輸入框上方。
+- `Table` 的緊湊手機版面比列內距更窄時不再擲回 "Invalid Arrange rectangle"，`ChatThread` 氣泡跟隨主題的圓角風格。
+- Windows 圖庫應用程式在 21H2 之前的 Windows 10 上可以再次啟動（#76）。
 
 ## 1.0.0（2026-11-08）
 
