@@ -51,7 +51,8 @@ jobs:
     name: Build and test (${{ matrix.os }})
     if: github.event_name != 'workflow_dispatch' && !startsWith(github.ref, 'refs/tags/')
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 45
+    # macOS: about 15 minutes of build and 35 or more of the headless control tests (which grow with every component).
+    timeout-minutes: 75
     strategy:
       fail-fast: false
       matrix:
