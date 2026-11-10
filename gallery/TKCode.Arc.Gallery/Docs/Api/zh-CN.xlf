@@ -26933,8 +26933,8 @@
         <target>数字超出 `Minimum` 和 `Maximum` 时不通过；空值和其他类型通过。</target>
       </trans-unit>
       <trans-unit id="Rating">
-        <source>Arc rating: a row of stars for a score from 1 to N. Pointing previews a value, a press or drag commits it, and a rolling word beside the stars says what the value means. Half stars, clearing and a read-only display are options. The arrow keys move by one step, Home and End jump, the number keys choose a star, and Backspace or Delete clear.</source>
-        <target>Arc 评分：一排星星，用于 1 到 N 的打分。指向时预览分值，按下或拖动时提交，星星旁滚动的文字说明分值的含义。半星、清除和只读显示都是可选项。方向键按一档移动，Home 和 End 跳到两端，数字键选择星星，Backspace 或 Delete 清除。</target>
+        <source>Arc rating: a row of stars for a score from 1 to N. Pointing previews a value, a press or drag commits it, and a rolling word beside the stars says what the value means. Half stars, clearing, a read-only display and other shapes (`Icon`, `EmptyIcon`) are options. The arrow keys move by one step, Home and End jump, the number keys choose a star, and Backspace or Delete clear.</source>
+        <target>Arc 评分：一排星星，用于 1 到 N 的打分。指向时预览分值，按下或拖动时提交，星星旁滚动的文字说明分值的含义。半星、清除、只读显示和其他形状（`Icon`、`EmptyIcon`）都是可选项。方向键按一档移动，Home 和 End 跳到两端，数字键选择星星，Backspace 或 Delete 清除。</target>
       </trans-unit>
       <trans-unit id="Rating.AllowClear">
         <source>Lets choosing the current value again clear it; Backspace and Delete clear from the keyboard.</source>
@@ -26948,9 +26948,17 @@
         <source>A hint under the stars.</source>
         <target>星星下方的提示。</target>
       </trans-unit>
+      <trans-unit id="Rating.EmptyIcon">
+        <source>The shape of the part of a star that is not filled, in the same 24 × 24 box. Null uses `Icon`. A half value shows the left half of `Icon` over the right half of this shape.</source>
+        <target>星星未填充部分的形状，同样在 24 × 24 的框内。为 null 时使用 `Icon`。半值时左半边显示 `Icon`，右半边显示这个形状。</target>
+      </trans-unit>
       <trans-unit id="Rating.EmptyLabel">
         <source>The text shown beside empty stars.</source>
         <target>星星为空时旁边显示的文字。</target>
+      </trans-unit>
+      <trans-unit id="Rating.Icon">
+        <source>The shape of each star, drawn in a 24 × 24 box like the Lucide icons of `ArcIcons`, for example `{x:Static arc:ArcIcons.Heart}` or path data. Null draws a star.</source>
+        <target>每颗星的形状，在 24 × 24 的框内绘制，与 `ArcIcons` 中的 Lucide 图标一致，例如 `{x:Static arc:ArcIcons.Heart}` 或路径数据。为 null 时绘制星星。</target>
       </trans-unit>
       <trans-unit id="Rating.IsReadOnly">
         <source>Shows the value without taking input.</source>
