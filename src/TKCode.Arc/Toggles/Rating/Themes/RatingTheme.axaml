@@ -22,7 +22,10 @@
                                FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
                                TextWrapping="Wrap" />
                     <WrapPanel ItemSpacing="{arc:RatingTokenResource ValueGap}" LineSpacing="{arc:RatingTokenResource RowGap}">
-                        <arc:RatingStars Name="PART_Stars" VerticalAlignment="Center" />
+                        <arc:RatingStars Name="PART_Stars"
+                                         Icon="{TemplateBinding Icon}"
+                                         EmptyIcon="{TemplateBinding EmptyIcon}"
+                                         VerticalAlignment="Center" />
                         <arc:RatingRollingText Name="PART_Value"
                                                Spacing="4"
                                                VerticalAlignment="Center"

@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.RatingIconsDemo">
+    <StackPanel Spacing="16" HorizontalAlignment="Center">
+        <arc:Rating Label="How much did you like it?" Value="3.5" AllowHalf="True"
+                    Icon="{x:Static arc:ArcIcons.Heart}" />
+        <arc:Rating Label="Intensity" Value="2" Maximum="3"
+                    Icon="{x:Static arc:ArcIcons.Zap}" />
+        <!-- Filled steps are circles; the steps still to go are small dots. -->
+        <arc:Rating Label="Pain scale" Value="4" Maximum="10" Size="Small"
+                    Icon="{x:Static arc:ArcIcons.Circle}"
+                    EmptyIcon="M10 12a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+    </StackPanel>
+</UserControl>
