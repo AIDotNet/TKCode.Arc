@@ -3,7 +3,7 @@
          (tkcode-arc-page, -window, -dialog, -control). It has no code of its own: the package carries the templates under content/ as they
          are, except that the project files get the Arc and Avalonia versions of this build (build/Versions.props) in place
          of __ARC_VERSION__ and __AVALONIA_VERSION__, so a template always references the packages it was released with,
-         and __MVVM_VERSION__ becomes ArcTemplateMvvmVersion below. tools/templates/verify_templates.py creates, builds and
+         and __MVVM_VERSION__ becomes ArcTemplateMvvmVersion below (__LIBRARY_VERSION__: ArcTemplateLibraryVersion). tools/templates/verify_templates.py creates, builds and
          starts every template (design/engineering/project-templates.md). -->
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
@@ -28,6 +28,10 @@
         <ArcTemplateTestSdkVersion>18.11.0</ArcTemplateTestSdkVersion>
         <ArcTemplateXunitVersion>3.2.2</ArcTemplateXunitVersion>
         <ArcTemplateXunitRunnerVersion>3.1.5</ArcTemplateXunitRunnerVersion>
+        <!-- The first version of a library made with tkcode-arc-lib (__LIBRARY_VERSION__): a prerelease while TKCode.Arc is
+             one, since a stable package cannot depend on a prerelease (NuGet error NU5104, an error under -warnaserror). -->
+        <ArcTemplateLibraryVersion>0.1.0</ArcTemplateLibraryVersion>
+        <ArcTemplateLibraryVersion Condition="$(ArcVersion.Contains('-'))">0.1.0-preview.1</ArcTemplateLibraryVersion>
         <_ArcTemplateStage>$(MSBuildProjectDirectory)/$(BaseIntermediateOutputPath)template-content/</_ArcTemplateStage>
     </PropertyGroup>
 
@@ -47,7 +51,7 @@
             Inputs="%(_ArcTemplateProjectFile.FullPath);$(ArcRepositoryRoot)build/Versions.props;$(MSBuildProjectFullPath)"
             Outputs="$(_ArcTemplateStage)%(_ArcTemplateProjectFile.RecursiveDir)%(_ArcTemplateProjectFile.Filename)%(_ArcTemplateProjectFile.Extension)">
         <PropertyGroup>
-            <_ArcTemplateText>$([System.IO.File]::ReadAllText('%(_ArcTemplateProjectFile.FullPath)').Replace('__ARC_VERSION__', '$(ArcVersion)').Replace('__AVALONIA_VERSION__', '$(AvaloniaVersion)').Replace('__MVVM_VERSION__', '$(ArcTemplateMvvmVersion)').Replace('__DI_VERSION__', '$(ArcTemplateDiVersion)').Replace('__TEST_SDK_VERSION__', '$(ArcTemplateTestSdkVersion)').Replace('__XUNIT_VERSION__', '$(ArcTemplateXunitVersion)').Replace('__XUNIT_RUNNER_VERSION__', '$(ArcTemplateXunitRunnerVersion)'))</_ArcTemplateText>
+            <_ArcTemplateText>$([System.IO.File]::ReadAllText('%(_ArcTemplateProjectFile.FullPath)').Replace('__ARC_VERSION__', '$(ArcVersion)').Replace('__AVALONIA_VERSION__', '$(AvaloniaVersion)').Replace('__MVVM_VERSION__', '$(ArcTemplateMvvmVersion)').Replace('__DI_VERSION__', '$(ArcTemplateDiVersion)').Replace('__TEST_SDK_VERSION__', '$(ArcTemplateTestSdkVersion)').Replace('__XUNIT_VERSION__', '$(ArcTemplateXunitVersion)').Replace('__XUNIT_RUNNER_VERSION__', '$(ArcTemplateXunitRunnerVersion)').Replace('__LIBRARY_VERSION__', '$(ArcTemplateLibraryVersion)'))</_ArcTemplateText>
         </PropertyGroup>
         <MakeDir Directories="$(_ArcTemplateStage)%(_ArcTemplateProjectFile.RecursiveDir)" />
         <WriteLinesToFile File="$(_ArcTemplateStage)%(_ArcTemplateProjectFile.RecursiveDir)%(_ArcTemplateProjectFile.Filename)%(_ArcTemplateProjectFile.Extension)"

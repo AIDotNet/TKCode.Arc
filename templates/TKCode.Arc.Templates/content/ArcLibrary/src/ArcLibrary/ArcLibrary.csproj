@@ -12,9 +12,10 @@
         <IsTrimmable>true</IsTrimmable>
         <IsAotCompatible>true</IsAotCompatible>
 
-        <!-- The NuGet package (dotnet pack). -->
+        <!-- The NuGet package (dotnet pack). A prerelease version while TKCode.Arc is one: a stable package cannot depend
+             on a prerelease (NuGet error NU5104). -->
         <PackageId>ArcLibrary</PackageId>
-        <Version>0.1.0</Version>
+        <Version>__LIBRARY_VERSION__</Version>
         <Description>Controls for TKCode.Arc apps.</Description>
         <PackageTags>avalonia;tkcode-arc;controls</PackageTags>
         <PackageReadmeFile>README.md</PackageReadmeFile>
