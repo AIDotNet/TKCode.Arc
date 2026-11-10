@@ -160,6 +160,9 @@
         </Setter>
 
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <!-- Templated controls clip to their box by default, which would cut the floating shadow to a rectangle
+             (dark square corners below the rounded ones). -->
+        <Setter Property="ClipToBounds" Value="False" />
         <Setter Property="arc:ArcSurface.Elevation" Value="Raised" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
