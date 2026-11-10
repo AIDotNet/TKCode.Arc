@@ -1,6 +1,6 @@
 ---
 title: 更新日志
-source-hash: 8957d71dabbb
+source-hash: 50d12d0ea25b
 ---
 
 # 更新日志
@@ -8,6 +8,14 @@ source-hash: 8957d71dabbb
 TKCode.Arc 的所有重要变更，最新的在前。版本遵循[语义化版本](https://semver.org/)。从 1.0.0 起，破坏性 API 变更只在新的主版本中出现；更早的 `-preview` 版本在各发布版本之间可能变更 API。同样的列表也保存在仓库的 `CHANGELOG.md` 中。
 
 每次发布附带的 NuGet 包：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Foundation`（0.3.2 起）、`TKCode.Arc.Fonts` `TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 、`TKCode.Arc.Special`、`TKCode.Arc.Workflow`、`TKCode.Arc.Dock`（0.4.0-preview.2 起）、`TKCode.Arc.Themes.Pixel`、`TKCode.Arc.Themes.Corners`、`TKCode.Arc.Mobile`、`TKCode.Arc.Terminal`、`TKCode.Arc.Audio`、`TKCode.Arc.Audio.Native`、`TKCode.Arc.Audio.Browser`、`TKCode.Arc.Templates`（0.4.0-preview.6 起）、`TKCode.Arc.Pdf`、`TKCode.Arc.Pdf.Native` 和 `TKCode.Arc.Pdf.Browser`（1.0.0 起），`TKCode.Arc.Video`、`TKCode.Arc.Video.Native` 和 `TKCode.Arc.Video.Browser`（1.1.0-preview.1 起）。
+
+## 1.1.0-preview.2（2026-11-10）
+
+NativeAOT 修复：使用 `Sidebar` 的应用发布时不再出现裁剪警告。与 1.1.0-preview.1 相比没有破坏性变更。安装时使用 `--version 1.1.0-preview.2`（或 `--prerelease`）。
+
+### 修复
+
+- **NativeAOT 下的 `Sidebar`**（[#100](https://github.com/AIDotNet/TKCode.Arc/issues/100)）：应用使用 `Sidebar` 时，`TKCode.Arc.Blocks` 不再产生裁剪警告（IL2026 / IL3053）。新增的 `LabelMemberBinding`、`KeyMemberBinding`、`IconMemberBinding`、`BadgeMemberBinding`、`IsEnabledMemberBinding` 和 `ChildrenMemberBinding` 用编译绑定映射 `ItemsSource` 的数据，例如 `LabelMemberBinding="{Binding Title, DataType={x:Type local:MenuNode}}"`。字符串形式的 `*Member` 路径仍然可用，但走反射；裁剪和 NativeAOT 应用请改用 `*MemberBinding` 属性。
 
 ## 1.1.0-preview.1（2026-11-10）
 
