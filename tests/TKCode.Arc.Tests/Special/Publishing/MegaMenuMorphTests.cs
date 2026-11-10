@@ -213,6 +213,27 @@ public class MegaMenuMorphTests
     }
 
     [AvaloniaFact]
+    public void The_open_panel_leaves_the_bar_under_the_pointer_and_a_press_outside_closes_it()
+    {
+        // A light-dismiss layer over the window used to take the pointer from the trigger once the panel opened, so
+        // the panel closed and reopened in a loop while the pointer rested on the trigger.
+        var (menu, window) = Open();
+        var trigger = menu.Triggers[0];
+        var center = trigger.TranslatePoint(new Point(trigger.Bounds.Width / 2, trigger.Bounds.Height / 2), window)!.Value;
+        menu.Open(0);
+        Pump();
+        menu.Stage!.IsShown.ShouldBeTrue();
+        window.InputHitTest(center).ShouldBeAssignableTo<Visual>()!.FindAncestorOfType<MegaMenuMorphTrigger>(includeSelf: true)
+            .ShouldBeSameAs(trigger);
+
+        window.MouseDown(new Point(5, window.Bounds.Height - 5), MouseButton.Left);
+        window.MouseUp(new Point(5, window.Bounds.Height - 5), MouseButton.Left);
+        Pump();
+        menu.OpenIndex.ShouldBe(-1);
+        window.Close();
+    }
+
+    [AvaloniaFact]
     public void Removing_the_open_item_closes_the_panel()
     {
         var (menu, window) = Open();

@@ -40,6 +40,7 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 
 ### Fixed
 
+- `MegaMenuMorph` no longer opens and closes over and over while the pointer rests on a trigger: its panel's popup no longer turns on light dismiss, whose transparent layer covered the bar and took the pointer from the trigger. A press outside the bar and the panel still closes it.
 - The Windows gallery app starts again on Windows 10 builds before 21H2 or without recent updates: it no longer opts in to CET shadow stacks (`CETCompat` false; #76).
 - `Dialog`, `Drawer` and `BottomSheet` panels and `Tooltip` bubbles (the `ArcWindow` title bar buttons' included) no longer show dark square corners below their rounded ones ([#75](https://github.com/AIDotNet/TKCode.Arc/issues/75)): the panels clipped their own floating shadow to a rectangle, and popups in the overlay layer had it clipped by the FluentTheme or SimpleTheme popup host.
 - `Table` no longer throws "Invalid Arrange rectangle" when its compact phone layout is narrower than the row's insets: hosted cells get zero width instead of a negative one.
