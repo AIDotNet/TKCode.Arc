@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.InlineEditFollowedByTagDemo">
+    <StackPanel HorizontalAlignment="Center" Spacing="16">
+        <StackPanel Orientation="Horizontal" Spacing="4">
+            <arc:InlineEdit Label="Project name"
+                            Value="Atlas redesign"
+                            HeadingLevel="2"
+                            ReserveActionSpace="False"
+                            VerticalAlignment="Center" />
+            <arc:Badge Content="Beta" VerticalAlignment="Center" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Spacing="4">
+            <arc:InlineEdit Label="Assistant name"
+                            Variant="Body"
+                            Value="Release notes writer"
+                            ReserveActionSpace="False"
+                            VerticalAlignment="Center" />
+            <arc:Badge Content="Default" Tone="Success" Size="Small" VerticalAlignment="Center" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

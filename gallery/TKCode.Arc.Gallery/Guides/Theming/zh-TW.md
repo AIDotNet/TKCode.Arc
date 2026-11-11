@@ -1,6 +1,6 @@
 ---
 title: 主題
-source-hash: 65d9e8b78c7c
+source-hash: cceaf2bc7826
 ---
 
 # 主題
@@ -192,6 +192,8 @@ ArcTheme.Apply(t => t.Accent(Color.Parse("#0E7C86")));
 | 形狀 | `RadiusControl`（18）、`RadiusPanel`（26）、`RadiusSurface`（34）、`RadiusPill` | 欄位與按鈕、卡片與面板、大型表面，以及膠囊形和徽章。 |
 | 尺寸 | `ControlSizeSM`（36）、`ControlSizeMD`（44）、`ControlSizeLG`（50）；`GlyphSizeSM`（16）、`GlyphSizeMD`（20）、`GlyphSizeLG`（24）；`IconStrokeWidth` | `Small`、`Medium` 與 `Large` 三種尺寸對應的控制項高度，以及圖示尺寸。 |
 | 間距 | `Space1`（4）至 `Space24`（96） | 以 4 px 為基準的間距刻度：4、8、12、16、20、24、32、40、48、64、80、96。 |
+| 寬度 | `ContentMaxWidthSM`（640）、`ContentMaxWidthMD`（760）、`ContentMaxWidthLG`（880）、`ContentMaxWidthXL`（1120） | 頁面內容欄的最大寬度：閱讀欄或單一表單、設定頁、含表格或兩欄欄位的文件頁、整寬的頁面區塊。以 `MaxWidth` 設定，視窗較窄時內容欄仍佔滿整個寬度。 |
+| 媒體 | `MediaSizeSM`（64）、`MediaSizeMD`（128）、`MediaSizeLG`（192）、`MediaSizeXL`（256） | 方形媒體的邊長，以 64 為級距：列中的縮圖、卡片上的預覽、QR 碼或封面圖、大圖預覽。 |
 | 字級 | `TypeXS`（12）、`TypeSM`（14）、`TypeBase`（16）、`TypeLG`（18）、`TypeXL`（22）、`Type2XL`（28）、`Type3XL`（36）、`Type4XL`（52）、`Type5XL`（72） | 字級刻度。 |
 | 字型樣式 | `BodyFontFamily`、`DisplayFontFamily`、`MonoFontFamily`、`WeightRegular`、`WeightMedium`、`LeadingBody`（1.4）、`LeadingDisplay`（1.1）、`TrackingBody`、`TrackingDisplay` | 內文與展示文字的字型家族、字重、行高和字距。 |
 | 層級 | `ShadowResting`、`ShadowRaised`、`ShadowFloating` | 靜止的卡片、抬起的卡片與選單、浮動的對話方塊與彈出框。深色模式使用較深的陰影。 |
@@ -218,6 +220,23 @@ ArcTheme.Apply(t => t.Accent(Color.Parse("#0E7C86")));
                    Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
     </StackPanel>
 </Border>
+```
+
+寬度與媒體權杖決定版面的尺寸。設定頁以 `ContentMaxWidthMD` 限制內容欄的寬度並靠左放置，視窗較窄時內容欄仍佔滿整個寬度；QR 碼的寬和高都取 `MediaSizeLG`：
+
+```xml
+<StackPanel MaxWidth="{arc:ArcDesignTokenResource ContentMaxWidthMD}"
+            HorizontalAlignment="Left"
+            Spacing="{arc:ArcDesignTokenResource Space4}">
+    <TextBlock Text="連接手機"
+               FontSize="{arc:ArcDesignTokenResource TypeXL}"
+               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+    <!-- The QR code image goes here. -->
+    <Border Width="{arc:ArcDesignTokenResource MediaSizeLG}"
+            Height="{arc:ArcDesignTokenResource MediaSizeLG}"
+            Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+            CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}" />
+</StackPanel>
 ```
 
 ### 在程式碼中

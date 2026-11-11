@@ -1,7 +1,7 @@
 ---
 title: 头像
 summary: 用于人员与账号的紧凑身份标识。
-source-hash: 172bf0f5745b
+source-hash: 34130a019850
 ---
 
 <Demo name="Initials" />
@@ -39,9 +39,9 @@ source-hash: 172bf0f5745b
 ### 结构
 
 1. **外框**（控件本身）：一个圆形，带 1 px 的 `Border` 描边，填充为 `SurfaceMuted`。圆角为胶囊圆角，因此在任何尺寸下都保持圆形，内容也会被裁剪到这个形状内。
-2. **首字母**（`Initials`，只读）：居中的文字，使用常规前景色与中等字重。在 `Small` 尺寸下文字为 10 px；在 `Medium`、`Large` 和 `XLarge` 下，它跟随 Arc 字号阶梯中的 XS、SM 和 XL。
+2. **首字母**（`Initials`，只读）：居中的文字，使用常规前景色与中等字重。在 `Small` 尺寸下文字为 10 px；在 `Medium`、`Large`、`LargePlus` 和 `XLarge` 下，它跟随 Arc 字号阶梯中的 XS、SM、LG 和 XL。
 3. **照片**（`Source`）：填满圆形的异步图像。只有在设置了 `Source` 且尚未加载失败时才显示；加载期间外框保持为空。
-4. **状态圆点**（`Status`）：位于右下角的实心圆，带有与表面色相同的环（`Small` 为 1.5 px，其他尺寸为 2 px），外围还有一层边框色的淡色光晕（1 px）。`Online` 使用成功色，`Offline` 使用弱化的文字颜色，`None` 则完全移除圆点。`Busy`（请勿打扰）使用危险色并带一条横杠，`Away` 使用警告色，`Connecting` 是弱化文字颜色的空心圆环，并以不透明度呼吸（关闭动效时静止），用于正在重连的客户端。
+4. **状态圆点**（`Status`）：位于右下角的实心圆，大小随头像变化（见“尺寸”），带有与表面色相同的环（`Small` 为 1.5 px，其他尺寸为 2 px），外围还有一层边框色的淡色光晕（1 px）。在 `LargePlus` 和 `XLarge` 下，它从角落向内移 2 px 和 4 px，以保持在圆的边缘上。`Online` 使用成功色，`Offline` 使用弱化的文字颜色，`None` 则完全移除圆点。`Busy`（请勿打扰）使用危险色并带一条横杠，`Away` 使用警告色，`Connecting` 是弱化文字颜色的空心圆环，并以不透明度呼吸（关闭动效时静止），用于正在重连的客户端。
 
 ### 照片与回退
 
@@ -53,21 +53,19 @@ source-hash: 172bf0f5745b
 
 ### 尺寸
 
-`Size` 决定直径：`Small` 为 28 px，`Medium`（默认）为 36 px，`Large` 为 48 px，`XLarge` 为 88 px。尺寸不随窗口变化，在任何宽度下都保持一致。
+`Size` 决定直径：`Small` 为 28 px，`Medium`（默认）为 36 px，`Large` 为 48 px，`LargePlus` 为 64 px，`XLarge` 为 88 px。每一档比前一档大约三分之一，状态圆点和首字母随之变大。尺寸不随窗口变化，在任何宽度下都保持一致。
 
 | 尺寸 | 直径 | 首字母文字 | 状态圆点 | 适用场景 |
 |---|---|---|---|---|
 | `Small` | 28 px | 10 px | 8 px | 表格行、活动日志、密集列表 |
 | `Medium` | 36 px | Arc XS | 10 px | 页头、卡片与表单摘要的默认值 |
 | `Large` | 48 px | Arc SM | 12 px | 人员名册面板、个人资料卡 |
+| `LargePlus` | 64 px | Arc LG | 13 px | 联系人与成员详情面板、以人物为主的个人资料卡 |
 | `XLarge` | 88 px | Arc XL | 14 px | 账号与个人资料页的页头 |
 
-```xml
-<arc:Avatar DisplayName="Ada Lovelace" Size="Small" />
-<arc:Avatar DisplayName="Grace Hopper" Size="Medium" />
-<arc:Avatar DisplayName="Alan Turing" Size="Large" />
-<arc:Avatar DisplayName="Katherine Johnson" Size="XLarge" />
-```
+<Demo name="Sizes" />
+
+`LargePlus` 是在 `XLarge` 之后加入的，所以 `AvatarSize` 的成员并不按大小排列：比较尺寸时请看直径，不要看枚举的数值。
 
 同一列表或同一组相关头像使用同一个尺寸，这样行高一致，圆点也能对齐。在密集的表格中，`Small` 配合 8 px 的圆点仍然清晰可读，因为圆点带有一圈将其与照片分隔开的环。
 
@@ -199,7 +197,7 @@ public partial class OnCallMemberViewModel : ObservableObject
 
 - **显示名称**：产品中人们使用的完整姓名，例如 "Maya Chen"。首字母和无障碍名称都来自它，因此简短的昵称会得到糟糕的结果。
 - **名称文字**：不要把头衔、角色和缩写放进 `DisplayName`。像 "Dr." 这样的前缀会改变首字母，而角色应放在头像旁边的文字中。
-- **状态**：控件中只存在 "online" 和 "offline" 两个词。更具体的内容，例如 "18:00 前离开"，请放在头像旁边的文字里。
+- **状态**：控件中表示在线状态的词有五个："online"、"offline"、"busy"、"away" 和 "connecting"。更具体的内容，例如 "18:00 前离开"，请放在头像旁边的文字里。
 
 | 不要写 | 改为 |
 |---|---|
@@ -269,7 +267,7 @@ public partial class OnCallMemberViewModel : ObservableObject
 
 ## 响应式
 
-- `Avatar` 在任何宽度下都不会变化，也不测量自身所在的容器。直径只由 `Size` 决定：`Small` 为 28 px，`Medium` 为 36 px（默认），`Large` 为 48 px，`XLarge` 为 88 px。
+- `Avatar` 在任何宽度下都不会变化，也不测量自身所在的容器。直径只由 `Size` 决定：`Small` 为 28 px，`Medium` 为 36 px（默认），`Large` 为 48 px，`LargePlus` 为 64 px，`XLarge` 为 88 px。
 - 首字母最多两个字母，取自 `DisplayName`，因此很长的名字不会撑宽或换行头像。照片加载失败时回退为首字母。
 - 状态点只是颜色提示，无障碍名称中也包含状态。在手机上，若头像本身是可点按的目标（例如个人资料按钮），请使用 `Large`（48 px）或更大；`Small` 适合点按整行的紧凑列表。
 - 按头像所在的位置而不是屏幕来选择尺寸。尺寸不会在某个断点改变，因此窄标题栏中的头像保持原尺寸，标题栏需要为它留出空间。

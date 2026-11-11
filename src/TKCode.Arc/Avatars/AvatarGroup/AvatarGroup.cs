@@ -51,7 +51,7 @@ public class AvatarGroup : TemplatedControl
     public static readonly StyledProperty<int> MaxVisibleCountProperty =
         AvaloniaProperty.Register<AvatarGroup, int>(nameof(MaxVisibleCount), 4);
 
-    /// <summary>Avatar size: Small 28, Medium 36, Large 48 (XLarge is treated as Large).</summary>
+    /// <summary>Avatar size: Small 28, Medium 36, Large 48 (LargePlus and XLarge are treated as Large).</summary>
     public static readonly StyledProperty<AvatarSize> SizeProperty =
         AvaloniaProperty.Register<AvatarGroup, AvatarSize>(nameof(Size), AvatarSize.Medium);
 
@@ -157,7 +157,8 @@ public class AvatarGroup : TemplatedControl
     {
         var size = Size;
         PseudoClasses.Set(SmallPseudoClass, size == AvatarSize.Small);
-        PseudoClasses.Set(LargePseudoClass, size == AvatarSize.Large);
+        // A stack has no size above Large: LargePlus draws as Large (XLarge keeps its own pseudo-class, styled the same).
+        PseudoClasses.Set(LargePseudoClass, size is AvatarSize.Large or AvatarSize.LargePlus);
         PseudoClasses.Set(XLargePseudoClass, size == AvatarSize.XLarge);
     }
 

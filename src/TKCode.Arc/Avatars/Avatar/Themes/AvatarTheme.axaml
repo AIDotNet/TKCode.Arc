@@ -54,6 +54,12 @@
             <Setter Property="Height" Value="{arc:AvatarTokenResource DiameterLG}" />
             <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
         </Style>
+        <Style Selector="^:large-plus">
+            <Setter Property="Width" Value="{arc:AvatarTokenResource DiameterLGPlus}" />
+            <Setter Property="Height" Value="{arc:AvatarTokenResource DiameterLGPlus}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeLG}" />
+            <!-- The dot's LargePlus inset (StatusMarginLGPlus) is applied by the avatar to the host it builds. -->
+        </Style>
         <Style Selector="^:xlarge">
             <Setter Property="Width" Value="{arc:AvatarTokenResource DiameterXL}" />
             <Setter Property="Height" Value="{arc:AvatarTokenResource DiameterXL}" />
@@ -104,7 +110,8 @@
         </Style>
     </ControlTheme>
 
-    <!-- The bar across a Busy dot (PART_StatusBar); the dot shows it only while busy. -->
+    <!-- The bar across a Busy dot (PART_StatusBar); the dot shows it only while busy. It spans the dot's inner circle less
+         1px at each end, so the dot mirrors the avatar's size into it. -->
     <ControlTheme x:Key="{x:Type arc:AvatarStatusBar}" TargetType="arc:AvatarStatusBar">
         <Setter Property="Width" Value="{arc:AvatarTokenResource StatusBarWidth}" />
         <Setter Property="Height" Value="{arc:AvatarTokenResource StatusBarHeight}" />
@@ -112,11 +119,24 @@
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Center" />
+        <Style Selector="^:small">
+            <Setter Property="Width" Value="{arc:AvatarTokenResource StatusBarWidthSM}" />
+        </Style>
+        <Style Selector="^:large">
+            <Setter Property="Width" Value="{arc:AvatarTokenResource StatusBarWidthLG}" />
+        </Style>
+        <Style Selector="^:large-plus">
+            <Setter Property="Width" Value="{arc:AvatarTokenResource StatusBarWidthLGPlus}" />
+        </Style>
+        <Style Selector="^:xlarge">
+            <Setter Property="Width" Value="{arc:AvatarTokenResource StatusBarWidthXL}" />
+        </Style>
     </ControlTheme>
 
-    <!-- The presence dot the avatar builds on demand (PART_Status). The dot keeps the medium size and ring whatever the
-         avatar's size, as the template part did (its token values were local and the size styles never overrode them);
-         the avatar mirrors Online into :online. -->
+    <!-- The presence dot the avatar builds on demand (PART_Status). It follows the avatar's size (Arc: 8 / 10 / 12 / 14px
+         for sm / md / lg / xl, a 1.5px ring at sm; 13px for LargePlus), which the avatar mirrors into :small, :large,
+         :large-plus and :xlarge (the dot used to keep the medium size at every size: the old template part's local token
+         values hid these styles). The avatar mirrors its status into :online, :busy, :away and :connecting. -->
     <ControlTheme x:Key="{x:Type arc:AvatarStatusDot}" TargetType="arc:AvatarStatusDot">
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Width" Value="{arc:AvatarTokenResource StatusSizeMD}" />
@@ -126,6 +146,23 @@
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Surface}" />
         <Setter Property="BoxShadow" Value="{arc:AvatarTokenResource StatusHalo}" />
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Style Selector="^:small">
+            <Setter Property="Width" Value="{arc:AvatarTokenResource StatusSizeSM}" />
+            <Setter Property="Height" Value="{arc:AvatarTokenResource StatusSizeSM}" />
+            <Setter Property="BorderThickness" Value="{arc:AvatarTokenResource StatusRingSM}" />
+        </Style>
+        <Style Selector="^:large">
+            <Setter Property="Width" Value="{arc:AvatarTokenResource StatusSizeLG}" />
+            <Setter Property="Height" Value="{arc:AvatarTokenResource StatusSizeLG}" />
+        </Style>
+        <Style Selector="^:large-plus">
+            <Setter Property="Width" Value="{arc:AvatarTokenResource StatusSizeLGPlus}" />
+            <Setter Property="Height" Value="{arc:AvatarTokenResource StatusSizeLGPlus}" />
+        </Style>
+        <Style Selector="^:xlarge">
+            <Setter Property="Width" Value="{arc:AvatarTokenResource StatusSizeXL}" />
+            <Setter Property="Height" Value="{arc:AvatarTokenResource StatusSizeXL}" />
+        </Style>
         <Style Selector="^:online">
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource Success}" />
         </Style>

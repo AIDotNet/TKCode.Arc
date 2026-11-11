@@ -122,4 +122,89 @@ public class AvatarTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void LargePlus_Is_Appended_Between_Large_And_XLarge()
+    {
+        // Issue #110: nothing between 48 and 88. The new member is appended, so the earlier values keep their numbers.
+        ((int)AvatarSize.Small).ShouldBe(0);
+        ((int)AvatarSize.Medium).ShouldBe(1);
+        ((int)AvatarSize.Large).ShouldBe(2);
+        ((int)AvatarSize.XLarge).ShouldBe(3);
+        ((int)AvatarSize.LargePlus).ShouldBe(4);
+
+        var avatar = new Avatar { DisplayName = "Alan Turing", Size = AvatarSize.LargePlus };
+        var window = TestHelpers.Show(avatar);
+        try
+        {
+            avatar.Bounds.Width.ShouldBe(64);
+            avatar.Bounds.Height.ShouldBe(64);
+            avatar.Classes.ShouldContain(Avatar.LargePlusPseudoClass);
+            avatar.Classes.ShouldNotContain(Avatar.LargePseudoClass);
+            avatar.Classes.ShouldNotContain(Avatar.XLargePseudoClass);
+            // The initials take the type step between Large's TypeSM and XLarge's TypeXL.
+            avatar.FontSize.ShouldBe(ArcTokens.Get<double>(avatar, DesignTokens.ArcDesignTokenKind.TypeLG));
+            avatar.FontSize.ShouldBe(18);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTheory]
+    [InlineData(AvatarSize.Small, 28, 8, 1.5, 3, 0)]
+    [InlineData(AvatarSize.Medium, 36, 10, 2, 4, 0)]
+    [InlineData(AvatarSize.Large, 48, 12, 2, 6, 0)]
+    [InlineData(AvatarSize.LargePlus, 64, 13, 2, 7, 2)]
+    [InlineData(AvatarSize.XLarge, 88, 14, 2, 8, 4)]
+    public void The_Status_Dot_Follows_The_Size(AvatarSize size, double diameter, double dot, double ring, double bar, double inset)
+    {
+        var avatar = new Avatar { DisplayName = "Leah Fox", Size = size, Status = AvatarStatus.Busy };
+        var window = TestHelpers.Show(avatar);
+        try
+        {
+            AssertDot(avatar, diameter, dot, ring, bar, inset);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void The_Status_Dot_Follows_A_Size_Change()
+    {
+        var avatar = new Avatar { DisplayName = "Leah Fox", Size = AvatarSize.Small, Status = AvatarStatus.Busy };
+        var window = TestHelpers.Show(avatar);
+        try
+        {
+            AssertDot(avatar, 28, 8, 1.5, 3, 0);
+            avatar.Size = AvatarSize.LargePlus;
+            Dispatcher.UIThread.RunJobs();
+            AssertDot(avatar, 64, 13, 2, 7, 2);
+            avatar.Size = AvatarSize.Medium;
+            Dispatcher.UIThread.RunJobs();
+            AssertDot(avatar, 36, 10, 2, 4, 0);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    private static void AssertDot(Avatar avatar, double diameter, double dot, double ring, double bar, double inset)
+    {
+        avatar.Bounds.Width.ShouldBe(diameter);
+        var status = TestHelpers.Descendant<Avalonia.Controls.Border>(avatar, "PART_Status");
+        status.Bounds.Width.ShouldBe(dot);
+        status.Bounds.Height.ShouldBe(dot);
+        status.BorderThickness.ShouldBe(new Avalonia.Thickness(ring));
+        TestHelpers.Descendant<Avalonia.Controls.Border>(status, "PART_StatusBar").Bounds.Width.ShouldBe(bar);
+        // The dot sits in the lower-right corner, inset on the largest sizes so its center stays near the circle's edge.
+        var host = TestHelpers.Descendant<Avalonia.Controls.Control>(avatar, "PART_StatusHost");
+        host.Margin.ShouldBe(new Avalonia.Thickness(0, 0, inset, inset));
+        host.Bounds.Right.ShouldBe(diameter - inset, 0.01);
+        host.Bounds.Bottom.ShouldBe(diameter - inset, 0.01);
+    }
 }

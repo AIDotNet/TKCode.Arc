@@ -79,7 +79,7 @@ public sealed class InlineEditSaveFailedEventArgs : RoutedEventArgs
 [TemplatePart(DisplayPart, typeof(AvaloniaButton))]
 [TemplatePart(EditorPart, typeof(TextBox))]
 [PseudoClasses(EditingPseudoClass, InvalidPseudoClass, SavingPseudoClass, FlashPseudoClass, FlashOffPseudoClass, EmptyPseudoClass,
-    TextHoverPseudoClass, TextFocusPseudoClass, BodyPseudoClass, MultilinePseudoClass)]
+    TextHoverPseudoClass, TextFocusPseudoClass, BodyPseudoClass, MultilinePseudoClass, NoReservePseudoClass)]
 public class InlineEdit : TemplatedControl
 {
     /// <summary>Set while <see cref="Variant"/> is <see cref="InlineEditVariant.Body"/> (the theme selects on it, not on the property).</summary>
@@ -87,6 +87,9 @@ public class InlineEdit : TemplatedControl
 
     /// <summary>Set while <see cref="IsMultiline"/> is true (the theme selects on it, not on the property).</summary>
     public const string MultilinePseudoClass = ":multiline";
+
+    /// <summary>Set while <see cref="ReserveActionSpace"/> is false (the theme selects on it, not on the property).</summary>
+    public const string NoReservePseudoClass = ":no-reserve";
 
     public const string BoxPart = "PART_Box";
     public const string DisplayPart = "PART_Display";
@@ -126,6 +129,17 @@ public class InlineEdit : TemplatedControl
     /// <summary>Wraps onto several lines and grows in height; Enter still saves, Shift+Enter adds a line break.</summary>
     public static readonly StyledProperty<bool> IsMultilineProperty =
         AvaloniaProperty.Register<InlineEdit, bool>(nameof(IsMultiline));
+
+    /// <summary>
+    /// Keeps room after a single line for the save and cancel buttons (66 px; default true), so the box is the same width
+    /// at rest and while editing. False lets the box hug its text, so a tag or badge can follow the name: the rest state
+    /// then draws nothing past the frame (no pencil, saving spinner or result mark; the half-opacity text, the failed-save
+    /// message and the announcements remain), and while editing the buttons overlay what follows, with the control drawn
+    /// above its later siblings in the same panel. The reserve does not come back while editing, so neither the text nor
+    /// the content after it moves when the buttons appear. A multiline field fills its line and keeps its 38 px reserve.
+    /// </summary>
+    public static readonly StyledProperty<bool> ReserveActionSpaceProperty =
+        AvaloniaProperty.Register<InlineEdit, bool>(nameof(ReserveActionSpace), true);
 
     /// <summary>Title for names and headings (default), Body for descriptions.</summary>
     public static readonly StyledProperty<InlineEditVariant> VariantProperty =
@@ -190,6 +204,9 @@ public class InlineEdit : TemplatedControl
     public string Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
     public string PlaceholderText { get => GetValue(PlaceholderTextProperty); set => SetValue(PlaceholderTextProperty, value); }
     public bool IsMultiline { get => GetValue(IsMultilineProperty); set => SetValue(IsMultilineProperty, value); }
+
+    /// <inheritdoc cref="ReserveActionSpaceProperty"/>
+    public bool ReserveActionSpace { get => GetValue(ReserveActionSpaceProperty); set => SetValue(ReserveActionSpaceProperty, value); }
     public InlineEditVariant Variant { get => GetValue(VariantProperty); set => SetValue(VariantProperty, value); }
     public int HeadingLevel { get => GetValue(HeadingLevelProperty); set => SetValue(HeadingLevelProperty, value); }
     public Func<string, string?>? Validator { get => GetValue(ValidatorProperty); set => SetValue(ValidatorProperty, value); }
@@ -386,6 +403,11 @@ public class InlineEdit : TemplatedControl
         else if (change.Property == VariantProperty)
         {
             PseudoClasses.Set(BodyPseudoClass, Variant == InlineEditVariant.Body);
+        }
+        else if (change.Property == ReserveActionSpaceProperty)
+        {
+            PseudoClasses.Set(NoReservePseudoClass, !ReserveActionSpace);
+            UpdateSlot();
         }
     }
 
@@ -801,20 +823,29 @@ public class InlineEdit : TemplatedControl
 
     private string _slotKey = string.Empty;
 
+    private const string NoSlotKey = "none";
+
+    /// <summary>
+    /// Whether the slot shows the pencil and the save marks at rest. Without the reserve a single line has no room past its
+    /// frame, and a mark there would sit on the content that follows, so only the actions show, while editing.
+    /// </summary>
+    private bool ShowsRestingSlot => ReserveActionSpace || IsMultiline;
+
     private void UpdateSlot()
     {
         if (_slot is null)
         {
             return;
         }
-        var key = IsEditing ? "edit" : Phase.ToString();
-        if (key == _slotKey && _slot.Content is not null)
+        var key = IsEditing ? "edit" : ShowsRestingSlot ? Phase.ToString() : NoSlotKey;
+        if (key == _slotKey && (_slot.Content is not null || key == NoSlotKey))
         {
             return;
         }
         _slotKey = key;
         _slot.Content = key switch
         {
+            NoSlotKey => null,
             "edit" => CreateActions(),
             nameof(InlineEditPhase.Saving) => CreateSpinner(),
             nameof(InlineEditPhase.Saved) => CreateSavedCheck(),

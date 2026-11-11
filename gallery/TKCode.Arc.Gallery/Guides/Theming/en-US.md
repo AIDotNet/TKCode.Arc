@@ -215,6 +215,8 @@ XAML refers to them.
 | Shape | `RadiusControl` (18), `RadiusPanel` (26), `RadiusSurface` (34), `RadiusPill` | Fields and buttons, cards and panels, large surfaces, pills and badges. |
 | Size | `ControlSizeSM` (36), `ControlSizeMD` (44), `ControlSizeLG` (50); `GlyphSizeSM` (16), `GlyphSizeMD` (20), `GlyphSizeLG` (24); `IconStrokeWidth` | Control heights for the `Small`, `Medium` and `Large` sizes, and icon sizes. |
 | Spacing | `Space1` (4) to `Space24` (96) | A 4 px based spacing scale: 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80, 96. |
+| Width | `ContentMaxWidthSM` (640), `ContentMaxWidthMD` (760), `ContentMaxWidthLG` (880), `ContentMaxWidthXL` (1120) | Max widths of a page's content column: a reading column or a single form, a settings page, a document page with tables or two columns of fields, full-width page sections. Set them as `MaxWidth`, so a narrower window still uses its whole width. |
+| Media | `MediaSizeSM` (64), `MediaSizeMD` (128), `MediaSizeLG` (192), `MediaSizeXL` (256) | Sides of square media, in steps of 64: a thumbnail in a row, a preview on a card, a QR code or cover art, a large image preview. |
 | Type | `TypeXS` (12), `TypeSM` (14), `TypeBase` (16), `TypeLG` (18), `TypeXL` (22), `Type2XL` (28), `Type3XL` (36), `Type4XL` (52), `Type5XL` (72) | The type scale. |
 | Type style | `BodyFontFamily`, `DisplayFontFamily`, `MonoFontFamily`, `WeightRegular`, `WeightMedium`, `LeadingBody` (1.4), `LeadingDisplay` (1.1), `TrackingBody`, `TrackingDisplay` | Families, weights, line height and letter spacing for body and display text. |
 | Elevation | `ShadowResting`, `ShadowRaised`, `ShadowFloating` | Cards at rest, raised cards and menus, floating dialogs and popovers. Dark mode uses deeper shadows. |
@@ -241,6 +243,24 @@ XAML refers to them.
                    Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
     </StackPanel>
 </Border>
+```
+
+The width and media tokens size the layout. A settings page caps its column at `ContentMaxWidthMD` and keeps it on the
+left, so a narrower window still gets the whole width; a QR code takes `MediaSizeLG` on both sides:
+
+```xml
+<StackPanel MaxWidth="{arc:ArcDesignTokenResource ContentMaxWidthMD}"
+            HorizontalAlignment="Left"
+            Spacing="{arc:ArcDesignTokenResource Space4}">
+    <TextBlock Text="Connect a phone"
+               FontSize="{arc:ArcDesignTokenResource TypeXL}"
+               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+    <!-- The QR code image goes here. -->
+    <Border Width="{arc:ArcDesignTokenResource MediaSizeLG}"
+            Height="{arc:ArcDesignTokenResource MediaSizeLG}"
+            Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+            CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}" />
+</StackPanel>
 ```
 
 ### In code

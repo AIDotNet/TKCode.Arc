@@ -21,12 +21,37 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
   whole `Columns` × `Rows` grid. Both panels pick sizes from the child's index and a new `Seed` property, never from
   random values during layout: the same items, seed and grid always give the same result, and resizing never reshuffles
   it. The defaults (`Content` sizing, auto span off) keep today's layouts.
+- **`InlineEdit.ReserveActionSpace`** ([#110](https://github.com/AIDotNet/TKCode.Arc/issues/110)): `False` drops the
+  66 px a single line keeps after its text for the save and cancel buttons, so the box hugs its text and a tag or badge
+  can follow the name. At rest nothing is drawn past the frame (no pencil hint, saving spinner or result mark); while
+  editing the buttons overlay what follows and the control draws above its later siblings in the same panel. The
+  reserve does not come back while editing, so neither the text nor the tag jumps when the buttons appear. A multiline
+  field keeps its 38 px. The default (`True`) is unchanged.
+- **Content-width and media tokens** ([#110](https://github.com/AIDotNet/TKCode.Arc/issues/110)):
+  `ContentMaxWidthSM` / `MD` / `LG` / `XL` (640 / 760 / 880 / 1120) cap a page's content column (a reading column or
+  a single form, a settings page, a document page, full-width sections), and `MediaSizeSM` / `MD` / `LG` / `XL`
+  (64 / 128 / 192 / 256) size square media (a thumbnail in a row, a card preview, a QR code or cover art, a large image
+  preview). Use them as `{arc:ArcDesignTokenResource ContentMaxWidthMD}` and override them like any ArcDesign token.
+  They are appended to `ArcDesignTokenKind`, so the existing members keep their numbers.
+- **`AvatarSize.LargePlus`** ([#110](https://github.com/AIDotNet/TKCode.Arc/issues/110)): a 64 px avatar between
+  `Large` (48) and `XLarge` (88), with `TypeLG` initials and a 13 px status dot set 2 px in from the corner. It is
+  appended to the enum, so the existing members keep their values; `AvatarGroup` draws it as `Large`.
 
 ### Changed
 
 - **`TilePanel.IsAutoFill` also fills holes from the side and from below** ([#112](https://github.com/AIDotNet/TKCode.Arc/issues/112)):
   after tiles grow right and down, every hole still empty is offered to the tiles around it, so a neighbour on the
   right or below can grow over it too. Tiles still never move, overlap or shrink, and the span limits still hold.
+
+### Fixed
+
+- **Avatar status dot size** ([#110](https://github.com/AIDotNet/TKCode.Arc/issues/110)): the dot now follows the
+  avatar's size as documented (8 px with a 1.5 px ring at `Small`, 10 px at `Medium`, 12 px at `Large`, 14 px at
+  `XLarge`), and the Busy bar spans the dot at every size. Before, every avatar drew the 10 px medium dot: the old
+  template's local values hid the size styles.
+- **`InlineEdit` multiline reserve** ([#110](https://github.com/AIDotNet/TKCode.Arc/issues/110)): a multiline field
+  now keeps 38 px for its stacked save and cancel buttons, as documented, instead of 66 px, so its text wraps 28 px
+  later. The template's own padding had hidden the multiline style.
 
 ## 1.1.0-preview.4 - 2026-11-11
 

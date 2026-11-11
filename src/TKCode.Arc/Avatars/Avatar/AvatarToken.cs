@@ -27,6 +27,24 @@ internal sealed class AvatarToken : AbstractControlDesignToken
     /// <summary>Outer hairline around the status dot: 70% border.</summary>
     public BoxShadows StatusHalo { get; set; }
 
+    // Appended (AvatarTokenKind numbers tokens in declaration order).
+
+    /// <summary>LargePlus: a 64px circle, a 13px dot inset 2px so its center stays near the circle's edge.</summary>
+    public double DiameterLGPlus { get; set; }
+
+    public double StatusSizeLGPlus { get; set; }
+    public Thickness StatusMarginLGPlus { get; set; }
+
+    /// <summary>
+    /// The Busy bar at the other dot sizes: like <see cref="StatusBarWidth"/> in the medium dot, it spans the dot's inner
+    /// circle less 1px at each end.
+    /// </summary>
+    public double StatusBarWidthSM { get; set; }
+
+    public double StatusBarWidthLG { get; set; }
+    public double StatusBarWidthLGPlus { get; set; }
+    public double StatusBarWidthXL { get; set; }
+
     public override void CalculateTokenValues(bool isDarkMode)
     {
         base.CalculateTokenValues(isDarkMode);
@@ -46,5 +64,12 @@ internal sealed class AvatarToken : AbstractControlDesignToken
         StatusBarHeight = 1.5;
         var halo = Oklch.WithAlpha(ArcPalette.Neutrals(isDarkMode).Border, 0.7);
         StatusHalo = new BoxShadows(new BoxShadow { Spread = 1, Color = halo });
+        DiameterLGPlus = 64;
+        StatusSizeLGPlus = 13;
+        StatusMarginLGPlus = new Thickness(0, 0, 2, 2);
+        StatusBarWidthSM = 3;
+        StatusBarWidthLG = 6;
+        StatusBarWidthLGPlus = 7;
+        StatusBarWidthXL = 8;
     }
 }

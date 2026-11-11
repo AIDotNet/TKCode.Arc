@@ -241,12 +241,38 @@ internal sealed class ArcDesignToken : AbstractControlDesignToken
 
     #endregion
 
+    // Appended after the earlier groups: the generated ArcDesignTokenKind numbers tokens in declaration order, and code
+    // compiled against an earlier version keeps the numbers it was built with.
+    #region Content widths and media
+
+    /// <summary>
+    /// Max widths of a page's content column, set as <c>MaxWidth</c> so a narrower window still uses its whole width:
+    /// SM 640 (a reading column or a single form), MD 760 (a settings page), LG 880 (a document page with tables or two
+    /// columns of fields), XL 1120 (full-width page sections, the width of the Blocks).
+    /// </summary>
+    public double ContentMaxWidthSM { get; set; }
+    public double ContentMaxWidthMD { get; set; }
+    public double ContentMaxWidthLG { get; set; }
+    public double ContentMaxWidthXL { get; set; }
+
+    /// <summary>
+    /// Sides of square media, in steps of 64: SM 64 (a thumbnail in a row), MD 128 (a preview on a card), LG 192 (a QR
+    /// code or cover art), XL 256 (a large image preview).
+    /// </summary>
+    public double MediaSizeSM { get; set; }
+    public double MediaSizeMD { get; set; }
+    public double MediaSizeLG { get; set; }
+    public double MediaSizeXL { get; set; }
+
+    #endregion
+
     public override void CalculateTokenValues(bool isDarkMode)
     {
         base.CalculateTokenValues(isDarkMode);
         ApplyNeutralRamp();
         ApplySemantic(isDarkMode);
         ApplyGeometry();
+        ApplyLayout();
         ApplyTypography();
         ApplyMotion();
         BlurSubtle = 2;
@@ -424,6 +450,18 @@ internal sealed class ArcDesignToken : AbstractControlDesignToken
         Space16 = 64;
         Space20 = 80;
         Space24 = 96;
+    }
+
+    private void ApplyLayout()
+    {
+        ContentMaxWidthSM = 640;
+        ContentMaxWidthMD = 760;
+        ContentMaxWidthLG = 880;
+        ContentMaxWidthXL = 1120;
+        MediaSizeSM = 64;
+        MediaSizeMD = 128;
+        MediaSizeLG = 192;
+        MediaSizeXL = 256;
     }
 
     private void ApplyTypography()

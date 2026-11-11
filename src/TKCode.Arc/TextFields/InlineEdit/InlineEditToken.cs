@@ -9,7 +9,10 @@ internal sealed class InlineEditToken : AbstractControlDesignToken
     /// <summary>The box sits a border and padding outside the text, so the text lines up with the content around it.</summary>
     public Thickness RootMargin { get; set; }
 
-    /// <summary>Room reserved for the actions in every state (66px; 38px multiline), so the text never rewraps.</summary>
+    /// <summary>
+    /// Room reserved for the actions in every state (66px; 38px multiline), so the text never rewraps. A single line with
+    /// <c>ReserveActionSpace="False"</c> has none; its actions overlay what follows.
+    /// </summary>
     public Thickness LinePadding { get; set; }
     public Thickness MultilineLinePadding { get; set; }
 

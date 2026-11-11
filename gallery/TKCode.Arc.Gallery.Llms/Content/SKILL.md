@@ -114,6 +114,7 @@ in XAML, `ArcTokens.Bind(control, property, ArcDesignTokenKind.Name)` in code. T
 | Status | `Success`, `Warning`, `Danger` and their `…Subtle` tints |
 | Shape | `RadiusControl` (fields, buttons), `RadiusPanel` (cards), `RadiusSurface` (large surfaces), `RadiusPill` |
 | Spacing | `Space1` (4) to `Space24` (96), on a 4 px scale |
+| Sizes | A page column's `MaxWidth`: `ContentMaxWidthSM` (640), `ContentMaxWidthMD` (760, settings pages), `ContentMaxWidthLG` (880), `ContentMaxWidthXL` (1120). Square media: `MediaSizeSM` (64, thumbnails) to `MediaSizeXL` (256, image previews); a QR code takes `MediaSizeLG` (192) |
 | Type | `TypeXS` (12), `TypeSM` (14), `TypeBase` (16), `TypeLG` (18) up to `Type5XL` (72) |
 | Elevation | `ShadowResting`, `ShadowRaised`, `ShadowFloating` |
 
