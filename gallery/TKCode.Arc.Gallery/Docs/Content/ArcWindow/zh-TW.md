@@ -111,6 +111,16 @@ public partial class MainWindow : ArcWindow
 
 把 `IsTitleBarVisible` 設為 `False`（或把 `TitleBar` 設為 null），內容會延伸到視窗頂端；視窗仍延伸到裝飾區域，並可從邊緣調整大小。此時需要由你的內容來移動視窗，例如呼叫 `BeginMoveDrag`。同時把 `ExtendClientAreaToDecorationsHint` 設為 `False` 可以恢復系統標題列。
 
+### 視窗邊框
+
+Windows 11 由 DWM 在視窗的左、右、下邊緣畫 1px 邊框，但用戶區延伸到標題列後不再畫頂邊。`ArcWindow` 在 Windows 上、視窗處於一般狀態時（最大化、全螢幕或 `WindowDecorations="None"` 時不畫）設定虛擬類別 `:top-edge`，自行畫出頂邊（顏色 `Border`），四邊保持一致。不需要這條線時用樣式覆寫：
+
+```xml
+<Style Selector="arc|ArcWindow:top-edge /template/ Border#PART_Root">
+    <Setter Property="BorderThickness" Value="0" />
+</Style>
+```
+
 ### 預覽
 
 只有作為 `ArcWindow` 的 `TitleBar` 時，`TitleBar` 才會控制視窗。放在其他位置的標題列（例如本頁的預覽）外觀相同，但不會移動、最大化或關閉任何視窗。

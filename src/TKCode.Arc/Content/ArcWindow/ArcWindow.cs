@@ -29,6 +29,13 @@ public class ArcWindow : AvaloniaWindow
     public const string TitleBarPresenterPart = "PART_TitleBarPresenter";
 
     /// <summary>
+    /// Set on Windows while the window is in its normal state with system decorations: DWM draws the 1 px frame on the
+    /// left, right and bottom edges but not on the top edge of a window whose client area extends into the title bar, so
+    /// the theme draws that edge (issue #102).
+    /// </summary>
+    public const string TopEdgePseudoClass = ":top-edge";
+
+    /// <summary>
     /// The title bar at the top of the window. A new <see cref="Arc.TitleBar"/> by default; set your own to fill its left,
     /// center and right content, or null for none.
     /// </summary>
@@ -83,6 +90,7 @@ public class ArcWindow : AvaloniaWindow
     {
         base.OnApplyTemplate(e);
         _root = e.NameScope.Find<Border>(RootPart);
+        SyncTopEdge();
         SyncOffScreenMargin();
     }
 
@@ -97,13 +105,32 @@ public class ArcWindow : AvaloniaWindow
         {
             SyncTitleBarHeightHint();
         }
+        else if (change.Property == ExtendClientAreaToDecorationsHintProperty || change.Property == WindowDecorationsProperty)
+        {
+            SyncTopEdge();
+        }
         else if (change.Property == WindowStateProperty || change.Property == OffScreenMarginProperty)
         {
+            SyncTopEdge();
             SyncOffScreenMargin();
             // The platform reports the off-screen margin of a maximized window after the state change.
             Dispatcher.UIThread.Post(SyncOffScreenMargin);
         }
     }
+
+    private void SyncTopEdge() =>
+        PseudoClasses.Set(TopEdgePseudoClass,
+            ShowsTopEdge(OperatingSystem.IsWindows(), ExtendClientAreaToDecorationsHint, WindowDecorations, WindowState));
+
+    /// <summary>
+    /// Whether the theme draws the top edge: only on Windows, where the extended client area covers DWM's top frame line,
+    /// and only in the normal state with system decorations (a maximized or full-screen window has no visible frame, and
+    /// without decorations there is no frame on the other edges either).
+    /// </summary>
+    internal static bool ShowsTopEdge(bool isWindows, bool extendsIntoDecorations, WindowDecorations decorations,
+        WindowState state) =>
+        isWindows && extendsIntoDecorations && decorations != Avalonia.Controls.WindowDecorations.None
+        && state == WindowState.Normal;
 
     /// <summary>Windows keeps the frame of a maximized window off screen; the root steps in by that much.</summary>
     private void SyncOffScreenMargin()

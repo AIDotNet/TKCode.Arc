@@ -615,4 +615,40 @@ public class ArcWindowTests
             window.Close();
         }
     }
+
+    [Theory]
+    [InlineData(true, true, WindowDecorations.Full, WindowState.Normal, true)]
+    [InlineData(true, true, WindowDecorations.BorderOnly, WindowState.Normal, true)]
+    [InlineData(false, true, WindowDecorations.Full, WindowState.Normal, false)]
+    [InlineData(true, false, WindowDecorations.Full, WindowState.Normal, false)]
+    [InlineData(true, true, WindowDecorations.None, WindowState.Normal, false)]
+    [InlineData(true, true, WindowDecorations.Full, WindowState.Maximized, false)]
+    [InlineData(true, true, WindowDecorations.Full, WindowState.FullScreen, false)]
+    public void Top_Edge_Only_Where_Dwm_Leaves_It_Out(bool isWindows, bool extended, WindowDecorations decorations,
+        WindowState state, bool expected) =>
+        ArcWindow.ShowsTopEdge(isWindows, extended, decorations, state).ShouldBe(expected);
+
+    [AvaloniaFact]
+    public void Top_Edge_Draws_A_Border_Line_On_The_Root()
+    {
+        var window = Open();
+        try
+        {
+            var root = Part<Border>(window, ArcWindow.RootPart);
+            window.Classes.Contains(ArcWindow.TopEdgePseudoClass).ShouldBe(OperatingSystem.IsWindows());
+
+            ((IPseudoClasses)window.Classes).Set(ArcWindow.TopEdgePseudoClass, true);
+            Dispatcher.UIThread.RunJobs();
+            root.BorderThickness.ShouldBe(new Thickness(0, 1, 0, 0));
+            root.BorderBrush.ShouldNotBeNull();
+
+            ((IPseudoClasses)window.Classes).Set(ArcWindow.TopEdgePseudoClass, false);
+            Dispatcher.UIThread.RunJobs();
+            root.BorderThickness.ShouldBe(default);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

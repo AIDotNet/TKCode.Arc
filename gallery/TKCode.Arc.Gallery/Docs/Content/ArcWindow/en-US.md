@@ -123,6 +123,16 @@ Set `IsTitleBarVisible` to `False` (or `TitleBar` to null) and the content reach
 extends into the decorations and resizes from its edges. Your content then has to move the window, for example with
 `BeginMoveDrag`. Set `ExtendClientAreaToDecorationsHint` to `False` as well to get the system's title bar back.
 
+### Window border
+
+On Windows 11, DWM draws a 1 px frame on the left, right and bottom edges, but not on the top edge once the client area extends into the title bar. On Windows, while the window is in its normal state (not maximized, full screen or `WindowDecorations="None"`), `ArcWindow` sets the `:top-edge` pseudo-class and draws that top edge itself (color `Border`), so all four edges match. To drop the line, override it with a style:
+
+```xml
+<Style Selector="arc|ArcWindow:top-edge /template/ Border#PART_Root">
+    <Setter Property="BorderThickness" Value="0" />
+</Style>
+```
+
 ### Previews
 
 A `TitleBar` drives a window only when it is that `ArcWindow`'s `TitleBar`. One placed anywhere else, like the previews
