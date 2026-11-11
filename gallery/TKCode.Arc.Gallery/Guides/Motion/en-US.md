@@ -86,6 +86,11 @@ nothing is scheduled while nothing moves. Continuous effects (skeleton pulses, s
 when their control is scrolled out of view, hidden or detached. Animated blurs are quantized to 0.25 px steps and
 reused, so a running blur does not allocate per frame.
 
+Loops step on every frame the display shows. Where each step is costly and the motion is slow, such as a small window
+that is always on screen, set `arc:ArcMotion.MaxFrameRate` on the window or a container: every `LiveLoop` under it
+then steps at most that many times a second, each step with the time since the last one, so the motion keeps its
+speed. The default, 0, steps on every frame; springs and theme transitions are not affected.
+
 ## Motion in your own controls
 
 The rules the library follows apply to controls you write as well.

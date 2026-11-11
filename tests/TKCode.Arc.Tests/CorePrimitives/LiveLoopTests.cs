@@ -76,6 +76,57 @@ public class LiveLoopTests
     }
 
     [AvaloniaFact]
+    public void Steps_At_Most_MaxFrameRate_Times_A_Second_And_Keeps_Its_Speed()
+    {
+        var clock = new ManualFrameClock();
+        using var _ = clock.Install();
+        var probe = new Border { Width = 40, Height = 20 };
+        var steps = 0;
+        var elapsed = 0.0;
+        var loop = new LiveLoop(probe, dt =>
+        {
+            steps++;
+            elapsed += dt;
+            return true;
+        });
+        loop.Start();
+        var window = TestHelpers.Show(probe, ArcMotionLevel.Full);
+        try
+        {
+            // Default: every frame of a 60 Hz display.
+            clock.Advance(TimeSpan.FromSeconds(1));
+            steps.ShouldBeInRange(59, 61);
+
+            // Inherited from the window: 30 a second on a 60 Hz display is every second frame, with both frames' time.
+            ArcMotion.SetMaxFrameRate(window, 30);
+            steps = 0;
+            elapsed = 0;
+            clock.Advance(TimeSpan.FromSeconds(1));
+            steps.ShouldBeInRange(29, 31);
+            elapsed.ShouldBe(1, 0.04);
+
+            // 15 a second on a 120 Hz display.
+            ArcMotion.SetMaxFrameRate(window, 15);
+            steps = 0;
+            elapsed = 0;
+            clock.Advance(TimeSpan.FromSeconds(1), TimeSpan.FromMilliseconds(1000.0 / 120));
+            steps.ShouldBeInRange(14, 16);
+            elapsed.ShouldBe(1, 0.07);
+
+            // Back to every frame.
+            ArcMotion.SetMaxFrameRate(window, 0);
+            steps = 0;
+            clock.Advance(TimeSpan.FromSeconds(1));
+            steps.ShouldBeInRange(59, 61);
+        }
+        finally
+        {
+            loop.Dispose();
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void Follows_The_Motion_Level_With_An_Option_For_Reduced()
     {
         var probe = new Border { Width = 40, Height = 20 };
