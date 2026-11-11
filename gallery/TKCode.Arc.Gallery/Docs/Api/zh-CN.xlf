@@ -8624,6 +8624,10 @@
         <source>Title of the empty state when nothing matches.</source>
         <target>没有匹配项时空状态的标题。</target>
       </trans-unit>
+      <trans-unit id="CommandPalette.IsFilteringEnabled">
+        <source>False lists every item of `ItemsSource` as given, for an app that filters and ranks the results itself (fuzzy matching, recent first): it updates `ItemsSource` as `Query` changes, and the palette no longer drops items that do not contain the query. Items still group under their `Group`, groups in the order they first appear; leave `Group` empty for one flat list in the app's order. Defaults to true.</source>
+        <target>为 false 时按原样列出 `ItemsSource` 的每一项，适合自己筛选并排序结果的应用（模糊匹配、最近使用优先）：应用在 `Query` 变化时更新 `ItemsSource`，面板不再去掉不包含查询文本的项。各项仍按 `Group` 分组，分组按第一次出现的顺序排列；不设置 `Group` 即可按应用的顺序显示为一个平铺列表。默认为 true。</target>
+      </trans-unit>
       <trans-unit id="CommandPalette.IsShortcutEnabled">
         <source>Cmd/Ctrl+K anywhere in the window focuses the search field (handled before the window's own shortcuts).</source>
         <target>窗口内任意位置按 Cmd/Ctrl+K 均可聚焦搜索框（优先于窗口自身的快捷键处理）。</target>
@@ -8668,6 +8672,10 @@
         <source>The command palette as a popup: declare it once and it opens a `CommandPalette` above the page on Cmd+K (Ctrl+K elsewhere) or from a button, and closes it with a key. It renders nothing in place; while `IsOpen` is true it shows the palette near the top centre of the window over a dimmed scrim. Keys: the open gesture (`OpenGesture`) toggles it from anywhere in the window; ↓ ↑ Home End move the highlight, Enter runs the highlighted command (or the top match after typing), Escape clears the query and, in an empty field, closes. A press on the scrim, a click on the "Esc" key cap and choosing a command also close it (`CloseOnOutsidePress`, `CloseOnSelect`); focus returns to what had it before. The palette is built the first time the dialog opens and reused after that; while the dialog is closed it only listens for the open gesture. It is mounted by Core `ModalPresence` (scrim fade, focus trap, stacking with other modals) and rises 6px on the smooth spring (reduced motion: fade only, Off: instant).</source>
         <target>以弹出层呈现的命令面板：只需声明一次，它就会在按下 Cmd+K（其他平台为 Ctrl+K）或点击按钮时，在页面上方打开一个 `CommandPalette`，并可用按键关闭。它在原位不渲染任何内容；`IsOpen` 为 true 时，它会在窗口顶部居中附近、淡淡的遮罩之上显示面板。按键：打开手势（`OpenGesture`）可在窗口中任意位置切换它；↓ ↑ Home End 移动高亮，Enter 执行高亮的命令（输入后则执行排在最前的匹配项），Escape 清空查询，搜索框为空时则关闭。点击遮罩、点击 “Esc” 键帽以及选择命令同样会关闭它（`CloseOnOutsidePress`、`CloseOnSelect`）；焦点会回到此前拥有焦点的元素。面板在对话框第一次打开时创建并复用；对话框关闭期间只处理打开手势。它由 Core 的 `ModalPresence` 挂载（遮罩淡入、焦点陷阱、与其他模态层堆叠），并沿平滑弹簧上移 6px（Reduced：仅淡入淡出；Off：立即显示）。</target>
       </trans-unit>
+      <trans-unit id="CommandPaletteDialog.ActiveItem">
+        <source>The highlighted command (keyboard or pointer), or null; null while the dialog has not been opened.</source>
+        <target>当前高亮的命令（键盘或指针），没有时为 null；对话框还没打开过时为 null。</target>
+      </trans-unit>
       <trans-unit id="CommandPaletteDialog.BackdropBlur">
         <source>Backdrop blur radius in px applied to the page while the scrim is shown (default 0: none; Arc's dialog uses 7). Off under the ReduceTransparency token.</source>
         <target>遮罩显示期间应用于页面的背景模糊半径，单位 px（默认 0：无；Arc 的对话框使用 7）。在 ReduceTransparency 下关闭。</target>
@@ -8711,6 +8719,10 @@
       <trans-unit id="CommandPaletteDialog.EmptyTitle">
         <source>Title of the empty state when nothing matches.</source>
         <target>没有匹配项时空状态的标题。</target>
+      </trans-unit>
+      <trans-unit id="CommandPaletteDialog.IsFilteringEnabled">
+        <source>False lists every item of `ItemsSource` as given, for an app that filters and ranks the results itself (fuzzy matching, recent first): it updates `ItemsSource` as `Query` changes, and the palette no longer drops items that do not contain the query. Items still group under their `Group`, groups in the order they first appear; leave `Group` empty for one flat list in the app's order. Defaults to true.</source>
+        <target>为 false 时按原样列出 `ItemsSource` 的每一项，适合自己筛选并排序结果的应用（模糊匹配、最近使用优先）：应用在 `Query` 变化时更新 `ItemsSource`，面板不再去掉不包含查询文本的项。各项仍按 `Group` 分组，分组按第一次出现的顺序排列；不设置 `Group` 即可按应用的顺序显示为一个平铺列表。默认为 true。</target>
       </trans-unit>
       <trans-unit id="CommandPaletteDialog.IsModal">
         <source>Modal (default): a scrim over the page, a focus trap, and a press on the scrim closes. When false the page stays interactive and focus is free, and a press anywhere outside the palette closes it.</source>
@@ -8759,6 +8771,10 @@
       <trans-unit id="CommandPaletteDialog.PlaceholderText">
         <source>Hint in the empty search field.</source>
         <target>空搜索框中的提示文字。</target>
+      </trans-unit>
+      <trans-unit id="CommandPaletteDialog.Query">
+        <source>The text in the search field (two-way; readable and bindable before the dialog first opens). A fresh open starts with an empty query; set it in `Opened` to open with a search already typed.</source>
+        <target>搜索框中的文本（双向；对话框第一次打开前即可读取和绑定）。每次重新打开时查询为空；要打开时就带上搜索词，请在 `Opened` 中设置。</target>
       </trans-unit>
       <trans-unit id="CommandPaletteDialog.ResultsLabel">
         <source>Accessible name of the result list.</source>
@@ -11479,6 +11495,10 @@
       <trans-unit id="Dialog.Result">
         <source>Set on a button inside a dialog, drawer or bottom sheet: clicking it closes that overlay with this value as its `CloseResult` (and the result of `ShowAsync`).</source>
         <target>设置在对话框、抽屉或底部面板内的按钮上：点击后将以此值作为其 `CloseResult` 关闭该覆盖层（同时也是 `ShowAsync` 的结果）。</target>
+      </trans-unit>
+      <trans-unit id="Dialog.ShowHeader">
+        <source>False hides the header row: the title, the description, the close button and the line under them, for a panel that brings its own heading (a branded sign-in, for example). Keep `Title` set: it stays the accessible name of the panel. Without the close button the dialog closes with Escape, a click outside or its own buttons. Defaults to true.</source>
+        <target>为 false 时隐藏标题行：标题、说明、关闭按钮和下方的分隔线，适合自带标题的面板（例如品牌化的登录弹窗）。仍要设置 `Title`：它仍是面板的无障碍名称。没有关闭按钮时，对话框通过 Esc、点击外部或自己的按钮关闭。默认为 true。</target>
       </trans-unit>
       <trans-unit id="Dialog.Size">
         <source>Panel width: Small 360, Medium 440 (Arc), Large 560 — always within the viewport minus 32px.</source>
@@ -21317,8 +21337,8 @@
         <target>按钮的显著程度：朴素、浅色、实心或悬浮操作按钮。</target>
       </trans-unit>
       <trans-unit id="MobileListGroup">
-        <source>A card of `ListItem` rows with an optional `Header` above it and `Footer` under it, the way settings screens group their rows. Put it in a scrolling `Page`.</source>
-        <target>一张由 `ListItem` 行组成的卡片，上方可有 `Header`，下方可有 `Footer`，就像设置页给行分组的方式。把它放进可滚动的 `Page`。</target>
+        <source>A card of `ListItem` rows with an optional `Header` above it and `Footer` under it, the way settings screens group their rows. Put it in a scrolling `Page`. Each data item becomes a `ListItem` row. When the item template's root is itself a `ListItem`, that row is the container (it is not wrapped in a second row), so its `Title`, `Subtitle`, `Command` and so on can be bound in the template. A template that returns plain content is shown inside a row; style that row with a `ListItem` selector in `ListGroup.Styles`.</source>
+        <target>一张由 `ListItem` 行组成的卡片，上方可有 `Header`，下方可有 `Footer`，就像设置页给行分组的方式。把它放进可滚动的 `Page`。每个数据项都成为一行 `ListItem`。如果项模板的根本身就是 `ListItem`，这一行就直接作为容器（不会再套一层），因此可以在模板中绑定它的 `Title`、`Subtitle`、`Command` 等属性。模板返回普通内容时，内容显示在一行之中；请在 `ListGroup.Styles` 中用 `ListItem` 选择器设置这一行的样式。</target>
       </trans-unit>
       <trans-unit id="MobileListGroup.Footer">
         <source>A note under the card, for example what the settings in it do.</source>
@@ -23968,6 +23988,10 @@
         <source>True while the header is folded into the compact bar (the body scrolled past 16px, until it is back within 4px).</source>
         <target>页头折叠为紧凑栏期间为 true（正文滚动超过 16px，直到回到 4px 以内为止）。</target>
       </trans-unit>
+      <trans-unit id="PageHeader.IsHeaderOnly">
+        <source>True shows only the header (breadcrumbs, title, status, description, meta and actions) with no tabs, no rule under it and no scrolling body, for a title and action bar on top of a page that lays out its own content. The header never condenses in this mode. Defaults to false.</source>
+        <target>为 true 时只显示页头（面包屑、标题、状态、说明、元信息和操作），没有标签页、下方的分隔线和滚动区，用作页面顶部的标题和操作栏，页面内容自行布局。此模式下页头不会收拢。默认为 false。</target>
+      </trans-unit>
       <trans-unit id="PageHeader.Meta">
         <source>Meta row under the description (members, owner, dates): any content, drawn in the extra-small muted type.</source>
         <target>描述下方的元信息行（成员、所有者、日期）：可放任意内容，以超小号的弱化字体绘制。</target>
@@ -23979,6 +24003,10 @@
       <trans-unit id="PageHeader.PrimaryAction">
         <source>The main action: a small primary button at the end of the header row (icon only below 460px).</source>
         <target>主要操作：位于页头行末尾的小型主要按钮（低于 460px 时仅显示图标）。</target>
+      </trans-unit>
+      <trans-unit id="PageHeader.Size">
+        <source>Header density. `Small` is a compact header for settings pages and side panes: a smaller title (TypeXL instead of Type3XL) and tighter space around it. Medium and Large are the full Arc header (the default).</source>
+        <target>页头密度。`Small` 是用于设置页和侧栏的紧凑页头：标题更小（TypeXL 而非 Type3XL），周围留白更紧凑。Medium 和 Large 是完整的 Arc 页头（默认）。</target>
       </trans-unit>
       <trans-unit id="PageHeader.Status">
         <source>Status shown as a badge with a dot beside the title and in the compact bar; null hides it.</source>
@@ -24027,6 +24055,10 @@
       <trans-unit id="PageHeaderAction.IsLoading">
         <source>Shows the button spinner and ignores clicks while true; the menu row is disabled meanwhile.</source>
         <target>为 true 时显示按钮加载指示器并忽略点击；同时菜单行被禁用。</target>
+      </trans-unit>
+      <trans-unit id="PageHeaderAction.IsVisible">
+        <source>False hides the action: no button, no menu row, and it takes no room when the header decides whether the secondary actions fold. Use it for actions that do not apply now (use `IsEnabled` to show them dimmed). Defaults to true.</source>
+        <target>为 false 时隐藏操作：没有按钮、没有菜单行，页头判断次要操作是否收拢时也不计算它。用于当前不适用的操作（要显示为变淡，请用 `IsEnabled`）。默认为 true。</target>
       </trans-unit>
       <trans-unit id="PageHeaderAction.Label">
         <source>Button text, and the accessible name of the button and its menu row.</source>

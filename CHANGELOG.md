@@ -10,6 +10,20 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 
 ## Unreleased
 
+### Added
+
+- **`PageHeader` for settings pages and side panes** ([#108](https://github.com/AIDotNet/TKCode.Arc/issues/108),
+  `TKCode.Arc.Blocks`): `IsHeaderOnly="True"` shows only the header, with no tabs, rule or scrolling body, as a title
+  and action bar on top of a page; `Size="Small"` is a compact header (a `TypeXL` title and tighter space around it);
+  `PageHeaderAction.IsVisible="False"` hides an action's button and menu row instead of dimming them.
+- **`Dialog.ShowHeader`** ([#108](https://github.com/AIDotNet/TKCode.Arc/issues/108)): `False` hides the title row
+  (title, description, close button and rule) for a dialog that brings its own heading. `Title` stays the accessible
+  name.
+- **`CommandPalette` with results from the app** ([#108](https://github.com/AIDotNet/TKCode.Arc/issues/108),
+  `TKCode.Arc.Blocks`): `IsFilteringEnabled="False"` on the palette or the dialog lists `ItemsSource` as given, for
+  apps that filter and rank results themselves. `CommandPaletteDialog` now has `Query` (two-way) and `ActiveItem`,
+  readable before the dialog first opens. A query set from code leaves the caret at its end.
+
 ### Fixed
 
 - **`ArcWindow` top edge on Windows** ([#102](https://github.com/AIDotNet/TKCode.Arc/issues/102)): DWM draws no
