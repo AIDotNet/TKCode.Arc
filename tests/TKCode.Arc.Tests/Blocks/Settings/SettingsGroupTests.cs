@@ -86,6 +86,34 @@ public class SettingsGroupTests
     }
 
     [AvaloniaFact]
+    public void Rows_Generated_From_ItemsSource_Have_No_Hairline_Above_The_First()
+    {
+        // Issue #106: a templated row was built after the panel picked the first line, so it kept its hairline.
+        var group = new SettingsGroup
+        {
+            Header = "Notifications",
+            Width = 640,
+            ItemsSource = new[] { "Mentions", "Digest", "Replies" },
+            ItemTemplate = new Avalonia.Controls.Templates.FuncDataTemplate<string>((name, _) => new SettingsRow { Header = name })
+        };
+        var window = TestHelpers.Show(group);
+        try
+        {
+            var rows = group.GetRealizedContainers()
+                .Select(container => container as SettingsRow ?? (container as ContentPresenter)?.Child as SettingsRow)
+                .ToList();
+            rows.Count.ShouldBe(3);
+            TestHelpers.Descendant<Border>(rows[0]!, "PART_Divider").IsVisible.ShouldBeFalse();
+            TestHelpers.Descendant<Border>(rows[1]!, "PART_Divider").IsVisible.ShouldBeTrue();
+            TestHelpers.Descendant<Border>(rows[2]!, "PART_Divider").IsVisible.ShouldBeTrue();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void The_Control_Takes_The_Header_And_Description_Unless_It_Has_Its_Own()
     {
         var group = Group(out var first, out var second, out var toggle);
