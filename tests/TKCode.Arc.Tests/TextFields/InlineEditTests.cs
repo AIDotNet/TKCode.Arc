@@ -1,3 +1,4 @@
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
@@ -177,5 +178,62 @@ public class InlineEditTests
         {
             window.Close();
         }
+    }
+
+    [AvaloniaFact]
+    public void Labels_Localize_Every_Spoken_Text()
+    {
+        // Issue #110: the announcements and button names were hard-coded English.
+        var edit = new InlineEdit
+        {
+            Label = "项目名称",
+            Value = "Atlas",
+            Labels = new InlineEditLabels
+            {
+                Saving = label => $"正在保存{label}",
+                Saved = label => $"{label}已保存",
+                SaveButton = label => $"保存{label}",
+                CancelButton = "取消编辑",
+                EditHelp = "激活即可编辑。",
+                KeysHelp = "Enter 保存，Esc 取消。"
+            }
+        };
+        var gate = new TaskCompletionSource();
+        edit.SaveHandler = _ => gate.Task;
+        var window = TestHelpers.Show(edit);
+        try
+        {
+            var display = edit.GetVisualDescendants().OfType<InlineEditDisplay>().First();
+            AutomationProperties.GetHelpText(display).ShouldBe("激活即可编辑。");
+            var status = edit.GetVisualDescendants().OfType<TextBlock>().First(t => t.Name == "PART_Status");
+
+            edit.BeginEdit();
+            Dispatcher.UIThread.RunJobs();
+            AutomationProperties.GetHelpText(Editor(edit)).ShouldBe("Enter 保存，Esc 取消。");
+            var names = edit.GetVisualDescendants().OfType<InlineEditActionButton>().Select(AutomationProperties.GetName).ToList();
+            names.ShouldBe(["保存项目名称", "取消编辑"]);
+
+            window.KeyTextInput("2");
+            window.KeyPressQwerty(PhysicalKey.Enter, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+            status.Text.ShouldBe("正在保存项目名称");
+            gate.SetResult();
+            TestHelpers.PumpUntil(() => edit.Phase == InlineEditPhase.Saved).ShouldBeTrue();
+            status.Text.ShouldBe("项目名称已保存");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void The_Default_Labels_Keep_The_English_Text()
+    {
+        var labels = new InlineEditLabels();
+        labels.Saving("Project name").ShouldBe("Saving project name");
+        labels.Saved("Project name").ShouldBe("Project name saved");
+        labels.SaveButton("Project name").ShouldBe("Save project name");
+        labels.CancelButton.ShouldBe("Cancel editing");
     }
 }

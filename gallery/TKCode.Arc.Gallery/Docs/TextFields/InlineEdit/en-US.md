@@ -366,6 +366,9 @@ value is parsed before it reaches the view model.
 - Validation messages and save errors are in a polite message row, and saving progress and the result are announced
   through a polite status region ("Saving project name", "Project name saved").
 - The save and cancel buttons are named "Save project name" and "Cancel editing"; the retry link reads "Try again".
+- To localize everything a screen reader hears, set `Labels` to an `InlineEditLabels` with your text: the save
+  announcements, the button names and the help text. Its functions get `Label` as written, so a language without upper
+  and lower case reads correctly. Set `FailedMessageFormat` and `RetryText` for the visible failure message.
 - Enter, the save button and Escape return focus to the resting text, so a keyboard user continues from the same place.
   A blur (Tab or a click elsewhere) leaves focus where the person moved it.
 
