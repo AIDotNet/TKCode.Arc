@@ -29,6 +29,15 @@ public sealed class ArcMotion
     public static readonly AttachedProperty<bool> TracksProperty =
         AvaloniaProperty.RegisterAttached<ArcMotion, Control, bool>("Tracks");
 
+    /// <summary>
+    /// The most times a second a <see cref="LiveLoop"/> under this element steps (inherited). 0, the default, steps on
+    /// every frame the display shows. Every step of a decorative loop (a mascot floating, a shimmer) repaints its
+    /// window, so lower it where that is costly and the motion is slow: a small always-on window, a background
+    /// accessory. The loops then step less often, each with the longer elapsed time, so they keep their speed.
+    /// </summary>
+    public static readonly AttachedProperty<double> MaxFrameRateProperty =
+        AvaloniaProperty.RegisterAttached<ArcMotion, AvaloniaObject, double>("MaxFrameRate", 0, inherits: true);
+
     /// <summary>The theme's MotionMode on a tracking control (internal so <see cref="LiveLoop"/> can follow it).</summary>
     internal static readonly AttachedProperty<ArcMotionLevel> TokenLevelProperty =
         AvaloniaProperty.RegisterAttached<ArcMotion, Control, ArcMotionLevel>("TokenLevel", ArcMotionLevel.Full);
@@ -69,6 +78,12 @@ public sealed class ArcMotion
     public static bool GetTracks(Control element) => element.GetValue(TracksProperty);
 
     public static void SetTracks(Control element, bool value) => element.SetValue(TracksProperty, value);
+
+    /// <summary>Gets <see cref="MaxFrameRateProperty"/>: the most steps a second for live loops (0: every frame).</summary>
+    public static double GetMaxFrameRate(AvaloniaObject element) => element.GetValue(MaxFrameRateProperty);
+
+    /// <summary>Sets <see cref="MaxFrameRateProperty"/>: the most steps a second for live loops (0: every frame).</summary>
+    public static void SetMaxFrameRate(AvaloniaObject element, double value) => element.SetValue(MaxFrameRateProperty, value);
 
     /// <summary>Effective level for <paramref name="visual"/>: min(inherited level, theme MotionMode).</summary>
     public static ArcMotionLevel GetEffectiveLevel(AvaloniaObject visual)

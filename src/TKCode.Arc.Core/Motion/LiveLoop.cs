@@ -11,7 +11,8 @@ namespace TKCode.Arc.Motion;
 /// visible, inside the viewport (when <see cref="TracksViewport"/>) and at a motion level of at least
 /// <see cref="MinimumLevel"/>. It pauses on its own as soon as one of these stops holding and resumes when they all
 /// hold again, so the owner keeps its phase. A running loop costs one delegate call per frame and allocates nothing;
-/// a paused loop requests no frames.
+/// a paused loop requests no frames. Under <see cref="ArcMotion.MaxFrameRateProperty"/> it steps at most that many
+/// times a second, each step with the time since the last one.
 /// </summary>
 public sealed class LiveLoop : IMotionDriver, IDisposable
 {
@@ -27,6 +28,8 @@ public sealed class LiveLoop : IMotionDriver, IDisposable
     private bool _viewportHooked;
     private bool _attached;
     private bool _disposed;
+    private double _minStep;   // seconds between steps under ArcMotion.MaxFrameRate (0: every frame)
+    private double _pending;   // frame time not yet handed to the step
 
     /// <param name="owner">The visual whose attachment, visibility, viewport and motion level gate the loop.</param>
     /// <param name="step">
@@ -39,6 +42,7 @@ public sealed class LiveLoop : IMotionDriver, IDisposable
         _step = step;
         // Walking up to the TopLevel on every gate check adds up (every Button owns a spinner), so attachment is tracked.
         _attached = owner.IsAttachedToVisualTree();
+        ReadMaxFrameRate();
         owner.AttachedToVisualTree += OnAttached;
         owner.DetachedFromVisualTree += OnDetached;
         owner.PropertyChanged += OnOwnerPropertyChanged;
@@ -203,6 +207,7 @@ public sealed class LiveLoop : IMotionDriver, IDisposable
             return;
         }
         _running = running;
+        _pending = 0;
         RunningChanged?.Invoke(running);
     }
 
@@ -211,6 +216,18 @@ public sealed class LiveLoop : IMotionDriver, IDisposable
         if (!_running)
         {
             return false;
+        }
+        if (_minStep > 0)
+        {
+            _pending += dt;
+            // A little early still counts, so a 60 Hz display steps a 30 a second loop on every second frame, not
+            // every third. Skipped frames draw nothing: the window repaints only when a step invalidates it.
+            if (_pending < _minStep * 0.9)
+            {
+                return true;
+            }
+            dt = _pending;
+            _pending = 0;
         }
         if (!_step(dt))
         {
@@ -250,6 +267,16 @@ public sealed class LiveLoop : IMotionDriver, IDisposable
         {
             Refresh();
         }
+        else if (e.Property == ArcMotion.MaxFrameRateProperty)
+        {
+            ReadMaxFrameRate();
+        }
+    }
+
+    private void ReadMaxFrameRate()
+    {
+        var rate = _owner.GetValue(ArcMotion.MaxFrameRateProperty);
+        _minStep = rate > 0 && double.IsFinite(rate) ? 1 / rate : 0;
     }
 
     private void OnViewportChanged(object? sender, EffectiveViewportChangedEventArgs e)
