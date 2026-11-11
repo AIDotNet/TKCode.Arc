@@ -1,6 +1,6 @@
 ---
 title: 更新日志
-source-hash: 623515abd1ec
+source-hash: 4231e90c2020
 ---
 
 # 更新日志
@@ -8,6 +8,31 @@ source-hash: 623515abd1ec
 TKCode.Arc 的所有重要变更，最新的在前。版本遵循[语义化版本](https://semver.org/)。从 1.0.0 起，破坏性 API 变更只在新的主版本中出现；更早的 `-preview` 版本在各发布版本之间可能变更 API。同样的列表也保存在仓库的 `CHANGELOG.md` 中。
 
 每次发布附带的 NuGet 包：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Foundation`（0.3.2 起）、`TKCode.Arc.Fonts` `TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 、`TKCode.Arc.Special`、`TKCode.Arc.Workflow`、`TKCode.Arc.Dock`（0.4.0-preview.2 起）、`TKCode.Arc.Themes.Pixel`、`TKCode.Arc.Themes.Corners`、`TKCode.Arc.Mobile`、`TKCode.Arc.Terminal`、`TKCode.Arc.Audio`、`TKCode.Arc.Audio.Native`、`TKCode.Arc.Audio.Browser`、`TKCode.Arc.Templates`（0.4.0-preview.6 起）、`TKCode.Arc.Pdf`、`TKCode.Arc.Pdf.Native` 和 `TKCode.Arc.Pdf.Browser`（1.0.0 起），`TKCode.Arc.Video`、`TKCode.Arc.Video.Native` 和 `TKCode.Arc.Video.Browser`（1.1.0-preview.1 起）。
+
+## 1.1.0-preview.4（2026-11-11）
+
+来自迁移到 Arc 的应用的反馈（#102–#110）：`PageHeader`、`Dialog`、`CommandPalette`、`Avatar`、`EmptyState`、`InlineEdit`、`CodeBlock` 和 `Tooltip` 增加了新选项，并修复了 `Table`、`ToggleGroup`、`SettingsGroup`、Mobile `ListGroup`、模态覆盖层、`Gauge` 和 `ArcWindow` 的问题。与 1.1.0-preview.3 相比没有破坏性变更。安装时使用 `--version 1.1.0-preview.4`（或 `--prerelease`）。
+
+### 新增
+
+- **适合设置页和侧栏的 `PageHeader`**（[#108](https://github.com/AIDotNet/TKCode.Arc/issues/108)，`TKCode.Arc.Blocks`）：`IsHeaderOnly="True"` 只显示页头，没有标签页、分隔线和滚动区，用作页面顶部的标题和操作栏；`Size="Small"` 是紧凑页头（`TypeXL` 标题，周围留白更小）；`PageHeaderAction.IsVisible="False"` 隐藏操作的按钮和菜单行，而不是让它们变淡。
+- **`Dialog.ShowHeader`**（[#108](https://github.com/AIDotNet/TKCode.Arc/issues/108)）：设为 `False` 时隐藏标题行（标题、说明、关闭按钮和分隔线），适合自带标题的对话框。`Title` 仍是无障碍名称。
+- **由应用提供结果的 `CommandPalette`**（[#108](https://github.com/AIDotNet/TKCode.Arc/issues/108)，`TKCode.Arc.Blocks`）：在面板或对话框上设置 `IsFilteringEnabled="False"`，会按原样列出 `ItemsSource`，适合自己筛选和排序结果的应用。`CommandPaletteDialog` 新增 `Query`（双向）和 `ActiveItem`，在对话框第一次打开前就能读取。从代码设置的查询会把光标放在末尾。
+- **更多头像在线状态**（[#110](https://github.com/AIDotNet/TKCode.Arc/issues/110)）：`AvatarStatus` 新增 `Busy`（危险色，圆点上带一条横杠）、`Away`（警告色）和 `Connecting`（以不透明度呼吸的空心圆环，关闭动效时静止）。每种状态都是头像无障碍名称的一部分。
+- **`EmptyState.Size`**（[#110](https://github.com/AIDotNet/TKCode.Arc/issues/110)）：`Small` 是用于列表栏和卡片的紧凑空状态（32 px 图标块，上下各 16 px，间距更紧凑），在任何窗口宽度下都生效。
+- **`InlineEdit.Labels`**（[#110](https://github.com/AIDotNet/TKCode.Arc/issues/110)）：`InlineEditLabels` 对象可本地化屏幕阅读器听到的所有文字：“Saving …”和“… saved”播报、保存和取消按钮的名称以及帮助文字。英文默认值不变。
+- **代码中的 diff 着色**（[#110](https://github.com/AIDotNet/TKCode.Arc/issues/110)）：语言为 `diff` 或 `patch` 时，`CodeBlock`、Markdown 代码围栏和富文本编辑器的代码块会把新增行显示为成功色、删除行显示为危险色，文件头和块头显示为次要文字颜色。之前这些行借用了数字色和字符串色。文档中说明了 `text` 和 `plaintext` 显示为纯文本。
+- **`Tooltip.ShowOnDisabled`**（[#110](https://github.com/AIDotNet/TKCode.Arc/issues/110)）：在禁用的控件上显示提示，例如说明按钮为何不能使用。禁用的控件收不到指针输入，因此提示改为跟踪指针是否位于控件范围内。之前 Tooltip 文档说这已经可以使用，实际上并不能。
+
+### 修复
+
+- **小尺寸的 `Gauge`**：数字现在随圆环缩放（最大尺寸时为 `Type3XL`），因此在小表盘上也不会超出圆环；位于圆环中心的是数字的墨迹而不是行框，因此数字不再偏上。
+- **Windows 上 `ArcWindow` 的上边框**（[#102](https://github.com/AIDotNet/TKCode.Arc/issues/102)）：客户区延伸到标题栏时，DWM 不绘制窗口顶部的边框线，因此窗口在 Windows 上处于正常状态时会自己用 `Border` 颜色画出这条线（`:top-edge` 伪类）。四条边一致；用 `ArcWindow:top-edge /template/ Border#PART_Root` 上的样式可以去掉它。
+- **未布局时更换数据源的 Table**（[#103](https://github.com/AIDotNet/TKCode.Arc/issues/103)）：`Table` 在隐藏或不在可视树上时更换了 `ItemsSource`，之后切换主题（例如页面重新显示时）不再抛出 `ArgumentOutOfRangeException`。行会等到下一次布局再读取新的数据源。
+- **使用 `ListItem` 模板的 `ListGroup`**（[#104](https://github.com/AIDotNet/TKCode.Arc/issues/104)，`TKCode.Arc.Mobile`）：当 `ItemTemplate` 的根是 `arcm:ListItem` 时，这一行直接作为容器，不再套第二层，因此可以在模板中绑定 `Title`、`Subtitle`、`Command` 等行属性。
+- **使用自定义 `SelectedValueBinding` 的 `ToggleGroup`**（[#105](https://github.com/AIDotNet/TKCode.Arc/issues/105)）：`SelectedValues`、`SelectedValue` 和 `ValueChanged` 事件报告的是绑定取出的值而不是项本身，双向绑定的 `SelectedValue` 在控件显示时也不再被覆盖。
+- **由 `ItemsSource` 生成行的 `SettingsGroup`**（[#106](https://github.com/AIDotNet/TKCode.Arc/issues/106)，`TKCode.Arc.Blocks`）：第一行上方不再多一条细线，模板生成的行上设置的 `ColumnSpan` 在第一次布局时就生效。
+- **逻辑树中的模态内容**（[#108](https://github.com/AIDotNet/TKCode.Arc/issues/108)）：`Dialog`、`Drawer` 或 `BottomSheet` 的内容在 `GetLogicalDescendants()` 中只出现一次（位于覆盖层之下），不再出现两次。
 
 ## 1.1.0-preview.3（2026-11-10）
 
