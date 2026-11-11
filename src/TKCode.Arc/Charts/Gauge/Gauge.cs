@@ -83,7 +83,10 @@ public class Gauge : Control
     private int _shownPercent;
     private ChartsBRun? _unit;
     private int _unitVersion = -1;
+    private double _unitSize;
     private double _digitBaseline;
+    private double _digitInkTop;
+    private double _digitInkBottom;
     private Rect _dial;
     private Point _unitOrigin;
     private StreamGeometry? _track;
@@ -108,7 +111,7 @@ public class Gauge : Control
 
         _digits = new RollingDigits { IsArmed = true, UseGrouping = false };
         ArcTokens.Bind(_digits, RollingDigits.FontFamilyProperty, ArcDesignTokenKind.DisplayFontFamily);
-        ArcTokens.Bind(_digits, RollingDigits.FontSizeProperty, ArcDesignTokenKind.Type3XL);
+        // The size follows the ring (see MeasureOverride), so the readout keeps its proportions on a small dial.
         ArcTokens.Bind(_digits, RollingDigits.FontWeightProperty, ArcDesignTokenKind.WeightMedium);
         ArcTokens.Bind(_digits, RollingDigits.ForegroundProperty, ArcDesignTokenKind.Foreground);
 
@@ -216,6 +219,15 @@ public class Gauge : Control
     internal string StatusText => _status.Content as string ?? string.Empty;
 
     internal string DigitsText => _digits.DisplayText;
+
+    /// <summary>The ring's center: the middle of a square as wide as the ring.</summary>
+    internal Point DialCenter => new(_dial.Center.X, _dial.Y + _dial.Width / 2);
+
+    /// <summary>The ink of the number and its percent sign (the line box less the space digits leave unused).</summary>
+    internal Rect ReadoutInk => _unit is null
+        ? default
+        : new Rect(_digits.Bounds.X, _digits.Bounds.Y + _digitInkTop,
+            _unitOrigin.X + _unit.WidthIncludingTrailingWhitespace - _digits.Bounds.X, _digitInkBottom - _digitInkTop);
 
     private double SafeMax => Maximum > Minimum ? Maximum : Minimum + 1;
 
@@ -415,14 +427,19 @@ public class Gauge : Control
 
     private ChartsBRun Unit()
     {
-        if (_unit is null || _unitVersion != _palette.Version)
+        var size = _digits.FontSize > 0 ? _digits.FontSize : 36;
+        if (_unit is null || _unitVersion != _palette.Version || _unitSize != size)
         {
             _unitVersion = _palette.Version;
-            var size = _digits.FontSize > 0 ? _digits.FontSize : 36;
+            _unitSize = size;
             _unit = ChartsBText.Label("%", _palette, size * 0.5, _palette.TextSecondary);
             var zero = new FormattedText("0", CultureInfo.InvariantCulture, FlowDirection.LeftToRight,
                 new Typeface(_digits.FontFamily, FontStyle.Normal, _digits.FontWeight), size, null);
             _digitBaseline = zero.Baseline;
+            // Where a digit's ink sits in its line box: digits have no descender, so centring the line box would
+            // leave them high in the ring.
+            _digitInkBottom = zero.Height + zero.OverhangAfter;
+            _digitInkTop = _digitInkBottom - zero.Extent;
         }
         return _unit;
     }
@@ -432,6 +449,15 @@ public class Gauge : Control
         var maxWidth = DialMaxWidth;
         var width = double.IsInfinity(availableSize.Width) ? maxWidth : Math.Min(availableSize.Width, maxWidth);
         var dialHeight = width * 0.9;
+        // Type3XL is sized for the largest ring; a smaller ring scales the number with it so it stays inside.
+        var digitSize = this.TryFindResource(ArcDesignTokenKind.Type3XL, ActualThemeVariant, out var token) && token is double tokenSize
+            ? tokenSize
+            : 36;
+        digitSize *= Math.Min(1, width / Math.Max(1, DialMaxWidth));
+        if (Math.Abs(_digits.FontSize - digitSize) > 0.01)
+        {
+            _digits.FontSize = digitSize;
+        }
         var unbounded = new Size(double.PositiveInfinity, double.PositiveInfinity);
         _digits.Measure(unbounded);
         _status.Measure(unbounded);
@@ -469,9 +495,10 @@ public class Gauge : Control
         var digits = _digits.DesiredSize;
         var numberWidth = digits.Width + 1 + unit.WidthIncludingTrailingWhitespace;
         var statusHeight = _status.IsVisible ? Math.Max(_status.DesiredSize.Height, (_status.GetValue(TextElement.FontSizeProperty)) * 1.4) : 0;
-        var blockHeight = digits.Height + (statusHeight > 0 ? 4 + statusHeight : 0);
-        // The readout sits on the ring's true center: the middle of a square as wide as the ring.
-        var top = _dial.Y + width / 2 - blockHeight / 2;
+        // The readout's ink (digits, plus the status line under them) sits on the ring's true center: the middle of a
+        // square as wide as the ring.
+        var blockBottom = statusHeight > 0 ? digits.Height + 4 + statusHeight : _digitInkBottom;
+        var top = _dial.Y + width / 2 - (_digitInkTop + blockBottom) / 2;
         var left = _dial.X + (width - numberWidth) / 2;
         _digits.Arrange(new Rect(left, top, digits.Width, digits.Height));
         _unitOrigin = new Point(left + digits.Width + 1, top + _digitBaseline - unit.Baseline);
