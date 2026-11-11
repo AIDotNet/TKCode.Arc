@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
+using Avalonia.LogicalTree;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 
@@ -19,6 +20,32 @@ public class DialogTests
         var window = TestHelpers.Show(new StackPanel { Children = { opener, dialog } });
         opener.Focus();
         return (window, dialog, opener);
+    }
+
+    [AvaloniaFact]
+    public void The_Content_Is_In_The_Logical_Tree_Once()
+    {
+        // Issue #108: the overlay and its surface both listed the content as a logical child.
+        var (window, dialog, _) = Setup();
+        try
+        {
+            var content = (TextBox)dialog.Content!;
+            dialog.IsOpen = true;
+            Dispatcher.UIThread.RunJobs();
+            dialog.GetLogicalDescendants().Count(d => ReferenceEquals(d, content)).ShouldBe(1);
+            content.GetLogicalParent().ShouldBeSameAs(dialog);
+
+            var next = new TextBox { Text = "Beacon" };
+            dialog.Content = next;
+            Dispatcher.UIThread.RunJobs();
+            dialog.GetLogicalDescendants().Count(d => ReferenceEquals(d, next)).ShouldBe(1);
+            dialog.GetLogicalDescendants().ShouldNotContain(content);
+            next.IsEffectivelyVisible.ShouldBeTrue();
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     [AvaloniaFact]

@@ -1,3 +1,4 @@
+using System.Collections.Specialized;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Automation.Peers;
@@ -37,6 +38,21 @@ public abstract class ModalSurface : ContentControl
 
     public static readonly StyledProperty<string> CloseButtonNameProperty =
         AvaloniaProperty.Register<ModalSurface, string>(nameof(CloseButtonName), "Close");
+
+    /// <summary>
+    /// The surface shows the overlay's content, which the overlay already holds as a logical child. ContentControl and its
+    /// ContentPresenter add it here as well, which put it in the logical tree twice (issue #108): content another element
+    /// owns is dropped again as soon as it is added.
+    /// </summary>
+    protected override void LogicalChildrenCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        base.LogicalChildrenCollectionChanged(sender, e);
+        if (e.Action == NotifyCollectionChangedAction.Add && Content is ILogical content && e.NewItems!.Contains(content)
+            && content.LogicalParent is { } parent && !ReferenceEquals(parent, this))
+        {
+            LogicalChildren.Remove(content);
+        }
+    }
 
     /// <summary>Heading; when it changes while open the new copy rises in with a soft blur.</summary>
     public string? Title { get => GetValue(TitleProperty); set => SetValue(TitleProperty, value); }
