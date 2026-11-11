@@ -152,6 +152,11 @@ regard to case. The query is trimmed, and a match is any substring of that joine
 fields. Give every command a stable `Id`. Rows keep their place by `Id` when the list is filtered or refreshed, so the
 highlight stays on its command.
 
+When the app filters and ranks the results itself (fuzzy matching, recent commands first), set
+`IsFilteringEnabled="False"` on the palette or the dialog. The palette then lists every item of `ItemsSource` as given
+and no longer drops items that do not contain the query: update `ItemsSource` as `Query` changes. Items still group
+under their `Group`, groups in the order they first appear, so leave `Group` empty for one flat list in your order.
+
 A narrow window gets a tighter palette. When the window is 480 pixels wide or less, the palette hides the shortcut caps
 and tightens its padding, and at 340 pixels or less the rows also tighten their sides. The rule follows the window, not
 the palette's own width: the 400 pixel palette above keeps its caps in a normal window, and so does a popup 440 pixels
@@ -189,7 +194,8 @@ Rows that stay move to their new place, new rows fade in, and the frame changes 
 `ObservableCollection` rather than replacing the whole list, so the rows that stay keep their place.
 
 The demo uses an inline palette, which also has a two-way `Query`; `ActiveItem` is read-only and reports the highlighted
-command. The dialog has no `Query`: it starts every opening with an empty field.
+command. The dialog has the same two-way `Query` and read-only `ActiveItem`, readable and bindable before it first
+opens. A fresh open starts with an empty field; set `Query` in the `Opened` event to open with a search already typed.
 
 <Demo name="DataBinding" />
 

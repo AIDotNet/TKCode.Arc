@@ -90,6 +90,16 @@ public class CommandPalette : TemplatedControl
         AvaloniaProperty.Register<CommandPalette, string>(nameof(Query), string.Empty,
             defaultBindingMode: BindingMode.TwoWay, coerce: static (_, value) => value ?? string.Empty);
 
+    /// <summary>
+    /// False lists every item of <see cref="ItemsSource"/> as given, for an app that filters and ranks the results itself
+    /// (fuzzy matching, recent first): it updates <see cref="ItemsSource"/> as <see cref="Query"/> changes, and the
+    /// palette no longer drops items that do not contain the query. Items still group under their
+    /// <see cref="CommandPaletteItem.Group"/>, groups in the order they first appear; leave <c>Group</c> empty for one
+    /// flat list in the app's order. Defaults to true.
+    /// </summary>
+    public static readonly StyledProperty<bool> IsFilteringEnabledProperty =
+        AvaloniaProperty.Register<CommandPalette, bool>(nameof(IsFilteringEnabled), true);
+
     /// <summary>Hint in the empty search field.</summary>
     public static readonly StyledProperty<string> PlaceholderTextProperty =
         AvaloniaProperty.Register<CommandPalette, string>(nameof(PlaceholderText), "Search commands");
@@ -165,6 +175,9 @@ public class CommandPalette : TemplatedControl
 
     /// <inheritdoc cref="QueryProperty"/>
     public string Query { get => GetValue(QueryProperty); set => SetValue(QueryProperty, value); }
+
+    /// <inheritdoc cref="IsFilteringEnabledProperty"/>
+    public bool IsFilteringEnabled { get => GetValue(IsFilteringEnabledProperty); set => SetValue(IsFilteringEnabledProperty, value); }
 
     /// <inheritdoc cref="PlaceholderTextProperty"/>
     public string PlaceholderText { get => GetValue(PlaceholderTextProperty); set => SetValue(PlaceholderTextProperty, value); }
@@ -496,6 +509,10 @@ public class CommandPalette : TemplatedControl
             WatchSource();
             Refresh(RefreshReason.Data);
         }
+        else if (change.Property == IsFilteringEnabledProperty)
+        {
+            Refresh(RefreshReason.Data);
+        }
         else if (change.Property == DefaultGroupProperty)
         {
             Refresh(RefreshReason.Data);
@@ -752,6 +769,8 @@ public class CommandPalette : TemplatedControl
         {
             _syncingText = true;
             _input.Text = text;
+            // A query set from code (a prefilled search) is continued, not typed in front of.
+            _input.CaretIndex = text.Length;
             _syncingText = false;
         }
         PseudoClasses.Set(HasQueryPseudoClass, text.Length > 0);
@@ -766,7 +785,8 @@ public class CommandPalette : TemplatedControl
         {
             WatchItems(source);
         }
-        var groups = CommandPaletteFilter.Group(source, CommandPaletteFilter.Normalize(Query), DefaultGroup);
+        var filter = IsFilteringEnabled ? CommandPaletteFilter.Normalize(Query) : string.Empty;
+        var groups = CommandPaletteFilter.Group(source, filter, DefaultGroup);
         var visible = new List<CommandPaletteItem>();
         foreach (var group in groups)
         {

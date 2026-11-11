@@ -58,6 +58,27 @@ public class CommandPaletteDialog : TemplatedControl
     public static readonly StyledProperty<string> PlaceholderTextProperty =
         CommandPalette.PlaceholderTextProperty.AddOwner<CommandPaletteDialog>();
 
+    /// <summary>
+    /// The text in the search field (two-way; readable and bindable before the dialog first opens). A fresh open starts
+    /// with an empty query; set it in <see cref="Opened"/> to open with a search already typed.
+    /// </summary>
+    public static readonly StyledProperty<string> QueryProperty =
+        CommandPalette.QueryProperty.AddOwner<CommandPaletteDialog>();
+
+    /// <summary>The highlighted command (keyboard or pointer), or null; null while the dialog has not been opened.</summary>
+    public static readonly DirectProperty<CommandPaletteDialog, CommandPaletteItem?> ActiveItemProperty =
+        CommandPalette.ActiveItemProperty.AddOwner<CommandPaletteDialog>(o => o.ActiveItem);
+
+    /// <summary>
+    /// False lists every item of <see cref="ItemsSource"/> as given, for an app that filters and ranks the results itself
+    /// (fuzzy matching, recent first): it updates <see cref="ItemsSource"/> as <see cref="Query"/> changes, and the
+    /// palette no longer drops items that do not contain the query. Items still group under their
+    /// <see cref="CommandPaletteItem.Group"/>, groups in the order they first appear; leave <c>Group</c> empty for one
+    /// flat list in the app's order. Defaults to true.
+    /// </summary>
+    public static readonly StyledProperty<bool> IsFilteringEnabledProperty =
+        CommandPalette.IsFilteringEnabledProperty.AddOwner<CommandPaletteDialog>();
+
     /// <summary>Accessible name of the dialog and of its search field.</summary>
     public static readonly StyledProperty<string> LabelProperty =
         CommandPalette.LabelProperty.AddOwner<CommandPaletteDialog>();
@@ -176,6 +197,19 @@ public class CommandPaletteDialog : TemplatedControl
     /// <inheritdoc cref="PlaceholderTextProperty"/>
     public string PlaceholderText { get => GetValue(PlaceholderTextProperty); set => SetValue(PlaceholderTextProperty, value); }
 
+    /// <inheritdoc cref="QueryProperty"/>
+    public string Query { get => GetValue(QueryProperty); set => SetValue(QueryProperty, value); }
+
+    /// <inheritdoc cref="ActiveItemProperty"/>
+    public CommandPaletteItem? ActiveItem
+    {
+        get => _activeItem;
+        private set => SetAndRaise(ActiveItemProperty, ref _activeItem, value);
+    }
+
+    /// <inheritdoc cref="IsFilteringEnabledProperty"/>
+    public bool IsFilteringEnabled { get => GetValue(IsFilteringEnabledProperty); set => SetValue(IsFilteringEnabledProperty, value); }
+
     /// <inheritdoc cref="LabelProperty"/>
     public string Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
 
@@ -283,6 +317,7 @@ public class CommandPaletteDialog : TemplatedControl
     #endregion
 
     private CommandPalette? _palette;
+    private CommandPaletteItem? _activeItem;
     private CommandPaletteFrame? _frame;
     private ModalPresence? _presence;
     private DismissReason _pendingReason = DismissReason.Programmatic;
@@ -371,6 +406,13 @@ public class CommandPaletteDialog : TemplatedControl
                 CloseCore();
             }
         }
+        else if (property == QueryProperty)
+        {
+            if (_palette is not null && _palette.Query != Query)
+            {
+                _palette.SetCurrentValue(CommandPalette.QueryProperty, Query);
+            }
+        }
         else if (property == ItemsSourceProperty)
         {
             if (_palette is not null)
@@ -438,6 +480,21 @@ public class CommandPaletteDialog : TemplatedControl
         }
     }
 
+    private void OnPalettePropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+    {
+        if (e.Property == CommandPalette.QueryProperty)
+        {
+            if (Query != _palette!.Query)
+            {
+                SetCurrentValue(QueryProperty, _palette.Query);
+            }
+        }
+        else if (e.Property == CommandPalette.ActiveItemProperty)
+        {
+            ActiveItem = _palette!.ActiveItem;
+        }
+    }
+
     private void EnsurePalette()
     {
         if (_palette is not null)
@@ -455,6 +512,10 @@ public class CommandPaletteDialog : TemplatedControl
         Forward(CommandPalette.ResultsLabelProperty, ResultsLabelProperty);
         Forward(CommandPalette.SelectCommandProperty, SelectCommandProperty);
         Forward(CommandPalette.ShowCloseButtonProperty, ShowCloseButtonProperty);
+        Forward(CommandPalette.IsFilteringEnabledProperty, IsFilteringEnabledProperty);
+        // Query goes both ways (typing reaches the dialog's binding); the highlighted item is mirrored.
+        _palette.SetCurrentValue(CommandPalette.QueryProperty, Query);
+        _palette.PropertyChanged += OnPalettePropertyChanged;
         _palette.ItemsSource = ItemsSource ?? Items;
         _palette.ItemSelected += OnPaletteItemSelected;
         _palette.CloseRequested += OnPaletteCloseRequested;
