@@ -128,9 +128,15 @@ extends into the decorations and resizes from its edges. Your content then has t
 On Windows 11, DWM draws a 1 px frame on the left, right and bottom edges, but not on the top edge once the client area extends into the title bar. On Windows, while the window is in its normal state (not maximized, full screen or `WindowDecorations="None"`), `ArcWindow` sets the `:top-edge` pseudo-class and draws that top edge itself (color `Border`), so all four edges match. To drop the line, override it with a style:
 
 ```xml
-<Style Selector="arc|ArcWindow:top-edge /template/ Border#PART_Root">
-    <Setter Property="BorderThickness" Value="0" />
-</Style>
+<arc:ArcWindow xmlns="https://github.com/avaloniaui"
+               xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
+    <arc:ArcWindow.Styles>
+        <Style Selector="arc|ArcWindow:top-edge /template/ Border#PART_Root">
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+    </arc:ArcWindow.Styles>
+    <!-- ... -->
+</arc:ArcWindow>
 ```
 
 ### Previews

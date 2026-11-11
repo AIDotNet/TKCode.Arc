@@ -8,7 +8,12 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0), `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` (from 1.1.0-preview.1).
 
-## Unreleased
+## 1.1.0-preview.4 - 2026-11-11
+
+Feedback from apps moving to Arc (#102–#110): new options on `PageHeader`, `Dialog`, `CommandPalette`, `Avatar`,
+`EmptyState`, `InlineEdit`, `CodeBlock` and `Tooltip`, and fixes to `Table`, `ToggleGroup`, `SettingsGroup`, Mobile
+`ListGroup`, modal overlays, `Gauge` and `ArcWindow`. There are no breaking changes from 1.1.0-preview.3. Install it
+with `--version 1.1.0-preview.4` (or `--prerelease`).
 
 ### Added
 
