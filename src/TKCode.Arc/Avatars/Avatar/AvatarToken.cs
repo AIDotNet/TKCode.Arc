@@ -19,6 +19,11 @@ internal sealed class AvatarToken : AbstractControlDesignToken
     public Thickness StatusRing { get; set; }
     public Thickness StatusMarginXL { get; set; }
 
+    /// <summary>The bar across a Busy dot (inside the 10px dot and its 2px ring).</summary>
+    public double StatusBarWidth { get; set; }
+
+    public double StatusBarHeight { get; set; }
+
     /// <summary>Outer hairline around the status dot: 70% border.</summary>
     public BoxShadows StatusHalo { get; set; }
 
@@ -37,6 +42,8 @@ internal sealed class AvatarToken : AbstractControlDesignToken
         StatusRingSM = new Thickness(1.5);
         StatusRing = new Thickness(2);
         StatusMarginXL = new Thickness(0, 0, 4, 4);
+        StatusBarWidth = 4;
+        StatusBarHeight = 1.5;
         var halo = Oklch.WithAlpha(ArcPalette.Neutrals(isDarkMode).Border, 0.7);
         StatusHalo = new BoxShadows(new BoxShadow { Spread = 1, Color = halo });
     }

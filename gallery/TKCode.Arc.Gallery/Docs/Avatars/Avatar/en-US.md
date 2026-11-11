@@ -60,7 +60,9 @@ the theme, and the status dot and initials then no longer match the Arc scale. P
    failed; while it loads, the frame stays empty.
 4. **Status dot** (`Status`): a filled circle at the lower right with a surface-colored ring (1.5 px at `Small`,
    2 px at the other sizes) and a faint 1 px halo in the border color. `Online` uses the success color, `Offline` the
-   muted text color, and `None` removes the dot entirely.
+   muted text color, and `None` removes the dot entirely. `Busy` (do not disturb) is the danger color with a bar across
+   it, `Away` the warning color, and `Connecting` a hollow ring in the muted text color that breathes in opacity (it
+   rests when motion is off), for a client that is reconnecting.
 
 ### Photo and fallback
 

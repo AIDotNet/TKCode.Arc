@@ -104,6 +104,16 @@
         </Style>
     </ControlTheme>
 
+    <!-- The bar across a Busy dot (PART_StatusBar); the dot shows it only while busy. -->
+    <ControlTheme x:Key="{x:Type arc:AvatarStatusBar}" TargetType="arc:AvatarStatusBar">
+        <Setter Property="Width" Value="{arc:AvatarTokenResource StatusBarWidth}" />
+        <Setter Property="Height" Value="{arc:AvatarTokenResource StatusBarHeight}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </ControlTheme>
+
     <!-- The presence dot the avatar builds on demand (PART_Status). The dot keeps the medium size and ring whatever the
          avatar's size, as the template part did (its token values were local and the size styles never overrode them);
          the avatar mirrors Online into :online. -->
@@ -118,6 +128,17 @@
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource TextMuted}" />
         <Style Selector="^:online">
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:busy">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:away">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Warning}" />
+        </Style>
+        <!-- Connecting: a hollow ring (the halo still separates it from the photo); the avatar breathes its opacity. -->
+        <Style Selector="^:connecting">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
         </Style>
         <Style Selector="^:motion-full">
             <Setter Property="Transitions">
