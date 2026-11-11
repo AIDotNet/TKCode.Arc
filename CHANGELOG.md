@@ -16,6 +16,22 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
   frame line on the top edge of a window whose client area extends into the title bar, so the window now draws it in the
   `Border` color while it is in its normal state on Windows (`:top-edge` pseudo-class). All four edges match; a style on
   `ArcWindow:top-edge /template/ Border#PART_Root` can remove it.
+- **Table after a source change without layout** ([#103](https://github.com/AIDotNet/TKCode.Arc/issues/103)): a
+  `Table` whose `ItemsSource` changed while it was hidden or off the visual tree no longer throws
+  `ArgumentOutOfRangeException` when the theme changes (for example when the page is shown again). Rows wait for the
+  next layout before they read the new source.
+- **`ListGroup` with a `ListItem` template** ([#104](https://github.com/AIDotNet/TKCode.Arc/issues/104),
+  `TKCode.Arc.Mobile`): when the `ItemTemplate`'s root is an `arcm:ListItem`, that row is the container instead of
+  being wrapped in a second row, so `Title`, `Subtitle`, `Command` and the other row properties can be bound in the
+  template.
+- **`ToggleGroup` with a custom `SelectedValueBinding`** ([#105](https://github.com/AIDotNet/TKCode.Arc/issues/105)):
+  `SelectedValues`, `SelectedValue` and the `ValueChanged` event report the value the binding selects, not the item,
+  and a two-way bound `SelectedValue` is no longer overwritten when the group is shown.
+- **`SettingsGroup` rows from `ItemsSource`** ([#106](https://github.com/AIDotNet/TKCode.Arc/issues/106),
+  `TKCode.Arc.Blocks`): the first generated row no longer draws a hairline above it, and a `ColumnSpan` set on a
+  templated row applies on the first layout.
+- **Modal content in the logical tree** ([#108](https://github.com/AIDotNet/TKCode.Arc/issues/108)): the content of a
+  `Dialog`, `Drawer` or `BottomSheet` appears once in `GetLogicalDescendants()`, under the overlay, instead of twice.
 
 ## 1.1.0-preview.3 - 2026-11-10
 
