@@ -4,8 +4,9 @@
              xmlns:demos="using:TKCode.Arc.Gallery.Demos"
              x:Class="TKCode.Arc.Gallery.Demos.TilePanelItemsControlDemo">
     <UserControl.Styles>
-        <!-- The panel's children are the item containers, so the spans go on them, read from the item. -->
-        <Style Selector="arc|TilePanel > ContentPresenter" x:DataType="demos:DashboardTile">
+        <!-- The panel's children are the item containers, so the spans go on them, read from the item. A container's
+             logical parent is the ItemsControl, not the panel, so the selector starts there. -->
+        <Style Selector="ItemsControl > ContentPresenter" x:DataType="demos:DashboardTile">
             <Setter Property="arc:TilePanel.RowSpan" Value="{Binding RowSpan}" />
             <Setter Property="arc:TilePanel.ColumnSpan" Value="{Binding ColumnSpan}" />
         </Style>

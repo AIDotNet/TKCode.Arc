@@ -35733,8 +35733,12 @@
         <target>列数；0 表示按宽度放下尽可能多的、至少 `MinCellSize` 宽的列。</target>
       </trans-unit>
       <trans-unit id="TilePanel.IsAutoFill">
-        <source>Lets tiles grow into the empty cells to their right and below them after placement (see the remarks of `TilePanel`).</source>
-        <target>放置之后让磁贴扩展到右侧和下方的空单元格（见 `TilePanel` 的说明）。</target>
+        <source>Lets tiles grow into empty cells after placement: to their right and below them, then from any side into the holes left (see the remarks of `TilePanel`).</source>
+        <target>放置之后让磁贴扩展到空单元格：先向右、向下，再从任意一侧扩展到剩下的空洞（见 `TilePanel` 的说明）。</target>
+      </trans-unit>
+      <trans-unit id="TilePanel.IsAutoSpan">
+        <source>Lets the panel size the children that set neither `RowSpan` nor `ColumnSpan`: 1×1, 1×2, 2×1 or 2×2, picked from the child's index and `Seed` (see the remarks of `TilePanel`).</source>
+        <target>由面板决定既没有设置 `RowSpan` 也没有设置 `ColumnSpan` 的子元素的大小：1×1、1×2、2×1 或 2×2，按子元素的索引和 `Seed` 选取（见 `TilePanel` 的说明）。</target>
       </trans-unit>
       <trans-unit id="TilePanel.MaxColumnSpan">
         <source>The most columns a tile may span; 0 means no limit beyond the grid.</source>
@@ -35755,6 +35759,10 @@
       <trans-unit id="TilePanel.Rows">
         <source>Number of rows the height is shared between (tiles that do not fit continue on further rows); 0 sizes rows like columns. Also fixes the row count when the grid grows sideways (unbounded width and `Columns` 0).</source>
         <target>平分高度的行数（放不下的磁贴继续排在后续行中）；0 表示行的尺寸与列相同。网格横向增长（宽度无界且 `Columns` 为 0）时，它也固定行数。</target>
+      </trans-unit>
+      <trans-unit id="TilePanel.Seed">
+        <source>Picks the arrangement when `IsAutoSpan` is on: the same seed always gives the same tiles; another seed gives another arrangement.</source>
+        <target>开启 `IsAutoSpan` 时决定排列：同一个种子总是得到同样的磁贴，换一个种子得到另一种排列。</target>
       </trans-unit>
       <trans-unit id="TilePanel.Spacing">
         <source>The gap between neighbouring cells.</source>
@@ -39608,6 +39616,10 @@
         <source>Stretches the last child of every lane to the panel's end, so all lanes end together. The end is the longest lane, or the panel's arranged size when its parent gives it more; it never reaches past the panel.</source>
         <target>把每条通道的最后一个子元素拉伸到面板末端，让所有通道一起结束。末端是最长的通道；父级给面板更多空间时则是面板的排列尺寸；永远不会超出面板。</target>
       </trans-unit>
+      <trans-unit id="WaterfallPanel.ItemSizing">
+        <source>Where each child's size along the flow comes from: `Content` (default) measures the child, `Varied` picks a size between `MinItemSize` and `MaxItemSize` from the child's index and `Seed`.</source>
+        <target>每个子元素沿排列方向的尺寸从哪里来：`Content`（默认）测量子元素，`Varied` 按子元素的索引和 `Seed` 在 `MinItemSize` 与 `MaxItemSize` 之间选取。</target>
+      </trans-unit>
       <trans-unit id="WaterfallPanel.MaxItemSize">
         <source>The largest size a child gets along the flow; children are also measured within it.</source>
         <target>子元素沿排列方向的最大尺寸；子元素也在这个尺寸之内测量。</target>
@@ -39627,6 +39639,10 @@
       <trans-unit id="WaterfallPanel.Rows">
         <source>Number of rows when `Orientation` is `Horizontal`; 0 fits as many as `MinLaneSize` allows.</source>
         <target>`Orientation` 为 `Horizontal` 时的行数；0 表示按 `MinLaneSize` 放下尽可能多的行。</target>
+      </trans-unit>
+      <trans-unit id="WaterfallPanel.Seed">
+        <source>Picks the arrangement when `ItemSizing` is `Varied`: the same seed always gives the same sizes; another seed gives another arrangement.</source>
+        <target>`ItemSizing` 为 `Varied` 时决定排列：同一个种子总是得到同样的尺寸，换一个种子得到另一种排列。</target>
       </trans-unit>
       <trans-unit id="WaterfallPanel.Spacing">
         <source>The gap between lanes and between consecutive children of a lane.</source>

@@ -21,6 +21,13 @@ namespace TKCode.Arc;
 /// A lane count of 0 picks as many lanes as fit at <see cref="MinLaneSize"/> or wider. Collapsed children
 /// (<c>IsVisible="False"</c>) take no place.
 /// </para>
+/// <para>
+/// <see cref="ItemSizing"/> <c>Varied</c> ignores the content's size: each child gets a size between
+/// <see cref="MinItemSize"/> and <see cref="MaxItemSize"/> picked from its index in <see cref="Panel.Children"/> and
+/// <see cref="Seed"/>, so cards built from one template still form a masonry wall. An unset bound follows the lane size
+/// (half a lane for the minimum, one and a half for the maximum). The same index and seed always give the same size; adding
+/// children at the end keeps the sizes before them, inserting or removing one changes the sizes after it.
+/// </para>
 /// </remarks>
 public class WaterfallPanel : Panel
 {
@@ -59,6 +66,20 @@ public class WaterfallPanel : Panel
     public static readonly StyledProperty<bool> FillLastItemProperty =
         AvaloniaProperty.Register<WaterfallPanel, bool>(nameof(FillLastItem));
 
+    /// <summary>
+    /// Where each child's size along the flow comes from: <c>Content</c> (default) measures the child, <c>Varied</c> picks a
+    /// size between <see cref="MinItemSize"/> and <see cref="MaxItemSize"/> from the child's index and <see cref="Seed"/>.
+    /// </summary>
+    public static readonly StyledProperty<WaterfallItemSizing> ItemSizingProperty =
+        AvaloniaProperty.Register<WaterfallPanel, WaterfallItemSizing>(nameof(ItemSizing));
+
+    /// <summary>
+    /// Picks the arrangement when <see cref="ItemSizing"/> is <c>Varied</c>: the same seed always gives the same sizes; another
+    /// seed gives another arrangement.
+    /// </summary>
+    public static readonly StyledProperty<int> SeedProperty =
+        AvaloniaProperty.Register<WaterfallPanel, int>(nameof(Seed));
+
     // Placement of each child from the last measure, indexed like Children: lane (-1 = collapsed), start and extent along the flow.
     private int[] _lane = [];
     private double[] _start = [];
@@ -70,7 +91,7 @@ public class WaterfallPanel : Panel
     static WaterfallPanel()
     {
         AffectsMeasure<WaterfallPanel>(OrientationProperty, ColumnsProperty, RowsProperty, SpacingProperty, MinItemSizeProperty,
-            MaxItemSizeProperty, MinLaneSizeProperty);
+            MaxItemSizeProperty, MinLaneSizeProperty, ItemSizingProperty, SeedProperty);
         AffectsArrange<WaterfallPanel>(FillLastItemProperty);
     }
 
@@ -128,6 +149,20 @@ public class WaterfallPanel : Panel
     {
         get => GetValue(FillLastItemProperty);
         set => SetValue(FillLastItemProperty, value);
+    }
+
+    /// <inheritdoc cref="ItemSizingProperty"/>
+    public WaterfallItemSizing ItemSizing
+    {
+        get => GetValue(ItemSizingProperty);
+        set => SetValue(ItemSizingProperty, value);
+    }
+
+    /// <inheritdoc cref="SeedProperty"/>
+    public int Seed
+    {
+        get => GetValue(SeedProperty);
+        set => SetValue(SeedProperty, value);
     }
 
     /// <summary>The number of lanes of the last layout pass (columns or rows, after resolving a count of 0).</summary>
@@ -188,6 +223,10 @@ public class WaterfallPanel : Panel
             }
         }
 
+        var varied = ItemSizing == WaterfallItemSizing.Varied;
+        var (variedLow, variedHigh) = varied ? VariedRange(laneSize) : (0, 0);
+        var seed = Seed;
+
         Span<double> ends = lanes <= 64 ? stackalloc double[lanes] : new double[lanes];
         Span<bool> used = lanes <= 64 ? stackalloc bool[lanes] : new bool[lanes];
         ends.Clear();
@@ -200,9 +239,20 @@ public class WaterfallPanel : Panel
                 _lane[i] = -1;
                 continue;
             }
-            child.Measure(vertical ? new Size(laneSize, maxItem) : new Size(maxItem, laneSize));
-            var natural = vertical ? child.DesiredSize.Height : child.DesiredSize.Width;
-            var extent = Math.Clamp(natural, minItem, maxItem);
+            double extent;
+            if (varied)
+            {
+                // Index in Children (collapsed ones included), so hiding a child does not change the others' sizes. Whole
+                // pixels, so edges stay crisp and equal sizes stay equal.
+                extent = Math.Clamp(Math.Round(variedLow + (variedHigh - variedLow) * LayoutSeed.Unit(seed, i)), variedLow, variedHigh);
+                child.Measure(vertical ? new Size(laneSize, extent) : new Size(extent, laneSize));
+            }
+            else
+            {
+                child.Measure(vertical ? new Size(laneSize, maxItem) : new Size(maxItem, laneSize));
+                var natural = vertical ? child.DesiredSize.Height : child.DesiredSize.Width;
+                extent = Math.Clamp(natural, minItem, maxItem);
+            }
             // A child's own minimum wins over MaxItemSize, so its content is never cut below what it asked for.
             extent = Math.Max(extent, vertical ? child.MinHeight : child.MinWidth);
 
@@ -231,6 +281,31 @@ public class WaterfallPanel : Panel
         _measuredLaneSize = laneSize;
         var crossDesired = _crossWasFinite ? cross : lanes * laneSize + (lanes - 1) * spacing;
         return vertical ? new Size(crossDesired, flow) : new Size(flow, crossDesired);
+    }
+
+    /// <summary>
+    /// The range <c>Varied</c> sizes come from: <see cref="MinItemSize"/>..<see cref="MaxItemSize"/>, an unset bound following
+    /// the lane (0 = half a lane, unbounded = one and a half lanes). A set minimum wins over a smaller maximum, like in
+    /// <c>Content</c> sizing.
+    /// </summary>
+    private (double Low, double High) VariedRange(double laneSize)
+    {
+        var minSet = MinItemSize > 0;
+        var maxSet = double.IsFinite(MaxItemSize);
+        var low = minSet ? MinItemSize : laneSize * 0.5;
+        var high = maxSet ? MaxItemSize : laneSize * 1.5;
+        if (low > high)
+        {
+            if (minSet)
+            {
+                high = low;
+            }
+            else
+            {
+                low = high;
+            }
+        }
+        return (low, high);
     }
 
     protected override Size ArrangeOverride(Size finalSize)

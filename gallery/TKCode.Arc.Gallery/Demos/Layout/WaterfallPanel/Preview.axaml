@@ -3,30 +3,49 @@
              xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
              x:Class="TKCode.Arc.Gallery.Demos.WaterfallPanelPreviewDemo">
     <UserControl.Styles>
-        <Style Selector="Border.card">
-            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
-            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
-            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <!-- The cards set no height: ItemSizing="Varied" gives each one a height between MinItemSize and MaxItemSize. -->
+        <Style Selector="arc|WaterfallPanel > Border">
             <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
-            <Setter Property="Padding" Value="12" />
+            <Setter Property="Padding" Value="10" />
         </Style>
-        <Style Selector="Border.card > TextBlock">
+        <Style Selector="arc|WaterfallPanel > Border:nth-child(4n+1)">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Series1}" />
+        </Style>
+        <Style Selector="arc|WaterfallPanel > Border:nth-child(4n+2)">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Series2}" />
+        </Style>
+        <Style Selector="arc|WaterfallPanel > Border:nth-child(4n+3)">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Series3}" />
+        </Style>
+        <Style Selector="arc|WaterfallPanel > Border:nth-child(4n+4)">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Series4}" />
+        </Style>
+        <Style Selector="arc|WaterfallPanel > Border > Border">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="Padding" Value="8,2" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep8}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        </Style>
+        <Style Selector="arc|WaterfallPanel > Border > Border > TextBlock">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
-            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
         </Style>
     </UserControl.Styles>
     <ScrollViewer MaxHeight="380" MaxWidth="560">
-        <arc:WaterfallPanel Columns="3">
-            <Border Classes="card" Height="120"><TextBlock Text="1" /></Border>
-            <Border Classes="card" Height="200"><TextBlock Text="2" /></Border>
-            <Border Classes="card" Height="150"><TextBlock Text="3" /></Border>
-            <Border Classes="card" Height="90"><TextBlock Text="4" /></Border>
-            <Border Classes="card" Height="170"><TextBlock Text="5" /></Border>
-            <Border Classes="card" Height="110"><TextBlock Text="6" /></Border>
-            <Border Classes="card" Height="140"><TextBlock Text="7" /></Border>
-            <Border Classes="card" Height="80"><TextBlock Text="8" /></Border>
-            <Border Classes="card" Height="190"><TextBlock Text="9" /></Border>
-            <Border Classes="card" Height="100"><TextBlock Text="10" /></Border>
+        <arc:WaterfallPanel Columns="3" Spacing="10" ItemSizing="Varied" MinItemSize="80" MaxItemSize="200">
+            <Border><Border><TextBlock Text="1" /></Border></Border>
+            <Border><Border><TextBlock Text="2" /></Border></Border>
+            <Border><Border><TextBlock Text="3" /></Border></Border>
+            <Border><Border><TextBlock Text="4" /></Border></Border>
+            <Border><Border><TextBlock Text="5" /></Border></Border>
+            <Border><Border><TextBlock Text="6" /></Border></Border>
+            <Border><Border><TextBlock Text="7" /></Border></Border>
+            <Border><Border><TextBlock Text="8" /></Border></Border>
+            <Border><Border><TextBlock Text="9" /></Border></Border>
+            <Border><Border><TextBlock Text="10" /></Border></Border>
+            <Border><Border><TextBlock Text="11" /></Border></Border>
+            <Border><Border><TextBlock Text="12" /></Border></Border>
         </arc:WaterfallPanel>
     </ScrollViewer>
 </UserControl>

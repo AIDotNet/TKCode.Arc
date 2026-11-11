@@ -8,6 +8,26 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0), `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` (from 1.1.0-preview.1).
 
+## Unreleased
+
+### Added
+
+- **`WaterfallPanel` and `TilePanel` lay out items of one template by themselves**
+  ([#112](https://github.com/AIDotNet/TKCode.Arc/issues/112), from [#86](https://github.com/AIDotNet/TKCode.Arc/issues/86)):
+  `WaterfallPanel.ItemSizing="Varied"` gives each child a height (a width in rows) between `MinItemSize` and `MaxItemSize`
+  instead of measuring its content, so cards built from one template still form a masonry wall; an unset bound follows
+  the lane size. `TilePanel.IsAutoSpan` gives children that set no span 1×1, 1×2, 2×1 or 2×2, placed at the first free
+  cell and keeping larger tiles apart; with `IsAutoFill` and `Rows` set, the automatic tiles are sized to cover the
+  whole `Columns` × `Rows` grid. Both panels pick sizes from the child's index and a new `Seed` property, never from
+  random values during layout: the same items, seed and grid always give the same result, and resizing never reshuffles
+  it. The defaults (`Content` sizing, auto span off) keep today's layouts.
+
+### Changed
+
+- **`TilePanel.IsAutoFill` also fills holes from the side and from below** ([#112](https://github.com/AIDotNet/TKCode.Arc/issues/112)):
+  after tiles grow right and down, every hole still empty is offered to the tiles around it, so a neighbour on the
+  right or below can grow over it too. Tiles still never move, overlap or shrink, and the span limits still hold.
+
 ## 1.1.0-preview.4 - 2026-11-11
 
 Feedback from apps moving to Arc (#102–#110): new options on `PageHeader`, `Dialog`, `CommandPalette`, `Avatar`,

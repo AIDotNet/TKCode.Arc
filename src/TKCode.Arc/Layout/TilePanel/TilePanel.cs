@@ -28,10 +28,20 @@ namespace TKCode.Arc;
 /// depends only on the children, their spans and the grid size.
 /// </para>
 /// <para>
+/// <b>Auto span</b> (<see cref="IsAutoSpan"/>, off by default). Children that set neither <see cref="RowSpanProperty">RowSpan</see>
+/// nor <see cref="ColumnSpanProperty">ColumnSpan</see> get 1×1, 1×2, 2×1 or 2×2 from the panel, picked from their index and
+/// <see cref="Seed"/> within <see cref="MaxRowSpan"/> / <see cref="MaxColumnSpan"/>. Such a tile goes to the first free cell
+/// and takes a size that fits there, so it never leaves a hole before it; larger tiles are kept from touching each other, and
+/// none straddles the last of <see cref="Rows"/>. The same children, seed and grid always give the same tiles.
+/// </para>
+/// <para>
 /// <b>Auto fill</b> (<see cref="IsAutoFill"/>, off by default). After placement, each tile in child order grows into empty
 /// cells: first to the right, one column at a time while every cell of the new column next to it is empty, then down one row
-/// at a time likewise, never past the span limits or the grid (the grid's height is <see cref="Rows"/> or the rows already
-/// used, whichever is more). Holes that no tile can reach stay empty.
+/// at a time likewise. Then every hole left is offered to the tiles around it: a neighbour on any side grows over it when the
+/// whole strip it needs is empty. Tiles never pass the span limits or the grid (the grid's height is <see cref="Rows"/> or
+/// the rows already used, whichever is more), so a hole stays empty only when no neighbour can cover it within its limits.
+/// With <see cref="IsAutoSpan"/> and <see cref="Rows"/> set as well, the panel sizes the automatic tiles to cover the
+/// <see cref="Columns"/> × <see cref="Rows"/> grid.
 /// </para>
 /// </remarks>
 public class TilePanel : Panel
@@ -63,9 +73,26 @@ public class TilePanel : Panel
     public static readonly StyledProperty<int> MaxColumnSpanProperty =
         AvaloniaProperty.Register<TilePanel, int>(nameof(MaxColumnSpan), coerce: CoerceCount);
 
-    /// <summary>Lets tiles grow into the empty cells to their right and below them after placement (see the remarks of <see cref="TilePanel"/>).</summary>
+    /// <summary>
+    /// Lets tiles grow into empty cells after placement: to their right and below them, then from any side into the holes left
+    /// (see the remarks of <see cref="TilePanel"/>).
+    /// </summary>
     public static readonly StyledProperty<bool> IsAutoFillProperty =
         AvaloniaProperty.Register<TilePanel, bool>(nameof(IsAutoFill));
+
+    /// <summary>
+    /// Lets the panel size the children that set neither <c>RowSpan</c> nor <c>ColumnSpan</c>: 1×1, 1×2, 2×1 or 2×2, picked
+    /// from the child's index and <see cref="Seed"/> (see the remarks of <see cref="TilePanel"/>).
+    /// </summary>
+    public static readonly StyledProperty<bool> IsAutoSpanProperty =
+        AvaloniaProperty.Register<TilePanel, bool>(nameof(IsAutoSpan));
+
+    /// <summary>
+    /// Picks the arrangement when <see cref="IsAutoSpan"/> is on: the same seed always gives the same tiles; another seed gives
+    /// another arrangement.
+    /// </summary>
+    public static readonly StyledProperty<int> SeedProperty =
+        AvaloniaProperty.Register<TilePanel, int>(nameof(Seed));
 
     /// <summary>How many rows a child covers (at least 1; attached).</summary>
     public static readonly AttachedProperty<int> RowSpanProperty =
@@ -74,6 +101,10 @@ public class TilePanel : Panel
     /// <summary>How many columns a child covers (at least 1; attached).</summary>
     public static readonly AttachedProperty<int> ColumnSpanProperty =
         AvaloniaProperty.RegisterAttached<TilePanel, Control, int>("ColumnSpan", 1, coerce: CoerceSpan);
+
+    // Share of automatic tiles that get 2×2, and 1×2 or 2×1, when no grid has to be filled (an extra 0.6 cell per tile).
+    private const double BigShare = 0.12;
+    private const double MediumShare = 0.24;
 
     // Placement of each child from the last measure (indexed like Children): cell row/column and spans; row -1 = collapsed.
     private int[] _row = [];
@@ -91,7 +122,7 @@ public class TilePanel : Panel
     static TilePanel()
     {
         AffectsMeasure<TilePanel>(ColumnsProperty, RowsProperty, SpacingProperty, MinCellSizeProperty, MaxRowSpanProperty,
-            MaxColumnSpanProperty, IsAutoFillProperty);
+            MaxColumnSpanProperty, IsAutoFillProperty, IsAutoSpanProperty, SeedProperty);
         AffectsParentMeasure<TilePanel>(RowSpanProperty, ColumnSpanProperty);
     }
 
@@ -142,6 +173,20 @@ public class TilePanel : Panel
     {
         get => GetValue(IsAutoFillProperty);
         set => SetValue(IsAutoFillProperty, value);
+    }
+
+    /// <inheritdoc cref="IsAutoSpanProperty"/>
+    public bool IsAutoSpan
+    {
+        get => GetValue(IsAutoSpanProperty);
+        set => SetValue(IsAutoSpanProperty, value);
+    }
+
+    /// <inheritdoc cref="SeedProperty"/>
+    public int Seed
+    {
+        get => GetValue(SeedProperty);
+        set => SetValue(SeedProperty, value);
     }
 
     /// <summary>The number of columns of the last layout pass.</summary>
@@ -235,9 +280,29 @@ public class TilePanel : Panel
             maxRowSpan = Math.Min(maxRowSpan, across);
         }
 
-        // Placement on an (along, across) occupancy grid: "across" is the fixed axis, "along" the one the grid grows on.
-        var occupied = new List<bool[]>();
+        // Placement on an (along, across) grid of owners (child index, -1 = free): "across" is the fixed axis, "along" the one
+        // the grid grows on.
+        var owner = new List<int[]>();
         var alongUsed = 0;
+        var autoSpan = IsAutoSpan;
+        var isAuto = autoSpan ? new bool[count] : null;
+        var spread = autoSpan ? new bool[count] : null;
+        var autoLeft = 0;
+        if (autoSpan)
+        {
+            for (var i = 0; i < count; i++)
+            {
+                var child = children[i];
+                isAuto![i] = child.IsVisible && !child.IsSet(RowSpanProperty) && !child.IsSet(ColumnSpanProperty);
+                autoLeft += isAuto[i] ? 1 : 0;
+            }
+        }
+        // Automatic tiles stay within the shared rows (row-major with Rows set) rather than straddling their last line.
+        var autoAlongLimit = rowMajor && rows > 0 ? rows : int.MaxValue;
+        // With auto fill and a fixed grid, the cells the automatic tiles may add beyond one each so that the grid is covered.
+        var hasBudget = IsAutoFill && autoLeft > 0 && rowMajor && rows > 0;
+        var budget = hasBudget ? Math.Max(0, across * rows - MinimumCells(children, isAuto!, maxRowSpan, maxColumnSpan)) : 0;
+        var seed = Seed;
         for (var i = 0; i < count; i++)
         {
             var child = children[i];
@@ -246,12 +311,26 @@ public class TilePanel : Panel
                 _row[i] = -1;
                 continue;
             }
-            var rowSpan = Math.Min(GetRowSpan(child), maxRowSpan);
-            var columnSpan = Math.Min(GetColumnSpan(child), maxColumnSpan);
-            var spanAcross = rowMajor ? columnSpan : rowSpan;
-            var spanAlong = rowMajor ? rowSpan : columnSpan;
-            var (along, at) = FirstFit(occupied, across, spanAlong, spanAcross);
-            Occupy(occupied, across, along, at, spanAlong, spanAcross);
+            int along, at, spanAlong, spanAcross;
+            if (isAuto is not null && isAuto[i])
+            {
+                (along, at) = FirstFree(owner, across);
+                var spans = new SpanChoice(rowMajor, across, autoAlongLimit, maxRowSpan, maxColumnSpan);
+                (spanAlong, spanAcross) = ChooseSpan(owner, spread!, spans, seed, i, along, at, budget, autoLeft, hasBudget);
+                var added = spanAlong * spanAcross - 1;
+                spread![i] = added > 0;
+                budget = Math.Max(0, budget - added);
+                autoLeft--;
+            }
+            else
+            {
+                var rowSpan = Math.Min(GetRowSpan(child), maxRowSpan);
+                var columnSpan = Math.Min(GetColumnSpan(child), maxColumnSpan);
+                spanAcross = rowMajor ? columnSpan : rowSpan;
+                spanAlong = rowMajor ? rowSpan : columnSpan;
+                (along, at) = FirstFit(owner, across, spanAlong, spanAcross);
+            }
+            Occupy(owner, across, along, at, spanAlong, spanAcross, i);
             alongUsed = Math.Max(alongUsed, along + spanAlong);
             Store(i, rowMajor, along, at, spanAlong, spanAcross);
         }
@@ -271,19 +350,20 @@ public class TilePanel : Panel
                 var at = rowMajor ? _column[i] : _row[i];
                 var spanAlong = rowMajor ? _rowSpan[i] : _columnSpan[i];
                 var spanAcross = rowMajor ? _columnSpan[i] : _rowSpan[i];
-                while (spanAcross < maxAcross && at + spanAcross < across && IsFree(occupied, along, spanAlong, at + spanAcross, 1))
+                while (spanAcross < maxAcross && at + spanAcross < across && IsFree(owner, along, spanAlong, at + spanAcross, 1))
                 {
-                    Occupy(occupied, across, along, at + spanAcross, spanAlong, 1);
+                    Occupy(owner, across, along, at + spanAcross, spanAlong, 1, i);
                     spanAcross++;
                 }
-                while (spanAlong < maxAlong && along + spanAlong < alongLimit && IsFree(occupied, along + spanAlong, 1, at, spanAcross))
+                while (spanAlong < maxAlong && along + spanAlong < alongLimit && IsFree(owner, along + spanAlong, 1, at, spanAcross))
                 {
-                    Occupy(occupied, across, along + spanAlong, at, 1, spanAcross);
+                    Occupy(owner, across, along + spanAlong, at, 1, spanAcross, i);
                     spanAlong++;
                 }
                 alongUsed = Math.Max(alongUsed, along + spanAlong);
                 Store(i, rowMajor, along, at, spanAlong, spanAcross);
             }
+            FillHoles(owner, rowMajor, across, alongLimit, maxAlong, maxAcross);
         }
 
         _usedColumns = rowMajor ? across : alongUsed;
@@ -352,13 +432,13 @@ public class TilePanel : Panel
 
     private static double Extent(int span, double cell, double spacing) => Math.Max(0, span * cell + (span - 1) * spacing);
 
-    private static (int Along, int At) FirstFit(List<bool[]> occupied, int across, int spanAlong, int spanAcross)
+    private static (int Along, int At) FirstFit(List<int[]> owner, int across, int spanAlong, int spanAcross)
     {
         for (var along = 0; ; along++)
         {
             for (var at = 0; at + spanAcross <= across; at++)
             {
-                if (IsFree(occupied, along, spanAlong, at, spanAcross))
+                if (IsFree(owner, along, spanAlong, at, spanAcross))
                 {
                     return (along, at);
                 }
@@ -366,14 +446,31 @@ public class TilePanel : Panel
         }
     }
 
-    private static bool IsFree(List<bool[]> occupied, int along, int spanAlong, int at, int spanAcross)
+    /// <summary>The first free cell in reading order (rows, then columns within a row; the other way round column-major).</summary>
+    private static (int Along, int At) FirstFree(List<int[]> owner, int across)
     {
-        for (var a = along; a < along + spanAlong && a < occupied.Count; a++)
+        for (var along = 0; along < owner.Count; along++)
         {
-            var line = occupied[a];
+            var line = owner[along];
+            for (var at = 0; at < across; at++)
+            {
+                if (line[at] < 0)
+                {
+                    return (along, at);
+                }
+            }
+        }
+        return (owner.Count, 0);
+    }
+
+    private static bool IsFree(List<int[]> owner, int along, int spanAlong, int at, int spanAcross)
+    {
+        for (var a = along; a < along + spanAlong && a < owner.Count; a++)
+        {
+            var line = owner[a];
             for (var c = at; c < at + spanAcross; c++)
             {
-                if (line[c])
+                if (line[c] >= 0)
                 {
                     return false;
                 }
@@ -382,19 +479,231 @@ public class TilePanel : Panel
         return true;
     }
 
-    private static void Occupy(List<bool[]> occupied, int across, int along, int at, int spanAlong, int spanAcross)
+    private static void Occupy(List<int[]> owner, int across, int along, int at, int spanAlong, int spanAcross, int index)
     {
-        while (occupied.Count < along + spanAlong)
+        while (owner.Count < along + spanAlong)
         {
-            occupied.Add(new bool[across]);
+            var line = new int[across];
+            Array.Fill(line, -1);
+            owner.Add(line);
         }
         for (var a = along; a < along + spanAlong; a++)
         {
             for (var c = at; c < at + spanAcross; c++)
             {
-                occupied[a][c] = true;
+                owner[a][c] = index;
             }
         }
+    }
+
+    private static int OwnerAt(List<int[]> owner, int across, int along, int at) =>
+        along < 0 || at < 0 || at >= across || along >= owner.Count ? -1 : owner[along][at];
+
+    /// <summary>The cells the visible tiles cover at their smallest: the explicit spans, and one cell per automatic tile.</summary>
+    private static int MinimumCells(Controls children, bool[] isAuto, int maxRowSpan, int maxColumnSpan)
+    {
+        var cells = 0;
+        for (var i = 0; i < children.Count; i++)
+        {
+            var child = children[i];
+            if (!child.IsVisible)
+            {
+                continue;
+            }
+            cells += isAuto[i] ? 1 : Math.Min(GetRowSpan(child), maxRowSpan) * Math.Min(GetColumnSpan(child), maxColumnSpan);
+        }
+        return cells;
+    }
+
+    /// <summary>The grid and limits an automatic tile's size is chosen within.</summary>
+    private readonly record struct SpanChoice(bool RowMajor, int Across, int AlongLimit, int MaxRowSpan, int MaxColumnSpan);
+
+    /// <summary>
+    /// The (along, across) spans of an automatic tile at its first free cell. A size class is drawn from the child's index and
+    /// the seed (2×2, then 1×2 or 2×1, then 1×1); a class that does not fit there, breaks a limit or would touch another larger
+    /// automatic tile falls back to the next smaller one, so 1×1 always remains. With a budget (auto fill on a fixed grid) the
+    /// odds follow the cells still to cover per remaining tile, and a size never adds more cells than are left.
+    /// </summary>
+    private static (int Along, int Across) ChooseSpan(List<int[]> owner, bool[] spread, SpanChoice grid, int seed, int index,
+        int along, int at, int budget, int autoLeft, bool hasBudget)
+    {
+        double big;
+        double medium;
+        var keepApart = true;
+        var needed = 0;
+        if (hasBudget)
+        {
+            var perTile = autoLeft > 0 ? (double)budget / autoLeft : 0;
+            if (perTile >= 3)
+            {
+                (big, medium) = (1, 0);
+            }
+            else if (perTile >= 1)
+            {
+                big = (perTile - 1) / 2;
+                medium = 1 - big;
+            }
+            else
+            {
+                // Same mix as without a budget, scaled to add perTile cells per tile on average.
+                big = BigShare * perTile / (3 * BigShare + MediumShare);
+                medium = MediumShare * perTile / (3 * BigShare + MediumShare);
+            }
+            // A tight budget needs every tile it can get: larger tiles may then touch.
+            keepApart = perTile < 1;
+            // Cells the later tiles cannot add even if all of them were 2×2.
+            needed = Math.Max(0, budget - 3 * (autoLeft - 1));
+        }
+        else
+        {
+            (big, medium) = (BigShare, MediumShare);
+        }
+
+        var draw = LayoutSeed.Unit(seed, index);
+        var wideFirst = LayoutSeed.Unit(seed, index, 1) < 0.5;
+        var size = draw < big ? 3 : draw < big + medium ? 1 : 0;
+        if (needed >= 2)
+        {
+            size = 3;
+        }
+        else if (needed == 1)
+        {
+            size = Math.Max(size, 1);
+        }
+
+        // (rowSpan, columnSpan) candidates from the drawn class down to 1×1.
+        Span<(int Rows, int Columns)> candidates = stackalloc (int, int)[4];
+        var n = 0;
+        if (size == 3)
+        {
+            candidates[n++] = (2, 2);
+        }
+        if (size >= 1)
+        {
+            candidates[n++] = wideFirst ? (1, 2) : (2, 1);
+            candidates[n++] = wideFirst ? (2, 1) : (1, 2);
+        }
+        for (var k = 0; k < n; k++)
+        {
+            var (rowSpan, columnSpan) = candidates[k];
+            if (rowSpan > grid.MaxRowSpan || columnSpan > grid.MaxColumnSpan)
+            {
+                continue;
+            }
+            if (hasBudget && rowSpan * columnSpan - 1 > budget)
+            {
+                continue;
+            }
+            var spanAlong = grid.RowMajor ? rowSpan : columnSpan;
+            var spanAcross = grid.RowMajor ? columnSpan : rowSpan;
+            if (at + spanAcross > grid.Across || (along < grid.AlongLimit && along + spanAlong > grid.AlongLimit))
+            {
+                continue;
+            }
+            if (!IsFree(owner, along, spanAlong, at, spanAcross))
+            {
+                continue;
+            }
+            if (keepApart && TouchesLarger(owner, spread, grid.Across, along, at, spanAlong, spanAcross))
+            {
+                continue;
+            }
+            return (spanAlong, spanAcross);
+        }
+        return (1, 1);
+    }
+
+    /// <summary>Whether a block has a larger automatic tile on its ring of neighbouring cells (corners included).</summary>
+    private static bool TouchesLarger(List<int[]> owner, bool[] spread, int across, int along, int at, int spanAlong, int spanAcross)
+    {
+        for (var a = along - 1; a <= along + spanAlong; a++)
+        {
+            for (var c = at - 1; c <= at + spanAcross; c++)
+            {
+                var inside = a >= along && a < along + spanAlong && c >= at && c < at + spanAcross;
+                if (inside)
+                {
+                    continue;
+                }
+                var o = OwnerAt(owner, across, a, c);
+                if (o >= 0 && spread[o])
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Offers every empty cell of the grid (up to <paramref name="alongLimit"/>) to the tiles around it until none can grow:
+    /// the neighbour before or after it on either axis grows one line over it when that whole line is empty and its span
+    /// limit allows. Each growth covers at least one cell, so this ends.
+    /// </summary>
+    private void FillHoles(List<int[]> owner, bool rowMajor, int across, int alongLimit, int maxAlong, int maxAcross)
+    {
+        bool grew;
+        do
+        {
+            grew = false;
+            for (var along = 0; along < alongLimit; along++)
+            {
+                for (var at = 0; at < across; at++)
+                {
+                    if (OwnerAt(owner, across, along, at) >= 0)
+                    {
+                        continue;
+                    }
+                    grew |= TryGrowInto(owner, rowMajor, across, alongLimit, maxAlong, maxAcross, along, at);
+                }
+            }
+        }
+        while (grew);
+    }
+
+    private bool TryGrowInto(List<int[]> owner, bool rowMajor, int across, int alongLimit, int maxAlong, int maxAcross, int along,
+        int at)
+    {
+        // Neighbours: before across, before along, after across, after along.
+        ReadOnlySpan<(int DAlong, int DAt)> sides = [(0, -1), (-1, 0), (0, 1), (1, 0)];
+        foreach (var (dAlong, dAt) in sides)
+        {
+            var i = OwnerAt(owner, across, along + dAlong, at + dAt);
+            if (i < 0)
+            {
+                continue;
+            }
+            var tAlong = rowMajor ? _row[i] : _column[i];
+            var tAt = rowMajor ? _column[i] : _row[i];
+            var tSpanAlong = rowMajor ? _rowSpan[i] : _columnSpan[i];
+            var tSpanAcross = rowMajor ? _columnSpan[i] : _rowSpan[i];
+            if (dAlong == 0)
+            {
+                // The hole is beside the tile: grow across by one line over the tile's whole along-range.
+                if (tSpanAcross >= maxAcross || tAlong + tSpanAlong > alongLimit)
+                {
+                    continue;
+                }
+                if (!IsFree(owner, tAlong, tSpanAlong, at, 1))
+                {
+                    continue;
+                }
+                Occupy(owner, across, tAlong, at, tSpanAlong, 1, i);
+                Store(i, rowMajor, tAlong, Math.Min(tAt, at), tSpanAlong, tSpanAcross + 1);
+            }
+            else
+            {
+                // The hole is above or below the tile: grow along by one line over the tile's whole across-range.
+                if (tSpanAlong >= maxAlong || !IsFree(owner, along, 1, tAt, tSpanAcross))
+                {
+                    continue;
+                }
+                Occupy(owner, across, along, tAt, 1, tSpanAcross, i);
+                Store(i, rowMajor, Math.Min(tAlong, along), tAt, tSpanAlong + 1, tSpanAcross);
+            }
+            return true;
+        }
+        return false;
     }
 
     private void Store(int i, bool rowMajor, int along, int at, int spanAlong, int spanAcross)

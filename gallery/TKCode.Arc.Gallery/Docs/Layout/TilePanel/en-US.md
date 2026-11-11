@@ -77,14 +77,41 @@ the result is predictable:
   `MaxColumnSpan` and the last column.
 - Then it grows down one row at a time likewise, up to `MaxRowSpan` and the grid's height: `Rows`, or the rows the tiles
   already use, whichever is more.
-- Holes that no tile can reach within its limits stay empty. Tiles never move, overlap or shrink.
+- Every hole that is still empty is then offered to the tiles around it, on any side: the tile to its left or right grows
+  sideways, the one above or below grows up or down, when the whole strip of cells it needs is empty and its span limit
+  allows. This repeats until no tile can grow.
+- Tiles never move, overlap or shrink, so explicit spans are always kept. A hole stays empty only when no neighbouring tile
+  can cover it within `MaxRowSpan` / `MaxColumnSpan`.
 
 <Demo name="AutoFill" />
+
+### Auto span
+
+`IsAutoSpan` (off by default) lets the panel size the tiles: children that set neither `TilePanel.RowSpan` nor
+`TilePanel.ColumnSpan` get 1×1, 1×2, 2×1 or 2×2. This is meant for an `ItemsControl` whose items all use one template, where
+nothing on the items says how big each one should be.
+
+- **Repeatable.** A tile's size depends on its index, `Seed` (0 by default) and the grid, never on random values during
+  layout: the same items, seed and grid always give the same tiles, and with a fixed `Columns` resizing the window only
+  scales them. Set another `Seed` for another arrangement. Adding items at the end keeps the tiles before them; inserting or
+  removing one changes the tiles after it.
+- **No holes before a tile.** An automatic tile goes to the first free cell and takes a size that fits there, so it never
+  leaves an empty cell before it.
+- **Spread out.** Larger tiles are kept from touching each other, so they do not bunch up, and none straddles the last of
+  `Rows`. `MaxRowSpan` and `MaxColumnSpan` still apply (`MaxColumnSpan="1"` allows only 1×1 and 2×1).
+- **Explicit spans win.** A child that sets either span keeps the spans it asked for, as without auto span.
+
+With `IsAutoFill` and a fixed grid (`Rows` set as well as `Columns`, or a width that fixes the column count), the panel
+sizes the automatic tiles to cover the whole `Columns` × `Rows` grid: fewer items get larger tiles, and the auto fill step
+covers whatever is left. With more items than cells, all automatic tiles are 1×1 and the rest continue on further rows.
+
+<Demo name="AutoSpan" />
 
 ### In an ItemsControl
 
 The panel's children are the item containers, so put the spans on them, for example with a style that reads them from the
-item. Replacing an item rebuilds its container with the new spans.
+item. Replacing an item rebuilds its container with the new spans. Items that should not choose a size need no spans at all
+with `IsAutoSpan` (see [Auto span](#auto-span)).
 
 <Demo name="ItemsControl" />
 

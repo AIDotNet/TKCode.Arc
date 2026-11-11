@@ -43,8 +43,9 @@ is currently shortest, so the lanes stay close in length.
 
 Placement is shortest lane first, in child order: the child goes to the lane whose end is nearest the top, and of two
 equally short lanes the first one wins. The same children therefore always give the same layout, and adding a child at the
-end never moves the ones before it. Sizes come from the children's own measurement, never from random values. The panel is
-as tall as its longest lane, so it scrolls correctly in a `ScrollViewer`.
+end never moves the ones before it. By default sizes come from the children's own measurement; `ItemSizing="Varied"` lets
+the panel pick them instead (see [Varied sizes](#varied-sizes)). The panel is as tall as its longest lane, so it scrolls
+correctly in a `ScrollViewer`.
 
 Collapsed children (`IsVisible="False"`) take no place. Adding, removing or resizing a child, or changing any property,
 lays the panel out again.
@@ -71,6 +72,23 @@ within `MaxItemSize`, so wrapping text has the room it will get. A child's own `
 wins over `MaxItemSize`, so its content is never cut below what it asked for.
 
 <Demo name="ItemSize" />
+
+### Varied sizes
+
+When every item uses the same template, their heights are equal and the panel lays them out as a plain grid. Set
+`ItemSizing="Varied"` to ignore the content's size: the panel gives each child a height (a width in rows) between
+`MinItemSize` and `MaxItemSize`, so cards with the same template still form a masonry wall. Children are measured within the
+size they get, so let the template stretch (a picture or color area that fills the card) rather than fix its height.
+
+- **Repeatable.** A size depends only on the child's index and `Seed` (0 by default). Nothing is random during layout: the
+  same items, seed and lane count always give the same wall, and resizing the window never shuffles it. Set another `Seed`
+  for another arrangement.
+- **Index-based.** Adding items at the end keeps the sizes of the items before them; inserting or removing an item changes
+  the sizes of the items after it. Hiding a child (`IsVisible="False"`) keeps the others' sizes.
+- **Bounds.** Set both `MinItemSize` and `MaxItemSize` for a fixed range. A bound left unset follows the lane size: half a
+  lane for the minimum, one and a half lanes for the maximum. A child's own `MinHeight` (or `MinWidth`) still wins.
+
+<Demo name="VariedSizes" />
 
 ### Filling the last item
 
