@@ -1,6 +1,6 @@
 ---
 title: 更新日誌
-source-hash: 50d12d0ea25b
+source-hash: 623515abd1ec
 ---
 
 # 更新日誌
@@ -8,6 +8,14 @@ source-hash: 50d12d0ea25b
 TKCode.Arc 的所有重要變更，最新的在前。版本遵循[語意化版本](https://semver.org/)。從 1.0.0 起，破壞性 API 變更只在新的主版本中出現；更早的 `-preview` 版本在各發行版本之間可能變更 API。同一份清單也保存在儲存庫的 `CHANGELOG.md` 中。
 
 每次發行附帶的 NuGet 套件：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Foundation`（0.3.2 起）、`TKCode.Arc.Fonts` 、`TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 、`TKCode.Arc.Special`、`TKCode.Arc.Workflow`、`TKCode.Arc.Dock`（0.4.0-preview.2 起）、`TKCode.Arc.Themes.Pixel`、`TKCode.Arc.Themes.Corners`、`TKCode.Arc.Mobile`、`TKCode.Arc.Terminal`、`TKCode.Arc.Audio`、`TKCode.Arc.Audio.Native`、`TKCode.Arc.Audio.Browser`、`TKCode.Arc.Templates`（0.4.0-preview.6 起）、`TKCode.Arc.Pdf`、`TKCode.Arc.Pdf.Native` 和 `TKCode.Arc.Pdf.Browser`（1.0.0 起），`TKCode.Arc.Video`、`TKCode.Arc.Video.Native` 和 `TKCode.Arc.Video.Browser`（1.1.0-preview.1 起）。
+
+## 1.1.0-preview.3（2026-11-10）
+
+效能更新：應用程式可以限制持續循環重繪的頻率。與 1.1.0-preview.2 相比沒有破壞性變更。安裝時使用 `--version 1.1.0-preview.3`（或 `--prerelease`）。
+
+### 新增
+
+- **`ArcMotion.MaxFrameRate`**（`TKCode.Arc.Core`）：可繼承的附加屬性，限制元素之下每個 `LiveLoop`（吉祥物、骨架畫面脈動、閃光、即時指示點）每秒最多推進的次數。每次推進傳入自上次以來經過的時間，因此動作速度不變，略過的影格不繪製任何內容。預設值 0 與之前一樣每影格推進。在始終顯示的小視窗上設定它，例如 `arc:ArcMotion.MaxFrameRate="24"`，緩慢的裝飾動態效果就不會再以顯示器的完整影格率重繪視窗。
 
 ## 1.1.0-preview.2（2026-11-10）
 

@@ -1,6 +1,6 @@
 <Project>
     <PropertyGroup>
-        <ArcVersion>1.1.0-preview.2</ArcVersion>
+        <ArcVersion>1.1.0-preview.3</ArcVersion>
         <AvaloniaVersion>12.1.5</AvaloniaVersion>
         <!-- What the packages ask of Avalonia: this version or any later 12.x (#97). Restore picks the lowest match, so the
              repository still builds against AvaloniaVersion, while apps may move to newer Avalonia 12 releases. -->

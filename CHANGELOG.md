@@ -8,6 +8,19 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0), `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` (from 1.1.0-preview.1).
 
+## 1.1.0-preview.3 - 2026-11-10
+
+A performance release: apps can cap how often continuous loops repaint. There are no breaking changes from
+1.1.0-preview.2. Install it with `--version 1.1.0-preview.3` (or `--prerelease`).
+
+### Added
+
+- **`ArcMotion.MaxFrameRate`** (`TKCode.Arc.Core`): an inherited attached property that caps how many times a second
+  every `LiveLoop` under an element steps (mascots, skeleton pulses, shimmers, live dots). Each step gets the time since
+  the last one, so the motion keeps its speed, and skipped frames draw nothing. The default, 0, steps on every frame, as
+  before. Set it on a small always-on window, e.g. `arc:ArcMotion.MaxFrameRate="24"`, to stop slow decorative motion
+  from repainting the window at the display's full rate.
+
 ## 1.1.0-preview.2 - 2026-11-10
 
 A fix for NativeAOT: apps that use `Sidebar` publish without trim warnings. There are no breaking changes from
