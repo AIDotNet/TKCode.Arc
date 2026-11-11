@@ -14,10 +14,12 @@ namespace TKCode.Arc;
 /// The presence dot of an <see cref="Avatar"/>, built by the avatar when it first has a status. Its look (size, ring,
 /// halo, the fill per status and the fill's transition) is its own ControlTheme in AvatarTheme.axaml, so a code-built
 /// part is styled like the template part it replaces; the avatar mirrors its status into <c>:online</c>, <c>:busy</c>,
-/// <c>:away</c> or <c>:connecting</c>. Every status but Online and Offline also differs in shape, not only in color:
-/// Busy carries a bar, Connecting is a hollow ring that breathes.
+/// <c>:away</c> or <c>:connecting</c>, and its size into <c>:small</c>, <c>:large</c>, <c>:large-plus</c> or
+/// <c>:xlarge</c>, so the dot grows with the avatar. Every status but Online and Offline also differs in shape, not only
+/// in color: Busy carries a bar, Connecting is a hollow ring that breathes.
 /// </summary>
-[PseudoClasses(OnlinePseudoClass, BusyPseudoClass, AwayPseudoClass, ConnectingPseudoClass)]
+[PseudoClasses(OnlinePseudoClass, BusyPseudoClass, AwayPseudoClass, ConnectingPseudoClass,
+    Avatar.SmallPseudoClass, Avatar.LargePseudoClass, Avatar.LargePlusPseudoClass, Avatar.XLargePseudoClass)]
 internal sealed class AvatarStatusDot : Border
 {
     public const string OnlinePseudoClass = ":online";
@@ -38,6 +40,13 @@ internal sealed class AvatarStatusDot : Border
     protected override Type StyleKeyOverride => typeof(AvatarStatusDot);
 
     internal AvatarStatus Status { get; private set; }
+
+    /// <summary>Mirrors the avatar's size into the dot and its bar (Medium has no pseudo-class).</summary>
+    internal void SetSize(AvatarSize size)
+    {
+        Avatar.SetSizePseudoClasses(PseudoClasses, size);
+        _bar.SetSize(size);
+    }
 
     internal void SetStatus(AvatarStatus status)
     {
@@ -83,18 +92,37 @@ internal sealed class AvatarStatusDot : Border
     }
 }
 
+/// <summary>
+/// The diameter of an <see cref="Avatar"/>. Each step is about a third larger than the one before. The members are in
+/// the order they were added, not in size order: <see cref="LargePlus"/> (64 px) sits between <see cref="Large"/> and
+/// <see cref="XLarge"/>.
+/// </summary>
 public enum AvatarSize
 {
+    /// <summary>28 px, for table rows, activity logs and dense lists.</summary>
     Small,
+
+    /// <summary>36 px (the default), for headers, cards and form summaries.</summary>
     Medium,
+
+    /// <summary>48 px, for roster panels and profile cards.</summary>
     Large,
-    XLarge
+
+    /// <summary>88 px, for account and profile page headers.</summary>
+    XLarge,
+
+    /// <summary>64 px, between Large and XLarge: a contact or member detail pane, a profile card that leads with the person.</summary>
+    LargePlus
 }
 
 /// <summary>The bar across a Busy <see cref="AvatarStatusDot"/>; its look is its own ControlTheme in AvatarTheme.axaml.</summary>
+[PseudoClasses(Avatar.SmallPseudoClass, Avatar.LargePseudoClass, Avatar.LargePlusPseudoClass, Avatar.XLargePseudoClass)]
 internal sealed class AvatarStatusBar : Border
 {
     protected override Type StyleKeyOverride => typeof(AvatarStatusBar);
+
+    /// <summary>The bar spans the dot's inner circle, so it follows the dot's size.</summary>
+    internal void SetSize(AvatarSize size) => Avatar.SetSizePseudoClasses(PseudoClasses, size);
 }
 
 /// <summary>The presence an <see cref="Avatar"/> shows in its status dot.</summary>
@@ -124,8 +152,8 @@ public enum AvatarStatus
 /// show at once); a failed photo falls back to initials; the status dot pops in on a snappy spring.
 /// </summary>
 [TemplatePart(ImagePart, typeof(ArcImage))]
-[PseudoClasses(ImageLoadingPseudoClass, ShowImagePseudoClass, FallbackPseudoClass, SmallPseudoClass, LargePseudoClass, XLargePseudoClass,
-    OnlinePseudoClass, OfflinePseudoClass, BusyPseudoClass, AwayPseudoClass, ConnectingPseudoClass)]
+[PseudoClasses(ImageLoadingPseudoClass, ShowImagePseudoClass, FallbackPseudoClass, SmallPseudoClass, LargePseudoClass, LargePlusPseudoClass,
+    XLargePseudoClass, OnlinePseudoClass, OfflinePseudoClass, BusyPseudoClass, AwayPseudoClass, ConnectingPseudoClass)]
 public class Avatar : TemplatedControl
 {
     public const string ImagePart = "PART_Image";
@@ -133,11 +161,14 @@ public class Avatar : TemplatedControl
     public const string ShowImagePseudoClass = ":show-image";
     public const string FallbackPseudoClass = ":fallback";
 
-    /// <summary><see cref="Size"/> Small, Large or XLarge as a pseudo-class (Medium has none; the theme selects on these).</summary>
+    /// <summary><see cref="Size"/> Small, Large, LargePlus or XLarge as a pseudo-class (Medium has none; the theme selects on these).</summary>
     public const string SmallPseudoClass = ":small";
 
     /// <inheritdoc cref="SmallPseudoClass"/>
     public const string LargePseudoClass = ":large";
+
+    /// <inheritdoc cref="SmallPseudoClass"/>
+    public const string LargePlusPseudoClass = ":large-plus";
 
     /// <inheritdoc cref="SmallPseudoClass"/>
     public const string XLargePseudoClass = ":xlarge";
@@ -165,7 +196,7 @@ public class Avatar : TemplatedControl
     public static readonly StyledProperty<ImageSource?> SourceProperty =
         AvaloniaProperty.Register<Avatar, ImageSource?>(nameof(Source));
 
-    /// <summary>Avatar size: Small, Medium (default), Large or XLarge.</summary>
+    /// <summary>Avatar size: Small 28, Medium 36 (default), Large 48, LargePlus 64 or XLarge 88. The status dot and the initials follow it.</summary>
     public static readonly StyledProperty<AvatarSize> SizeProperty =
         AvaloniaProperty.Register<Avatar, AvatarSize>(nameof(Size), AvatarSize.Medium);
 
@@ -216,10 +247,17 @@ public class Avatar : TemplatedControl
     // subscription per selector, and avatars repeat in every member list.
     private void UpdateSizePseudoClasses()
     {
-        var size = Size;
-        PseudoClasses.Set(SmallPseudoClass, size == AvatarSize.Small);
-        PseudoClasses.Set(LargePseudoClass, size == AvatarSize.Large);
-        PseudoClasses.Set(XLargePseudoClass, size == AvatarSize.XLarge);
+        SetSizePseudoClasses(PseudoClasses, Size);
+        _statusDot?.SetSize(Size);
+    }
+
+    /// <summary>One pseudo-class per size but Medium; shared with the status dot and its bar, which follow the avatar's size.</summary>
+    internal static void SetSizePseudoClasses(IPseudoClasses classes, AvatarSize size)
+    {
+        classes.Set(SmallPseudoClass, size == AvatarSize.Small);
+        classes.Set(LargePseudoClass, size == AvatarSize.Large);
+        classes.Set(LargePlusPseudoClass, size == AvatarSize.LargePlus);
+        classes.Set(XLargePseudoClass, size == AvatarSize.XLarge);
     }
 
     private void UpdateStatusPseudoClasses()
@@ -294,6 +332,7 @@ public class Avatar : TemplatedControl
                 return;
             }
             var dot = new AvatarStatusDot { Name = "PART_Status" };
+            dot.SetSize(Size);
             dot.SetStatus(Status);
             var host = new PresenceHost
             {
@@ -337,7 +376,10 @@ public class Avatar : TemplatedControl
         }
     }
 
-    /// <summary>XLarge avatars inset the dot (the theme's <c>StatusMarginXL</c>); the other sizes leave it in the corner.</summary>
+    /// <summary>
+    /// LargePlus and XLarge avatars inset the dot (the theme's <c>StatusMarginLGPlus</c> and <c>StatusMarginXL</c>), so its
+    /// center stays near the circle's edge; the smaller sizes leave it in the corner.
+    /// </summary>
     private void UpdateStatusMargin()
     {
         _statusMargin?.Dispose();
@@ -346,9 +388,15 @@ public class Avatar : TemplatedControl
         {
             return;
         }
-        if (Size == AvatarSize.XLarge)
+        AvatarTokenKind? inset = Size switch
         {
-            _statusMargin = _statusHost.Bind(MarginProperty, _statusHost.GetResourceObservable(AvatarTokens.Key(AvatarTokenKind.StatusMarginXL)), BindingPriority.Style);
+            AvatarSize.XLarge => AvatarTokenKind.StatusMarginXL,
+            AvatarSize.LargePlus => AvatarTokenKind.StatusMarginLGPlus,
+            _ => null
+        };
+        if (inset is { } kind)
+        {
+            _statusMargin = _statusHost.Bind(MarginProperty, _statusHost.GetResourceObservable(AvatarTokens.Key(kind)), BindingPriority.Style);
         }
         else
         {

@@ -4925,8 +4925,8 @@
         <target>由 DisplayName 计算出的首字母：取其前两个单词的首字母。</target>
       </trans-unit>
       <trans-unit id="Avatar.Size">
-        <source>Avatar size: Small, Medium (default), Large or XLarge.</source>
-        <target>头像尺寸：Small、Medium（默认）、Large 或 XLarge。</target>
+        <source>Avatar size: Small 28, Medium 36 (default), Large 48, LargePlus 64 or XLarge 88. The status dot and the initials follow it.</source>
+        <target>头像尺寸：Small 为 28，Medium 为 36（默认），Large 为 48，LargePlus 为 64，XLarge 为 88。状态圆点与首字母随之变化。</target>
       </trans-unit>
       <trans-unit id="Avatar.Source">
         <source>Photo to show. A photo that fails to load falls back to initials.</source>
@@ -4957,8 +4957,8 @@
         <target>折叠进“+N”标签的人数。</target>
       </trans-unit>
       <trans-unit id="AvatarGroup.Size">
-        <source>Avatar size: Small 28, Medium 36, Large 48 (XLarge is treated as Large).</source>
-        <target>头像尺寸：Small 为 28，Medium 为 36，Large 为 48（XLarge 按 Large 处理）。</target>
+        <source>Avatar size: Small 28, Medium 36, Large 48 (LargePlus and XLarge are treated as Large).</source>
+        <target>头像尺寸：Small 为 28，Medium 为 36，Large 为 48（LargePlus 与 XLarge 按 Large 处理）。</target>
       </trans-unit>
       <trans-unit id="AvatarGroupMember">
         <source>One person in an `AvatarGroup` (Arc `members[]` entry).</source>
@@ -16451,6 +16451,10 @@
       <trans-unit id="InlineEdit.PlaceholderText">
         <source>Shown while the value is empty.</source>
         <target>值为空时显示的占位文字。</target>
+      </trans-unit>
+      <trans-unit id="InlineEdit.ReserveActionSpace">
+        <source>Keeps room after a single line for the save and cancel buttons (66 px; default true), so the box is the same width at rest and while editing. False lets the box hug its text, so a tag or badge can follow the name: the rest state then draws nothing past the frame (no pencil, saving spinner or result mark; the half-opacity text, the failed-save message and the announcements remain), and while editing the buttons overlay what follows, with the control drawn above its later siblings in the same panel. The reserve does not come back while editing, so neither the text nor the content after it moves when the buttons appear. A multiline field fills its line and keeps its 38 px reserve.</source>
+        <target>在单行文字后面为保存与取消按钮留出空间（66 px；默认 true），使框在静止时与编辑时宽度相同。设为 False 时框紧贴文字，名称后面可以紧跟标签或徽章：此时静止状态在框外不绘制任何东西（没有铅笔、保存中的加载指示或结果标记；半透明的文字、保存失败的消息和播报仍然保留），编辑时按钮覆盖在后面的内容上，控件绘制在同一面板中排在它后面的元素之上。保留空间不会在编辑时恢复，因此按钮出现时，文字和它后面的内容都不会移动。多行字段占满整行，保留 38 px。</target>
       </trans-unit>
       <trans-unit id="InlineEdit.RetryText">
         <source>The retry link after a failed save.</source>

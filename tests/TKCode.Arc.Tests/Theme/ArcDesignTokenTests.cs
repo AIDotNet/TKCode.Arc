@@ -1,6 +1,7 @@
 using TKCode.Arc.DesignTokens;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
+using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 
 namespace TKCode.Arc.Tests.Theme;
@@ -65,6 +66,58 @@ public class ArcDesignTokenTests
             window.Close();
             await TestHelpers.ApplyAsync(null);
         }
+    }
+
+    [AvaloniaFact]
+    public async Task Content_Widths_And_Media_Sizes_Resolve_From_Xaml_And_Can_Be_Overridden()
+    {
+        // Issue #110: settings pages and QR codes had to hard-code their widths.
+        var page = (StackPanel)AvaloniaRuntimeXamlLoader.Load(
+            """
+            <StackPanel xmlns="https://github.com/avaloniaui"
+                        xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                        MaxWidth="{arc:ArcDesignTokenResource ContentMaxWidthMD}">
+                <Border Width="{arc:ArcDesignTokenResource MediaSizeLG}"
+                        Height="{arc:ArcDesignTokenResource MediaSizeLG}" />
+            </StackPanel>
+            """);
+        var window = TestHelpers.Show(page);
+        try
+        {
+            page.MaxWidth.ShouldBe(760);
+            var qr = (Avalonia.Controls.Border)page.Children[0];
+            qr.Width.ShouldBe(192);
+            qr.Height.ShouldBe(192);
+
+            ArcTokens.Get<double>(page, ArcDesignTokenKind.ContentMaxWidthSM).ShouldBe(640);
+            ArcTokens.Get<double>(page, ArcDesignTokenKind.ContentMaxWidthLG).ShouldBe(880);
+            ArcTokens.Get<double>(page, ArcDesignTokenKind.ContentMaxWidthXL).ShouldBe(1120);
+            ArcTokens.Get<double>(page, ArcDesignTokenKind.MediaSizeSM).ShouldBe(64);
+            ArcTokens.Get<double>(page, ArcDesignTokenKind.MediaSizeMD).ShouldBe(128);
+            ArcTokens.Get<double>(page, ArcDesignTokenKind.MediaSizeXL).ShouldBe(256);
+
+            await TestHelpers.ApplyAsync(t => t.Token(nameof(ArcDesignTokenKind.ContentMaxWidthMD), "680"));
+            page.MaxWidth.ShouldBe(680);
+        }
+        finally
+        {
+            window.Close();
+            await TestHelpers.ApplyAsync(null);
+        }
+    }
+
+    [AvaloniaFact]
+    public void The_Width_And_Media_Tokens_Are_Appended_So_Earlier_Kinds_Keep_Their_Numbers()
+    {
+        // ArcDesignTokenKind numbers tokens in declaration order; code compiled against an earlier version keeps its numbers.
+        var kinds = Enum.GetValues<ArcDesignTokenKind>();
+        kinds[^8..].ShouldBe(
+        [
+            ArcDesignTokenKind.ContentMaxWidthSM, ArcDesignTokenKind.ContentMaxWidthMD, ArcDesignTokenKind.ContentMaxWidthLG,
+            ArcDesignTokenKind.ContentMaxWidthXL, ArcDesignTokenKind.MediaSizeSM, ArcDesignTokenKind.MediaSizeMD,
+            ArcDesignTokenKind.MediaSizeLG, ArcDesignTokenKind.MediaSizeXL
+        ]);
+        ((int)ArcDesignTokenKind.ContentMaxWidthSM).ShouldBe((int)ArcDesignTokenKind.ReduceTransparency + 1);
     }
 
     private static object? Find(Avalonia.Controls.Control host, ArcDesignTokenKind kind)

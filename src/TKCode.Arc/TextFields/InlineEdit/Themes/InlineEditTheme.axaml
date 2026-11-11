@@ -146,8 +146,7 @@
             <ControlTemplate TargetType="arc:InlineEdit">
                 <StackPanel Margin="{arc:InlineEditTokenResource RootMargin}">
                     <Border Name="PART_Line"
-                            HorizontalAlignment="Left"
-                            Padding="{arc:InlineEditTokenResource LinePadding}">
+                            HorizontalAlignment="Left">
                         <arc:InlineEditBox Name="PART_Box"
                                            IsMultiline="{TemplateBinding IsMultiline}">
                             <Border Name="PART_Ring"
@@ -193,6 +192,12 @@
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="ClipToBounds" Value="False" />
 
+        <!-- The room reserved for the actions. A style, not a template value: a template element's own value would outrank
+             the :multiline and :no-reserve styles below. -->
+        <Style Selector="^ /template/ Border#PART_Line">
+            <Setter Property="Padding" Value="{arc:InlineEditTokenResource LinePadding}" />
+        </Style>
+
         <!-- Display and field share every metric: border, padding, font and line height. -->
         <Style Selector="^ /template/ arc|InlineEditDisplay#PART_Display">
             <Setter Property="Padding" Value="{arc:InlineEditTokenResource TitlePadding}" />
@@ -235,6 +240,18 @@
             </Style>
             <Style Selector="^ /template/ arc|InlineEditDisplay#PART_Display">
                 <Setter Property="HorizontalAlignment" Value="Stretch" />
+            </Style>
+        </Style>
+
+        <!-- ReserveActionSpace="False": a single line hugs its text, so a tag can follow it. The control keeps that width
+             while editing, so nothing moves when the actions appear: they overlay what follows, and the control draws
+             above its later siblings in the same panel, so they stay visible and clickable. -->
+        <Style Selector="^:no-reserve:not(:multiline)">
+            <Style Selector="^ /template/ Border#PART_Line">
+                <Setter Property="Padding" Value="0" />
+            </Style>
+            <Style Selector="^:editing">
+                <Setter Property="ZIndex" Value="1" />
             </Style>
         </Style>
 

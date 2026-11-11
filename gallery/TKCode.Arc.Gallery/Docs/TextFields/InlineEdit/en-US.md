@@ -74,7 +74,8 @@ display of the new text, a saving indicator, a rollback on failure and the valid
    button with the check glyph) and the cancel button (a 28 px outlined round button with the close glyph). While saving
    it shows a 14 px spinner; after a save it shows a check mark that draws itself; after a failed save it shows a
    danger glyph. A single line keeps 66 px free for the actions and a multiline value keeps 38 px, so the text never
-   rewraps when the actions appear.
+   rewraps when the actions appear. With `ReserveActionSpace="False"` a single line keeps no room, and the actions
+   overlay what follows it (see Text followed by a tag).
 7. **Message row**: 12 px copy under the field. A validation message uses the danger color. A failed save uses the
    secondary text color and ends with the `RetryText` link, which reopens the field with the failed text.
 8. **Status**: a hidden polite region that announces saving progress and the outcome.
@@ -99,6 +100,29 @@ Use `Title` for text that names something and is read as a heading, and use `Bod
 one variant for each kind of text on a page, so the names line up and the descriptions read as one group. Use
 `IsMultiline` only for text that people write in paragraphs; a single-line name that wraps is a sign that it is too
 long for the place it sits.
+
+### Text followed by a tag
+
+A single line keeps 66 px free after its text for the save and cancel buttons, so the box is as wide at rest as while
+editing. To put a tag, a badge or a count right after a name, set `ReserveActionSpace="False"`: the box then hugs its
+text.
+
+<Demo name="FollowedByTag" />
+
+Without the reserve:
+
+- **At rest** nothing is drawn after the frame, because it would sit on the tag: no pencil on hover, and no spinner or
+  check mark around a save. The frame still tints on hover, a saving value still shows at half opacity until the save
+  lands, a failed save still shows its message and the retry link under the field, and screen readers hear the same
+  announcements.
+- **While editing** the save and cancel buttons appear after the frame, over the tag, and the control draws above the
+  elements that follow it in the same panel, so the buttons can be clicked. The reserve does not come back: it would
+  push the tag 66 px to the right as the field opens, and in a narrow or centered row it would shift or cut off the
+  text being edited. The tag moves only as the box grows with the draft.
+- Put the field and the tag in the same panel, such as a horizontal `StackPanel`. The buttons take 66 px after the
+  frame; keep that space inside the window and inside any container that clips (the viewport of a `ScrollViewer`, a
+  panel with `ClipToBounds`), or they are cut off.
+- A multiline field fills its line, so nothing can follow it; it keeps its 38 px reserve whatever the property says.
 
 ### Binding
 
@@ -410,7 +434,8 @@ value is parsed before it reaches the view model.
 - While a single line is being edited, the editor is at least `TitleEditingMinWidth` (110 px) wide for a title and
   `BodyEditingMinWidth` (70 px) for body text.
 - The text reserves room for the actions in every state: 66 px on the right of a single line (`LinePadding`) and 38 px
-  for multiline (`MultilineLinePadding`), so the text does not rewrap when they appear.
+  for multiline (`MultilineLinePadding`), so the text does not rewrap when they appear. `ReserveActionSpace="False"`
+  drops the single-line reserve; the box then hugs its text and the actions overlay what follows while editing.
 - A tap on the text starts editing, and the hover hint follows fine pointers only. The save and cancel buttons are 28 px
   (`ActionSize`), so on a phone a tap outside the field saves it, as Tab or a click does.
 - On a phone, use `IsMultiline` for long values so the text wraps instead of staying on one line, and give the field a

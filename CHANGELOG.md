@@ -8,6 +8,36 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0), `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` (from 1.1.0-preview.1).
 
+## Unreleased
+
+### Added
+
+- **`InlineEdit.ReserveActionSpace`** ([#110](https://github.com/AIDotNet/TKCode.Arc/issues/110)): `False` drops the
+  66 px a single line keeps after its text for the save and cancel buttons, so the box hugs its text and a tag or badge
+  can follow the name. At rest nothing is drawn past the frame (no pencil hint, saving spinner or result mark); while
+  editing the buttons overlay what follows and the control draws above its later siblings in the same panel. The
+  reserve does not come back while editing, so neither the text nor the tag jumps when the buttons appear. A multiline
+  field keeps its 38 px. The default (`True`) is unchanged.
+- **Content-width and media tokens** ([#110](https://github.com/AIDotNet/TKCode.Arc/issues/110)):
+  `ContentMaxWidthSM` / `MD` / `LG` / `XL` (640 / 760 / 880 / 1120) cap a page's content column (a reading column or
+  a single form, a settings page, a document page, full-width sections), and `MediaSizeSM` / `MD` / `LG` / `XL`
+  (64 / 128 / 192 / 256) size square media (a thumbnail in a row, a card preview, a QR code or cover art, a large image
+  preview). Use them as `{arc:ArcDesignTokenResource ContentMaxWidthMD}` and override them like any ArcDesign token.
+  They are appended to `ArcDesignTokenKind`, so the existing members keep their numbers.
+- **`AvatarSize.LargePlus`** ([#110](https://github.com/AIDotNet/TKCode.Arc/issues/110)): a 64 px avatar between
+  `Large` (48) and `XLarge` (88), with `TypeLG` initials and a 13 px status dot set 2 px in from the corner. It is
+  appended to the enum, so the existing members keep their values; `AvatarGroup` draws it as `Large`.
+
+### Fixed
+
+- **Avatar status dot size** ([#110](https://github.com/AIDotNet/TKCode.Arc/issues/110)): the dot now follows the
+  avatar's size as documented (8 px with a 1.5 px ring at `Small`, 10 px at `Medium`, 12 px at `Large`, 14 px at
+  `XLarge`), and the Busy bar spans the dot at every size. Before, every avatar drew the 10 px medium dot: the old
+  template's local values hid the size styles.
+- **`InlineEdit` multiline reserve** ([#110](https://github.com/AIDotNet/TKCode.Arc/issues/110)): a multiline field
+  now keeps 38 px for its stacked save and cancel buttons, as documented, instead of 66 px, so its text wraps 28 px
+  later. The template's own padding had hidden the multiline style.
+
 ## 1.1.0-preview.4 - 2026-11-11
 
 Feedback from apps moving to Arc (#102–#110): new options on `PageHeader`, `Dialog`, `CommandPalette`, `Avatar`,

@@ -55,11 +55,13 @@ the theme, and the status dot and initials then no longer match the Arc scale. P
 1. **Frame** (the control itself): a circle with a 1 px `Border` outline on the `SurfaceMuted` fill. The corner
    radius is the pill radius, so the shape stays round at every size, and the content is clipped to it.
 2. **Initials** (`Initials`, read only): centered text in the regular foreground color with a medium weight. The
-   text is 10 px at `Small`; at `Medium`, `Large` and `XLarge` it follows the Arc type scale steps XS, SM and XL.
+   text is 10 px at `Small`; at `Medium`, `Large`, `LargePlus` and `XLarge` it follows the Arc type scale steps XS, SM,
+   LG and XL.
 3. **Photo** (`Source`): an async image that fills the circle. It is shown only while `Source` is set and has not
    failed; while it loads, the frame stays empty.
-4. **Status dot** (`Status`): a filled circle at the lower right with a surface-colored ring (1.5 px at `Small`,
-   2 px at the other sizes) and a faint 1 px halo in the border color. `Online` uses the success color, `Offline` the
+4. **Status dot** (`Status`): a filled circle at the lower right, sized with the avatar (see Sizes), with a
+   surface-colored ring (1.5 px at `Small`, 2 px at the other sizes) and a faint 1 px halo in the border color. At
+   `LargePlus` and `XLarge` it moves 2 px and 4 px in from the corner, so it stays on the edge of the circle. `Online` uses the success color, `Offline` the
    muted text color, and `None` removes the dot entirely. `Busy` (do not disturb) is the danger color with a bar across
    it, `Away` the warning color, and `Connecting` a hollow ring in the muted text color that breathes in opacity (it
    rests when motion is off), for a client that is reconnecting.
@@ -78,22 +80,22 @@ photo is present.
 
 ### Sizes
 
-`Size` sets the diameter: `Small` is 28 px, `Medium` (the default) is 36 px, `Large` is 48 px and `XLarge` is 88 px.
-The size does not follow the window; it is the same at every width.
+`Size` sets the diameter: `Small` is 28 px, `Medium` (the default) is 36 px, `Large` is 48 px, `LargePlus` is 64 px
+and `XLarge` is 88 px. Each size is about a third larger than the one before, and the status dot and the initials grow
+with it. The size does not follow the window; it is the same at every width.
 
 | Size | Diameter | Initials text | Status dot | Use it for |
 |---|---|---|---|---|
 | `Small` | 28 px | 10 px | 8 px | Table rows, activity logs, dense lists |
 | `Medium` | 36 px | Arc XS | 10 px | Default for headers, cards and form summaries |
 | `Large` | 48 px | Arc SM | 12 px | Roster panels, profile cards |
+| `LargePlus` | 64 px | Arc LG | 13 px | Contact and member detail panes, profile cards that lead with the person |
 | `XLarge` | 88 px | Arc XL | 14 px | Account and profile page headers |
 
-```xml
-<arc:Avatar DisplayName="Ada Lovelace" Size="Small" />
-<arc:Avatar DisplayName="Grace Hopper" Size="Medium" />
-<arc:Avatar DisplayName="Alan Turing" Size="Large" />
-<arc:Avatar DisplayName="Katherine Johnson" Size="XLarge" />
-```
+<Demo name="Sizes" />
+
+`LargePlus` was added after `XLarge`, so the members of `AvatarSize` are not in size order: compare sizes by their
+diameter, not by the enum's numeric value.
 
 Keep one size for each list or group of related avatars, so rows keep the same height and the dots line up. In a
 dense table, `Small` with its 8 px dot is still readable because the dot has a ring that separates it from the
@@ -245,8 +247,8 @@ these responders yet; a missing photo costs nothing and the layout does not chan
   accessible name both come from it, so a short handle gives a poor result.
 - **Name text**: keep titles, roles and abbreviations out of `DisplayName`. A prefix such as "Dr." changes the
   initials, and the role belongs in the text beside the avatar.
-- **Status**: only the two words "online" and "offline" exist in the control. Put anything more specific, such as
-  "away until 18:00", in the text next to the avatar.
+- **Status**: the control has five words for presence: "online", "offline", "busy", "away" and "connecting". Put
+  anything more specific, such as "away until 18:00", in the text next to the avatar.
 
 | Instead of | Write |
 |---|---|
@@ -334,7 +336,7 @@ the failure memory for the old one, so the new photo is loaded even if the previ
 ## Responsive behavior
 
 - `Avatar` does not change at any width and does not measure its container. Its diameter comes only from `Size`: `Small`
-  28 px, `Medium` 36 px (the default), `Large` 48 px or `XLarge` 88 px.
+  28 px, `Medium` 36 px (the default), `Large` 48 px, `LargePlus` 64 px or `XLarge` 88 px.
 - Initials are at most two letters, taken from `DisplayName`, so a long name does not widen or wrap the avatar. A photo
   that fails to load falls back to the initials.
 - The status dot is a colour cue, and the accessible name also carries the status. On a phone, use `Large` (48 px) or
