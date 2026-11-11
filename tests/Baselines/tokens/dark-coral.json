@@ -1138,6 +1138,8 @@
       "DiameterSM": "28",
       "DiameterXL": "88",
       "InitialsFontSizeSM": "10",
+      "StatusBarHeight": "1.5",
+      "StatusBarWidth": "4",
       "StatusHalo": "0 0 0 1 #B22B2B2B",
       "StatusMarginXL": "0,0,4,4",
       "StatusRing": "2,2,2,2",
@@ -1943,7 +1945,9 @@
       "LineNumbersPadding": "20,20,0,20",
       "LineNumbersPaddingCompact": "16,16,0,16",
       "SyntaxComment": "#FF8C8C8C",
+      "SyntaxDeleted": "#FFFF817A",
       "SyntaxFunction": "#FFFF9B93",
+      "SyntaxInserted": "#FF4CD676",
       "SyntaxKeyword": "#FFAFAAFF",
       "SyntaxNumber": "#FFF2AF48",
       "SyntaxProperty": "#FFDEB459",
@@ -3044,13 +3048,17 @@
     },
     "EmptyState": {
       "ActionMargin": "0,20,0,0",
+      "ActionMarginSmall": "0,12,0,0",
+      "BlockPaddingSmall": "16",
       "DescriptionLineHeight": "19.599999999999998",
       "DescriptionMargin": "0,8,0,0",
       "DescriptionMaxWidth": "288",
       "IconBlockSize": "48",
+      "IconBlockSizeSmall": "32",
       "InlinePadding": "20",
       "TitleLineHeight": "22.4",
-      "TitleMargin": "0,20,0,0"
+      "TitleMargin": "0,20,0,0",
+      "TitleMarginSmall": "0,12,0,0"
     },
     "EmptyStates": {
       "ArtStrokeWidth": "1.5",
@@ -5619,6 +5627,7 @@
       "IntroGap": "10",
       "IntroPadding": "0,18,0,20",
       "IntroPaddingNarrow": "0,16,0,20",
+      "IntroPaddingSmall": "0,10,0,14",
       "OverflowGlyphSize": "17",
       "SecondaryTrailing": "0,0,8,0",
       "StatusDotSize": "6",
@@ -5630,8 +5639,10 @@
       "TabsPaddingNarrow": "8,0,32,0",
       "TitleLetterSpacing": "-1.08",
       "TitleLetterSpacingNarrow": "-0.84",
+      "TitleLetterSpacingSmall": "-0.44",
       "TitleLineHeight": "39.6",
       "TitleLineHeightNarrow": "30.800000000000004",
+      "TitleLineHeightSmall": "26.4",
       "TitleRowItemGap": "14",
       "TitleRowLineGap": "8"
     },
@@ -6246,6 +6257,9 @@
       "StrokeThickness": "2",
       "TooltipGap": "10"
     },
+    "RadioCard": {
+      "GlyphSize": "18"
+    },
     "RadioCards": {
       "BodyGap": "2",
       "CardInsetGrid": "16,14,16,14",
@@ -6288,6 +6302,9 @@
       "RingRadius": "8.5,8.5,8.5,8.5",
       "RowGap": "8",
       "RowInset": "12,12,12,12"
+    },
+    "RadioGroupItem": {
+      "MinRowHeight": "0"
     },
     "RangeHistogramSlider": {
       "BarColor": "#1CF2F2F2",
@@ -7170,6 +7187,8 @@
     "SettingsRow": {
       "BodyLineHeight": "19.599999999999998",
       "ControlMargin": "16,0,0,0",
+      "DetailsLineHeight": "16.799999999999997",
+      "DetailsMargin": "0,4,0,0",
       "IconGlyph": "17",
       "IconTile": "34",
       "IconTileMargin": "0,0,16,0",
@@ -8584,6 +8603,11 @@
       "ItemInsetSM": "8,0,8,0",
       "ItemSizeMD": "36",
       "ItemSizeSM": "28"
+    },
+    "ToggleGroupItem": {
+      "PressDownDuration": "90ms",
+      "PressScale": "0.92",
+      "PressUpDuration": "320ms"
     },
     "TokenTextEditor": {
       "EditorLetterSpacing": "-0.16",

@@ -8,6 +8,32 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0), `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` (from 1.1.0-preview.1).
 
+## Unreleased
+
+### Added
+
+- **`SettingsSection.BadgeTone`** ([#109](https://github.com/AIDotNet/TKCode.Arc/issues/109), `TKCode.Arc.Blocks`):
+  colors the section's navigation badge with a `BadgeTone` (`Warning` for "Needs attention", `Danger` for a failed
+  check). `Neutral`, the default, keeps today's look.
+- **`SettingsRow.Details` and `SettingsRow.Leading`** ([#109](https://github.com/AIDotNet/TKCode.Arc/issues/109),
+  `TKCode.Arc.Blocks`): `Details` takes any content under the description, such as a status line, an error or a row of
+  tags (text is small and muted). `Leading` takes any content in place of the icon tile, such as an `Avatar`; it keeps
+  its own size and `LabelWidth` includes it. `Icon` is unchanged.
+- **`SettingsPage.SelectedValue`** ([#109](https://github.com/AIDotNet/TKCode.Arc/issues/109), `TKCode.Arc.Blocks`):
+  the new `SettingsSection.Value` identifies a section (an enum member or a route key), and the page's two-way
+  `SelectedValue` is the selected section's `Value`, so the shown section binds to a view model property. Setting
+  `SelectedValue` selects the matching section. A section without a `Value` reports itself, as before;
+  `SelectedValueBinding` reads the value some other way.
+- **Public item containers for `RadioGroup`, `RadioCards` and `ToggleGroup`**
+  ([#109](https://github.com/AIDotNet/TKCode.Arc/issues/109)): `RadioGroupItem`, `RadioCard` and `ToggleGroupItem` (and
+  their base `TogglesItem`, which only the library derives from) are public. Data-bound items work like Avalonia's
+  `ListBoxItem`: a style on `arc|RadioGroupItem` or the group's `ItemContainerTheme` can bind an item's `Description`,
+  `Icon`, `Meta`, `IsEnabled` and `AutomationProperties.Name`, so items no longer have to be `RadioOption` or
+  `ToggleGroupOption` to get them. Each container has its own token (`RadioGroupItem.MinRowHeight`,
+  `RadioCard.GlyphSize`, and `ToggleGroupItem.PressScale`, `PressDownDuration` and `PressUpDuration` for the press that
+  was fixed before); the defaults keep today's look, and the existing `RadioGroup`, `RadioCards` and `ToggleGroup` tokens
+  are unchanged.
+
 ## 1.1.0-preview.4 - 2026-11-11
 
 Feedback from apps moving to Arc (#102–#110): new options on `PageHeader`, `Dialog`, `CommandPalette`, `Avatar`,

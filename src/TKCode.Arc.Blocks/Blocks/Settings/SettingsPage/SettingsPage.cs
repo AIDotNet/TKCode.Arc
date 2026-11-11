@@ -3,6 +3,7 @@ using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
+using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.VisualTree;
@@ -33,6 +34,9 @@ public sealed class SettingsSectionEventArgs : RoutedEventArgs
 /// <para>
 /// Write the sections inline (<c>&lt;arc:SettingsSection Header="Billing" Icon="..."&gt;…&lt;/arc:SettingsSection&gt;</c>)
 /// or bind them through <see cref="ItemsControl.ItemsSource"/>; the first enabled section is selected by default.
+/// <see cref="SelectingItemsControl.SelectedValue"/> (two-way) is the selected section's <see cref="SettingsSection.Value"/>,
+/// so the shown section can be bound to an enum or a view model property; set
+/// <see cref="SelectingItemsControl.SelectedValueBinding"/> to read the value some other way.
 /// </para>
 /// </summary>
 [TemplatePart(NavScrollPart, typeof(ScrollArea))]
@@ -175,6 +179,14 @@ public class SettingsPage : SelectingItemsControl
         AutoScrollToSelectedItemProperty.OverrideDefaultValue<SettingsPage>(false);
     }
 
+    private readonly BindingBase _defaultValueBinding;
+
+    public SettingsPage()
+    {
+        _defaultValueBinding = SettingsSectionValueBinding.Create();
+        SelectedValueBinding = _defaultValueBinding;
+    }
+
     protected override Type StyleKeyOverride => typeof(SettingsPage);
 
     /// <summary>The section being shown (the selected item when it is a <see cref="SettingsSection"/>).</summary>
@@ -226,6 +238,7 @@ public class SettingsPage : SelectingItemsControl
             nav.ClearValue(SettingsPageNavItem.HeaderProperty);
             nav.ClearValue(SettingsPageNavItem.IconProperty);
             nav.ClearValue(SettingsPageNavItem.BadgeProperty);
+            nav.ClearValue(SettingsPageNavItem.BadgeToneProperty);
             nav.ClearValue(SettingsPageNavItem.IsDirtyProperty);
             nav.ClearValue(IsEnabledProperty);
         }
@@ -238,6 +251,7 @@ public class SettingsPage : SelectingItemsControl
         nav.Header = section.Header as string ?? section.Header?.ToString();
         nav.Icon = section.Icon;
         nav.Badge = section.Badge;
+        nav.BadgeTone = section.BadgeTone;
         nav.IsDirty = section.IsDirty;
         nav.IsEnabled = section.IsEnabled;
     }
@@ -252,6 +266,24 @@ public class SettingsPage : SelectingItemsControl
         if (ReferenceEquals(section, SelectedItem))
         {
             UpdateSaveBar();
+        }
+    }
+
+    /// <summary>
+    /// Called by a <see cref="SettingsSection"/> when its <see cref="SettingsSection.Value"/> changes: the selection reports
+    /// the value it has now (the items control reads it only when the selection changes).
+    /// </summary>
+    internal void OnSectionValueChanged(SettingsSection section)
+    {
+        // A custom SelectedValueBinding may not read Value at all; the items control evaluates it on the next selection.
+        if (!ReferenceEquals(section, SelectedItem) || !ReferenceEquals(SelectedValueBinding, _defaultValueBinding))
+        {
+            return;
+        }
+        var value = SettingsSectionValueBinding.ValueOf(section);
+        if (!Equals(SelectedValue, value))
+        {
+            SetCurrentValue(SelectedValueProperty, value);
         }
     }
 

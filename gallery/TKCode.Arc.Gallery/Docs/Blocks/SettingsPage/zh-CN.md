@@ -1,7 +1,7 @@
 ---
 title: 设置页
 summary: 完整的设置页：导航区带有账户卡片，旁边显示所选分区，并提供未保存修改的保存条。
-source-hash: 7b3f7d3a7054
+source-hash: 6e400a82679b
 ---
 
 <Demo name="Overview" />
@@ -26,7 +26,7 @@ source-hash: 7b3f7d3a7054
 
 ## 用法
 
-每个分区写一个 `SettingsSection`。`Header`、`Icon` 和 `Badge` 显示在导航中，所选分区则在右侧显示其 `Header`、`Description` 和内容。第一个已启用的分区会被选中；设置 `SelectedIndex` 或调用 `Select(section)` 可显示其他分区。`Title` 位于导航上方，`Footer` 位于导航下方，例如账户卡片。
+每个分区写一个 `SettingsSection`。`Header`、`Icon` 和 `Badge` 显示在导航中，所选分区则在右侧显示其 `Header`、`Description` 和内容。第一个已启用的分区会被选中；设置 `SelectedIndex`、调用 `Select(section)`，或把 `SelectedValue` 设为某个分区的 `Value`，可显示其他分区。`Title` 位于导航上方，`Footer` 位于导航下方，例如账户卡片。
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
@@ -54,7 +54,7 @@ source-hash: 7b3f7d3a7054
 1. **标题**（`Title`，默认为 "Settings"）：导航列顶部的中等字重大字，两侧留出 24 px 的间距。
 2. **导航列**：宽 248 px，背景是表面色与 2.5% 前景色的混合，右边缘有一条 1 px 的分隔线。
 3. **导航项**（每个分区的 `Header`、`Icon`、`Badge`）：高 40 px，项之间间隔 2 px。图标为 18 px，标题为小号文字。未选中的项使用次要文字颜色；选中的项使用前景色和中等字重。
-4. **徽标**（`Badge`）：位于导航项末尾的小型 `Badge`，例如新消息的数量。
+4. **徽标**（`Badge`、`BadgeTone`）：位于导航项末尾的小型 `Badge`，例如新消息的数量；默认为中性色调，`BadgeTone` 可设为其他色调。
 5. **未保存圆点**：当分区设置了 `IsDirty` 时，导航项中出现一个 6 px 的强调色圆点。
 6. **选中胶囊**：一个抬起的表面，带 1 px 的淡边框和静止阴影，圆角 12 px。它会在各导航项之间滑动。
 7. **页脚**（`Footer`）：位于列底部的分隔线之下，内边距为 16 px 和 14 px。紧凑布局中隐藏。
@@ -77,11 +77,48 @@ page.SaveRequested += async (_, e) =>
 };
 ```
 
+### 徽标色调
+
+`BadgeTone` 使用 `Badge` 的色调为分区的徽标着色：`Neutral`（默认）、`Success`、`Info`（强调色）、`Warning` 和 `Danger`。需要用户处理的分区（例如付款方式已过期）用 `Warning` 或 `Danger`，计数保留中性色调。
+
+```xml
+<arc:SettingsPage Height="320">
+    <arc:SettingsSection Header="Profile" Icon="{x:Static arc:ArcIcons.User}" />
+    <arc:SettingsSection Header="Security" Icon="{x:Static arc:ArcIcons.Shield}" Badge="Review" BadgeTone="Warning" />
+    <arc:SettingsSection Header="Billing" Icon="{x:Static arc:ArcIcons.CreditCard}" Badge="Failed" BadgeTone="Danger" />
+</arc:SettingsPage>
+```
+
 ### 布局与宽度
 
 页面宽度不小于 `CompactWidth`（默认 720 px）时为两列。低于该宽度时变为单列：标题位于一排可横向滚动的分区胶囊之上，页脚隐藏，内容的内边距变小（两侧 20 px，上方 22 px，下方 24 px）。`IsCompact` 反映当前布局，页面还带有 `:compact` 伪类，因此样式可以据此调整页面。应根据页面可用的空间而不是屏幕来选择宽度：400 px 侧边面板中的设置页即使在宽显示器上也是紧凑布局。
 
 <Demo name="Compact" />
+
+### 选中值
+
+为每个分区设置一个标识它的 `Value`，例如路由键或枚举成员，然后绑定页面的 `SelectedValue`。它是双向的：页面报告所选分区的 `Value`，设置 `SelectedValue` 则显示具有该值的分区，因此视图模型可以让页面打开在某个分区上，也能跟随用户的选择。没有 `Value` 的分区报告它自己。若要以其他方式读取值，像在任何 Avalonia 选择器上一样设置 `SelectedValueBinding`。
+
+```xml
+<arc:SettingsPage SelectedValue="{Binding Route}">
+    <arc:SettingsSection Header="Profile" Value="profile" Icon="{x:Static arc:ArcIcons.User}" />
+    <arc:SettingsSection Header="Notifications" Value="notifications" Icon="{x:Static arc:ArcIcons.Bell}" />
+    <arc:SettingsSection Header="Billing" Value="billing" Icon="{x:Static arc:ArcIcons.CreditCard}" />
+</arc:SettingsPage>
+```
+
+对于枚举，每个值要写成枚举成员 `Value="{x:Static local:SettingsTab.Billing}"`，而不是它的名称：页面用 `Equals` 比较值，字符串 `"Billing"` 不等于 `SettingsTab.Billing`。
+
+```csharp
+public enum SettingsTab { Profile, Notifications, Billing }
+
+public partial class SettingsViewModel : ObservableObject
+{
+    // 页面打开时显示 Notifications；用户的选择会写回这里。
+    [ObservableProperty]
+    private SettingsTab _tab = SettingsTab.Notifications;
+}
+```
 
 ### 绑定到视图模型
 
@@ -140,6 +177,12 @@ Page.DiscardRequested += (_, _) => ViewModel.DiscardCommand.Execute(null);
 分组默认绘制为卡片，可选的 `Header`、`Description`、`HeaderActions` 以及带淡色底的 `Footer` 条。`Appearance="Plain"` 会去掉框架，适用于页面内用细线分隔的分组。分区本身已有标题，因此在分区内优先使用 `Plain`，避免页面中出现卡片套卡片。
 
 <Demo name="Rows" />
+
+### 行的详情与前置内容
+
+`Details` 在行的标题和描述下方放入任意内容：例如"Last synced 2 minutes ago"这样的状态行、错误信息或一排标签。文字以超小字号和弱化颜色显示，位于描述下方 4 px；其他内容保持自身外观，因此错误信息可以使用危险色。`Leading` 用任意内容代替图标块，例如 `Avatar` 或服务的标志。它保持自身尺寸，后面留出与图标块相同的 16 px 间距，并且 `LabelWidth` 会把它计算在内，因此各行的控件仍然对齐。行设置了 `Leading` 内容时，不显示其 `Icon`。
+
+<Demo name="RowSlots" />
 
 ### 多列
 
@@ -270,6 +313,8 @@ Larkspur Studio 的管理后台打开时停留在成员分区，而常规分区�
 
 **首先显示哪个分区？** 第一个已启用的分区，除非 `SelectedIndex` 或 `Select(section)` 选择了其他分区。已禁用的分区在初始选择和键盘移动中都会被跳过。
 
+**如何把当前显示的分区绑定到视图模型？** 为每个分区设置 `Value`，并绑定双向的 `SelectedValue`。这样视图模型保存的是路由键或枚举成员而不是索引，设置新值即显示对应的分区。
+
 **如何更改保存按钮的文字？** 用一个 `SettingsPageLabels` 替换 `Labels` 对象，并在其 `Save` 属性中写入所需文字。其他文字保持默认值，除非你也设置它们。
 
 ## API 参考
@@ -303,6 +348,8 @@ Larkspur Studio 的管理后台打开时停留在成员分区，而常规分区�
 - 键盘焦点会在导航项周围绘制 2px 的焦点环。指针聚焦时不显示。
 - 保存条中的提示文字位于礼貌的实时区域中。
 - 选中的项会被播报为已选中，因此屏幕阅读器用户在每次移动后都能听到当前显示的是哪个分区。
+- 徽标作为文字朗读，因此色调不是唯一的提示：请把文字（"Review"、"Failed"）写在徽标中。
+- 行的 `Leading` 和 `Details` 中的内容保留各自的无障碍名称和角色；行的控件仍以标题命名。
 
 ### 键盘
 

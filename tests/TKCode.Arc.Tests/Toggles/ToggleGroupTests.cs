@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Automation;
@@ -568,4 +569,91 @@ public class ToggleGroupTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void Data_Bound_Options_Take_Their_Icon_And_Name_From_A_Style()
+    {
+        var group = AvaloniaRuntimeXamlLoader.Parse<ToggleGroup>("""
+            <arc:ToggleGroup xmlns="https://github.com/avaloniaui" xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                             Label="View" SelectedValueBinding="{Binding Key}">
+                <arc:ToggleGroup.Styles>
+                    <Style Selector="arc|ToggleGroupItem">
+                        <Setter Property="Icon" Value="{Binding Glyph}" />
+                        <Setter Property="AutomationProperties.Name" Value="{Binding Title}" />
+                        <Setter Property="arc:Tooltip.Tip" Value="{Binding Title}" />
+                    </Style>
+                </arc:ToggleGroup.Styles>
+                <arc:ToggleGroup.ItemTemplate>
+                    <DataTemplate>
+                        <Panel />
+                    </DataTemplate>
+                </arc:ToggleGroup.ItemTemplate>
+            </arc:ToggleGroup>
+            """);
+        group.ItemsSource = new[] { new ViewChoice("list", "List", ArcIcons.List), new ViewChoice("grid", "Grid", ArcIcons.LayoutGrid) };
+        group.SelectedValue = "grid";
+        var window = TestHelpers.Show(group);
+        try
+        {
+            Item(group, 1).IsSelected.ShouldBeTrue();
+            Item(group, 0).Icon.ShouldBe(ArcIcons.List);
+            AutomationProperties.GetName(Item(group, 0)).ShouldBe("List");
+            ControlAutomationPeer.CreatePeerForElement(Item(group, 0)).GetName().ShouldBe("List");
+            Tooltip.GetTip(Item(group, 1)).ShouldBe("Grid");
+            Click(window, Item(group, 0));
+            group.SelectedValue.ShouldBe("list");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void An_Item_Container_Theme_Based_On_The_Default_Keeps_The_Look()
+    {
+        var group = Group();
+        var window = TestHelpers.Show(group);
+        try
+        {
+            group.TryFindResource(typeof(ToggleGroupItem), out var found).ShouldBeTrue();
+            var theme = new Avalonia.Styling.ControlTheme(typeof(ToggleGroupItem))
+            {
+                BasedOn = (Avalonia.Styling.ControlTheme)found!,
+                Setters = { new Avalonia.Styling.Setter(Avalonia.Layout.Layoutable.MinWidthProperty, 80d) }
+            };
+            group.ItemContainerTheme = theme;
+            Dispatcher.UIThread.RunJobs();
+            Item(group, 0).MinWidth.ShouldBe(80);
+            TestHelpers.Descendant<ToggleGroupFill>(Item(group, 0)).ShouldNotBeNull();
+            Item(group, 0).Bounds.Width.ShouldBeGreaterThanOrEqualTo(80);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void The_Press_Comes_From_The_Item_Tokens()
+    {
+        var group = Group();
+        var window = TestHelpers.Show(group);
+        try
+        {
+            var item = Item(group, 0);
+            item.TryFindResource(ToggleGroupItemTokens.Key(ToggleGroupItemTokenKind.PressScale), out var scale).ShouldBeTrue();
+            scale.ShouldBe(0.92);
+            item.TryFindResource(ToggleGroupItemTokens.Key(ToggleGroupItemTokenKind.PressDownDuration), out var down).ShouldBeTrue();
+            down.ShouldBe(TimeSpan.FromMilliseconds(90));
+            item.TryFindResource(ToggleGroupItemTokens.Key(ToggleGroupItemTokenKind.PressUpDuration), out var up).ShouldBeTrue();
+            up.ShouldBe(TimeSpan.FromMilliseconds(320));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    public sealed record ViewChoice(string Key, string Title, Geometry Glyph);
 }

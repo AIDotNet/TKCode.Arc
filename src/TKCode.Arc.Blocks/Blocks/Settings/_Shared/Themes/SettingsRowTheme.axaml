@@ -7,7 +7,8 @@
         A settings row: hairline on top (not on the first row, nor on a group's first line), icon tile, header and
         description, and the control on the right; under :stacked the control drops below the text, aligned with it.
         LabelWidth, ContentAlignment and ContentSpacing are applied in code (SettingsRow.ApplyLayoutOptions): the column
-        widths, the control's HorizontalAlignment and, when ContentSpacing is set, its Margin.
+        widths, the control's HorizontalAlignment and, when ContentSpacing is set, its Margin. The row builds PART_Leading
+        (in the icon tile's cell, which it replaces) and PART_Details (under the description) the first time it has them.
     -->
     <ControlTheme x:Key="{x:Type arc:SettingsRow}" TargetType="arc:SettingsRow">
         <Setter Property="ClipToBounds" Value="False" />

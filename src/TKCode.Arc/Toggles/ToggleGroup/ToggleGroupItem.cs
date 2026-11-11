@@ -13,28 +13,42 @@ using Avalonia.Media;
 namespace TKCode.Arc;
 
 /// <summary>
-/// One option of a <see cref="ToggleGroup"/>. A click, Space and Enter ask the group to toggle it; the shared item base
-/// would only select, which cannot press several options or turn one off. The item box never scales, so neighbours stay
-/// put; only its content gives a small press.
+/// One option of a <see cref="ToggleGroup"/>: an optional icon and the option's content. The group creates one for each
+/// option. For a <see cref="ToggleGroupOption"/> the item takes its content, icon, disabled state, accessible name and
+/// tooltip from the option; for any other item the content is the group's <c>ItemTemplate</c>, and a style on
+/// <c>arc|ToggleGroupItem</c> (or the group's <c>ItemContainerTheme</c>) can bind <see cref="Icon"/>, <c>IsEnabled</c>,
+/// <c>AutomationProperties.Name</c> and <c>arc:Tooltip.Tip</c> to the item. A click, Space and Enter ask the group to
+/// toggle it; the shared item base would only select, which cannot press several options or turn one off. The item box
+/// never scales, so neighbours stay put; only its content gives a small press.
 /// </summary>
 [PseudoClasses(SmallPseudoClass, MultiplePseudoClass, HoveringPseudoClass, JoinStartPseudoClass, JoinEndPseudoClass)]
-internal sealed class ToggleGroupItem : TogglesItem
+public sealed class ToggleGroupItem : TogglesItem
 {
+    /// <summary>Set while the group's <see cref="ToggleGroup.Size"/> is Small.</summary>
     public const string SmallPseudoClass = ":small";
+
+    /// <summary>Set while the group's <see cref="ToggleGroup.Mode"/> is Multiple.</summary>
     public const string MultiplePseudoClass = ":multiple";
 
     /// <summary>A pointer that can hover is over the option; touch never sets it (Arc's hover media query).</summary>
     public const string HoveringPseudoClass = ":hovering";
+
+    /// <summary>Multiple mode: the option and the one before it are both pressed, so their fills join.</summary>
     public const string JoinStartPseudoClass = ":join-start";
+
+    /// <summary>Multiple mode: the option and the one after it are both pressed, so their fills join.</summary>
     public const string JoinEndPseudoClass = ":join-end";
 
+    /// <summary>A 24×24 stroke icon (for example an <see cref="ArcIcons"/> member) drawn before the content.</summary>
     public static readonly StyledProperty<Geometry?> IconProperty =
         AvaloniaProperty.Register<ToggleGroupItem, Geometry?>(nameof(Icon));
 
+    /// <inheritdoc cref="IconProperty"/>
     public Geometry? Icon { get => GetValue(IconProperty); set => SetValue(IconProperty, value); }
 
     public const string ContentPart = "PART_Content";
 
+    // Arc's press, used until the item's tokens are found (an item outside a themed tree).
     private static readonly TimeSpan s_pressDown = TimeSpan.FromMilliseconds(90);
     private static readonly TimeSpan s_pressUp = TimeSpan.FromMilliseconds(320);
     private const double PressedScale = 0.92;
@@ -87,13 +101,18 @@ internal sealed class ToggleGroupItem : TogglesItem
         }
         else if (down)
         {
-            _ = _pressScale.AnimateTo(PressedScale, MotionSpec.Tween(s_pressDown, ArcEasings.Standard));
+            var scale = Token(ToggleGroupItemTokenKind.PressScale, PressedScale);
+            _ = _pressScale.AnimateTo(scale, MotionSpec.Tween(Token(ToggleGroupItemTokenKind.PressDownDuration, s_pressDown), ArcEasings.Standard));
         }
         else
         {
-            _ = _pressScale.AnimateTo(1, MotionSpec.Tween(s_pressUp, ArcEasings.CssSpring));
+            _ = _pressScale.AnimateTo(1, MotionSpec.Tween(Token(ToggleGroupItemTokenKind.PressUpDuration, s_pressUp), ArcEasings.CssSpring));
         }
     }
+
+    /// <summary>The value of one of the item's tokens, read when a press starts or ends.</summary>
+    private T Token<T>(ToggleGroupItemTokenKind kind, T fallback)
+        => this.TryFindResource(ToggleGroupItemTokens.Key(kind), ActualThemeVariant, out var value) && value is T typed ? typed : fallback;
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
@@ -105,7 +124,7 @@ internal sealed class ToggleGroupItem : TogglesItem
         }
     }
 
-    protected override (object Margin, object Radius)? FocusRingKeys =>
+    private protected override (object Margin, object Radius)? FocusRingKeys =>
         (ToggleGroupTokens.Key(ToggleGroupTokenKind.FocusRingMargin), ToggleGroupTokens.Key(ToggleGroupTokenKind.FocusRingRadius));
 
     internal void SetLook(bool small, bool multiple)
@@ -120,7 +139,7 @@ internal sealed class ToggleGroupItem : TogglesItem
         PseudoClasses.Set(JoinEndPseudoClass, end);
     }
 
-    protected override void OnIsSelectedChanged() => Group?.OnItemPressedChanged();
+    private protected override void OnIsSelectedChanged() => Group?.OnItemPressedChanged();
 
     protected override void OnPointerEntered(PointerEventArgs e)
     {

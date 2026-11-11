@@ -1,15 +1,21 @@
 using Avalonia.Automation;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
+using Avalonia.Data;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using TKCode.Arc.Primitives;
 
 namespace TKCode.Arc.Tests.Blocks.Settings;
 
-/// <summary>SettingsPage: default selection, keyboard model, save bar and its events, compact layout, navigation names.</summary>
+/// <summary>
+/// SettingsPage: default selection, keyboard model, save bar and its events, compact layout, navigation names, badge tones
+/// and the selected value.
+/// </summary>
 public class SettingsPageTests
 {
     private static SettingsPage Page(out SettingsSection profile, out SettingsSection alerts, out SettingsSection billing)
@@ -210,5 +216,168 @@ public class SettingsPageTests
         {
             window.Close();
         }
+    }
+
+    [AvaloniaFact]
+    public void The_Badge_Tone_Reaches_The_Navigation_Badge()
+    {
+        var page = Page(out _, out var alerts, out _);
+        var window = Show(page);
+        try
+        {
+            alerts.BadgeTone.ShouldBe(BadgeTone.Neutral);
+            var badge = TestHelpers.Descendant<Badge>(Nav(page, 1), "PART_Badge");
+            badge.Tone.ShouldBe(BadgeTone.Neutral);
+
+            alerts.BadgeTone = BadgeTone.Warning;
+            Nav(page, 1).BadgeTone.ShouldBe(BadgeTone.Warning);
+            badge.Tone.ShouldBe(BadgeTone.Warning);
+            badge.Classes.Contains(Badge.WarningPseudoClass).ShouldBeTrue();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void SelectedValue_Is_The_Selected_Sections_Value_And_Selects_It()
+    {
+        var page = Page(out var profile, out var alerts, out var billing);
+        profile.Value = "profile";
+        alerts.Value = "alerts";
+        billing.Value = "billing";
+        var window = Show(page);
+        try
+        {
+            // Selection to value.
+            page.SelectedValue.ShouldBe("profile");
+            page.SelectedIndex = 2;
+            page.SelectedValue.ShouldBe("billing");
+            Nav(page, 0).Focus(NavigationMethod.Tab);
+            window.KeyPressQwerty(PhysicalKey.Home, RawInputModifiers.None);
+            page.SelectedValue.ShouldBe("profile");
+
+            // Value to selection.
+            page.SelectedValue = "alerts";
+            page.SelectedSection.ShouldBe(alerts);
+            Shown(page).ShouldBe(alerts);
+            Nav(page, 1).IsSelected.ShouldBeTrue();
+
+            // A new value on the selected section is reported at once.
+            alerts.Value = "notifications";
+            page.SelectedValue.ShouldBe("notifications");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Section_Without_A_Value_Reports_Itself()
+    {
+        var page = Page(out var profile, out _, out var billing);
+        var window = Show(page);
+        try
+        {
+            page.SelectedValue.ShouldBe(profile);
+            page.SelectedValue = billing;
+            page.SelectedSection.ShouldBe(billing);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void SelectedValue_Binds_Two_Way_To_An_Enum()
+    {
+        var model = new SettingsModel { Tab = SettingsTab.Notifications };
+        var page = Page(out var profile, out var alerts, out var billing);
+        profile.Value = SettingsTab.Profile;
+        alerts.Value = SettingsTab.Notifications;
+        billing.Value = SettingsTab.Billing;
+        page.DataContext = model;
+        page.Bind(SelectingItemsControl.SelectedValueProperty, new Binding(nameof(SettingsModel.Tab)));
+        var window = Show(page);
+        try
+        {
+            page.SelectedSection.ShouldBe(alerts);
+
+            // The person picks a section: the view model hears the enum member.
+            page.Select(billing).ShouldBeTrue();
+            model.Tab.ShouldBe(SettingsTab.Billing);
+
+            // The view model changes the tab: the page shows that section.
+            model.Tab = SettingsTab.Profile;
+            Dispatcher.UIThread.RunJobs();
+            page.SelectedSection.ShouldBe(profile);
+            Shown(page).ShouldBe(profile);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Bound_Value_In_Xaml_Selects_Its_Section_At_Start()
+    {
+        var page = AvaloniaRuntimeXamlLoader.Parse<SettingsPage>("""
+            <arc:SettingsPage xmlns="https://github.com/avaloniaui" xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                              Width="820" Height="480" SelectedValue="{Binding Tab}">
+                <arc:SettingsSection Header="Profile" Value="profile" />
+                <arc:SettingsSection Header="Billing" Value="billing" />
+            </arc:SettingsPage>
+            """);
+        var model = new StringModel { Tab = "billing" };
+        page.DataContext = model;
+        var window = Show(page);
+        try
+        {
+            page.SelectedIndex.ShouldBe(1);
+            page.SelectedSection!.Header.ShouldBe("Billing");
+            Nav(page, 0).Focus(NavigationMethod.Tab);
+            window.KeyPressQwerty(PhysicalKey.Home, RawInputModifiers.None);
+            model.Tab.ShouldBe("profile");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    public enum SettingsTab
+    {
+        Profile,
+        Notifications,
+        Billing
+    }
+
+    public sealed class SettingsModel : System.ComponentModel.INotifyPropertyChanged
+    {
+        private SettingsTab _tab;
+
+        public SettingsTab Tab
+        {
+            get => _tab;
+            set
+            {
+                if (_tab != value)
+                {
+                    _tab = value;
+                    PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(Tab)));
+                }
+            }
+        }
+
+        public event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;
+    }
+
+    public sealed class StringModel
+    {
+        public string? Tab { get; set; }
     }
 }

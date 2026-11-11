@@ -84,10 +84,45 @@ arrives.
 
 <Demo name="Disabled" />
 
+### Data-bound items
+
+The options do not have to be `ToggleGroupOption` objects. Bind `ItemsSource` to your own items and give the group an
+`ItemTemplate` for the content. Each option is a public `ToggleGroupItem` whose `DataContext` is its item, so a style on
+`arc|ToggleGroupItem` binds the rest of the option to the item, as with Avalonia's `ListBoxItem`: `Icon`, `IsEnabled`,
+`AutomationProperties.Name` and `arc:Tooltip.Tip`. Set `SelectedValueBinding` to the property that identifies an item;
+without it the values are the items themselves.
+
+```xml
+<arc:ToggleGroup Label="View"
+                 ItemsSource="{Binding Views}"
+                 SelectedValue="{Binding ViewKey}"
+                 SelectedValueBinding="{Binding Key}">
+    <arc:ToggleGroup.ItemTemplate>
+        <DataTemplate>
+            <TextBlock Text="{Binding Title}" />
+        </DataTemplate>
+    </arc:ToggleGroup.ItemTemplate>
+    <arc:ToggleGroup.Styles>
+        <Style Selector="arc|ToggleGroupItem">
+            <Setter Property="Icon" Value="{Binding Glyph}" />
+            <Setter Property="AutomationProperties.Name" Value="{Binding Title}" />
+        </Style>
+    </arc:ToggleGroup.Styles>
+</arc:ToggleGroup>
+```
+
+- With compiled bindings, give the `DataTemplate` and the `Style` an `x:DataType` of your item type.
+- An option that shows only an icon needs `AutomationProperties.Name` and a tooltip (`arc:Tooltip.Tip`) from the style,
+  as `Label` gives them to a `ToggleGroupOption`.
+- `ItemContainerTheme` works too. Base it on the option's theme, `BasedOn="{StaticResource {x:Type arc:ToggleGroupItem}}"`,
+  so the option keeps its fill, press and focus ring.
+- A `ToggleGroupOption` sets its option's content, icon, name and tooltip itself, and those values win over a style.
+
 ## API reference
 
 <!-- api: ToggleGroup -->
 <!-- api: ToggleGroupOption -->
+<!-- api: ToggleGroupItem -->
 
 ## Accessibility
 
@@ -100,13 +135,15 @@ arrives.
 
 The arrow keys only move focus, so a person can reach an option without changing anything. The group is one tab stop:
 the last focused option, else the first pressed one, else the first enabled one. `Label` names the group. In single mode
-the options report as radio buttons; in multiple mode they report as buttons with a pressed state.
+the options report as radio buttons; in multiple mode they report as buttons with a pressed state. A `ToggleGroupOption`
+is named by its `Label`; a data-bound option needs `AutomationProperties.Name` from a style on `arc|ToggleGroupItem`.
 
 ## Motion
 
 In single mode one fill glides between options on the morph spring. In multiple mode a fill fades in over 160 ms while it
 settles from 86% scale over 360 ms, and a join crosses the 2 px gap and squares its corners over 240 ms. The content of a
-pressed option shrinks to 92% in 90 ms and returns in 320 ms; the option's box never scales, so neighbours stay put. With
+pressed option shrinks to 92% in 90 ms and returns in 320 ms (the `ToggleGroupItem` tokens `PressScale`,
+`PressDownDuration` and `PressUpDuration`); the option's box never scales, so neighbours stay put. With
 reduced motion the fill jumps or fades in 120 ms, nothing scales and colors change in 120 ms.
 
 ## Responsive behavior

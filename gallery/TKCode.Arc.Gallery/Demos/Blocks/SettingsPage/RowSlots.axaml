@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SettingsPageRowSlotsDemo">
+    <arc:SettingsGroup Header="Connected accounts" Description="Services that can read and post on your behalf." MaxWidth="640">
+        <arc:SettingsRow Header="Noor Haddad" Description="noor@larkspur.studio">
+            <arc:SettingsRow.Leading>
+                <arc:Avatar DisplayName="Noor Haddad" />
+            </arc:SettingsRow.Leading>
+            <arc:SettingsRow.Details>
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                    <arc:Badge Content="Owner" Size="Small" Tone="Info" />
+                    <arc:Badge Content="2FA on" Size="Small" Tone="Success" />
+                </StackPanel>
+            </arc:SettingsRow.Details>
+            <arc:Button Variant="Secondary" Size="Small" Content="Manage" />
+        </arc:SettingsRow>
+        <arc:SettingsRow Header="Calendar sync" Description="Adds deadlines to your calendar." Icon="{x:Static arc:ArcIcons.Calendar}"
+                         Details="Last synced 2 minutes ago">
+            <arc:Switch IsChecked="True" />
+        </arc:SettingsRow>
+        <arc:SettingsRow Header="Slack" Description="Posts mentions to a channel." Icon="{x:Static arc:ArcIcons.MessageSquare}">
+            <arc:SettingsRow.Details>
+                <TextBlock Text="The connection expired. Reconnect to keep posting."
+                           TextWrapping="Wrap"
+                           Foreground="{arc:ArcDesignTokenResource Danger}" />
+            </arc:SettingsRow.Details>
+            <arc:Button Variant="Secondary" Size="Small" Content="Reconnect" />
+        </arc:SettingsRow>
+    </arc:SettingsGroup>
+</UserControl>

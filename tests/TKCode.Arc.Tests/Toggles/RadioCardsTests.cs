@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
+using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Threading;
 
@@ -165,4 +166,70 @@ public class RadioCardsTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void Data_Bound_Cards_Take_Their_Parts_Name_And_State_From_A_Style()
+    {
+        var cards = AvaloniaRuntimeXamlLoader.Parse<RadioCards>("""
+            <arc:RadioCards xmlns="https://github.com/avaloniaui" xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                            Width="600" SelectedValueBinding="{Binding Id}">
+                <arc:RadioCards.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}" />
+                    </DataTemplate>
+                </arc:RadioCards.ItemTemplate>
+                <arc:RadioCards.Styles>
+                    <Style Selector="arc|RadioCard">
+                        <Setter Property="Description" Value="{Binding Summary}" />
+                        <Setter Property="Meta" Value="{Binding Price}" />
+                        <Setter Property="DisabledReason" Value="{Binding Reason}" />
+                        <Setter Property="IsEnabled" Value="{Binding IsAvailable}" />
+                        <Setter Property="AutomationProperties.Name" Value="{Binding Name}" />
+                    </Style>
+                </arc:RadioCards.Styles>
+            </arc:RadioCards>
+            """);
+        cards.ItemsSource = new[]
+        {
+            new PlanCard("starter", "Starter", "For individuals", "$9", null, true),
+            new PlanCard("enterprise", "Enterprise", "Custom contracts", "Contact us", "Talk to sales first", false)
+        };
+        cards.SelectedValue = "starter";
+        var window = TestHelpers.Show(cards);
+        try
+        {
+            cards.SelectedIndex.ShouldBe(0);
+            var starter = cards.ContainerFromIndex(0).ShouldBeOfType<RadioCard>();
+            starter.Description.ShouldBe("For individuals");
+            starter.Meta.ShouldBe("$9");
+            AutomationProperties.GetName(starter).ShouldBe("Starter");
+            AutomationProperties.GetHelpText(starter).ShouldBe("For individuals");
+            var enterprise = cards.ContainerFromIndex(1).ShouldBeOfType<RadioCard>();
+            enterprise.IsEnabled.ShouldBeFalse();
+            // A disabled card shows its reason in place of the description.
+            TestHelpers.Descendant<TextBlock>(enterprise, "PART_Description").Text.ShouldBe("Talk to sales first");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void An_Option_Icon_Is_Drawn_At_The_Card_Token_Size()
+    {
+        var cards = Plans();
+        var window = TestHelpers.Show(cards);
+        try
+        {
+            var card = cards.ContainerFromIndex(1).ShouldBeOfType<RadioCard>();
+            card.Icon.ShouldBeOfType<ArcGlyph>().Size.ShouldBe(18);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    public sealed record PlanCard(string Id, string Name, string Summary, string Price, string? Reason, bool IsAvailable);
 }

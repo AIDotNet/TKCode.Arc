@@ -10,46 +10,64 @@ using Avalonia.Media;
 
 namespace TKCode.Arc;
 
-/// <summary>One card of <see cref="RadioCards"/>: indicator, label with icon, description and meta.</summary>
+/// <summary>
+/// One card of <see cref="RadioCards"/>: indicator, label (the card's content) with an optional icon, description and
+/// meta. The group creates a card for each option. For a <see cref="RadioCardOption"/> the card takes its label, icon,
+/// description, meta, disabled state and reason from the option; for any other item the label is the group's
+/// <c>ItemTemplate</c>, and a style on <c>arc|RadioCard</c> (or the group's <c>ItemContainerTheme</c>) can bind these
+/// properties, <c>IsEnabled</c> and <c>AutomationProperties.Name</c> to the item.
+/// </summary>
 [PseudoClasses(ListPseudoClass)]
-internal sealed class RadioCard : TogglesItem
+public sealed class RadioCard : TogglesItem
 {
+    /// <summary>Set while the group uses <see cref="RadioCardsLayout.List"/>: indicator, body and meta on one line.</summary>
     public const string ListPseudoClass = ":list";
 
     // The ring is built by TogglesItem the first time the card is keyboard focused (the template used to keep a hidden Border).
-    protected override (object Margin, object Radius)? FocusRingKeys =>
+    private protected override (object Margin, object Radius)? FocusRingKeys =>
         (RadioCardsTokens.Key(RadioCardsTokenKind.FocusRingMargin), RadioCardsTokens.Key(RadioCardsTokenKind.FocusRingRadius));
 
+    /// <summary>A line under the label that explains the option; also the card's accessible help text.</summary>
     public static readonly StyledProperty<string?> DescriptionProperty =
         AvaloniaProperty.Register<RadioCard, string?>(nameof(Description));
 
+    /// <summary>Why the card is disabled; shown in place of the description while the card is disabled.</summary>
     public static readonly StyledProperty<string?> DisabledReasonProperty =
         AvaloniaProperty.Register<RadioCard, string?>(nameof(DisabledReason));
 
+    /// <summary>Content at the bottom of the card (at the end of a list row), such as a price.</summary>
     public static readonly StyledProperty<object?> MetaProperty =
         AvaloniaProperty.Register<RadioCard, object?>(nameof(Meta));
 
+    /// <summary>Content before the label, such as an <see cref="ArcGlyph"/> (shown in an 18 px box).</summary>
     public static readonly StyledProperty<object?> IconProperty =
         AvaloniaProperty.Register<RadioCard, object?>(nameof(Icon));
 
-    public static readonly DirectProperty<RadioCard, string?> ShownDescriptionProperty =
+    internal static readonly DirectProperty<RadioCard, string?> ShownDescriptionProperty =
         AvaloniaProperty.RegisterDirect<RadioCard, string?>(nameof(ShownDescription), o => o.ShownDescription);
 
+    /// <inheritdoc cref="DescriptionProperty"/>
     public string? Description { get => GetValue(DescriptionProperty); set => SetValue(DescriptionProperty, value); }
+
+    /// <inheritdoc cref="DisabledReasonProperty"/>
     public string? DisabledReason { get => GetValue(DisabledReasonProperty); set => SetValue(DisabledReasonProperty, value); }
+
+    /// <inheritdoc cref="MetaProperty"/>
     public object? Meta { get => GetValue(MetaProperty); set => SetValue(MetaProperty, value); }
+
+    /// <inheritdoc cref="IconProperty"/>
     public object? Icon { get => GetValue(IconProperty); set => SetValue(IconProperty, value); }
 
     private string? _shownDescription;
 
     /// <summary>The disabled reason while the card is disabled (when given), otherwise the description.</summary>
-    public string? ShownDescription
+    internal string? ShownDescription
     {
         get => _shownDescription;
         private set => SetAndRaise(ShownDescriptionProperty, ref _shownDescription, value);
     }
 
-    public bool IsListLayout
+    internal bool IsListLayout
     {
         set => PseudoClasses.Set(ListPseudoClass, value);
     }

@@ -26832,6 +26832,26 @@
         <source>A value of a `RadarSeries` on one axis.</source>
         <target>`RadarSeries` 在一条轴上的数值。</target>
       </trans-unit>
+      <trans-unit id="RadioCard">
+        <source>One card of `RadioCards`: indicator, label (the card's content) with an optional icon, description and meta. The group creates a card for each option. For a `RadioCardOption` the card takes its label, icon, description, meta, disabled state and reason from the option; for any other item the label is the group's `ItemTemplate`, and a style on `arc|RadioCard` (or the group's `ItemContainerTheme`) can bind these properties, `IsEnabled` and `AutomationProperties.Name` to the item.</source>
+        <target>`RadioCards` 的一张卡片：指示器、标签（卡片的内容）及可选图标、描述和附注。组为每个选项创建一张卡片。对于 `RadioCardOption`，卡片从选项读取标签、图标、描述、附注、禁用状态和原因；对于其他项，标签由组的 `ItemTemplate` 生成，并且可以用针对 `arc|RadioCard` 的样式（或组的 `ItemContainerTheme`）把这些属性、`IsEnabled` 和 `AutomationProperties.Name` 绑定到项。</target>
+      </trans-unit>
+      <trans-unit id="RadioCard.Description">
+        <source>A line under the label that explains the option; also the card's accessible help text.</source>
+        <target>标签下方解释该选项的一行文字；同时也是卡片的无障碍帮助文字。</target>
+      </trans-unit>
+      <trans-unit id="RadioCard.DisabledReason">
+        <source>Why the card is disabled; shown in place of the description while the card is disabled.</source>
+        <target>卡片被禁用的原因；卡片禁用时显示在描述的位置。</target>
+      </trans-unit>
+      <trans-unit id="RadioCard.Icon">
+        <source>Content before the label, such as an `ArcGlyph` (shown in an 18 px box).</source>
+        <target>标签前的内容，例如 `ArcGlyph`（显示在 18 px 的方框中）。</target>
+      </trans-unit>
+      <trans-unit id="RadioCard.Meta">
+        <source>Content at the bottom of the card (at the end of a list row), such as a price.</source>
+        <target>卡片底部（列表行中位于末尾）的内容，例如价格。</target>
+      </trans-unit>
       <trans-unit id="RadioCardOption">
         <source>One option of `RadioCards` (Arc `RadioCardOption`): a label with optional description, a meta value (price, estimate), a decorative icon, and a reason shown in place of the description when the option is disabled. Its properties can be bound in XAML; the cards follow later changes.</source>
         <target>`RadioCards` 的一个选项（Arc `RadioCardOption`）：一个标签，可选的描述、元信息（价格、估算）、装饰图标，以及选项禁用时代替描述显示的原因。它的属性可以在 XAML 中绑定；卡片组会跟随之后的变化。</target>
@@ -26883,6 +26903,14 @@
       <trans-unit id="RadioGroup">
         <source>Arc radio group: choose one option from a visible set. One highlight (a `ControlOn` border with a faint fill) glides to the chosen row on the morph spring while the new dot springs in and the old one shrinks away, so a change reads as a single physical move. Arrow keys take the same path; the group is one tab stop (the selected row). Options come from `ItemsSource` or inline `RadioOption` items; `SelectedValue` (two-way) is the selected option's `Value`. The `Header` is the legend and the group's accessible name.</source>
         <target>Arc 单选组：从一组可见选项中选择其一。一个高亮框（`ControlOn` 边框加淡色填充）会以形变弹簧滑动到所选行，新的圆点弹入，旧的圆点缩小消失，因此变化看起来像一次连贯的物理移动。方向键走同样的路径；整个组只有一个 Tab 停靠点（所选行）。选项来自 `ItemsSource` 或内联的 `RadioOption` 项；`SelectedValue`（双向绑定）为所选选项的 `Value`。`Header` 为图例，也是该组的无障碍名称。</target>
+      </trans-unit>
+      <trans-unit id="RadioGroupItem">
+        <source>One row of a `RadioGroup`: a ring with a springing dot, the label (the row's content) and an optional description. The group creates a row for each option. For a `RadioOption` the row takes its label, description and disabled state from the option; for any other item the label is the group's `ItemTemplate`, and a style on `arc|RadioGroupItem` (or the group's `ItemContainerTheme`) can bind `Description`, `IsEnabled` and `AutomationProperties.Name` to the item.</source>
+        <target>`RadioGroup` 的一行：带有弹出圆点的圆环、标签（行的内容）和可选的描述。组为每个选项创建一行。对于 `RadioOption`，行从选项读取标签、描述和禁用状态；对于其他项，标签由组的 `ItemTemplate` 生成，并且可以用针对 `arc|RadioGroupItem` 的样式（或组的 `ItemContainerTheme`）把 `Description`、`IsEnabled` 和 `AutomationProperties.Name` 绑定到项。</target>
+      </trans-unit>
+      <trans-unit id="RadioGroupItem.Description">
+        <source>A line under the label that explains the option; also the row's accessible help text.</source>
+        <target>标签下方解释该选项的一行文字；同时也是行的无障碍帮助文字。</target>
       </trans-unit>
       <trans-unit id="RadioOption">
         <source>One option of a `RadioGroup` (Arc `{ value, label, description? }`). Use it in `ItemsSource` or inline in XAML; the group reports `Value` as its `SelectedValue`. Its properties can be bound in XAML; the group follows later changes.</source>
@@ -30625,8 +30653,8 @@
         <target>设置行各行之间的垂直间距（默认 0：设置行自带内边距和细线）。</target>
       </trans-unit>
       <trans-unit id="SettingsPage">
-        <source>A full settings page. The left column holds the page `Title`, one navigation item per `SettingsSection` (icon, header, badge) under a raised selection pill that glides between them, and a `Footer` such as an account card; the chosen section fills the rest of the page. While the chosen section is `IsDirty`, a save bar rises at the bottom with Discard and Save. Narrower than `CompactWidth`, the page becomes one column with the sections as a scrolling row of pills. Write the sections inline (`&lt;arc:SettingsSection Header="Billing" Icon="..."&gt;…&lt;/arc:SettingsSection&gt;`) or bind them through `ItemsSource`; the first enabled section is selected by default.</source>
-        <target>完整的设置页。左列显示页面的 `Title`，每个 `SettingsSection` 对应一个导航项（图标、标题、徽标），导航项之间有一个凸起的选中胶囊滑动切换；左列底部是 `Footer`，例如账户卡片。所选分区占满页面其余部分。所选分区有未保存的修改（`IsDirty`）时，底部会升起保存条，带有放弃和保存按钮。宽度小于 `CompactWidth` 时，页面变为单列，分区以一排可滚动的胶囊显示。可直接内联书写分区（`&lt;arc:SettingsSection Header="Billing" Icon="..."&gt;…&lt;/arc:SettingsSection&gt;`），也可通过 `ItemsSource` 绑定；默认选中第一个已启用的分区。</target>
+        <source>A full settings page. The left column holds the page `Title`, one navigation item per `SettingsSection` (icon, header, badge) under a raised selection pill that glides between them, and a `Footer` such as an account card; the chosen section fills the rest of the page. While the chosen section is `IsDirty`, a save bar rises at the bottom with Discard and Save. Narrower than `CompactWidth`, the page becomes one column with the sections as a scrolling row of pills. Write the sections inline (`&lt;arc:SettingsSection Header="Billing" Icon="..."&gt;…&lt;/arc:SettingsSection&gt;`) or bind them through `ItemsSource`; the first enabled section is selected by default. `SelectedValue` (two-way) is the selected section's `Value`, so the shown section can be bound to an enum or a view model property; set `SelectedValueBinding` to read the value some other way.</source>
+        <target>完整的设置页。左列显示页面的 `Title`，每个 `SettingsSection` 对应一个导航项（图标、标题、徽标），导航项之间有一个凸起的选中胶囊滑动切换；左列底部是 `Footer`，例如账户卡片。所选分区占满页面其余部分。所选分区有未保存的修改（`IsDirty`）时，底部会升起保存条，带有放弃和保存按钮。宽度小于 `CompactWidth` 时，页面变为单列，分区以一排可滚动的胶囊显示。可直接内联书写分区（`&lt;arc:SettingsSection Header="Billing" Icon="..."&gt;…&lt;/arc:SettingsSection&gt;`），也可通过 `ItemsSource` 绑定；默认选中第一个已启用的分区。`SelectedValue`（双向）是所选分区的 `Value`，因此可以把当前显示的分区绑定到枚举或视图模型的属性；设置 `SelectedValueBinding` 可用其他方式读取值。</target>
       </trans-unit>
       <trans-unit id="SettingsPage.CompactWidth">
         <source>Below this width the page becomes one column with the sections as a row of pills (default 720).</source>
@@ -30657,8 +30685,8 @@
         <target>导航上方的页面标题（默认为“设置”）。</target>
       </trans-unit>
       <trans-unit id="SettingsRow">
-        <source>One setting: an optional icon, a header and description on the left, and the control that changes it (`Content`) on the right. Below `StackWidth` the control moves under the text. Rows in a `SettingsGroup` (or any panel) are separated by a hairline; the first row has none. When the control is a toggle (Switch, Checkbox), clicking the header or description toggles it too, and the control takes the header as its accessible name and the description as its help text unless it has its own. `LabelWidth`, `ContentAlignment` and `ContentSpacing` are inherited from the `SettingsGroup` that holds the row, so the controls of a group line up; set them on a row to override.</source>
-        <target>一项设置：左侧是可选的图标、标题和描述，右侧是用于修改该设置的控件（`Content`）。宽度小于 `StackWidth` 时，控件会移到文字下方。`SettingsGroup`（或任意面板）中的设置行之间以细线分隔，第一行没有分隔线。当控件是开关（Switch）或复选框（Checkbox）时，点击标题或描述也会切换它；除非控件已有自己的名称和帮助文本，否则控件会以标题作为无障碍名称，以描述作为帮助文本。`LabelWidth`、`ContentAlignment` 和 `ContentSpacing` 继承自包含该行的 `SettingsGroup`，因此分组内的控件会对齐；在设置行上设置它们即可覆盖。</target>
+        <source>One setting: an optional icon (or any `Leading` content, such as an avatar), a header and description on the left with optional `Details` under them, and the control that changes it (`Content`) on the right. Below `StackWidth` the control moves under the text. Rows in a `SettingsGroup` (or any panel) are separated by a hairline; the first row has none. When the control is a toggle (Switch, Checkbox), clicking the header or description toggles it too, and the control takes the header as its accessible name and the description as its help text unless it has its own. `LabelWidth`, `ContentAlignment` and `ContentSpacing` are inherited from the `SettingsGroup` that holds the row, so the controls of a group line up; set them on a row to override.</source>
+        <target>一项设置：左侧是可选的图标（或任意 `Leading` 内容，例如头像）、标题和描述，其下可有可选的 `Details`；右侧是用于修改该设置的控件（`Content`）。宽度小于 `StackWidth` 时，控件会移到文字下方。`SettingsGroup`（或任意面板）中的设置行之间以细线分隔，第一行没有分隔线。当控件是开关（Switch）或复选框（Checkbox）时，点击标题或描述也会切换它；除非控件已有自己的名称和帮助文本，否则控件会以标题作为无障碍名称，以描述作为帮助文本。`LabelWidth`、`ContentAlignment` 和 `ContentSpacing` 继承自包含该行的 `SettingsGroup`，因此分组内的控件会对齐；在设置行上设置它们即可覆盖。</target>
       </trans-unit>
       <trans-unit id="SettingsRow.ContentAlignment">
         <source>Where the control sits in the space beside a fixed `LabelWidth` (default Right); Stretch fills it. Without a label width the control is as wide as it needs, at the right. Under the text the control is at the left, or fills the row with Stretch. Inherited from the `SettingsGroup`.</source>
@@ -30672,13 +30700,17 @@
         <source>A sentence under the header that explains the setting; also the control's help text.</source>
         <target>标题下方说明该设置的一句话；同时也是控件的帮助文本。</target>
       </trans-unit>
+      <trans-unit id="SettingsRow.Details">
+        <source>Content under the header and description, such as a status line, an error or a row of tags. Text is shown small and muted; other content keeps its own look.</source>
+        <target>标题和描述下方的内容，例如状态行、错误信息或一排标签。文字以小号弱化样式显示；其他内容保持自身外观。</target>
+      </trans-unit>
       <trans-unit id="SettingsRow.Header">
         <source>The setting's name, shown in medium weight; also the control's accessible name.</source>
         <target>设置的名称，以中等字重显示；同时也是控件的无障碍名称。</target>
       </trans-unit>
       <trans-unit id="SettingsRow.Icon">
-        <source>A 24×24 stroke icon (for example an `ArcIcons` member) shown in a tile before the header.</source>
-        <target>24×24 线性图标（例如 `ArcIcons` 的成员），显示在标题前的图块中。</target>
+        <source>A 24×24 stroke icon (for example an `ArcIcons` member) shown in a tile before the header. Not shown while the row has `Leading` content.</source>
+        <target>24×24 线性图标（例如 `ArcIcons` 的成员），显示在标题前的图块中。行有 `Leading` 内容时不显示。</target>
       </trans-unit>
       <trans-unit id="SettingsRow.IsStacked">
         <source>Whether the control currently sits under the text (the row is narrower than `StackWidth`).</source>
@@ -30688,17 +30720,25 @@
         <source>The width from the row's left edge to the control, icon included, so controls line up across rows with and without icons (default NaN: as wide as the text needs). Inherited from the `SettingsGroup`. Ignored while the control sits under the text.</source>
         <target>从设置行左边缘到控件的宽度（包含图标），因此带图标和不带图标的设置行中的控件会对齐（默认 NaN：按文字需要的宽度）。继承自 `SettingsGroup`。控件位于文字下方时不生效。</target>
       </trans-unit>
+      <trans-unit id="SettingsRow.Leading">
+        <source>Content before the header in place of the icon tile, such as an `Avatar` or a logo; it keeps its own size. When set, `Icon` is not shown.</source>
+        <target>标题前代替图标块的内容，例如 `Avatar` 或标志；它保持自身尺寸。设置后不显示 `Icon`。</target>
+      </trans-unit>
       <trans-unit id="SettingsRow.StackWidth">
         <source>Below this width the control moves under the header and description (default 440).</source>
         <target>低于此宽度时，控件移到标题和描述下方（默认 440）。</target>
       </trans-unit>
       <trans-unit id="SettingsSection">
-        <source>One section of a `SettingsPage`: its `Header`, `Icon` and `Badge` appear in the page's navigation, and while it is selected the section itself (header, `Description` and content) fills the page's content area. Set `IsDirty` while it has unsaved changes to show the page's save bar.</source>
-        <target>`SettingsPage` 的一个分区：其 `Header`、`Icon` 和 `Badge` 显示在页面导航中；选中时，分区本身（标题、`Description` 和内容）会占满页面的内容区域。分区有未保存的修改时，设置 `IsDirty` 即可显示页面的保存条。</target>
+        <source>One section of a `SettingsPage`: its `Header`, `Icon` and `Badge` appear in the page's navigation, and while it is selected the section itself (header, `Description` and content) fills the page's content area. Set `IsDirty` while it has unsaved changes to show the page's save bar. `Value` is what the page reports as its `SelectedValue` while the section is selected.</source>
+        <target>`SettingsPage` 的一个分区：其 `Header`、`Icon` 和 `Badge` 显示在页面导航中；选中时，分区本身（标题、`Description` 和内容）会占满页面的内容区域。分区有未保存的修改时，设置 `IsDirty` 即可显示页面的保存条。分区被选中时，`Value` 就是页面报告的 `SelectedValue`。</target>
       </trans-unit>
       <trans-unit id="SettingsSection.Badge">
         <source>A short marker at the end of the navigation item, such as "New" or a count.</source>
         <target>导航项末尾的简短标记，例如“New”或计数。</target>
+      </trans-unit>
+      <trans-unit id="SettingsSection.BadgeTone">
+        <source>The color of the `Badge`: Neutral (the default), Success, Info (the accent), Warning or Danger.</source>
+        <target>`Badge` 的颜色：Neutral（默认）、Success、Info（强调色）、Warning 或 Danger。</target>
       </trans-unit>
       <trans-unit id="SettingsSection.Description">
         <source>A sentence under the section title in the content area.</source>
@@ -30711,6 +30751,10 @@
       <trans-unit id="SettingsSection.IsDirty">
         <source>Whether the section has unsaved changes: the page shows its save bar while this section is selected.</source>
         <target>分区是否有未保存的修改：选中此分区时，页面会显示其保存条。</target>
+      </trans-unit>
+      <trans-unit id="SettingsSection.Value">
+        <source>The value that identifies the section, such as an enum member or a route key: the page's `SelectedValue` while this section is selected, and setting the page's `SelectedValue` to it selects this section. Without a value the section reports itself.</source>
+        <target>标识该分区的值，例如枚举成员或路由键：选中此分区时它就是页面的 `SelectedValue`，把页面的 `SelectedValue` 设为它则会选中此分区。没有值时，分区报告它自己。</target>
       </trans-unit>
       <trans-unit id="ShareAccess">
         <source>The share dialog of a document: invite people by email with a role, see everyone who has access and change or remove their role, choose who else can open the link (only the people listed, anyone in the organization or anyone with the link, each with its own role) and copy the link.</source>
@@ -36232,6 +36276,14 @@
         <source>Raised when a person toggles an option, not when code sets the value.</source>
         <target>使用者切换选项时触发，代码设置值时不触发。</target>
       </trans-unit>
+      <trans-unit id="ToggleGroupItem">
+        <source>One option of a `ToggleGroup`: an optional icon and the option's content. The group creates one for each option. For a `ToggleGroupOption` the item takes its content, icon, disabled state, accessible name and tooltip from the option; for any other item the content is the group's `ItemTemplate`, and a style on `arc|ToggleGroupItem` (or the group's `ItemContainerTheme`) can bind `Icon`, `IsEnabled`, `AutomationProperties.Name` and `arc:Tooltip.Tip` to the item. A click, Space and Enter ask the group to toggle it; the shared item base would only select, which cannot press several options or turn one off. The item box never scales, so neighbours stay put; only its content gives a small press.</source>
+        <target>`ToggleGroup` 的一个选项：可选图标和选项的内容。组为每个选项创建一个。对于 `ToggleGroupOption`，该项从选项读取内容、图标、禁用状态、无障碍名称和工具提示；对于其他项，内容由组的 `ItemTemplate` 生成，并且可以用针对 `arc|ToggleGroupItem` 的样式（或组的 `ItemContainerTheme`）把 `Icon`、`IsEnabled`、`AutomationProperties.Name` 和 `arc:Tooltip.Tip` 绑定到项。点击、Space 和 Enter 会请求组切换它；共用的项基类只会选择，无法按下多个选项或把一个选项关闭。项的方框从不缩放，因此相邻选项保持不动；只有其内容会产生轻微的按压效果。</target>
+      </trans-unit>
+      <trans-unit id="ToggleGroupItem.Icon">
+        <source>A 24×24 stroke icon (for example an `ArcIcons` member) drawn before the content.</source>
+        <target>24×24 线性图标（例如 `ArcIcons` 的成员），绘制在内容之前。</target>
+      </trans-unit>
       <trans-unit id="ToggleGroupOption">
         <source>One option of a `ToggleGroup` (Arc `ToggleGroup.Item`): an icon, content or both. Its properties can be bound in XAML; the group follows later changes.</source>
         <target>`ToggleGroup` 的一个选项（Arc `ToggleGroup.Item`）：图标、内容或两者都有。它的属性可以在 XAML 中绑定；组会跟随之后的变化。</target>
@@ -36259,6 +36311,10 @@
       <trans-unit id="ToggleGroupOption.Value">
         <source>The value reported by the group's `SelectedValue` and `SelectedValues`.</source>
         <target>由组的 `SelectedValue` 和 `SelectedValues` 报告的值。</target>
+      </trans-unit>
+      <trans-unit id="TogglesItem.IsSelected">
+        <source>Whether the item is selected. The group sets it; change the group's selection to change it.</source>
+        <target>该项是否被选中。由组设置；要改变它，请改变组的选择。</target>
       </trans-unit>
       <trans-unit id="TokenStyle">
         <source>The colors of one token kind in a `TokenTextEditor`. Null brushes use the editor's defaults.</source>

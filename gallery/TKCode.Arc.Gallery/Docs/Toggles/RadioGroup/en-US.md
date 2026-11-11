@@ -55,7 +55,7 @@ and an optional description.
 `RadioGroup` derives from Avalonia's `HeaderedSelectingItemsControl`. Selection, `SelectedIndex`, `SelectedItem`,
 `SelectionChanged`, the header and `HeaderTemplate` are therefore the same as in any Avalonia selecting control, and
 the group adds the Arc row design, the single moving highlight, the keyboard model and the automation names on top.
-The group creates one row for each option; you never add rows yourself.
+The group creates one row, a `RadioGroupItem`, for each option; you never add rows yourself.
 
 ### Anatomy
 
@@ -164,6 +164,44 @@ public partial class UpgradeViewModel : ObservableObject
 - Use `SelectionChanged` in code for side effects that are not data, such as a preview label. Keep the save in the
   command, so it runs once when the person presses the button and not on every arrow key.
 - Set `Header` in XAML with a plain string. A string header is also the group's accessible name.
+
+### Data-bound items
+
+The options do not have to be `RadioOption` objects. Bind `ItemsSource` to your own items and give the group an
+`ItemTemplate` for the label. Each row is a public `RadioGroupItem` whose `DataContext` is its item, so a style on
+`arc|RadioGroupItem` binds the rest of the row to the item, as with Avalonia's `ListBoxItem`: `Description`,
+`IsEnabled` and `AutomationProperties.Name`. Set `SelectedValueBinding` to the property that identifies an item;
+without it `SelectedValue` is the item itself.
+
+<Demo name="DataItems" />
+
+```xml
+<arc:RadioGroup Header="Region"
+                ItemsSource="{Binding Regions}"
+                SelectedValue="{Binding RegionId}"
+                SelectedValueBinding="{Binding Id}">
+    <arc:RadioGroup.ItemTemplate>
+        <DataTemplate>
+            <TextBlock Text="{Binding Name}" />
+        </DataTemplate>
+    </arc:RadioGroup.ItemTemplate>
+    <arc:RadioGroup.Styles>
+        <Style Selector="arc|RadioGroupItem">
+            <Setter Property="Description" Value="{Binding Note}" />
+            <Setter Property="IsEnabled" Value="{Binding IsAvailable}" />
+            <Setter Property="AutomationProperties.Name" Value="{Binding Name}" />
+        </Style>
+    </arc:RadioGroup.Styles>
+</arc:RadioGroup>
+```
+
+- With compiled bindings, give the `DataTemplate` and the `Style` an `x:DataType` of your item type, and write
+  `SelectedValueBinding="{Binding Id, DataType={x:Type local:Region}}"`.
+- Set `AutomationProperties.Name` when the template's root is not a `TextBlock`: the row takes its name from a text
+  label only. The description is the row's help text.
+- `ItemContainerTheme` works too. Base it on the row's theme, `BasedOn="{StaticResource {x:Type arc:RadioGroupItem}}"`,
+  so the row keeps its ring, dot and focus ring.
+- A `RadioOption` sets its row's label, description and disabled state itself, and those values win over a style.
 
 ### Disabled options
 
@@ -297,18 +335,21 @@ a heading and a hint, does not, so set `AutomationProperties.Name` on the group 
 **How do I show the description of the selected option somewhere else?** Read `SelectedItem` as a `RadioOption` in
 `SelectionChanged`, and show its `Description` in a text block. The group's own rows keep their descriptions.
 
-**Can the rows take arbitrary objects?** Use `RadioOption` for every row. The row reads `Label`, `Description` and
-`IsDisabled` from that type, so other objects do not give the row its text. Map your own model to `RadioOption` in
-the view model.
+**Can the rows take arbitrary objects?** Yes. Give the group an `ItemTemplate` for the label and a style on
+`arc|RadioGroupItem` that binds `Description`, `IsEnabled` and `AutomationProperties.Name` to the item, as in Data-bound
+items. Set `SelectedValueBinding` so that `SelectedValue` is the item's key rather than the item.
 
 ## API reference
 
 <!-- api: RadioGroup -->
 <!-- api: RadioOption -->
+<!-- api: RadioGroupItem -->
 
 ## Accessibility
 
 - `Header` names the group when it is a string. Each option is a radio button, and its description is the help text.
+- A `RadioOption` row is named by its label. A data-bound row needs `AutomationProperties.Name` from a style on
+  `arc|RadioGroupItem` when its label is not plain text.
 - The group is one tab stop. Tab enters it at the selected option, and the next Tab leaves it. Keyboard focus never
   stops on an unselected option.
 - Arrow keys move the selection to the next or previous option and wrap around. Disabled options are skipped.

@@ -8,19 +8,26 @@ using TKCode.Arc.Primitives;
 namespace TKCode.Arc;
 
 /// <summary>
-/// Base of the internal item containers of the toggle groups (radio rows, radio cards, segments, billing options).
-/// A press is answered on release inside the item (a click), Space / Enter select the focused item, and the owner
-/// keeps the selection; the container only mirrors it through <see cref="IsSelected"/> (<c>:selected</c>).
+/// Base of the item containers of the toggle groups: <see cref="RadioGroupItem"/>, <see cref="RadioCard"/>,
+/// <see cref="ToggleGroupItem"/> and the internal segments and billing options. The group creates one for each item; a
+/// press is answered on release inside the item (a click), Space / Enter select the focused item, and the group keeps the
+/// selection, which the container mirrors through <see cref="IsSelected"/> (<c>:selected</c>). Only this library derives
+/// from it.
 /// </summary>
 [PseudoClasses(SelectedPseudoClass, PressedPseudoClass)]
-internal abstract class TogglesItem : ContentControl
+public abstract class TogglesItem : ContentControl
 {
+    /// <summary>Set while the item is selected (pressed in a toggle group).</summary>
     public const string SelectedPseudoClass = ":selected";
+
+    /// <summary>Set while a pointer holds the item down.</summary>
     public const string PressedPseudoClass = ":pressed";
 
+    /// <summary>Whether the item is selected. The group sets it; change the group's selection to change it.</summary>
     public static readonly StyledProperty<bool> IsSelectedProperty =
         SelectingItemsControl.IsSelectedProperty.AddOwner<TogglesItem>();
 
+    /// <inheritdoc cref="IsSelectedProperty"/>
     public bool IsSelected
     {
         get => GetValue(IsSelectedProperty);
@@ -35,7 +42,12 @@ internal abstract class TogglesItem : ContentControl
         FocusableProperty.OverrideDefaultValue<TogglesItem>(true);
     }
 
-    protected SelectingItemsControl? Owner => ItemsControl.ItemsControlFromItemContainer(this) as SelectingItemsControl;
+    /// <summary>Only the toggle groups of this library derive item containers from this class.</summary>
+    private protected TogglesItem()
+    {
+    }
+
+    private protected SelectingItemsControl? Owner => ItemsControl.ItemsControlFromItemContainer(this) as SelectingItemsControl;
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
@@ -51,12 +63,12 @@ internal abstract class TogglesItem : ContentControl
         }
     }
 
-    protected virtual void OnIsSelectedChanged()
+    private protected virtual void OnIsSelectedChanged()
     {
     }
 
     /// <summary>Selects this item through its owner (click, Space, Enter, automation).</summary>
-    public void Select()
+    internal void Select()
     {
         if (!IsEffectivelyEnabled || Owner is not { } owner)
         {
@@ -121,7 +133,7 @@ internal abstract class TogglesItem : ContentControl
     /// Resource keys of the item's keyboard focus ring (margin, radius), or null when the template draws its own. The
     /// ring is built the first time the item is keyboard focused, as the last child of the template's root panel.
     /// </summary>
-    protected virtual (object Margin, object Radius)? FocusRingKeys => null;
+    private protected virtual (object Margin, object Radius)? FocusRingKeys => null;
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {

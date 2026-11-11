@@ -183,6 +183,7 @@
                         <arc:Badge Name="PART_Badge"
                                    Grid.Column="2"
                                    Size="Small"
+                                   Tone="{TemplateBinding BadgeTone}"
                                    Content="{TemplateBinding Badge}"
                                    Margin="{arc:SettingsPageNavItemTokenResource TrailingMargin}"
                                    VerticalAlignment="Center" />

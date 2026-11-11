@@ -7,12 +7,13 @@ using Avalonia.Controls.Presenters;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 
 namespace TKCode.Arc.Tests.Blocks.Settings;
 
 /// <summary>
 /// The shared Settings parts: rows stack when narrow, label clicks toggle, hairlines between rows only, columns (fixed,
-/// responsive, spans) and the row layout a group hands down to its rows.
+/// responsive, spans), the row layout a group hands down to its rows, and the row's leading and details slots.
 /// </summary>
 public class SettingsGroupTests
 {
@@ -372,6 +373,100 @@ public class SettingsGroupTests
             presenter.Margin.ShouldBe(new Thickness(16, 0, 0, 0));
             presenter.Bounds.Right.ShouldBe(640, 0.5);
             double.IsNaN(row.LabelWidth).ShouldBeTrue();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Details_Sit_Under_The_Description_And_Are_Built_Only_When_Set()
+    {
+        var group = Group(out var first, out var second, out _);
+        var window = TestHelpers.Show(group);
+        try
+        {
+            first.Details = "Last synced 2 minutes ago";
+            Dispatcher.UIThread.RunJobs();
+            first.Classes.Contains(SettingsRow.DetailsPseudoClass).ShouldBeTrue();
+            var details = TestHelpers.Descendant<ContentPresenter>(first, SettingsRow.DetailsPart);
+            details.IsVisible.ShouldBeTrue();
+            details.Content.ShouldBe("Last synced 2 minutes ago");
+            var description = TestHelpers.Descendant<TextBlock>(first, "PART_Description");
+            details.TranslatePoint(default, first)!.Value.Y.ShouldBeGreaterThan(description.TranslatePoint(default, first)!.Value.Y);
+            details.Margin.ShouldBe(new Thickness(0, 4, 0, 0));
+
+            // Any content works, such as an error line with its own color.
+            var error = new TextBlock { Text = "The key expired." };
+            first.Details = error;
+            Dispatcher.UIThread.RunJobs();
+            error.GetVisualParent().ShouldBe(details);
+
+            first.Details = null;
+            Dispatcher.UIThread.RunJobs();
+            details.IsVisible.ShouldBeFalse();
+            first.Classes.Contains(SettingsRow.DetailsPseudoClass).ShouldBeFalse();
+
+            // A row without details has no presenter for them.
+            second.GetVisualDescendants().OfType<ContentPresenter>().Any(p => p.Name == SettingsRow.DetailsPart).ShouldBeFalse();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Leading_Content_Replaces_The_Icon_Tile()
+    {
+        var group = Group(out var first, out _, out _);
+        first.Icon = ArcIcons.Bell;
+        var window = TestHelpers.Show(group);
+        try
+        {
+            var tile = TestHelpers.Descendant<Border>(first, SettingsRow.IconTilePart);
+            tile.IsVisible.ShouldBeTrue();
+            first.Classes.Contains(SettingsRow.IconPseudoClass).ShouldBeTrue();
+
+            var avatar = new Border { Width = 40, Height = 40 };
+            first.Leading = avatar;
+            Dispatcher.UIThread.RunJobs();
+            tile.IsVisible.ShouldBeFalse();
+            first.Classes.Contains(SettingsRow.IconPseudoClass).ShouldBeFalse();
+            first.Classes.Contains(SettingsRow.LeadingPseudoClass).ShouldBeTrue();
+            var leading = TestHelpers.Descendant<ContentPresenter>(first, SettingsRow.LeadingPart);
+            avatar.GetVisualParent().ShouldBe(leading);
+            // The text starts after the leading content and the icon tile's gap.
+            var label = TestHelpers.Descendant<StackPanel>(first, SettingsRow.LabelPart);
+            Left(label, first).ShouldBe(40 + 16, 0.5);
+
+            first.Leading = null;
+            Dispatcher.UIThread.RunJobs();
+            leading.IsVisible.ShouldBeFalse();
+            tile.IsVisible.ShouldBeTrue();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Label_Width_Includes_The_Leading_Content()
+    {
+        var group = Rows(2, 640);
+        group.Appearance = SettingsGroupAppearance.Plain;
+        group.LabelWidth = 240;
+        group.ContentAlignment = HorizontalAlignment.Left;
+        var withLeading = Row(group, 1);
+        withLeading.Leading = new Border { Width = 40, Height = 40 };
+        var window = TestHelpers.Show(group);
+        try
+        {
+            // The controls line up whether the row has leading content or not.
+            Left(ControlOf(Row(group, 0)), Row(group, 0)).ShouldBe(240 + 16, 0.5);
+            Left(ControlOf(withLeading), withLeading).ShouldBe(240 + 16, 0.5);
         }
         finally
         {

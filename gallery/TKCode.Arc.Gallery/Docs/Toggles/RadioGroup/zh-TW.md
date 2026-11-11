@@ -1,7 +1,7 @@
 ---
 title: 單選群組
 summary: 從可見的一組選項中選取一項。
-source-hash: d2f4b16cda52
+source-hash: 9abd7f8198ab
 ---
 
 <Demo name="Plans" />
@@ -39,7 +39,7 @@ source-hash: d2f4b16cda52
 </UserControl>
 ```
 
-`RadioGroup` 衍生自 Avalonia 的 `HeaderedSelectingItemsControl`。因此選取、`SelectedIndex`、`SelectedItem`、`SelectionChanged`、標題和 `HeaderTemplate` 與任何 Avalonia 選取控制項中的行為相同，而此群組在此之上加入 Arc 的列設計、單一移動的反白、鍵盤模型與自動化名稱。群組會為每個選項建立一列，你無需自行加入列。
+`RadioGroup` 衍生自 Avalonia 的 `HeaderedSelectingItemsControl`。因此選取、`SelectedIndex`、`SelectedItem`、`SelectionChanged`、標題和 `HeaderTemplate` 與任何 Avalonia 選取控制項中的行為相同，而此群組在此之上加入 Arc 的列設計、單一移動的反白、鍵盤模型與自動化名稱。群組會為每個選項建立一列（一個 `RadioGroupItem`），你無需自行加入列。
 
 ### 結構
 
@@ -133,6 +133,37 @@ public partial class UpgradeViewModel : ObservableObject
 - `ItemsSource` 接受 `ObservableCollection<RadioOption>`，因此新增或移除選項都會更新群組。
 - 對於不屬於資料的副作用（例如預覽標籤），在程式碼中使用 `SelectionChanged`。儲存動作應放在命令中，這樣它只在使用者按下按鈕時執行一次，而不是每次按方向鍵都執行。
 - 在 XAML 中用一般字串設定 `Header`。字串標題同時也是群組的無障礙名稱。
+
+### 資料繫結的項目
+
+選項不必是 `RadioOption` 物件。把 `ItemsSource` 繫結到你自己的項目，並為群組提供用於標籤的 `ItemTemplate`。每一列都是公開的 `RadioGroupItem`，其 `DataContext` 就是它的項目，因此像 Avalonia 的 `ListBoxItem` 一樣，可以用針對 `arc|RadioGroupItem` 的樣式把列的其餘部分繫結到項目：`Description`、`IsEnabled` 和 `AutomationProperties.Name`。把 `SelectedValueBinding` 設為識別項目的屬性；未設定時，`SelectedValue` 就是項目本身。
+
+<Demo name="DataItems" />
+
+```xml
+<arc:RadioGroup Header="Region"
+                ItemsSource="{Binding Regions}"
+                SelectedValue="{Binding RegionId}"
+                SelectedValueBinding="{Binding Id}">
+    <arc:RadioGroup.ItemTemplate>
+        <DataTemplate>
+            <TextBlock Text="{Binding Name}" />
+        </DataTemplate>
+    </arc:RadioGroup.ItemTemplate>
+    <arc:RadioGroup.Styles>
+        <Style Selector="arc|RadioGroupItem">
+            <Setter Property="Description" Value="{Binding Note}" />
+            <Setter Property="IsEnabled" Value="{Binding IsAvailable}" />
+            <Setter Property="AutomationProperties.Name" Value="{Binding Name}" />
+        </Style>
+    </arc:RadioGroup.Styles>
+</arc:RadioGroup>
+```
+
+- 使用編譯繫結時，為 `DataTemplate` 和 `Style` 設定你的項目型別作為 `x:DataType`，並寫成 `SelectedValueBinding="{Binding Id, DataType={x:Type local:Region}}"`。
+- 範本的根元素不是 `TextBlock` 時請設定 `AutomationProperties.Name`：列只會從文字標籤取得名稱。說明是列的說明文字。
+- 也可以使用 `ItemContainerTheme`。讓它基於列的主題 `BasedOn="{StaticResource {x:Type arc:RadioGroupItem}}"`，這樣列會保留圓環、圓點和焦點環。
+- `RadioOption` 會自行設定所在列的標籤、說明和停用狀態，這些值優先於樣式。
 
 ### 停用選項
 
@@ -242,16 +273,18 @@ group.SelectionChanged += (_, _) =>
 
 **如何在別處顯示所選選項的說明？** 在 `SelectionChanged` 中把 `SelectedItem` 讀取為 `RadioOption`，並在文字區塊中顯示它的 `Description`。群組自己的列仍會保留各自的說明。
 
-**列可以接受任意物件嗎？** 每一列都使用 `RadioOption`。列從該型別讀取 `Label`、`Description` 和 `IsDisabled`，因此其他物件不會為列提供文字。請在檢視模型中把你自己的模型對應為 `RadioOption`。
+**列可以接受任意物件嗎？** 可以。為群組提供用於標籤的 `ItemTemplate`，並用針對 `arc|RadioGroupItem` 的樣式把 `Description`、`IsEnabled` 和 `AutomationProperties.Name` 繫結到項目，如「資料繫結的項目」所示。設定 `SelectedValueBinding`，使 `SelectedValue` 是項目的鍵而不是項目本身。
 
 ## API 參考
 
 <!-- api: RadioGroup -->
 <!-- api: RadioOption -->
+<!-- api: RadioGroupItem -->
 
 ## 無障礙
 
 - 當 `Header` 為字串時，它為群組命名。每個選項都是單選按鈕，其說明即為說明文字。
+- `RadioOption` 的列以其標籤命名。資料繫結的列在標籤不是純文字時，需要透過針對 `arc|RadioGroupItem` 的樣式設定 `AutomationProperties.Name`。
 - 群組只佔一個 Tab 停駐點。Tab 從選取的選項進入群組，下一次 Tab 離開。鍵盤焦點永遠不會停在未選取的選項上。
 - 方向鍵將選取移到下一個或上一個選項，並循環切換。停用的選項會被略過。
 - Home 和 End 選取第一個和最後一個選項。空白鍵和 Enter 選取獲得焦點的選項。
