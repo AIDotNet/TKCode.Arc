@@ -112,6 +112,7 @@ Markdown: Markdown viewer, Markdown renderer, streaming text
 Cascader: cascading select, nested dropdown, region picker
 PropertyGrid: property inspector, settings inspector, object editor
 ArcWindow: custom title bar window, chromeless window
+WindowCaptionButtons: caption buttons, window controls, minimize maximize close buttons, title bar buttons
 FluidTabControl: scroll spy, scroll-linked tabs, anchor navigation, table of contents tabs, settings navigation
 AgentStatus: AI status, agent running indicator
 ToolCall: function call, tool invocation, tool use card

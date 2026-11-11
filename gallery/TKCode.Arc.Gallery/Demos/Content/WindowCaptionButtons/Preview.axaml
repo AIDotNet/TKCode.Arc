@@ -1,0 +1,36 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.WindowCaptionButtonsPreviewDemo">
+    <StackPanel HorizontalAlignment="Stretch" MaxWidth="600" Spacing="12">
+        <!-- A mock-up of a window whose sidebar reaches the top; IsPreview keeps the buttons from closing the gallery. -->
+        <Border BorderBrush="{arc:ArcDesignTokenResource Border}"
+                BorderThickness="1"
+                CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}">
+            <Border CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}" ClipToBounds="True">
+                <DockPanel Height="220" Background="{arc:ArcDesignTokenResource Background}">
+                    <StackPanel DockPanel.Dock="Left"
+                                Width="150"
+                                Spacing="6"
+                                Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+                        <StackPanel Orientation="Horizontal" Spacing="8" Margin="16,16,16,8">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Layers}" Size="16" />
+                            <TextBlock Text="Atlas" FontWeight="Medium" VerticalAlignment="Center" />
+                        </StackPanel>
+                        <TextBlock Text="Inbox" Margin="16,0" Opacity="0.8" />
+                        <TextBlock Text="Drafts" Margin="16,0" Opacity="0.6" />
+                        <TextBlock Text="Archive" Margin="16,0" Opacity="0.6" />
+                    </StackPanel>
+                    <Grid DockPanel.Dock="Top" Height="48" ColumnDefinitions="*,Auto">
+                        <TextBlock Text="Inbox" FontWeight="Medium" Margin="20,0" VerticalAlignment="Center" />
+                        <arc:WindowCaptionButtons Grid.Column="1" Margin="0,0,8,0" IsPreview="True" />
+                    </Grid>
+                    <Border Margin="20,4,20,20"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
+                            Background="{arc:ArcDesignTokenResource SurfaceMuted}" />
+                </DockPanel>
+            </Border>
+        </Border>
+        <arc:Button x:Name="OpenButton" Content="Open a window" HorizontalAlignment="Left" Click="OnOpen" />
+    </StackPanel>
+</UserControl>

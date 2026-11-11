@@ -1,0 +1,120 @@
+<!--
+    WindowCaptionButtons (issue #107): minimize, maximize / restore and close in a row, for a window whose content reaches
+    the top; TitleBar draws its caption buttons with it too and passes its own tokens. The buttons are WindowCaptionButton,
+    themed here: ghost squares, close turns danger under the pointer. Sizes come from the control (ButtonSize, GlyphSize,
+    ...) so a TitleBar's tokens reach them; the maximize glyph and its size follow the window state in code.
+-->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.WindowCaptionButtonsTheme">
+    <ControlTheme x:Key="{x:Type arc:WindowCaptionButton}" TargetType="arc:WindowCaptionButton">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:WindowCaptionButton">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <!-- Close is the one destructive caption button: danger fill and glyph under the pointer. -->
+        <Style Selector="^.close:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource DangerSubtle}" />
+        </Style>
+        <Style Selector="^.close:pressed">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource DangerSubtle}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:WindowCaptionButtons}" TargetType="arc:WindowCaptionButtons">
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="ButtonSize" Value="{arc:WindowCaptionButtonsTokenResource ButtonSize}" />
+        <Setter Property="ButtonSpacing" Value="{arc:WindowCaptionButtonsTokenResource ButtonSpacing}" />
+        <Setter Property="GlyphSize" Value="{arc:WindowCaptionButtonsTokenResource GlyphSize}" />
+        <Setter Property="MaximizeGlyphSize" Value="{arc:WindowCaptionButtonsTokenResource MaximizeGlyphSize}" />
+        <Setter Property="RestoreGlyphSize" Value="{arc:WindowCaptionButtonsTokenResource RestoreGlyphSize}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:WindowCaptionButtons">
+                <StackPanel Name="PART_Panel"
+                            Orientation="Horizontal"
+                            Spacing="{TemplateBinding ButtonSpacing}"
+                            VerticalAlignment="Center">
+                    <arc:WindowCaptionButton Name="PART_MinimizeButton"
+                                             Width="{TemplateBinding ButtonSize}"
+                                             Height="{TemplateBinding ButtonSize}"
+                                             IsVisible="{TemplateBinding ShowMinimizeButton}"
+                                             arc:Tooltip.Tip="{arc:TitleBarLangResource Minimize}"
+                                             AutomationProperties.Name="{arc:TitleBarLangResource Minimize}">
+                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Minus}" Size="{TemplateBinding GlyphSize}" />
+                    </arc:WindowCaptionButton>
+                    <arc:WindowCaptionButton Name="PART_MaximizeButton"
+                                             Width="{TemplateBinding ButtonSize}"
+                                             Height="{TemplateBinding ButtonSize}"
+                                             IsVisible="{TemplateBinding ShowMaximizeButton}">
+                        <arc:ArcGlyph Name="PART_MaximizeGlyph" />
+                    </arc:WindowCaptionButton>
+                    <arc:WindowCaptionButton Name="PART_CloseButton"
+                                             Classes="close"
+                                             Width="{TemplateBinding ButtonSize}"
+                                             Height="{TemplateBinding ButtonSize}"
+                                             IsVisible="{TemplateBinding ShowCloseButton}"
+                                             arc:Tooltip.Tip="{arc:TitleBarLangResource Close}"
+                                             AutomationProperties.Name="{arc:TitleBarLangResource Close}">
+                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}" Size="{TemplateBinding GlyphSize}" />
+                    </arc:WindowCaptionButton>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Maximize, or restore while maximized: tooltip and name follow the state (the glyph follows in code). -->
+        <Style Selector="^ /template/ arc|WindowCaptionButton#PART_MaximizeButton">
+            <Setter Property="arc:Tooltip.Tip" Value="{arc:TitleBarLangResource Maximize}" />
+            <Setter Property="AutomationProperties.Name" Value="{arc:TitleBarLangResource Maximize}" />
+        </Style>
+        <Style Selector="^:maximized /template/ arc|WindowCaptionButton#PART_MaximizeButton">
+            <Setter Property="arc:Tooltip.Tip" Value="{arc:TitleBarLangResource Restore}" />
+            <Setter Property="AutomationProperties.Name" Value="{arc:TitleBarLangResource Restore}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

@@ -123,6 +123,10 @@ Set `IsTitleBarVisible` to `False` (or `TitleBar` to null) and the content reach
 extends into the decorations and resizes from its edges. Your content then has to move the window, for example with
 `BeginMoveDrag`. Set `ExtendClientAreaToDecorationsHint` to `False` as well to get the system's title bar back.
 
+For minimize, maximize and close in a header of your own, use `WindowCaptionButtons`, and put the content in an
+`ArcOverlayHost` beside that header so that dialogs and drawers leave it uncovered (see Window caption buttons). A bar
+hidden this way is not hit, so its buttons never compete with yours.
+
 ### Window border
 
 On Windows 11, DWM draws a 1 px frame on the left, right and bottom edges, but not on the top edge once the client area extends into the title bar. On Windows, while the window is in its normal state (not maximized, full screen or `WindowDecorations="None"`), `ArcWindow` sets the `:top-edge` pseudo-class and draws that top edge itself (color `Border`), so all four edges match. To drop the line, override it with a style:
@@ -179,5 +183,6 @@ on this page, draws the same bar and moves, maximizes and closes nothing.
 ## Related
 
 - `Dialog`, `Drawer` and `BottomSheet`: content that opens over the window.
+- `WindowCaptionButtons`: minimize, maximize and close for a window whose content reaches the top.
 - `DropdownMenu`: menus for the bar's left area.
 - `Tabs`: tabs for the bar's center area.

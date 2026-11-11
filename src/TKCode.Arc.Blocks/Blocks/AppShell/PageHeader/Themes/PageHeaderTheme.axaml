@@ -319,6 +319,11 @@
             </Style>
         </Style>
 
+        <!-- The window's title bar (IsTitleBar): the header's empty part is hit, so it can be the caption and move the window. -->
+        <Style Selector="^:title-bar /template/ Panel#PART_Header">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+
         <!-- Only the header: no rule, no tabs (hidden in code), no body; the control is as tall as the header. -->
         <Style Selector="^:header-only">
             <Setter Property="VerticalAlignment" Value="Top" />

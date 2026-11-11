@@ -8,8 +8,10 @@ namespace TKCode.Arc.Primitives;
 /// <summary>
 /// A panel that gives its descendants their own overlay layer: modals opened from inside it (dialogs, drawers, bottom
 /// sheets, command palettes) mount on this panel's <see cref="Layer"/> and are bounded by it instead of covering the
-/// whole window. Children stack like a <see cref="Panel"/>; the layer sits above all of them. Used for previews and docs
-/// stages; an app does not need it.
+/// whole window. Children stack like a <see cref="Panel"/>; the layer sits above all of them. An app uses it to keep its own
+/// controls above every modal: put the app's content in a host and those controls (a title bar with
+/// <c>WindowCaptionButtons</c> in a window whose content reaches the top, a splash screen) beside it, outside the host, and
+/// a modal opened from the content covers the host only. Previews and docs stages use it to keep a modal on the stage.
 /// <code>
 /// &lt;arc:ArcOverlayHost Height="480"&gt;
 ///     &lt;StackPanel&gt;…&lt;/StackPanel&gt;
