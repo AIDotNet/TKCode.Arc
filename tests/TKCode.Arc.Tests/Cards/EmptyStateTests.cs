@@ -88,4 +88,41 @@ public class EmptyStateTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void Small_Size_Is_Compact_At_Every_Window_Width()
+    {
+        // Issue #110: an empty state in a list pane or card.
+        var empty = new EmptyState { Title = "No messages", Description = "New messages show up here.", Action = new Button { Content = "Compose" } };
+        var window = TestHelpers.Show(new StackPanel { Children = { empty } });
+        try
+        {
+            window.Width = 1200;
+            Dispatcher.UIThread.RunJobs();
+            var full = empty.Bounds.Height;
+
+            empty.Size = ControlSize.Small;
+            Dispatcher.UIThread.RunJobs();
+            empty.Classes.Contains(EmptyState.SmallPseudoClass).ShouldBeTrue();
+            var block = empty.GetVisualDescendants().OfType<Border>().First(b => b.Name == "PART_IconBlock");
+            block.Bounds.Width.ShouldBe(32);
+            TestHelpers.Descendant<ArcGlyph>(block).Size.ShouldBe(18);
+            empty.ContentPadding.Top.ShouldBe(16);
+            empty.Bounds.Height.ShouldBeLessThan(full - 60);
+
+            // The window width no longer changes its padding.
+            window.Width = 500;
+            Dispatcher.UIThread.RunJobs();
+            empty.ContentPadding.Top.ShouldBe(16);
+
+            empty.Size = ControlSize.Medium;
+            Dispatcher.UIThread.RunJobs();
+            block.Bounds.Width.ShouldBe(48);
+            empty.ContentPadding.Top.ShouldBe(40);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

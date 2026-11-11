@@ -26,6 +26,15 @@ internal sealed class EmptyStateToken : AbstractControlDesignToken
 
     public double DescriptionLineHeight { get; set; }
 
+    /// <summary>The compact state (<c>Size="Small"</c>): a space-8 icon block, space-4 above and below, space-3 gaps.</summary>
+    public double IconBlockSizeSmall { get; set; }
+
+    public double BlockPaddingSmall { get; set; }
+
+    public Thickness TitleMarginSmall { get; set; }
+
+    public Thickness ActionMarginSmall { get; set; }
+
     public override void CalculateTokenValues(bool isDarkMode)
     {
         base.CalculateTokenValues(isDarkMode);
@@ -37,5 +46,9 @@ internal sealed class EmptyStateToken : AbstractControlDesignToken
         InlinePadding = 20;
         TitleLineHeight = 16 * 1.4;
         DescriptionLineHeight = 14 * 1.4;
+        IconBlockSizeSmall = 32;
+        BlockPaddingSmall = 16;
+        TitleMarginSmall = new Thickness(0, 12, 0, 0);
+        ActionMarginSmall = new Thickness(0, 12, 0, 0);
     }
 }

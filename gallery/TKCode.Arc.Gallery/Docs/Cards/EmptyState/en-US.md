@@ -211,6 +211,10 @@ copy keep their place and the change reads as the same area updating.
 
 ### Layout and sizing
 
+`Size="Small"` is a compact empty state for list panes, side panels and cards: a 32 px icon block, 16 px above and
+below, a smaller title and tighter gaps, at every window width. The default size keeps Arc's layout, whose vertical
+padding follows the window.
+
 The control has no fixed width. It fills the space its parent gives it and centers its contents, so the same control
 works in a narrow side panel and in a wide content area. Its copy is limited to 288 px, so a long description stays
 in a readable measure on a wide page.

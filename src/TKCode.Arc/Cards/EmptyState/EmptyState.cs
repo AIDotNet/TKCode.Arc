@@ -20,13 +20,16 @@ namespace TKCode.Arc;
 [TemplatePart(IconBlockPart, typeof(Control))]
 [TemplatePart(TitlePart, typeof(MessagesTextSwap))]
 [TemplatePart(DescriptionPart, typeof(MessagesTextSwap))]
-[PseudoClasses(HasActionPseudoClass)]
+[PseudoClasses(HasActionPseudoClass, SmallPseudoClass)]
 public class EmptyState : TemplatedControl
 {
     public const string IconBlockPart = "PART_IconBlock";
     public const string TitlePart = "PART_Title";
     public const string DescriptionPart = "PART_Description";
     public const string HasActionPseudoClass = ":has-action";
+
+    /// <summary>Set while <see cref="Size"/> is <see cref="ControlSize.Small"/>.</summary>
+    public const string SmallPseudoClass = ":small";
 
     #region 公共属性定义
 
@@ -46,6 +49,14 @@ public class EmptyState : TemplatedControl
     public static readonly StyledProperty<object?> IconProperty =
         AvaloniaProperty.Register<EmptyState, object?>(nameof(Icon));
 
+    /// <summary>
+    /// <see cref="ControlSize.Small"/> is a compact empty state for list panes, side panels and cards: a 32px icon block,
+    /// 16px above and below, and tighter gaps, whatever the window width. Medium (default) and Large are Arc's layout,
+    /// whose vertical padding follows the window.
+    /// </summary>
+    public static readonly StyledProperty<ControlSize> SizeProperty =
+        AvaloniaProperty.Register<EmptyState, ControlSize>(nameof(Size), ControlSize.Medium);
+
     /// <summary>Accessible name of the region.</summary>
     public static readonly StyledProperty<string?> LabelProperty =
         AvaloniaProperty.Register<EmptyState, string?>(nameof(Label));
@@ -53,6 +64,10 @@ public class EmptyState : TemplatedControl
     /// <summary>Horizontal padding (space-5); the vertical padding follows the window (clamp(space-8, 8vw, space-12)).</summary>
     internal static readonly StyledProperty<double> InlinePaddingProperty =
         AvaloniaProperty.Register<EmptyState, double>(nameof(InlinePadding), 20);
+
+    /// <summary>Vertical padding of the compact state (space-4).</summary>
+    internal static readonly StyledProperty<double> CompactBlockPaddingProperty =
+        AvaloniaProperty.Register<EmptyState, double>(nameof(CompactBlockPadding), 16);
 
     internal static readonly DirectProperty<EmptyState, Thickness> ContentPaddingProperty =
         AvaloniaProperty.RegisterDirect<EmptyState, Thickness>(nameof(ContentPadding), o => o.ContentPadding);
@@ -70,6 +85,15 @@ public class EmptyState : TemplatedControl
     public object? Icon { get => GetValue(IconProperty); set => SetValue(IconProperty, value); }
     /// <summary>Accessible name of the region.</summary>
     public string? Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
+
+    /// <inheritdoc cref="SizeProperty"/>
+    public ControlSize Size { get => GetValue(SizeProperty); set => SetValue(SizeProperty, value); }
+
+    internal double CompactBlockPadding
+    {
+        get => GetValue(CompactBlockPaddingProperty);
+        set => SetValue(CompactBlockPaddingProperty, value);
+    }
 
     internal double InlinePadding
     {
@@ -112,7 +136,23 @@ public class EmptyState : TemplatedControl
         AutomationProperties.SetLandmarkType(this, AutomationLandmarkType.Region);
     }
 
-    private static ArcGlyph CreateGlyph(Geometry data) => new() { Data = data, Size = 24, StrokeThickness = 1.5 };
+    private bool IsCompact => Size == ControlSize.Small;
+
+    private ArcGlyph CreateGlyph(Geometry data) => new() { Data = data, Size = IsCompact ? 18 : 24, StrokeThickness = 1.5 };
+
+    private void UpdateIconContent()
+    {
+        IconContent = Icon switch
+        {
+            null => CreateGlyph(ArcIcons.Folder),
+            Geometry geometry => CreateGlyph(geometry),
+            _ => Icon
+        };
+    }
+
+    /// <summary>Arc's vertical padding follows the window; the compact state keeps its own.</summary>
+    private void UpdateContentPadding()
+        => ContentPadding = new Thickness(InlinePadding, IsCompact ? CompactBlockPadding : _blockPadding);
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
@@ -137,12 +177,7 @@ public class EmptyState : TemplatedControl
         if (change.Property == IconProperty)
         {
             // A new icon pops in; the same icon stays still.
-            IconContent = Icon switch
-            {
-                null => CreateGlyph(ArcIcons.Folder),
-                Geometry geometry => CreateGlyph(geometry),
-                _ => Icon
-            };
+            UpdateIconContent();
         }
         else if (change.Property == ActionProperty)
         {
@@ -152,9 +187,18 @@ public class EmptyState : TemplatedControl
         {
             AutomationProperties.SetName(this, Label ?? string.Empty);
         }
-        else if (change.Property == InlinePaddingProperty)
+        else if (change.Property == InlinePaddingProperty || change.Property == CompactBlockPaddingProperty)
         {
-            ContentPadding = new Thickness(InlinePadding, _blockPadding);
+            UpdateContentPadding();
+        }
+        else if (change.Property == SizeProperty)
+        {
+            PseudoClasses.Set(SmallPseudoClass, IsCompact);
+            UpdateContentPadding();
+            if (Icon is null or Geometry)
+            {
+                UpdateIconContent();
+            }
         }
     }
 
@@ -235,7 +279,7 @@ public class EmptyState : TemplatedControl
         public void OnNext(Size value)
         {
             _owner._blockPadding = Math.Clamp(value.Width * 0.08, 32, 48);
-            _owner.ContentPadding = new Thickness(_owner.InlinePadding, _owner._blockPadding);
+            _owner.UpdateContentPadding();
         }
     }
 }
