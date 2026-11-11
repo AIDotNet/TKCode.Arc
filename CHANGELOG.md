@@ -8,6 +8,15 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0), `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` (from 1.1.0-preview.1).
 
+## Unreleased
+
+### Fixed
+
+- **`ArcWindow` top edge on Windows** ([#102](https://github.com/AIDotNet/TKCode.Arc/issues/102)): DWM draws no
+  frame line on the top edge of a window whose client area extends into the title bar, so the window now draws it in the
+  `Border` color while it is in its normal state on Windows (`:top-edge` pseudo-class). All four edges match; a style on
+  `ArcWindow:top-edge /template/ Border#PART_Root` can remove it.
+
 ## 1.1.0-preview.3 - 2026-11-10
 
 A performance release: apps can cap how often continuous loops repaint. There are no breaking changes from

@@ -2,7 +2,8 @@
     ArcWindow (design/components/content/arc-window.md): the background with the title bar over the content inside a visual
     layer manager. PART_VisualLayerManager is the name Avalonia's Window looks for to switch on its overlay layer, which
     hosts Arc's popups, toasts and tooltips for the bar and the content alike. PART_Root steps in by the off-screen margin
-    while maximized (ArcWindow.SyncOffScreenMargin).
+    while maximized (ArcWindow.SyncOffScreenMargin). On Windows, :top-edge draws the top frame line DWM leaves out of a
+    window that extends into its title bar, so all four edges match (issue #102).
 -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -41,5 +42,9 @@
                 </Panel>
             </ControlTemplate>
         </Setter>
+        <Style Selector="^:top-edge /template/ Border#PART_Root">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessTop}" />
+        </Style>
     </ControlTheme>
 </ResourceDictionary>
