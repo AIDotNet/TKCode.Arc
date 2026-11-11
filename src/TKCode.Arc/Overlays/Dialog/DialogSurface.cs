@@ -21,6 +21,18 @@ public class DialogSurface : ModalSurface
 
     public ControlSize Size { get => GetValue(SizeProperty); set => SetValue(SizeProperty, value); }
 
+    /// <summary>
+    /// False hides the header row: the title, the description, the close button and the line under them, for a panel
+    /// that brings its own heading (a branded sign-in, for example). Keep <c>Title</c> set: it stays the accessible name
+    /// of the panel. Without the close button the dialog closes with Escape, a click outside or its own buttons.
+    /// Defaults to true.
+    /// </summary>
+    public static readonly StyledProperty<bool> ShowHeaderProperty =
+        AvaloniaProperty.Register<DialogSurface, bool>(nameof(ShowHeader), true);
+
+    /// <inheritdoc cref="ShowHeaderProperty"/>
+    public bool ShowHeader { get => GetValue(ShowHeaderProperty); set => SetValue(ShowHeaderProperty, value); }
+
     static DialogSurface()
     {
         CloseButtonNameProperty.OverrideDefaultValue<DialogSurface>("Close dialog");
