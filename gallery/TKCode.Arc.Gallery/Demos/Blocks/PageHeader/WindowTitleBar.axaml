@@ -1,0 +1,44 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:generic="using:System.Collections.Generic"
+             x:Class="TKCode.Arc.Gallery.Demos.PageHeaderWindowTitleBarDemo">
+    <!-- The top of a window whose content reaches the top: the header is the title bar, the buttons sit at its end.
+         The header really moves this window; the buttons are a preview, so they leave it alone. -->
+    <Border HorizontalAlignment="Stretch"
+            MaxWidth="800"
+            BorderBrush="{arc:ArcDesignTokenResource Border}"
+            BorderThickness="1"
+            CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}">
+        <Border CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}" ClipToBounds="True">
+            <DockPanel>
+                <Grid DockPanel.Dock="Top"
+                      ColumnDefinitions="*,Auto"
+                      Background="{arc:ArcDesignTokenResource Surface}">
+                    <arc:PageHeader IsTitleBar="True"
+                                    IsHeaderOnly="True"
+                                    Size="Small"
+                                    BorderThickness="0"
+                                    CornerRadius="0"
+                                    Title="Notifications"
+                                    Description="Choose what reaches you and where.">
+                        <arc:PageHeader.Breadcrumbs>
+                            <generic:List x:TypeArguments="x:String">
+                                <x:String>Settings</x:String>
+                                <x:String>Notifications</x:String>
+                            </generic:List>
+                        </arc:PageHeader.Breadcrumbs>
+                        <arc:PageHeader.Actions>
+                            <arc:PageHeaderAction Label="Mark all read" Icon="{x:Static arc:ArcIcons.Check}" />
+                        </arc:PageHeader.Actions>
+                    </arc:PageHeader>
+                    <arc:WindowCaptionButtons Grid.Column="1"
+                                              VerticalAlignment="Top"
+                                              Margin="0,8,8,0"
+                                              IsPreview="True" />
+                </Grid>
+                <Border Height="120" Background="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            </DockPanel>
+        </Border>
+    </Border>
+</UserControl>

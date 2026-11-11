@@ -1,0 +1,40 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.WindowCaptionButtonsButtonsDemo">
+    <StackPanel HorizontalAlignment="Center" Width="460" Spacing="16">
+        <StackPanel Spacing="6">
+            <TextBlock Text="All three (the default)" FontSize="12" Opacity="0.7" />
+            <Border BorderBrush="{arc:ArcDesignTokenResource Border}" BorderThickness="1" Padding="16,6,6,6"
+                    CornerRadius="{arc:ArcDesignTokenResource RadiusControl}">
+                <Grid ColumnDefinitions="*,Auto">
+                    <TextBlock Text="Main window" VerticalAlignment="Center" />
+                    <arc:WindowCaptionButtons Grid.Column="1" IsPreview="True" />
+                </Grid>
+            </Border>
+        </StackPanel>
+        <StackPanel Spacing="6">
+            <TextBlock Text="Minimize and close: a window that keeps its size" FontSize="12" Opacity="0.7" />
+            <Border BorderBrush="{arc:ArcDesignTokenResource Border}" BorderThickness="1" Padding="16,6,6,6"
+                    CornerRadius="{arc:ArcDesignTokenResource RadiusControl}">
+                <Grid ColumnDefinitions="*,Auto">
+                    <TextBlock Text="Player" VerticalAlignment="Center" />
+                    <arc:WindowCaptionButtons Grid.Column="1" IsPreview="True" ShowMaximizeButton="False" />
+                </Grid>
+            </Border>
+        </StackPanel>
+        <StackPanel Spacing="6">
+            <TextBlock Text="Close only: a tool window" FontSize="12" Opacity="0.7" />
+            <Border BorderBrush="{arc:ArcDesignTokenResource Border}" BorderThickness="1" Padding="16,6,6,6"
+                    CornerRadius="{arc:ArcDesignTokenResource RadiusControl}">
+                <Grid ColumnDefinitions="*,Auto">
+                    <TextBlock Text="Color picker" VerticalAlignment="Center" />
+                    <arc:WindowCaptionButtons Grid.Column="1"
+                                              IsPreview="True"
+                                              ShowMinimizeButton="False"
+                                              ShowMaximizeButton="False" />
+                </Grid>
+            </Border>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

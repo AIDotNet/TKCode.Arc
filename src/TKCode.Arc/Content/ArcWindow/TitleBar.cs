@@ -7,7 +7,6 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using AvaloniaButton = Avalonia.Controls.Button;
 using AvaloniaToggleButton = Avalonia.Controls.Primitives.ToggleButton;
 using AvaloniaWindow = Avalonia.Controls.Window;
 
@@ -40,9 +39,7 @@ public enum TitleBarCaptionButtons
 [TemplatePart(LeftPresenterPart, typeof(ContentPresenter))]
 [TemplatePart(CenterPresenterPart, typeof(ContentPresenter))]
 [TemplatePart(RightPresenterPart, typeof(ContentPresenter))]
-[TemplatePart(MinimizeButtonPart, typeof(AvaloniaButton))]
-[TemplatePart(MaximizeButtonPart, typeof(AvaloniaButton))]
-[TemplatePart(CloseButtonPart, typeof(AvaloniaButton))]
+[TemplatePart(WindowCaptionButtonsPart, typeof(WindowCaptionButtons))]
 [TemplatePart(TopmostButtonPart, typeof(AvaloniaToggleButton))]
 [PseudoClasses(MaximizedPseudoClass, FullScreenPseudoClass, InactivePseudoClass, DrawnButtonsPseudoClass,
     SystemButtonsPseudoClass, HasRightPseudoClass, TopmostButtonPseudoClass)]
@@ -52,9 +49,17 @@ public class TitleBar : TemplatedControl
     public const string LeftPresenterPart = "PART_LeftPresenter";
     public const string CenterPresenterPart = "PART_CenterPresenter";
     public const string RightPresenterPart = "PART_RightPresenter";
-    public const string MinimizeButtonPart = "PART_MinimizeButton";
-    public const string MaximizeButtonPart = "PART_MaximizeButton";
-    public const string CloseButtonPart = "PART_CloseButton";
+    public const string WindowCaptionButtonsPart = "PART_WindowCaptionButtons";
+
+    /// <summary>Minimize, inside the bar's <see cref="WindowCaptionButtons"/>.</summary>
+    public const string MinimizeButtonPart = WindowCaptionButtons.MinimizeButtonPart;
+
+    /// <summary>Maximize / restore, inside the bar's <see cref="WindowCaptionButtons"/>.</summary>
+    public const string MaximizeButtonPart = WindowCaptionButtons.MaximizeButtonPart;
+
+    /// <summary>Close, inside the bar's <see cref="WindowCaptionButtons"/>.</summary>
+    public const string CloseButtonPart = WindowCaptionButtons.CloseButtonPart;
+
     public const string TopmostButtonPart = "PART_TopmostButton";
 
     public const string MaximizedPseudoClass = ":maximized";
@@ -105,9 +110,7 @@ public class TitleBar : TemplatedControl
 
     private AvaloniaWindow? _window;
     private IDisposable? _titleBinding;
-    private AvaloniaButton? _minimize;
-    private AvaloniaButton? _maximize;
-    private AvaloniaButton? _close;
+    private WindowCaptionButtons? _captionButtons;
     private AvaloniaToggleButton? _topmost;
 
     public TitleBar()
@@ -170,33 +173,18 @@ public class TitleBar : TemplatedControl
         : CaptionButtons;
 
     /// <summary>Maximizes a normal window and restores a maximized one; does nothing when the window cannot be maximized.</summary>
-    public void ToggleMaximize()
-    {
-        var window = _window;
-        if (window is null || !window.CanResize || !window.CanMaximize)
-        {
-            return;
-        }
-        window.WindowState = window.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
-    }
+    public void ToggleMaximize() => WindowCaptionButtons.ToggleMaximize(_window);
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        Unhook(_minimize, OnMinimizeClick);
-        Unhook(_maximize, OnMaximizeClick);
-        Unhook(_close, OnCloseClick);
         if (_topmost is not null)
         {
             _topmost.IsCheckedChanged -= OnTopmostToggled;
         }
+        _captionButtons?.Drive(null);
 
-        _minimize = e.NameScope.Find<AvaloniaButton>(MinimizeButtonPart);
-        _maximize = e.NameScope.Find<AvaloniaButton>(MaximizeButtonPart);
-        _close = e.NameScope.Find<AvaloniaButton>(CloseButtonPart);
-        Hook(_minimize, OnMinimizeClick);
-        Hook(_maximize, OnMaximizeClick);
-        Hook(_close, OnCloseClick);
+        _captionButtons = e.NameScope.Find<WindowCaptionButtons>(WindowCaptionButtonsPart);
         _topmost = e.NameScope.Find<AvaloniaToggleButton>(TopmostButtonPart);
         if (_topmost is not null)
         {
@@ -219,7 +207,7 @@ public class TitleBar : TemplatedControl
             }
         }
         SyncRole();
-        SyncButtons();
+        SyncCaptionButtons();
         SyncTopmost();
     }
 
@@ -299,7 +287,7 @@ public class TitleBar : TemplatedControl
         SyncRole();
         SyncState();
         SyncActive();
-        SyncButtons();
+        SyncCaptionButtons();
         SyncTopmost();
     }
 
@@ -307,8 +295,7 @@ public class TitleBar : TemplatedControl
     /// On Windows the bar is the system caption: the system moves the window, maximizes on a double click, shows its menu on
     /// a right click and snaps. On macOS the system would act only on the very element hit and still pass the press on, and
     /// on Linux it would swallow the press and with it the double click, so there the bar moves the window itself. The caption
-    /// buttons tell the system what they are (the maximize button opens Snap Layouts on Windows 11) while the bar is the
-    /// window's.
+    /// buttons give themselves their roles (see <see cref="DriveCaptionButtons"/>).
     /// </summary>
     private void SyncRole()
     {
@@ -316,9 +303,6 @@ public class TitleBar : TemplatedControl
         WindowDecorationProperties.SetElementRole(this, attached && OperatingSystem.IsWindows()
             ? WindowDecorationsElementRole.TitleBar
             : WindowDecorationsElementRole.None);
-        SetRole(_minimize, attached ? WindowDecorationsElementRole.MinimizeButton : WindowDecorationsElementRole.None);
-        SetRole(_maximize, attached ? WindowDecorationsElementRole.MaximizeButton : WindowDecorationsElementRole.None);
-        SetRole(_close, attached ? WindowDecorationsElementRole.CloseButton : WindowDecorationsElementRole.None);
         // The toggle is the app's own control: a press on it must not start a window drag.
         if (_topmost is not null)
         {
@@ -326,13 +310,13 @@ public class TitleBar : TemplatedControl
         }
     }
 
-    private static void SetRole(AvaloniaButton? button, WindowDecorationsElementRole role)
-    {
-        if (button is not null)
-        {
-            WindowDecorationProperties.SetElementRole(button, role);
-        }
-    }
+    /// <summary>
+    /// The caption buttons drive the window, and tell the system what they are (the maximize button opens Snap Layouts on
+    /// Windows 11), only while the bar is the window's and draws them. With <c>System</c> or <c>None</c> they give up their
+    /// roles, so a <see cref="WindowCaptionButtons"/> the app places elsewhere is the window's only set.
+    /// </summary>
+    private void DriveCaptionButtons() =>
+        _captionButtons?.Drive(EffectiveCaptionButtons == TitleBarCaptionButtons.Drawn ? _window : null);
 
     private void OnWindowPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
     {
@@ -347,12 +331,6 @@ public class TitleBar : TemplatedControl
         else if (e.Property == WindowBase.IsActiveProperty)
         {
             SyncActive();
-        }
-        else if (e.Property == AvaloniaWindow.CanResizeProperty
-                 || e.Property == AvaloniaWindow.CanMaximizeProperty
-                 || e.Property == AvaloniaWindow.CanMinimizeProperty)
-        {
-            SyncButtons();
         }
     }
 
@@ -397,47 +375,6 @@ public class TitleBar : TemplatedControl
         var effective = EffectiveCaptionButtons;
         PseudoClasses.Set(DrawnButtonsPseudoClass, effective == TitleBarCaptionButtons.Drawn);
         PseudoClasses.Set(SystemButtonsPseudoClass, effective == TitleBarCaptionButtons.System);
-    }
-
-    private void SyncButtons()
-    {
-        SyncCaptionButtons();
-        var window = _window;
-        if (_minimize is not null)
-        {
-            _minimize.IsEnabled = window is null || window.CanMinimize;
-        }
-        if (_maximize is not null)
-        {
-            _maximize.IsEnabled = window is null || (window.CanResize && window.CanMaximize);
-        }
-    }
-
-    private void OnMinimizeClick(object? sender, RoutedEventArgs e)
-    {
-        if (_window is not null)
-        {
-            _window.WindowState = WindowState.Minimized;
-        }
-    }
-
-    private void OnMaximizeClick(object? sender, RoutedEventArgs e) => ToggleMaximize();
-
-    private void OnCloseClick(object? sender, RoutedEventArgs e) => _window?.Close();
-
-    private static void Hook(AvaloniaButton? button, EventHandler<RoutedEventArgs> handler)
-    {
-        if (button is not null)
-        {
-            button.Click += handler;
-        }
-    }
-
-    private static void Unhook(AvaloniaButton? button, EventHandler<RoutedEventArgs> handler)
-    {
-        if (button is not null)
-        {
-            button.Click -= handler;
-        }
+        DriveCaptionButtons();
     }
 }

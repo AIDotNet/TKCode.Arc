@@ -643,6 +643,132 @@ public class PageHeaderTests
         }
     }
 
+    private static WindowDecorationsElementRole Role(Visual visual) =>
+        Avalonia.Controls.Chrome.WindowDecorationProperties.GetElementRole(visual);
+
+    private static Control[] TitleBarUserParts(PageHeader header) =>
+    [
+        TestHelpers.Descendant<Breadcrumb>(header, PageHeader.BreadcrumbPart),
+        TestHelpers.Descendant<Control>(header, PageHeader.CompactTitlePart),
+        TestHelpers.Descendant<Control>(header, "PART_Actions"),
+        TestHelpers.Descendant<Control>(header, "PART_Meta"),
+        TestHelpers.Descendant<ScrollViewer>(header, PageHeader.TabsViewportPart)
+    ];
+
+    [AvaloniaFact]
+    public void Title_Bar_Is_Off_By_Default_And_Sets_No_Roles()
+    {
+        var header = WithActions(Create(), out _, out _, out _, out _);
+        var window = Show(header);
+        try
+        {
+            header.IsTitleBar.ShouldBeFalse();
+            var part = TestHelpers.Descendant<Panel>(header, PageHeader.HeaderPart);
+            part.Background.ShouldBeNull();
+            part.IsSet(Avalonia.Controls.Chrome.WindowDecorationProperties.ElementRoleProperty).ShouldBeFalse();
+            foreach (var userPart in TitleBarUserParts(header))
+            {
+                userPart.IsSet(Avalonia.Controls.Chrome.WindowDecorationProperties.ElementRoleProperty).ShouldBeFalse();
+            }
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Title_Bar_Marks_The_Header_And_Leaves_Its_Controls_To_The_App()
+    {
+        // Issue #107: the header is the window's title bar, but breadcrumbs, actions, meta and tabs keep their clicks.
+        var header = WithActions(Create(), out _, out _, out _, out _);
+        header.Meta = new TextBlock { Text = "Led by Emma Collins" };
+        header.IsTitleBar = true;
+        var window = Show(header);
+        try
+        {
+            header.Classes.Contains(PageHeader.TitleBarPseudoClass).ShouldBeTrue();
+            var part = TestHelpers.Descendant<Panel>(header, PageHeader.HeaderPart);
+            part.Background.ShouldBeAssignableTo<Avalonia.Media.ISolidColorBrush>()!.Color.ShouldBe(Avalonia.Media.Colors.Transparent);
+            // On Windows the header is the system caption; elsewhere it moves the window itself.
+            Role(part).ShouldBe(OperatingSystem.IsWindows() ? WindowDecorationsElementRole.TitleBar : WindowDecorationsElementRole.None);
+            foreach (var userPart in TitleBarUserParts(header))
+            {
+                Role(userPart).ShouldBe(WindowDecorationsElementRole.User, userPart.Name);
+            }
+            // The title is part of the bar; the body never is.
+            TestHelpers.Descendant<TextBlock>(header, PageHeader.TitlePart).GetVisualAncestors().ShouldContain(part);
+            Scroller(header).GetVisualAncestors().ShouldNotContain(part);
+            Role(Scroller(header)).ShouldBe(WindowDecorationsElementRole.None);
+
+            header.IsTitleBar = false;
+            Pump();
+            part.Background.ShouldBeNull();
+            part.IsSet(Avalonia.Controls.Chrome.WindowDecorationProperties.ElementRoleProperty).ShouldBeFalse();
+            foreach (var userPart in TitleBarUserParts(header))
+            {
+                userPart.IsSet(Avalonia.Controls.Chrome.WindowDecorationProperties.ElementRoleProperty).ShouldBeFalse();
+            }
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Double_Click_On_The_Title_Bar_Header_Maximizes_But_Not_On_Its_Controls()
+    {
+        var header = WithActions(Create(), out _, out _, out _, out _);
+        var window = Show(header);
+        try
+        {
+            // A third click right after a double click counts as a triple click, so each pair lands elsewhere.
+            void DoubleClick(Point point)
+            {
+                window.MouseDown(point, MouseButton.Left);
+                window.MouseUp(point, MouseButton.Left);
+                window.MouseDown(point, MouseButton.Left);
+                window.MouseUp(point, MouseButton.Left);
+                Pump();
+            }
+
+            // The middle of the header's top padding: empty header.
+            Point Empty(double dx) => header.TranslatePoint(new Point(header.Bounds.Width / 2 + dx, 8), window)!.Value;
+
+            // Off, the header is plain content.
+            DoubleClick(Empty(0));
+            window.WindowState.ShouldBe(WindowState.Normal);
+
+            header.IsTitleBar = true;
+            Pump();
+            DoubleClick(Empty(40));
+            window.WindowState.ShouldBe(WindowState.Maximized);
+            DoubleClick(Empty(-40));
+            window.WindowState.ShouldBe(WindowState.Normal);
+
+            // A tab keeps its clicks: it is selected and the window stays as it is.
+            var tab = header.GetVisualDescendants().OfType<PageHeaderTab>().ElementAt(1);
+            DoubleClick(tab.TranslatePoint(new Point(tab.Bounds.Width / 2, tab.Bounds.Height / 2), window)!.Value);
+            window.WindowState.ShouldBe(WindowState.Normal);
+            header.SelectedIndex.ShouldBe(1);
+
+            // So does the body.
+            var body = Scroller(header);
+            DoubleClick(body.TranslatePoint(new Point(body.Bounds.Width / 2, 40), window)!.Value);
+            window.WindowState.ShouldBe(WindowState.Normal);
+
+            // A window that cannot grow stays as it is.
+            window.CanResize = false;
+            DoubleClick(Empty(80));
+            window.WindowState.ShouldBe(WindowState.Normal);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     [AvaloniaFact]
     public void Action_Collections_Can_Change()
     {

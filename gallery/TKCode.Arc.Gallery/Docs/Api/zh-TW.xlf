@@ -24000,6 +24000,10 @@
         <source>True shows only the header (breadcrumbs, title, status, description, meta and actions) with no tabs, no rule under it and no scrolling body, for a title and action bar on top of a page that lays out its own content. The header never condenses in this mode. Defaults to false.</source>
         <target>為 true 時只顯示頁首（麵包屑、標題、狀態、說明、中繼資訊與操作），沒有標籤頁、下方的分隔線與捲動區，用作頁面頂端的標題與操作列，頁面內容自行配置。此模式下頁首不會收合。預設為 false。</target>
       </trans-unit>
+      <trans-unit id="PageHeader.IsTitleBar">
+        <source>True makes the header the window's title bar, for a window whose content reaches the top: pressing and dragging its empty part, title or description moves the window and a double click maximizes or restores it, while the breadcrumbs, the compact title, the actions, the meta row and the tabs keep their clicks. On Windows the header is the system caption (system menu, Aero Snap). The body is never part of it. Defaults to false.</source>
+        <target>為 True 時頁首成為視窗的標題列，用於內容延伸到頂端的視窗：按住並拖曳它的空白部分、標題或說明可以移動視窗，按兩下最大化或還原，而麵包屑、精簡標題、操作、中繼資料列與標籤頁仍自己處理點擊。在 Windows 上頁首就是系統標題列（系統選單、Aero 貼齊）。捲動區永遠不屬於標題列。預設為 false。</target>
+      </trans-unit>
       <trans-unit id="PageHeader.Meta">
         <source>Meta row under the description (members, owner, dates): any content, drawn in the extra-small muted type.</source>
         <target>描述下方的中繼資訊列（成員、擁有者、日期）：可放任意內容，以超小號的弱化字型繪製。</target>
@@ -35944,6 +35948,10 @@
         <source>Content before the caption buttons, at the right of the bar (tool buttons, a theme switcher).</source>
         <target>標題列按鈕之前、標題列右側的內容（工具按鈕、主題切換）。</target>
       </trans-unit>
+      <trans-unit id="TitleBar.ShowTopmostButton">
+        <source>Shows a pin toggle before the caption buttons that keeps the window above other windows: it is checked while the window's `Topmost` is true and sets it when toggled. Off by default. It shows whatever `CaptionButtons` is, and only the window's own bar drives the window.</source>
+        <target>在標題列按鈕之前顯示一個圖釘開關，讓視窗保持在其他視窗之上：視窗的 `Topmost` 為 true 時開關處於選取狀態，切換開關會設定它。預設關閉。無論 `CaptionButtons` 取何值都會顯示，而且只有視窗自己的標題列會控制視窗。</target>
+      </trans-unit>
       <trans-unit id="TitleBar.Title">
         <source>The title. Follows the window's `Title` unless set.</source>
         <target>標題。未設定時跟隨視窗的 `Title`。</target>
@@ -40255,6 +40263,26 @@
       <trans-unit id="WeekCalendarSource.Tag">
         <source>Any object the app wants to keep with the calendar.</source>
         <target>應用程式希望與該行事曆一同保存的任意物件。</target>
+      </trans-unit>
+      <trans-unit id="WindowCaptionButtons">
+        <source>Minimize, maximize / restore and close for a window whose content reaches the top (an `ArcWindow` with `IsTitleBarVisible="False"`), placed wherever the app draws its own header. The buttons drive the window they are in and follow it: maximize shows restore while the window is maximized and is disabled while the window cannot grow (`CanResize` or `CanMaximize` false), minimize while `CanMinimize` is false. On Windows they tell the system what they are, so the maximize button opens Snap Layouts. `TitleBar` draws its own caption buttons with this control; show one set per window.</source>
+        <target>內容延伸到頂端的視窗（`IsTitleBarVisible="False"` 的 `ArcWindow`）所用的最小化、最大化 / 還原和關閉按鈕，可放在應用程式自己繪製的頁首中的任意位置。按鈕控制所在的視窗並跟隨其狀態：視窗最大化時最大化按鈕顯示為還原，視窗不能放大時（`CanResize` 或 `CanMaximize` 為 false）最大化按鈕停用，`CanMinimize` 為 false 時最小化按鈕停用。在 Windows 上，它們會告訴系統自己是什麼按鈕，因此最大化按鈕會開啟貼齊版面配置。`TitleBar` 也用這個控制項繪製自己的標題列按鈕；每個視窗只顯示一組。</target>
+      </trans-unit>
+      <trans-unit id="WindowCaptionButtons.IsPreview">
+        <source>True draws the buttons without driving the window: they minimize, maximize and close nothing and the system does not treat them as caption buttons. For previews, such as a mock-up of a window inside a page. False by default.</source>
+        <target>為 True 時只繪製按鈕而不控制視窗：它們不會最小化、最大化或關閉任何視窗，系統也不會把它們當作標題列按鈕。用於預覽，例如頁面中的視窗示意圖。預設為 False。</target>
+      </trans-unit>
+      <trans-unit id="WindowCaptionButtons.ShowCloseButton">
+        <source>Shows the close button. True by default.</source>
+        <target>顯示關閉按鈕。預設為 True。</target>
+      </trans-unit>
+      <trans-unit id="WindowCaptionButtons.ShowMaximizeButton">
+        <source>Shows the maximize / restore button. True by default.</source>
+        <target>顯示最大化 / 還原按鈕。預設為 True。</target>
+      </trans-unit>
+      <trans-unit id="WindowCaptionButtons.ShowMinimizeButton">
+        <source>Shows the minimize button. True by default.</source>
+        <target>顯示最小化按鈕。預設為 True。</target>
       </trans-unit>
       <trans-unit id="WorkflowCanvas">
         <source>Shows a `WorkflowGraph` on a dotted canvas (visual rules from Arc's free hero-section block, HeroRelay): one card per step, edges between them, and a run played out step by step. Set the steps' states as your run goes; when a step finishes, the data draws along its edges in the accent before the next step shows as running, and the edges of a branch the run did not take turn dashed. Steps without a position are arranged in ranks; by default the whole workflow shows at actual size and shrinks like a screenshot when it does not fit. Pan with a drag or the wheel, zoom with Ctrl / ⌘ + wheel, a pinch or the keyboard, and move between steps with the arrow keys.</source>

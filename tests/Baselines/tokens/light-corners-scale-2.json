@@ -9293,6 +9293,13 @@
       "ToolbarItemHeight": "36",
       "ToolbarRowGap": "10"
     },
+    "WindowCaptionButtons": {
+      "ButtonSize": "30",
+      "ButtonSpacing": "4",
+      "GlyphSize": "15",
+      "MaximizeGlyphSize": "13",
+      "RestoreGlyphSize": "14"
+    },
     "WorkflowCanvas": {
       "BezierMinHandle": "40",
       "CanvasAccentShare": "0.02",

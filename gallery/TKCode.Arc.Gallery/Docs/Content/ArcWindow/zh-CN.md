@@ -1,7 +1,7 @@
 ---
 title: 窗口
 summary: 带 Arc 标题栏的桌面窗口：左、中、右三个区域放置你的控件，保留原生拖动、贴靠和缩放，标题栏按钮跟随主题。
-source-hash: 546408f8d469
+source-hash: b87bd013c4a2
 ---
 
 <Demo name="Basic" />
@@ -111,6 +111,8 @@ public partial class MainWindow : ArcWindow
 
 把 `IsTitleBarVisible` 设为 `False`（或把 `TitleBar` 设为 null），内容会延伸到窗口顶部；窗口仍扩展到装饰区域，并可从边缘调整大小。此时需要由你的内容来移动窗口，例如调用 `BeginMoveDrag`。同时把 `ExtendClientAreaToDecorationsHint` 设为 `False` 可以恢复系统标题栏。
 
+需要在自己的页头里放最小化、最大化和关闭按钮时，使用 `WindowCaptionButtons`，并把内容放进页头旁边的 `ArcOverlayHost`，让对话框和抽屉不会盖住页头（见“窗口标题栏按钮”）。以这种方式隐藏的标题栏不参与命中测试，它的按钮不会与你的按钮冲突。
+
 ### 窗口边框
 
 Windows 11 由 DWM 在窗口的左、右、下边缘画 1px 边框，但客户区延伸到标题栏后不再画顶边。`ArcWindow` 在 Windows 上、窗口处于普通状态时（最大化、全屏或 `WindowDecorations="None"` 时不画）设置伪类 `:top-edge`，自己画出顶边（颜色 `Border`），四边保持一致。不需要这条线时用样式覆盖：
@@ -162,5 +164,6 @@ Windows 11 由 DWM 在窗口的左、右、下边缘画 1px 边框，但客户�
 ## 相关组件
 
 - `Dialog`、`Drawer` 和 `BottomSheet`：在窗口之上打开的内容。
+- `WindowCaptionButtons`：内容延伸到顶部的窗口所用的最小化、最大化和关闭按钮。
 - `DropdownMenu`：标题栏左侧区域的菜单。
 - `Tabs`：标题栏中间区域的标签页。

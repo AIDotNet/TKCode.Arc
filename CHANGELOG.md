@@ -8,6 +8,28 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0), `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` (from 1.1.0-preview.1).
 
+## Unreleased
+
+### Added
+
+- **`WindowCaptionButtons`** ([#107](https://github.com/AIDotNet/TKCode.Arc/issues/107)): minimize, maximize /
+  restore and close as a control of their own, for a window whose content reaches the top (an `ArcWindow` with
+  `IsTitleBarVisible="False"`). Put them anywhere in your own header: they drive the window they are in, show restore
+  while it is maximized, follow `CanResize`, `CanMaximize` and `CanMinimize`, carry the system roles while they drive
+  it (Snap Layouts on Windows 11), and keep the localized tooltips. `ShowMinimizeButton`, `ShowMaximizeButton` and
+  `ShowCloseButton` hide a button, and `IsPreview` draws them without driving the window. `TitleBar` now draws its
+  caption buttons with this control and gives up their roles while `CaptionButtons` is `System` or `None`, so the
+  window keeps one set.
+- **`PageHeader.IsTitleBar`** ([#107](https://github.com/AIDotNet/TKCode.Arc/issues/107), `TKCode.Arc.Blocks`):
+  `True` makes the header, never the body, the window's title bar: dragging its empty part, title or description
+  moves the window and a double click maximizes it, while the breadcrumbs, the compact title, the actions, the meta
+  row and the tabs keep their clicks. On Windows the header is the system caption and those parts are user content.
+  `False` (the default) changes nothing.
+- **`ArcOverlayHost` in apps** ([#107](https://github.com/AIDotNet/TKCode.Arc/issues/107), `TKCode.Arc.Core`): the
+  docs no longer say an app does not need it. Put the app's content in a host and the title bar beside it, and a
+  dialog, drawer or sheet opened from the content covers the host only, never the title bar and its caption buttons
+  (Window caption buttons page).
+
 ## 1.1.0-preview.4 - 2026-11-11
 
 Feedback from apps moving to Arc (#102–#110): new options on `PageHeader`, `Dialog`, `CommandPalette`, `Avatar`,

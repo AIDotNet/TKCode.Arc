@@ -1,7 +1,7 @@
 ---
 title: 視窗
 summary: 帶 Arc 標題列的桌面視窗：左、中、右三個區域放置你的控制項，保留原生拖曳、貼齊和縮放，標題列按鈕跟隨主題。
-source-hash: 546408f8d469
+source-hash: b87bd013c4a2
 ---
 
 <Demo name="Basic" />
@@ -111,6 +111,8 @@ public partial class MainWindow : ArcWindow
 
 把 `IsTitleBarVisible` 設為 `False`（或把 `TitleBar` 設為 null），內容會延伸到視窗頂端；視窗仍延伸到裝飾區域，並可從邊緣調整大小。此時需要由你的內容來移動視窗，例如呼叫 `BeginMoveDrag`。同時把 `ExtendClientAreaToDecorationsHint` 設為 `False` 可以恢復系統標題列。
 
+需要在自己的頁首裡放最小化、最大化和關閉按鈕時，使用 `WindowCaptionButtons`，並把內容放進頁首旁邊的 `ArcOverlayHost`，讓對話方塊和抽屜不會蓋住頁首（見「視窗標題列按鈕」）。以這種方式隱藏的標題列不參與點擊測試，它的按鈕不會與你的按鈕衝突。
+
 ### 視窗邊框
 
 Windows 11 由 DWM 在視窗的左、右、下邊緣畫 1px 邊框，但用戶區延伸到標題列後不再畫頂邊。`ArcWindow` 在 Windows 上、視窗處於一般狀態時（最大化、全螢幕或 `WindowDecorations="None"` 時不畫）設定虛擬類別 `:top-edge`，自行畫出頂邊（顏色 `Border`），四邊保持一致。不需要這條線時用樣式覆寫：
@@ -162,5 +164,6 @@ Windows 11 由 DWM 在視窗的左、右、下邊緣畫 1px 邊框，但用戶�
 ## 相關元件
 
 - `Dialog`、`Drawer` 和 `BottomSheet`：在視窗之上開啟的內容。
+- `WindowCaptionButtons`：內容延伸到頂端的視窗所用的最小化、最大化和關閉按鈕。
 - `DropdownMenu`：標題列左側區域的選單。
 - `Tabs`：標題列中間區域的索引標籤。

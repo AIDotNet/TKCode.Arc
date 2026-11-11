@@ -1,7 +1,7 @@
 ---
 title: 頁首
 summary: 專案頁首會隨捲動收合為精簡列，標籤頁的數量會滾動更新。
-source-hash: 62afcdc3ae47
+source-hash: 424226d10de7
 ---
 
 <Demo name="Preview" />
@@ -126,6 +126,14 @@ share.IsLoading = true;
 <arc:PageHeader IsHeaderOnly="True" Size="Small" Title="Notifications"
                 Description="Choose what reaches you and where." />
 ```
+
+### 視窗標題列
+
+在內容延伸到頂端的視窗中（`IsTitleBarVisible="False"` 的 `ArcWindow`），設定 `IsTitleBar="True"` 後頁首就是視窗的標題列。按住並拖曳它的空白部分、標題或說明可以移動視窗，按兩下最大化或還原。麵包屑、精簡標題、操作、中繼資料列與標籤頁仍自己處理點擊，捲動區永遠不屬於標題列。在 Windows 上頁首就是系統標題列，因此按右鍵會開啟系統選單，把視窗拖到螢幕邊緣會貼齊。在頁首末端放置 `WindowCaptionButtons` 提供最小化、最大化與關閉按鈕。`False`（預設）時不做任何改變。
+
+<Demo name="WindowTitleBar" />
+
+預覽中的頁首就是目前視窗的標題列：拖曳它會移動 Gallery 視窗。標題列按鈕是預覽（`IsPreview="True"`），不會影響視窗；在你的應用程式中不要設定 `IsPreview`。
 
 ### 繫結到檢視模型
 

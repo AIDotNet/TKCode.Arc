@@ -172,6 +172,20 @@ full header.
                 Description="Choose what reaches you and where." />
 ```
 
+### Window title bar
+
+In a window whose content reaches the top (an `ArcWindow` with `IsTitleBarVisible="False"`), set `IsTitleBar="True"`
+and the header is the window's title bar. Pressing and dragging its empty part, its title or its description moves the
+window, and a double click maximizes or restores it. The breadcrumbs, the compact title, the actions, the meta row and
+the tabs keep their clicks, and the body is never part of the bar. On Windows the header is the system caption, so a
+right click opens the system menu and dragging the window to an edge snaps it. Put `WindowCaptionButtons` at the end
+of the header for minimize, maximize and close. `False` (the default) changes nothing.
+
+<Demo name="WindowTitleBar" />
+
+In the preview the header is this window's title bar: dragging it moves the gallery window. The caption buttons are a
+preview (`IsPreview="True"`), so they leave the window alone; in your app, leave `IsPreview` out.
+
 ### Binding to a view model
 
 The view model owns the selected tab, the counts and the commands. The header shows them and reports the person's

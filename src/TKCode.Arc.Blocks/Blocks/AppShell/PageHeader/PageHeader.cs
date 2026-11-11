@@ -7,6 +7,7 @@ using Avalonia.Automation;
 using Avalonia.Automation.Peers;
 using Avalonia.Collections;
 using Avalonia.Controls;
+using Avalonia.Controls.Chrome;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
@@ -67,6 +68,7 @@ public sealed class PageHeaderActionEventArgs : RoutedEventArgs
 /// <see cref="ContentTemplate"/>), actions are <see cref="PageHeaderAction"/>s.
 /// </para>
 /// </summary>
+[TemplatePart(HeaderPart, typeof(Panel))]
 [TemplatePart(BarPart, typeof(Grid))]
 [TemplatePart(BreadcrumbPart, typeof(Breadcrumb))]
 [TemplatePart(CompactTitlePart, typeof(AvaloniaButton))]
@@ -85,9 +87,10 @@ public sealed class PageHeaderActionEventArgs : RoutedEventArgs
 [TemplatePart(ScrollerPart, typeof(ScrollViewer))]
 [TemplatePart(BodyPart, typeof(Control))]
 [PseudoClasses(CondensedPseudoClass, ActionsFoldedPseudoClass, NarrowPseudoClass, TightPseudoClass, HeaderOnlyPseudoClass,
-    SmallPseudoClass)]
+    SmallPseudoClass, TitleBarPseudoClass)]
 public class PageHeader : SelectingItemsControl
 {
+    public const string HeaderPart = "PART_Header";
     public const string BarPart = "PART_Bar";
     public const string BreadcrumbPart = "PART_Breadcrumb";
     public const string CompactTitlePart = "PART_CompactTitle";
@@ -105,6 +108,8 @@ public class PageHeader : SelectingItemsControl
     public const string IndicatorPart = "PART_Indicator";
     public const string ScrollerPart = "PART_Scroller";
     public const string BodyPart = "PART_Body";
+    private const string ActionsPart = "PART_Actions";
+    private const string MetaPart = "PART_Meta";
 
     /// <summary>Set while the header is folded into the compact bar.</summary>
     public const string CondensedPseudoClass = ":condensed";
@@ -123,6 +128,9 @@ public class PageHeader : SelectingItemsControl
 
     /// <summary>Set while <see cref="Size"/> is <see cref="ControlSize.Small"/> (the compact header).</summary>
     public const string SmallPseudoClass = ":small";
+
+    /// <summary>Set while <see cref="IsTitleBar"/> is true.</summary>
+    public const string TitleBarPseudoClass = ":title-bar";
 
     /// <summary>The header condenses once the body scrolls past this offset ...</summary>
     internal const double CondenseAt = 16;
@@ -208,6 +216,15 @@ public class PageHeader : SelectingItemsControl
     /// </summary>
     public static readonly StyledProperty<ControlSize> SizeProperty =
         AvaloniaProperty.Register<PageHeader, ControlSize>(nameof(Size), ControlSize.Medium);
+
+    /// <summary>
+    /// True makes the header the window's title bar, for a window whose content reaches the top: pressing and dragging
+    /// its empty part, title or description moves the window and a double click maximizes or restores it, while the
+    /// breadcrumbs, the compact title, the actions, the meta row and the tabs keep their clicks. On Windows the header is
+    /// the system caption (system menu, Aero Snap). The body is never part of it. Defaults to false.
+    /// </summary>
+    public static readonly StyledProperty<bool> IsTitleBarProperty =
+        AvaloniaProperty.Register<PageHeader, bool>(nameof(IsTitleBar));
 
     /// <summary>True while the header is folded into the compact bar (the body scrolled past 16px, until it is back within 4px).</summary>
     public static readonly DirectProperty<PageHeader, bool> IsCondensedProperty =
@@ -326,6 +343,9 @@ public class PageHeader : SelectingItemsControl
     /// <inheritdoc cref="SizeProperty"/>
     public ControlSize Size { get => GetValue(SizeProperty); set => SetValue(SizeProperty, value); }
 
+    /// <inheritdoc cref="IsTitleBarProperty"/>
+    public bool IsTitleBar { get => GetValue(IsTitleBarProperty); set => SetValue(IsTitleBarProperty, value); }
+
     private bool _isCondensed;
 
     /// <summary>True while the header is folded into the compact bar (the body scrolled past 16px, until it is back within 4px).</summary>
@@ -396,6 +416,7 @@ public class PageHeader : SelectingItemsControl
 
     #endregion
 
+    private Panel? _header;
     private Grid? _bar;
     private Breadcrumb? _breadcrumb;
     private PageHeaderCompactTitle? _compact;
@@ -413,6 +434,8 @@ public class PageHeader : SelectingItemsControl
     private GlidingIndicator? _indicator;
     private ScrollViewer? _scroller;
     private PageHeaderBody? _body;
+    private Control? _actions;
+    private Control? _meta;
 
     private PageHeaderSwap? _crumbSwap;
     private PageHeaderSwap? _compactSwap;
@@ -531,6 +554,7 @@ public class PageHeader : SelectingItemsControl
         Unhook();
         base.OnApplyTemplate(e);
 
+        _header = e.NameScope.Find<Panel>(HeaderPart);
         _bar = e.NameScope.Find<Grid>(BarPart);
         _breadcrumb = e.NameScope.Find<Breadcrumb>(BreadcrumbPart);
         _compact = e.NameScope.Find<PageHeaderCompactTitle>(CompactTitlePart);
@@ -548,6 +572,8 @@ public class PageHeader : SelectingItemsControl
         _indicator = e.NameScope.Find<GlidingIndicator>(IndicatorPart);
         _scroller = e.NameScope.Find<ScrollViewer>(ScrollerPart);
         _body = e.NameScope.Find<PageHeaderBody>(BodyPart);
+        _actions = e.NameScope.Find<Control>(ActionsPart);
+        _meta = e.NameScope.Find<Control>(MetaPart);
         _indicatorTarget = default;
         _crumbSwap = null;
         _compactSwap = null;
@@ -559,6 +585,10 @@ public class PageHeader : SelectingItemsControl
         _pageScroll = null;
         _tabScroll = null;
 
+        if (_header is not null)
+        {
+            _header.PointerPressed += OnHeaderPointerPressed;
+        }
         if (_bar is not null)
         {
             _bar.SizeChanged += OnBarSizeChanged;
@@ -613,10 +643,15 @@ public class PageHeader : SelectingItemsControl
         UpdateTabsVisibility();
         UpdateCondensedVisuals(animate: false);
         UpdateContent(0, animate: false);
+        UpdateTitleBarRoles();
     }
 
     private void Unhook()
     {
+        if (_header is not null)
+        {
+            _header.PointerPressed -= OnHeaderPointerPressed;
+        }
         if (_bar is not null)
         {
             _bar.SizeChanged -= OnBarSizeChanged;
@@ -712,6 +747,11 @@ public class PageHeader : SelectingItemsControl
         {
             PseudoClasses.Set(SmallPseudoClass, Size == ControlSize.Small);
         }
+        else if (change.Property == IsTitleBarProperty)
+        {
+            PseudoClasses.Set(TitleBarPseudoClass, IsTitleBar);
+            UpdateTitleBarRoles();
+        }
         else if (change.Property == BreadcrumbsProperty)
         {
             ObserveBreadcrumbs();
@@ -756,6 +796,89 @@ public class PageHeader : SelectingItemsControl
         {
             AutomationProperties.SetName(_moreButton, MoreActionsLabel);
         }
+    }
+
+    #endregion
+
+    #region Window title bar
+
+    /// <summary>
+    /// The parts of the header that take their own clicks while it is the window's title bar. On Windows they are the
+    /// app's content inside the system caption; everywhere they never start a window drag.
+    /// </summary>
+    private IEnumerable<Control?> TitleBarUserParts => [_breadcrumb, _compact, _actions, _meta, _tabsViewport];
+
+    /// <summary>
+    /// While <see cref="IsTitleBar"/> is true, the header (not the body) is the window's title bar. On Windows it is the
+    /// system caption: the system moves the window, maximizes on a double click, shows its menu on a right click and snaps.
+    /// macOS would act only on the very element hit and still pass the press on, and Linux would swallow the press and with
+    /// it the double click, so there the header moves the window itself (<see cref="OnHeaderPointerPressed"/>), as
+    /// <see cref="TitleBar"/> does. The interactive parts are user content on every system. Off, nothing is set.
+    /// </summary>
+    private void UpdateTitleBarRoles()
+    {
+        var on = IsTitleBar;
+        if (_header is not null)
+        {
+            SetRole(_header, on && OperatingSystem.IsWindows() ? WindowDecorationsElementRole.TitleBar : null);
+        }
+        foreach (var part in TitleBarUserParts)
+        {
+            if (part is not null)
+            {
+                SetRole(part, on ? WindowDecorationsElementRole.User : null);
+            }
+        }
+    }
+
+    private static void SetRole(Control part, WindowDecorationsElementRole? role)
+    {
+        if (role is { } value)
+        {
+            WindowDecorationProperties.SetElementRole(part, value);
+        }
+        else
+        {
+            part.ClearValue(WindowDecorationProperties.ElementRoleProperty);
+        }
+    }
+
+    /// <summary>
+    /// A press on the header that no control took moves the window, and a double click maximizes or restores it. On
+    /// Windows the header's empty part is the system caption and its presses never get here. Presses inside the
+    /// interactive parts are theirs, even where nothing handles them (the gap between two tabs).
+    /// </summary>
+    private void OnHeaderPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        if (!IsTitleBar || e.Handled || TopLevel.GetTopLevel(this) is not Window window
+            || !e.GetCurrentPoint(this).Properties.IsLeftButtonPressed || IsInUserPart(e.Source as Visual))
+        {
+            return;
+        }
+        if (e.ClickCount == 2)
+        {
+            if (window.CanResize && window.CanMaximize)
+            {
+                window.WindowState = window.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+            }
+        }
+        else if (window.WindowState != WindowState.FullScreen)
+        {
+            window.BeginMoveDrag(e);
+        }
+        e.Handled = true;
+    }
+
+    private bool IsInUserPart(Visual? source)
+    {
+        for (var visual = source; visual is not null && !ReferenceEquals(visual, _header); visual = visual.GetVisualParent())
+        {
+            if (WindowDecorationProperties.GetElementRole(visual) == WindowDecorationsElementRole.User)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     #endregion

@@ -1,7 +1,7 @@
 ---
 title: 页头
 summary: 项目页头会随滚动收拢为紧凑栏，标签页的数量会滚动更新。
-source-hash: 62afcdc3ae47
+source-hash: 424226d10de7
 ---
 
 <Demo name="Preview" />
@@ -126,6 +126,14 @@ share.IsLoading = true;
 <arc:PageHeader IsHeaderOnly="True" Size="Small" Title="Notifications"
                 Description="Choose what reaches you and where." />
 ```
+
+### 窗口标题栏
+
+在内容延伸到顶部的窗口中（`IsTitleBarVisible="False"` 的 `ArcWindow`），设置 `IsTitleBar="True"` 后页头就是窗口的标题栏。按住并拖动它的空白部分、标题或说明可以移动窗口，双击最大化或还原。面包屑、紧凑标题、操作、元信息行和标签页仍自己处理点击，滚动区永远不属于标题栏。在 Windows 上页头就是系统标题栏，因此右键会打开系统菜单，把窗口拖到屏幕边缘会贴靠。在页头末端放置 `WindowCaptionButtons` 提供最小化、最大化和关闭按钮。`False`（默认）时不做任何改变。
+
+<Demo name="WindowTitleBar" />
+
+预览中的页头就是当前窗口的标题栏：拖动它会移动 Gallery 窗口。标题栏按钮是预览（`IsPreview="True"`），不会影响窗口；在你的应用中不要设置 `IsPreview`。
 
 ### 绑定到视图模型
 

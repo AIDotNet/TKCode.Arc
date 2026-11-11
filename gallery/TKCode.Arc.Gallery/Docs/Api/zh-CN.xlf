@@ -24000,6 +24000,10 @@
         <source>True shows only the header (breadcrumbs, title, status, description, meta and actions) with no tabs, no rule under it and no scrolling body, for a title and action bar on top of a page that lays out its own content. The header never condenses in this mode. Defaults to false.</source>
         <target>为 true 时只显示页头（面包屑、标题、状态、说明、元信息和操作），没有标签页、下方的分隔线和滚动区，用作页面顶部的标题和操作栏，页面内容自行布局。此模式下页头不会收拢。默认为 false。</target>
       </trans-unit>
+      <trans-unit id="PageHeader.IsTitleBar">
+        <source>True makes the header the window's title bar, for a window whose content reaches the top: pressing and dragging its empty part, title or description moves the window and a double click maximizes or restores it, while the breadcrumbs, the compact title, the actions, the meta row and the tabs keep their clicks. On Windows the header is the system caption (system menu, Aero Snap). The body is never part of it. Defaults to false.</source>
+        <target>为 True 时页头成为窗口的标题栏，用于内容延伸到顶部的窗口：按住并拖动它的空白部分、标题或说明可以移动窗口，双击最大化或还原，而面包屑、紧凑标题、操作、元信息行和标签页仍自己处理点击。在 Windows 上页头就是系统标题栏（系统菜单、Aero 贴靠）。滚动区永远不属于标题栏。默认为 false。</target>
+      </trans-unit>
       <trans-unit id="PageHeader.Meta">
         <source>Meta row under the description (members, owner, dates): any content, drawn in the extra-small muted type.</source>
         <target>描述下方的元信息行（成员、所有者、日期）：可放任意内容，以超小号的弱化字体绘制。</target>
@@ -35944,6 +35948,10 @@
         <source>Content before the caption buttons, at the right of the bar (tool buttons, a theme switcher).</source>
         <target>标题栏按钮之前、标题栏右侧的内容（工具按钮、主题切换）。</target>
       </trans-unit>
+      <trans-unit id="TitleBar.ShowTopmostButton">
+        <source>Shows a pin toggle before the caption buttons that keeps the window above other windows: it is checked while the window's `Topmost` is true and sets it when toggled. Off by default. It shows whatever `CaptionButtons` is, and only the window's own bar drives the window.</source>
+        <target>在标题栏按钮之前显示一个图钉开关，让窗口保持在其他窗口之上：窗口的 `Topmost` 为 true 时开关处于选中状态，切换开关会设置它。默认关闭。无论 `CaptionButtons` 取何值都会显示，并且只有窗口自己的标题栏会控制窗口。</target>
+      </trans-unit>
       <trans-unit id="TitleBar.Title">
         <source>The title. Follows the window's `Title` unless set.</source>
         <target>标题。未设置时跟随窗口的 `Title`。</target>
@@ -40255,6 +40263,26 @@
       <trans-unit id="WeekCalendarSource.Tag">
         <source>Any object the app wants to keep with the calendar.</source>
         <target>应用希望与该日历一同保存的任意对象。</target>
+      </trans-unit>
+      <trans-unit id="WindowCaptionButtons">
+        <source>Minimize, maximize / restore and close for a window whose content reaches the top (an `ArcWindow` with `IsTitleBarVisible="False"`), placed wherever the app draws its own header. The buttons drive the window they are in and follow it: maximize shows restore while the window is maximized and is disabled while the window cannot grow (`CanResize` or `CanMaximize` false), minimize while `CanMinimize` is false. On Windows they tell the system what they are, so the maximize button opens Snap Layouts. `TitleBar` draws its own caption buttons with this control; show one set per window.</source>
+        <target>内容延伸到顶部的窗口（`IsTitleBarVisible="False"` 的 `ArcWindow`）所用的最小化、最大化 / 还原和关闭按钮，可放在应用自己绘制的页头中的任意位置。按钮控制所在的窗口并跟随其状态：窗口最大化时最大化按钮显示为还原，窗口不能放大时（`CanResize` 或 `CanMaximize` 为 false）最大化按钮禁用，`CanMinimize` 为 false 时最小化按钮禁用。在 Windows 上，它们会告诉系统自己是什么按钮，因此最大化按钮会打开贴靠布局。`TitleBar` 也用这个控件绘制自己的标题栏按钮；每个窗口只显示一组。</target>
+      </trans-unit>
+      <trans-unit id="WindowCaptionButtons.IsPreview">
+        <source>True draws the buttons without driving the window: they minimize, maximize and close nothing and the system does not treat them as caption buttons. For previews, such as a mock-up of a window inside a page. False by default.</source>
+        <target>为 True 时只绘制按钮而不控制窗口：它们不会最小化、最大化或关闭任何窗口，系统也不会把它们当作标题栏按钮。用于预览，例如页面中的窗口示意图。默认为 False。</target>
+      </trans-unit>
+      <trans-unit id="WindowCaptionButtons.ShowCloseButton">
+        <source>Shows the close button. True by default.</source>
+        <target>显示关闭按钮。默认为 True。</target>
+      </trans-unit>
+      <trans-unit id="WindowCaptionButtons.ShowMaximizeButton">
+        <source>Shows the maximize / restore button. True by default.</source>
+        <target>显示最大化 / 还原按钮。默认为 True。</target>
+      </trans-unit>
+      <trans-unit id="WindowCaptionButtons.ShowMinimizeButton">
+        <source>Shows the minimize button. True by default.</source>
+        <target>显示最小化按钮。默认为 True。</target>
       </trans-unit>
       <trans-unit id="WorkflowCanvas">
         <source>Shows a `WorkflowGraph` on a dotted canvas (visual rules from Arc's free hero-section block, HeroRelay): one card per step, edges between them, and a run played out step by step. Set the steps' states as your run goes; when a step finishes, the data draws along its edges in the accent before the next step shows as running, and the edges of a branch the run did not take turn dashed. Steps without a position are arranged in ranks; by default the whole workflow shows at actual size and shrinks like a screenshot when it does not fit. Pan with a drag or the wheel, zoom with Ctrl / ⌘ + wheel, a pinch or the keyboard, and move between steps with the arrow keys.</source>
