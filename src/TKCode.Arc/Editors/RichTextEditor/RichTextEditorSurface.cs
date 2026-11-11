@@ -42,6 +42,8 @@ internal sealed class RichTextEditorSurface : Control
     public static readonly StyledProperty<IBrush?> SyntaxPropertyBrushProperty = AvaloniaProperty.Register<RichTextEditorSurface, IBrush?>(nameof(SyntaxPropertyBrush));
     public static readonly StyledProperty<IBrush?> SyntaxTagBrushProperty = AvaloniaProperty.Register<RichTextEditorSurface, IBrush?>(nameof(SyntaxTagBrush));
     public static readonly StyledProperty<IBrush?> SyntaxPunctuationBrushProperty = AvaloniaProperty.Register<RichTextEditorSurface, IBrush?>(nameof(SyntaxPunctuationBrush));
+    public static readonly StyledProperty<IBrush?> SyntaxInsertedBrushProperty = AvaloniaProperty.Register<RichTextEditorSurface, IBrush?>(nameof(SyntaxInsertedBrush));
+    public static readonly StyledProperty<IBrush?> SyntaxDeletedBrushProperty = AvaloniaProperty.Register<RichTextEditorSurface, IBrush?>(nameof(SyntaxDeletedBrush));
     public static readonly StyledProperty<bool> ShowCodeHeaderProperty = AvaloniaProperty.Register<RichTextEditorSurface, bool>(nameof(ShowCodeHeader));
     public static readonly StyledProperty<IBrush?> CheckBrushProperty = AvaloniaProperty.Register<RichTextEditorSurface, IBrush?>(nameof(CheckBrush));
     public static readonly StyledProperty<IBrush?> TextGrayBrushProperty = AvaloniaProperty.Register<RichTextEditorSurface, IBrush?>(nameof(TextGrayBrush));
@@ -85,6 +87,8 @@ internal sealed class RichTextEditorSurface : Control
     public IBrush? SyntaxPropertyBrush { get => GetValue(SyntaxPropertyBrushProperty); set => SetValue(SyntaxPropertyBrushProperty, value); }
     public IBrush? SyntaxTagBrush { get => GetValue(SyntaxTagBrushProperty); set => SetValue(SyntaxTagBrushProperty, value); }
     public IBrush? SyntaxPunctuationBrush { get => GetValue(SyntaxPunctuationBrushProperty); set => SetValue(SyntaxPunctuationBrushProperty, value); }
+    public IBrush? SyntaxInsertedBrush { get => GetValue(SyntaxInsertedBrushProperty); set => SetValue(SyntaxInsertedBrushProperty, value); }
+    public IBrush? SyntaxDeletedBrush { get => GetValue(SyntaxDeletedBrushProperty); set => SetValue(SyntaxDeletedBrushProperty, value); }
 
     /// <summary>True when every code block shows its language header (the Docs profile); otherwise only blocks with a language do.</summary>
     public bool ShowCodeHeader { get => GetValue(ShowCodeHeaderProperty); set => SetValue(ShowCodeHeaderProperty, value); }
@@ -100,6 +104,8 @@ internal sealed class RichTextEditorSurface : Control
         CodeBlockSyntaxKind.Property => SyntaxPropertyBrush,
         CodeBlockSyntaxKind.Tag => SyntaxTagBrush,
         CodeBlockSyntaxKind.Punctuation => SyntaxPunctuationBrush,
+        CodeBlockSyntaxKind.Inserted => SyntaxInsertedBrush,
+        CodeBlockSyntaxKind.Deleted => SyntaxDeletedBrush,
         _ => null
     };
 

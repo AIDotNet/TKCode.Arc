@@ -10,7 +10,7 @@ namespace TKCode.Arc;
 /// <summary>Brushes for the syntax roles, resolved by <see cref="CodeBlock"/> from its token.</summary>
 internal sealed class CodeBlockSyntaxPalette
 {
-    private readonly IBrush?[] _brushes = new IBrush?[10];
+    private readonly IBrush?[] _brushes = new IBrush?[CodeBlockHighlighter.KindCount];
 
     public IBrush? this[CodeBlockSyntaxKind kind]
     {
@@ -39,7 +39,7 @@ internal sealed class CodeBlockText : SelectableTextBlock
     private static readonly System.Collections.Concurrent.ConcurrentDictionary<string, byte> s_warmLanguages = new(StringComparer.Ordinal);
 
     private readonly List<CodeBlockSyntaxSpan> _spans = new();
-    private readonly TextRunProperties?[] _kindProperties = new TextRunProperties?[10];
+    private readonly TextRunProperties?[] _kindProperties = new TextRunProperties?[CodeBlockHighlighter.KindCount];
     private IHighlightSession? _session;
     private string _sessionLanguage = string.Empty;
     private CodeBlockLanguageFamily _family;

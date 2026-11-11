@@ -18,7 +18,13 @@ internal enum CodeBlockSyntaxKind : byte
     Function,
     Property,
     Tag,
-    Punctuation
+    Punctuation,
+
+    /// <summary>An added line of a diff (Arc's success color).</summary>
+    Inserted,
+
+    /// <summary>A removed line of a diff (Arc's danger color).</summary>
+    Deleted
 }
 
 /// <summary>A highlighted range of the displayed source.</summary>
@@ -34,7 +40,10 @@ internal enum CodeBlockLanguageFamily : byte
     Markup,
     Json,
     Yaml,
-    Css
+    Css,
+
+    /// <summary>Unified diffs and patches: whole lines take a role from their first character.</summary>
+    Diff
 }
 
 /// <summary>
@@ -90,6 +99,9 @@ internal static class CodeBlockHighlighter
 
     /// <summary>The shared TextMate highlighter (grammars load once per process, lazily, on first use).</summary>
     public static TextMateSyntaxHighlighter Engine => s_engine.Value;
+
+    /// <summary>The number of <see cref="CodeBlockSyntaxKind"/> values (palettes are indexed by role).</summary>
+    public const int KindCount = (int)CodeBlockSyntaxKind.Deleted + 1;
 
     /// <summary>The theme every session is created with: the role table belongs to Light+.</summary>
     public const HighlightThemeKind SessionTheme = HighlightThemeKind.Light;
@@ -200,6 +212,11 @@ internal static class CodeBlockHighlighter
     public static void AppendLine(string code, int lineStart, int lineEnd, ImmutableArray<HighlightToken> tokens, CodeBlockLanguageFamily family,
                                   ref bool inMarkupComment, List<CodeBlockSyntaxSpan> output)
     {
+        if (family == CodeBlockLanguageFamily.Diff)
+        {
+            AppendDiffLine(code, lineStart, lineEnd, output);
+            return;
+        }
         var first = output.Count;
         var position = lineStart;
         if (!tokens.IsDefault)
@@ -230,6 +247,38 @@ internal static class CodeBlockHighlighter
         if (family == CodeBlockLanguageFamily.Markup)
         {
             MarkMarkupComments(code, lineStart, lineEnd, ref inMarkupComment, output, first);
+        }
+    }
+
+    /// <summary>
+    /// A diff line is one role: <c>+</c> added, <c>-</c> removed, the file and hunk headers (<c>+++</c>, <c>---</c>,
+    /// <c>@@</c>, <c>diff</c>, <c>index</c>) in the punctuation role, context lines plain. TextMate's diff grammar colors
+    /// these by Light+ colors that mean other roles (an added line read as a number), so its tokens are not used.
+    /// </summary>
+    private static void AppendDiffLine(string code, int lineStart, int lineEnd, List<CodeBlockSyntaxSpan> output)
+    {
+        if (lineEnd <= lineStart)
+        {
+            return;
+        }
+        var line = code.AsSpan(lineStart, lineEnd - lineStart);
+        var kind = CodeBlockSyntaxKind.None;
+        if (line.StartsWith("+++") || line.StartsWith("---") || line.StartsWith("@@") || line.StartsWith("diff ") ||
+            line.StartsWith("index ") || line.StartsWith("\\ "))
+        {
+            kind = CodeBlockSyntaxKind.Punctuation;
+        }
+        else if (line[0] == '+')
+        {
+            kind = CodeBlockSyntaxKind.Inserted;
+        }
+        else if (line[0] == '-')
+        {
+            kind = CodeBlockSyntaxKind.Deleted;
+        }
+        if (kind != CodeBlockSyntaxKind.None)
+        {
+            Add(output, lineStart, lineEnd - lineStart, kind);
         }
     }
 
@@ -387,6 +436,10 @@ internal static class CodeBlockHighlighter
         foreach (var name in new[] { "css", "scss", "less" })
         {
             families[name] = CodeBlockLanguageFamily.Css;
+        }
+        foreach (var name in new[] { "diff", "patch" })
+        {
+            families[name] = CodeBlockLanguageFamily.Diff;
         }
         return families.ToFrozenDictionary(StringComparer.Ordinal);
     }

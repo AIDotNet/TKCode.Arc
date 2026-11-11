@@ -51,6 +51,44 @@ public class CodeBlockTests
         }
     }
 
+    [Fact]
+    public void Diff_Lines_Take_The_Inserted_And_Deleted_Roles()
+    {
+        // Issue #110: added and removed lines were painted with the number and string colors.
+        const string code = "diff --git a/app.cs b/app.cs\n--- a/app.cs\n+++ b/app.cs\n@@ -1,3 +1,3 @@\n using System;\n-var count = 1;\n+var count = 2;\n";
+        foreach (var language in new[] { "diff", "patch" })
+        {
+            var h = Highlight(code, language);
+            h["+var count = 2;"].ShouldBe(CodeBlockSyntaxKind.Inserted);
+            h["-var count = 1;"].ShouldBe(CodeBlockSyntaxKind.Deleted);
+            h["--- a/app.cs"].ShouldBe(CodeBlockSyntaxKind.Punctuation);
+            h["+++ b/app.cs"].ShouldBe(CodeBlockSyntaxKind.Punctuation);
+            h["@@ -1,3 +1,3 @@"].ShouldBe(CodeBlockSyntaxKind.Punctuation);
+            h[" using System;"].ShouldBe(CodeBlockSyntaxKind.None);
+        }
+    }
+
+    [Fact]
+    public void Diff_Roles_Use_The_Success_And_Danger_Colors()
+    {
+        foreach (var dark in new[] { false, true })
+        {
+            var n = ArcPalette.Neutrals(dark);
+            CodeBlockSyntaxColors.Get(CodeBlockSyntaxKind.Inserted, dark).ShouldBe(n.Success);
+            CodeBlockSyntaxColors.Get(CodeBlockSyntaxKind.Deleted, dark).ShouldBe(n.Danger);
+        }
+    }
+
+    [Fact]
+    public void Plain_Text_Languages_Show_Plain_Text()
+    {
+        foreach (var language in new[] { "text", "plaintext", "txt" })
+        {
+            CodeBlockHighlighter.SupportsLanguage(language).ShouldBeFalse(language);
+            CodeBlockHighlighter.CreateSession(language).ShouldBeNull(language);
+        }
+    }
+
     private static Avalonia.Controls.Window Show(Control control, double width = 800)
     {
         var window = TestHelpers.Show(control);

@@ -31,6 +31,10 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 - **`InlineEdit.Labels`** ([#110](https://github.com/AIDotNet/TKCode.Arc/issues/110)): an `InlineEditLabels` object
   localizes everything a screen reader hears: the "Saving …" and "… saved" announcements, the save and cancel button
   names and the help text. The English defaults are unchanged.
+- **Diff coloring in code** ([#110](https://github.com/AIDotNet/TKCode.Arc/issues/110)): `CodeBlock`, Markdown fences
+  and the rich text editor's code blocks with the `diff` or `patch` language color added lines in the success color,
+  removed lines in the danger color and the file and hunk headers in the secondary text color. Before, those lines
+  borrowed the number and string colors. `text` and `plaintext` are documented as plain text.
 
 ### Fixed
 

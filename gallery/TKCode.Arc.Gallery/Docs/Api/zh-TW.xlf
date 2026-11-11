@@ -8057,8 +8057,8 @@
         <target>可摺疊的原始碼是否顯示全部行。</target>
       </trans-unit>
       <trans-unit id="CodeBlock.Language">
-        <source>Header label and highlighting language (Arc default "tsx"): a fence-style name or alias such as `cs`, `ts`, `json`, `xml`/`axaml`, `py`, `sh`. Languages without a TextMate grammar show plain text.</source>
-        <target>標題標籤與語法醒目提示所用的語言（Arc 預設 “tsx”）：圍欄式的名稱或別名，如 `cs`、`ts`、`json`、`xml`/`axaml`、`py`、`sh`。沒有 TextMate 語法的語言將顯示為純文字。</target>
+        <source>Header label and highlighting language (Arc default "tsx"): a fence-style name or alias such as `cs`, `ts`, `json`, `xml`/`axaml`, `py`, `sh`. `diff` (or `patch`) colors added lines in the success color and removed lines in the danger color. Languages without a TextMate grammar, such as `text` or `plaintext`, show plain text.</source>
+        <target>標題標籤與語法醒目提示所用的語言（Arc 預設 “tsx”）：圍欄式的名稱或別名，如 `cs`、`ts`、`json`、`xml`/`axaml`、`py`、`sh`。`diff`（或 `patch`）將新增行顯示為成功色、刪除行顯示為危險色。沒有 TextMate 語法的語言（例如 `text` 或 `plaintext`）將顯示為純文字。</target>
       </trans-unit>
       <trans-unit id="CodeBlock.LineCount">
         <source>Number of lines in `Code`.</source>

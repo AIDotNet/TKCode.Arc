@@ -96,6 +96,8 @@
         <Setter Property="PropertyBrush" Value="{arc:CodeBlockTokenResource SyntaxProperty}" />
         <Setter Property="TagBrush" Value="{arc:CodeBlockTokenResource SyntaxTag}" />
         <Setter Property="PunctuationBrush" Value="{arc:CodeBlockTokenResource SyntaxPunctuation}" />
+        <Setter Property="InsertedBrush" Value="{arc:CodeBlockTokenResource SyntaxInserted}" />
+        <Setter Property="DeletedBrush" Value="{arc:CodeBlockTokenResource SyntaxDeleted}" />
 
         <!-- Sizes live in styles (not template attributes) so the compact layout can override them. -->
         <Style Selector="^ /template/ Border#PART_Header">

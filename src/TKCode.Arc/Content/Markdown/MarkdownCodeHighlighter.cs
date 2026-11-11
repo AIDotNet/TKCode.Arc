@@ -42,8 +42,8 @@ internal sealed class MarkdownCodeHighlighter : ISyntaxHighlighter
 
     private static uint[] BuildColors(bool isDarkMode)
     {
-        var colors = new uint[10];
-        for (var kind = CodeBlockSyntaxKind.Comment; kind <= CodeBlockSyntaxKind.Punctuation; kind++)
+        var colors = new uint[CodeBlockHighlighter.KindCount];
+        for (var kind = CodeBlockSyntaxKind.Comment; kind <= CodeBlockSyntaxKind.Deleted; kind++)
         {
             colors[(int)kind] = CodeBlockSyntaxColors.Get(kind, isDarkMode).ToUInt32();
         }

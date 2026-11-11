@@ -40,6 +40,8 @@
                                                SyntaxPropertyBrush="{arc:CodeBlockTokenResource SyntaxProperty}"
                                                SyntaxTagBrush="{arc:CodeBlockTokenResource SyntaxTag}"
                                                SyntaxPunctuationBrush="{arc:CodeBlockTokenResource SyntaxPunctuation}"
+                                               SyntaxInsertedBrush="{arc:CodeBlockTokenResource SyntaxInserted}"
+                                               SyntaxDeletedBrush="{arc:CodeBlockTokenResource SyntaxDeleted}"
                                                CheckBrush="{arc:ArcDesignTokenResource AccentForeground}"
                                                TextGrayBrush="{arc:RichTextEditorTokenResource TextGray}"
                                                TextRedBrush="{arc:RichTextEditorTokenResource TextRed}"
