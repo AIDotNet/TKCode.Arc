@@ -1,7 +1,7 @@
 ---
 title: 視窗
 summary: 帶 Arc 標題列的桌面視窗：左、中、右三個區域放置你的控制項，保留原生拖曳、貼齊和縮放，標題列按鈕跟隨主題。
-source-hash: e77d9c986d50
+source-hash: 546408f8d469
 ---
 
 <Demo name="Basic" />
@@ -116,9 +116,15 @@ public partial class MainWindow : ArcWindow
 Windows 11 由 DWM 在視窗的左、右、下邊緣畫 1px 邊框，但用戶區延伸到標題列後不再畫頂邊。`ArcWindow` 在 Windows 上、視窗處於一般狀態時（最大化、全螢幕或 `WindowDecorations="None"` 時不畫）設定虛擬類別 `:top-edge`，自行畫出頂邊（顏色 `Border`），四邊保持一致。不需要這條線時用樣式覆寫：
 
 ```xml
-<Style Selector="arc|ArcWindow:top-edge /template/ Border#PART_Root">
-    <Setter Property="BorderThickness" Value="0" />
-</Style>
+<arc:ArcWindow xmlns="https://github.com/avaloniaui"
+               xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
+    <arc:ArcWindow.Styles>
+        <Style Selector="arc|ArcWindow:top-edge /template/ Border#PART_Root">
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+    </arc:ArcWindow.Styles>
+    <!-- ... -->
+</arc:ArcWindow>
 ```
 
 ### 預覽

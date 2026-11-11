@@ -1,7 +1,7 @@
 ---
 title: 窗口
 summary: 带 Arc 标题栏的桌面窗口：左、中、右三个区域放置你的控件，保留原生拖动、贴靠和缩放，标题栏按钮跟随主题。
-source-hash: e77d9c986d50
+source-hash: 546408f8d469
 ---
 
 <Demo name="Basic" />
@@ -116,9 +116,15 @@ public partial class MainWindow : ArcWindow
 Windows 11 由 DWM 在窗口的左、右、下边缘画 1px 边框，但客户区延伸到标题栏后不再画顶边。`ArcWindow` 在 Windows 上、窗口处于普通状态时（最大化、全屏或 `WindowDecorations="None"` 时不画）设置伪类 `:top-edge`，自己画出顶边（颜色 `Border`），四边保持一致。不需要这条线时用样式覆盖：
 
 ```xml
-<Style Selector="arc|ArcWindow:top-edge /template/ Border#PART_Root">
-    <Setter Property="BorderThickness" Value="0" />
-</Style>
+<arc:ArcWindow xmlns="https://github.com/avaloniaui"
+               xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
+    <arc:ArcWindow.Styles>
+        <Style Selector="arc|ArcWindow:top-edge /template/ Border#PART_Root">
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+    </arc:ArcWindow.Styles>
+    <!-- ... -->
+</arc:ArcWindow>
 ```
 
 ### 预览
