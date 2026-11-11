@@ -35,6 +35,9 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
   and the rich text editor's code blocks with the `diff` or `patch` language color added lines in the success color,
   removed lines in the danger color and the file and hunk headers in the secondary text color. Before, those lines
   borrowed the number and string colors. `text` and `plaintext` are documented as plain text.
+- **`Tooltip.ShowOnDisabled`** ([#110](https://github.com/AIDotNet/TKCode.Arc/issues/110)): shows a tooltip over a
+  disabled control, for example to say why a button cannot be used. A disabled control gets no pointer input, so the
+  tooltip follows the pointer over its bounds. The Tooltip docs said this already worked; it did not.
 
 ### Fixed
 

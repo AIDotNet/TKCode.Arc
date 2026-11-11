@@ -1,7 +1,7 @@
 ---
 title: 工具提示
 summary: 在滑鼠停留或鍵盤聚焦時顯示的簡短說明，用於本身不夠直觀的控制項，例如純圖示按鈕。
-source-hash: 35d72eeefd91
+source-hash: e715ddded962
 ---
 
 <Demo name="Sides" />
@@ -102,10 +102,12 @@ public partial class OrderRowViewModel : ObservableObject
 ```xml
 <arc:Button Content="退款"
             IsEnabled="{Binding CanRefund}"
-            arc:Tooltip.Tip="{Binding RefundHint}" />
+            arc:Tooltip.Tip="{Binding RefundHint}"
+            arc:Tooltip.ShowOnDisabled="True"
+            AutomationProperties.HelpText="{Binding RefundHint}" />
 ```
 
-停用的控制項不會因懸停或聚焦而自行開啟工具提示；停用控制項上的工具提示只有在指標懸停其上時才會開啟。把原因寫在工具提示中，讓使用者知道什麼條件能使控制項可用。原因改變時（例如「付款結算後開放退款」變為「退款已於 2026-10-18 申請」），更新繫結的屬性，工具提示會隨之更新。
+停用的控制項收不到指標輸入，因此除非設定 `arc:Tooltip.ShowOnDisabled="True"`，它的工具提示不會開啟。設定後，工具提示會追蹤指標是否位於控制項範圍內，並在指標懸停其上時開啟，儘管控制項本身不回應指標。鍵盤無法聚焦停用的控制項，因此請把同樣的原因寫進 `AutomationProperties.HelpText`。把原因寫在工具提示中，讓使用者知道什麼條件能使控制項可用。原因改變時（例如「付款結算後開放退款」變為「退款已於 2026-10-18 申請」），更新繫結的屬性，工具提示會隨之更新。
 
 ### 排隊與時機
 
@@ -139,7 +141,9 @@ public partial class OrderRowViewModel : ObservableObject
         <arc:Button Grid.Column="3" Variant="Secondary" Content="退款"
                     VerticalAlignment="Center"
                     IsEnabled="False"
-                    arc:Tooltip.Tip="付款結算後開放退款。" />
+                    arc:Tooltip.Tip="付款結算後開放退款。"
+                    arc:Tooltip.ShowOnDisabled="True"
+                    AutomationProperties.HelpText="付款結算後開放退款。" />
     </Grid>
 </StackPanel>
 ```
@@ -182,7 +186,7 @@ public partial class OrderRowViewModel : ObservableObject
 
 ### 常見問題
 
-**為什麼停用的按鈕不顯示工具提示？** 停用的控制項不會因懸停或聚焦而開啟工具提示。只有指標懸停在停用的控制項上時才會開啟，因此它可以在控制項無需取得焦點的情況下說明原因。
+**為什麼停用的按鈕不顯示工具提示？** 停用的控制項收不到指標輸入，因此只有設定了 `arc:Tooltip.ShowOnDisabled="True"` 時工具提示才會開啟。也請把原因寫進 `AutomationProperties.HelpText`，因為鍵盤無法到達停用的控制項。
 
 **為什麼點擊按鈕後工具提示消失？** 按下觸發器會立即關閉工具提示，因此它不會遮住該次按下所開啟的選單、對話方塊或面板。
 

@@ -1,7 +1,7 @@
 ---
 title: 提示
 summary: 在悬停或键盘聚焦时显示的简短说明，用于本身不够直观的控件，例如纯图标按钮。
-source-hash: 35d72eeefd91
+source-hash: e715ddded962
 ---
 
 <Demo name="Sides" />
@@ -102,10 +102,12 @@ public partial class OrderRowViewModel : ObservableObject
 ```xml
 <arc:Button Content="退款"
             IsEnabled="{Binding CanRefund}"
-            arc:Tooltip.Tip="{Binding RefundHint}" />
+            arc:Tooltip.Tip="{Binding RefundHint}"
+            arc:Tooltip.ShowOnDisabled="True"
+            AutomationProperties.HelpText="{Binding RefundHint}" />
 ```
 
-禁用的控件不会因悬停或聚焦而自行打开提示；禁用控件上的提示只有在指针悬停其上时才会打开。把原因写在提示中，让读者知道什么条件能使控件可用。原因改变时（例如“付款结算后开放退款”变为“退款已于 2026-10-18 申请”），更新绑定的属性，提示会随之更新。
+禁用的控件收不到指针输入，因此除非设置 `arc:Tooltip.ShowOnDisabled="True"`，它的提示不会打开。设置后，提示会跟踪指针是否位于控件范围内，并在指针悬停其上时打开，尽管控件本身不响应指针。键盘无法聚焦禁用的控件，因此请把同样的原因写进 `AutomationProperties.HelpText`。把原因写在提示中，让读者知道什么条件能使控件可用。原因改变时（例如“付款结算后开放退款”变为“退款已于 2026-10-18 申请”），更新绑定的属性，提示会随之更新。
 
 ### 排队与时机
 
@@ -139,7 +141,9 @@ public partial class OrderRowViewModel : ObservableObject
         <arc:Button Grid.Column="3" Variant="Secondary" Content="退款"
                     VerticalAlignment="Center"
                     IsEnabled="False"
-                    arc:Tooltip.Tip="付款结算后开放退款。" />
+                    arc:Tooltip.Tip="付款结算后开放退款。"
+                    arc:Tooltip.ShowOnDisabled="True"
+                    AutomationProperties.HelpText="付款结算后开放退款。" />
     </Grid>
 </StackPanel>
 ```
@@ -182,7 +186,7 @@ public partial class OrderRowViewModel : ObservableObject
 
 ### 常见问题
 
-**为什么禁用的按钮不显示提示？** 禁用的控件不会因悬停或聚焦而打开提示。只有指针悬停在禁用控件上时才会打开，因此它可以在控件无需获得焦点的情况下说明原因。
+**为什么禁用的按钮不显示提示？** 禁用的控件收不到指针输入，因此只有设置了 `arc:Tooltip.ShowOnDisabled="True"` 时提示才会打开。也请把原因写进 `AutomationProperties.HelpText`，因为键盘无法到达禁用的控件。
 
 **为什么点击按钮后提示消失？** 按下触发器会立即关闭提示，因此它不会遮住该次按下所打开的菜单、对话框或面板。
 

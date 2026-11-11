@@ -131,11 +131,15 @@ public partial class OrderRowViewModel : ObservableObject
 ```xml
 <arc:Button Content="Refund"
             IsEnabled="{Binding CanRefund}"
-            arc:Tooltip.Tip="{Binding RefundHint}" />
+            arc:Tooltip.Tip="{Binding RefundHint}"
+            arc:Tooltip.ShowOnDisabled="True"
+            AutomationProperties.HelpText="{Binding RefundHint}" />
 ```
 
-A disabled control does not open a tooltip from hover or focus by itself; a tooltip on a disabled control opens only
-while the pointer is over it. Keep the reason in the tip, so the reader learns what would enable the control. When
+A disabled control gets no pointer input, so its tooltip stays closed unless you set `arc:Tooltip.ShowOnDisabled="True"`.
+The tooltip then follows the pointer over the control's bounds and opens while the pointer is over it, even though the
+control itself ignores the pointer. A keyboard cannot focus a disabled control, so put the same reason in
+`AutomationProperties.HelpText`. Keep the reason in the tip, so the reader learns what would enable the control. When
 the reason changes (for example, "Refunds open after the payment settles" becomes "Refund requested on 2026-10-18"),
 update the bound property and the tooltip follows.
 
@@ -177,7 +181,9 @@ where the label is not enough: the refund button is disabled, and its tip explai
         <arc:Button Grid.Column="3" Variant="Secondary" Content="Refund"
                     VerticalAlignment="Center"
                     IsEnabled="False"
-                    arc:Tooltip.Tip="Refunds open after the payment settles." />
+                    arc:Tooltip.Tip="Refunds open after the payment settles."
+                    arc:Tooltip.ShowOnDisabled="True"
+                    AutomationProperties.HelpText="Refunds open after the payment settles." />
     </Grid>
 </StackPanel>
 ```
@@ -231,9 +237,9 @@ button keeps its tip, because a disabled control gives no other clue about why i
 
 ### Common questions
 
-**Why does the tooltip not show on a disabled button?** A disabled control does not open a tooltip from hover or focus
-by itself. The tooltip opens only while the pointer is over the disabled control, so it can explain the reason without
-the control taking focus.
+**Why does the tooltip not show on a disabled button?** A disabled control gets no pointer input, so its tooltip opens
+only with `arc:Tooltip.ShowOnDisabled="True"`. Put the reason in `AutomationProperties.HelpText` as well, because a
+keyboard cannot reach a disabled control.
 
 **Why does the tooltip disappear when I click the button?** A press on the trigger closes the tooltip at once, so it does
 not sit over the menu, dialog or panel the press opened.

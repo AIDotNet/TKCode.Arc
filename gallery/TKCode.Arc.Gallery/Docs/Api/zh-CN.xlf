@@ -36764,6 +36764,10 @@
         <source>Wait before the first tooltip opens after hover or focus; default 250 ms. Open tooltips skip the wait.</source>
         <target>悬停或获得焦点后，第一个提示打开前的等待时间；默认 250 ms。已打开的提示会跳过等待。</target>
       </trans-unit>
+      <trans-unit id="Tooltip.ShowOnDisabled">
+        <source>Shows the tooltip while the target is disabled, for example to say why a button cannot be used. A disabled control gets no pointer input, so the tooltip follows the pointer over its bounds instead. Default false. Put the reason in `AutomationProperties.HelpText` as well: a keyboard cannot focus a disabled control.</source>
+        <target>在目标控件禁用时也显示提示，例如说明按钮为何不能使用。禁用的控件收不到指针输入，因此提示改为跟踪指针是否位于其范围内。默认为 false。也请把原因写进 `AutomationProperties.HelpText`：键盘无法聚焦禁用的控件。</target>
+      </trans-unit>
       <trans-unit id="Tooltip.Side">
         <source>Side of the trigger the bubble opens on: Top (default), Bottom, Left or Right.</source>
         <target>气泡相对于触发元素打开的一侧：Top（默认）、Bottom、Left 或 Right。</target>
