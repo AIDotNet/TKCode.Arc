@@ -562,4 +562,41 @@ public class TableTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void A_Source_Swapped_Without_Layout_Survives_A_Theme_Switch()
+    {
+        // Issue #103: rows kept their old source indices until the next layout, and a theme switch read them first.
+        var table = Table(Projects());
+        var host = new Border { Child = table };
+        var window = TestHelpers.Show(host);
+        try
+        {
+            window.RequestedThemeVariant = Avalonia.Styling.ThemeVariant.Light;
+            Dispatcher.UIThread.RunJobs();
+            table.RowCount.ShouldBe(5);
+
+            // Hidden: no layout runs while the source shrinks, then the theme changes.
+            table.IsVisible = false;
+            table.ItemsSource = Projects().Take(2).ToList();
+            window.RequestedThemeVariant = Avalonia.Styling.ThemeVariant.Dark;
+            Dispatcher.UIThread.RunJobs();
+            table.IsVisible = true;
+            Dispatcher.UIThread.RunJobs();
+            Names(table).ShouldBe(["Atlas", "Beacon"]);
+
+            // Detached: the source shrinks off the tree and the table comes back under another theme.
+            host.Child = null;
+            table.ItemsSource = Projects().Take(1).ToList();
+            window.RequestedThemeVariant = Avalonia.Styling.ThemeVariant.Light;
+            Dispatcher.UIThread.RunJobs();
+            host.Child = table;
+            Dispatcher.UIThread.RunJobs();
+            Names(table).ShouldBe(["Atlas"]);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

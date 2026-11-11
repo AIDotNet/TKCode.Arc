@@ -135,11 +135,21 @@ internal sealed class TableRow : Control
         }
     }
 
+    /// <summary>
+    /// True when the source changed since the row was last configured: its <see cref="SourceIndex"/> may point past the
+    /// new items, so it must not read values until the next layout configures it again.
+    /// </summary>
+    public bool IsStale => Item is null || _dataVersion != _table.DataVersion;
+
     /// <summary>Drops cached cell text (values or columns changed).</summary>
     public void InvalidateTexts()
     {
         _textVersion = -1;
-        UpdateAutomation();
+        // A stale row (the source changed while the table had no layout, issue #103) gets its name on its next Configure.
+        if (!IsStale)
+        {
+            UpdateAutomation();
+        }
         InvalidateVisual();
     }
 

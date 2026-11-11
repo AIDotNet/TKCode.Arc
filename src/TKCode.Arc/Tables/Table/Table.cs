@@ -539,7 +539,8 @@ public class Table : TemplatedControl
 
     internal string RowName(TableRow row)
     {
-        if (row.SourceIndex < 0 || _states.Length == 0)
+        if (row.SourceIndex < 0 || row.SourceIndex >= _items.Count || _states.Length == 0
+            || !ReferenceEquals(_items[row.SourceIndex], row.Item))
         {
             return string.Empty;
         }
