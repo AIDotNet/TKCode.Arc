@@ -357,6 +357,59 @@ public class MobileControlTests
     }
 
     [AvaloniaFact]
+    public void ListGroup_Uses_A_ListItem_Template_Root_As_The_Row_Instead_Of_Nesting_It()
+    {
+        // Issue #104: a template whose root is a ListItem was wrapped in a second ListItem.
+        var group = new ListGroup
+        {
+            ItemsSource = new[] { "Ada", "Grace" },
+            ItemTemplate = new Avalonia.Controls.Templates.FuncDataTemplate<string>((_, _) => new ListItem
+            {
+                Content = "Buddy",
+                [!ListItem.SubtitleProperty] = new Avalonia.Data.Binding(".")
+            }),
+        };
+        var window = Show(new Page { Content = group });
+        try
+        {
+            var rows = group.GetVisualDescendants().OfType<ListItem>().ToList();
+            rows.Count.ShouldBe(2);
+            group.ContainerFromIndex(0).ShouldBeSameAs(rows[0]);
+            rows.Select(r => r.Subtitle).ShouldBe(["Ada", "Grace"]);
+            rows[0].GetVisualDescendants().OfType<ListItem>().ShouldBeEmpty();
+            string Visible(ListItem r) => r.GetVisualDescendants().OfType<Avalonia.Controls.Border>()
+                .Single(b => b.Name == "PART_Separator").IsVisible.ToString();
+            Visible(rows[0]).ShouldBe("True");
+            Visible(rows[1]).ShouldBe("False");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void ListGroup_Wraps_Plain_Template_Content_In_One_Row()
+    {
+        var group = new ListGroup
+        {
+            ItemsSource = new[] { "Ada" },
+            ItemTemplate = new Avalonia.Controls.Templates.FuncDataTemplate<string>((name, _) => new Avalonia.Controls.TextBlock { Text = name }),
+        };
+        var window = Show(new Page { Content = group });
+        try
+        {
+            var rows = group.GetVisualDescendants().OfType<ListItem>().ToList();
+            rows.Count.ShouldBe(1);
+            rows[0].GetVisualDescendants().OfType<Avalonia.Controls.TextBlock>().ShouldContain(t => t.Text == "Ada");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void ListItem_Press_Shades_The_Row_And_Click_Runs_Its_Command()
     {
         var ran = false;
