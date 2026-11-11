@@ -55,6 +55,28 @@ public class GaugeTests
     }
 
     [AvaloniaFact]
+    public void A_Small_Ring_Keeps_Its_Number_Inside_And_Centered()
+    {
+        var gauge = new Gauge { Width = 96, Value = 99 };
+        var window = TestHelpers.Show(gauge);
+        try
+        {
+            var ink = gauge.ReadoutInk;
+            var center = gauge.DialCenter;
+            ink.Width.ShouldBeGreaterThan(0);
+            ink.Center.X.ShouldBe(center.X, 1.5);
+            ink.Center.Y.ShouldBe(center.Y, 1.5);
+            // The ring's inside (radius 42 less half the stroke, in the 100-wide view box) holds the readout.
+            var inner = 96 * (42 - 9 / 2.0) / 100 * 2;
+            ink.Width.ShouldBeLessThan(inner * 0.8);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void Maps_Any_Range_And_Clamps()
     {
         var gauge = new Gauge { Minimum = 300, Maximum = 850, Value = 575 };

@@ -41,6 +41,8 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 
 ### Fixed
 
+- **`Gauge` on a small ring**: the number now scales with the ring (`Type3XL` at the largest size), so it stays
+  inside a small dial, and its ink, not its line box, sits on the ring's center, so it no longer rides high.
 - **`ArcWindow` top edge on Windows** ([#102](https://github.com/AIDotNet/TKCode.Arc/issues/102)): DWM draws no
   frame line on the top edge of a window whose client area extends into the title bar, so the window now draws it in the
   `Border` color while it is in its normal state on Windows (`:top-edge` pseudo-class). All four edges match; a style on
