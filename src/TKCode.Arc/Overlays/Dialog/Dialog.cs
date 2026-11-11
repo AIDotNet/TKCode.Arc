@@ -53,6 +53,18 @@ public class Dialog : ModalOverlay
 
     public ControlSize Size { get => GetValue(SizeProperty); set => SetValue(SizeProperty, value); }
 
+    /// <summary>
+    /// False hides the header row: the title, the description, the close button and the line under them, for a panel
+    /// that brings its own heading (a branded sign-in, for example). Keep <c>Title</c> set: it stays the accessible name
+    /// of the panel. Without the close button the dialog closes with Escape, a click outside or its own buttons.
+    /// Defaults to true.
+    /// </summary>
+    public static readonly StyledProperty<bool> ShowHeaderProperty =
+        DialogSurface.ShowHeaderProperty.AddOwner<Dialog>();
+
+    /// <inheritdoc cref="ShowHeaderProperty"/>
+    public bool ShowHeader { get => GetValue(ShowHeaderProperty); set => SetValue(ShowHeaderProperty, value); }
+
     static Dialog()
     {
         CloseButtonNameProperty.OverrideDefaultValue<Dialog>("Close dialog");
@@ -79,6 +91,7 @@ public class Dialog : ModalOverlay
     {
         var surface = new DialogSurface();
         surface.Bind(DialogSurface.SizeProperty, this.GetObservable(SizeProperty));
+        surface.Bind(DialogSurface.ShowHeaderProperty, this.GetObservable(ShowHeaderProperty));
         return surface;
     }
 

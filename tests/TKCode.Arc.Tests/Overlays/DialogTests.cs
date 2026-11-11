@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
+using Avalonia.LogicalTree;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 
@@ -19,6 +20,57 @@ public class DialogTests
         var window = TestHelpers.Show(new StackPanel { Children = { opener, dialog } });
         opener.Focus();
         return (window, dialog, opener);
+    }
+
+    [AvaloniaFact]
+    public void ShowHeader_False_Hides_The_Title_Row_But_Keeps_The_Accessible_Name()
+    {
+        // Issue #108: a branded dialog brings its own heading.
+        var (window, dialog, _) = Setup(d => d.ShowHeader = false);
+        try
+        {
+            dialog.IsOpen = true;
+            Dispatcher.UIThread.RunJobs();
+            var surface = dialog.Surface.ShouldBeOfType<DialogSurface>();
+            surface.ShowHeader.ShouldBeFalse();
+            TestHelpers.Descendant<Border>(surface, "PART_Header").IsVisible.ShouldBeFalse();
+            Avalonia.Automation.AutomationProperties.GetName(surface).ShouldBe("Rename project");
+            ((TextBox)dialog.Content!).IsEffectivelyVisible.ShouldBeTrue();
+
+            dialog.ShowHeader = true;
+            Dispatcher.UIThread.RunJobs();
+            TestHelpers.Descendant<Border>(surface, "PART_Header").IsVisible.ShouldBeTrue();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void The_Content_Is_In_The_Logical_Tree_Once()
+    {
+        // Issue #108: the overlay and its surface both listed the content as a logical child.
+        var (window, dialog, _) = Setup();
+        try
+        {
+            var content = (TextBox)dialog.Content!;
+            dialog.IsOpen = true;
+            Dispatcher.UIThread.RunJobs();
+            dialog.GetLogicalDescendants().Count(d => ReferenceEquals(d, content)).ShouldBe(1);
+            content.GetLogicalParent().ShouldBeSameAs(dialog);
+
+            var next = new TextBox { Text = "Beacon" };
+            dialog.Content = next;
+            Dispatcher.UIThread.RunJobs();
+            dialog.GetLogicalDescendants().Count(d => ReferenceEquals(d, next)).ShouldBe(1);
+            dialog.GetLogicalDescendants().ShouldNotContain(content);
+            next.IsEffectivelyVisible.ShouldBeTrue();
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     [AvaloniaFact]

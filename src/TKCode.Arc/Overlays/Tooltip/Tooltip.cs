@@ -41,6 +41,14 @@ public class Tooltip : ContentControl
     public static readonly AttachedProperty<bool> IsOpenProperty =
         AvaloniaProperty.RegisterAttached<Tooltip, Control, bool>("IsOpen");
 
+    /// <summary>
+    /// Shows the tooltip while the target is disabled, for example to say why a button cannot be used. A disabled
+    /// control gets no pointer input, so the tooltip follows the pointer over its bounds instead. Default false. Put the
+    /// reason in <c>AutomationProperties.HelpText</c> as well: a keyboard cannot focus a disabled control.
+    /// </summary>
+    public static readonly AttachedProperty<bool> ShowOnDisabledProperty =
+        AvaloniaProperty.RegisterAttached<Tooltip, Control, bool>("ShowOnDisabled");
+
     private static readonly AttachedProperty<TooltipSession?> SessionProperty =
         AvaloniaProperty.RegisterAttached<Tooltip, Control, TooltipSession?>("Session");
 
@@ -50,6 +58,12 @@ public class Tooltip : ContentControl
     public static void SetSide(Control element, TooltipSide value) => element.SetValue(SideProperty, value);
     public static TimeSpan GetShowDelay(Control element) => element.GetValue(ShowDelayProperty);
     public static void SetShowDelay(Control element, TimeSpan value) => element.SetValue(ShowDelayProperty, value);
+
+    /// <summary>Gets whether the tooltip shows while <paramref name="element"/> is disabled.</summary>
+    public static bool GetShowOnDisabled(Control element) => element.GetValue(ShowOnDisabledProperty);
+
+    /// <summary>Sets whether the tooltip shows while <paramref name="element"/> is disabled.</summary>
+    public static void SetShowOnDisabled(Control element, bool value) => element.SetValue(ShowOnDisabledProperty, value);
 
     /// <summary>Opens or closes the tooltip programmatically (no delay).</summary>
     public static bool GetIsOpen(Control element) => element.GetValue(IsOpenProperty);
@@ -82,6 +96,7 @@ public class Tooltip : ContentControl
                 session.Close();
             }
         });
+        ShowOnDisabledProperty.Changed.AddClassHandler<Control>((c, _) => c.GetValue(SessionProperty)?.UpdateDisabledTracking());
         IsHitTestVisibleProperty.OverrideDefaultValue<Tooltip>(false);
         FocusableProperty.OverrideDefaultValue<Tooltip>(false);
     }
@@ -136,6 +151,8 @@ public class Tooltip : ContentControl
         private Tooltip? _bubble;
         private DispatcherTimer? _delay;
         private bool _counted;
+        private TopLevel? _trackedTopLevel;
+        private bool _disabledHover;
 
         public ArcPopup? Popup => _popup;
 
@@ -148,6 +165,76 @@ public class Tooltip : ContentControl
             target.GotFocus += OnGotFocus;
             target.LostFocus += OnLostFocus;
             target.DetachedFromVisualTree += OnDetached;
+            target.AttachedToVisualTree += OnAttached;
+            target.PropertyChanged += OnTargetPropertyChanged;
+            UpdateDisabledTracking();
+        }
+
+        private void OnAttached(object? sender, VisualTreeAttachmentEventArgs e) => UpdateDisabledTracking();
+
+        private void OnTargetPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+        {
+            if (e.Property == IsEffectivelyEnabledProperty)
+            {
+                UpdateDisabledTracking();
+            }
+        }
+
+        /// <summary>
+        /// While the target is disabled and asks for <see cref="ShowOnDisabledProperty"/>, the pointer is followed on the
+        /// top level (a disabled control gets no pointer events): entering the target's bounds schedules the tooltip,
+        /// leaving them closes it. Nothing is followed otherwise.
+        /// </summary>
+        public void UpdateDisabledTracking(bool detaching = false)
+        {
+            var wanted = !detaching && GetShowOnDisabled(_target) && !_target.IsEffectivelyEnabled ? TopLevel.GetTopLevel(_target) : null;
+            if (ReferenceEquals(wanted, _trackedTopLevel))
+            {
+                return;
+            }
+            if (_trackedTopLevel is not null)
+            {
+                _trackedTopLevel.RemoveHandler(InputElement.PointerMovedEvent, OnTopLevelPointerMoved);
+                _trackedTopLevel.PointerExited -= OnTopLevelPointerExited;
+            }
+            _trackedTopLevel = wanted;
+            if (_disabledHover)
+            {
+                _disabledHover = false;
+                Close();
+            }
+            if (wanted is not null)
+            {
+                wanted.AddHandler(InputElement.PointerMovedEvent, OnTopLevelPointerMoved, RoutingStrategies.Tunnel, handledEventsToo: true);
+                wanted.PointerExited += OnTopLevelPointerExited;
+            }
+        }
+
+        private void OnTopLevelPointerMoved(object? sender, PointerEventArgs e)
+        {
+            var over = _target.IsEffectivelyVisible && new Rect(_target.Bounds.Size).Contains(e.GetPosition(_target));
+            if (over == _disabledHover)
+            {
+                return;
+            }
+            _disabledHover = over;
+            if (over)
+            {
+                Schedule();
+            }
+            else
+            {
+                Close();
+            }
+        }
+
+        private void OnTopLevelPointerExited(object? sender, PointerEventArgs e)
+        {
+            if (_disabledHover)
+            {
+                _disabledHover = false;
+                Close();
+            }
         }
 
         private void OnPointerEntered(object? sender, PointerEventArgs e) => Schedule();
@@ -166,11 +253,15 @@ public class Tooltip : ContentControl
 
         private void OnLostFocus(object? sender, FocusChangedEventArgs e) => Close();
 
-        private void OnDetached(object? sender, VisualTreeAttachmentEventArgs e) => Close(immediate: true);
+        private void OnDetached(object? sender, VisualTreeAttachmentEventArgs e)
+        {
+            Close(immediate: true);
+            UpdateDisabledTracking(detaching: true);
+        }
 
         private void Schedule()
         {
-            if (GetTip(_target) is null || !_target.IsEffectivelyEnabled && !_target.IsPointerOver)
+            if (GetTip(_target) is null || !_target.IsEffectivelyEnabled && !_target.IsPointerOver && !_disabledHover)
             {
                 return;
             }
@@ -289,6 +380,9 @@ public class Tooltip : ContentControl
             _target.GotFocus -= OnGotFocus;
             _target.LostFocus -= OnLostFocus;
             _target.DetachedFromVisualTree -= OnDetached;
+            _target.AttachedToVisualTree -= OnAttached;
+            _target.PropertyChanged -= OnTargetPropertyChanged;
+            UpdateDisabledTracking(detaching: true);
         }
     }
 }

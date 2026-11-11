@@ -37,6 +37,11 @@ internal sealed class CodeBlockToken : AbstractControlDesignToken
     public Color SyntaxProperty { get; set; }
     public Color SyntaxTag { get; set; }
     public Color SyntaxPunctuation { get; set; }
+
+    /// <summary>Added and removed lines of a diff: the success and danger colors.</summary>
+    public Color SyntaxInserted { get; set; }
+
+    public Color SyntaxDeleted { get; set; }
     public Color LineNumberForeground { get; set; }
 
     public CornerRadius FocusRingRadius { get; set; }
@@ -75,6 +80,8 @@ internal sealed class CodeBlockToken : AbstractControlDesignToken
         SyntaxProperty = CodeBlockSyntaxColors.Get(CodeBlockSyntaxKind.Property, isDarkMode);
         SyntaxTag = CodeBlockSyntaxColors.Get(CodeBlockSyntaxKind.Tag, isDarkMode);
         SyntaxPunctuation = CodeBlockSyntaxColors.Get(CodeBlockSyntaxKind.Punctuation, isDarkMode);
+        SyntaxInserted = CodeBlockSyntaxColors.Get(CodeBlockSyntaxKind.Inserted, isDarkMode);
+        SyntaxDeleted = CodeBlockSyntaxColors.Get(CodeBlockSyntaxKind.Deleted, isDarkMode);
     }
 }
 
@@ -92,6 +99,8 @@ internal static class CodeBlockSyntaxColors
         {
             CodeBlockSyntaxKind.Comment => n.TextMuted,
             CodeBlockSyntaxKind.Punctuation => n.TextSecondary,
+            CodeBlockSyntaxKind.Inserted => n.Success,
+            CodeBlockSyntaxKind.Deleted => n.Danger,
             CodeBlockSyntaxKind.String => isDarkMode ? Oklch.ToColor(0.77, 0.15, 150) : Oklch.ToColor(0.46, 0.13, 150),
             CodeBlockSyntaxKind.Number => isDarkMode ? Oklch.ToColor(0.80, 0.14, 75) : Oklch.ToColor(0.50, 0.14, 55),
             CodeBlockSyntaxKind.Keyword => isDarkMode ? Oklch.ToColor(0.78, 0.16, 285) : Oklch.ToColor(0.48, 0.15, 285),

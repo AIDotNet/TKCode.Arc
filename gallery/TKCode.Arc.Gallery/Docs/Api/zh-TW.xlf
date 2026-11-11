@@ -4933,8 +4933,8 @@
         <target>要顯示的照片。照片載入失敗時改為顯示首字母。</target>
       </trans-unit>
       <trans-unit id="Avatar.Status">
-        <source>Presence dot: None (default, no dot), Online or Offline.</source>
-        <target>線上狀態圓點：None（預設，不顯示圓點）、Online 或 Offline。</target>
+        <source>Presence dot: None (default, no dot), Online, Offline, Busy, Away or Connecting. The status is part of the accessible name.</source>
+        <target>上線狀態圓點：None（預設，無圓點）、Online、Offline、Busy、Away 或 Connecting。狀態是無障礙名稱的一部分。</target>
       </trans-unit>
       <trans-unit id="AvatarGroup">
         <source>A team or set of contributors in a small space (Arc AvatarGroup): overlapping avatars with a 2px surface ring and a 1px border ring, later people stacked over earlier ones, and a "+N" chip for everyone past `MaxVisibleCount`. People who join or leave open or close their slot on the morph spring so the stack slides (P19); the overflow count rolls the way it moved (P14). Pointing at the stack (fine pointers only) loosens it from the center (P28) and lifts the person under the pointer with a crisp ring and their name while the neighbours ease aside (P27). Only the visible people get controls, so long member lists stay cheap. Items may be `AvatarGroupMember`, `Avatar` or plain names.</source>
@@ -8057,8 +8057,8 @@
         <target>可摺疊的原始碼是否顯示全部行。</target>
       </trans-unit>
       <trans-unit id="CodeBlock.Language">
-        <source>Header label and highlighting language (Arc default "tsx"): a fence-style name or alias such as `cs`, `ts`, `json`, `xml`/`axaml`, `py`, `sh`. Languages without a TextMate grammar show plain text.</source>
-        <target>標題標籤與語法醒目提示所用的語言（Arc 預設 “tsx”）：圍欄式的名稱或別名，如 `cs`、`ts`、`json`、`xml`/`axaml`、`py`、`sh`。沒有 TextMate 語法的語言將顯示為純文字。</target>
+        <source>Header label and highlighting language (Arc default "tsx"): a fence-style name or alias such as `cs`, `ts`, `json`, `xml`/`axaml`, `py`, `sh`. `diff` (or `patch`) colors added lines in the success color and removed lines in the danger color. Languages without a TextMate grammar, such as `text` or `plaintext`, show plain text.</source>
+        <target>標題標籤與語法醒目提示所用的語言（Arc 預設 “tsx”）：圍欄式的名稱或別名，如 `cs`、`ts`、`json`、`xml`/`axaml`、`py`、`sh`。`diff`（或 `patch`）將新增行顯示為成功色、刪除行顯示為危險色。沒有 TextMate 語法的語言（例如 `text` 或 `plaintext`）將顯示為純文字。</target>
       </trans-unit>
       <trans-unit id="CodeBlock.LineCount">
         <source>Number of lines in `Code`.</source>
@@ -8624,6 +8624,10 @@
         <source>Title of the empty state when nothing matches.</source>
         <target>沒有符合項目時空狀態的標題。</target>
       </trans-unit>
+      <trans-unit id="CommandPalette.IsFilteringEnabled">
+        <source>False lists every item of `ItemsSource` as given, for an app that filters and ranks the results itself (fuzzy matching, recent first): it updates `ItemsSource` as `Query` changes, and the palette no longer drops items that do not contain the query. Items still group under their `Group`, groups in the order they first appear; leave `Group` empty for one flat list in the app's order. Defaults to true.</source>
+        <target>為 false 時依原樣列出 `ItemsSource` 的每一項，適合自行篩選並排序結果的應用程式（模糊比對、最近使用優先）：應用程式在 `Query` 變更時更新 `ItemsSource`，面板不再移除不包含查詢文字的項目。各項目仍依 `Group` 分組，分組依第一次出現的順序排列；不設定 `Group` 即可依應用程式的順序顯示為一個平鋪清單。預設為 true。</target>
+      </trans-unit>
       <trans-unit id="CommandPalette.IsShortcutEnabled">
         <source>Cmd/Ctrl+K anywhere in the window focuses the search field (handled before the window's own shortcuts).</source>
         <target>視窗中任何位置按下 Cmd/Ctrl+K 都會聚焦搜尋欄（優先於視窗本身的快速鍵處理）。</target>
@@ -8668,6 +8672,10 @@
         <source>The command palette as a popup: declare it once and it opens a `CommandPalette` above the page on Cmd+K (Ctrl+K elsewhere) or from a button, and closes it with a key. It renders nothing in place; while `IsOpen` is true it shows the palette near the top centre of the window over a dimmed scrim. Keys: the open gesture (`OpenGesture`) toggles it from anywhere in the window; ↓ ↑ Home End move the highlight, Enter runs the highlighted command (or the top match after typing), Escape clears the query and, in an empty field, closes. A press on the scrim, a click on the "Esc" key cap and choosing a command also close it (`CloseOnOutsidePress`, `CloseOnSelect`); focus returns to what had it before. The palette is built the first time the dialog opens and reused after that; while the dialog is closed it only listens for the open gesture. It is mounted by Core `ModalPresence` (scrim fade, focus trap, stacking with other modals) and rises 6px on the smooth spring (reduced motion: fade only, Off: instant).</source>
         <target>以彈出層呈現的指令面板：只需宣告一次，它就會在按下 Cmd+K（其他平台為 Ctrl+K）或點按按鈕時，在頁面上方開啟一個 `CommandPalette`，並可用按鍵關閉。它在原位不轉譯任何內容；`IsOpen` 為 true 時，它會在視窗頂部置中附近、淡淡的遮罩之上顯示面板。按鍵：開啟手勢（`OpenGesture`）可在視窗中任意位置切換它；↓ ↑ Home End 移動醒目提示，Enter 執行醒目提示的指令（輸入後則執行排在最前的符合項），Escape 清除查詢，搜尋欄位為空時則關閉。點按遮罩、點按 “Esc” 鍵帽以及選擇指令同樣會關閉它（`CloseOnOutsidePress`、`CloseOnSelect`）；焦點會回到先前擁有焦點的元素。面板在對話方塊第一次開啟時建立並重複使用；對話方塊關閉期間只處理開啟手勢。它由 Core 的 `ModalPresence` 掛載（遮罩淡入、焦點陷阱、與其他模態層堆疊），並沿平滑彈簧上移 6px（Reduced：僅淡入淡出；Off：立即顯示）。</target>
       </trans-unit>
+      <trans-unit id="CommandPaletteDialog.ActiveItem">
+        <source>The highlighted command (keyboard or pointer), or null; null while the dialog has not been opened.</source>
+        <target>目前醒目提示的指令（鍵盤或指標），沒有時為 null；對話方塊尚未開啟過時為 null。</target>
+      </trans-unit>
       <trans-unit id="CommandPaletteDialog.BackdropBlur">
         <source>Backdrop blur radius in px applied to the page while the scrim is shown (default 0: none; Arc's dialog uses 7). Off under the ReduceTransparency token.</source>
         <target>遮罩顯示期間套用於頁面的背景模糊半徑，單位 px（預設 0：無；Arc 的對話方塊使用 7）。在 ReduceTransparency 下關閉。</target>
@@ -8711,6 +8719,10 @@
       <trans-unit id="CommandPaletteDialog.EmptyTitle">
         <source>Title of the empty state when nothing matches.</source>
         <target>沒有符合項時空狀態的標題。</target>
+      </trans-unit>
+      <trans-unit id="CommandPaletteDialog.IsFilteringEnabled">
+        <source>False lists every item of `ItemsSource` as given, for an app that filters and ranks the results itself (fuzzy matching, recent first): it updates `ItemsSource` as `Query` changes, and the palette no longer drops items that do not contain the query. Items still group under their `Group`, groups in the order they first appear; leave `Group` empty for one flat list in the app's order. Defaults to true.</source>
+        <target>為 false 時依原樣列出 `ItemsSource` 的每一項，適合自行篩選並排序結果的應用程式（模糊比對、最近使用優先）：應用程式在 `Query` 變更時更新 `ItemsSource`，面板不再移除不包含查詢文字的項目。各項目仍依 `Group` 分組，分組依第一次出現的順序排列；不設定 `Group` 即可依應用程式的順序顯示為一個平鋪清單。預設為 true。</target>
       </trans-unit>
       <trans-unit id="CommandPaletteDialog.IsModal">
         <source>Modal (default): a scrim over the page, a focus trap, and a press on the scrim closes. When false the page stays interactive and focus is free, and a press anywhere outside the palette closes it.</source>
@@ -8759,6 +8771,10 @@
       <trans-unit id="CommandPaletteDialog.PlaceholderText">
         <source>Hint in the empty search field.</source>
         <target>空搜尋欄位中的提示文字。</target>
+      </trans-unit>
+      <trans-unit id="CommandPaletteDialog.Query">
+        <source>The text in the search field (two-way; readable and bindable before the dialog first opens). A fresh open starts with an empty query; set it in `Opened` to open with a search already typed.</source>
+        <target>搜尋欄位中的文字（雙向；對話方塊第一次開啟前即可讀取與繫結）。每次重新開啟時查詢為空；要開啟時就帶上搜尋詞，請在 `Opened` 中設定。</target>
       </trans-unit>
       <trans-unit id="CommandPaletteDialog.ResultsLabel">
         <source>Accessible name of the result list.</source>
@@ -11480,6 +11496,10 @@
         <source>Set on a button inside a dialog, drawer or bottom sheet: clicking it closes that overlay with this value as its `CloseResult` (and the result of `ShowAsync`).</source>
         <target>設定於對話方塊、抽屜或底部面板內的按鈕上：點選後會以此值作為其 `CloseResult` 關閉該覆蓋層（同時也是 `ShowAsync` 的結果）。</target>
       </trans-unit>
+      <trans-unit id="Dialog.ShowHeader">
+        <source>False hides the header row: the title, the description, the close button and the line under them, for a panel that brings its own heading (a branded sign-in, for example). Keep `Title` set: it stays the accessible name of the panel. Without the close button the dialog closes with Escape, a click outside or its own buttons. Defaults to true.</source>
+        <target>為 false 時隱藏標題列：標題、說明、關閉按鈕與下方的分隔線，適合自帶標題的面板（例如品牌化的登入對話方塊）。仍要設定 `Title`：它仍是面板的無障礙名稱。沒有關閉按鈕時，對話方塊透過 Esc、點擊外部或自己的按鈕關閉。預設為 true。</target>
+      </trans-unit>
       <trans-unit id="Dialog.Size">
         <source>Panel width: Small 360, Medium 440 (Arc), Large 560 — always within the viewport minus 32px.</source>
         <target>面板寬度：Small 360、Medium 440（Arc）、Large 560——始終不超過視埠寬度減去 32px。</target>
@@ -12335,6 +12355,10 @@
       <trans-unit id="EmptyState.Label">
         <source>Accessible name of the region.</source>
         <target>該區域的無障礙名稱。</target>
+      </trans-unit>
+      <trans-unit id="EmptyState.Size">
+        <source>`Small` is a compact empty state for list panes, side panels and cards: a 32px icon block, 16px above and below, and tighter gaps, whatever the window width. Medium (default) and Large are Arc's layout, whose vertical padding follows the window.</source>
+        <target>`Small` 是用於清單欄、側邊面板與卡片的精簡空狀態：32px 的圖示區塊，上下各 16px，間距較緊湊，與視窗寬度無關。Medium（預設）與 Large 是 Arc 的版面，其上下內距會隨視窗變化。</target>
       </trans-unit>
       <trans-unit id="EmptyState.Title">
         <source>The headline (a heading, level 3).</source>
@@ -15739,6 +15763,10 @@
       <trans-unit id="InboxTriageItem.PropertyChanged">
         <source>Raised when a property changes.</source>
         <target>屬性改變時觸發。</target>
+      </trans-unit>
+      <trans-unit id="InlineEdit.Labels">
+        <source>The text screen readers hear (save announcements, the save and cancel button names, help text); replace the object to localize it.</source>
+        <target>螢幕閱讀器聽到的文字（儲存播報、儲存與取消按鈕的名稱、說明文字）；替換整個物件即可在地化。</target>
       </trans-unit>
       <trans-unit id="InvoiceClient">
         <source>Who an invoice of `InvoiceStudio` is billed to.</source>
@@ -21317,8 +21345,8 @@
         <target>按鈕的顯著程度：樸素、淺色、實心或懸浮操作按鈕。</target>
       </trans-unit>
       <trans-unit id="MobileListGroup">
-        <source>A card of `ListItem` rows with an optional `Header` above it and `Footer` under it, the way settings screens group their rows. Put it in a scrolling `Page`.</source>
-        <target>一張由 `ListItem` 列組成的卡片，上方可有 `Header`，下方可有 `Footer`，就像設定頁替列分組的方式。把它放進可捲動的 `Page`。</target>
+        <source>A card of `ListItem` rows with an optional `Header` above it and `Footer` under it, the way settings screens group their rows. Put it in a scrolling `Page`. Each data item becomes a `ListItem` row. When the item template's root is itself a `ListItem`, that row is the container (it is not wrapped in a second row), so its `Title`, `Subtitle`, `Command` and so on can be bound in the template. A template that returns plain content is shown inside a row; style that row with a `ListItem` selector in `ListGroup.Styles`.</source>
+        <target>一張由 `ListItem` 列組成的卡片，上方可有 `Header`，下方可有 `Footer`，就像設定頁替列分組的方式。把它放進可捲動的 `Page`。每個資料項目都會成為一列 `ListItem`。如果項目範本的根本身就是 `ListItem`，這一列就直接作為容器（不會再套一層），因此可以在範本中繫結它的 `Title`、`Subtitle`、`Command` 等屬性。範本傳回一般內容時，內容會顯示在一列之中；請在 `ListGroup.Styles` 中用 `ListItem` 選取器設定這一列的樣式。</target>
       </trans-unit>
       <trans-unit id="MobileListGroup.Footer">
         <source>A note under the card, for example what the settings in it do.</source>
@@ -23968,6 +23996,10 @@
         <source>True while the header is folded into the compact bar (the body scrolled past 16px, until it is back within 4px).</source>
         <target>頁首收合為精簡列期間為 true（內文捲動超過 16px，直到回到 4px 以內為止）。</target>
       </trans-unit>
+      <trans-unit id="PageHeader.IsHeaderOnly">
+        <source>True shows only the header (breadcrumbs, title, status, description, meta and actions) with no tabs, no rule under it and no scrolling body, for a title and action bar on top of a page that lays out its own content. The header never condenses in this mode. Defaults to false.</source>
+        <target>為 true 時只顯示頁首（麵包屑、標題、狀態、說明、中繼資訊與操作），沒有標籤頁、下方的分隔線與捲動區，用作頁面頂端的標題與操作列，頁面內容自行配置。此模式下頁首不會收合。預設為 false。</target>
+      </trans-unit>
       <trans-unit id="PageHeader.Meta">
         <source>Meta row under the description (members, owner, dates): any content, drawn in the extra-small muted type.</source>
         <target>描述下方的中繼資訊列（成員、擁有者、日期）：可放任意內容，以超小號的弱化字型繪製。</target>
@@ -23979,6 +24011,10 @@
       <trans-unit id="PageHeader.PrimaryAction">
         <source>The main action: a small primary button at the end of the header row (icon only below 460px).</source>
         <target>主要操作：位於頁首列末端的小型主要按鈕（低於 460px 時僅顯示圖示）。</target>
+      </trans-unit>
+      <trans-unit id="PageHeader.Size">
+        <source>Header density. `Small` is a compact header for settings pages and side panes: a smaller title (TypeXL instead of Type3XL) and tighter space around it. Medium and Large are the full Arc header (the default).</source>
+        <target>頁首密度。`Small` 是用於設定頁與側欄的精簡頁首：標題較小（TypeXL 而非 Type3XL），周圍留白較緊湊。Medium 與 Large 是完整的 Arc 頁首（預設）。</target>
       </trans-unit>
       <trans-unit id="PageHeader.Status">
         <source>Status shown as a badge with a dot beside the title and in the compact bar; null hides it.</source>
@@ -24027,6 +24063,10 @@
       <trans-unit id="PageHeaderAction.IsLoading">
         <source>Shows the button spinner and ignores clicks while true; the menu row is disabled meanwhile.</source>
         <target>為 true 時顯示按鈕載入指示器並忽略點按；同時選單列會被停用。</target>
+      </trans-unit>
+      <trans-unit id="PageHeaderAction.IsVisible">
+        <source>False hides the action: no button, no menu row, and it takes no room when the header decides whether the secondary actions fold. Use it for actions that do not apply now (use `IsEnabled` to show them dimmed). Defaults to true.</source>
+        <target>為 false 時隱藏操作：沒有按鈕、沒有選單列，頁首判斷次要操作是否收合時也不計算它。用於目前不適用的操作（要顯示為變淡，請用 `IsEnabled`）。預設為 true。</target>
       </trans-unit>
       <trans-unit id="PageHeaderAction.Label">
         <source>Button text, and the accessible name of the button and its menu row.</source>
@@ -36723,6 +36763,10 @@
       <trans-unit id="Tooltip.ShowDelay">
         <source>Wait before the first tooltip opens after hover or focus; default 250 ms. Open tooltips skip the wait.</source>
         <target>指標懸停或取得焦點後，第一個提示開啟前的等待時間；預設 250 ms。已開啟的提示會跳過等待。</target>
+      </trans-unit>
+      <trans-unit id="Tooltip.ShowOnDisabled">
+        <source>Shows the tooltip while the target is disabled, for example to say why a button cannot be used. A disabled control gets no pointer input, so the tooltip follows the pointer over its bounds instead. Default false. Put the reason in `AutomationProperties.HelpText` as well: a keyboard cannot focus a disabled control.</source>
+        <target>在目標控制項停用時也顯示工具提示，例如說明按鈕為何不能使用。停用的控制項收不到指標輸入，因此工具提示改為追蹤指標是否位於其範圍內。預設為 false。也請把原因寫進 `AutomationProperties.HelpText`：鍵盤無法聚焦停用的控制項。</target>
       </trans-unit>
       <trans-unit id="Tooltip.Side">
         <source>Side of the trigger the bubble opens on: Top (default), Bottom, Left or Right.</source>

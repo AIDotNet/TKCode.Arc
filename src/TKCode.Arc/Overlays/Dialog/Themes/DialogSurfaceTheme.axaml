@@ -88,6 +88,7 @@
                                       VerticalScrollBarVisibility="Auto">
                             <StackPanel>
                                 <Border Name="PART_Header"
+                                        IsVisible="{TemplateBinding ShowHeader}"
                                         Padding="{arc:DialogSurfaceTokenResource HeaderPadding}"
                                         BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}"
                                         BorderBrush="{arc:ArcDesignTokenResource Border}">

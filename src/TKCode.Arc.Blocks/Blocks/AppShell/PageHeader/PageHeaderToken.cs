@@ -41,6 +41,9 @@ internal sealed class PageHeaderToken : AbstractControlDesignToken
 
     public Thickness IntroPaddingNarrow { get; set; }
 
+    /// <summary>Intro padding of the compact header (<c>Size="Small"</c>): 10px 0 14px.</summary>
+    public Thickness IntroPaddingSmall { get; set; }
+
     public double IntroGap { get; set; }
 
     /// <summary>Title row gap: 8px between lines, 14px between title and status.</summary>
@@ -62,6 +65,11 @@ internal sealed class PageHeaderToken : AbstractControlDesignToken
     public double TitleLetterSpacing { get; set; }
 
     public double TitleLetterSpacingNarrow { get; set; }
+
+    /// <summary>Title of the compact header: text-xl × 1.2, tracking −0.02em.</summary>
+    public double TitleLineHeightSmall { get; set; }
+
+    public double TitleLetterSpacingSmall { get; set; }
 
     /// <summary>text-sm × leading-body.</summary>
     public double BodyLineHeight { get; set; }
@@ -137,6 +145,7 @@ internal sealed class PageHeaderToken : AbstractControlDesignToken
         ActionContentGap = 8;
         IntroPadding = new Thickness(0, 18, 0, 20);
         IntroPaddingNarrow = new Thickness(0, 16, 0, 20);
+        IntroPaddingSmall = new Thickness(0, 10, 0, 14);
         IntroGap = 10;
         TitleRowItemGap = 14;
         TitleRowLineGap = 8;
@@ -146,6 +155,8 @@ internal sealed class PageHeaderToken : AbstractControlDesignToken
         TitleLineHeightNarrow = 28 * 1.1;
         TitleLetterSpacing = 36 * -0.03;
         TitleLetterSpacingNarrow = 28 * -0.03;
+        TitleLineHeightSmall = 22 * 1.2;
+        TitleLetterSpacingSmall = 22 * -0.02;
         BodyLineHeight = 14 * 1.4;
         TabsMargin = new Thickness(-28, 2, -28, 0);
         TabsMarginNarrow = new Thickness(-18, 2, -18, 0);

@@ -526,6 +526,124 @@ public class PageHeaderTests
     }
 
     [AvaloniaFact]
+    public void A_Hidden_Action_Has_No_Button_And_No_Menu_Row()
+    {
+        // Issue #108: an action that does not apply now can be hidden, not only dimmed.
+        var header = WithActions(Create(), out var follow, out var share, out var copy, out var create);
+        follow.IsVisible = false;
+        copy.IsVisible = false;
+        var window = Show(header);
+        try
+        {
+            var buttons = SecondaryButtons(header);
+            buttons.Single(b => b.Tag == follow).IsVisible.ShouldBeFalse();
+            buttons.Single(b => b.Tag == share).IsVisible.ShouldBeTrue();
+            // The only More action is hidden, so the overflow button hides with it.
+            More(header).IsVisible.ShouldBeFalse();
+
+            create.IsVisible = false;
+            Pump();
+            Primary(header).IsVisible.ShouldBeFalse();
+            var ran = 0;
+            create.Click += (_, _) => ran++;
+            create.Invoke();
+            ran.ShouldBe(0);
+
+            follow.IsVisible = true;
+            copy.IsVisible = true;
+            create.IsVisible = true;
+            Pump();
+            buttons.Single(b => b.Tag == follow).IsVisible.ShouldBeTrue();
+            More(header).IsVisible.ShouldBeTrue();
+            DropdownMenu.GetMenu(More(header))!.Items.OfType<MenuEntry>().Select(e => e.Header).ShouldBe(["Copy link"]);
+            Primary(header).IsVisible.ShouldBeTrue();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Hidden_Actions_Stay_Out_Of_The_Folded_Menu()
+    {
+        var header = WithActions(Create(width: 600), out var follow, out _, out _, out _);
+        follow.IsVisible = false;
+        var window = Show(header);
+        try
+        {
+            header.AreActionsFolded.ShouldBeTrue();
+            DropdownMenu.GetMenu(More(header))!.Items.OfType<MenuEntry>().Select(e => e.Header).ShouldBe(["Share update", "Copy link"]);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Header_Only_Shows_No_Tabs_Rule_Or_Body_And_Takes_The_Header_Height()
+    {
+        // Issue #108: the header as a title and action bar on top of a page.
+        var header = WithActions(Create(), out _, out _, out _, out _);
+        header.Height = double.NaN;
+        header.IsHeaderOnly = true;
+        var window = Show(header);
+        try
+        {
+            header.Classes.Contains(PageHeader.HeaderOnlyPseudoClass).ShouldBeTrue();
+            Scroller(header).IsVisible.ShouldBeFalse();
+            TestHelpers.Descendant<ScrollViewer>(header, PageHeader.TabsViewportPart).IsVisible.ShouldBeFalse();
+            TestHelpers.Descendant<Border>(header, "PART_HeaderRule").IsVisible.ShouldBeFalse();
+            var content = TestHelpers.Descendant<StackPanel>(header, "PART_HeaderContent");
+            // Exactly the header: its content, the space above it and the frame's border.
+            header.Bounds.Height.ShouldBe(content.Bounds.Height + content.Margin.Top + header.BorderThickness.Top
+                + header.BorderThickness.Bottom, 0.5);
+            header.IsCondensed.ShouldBeFalse();
+
+            header.IsHeaderOnly = false;
+            Pump();
+            Scroller(header).IsVisible.ShouldBeTrue();
+            TestHelpers.Descendant<ScrollViewer>(header, PageHeader.TabsViewportPart).IsVisible.ShouldBeTrue();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Small_Size_Is_A_Compact_Header_At_Every_Width()
+    {
+        var header = WithActions(Create(), out _, out _, out _, out _);
+        header.IsHeaderOnly = true;
+        header.Height = double.NaN;
+        var window = Show(header);
+        try
+        {
+            var title = TestHelpers.Descendant<TextBlock>(header, PageHeader.TitlePart);
+            var full = header.Bounds.Height;
+            title.FontSize.ShouldBe(36);
+
+            header.Size = ControlSize.Small;
+            Pump();
+            header.Classes.Contains(PageHeader.SmallPseudoClass).ShouldBeTrue();
+            title.FontSize.ShouldBe(22);
+            TestHelpers.Descendant<StackPanel>(header, "PART_IntroInner").Margin.ShouldBe(new Thickness(0, 10, 0, 14));
+            header.Bounds.Height.ShouldBeLessThan(full - 20);
+
+            header.Width = 540;
+            Pump();
+            header.Classes.Contains(PageHeader.NarrowPseudoClass).ShouldBeTrue();
+            title.FontSize.ShouldBe(22);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void Action_Collections_Can_Change()
     {
         var header = Create();

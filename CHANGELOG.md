@@ -10,12 +10,57 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 
 ## Unreleased
 
+### Added
+
+- **`PageHeader` for settings pages and side panes** ([#108](https://github.com/AIDotNet/TKCode.Arc/issues/108),
+  `TKCode.Arc.Blocks`): `IsHeaderOnly="True"` shows only the header, with no tabs, rule or scrolling body, as a title
+  and action bar on top of a page; `Size="Small"` is a compact header (a `TypeXL` title and tighter space around it);
+  `PageHeaderAction.IsVisible="False"` hides an action's button and menu row instead of dimming them.
+- **`Dialog.ShowHeader`** ([#108](https://github.com/AIDotNet/TKCode.Arc/issues/108)): `False` hides the title row
+  (title, description, close button and rule) for a dialog that brings its own heading. `Title` stays the accessible
+  name.
+- **`CommandPalette` with results from the app** ([#108](https://github.com/AIDotNet/TKCode.Arc/issues/108),
+  `TKCode.Arc.Blocks`): `IsFilteringEnabled="False"` on the palette or the dialog lists `ItemsSource` as given, for
+  apps that filter and rank results themselves. `CommandPaletteDialog` now has `Query` (two-way) and `ActiveItem`,
+  readable before the dialog first opens. A query set from code leaves the caret at its end.
+- **More avatar presence** ([#110](https://github.com/AIDotNet/TKCode.Arc/issues/110)): `AvatarStatus` gains `Busy`
+  (danger color with a bar across the dot), `Away` (warning color) and `Connecting` (a hollow ring that breathes in
+  opacity and rests with motion off). Each status is part of the avatar's accessible name.
+- **`EmptyState.Size`** ([#110](https://github.com/AIDotNet/TKCode.Arc/issues/110)): `Small` is a compact empty state
+  for list panes and cards (a 32 px icon block, 16 px above and below, tighter gaps) at every window width.
+- **`InlineEdit.Labels`** ([#110](https://github.com/AIDotNet/TKCode.Arc/issues/110)): an `InlineEditLabels` object
+  localizes everything a screen reader hears: the "Saving …" and "… saved" announcements, the save and cancel button
+  names and the help text. The English defaults are unchanged.
+- **Diff coloring in code** ([#110](https://github.com/AIDotNet/TKCode.Arc/issues/110)): `CodeBlock`, Markdown fences
+  and the rich text editor's code blocks with the `diff` or `patch` language color added lines in the success color,
+  removed lines in the danger color and the file and hunk headers in the secondary text color. Before, those lines
+  borrowed the number and string colors. `text` and `plaintext` are documented as plain text.
+- **`Tooltip.ShowOnDisabled`** ([#110](https://github.com/AIDotNet/TKCode.Arc/issues/110)): shows a tooltip over a
+  disabled control, for example to say why a button cannot be used. A disabled control gets no pointer input, so the
+  tooltip follows the pointer over its bounds. The Tooltip docs said this already worked; it did not.
+
 ### Fixed
 
 - **`ArcWindow` top edge on Windows** ([#102](https://github.com/AIDotNet/TKCode.Arc/issues/102)): DWM draws no
   frame line on the top edge of a window whose client area extends into the title bar, so the window now draws it in the
   `Border` color while it is in its normal state on Windows (`:top-edge` pseudo-class). All four edges match; a style on
   `ArcWindow:top-edge /template/ Border#PART_Root` can remove it.
+- **Table after a source change without layout** ([#103](https://github.com/AIDotNet/TKCode.Arc/issues/103)): a
+  `Table` whose `ItemsSource` changed while it was hidden or off the visual tree no longer throws
+  `ArgumentOutOfRangeException` when the theme changes (for example when the page is shown again). Rows wait for the
+  next layout before they read the new source.
+- **`ListGroup` with a `ListItem` template** ([#104](https://github.com/AIDotNet/TKCode.Arc/issues/104),
+  `TKCode.Arc.Mobile`): when the `ItemTemplate`'s root is an `arcm:ListItem`, that row is the container instead of
+  being wrapped in a second row, so `Title`, `Subtitle`, `Command` and the other row properties can be bound in the
+  template.
+- **`ToggleGroup` with a custom `SelectedValueBinding`** ([#105](https://github.com/AIDotNet/TKCode.Arc/issues/105)):
+  `SelectedValues`, `SelectedValue` and the `ValueChanged` event report the value the binding selects, not the item,
+  and a two-way bound `SelectedValue` is no longer overwritten when the group is shown.
+- **`SettingsGroup` rows from `ItemsSource`** ([#106](https://github.com/AIDotNet/TKCode.Arc/issues/106),
+  `TKCode.Arc.Blocks`): the first generated row no longer draws a hairline above it, and a `ColumnSpan` set on a
+  templated row applies on the first layout.
+- **Modal content in the logical tree** ([#108](https://github.com/AIDotNet/TKCode.Arc/issues/108)): the content of a
+  `Dialog`, `Drawer` or `BottomSheet` appears once in `GetLogicalDescendants()`, under the overlay, instead of twice.
 
 ## 1.1.0-preview.3 - 2026-11-10
 

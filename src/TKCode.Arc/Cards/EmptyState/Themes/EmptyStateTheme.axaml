@@ -13,12 +13,9 @@
                     <StackPanel HorizontalAlignment="Stretch">
                         <Border Name="PART_IconBlock"
                                 HorizontalAlignment="Center"
-                                Width="{arc:EmptyStateTokenResource IconBlockSize}"
-                                Height="{arc:EmptyStateTokenResource IconBlockSize}"
                                 BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                 BorderBrush="{arc:ArcDesignTokenResource Border}"
                                 Background="{arc:ArcDesignTokenResource SurfaceMuted}"
-                                CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
                                 TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}">
                             <arc:ArcContentSwap Name="PART_Icon"
                                                 Mode="Pop"
@@ -30,13 +27,11 @@
                         <arc:SpringSizeDecorator Name="PART_CopyFrame" Axis="Height" Spring="Smooth" CrossClipOverflow="12">
                             <StackPanel>
                                 <arc:MessagesTextSwap Name="PART_Title"
-                                                      Margin="{arc:EmptyStateTokenResource TitleMargin}"
                                                       Text="{TemplateBinding Title}"
                                                       TextAlignment="Center"
                                                       TextWrapping="Wrap"
                                                       IsBalanced="True"
                                                       LineHeight="{arc:EmptyStateTokenResource TitleLineHeight}"
-                                                      TextElement.FontSize="{arc:ArcDesignTokenResource TypeBase}"
                                                       TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
                                                       TextElement.Foreground="{arc:ArcDesignTokenResource Foreground}" />
                                 <arc:MessagesTextSwap Name="PART_Description"
@@ -54,7 +49,6 @@
                         <ContentPresenter Name="PART_Action"
                                           IsVisible="False"
                                           HorizontalAlignment="Center"
-                                          Margin="{arc:EmptyStateTokenResource ActionMargin}"
                                           Content="{TemplateBinding Action}" />
                     </StackPanel>
                 </Border>
@@ -64,8 +58,36 @@
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
         <Setter Property="InlinePadding" Value="{arc:EmptyStateTokenResource InlinePadding}" />
+        <Setter Property="CompactBlockPadding" Value="{arc:EmptyStateTokenResource BlockPaddingSmall}" />
+        <!-- Values the compact state overrides live in styles (a template value would outrank them). -->
+        <Style Selector="^ /template/ Border#PART_IconBlock">
+            <Setter Property="Width" Value="{arc:EmptyStateTokenResource IconBlockSize}" />
+            <Setter Property="Height" Value="{arc:EmptyStateTokenResource IconBlockSize}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        </Style>
+        <Style Selector="^ /template/ arc|MessagesTextSwap#PART_Title">
+            <Setter Property="Margin" Value="{arc:EmptyStateTokenResource TitleMargin}" />
+            <Setter Property="TextElement.FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        </Style>
+        <Style Selector="^ /template/ ContentPresenter#PART_Action">
+            <Setter Property="Margin" Value="{arc:EmptyStateTokenResource ActionMargin}" />
+        </Style>
         <Style Selector="^:has-action /template/ ContentPresenter#PART_Action">
             <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:small">
+            <Style Selector="^ /template/ Border#PART_IconBlock">
+                <Setter Property="Width" Value="{arc:EmptyStateTokenResource IconBlockSizeSmall}" />
+                <Setter Property="Height" Value="{arc:EmptyStateTokenResource IconBlockSizeSmall}" />
+                <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+            </Style>
+            <Style Selector="^ /template/ arc|MessagesTextSwap#PART_Title">
+                <Setter Property="Margin" Value="{arc:EmptyStateTokenResource TitleMarginSmall}" />
+                <Setter Property="TextElement.FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            </Style>
+            <Style Selector="^ /template/ ContentPresenter#PART_Action">
+                <Setter Property="Margin" Value="{arc:EmptyStateTokenResource ActionMarginSmall}" />
+            </Style>
         </Style>
     </ControlTheme>
 </ResourceDictionary>

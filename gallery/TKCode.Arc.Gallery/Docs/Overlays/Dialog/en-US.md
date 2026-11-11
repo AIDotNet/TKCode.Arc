@@ -70,7 +70,10 @@ that value.
 3. **Close button** (`ShowCloseButton`, `CloseButtonName`): a 32 px button with a 1 px border and the control radius,
    aligned to the first line of the title. Its fill is the muted surface color at 50% opacity. It is named
    "Close dialog" by default.
-4. **Header rule**: a 1 px line in the border color under the header.
+4. **Header rule**: a 1 px line in the border color under the header. `ShowHeader="False"` hides the whole header
+   row (title, description, close button and rule) for a panel that brings its own heading, such as a branded sign-in.
+   Keep `Title` set: it is still the accessible name of the panel. Without the close button the dialog closes with
+   Escape, a click outside or its own buttons.
 5. **Body** (`Content`): 24 px padding on every side. The whole panel scrolls when it is taller than the window.
 6. **Actions** (`Actions`): right aligned, 24 px below the body. It is hidden when `Actions` is null.
 7. **Panel**: the raised surface color, a 1 px border, the surface radius and the floating shadow. Its width is the

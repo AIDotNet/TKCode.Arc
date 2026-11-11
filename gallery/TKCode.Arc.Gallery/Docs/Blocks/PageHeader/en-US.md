@@ -109,7 +109,9 @@ with `IsFromMenu` set when the action came from the menu.
 
 Use `IsDestructive="True"` on a menu action that removes data, such as a delete or a cancellation. It draws the menu
 row in the danger color. `IsEnabled="False"` disables the button and dims its menu row. `IsLoading="True"` shows a
-spinner and ignores clicks. `Invoke()` runs the action from code and respects those states.
+spinner and ignores clicks. `IsVisible="False"` hides the action: it gets no button and no menu row, and it takes no
+room when the header decides whether to fold. Use it for actions that do not apply right now, and `IsEnabled` for
+actions that apply but cannot run yet. `Invoke()` runs the action from code and respects those states.
 
 When the breadcrumbs would get less than 240 pixels, the secondary actions fold into the top of the "More actions"
 menu. They come back once there are 272 pixels again, so the header does not flicker at the threshold. Only the width
@@ -154,6 +156,21 @@ The layout follows the width of the control, not the window. Below 560 pixels th
 and the compact badge hide, the title steps down a size, and the far edge of the tab row fades. Below 460 pixels the
 primary action shows only its icon. Until the header has been measured once, a header narrower than 720 pixels starts
 with its secondary actions folded, so nothing flashes on load.
+
+### Header only and compact size
+
+Set `IsHeaderOnly="True"` to use the header as a title and action bar on top of a page that lays out its own content.
+The tabs, the rule under the header and the scrolling body go away, the control is only as tall as the header, and it
+never condenses.
+
+`Size="Small"` is a compact header for settings pages and side panes: the title uses the `TypeXL` size instead of
+`Type3XL`, with less space above and below it. It applies at every width. `Medium` (the default) and `Large` are the
+full header.
+
+```xml
+<arc:PageHeader IsHeaderOnly="True" Size="Small" Title="Notifications"
+                Description="Choose what reaches you and where." />
+```
 
 ### Binding to a view model
 

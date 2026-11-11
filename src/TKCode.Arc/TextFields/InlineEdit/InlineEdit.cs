@@ -147,6 +147,13 @@ public class InlineEdit : TemplatedControl
     public static readonly StyledProperty<string> FailedMessageFormatProperty =
         AvaloniaProperty.Register<InlineEdit, string>(nameof(FailedMessageFormat), "Couldn’t save “{0}”, so the last saved {1} is back.");
 
+    /// <summary>
+    /// The text screen readers hear (save announcements, the save and cancel button names, help text); replace the object
+    /// to localize it.
+    /// </summary>
+    public static readonly StyledProperty<InlineEditLabels> LabelsProperty =
+        AvaloniaProperty.Register<InlineEdit, InlineEditLabels>(nameof(Labels), new InlineEditLabels());
+
     /// <summary>The retry link after a failed save.</summary>
     public static readonly StyledProperty<string> RetryTextProperty =
         AvaloniaProperty.Register<InlineEdit, string>(nameof(RetryText), "Try again");
@@ -189,6 +196,9 @@ public class InlineEdit : TemplatedControl
     public Func<string, Task>? SaveHandler { get => GetValue(SaveHandlerProperty); set => SetValue(SaveHandlerProperty, value); }
     public string FailedMessageFormat { get => GetValue(FailedMessageFormatProperty); set => SetValue(FailedMessageFormatProperty, value); }
     public string RetryText { get => GetValue(RetryTextProperty); set => SetValue(RetryTextProperty, value); }
+
+    /// <inheritdoc cref="LabelsProperty"/>
+    public InlineEditLabels Labels { get => GetValue(LabelsProperty); set => SetValue(LabelsProperty, value); }
 
     private bool _isEditing;
 
@@ -354,7 +364,8 @@ public class InlineEdit : TemplatedControl
                 ShowText(roll: 1);
             }
         }
-        else if (change.Property == LabelProperty || change.Property == PlaceholderTextProperty || change.Property == HeadingLevelProperty)
+        else if (change.Property == LabelProperty || change.Property == PlaceholderTextProperty || change.Property == HeadingLevelProperty ||
+                 change.Property == LabelsProperty)
         {
             UpdateAutomation();
             if (change.Property == PlaceholderTextProperty)
@@ -383,15 +394,13 @@ public class InlineEdit : TemplatedControl
         if (_display is not null)
         {
             AutomationProperties.SetName(_display, $"{Label}: {(_shown.Length > 0 ? _shown : PlaceholderText)}");
-            AutomationProperties.SetHelpText(_display, "Activate to edit.");
+            AutomationProperties.SetHelpText(_display, Labels.EditHelp);
             AutomationProperties.SetHeadingLevel(_display, HeadingLevel);
         }
         if (_editor is not null)
         {
             AutomationProperties.SetName(_editor, Label);
-            AutomationProperties.SetHelpText(_editor, ErrorMessage ?? (IsMultiline
-                ? "Enter saves, Shift+Enter adds a line break, Escape cancels."
-                : "Enter saves, Escape cancels."));
+            AutomationProperties.SetHelpText(_editor, ErrorMessage ?? (IsMultiline ? Labels.MultilineKeysHelp : Labels.KeysHelp));
         }
     }
 
@@ -619,7 +628,7 @@ public class InlineEdit : TemplatedControl
         ShowText(roll: cleaned ? 1 : null);
         Phase = InlineEditPhase.Saving;
         PseudoClasses.Set(SavingPseudoClass, true);
-        Announce($"Saving {Label.ToLowerInvariant()}");
+        Announce(Labels.Saving(Label));
         UpdateSlot();
         RaiseEvent(new InlineEditCommittedEventArgs(TextCommittedEvent, previous, next));
         _ = SaveAsync(run, previous, next);
@@ -657,7 +666,7 @@ public class InlineEdit : TemplatedControl
                 _syncingValue = false;
             }
             Phase = InlineEditPhase.Saved;
-            Announce($"{Label} saved");
+            Announce(Labels.Saved(Label));
             UpdateSlot();
             RaiseEvent(new InlineEditCommittedEventArgs(SavedEvent, previous, next));
             RestartTimer(ref _phaseTimer, TimeSpan.FromMilliseconds(1800), () =>
@@ -816,16 +825,15 @@ public class InlineEdit : TemplatedControl
 
     private Control CreateActions()
     {
-        var noun = Label.ToLowerInvariant();
         var save = new InlineEditActionButton { IsPrimary = true, Content = new ArcGlyph { Data = ArcIcons.Check, Size = 15, StrokeThickness = 2 } };
-        AutomationProperties.SetName(save, $"Save {noun}");
+        AutomationProperties.SetName(save, Labels.SaveButton(Label));
         save.Click += (_, e) =>
         {
             e.Handled = true;
             Submit(InlineEditSource.Button);
         };
         var cancel = new InlineEditActionButton { Content = new ArcGlyph { Data = ArcIcons.X, Size = 15, StrokeThickness = 2 } };
-        AutomationProperties.SetName(cancel, "Cancel editing");
+        AutomationProperties.SetName(cancel, Labels.CancelButton);
         cancel.Click += (_, e) =>
         {
             e.Handled = true;

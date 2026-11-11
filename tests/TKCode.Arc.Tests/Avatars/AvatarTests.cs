@@ -50,4 +50,76 @@ public class AvatarTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void Busy_Away_And_Connecting_Have_Their_Own_Look_And_Name()
+    {
+        // Issue #110: presence beyond online and offline.
+        var avatar = new Avatar { DisplayName = "Leah Fox", Status = AvatarStatus.Busy };
+        var window = TestHelpers.Show(avatar, Motion.ArcMotionLevel.Full);
+        try
+        {
+            var dot = TestHelpers.Descendant<Avalonia.Controls.Border>(avatar, "PART_Status");
+            var bar = TestHelpers.Descendant<Avalonia.Controls.Border>(dot, "PART_StatusBar");
+            TestHelpers.ColorOf(dot.Background).ShouldBe(ArcTokens.GetColor(avatar, DesignTokens.ArcDesignTokenKind.Danger));
+            bar.IsVisible.ShouldBeTrue();
+            avatar.Classes.Contains(Avatar.BusyPseudoClass).ShouldBeTrue();
+            Avalonia.Automation.AutomationProperties.GetName(avatar).ShouldBe("Leah Fox, busy");
+
+            // Full motion: the fill crossfades, so wait for it to settle.
+            bool Settles(Func<Avalonia.Media.IBrush?> brush, DesignTokens.ArcDesignTokenKind kind) => TestHelpers.PumpUntil(() =>
+            {
+                Avalonia.Headless.AvaloniaHeadlessPlatform.ForceRenderTimerTick();
+                return TestHelpers.ColorOf(brush()) == ArcTokens.GetColor(avatar, kind);
+            }, 5000);
+
+            avatar.Status = AvatarStatus.Away;
+            Dispatcher.UIThread.RunJobs();
+            Settles(() => dot.Background, DesignTokens.ArcDesignTokenKind.Warning).ShouldBeTrue();
+            bar.IsVisible.ShouldBeFalse();
+            Avalonia.Automation.AutomationProperties.GetName(avatar).ShouldBe("Leah Fox, away");
+
+            avatar.Status = AvatarStatus.Connecting;
+            Dispatcher.UIThread.RunJobs();
+            Settles(() => dot.Background, DesignTokens.ArcDesignTokenKind.Surface).ShouldBeTrue();
+            TestHelpers.ColorOf(dot.BorderBrush).ShouldBe(ArcTokens.GetColor(avatar, DesignTokens.ArcDesignTokenKind.TextMuted));
+            Avalonia.Automation.AutomationProperties.GetName(avatar).ShouldBe("Leah Fox, connecting");
+            // The ring breathes in opacity while connecting ...
+            TestHelpers.PumpUntil(() =>
+            {
+                Avalonia.Headless.AvaloniaHeadlessPlatform.ForceRenderTimerTick();
+                return dot.Opacity < 0.95;
+            }, 5000).ShouldBeTrue();
+
+            // ... and rests once it is connected.
+            avatar.Status = AvatarStatus.Online;
+            Dispatcher.UIThread.RunJobs();
+            dot.Opacity.ShouldBe(1);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Connecting_Rests_At_Full_Opacity_With_Motion_Off()
+    {
+        var avatar = new Avatar { DisplayName = "Leah Fox", Status = AvatarStatus.Connecting };
+        var window = TestHelpers.Show(avatar);
+        try
+        {
+            var dot = TestHelpers.Descendant<Avalonia.Controls.Border>(avatar, "PART_Status");
+            for (var i = 0; i < 20; i++)
+            {
+                Avalonia.Headless.AvaloniaHeadlessPlatform.ForceRenderTimerTick();
+                Dispatcher.UIThread.RunJobs();
+            }
+            dot.Opacity.ShouldBe(1);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

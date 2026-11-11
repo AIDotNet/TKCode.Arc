@@ -54,6 +54,15 @@ internal sealed class SettingsGroupPanel : Panel
 
     protected override Size MeasureOverride(Size availableSize)
     {
+        // A generated row sits in a ContentPresenter that builds it only in its own measure. Build it now so the span and
+        // first-line checks below see the row; otherwise the first ItemsSource row keeps its hairline (issue #106).
+        foreach (var child in Children)
+        {
+            if (child is ContentPresenter { Child: null, Content: not null } presenter)
+            {
+                presenter.UpdateChild();
+            }
+        }
         var width = availableSize.Width;
         var columns = ResolveColumns(width);
         _owner?.SetActualColumns(columns);

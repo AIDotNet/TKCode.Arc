@@ -1036,6 +1036,38 @@ public class CommandPaletteTests
 
         public void Execute(object? parameter) => calls.Add(parameter);
     }
+
+    [AvaloniaFact]
+    public void Without_Filtering_The_App_Supplies_The_Results_In_Its_Order()
+    {
+        // Issue #108: results ranked by the app are listed as given, not filtered again.
+        var palette = new CommandPalette { ItemsSource = Sample(), IsFilteringEnabled = false };
+        var window = Show(palette);
+        try
+        {
+            palette.Query = "zzz";
+            Dispatcher.UIThread.RunJobs();
+            palette.VisibleItems.Count.ShouldBe(6);
+
+            var ranked = new List<CommandPaletteItem>
+            {
+                new() { Id = "theme", Label = "Switch theme" },
+                new() { Id = "new", Label = "Create project" },
+                new() { Id = "dashboard", Label = "Go to dashboard" }
+            };
+            palette.ItemsSource = ranked;
+            Dispatcher.UIThread.RunJobs();
+            Ids(palette.VisibleItems).ShouldBe(["theme", "new", "dashboard"]);
+
+            palette.IsFilteringEnabled = true;
+            Dispatcher.UIThread.RunJobs();
+            palette.VisibleItems.ShouldBeEmpty();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }
 
 public class CommandPaletteDialogTests
@@ -1073,6 +1105,39 @@ public class CommandPaletteDialogTests
     private static IInputElement? Focused(Window window) => TopLevel.GetTopLevel(window)!.FocusManager!.GetFocusedElement();
 
     private static bool IsOnLayer(CommandPaletteDialog dialog) => dialog.Presence!.Host.GetVisualParent() is not null;
+
+    [AvaloniaFact]
+    public void Query_And_ActiveItem_Are_On_The_Dialog_Before_And_After_It_Opens()
+    {
+        // Issue #108: the dialog exposes the palette's query and highlight; the palette exists only once opened.
+        var (window, dialog, _, _) = Setup(d => d.IsFilteringEnabled = false);
+        try
+        {
+            dialog.Palette.ShouldBeNull();
+            dialog.Query.ShouldBe(string.Empty);
+            dialog.ActiveItem.ShouldBeNull();
+            dialog.Opened += (_, _) => dialog.Query = "pro";
+
+            dialog.IsOpen = true;
+            Dispatcher.UIThread.RunJobs();
+            dialog.Palette!.Query.ShouldBe("pro");
+            dialog.Palette.IsFilteringEnabled.ShouldBeFalse();
+            dialog.Palette.VisibleItems.Count.ShouldBe(6);
+
+            Type(window, "j");
+            dialog.Query.ShouldBe("proj");
+            Press(window, PhysicalKey.ArrowDown);
+            dialog.ActiveItem.ShouldNotBeNull();
+            dialog.ActiveItem.ShouldBeSameAs(dialog.Palette.ActiveItem);
+
+            dialog.Query = "x";
+            dialog.Palette.Query.ShouldBe("x");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 
     [AvaloniaFact]
     public void A_Closed_Dialog_Takes_No_Space_And_Builds_Nothing_Until_It_Opens()

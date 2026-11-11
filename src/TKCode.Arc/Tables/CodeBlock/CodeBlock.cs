@@ -46,8 +46,9 @@ public class CodeBlock : TemplatedControl
 
     /// <summary>
     /// Header label and highlighting language (Arc default "tsx"): a fence-style name or alias such as <c>cs</c>,
-    /// <c>ts</c>, <c>json</c>, <c>xml</c>/<c>axaml</c>, <c>py</c>, <c>sh</c>. Languages without a TextMate grammar
-    /// show plain text.
+    /// <c>ts</c>, <c>json</c>, <c>xml</c>/<c>axaml</c>, <c>py</c>, <c>sh</c>. <c>diff</c> (or <c>patch</c>) colors added
+    /// lines in the success color and removed lines in the danger color. Languages without a TextMate grammar, such as
+    /// <c>text</c> or <c>plaintext</c>, show plain text.
     /// </summary>
     public static readonly StyledProperty<string?> LanguageProperty =
         AvaloniaProperty.Register<CodeBlock, string?>(nameof(Language), "tsx");
@@ -138,11 +139,16 @@ public class CodeBlock : TemplatedControl
         AvaloniaProperty.Register<CodeBlock, IBrush?>(nameof(TagBrush));
     internal static readonly StyledProperty<IBrush?> PunctuationBrushProperty =
         AvaloniaProperty.Register<CodeBlock, IBrush?>(nameof(PunctuationBrush));
+    internal static readonly StyledProperty<IBrush?> InsertedBrushProperty =
+        AvaloniaProperty.Register<CodeBlock, IBrush?>(nameof(InsertedBrush));
+    internal static readonly StyledProperty<IBrush?> DeletedBrushProperty =
+        AvaloniaProperty.Register<CodeBlock, IBrush?>(nameof(DeletedBrush));
 
     private static readonly AvaloniaProperty[] s_brushProperties =
     [
         CommentBrushProperty, StringBrushProperty, NumberBrushProperty, KeywordBrushProperty, TypeBrushProperty,
-        FunctionBrushProperty, PropertyBrushProperty, TagBrushProperty, PunctuationBrushProperty
+        FunctionBrushProperty, PropertyBrushProperty, TagBrushProperty, PunctuationBrushProperty, InsertedBrushProperty,
+        DeletedBrushProperty
     ];
 
     public string? Code { get => GetValue(CodeProperty); set => SetValue(CodeProperty, value); }
@@ -204,6 +210,8 @@ public class CodeBlock : TemplatedControl
     internal IBrush? PropertyBrush { get => GetValue(PropertyBrushProperty); set => SetValue(PropertyBrushProperty, value); }
     internal IBrush? TagBrush { get => GetValue(TagBrushProperty); set => SetValue(TagBrushProperty, value); }
     internal IBrush? PunctuationBrush { get => GetValue(PunctuationBrushProperty); set => SetValue(PunctuationBrushProperty, value); }
+    internal IBrush? InsertedBrush { get => GetValue(InsertedBrushProperty); set => SetValue(InsertedBrushProperty, value); }
+    internal IBrush? DeletedBrush { get => GetValue(DeletedBrushProperty); set => SetValue(DeletedBrushProperty, value); }
 
     /// <summary>The source as displayed and tokenized (line breaks normalized, tabs as two spaces).</summary>
     internal string DisplayCode { get; private set; } = string.Empty;
@@ -408,6 +416,8 @@ public class CodeBlock : TemplatedControl
         _palette[CodeBlockSyntaxKind.Property] = GetValue(PropertyBrushProperty);
         _palette[CodeBlockSyntaxKind.Tag] = GetValue(TagBrushProperty);
         _palette[CodeBlockSyntaxKind.Punctuation] = GetValue(PunctuationBrushProperty);
+        _palette[CodeBlockSyntaxKind.Inserted] = GetValue(InsertedBrushProperty);
+        _palette[CodeBlockSyntaxKind.Deleted] = GetValue(DeletedBrushProperty);
         _text?.RefreshPalette();
     }
 

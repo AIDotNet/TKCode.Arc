@@ -1,4 +1,5 @@
 using TKCode.Arc.DesignTokens;
+using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Automation;
@@ -11,17 +12,75 @@ namespace TKCode.Arc;
 
 /// <summary>
 /// The presence dot of an <see cref="Avatar"/>, built by the avatar when it first has a status. Its look (size, ring,
-/// halo, the muted or success fill and the fill's transition) is its own ControlTheme in AvatarTheme.axaml, so a code-built
-/// part is styled like the template part it replaces; the avatar mirrors its status into <c>:online</c>.
+/// halo, the fill per status and the fill's transition) is its own ControlTheme in AvatarTheme.axaml, so a code-built
+/// part is styled like the template part it replaces; the avatar mirrors its status into <c>:online</c>, <c>:busy</c>,
+/// <c>:away</c> or <c>:connecting</c>. Every status but Online and Offline also differs in shape, not only in color:
+/// Busy carries a bar, Connecting is a hollow ring that breathes.
 /// </summary>
-[PseudoClasses(OnlinePseudoClass)]
+[PseudoClasses(OnlinePseudoClass, BusyPseudoClass, AwayPseudoClass, ConnectingPseudoClass)]
 internal sealed class AvatarStatusDot : Border
 {
     public const string OnlinePseudoClass = ":online";
+    public const string BusyPseudoClass = ":busy";
+    public const string AwayPseudoClass = ":away";
+    public const string ConnectingPseudoClass = ":connecting";
+
+    private readonly AvatarStatusBar _bar = new() { Name = "PART_StatusBar", IsVisible = false };
+    private LiveLoop? _breath;
+    private double _phase;
+
+    public AvatarStatusDot()
+    {
+        // Busy's bar (a ControlTheme cannot select a child, so the dot shows it).
+        Child = _bar;
+    }
 
     protected override Type StyleKeyOverride => typeof(AvatarStatusDot);
 
-    internal void SetOnline(bool online) => PseudoClasses.Set(OnlinePseudoClass, online);
+    internal AvatarStatus Status { get; private set; }
+
+    internal void SetStatus(AvatarStatus status)
+    {
+        Status = status;
+        PseudoClasses.Set(OnlinePseudoClass, status == AvatarStatus.Online);
+        PseudoClasses.Set(BusyPseudoClass, status == AvatarStatus.Busy);
+        PseudoClasses.Set(AwayPseudoClass, status == AvatarStatus.Away);
+        PseudoClasses.Set(ConnectingPseudoClass, status == AvatarStatus.Connecting);
+        _bar.IsVisible = status == AvatarStatus.Busy;
+        UpdateBreath();
+    }
+
+    /// <summary>
+    /// Connecting breathes in opacity (<see cref="ArcBusyPulse"/>). ControlTheme cannot express a repeating animation that
+    /// pauses off screen and parks with motion off, so a <see cref="LiveLoop"/> drives it; an opacity breath is kept under
+    /// reduced motion, and with motion off the dot rests at full opacity.
+    /// </summary>
+    private void UpdateBreath()
+    {
+        if (Status != AvatarStatus.Connecting)
+        {
+            _breath?.Stop();
+            return;
+        }
+        if (_breath is null)
+        {
+            _breath = new LiveLoop(this, seconds =>
+            {
+                _phase = ArcBusyPulse.Advance(_phase, seconds);
+                Opacity = ArcBusyPulse.Opacity(_phase);
+                return true;
+            }) { MinimumLevel = ArcMotionLevel.Reduced };
+            _breath.RunningChanged += running =>
+            {
+                if (!running)
+                {
+                    _phase = 0;
+                    Opacity = 1;
+                }
+            };
+        }
+        _breath.Start();
+    }
 }
 
 public enum AvatarSize
@@ -32,11 +91,32 @@ public enum AvatarSize
     XLarge
 }
 
+/// <summary>The bar across a Busy <see cref="AvatarStatusDot"/>; its look is its own ControlTheme in AvatarTheme.axaml.</summary>
+internal sealed class AvatarStatusBar : Border
+{
+    protected override Type StyleKeyOverride => typeof(AvatarStatusBar);
+}
+
+/// <summary>The presence an <see cref="Avatar"/> shows in its status dot.</summary>
 public enum AvatarStatus
 {
+    /// <summary>No dot.</summary>
     None,
+
+    /// <summary>Available: a success-colored dot.</summary>
     Online,
-    Offline
+
+    /// <summary>Not available: a muted dot.</summary>
+    Offline,
+
+    /// <summary>Do not disturb: a danger-colored dot with a bar across it.</summary>
+    Busy,
+
+    /// <summary>Idle or stepped away: a warning-colored dot.</summary>
+    Away,
+
+    /// <summary>Reconnecting: a hollow ring that breathes (it rests when motion is off).</summary>
+    Connecting
 }
 
 /// <summary>
@@ -45,7 +125,7 @@ public enum AvatarStatus
 /// </summary>
 [TemplatePart(ImagePart, typeof(ArcImage))]
 [PseudoClasses(ImageLoadingPseudoClass, ShowImagePseudoClass, FallbackPseudoClass, SmallPseudoClass, LargePseudoClass, XLargePseudoClass,
-    OnlinePseudoClass, OfflinePseudoClass)]
+    OnlinePseudoClass, OfflinePseudoClass, BusyPseudoClass, AwayPseudoClass, ConnectingPseudoClass)]
 public class Avatar : TemplatedControl
 {
     public const string ImagePart = "PART_Image";
@@ -62,11 +142,20 @@ public class Avatar : TemplatedControl
     /// <inheritdoc cref="SmallPseudoClass"/>
     public const string XLargePseudoClass = ":xlarge";
 
-    /// <summary><see cref="Status"/> Online or Offline as a pseudo-class (None has none).</summary>
+    /// <summary><see cref="Status"/> as a pseudo-class (None has none).</summary>
     public const string OnlinePseudoClass = ":online";
 
     /// <inheritdoc cref="OnlinePseudoClass"/>
     public const string OfflinePseudoClass = ":offline";
+
+    /// <inheritdoc cref="OnlinePseudoClass"/>
+    public const string BusyPseudoClass = ":busy";
+
+    /// <inheritdoc cref="OnlinePseudoClass"/>
+    public const string AwayPseudoClass = ":away";
+
+    /// <inheritdoc cref="OnlinePseudoClass"/>
+    public const string ConnectingPseudoClass = ":connecting";
 
     /// <summary>The person's name; initials are the first letters of its first two words.</summary>
     public static readonly StyledProperty<string?> DisplayNameProperty =
@@ -80,7 +169,7 @@ public class Avatar : TemplatedControl
     public static readonly StyledProperty<AvatarSize> SizeProperty =
         AvaloniaProperty.Register<Avatar, AvatarSize>(nameof(Size), AvatarSize.Medium);
 
-    /// <summary>Presence dot: None (default, no dot), Online or Offline.</summary>
+    /// <summary>Presence dot: None (default, no dot), Online, Offline, Busy, Away or Connecting. The status is part of the accessible name.</summary>
     public static readonly StyledProperty<AvatarStatus> StatusProperty =
         AvaloniaProperty.Register<Avatar, AvatarStatus>(nameof(Status));
 
@@ -138,6 +227,9 @@ public class Avatar : TemplatedControl
         var status = Status;
         PseudoClasses.Set(OnlinePseudoClass, status == AvatarStatus.Online);
         PseudoClasses.Set(OfflinePseudoClass, status == AvatarStatus.Offline);
+        PseudoClasses.Set(BusyPseudoClass, status == AvatarStatus.Busy);
+        PseudoClasses.Set(AwayPseudoClass, status == AvatarStatus.Away);
+        PseudoClasses.Set(ConnectingPseudoClass, status == AvatarStatus.Connecting);
     }
 
     /// <summary>First letters of the first two words, upper-cased ("Ada Lovelace" → "AL").</summary>
@@ -202,7 +294,7 @@ public class Avatar : TemplatedControl
                 return;
             }
             var dot = new AvatarStatusDot { Name = "PART_Status" };
-            dot.SetOnline(Status == AvatarStatus.Online);
+            dot.SetStatus(Status);
             var host = new PresenceHost
             {
                 Name = "PART_StatusHost",
@@ -228,7 +320,11 @@ public class Avatar : TemplatedControl
             _root.Children.Add(host);
             return;
         }
-        _statusDot?.SetOnline(Status == AvatarStatus.Online);
+        if (present)
+        {
+            // A dot that hides keeps its last look while it pops out.
+            _statusDot?.SetStatus(Status);
+        }
         _statusHost.IsPresent = present;
     }
 
@@ -301,6 +397,9 @@ public class Avatar : TemplatedControl
             {
                 AvatarStatus.Online => $"{name}, online",
                 AvatarStatus.Offline => $"{name}, offline",
+                AvatarStatus.Busy => $"{name}, busy",
+                AvatarStatus.Away => $"{name}, away",
+                AvatarStatus.Connecting => $"{name}, connecting",
                 _ => name
             });
         }

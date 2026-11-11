@@ -98,8 +98,12 @@ always has the same height for the same settings, whatever the code is.
 that code fences use, such as `cs`, `ts`, `py`, `sh`, `yaml`, `json` and `axaml`. Names are case-insensitive and a
 leading dot is ignored, so `.TSX` and `tsx` are the same language. The default is `tsx`.
 
-A language without a grammar, such as `text`, shows plain text with no colors. Use it for logs, notes and output that
-is not code, so the block does not color words by accident.
+A language without a grammar, such as `text` or `plaintext`, shows plain text with no colors. Use it for logs, notes
+and output that is not code, so the block does not color words by accident.
+
+`diff` (or `patch`) colors whole lines of a unified diff: added lines (`+`) in the success color, removed lines (`-`)
+in the danger color, and the file and hunk headers (`---`, `+++`, `@@`) in the secondary text color. Context lines stay
+plain.
 
 <Demo name="Languages" />
 

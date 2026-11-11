@@ -1,7 +1,7 @@
 ---
 title: 页头
 summary: 项目页头会随滚动收拢为紧凑栏，标签页的数量会滚动更新。
-source-hash: b1f92de5ae59
+source-hash: 62afcdc3ae47
 ---
 
 <Demo name="Preview" />
@@ -82,7 +82,7 @@ header.BreadcrumbClick += (_, e) => router.Open(e.Index);
 
 `Actions` 是页头行中的小型次要按钮。`MoreActions` 始终位于 “More actions” 菜单中，排在收拢的次要操作之后，并以分隔线隔开。`PrimaryAction` 是行末的一个小型主按钮，在 460 像素以下时只显示图标。每个 `PageHeaderAction` 都有 `Label`、`Icon`（Lucide 图形，例如 `ArcIcons.Bell`），以及 `Command` 或 `Click` 事件。`PageHeader.ActionInvoked` 在一处报告所有操作，操作来自菜单时 `IsFromMenu` 会被设为 true。
 
-对会删除数据的菜单操作（例如删除或取消）使用 `IsDestructive="True"`。它会以危险色绘制菜单行。`IsEnabled="False"` 会禁用按钮并让其菜单行变淡。`IsLoading="True"` 会显示加载指示器并忽略点击。`Invoke()` 从代码运行操作，并遵守这些状态。
+对会删除数据的菜单操作（例如删除或取消）使用 `IsDestructive="True"`。它会以危险色绘制菜单行。`IsEnabled="False"` 会禁用按钮并让其菜单行变淡。`IsLoading="True"` 会显示加载指示器并忽略点击。`IsVisible="False"` 会隐藏操作：既没有按钮也没有菜单行，页头判断是否收拢时也不计算它的宽度。当前不适用的操作用它隐藏；适用但暂时不能执行的操作用 `IsEnabled`。`Invoke()` 从代码运行操作，并遵守这些状态。
 
 当面包屑的可用宽度将小于 240 像素时，次要操作会收拢到 “More actions” 菜单的顶部。宽度再次达到 272 像素时它们会恢复显示，因此页头不会在阈值处闪烁。只监视页头的宽度，因此变长的标签（Follow 变为 Following）不会让你刚刚按下的按钮被收拢。
 
@@ -115,6 +115,17 @@ share.IsLoading = true;
 ### 窄宽度
 
 布局跟随控件的宽度，而不是窗口的宽度。宽度低于 560 像素时，内边距变小，根面包屑和紧凑徽标隐藏，标题降一级字号，标签行的远端边缘会渐隐。宽度低于 460 像素时，主操作只显示图标。在页头第一次测量之前，宽度小于 720 像素的页头会以收拢的次要操作开始，因此加载时不会闪烁。
+
+### 仅页头与紧凑尺寸
+
+设置 `IsHeaderOnly="True"` 后，页头只作为页面顶部的标题和操作栏，页面内容由你自己布局。标签页、页头下方的分隔线和滚动区都不显示，控件只有页头那么高，也不会收拢。
+
+`Size="Small"` 是用于设置页和侧栏的紧凑页头：标题使用 `TypeXL` 字号而不是 `Type3XL`，上下留白也更小，在任何宽度下都生效。`Medium`（默认）和 `Large` 是完整页头。
+
+```xml
+<arc:PageHeader IsHeaderOnly="True" Size="Small" Title="Notifications"
+                Description="Choose what reaches you and where." />
+```
 
 ### 绑定到视图模型
 
