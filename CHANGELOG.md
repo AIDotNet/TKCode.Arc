@@ -23,6 +23,14 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
   `TKCode.Arc.Blocks`): `IsFilteringEnabled="False"` on the palette or the dialog lists `ItemsSource` as given, for
   apps that filter and rank results themselves. `CommandPaletteDialog` now has `Query` (two-way) and `ActiveItem`,
   readable before the dialog first opens. A query set from code leaves the caret at its end.
+- **More avatar presence** ([#110](https://github.com/AIDotNet/TKCode.Arc/issues/110)): `AvatarStatus` gains `Busy`
+  (danger color with a bar across the dot), `Away` (warning color) and `Connecting` (a hollow ring that breathes in
+  opacity and rests with motion off). Each status is part of the avatar's accessible name.
+- **`EmptyState.Size`** ([#110](https://github.com/AIDotNet/TKCode.Arc/issues/110)): `Small` is a compact empty state
+  for list panes and cards (a 32 px icon block, 16 px above and below, tighter gaps) at every window width.
+- **`InlineEdit.Labels`** ([#110](https://github.com/AIDotNet/TKCode.Arc/issues/110)): an `InlineEditLabels` object
+  localizes everything a screen reader hears: the "Saving …" and "… saved" announcements, the save and cancel button
+  names and the help text. The English defaults are unchanged.
 
 ### Fixed
 

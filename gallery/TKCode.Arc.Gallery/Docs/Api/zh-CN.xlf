@@ -4933,8 +4933,8 @@
         <target>要显示的照片。照片加载失败时回退为首字母。</target>
       </trans-unit>
       <trans-unit id="Avatar.Status">
-        <source>Presence dot: None (default, no dot), Online or Offline.</source>
-        <target>在线状态圆点：None（默认，不显示圆点）、Online 或 Offline。</target>
+        <source>Presence dot: None (default, no dot), Online, Offline, Busy, Away or Connecting. The status is part of the accessible name.</source>
+        <target>在线状态圆点：None（默认，无圆点）、Online、Offline、Busy、Away 或 Connecting。状态是无障碍名称的一部分。</target>
       </trans-unit>
       <trans-unit id="AvatarGroup">
         <source>A team or set of contributors in a small space (Arc AvatarGroup): overlapping avatars with a 2px surface ring and a 1px border ring, later people stacked over earlier ones, and a "+N" chip for everyone past `MaxVisibleCount`. People who join or leave open or close their slot on the morph spring so the stack slides (P19); the overflow count rolls the way it moved (P14). Pointing at the stack (fine pointers only) loosens it from the center (P28) and lifts the person under the pointer with a crisp ring and their name while the neighbours ease aside (P27). Only the visible people get controls, so long member lists stay cheap. Items may be `AvatarGroupMember`, `Avatar` or plain names.</source>
@@ -12356,6 +12356,10 @@
         <source>Accessible name of the region.</source>
         <target>该区域的无障碍名称。</target>
       </trans-unit>
+      <trans-unit id="EmptyState.Size">
+        <source>`Small` is a compact empty state for list panes, side panels and cards: a 32px icon block, 16px above and below, and tighter gaps, whatever the window width. Medium (default) and Large are Arc's layout, whose vertical padding follows the window.</source>
+        <target>`Small` 是用于列表栏、侧边面板和卡片的紧凑空状态：32px 的图标块，上下各 16px，间距更紧凑，与窗口宽度无关。Medium（默认）和 Large 是 Arc 的布局，其上下内边距随窗口变化。</target>
+      </trans-unit>
       <trans-unit id="EmptyState.Title">
         <source>The headline (a heading, level 3).</source>
         <target>标题（三级标题）。</target>
@@ -15759,6 +15763,10 @@
       <trans-unit id="InboxTriageItem.PropertyChanged">
         <source>Raised when a property changes.</source>
         <target>属性改变时触发。</target>
+      </trans-unit>
+      <trans-unit id="InlineEdit.Labels">
+        <source>The text screen readers hear (save announcements, the save and cancel button names, help text); replace the object to localize it.</source>
+        <target>屏幕阅读器听到的文字（保存播报、保存和取消按钮的名称、帮助文字）；替换整个对象即可本地化。</target>
       </trans-unit>
       <trans-unit id="InvoiceClient">
         <source>Who an invoice of `InvoiceStudio` is billed to.</source>
