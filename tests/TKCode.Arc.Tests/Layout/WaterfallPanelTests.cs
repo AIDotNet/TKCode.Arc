@@ -8,7 +8,7 @@ using Avalonia.VisualTree;
 
 namespace TKCode.Arc.Tests.Layout;
 
-/// <summary>WaterfallPanel: shortest-lane placement, lane sizes, item size limits, FillLastItem and ItemsControl use.</summary>
+/// <summary>WaterfallPanel: shortest-lane placement, lane sizes, item size limits, FillLastItem, varied sizes and ItemsControl use.</summary>
 public class WaterfallPanelTests
 {
     private static Border Item(double height, double width = double.NaN) => new() { Height = height, Width = width };
@@ -273,6 +273,180 @@ public class WaterfallPanelTests
             panel.Children.Count.ShouldBe(3);
             panel.Children[2].Bounds.ShouldBe(new Rect(110, 30, 100, 30));
             items.Bounds.Height.ShouldBe(60);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    /// <summary>A card with no size of its own: in Varied sizing only the panel decides its height.</summary>
+    private static Control[] Cards(int count) => Enumerable.Range(0, count).Select(_ => (Control)new Border()).ToArray();
+
+    private static double[] Heights(WaterfallPanel panel) => panel.Children.Select(c => c.Bounds.Height).ToArray();
+
+    [AvaloniaFact]
+    public void Varied_Sizes_Stay_Within_Min_And_Max_And_Ignore_The_Content()
+    {
+        var cards = Cards(40);
+        // Content asking for more than MaxItemSize does not matter in Varied sizing.
+        ((Border)cards[3]).Child = new Border { Height = 500 };
+        var panel = Panel(320, double.NaN, cards);
+        panel.ItemSizing = WaterfallItemSizing.Varied;
+        panel.MinItemSize = 80;
+        panel.MaxItemSize = 200;
+        var window = Show(panel);
+        try
+        {
+            var heights = Heights(panel);
+            heights.ShouldAllBe(h => h >= 80 && h <= 200);
+            // Not a grid: the sizes really vary over the whole range.
+            heights.Distinct().Count().ShouldBeGreaterThan(20);
+            heights.Min().ShouldBeLessThan(100);
+            heights.Max().ShouldBeGreaterThan(180);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Varied_Sizes_Are_Repeatable_And_Follow_The_Seed()
+    {
+        WaterfallPanel Make(int seed)
+        {
+            var panel = Panel(320, double.NaN, Cards(12));
+            panel.ItemSizing = WaterfallItemSizing.Varied;
+            panel.MinItemSize = 60;
+            panel.MaxItemSize = 160;
+            panel.Seed = seed;
+            return panel;
+        }
+
+        var first = Make(7);
+        var second = Make(7);
+        var other = Make(8);
+        var window = Show(new StackPanel { Children = { first, second, other } });
+        try
+        {
+            Heights(second).ShouldBe(Heights(first));
+            first.Children.Select(c => c.Bounds).ShouldBe(second.Children.Select(c => c.Bounds));
+            Heights(other).ShouldNotBe(Heights(first));
+
+            // Relayout and resizing keep the sizes; only the lane width follows the panel.
+            var before = Heights(first);
+            first.Width = 620;
+            Dispatcher.UIThread.RunJobs();
+            Heights(first).ShouldBe(before);
+            first.InvalidateMeasure();
+            Dispatcher.UIThread.RunJobs();
+            Heights(first).ShouldBe(before);
+
+            // Appending keeps the sizes before it.
+            first.Children.Add(new Border());
+            Dispatcher.UIThread.RunJobs();
+            Heights(first).Take(12).ShouldBe(before);
+
+            // A new seed is a new arrangement.
+            first.Seed = 8;
+            Dispatcher.UIThread.RunJobs();
+            Heights(first).Take(12).ShouldBe(Heights(other));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Varied_Uses_The_Shortest_Lane_And_Hidden_Children_Keep_The_Others_Sizes()
+    {
+        var panel = Panel(320, double.NaN, Cards(9));
+        panel.Spacing = 10;
+        panel.ItemSizing = WaterfallItemSizing.Varied;
+        panel.MinItemSize = 50;
+        panel.MaxItemSize = 150;
+        var window = Show(panel);
+        try
+        {
+            var ends = new double[3];
+            var used = new bool[3];
+            foreach (var child in panel.Children)
+            {
+                var lane = (int)Math.Round(child.Bounds.X / 110);
+                var shortest = Array.IndexOf(ends, ends.Min());
+                lane.ShouldBe(shortest);
+                child.Bounds.Y.ShouldBe(used[lane] ? ends[lane] + 10 : 0, 1e-6);
+                ends[lane] = child.Bounds.Bottom;
+                used[lane] = true;
+            }
+
+            var before = Heights(panel);
+            panel.Children[2].IsVisible = false;
+            Dispatcher.UIThread.RunJobs();
+            var after = Heights(panel);
+            for (var i = 0; i < before.Length; i++)
+            {
+                if (i != 2)
+                {
+                    after[i].ShouldBe(before[i]);
+                }
+            }
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Varied_Bounds_Follow_The_Lane_When_Unset_And_A_Set_Minimum_Wins()
+    {
+        // Three 100px columns: unset bounds give 50..150.
+        var panel = Panel(320, double.NaN, Cards(30));
+        panel.Spacing = 10;
+        panel.ItemSizing = WaterfallItemSizing.Varied;
+        var window = Show(panel);
+        try
+        {
+            Heights(panel).ShouldAllBe(h => h >= 50 && h <= 150);
+
+            // MinItemSize above MaxItemSize: every child gets the minimum, as in Content sizing.
+            panel.MinItemSize = 120;
+            panel.MaxItemSize = 90;
+            Dispatcher.UIThread.RunJobs();
+            Heights(panel).ShouldAllBe(h => h == 120);
+
+            // A child's own MinHeight still wins.
+            panel.MinItemSize = 0;
+            panel.MaxItemSize = 60;
+            panel.Children[0].MinHeight = 75;
+            Dispatcher.UIThread.RunJobs();
+            panel.Children[0].Bounds.Height.ShouldBe(75);
+            Heights(panel).Skip(1).ShouldAllBe(h => h <= 60);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Varied_Horizontal_Varies_The_Widths()
+    {
+        var panel = Panel(double.NaN, 320, Cards(12));
+        panel.Orientation = Orientation.Horizontal;
+        panel.ItemSizing = WaterfallItemSizing.Varied;
+        panel.MinItemSize = 70;
+        panel.MaxItemSize = 140;
+        var window = Show(new ScrollViewer { HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Auto, Content = panel });
+        try
+        {
+            var widths = panel.Children.Select(c => c.Bounds.Width).ToArray();
+            widths.ShouldAllBe(w => w >= 70 && w <= 140);
+            widths.Distinct().Count().ShouldBeGreaterThan(6);
+            panel.Children.ShouldAllBe(c => Math.Abs(c.Bounds.Height - panel.Children[0].Bounds.Height) < 1e-6);
         }
         finally
         {
