@@ -11,14 +11,22 @@ using Avalonia.VisualTree;
 
 namespace TKCode.Arc;
 
-/// <summary>One row of a <see cref="RadioGroup"/>: a ring with a springing dot, the label and an optional description.</summary>
-internal sealed class RadioGroupItem : TogglesItem
+/// <summary>
+/// One row of a <see cref="RadioGroup"/>: a ring with a springing dot, the label (the row's content) and an optional
+/// description. The group creates a row for each option. For a <see cref="RadioOption"/> the row takes its label,
+/// description and disabled state from the option; for any other item the label is the group's <c>ItemTemplate</c>, and a
+/// style on <c>arc|RadioGroupItem</c> (or the group's <c>ItemContainerTheme</c>) can bind <see cref="Description"/>,
+/// <c>IsEnabled</c> and <c>AutomationProperties.Name</c> to the item.
+/// </summary>
+public sealed class RadioGroupItem : TogglesItem
 {
-    protected override (object Margin, object Radius)? FocusRingKeys => (RadioGroupTokens.Key(RadioGroupTokenKind.FocusRingMargin), RadioGroupTokens.Key(RadioGroupTokenKind.FocusRingRadius));
+    private protected override (object Margin, object Radius)? FocusRingKeys => (RadioGroupTokens.Key(RadioGroupTokenKind.FocusRingMargin), RadioGroupTokens.Key(RadioGroupTokenKind.FocusRingRadius));
 
+    /// <summary>A line under the label that explains the option; also the row's accessible help text.</summary>
     public static readonly StyledProperty<string?> DescriptionProperty =
         AvaloniaProperty.Register<RadioGroupItem, string?>(nameof(Description));
 
+    /// <inheritdoc cref="DescriptionProperty"/>
     public string? Description
     {
         get => GetValue(DescriptionProperty);

@@ -36,6 +36,27 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 - **`AvatarSize.LargePlus`** ([#110](https://github.com/AIDotNet/TKCode.Arc/issues/110)): a 64 px avatar between
   `Large` (48) and `XLarge` (88), with `TypeLG` initials and a 13 px status dot set 2 px in from the corner. It is
   appended to the enum, so the existing members keep their values; `AvatarGroup` draws it as `Large`.
+- **`SettingsSection.BadgeTone`** ([#109](https://github.com/AIDotNet/TKCode.Arc/issues/109), `TKCode.Arc.Blocks`):
+  colors the section's navigation badge with a `BadgeTone` (`Warning` for "Needs attention", `Danger` for a failed
+  check). `Neutral`, the default, keeps today's look.
+- **`SettingsRow.Details` and `SettingsRow.Leading`** ([#109](https://github.com/AIDotNet/TKCode.Arc/issues/109),
+  `TKCode.Arc.Blocks`): `Details` takes any content under the description, such as a status line, an error or a row of
+  tags (text is small and muted). `Leading` takes any content in place of the icon tile, such as an `Avatar`; it keeps
+  its own size and `LabelWidth` includes it. `Icon` is unchanged.
+- **`SettingsPage.SelectedValue`** ([#109](https://github.com/AIDotNet/TKCode.Arc/issues/109), `TKCode.Arc.Blocks`):
+  the new `SettingsSection.Value` identifies a section (an enum member or a route key), and the page's two-way
+  `SelectedValue` is the selected section's `Value`, so the shown section binds to a view model property. Setting
+  `SelectedValue` selects the matching section. A section without a `Value` reports itself, as before;
+  `SelectedValueBinding` reads the value some other way.
+- **Public item containers for `RadioGroup`, `RadioCards` and `ToggleGroup`**
+  ([#109](https://github.com/AIDotNet/TKCode.Arc/issues/109)): `RadioGroupItem`, `RadioCard` and `ToggleGroupItem` (and
+  their base `TogglesItem`, which only the library derives from) are public. Data-bound items work like Avalonia's
+  `ListBoxItem`: a style on `arc|RadioGroupItem` or the group's `ItemContainerTheme` can bind an item's `Description`,
+  `Icon`, `Meta`, `IsEnabled` and `AutomationProperties.Name`, so items no longer have to be `RadioOption` or
+  `ToggleGroupOption` to get them. Each container has its own token (`RadioGroupItem.MinRowHeight`,
+  `RadioCard.GlyphSize`, and `ToggleGroupItem.PressScale`, `PressDownDuration` and `PressUpDuration` for the press that
+  was fixed before); the defaults keep today's look, and the existing `RadioGroup`, `RadioCards` and `ToggleGroup` tokens
+  are unchanged.
 
 ### Changed
 

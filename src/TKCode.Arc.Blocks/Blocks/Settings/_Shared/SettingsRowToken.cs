@@ -9,7 +9,7 @@ internal sealed class SettingsRowToken : AbstractControlDesignToken
     /// <summary>Space around the row's content (vertical only: the group supplies the inline inset).</summary>
     public Thickness RowInset { get; set; }
 
-    /// <summary>Gap after the icon tile.</summary>
+    /// <summary>Gap after the icon tile or the leading content.</summary>
     public Thickness IconTileMargin { get; set; }
 
     /// <summary>Gap before the control when it sits beside the text.</summary>
@@ -35,6 +35,12 @@ internal sealed class SettingsRowToken : AbstractControlDesignToken
     /// <summary>Line height of the header and description (1.4 × text-sm).</summary>
     public double BodyLineHeight { get; set; }
 
+    /// <summary>Gap above the details, on top of the gap between the text lines.</summary>
+    public Thickness DetailsMargin { get; set; }
+
+    /// <summary>Line height of text details (1.4 × text-xs).</summary>
+    public double DetailsLineHeight { get; set; }
+
     public override void CalculateTokenValues(bool isDarkMode)
     {
         base.CalculateTokenValues(isDarkMode);
@@ -48,5 +54,7 @@ internal sealed class SettingsRowToken : AbstractControlDesignToken
         IconTileRadius = new CornerRadius(10);
         StackThreshold = 440;
         BodyLineHeight = 14 * 1.4;
+        DetailsMargin = new Thickness(0, 4, 0, 0);
+        DetailsLineHeight = 12 * 1.4;
     }
 }

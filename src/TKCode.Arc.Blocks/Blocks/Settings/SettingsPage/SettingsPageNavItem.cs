@@ -41,6 +41,10 @@ public sealed class SettingsPageNavItem : TemplatedControl, ISelectable
     public static readonly StyledProperty<string?> BadgeProperty =
         AvaloniaProperty.Register<SettingsPageNavItem, string?>(nameof(Badge));
 
+    /// <summary>The color of the section's badge.</summary>
+    public static readonly StyledProperty<BadgeTone> BadgeToneProperty =
+        AvaloniaProperty.Register<SettingsPageNavItem, BadgeTone>(nameof(BadgeTone));
+
     /// <summary>Whether the section has unsaved changes (shows a dot).</summary>
     public static readonly StyledProperty<bool> IsDirtyProperty =
         AvaloniaProperty.Register<SettingsPageNavItem, bool>(nameof(IsDirty));
@@ -71,6 +75,13 @@ public sealed class SettingsPageNavItem : TemplatedControl, ISelectable
     {
         get => GetValue(BadgeProperty);
         set => SetValue(BadgeProperty, value);
+    }
+
+    /// <inheritdoc cref="BadgeToneProperty"/>
+    public BadgeTone BadgeTone
+    {
+        get => GetValue(BadgeToneProperty);
+        set => SetValue(BadgeToneProperty, value);
     }
 
     /// <inheritdoc cref="IsDirtyProperty"/>

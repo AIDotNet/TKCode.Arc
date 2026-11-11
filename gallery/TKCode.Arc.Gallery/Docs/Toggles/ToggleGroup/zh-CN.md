@@ -1,7 +1,7 @@
 ---
 title: 切换按钮组
 summary: 一排切换按钮，用于单选或多个相互独立的选项。
-source-hash: 6f83997f4253
+source-hash: bbe990e3c809
 ---
 
 <Demo name="TextStyle" />
@@ -72,10 +72,39 @@ source-hash: 6f83997f4253
 
 <Demo name="Disabled" />
 
+### 数据绑定的项
+
+选项不必是 `ToggleGroupOption` 对象。把 `ItemsSource` 绑定到你自己的项，并为组提供用于内容的 `ItemTemplate`。每个选项都是公开的 `ToggleGroupItem`，其 `DataContext` 就是它的项，因此像 Avalonia 的 `ListBoxItem` 一样，可以用针对 `arc|ToggleGroupItem` 的样式把选项的其余部分绑定到项：`Icon`、`IsEnabled`、`AutomationProperties.Name` 和 `arc:Tooltip.Tip`。把 `SelectedValueBinding` 设为标识项的属性；不设置时，值就是项本身。
+
+```xml
+<arc:ToggleGroup Label="View"
+                 ItemsSource="{Binding Views}"
+                 SelectedValue="{Binding ViewKey}"
+                 SelectedValueBinding="{Binding Key}">
+    <arc:ToggleGroup.ItemTemplate>
+        <DataTemplate>
+            <TextBlock Text="{Binding Title}" />
+        </DataTemplate>
+    </arc:ToggleGroup.ItemTemplate>
+    <arc:ToggleGroup.Styles>
+        <Style Selector="arc|ToggleGroupItem">
+            <Setter Property="Icon" Value="{Binding Glyph}" />
+            <Setter Property="AutomationProperties.Name" Value="{Binding Title}" />
+        </Style>
+    </arc:ToggleGroup.Styles>
+</arc:ToggleGroup>
+```
+
+- 使用编译绑定时，为 `DataTemplate` 和 `Style` 设置你的项类型作为 `x:DataType`。
+- 只显示图标的选项需要从样式获得 `AutomationProperties.Name` 和工具提示（`arc:Tooltip.Tip`），就像 `Label` 为 `ToggleGroupOption` 提供它们一样。
+- 也可以使用 `ItemContainerTheme`。让它基于选项的主题 `BasedOn="{StaticResource {x:Type arc:ToggleGroupItem}}"`，这样选项会保留填充、按压效果和焦点环。
+- `ToggleGroupOption` 会自己设置所在选项的内容、图标、名称和工具提示，这些值优先于样式。
+
 ## API 参考
 
 <!-- api: ToggleGroup -->
 <!-- api: ToggleGroupOption -->
+<!-- api: ToggleGroupItem -->
 
 ## 无障碍
 
@@ -86,11 +115,11 @@ source-hash: 6f83997f4253
 | Home、End | 把焦点移到第一个或最后一个可用选项 |
 | Space、Enter | 切换获得焦点的选项 |
 
-方向键只移动焦点，因此使用者可以到达某个选项而不改变任何内容。整个组是一个制表位：上次获得焦点的选项，否则是第一个按下的选项，否则是第一个可用选项。`Label` 为组命名。单选模式下，选项报告为单选按钮；多选模式下，选项报告为带按下状态的按钮。
+方向键只移动焦点，因此使用者可以到达某个选项而不改变任何内容。整个组是一个制表位：上次获得焦点的选项，否则是第一个按下的选项，否则是第一个可用选项。`Label` 为组命名。单选模式下，选项报告为单选按钮；多选模式下，选项报告为带按下状态的按钮。`ToggleGroupOption` 以其 `Label` 命名；数据绑定的选项需要通过针对 `arc|ToggleGroupItem` 的样式设置 `AutomationProperties.Name`。
 
 ## 动效
 
-单选模式下，一个填充以 morph 弹簧在选项之间滑动。多选模式下，填充在 160 ms 内淡入，同时在 360 ms 内从 86% 缩放稳定下来；连接时在 240 ms 内跨过 2 px 间隙并把相接的圆角变成直角。按下选项时内容在 90 ms 内缩小到 92%，并在 320 ms 内恢复；选项的方框从不缩放，因此相邻选项不会移动。减弱动效时，填充直接跳转或在 120 ms 内淡入淡出，没有缩放，颜色在 120 ms 内变化。
+单选模式下，一个填充以 morph 弹簧在选项之间滑动。多选模式下，填充在 160 ms 内淡入，同时在 360 ms 内从 86% 缩放稳定下来；连接时在 240 ms 内跨过 2 px 间隙并把相接的圆角变成直角。按下选项时内容在 90 ms 内缩小到 92%，并在 320 ms 内恢复（`ToggleGroupItem` 的 Token `PressScale`、`PressDownDuration` 和 `PressUpDuration`）；选项的方框从不缩放，因此相邻选项不会移动。减弱动效时，填充直接跳转或在 120 ms 内淡入淡出，没有缩放，颜色在 120 ms 内变化。
 
 ## 响应式
 

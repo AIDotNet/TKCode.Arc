@@ -197,7 +197,7 @@ public class ToggleGroup : SelectingItemsControl
             option.ClearValue(ToggleGroupItem.IconProperty);
             option.ClearValue(IsEnabledProperty);
             option.ClearValue(AutomationProperties.NameProperty);
-            Tooltip.SetTip(option, null);
+            option.ClearValue(Tooltip.TipProperty);
             option.SetJoins(false, false);
             if (ReferenceEquals(_lastFocused, option))
             {

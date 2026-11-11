@@ -10,7 +10,8 @@ namespace TKCode.Arc;
 /// One section of a <see cref="SettingsPage"/>: its <see cref="HeaderedContentControl.Header"/>, <see cref="Icon"/> and
 /// <see cref="Badge"/> appear in the page's navigation, and while it is selected the section itself (header,
 /// <see cref="Description"/> and content) fills the page's content area. Set <see cref="IsDirty"/> while it has unsaved
-/// changes to show the page's save bar.
+/// changes to show the page's save bar. <see cref="Value"/> is what the page reports as its <c>SelectedValue</c> while the
+/// section is selected.
 /// </summary>
 [PseudoClasses(DirtyPseudoClass)]
 public class SettingsSection : HeaderedContentControl
@@ -28,6 +29,18 @@ public class SettingsSection : HeaderedContentControl
     /// <summary>A short marker at the end of the navigation item, such as "New" or a count.</summary>
     public static readonly StyledProperty<string?> BadgeProperty =
         AvaloniaProperty.Register<SettingsSection, string?>(nameof(Badge));
+
+    /// <summary>The color of the <see cref="Badge"/>: Neutral (the default), Success, Info (the accent), Warning or Danger.</summary>
+    public static readonly StyledProperty<BadgeTone> BadgeToneProperty =
+        AvaloniaProperty.Register<SettingsSection, BadgeTone>(nameof(BadgeTone));
+
+    /// <summary>
+    /// The value that identifies the section, such as an enum member or a route key: the page's <c>SelectedValue</c> while
+    /// this section is selected, and setting the page's <c>SelectedValue</c> to it selects this section. Without a value the
+    /// section reports itself.
+    /// </summary>
+    public static readonly StyledProperty<object?> ValueProperty =
+        AvaloniaProperty.Register<SettingsSection, object?>(nameof(Value));
 
     /// <summary>Whether the section has unsaved changes: the page shows its save bar while this section is selected.</summary>
     public static readonly StyledProperty<bool> IsDirtyProperty =
@@ -54,6 +67,20 @@ public class SettingsSection : HeaderedContentControl
         set => SetValue(BadgeProperty, value);
     }
 
+    /// <inheritdoc cref="BadgeToneProperty"/>
+    public BadgeTone BadgeTone
+    {
+        get => GetValue(BadgeToneProperty);
+        set => SetValue(BadgeToneProperty, value);
+    }
+
+    /// <inheritdoc cref="ValueProperty"/>
+    public object? Value
+    {
+        get => GetValue(ValueProperty);
+        set => SetValue(ValueProperty, value);
+    }
+
     /// <inheritdoc cref="IsDirtyProperty"/>
     public bool IsDirty
     {
@@ -76,9 +103,13 @@ public class SettingsSection : HeaderedContentControl
             PseudoClasses.Set(DirtyPseudoClass, IsDirty);
         }
         if (change.Property == HeaderProperty || change.Property == IconProperty || change.Property == BadgeProperty ||
-            change.Property == IsDirtyProperty || change.Property == IsEnabledProperty)
+            change.Property == BadgeToneProperty || change.Property == IsDirtyProperty || change.Property == IsEnabledProperty)
         {
             (Parent as SettingsPage)?.OnSectionChanged(this);
+        }
+        else if (change.Property == ValueProperty)
+        {
+            (Parent as SettingsPage)?.OnSectionValueChanged(this);
         }
     }
 }

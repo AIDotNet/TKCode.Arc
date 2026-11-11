@@ -4,14 +4,17 @@ using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Presenters;
+using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
+using TKCode.Arc.DesignTokens;
 
 namespace TKCode.Arc;
 
 /// <summary>
-/// One setting: an optional icon, a header and description on the left, and the control that changes it
+/// One setting: an optional icon (or any <see cref="Leading"/> content, such as an avatar), a header and description on
+/// the left with optional <see cref="Details"/> under them, and the control that changes it
 /// (<see cref="ContentControl.Content"/>) on the right. Below <see cref="StackWidth"/> the control moves under the text.
 /// Rows in a <see cref="SettingsGroup"/> (or any panel) are separated by a hairline; the first row has none. When the
 /// control is a toggle (Switch, Checkbox), clicking the header or description toggles it too, and the control takes
@@ -23,15 +26,30 @@ namespace TKCode.Arc;
 [TemplatePart(LayoutPart, typeof(Grid))]
 [TemplatePart(ContentPart, typeof(ContentPresenter))]
 [TemplatePart(IconTilePart, typeof(Control))]
-[PseudoClasses(StackedPseudoClass, IconPseudoClass, FirstLinePseudoClass)]
+[PseudoClasses(StackedPseudoClass, IconPseudoClass, LeadingPseudoClass, DetailsPseudoClass, FirstLinePseudoClass)]
 public class SettingsRow : ContentControl
 {
     public const string LabelPart = "PART_Label";
     public const string LayoutPart = "PART_Layout";
     public const string ContentPart = "PART_ContentPresenter";
     public const string IconTilePart = "PART_IconTile";
+
+    /// <summary>The presenter of <see cref="Leading"/>, built in the icon's place the first time the row has leading content.</summary>
+    public const string LeadingPart = "PART_Leading";
+
+    /// <summary>The presenter of <see cref="Details"/>, built under the description the first time the row has details.</summary>
+    public const string DetailsPart = "PART_Details";
+
     public const string StackedPseudoClass = ":stacked";
+
+    /// <summary>Set while the icon tile shows: the row has an <see cref="Icon"/> and no <see cref="Leading"/> content.</summary>
     public const string IconPseudoClass = ":icon";
+
+    /// <summary>Set while the row has <see cref="Leading"/> content.</summary>
+    public const string LeadingPseudoClass = ":leading";
+
+    /// <summary>Set while the row has <see cref="Details"/>.</summary>
+    public const string DetailsPseudoClass = ":details";
 
     /// <summary>Set on the rows of a <see cref="SettingsGroup"/>'s first line, which have no hairline above them.</summary>
     public const string FirstLinePseudoClass = ":first-line";
@@ -44,9 +62,26 @@ public class SettingsRow : ContentControl
     public static readonly StyledProperty<string?> DescriptionProperty =
         AvaloniaProperty.Register<SettingsRow, string?>(nameof(Description));
 
-    /// <summary>A 24×24 stroke icon (for example an <see cref="ArcIcons"/> member) shown in a tile before the header.</summary>
+    /// <summary>
+    /// A 24×24 stroke icon (for example an <see cref="ArcIcons"/> member) shown in a tile before the header. Not shown while
+    /// the row has <see cref="Leading"/> content.
+    /// </summary>
     public static readonly StyledProperty<Geometry?> IconProperty =
         AvaloniaProperty.Register<SettingsRow, Geometry?>(nameof(Icon));
+
+    /// <summary>
+    /// Content before the header in place of the icon tile, such as an <see cref="Avatar"/> or a logo; it keeps its own size.
+    /// When set, <see cref="Icon"/> is not shown.
+    /// </summary>
+    public static readonly StyledProperty<object?> LeadingProperty =
+        AvaloniaProperty.Register<SettingsRow, object?>(nameof(Leading));
+
+    /// <summary>
+    /// Content under the header and description, such as a status line, an error or a row of tags. Text is shown small
+    /// and muted; other content keeps its own look.
+    /// </summary>
+    public static readonly StyledProperty<object?> DetailsProperty =
+        AvaloniaProperty.Register<SettingsRow, object?>(nameof(Details));
 
     /// <summary>Below this width the control moves under the header and description (default 440).</summary>
     public static readonly StyledProperty<double> StackWidthProperty =
@@ -85,6 +120,8 @@ public class SettingsRow : ContentControl
     private Grid? _layout;
     private ContentPresenter? _contentPresenter;
     private Control? _iconTile;
+    private ContentPresenter? _leading;
+    private ContentPresenter? _details;
     private bool _spacingApplied;
     private Control? _namedControl;
     private string? _assignedName;
@@ -111,6 +148,20 @@ public class SettingsRow : ContentControl
     {
         get => GetValue(IconProperty);
         set => SetValue(IconProperty, value);
+    }
+
+    /// <inheritdoc cref="LeadingProperty"/>
+    public object? Leading
+    {
+        get => GetValue(LeadingProperty);
+        set => SetValue(LeadingProperty, value);
+    }
+
+    /// <inheritdoc cref="DetailsProperty"/>
+    public object? Details
+    {
+        get => GetValue(DetailsProperty);
+        set => SetValue(DetailsProperty, value);
     }
 
     /// <inheritdoc cref="StackWidthProperty"/>
@@ -150,13 +201,14 @@ public class SettingsRow : ContentControl
             if (SetAndRaise(IsStackedProperty, ref _isStacked, value))
             {
                 PseudoClasses.Set(StackedPseudoClass, value);
+                AlignLeading();
             }
         }
     }
 
     static SettingsRow()
     {
-        AffectsMeasure<SettingsRow>(LabelWidthProperty, ContentAlignmentProperty, ContentSpacingProperty, IconProperty);
+        AffectsMeasure<SettingsRow>(LabelWidthProperty, ContentAlignmentProperty, ContentSpacingProperty, IconProperty, LeadingProperty);
     }
 
     protected override Type StyleKeyOverride => typeof(SettingsRow);
@@ -184,6 +236,86 @@ public class SettingsRow : ContentControl
             _label.PointerReleased += OnLabelPointerReleased;
             _label.PointerCaptureLost += OnLabelPointerCaptureLost;
         }
+        _leading = null;
+        _details = null;
+        UpdateLeading();
+        UpdateDetails();
+    }
+
+    /// <summary>
+    /// The leading presenter (PART_Leading) is built the first time the row has leading content, in the icon tile's cell,
+    /// with the tile's gap after it; most rows have none.
+    /// </summary>
+    private void UpdateLeading()
+    {
+        var hasLeading = Leading is not null;
+        PseudoClasses.Set(LeadingPseudoClass, hasLeading);
+        PseudoClasses.Set(IconPseudoClass, Icon is not null && !hasLeading);
+        if (!hasLeading)
+        {
+            if (_leading is not null)
+            {
+                _leading.IsVisible = false;
+            }
+            return;
+        }
+        if (_leading is null)
+        {
+            if (_layout is null)
+            {
+                return;
+            }
+            var presenter = new ContentPresenter { Name = LeadingPart };
+            presenter.Bind(ContentPresenter.ContentProperty, this.GetObservable(LeadingProperty));
+            presenter.Bind(MarginProperty, presenter.GetResourceObservable(SettingsRowTokens.Key(SettingsRowTokenKind.IconTileMargin)));
+            _layout.Children.Add(presenter);
+            _leading = presenter;
+        }
+        _leading.IsVisible = true;
+        AlignLeading();
+    }
+
+    /// <summary>Like the icon tile, the leading content is centered beside the text and sits at the top once the control drops under it.</summary>
+    private void AlignLeading()
+    {
+        if (_leading is not null)
+        {
+            _leading.VerticalAlignment = IsStacked ? VerticalAlignment.Top : VerticalAlignment.Center;
+        }
+    }
+
+    /// <summary>
+    /// The details presenter (PART_Details) is built the first time the row has details, under the description in
+    /// PART_Label, in small muted text; most rows have none.
+    /// </summary>
+    private void UpdateDetails()
+    {
+        var hasDetails = Details is not null;
+        PseudoClasses.Set(DetailsPseudoClass, hasDetails);
+        if (!hasDetails)
+        {
+            if (_details is not null)
+            {
+                _details.IsVisible = false;
+            }
+            return;
+        }
+        if (_details is null)
+        {
+            if (_label is not Panel panel)
+            {
+                return;
+            }
+            var presenter = new ContentPresenter { Name = DetailsPart, TextWrapping = TextWrapping.Wrap };
+            presenter.Bind(ContentPresenter.ContentProperty, this.GetObservable(DetailsProperty));
+            presenter.Bind(MarginProperty, presenter.GetResourceObservable(SettingsRowTokens.Key(SettingsRowTokenKind.DetailsMargin)));
+            presenter.Bind(ContentPresenter.LineHeightProperty, presenter.GetResourceObservable(SettingsRowTokens.Key(SettingsRowTokenKind.DetailsLineHeight)));
+            ArcTokens.Bind(presenter, ContentPresenter.FontSizeProperty, ArcDesignTokenKind.TypeXS, BindingPriority.LocalValue);
+            ArcTokens.Bind(presenter, ContentPresenter.ForegroundProperty, ArcDesignTokenKind.TextMuted, BindingPriority.LocalValue);
+            panel.Children.Add(presenter);
+            _details = presenter;
+        }
+        _details.IsVisible = true;
     }
 
     protected override Size MeasureOverride(Size availableSize)
@@ -248,9 +380,18 @@ public class SettingsRow : ContentControl
         }
     }
 
-    /// <summary>The width the icon tile and its gap take before the text, which <see cref="LabelWidth"/> includes.</summary>
+    /// <summary>
+    /// The width the icon tile (or the leading content) and its gap take before the text, which <see cref="LabelWidth"/>
+    /// includes.
+    /// </summary>
     private double IconExtent()
     {
+        if (Leading is not null && _leading is { IsVisible: true } leading)
+        {
+            // Measured as the grid's Auto cell measures it, so the grid finds the result cached.
+            leading.Measure(Size.Infinity);
+            return leading.DesiredSize.Width;
+        }
         if (Icon is null || _iconTile is null)
         {
             return 0;
@@ -266,9 +407,13 @@ public class SettingsRow : ContentControl
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-        if (change.Property == IconProperty)
+        if (change.Property == IconProperty || change.Property == LeadingProperty)
         {
-            PseudoClasses.Set(IconPseudoClass, Icon is not null);
+            UpdateLeading();
+        }
+        else if (change.Property == DetailsProperty)
+        {
+            UpdateDetails();
         }
         else if (change.Property == StackWidthProperty)
         {

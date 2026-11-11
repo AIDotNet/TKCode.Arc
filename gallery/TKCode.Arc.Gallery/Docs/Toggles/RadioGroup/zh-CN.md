@@ -1,7 +1,7 @@
 ---
 title: 单选组
 summary: 从可见的一组选项中选择一项。
-source-hash: d2f4b16cda52
+source-hash: 9abd7f8198ab
 ---
 
 <Demo name="Plans" />
@@ -39,7 +39,7 @@ source-hash: d2f4b16cda52
 </UserControl>
 ```
 
-`RadioGroup` 派生自 Avalonia 的 `HeaderedSelectingItemsControl`。因此选择、`SelectedIndex`、`SelectedItem`、`SelectionChanged`、标题和 `HeaderTemplate` 与任何 Avalonia 选择控件中的行为相同，而该组在此之上加入 Arc 的行设计、单一移动的高亮、键盘模型和自动化名称。该组为每个选项创建一行，你无需自己添加行。
+`RadioGroup` 派生自 Avalonia 的 `HeaderedSelectingItemsControl`。因此选择、`SelectedIndex`、`SelectedItem`、`SelectionChanged`、标题和 `HeaderTemplate` 与任何 Avalonia 选择控件中的行为相同，而该组在此之上加入 Arc 的行设计、单一移动的高亮、键盘模型和自动化名称。该组为每个选项创建一行（一个 `RadioGroupItem`），你无需自己添加行。
 
 ### 结构
 
@@ -133,6 +133,37 @@ public partial class UpgradeViewModel : ObservableObject
 - `ItemsSource` 接受 `ObservableCollection<RadioOption>`，因此添加或删除选项都会更新该组。
 - 对于不属于数据的副作用（例如预览标签），在代码中使用 `SelectionChanged`。保存操作应放在命令中，这样它只在人按下按钮时运行一次，而不是每次按方向键都运行。
 - 在 XAML 中用普通字符串设置 `Header`。字符串标题同时也是该组的无障碍名称。
+
+### 数据绑定的项
+
+选项不必是 `RadioOption` 对象。把 `ItemsSource` 绑定到你自己的项，并为组提供用于标签的 `ItemTemplate`。每一行都是公开的 `RadioGroupItem`，其 `DataContext` 就是它的项，因此像 Avalonia 的 `ListBoxItem` 一样，可以用针对 `arc|RadioGroupItem` 的样式把行的其余部分绑定到项：`Description`、`IsEnabled` 和 `AutomationProperties.Name`。把 `SelectedValueBinding` 设为标识项的属性；不设置时，`SelectedValue` 就是项本身。
+
+<Demo name="DataItems" />
+
+```xml
+<arc:RadioGroup Header="Region"
+                ItemsSource="{Binding Regions}"
+                SelectedValue="{Binding RegionId}"
+                SelectedValueBinding="{Binding Id}">
+    <arc:RadioGroup.ItemTemplate>
+        <DataTemplate>
+            <TextBlock Text="{Binding Name}" />
+        </DataTemplate>
+    </arc:RadioGroup.ItemTemplate>
+    <arc:RadioGroup.Styles>
+        <Style Selector="arc|RadioGroupItem">
+            <Setter Property="Description" Value="{Binding Note}" />
+            <Setter Property="IsEnabled" Value="{Binding IsAvailable}" />
+            <Setter Property="AutomationProperties.Name" Value="{Binding Name}" />
+        </Style>
+    </arc:RadioGroup.Styles>
+</arc:RadioGroup>
+```
+
+- 使用编译绑定时，为 `DataTemplate` 和 `Style` 设置你的项类型作为 `x:DataType`，并写成 `SelectedValueBinding="{Binding Id, DataType={x:Type local:Region}}"`。
+- 模板的根元素不是 `TextBlock` 时请设置 `AutomationProperties.Name`：行只会从文字标签获得名称。描述是行的帮助文字。
+- 也可以使用 `ItemContainerTheme`。让它基于行的主题 `BasedOn="{StaticResource {x:Type arc:RadioGroupItem}}"`，这样行会保留圆环、圆点和焦点环。
+- `RadioOption` 会自己设置所在行的标签、描述和禁用状态，这些值优先于样式。
 
 ### 禁用选项
 
@@ -242,16 +273,18 @@ group.SelectionChanged += (_, _) =>
 
 **如何在别处显示所选选项的描述？** 在 `SelectionChanged` 中把 `SelectedItem` 读取为 `RadioOption`，并在文本块中显示它的 `Description`。该组自己的行仍会保留各自的描述。
 
-**行可以接受任意对象吗？** 每一行都使用 `RadioOption`。行从该类型读取 `Label`、`Description` 和 `IsDisabled`，因此其他对象不会为行提供文字。请在视图模型中把你自己的模型映射为 `RadioOption`。
+**行可以接受任意对象吗？** 可以。为组提供用于标签的 `ItemTemplate`，并用针对 `arc|RadioGroupItem` 的样式把 `Description`、`IsEnabled` 和 `AutomationProperties.Name` 绑定到项，如"数据绑定的项"所示。设置 `SelectedValueBinding`，使 `SelectedValue` 是项的键而不是项本身。
 
 ## API 参考
 
 <!-- api: RadioGroup -->
 <!-- api: RadioOption -->
+<!-- api: RadioGroupItem -->
 
 ## 无障碍
 
 - 当 `Header` 为字符串时，它为该组命名。每个选项都是单选按钮，其描述即为帮助文字。
+- `RadioOption` 的行以其标签命名。数据绑定的行在标签不是纯文字时，需要通过针对 `arc|RadioGroupItem` 的样式设置 `AutomationProperties.Name`。
 - 该组只占一个 Tab 停靠点。Tab 从选中的选项进入该组，下一次 Tab 离开。键盘焦点永远不会停在未选中的选项上。
 - 方向键将选择移动到下一个或上一个选项，并循环切换。禁用的选项会被跳过。
 - Home 和 End 选中第一个和最后一个选项。空格和 Enter 选中获得焦点的选项。

@@ -145,6 +145,42 @@ plans.SelectionChanged += (_, _) => Console.WriteLine(plans.SelectedValue);
 
 `Icon` takes a `Geometry`. It is drawn as an 18px icon at the start of the card.
 
+### Data-bound items
+
+The cards do not have to be `RadioCardOption` objects. Bind `ItemsSource` to your own items and give the group an
+`ItemTemplate` for the label. Each card is a public `RadioCard` whose `DataContext` is its item, so a style on
+`arc|RadioCard` binds the rest of the card to the item, as with Avalonia's `ListBoxItem`: `Description`, `Meta`, `Icon`,
+`DisabledReason`, `IsEnabled` and `AutomationProperties.Name`. Set `SelectedValueBinding` to the property that
+identifies an item; without it `SelectedValue` is the item itself.
+
+```xml
+<arc:RadioCards ItemsSource="{Binding Plans}"
+                SelectedValue="{Binding PlanId}"
+                SelectedValueBinding="{Binding Id}">
+    <arc:RadioCards.ItemTemplate>
+        <DataTemplate>
+            <TextBlock Text="{Binding Name}" />
+        </DataTemplate>
+    </arc:RadioCards.ItemTemplate>
+    <arc:RadioCards.Styles>
+        <Style Selector="arc|RadioCard">
+            <Setter Property="Description" Value="{Binding Summary}" />
+            <Setter Property="Meta" Value="{Binding Price}" />
+            <Setter Property="IsEnabled" Value="{Binding IsAvailable}" />
+            <Setter Property="DisabledReason" Value="{Binding UnavailableReason}" />
+            <Setter Property="AutomationProperties.Name" Value="{Binding Name}" />
+        </Style>
+    </arc:RadioCards.Styles>
+</arc:RadioCards>
+```
+
+- With compiled bindings, give the `DataTemplate` and the `Style` an `x:DataType` of your item type.
+- Set `AutomationProperties.Name` when the template's root is not a `TextBlock`: the card takes its name from a text
+  label only. The description (or the disabled reason) is the card's help text.
+- A card's `Icon` takes any content; bind it to an `ArcGlyph` or an image, at 18 px. `ItemContainerTheme` works too, based
+  on the card's theme: `BasedOn="{StaticResource {x:Type arc:RadioCard}}"`.
+- A `RadioCardOption` sets its card's parts itself, and those values win over a style.
+
 ### Choosing a layout
 
 `Layout="List"` stacks the cards as full-width rows with the meta at the end. Long descriptions wrap. The default
@@ -295,11 +331,13 @@ its row.
 
 <!-- api: RadioCards -->
 <!-- api: RadioCardOption -->
+<!-- api: RadioCard -->
 
 ## Accessibility
 
 - Each card is a radio button to assistive technology. Set `AutomationProperties.Name` on the group when no visible header names it.
 - The card label is the card's name. The description is its help text. A disabled card reports its `DisabledReason` instead.
+- A data-bound card needs `AutomationProperties.Name` from a style on `arc|RadioCard` when its label is not plain text.
 - The group is one tab stop. `IsRequired` is reported to assistive technology as required for the form.
 - Right-to-left layouts mirror the arrow keys: Right moves to the previous card, and Left to the next.
 - Keyboard focus draws a 2px outline offset by 2px. Pointer focus does not.

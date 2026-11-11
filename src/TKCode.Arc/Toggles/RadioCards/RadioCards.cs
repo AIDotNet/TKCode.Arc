@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
 using Avalonia;
@@ -129,12 +130,20 @@ public class RadioCards : SelectingItemsControl
             {
                 // Re-applied when any property of the option changes: keep the glyph that already shows this geometry.
                 Geometry geometry when card.Icon is ArcGlyph shown && ReferenceEquals(shown.Data, geometry) => shown,
-                Geometry geometry => new ArcGlyph { Data = geometry, Size = 18 },
+                Geometry geometry => CreateGlyph(geometry),
                 var icon => icon
             };
             card.DisabledReason = option.DisabledReason;
             card.IsEnabled = !option.IsDisabled;
         }
+    }
+
+    /// <summary>The stroke icon of an option's <see cref="RadioCardOption.Icon"/> geometry, sized by the card's token.</summary>
+    private static ArcGlyph CreateGlyph(Geometry geometry)
+    {
+        var glyph = new ArcGlyph { Data = geometry };
+        glyph.Bind(ArcGlyph.SizeProperty, glyph.GetResourceObservable(RadioCardTokens.Key(RadioCardTokenKind.GlyphSize)));
+        return glyph;
     }
 
     protected override void ContainerForItemPreparedOverride(Control container, object? item, int index)

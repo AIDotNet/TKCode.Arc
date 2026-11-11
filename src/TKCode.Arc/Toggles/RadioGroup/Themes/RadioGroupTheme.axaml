@@ -95,6 +95,7 @@
             </ControlTemplate>
         </Setter>
         <Setter Property="Background" Value="Transparent" />
+        <Setter Property="MinHeight" Value="{arc:RadioGroupItemTokenResource MinRowHeight}" />
         <Setter Property="Cursor" Value="Hand" />
 
         <!-- Token values that states override are set by styles: token markup in a template is a local value. -->

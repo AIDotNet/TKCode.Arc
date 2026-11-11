@@ -1,11 +1,15 @@
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Primitives;
 using Avalonia;
+using Avalonia.Automation;
+using Avalonia.Automation.Peers;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
+using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 
 namespace TKCode.Arc.Tests.Toggles;
@@ -223,8 +227,81 @@ public class RadioGroupTests
         }
     }
 
+    [AvaloniaFact]
+    public void Data_Bound_Rows_Take_Their_Description_Name_And_State_From_A_Style()
+    {
+        // The docs' pattern: any item type, an ItemTemplate for the label, a style on the public container for the rest.
+        var group = AvaloniaRuntimeXamlLoader.Parse<RadioGroup>("""
+            <arc:RadioGroup xmlns="https://github.com/avaloniaui" xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                            Header="Plan" SelectedValueBinding="{Binding Id}">
+                <arc:RadioGroup.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}" />
+                    </DataTemplate>
+                </arc:RadioGroup.ItemTemplate>
+                <arc:RadioGroup.Styles>
+                    <Style Selector="arc|RadioGroupItem">
+                        <Setter Property="Description" Value="{Binding Summary}" />
+                        <Setter Property="IsEnabled" Value="{Binding IsAvailable}" />
+                        <Setter Property="AutomationProperties.Name" Value="{Binding Name}" />
+                    </Style>
+                </arc:RadioGroup.Styles>
+            </arc:RadioGroup>
+            """);
+        group.ItemsSource = new[]
+        {
+            new PlanRow("hobby", "Hobby", "For side projects.", true),
+            new PlanRow("pro", "Pro", "For growing teams.", true),
+            new PlanRow("team", "Team", "Talk to sales.", false)
+        };
+        group.SelectedValue = "pro";
+        var window = TestHelpers.Show(group);
+        try
+        {
+            group.SelectedIndex.ShouldBe(1);
+            var row = group.ContainerFromIndex(0).ShouldBeOfType<RadioGroupItem>();
+            row.Description.ShouldBe("For side projects.");
+            TestHelpers.Descendant<TextBlock>(row, "PART_Description").Text.ShouldBe("For side projects.");
+            AutomationProperties.GetName(row).ShouldBe("Hobby");
+            var peer = ControlAutomationPeer.CreatePeerForElement(row);
+            peer.GetName().ShouldBe("Hobby");
+            peer.GetHelpText().ShouldBe("For side projects.");
+            group.ContainerFromIndex(2)!.IsEnabled.ShouldBeFalse();
+
+            // The disabled row is skipped like a disabled RadioOption.
+            group.ContainerFromIndex(1)!.Focus(NavigationMethod.Tab);
+            window.KeyPressQwerty(PhysicalKey.ArrowDown, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+            group.SelectedValue.ShouldBe("hobby");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Row_Has_Its_Own_Token()
+    {
+        var group = Plans();
+        var window = TestHelpers.Show(group);
+        try
+        {
+            var row = group.ContainerFromIndex(0).ShouldBeOfType<RadioGroupItem>();
+            row.TryFindResource(RadioGroupItemTokens.Key(RadioGroupItemTokenKind.MinRowHeight), out var minHeight).ShouldBeTrue();
+            minHeight.ShouldBe(0d);
+            row.MinHeight.ShouldBe(0);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     private sealed class Model
     {
         public string? Plan { get; set; }
     }
+
+    public sealed record PlanRow(string Id, string Name, string Summary, bool IsAvailable);
 }

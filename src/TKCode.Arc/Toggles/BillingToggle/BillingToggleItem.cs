@@ -15,7 +15,7 @@ namespace TKCode.Arc;
 [PseudoClasses(BadgePseudoClass, LargePseudoClass)]
 internal sealed class BillingToggleItem : TogglesItem
 {
-    protected override (object Margin, object Radius)? FocusRingKeys => (BillingToggleTokens.Key(BillingToggleTokenKind.FocusRingMargin), ArcDesignTokens.Key(ArcDesignTokenKind.RadiusPill));
+    private protected override (object Margin, object Radius)? FocusRingKeys => (BillingToggleTokens.Key(BillingToggleTokenKind.FocusRingMargin), ArcDesignTokens.Key(ArcDesignTokenKind.RadiusPill));
 
     public const string BadgePseudoClass = ":badge";
     public const string LargePseudoClass = ":large";
@@ -76,7 +76,7 @@ internal sealed class BillingToggleItem : TogglesItem
         }
     }
 
-    protected override void OnIsSelectedChanged() => Refresh();
+    private protected override void OnIsSelectedChanged() => Refresh();
 
     private void Refresh()
     {

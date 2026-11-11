@@ -6272,6 +6272,9 @@
       "StrokeThickness": "2",
       "TooltipGap": "10"
     },
+    "RadioCard": {
+      "GlyphSize": "18"
+    },
     "RadioCards": {
       "BodyGap": "2",
       "CardInsetGrid": "16,14,16,14",
@@ -6314,6 +6317,9 @@
       "RingRadius": "4.25,4.25,4.25,4.25",
       "RowGap": "8",
       "RowInset": "12,12,12,12"
+    },
+    "RadioGroupItem": {
+      "MinRowHeight": "0"
     },
     "RangeHistogramSlider": {
       "BarColor": "#1C0B0B0B",
@@ -7196,6 +7202,8 @@
     "SettingsRow": {
       "BodyLineHeight": "19.599999999999998",
       "ControlMargin": "16,0,0,0",
+      "DetailsLineHeight": "16.799999999999997",
+      "DetailsMargin": "0,4,0,0",
       "IconGlyph": "17",
       "IconTile": "34",
       "IconTileMargin": "0,0,16,0",
@@ -8610,6 +8618,11 @@
       "ItemInsetSM": "8,0,8,0",
       "ItemSizeMD": "36",
       "ItemSizeSM": "28"
+    },
+    "ToggleGroupItem": {
+      "PressDownDuration": "90ms",
+      "PressScale": "0.92",
+      "PressUpDuration": "320ms"
     },
     "TokenTextEditor": {
       "EditorLetterSpacing": "-0.16",

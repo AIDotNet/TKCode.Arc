@@ -37,9 +37,9 @@ so people always see whether their changes are pending.
 ## Usage
 
 Write one `SettingsSection` per section. `Header`, `Icon` and `Badge` appear in the navigation, and the selected section
-shows its header, `Description` and content on the right. The first enabled section is selected; set `SelectedIndex`
-or call `Select(section)` to show another. `Title` sits above the navigation and `Footer` below it, for example an
-account card.
+shows its header, `Description` and content on the right. The first enabled section is selected; set `SelectedIndex`,
+call `Select(section)` or set `SelectedValue` to a section's `Value` to show another. `Title` sits above the navigation
+and `Footer` below it, for example an account card.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
@@ -74,7 +74,8 @@ selection pill, the content area and the save bar, so the sections only describe
 3. **Navigation item** (`Header`, `Icon`, `Badge` of each section): 40 px high with a 2 px gap between items. The icon is
    18 px and the header is small text. An unselected item uses the secondary text color; the selected item uses the
    foreground color with medium weight.
-4. **Badge** (`Badge`): a small `Badge` at the end of the item, such as a count of new messages.
+4. **Badge** (`Badge`, `BadgeTone`): a small `Badge` at the end of the item, such as a count of new messages, in the
+   neutral tone unless `BadgeTone` sets another.
 5. **Unsaved dot**: a 6 px accent dot in the item when `IsDirty` is set on its section.
 6. **Selection pill**: a raised surface with a 1 px subtle border and a resting shadow, with a 12 px corner radius. It
    glides between items.
@@ -109,6 +110,20 @@ page.SaveRequested += async (_, e) =>
 };
 ```
 
+### Badge tones
+
+`BadgeTone` colors a section's badge with the tones of `Badge`: `Neutral` (the default), `Success`, `Info` (the accent),
+`Warning` and `Danger`. Use `Warning` or `Danger` for a section that needs the person's attention, such as an expired
+payment method, and keep the neutral tone for counts.
+
+```xml
+<arc:SettingsPage Height="320">
+    <arc:SettingsSection Header="Profile" Icon="{x:Static arc:ArcIcons.User}" />
+    <arc:SettingsSection Header="Security" Icon="{x:Static arc:ArcIcons.Shield}" Badge="Review" BadgeTone="Warning" />
+    <arc:SettingsSection Header="Billing" Icon="{x:Static arc:ArcIcons.CreditCard}" Badge="Failed" BadgeTone="Danger" />
+</arc:SettingsPage>
+```
+
 ### Layout and width
 
 The page is two columns while it is at least `CompactWidth` wide (720 px by default). Below that width it becomes one
@@ -118,6 +133,36 @@ and the page carries the `:compact` pseudo class, so a style can adjust the page
 the page has, not by the screen: a settings page in a 400 px side panel is compact even on a wide monitor.
 
 <Demo name="Compact" />
+
+### Selected value
+
+Give each section a `Value` that identifies it, such as a route key or an enum member, and bind the page's
+`SelectedValue`. It is two-way: the page reports the selected section's `Value`, and setting `SelectedValue` shows the
+section with that value, so a view model can open the page on a section or follow the person's choice. A section
+without a `Value` reports itself. To read the value some other way, set `SelectedValueBinding`, as on any Avalonia
+selector.
+
+```xml
+<arc:SettingsPage SelectedValue="{Binding Route}">
+    <arc:SettingsSection Header="Profile" Value="profile" Icon="{x:Static arc:ArcIcons.User}" />
+    <arc:SettingsSection Header="Notifications" Value="notifications" Icon="{x:Static arc:ArcIcons.Bell}" />
+    <arc:SettingsSection Header="Billing" Value="billing" Icon="{x:Static arc:ArcIcons.CreditCard}" />
+</arc:SettingsPage>
+```
+
+For an enum, write each value as the enum member, `Value="{x:Static local:SettingsTab.Billing}"`, not as its name: the
+page compares values with `Equals`, and the string `"Billing"` does not equal `SettingsTab.Billing`.
+
+```csharp
+public enum SettingsTab { Profile, Notifications, Billing }
+
+public partial class SettingsViewModel : ObservableObject
+{
+    // Opens the page on Notifications; the person's choice comes back here.
+    [ObservableProperty]
+    private SettingsTab _tab = SettingsTab.Notifications;
+}
+```
 
 ### Binding to a view model
 
@@ -184,6 +229,16 @@ A group draws a card by default, with an optional `Header`, `Description`, `Head
 already has a title, prefer `Plain` so the page does not show cards inside a card.
 
 <Demo name="Rows" />
+
+### Row details and leading content
+
+`Details` puts any content under a row's header and description: a status line such as "Last synced 2 minutes ago", an
+error, or a row of tags. Text is shown in the extra-small size and the muted color, 4 px below the description; other
+content keeps its own look, so an error can use the danger color. `Leading` puts any content in place of the icon tile,
+such as an `Avatar` or a service logo. It keeps its own size, it has the tile's 16 px gap after it, and `LabelWidth`
+includes it, so the controls still line up. While a row has `Leading` content, its `Icon` is not shown.
+
+<Demo name="RowSlots" />
 
 ### Columns
 
@@ -343,6 +398,9 @@ dirty. Handle the event for each section you save, or check `e.Section` to choos
 **Which section is shown first?** The first enabled section, unless `SelectedIndex` or `Select(section)` chooses another.
 A disabled section is skipped in both the initial selection and the keyboard movement.
 
+**How do I bind the shown section to my view model?** Give each section a `Value` and bind `SelectedValue`, which is
+two-way. The view model then holds a route key or an enum member instead of an index, and a new value shows its section.
+
 **How do I change the Save button text?** Replace the `Labels` object with a `SettingsPageLabels` whose `Save` property
 holds the text you need. The other texts keep their defaults unless you set them too.
 
@@ -379,6 +437,9 @@ holds the text you need. The other texts keep their defaults unless you set them
 - Keyboard focus draws a 2px ring around the navigation item. Pointer focus does not.
 - The note in the save bar is a polite live region.
 - The selected item is announced as selected, so a screen reader user hears which section is shown after each move.
+- A badge is read as text, so its tone is not the only cue: write the word ("Review", "Failed") in the badge.
+- Content in a row's `Leading` and `Details` keeps its own accessible name and role; the row's control is still named
+  after the header.
 
 ### Keyboard
 

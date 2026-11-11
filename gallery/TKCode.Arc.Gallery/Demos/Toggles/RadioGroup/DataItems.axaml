@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.RadioGroupDataItemsDemo">
+    <StackPanel Width="420" Spacing="12" HorizontalAlignment="Center">
+        <arc:RadioGroup x:Name="Regions"
+                        Header="Region"
+                        SelectedValueBinding="{Binding Id, DataType={x:Type demos:RadioGroupDemoRegion}}">
+            <arc:RadioGroup.ItemTemplate>
+                <DataTemplate x:DataType="demos:RadioGroupDemoRegion">
+                    <TextBlock Text="{Binding Name}" />
+                </DataTemplate>
+            </arc:RadioGroup.ItemTemplate>
+            <arc:RadioGroup.Styles>
+                <!-- Each row is a RadioGroupItem whose DataContext is its region. -->
+                <Style Selector="arc|RadioGroupItem" x:DataType="demos:RadioGroupDemoRegion">
+                    <Setter Property="Description" Value="{Binding Note}" />
+                    <Setter Property="IsEnabled" Value="{Binding IsAvailable}" />
+                    <Setter Property="AutomationProperties.Name" Value="{Binding Name}" />
+                </Style>
+            </arc:RadioGroup.Styles>
+        </arc:RadioGroup>
+        <TextBlock Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                   Text="{Binding #Regions.SelectedValue, StringFormat='SelectedValue: {0}'}" />
+    </StackPanel>
+</UserControl>

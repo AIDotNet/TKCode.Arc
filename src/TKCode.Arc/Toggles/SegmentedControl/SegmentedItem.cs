@@ -8,7 +8,7 @@ namespace TKCode.Arc;
 /// <summary>One segment of a <see cref="SegmentedControl"/>. Segments never scale or change weight; only the pill moves.</summary>
 internal sealed class SegmentedItem : TogglesItem
 {
-    protected override (object Margin, object Radius)? FocusRingKeys => (SegmentedControlTokens.Key(SegmentedControlTokenKind.FocusRingMargin), SegmentedControlTokens.Key(SegmentedControlTokenKind.FocusRingRadius));
+    private protected override (object Margin, object Radius)? FocusRingKeys => (SegmentedControlTokens.Key(SegmentedControlTokenKind.FocusRingMargin), SegmentedControlTokens.Key(SegmentedControlTokenKind.FocusRingRadius));
 
     public static readonly StyledProperty<object?> AccessoryProperty =
         AvaloniaProperty.Register<SegmentedItem, object?>(nameof(Accessory));

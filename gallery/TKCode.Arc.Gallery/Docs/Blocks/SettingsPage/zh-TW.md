@@ -1,7 +1,7 @@
 ---
 title: 設定頁面
 summary: 完整的設定頁面：導覽區帶有帳戶卡片，旁邊顯示所選區段，並提供未儲存變更的儲存列。
-source-hash: 7b3f7d3a7054
+source-hash: 6e400a82679b
 ---
 
 <Demo name="Overview" />
@@ -26,7 +26,7 @@ source-hash: 7b3f7d3a7054
 
 ## 用法
 
-每個區段寫一個 `SettingsSection`。`Header`、`Icon` 和 `Badge` 顯示在導覽中，所選區段則在右側顯示其 `Header`、`Description` 和內容。第一個已啟用的區段會被選取；設定 `SelectedIndex` 或呼叫 `Select(section)` 可顯示其他區段。`Title` 位於導覽上方，`Footer` 位於導覽下方，例如帳號卡片。
+每個區段寫一個 `SettingsSection`。`Header`、`Icon` 和 `Badge` 顯示在導覽中，所選區段則在右側顯示其 `Header`、`Description` 和內容。第一個已啟用的區段會被選取；設定 `SelectedIndex`、呼叫 `Select(section)`，或把 `SelectedValue` 設為某個區段的 `Value`，可顯示其他區段。`Title` 位於導覽上方，`Footer` 位於導覽下方，例如帳號卡片。
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
@@ -54,7 +54,7 @@ source-hash: 7b3f7d3a7054
 1. **標題**（`Title`，預設為 "Settings"）：導覽欄頂部的中等字重大字，兩側留出 24 px 的間距。
 2. **導覽欄**：寬 248 px，背景是表面色與 2.5% 前景色的混合，右邊緣有一條 1 px 的分隔線。
 3. **導覽項目**（每個區段的 `Header`、`Icon`、`Badge`）：高 40 px，項目之間間距 2 px。圖示為 18 px，標題為小號文字。未選取的項目使用次要文字顏色；選取的項目使用前景色和中等字重。
-4. **徽章**（`Badge`）：位於導覽項目末端的小型 `Badge`，例如新訊息的數量。
+4. **徽章**（`Badge`、`BadgeTone`）：位於導覽項目末端的小型 `Badge`，例如新訊息的數量；預設為中性色調，`BadgeTone` 可設為其他色調。
 5. **未儲存圓點**：當區段設定了 `IsDirty` 時，導覽項目中出現一個 6 px 的強調色圓點。
 6. **選取膠囊**：一個抬起的表面，帶 1 px 的淡邊框和靜止陰影，圓角 12 px。它會在各導覽項目之間滑動。
 7. **頁尾**（`Footer`）：位於欄底部的分隔線之下，內距為 16 px 和 14 px。緊湊版面中隱藏。
@@ -77,11 +77,48 @@ page.SaveRequested += async (_, e) =>
 };
 ```
 
+### 徽章色調
+
+`BadgeTone` 使用 `Badge` 的色調為區段的徽章著色：`Neutral`（預設）、`Success`、`Info`（強調色）、`Warning` 和 `Danger`。需要使用者處理的區段（例如付款方式已過期）用 `Warning` 或 `Danger`，計數保留中性色調。
+
+```xml
+<arc:SettingsPage Height="320">
+    <arc:SettingsSection Header="Profile" Icon="{x:Static arc:ArcIcons.User}" />
+    <arc:SettingsSection Header="Security" Icon="{x:Static arc:ArcIcons.Shield}" Badge="Review" BadgeTone="Warning" />
+    <arc:SettingsSection Header="Billing" Icon="{x:Static arc:ArcIcons.CreditCard}" Badge="Failed" BadgeTone="Danger" />
+</arc:SettingsPage>
+```
+
 ### 版面與寬度
 
 頁面寬度不小於 `CompactWidth`（預設 720 px）時為兩欄。低於該寬度時變為單欄：標題位於一排可橫向捲動的區段膠囊之上，頁尾隱藏，內容的內距變小（兩側 20 px，上方 22 px，下方 24 px）。`IsCompact` 反映目前的版面，頁面還帶有 `:compact` 虛擬類別，因此樣式可以據此調整頁面。應依頁面可用的空間而不是螢幕來選擇寬度：400 px 側邊面板中的設定頁面即使在寬螢幕上也是緊湊版面。
 
 <Demo name="Compact" />
+
+### 選取值
+
+為每個區段設定一個識別它的 `Value`，例如路由鍵或列舉成員，然後繫結頁面的 `SelectedValue`。它是雙向的：頁面回報所選區段的 `Value`，設定 `SelectedValue` 則顯示具有該值的區段，因此檢視模型可以讓頁面開啟在某個區段上，也能跟隨使用者的選擇。沒有 `Value` 的區段回報它自己。若要以其他方式讀取值，像在任何 Avalonia 選取器上一樣設定 `SelectedValueBinding`。
+
+```xml
+<arc:SettingsPage SelectedValue="{Binding Route}">
+    <arc:SettingsSection Header="Profile" Value="profile" Icon="{x:Static arc:ArcIcons.User}" />
+    <arc:SettingsSection Header="Notifications" Value="notifications" Icon="{x:Static arc:ArcIcons.Bell}" />
+    <arc:SettingsSection Header="Billing" Value="billing" Icon="{x:Static arc:ArcIcons.CreditCard}" />
+</arc:SettingsPage>
+```
+
+對於列舉，每個值要寫成列舉成員 `Value="{x:Static local:SettingsTab.Billing}"`，而不是它的名稱：頁面用 `Equals` 比較值，字串 `"Billing"` 不等於 `SettingsTab.Billing`。
+
+```csharp
+public enum SettingsTab { Profile, Notifications, Billing }
+
+public partial class SettingsViewModel : ObservableObject
+{
+    // 頁面開啟時顯示 Notifications；使用者的選擇會寫回這裡。
+    [ObservableProperty]
+    private SettingsTab _tab = SettingsTab.Notifications;
+}
+```
 
 ### 繫結到檢視模型
 
@@ -140,6 +177,12 @@ Page.DiscardRequested += (_, _) => ViewModel.DiscardCommand.Execute(null);
 群組預設繪製為卡片，可選的 `Header`、`Description`、`HeaderActions` 以及帶淡色底的 `Footer` 條。`Appearance="Plain"` 會去掉外框，適用於頁面內用細線分隔的群組。區段本身已有標題，因此在區段內優先使用 `Plain`，避免頁面中出現卡片套卡片。
 
 <Demo name="Rows" />
+
+### 設定列的詳細資訊與前置內容
+
+`Details` 在設定列的標題和說明下方放入任意內容：例如「Last synced 2 minutes ago」這樣的狀態列、錯誤訊息或一排標籤。文字以超小字級和弱化顏色顯示，位於說明下方 4 px；其他內容保持自身外觀，因此錯誤訊息可以使用危險色。`Leading` 用任意內容取代圖示區塊，例如 `Avatar` 或服務的標誌。它保持自身尺寸，後面留出與圖示區塊相同的 16 px 間距，並且 `LabelWidth` 會把它計算在內，因此各列的控制項仍然對齊。設定列有 `Leading` 內容時，不顯示其 `Icon`。
+
+<Demo name="RowSlots" />
 
 ### 多欄
 
@@ -270,6 +313,8 @@ Larkspur Studio 的管理後台打開時停留在成員區段，而一般區段�
 
 **首先顯示哪個區段？** 第一個已啟用的區段，除非 `SelectedIndex` 或 `Select(section)` 選擇了其他區段。已停用的區段在初始選取和鍵盤移動中都會被跳過。
 
+**如何把目前顯示的區段繫結到檢視模型？** 為每個區段設定 `Value`，並繫結雙向的 `SelectedValue`。這樣檢視模型儲存的是路由鍵或列舉成員而不是索引，設定新值即顯示對應的區段。
+
 **如何更改儲存按鈕的文字？** 用一個 `SettingsPageLabels` 取代 `Labels` 物件，並在其 `Save` 屬性中寫入所需文字。其他文字保持預設值，除非你也設定它們。
 
 ## API 參考
@@ -303,6 +348,8 @@ Larkspur Studio 的管理後台打開時停留在成員區段，而一般區段�
 - 鍵盤焦點會在導覽項目周圍繪製 2px 的焦點環。指標聚焦時不顯示。
 - 儲存列中的提示文字位於禮貌的即時區域中。
 - 選取的項目會被朗讀為已選取，因此螢幕閱讀器使用者在每次移動後都能聽到目前顯示的是哪個區段。
+- 徽章以文字朗讀，因此色調不是唯一的提示：請把文字（「Review」、「Failed」）寫在徽章中。
+- 設定列的 `Leading` 和 `Details` 中的內容保留各自的無障礙名稱和角色；設定列的控制項仍以標題命名。
 
 ### 鍵盤
 

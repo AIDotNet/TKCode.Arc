@@ -1,7 +1,7 @@
 ---
 title: 单选卡片
 summary: 可选择的选项卡片，带有滑动的选中光环、价格与描述插槽，并具有单选按钮的键盘行为。
-source-hash: d83deb93b014
+source-hash: 2a7f8a98a796
 ---
 
 <Demo name="Grid" />
@@ -115,6 +115,36 @@ plans.SelectionChanged += (_, _) => Console.WriteLine(plans.SelectedValue);
 ```
 
 `Icon` 接受一个 `Geometry`。它会以 18px 的图标绘制在卡片的起始位置。
+
+### 数据绑定的项
+
+卡片不必是 `RadioCardOption` 对象。把 `ItemsSource` 绑定到你自己的项，并为组提供用于标签的 `ItemTemplate`。每张卡片都是公开的 `RadioCard`，其 `DataContext` 就是它的项，因此像 Avalonia 的 `ListBoxItem` 一样，可以用针对 `arc|RadioCard` 的样式把卡片的其余部分绑定到项：`Description`、`Meta`、`Icon`、`DisabledReason`、`IsEnabled` 和 `AutomationProperties.Name`。把 `SelectedValueBinding` 设为标识项的属性；不设置时，`SelectedValue` 就是项本身。
+
+```xml
+<arc:RadioCards ItemsSource="{Binding Plans}"
+                SelectedValue="{Binding PlanId}"
+                SelectedValueBinding="{Binding Id}">
+    <arc:RadioCards.ItemTemplate>
+        <DataTemplate>
+            <TextBlock Text="{Binding Name}" />
+        </DataTemplate>
+    </arc:RadioCards.ItemTemplate>
+    <arc:RadioCards.Styles>
+        <Style Selector="arc|RadioCard">
+            <Setter Property="Description" Value="{Binding Summary}" />
+            <Setter Property="Meta" Value="{Binding Price}" />
+            <Setter Property="IsEnabled" Value="{Binding IsAvailable}" />
+            <Setter Property="DisabledReason" Value="{Binding UnavailableReason}" />
+            <Setter Property="AutomationProperties.Name" Value="{Binding Name}" />
+        </Style>
+    </arc:RadioCards.Styles>
+</arc:RadioCards>
+```
+
+- 使用编译绑定时，为 `DataTemplate` 和 `Style` 设置你的项类型作为 `x:DataType`。
+- 模板的根元素不是 `TextBlock` 时请设置 `AutomationProperties.Name`：卡片只会从文字标签获得名称。描述（或禁用原因）是卡片的帮助文字。
+- 卡片的 `Icon` 接受任意内容；把它绑定到 `ArcGlyph` 或图片，尺寸为 18 px。也可以使用基于卡片主题的 `ItemContainerTheme`：`BasedOn="{StaticResource {x:Type arc:RadioCard}}"`。
+- `RadioCardOption` 会自己设置所在卡片的各个部分，这些值优先于样式。
 
 ### 选择布局
 
@@ -242,11 +272,13 @@ plans.SelectionChanged += (_, _) => Console.WriteLine(plans.SelectedValue);
 
 <!-- api: RadioCards -->
 <!-- api: RadioCardOption -->
+<!-- api: RadioCard -->
 
 ## 无障碍
 
 - 对辅助技术而言，每张卡片都是一个单选按钮。当没有可见的标题为该组命名时，请在组上设置 `AutomationProperties.Name`。
 - 卡片标签即卡片的名称。描述是其帮助文字。被禁用的卡片会改为报告其 `DisabledReason`。
+- 数据绑定的卡片在标签不是纯文字时，需要通过针对 `arc|RadioCard` 的样式设置 `AutomationProperties.Name`。
 - 该组只占一个 Tab 停靠点。`IsRequired` 会作为表单的必填项报告给辅助技术。
 - 从右到左的布局会镜像方向键：Right 移到上一张卡片，Left 移到下一张。
 - 键盘焦点会绘制一个偏移 2px 的 2px 轮廓。指针焦点不会绘制。
