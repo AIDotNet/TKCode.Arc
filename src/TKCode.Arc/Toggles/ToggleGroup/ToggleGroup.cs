@@ -115,6 +115,8 @@ public class ToggleGroup : SelectingItemsControl
     private GlidingIndicator? _indicator;
     private ToggleGroupItem? _lastFocused;
     private bool _syncing;
+    private readonly BindingBase _defaultValueBinding;
+    private SelectBindingEvaluator? _valueEvaluator;
 
     static ToggleGroup()
     {
@@ -125,7 +127,8 @@ public class ToggleGroup : SelectingItemsControl
     public ToggleGroup()
     {
         _host = new TogglesGroupHost(this, flipInRtl: false, OnOptionApplied);
-        SelectedValueBinding = TogglesValueBinding.Create();
+        _defaultValueBinding = TogglesValueBinding.Create();
+        SelectedValueBinding = _defaultValueBinding;
         SelectionChanged += OnSelectionChanged;
         ActualThemeVariantChanged += (_, _) => UpdateFill();
         ResourcesChanged += (_, _) => UpdateFill();
@@ -167,14 +170,14 @@ public class ToggleGroup : SelectingItemsControl
     private void OnOptionApplied(Control container, object? item)
     {
         ApplyOption(container, item);
-        ApplyValuesToSelection();
+        ApplyValuesToSelection(fromValues: false);
     }
 
     protected override void ContainerForItemPreparedOverride(Control container, object? item, int index)
     {
         base.ContainerForItemPreparedOverride(container, item, index);
         // The options of a XAML list arrive after the attributes, so values set earlier apply here.
-        ApplyValuesToSelection();
+        ApplyValuesToSelection(fromValues: false);
         RefreshTabStop();
         UpdateJoins();
     }
@@ -229,7 +232,7 @@ public class ToggleGroup : SelectingItemsControl
             PseudoClasses.Set(MultiplePseudoClass, IsMultiple);
             UpdateLooks();
             AttachIndicator();
-            ApplyValuesToSelection();
+            ApplyValuesToSelection(fromValues: true);
             RefreshTabStop();
             UpdateJoins();
         }
@@ -242,7 +245,7 @@ public class ToggleGroup : SelectingItemsControl
         {
             if (!_syncing)
             {
-                ApplyValuesToSelection();
+                ApplyValuesToSelection(fromValues: true);
             }
         }
         else if (change.Property == FillMixProperty)
@@ -310,7 +313,7 @@ public class ToggleGroup : SelectingItemsControl
         var count = ItemCount;
         for (var index = 0; index < count; index++)
         {
-            if (Equals(TogglesValueBinding.ValueOf(Items[index]), value))
+            if (Equals(ValueAt(index), value))
             {
                 return index;
             }
@@ -318,13 +321,35 @@ public class ToggleGroup : SelectingItemsControl
         return -1;
     }
 
-    /// <summary>Presses the options <see cref="SelectedValues"/> names; does nothing when they are already pressed.</summary>
-    private void ApplyValuesToSelection()
+    /// <summary>
+    /// The value the item at <paramref name="index"/> reports, read through the current <c>SelectedValueBinding</c>
+    /// (the default one maps an option to its <c>Value</c> and any other item to itself).
+    /// </summary>
+    private object? ValueAt(int index)
+    {
+        var item = Items[index];
+        var binding = SelectedValueBinding;
+        if (binding is null || ReferenceEquals(binding, _defaultValueBinding))
+        {
+            return TogglesValueBinding.ValueOf(item);
+        }
+        _valueEvaluator ??= new SelectBindingEvaluator();
+        var value = _valueEvaluator.Evaluate(binding, item);
+        _valueEvaluator.Clear();
+        return value;
+    }
+
+    /// <summary>
+    /// Presses the options <see cref="SelectedValues"/> names; does nothing when they are already pressed.
+    /// <paramref name="fromValues"/> is true when <see cref="SelectedValues"/> (or the mode) changed: only then does
+    /// single mode push the value into <c>SelectedValue</c>, so preparing options never overwrites a bound value.
+    /// </summary>
+    private void ApplyValuesToSelection(bool fromValues)
     {
         var values = SelectedValues;
         if (!IsMultiple)
         {
-            if (values.Count > 0 && !_syncing && !Equals(SelectedValue, values[0]))
+            if (fromValues && values.Count > 0 && !_syncing && !Equals(SelectedValue, values[0]))
             {
                 SetCurrentValue(SelectedValueProperty, values[0]);
             }
@@ -390,7 +415,7 @@ public class ToggleGroup : SelectingItemsControl
             }
             foreach (var index in Selection.SelectedIndexes)
             {
-                var value = TogglesValueBinding.ValueOf(Items[index]);
+                var value = ValueAt(index);
                 if (!pressed.Contains(value))
                 {
                     pressed.Add(value);
@@ -400,7 +425,7 @@ public class ToggleGroup : SelectingItemsControl
         }
         else
         {
-            next = SelectedIndex >= 0 && SelectedIndex < ItemCount ? [TogglesValueBinding.ValueOf(Items[SelectedIndex])] : [];
+            next = SelectedIndex >= 0 && SelectedIndex < ItemCount ? [ValueAt(SelectedIndex)] : [];
         }
         if (next.SequenceEqual(SelectedValues))
         {
@@ -419,7 +444,7 @@ public class ToggleGroup : SelectingItemsControl
         {
             return;
         }
-        var value = TogglesValueBinding.ValueOf(Items[index]);
+        var value = ValueAt(index);
         if (IsMultiple)
         {
             var on = item.IsSelected;

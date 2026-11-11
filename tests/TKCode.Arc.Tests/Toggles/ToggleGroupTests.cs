@@ -4,6 +4,7 @@ using Avalonia.Automation;
 using Avalonia.Automation.Peers;
 using Avalonia.Automation.Provider;
 using Avalonia.Controls;
+using Avalonia.Data;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
@@ -502,6 +503,65 @@ public class ToggleGroupTests
             multiple.SelectedValues.ShouldBe(["c"]);
             provider.Toggle();
             provider.ToggleState.ShouldBe(ToggleState.Off);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    public sealed record ColorOption(string Key, string Name)
+    {
+        public override string ToString() => Name;
+    }
+
+    public sealed class ColorState : System.ComponentModel.INotifyPropertyChanged
+    {
+        private object? _colorKey = "green";
+
+        public object? ColorKey
+        {
+            get => _colorKey;
+            set
+            {
+                _colorKey = value;
+                PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(ColorKey)));
+            }
+        }
+
+        public event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;
+    }
+
+    [AvaloniaFact]
+    public void A_Custom_Value_Binding_Reports_Values_And_Keeps_The_Bound_Value()
+    {
+        // Issue #105: the values ignored SelectedValueBinding and the item itself was written back into SelectedValue.
+        var state = new ColorState();
+        var group = new ToggleGroup
+        {
+            Label = "Color",
+            ItemsSource = new[] { new ColorOption("red", "Red"), new ColorOption("green", "Green"), new ColorOption("blue", "Blue") },
+            SelectedValueBinding = new Binding(nameof(ColorOption.Key))
+        };
+        group.Bind(ToggleGroup.SelectedValueProperty, new Binding(nameof(ColorState.ColorKey)) { Source = state, Mode = BindingMode.TwoWay });
+        var window = TestHelpers.Show(group);
+        try
+        {
+            state.ColorKey.ShouldBe("green");
+            group.SelectedIndex.ShouldBe(1);
+            group.SelectedValues.ShouldBe(["green"]);
+
+            object? reported = null;
+            group.ValueChanged += (_, e) => reported = e.Value;
+            Click(window, Item(group, 2));
+            state.ColorKey.ShouldBe("blue");
+            group.SelectedValues.ShouldBe(["blue"]);
+            reported.ShouldBe("blue");
+
+            state.ColorKey = "red";
+            Dispatcher.UIThread.RunJobs();
+            group.SelectedIndex.ShouldBe(0);
+            group.SelectedValues.ShouldBe(["red"]);
         }
         finally
         {
