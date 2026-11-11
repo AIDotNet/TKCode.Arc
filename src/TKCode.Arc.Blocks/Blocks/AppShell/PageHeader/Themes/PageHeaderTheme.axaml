@@ -306,6 +306,29 @@
                 <Setter Property="IsStatusVisible" Value="False" />
             </Style>
         </Style>
+
+        <!-- The compact header; after :narrow so it wins at every width. -->
+        <Style Selector="^:small">
+            <Style Selector="^ /template/ StackPanel#PART_IntroInner">
+                <Setter Property="Margin" Value="{arc:PageHeaderTokenResource IntroPaddingSmall}" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_Title">
+                <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXL}" />
+                <Setter Property="LineHeight" Value="{arc:PageHeaderTokenResource TitleLineHeightSmall}" />
+                <Setter Property="LetterSpacing" Value="{arc:PageHeaderTokenResource TitleLetterSpacingSmall}" />
+            </Style>
+        </Style>
+
+        <!-- Only the header: no rule, no tabs (hidden in code), no body; the control is as tall as the header. -->
+        <Style Selector="^:header-only">
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Style Selector="^ /template/ Border#PART_HeaderRule">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ ScrollViewer#PART_Scroller">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+        </Style>
     </ControlTheme>
 
     <!-- The compact bar title (Arc .compact): text-base 500 with a small status badge, a quiet hover fill. -->

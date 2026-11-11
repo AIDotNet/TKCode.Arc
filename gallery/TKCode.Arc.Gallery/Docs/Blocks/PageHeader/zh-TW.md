@@ -1,7 +1,7 @@
 ---
 title: 頁首
 summary: 專案頁首會隨捲動收合為精簡列，標籤頁的數量會滾動更新。
-source-hash: b1f92de5ae59
+source-hash: 62afcdc3ae47
 ---
 
 <Demo name="Preview" />
@@ -82,7 +82,7 @@ header.BreadcrumbClick += (_, e) => router.Open(e.Index);
 
 `Actions` 是頁首列中的小型次要按鈕。`MoreActions` 一律位於「More actions」選單中，排在收合的次要操作之後，並以分隔線隔開。`PrimaryAction` 是列尾的一個小型主要按鈕，在 460 像素以下時只顯示圖示。每個 `PageHeaderAction` 都有 `Label`、`Icon`（Lucide 圖形，例如 `ArcIcons.Bell`），以及 `Command` 或 `Click` 事件。`PageHeader.ActionInvoked` 在一處回報所有操作，操作來自選單時 `IsFromMenu` 會設為 true。
 
-對會刪除資料的選單操作（例如刪除或取消）使用 `IsDestructive="True"`。它會以危險色繪製選單列。`IsEnabled="False"` 會停用按鈕並讓其選單列變淡。`IsLoading="True"` 會顯示載入指示器並忽略點擊。`Invoke()` 從程式碼執行操作，並遵守這些狀態。
+對會刪除資料的選單操作（例如刪除或取消）使用 `IsDestructive="True"`。它會以危險色繪製選單列。`IsEnabled="False"` 會停用按鈕並讓其選單列變淡。`IsLoading="True"` 會顯示載入指示器並忽略點擊。`IsVisible="False"` 會隱藏操作：既沒有按鈕也沒有選單列，頁首判斷是否收合時也不計算它的寬度。目前不適用的操作用它隱藏；適用但暫時不能執行的操作用 `IsEnabled`。`Invoke()` 從程式碼執行操作，並遵守這些狀態。
 
 當麵包屑的可用寬度將小於 240 像素時，次要操作會收合到「More actions」選單的頂部。寬度再次達到 272 像素時它們會恢復顯示，因此頁首不會在門檻處閃爍。只監看頁首的寬度，因此變長的標籤（Follow 變為 Following）不會讓你剛按下的按鈕被收合。
 
@@ -115,6 +115,17 @@ share.IsLoading = true;
 ### 窄寬度
 
 版面配置跟隨控制項的寬度，而不是視窗的寬度。寬度低於 560 像素時，內距變小，根麵包屑與精簡徽章隱藏，標題降一級字級，標籤列的遠端邊緣會漸隱。寬度低於 460 像素時，主要操作只顯示圖示。在頁首第一次測量之前，寬度小於 720 像素的頁首會以收合的次要操作開始，因此載入時不會閃爍。
+
+### 僅頁首與精簡尺寸
+
+設定 `IsHeaderOnly="True"` 後，頁首只作為頁面頂端的標題與操作列，頁面內容由你自己配置。標籤頁、頁首下方的分隔線與捲動區都不顯示，控制項只有頁首那麼高，也不會收合。
+
+`Size="Small"` 是用於設定頁與側欄的精簡頁首：標題使用 `TypeXL` 字級而不是 `Type3XL`，上下留白也更小，在任何寬度下都生效。`Medium`（預設）與 `Large` 是完整頁首。
+
+```xml
+<arc:PageHeader IsHeaderOnly="True" Size="Small" Title="Notifications"
+                Description="Choose what reaches you and where." />
+```
 
 ### 繫結到檢視模型
 

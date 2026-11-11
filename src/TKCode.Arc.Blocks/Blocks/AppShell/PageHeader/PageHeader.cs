@@ -84,7 +84,8 @@ public sealed class PageHeaderActionEventArgs : RoutedEventArgs
 [TemplatePart(IndicatorPart, typeof(GlidingIndicator))]
 [TemplatePart(ScrollerPart, typeof(ScrollViewer))]
 [TemplatePart(BodyPart, typeof(Control))]
-[PseudoClasses(CondensedPseudoClass, ActionsFoldedPseudoClass, NarrowPseudoClass, TightPseudoClass)]
+[PseudoClasses(CondensedPseudoClass, ActionsFoldedPseudoClass, NarrowPseudoClass, TightPseudoClass, HeaderOnlyPseudoClass,
+    SmallPseudoClass)]
 public class PageHeader : SelectingItemsControl
 {
     public const string BarPart = "PART_Bar";
@@ -116,6 +117,12 @@ public class PageHeader : SelectingItemsControl
 
     /// <summary>Set while the control is narrower than 460px (the primary action shows only its icon).</summary>
     public const string TightPseudoClass = ":tight";
+
+    /// <summary>Set while <see cref="IsHeaderOnly"/> is true.</summary>
+    public const string HeaderOnlyPseudoClass = ":header-only";
+
+    /// <summary>Set while <see cref="Size"/> is <see cref="ControlSize.Small"/> (the compact header).</summary>
+    public const string SmallPseudoClass = ":small";
 
     /// <summary>The header condenses once the body scrolls past this offset ...</summary>
     internal const double CondenseAt = 16;
@@ -186,6 +193,21 @@ public class PageHeader : SelectingItemsControl
     /// <summary>Accessible name of the tab row (default "Sections").</summary>
     public static readonly StyledProperty<string> TabsLabelProperty =
         AvaloniaProperty.Register<PageHeader, string>(nameof(TabsLabel), "Sections");
+
+    /// <summary>
+    /// True shows only the header (breadcrumbs, title, status, description, meta and actions) with no tabs, no rule under
+    /// it and no scrolling body, for a title and action bar on top of a page that lays out its own content. The header
+    /// never condenses in this mode. Defaults to false.
+    /// </summary>
+    public static readonly StyledProperty<bool> IsHeaderOnlyProperty =
+        AvaloniaProperty.Register<PageHeader, bool>(nameof(IsHeaderOnly));
+
+    /// <summary>
+    /// Header density. <see cref="ControlSize.Small"/> is a compact header for settings pages and side panes: a smaller
+    /// title (TypeXL instead of Type3XL) and tighter space around it. Medium and Large are the full Arc header (the default).
+    /// </summary>
+    public static readonly StyledProperty<ControlSize> SizeProperty =
+        AvaloniaProperty.Register<PageHeader, ControlSize>(nameof(Size), ControlSize.Medium);
 
     /// <summary>True while the header is folded into the compact bar (the body scrolled past 16px, until it is back within 4px).</summary>
     public static readonly DirectProperty<PageHeader, bool> IsCondensedProperty =
@@ -297,6 +319,12 @@ public class PageHeader : SelectingItemsControl
         get => GetValue(TabsLabelProperty);
         set => SetValue(TabsLabelProperty, value);
     }
+
+    /// <inheritdoc cref="IsHeaderOnlyProperty"/>
+    public bool IsHeaderOnly { get => GetValue(IsHeaderOnlyProperty); set => SetValue(IsHeaderOnlyProperty, value); }
+
+    /// <inheritdoc cref="SizeProperty"/>
+    public ControlSize Size { get => GetValue(SizeProperty); set => SetValue(SizeProperty, value); }
 
     private bool _isCondensed;
 
@@ -671,6 +699,19 @@ public class PageHeader : SelectingItemsControl
         {
             PseudoClasses.Set(ActionsFoldedPseudoClass, AreActionsFolded);
         }
+        else if (change.Property == IsHeaderOnlyProperty)
+        {
+            PseudoClasses.Set(HeaderOnlyPseudoClass, IsHeaderOnly);
+            UpdateTabsVisibility();
+            if (IsHeaderOnly && IsCondensed)
+            {
+                IsCondensed = false;
+            }
+        }
+        else if (change.Property == SizeProperty)
+        {
+            PseudoClasses.Set(SmallPseudoClass, Size == ControlSize.Small);
+        }
         else if (change.Property == BreadcrumbsProperty)
         {
             ObserveBreadcrumbs();
@@ -796,7 +837,7 @@ public class PageHeader : SelectingItemsControl
         }
         _lastBarWidth = width;
         var room = width - _secondarySlot.NaturalWidth - _trailing.Bounds.Width - _bar.ColumnSpacing;
-        var folded = Actions.Count > 0 && (_foldMeasured && AreActionsFolded ? room < LeadReturn : room < LeadMin);
+        var folded = Actions.Any(a => a.IsVisible) && (_foldMeasured && AreActionsFolded ? room < LeadReturn : room < LeadMin);
         var animate = _foldMeasured;
         _foldMeasured = true;
         if (folded != AreActionsFolded || folded != _secondarySlot.IsFolded)
@@ -1134,6 +1175,19 @@ public class PageHeader : SelectingItemsControl
                 UpdateEntry(entry, action);
             }
         }
+        else if (p == PageHeaderAction.IsVisibleProperty)
+        {
+            if (_secondaryButtons.TryGetValue(action, out var button))
+            {
+                button.IsVisible = action.IsVisible;
+            }
+            if (ReferenceEquals(action, PrimaryAction))
+            {
+                UpdatePrimary();
+            }
+            RebuildMenu();
+            RequestFoldEvaluation();
+        }
         else if (p == PageHeaderAction.IsLoadingProperty)
         {
             if (_secondaryButtons.TryGetValue(action, out var button))
@@ -1194,6 +1248,7 @@ public class PageHeader : SelectingItemsControl
                 Variant = ButtonVariant.Secondary,
                 Size = ControlSize.Small,
                 Tag = action,
+                IsVisible = action.IsVisible,
                 IsEnabled = IsButtonEnabled(action),
                 IsLoading = action.IsLoading,
                 Content = BuildContent(action, out _)
@@ -1213,7 +1268,7 @@ public class PageHeader : SelectingItemsControl
             return;
         }
         var action = PrimaryAction;
-        _primaryButton.IsVisible = action is not null;
+        _primaryButton.IsVisible = action is { IsVisible: true };
         if (action is null)
         {
             _primaryButton.Content = null;
@@ -1328,7 +1383,7 @@ public class PageHeader : SelectingItemsControl
         var menu = EnsureMenu();
         _menuEntries.Clear();
         menu.Items.Clear();
-        var folded = AreActionsFolded ? Actions.ToList() : new List<PageHeaderAction>();
+        var folded = AreActionsFolded ? Actions.Where(a => a.IsVisible).ToList() : new List<PageHeaderAction>();
         foreach (var action in folded)
         {
             AddEntry(menu, action, separatorBefore: false);
@@ -1336,6 +1391,10 @@ public class PageHeader : SelectingItemsControl
         var first = true;
         foreach (var action in MoreActions)
         {
+            if (!action.IsVisible)
+            {
+                continue;
+            }
             AddEntry(menu, action, separatorBefore: first && folded.Count > 0);
             first = false;
         }
@@ -1385,7 +1444,7 @@ public class PageHeader : SelectingItemsControl
     {
         if (_tabsViewport is not null)
         {
-            _tabsViewport.IsVisible = ItemCount > 0;
+            _tabsViewport.IsVisible = ItemCount > 0 && !IsHeaderOnly;
         }
     }
 

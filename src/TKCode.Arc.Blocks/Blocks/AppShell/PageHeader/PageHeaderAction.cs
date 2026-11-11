@@ -40,6 +40,14 @@ public class PageHeaderAction : AvaloniaObject
     public static readonly StyledProperty<bool> IsEnabledProperty =
         AvaloniaProperty.Register<PageHeaderAction, bool>(nameof(IsEnabled), true);
 
+    /// <summary>
+    /// False hides the action: no button, no menu row, and it takes no room when the header decides whether the
+    /// secondary actions fold. Use it for actions that do not apply now (use <see cref="IsEnabled"/> to show them dimmed).
+    /// Defaults to true.
+    /// </summary>
+    public static readonly StyledProperty<bool> IsVisibleProperty =
+        AvaloniaProperty.Register<PageHeaderAction, bool>(nameof(IsVisible), true);
+
     /// <summary>Shows the button spinner and ignores clicks while true; the menu row is disabled meanwhile.</summary>
     public static readonly StyledProperty<bool> IsLoadingProperty =
         AvaloniaProperty.Register<PageHeaderAction, bool>(nameof(IsLoading));
@@ -101,6 +109,17 @@ public class PageHeaderAction : AvaloniaObject
         set => SetValue(IsEnabledProperty, value);
     }
 
+    /// <summary>
+    /// False hides the action: no button, no menu row, and it takes no room when the header decides whether the
+    /// secondary actions fold. Use it for actions that do not apply now (use <see cref="IsEnabled"/> to show them dimmed).
+    /// Defaults to true.
+    /// </summary>
+    public bool IsVisible
+    {
+        get => GetValue(IsVisibleProperty);
+        set => SetValue(IsVisibleProperty, value);
+    }
+
     /// <summary>Shows the button spinner and ignores clicks while true; the menu row is disabled meanwhile.</summary>
     public bool IsLoading
     {
@@ -148,7 +167,7 @@ public class PageHeaderAction : AvaloniaObject
     }
 
     /// <summary>True when the action can be chosen now: enabled, not loading, and its command can execute.</summary>
-    internal bool CanExecute => IsEnabled && !IsLoading && (Command is not { } command || command.CanExecute(CommandParameter));
+    internal bool CanExecute => IsVisible && IsEnabled && !IsLoading && (Command is not { } command || command.CanExecute(CommandParameter));
 
     /// <summary>The label of the menu row.</summary>
     internal string? EffectiveMenuLabel => MenuLabel ?? Label;
@@ -159,7 +178,7 @@ public class PageHeaderAction : AvaloniaObject
     /// <summary>Chooses the action: raises <see cref="Click"/> and runs <see cref="Command"/> when it can execute.</summary>
     public void Invoke()
     {
-        if (!IsEnabled || IsLoading)
+        if (!IsVisible || !IsEnabled || IsLoading)
         {
             return;
         }
