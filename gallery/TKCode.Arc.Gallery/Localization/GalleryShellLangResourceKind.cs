@@ -106,6 +106,7 @@ public enum GalleryShellLangResourceKind
     Category_Publishing,
     Category_Inputs,
     Category_Cursor,
+    Category_DocksTabs,
     Category_Data,
     Category_Blocks,
     BlockGroup_Analytics,

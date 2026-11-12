@@ -1,0 +1,225 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ToolDockTheme">
+
+    <!-- The dock: one surface (bar, and the tray while a group is open) under the slots; the tray and the label are added
+         to the stage by code the first time they are needed. -->
+    <ControlTheme x:Key="{x:Type arc:ToolDock}" TargetType="arc:ToolDock">
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+                <arc:ToolDockPanel Spacing="{arc:ToolDockTokenResource SlotSpacing}" />
+            </ItemsPanelTemplate>
+        </Setter>
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ToolDock">
+                <arc:ToolDockStage Name="PART_Stage" Padding="{arc:ToolDockTokenResource BarPadding}">
+                    <arc:ToolDockSurface Name="PART_Surface"
+                                         Fill="{arc:ArcDesignTokenResource SurfaceRaised}"
+                                         Stroke="{arc:ToolDockTokenResource OutlineColor}"
+                                         StrokeThickness="{arc:ToolDockTokenResource OutlineThickness}"
+                                         BoxShadow="{arc:ArcDesignTokenResource ShadowRaised}"
+                                         BarCornerRadius="{arc:ArcDesignTokenResource RadiusStep20}"
+                                         TrayCornerRadius="{arc:ArcDesignTokenResource RadiusStep16}"
+                                         FilletRadius="{arc:ToolDockTokenResource FilletRadius}" />
+                    <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
+                </arc:ToolDockStage>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- A slot: secondary glyph at rest, full text color under the mouse, accent when chosen. The tint is the slot's own
+         and slides in from the previous slot (code); the press dip and the drag lift are code-driven transforms. -->
+    <ControlTheme x:Key="{x:Type arc:ToolDockItem}" TargetType="arc:ToolDockItem">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Width" Value="{arc:ToolDockTokenResource SlotSize}" />
+        <Setter Property="Height" Value="{arc:ToolDockTokenResource SlotSize}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep14}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ToolDockItem">
+                <Panel Name="PART_Root">
+                    <Border Name="PART_Tint"
+                            Background="{arc:ArcDesignTokenResource AccentSubtle}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            IsVisible="False" />
+                    <Border Name="PART_Face"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <Panel Name="PART_Content">
+                            <arc:ToolDockGlyph Name="PART_Glyph"
+                                               Size="{arc:ToolDockTokenResource GlyphSize}"
+                                               Foreground="{TemplateBinding Foreground}"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center" />
+                            <Border Name="PART_Mark"
+                                    Width="{arc:ToolDockTokenResource MarkSize}"
+                                    Height="{arc:ToolDockTokenResource MarkSize}"
+                                    Margin="{arc:ToolDockTokenResource MarkMargin}"
+                                    Opacity="{arc:ToolDockTokenResource MarkOpacity}"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Top"
+                                    BorderThickness="0,0,1,1"
+                                    BorderBrush="{TemplateBinding Foreground}"
+                                    IsHitTestVisible="False"
+                                    IsVisible="False" />
+                        </Panel>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:group /template/ Border#PART_Mark">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:hover-fine">
+            <Setter Property="Background" Value="{arc:ToolDockTokenResource HoverFillColor}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:selected">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:selected /template/ Border#PART_Tint">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A tray: members in a row. -->
+    <ControlTheme x:Key="{x:Type arc:ToolDockTray}" TargetType="arc:ToolDockTray">
+        <Setter Property="Padding" Value="{arc:ToolDockTokenResource TrayPadding}" />
+        <Setter Property="Spacing" Value="{arc:ToolDockTokenResource TraySpacing}" />
+        <Setter Property="TrayInset" Value="{arc:ToolDockTokenResource TrayInset}" />
+    </ControlTheme>
+
+    <!-- A member: like a slot, a little smaller; the chosen member keeps a tinted fill. -->
+    <ControlTheme x:Key="{x:Type arc:ToolDockTrayButton}" TargetType="arc:ToolDockTrayButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Width" Value="{arc:ToolDockTokenResource MemberSize}" />
+        <Setter Property="Height" Value="{arc:ToolDockTokenResource MemberSize}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ToolDockTrayButton">
+                <Panel Name="PART_Root">
+                    <Border Name="PART_Face"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <arc:ArcGlyph Data="{TemplateBinding Glyph}"
+                                      Size="{arc:ToolDockTokenResource GlyphSize}"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Border#PART_Face">
+            <Setter Property="RenderTransform" Value="scale(1)" />
+        </Style>
+        <Style Selector="^:hover-fine">
+            <Setter Property="Background" Value="{arc:ToolDockTokenResource HoverFillColor}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:selected">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:pressed /template/ Border#PART_Face">
+            <Setter Property="RenderTransform" Value="scale(0.94)" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Face">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The floating label: the text color as the pill, the page color as the text. -->
+    <ControlTheme x:Key="{x:Type arc:ToolDockLabel}" TargetType="arc:ToolDockLabel">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="ShortcutFill" Value="{arc:ToolDockTokenResource ShortcutFillColor}" />
+        <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowRaised}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep10}" />
+        <Setter Property="ShortcutCornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep5}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="ShortcutFontSize" Value="{arc:ToolDockTokenResource ShortcutFontSize}" />
+        <Setter Property="ShortcutSize" Value="{arc:ToolDockTokenResource ShortcutSize}" />
+        <Setter Property="ShortcutSpacing" Value="{arc:ToolDockTokenResource ShortcutSpacing}" />
+        <Setter Property="Padding" Value="{arc:ToolDockTokenResource LabelPadding}" />
+        <Setter Property="PillHeight" Value="{arc:ToolDockTokenResource LabelHeight}" />
+        <Setter Property="Gap" Value="{arc:ToolDockTokenResource LabelGap}" />
+    </ControlTheme>
+
+    <!-- A badge: danger pill with white digits and a ring of the bar's fill. -->
+    <ControlTheme x:Key="{x:Type arc:ToolDockBadge}" TargetType="arc:ToolDockBadge">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Fill" Value="{arc:ArcDesignTokenResource Danger}" />
+        <Setter Property="RingBrush" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="RingThickness" Value="{arc:ToolDockTokenResource BadgeRingThickness}" />
+        <Setter Property="Foreground" Value="{arc:ToolDockTokenResource BadgeForegroundColor}" />
+        <Setter Property="Padding" Value="{arc:ToolDockTokenResource BadgePadding}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="FontSize" Value="{arc:ToolDockTokenResource BadgeFontSize}" />
+        <Setter Property="PillHeight" Value="{arc:ToolDockTokenResource BadgeHeight}" />
+        <Setter Property="Margin" Value="{arc:ToolDockTokenResource BadgeMargin}" />
+    </ControlTheme>
+</ResourceDictionary>

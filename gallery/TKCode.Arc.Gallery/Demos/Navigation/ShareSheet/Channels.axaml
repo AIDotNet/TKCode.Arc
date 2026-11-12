@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ShareSheetChannelsDemo">
+    <!-- Each channel spins while its handler runs. "Wiki" always fails, so its button reads Failed for a moment. -->
+    <StackPanel Spacing="14" HorizontalAlignment="Center" VerticalAlignment="Top">
+        <arc:ShareSheet x:Name="Sheet"
+                        Title="Release checklist"
+                        Link="https://harbor.example/doc/release-checklist"
+                        Align="Start"
+                        ChannelShared="OnChannelShared">
+            <arc:ShareSheet.Channels>
+                <arc:ShareSheetChannel Id="email" Label="Email" DoneLabel="Sent" Glyph="{x:Static arc:ArcIcons.Mail}" />
+                <arc:ShareSheetChannel Id="chat" Label="Chat" DoneLabel="Posted" Glyph="{x:Static arc:ArcIcons.MessageSquare}" />
+                <arc:ShareSheetChannel Id="wiki" Label="Wiki" DoneLabel="Linked" Glyph="{x:Static arc:ArcIcons.BookOpen}" />
+            </arc:ShareSheet.Channels>
+        </arc:ShareSheet>
+        <TextBlock x:Name="Log" Text="Nothing posted yet" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

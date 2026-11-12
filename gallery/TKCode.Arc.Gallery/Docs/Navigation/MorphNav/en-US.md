@@ -1,77 +1,118 @@
 ---
 title: Morph nav
-summary: A compact navigation pill that grows into a panel of sections and links on one continuous surface, and folds back into the pill when a link is chosen.
+summary: A website's top bar in which sections, their link panels and search share one reshaping surface; it slims down once the page scrolls and gathers its sections into a single menu when narrow.
 ---
 
 <Demo name="Preview" />
 
 ## When to use
 
-`MorphNav` is a site or app menu that stays out of the way. At rest it is one small pill: your mark, your name, the
-page you are on and a menu glyph. Pressing it does not open a separate menu; the pill itself grows, on a spring, into
-a panel of titled sections with a link per row, and when a link is picked the panel shrinks back into the pill, which
-now names the new page. Because the same surface changes size, corners and shadow, the eye never loses its place.
+`MorphNav` heads a product or marketing website. From left to right it carries your brand, a handful of sections, a
+search button and a single call to action. None of these open a window of their own: pointing at a section stretches
+the bar down into that section's links, sliding over to a neighbour reshapes the same surface for the neighbour's
+links, and search takes over the bar itself rather than popping up a dialog.
 
-- **Marketing sites and docs** with a handful of sections, where a full header bar would crowd the hero.
-- **Focused apps** (an editor, a reader, a player) that want navigation one press away but not on screen all the time.
-- **Phone layouts**, where the panel takes the width of the screen and stacks its sections.
+- **Websites with a small number of sections**, each leading to several pages, such as a product site.
+- **Search that should stay part of the header** rather than opening on top of the page.
+- **A single action you always want within reach**, like starting a trial, kept at the bar's far end.
 
 ## When not to use
 
-- **Deep hierarchies**: a tree with many levels needs a sidebar or a breadcrumb, not one panel.
-- **Navigation used on every step** of a task: a visible tab bar or sidebar saves a press each time.
-- **Actions** such as Delete or Export: the panel is for going somewhere; use a menu or a toolbar for doing things.
+- **Views of the same page**: `Tabs` keeps them side by side.
+- **Top-level areas of an app** rather than a website: `LiquidTabBar` suits that better.
+- **Commands rather than destinations**: a `DropdownMenu` holds those.
 
 ## Usage
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
-    <arc:MorphNav Title="Lantern">
-        <arc:MorphNavSection Header="Notebook">
-            <arc:MorphNavLink Text="Today" Description="What you saw this morning" />
-            <arc:MorphNavLink Text="Archive" />
-        </arc:MorphNavSection>
-        <arc:MorphNavSection Header="Help">
-            <arc:MorphNavLink Text="Contact" />
-        </arc:MorphNavSection>
+    <arc:MorphNav BrandName="Lantern" ActionLabel="Get started" Current="platform">
+        <arc:MorphNavItem Value="platform" Label="Platform">
+            <arc:MorphNavLink Label="Notebooks" Description="Notes and photos in one place" Href="/notebooks" />
+            <arc:MorphNavLink Label="Maps" Description="Pin every note to a place" Href="/maps" />
+        </arc:MorphNavItem>
+        <arc:MorphNavItem Value="pricing" Label="Pricing" Href="/pricing" />
+        <arc:MorphNav.SearchEntries>
+            <arc:MorphNavSearchEntry Label="Maps" Group="Platform" Href="/maps" />
+        </arc:MorphNav.SearchEntries>
     </arc:MorphNav>
 </UserControl>
 ```
 
-`MorphNav` is in the Special package: register it with `UseArcSpecial()` next to `UseArcControls()`. Its content is a
-list of `MorphNavSection` elements, each with a `Header` and its `MorphNavLink` elements. A link has `Text`, an
-optional `Description` line and an optional `Glyph` drawn in a small tile; `Tag` carries your own value, such as a
-route.
+`MorphNav` is in the Special package: register it with `UseArcSpecial()` next to `UseArcControls()`. Put
+`MorphNavItem` elements inside it, one per section. Give an item `MorphNavLink` children or a `Feature` and it gets a
+panel; leave both out and the item is a link by itself. Each link takes a `Label`, an `Href`, and optionally a
+`Description` and an `Icon`. Up to three links sit in a single column and four or more are split into two; `Columns`
+overrides that.
 
-The nav takes only the pill's room in the layout. The panel grows over the page: to the right when the nav is aligned
-left, to the left when it is aligned right and both ways when it is centered, and it keeps 16 px from the sides of the
-window. It sits above its siblings (`ZIndex` 10), so put it in the same panel as the page it floats over.
+Beside the links, `Feature` holds a card: a `MorphNavStory` shows a picture, a title and a line under it, and any other
+content is shown as it is. `Footer` adds a line under the links behind a hairline; a `MorphNavLink` there shows as a
+short link with an arrow. The panel closes as soon as any link or button inside it is used.
 
-### Knowing what was chosen
+`BrandName` and `BrandMark` make up the brand button that leads the bar, and `ActionLabel` adds the call-to-action
+button that ends it, which raises `ActionInvoked` and runs `ActionCommand`. Search appears once `SearchEntries` has
+entries.
 
-`LinkInvoked` is raised when a link is chosen, with the link in `e.Link`. The link becomes `CurrentLink`, which is
-two-way: bind it to your router to mark the page you are on, and set it when the page changes by other means. Its
-text shows in the pill, and its row is marked in the panel. `Open()`, `Close()`, `Toggle()` and the two-way `IsOpen`
-control the panel from code.
+### Going places
 
-`Footer` is shown under the sections, for a sign-in or a call to action. `PanelWidth` sets the panel's width (600 px by
-default), never more than the window less its gutters.
+Whatever leads somewhere raises `Navigate`: a panel link, a footer link, a feature card, a search result, an item
+without a panel, or the brand. `e.Label` and `e.Href` describe it, `e.Section` is the `Value` of the item it belongs to,
+and `e.Destination` is the object that was chosen. Route there in the handler, and set `Current` to the section you are
+in: that item reads in the foreground color and is announced as the current page.
 
-<Demo name="Footer" />
+<Demo name="Current" />
+
+```csharp
+nav.Navigate += (_, e) =>
+{
+    router.Go(e.Href);
+    nav.Current = e.Section;
+};
+```
+
+`Open(value)`, `ClosePanel()`, `OpenSearch()` and `CloseSearch()` drive the bar from code; `OpenValue` and
+`IsSearchOpen` report what is open.
+
+### Search
+
+Opening search turns the bar into a search field: the items fade and shrink out while the field takes over the same
+surface, and the results appear below it. Before anything is typed, the first five entries are offered as suggestions;
+as you type it ranks labels that start with the query first, then words of a label, then labels that contain it, then
+descriptions, groups and `Keywords`. No more than six results are listed, each with its `Group` at the end. Arrow keys
+move the active result and Enter opens it.
+
+### Slimmer after scrolling
+
+`IsCompact` slims the bar from 56 to 46 px on a spring and tucks the brand name away. Set it from your page's
+scroll position, so the bar takes less room once the reader moves on.
+
+<Demo name="TightenOnScroll" />
+
+```csharp
+page.ScrollChanged += (_, _) => nav.IsCompact = page.Offset.Y > 24;
+```
+
+### Folding into a menu
+
+When the nav itself is narrower than `CollapseBelow` (720 px unless you change it), its sections are replaced by a
+single Menu item. That item's panel gathers the links of every section under the section's name, followed by the
+items that have no panel. `IsCollapsed` tells you when it has folded.
+
+<Demo name="Folded" />
 
 ### Best practices
 
 **Do**
 
-- Keep it to two to four sections of a few links each, so the panel reads at a glance.
-- Give links a short `Description` when their names alone are vague.
-- Keep `CurrentLink` in step with the page, so the pill always says where you are.
+- Keep to three to five sections, and a handful of links in each panel.
+- Give links a short description when their names alone are vague.
+- Keep `Current` in step with the page, so the bar always says where you are.
 
 **Avoid**
 
-- Long link texts: rows trim with an ellipsis rather than wrap.
-- Putting the nav inside a parent that clips: the panel is drawn outside the pill's box.
+- More than one primary action: the bar has room for one.
+- Putting the nav inside a parent that clips: panels grow over the page below the bar.
 
 ## API reference
 
@@ -79,54 +120,64 @@ default), never more than the window less its gutters.
 
 ## Accessibility
 
-- The pill is a button named by `MenuLabel` and the current page ("Open menu, Archive"), and reports whether the panel
-  is expanded.
-- Links are announced as links named by their text, with the description as help text. Each can be invoked by
-  assistive technology.
-- Focus moves into the panel when it opens from the keyboard (to the current page, else the first link) and back to the
-  pill when it closes. Pointer use shows no focus ring; keyboard use shows the shared ring.
+- The nav is a navigation landmark named by `Label` ("Main" by default).
+- Items with a panel report whether they are expanded; plain items, links and cards are links. The current item is
+  announced as the current page.
+- An open panel is exposed as a region that takes its item's name. The search field is a combo box that controls the
+  results list; the line above the results ("Suggested", "6 results", "No results for …") sits in a polite live
+  region, so screen readers hear how many matched.
+- Keyboard focus shows the shared focus ring; the highlight follows keyboard focus along the bar. Pointer use shows no
+  ring.
+- Pressing anywhere beyond the nav dismisses an open panel or search; a panel also closes once focus moves out of the
+  nav.
 
 ### Keyboard interactions
 
 | Key | Action |
 |---|---|
-| Enter or Space on the pill | Opens the panel. |
-| Down / Up | Moves to the next or previous link. |
-| Right / Left | Moves to the link at the same height in the section beside it, when sections sit side by side. |
-| Home / End | Moves to the first or last link. |
-| Enter or Space on a link | Chooses the link and closes the panel. |
-| Escape | Closes the panel and returns focus to the pill. |
-
-A press outside the nav also closes the panel.
+| Left / Right | Steps along the items and wraps at either end; if a panel is open, it switches to the newly focused item's panel. |
+| Home / End | Moves to the first or last item. |
+| Down, Enter or Space, on an item that has a panel | Shows the panel with focus on its top link; when the panel is already showing, takes focus into it. |
+| Down / Up in a panel | Steps through the panel's links; from the top link, Up goes back to the item. |
+| Down / Up in search | Changes which result is highlighted. |
+| Enter in search | Goes to the highlighted result. |
+| Escape | Dismisses the open panel or search and puts focus back on the control that opened it. |
 
 ## Motion
 
-- Opening and closing are one surface changing size on the morph spring, with its corners going from the pill's to the
-  panel's and its shadow rising from resting to floating.
-- The pill fades out as the panel fades in; on the way back the panel keeps its room until it has faded, then the
-  surface shrinks to the pill.
-- The surface clips its content only while it moves. Nothing outside the nav is laid out again while it moves.
+- A spring resizes the surface to fit each panel: growing overshoots slightly, shrinking settles without overshoot.
+  Meanwhile the rounding changes from the bar's pill shape to the panel's corners and the shadow deepens.
+- The first panel opened from the bar drops slightly into place while sharpening out of a blur. Switching to another
+  section moves the contents sideways: the incoming panel enters from the side of the new item and the outgoing one
+  exits toward the other side, fading. A highlight slides along the bar to the open item, or else to the one under the
+  pointer or keyboard focus.
+- A panel waits for 60 ms of hovering before it opens and lingers 180 ms after the pointer leaves the nav, so a pointer
+  passing over a gap does not make it blink closed. Only a mouse hovers; on touch, a tap opens or closes a panel.
+- When search opens, the bar's contents blur, shrink and fade while the search field expands within the same surface.
+  Switching compact mode on or off resizes the bar on a spring.
 
 | Change | Full | Reduced | Off |
 |---|---|---|---|
-| Size | Morph spring | Jumps | Jumps |
-| Corners and shadow | Spring and 240ms | Jump | Jump |
-| Pill and panel | Crossfade | Crossfade | Swap |
+| Surface size and corners | Spring | Jumps | Jumps |
+| Panels and search | Fade, blur and travel | Short fade | Swap |
+| Highlight | Glides | Jumps | Jumps |
+| Compact | Spring | Jumps, name fades | Jumps |
 
 ## Responsive behavior
 
-- The panel is `PanelWidth` wide, never wider than the window less 16 px on each side. Inside the phone preview it
-  follows the preview's width.
-- Sections sit side by side while each column can be at least 176 px wide, and stack on narrower screens.
-- The pill's width follows its content; keep the title short on phones.
+- Panels top out at 700 px wide and search at 544 px, and neither gets wider than the nav minus 16 px.
+- A nav narrower than `CollapseBelow` (720 px) swaps its sections for one menu and shows the brand's mark without the
+  name.
+- In windows under 420 px wide, link panels keep to a single column and the folded menu leaves out glyphs.
 
 ## Related
 
-- `Tabs` and `LiquidTabBar` keep navigation always on screen.
-- `ActionMorph` uses the same growing surface for an action rather than for navigation.
+- `Tabs` for views within a single page.
+- `LiquidTabBar` for the main areas of an app.
+- `DropdownMenu` for a list of commands.
 
 | Component | Choose it when |
 |---|---|
-| `MorphNav` | Navigation should stay one small pill until it is needed |
+| `MorphNav` | A site's top bar needs sections with panels, search and one action |
 | `Tabs` | A few views of one page should always be visible |
-| `ActionMorph` | A single action needs a little room for its input |
+| `LiquidTabBar` | An app has a few main areas to move between |

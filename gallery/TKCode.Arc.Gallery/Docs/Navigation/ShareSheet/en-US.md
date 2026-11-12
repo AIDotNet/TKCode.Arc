@@ -1,27 +1,31 @@
 ---
 title: Share sheet
-summary: Share one item. Copy its link, pick a person or a destination, or run an action, in a sheet from the bottom on phones and a popover on desktop.
+summary: Sharing in place: the Share button stretches into a card to copy the item's link, set who may open it, post it to a channel or send it to a few people, and shrinks into a confirmation once sent.
 ---
 
 <Demo name="Preview" />
 
 ## When to use
 
-`ShareSheet` gathers every way to pass one item on in a single place. At the top is the item's link with a copy
-button; below it a strip of the people you share with most, each a soft circle with their initials; then a strip of
-destinations such as email, messages or a team space; and last a few actions such as embedding or downloading. On a
-phone it rises from the bottom as a sheet that can be dragged away; on a wider screen it opens as a popover under the
-button that asked for it. The sheet only reports what was picked; your app does the sending.
+`ShareSheet` is a Share button for a toolbar or a page header. Pressing it grows the button itself into a share panel:
+one shape stretches from the pill into a card, so the panel reads as the button opening up rather than a new window.
+The panel names the item, shows its link with a copy button and the access level the link carries, offers a few
+channels to post to, and lists the people you share with most. Picking a person flies their avatar up into a chip, and
+Send hands the list to your app. When the send succeeds the card shrinks to a short confirmation with Undo and Done.
+On a phone-sized screen the same panel rises from the bottom as a sheet instead.
 
-- **Sharing a document, a photo set or a page** with people and apps.
-- **Invites**: send a link to a few people or to a calendar.
-- **Exports** that sit next to sharing: embed code, download, print.
+- **An item people pass around again and again**, such as a document, a board or a design, with the button in that
+  item's own header.
+- **One stop for the link and the people**: copying it, deciding who may open it and sending it to colleagues all happen
+  in the same card.
+- **Two or three posting targets**, such as email or a team chat, where each button reports its own progress and
+  outcome.
 
 ## When not to use
 
-- **Managing who has access** (roles, permissions, link settings): that needs a settings dialog.
-- **A single destination**: a plain "Copy link" button is quicker.
-- **Long contact lists**: the strips show your frequent people; searching everyone belongs in a picker.
+- **Copying the address is the whole job**: put a copy button beside the link.
+- **Per-person roles, or looking people up by address**: that is a form, so open a dialog for it.
+- **A list of destinations with nobody to pick**: a popover or a dropdown menu does it with less.
 
 ## Usage
 
@@ -29,56 +33,85 @@ button that asked for it. The sheet only reports what was picked; your app does 
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
-    <arc:ShareSheet Link="https://example.com/a/autumn-hike" Subtitle="Autumn hike photos">
-        <arc:Button Content="Share" Variant="Secondary" />
+    <arc:ShareSheet Title="Quarterly review" Link="https://example.com/doc/quarterly-review" Access="team">
+        <arc:ShareSheet.AccessLevels>
+            <arc:ShareSheetAccess Value="private" Label="Private" Description="Only the people you add"
+                                  Glyph="{x:Static arc:ArcIcons.Lock}" />
+            <arc:ShareSheetAccess Value="team" Label="Your team" Description="Everyone on the team can comment"
+                                  Glyph="{x:Static arc:ArcIcons.Users}" />
+        </arc:ShareSheet.AccessLevels>
+        <arc:ShareSheet.Channels>
+            <arc:ShareSheetChannel Id="email" Label="Email" DoneLabel="Sent" Glyph="{x:Static arc:ArcIcons.Mail}" />
+        </arc:ShareSheet.Channels>
         <arc:ShareSheet.People>
-            <arc:ShareSheetTarget Name="Mira Okafor" />
-            <arc:ShareSheetTarget Name="Tomas Reyes" />
+            <arc:ShareSheetPerson Id="ada" Name="Ada Moreno" />
+            <arc:ShareSheetPerson Id="ravi" Name="Ravi Kapoor" />
         </arc:ShareSheet.People>
-        <arc:ShareSheet.Destinations>
-            <arc:ShareSheetTarget Name="Email" Glyph="{x:Static arc:ArcIcons.Mail}" />
-        </arc:ShareSheet.Destinations>
-        <arc:ShareSheet.Actions>
-            <arc:ShareSheetAction Label="Download a copy" Glyph="{x:Static arc:ArcIcons.Download}" />
-        </arc:ShareSheet.Actions>
     </arc:ShareSheet>
 </UserControl>
 ```
 
-`ShareSheet` is in the Special package: register it with `UseArcSpecial()` next to `UseArcControls()`. Its content is
-the trigger: a button there opens the sheet. `Open()`, `Close()`, `ShowAt(anchor)` and the two-way `IsOpen` control
-it from code.
+`ShareSheet` is in the Special package: register it with `UseArcSpecial()` next to `UseArcControls()`. Layout space goes
+to the Share button alone, because the panel is drawn on the overlay layer on top of the page. Keep some space free
+beneath the button, or, close to an edge, pick an `Align` that opens away from it. `IsOpen` (two-way), `Open()` and
+`Close()` control it from code.
 
-`People` and `Destinations` are lists of `ShareSheetTarget`: a `Name`, an optional `Detail` read by assistive
-technology, an optional `Glyph` (drawn instead of initials) and a `Tag` for your own value. `Actions` is a list of
-`ShareSheetAction` with a `Label`, a `Glyph` and a `Command`. `Link` adds the link row with its copy button; leave it
-null to hide the row. Groups with nothing in them are not shown.
+- `Title` names the item, and the panel's heading shows it as Share “Title”. `Link` is the URL: it gets a row of its
+  own, and Copy places it on the clipboard (null drops the row).
+- `AccessLevels` holds `ShareSheetAccess` items (`Value`, `Label`, `Description`, `Glyph`). `Access` is the chosen
+  value, two-way; it starts at the first level.
+- `Channels` holds `ShareSheetChannel` items (`Id`, `Label`, `DoneLabel`, `Glyph`). After a post the button swaps
+  `Label` for `DoneLabel` for two seconds, so pick words of similar length.
+- `People` holds `ShareSheetPerson` items (`Id`, `Name`, `Avatar`). Without an `Avatar` picture the sheet draws a soft
+  gradient seeded by the id, so a person always looks the same. `SelectedPeople` lists who is picked; `Pick` and
+  `Unpick` change it from code.
 
-### Knowing what was picked
+### Sending and posting
 
-`Shared` is raised with the target in `e.Target` and whether it is a person in `e.IsPerson`, and the sheet closes
-unless `ClosesOnShare` is false. `ActionInvoked` is raised for an action before its command runs. `LinkCopied` is
-raised after the copy button has put the link on the clipboard.
+Give the sheet your server calls and it handles the waiting. `SendHandler` receives the people and the access level;
+the Send button spins while it runs. If it throws, an error line appears over the button and the panel stays open with
+the people still picked; when it completes, `Sent` is raised and the panel folds into the confirmation. Undo on the
+confirmation goes back to the panel with the same people and raises `SendUndone`, so your app can take the send back.
+`ChannelHandler` works the same way for one channel button: it spins, then reads the channel's `DoneLabel`, or Failed
+when the handler throws.
 
-### Where it opens
+```csharp
+sheet.SendHandler = async (submission, token) =>
+    await api.ShareAsync(submission.People.Select(p => p.Id), submission.Access?.Value, token);
+sheet.ChannelHandler = (channel, token) => api.PostAsync(channel.Id, token);
+```
 
-`Presentation` is `Auto` by default: a bottom sheet on a viewport narrower than 640 px, a popover otherwise.
-`Popover` and `Sheet` choose one always.
+<Demo name="Channels" />
 
-<Demo name="Sheet" />
+### Where the panel grows
+
+`Align` sets the anchor the panel opens from. With `End` (the default) the button's top-right corner stays fixed and the
+panel extends to the left and downward; `Start` fixes the top-left corner and extends to the right and downward;
+`Center` fixes the button's center, so the panel expands and collapses symmetrically. A panel that would cross the
+window's edge is shifted back inside.
+
+<Demo name="Align" />
+
+### People only, and the phone sheet
+
+Rows appear only for what you set: without `Link`, `AccessLevels` or `Channels` the matching row is left out. When the
+viewport is 520 px wide or narrower (the phone preview counts), the panel becomes a sheet docked to the bottom edge,
+with the page behind it dimmed; set `SheetOnPhones="False"` to keep the floating panel at those widths as well.
+
+<Demo name="People" />
 
 ### Best practices
 
 **Do**
 
-- Show a handful of the people this person shares with most, in that order.
-- Set `Subtitle` to the item's name, so it is clear what is being shared.
-- Confirm a share in your app after `Shared`, for example with a toast.
+- Offer in `People` only the few people this item usually goes to, most likely first.
+- Return the task from your handlers so the sheet can show progress, errors and results.
+- Use short channel names and done words of a similar length.
 
 **Avoid**
 
-- More than about eight people or destinations: the strips scroll, but the first few are what people see.
-- Using `Actions` for things unrelated to the item.
+- Loading a whole address book into `People`: the row is for quick picks, not for looking people up.
+- More than three or four channels: the buttons share one row.
 
 ## API reference
 
@@ -86,51 +119,59 @@ raised after the copy button has put the link on the clipboard.
 
 ## Accessibility
 
-- The trigger reports whether the sheet is expanded. The popover or the sheet takes focus when it opens (the copy
-  button, else the first person) and gives it back to the trigger when it closes.
-- People and destinations are buttons named by `Name`, with `Detail` as help text; actions are menu items named by
-  `Label`. All can be invoked by assistive technology.
-- Each strip and the list of actions is one stop in the tab order; the arrow keys move inside it. Keyboard focus shows
-  a ring inside the tile or row.
+- The Share button exposes the panel's expanded state. Focus follows the flow: it lands on Copy (or the first control
+  there is) when the panel opens, on Done after a send, and back on the Share button when everything closes. Pressing
+  somewhere else on the page dismisses the panel, and focus stays with whatever was pressed.
+- The access list is a list of options; the chosen one is marked selected and is the list's only tab stop, and the
+  arrow keys move through the options.
+- Each recent person is a toggle button carrying their full name, and every chip offers a Remove button that names the
+  person it removes.
+- Screen readers hear each step through a polite live region: the link being copied, a person added or removed, a
+  channel's outcome and the names a share reached. A send that fails also gets an alert line.
 
 ### Keyboard interactions
 
 | Key | Action |
 |---|---|
-| Tab | Moves between the copy button, the people, the destinations and the actions. |
-| Left / Right | Moves along a strip of people or destinations. |
-| Up / Down | Moves through the actions. |
-| Home / End | Moves to the first or last item of the group. |
-| Enter or Space | Picks the focused person, destination or action. |
-| Escape | Closes the sheet and returns focus to the trigger. |
+| Enter or Space | On the Share button, opens the panel; anywhere else, activates the focused control. |
+| Tab | Moves through the close button, Copy, the access row, the channels, the people, the chips and Send. |
+| Up, Down, Left, Right | With the access list open, step through its options; after the last one they start again at the first. |
+| Home / End | Move to the first or last access option. |
+| Escape | If the access list is open, closes it; otherwise collapses the panel into the Share button. |
 
 ## Motion
 
-- As a popover it comes from the trigger's side with a short fade and a settling spring; as a sheet it rises from the
-  bottom of the window and can be flung down to close. Both are the library's own popover and bottom sheet.
-- The copy button swaps its label to "Copied" with a check, then back.
-- Tiles and rows draw themselves; hovering and focusing only repaint them.
+- Share button, panel and post-send confirmation are drawn as one surface; whenever it changes face, a spring carries
+  its size and rounding to the new shape. The contents swap with a brief blur: what leaves shrinks slightly as it fades, what
+  arrives grows in from 94%. From the panel to the confirmation and back, the contents slide sideways instead.
+- Picking someone sends a copy of their avatar travelling to the new chip. It is drawn above the panel, so the edge of
+  the chips row cannot cut it off. A removed chip fades, and the chips behind it shift over to fill the space.
+- The number on the Send button ticks up or down as people are added or removed. Pressing Send before anyone is chosen
+  gives the recipients row a short, stiff shake.
 
 | Change | Full | Reduced | Off |
 |---|---|---|---|
-| Popover | Fades and settles from the trigger | Fades | Appears |
-| Sheet | Rises, follows drags | Fades | Appears |
-| Copy label | Blur swap | Crossfade | Swap |
+| Open, confirm, fold | Size spring, blur and scale crossfade | Size jumps, faces fade | Instant |
+| Panel ↔ confirmation | Faces slide 32 px and blur across | Faces fade | Instant |
+| Pick a person | Avatar flies to its chip | Chip fades in | Chip appears |
+| Count in Send | Digits roll | Swap | Swap |
+| Send with nobody picked | Row nudges | Nothing moves | Nothing moves |
+| Phone sheet | Slides up, follows the grabber | Fades in | Appears |
 
 ## Responsive behavior
 
-- Below 640 px of viewport width (the phone preview included) the sheet rises from the bottom and spans the width; its
-  height fits the content, up to 92% of the window.
-- As a popover the panel is 320 px wide.
-- The strips scroll sideways when they hold more than fits, and the focused tile is scrolled into view.
+- Widths: 384 px for the panel and 304 px for the confirmation, each capped at the viewport width minus 32 px, which
+  still leaves room on a 320 px screen.
+- Up to 520 px of viewport width the panel is a bottom sheet inset 8 px from the sides and the bottom. Drag the grabber
+  down past 120 px, or flick it down, to close it; a shorter drag springs back. Escape, a tap on the dimmed page and Done
+  close it too.
+- Hover tints follow a mouse or a pen only; a touch never leaves a hover state behind.
 
 ## Related
 
-- `Popover` and `BottomSheet` are the two surfaces the sheet opens in.
-- `CopyButton` is the copy button of the link row.
-
 | Component | Choose it when |
 |---|---|
-| `ShareSheet` | One item can go to people, apps or a link |
-| `CopyButton` | Copying the link is the only way to share |
-| `Dialog` | Sharing needs access settings or a message |
+| `ShareSheet` | One item is shared by link, to channels and to a few people |
+| `ShareAccess` | People and their roles are managed in a dialog |
+| `CopyButton` | Copying the link is all that is needed |
+| `ActionMorph` | A button grows into a small inline form for another action |

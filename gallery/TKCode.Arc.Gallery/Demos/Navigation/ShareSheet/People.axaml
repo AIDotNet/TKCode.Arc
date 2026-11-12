@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ShareSheetPeopleDemo">
+    <!--
+        Only people, no link card or channels. SheetOnPhones="False" keeps the floating panel even in the phone preview.
+        Sent tells you who it went to; Undo on the confirmation raises SendUndone.
+    -->
+    <StackPanel Spacing="14" HorizontalAlignment="Center" VerticalAlignment="Top">
+        <arc:ShareSheet Title="Team photo" Label="Send" Glyph="{x:Static arc:ArcIcons.Send}" SheetOnPhones="False"
+                        Align="Start" Sent="OnSent" SendUndone="OnUndone">
+            <arc:ShareSheet.People>
+                <arc:ShareSheetPerson Id="ada" Name="Ada Moreno" />
+                <arc:ShareSheetPerson Id="ravi" Name="Ravi Kapoor" />
+                <arc:ShareSheetPerson Id="june" Name="June Park" />
+                <arc:ShareSheetPerson Id="noel" Name="Noel Brandt" />
+            </arc:ShareSheet.People>
+        </arc:ShareSheet>
+        <TextBlock x:Name="Log" Text="Not sent yet" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

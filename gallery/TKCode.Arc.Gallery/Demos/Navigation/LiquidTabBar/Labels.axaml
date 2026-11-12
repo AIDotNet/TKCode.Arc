@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LiquidTabBarLabelsDemo">
+    <!-- Labels picks which tabs show their name: the selected one (Active), every tab (Always), or none (None). -->
+    <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="20" RowSpacing="16"
+          HorizontalAlignment="Center">
+        <TextBlock Text="Active" VerticalAlignment="Center" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        <arc:LiquidTabBar Grid.Column="1" Labels="Active" AutomationProperties.Name="Library">
+            <arc:LiquidTabBarItem Label="Listen" Glyph="{x:Static arc:ArcIcons.Music}" />
+            <arc:LiquidTabBarItem Label="Search" Glyph="{x:Static arc:ArcIcons.Search}" />
+            <arc:LiquidTabBarItem Label="Starred" Glyph="{x:Static arc:ArcIcons.Star}" />
+        </arc:LiquidTabBar>
+        <TextBlock Grid.Row="1" Text="Always" VerticalAlignment="Center" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        <arc:LiquidTabBar Grid.Row="1" Grid.Column="1" Labels="Always" AutomationProperties.Name="Library">
+            <arc:LiquidTabBarItem Label="Listen" Glyph="{x:Static arc:ArcIcons.Music}" />
+            <arc:LiquidTabBarItem Label="Search" Glyph="{x:Static arc:ArcIcons.Search}" />
+            <arc:LiquidTabBarItem Label="Starred" Glyph="{x:Static arc:ArcIcons.Star}" />
+        </arc:LiquidTabBar>
+        <TextBlock Grid.Row="2" Text="None" VerticalAlignment="Center" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        <arc:LiquidTabBar Grid.Row="2" Grid.Column="1" Labels="None" AutomationProperties.Name="Library">
+            <arc:LiquidTabBarItem Label="Listen" Glyph="{x:Static arc:ArcIcons.Music}" />
+            <arc:LiquidTabBarItem Label="Search" Glyph="{x:Static arc:ArcIcons.Search}" />
+            <arc:LiquidTabBarItem Label="Starred" Glyph="{x:Static arc:ArcIcons.Star}" />
+        </arc:LiquidTabBar>
+    </Grid>
+</UserControl>

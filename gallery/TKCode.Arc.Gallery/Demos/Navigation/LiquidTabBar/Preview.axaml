@@ -2,19 +2,38 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
              x:Class="TKCode.Arc.Gallery.Demos.LiquidTabBarPreviewDemo">
-    <!-- Click a tab, or focus the bar and use the arrow keys: the drop reaches for the new tab, stretches, then settles. -->
-    <StackPanel Spacing="20" HorizontalAlignment="Center">
-        <arc:LiquidTabBar HorizontalAlignment="Center">
-            <arc:LiquidTabBarItem Content="Overview" />
-            <arc:LiquidTabBarItem Content="Activity" />
-            <arc:LiquidTabBarItem Content="Members" />
-            <arc:LiquidTabBarItem Content="Settings" />
-        </arc:LiquidTabBar>
-        <arc:LiquidTabBar HorizontalAlignment="Center" SelectedIndex="1">
-            <arc:LiquidTabBarItem Content="Home" Glyph="{x:Static arc:ArcIcons.House}" />
-            <arc:LiquidTabBarItem Content="Search" Glyph="{x:Static arc:ArcIcons.Search}" />
-            <arc:LiquidTabBarItem Content="Saved" Glyph="{x:Static arc:ArcIcons.Bookmark}" />
-            <arc:LiquidTabBarItem Content="Profile" Glyph="{x:Static arc:ArcIcons.User}" />
-        </arc:LiquidTabBar>
+    <!--
+        Click a tab, use the arrow keys, or grab the lens and drag or flick it. Hover a tab to see the lens lean toward it.
+        The segmented control below switches which tabs show their label.
+    -->
+    <StackPanel Spacing="48" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <StackPanel Spacing="16" HorizontalAlignment="Center">
+            <arc:LiquidTabBar x:Name="Bar"
+                              HorizontalAlignment="Center"
+                              AutomationProperties.Name="App sections"
+                              SelectedValue="feed">
+                <arc:LiquidTabBarItem Value="feed" Label="Feed" Glyph="{x:Static arc:ArcIcons.House}" />
+                <arc:LiquidTabBarItem Value="likes" Label="Likes" Glyph="{x:Static arc:ArcIcons.Heart}" />
+                <arc:LiquidTabBarItem Value="alerts" Label="Alerts" Glyph="{x:Static arc:ArcIcons.Bell}"
+                                      Badge="3" BadgeLabel="3 new" />
+                <arc:LiquidTabBarItem Value="account" Label="Account" Glyph="{x:Static arc:ArcIcons.User}" />
+            </arc:LiquidTabBar>
+            <arc:ArcContentSwap x:Name="Section"
+                                Mode="Crossfade"
+                                ExitDuration="0:0:0.18"
+                                EnterDuration="0:0:0.4"
+                                HorizontalAlignment="Center"
+                                HorizontalContentAlignment="Center"
+                                TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+        <arc:SegmentedControl x:Name="Mode"
+                              HorizontalAlignment="Center"
+                              AutomationProperties.Name="Which labels show"
+                              SelectedValue="Active">
+            <arc:SegmentedOption Value="Active" Label="Selected label" />
+            <arc:SegmentedOption Value="Always" Label="Every label" />
+            <arc:SegmentedOption Value="None" Label="Glyphs only" />
+        </arc:SegmentedControl>
     </StackPanel>
 </UserControl>

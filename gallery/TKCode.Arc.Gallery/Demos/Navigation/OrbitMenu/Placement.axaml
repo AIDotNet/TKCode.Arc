@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.OrbitMenuPlacementDemo">
+    <!--
+        Direction points the arc into free space, Spread sets how wide it fans and Radius how far out it reaches. Left: a
+        trigger at the edge of a note opens to the right. Right: a corner button opens up and to the left.
+    -->
+    <WrapPanel HorizontalAlignment="Center" ItemSpacing="16" LineSpacing="16">
+        <Border Width="300" Height="240"
+                Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}">
+            <arc:OrbitMenu Label="Note actions" Direction="0" Spread="120" Radius="88"
+                           HorizontalAlignment="Left" Margin="32,0,0,0">
+                <arc:OrbitMenuAction Glyph="{x:Static arc:ArcIcons.Pin}" Label="Pin" DoneText="Pinned" />
+                <arc:OrbitMenuAction Glyph="{x:Static arc:ArcIcons.Copy}" Label="Duplicate" DoneText="Duplicated" />
+                <arc:OrbitMenuAction Glyph="{x:Static arc:ArcIcons.Trash2}" Label="Delete" DoneText="Deleted" Tone="Danger" />
+            </arc:OrbitMenu>
+        </Border>
+        <Border Width="300" Height="240"
+                Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}">
+            <arc:OrbitMenu Label="Create" Direction="-135" Spread="90" Radius="96"
+                           HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,28,28">
+                <arc:OrbitMenuAction Glyph="{x:Static arc:ArcIcons.Camera}" Label="Photo" DoneText="Camera ready" />
+                <arc:OrbitMenuAction Glyph="{x:Static arc:ArcIcons.Mic}" Label="Voice note" DoneText="Recording" />
+                <arc:OrbitMenuAction Glyph="{x:Static arc:ArcIcons.PenLine}" Label="Text note" DoneText="New note" />
+            </arc:OrbitMenu>
+        </Border>
+    </WrapPanel>
+</UserControl>

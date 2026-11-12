@@ -1,0 +1,65 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ActionMorphCornerDemo">
+    <!--
+        Corner="Start" puts the button in the bottom-left corner; the surface grows up and to the right. Without a
+        SubmitHandler every submission is accepted at once; the check stays for ResetAfter (2.4 s here).
+    -->
+    <StackPanel Spacing="12" HorizontalAlignment="Center" Width="520">
+        <Border Height="340"
+                Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}">
+            <Panel>
+                <StackPanel Margin="28" Spacing="10">
+                    <TextBlock Text="Release notes"
+                               FontSize="{arc:ArcDesignTokenResource TypeXL}"
+                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                    <TextBlock Text="Exports now keep their layers, and large boards open about twice as fast. Tell us what you think with the button in the corner."
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                               TextWrapping="Wrap" />
+                </StackPanel>
+                <arc:ActionMorph x:Name="Feedback"
+                                 Label="Feedback"
+                                 Corner="Start"
+                                 ResetAfter="0:0:2.4"
+                                 HorizontalAlignment="Left"
+                                 VerticalAlignment="Bottom"
+                                 Margin="16"
+                                 Submitted="OnSubmitted">
+                    <arc:ActionMorphAction Id="bug"
+                                           Label="Report a problem"
+                                           Description="Something broke or looks wrong"
+                                           Glyph="{x:Static arc:ArcIcons.TriangleAlert}"
+                                           Shortcut="p"
+                                           Title="Report a problem"
+                                           Placeholder="What happened?"
+                                           IsMultiline="True"
+                                           SubmitLabel="Send report"
+                                           SuccessLabel="Report sent" />
+                    <arc:ActionMorphAction Id="idea"
+                                           Label="Share an idea"
+                                           Description="What would make it better"
+                                           Glyph="{x:Static arc:ArcIcons.Lightbulb}"
+                                           Shortcut="i"
+                                           Title="Share an idea"
+                                           Placeholder="I wish I could…"
+                                           ChoicesLabel="How much would it help?"
+                                           SubmitLabel="Send idea"
+                                           SuccessLabel="Idea sent">
+                        <arc:ActionMorphAction.Choices>
+                            <x:String>A little</x:String>
+                            <x:String>A lot</x:String>
+                        </arc:ActionMorphAction.Choices>
+                    </arc:ActionMorphAction>
+                </arc:ActionMorph>
+            </Panel>
+        </Border>
+        <TextBlock x:Name="Log"
+                   Text="Nothing sent yet."
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                   HorizontalAlignment="Center" />
+    </StackPanel>
+</UserControl>

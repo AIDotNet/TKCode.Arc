@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Automation;
+using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
@@ -7,143 +8,203 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
-using Avalonia.Media;
+using Avalonia.Metadata;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using TKCode.Arc.DesignTokens;
+using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
-using AvaloniaButton = Avalonia.Controls.Button;
 
 namespace TKCode.Arc;
 
-/// <summary>The look of an <see cref="ActionMorph"/>'s button face.</summary>
-public enum ActionMorphVariant
-{
-    /// <summary>A quiet surface with a border, like a secondary button.</summary>
-    Secondary,
-
-    /// <summary>The accent fill, like a primary button. The open panel is always a plain surface.</summary>
-    Primary
-}
-
 /// <summary>
-/// One button that grows into a small inline panel for its action, such as a field to name something or a few options,
-/// and shrinks back into the button when the action is done. The surface keeps going while it changes size and shape, so
-/// the panel reads as the same object as the button. <see cref="ContentControl.Content"/> is the panel's content.
+/// A corner button for quick entries: it expands into a short list of actions, a chosen action reshapes the same surface
+/// into a small form, and a successful submit shrinks it back to the button, which then shows a check mark. Width,
+/// height and corner radius follow a spring from face to face; a deeper face enters from the right, Escape climbs one
+/// level, and every action holds on to its draft for as long as the control exists.
 /// </summary>
 /// <remarks>
-/// The morph stays in the layout: what is next to it moves while it grows. Escape, the close button and a press outside
-/// fold it back; a button inside the panel with <c>arc:ActionMorph.Closes="True"</c> folds it back after its click.
+/// The morph does not place itself: put it at a corner of a panel (for example <c>HorizontalAlignment="Right"</c>,
+/// <c>VerticalAlignment="Bottom"</c>, a 16 px margin), last among its siblings so the surface draws over them. It takes
+/// only the button's 56 × 56 in the layout; the surface opens upward and away from the <see cref="Corner"/> side, over
+/// what is around it. <see cref="SubmitHandler"/> receives each submission; while its task runs the form shows a
+/// spinner, and when it throws the form stays up, keeps the draft and shows <see cref="ErrorMessage"/>.
 /// </remarks>
 [TemplatePart(RootPart, typeof(Panel))]
-[TemplatePart(FacePart, typeof(AvaloniaButton))]
-[TemplatePart(FaceHostPart, typeof(PresenceHost))]
-[TemplatePart(PanelHostPart, typeof(PresenceHost))]
-[TemplatePart(ClosePart, typeof(AvaloniaButton))]
-[PseudoClasses(ExpandedPseudoClass, PrimaryPseudoClass)]
-public class ActionMorph : ContentControl
+[TemplatePart(SurfacePart, typeof(ActionMorphSurface))]
+[TemplatePart(StatusPart, typeof(TextBlock))]
+[PseudoClasses(OpenPseudoClass, SuccessPseudoClass, HoverPseudoClass, PressedPseudoClass, StartPseudoClass)]
+public class ActionMorph : TemplatedControl
 {
     internal const string RootPart = "PART_Root";
-    internal const string FacePart = "PART_Face";
-    internal const string FaceHostPart = "PART_FaceHost";
-    internal const string PanelHostPart = "PART_PanelHost";
-    internal const string ClosePart = "PART_Close";
-    internal const string ExpandedPseudoClass = ":expanded";
-    internal const string PrimaryPseudoClass = ":primary";
+    internal const string SurfacePart = "PART_Surface";
+    internal const string StatusPart = "PART_Status";
+    internal const string OpenPseudoClass = ":open";
+    internal const string SuccessPseudoClass = ":success";
+    internal const string HoverPseudoClass = ":hover";
+    internal const string PressedPseudoClass = ":pressed";
+    internal const string StartPseudoClass = ":start";
 
-    /// <summary>The button's label, also the accessible name of the button and of the open panel.</summary>
+    /// <summary>The button's accessible name and the menu's title.</summary>
     public static readonly StyledProperty<string> LabelProperty =
-        AvaloniaProperty.Register<ActionMorph, string>(nameof(Label), "Add");
+        AvaloniaProperty.Register<ActionMorph, string>(nameof(Label), "Create");
 
-    /// <summary>A 24 × 24 stroked glyph before the label; null shows the label alone.</summary>
-    public static readonly StyledProperty<Geometry?> GlyphProperty =
-        AvaloniaProperty.Register<ActionMorph, Geometry?>(nameof(Glyph), ArcIcons.Plus);
+    /// <summary>The bottom corner that holds the button; the menu and forms open upward and toward the other side.</summary>
+    public static readonly StyledProperty<ActionMorphCorner> CornerProperty =
+        AvaloniaProperty.Register<ActionMorph, ActionMorphCorner>(nameof(Corner));
 
-    /// <summary>Whether the panel is open (two-way).</summary>
+    /// <summary>How long the check stays on the button after a successful submit before the plus returns.</summary>
+    public static readonly StyledProperty<TimeSpan> ResetAfterProperty =
+        AvaloniaProperty.Register<ActionMorph, TimeSpan>(nameof(ResetAfter), TimeSpan.FromMilliseconds(1600));
+
+    /// <summary>
+    /// Saves a submission (for example to your server). While its task runs the form shows a spinner; when it throws, the
+    /// form stays up, keeps the draft and shows <see cref="ErrorMessage"/>. Going back or closing cancels its token. Null
+    /// accepts every submission at once.
+    /// </summary>
+    public static readonly StyledProperty<Func<ActionMorphSubmission, CancellationToken, Task>?> SubmitHandlerProperty =
+        AvaloniaProperty.Register<ActionMorph, Func<ActionMorphSubmission, CancellationToken, Task>?>(nameof(SubmitHandler));
+
+    /// <summary>Whether the menu or a form is open (two-way). Setting it opens the menu or folds back into the button.</summary>
     public static readonly StyledProperty<bool> IsExpandedProperty =
         AvaloniaProperty.Register<ActionMorph, bool>(nameof(IsExpanded), defaultBindingMode: BindingMode.TwoWay);
 
-    /// <summary>The look of the button face.</summary>
-    public static readonly StyledProperty<ActionMorphVariant> VariantProperty =
-        AvaloniaProperty.Register<ActionMorph, ActionMorphVariant>(nameof(Variant));
-
-    /// <summary>Whether a press outside the morph folds the panel back (default true).</summary>
-    public static readonly StyledProperty<bool> CollapsesOnOutsidePressProperty =
-        AvaloniaProperty.Register<ActionMorph, bool>(nameof(CollapsesOnOutsidePress), true);
-
-    /// <summary>Whether the open panel shows a close button at its end (default true).</summary>
-    public static readonly StyledProperty<bool> ShowsCloseButtonProperty =
-        AvaloniaProperty.Register<ActionMorph, bool>(nameof(ShowsCloseButton), true);
-
-    /// <summary>Accessible name and tooltip of the close button.</summary>
+    /// <summary>Accessible name of the close buttons.</summary>
     public static readonly StyledProperty<string> CloseLabelProperty =
         AvaloniaProperty.Register<ActionMorph, string>(nameof(CloseLabel), "Close");
 
-    /// <summary>
-    /// Set on a button inside the panel: after its click the panel folds back (a Save or Create button, or an option that
-    /// is applied as soon as it is picked).
-    /// </summary>
-    public static readonly AttachedProperty<bool> ClosesProperty =
-        AvaloniaProperty.RegisterAttached<ActionMorph, Control, bool>("Closes");
+    /// <summary>Accessible name of a form's back button.</summary>
+    public static readonly StyledProperty<string> BackLabelProperty =
+        AvaloniaProperty.Register<ActionMorph, string>(nameof(BackLabel), "Back");
 
-    /// <summary>Raised when the panel opens. Bubbles.</summary>
+    /// <summary>The text beside the spinner while a submission is saved.</summary>
+    public static readonly StyledProperty<string> BusyLabelProperty =
+        AvaloniaProperty.Register<ActionMorph, string>(nameof(BusyLabel), "Saving");
+
+    /// <summary>Shown under the field when <see cref="SubmitHandler"/> throws.</summary>
+    public static readonly StyledProperty<string> ErrorMessageProperty =
+        AvaloniaProperty.Register<ActionMorph, string>(nameof(ErrorMessage), "Not saved. Try again.");
+
+    /// <summary>Shown under an empty field on submit, for actions without their own <see cref="ActionMorphAction.EmptyHint"/>.</summary>
+    public static readonly StyledProperty<string> EmptyHintProperty =
+        AvaloniaProperty.Register<ActionMorph, string>(nameof(EmptyHint), "Write something first");
+
+    /// <summary>What the surface shows.</summary>
+    public static readonly DirectProperty<ActionMorph, ActionMorphView> ViewProperty =
+        AvaloniaProperty.RegisterDirect<ActionMorph, ActionMorphView>(nameof(View), o => o.View);
+
+    /// <summary>The action whose form is open, or null.</summary>
+    public static readonly DirectProperty<ActionMorph, ActionMorphAction?> CurrentActionProperty =
+        AvaloniaProperty.RegisterDirect<ActionMorph, ActionMorphAction?>(nameof(CurrentAction), o => o.CurrentAction);
+
+    /// <summary>Whether <see cref="SubmitHandler"/> is running.</summary>
+    public static readonly DirectProperty<ActionMorph, bool> IsSubmittingProperty =
+        AvaloniaProperty.RegisterDirect<ActionMorph, bool>(nameof(IsSubmitting), o => o.IsSubmitting);
+
+    /// <summary>Raised when the menu opens from the button. Bubbles.</summary>
     public static readonly RoutedEvent<RoutedEventArgs> ExpandedEvent =
         RoutedEvent.Register<ActionMorph, RoutedEventArgs>(nameof(Expanded), RoutingStrategies.Bubble);
 
-    /// <summary>Raised when the panel folds back into the button. Bubbles.</summary>
+    /// <summary>Raised when the surface folds back into the button. Bubbles.</summary>
     public static readonly RoutedEvent<RoutedEventArgs> CollapsedEvent =
         RoutedEvent.Register<ActionMorph, RoutedEventArgs>(nameof(Collapsed), RoutingStrategies.Bubble);
 
+    /// <summary>Raised after a submission was accepted (after <see cref="SubmitHandler"/> finished). Bubbles.</summary>
+    public static readonly RoutedEvent<ActionMorphSubmittedEventArgs> SubmittedEvent =
+        RoutedEvent.Register<ActionMorph, ActionMorphSubmittedEventArgs>(nameof(Submitted), RoutingStrategies.Bubble);
+
+    private readonly ActionMorphTrigger _trigger;
+    private readonly Dictionary<ActionMorphAction, ActionMorphComposer> _composers = new();
     private Panel? _root;
-    private AvaloniaButton? _face;
-    private PresenceHost? _faceHost;
-    private PresenceHost? _panelHost;
-    private AvaloniaButton? _close;
+    private ActionMorphSurface? _surface;
+    private TextBlock? _status;
+    private ActionMorphMenu? _menu;
     private LazyFocusRing? _focusRing;
     private TopLevel? _pressRoot;
+    private DispatcherTimer? _resetTimer;
+    private CancellationTokenSource? _submitCts;
+    private ActionMorphView _view;
+    private ActionMorphAction? _currentAction;
+    private bool _isSubmitting;
+    private bool _success;
+    private string? _successLabel;
+    private bool _syncingExpanded;
     private int _focusRequest;
 
     static ActionMorph()
     {
         FocusableProperty.OverrideDefaultValue<ActionMorph>(false);
+        ClipToBoundsProperty.OverrideDefaultValue<ActionMorph>(false);
         SpecialFocusModality.Watch();
     }
 
     public ActionMorph()
     {
-        AddHandler(AvaloniaButton.ClickEvent, OnAnyClick);
+        Actions.CollectionChanged += (_, _) => OnActionsChanged();
+        _trigger = new ActionMorphTrigger(this);
+        _trigger.Click += OnTriggerClick;
+        AddHandler(KeyDownEvent, OnKeyDownTunnel, RoutingStrategies.Tunnel);
+        UpdateTriggerName();
     }
+
+    /// <summary>The actions, one menu row each, in order.</summary>
+    [Content]
+    public AvaloniaList<ActionMorphAction> Actions { get; } = new();
 
     /// <inheritdoc cref="LabelProperty"/>
     public string Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
 
-    /// <inheritdoc cref="GlyphProperty"/>
-    public Geometry? Glyph { get => GetValue(GlyphProperty); set => SetValue(GlyphProperty, value); }
+    /// <inheritdoc cref="CornerProperty"/>
+    public ActionMorphCorner Corner { get => GetValue(CornerProperty); set => SetValue(CornerProperty, value); }
+
+    /// <inheritdoc cref="ResetAfterProperty"/>
+    public TimeSpan ResetAfter { get => GetValue(ResetAfterProperty); set => SetValue(ResetAfterProperty, value); }
+
+    /// <inheritdoc cref="SubmitHandlerProperty"/>
+    public Func<ActionMorphSubmission, CancellationToken, Task>? SubmitHandler
+    {
+        get => GetValue(SubmitHandlerProperty);
+        set => SetValue(SubmitHandlerProperty, value);
+    }
 
     /// <inheritdoc cref="IsExpandedProperty"/>
     public bool IsExpanded { get => GetValue(IsExpandedProperty); set => SetValue(IsExpandedProperty, value); }
 
-    /// <inheritdoc cref="VariantProperty"/>
-    public ActionMorphVariant Variant { get => GetValue(VariantProperty); set => SetValue(VariantProperty, value); }
-
-    /// <inheritdoc cref="CollapsesOnOutsidePressProperty"/>
-    public bool CollapsesOnOutsidePress
-    {
-        get => GetValue(CollapsesOnOutsidePressProperty);
-        set => SetValue(CollapsesOnOutsidePressProperty, value);
-    }
-
-    /// <inheritdoc cref="ShowsCloseButtonProperty"/>
-    public bool ShowsCloseButton { get => GetValue(ShowsCloseButtonProperty); set => SetValue(ShowsCloseButtonProperty, value); }
-
     /// <inheritdoc cref="CloseLabelProperty"/>
     public string CloseLabel { get => GetValue(CloseLabelProperty); set => SetValue(CloseLabelProperty, value); }
 
-    /// <summary>Gets <see cref="ClosesProperty"/>.</summary>
-    public static bool GetCloses(Control element) => element.GetValue(ClosesProperty);
+    /// <inheritdoc cref="BackLabelProperty"/>
+    public string BackLabel { get => GetValue(BackLabelProperty); set => SetValue(BackLabelProperty, value); }
 
-    /// <summary>Sets <see cref="ClosesProperty"/>.</summary>
-    public static void SetCloses(Control element, bool value) => element.SetValue(ClosesProperty, value);
+    /// <inheritdoc cref="BusyLabelProperty"/>
+    public string BusyLabel { get => GetValue(BusyLabelProperty); set => SetValue(BusyLabelProperty, value); }
+
+    /// <inheritdoc cref="ErrorMessageProperty"/>
+    public string ErrorMessage { get => GetValue(ErrorMessageProperty); set => SetValue(ErrorMessageProperty, value); }
+
+    /// <inheritdoc cref="EmptyHintProperty"/>
+    public string EmptyHint { get => GetValue(EmptyHintProperty); set => SetValue(EmptyHintProperty, value); }
+
+    /// <inheritdoc cref="ViewProperty"/>
+    public ActionMorphView View
+    {
+        get => _view;
+        private set => SetAndRaise(ViewProperty, ref _view, value);
+    }
+
+    /// <inheritdoc cref="CurrentActionProperty"/>
+    public ActionMorphAction? CurrentAction
+    {
+        get => _currentAction;
+        private set => SetAndRaise(CurrentActionProperty, ref _currentAction, value);
+    }
+
+    /// <inheritdoc cref="IsSubmittingProperty"/>
+    public bool IsSubmitting
+    {
+        get => _isSubmitting;
+        private set => SetAndRaise(IsSubmittingProperty, ref _isSubmitting, value);
+    }
 
     /// <inheritdoc cref="ExpandedEvent"/>
     public event EventHandler<RoutedEventArgs>? Expanded
@@ -159,52 +220,94 @@ public class ActionMorph : ContentControl
         remove => RemoveHandler(CollapsedEvent, value);
     }
 
-    /// <summary>The button face (null before the template is applied).</summary>
-    internal AvaloniaButton? Face => _face;
+    /// <inheritdoc cref="SubmittedEvent"/>
+    public event EventHandler<ActionMorphSubmittedEventArgs>? Submitted
+    {
+        add => AddHandler(SubmittedEvent, value);
+        remove => RemoveHandler(SubmittedEvent, value);
+    }
 
-    /// <summary>Opens the panel; focus moves to its first focusable element.</summary>
-    public void Expand() => SetCurrentValue(IsExpandedProperty, true);
+    internal ActionMorphTrigger Trigger => _trigger;
 
-    /// <summary>Folds the panel back into the button; focus inside the panel returns to the button.</summary>
-    public void Collapse() => SetCurrentValue(IsExpandedProperty, false);
+    internal ActionMorphMenu? Menu => _menu;
 
-    /// <summary>Opens the panel when it is closed and closes it when it is open.</summary>
-    public void Toggle() => SetCurrentValue(IsExpandedProperty, !IsExpanded);
+    internal ActionMorphSurface? Surface => _surface;
+
+    internal TextBlock? Status => _status;
+
+    internal bool IsSuccess => _success;
+
+    internal ActionMorphComposer? ComposerOf(ActionMorphAction action) => _composers.GetValueOrDefault(action);
+
+    /// <summary>Expands the button into the menu and focuses the menu's first action.</summary>
+    public void Expand()
+    {
+        if (_view == ActionMorphView.Button)
+        {
+            GoTo(ActionMorphView.Menu, null, ActionMorphFaceEntry.Scale, ActionMorphSurface.GrowSpring);
+        }
+    }
+
+    /// <summary>Folds the menu or form back into the button (the draft stays); focus inside returns to the button.</summary>
+    public void Collapse()
+    {
+        if (_view != ActionMorphView.Button)
+        {
+            CancelSubmit();
+            GoTo(ActionMorphView.Button, null, ActionMorphFaceEntry.Scale, ActionMorphSurface.FoldSpring);
+        }
+    }
+
+    /// <summary>Opens the form of <paramref name="action"/> (one of <see cref="Actions"/>); focus moves to its field.</summary>
+    public void OpenComposer(ActionMorphAction action)
+    {
+        ArgumentNullException.ThrowIfNull(action);
+        if (!Actions.Contains(action) || (_view == ActionMorphView.Composer && ReferenceEquals(action, _currentAction)))
+        {
+            return;
+        }
+        CancelSubmit();
+        var entry = _view == ActionMorphView.Button ? ActionMorphFaceEntry.Scale : ActionMorphFaceEntry.Forward;
+        GoTo(ActionMorphView.Composer, action, entry, ActionMorphSurface.GrowSpring);
+    }
+
+    /// <summary>Goes back one level: from a form to the menu (focus on its action), from the menu to the button.</summary>
+    public void Back()
+    {
+        if (_view == ActionMorphView.Composer)
+        {
+            CancelSubmit();
+            GoTo(ActionMorphView.Menu, null, ActionMorphFaceEntry.Back, ActionMorphSurface.FoldSpring);
+        }
+        else if (_view == ActionMorphView.Menu)
+        {
+            Collapse();
+        }
+    }
 
     /// <inheritdoc />
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_face is not null)
-        {
-            _face.Click -= OnFaceClick;
-            _face.GotFocus -= OnFaceFocusChanged;
-            _face.LostFocus -= OnFaceFocusChanged;
-        }
-        if (_close is not null)
-        {
-            _close.Click -= OnCloseClick;
-        }
         _root = e.NameScope.Find<Panel>(RootPart);
-        _face = e.NameScope.Find<AvaloniaButton>(FacePart);
-        _faceHost = e.NameScope.Find<PresenceHost>(FaceHostPart);
-        _panelHost = e.NameScope.Find<PresenceHost>(PanelHostPart);
-        _close = e.NameScope.Find<AvaloniaButton>(ClosePart);
-        if (_face is not null)
+        _surface = e.NameScope.Find<ActionMorphSurface>(SurfacePart);
+        _status = e.NameScope.Find<TextBlock>(StatusPart);
+        if (_status is not null)
         {
-            _face.Click += OnFaceClick;
-            _face.GotFocus += OnFaceFocusChanged;
-            _face.LostFocus += OnFaceFocusChanged;
-            _focusRing = new LazyFocusRing(_face, ActionMorphTokens.Key(ActionMorphTokenKind.FocusRingMargin),
-                ArcDesignTokens.Key(ArcDesignTokenKind.RadiusStep21));
-            _focusRing.Attach(_root);
+            AutomationProperties.SetLiveSetting(_status, AutomationLiveSetting.Polite);
         }
-        if (_close is not null)
+        _focusRing = new LazyFocusRing(_trigger, ActionMorphTokens.Key(ActionMorphTokenKind.FocusRingMargin),
+            ArcDesignTokens.Key(ArcDesignTokenKind.RadiusPill));
+        _focusRing.Attach(_root);
+        if (_surface is not null)
         {
-            _close.Click += OnCloseClick;
+            _surface.IsStart = Corner == ActionMorphCorner.Start;
+            _surface.Show(FaceFor(_view, _currentAction), ActionMorphFaceEntry.Instant, ActionMorphSurface.GrowSpring,
+                _view == ActionMorphView.Button);
         }
-        UpdateState();
-        UpdateNames();
+        PseudoClasses.Set(StartPseudoClass, Corner == ActionMorphCorner.Start);
+        PseudoClasses.Set(OpenPseudoClass, _view != ActionMorphView.Button);
+        PseudoClasses.Set(SuccessPseudoClass, _success);
     }
 
     /// <inheritdoc />
@@ -213,20 +316,53 @@ public class ActionMorph : ContentControl
         base.OnPropertyChanged(change);
         if (change.Property == IsExpandedProperty)
         {
-            var expanded = change.GetNewValue<bool>();
-            OnExpandedChanged(expanded);
+            if (_syncingExpanded)
+            {
+                return;
+            }
+            if (change.GetNewValue<bool>())
+            {
+                Expand();
+            }
+            else
+            {
+                Collapse();
+            }
         }
-        else if (change.Property == VariantProperty)
+        else if (change.Property == LabelProperty)
         {
-            PseudoClasses.Set(PrimaryPseudoClass, Variant == ActionMorphVariant.Primary);
+            UpdateTriggerName();
+            if (_menu is not null)
+            {
+                _menu.Title = Label;
+                AutomationProperties.SetName(_menu, Label);
+            }
         }
-        else if (change.Property == LabelProperty || change.Property == CloseLabelProperty)
+        else if (change.Property == CornerProperty)
         {
-            UpdateNames();
+            var start = Corner == ActionMorphCorner.Start;
+            PseudoClasses.Set(StartPseudoClass, start);
+            if (_surface is not null)
+            {
+                _surface.IsStart = start;
+            }
         }
-        else if (change.Property == ShowsCloseButtonProperty && _close is not null)
+        else if (change.Property == CloseLabelProperty || change.Property == BackLabelProperty || change.Property == BusyLabelProperty)
         {
-            _close.IsVisible = ShowsCloseButton;
+            if (_menu is not null)
+            {
+                _menu.CloseLabel = CloseLabel;
+            }
+            foreach (var composer in _composers.Values)
+            {
+                ApplyWords(composer);
+            }
+        }
+        else if (change.Property == ResetAfterProperty && _resetTimer is { IsEnabled: true } timer)
+        {
+            timer.Stop();
+            timer.Interval = Positive(ResetAfter);
+            timer.Start();
         }
     }
 
@@ -234,7 +370,7 @@ public class ActionMorph : ContentControl
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
-        if (IsExpanded)
+        if (_view != ActionMorphView.Button)
         {
             WatchOutsidePresses(true);
         }
@@ -245,156 +381,365 @@ public class ActionMorph : ContentControl
     {
         base.OnDetachedFromVisualTree(e);
         WatchOutsidePresses(false);
+        CancelSubmit();
+        if (_success)
+        {
+            EndSuccess(animate: false);
+        }
+        _surface?.FinishExits();
     }
 
-    /// <inheritdoc />
-    protected override void OnKeyDown(KeyEventArgs e)
-    {
-        if (!e.Handled && e.Key == Key.Escape && IsExpanded)
-        {
-            e.Handled = true;
-            CollapseFrom(keyboard: true);
-            return;
-        }
-        base.OnKeyDown(e);
-    }
-
-    private void OnExpandedChanged(bool expanded)
-    {
-        PseudoClasses.Set(ExpandedPseudoClass, expanded);
-        if (!expanded)
-        {
-            // Give focus back before the panel goes, or it would fall to the window without a ring.
-            ReturnFocus(SpecialFocusModality.LastWasPointer(this) != true);
-        }
-        UpdateState();
-        WatchOutsidePresses(expanded);
-        if (expanded)
-        {
-            FocusPanelSoon();
-        }
-        RaiseEvent(new RoutedEventArgs(expanded ? ExpandedEvent : CollapsedEvent));
-    }
-
-    private void UpdateState()
-    {
-        var expanded = IsExpanded;
-        PseudoClasses.Set(ExpandedPseudoClass, expanded);
-        PseudoClasses.Set(PrimaryPseudoClass, Variant == ActionMorphVariant.Primary);
-        if (_faceHost is not null)
-        {
-            _faceHost.IsPresent = !expanded;
-        }
-        if (_panelHost is not null)
-        {
-            _panelHost.IsPresent = expanded;
-        }
-        if (_face is not null)
-        {
-            // The face is only the way in: while the panel is open it is neither a tab stop nor a target.
-            _face.IsTabStop = !expanded;
-            _face.IsHitTestVisible = !expanded;
-            AutomationProperties.SetItemStatus(_face, expanded ? "Expanded" : "Collapsed");
-        }
-        if (_close is not null)
-        {
-            _close.IsVisible = ShowsCloseButton;
-        }
-    }
-
-    private void UpdateNames()
-    {
-        if (_face is not null)
-        {
-            AutomationProperties.SetName(_face, Label);
-        }
-        if (_panelHost is not null)
-        {
-            AutomationProperties.SetName(_panelHost, Label);
-        }
-        if (_close is not null)
-        {
-            AutomationProperties.SetName(_close, CloseLabel);
-            Tooltip.SetTip(_close, CloseLabel);
-        }
-    }
-
-    private void FocusPanelSoon()
-    {
-        var request = ++_focusRequest;
-        var method = SpecialFocusModality.For(this);
-        // The panel becomes visible in this pass; focus it once it is laid out.
-        Dispatcher.UIThread.Post(() =>
-        {
-            if (request != _focusRequest || !IsExpanded || _panelHost is null)
-            {
-                return;
-            }
-            var target = FocusManager.FindFirstFocusableElement(_panelHost) as Control ?? _close;
-            target?.Focus(method);
-        }, DispatcherPriority.Loaded);
-    }
-
-    private void ReturnFocus(bool keyboard)
-    {
-        _focusRequest++;
-        if (_face is null || TopLevel.GetTopLevel(this)?.FocusManager?.GetFocusedElement() is not Visual focused)
-        {
-            return;
-        }
-        if (_panelHost is not null && (ReferenceEquals(focused, _panelHost) || _panelHost.IsVisualAncestorOf(focused)
-                                       || (focused is ILogical logical && _panelHost.IsLogicalAncestorOf(logical))))
-        {
-            // The button comes back first: it cannot take focus while it is hidden.
-            if (_faceHost is not null)
-            {
-                _faceHost.IsPresent = true;
-            }
-            _face.IsTabStop = true;
-            _face.IsHitTestVisible = true;
-            _face.Focus(keyboard ? NavigationMethod.Tab : NavigationMethod.Pointer);
-        }
-    }
-
-    private void CollapseFrom(bool keyboard)
-    {
-        if (!IsExpanded)
-        {
-            return;
-        }
-        ReturnFocus(keyboard);
-        Collapse();
-    }
-
-    private void OnFaceClick(object? sender, RoutedEventArgs e)
+    private void OnTriggerClick(object? sender, RoutedEventArgs e)
     {
         e.Handled = true;
         Expand();
     }
 
-    private void OnCloseClick(object? sender, RoutedEventArgs e)
+    private void OnKeyDownTunnel(object? sender, KeyEventArgs e)
     {
-        e.Handled = true;
-        CollapseFrom(SpecialFocusModality.LastWasPointer(this) != true);
-    }
-
-    private void OnAnyClick(object? sender, RoutedEventArgs e)
-    {
-        if (!IsExpanded || e.Source is not Control source)
+        if (e.Handled)
         {
             return;
         }
-        for (Control? c = source; c is not null && !ReferenceEquals(c, this); c = c.Parent as Control)
+        if (e.Key == Key.Escape && e.KeyModifiers == KeyModifiers.None)
         {
-            if (GetCloses(c))
+            if (_view == ActionMorphView.Composer)
             {
-                CollapseFrom(SpecialFocusModality.LastWasPointer(this) != true);
-                return;
+                e.Handled = true;
+                Back();
             }
+            else if (_view == ActionMorphView.Menu)
+            {
+                e.Handled = true;
+                Collapse();
+            }
+            return;
+        }
+        if (_view == ActionMorphView.Menu
+            && (e.KeyModifiers & (KeyModifiers.Control | KeyModifiers.Alt | KeyModifiers.Meta)) == 0
+            && ShortcutOf(e) is { } symbol
+            && Actions.FirstOrDefault(a => a.Matches(symbol)) is { } action)
+        {
+            e.Handled = true;
+            OpenComposer(action);
         }
     }
 
-    private void OnFaceFocusChanged(object? sender, RoutedEventArgs e) => _focusRing?.Update();
+    private static string? ShortcutOf(KeyEventArgs e)
+    {
+        if (e.KeySymbol is { Length: 1 } symbol && char.IsLetterOrDigit(symbol[0]))
+        {
+            return symbol;
+        }
+        return e.Key is >= Key.A and <= Key.Z ? ((char)('a' + (e.Key - Key.A))).ToString() : null;
+    }
+
+    private void GoTo(ActionMorphView view, ActionMorphAction? action, ActionMorphFaceEntry entry, SpringSpec spring)
+    {
+        var wasExpanded = _view != ActionMorphView.Button;
+        var fromAction = _currentAction;
+        if (view != ActionMorphView.Button && _success)
+        {
+            EndSuccess(animate: false);
+        }
+        var keyboard = SpecialFocusModality.LastWasPointer(this) != true;
+        var focusInside = FocusIsInside();
+        var face = FaceFor(view, action);
+        if (face is ActionMorphComposer { NeedsReset: true } fresh)
+        {
+            fresh.ResetDraft();
+        }
+        FitToViewport(face);
+        View = view;
+        CurrentAction = view == ActionMorphView.Composer ? action : null;
+        var expanded = view != ActionMorphView.Button;
+        PseudoClasses.Set(OpenPseudoClass, expanded);
+        _surface?.Show(face, entry, spring, view == ActionMorphView.Button);
+        if (view == ActionMorphView.Button)
+        {
+            // Give focus back before the old face leaves, or it would fall to the window without a ring.
+            _focusRequest++;
+            if (focusInside)
+            {
+                _trigger.Focus(keyboard ? NavigationMethod.Tab : NavigationMethod.Pointer);
+            }
+        }
+        else
+        {
+            FocusSoon(view == ActionMorphView.Menu ? (Control?)_menu?.RowOf(fromAction) : null);
+        }
+        WatchOutsidePresses(expanded);
+        if (expanded != wasExpanded)
+        {
+            _syncingExpanded = true;
+            try
+            {
+                SetCurrentValue(IsExpandedProperty, expanded);
+            }
+            finally
+            {
+                _syncingExpanded = false;
+            }
+            RaiseEvent(new RoutedEventArgs(expanded ? ExpandedEvent : CollapsedEvent));
+        }
+    }
+
+    private Control FaceFor(ActionMorphView view, ActionMorphAction? action) => view switch
+    {
+        ActionMorphView.Menu => EnsureMenu(),
+        ActionMorphView.Composer when action is not null => ComposerFor(action),
+        _ => _trigger
+    };
+
+    private ActionMorphMenu EnsureMenu()
+    {
+        if (_menu is null)
+        {
+            _menu = new ActionMorphMenu(this) { Title = Label, CloseLabel = CloseLabel };
+            AutomationProperties.SetName(_menu, Label);
+            _menu.SetActions(Actions);
+        }
+        return _menu;
+    }
+
+    private ActionMorphComposer ComposerFor(ActionMorphAction action)
+    {
+        if (!_composers.TryGetValue(action, out var composer))
+        {
+            composer = new ActionMorphComposer(this, action);
+            ApplyWords(composer);
+            _composers.Add(action, composer);
+        }
+        return composer;
+    }
+
+    private void ApplyWords(ActionMorphComposer composer)
+    {
+        composer.BackLabel = BackLabel;
+        composer.CloseLabel = CloseLabel;
+        composer.BusyLabel = BusyLabel;
+    }
+
+    private void OnActionsChanged()
+    {
+        _menu?.SetActions(Actions);
+        foreach (var stale in _composers.Keys.Where(a => !Actions.Contains(a)).ToList())
+        {
+            var composer = _composers[stale];
+            _composers.Remove(stale);
+            _surface?.Forget(composer);
+        }
+        if (_view == ActionMorphView.Composer && _currentAction is { } current && !Actions.Contains(current))
+        {
+            Back();
+        }
+    }
+
+    /// <summary>Caps the menu and forms at the viewport width less the margins, so they fit narrow phones.</summary>
+    private void FitToViewport(Control face)
+    {
+        if (face is ActionMorphTrigger)
+        {
+            return;
+        }
+        var margin = this.TryFindResource(ActionMorphTokens.Key(ActionMorphTokenKind.ViewportMargin), out var value) && value is double m
+            ? m
+            : 16;
+        face.MaxWidth = ArcViewport.GetSize(this) is { Width: > 0 } viewport
+            ? Math.Max(0, viewport.Width - 2 * margin)
+            : double.PositiveInfinity;
+    }
+
+    private bool FocusIsInside()
+    {
+        if (TopLevel.GetTopLevel(this)?.FocusManager?.GetFocusedElement() is not Visual focused)
+        {
+            return false;
+        }
+        return ReferenceEquals(focused, this) || this.IsVisualAncestorOf(focused)
+               || (focused is ILogical logical && this.IsLogicalAncestorOf(logical));
+    }
+
+    /// <summary>Moves focus into the new face once it is laid out: the given row, else the first row or the field.</summary>
+    private void FocusSoon(Control? preferred)
+    {
+        var request = ++_focusRequest;
+        var method = SpecialFocusModality.For(this);
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (request != _focusRequest)
+            {
+                return;
+            }
+            switch (_view)
+            {
+                case ActionMorphView.Menu when _menu is not null:
+                    var row = preferred as ActionMorphMenuItem ?? (_menu.Rows.Count > 0 ? _menu.Rows[0] : null);
+                    if (row is not null)
+                    {
+                        row.Focus(method);
+                        _menu.SetActive(row, animate: false);
+                    }
+                    else
+                    {
+                        _menu.CloseButton?.Focus(method);
+                    }
+                    break;
+                case ActionMorphView.Composer when _currentAction is { } action && ComposerOf(action) is { } composer:
+                    composer.FocusField(method);
+                    break;
+            }
+        }, DispatcherPriority.Loaded);
+    }
+
+    internal async void SubmitFrom(ActionMorphComposer composer)
+    {
+        if (_isSubmitting || _view != ActionMorphView.Composer || !ReferenceEquals(composer.Action, _currentAction))
+        {
+            return;
+        }
+        var text = composer.Text.Trim();
+        if (text.Length == 0)
+        {
+            composer.ShowError(composer.Action.EmptyHint ?? EmptyHint);
+            return;
+        }
+        var submission = new ActionMorphSubmission(composer.Action, text, composer.Action.Choices.Count > 0 ? composer.Choice : null);
+        if (SubmitHandler is { } handler)
+        {
+            var cts = new CancellationTokenSource();
+            _submitCts = cts;
+            SetSubmitting(composer, true);
+            try
+            {
+                await handler(submission, cts.Token);
+            }
+            catch (OperationCanceledException)
+            {
+                FinishSubmit(composer, cts);
+                return;
+            }
+            catch (Exception)
+            {
+                if (FinishSubmit(composer, cts))
+                {
+                    composer.ShowError(ErrorMessage);
+                }
+                return;
+            }
+            if (!FinishSubmit(composer, cts))
+            {
+                return;
+            }
+        }
+        Succeed(composer, submission);
+    }
+
+    /// <summary>Ends a run of the handler; false when it was cancelled (the person went back or closed the form).</summary>
+    private bool FinishSubmit(ActionMorphComposer composer, CancellationTokenSource cts)
+    {
+        var current = ReferenceEquals(_submitCts, cts) && !cts.IsCancellationRequested;
+        if (ReferenceEquals(_submitCts, cts))
+        {
+            _submitCts = null;
+            SetSubmitting(composer, false);
+        }
+        cts.Dispose();
+        return current;
+    }
+
+    private void SetSubmitting(ActionMorphComposer composer, bool busy)
+    {
+        IsSubmitting = busy;
+        composer.IsBusy = busy;
+        if (composer.Submit is { } submit)
+        {
+            submit.IsBusy = busy;
+        }
+    }
+
+    private void CancelSubmit()
+    {
+        if (_submitCts is not { } cts)
+        {
+            return;
+        }
+        _submitCts = null;
+        cts.Cancel();
+        if (_currentAction is { } action && ComposerOf(action) is { } composer)
+        {
+            SetSubmitting(composer, false);
+        }
+        IsSubmitting = false;
+    }
+
+    private void Succeed(ActionMorphComposer composer, ActionMorphSubmission submission)
+    {
+        composer.NeedsReset = true;
+        RaiseEvent(new ActionMorphSubmittedEventArgs(SubmittedEvent, submission));
+        if (_view != ActionMorphView.Composer || !ReferenceEquals(composer.Action, _currentAction))
+        {
+            return;
+        }
+        GoTo(ActionMorphView.Button, null, ActionMorphFaceEntry.Scale, ActionMorphSurface.FoldSpring);
+        _success = true;
+        _successLabel = submission.Action.EffectiveSuccessLabel;
+        PseudoClasses.Set(SuccessPseudoClass, true);
+        _trigger.SetSuccess(true, animate: true);
+        UpdateTriggerName();
+        Announce(_successLabel);
+        _resetTimer ??= CreateResetTimer();
+        _resetTimer.Stop();
+        _resetTimer.Interval = Positive(ResetAfter);
+        _resetTimer.Start();
+    }
+
+    private DispatcherTimer CreateResetTimer()
+    {
+        var timer = new DispatcherTimer();
+        timer.Tick += (_, _) =>
+        {
+            timer.Stop();
+            EndSuccess(animate: true);
+        };
+        return timer;
+    }
+
+    /// <summary>Returns the button from the check to the plus (the reset after a success).</summary>
+    internal void EndSuccess(bool animate)
+    {
+        _resetTimer?.Stop();
+        if (!_success)
+        {
+            return;
+        }
+        _success = false;
+        PseudoClasses.Set(SuccessPseudoClass, false);
+        _trigger.SetSuccess(false, animate);
+        UpdateTriggerName();
+    }
+
+    private static TimeSpan Positive(TimeSpan value) => value > TimeSpan.Zero ? value : TimeSpan.FromMilliseconds(1);
+
+    private void UpdateTriggerName() =>
+        AutomationProperties.SetName(_trigger, _success && _successLabel is { Length: > 0 } words ? $"{Label}. {words}" : Label);
+
+    private void Announce(string message)
+    {
+        if (_status is null)
+        {
+            return;
+        }
+        // The same words twice in a row are still announced: clear first.
+        _status.Text = string.Empty;
+        _status.Text = message;
+    }
+
+    internal void SetTriggerHover(bool hover) => PseudoClasses.Set(HoverPseudoClass, hover);
+
+    internal void SetTriggerPressed(bool pressed) => PseudoClasses.Set(PressedPseudoClass, pressed);
+
+    internal void UpdateFocusRing() => _focusRing?.Update();
 
     private void WatchOutsidePresses(bool watch)
     {
@@ -412,7 +757,7 @@ public class ActionMorph : ContentControl
 
     private void OnRootPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (!IsExpanded || !CollapsesOnOutsidePress || e.Source is not Visual source)
+        if (_view == ActionMorphView.Button || e.Source is not Visual source)
         {
             return;
         }

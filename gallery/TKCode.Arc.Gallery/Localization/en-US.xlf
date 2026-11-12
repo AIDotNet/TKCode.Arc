@@ -176,6 +176,11 @@
         <source>Cursor</source>
       </segment>
     </unit>
+    <unit id="Category_DocksTabs">
+      <segment>
+        <source>Docks and tabs</source>
+      </segment>
+    </unit>
     <unit id="Category_Data">
       <segment>
         <source>Data</source>

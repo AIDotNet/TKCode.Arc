@@ -211,6 +211,12 @@
         <target state="translated">游標</target>
       </segment>
     </unit>
+    <unit id="Category_DocksTabs">
+      <segment>
+        <source>Docks and tabs</source>
+        <target state="translated">Dock 與標籤列</target>
+      </segment>
+    </unit>
     <unit id="Category_Data">
       <segment>
         <source>Data</source>

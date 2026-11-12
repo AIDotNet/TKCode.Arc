@@ -9,31 +9,50 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using TKCode.Arc.Motion;
+using TKCode.Arc.Primitives;
 
 namespace TKCode.Arc;
 
+/// <summary>The color of an <see cref="OrbitMenuAction"/>.</summary>
+public enum OrbitMenuActionTone
+{
+    /// <summary>The foreground color.</summary>
+    Neutral,
+
+    /// <summary>The danger color, for actions that destroy something (delete, remove).</summary>
+    Danger
+}
+
 /// <summary>
-/// One action of an <see cref="OrbitMenu"/>: a round button with a glyph, named by <see cref="Label"/> (its tooltip and
-/// accessible name). It draws itself, circle, shadow, glyph and keyboard ring, so a ring of actions costs one element
-/// each.
+/// One action of an <see cref="OrbitMenu"/>: a round button with a glyph, named by <see cref="Label"/> (the pill text and the
+/// accessible name). It draws itself, circle, shadow and glyph, so an arc of actions costs one element each.
 /// </summary>
-[PseudoClasses(PressedPseudoClass)]
+[PseudoClasses(PressedPseudoClass, TargetedPseudoClass, DangerPseudoClass)]
 public class OrbitMenuAction : Control
 {
     internal const string PressedPseudoClass = ":pressed";
+    internal const string TargetedPseudoClass = ":targeted";
+    internal const string DangerPseudoClass = ":danger";
 
-    /// <summary>Gap between the button and its keyboard focus ring, plus half the ring's width.</summary>
-    private const double RingGap = 4;
+    private const double GlyphThickness = 1.75;
 
     /// <summary>The 24 × 24 stroked glyph in the middle of the button.</summary>
     public static readonly StyledProperty<Geometry?> GlyphProperty =
         AvaloniaProperty.Register<OrbitMenuAction, Geometry?>(nameof(Glyph));
 
-    /// <summary>What the action does, in a few words: the tooltip and the accessible name.</summary>
+    /// <summary>What the action does, in a few words: the pill shows it while the action is targeted, and it is the accessible name.</summary>
     public static readonly StyledProperty<string?> LabelProperty =
         AvaloniaProperty.Register<OrbitMenuAction, string?>(nameof(Label));
 
-    /// <summary>Command run when the action is invoked.</summary>
+    /// <summary>What the pill says once the action has run, such as "Saved"; null falls back to <see cref="Label"/>.</summary>
+    public static readonly StyledProperty<string?> DoneTextProperty =
+        AvaloniaProperty.Register<OrbitMenuAction, string?>(nameof(DoneText));
+
+    /// <summary>The action's color: <see cref="OrbitMenuActionTone.Danger"/> for destructive actions.</summary>
+    public static readonly StyledProperty<OrbitMenuActionTone> ToneProperty =
+        AvaloniaProperty.Register<OrbitMenuAction, OrbitMenuActionTone>(nameof(Tone));
+
+    /// <summary>Command run when the action fires.</summary>
     public static readonly StyledProperty<ICommand?> CommandProperty =
         AvaloniaProperty.Register<OrbitMenuAction, ICommand?>(nameof(Command));
 
@@ -41,7 +60,7 @@ public class OrbitMenuAction : Control
     public static readonly StyledProperty<object?> CommandParameterProperty =
         AvaloniaProperty.Register<OrbitMenuAction, object?>(nameof(CommandParameter));
 
-    /// <summary>Fill of the circle (set by the theme, with its hover and press states).</summary>
+    /// <summary>Fill of the circle (set by the theme; it fades out while the lens is under the action).</summary>
     public static readonly StyledProperty<IBrush?> BackgroundProperty =
         AvaloniaProperty.Register<OrbitMenuAction, IBrush?>(nameof(Background));
 
@@ -61,19 +80,15 @@ public class OrbitMenuAction : Control
     public static readonly StyledProperty<BoxShadows> ShadowProperty =
         AvaloniaProperty.Register<OrbitMenuAction, BoxShadows>(nameof(Shadow));
 
-    /// <summary>Color of the keyboard focus ring.</summary>
-    public static readonly StyledProperty<IBrush?> FocusRingBrushProperty =
-        AvaloniaProperty.Register<OrbitMenuAction, IBrush?>(nameof(FocusRingBrush));
-
     /// <summary>Diameter of the button.</summary>
     public static readonly StyledProperty<double> SizeProperty =
-        AvaloniaProperty.Register<OrbitMenuAction, double>(nameof(Size), 44);
+        AvaloniaProperty.Register<OrbitMenuAction, double>(nameof(Size), 46);
 
     /// <summary>Size of the glyph.</summary>
     public static readonly StyledProperty<double> GlyphSizeProperty =
-        AvaloniaProperty.Register<OrbitMenuAction, double>(nameof(GlyphSize), 18);
+        AvaloniaProperty.Register<OrbitMenuAction, double>(nameof(GlyphSize), 20);
 
-    /// <summary>Raised when the action is invoked by a click, Enter, Space or assistive technology. Bubbles.</summary>
+    /// <summary>Raised when the action fires: a release over it, a click, Enter, Space or assistive technology. Bubbles.</summary>
     public static readonly RoutedEvent<RoutedEventArgs> ClickEvent =
         RoutedEvent.Register<OrbitMenuAction, RoutedEventArgs>(nameof(Click), RoutingStrategies.Bubble);
 
@@ -83,15 +98,17 @@ public class OrbitMenuAction : Control
     private IBrush? _glyphPenBrush;
     private Pen? _edgePen;
     private IBrush? _edgePenBrush;
-    private Pen? _ringPen;
-    private IBrush? _ringPenBrush;
     private bool _pressed;
+    private double _iconScale = 1;
+    private double _iconOpacity = 1;
+    private double _blur;
+    private bool _targeted;
 
     static OrbitMenuAction()
     {
         AffectsMeasure<OrbitMenuAction>(SizeProperty);
         AffectsRender<OrbitMenuAction>(GlyphProperty, BackgroundProperty, ForegroundProperty, BorderBrushProperty,
-            CornerRadiusProperty, ShadowProperty, FocusRingBrushProperty, GlyphSizeProperty);
+            CornerRadiusProperty, ShadowProperty, GlyphSizeProperty);
         FocusableProperty.OverrideDefaultValue<OrbitMenuAction>(true);
         CursorProperty.OverrideDefaultValue<OrbitMenuAction>(new Cursor(StandardCursorType.Hand));
     }
@@ -107,6 +124,12 @@ public class OrbitMenuAction : Control
 
     /// <inheritdoc cref="LabelProperty"/>
     public string? Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
+
+    /// <inheritdoc cref="DoneTextProperty"/>
+    public string? DoneText { get => GetValue(DoneTextProperty); set => SetValue(DoneTextProperty, value); }
+
+    /// <inheritdoc cref="ToneProperty"/>
+    public OrbitMenuActionTone Tone { get => GetValue(ToneProperty); set => SetValue(ToneProperty, value); }
 
     /// <inheritdoc cref="CommandProperty"/>
     public ICommand? Command { get => GetValue(CommandProperty); set => SetValue(CommandProperty, value); }
@@ -129,9 +152,6 @@ public class OrbitMenuAction : Control
     /// <inheritdoc cref="ShadowProperty"/>
     public BoxShadows Shadow { get => GetValue(ShadowProperty); set => SetValue(ShadowProperty, value); }
 
-    /// <inheritdoc cref="FocusRingBrushProperty"/>
-    public IBrush? FocusRingBrush { get => GetValue(FocusRingBrushProperty); set => SetValue(FocusRingBrushProperty, value); }
-
     /// <inheritdoc cref="SizeProperty"/>
     public double Size { get => GetValue(SizeProperty); set => SetValue(SizeProperty, value); }
 
@@ -146,27 +166,104 @@ public class OrbitMenuAction : Control
     }
 
     /// <summary>Where the action rests when the menu is open, relative to the trigger's center.</summary>
-    internal Point Offset { get; set; }
+    internal Point Rest { get; set; }
+
+    /// <summary>The angle of <see cref="Rest"/> in radians, clockwise from the right.</summary>
+    internal double RestAngle { get; set; }
+
+    /// <summary>Distance from the trigger's center to <see cref="Rest"/>.</summary>
+    internal double OrbitRadius { get; set; }
 
     /// <summary>How far out of the trigger the action is: 0 inside it, 1 at its place on the arc.</summary>
     internal MotionValue<double>? Travel { get; set; }
 
-    /// <summary>The scale an action starts from.</summary>
-    internal double LaunchScale { get; set; } = 0.4;
+    /// <summary>The action's opacity, faded on its own clock (it reaches full well before the travel settles).</summary>
+    internal MotionValue<double>? Fade { get; set; }
 
-    /// <summary>Places the action <paramref name="progress"/> of the way out; with <paramref name="travels"/> false it only fades in place.</summary>
-    internal void ApplyTravel(double progress, bool travels)
+    /// <summary>The emphasis of the targeted action: 0 normal, 1 under the lens.</summary>
+    internal MotionValue<double>? Boost { get; set; }
+
+    /// <summary>The magnet's pull toward the pointer (added to the position).</summary>
+    internal Vector Pull { get; set; }
+
+    /// <summary>The magnet's growth near the pointer (multiplies the scale).</summary>
+    internal double PullScale { get; set; } = 1;
+
+    /// <summary>The scale the action is drawn at right now (read by the lens to sit exactly under it).</summary>
+    internal double VisualScale => _scale.ScaleX;
+
+    /// <summary>The center the action is drawn at right now, relative to the trigger's center.</summary>
+    internal Point VisualOffset => new(_translate.X, _translate.Y);
+
+    /// <summary>
+    /// Places and fades the action from its travel, fade, emphasis and pull. With <paramref name="full"/> false (reduced or
+    /// no motion) it never moves: it fades in place and the pull only grows it.
+    /// </summary>
+    internal void ApplyMotion(bool full)
     {
-        var p = travels ? progress : 1;
-        _translate.X = Offset.X * p;
-        _translate.Y = Offset.Y * p;
-        var scale = travels ? LaunchScale + (1 - LaunchScale) * Math.Max(0, progress) : 1;
+        var fade = Fade?.Value ?? 0;
+        var boost = 1 + OrbitMenuGeometry.TargetGain * (Boost?.Value ?? 0);
+        double x;
+        double y;
+        double scale;
+        double blur;
+        double iconScale;
+        double iconOpacity;
+        if (full)
+        {
+            var p = Travel?.Value ?? 0;
+            var angle = RestAngle - OrbitMenuGeometry.Swirl * (1 - p);
+            var reach = OrbitRadius * p;
+            var hold = Math.Clamp(p, 0, 1);
+            x = Math.Cos(angle) * reach + Pull.X * hold;
+            y = Math.Sin(angle) * reach + Pull.Y * hold;
+            scale = (OrbitMenuGeometry.LaunchScale + (1 - OrbitMenuGeometry.LaunchScale) * p) * PullScale * boost;
+            blur = OrbitMenuGeometry.LaunchBlur * Math.Max(0, 1 - p / 0.6);
+            iconScale = 0.5 + 0.5 * Math.Clamp((p - 0.3) / 0.7, 0, 1);
+            iconOpacity = Math.Clamp((p - 0.35) / 0.5, 0, 1);
+        }
+        else
+        {
+            x = Rest.X;
+            y = Rest.Y;
+            scale = PullScale * boost;
+            blur = 0;
+            iconScale = 1;
+            iconOpacity = 1;
+        }
+        _translate.X = x;
+        _translate.Y = y;
         _scale.ScaleX = scale;
         _scale.ScaleY = scale;
-        Opacity = Math.Clamp(travels ? progress * 1.6 : progress, 0, 1);
+        Opacity = Math.Clamp(fade, 0, 1);
+        if (Math.Abs(blur - _blur) > 0.01)
+        {
+            _blur = blur;
+            Effect = ArcBlur.Get(blur);
+        }
+        if (Math.Abs(iconScale - _iconScale) > 1e-4 || Math.Abs(iconOpacity - _iconOpacity) > 1e-4)
+        {
+            _iconScale = iconScale;
+            _iconOpacity = iconOpacity;
+            InvalidateVisual();
+        }
     }
 
-    /// <summary>Invokes the action: raises <see cref="Click"/> and runs <see cref="Command"/>.</summary>
+    /// <summary>Marks the action as the one the lens sits under.</summary>
+    internal void SetTargeted(bool targeted)
+    {
+        if (targeted == _targeted)
+        {
+            return;
+        }
+        _targeted = targeted;
+        PseudoClasses.Set(TargetedPseudoClass, targeted);
+        InvalidateVisual();
+    }
+
+    internal bool IsTargeted => _targeted;
+
+    /// <summary>Fires the action: raises <see cref="Click"/> and runs <see cref="Command"/>.</summary>
     public void Invoke()
     {
         if (!IsEffectivelyEnabled)
@@ -189,7 +286,10 @@ public class OrbitMenuAction : Control
         if (change.Property == LabelProperty)
         {
             AutomationProperties.SetName(this, Label);
-            Tooltip.SetTip(this, Label);
+        }
+        else if (change.Property == ToneProperty)
+        {
+            PseudoClasses.Set(DangerPseudoClass, Tone == OrbitMenuActionTone.Danger);
         }
         else if (change.Property == IsEffectivelyEnabledProperty)
         {
@@ -204,7 +304,8 @@ public class OrbitMenuAction : Control
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
         base.OnPointerPressed(e);
-        if (!e.Handled && e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+        var point = e.GetCurrentPoint(this);
+        if (!e.Handled && (point.Properties.IsLeftButtonPressed || e.Pointer.Type != PointerType.Mouse))
         {
             _pressed = true;
             e.Pointer.Capture(this);
@@ -225,7 +326,10 @@ public class OrbitMenuAction : Control
         PseudoClasses.Set(PressedPseudoClass, false);
         e.Pointer.Capture(null);
         e.Handled = true;
-        if (new Rect(Bounds.Size).Contains(e.GetPosition(this)))
+        var size = Bounds.Size;
+        var position = e.GetPosition(this);
+        var radius = Math.Min(size.Width, size.Height) / 2;
+        if (new Vector(position.X - size.Width / 2, position.Y - size.Height / 2).Length <= radius + 1)
         {
             Invoke();
         }
@@ -239,20 +343,6 @@ public class OrbitMenuAction : Control
         PseudoClasses.Set(PressedPseudoClass, false);
     }
 
-    /// <inheritdoc />
-    protected override void OnGotFocus(FocusChangedEventArgs e)
-    {
-        base.OnGotFocus(e);
-        InvalidateVisual();
-    }
-
-    /// <inheritdoc />
-    protected override void OnLostFocus(FocusChangedEventArgs e)
-    {
-        base.OnLostFocus(e);
-        InvalidateVisual();
-    }
-
     private void DrawFace(DrawingContext context, Rect bounds, double radius)
     {
         if (BorderBrush is { } edge && !ReferenceEquals(edge, _edgePenBrush))
@@ -260,22 +350,35 @@ public class OrbitMenuAction : Control
             _edgePen = new Pen(edge, 1);
             _edgePenBrush = edge;
         }
+        // The fill is always drawn (transparent while targeted) so the whole circle stays hit-testable; the lens under a
+        // targeted action brings its own shadow.
         context.DrawRectangle(Background ?? Brushes.Transparent, BorderBrush is null ? null : _edgePen,
-            new RoundedRect(bounds.Deflate(0.5), radius), Shadow);
-        if (Glyph is { } glyph && Foreground is { } ink)
+            new RoundedRect(bounds.Deflate(0.5), radius), _targeted ? default : Shadow);
+        if (Glyph is not { } glyph || Foreground is not { } ink || _iconOpacity <= 0)
         {
-            if (_glyphPen is null || !ReferenceEquals(_glyphPenBrush, ink))
-            {
-                _glyphPen = new Pen(ink, 1.75, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round);
-                _glyphPenBrush = ink;
-            }
-            var size = GlyphSize;
-            var scale = size / 24;
-            var origin = bounds.Center - new Point(size / 2, size / 2);
-            using (context.PushTransform(Matrix.CreateScale(scale, scale) * Matrix.CreateTranslation(origin.X, origin.Y)))
+            return;
+        }
+        if (_glyphPen is null || !ReferenceEquals(_glyphPenBrush, ink))
+        {
+            _glyphPen = new Pen(ink, GlyphThickness, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round);
+            _glyphPenBrush = ink;
+        }
+        var size = GlyphSize * _iconScale;
+        var scale = size / 24;
+        var origin = bounds.Center - new Point(size / 2, size / 2);
+        var transform = Matrix.CreateScale(scale, scale) * Matrix.CreateTranslation(origin.X, origin.Y);
+        if (_iconOpacity >= 1)
+        {
+            using (context.PushTransform(transform))
             {
                 context.DrawGeometry(null, _glyphPen, glyph);
             }
+            return;
+        }
+        using (context.PushOpacity(_iconOpacity))
+        using (context.PushTransform(transform))
+        {
+            context.DrawGeometry(null, _glyphPen, glyph);
         }
     }
 
@@ -287,22 +390,11 @@ public class OrbitMenuAction : Control
         if (IsEffectivelyEnabled)
         {
             DrawFace(context, bounds, radius);
+            return;
         }
-        else
+        using (context.PushOpacity(0.45))
         {
-            using (context.PushOpacity(0.45))
-            {
-                DrawFace(context, bounds, radius);
-            }
-        }
-        if (Classes.Contains(":focus-visible") && FocusRingBrush is { } ring)
-        {
-            if (_ringPen is null || !ReferenceEquals(_ringPenBrush, ring))
-            {
-                _ringPen = new Pen(ring, 2);
-                _ringPenBrush = ring;
-            }
-            context.DrawRectangle(null, _ringPen, new RoundedRect(bounds.Inflate(RingGap), radius > 0 ? radius + RingGap : 0));
+            DrawFace(context, bounds, radius);
         }
     }
 

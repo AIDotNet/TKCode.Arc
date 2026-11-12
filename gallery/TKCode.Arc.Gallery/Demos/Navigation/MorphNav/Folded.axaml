@@ -1,0 +1,35 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MorphNavFoldedDemo">
+    <!-- Narrower than CollapseBelow (720 px of its own width), the bar folds its items into one menu. -->
+    <Panel Height="420" Width="460" HorizontalAlignment="Center">
+        <arc:MorphNav BrandName="Lantern" ActionLabel="Get started" Margin="0,14,0,0">
+            <arc:MorphNav.BrandMark>
+                <Border Width="26" Height="26" CornerRadius="{arc:ArcDesignTokenResource RadiusStep8}"
+                        Background="{arc:ArcDesignTokenResource Foreground}">
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Sparkles}" Size="15"
+                                  Foreground="{arc:ArcDesignTokenResource Background}"
+                                  HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Border>
+            </arc:MorphNav.BrandMark>
+            <arc:MorphNavItem Value="platform" Label="Platform">
+                <arc:MorphNavLink Label="Notebooks" Icon="{x:Static arc:ArcIcons.FileText}" />
+                <arc:MorphNavLink Label="Maps" Icon="{x:Static arc:ArcIcons.Globe}" />
+                <arc:MorphNavLink Label="Timeline" Icon="{x:Static arc:ArcIcons.Clock}" />
+                <arc:MorphNavLink Label="Sync" Icon="{x:Static arc:ArcIcons.RefreshCw}" />
+            </arc:MorphNavItem>
+            <arc:MorphNavItem Value="teams" Label="Teams">
+                <arc:MorphNavLink Label="Classrooms" Icon="{x:Static arc:ArcIcons.Users}" />
+                <arc:MorphNavLink Label="Research" Icon="{x:Static arc:ArcIcons.Database}" />
+                <arc:MorphNavLink Label="Hiking groups" Icon="{x:Static arc:ArcIcons.Flag}" />
+            </arc:MorphNavItem>
+            <arc:MorphNavItem Value="learn" Label="Learn">
+                <arc:MorphNavLink Label="Guides" Icon="{x:Static arc:ArcIcons.BookOpen}" />
+                <arc:MorphNavLink Label="Help" Icon="{x:Static arc:ArcIcons.CircleHelp}" />
+            </arc:MorphNavItem>
+            <arc:MorphNavItem Value="pricing" Label="Pricing" />
+            <arc:MorphNavItem Value="journal" Label="Journal" />
+        </arc:MorphNav>
+    </Panel>
+</UserControl>

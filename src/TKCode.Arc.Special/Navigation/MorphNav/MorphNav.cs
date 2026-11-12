@@ -1,224 +1,489 @@
 using System.Collections.Specialized;
+using System.Globalization;
+using System.Windows.Input;
 using Avalonia;
 using Avalonia.Automation;
+using Avalonia.Automation.Peers;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
+using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
-using Avalonia.Data;
+using Avalonia.Controls.Templates;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Layout;
-using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Metadata;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using TKCode.Arc.DesignTokens;
+using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
 using AvaloniaButton = Avalonia.Controls.Button;
 
 namespace TKCode.Arc;
 
 /// <summary>
-/// A compact navigation pill that opens into a panel of sections and links, and closes back into the pill. The pill
-/// shows your mark, a title and the page you are on; pressing it grows the same surface into the panel on a spring,
-/// its corners and shadow following, and choosing a link shrinks it back.
+/// The top bar of a website, drawn as a single surface that changes shape: the brand first, then the sections, then
+/// search and a single call to action. A highlight follows the open item, else the one under the pointer or keyboard
+/// focus; a section with links stretches the surface down into its panel, resized on a spring, and search opens inside
+/// the same surface. <see cref="IsCompact"/> slims the bar, and a nav narrower than <see cref="CollapseBelow"/> gathers
+/// its sections into one menu.
 /// </summary>
 /// <remarks>
-/// The nav takes only the pill's room in the layout. The open panel grows over the page from the pill: to the right
-/// when the nav is aligned left, to the left when it is aligned right, and both ways when it is centered, kept
-/// <c>PanelGutter</c> from the window's sides. It sits above its siblings (<c>ZIndex</c> 10); give its parent room or
-/// no clipping if the panel should be seen in full.
+/// The nav takes the bar's height in the layout and the width it is given; the bar is centred in it. Open panels and
+/// search grow over the page below (the nav sits above its siblings, <c>ZIndex</c> 10), so put it in the same panel as
+/// the content it floats over and do not clip that panel.
 /// </remarks>
-[TemplatePart(PillPart, typeof(AvaloniaButton))]
-[TemplatePart(PillHostPart, typeof(PresenceHost))]
-[TemplatePart(PanelHostPart, typeof(PresenceHost))]
-[TemplatePart(SectionsPart, typeof(Panel))]
-[TemplatePart(ClosePart, typeof(AvaloniaButton))]
-[TemplatePart(SurfacePart, typeof(Border))]
-[PseudoClasses(OpenPseudoClass)]
+[TemplatePart(StagePart, typeof(MorphNavStage))]
+[TemplatePart(LayersPart, typeof(MorphNavLayers))]
+[TemplatePart(BarPart, typeof(MorphNavBar))]
+[TemplatePart(BrandPart, typeof(MorphNavBrandButton))]
+[TemplatePart(TrackPart, typeof(MorphNavTrack))]
+[TemplatePart(SearchButtonPart, typeof(MorphNavToolButton))]
+[TemplatePart(ActionPart, typeof(MorphNavActionButton))]
+[PseudoClasses(OpenPseudoClass, SearchingPseudoClass, CompactPseudoClass, CollapsedPseudoClass)]
 public class MorphNav : TemplatedControl
 {
-    internal const string PillPart = "PART_Pill";
-    internal const string PillHostPart = "PART_PillHost";
-    internal const string PanelHostPart = "PART_PanelHost";
-    internal const string SectionsPart = "PART_Sections";
-    internal const string ClosePart = "PART_Close";
-    internal const string SurfacePart = "PART_Surface";
+    internal const string StagePart = "PART_Stage";
+    internal const string LayersPart = "PART_Layers";
+    internal const string BarPart = "PART_Bar";
+    internal const string BrandPart = "PART_Brand";
+    internal const string TrackPart = "PART_Track";
+    internal const string SearchButtonPart = "PART_SearchButton";
+    internal const string ActionPart = "PART_Action";
     internal const string OpenPseudoClass = ":open";
+    internal const string SearchingPseudoClass = ":searching";
+    internal const string CompactPseudoClass = ":compact";
+    internal const string CollapsedPseudoClass = ":collapsed";
 
-    /// <summary>Your product's or site's name, shown in the pill and at the top of the panel.</summary>
-    public static readonly StyledProperty<string?> TitleProperty =
-        AvaloniaProperty.Register<MorphNav, string?>(nameof(Title));
+    /// <summary>What the menu trigger of a folded bar opens.</summary>
+    internal static readonly object MenuKey = new();
 
-    /// <summary>A 24 × 24 stroked mark before the title; null shows the title alone.</summary>
-    public static readonly StyledProperty<Geometry?> MarkProperty =
-        AvaloniaProperty.Register<MorphNav, Geometry?>(nameof(Mark));
+    /// <summary>What the search results face shows.</summary>
+    internal static readonly object SearchKey = new();
 
-    /// <summary>Whether the panel is open (two-way).</summary>
-    public static readonly StyledProperty<bool> IsOpenProperty =
-        AvaloniaProperty.Register<MorphNav, bool>(nameof(IsOpen), defaultBindingMode: BindingMode.TwoWay);
+    /// <summary>Your brand's name, shown first in the bar and used as the brand button's accessible name.</summary>
+    public static readonly StyledProperty<string?> BrandNameProperty =
+        AvaloniaProperty.Register<MorphNav, string?>(nameof(BrandName));
 
-    /// <summary>The page you are on (two-way): its link is marked in the panel and its text shows in the pill.</summary>
-    public static readonly StyledProperty<MorphNavLink?> CurrentLinkProperty =
-        AvaloniaProperty.Register<MorphNav, MorphNavLink?>(nameof(CurrentLink), defaultBindingMode: BindingMode.TwoWay);
+    /// <summary>The brand mark before the name (any content, about 26 × 26), such as a logo tile.</summary>
+    public static readonly StyledProperty<object?> BrandMarkProperty =
+        AvaloniaProperty.Register<MorphNav, object?>(nameof(BrandMark));
 
-    /// <summary>Content at the bottom of the open panel, such as a sign-in button; null leaves it out.</summary>
-    public static readonly StyledProperty<object?> FooterProperty =
-        AvaloniaProperty.Register<MorphNav, object?>(nameof(Footer));
+    /// <summary>Template for <see cref="BrandMark"/> when it is data rather than a control.</summary>
+    public static readonly StyledProperty<IDataTemplate?> BrandMarkTemplateProperty =
+        AvaloniaProperty.Register<MorphNav, IDataTemplate?>(nameof(BrandMarkTemplate));
 
-    /// <summary>Width of the open panel in px; NaN (default) uses the theme's 600. It never exceeds the window less its gutters.</summary>
-    public static readonly StyledProperty<double> PanelWidthProperty =
-        AvaloniaProperty.Register<MorphNav, double>(nameof(PanelWidth), double.NaN);
+    /// <summary>Where the brand leads, passed on in <see cref="MorphNavNavigateEventArgs.Href"/>.</summary>
+    public static readonly StyledProperty<string?> BrandHrefProperty =
+        AvaloniaProperty.Register<MorphNav, string?>(nameof(BrandHref));
 
-    /// <summary>Accessible name of the pill, which opens the panel.</summary>
+    /// <summary>Text of the call-to-action button at the far end of the bar; null leaves the button out.</summary>
+    public static readonly StyledProperty<string?> ActionLabelProperty =
+        AvaloniaProperty.Register<MorphNav, string?>(nameof(ActionLabel));
+
+    /// <summary>A 24 × 24 stroked glyph before the action's label; null shows the label alone.</summary>
+    public static readonly StyledProperty<Geometry?> ActionIconProperty =
+        AvaloniaProperty.Register<MorphNav, Geometry?>(nameof(ActionIcon));
+
+    /// <summary>Command run when the action is chosen, after <see cref="ActionInvoked"/>.</summary>
+    public static readonly StyledProperty<ICommand?> ActionCommandProperty =
+        AvaloniaProperty.Register<MorphNav, ICommand?>(nameof(ActionCommand));
+
+    /// <summary>The <see cref="MorphNavItem.Value"/> of the section the visitor is in; that item is drawn in the foreground color and announced as the current page.</summary>
+    public static readonly StyledProperty<string?> CurrentProperty =
+        AvaloniaProperty.Register<MorphNav, string?>(nameof(Current));
+
+    /// <summary>Slims the bar to 46 px (from 56) and tucks the brand name away; typically switched on after the page has scrolled a little.</summary>
+    public static readonly StyledProperty<bool> IsCompactProperty =
+        AvaloniaProperty.Register<MorphNav, bool>(nameof(IsCompact));
+
+    /// <summary>The nav width (px) under which its sections are gathered into a single menu.</summary>
+    public static readonly StyledProperty<double> CollapseBelowProperty =
+        AvaloniaProperty.Register<MorphNav, double>(nameof(CollapseBelow), 720);
+
+    /// <summary>Accessible name of the navigation landmark.</summary>
+    public static readonly StyledProperty<string> LabelProperty =
+        AvaloniaProperty.Register<MorphNav, string>(nameof(Label), "Main");
+
+    /// <summary>Placeholder of the search input.</summary>
+    public static readonly StyledProperty<string?> SearchPlaceholderProperty =
+        AvaloniaProperty.Register<MorphNav, string?>(nameof(SearchPlaceholder), "Search");
+
+    /// <summary>Accessible name of the search button and the search input.</summary>
+    public static readonly StyledProperty<string> SearchLabelProperty =
+        AvaloniaProperty.Register<MorphNav, string>(nameof(SearchLabel), "Search");
+
+    /// <summary>Accessible name and tooltip of the button that closes search.</summary>
+    public static readonly StyledProperty<string> CloseSearchLabelProperty =
+        AvaloniaProperty.Register<MorphNav, string>(nameof(CloseSearchLabel), "Close search");
+
+    /// <summary>Accessible name of the result list.</summary>
+    public static readonly StyledProperty<string> SearchResultsLabelProperty =
+        AvaloniaProperty.Register<MorphNav, string>(nameof(SearchResultsLabel), "Search results");
+
+    /// <summary>Label of the one item a folded bar shows instead of its items.</summary>
     public static readonly StyledProperty<string> MenuLabelProperty =
-        AvaloniaProperty.Register<MorphNav, string>(nameof(MenuLabel), "Open menu");
+        AvaloniaProperty.Register<MorphNav, string>(nameof(MenuLabel), "Menu");
 
-    /// <summary>Accessible name and tooltip of the panel's close button.</summary>
-    public static readonly StyledProperty<string> CloseLabelProperty =
-        AvaloniaProperty.Register<MorphNav, string>(nameof(CloseLabel), "Close menu");
+    /// <summary>Heading of the suggestions search shows for an empty query.</summary>
+    public static readonly StyledProperty<string> SuggestedLabelProperty =
+        AvaloniaProperty.Register<MorphNav, string>(nameof(SuggestedLabel), "Suggested");
 
-    /// <summary>Raised when a link is chosen, after it becomes <see cref="CurrentLink"/>. Bubbles.</summary>
-    public static readonly RoutedEvent<MorphNavLinkEventArgs> LinkInvokedEvent =
-        RoutedEvent.Register<MorphNav, MorphNavLinkEventArgs>(nameof(LinkInvoked), RoutingStrategies.Bubble);
+    /// <summary>Heading of a single result.</summary>
+    public static readonly StyledProperty<string> SingleResultLabelProperty =
+        AvaloniaProperty.Register<MorphNav, string>(nameof(SingleResultLabel), "1 result");
 
-    private readonly List<MorphNavLinkRow> _rows = new();
-    private readonly List<int> _rowSection = new();
-    private AvaloniaButton? _pill;
-    private PresenceHost? _pillHost;
-    private PresenceHost? _panelHost;
-    private Panel? _sections;
-    private AvaloniaButton? _close;
-    private Border? _surface;
-    private MorphNavSection[] _watched = [];
+    /// <summary>Heading of several results; <c>{0}</c> is the count.</summary>
+    public static readonly StyledProperty<string> ResultsFormatProperty =
+        AvaloniaProperty.Register<MorphNav, string>(nameof(ResultsFormat), "{0} results");
+
+    /// <summary>Heading when nothing matches; <c>{0}</c> is the query.</summary>
+    public static readonly StyledProperty<string> NoResultsFormatProperty =
+        AvaloniaProperty.Register<MorphNav, string>(nameof(NoResultsFormat), "No results for “{0}”");
+
+    /// <summary>The <see cref="MorphNavItem.Value"/> of the item whose panel is open, or null.</summary>
+    public static readonly DirectProperty<MorphNav, string?> OpenValueProperty =
+        AvaloniaProperty.RegisterDirect<MorphNav, string?>(nameof(OpenValue), o => o.OpenValue);
+
+    /// <summary>Whether search is open.</summary>
+    public static readonly DirectProperty<MorphNav, bool> IsSearchOpenProperty =
+        AvaloniaProperty.RegisterDirect<MorphNav, bool>(nameof(IsSearchOpen), o => o.IsSearchOpen);
+
+    /// <summary>Whether the items are folded into one menu (the nav is narrower than <see cref="CollapseBelow"/>).</summary>
+    public static readonly DirectProperty<MorphNav, bool> IsCollapsedProperty =
+        AvaloniaProperty.RegisterDirect<MorphNav, bool>(nameof(IsCollapsed), o => o.IsCollapsed);
+
+    /// <summary>Raised whenever something that leads somewhere is chosen: a panel or footer link, a feature card, a search result, an item without a panel, or the brand. Bubbles.</summary>
+    public static readonly RoutedEvent<MorphNavNavigateEventArgs> NavigateEvent =
+        RoutedEvent.Register<MorphNav, MorphNavNavigateEventArgs>(nameof(Navigate), RoutingStrategies.Bubble);
+
+    /// <summary>Raised when the primary action is chosen. Bubbles.</summary>
+    public static readonly RoutedEvent<RoutedEventArgs> ActionInvokedEvent =
+        RoutedEvent.Register<MorphNav, RoutedEventArgs>(nameof(ActionInvoked), RoutingStrategies.Bubble);
+
+    private readonly List<MorphNavTrigger> _triggers = new();
+    private readonly List<MorphNavSearchEntry> _results = new();
+    private MorphNavStage? _stage;
+    private MorphNavLayers? _layers;
+    private MorphNavBar? _bar;
+    private MorphNavBrandButton? _brand;
+    private MorphNavTrack? _track;
+    private MorphNavToolButton? _searchButton;
+    private MorphNavActionButton? _action;
+    private MorphNavTrigger? _menuTrigger;
+    private MorphNavLayerMotion? _barMotion;
+    private MorphNavSearchBar? _searchBar;
+    private MorphNavFace? _searchFace;
+    private MorphNavSearchBody? _searchBody;
+    private MorphNavFace? _face;
+    private MorphNavTrigger? _openTrigger;
+    private MorphNavTrigger? _hovered;
+    private MorphNavTrigger? _pendingOpen;
+    private DispatcherTimer? _openTimer;
+    private DispatcherTimer? _closeTimer;
     private TopLevel? _pressRoot;
     private IDisposable? _viewport;
-    private Size _footprint;
-    private Size _pillSize;
+    private MorphNavItem[] _watched = [];
+    private string? _openValue;
+    private bool _searchOpen;
+    private bool _collapsed;
+    private bool _tiny;
+    private bool _hasTarget;
+    private bool _pendingAnimate;
+    private Size _target;
+    private double _targetRadius;
+    private Size _lastBar;
+    private double _arrangedWidth;
     private int _focusRequest;
-    private bool _rowsDirty = true;
 
     static MorphNav()
     {
         FocusableProperty.OverrideDefaultValue<MorphNav>(false);
         ClipToBoundsProperty.OverrideDefaultValue<MorphNav>(false);
         ZIndexProperty.OverrideDefaultValue<MorphNav>(10);
-        AffectsMeasure<MorphNav>(PanelWidthProperty);
+        AutomationProperties.LandmarkTypeProperty.OverrideDefaultValue<MorphNav>(AutomationLandmarkType.Navigation);
+        AffectsMeasure<MorphNav>(CollapseBelowProperty);
         SpecialFocusModality.Watch();
     }
 
     public MorphNav()
     {
-        Sections.CollectionChanged += OnSectionsChanged;
+        Items.CollectionChanged += OnItemsChanged;
+        SearchEntries.CollectionChanged += OnSearchEntriesChanged;
+        AutomationProperties.SetName(this, Label);
     }
 
-    /// <summary>The panel's sections, in order.</summary>
+    /// <summary>The top-level items, in order.</summary>
     [Content]
-    public AvaloniaList<MorphNavSection> Sections { get; } = new();
+    public AvaloniaList<MorphNavItem> Items { get; } = new();
 
-    /// <inheritdoc cref="TitleProperty"/>
-    public string? Title { get => GetValue(TitleProperty); set => SetValue(TitleProperty, value); }
+    /// <summary>What search can find. Search shows only while there are entries.</summary>
+    public AvaloniaList<MorphNavSearchEntry> SearchEntries { get; } = new();
 
-    /// <inheritdoc cref="MarkProperty"/>
-    public Geometry? Mark { get => GetValue(MarkProperty); set => SetValue(MarkProperty, value); }
+    /// <inheritdoc cref="BrandNameProperty"/>
+    public string? BrandName { get => GetValue(BrandNameProperty); set => SetValue(BrandNameProperty, value); }
 
-    /// <inheritdoc cref="IsOpenProperty"/>
-    public bool IsOpen { get => GetValue(IsOpenProperty); set => SetValue(IsOpenProperty, value); }
+    /// <inheritdoc cref="BrandMarkProperty"/>
+    public object? BrandMark { get => GetValue(BrandMarkProperty); set => SetValue(BrandMarkProperty, value); }
 
-    /// <inheritdoc cref="CurrentLinkProperty"/>
-    public MorphNavLink? CurrentLink { get => GetValue(CurrentLinkProperty); set => SetValue(CurrentLinkProperty, value); }
+    /// <inheritdoc cref="BrandMarkTemplateProperty"/>
+    public IDataTemplate? BrandMarkTemplate { get => GetValue(BrandMarkTemplateProperty); set => SetValue(BrandMarkTemplateProperty, value); }
 
-    /// <inheritdoc cref="FooterProperty"/>
-    public object? Footer { get => GetValue(FooterProperty); set => SetValue(FooterProperty, value); }
+    /// <inheritdoc cref="BrandHrefProperty"/>
+    public string? BrandHref { get => GetValue(BrandHrefProperty); set => SetValue(BrandHrefProperty, value); }
 
-    /// <inheritdoc cref="PanelWidthProperty"/>
-    public double PanelWidth { get => GetValue(PanelWidthProperty); set => SetValue(PanelWidthProperty, value); }
+    /// <inheritdoc cref="ActionLabelProperty"/>
+    public string? ActionLabel { get => GetValue(ActionLabelProperty); set => SetValue(ActionLabelProperty, value); }
+
+    /// <inheritdoc cref="ActionIconProperty"/>
+    public Geometry? ActionIcon { get => GetValue(ActionIconProperty); set => SetValue(ActionIconProperty, value); }
+
+    /// <inheritdoc cref="ActionCommandProperty"/>
+    public ICommand? ActionCommand { get => GetValue(ActionCommandProperty); set => SetValue(ActionCommandProperty, value); }
+
+    /// <inheritdoc cref="CurrentProperty"/>
+    public string? Current { get => GetValue(CurrentProperty); set => SetValue(CurrentProperty, value); }
+
+    /// <inheritdoc cref="IsCompactProperty"/>
+    public bool IsCompact { get => GetValue(IsCompactProperty); set => SetValue(IsCompactProperty, value); }
+
+    /// <inheritdoc cref="CollapseBelowProperty"/>
+    public double CollapseBelow { get => GetValue(CollapseBelowProperty); set => SetValue(CollapseBelowProperty, value); }
+
+    /// <inheritdoc cref="LabelProperty"/>
+    public string Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
+
+    /// <inheritdoc cref="SearchPlaceholderProperty"/>
+    public string? SearchPlaceholder { get => GetValue(SearchPlaceholderProperty); set => SetValue(SearchPlaceholderProperty, value); }
+
+    /// <inheritdoc cref="SearchLabelProperty"/>
+    public string SearchLabel { get => GetValue(SearchLabelProperty); set => SetValue(SearchLabelProperty, value); }
+
+    /// <inheritdoc cref="CloseSearchLabelProperty"/>
+    public string CloseSearchLabel { get => GetValue(CloseSearchLabelProperty); set => SetValue(CloseSearchLabelProperty, value); }
+
+    /// <inheritdoc cref="SearchResultsLabelProperty"/>
+    public string SearchResultsLabel { get => GetValue(SearchResultsLabelProperty); set => SetValue(SearchResultsLabelProperty, value); }
 
     /// <inheritdoc cref="MenuLabelProperty"/>
     public string MenuLabel { get => GetValue(MenuLabelProperty); set => SetValue(MenuLabelProperty, value); }
 
-    /// <inheritdoc cref="CloseLabelProperty"/>
-    public string CloseLabel { get => GetValue(CloseLabelProperty); set => SetValue(CloseLabelProperty, value); }
+    /// <inheritdoc cref="SuggestedLabelProperty"/>
+    public string SuggestedLabel { get => GetValue(SuggestedLabelProperty); set => SetValue(SuggestedLabelProperty, value); }
 
-    /// <inheritdoc cref="LinkInvokedEvent"/>
-    public event EventHandler<MorphNavLinkEventArgs>? LinkInvoked
+    /// <inheritdoc cref="SingleResultLabelProperty"/>
+    public string SingleResultLabel { get => GetValue(SingleResultLabelProperty); set => SetValue(SingleResultLabelProperty, value); }
+
+    /// <inheritdoc cref="ResultsFormatProperty"/>
+    public string ResultsFormat { get => GetValue(ResultsFormatProperty); set => SetValue(ResultsFormatProperty, value); }
+
+    /// <inheritdoc cref="NoResultsFormatProperty"/>
+    public string NoResultsFormat { get => GetValue(NoResultsFormatProperty); set => SetValue(NoResultsFormatProperty, value); }
+
+    /// <inheritdoc cref="OpenValueProperty"/>
+    public string? OpenValue
     {
-        add => AddHandler(LinkInvokedEvent, value);
-        remove => RemoveHandler(LinkInvokedEvent, value);
+        get => _openValue;
+        private set => SetAndRaise(OpenValueProperty, ref _openValue, value);
     }
 
-    /// <summary>The pill (null before the template is applied).</summary>
-    internal AvaloniaButton? Pill => _pill;
+    /// <inheritdoc cref="IsSearchOpenProperty"/>
+    public bool IsSearchOpen
+    {
+        get => _searchOpen;
+        private set => SetAndRaise(IsSearchOpenProperty, ref _searchOpen, value);
+    }
 
-    /// <summary>The panel's link rows, in reading order.</summary>
-    internal IReadOnlyList<MorphNavLinkRow> Rows => _rows;
+    /// <inheritdoc cref="IsCollapsedProperty"/>
+    public bool IsCollapsed
+    {
+        get => _collapsed;
+        private set => SetAndRaise(IsCollapsedProperty, ref _collapsed, value);
+    }
 
-    /// <summary>The room the nav takes in the layout: the closed pill's.</summary>
-    internal Size Footprint => _footprint;
+    /// <inheritdoc cref="NavigateEvent"/>
+    public event EventHandler<MorphNavNavigateEventArgs>? Navigate
+    {
+        add => AddHandler(NavigateEvent, value);
+        remove => RemoveHandler(NavigateEvent, value);
+    }
 
-    /// <summary>Opens the panel; with the keyboard, focus moves to the first link.</summary>
-    public void Open() => SetCurrentValue(IsOpenProperty, true);
+    /// <inheritdoc cref="ActionInvokedEvent"/>
+    public event EventHandler<RoutedEventArgs>? ActionInvoked
+    {
+        add => AddHandler(ActionInvokedEvent, value);
+        remove => RemoveHandler(ActionInvokedEvent, value);
+    }
 
-    /// <summary>Closes the panel back into the pill.</summary>
-    public void Close() => SetCurrentValue(IsOpenProperty, false);
+    /// <summary>The bar's item triggers (without the menu trigger), in order.</summary>
+    internal IReadOnlyList<MorphNavTrigger> Triggers => _triggers;
 
-    /// <summary>Opens the panel when it is closed and closes it when it is open.</summary>
-    public void Toggle() => SetCurrentValue(IsOpenProperty, !IsOpen);
+    internal MorphNavTrigger? MenuTrigger => _menuTrigger;
+
+    internal MorphNavStage? Stage => _stage;
+
+    internal MorphNavBar? Bar => _bar;
+
+    internal MorphNavTrack? Track => _track;
+
+    internal MorphNavBrandButton? Brand => _brand;
+
+    internal MorphNavToolButton? SearchButton => _searchButton;
+
+    internal MorphNavActionButton? ActionButton => _action;
+
+    internal MorphNavFace? OpenFace => _face;
+
+    internal MorphNavSearchBar? SearchBar => _searchBar;
+
+    internal MorphNavSearchBody? SearchBody => _searchBody;
+
+    internal MorphNavFace? SearchFace => _searchFace;
+
+    internal MorphNavTrigger? OpenTrigger => _openTrigger;
+
+    internal bool IsOpenPending => _openTimer?.IsEnabled == true;
+
+    internal bool IsClosePending => _closeTimer?.IsEnabled == true;
+
+    /// <summary>Opens the panel of the item with <paramref name="value"/> (or the folded menu when the bar is folded).</summary>
+    public void Open(string value)
+    {
+        if (_collapsed)
+        {
+            if (_menuTrigger is not null)
+            {
+                OpenPanel(_menuTrigger, focusFirst: false);
+            }
+            return;
+        }
+        var trigger = _triggers.FirstOrDefault(t => t.HasPanel && t.Item?.Value == value);
+        if (trigger is not null)
+        {
+            OpenPanel(trigger, focusFirst: false);
+        }
+    }
+
+    /// <summary>Closes the open panel.</summary>
+    public void ClosePanel() => ClosePanel(returnFocus: false);
+
+    /// <summary>Opens search and moves focus to its input.</summary>
+    public void OpenSearch() => ShowSearch();
+
+    /// <summary>Closes search.</summary>
+    public void CloseSearch() => HideSearch(returnFocus: false);
 
     /// <inheritdoc />
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_pill is not null)
+        Unhook();
+        _stage = e.NameScope.Find<MorphNavStage>(StagePart);
+        _layers = e.NameScope.Find<MorphNavLayers>(LayersPart);
+        _bar = e.NameScope.Find<MorphNavBar>(BarPart);
+        _brand = e.NameScope.Find<MorphNavBrandButton>(BrandPart);
+        _track = e.NameScope.Find<MorphNavTrack>(TrackPart);
+        _searchButton = e.NameScope.Find<MorphNavToolButton>(SearchButtonPart);
+        _action = e.NameScope.Find<MorphNavActionButton>(ActionPart);
+        _searchBar = null;
+        _searchFace = null;
+        _searchBody = null;
+        _face = null;
+        _openTrigger = null;
+        _hasTarget = false;
+        if (_layers is not null)
         {
-            _pill.Click -= OnPillClick;
+            _layers.Bar = _bar;
+            _layers.Measured += OnLayersMeasured;
         }
-        if (_close is not null)
+        if (_bar is not null)
         {
-            _close.Click -= OnCloseClick;
+            _barMotion = new MorphNavLayerMotion(_bar, scales: true);
         }
-        _sections?.Children.Clear();
-        _pill = e.NameScope.Find<AvaloniaButton>(PillPart);
-        _pillHost = e.NameScope.Find<PresenceHost>(PillHostPart);
-        _panelHost = e.NameScope.Find<PresenceHost>(PanelHostPart);
-        _sections = e.NameScope.Find<Panel>(SectionsPart);
-        _close = e.NameScope.Find<AvaloniaButton>(ClosePart);
-        _surface = e.NameScope.Find<Border>(SurfacePart);
-        if (_pill is not null)
+        if (_brand is not null)
         {
-            _pill.Click += OnPillClick;
+            _brand.Click += OnBrandClick;
         }
-        if (_close is not null)
+        if (_searchButton is not null)
         {
-            _close.Click += OnCloseClick;
+            _searchButton.Click += OnSearchButtonClick;
         }
-        _rowsDirty = true;
-        RebuildRows();
-        UpdateState();
+        if (_action is not null)
+        {
+            _action.Click += OnActionClick;
+        }
+        if (_track is not null)
+        {
+            _track.Arranged += OnTrackArranged;
+        }
+        RebuildTriggers();
+        UpdateTools();
+        UpdateCompact();
         UpdateNames();
+        UpdateOpenState();
+    }
+
+    private void Unhook()
+    {
+        if (_brand is not null)
+        {
+            _brand.Click -= OnBrandClick;
+        }
+        if (_searchButton is not null)
+        {
+            _searchButton.Click -= OnSearchButtonClick;
+        }
+        if (_action is not null)
+        {
+            _action.Click -= OnActionClick;
+        }
+        if (_track is not null)
+        {
+            _track.Arranged -= OnTrackArranged;
+        }
+        if (_layers is not null)
+        {
+            _layers.Measured -= OnLayersMeasured;
+        }
+        CancelTimers();
+        OpenValue = null;
+        IsSearchOpen = false;
     }
 
     /// <inheritdoc />
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-        if (change.Property == IsOpenProperty)
-        {
-            OnOpenChanged(change.GetNewValue<bool>());
-        }
-        else if (change.Property == CurrentLinkProperty)
+        if (change.Property == CurrentProperty)
         {
             UpdateCurrent();
         }
-        else if (change.Property == MenuLabelProperty || change.Property == CloseLabelProperty || change.Property == TitleProperty)
+        else if (change.Property == IsCompactProperty)
+        {
+            UpdateCompact();
+        }
+        else if (change.Property == ActionLabelProperty || change.Property == BrandNameProperty || change.Property == BrandMarkProperty)
+        {
+            UpdateTools();
+        }
+        else if (change.Property == LabelProperty)
+        {
+            AutomationProperties.SetName(this, Label);
+        }
+        else if (change.Property == MenuLabelProperty && _menuTrigger is not null)
+        {
+            _menuTrigger.Label = MenuLabel;
+        }
+        else if (change.Property == SearchLabelProperty || change.Property == CloseSearchLabelProperty
+                 || change.Property == SearchResultsLabelProperty || change.Property == SearchPlaceholderProperty)
         {
             UpdateNames();
         }
-        else if (change.Property == HorizontalAlignmentProperty)
+        else if (change.Property == IsKeyboardFocusWithinProperty && !change.GetNewValue<bool>())
         {
-            InvalidateArrange();
+            Dispatcher.UIThread.Post(CloseIfFocusLeft, DispatcherPriority.Input);
         }
     }
 
@@ -227,10 +492,7 @@ public class MorphNav : TemplatedControl
     {
         base.OnAttachedToVisualTree(e);
         _viewport = ArcViewport.Observe(this, _ => InvalidateMeasure());
-        if (IsOpen)
-        {
-            WatchOutsidePresses(true);
-        }
+        WatchOutsidePresses(_openTrigger is not null || _searchOpen);
     }
 
     /// <inheritdoc />
@@ -239,316 +501,411 @@ public class MorphNav : TemplatedControl
         base.OnDetachedFromVisualTree(e);
         _viewport?.Dispose();
         _viewport = null;
+        CancelTimers();
         WatchOutsidePresses(false);
     }
 
-    #region Layout
+    /// <inheritdoc />
+    protected override AutomationPeer OnCreateAutomationPeer() => new NavPeer(this);
+
+    #region Layout and surface
 
     private double Token(MorphNavTokenKind kind, double fallback)
         => this.TryFindResource(MorphNavTokens.Key(kind), out var value) && value is double d ? d : fallback;
 
-    /// <summary>The width the open panel takes: <see cref="PanelWidth"/> or the theme's, within the window less its gutters.</summary>
-    internal double EffectivePanelWidth(double available)
-    {
-        var width = double.IsNaN(PanelWidth) ? Token(MorphNavTokenKind.PanelWidth, 600) : PanelWidth;
-        var gutter = Token(MorphNavTokenKind.PanelGutter, 16);
-        if (ArcViewport.GetSize(this) is { } viewport)
-        {
-            width = Math.Min(width, viewport.Width - 2 * gutter);
-        }
-        if (!double.IsInfinity(available) && HorizontalAlignment == HorizontalAlignment.Stretch)
-        {
-            width = Math.Min(width, Math.Max(available, 0));
-        }
-        return Math.Max(width, 160);
-    }
-
     /// <inheritdoc />
     protected override Size MeasureOverride(Size availableSize)
     {
-        var panelWidth = EffectivePanelWidth(availableSize.Width);
-        if (_panelHost?.Child is Layoutable panel && !panel.Width.Equals(panelWidth))
+        var container = double.IsInfinity(availableSize.Width)
+            ? (_arrangedWidth > 0 ? _arrangedWidth : double.PositiveInfinity)
+            : availableSize.Width;
+        var viewport = ArcViewport.GetSize(this);
+        _tiny = viewport is { } size && size.Width < Token(MorphNavTokenKind.TinyViewportWidth, 420);
+        UpdateCollapsed(!double.IsInfinity(container) && container < CollapseBelow);
+        if (_layers is not null)
         {
-            panel.Width = panelWidth;
+            var gutter = Token(MorphNavTokenKind.FaceGutter, 16);
+            var room = double.IsInfinity(container) ? double.PositiveInfinity : Math.Max(160, container - gutter);
+            _layers.FaceMaxWidth = Math.Min(Token(MorphNavTokenKind.FaceMaxWidth, 700), room);
+            _layers.SearchWidth = Math.Min(Token(MorphNavTokenKind.SearchWidth, 544), room);
         }
-        // The surface is measured without the parent's limits: it grows over the page, not into the layout.
-        base.MeasureOverride(new Size(double.PositiveInfinity, double.PositiveInfinity));
-        _footprint = MeasurePill();
-        return _footprint;
+        return base.MeasureOverride(availableSize);
     }
 
-    private Size MeasurePill()
-    {
-        if (_pill is null)
-        {
-            return default;
-        }
-        // The pill's size is kept from the last time it was shown: while the panel is open the pill is hidden.
-        if (_pillHost is { IsVisible: true } && _pill.DesiredSize != default)
-        {
-            _pillSize = _pill.DesiredSize;
-        }
-        else if (_pillSize == default)
-        {
-            _pill.Measure(Size.Infinity);
-            _pillSize = _pill.DesiredSize;
-        }
-        var edge = _surface?.BorderThickness ?? default;
-        return new Size(_pillSize.Width + edge.Left + edge.Right, _pillSize.Height + edge.Top + edge.Bottom);
-    }
+    private void OnLayersMeasured(object? sender, EventArgs e) => SyncSurface();
 
     /// <inheritdoc />
     protected override Size ArrangeOverride(Size finalSize)
     {
-        if (VisualChildren.Count == 0 || VisualChildren[0] is not Layoutable root)
+        if (Math.Abs(finalSize.Width - _arrangedWidth) > 0.5)
         {
-            return finalSize;
+            _arrangedWidth = finalSize.Width;
         }
-        var size = root.DesiredSize;
-        var x = HorizontalAlignment switch
-        {
-            HorizontalAlignment.Right => finalSize.Width - size.Width,
-            HorizontalAlignment.Center => (finalSize.Width - size.Width) / 2,
-            _ => 0
-        };
-        x = KeepInViewport(x, size.Width);
-        root.Arrange(new Rect(x, 0, size.Width, size.Height));
-        return finalSize;
+        return base.ArrangeOverride(finalSize);
     }
 
-    /// <summary>Shifts the surface so that it keeps the gutter from the window's sides.</summary>
-    private double KeepInViewport(double x, double width)
+    /// <summary>
+    /// Points the surface at the bar, the open panel or search. State changes and panels that change size animate on the
+    /// grow or shrink spring; the bar changing size on its own (compact, folding) is followed at once unless a morph is
+    /// already under way.
+    /// </summary>
+    private void SyncSurface()
     {
-        if (TopLevel.GetTopLevel(this) is not { } top || ArcViewport.GetBounds(this) is not { } viewport
-            || this.TranslatePoint(default, top) is not { } origin)
+        if (_stage is null || _bar is null)
         {
-            return x;
+            return;
         }
-        var gutter = Token(MorphNavTokenKind.PanelGutter, 16);
-        var left = origin.X + x;
-        var maxLeft = viewport.Right - gutter - width;
-        var minLeft = viewport.Left + gutter;
-        if (left > maxLeft)
+        var bar = _bar.DesiredSize;
+        Size target;
+        double radius;
+        var openRadius = _stage.OpenCornerRadius.TopLeft;
+        if (_searchOpen && _searchFace is not null)
         {
-            left = maxLeft;
+            target = new Size(_layers?.SearchWidth ?? 544, bar.Height + _searchFace.DesiredSize.Height);
+            radius = openRadius;
         }
-        if (left < minLeft)
+        else if (_face is not null)
         {
-            left = minLeft;
+            target = new Size(Math.Max(bar.Width, _face.DesiredSize.Width), bar.Height + _face.DesiredSize.Height);
+            radius = openRadius;
         }
-        return left - origin.X;
+        else
+        {
+            target = bar;
+            radius = Math.Min(_stage.ClosedCornerRadius.TopLeft, bar.Height / 2);
+        }
+        target = new Size(Math.Round(target.Width), Math.Round(target.Height));
+        var barChanged = bar != _lastBar;
+        _lastBar = bar;
+        if (_hasTarget && target == _target && Math.Abs(radius - _targetRadius) < 0.01)
+        {
+            _pendingAnimate = false;
+            return;
+        }
+        var open = _searchOpen || _face is not null;
+        var animate = _hasTarget && (_pendingAnimate || _stage.IsMorphing || (open && !barChanged));
+        var grow = target.Width * target.Height > _target.Width * _target.Height;
+        _target = target;
+        _targetRadius = radius;
+        _hasTarget = true;
+        _pendingAnimate = false;
+        _stage.MoveTo(target, radius, grow ? MorphNavMotion.Grow : MorphNavMotion.Shrink, animate);
+    }
+
+    private void UpdateCollapsed(bool collapsed)
+    {
+        if (collapsed == _collapsed && _menuTrigger is not null && _menuTrigger.IsVisible == collapsed)
+        {
+            return;
+        }
+        var changed = collapsed != _collapsed;
+        IsCollapsed = collapsed;
+        PseudoClasses.Set(CollapsedPseudoClass, collapsed);
+        foreach (var trigger in _triggers)
+        {
+            trigger.IsVisible = !collapsed;
+        }
+        if (_menuTrigger is not null)
+        {
+            _menuTrigger.IsVisible = collapsed;
+        }
+        _brand?.SetBare(IsCompact || collapsed);
+        if (changed && _openTrigger is not null)
+        {
+            // The open panel belongs to the other layout: it closes rather than jump into the menu.
+            ClosePanel(returnFocus: false);
+        }
     }
 
     #endregion
 
-    #region Rows
+    #region Items
 
-    private void OnSectionsChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
-        _rowsDirty = true;
-        RebuildRows();
-    }
+    private void OnItemsChanged(object? sender, NotifyCollectionChangedEventArgs e) => RebuildTriggers();
 
     private void OnLinksChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        _rowsDirty = true;
-        RebuildRows();
+        foreach (var trigger in _triggers)
+        {
+            trigger.HasPanel = trigger.Item?.HasPanel == true;
+        }
     }
 
-    /// <summary>Builds a block per section: its heading and a row per link.</summary>
-    private void RebuildRows()
+    private void RebuildTriggers()
     {
-        foreach (var section in _watched)
+        foreach (var item in _watched)
         {
-            section.Links.CollectionChanged -= OnLinksChanged;
+            item.Links.CollectionChanged -= OnLinksChanged;
         }
-        _watched = Sections.ToArray();
-        foreach (var section in _watched)
+        _watched = Items.ToArray();
+        foreach (var item in _watched)
         {
-            section.Links.CollectionChanged += OnLinksChanged;
+            item.Links.CollectionChanged += OnLinksChanged;
         }
-        if (_sections is null || !_rowsDirty)
+        if (_track is null)
         {
             return;
         }
-        _rowsDirty = false;
-        foreach (var row in _rows)
+        if (_openTrigger is not null)
         {
-            row.Owner = null;
+            ClosePanel(returnFocus: false);
         }
-        _rows.Clear();
-        _rowSection.Clear();
-        _sections.Children.Clear();
-        for (var s = 0; s < _watched.Length; s++)
+        foreach (var trigger in _triggers)
         {
-            var section = _watched[s];
-            var block = new StackPanel { Spacing = 2 };
-            if (section.Header is { Length: > 0 } header)
+            Unhook(trigger);
+            _track.Children.Remove(trigger);
+        }
+        _triggers.Clear();
+        _hovered = null;
+        if (_menuTrigger is null)
+        {
+            _menuTrigger = new MorphNavTrigger(null) { Label = MenuLabel, HasPanel = true, IsVisible = _collapsed };
+            Hook(_menuTrigger);
+            _track.Children.Add(_menuTrigger);
+        }
+        foreach (var item in _watched)
+        {
+            var trigger = new MorphNavTrigger(item)
             {
-                var heading = new TextBlock { Text = header, Margin = new Thickness(10, 4, 10, 6) };
-                ArcTokens.Bind(heading, TextBlock.ForegroundProperty, ArcDesignTokenKind.TextMuted);
-                ArcTokens.Bind(heading, TextBlock.FontSizeProperty, ArcDesignTokenKind.TypeXS);
-                ArcTokens.Bind(heading, TextBlock.FontWeightProperty, ArcDesignTokenKind.WeightMedium);
-                block.Children.Add(heading);
-            }
-            foreach (var link in section.Links)
-            {
-                var row = new MorphNavLinkRow(link) { Owner = this };
-                _rows.Add(row);
-                _rowSection.Add(s);
-                block.Children.Add(row);
-            }
-            _sections.Children.Add(block);
+                Label = item.Label,
+                HasPanel = item.HasPanel,
+                IsVisible = !_collapsed
+            };
+            Hook(trigger);
+            _triggers.Add(trigger);
+            _track.Children.Add(trigger);
         }
         UpdateCurrent();
-        UpdateTabStops();
+        UpdateCompact();
+        UpdateHighlight();
+    }
+
+    private void Hook(MorphNavTrigger trigger)
+    {
+        trigger.Click += OnTriggerClick;
+        trigger.PointerEntered += OnTriggerPointerEntered;
+        trigger.PointerExited += OnTriggerPointerExited;
+        trigger.FocusChanged += OnTriggerFocusChanged;
+    }
+
+    private void Unhook(MorphNavTrigger trigger)
+    {
+        trigger.Click -= OnTriggerClick;
+        trigger.PointerEntered -= OnTriggerPointerEntered;
+        trigger.PointerExited -= OnTriggerPointerExited;
+        trigger.FocusChanged -= OnTriggerFocusChanged;
     }
 
     private void UpdateCurrent()
     {
-        var current = CurrentLink;
-        foreach (var row in _rows)
+        var current = Current;
+        foreach (var trigger in _triggers)
         {
-            row.SetCurrent(ReferenceEquals(row.Link, current));
-        }
-        if (_pill is MorphNavPill pill)
-        {
-            pill.Current = current?.Text;
-        }
-        UpdateNames();
-    }
-
-    /// <summary>Only the panel's rows are tab stops while it is open; the pill is one while it is closed.</summary>
-    private void UpdateTabStops()
-    {
-        var open = IsOpen;
-        foreach (var row in _rows)
-        {
-            row.IsTabStop = open;
-        }
-        if (_pill is not null)
-        {
-            _pill.IsTabStop = !open;
-            _pill.IsHitTestVisible = !open;
+            trigger.SetCurrent(current is not null && trigger.Item?.Value == current);
         }
     }
 
-    /// <summary>A row was chosen: it becomes the current page, the event is raised and the panel closes.</summary>
-    internal void Invoke(MorphNavLinkRow row)
+    private void UpdateCompact()
     {
-        if (!ReferenceEquals(row.Owner, this))
+        var compact = IsCompact;
+        PseudoClasses.Set(CompactPseudoClass, compact);
+        _bar?.SetCompact(compact);
+        _brand?.SetCompact(compact);
+        _brand?.SetBare(compact || _collapsed);
+        _searchButton?.SetCompact(compact);
+        _action?.SetCompact(compact);
+        _menuTrigger?.SetCompact(compact);
+        foreach (var trigger in _triggers)
         {
-            return;
+            trigger.SetCompact(compact);
         }
-        SetCurrentValue(CurrentLinkProperty, row.Link);
-        RaiseEvent(new MorphNavLinkEventArgs(LinkInvokedEvent, row.Link));
-        ReturnFocus(SpecialFocusModality.LastWasPointer(this) != true);
-        Close();
+        _searchBar?.SetCompact(compact);
     }
 
-    #endregion
-
-    #region Open and close
-
-    private void OnOpenChanged(bool open)
+    private void UpdateTools()
     {
-        if (!open)
+        if (_brand is not null)
         {
-            ReturnFocus(SpecialFocusModality.LastWasPointer(this) != true);
+            _brand.IsVisible = BrandName is { Length: > 0 } || BrandMark is not null;
         }
-        UpdateState();
-        WatchOutsidePresses(open);
-        if (open)
+        if (_searchButton is not null)
         {
-            FocusPanelSoon();
+            _searchButton.IsVisible = SearchEntries.Count > 0;
         }
-    }
-
-    private void UpdateState()
-    {
-        var open = IsOpen;
-        PseudoClasses.Set(OpenPseudoClass, open);
-        if (_pillHost is not null)
+        if (_action is not null)
         {
-            _pillHost.IsPresent = !open;
+            _action.IsVisible = ActionLabel is { Length: > 0 };
         }
-        if (_panelHost is not null)
-        {
-            _panelHost.IsPresent = open;
-        }
-        if (_pill is not null)
-        {
-            AutomationProperties.SetItemStatus(_pill, open ? "Expanded" : "Collapsed");
-        }
-        UpdateTabStops();
     }
 
     private void UpdateNames()
     {
-        if (_pill is not null)
+        if (_searchButton is not null)
         {
-            var name = CurrentLink?.Text is { Length: > 0 } current ? $"{MenuLabel}, {current}" : MenuLabel;
-            AutomationProperties.SetName(_pill, name);
+            AutomationProperties.SetName(_searchButton, SearchLabel);
         }
-        if (_close is not null)
+        if (_searchBar is not null)
         {
-            AutomationProperties.SetName(_close, CloseLabel);
-            Tooltip.SetTip(_close, CloseLabel);
-        }
-        if (_panelHost is not null)
-        {
-            AutomationProperties.SetName(_panelHost, Title ?? MenuLabel);
-        }
-    }
-
-    private void FocusPanelSoon()
-    {
-        var request = ++_focusRequest;
-        var method = SpecialFocusModality.For(this);
-        Dispatcher.UIThread.Post(() =>
-        {
-            if (request != _focusRequest || !IsOpen)
+            _searchBar.Placeholder = SearchPlaceholder;
+            if (_searchBar.Input is { } input)
             {
-                return;
+                AutomationProperties.SetName(input, SearchLabel);
             }
-            var current = _rows.FirstOrDefault(r => ReferenceEquals(r.Link, CurrentLink));
-            Control? target = current ?? (_rows.Count > 0 ? _rows[0] : (Control?)_close);
-            target?.Focus(method);
-        }, DispatcherPriority.Loaded);
+            if (_searchBar.CloseButton is { } close)
+            {
+                AutomationProperties.SetName(close, CloseSearchLabel);
+                Tooltip.SetTip(close, CloseSearchLabel);
+            }
+        }
+        if (_searchBody is not null)
+        {
+            AutomationProperties.SetName(_searchBody.List, SearchResultsLabel);
+        }
     }
 
-    private void ReturnFocus(bool keyboard)
+    #endregion
+
+    #region Pointer and hover intent
+
+    private static bool IsMouse(PointerEventArgs e) => e.Pointer.Type == PointerType.Mouse;
+
+    private void OnTriggerPointerEntered(object? sender, PointerEventArgs e)
     {
-        _focusRequest++;
-        if (_pill is null || TopLevel.GetTopLevel(this)?.FocusManager?.GetFocusedElement() is not Visual focused)
+        if (sender is not MorphNavTrigger trigger || !IsMouse(e))
         {
             return;
         }
-        if (_panelHost is not null && (ReferenceEquals(focused, _panelHost) || _panelHost.IsVisualAncestorOf(focused)
-                                       || (focused is ILogical logical && _panelHost.IsLogicalAncestorOf(logical))))
+        _hovered = trigger;
+        if (_searchOpen)
         {
-            // The pill comes back first: it cannot take focus while it is hidden.
-            if (_pillHost is not null)
+            return;
+        }
+        _closeTimer?.Stop();
+        if (trigger.HasPanel)
+        {
+            if (_openTrigger is not null)
             {
-                _pillHost.IsPresent = true;
+                OpenPanel(trigger, focusFirst: false);
             }
-            _pill.IsTabStop = true;
-            _pill.IsHitTestVisible = true;
-            _pill.Focus(keyboard ? NavigationMethod.Tab : NavigationMethod.Pointer);
+            else
+            {
+                StartOpenIntent(trigger);
+            }
+        }
+        else
+        {
+            _openTimer?.Stop();
+            _pendingOpen = null;
+            if (_openTrigger is not null)
+            {
+                ClosePanel(returnFocus: false);
+            }
+        }
+        UpdateHighlight();
+    }
+
+    private void OnTriggerPointerExited(object? sender, PointerEventArgs e)
+    {
+        if (sender is not MorphNavTrigger trigger)
+        {
+            return;
+        }
+        if (ReferenceEquals(_hovered, trigger))
+        {
+            _hovered = null;
+        }
+        if (ReferenceEquals(_pendingOpen, trigger))
+        {
+            _openTimer?.Stop();
+            _pendingOpen = null;
+        }
+        UpdateHighlight();
+    }
+
+    /// <inheritdoc />
+    protected override void OnPointerEntered(PointerEventArgs e)
+    {
+        base.OnPointerEntered(e);
+        if (IsMouse(e))
+        {
+            _closeTimer?.Stop();
         }
     }
 
-    private void OnPillClick(object? sender, RoutedEventArgs e)
+    /// <inheritdoc />
+    protected override void OnPointerExited(PointerEventArgs e)
     {
-        e.Handled = true;
-        Open();
+        base.OnPointerExited(e);
+        if (!IsMouse(e))
+        {
+            return;
+        }
+        _openTimer?.Stop();
+        _pendingOpen = null;
+        _hovered = null;
+        if (_openTrigger is not null)
+        {
+            _closeTimer ??= NewTimer(MorphNavMotion.CloseIntent, OnCloseIntent);
+            _closeTimer.Stop();
+            _closeTimer.Start();
+        }
+        UpdateHighlight();
     }
 
-    private void OnCloseClick(object? sender, RoutedEventArgs e)
+    private void StartOpenIntent(MorphNavTrigger trigger)
     {
-        e.Handled = true;
-        ReturnFocus(SpecialFocusModality.LastWasPointer(this) != true);
-        Close();
+        _pendingOpen = trigger;
+        _openTimer ??= NewTimer(MorphNavMotion.OpenIntent, OnOpenIntent);
+        _openTimer.Stop();
+        _openTimer.Start();
+    }
+
+    private static DispatcherTimer NewTimer(TimeSpan interval, EventHandler tick)
+    {
+        var timer = new DispatcherTimer { Interval = interval };
+        timer.Tick += tick;
+        return timer;
+    }
+
+    private void OnOpenIntent(object? sender, EventArgs e)
+    {
+        _openTimer?.Stop();
+        CompleteOpenIntent();
+    }
+
+    private void OnCloseIntent(object? sender, EventArgs e)
+    {
+        _closeTimer?.Stop();
+        CompleteCloseIntent();
+    }
+
+    /// <summary>The hover intent has held: the pending panel opens (tests call this instead of waiting for the timer).</summary>
+    internal void CompleteOpenIntent()
+    {
+        _openTimer?.Stop();
+        var trigger = _pendingOpen;
+        _pendingOpen = null;
+        if (trigger is not null && !_searchOpen && trigger.IsVisible)
+        {
+            OpenPanel(trigger, focusFirst: false);
+        }
+    }
+
+    /// <summary>The pointer stayed away: the panel closes (tests call this instead of waiting for the timer).</summary>
+    internal void CompleteCloseIntent()
+    {
+        _closeTimer?.Stop();
+        if (_openTrigger is not null && !IsPointerOver)
+        {
+            ClosePanel(returnFocus: false);
+        }
+    }
+
+    private void CancelTimers()
+    {
+        _openTimer?.Stop();
+        _closeTimer?.Stop();
+        _pendingOpen = null;
     }
 
     private void WatchOutsidePresses(bool watch)
@@ -567,17 +924,635 @@ public class MorphNav : TemplatedControl
 
     private void OnRootPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (!IsOpen || e.Source is not Visual source)
+        if (e.Source is Visual source && (ReferenceEquals(source, this) || this.IsVisualAncestorOf(source)))
         {
             return;
         }
-        if (ReferenceEquals(source, this) || this.IsVisualAncestorOf(source)
-            || (source is ILogical logical && this.IsLogicalAncestorOf(logical)))
+        if (_searchOpen)
         {
-            return;
+            HideSearch(returnFocus: false);
         }
-        Close();
+        if (_openTrigger is not null)
+        {
+            ClosePanel(returnFocus: false);
+        }
     }
+
+    private void CloseIfFocusLeft()
+    {
+        if (!IsKeyboardFocusWithin && _openTrigger is not null && !IsPointerOver)
+        {
+            ClosePanel(returnFocus: false);
+        }
+    }
+
+    #endregion
+
+    #region Highlight
+
+    private void OnTriggerFocusChanged(object? sender, EventArgs e) => UpdateHighlight();
+
+    private void OnTrackArranged(object? sender, EventArgs e) => UpdateHighlight(snap: true);
+
+    /// <summary>
+    /// Moves the highlight to the open item, else the hovered one, else the one with keyboard focus; hides it when there
+    /// is none or search covers the bar.
+    /// </summary>
+    private void UpdateHighlight(bool snap = false)
+    {
+        if (_track is null)
+        {
+            return;
+        }
+        var target = _searchOpen ? null : _openTrigger ?? _hovered ?? FocusedTrigger();
+        var highlight = _track.Highlight;
+        if (target is null || !target.IsVisible || target.Bounds.Width <= 0)
+        {
+            if (!snap && highlight.HasTarget)
+            {
+                highlight.Hide();
+            }
+            return;
+        }
+        var rect = target.Bounds;
+        if (snap)
+        {
+            // The items changed size (compact, a new label): the highlight follows without a glide.
+            if (highlight.HasTarget && highlight.CurrentRect != rect)
+            {
+                highlight.MoveTo(rect, animate: false);
+            }
+            return;
+        }
+        highlight.MoveTo(rect, MorphNavMotion.Glide);
+    }
+
+    private MorphNavTrigger? FocusedTrigger()
+    {
+        if (_menuTrigger is { IsFocusVisible: true })
+        {
+            return _menuTrigger;
+        }
+        foreach (var trigger in _triggers)
+        {
+            if (trigger.IsFocusVisible)
+            {
+                return trigger;
+            }
+        }
+        return null;
+    }
+
+    #endregion
+
+    #region Panels
+
+    private void OnTriggerClick(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not MorphNavTrigger trigger)
+        {
+            return;
+        }
+        e.Handled = true;
+        if (!trigger.HasPanel)
+        {
+            if (_openTrigger is not null)
+            {
+                ClosePanel(returnFocus: false);
+            }
+            if (trigger.Item is { } item)
+            {
+                RaiseNavigate(item.Label ?? item.Value ?? string.Empty, item.Href, item.Value, item);
+            }
+            return;
+        }
+        if (SpecialFocusModality.LastWasPointer(this) == true)
+        {
+            if (ReferenceEquals(_openTrigger, trigger))
+            {
+                ClosePanel(returnFocus: false);
+            }
+            else
+            {
+                OpenPanel(trigger, focusFirst: false);
+            }
+        }
+        else
+        {
+            OpenPanel(trigger, focusFirst: true);
+        }
+    }
+
+    /// <summary>Assistive technology asked a trigger to expand.</summary>
+    internal void OpenFromAutomation(MorphNavTrigger trigger) => OpenPanel(trigger, focusFirst: false);
+
+    private int VisibleIndex(MorphNavTrigger trigger)
+    {
+        if (ReferenceEquals(trigger, _menuTrigger))
+        {
+            return -1;
+        }
+        return _triggers.IndexOf(trigger);
+    }
+
+    /// <summary>
+    /// Opens <paramref name="trigger"/>'s panel. From the bar the panel drops in; from a neighbour it slides in from that
+    /// side while the old one slides the other way.
+    /// </summary>
+    internal void OpenPanel(MorphNavTrigger trigger, bool focusFirst)
+    {
+        CancelTimers();
+        if (_layers is null || !trigger.HasPanel)
+        {
+            return;
+        }
+        if (_searchOpen)
+        {
+            HideSearch(returnFocus: false);
+        }
+        if (ReferenceEquals(_openTrigger, trigger) && _face is not null)
+        {
+            if (focusFirst)
+            {
+                FocusFirstInPanel();
+            }
+            return;
+        }
+        var direction = 0;
+        if (_openTrigger is not null && _face is not null)
+        {
+            direction = Math.Sign(VisibleIndex(trigger) - VisibleIndex(_openTrigger));
+        }
+        var old = _face;
+        _openTrigger?.SetOpen(false);
+        _openTrigger = trigger;
+        trigger.SetOpen(true);
+        OpenValue = trigger.Item?.Value;
+        _face = BuildFace(trigger);
+        if (old is not null)
+        {
+            Retire(old, direction == 0 ? new Point(0, -MorphNavMotion.LiftOut) : new Point(-direction * MorphNavMotion.SlideOut, 0));
+        }
+        _layers.Children.Add(_face);
+        _face.Motion.StartHidden();
+        _face.Motion.Show(direction == 0 ? new Point(0, -MorphNavMotion.DropIn) : new Point(direction * MorphNavMotion.SlideIn, 0),
+            1, MorphNavMotion.EnterDelay);
+        _pendingAnimate = true;
+        _layers?.InvalidateMeasure();
+        UpdateOpenState();
+        UpdateHighlight();
+        WatchOutsidePresses(true);
+        if (focusFirst)
+        {
+            FocusFirstInPanel();
+        }
+    }
+
+    /// <summary>Closes the open panel; the surface shrinks back to the bar.</summary>
+    internal void ClosePanel(bool returnFocus)
+    {
+        CancelTimers();
+        if (_openTrigger is null)
+        {
+            return;
+        }
+        var trigger = _openTrigger;
+        var focusInside = _face?.IsKeyboardFocusWithin == true;
+        if ((returnFocus || focusInside) && trigger.IsVisible)
+        {
+            _focusRequest++;
+            trigger.Focus(SpecialFocusModality.For(this));
+        }
+        trigger.SetOpen(false);
+        _openTrigger = null;
+        OpenValue = null;
+        if (_face is not null)
+        {
+            Retire(_face, new Point(0, -MorphNavMotion.LiftOut));
+            _face = null;
+        }
+        _pendingAnimate = true;
+        _layers?.InvalidateMeasure();
+        UpdateOpenState();
+        UpdateHighlight();
+        WatchOutsidePresses(_searchOpen);
+    }
+
+    /// <summary>A face leaves: it stops taking input at once and is removed once it has faded out.</summary>
+    private async void Retire(MorphNavFace face, Point to)
+    {
+        face.IsHitTestVisible = false;
+        KeyboardNavigation.SetTabNavigation(face, KeyboardNavigationMode.None);
+        if (await face.Motion.Hide(to, 1, MorphNavMotion.ExitFade))
+        {
+            _layers?.Children.Remove(face);
+        }
+    }
+
+    private void FocusFirstInPanel()
+    {
+        var request = ++_focusRequest;
+        var face = _face;
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (request != _focusRequest || face is null || !ReferenceEquals(face, _face))
+            {
+                return;
+            }
+            FocusablesOf(face).FirstOrDefault()?.Focus(NavigationMethod.Tab);
+        }, DispatcherPriority.Loaded);
+    }
+
+    private static IEnumerable<InputElement> FocusablesOf(MorphNavFace face) =>
+        face.GetVisualDescendants().OfType<AvaloniaButton>().Where(b => b.IsEffectivelyVisible && b.IsEffectivelyEnabled && b.Focusable);
+
+    private MorphNavFace BuildFace(MorphNavTrigger trigger)
+    {
+        var face = new MorphNavFace(trigger.Key);
+        AutomationProperties.SetName(face, trigger.Label);
+        AutomationProperties.SetLabeledBy(face, trigger);
+        face.AddHandler(AvaloniaButton.ClickEvent, OnFaceClick, RoutingStrategies.Bubble, handledEventsToo: true);
+        face.Child = trigger.Item is { } item ? BuildPanel(item) : BuildMenu();
+        return face;
+    }
+
+    private Control BuildPanel(MorphNavItem item)
+    {
+        var columns = item.Columns > 0 ? item.Columns : item.Links.Count > 3 ? 2 : 1;
+        if (_tiny)
+        {
+            columns = 1;
+        }
+        var body = new MorphNavPanelBody(columns);
+        foreach (var link in item.Links)
+        {
+            var button = new MorphNavLinkButton(link, link.Label, link.Description, link.Icon, dense: false, tiny: false);
+            button.Invoked += (_, _) => RaiseNavigate(link.Label ?? string.Empty, link.Href, item.Value, link);
+            body.AddLink(button);
+        }
+        if (item.Feature is { } feature)
+        {
+            if (feature is MorphNavStory story)
+            {
+                var card = new MorphNavStoryButton(story);
+                card.Invoked += (_, _) => RaiseNavigate(story.Title ?? string.Empty, story.Href, item.Value, story);
+                body.SetFeature(card);
+            }
+            else
+            {
+                body.SetFeature(Present(feature, item.FeatureTemplate));
+            }
+        }
+        if (item.Footer is { } footerContent)
+        {
+            var footer = new MorphNavFooter();
+            if (footerContent is MorphNavLink link)
+            {
+                var button = new MorphNavFooterLinkButton(link);
+                button.Invoked += (_, _) => RaiseNavigate(link.Label ?? string.Empty, link.Href, item.Value, link);
+                footer.Child = button;
+            }
+            else
+            {
+                footer.Child = Present(footerContent, item.FooterTemplate);
+            }
+            body.SetFooter(footer);
+        }
+        return body;
+    }
+
+    private static Control Present(object content, IDataTemplate? template)
+    {
+        var presenter = new ContentPresenter { Content = content };
+        if (template is not null)
+        {
+            presenter.ContentTemplate = template;
+        }
+        return presenter;
+    }
+
+    private Control BuildMenu()
+    {
+        var body = new MorphNavMenuBody();
+        StackPanel? plain = null;
+        foreach (var item in _watched)
+        {
+            if (item.HasPanel)
+            {
+                var group = new StackPanel { Classes = { "morph-nav-group" } };
+                group.Children.Add(new MorphNavHeading { Text = item.Label, Classes = { _tiny ? "tiny" : "menu" } });
+                var list = new StackPanel { Classes = { "morph-nav-list" } };
+                foreach (var link in item.Links)
+                {
+                    var button = new MorphNavLinkButton(link, link.Label, null, link.Icon, dense: true, tiny: _tiny);
+                    button.Invoked += (_, _) => RaiseNavigate(link.Label ?? string.Empty, link.Href, item.Value, link);
+                    list.Children.Add(button);
+                }
+                group.Children.Add(list);
+                body.Children.Add(group);
+            }
+            else
+            {
+                plain ??= new StackPanel { Classes = { "morph-nav-list" } };
+                var button = new MorphNavLinkButton(item, item.Label, null, null, dense: true, tiny: _tiny);
+                button.Invoked += (_, _) => RaiseNavigate(item.Label ?? item.Value ?? string.Empty, item.Href, item.Value, item);
+                plain.Children.Add(button);
+            }
+        }
+        if (plain is not null)
+        {
+            body.Children.Add(plain);
+        }
+        return body;
+    }
+
+    /// <summary>Any button in a panel closes it: links navigate first, then their click reaches here.</summary>
+    private void OnFaceClick(object? sender, RoutedEventArgs e)
+    {
+        if (sender is MorphNavFace face && ReferenceEquals(face, _face))
+        {
+            ClosePanel(returnFocus: true);
+        }
+    }
+
+    private void UpdateOpenState()
+    {
+        PseudoClasses.Set(OpenPseudoClass, _openTrigger is not null || _searchOpen);
+        PseudoClasses.Set(SearchingPseudoClass, _searchOpen);
+    }
+
+    #endregion
+
+    #region Search
+
+    private void OnSearchEntriesChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        UpdateTools();
+        if (_searchOpen)
+        {
+            Rerank();
+        }
+        else if (SearchEntries.Count == 0)
+        {
+            HideSearch(returnFocus: false);
+        }
+    }
+
+    private void OnSearchButtonClick(object? sender, RoutedEventArgs e)
+    {
+        e.Handled = true;
+        ShowSearch();
+    }
+
+    private void EnsureSearch()
+    {
+        if (_layers is null || _searchBar is not null)
+        {
+            return;
+        }
+        _searchBar = new MorphNavSearchBar { IsVisible = false, Placeholder = SearchPlaceholder };
+        _searchBar.PartsReady += OnSearchPartsReady;
+        _searchBar.SetCompact(IsCompact);
+        _layers.SearchBar = _searchBar;
+        _layers.Children.Insert(Math.Min(1, _layers.Children.Count), _searchBar);
+        _searchBar.Motion.StartHidden();
+        _searchBody = new MorphNavSearchBody(this);
+        _searchFace = new MorphNavFace(SearchKey, fillsSearchWidth: true) { Child = _searchBody, IsVisible = false };
+        _searchFace.Motion.StartHidden();
+        _layers.Children.Add(_searchFace);
+        UpdateNames();
+    }
+
+    private void OnSearchPartsReady(object? sender, EventArgs e)
+    {
+        if (_searchBar?.Input is { } input)
+        {
+            input.TextChanged -= OnQueryChanged;
+            input.TextChanged += OnQueryChanged;
+            input.RemoveHandler(KeyDownEvent, OnSearchKeyDown);
+            input.AddHandler(KeyDownEvent, OnSearchKeyDown, RoutingStrategies.Tunnel);
+        }
+        if (_searchBar?.CloseButton is { } close)
+        {
+            close.Click -= OnCloseSearchClick;
+            close.Click += OnCloseSearchClick;
+        }
+        UpdateNames();
+    }
+
+    private void ShowSearch()
+    {
+        if (_layers is null || SearchEntries.Count == 0)
+        {
+            return;
+        }
+        EnsureSearch();
+        if (_searchOpen)
+        {
+            FocusSearchSoon();
+            return;
+        }
+        CancelTimers();
+        if (_openTrigger is not null)
+        {
+            _openTrigger.SetOpen(false);
+            _openTrigger = null;
+            OpenValue = null;
+            if (_face is not null)
+            {
+                Retire(_face, new Point(0, -MorphNavMotion.LiftOut));
+                _face = null;
+            }
+        }
+        IsSearchOpen = true;
+        if (_searchBar!.Input is { } input)
+        {
+            input.Text = string.Empty;
+        }
+        Rerank();
+        if (_bar is not null)
+        {
+            KeyboardNavigation.SetTabNavigation(_bar, KeyboardNavigationMode.None);
+        }
+        _ = _barMotion?.Hide(default, MorphNavMotion.BarScale, MorphNavMotion.LayerExitFade);
+        _searchBar.IsVisible = true;
+        _searchBar.Motion.Show(default, MorphNavMotion.SearchScale, MorphNavMotion.LayerEnterDelay);
+        _searchFace!.IsVisible = true;
+        _searchFace.Motion.Show(new Point(0, -MorphNavMotion.DropIn), 1, MorphNavMotion.EnterDelay);
+        _pendingAnimate = true;
+        _layers?.InvalidateMeasure();
+        UpdateOpenState();
+        UpdateHighlight();
+        WatchOutsidePresses(true);
+        FocusSearchSoon();
+    }
+
+    private void HideSearch(bool returnFocus)
+    {
+        if (!_searchOpen || _searchBar is null || _searchFace is null)
+        {
+            return;
+        }
+        var focusInside = _searchBar.IsKeyboardFocusWithin || _searchFace.IsKeyboardFocusWithin;
+        IsSearchOpen = false;
+        if (_bar is not null)
+        {
+            KeyboardNavigation.SetTabNavigation(_bar, KeyboardNavigationMode.Continue);
+        }
+        _barMotion?.Show(default, MorphNavMotion.BarScale, MorphNavMotion.LayerEnterDelay);
+        if ((returnFocus || focusInside) && _searchButton is not null)
+        {
+            _focusRequest++;
+            _searchButton.Focus(SpecialFocusModality.For(this));
+        }
+        HideLayer(_searchBar, _searchBar.Motion.Hide(default, MorphNavMotion.SearchScale, MorphNavMotion.LayerExitFade));
+        HideLayer(_searchFace, _searchFace.Motion.Hide(new Point(0, -MorphNavMotion.LiftOut), 1, MorphNavMotion.ExitFade));
+        _pendingAnimate = true;
+        _layers?.InvalidateMeasure();
+        UpdateOpenState();
+        UpdateHighlight();
+        WatchOutsidePresses(_openTrigger is not null);
+    }
+
+    private async void HideLayer(Control layer, Task<bool> hidden)
+    {
+        if (await hidden && !_searchOpen)
+        {
+            layer.IsVisible = false;
+            if (ReferenceEquals(layer, _searchBar) && _searchBar.Input is { } input)
+            {
+                input.Text = string.Empty;
+            }
+        }
+    }
+
+    private void OnCloseSearchClick(object? sender, RoutedEventArgs e)
+    {
+        e.Handled = true;
+        HideSearch(returnFocus: true);
+    }
+
+    private void FocusSearchSoon()
+    {
+        var request = ++_focusRequest;
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (request == _focusRequest && _searchOpen)
+            {
+                _searchBar?.Input?.Focus(NavigationMethod.Tab);
+            }
+        }, DispatcherPriority.Loaded);
+    }
+
+    private void OnQueryChanged(object? sender, TextChangedEventArgs e)
+    {
+        if (_searchOpen)
+        {
+            Rerank();
+        }
+    }
+
+    /// <summary>Ranks the entries for the current query and shows the results, the first one active.</summary>
+    private void Rerank()
+    {
+        if (_searchBody is null)
+        {
+            return;
+        }
+        var query = _searchBar?.Input?.Text?.Trim() ?? string.Empty;
+        MorphNavSearch.Rank(SearchEntries, query, _results);
+        string heading;
+        if (query.Length == 0)
+        {
+            heading = SuggestedLabel;
+        }
+        else if (_results.Count == 0)
+        {
+            heading = string.Format(CultureInfo.CurrentCulture, NoResultsFormat, query);
+        }
+        else if (_results.Count == 1)
+        {
+            heading = SingleResultLabel;
+        }
+        else
+        {
+            heading = string.Format(CultureInfo.CurrentCulture, ResultsFormat, _results.Count);
+        }
+        _searchBody.Show(_results, heading, _results.Count > 0 ? 0 : -1);
+    }
+
+    /// <summary>The results on show, best first.</summary>
+    internal IReadOnlyList<MorphNavSearchEntry> Results => _results;
+
+    internal void SetActiveResult(int index)
+    {
+        if (_searchBody is not null && index >= 0 && index < _results.Count)
+        {
+            _searchBody.SetActive(index);
+        }
+    }
+
+    internal void InvokeResult(int index)
+    {
+        if (index < 0 || index >= _results.Count)
+        {
+            return;
+        }
+        var entry = _results[index];
+        RaiseNavigate(entry.Label ?? string.Empty, entry.Href, null, entry);
+        HideSearch(returnFocus: true);
+    }
+
+    private void OnSearchKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (_searchBody is null)
+        {
+            return;
+        }
+        var count = _results.Count;
+        switch (e.Key)
+        {
+            case Key.Down when count > 0:
+                _searchBody.SetActive((_searchBody.ActiveIndex + 1 + count) % count);
+                e.Handled = true;
+                break;
+            case Key.Up when count > 0:
+                _searchBody.SetActive((_searchBody.ActiveIndex - 1 + count) % count);
+                e.Handled = true;
+                break;
+            case Key.Enter:
+                InvokeResult(_searchBody.ActiveIndex);
+                e.Handled = true;
+                break;
+            case Key.Escape:
+                HideSearch(returnFocus: true);
+                e.Handled = true;
+                break;
+        }
+    }
+
+    #endregion
+
+    #region Brand, action and navigation
+
+    private void OnBrandClick(object? sender, RoutedEventArgs e)
+    {
+        e.Handled = true;
+        RaiseNavigate(BrandName ?? string.Empty, BrandHref, null, null);
+    }
+
+    private void OnActionClick(object? sender, RoutedEventArgs e)
+    {
+        e.Handled = true;
+        RaiseEvent(new RoutedEventArgs(ActionInvokedEvent));
+        if (ActionCommand is { } command && command.CanExecute(null))
+        {
+            command.Execute(null);
+        }
+    }
+
+    private void RaiseNavigate(string label, string? href, string? section, object? destination) =>
+        RaiseEvent(new MorphNavNavigateEventArgs(NavigateEvent, label, href, section, destination));
 
     #endregion
 
@@ -586,73 +1561,135 @@ public class MorphNav : TemplatedControl
     /// <inheritdoc />
     protected override void OnKeyDown(KeyEventArgs e)
     {
-        if (e.Handled)
+        if (e.Handled || e.Source is not Visual source)
         {
             base.OnKeyDown(e);
             return;
         }
-        if (e.Key == Key.Escape && IsOpen)
+        if (source.FindAncestorOfType<MorphNavTrigger>(includeSelf: true) is { } trigger && _track?.IsVisualAncestorOf(trigger) == true)
         {
-            e.Handled = true;
-            ReturnFocus(keyboard: true);
-            Close();
-            return;
+            OnTriggerKey(trigger, e);
         }
-        if (IsOpen && e.Source is MorphNavLinkRow row && _rows.IndexOf(row) is var index and >= 0)
+        else if (_face is not null && (ReferenceEquals(source, _face) || _face.IsVisualAncestorOf(source)))
         {
-            var target = e.Key switch
+            OnPanelKey(source, e);
+        }
+        else if (e.Key == Key.Escape)
+        {
+            if (_searchOpen)
             {
-                Key.Down => Math.Min(index + 1, _rows.Count - 1),
-                Key.Up => Math.Max(index - 1, 0),
-                Key.Home => 0,
-                Key.End => _rows.Count - 1,
-                Key.Right => AcrossSections(index, 1),
-                Key.Left => AcrossSections(index, -1),
-                _ => -1
-            };
-            if (target >= 0)
-            {
+                HideSearch(returnFocus: true);
                 e.Handled = true;
-                _rows[target].Focus(NavigationMethod.Directional);
-                return;
             }
-            if (e.Key is Key.Enter or Key.Space)
+            else if (_openTrigger is not null)
             {
+                ClosePanel(returnFocus: true);
                 e.Handled = true;
-                Invoke(row);
-                return;
             }
         }
         base.OnKeyDown(e);
     }
 
-    /// <summary>
-    /// The row at the same height in the next section to the side, when sections sit side by side; otherwise the row
-    /// itself.
-    /// </summary>
-    internal int AcrossSections(int index, int direction)
+    private IReadOnlyList<MorphNavTrigger> VisibleTriggers() =>
+        _collapsed && _menuTrigger is not null ? [_menuTrigger] : _triggers;
+
+    private void OnTriggerKey(MorphNavTrigger trigger, KeyEventArgs e)
     {
-        var columns = _sections is MorphNavColumns panel ? panel.Columns : 1;
-        if (columns <= 1)
+        var triggers = VisibleTriggers();
+        var index = -1;
+        for (var i = 0; i < triggers.Count; i++)
         {
-            return index;
+            if (ReferenceEquals(triggers[i], trigger))
+            {
+                index = i;
+            }
         }
-        var section = _rowSection[index];
-        var targetSection = section + direction;
-        if (targetSection < 0 || targetSection >= _watched.Length || targetSection / columns != section / columns)
+        var target = e.Key switch
         {
-            return index;
-        }
-        var first = _rowSection.IndexOf(section);
-        var offset = index - first;
-        var targetFirst = _rowSection.IndexOf(targetSection);
-        if (targetFirst < 0)
+            Key.Right when triggers.Count > 0 => (index + 1) % triggers.Count,
+            Key.Left when triggers.Count > 0 => (index - 1 + triggers.Count) % triggers.Count,
+            Key.Home when triggers.Count > 0 => 0,
+            Key.End when triggers.Count > 0 => triggers.Count - 1,
+            _ => -1
+        };
+        if (target >= 0)
         {
-            return index;
+            e.Handled = true;
+            var next = triggers[target];
+            next.Focus(NavigationMethod.Directional);
+            if (_openTrigger is not null && !ReferenceEquals(next, _openTrigger))
+            {
+                if (next.HasPanel)
+                {
+                    OpenPanel(next, focusFirst: false);
+                }
+                else
+                {
+                    ClosePanel(returnFocus: false);
+                }
+            }
+            UpdateHighlight();
+            return;
         }
-        var targetCount = _rowSection.Count(s => s == targetSection);
-        return targetFirst + Math.Min(offset, targetCount - 1);
+        if (e.Key == Key.Down && trigger.HasPanel)
+        {
+            e.Handled = true;
+            OpenPanel(trigger, focusFirst: true);
+        }
+        else if (e.Key == Key.Escape && _openTrigger is not null)
+        {
+            e.Handled = true;
+            ClosePanel(returnFocus: true);
+        }
+    }
+
+    private void OnPanelKey(Visual source, KeyEventArgs e)
+    {
+        if (_face is null)
+        {
+            return;
+        }
+        if (e.Key == Key.Escape)
+        {
+            e.Handled = true;
+            ClosePanel(returnFocus: true);
+            return;
+        }
+        if (e.Key is not (Key.Up or Key.Down))
+        {
+            return;
+        }
+        var focusables = FocusablesOf(_face).ToList();
+        var current = source.FindAncestorOfType<AvaloniaButton>(includeSelf: true);
+        var index = current is null ? -1 : focusables.IndexOf(current);
+        if (index < 0)
+        {
+            return;
+        }
+        e.Handled = true;
+        if (e.Key == Key.Down)
+        {
+            focusables[Math.Min(index + 1, focusables.Count - 1)].Focus(NavigationMethod.Directional);
+        }
+        else if (index == 0)
+        {
+            _openTrigger?.Focus(NavigationMethod.Directional);
+        }
+        else
+        {
+            focusables[index - 1].Focus(NavigationMethod.Directional);
+        }
     }
 
     #endregion
+
+    /// <summary>The nav is a navigation landmark named by <see cref="Label"/>.</summary>
+    private sealed class NavPeer(MorphNav owner) : ControlAutomationPeer(owner)
+    {
+        protected override AutomationControlType GetAutomationControlTypeCore() => AutomationControlType.Group;
+
+        protected override bool IsContentElementCore() => true;
+
+        protected override bool IsControlElementCore() => true;
+    }
 }

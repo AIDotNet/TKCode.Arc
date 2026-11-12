@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ToolDockBadgesDemo">
+    <!-- Counts roll when they change and the badge leaves when its count reaches 0. -->
+    <StackPanel Spacing="20" HorizontalAlignment="Center" Margin="0,48,0,0">
+        <arc:ToolDock Label="Review" SelectedValue="comments" HorizontalAlignment="Center">
+            <arc:ToolDockItem Value="comments" Label="Comments" Shortcut="C" Glyph="{x:Static arc:ArcIcons.MessageCircle}"
+                              Badge="{Binding #Comments.Value}" />
+            <arc:ToolDockItem Value="mentions" Label="Mentions" Glyph="{x:Static arc:ArcIcons.AtSign}"
+                              Badge="{Binding #Mentions.Value}" />
+            <arc:ToolDockItem Value="alerts" Label="Alerts" Glyph="{x:Static arc:ArcIcons.Bell}" Badge="0" />
+        </arc:ToolDock>
+        <StackPanel Orientation="Horizontal" Spacing="16" HorizontalAlignment="Center">
+            <StackPanel Spacing="6">
+                <TextBlock Text="Comments" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                <arc:NumberField x:Name="Comments" Value="3" Minimum="0" Maximum="120" Width="140" />
+            </StackPanel>
+            <StackPanel Spacing="6">
+                <TextBlock Text="Mentions" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                <arc:NumberField x:Name="Mentions" Value="1" Minimum="0" Maximum="120" Width="140" />
+            </StackPanel>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

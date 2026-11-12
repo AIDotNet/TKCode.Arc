@@ -1,0 +1,44 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MorphNavTightenOnScrollDemo">
+    <!-- Scroll the page: past 24 px the bar tightens; back at the top it opens up again. -->
+    <Panel Height="420" ClipToBounds="True">
+        <ScrollViewer x:Name="Page">
+            <StackPanel Spacing="14" Margin="40,96,40,40" MaxWidth="560">
+                <TextBlock Text="Notes from the estuary" FontSize="28" FontWeight="Medium"
+                           FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}" />
+                <TextBlock TextWrapping="Wrap" Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                           Text="Every spring the river brings the same visitors back: terns first, then the waders that feed on the mud at low tide. This season we kept a shared notebook for the whole walk, one page per morning." />
+                <TextBlock TextWrapping="Wrap" Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                           Text="The tide tables decided our hours. On neap tides the flats stay covered and the birds keep to the far bank, so those mornings went to the reed beds and the old sea wall instead." />
+                <Border Height="160" CornerRadius="{arc:ArcDesignTokenResource RadiusStep16}"
+                        Background="{arc:ArcDesignTokenResource SurfaceMuted}" />
+                <TextBlock Text="What we counted" FontSize="18" FontWeight="Medium" Margin="0,8,0,0" />
+                <TextBlock TextWrapping="Wrap" Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                           Text="Two hundred and twelve redshank on the best morning, a single spoonbill that stayed for three days, and more curlew than any of us had seen in one place. Each sighting is pinned to the spot where it was made." />
+                <TextBlock TextWrapping="Wrap" Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                           Text="Next year we want to start earlier and walk the north shore as well. If you would like to join, the notebook is open to anyone in the club." />
+                <Border Height="160" CornerRadius="{arc:ArcDesignTokenResource RadiusStep16}"
+                        Background="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            </StackPanel>
+        </ScrollViewer>
+        <arc:MorphNav x:Name="Nav" BrandName="Lantern" ActionLabel="Get started" Margin="14,14,14,0" Current="journal">
+            <arc:MorphNav.BrandMark>
+                <Border Width="26" Height="26" CornerRadius="{arc:ArcDesignTokenResource RadiusStep8}"
+                        Background="{arc:ArcDesignTokenResource Foreground}">
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Sparkles}" Size="15"
+                                  Foreground="{arc:ArcDesignTokenResource Background}"
+                                  HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Border>
+            </arc:MorphNav.BrandMark>
+            <arc:MorphNavItem Value="platform" Label="Platform">
+                <arc:MorphNavLink Label="Notebooks" Description="Notes, sketches and photos in one place" Icon="{x:Static arc:ArcIcons.FileText}" />
+                <arc:MorphNavLink Label="Maps" Description="Pin every note to where you took it" Icon="{x:Static arc:ArcIcons.Globe}" />
+                <arc:MorphNavLink Label="Timeline" Description="Walk back through trips and seasons" Icon="{x:Static arc:ArcIcons.Clock}" />
+            </arc:MorphNavItem>
+            <arc:MorphNavItem Value="journal" Label="Journal" />
+            <arc:MorphNavItem Value="pricing" Label="Pricing" />
+        </arc:MorphNav>
+    </Panel>
+</UserControl>

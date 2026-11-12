@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LiquidTabBarBadgesDemo">
+    <!-- A badge sits on the glyph's corner; its digits roll when the count changes and it shrinks away at 0. -->
+    <StackPanel Spacing="20" HorizontalAlignment="Center">
+        <arc:LiquidTabBar HorizontalAlignment="Center" AutomationProperties.Name="Workspace">
+            <arc:LiquidTabBarItem Label="Board" Glyph="{x:Static arc:ArcIcons.LayoutGrid}" />
+            <arc:LiquidTabBarItem x:Name="Mail" Label="Mail" Glyph="{x:Static arc:ArcIcons.Mail}"
+                                  Badge="8" BadgeLabel="8 unread" />
+            <arc:LiquidTabBarItem x:Name="Tasks" Label="Tasks" Glyph="{x:Static arc:ArcIcons.ListTodo}"
+                                  Badge="1" BadgeLabel="1 due today" />
+            <arc:LiquidTabBarItem Label="Team" Glyph="{x:Static arc:ArcIcons.Users}" />
+        </arc:LiquidTabBar>
+        <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+            <arc:Button x:Name="Receive" Content="Receive mail" Variant="Secondary" Size="Small" />
+            <arc:Button x:Name="Read" Content="Mark all read" Variant="Secondary" Size="Small" />
+            <arc:Button x:Name="Assign" Content="Assign a task" Variant="Secondary" Size="Small" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

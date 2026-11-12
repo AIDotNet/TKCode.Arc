@@ -124,6 +124,7 @@ public static class GalleryText
             "Ai" => GalleryShellLangResourceKind.Category_Ai,
             "Illustrations" => GalleryShellLangResourceKind.Category_Illustrations,
             "Cursor" => GalleryShellLangResourceKind.Category_Cursor,
+            "DocksTabs" => GalleryShellLangResourceKind.Category_DocksTabs,
             "Data" => GalleryShellLangResourceKind.Category_Data,
             "Blocks" => GalleryShellLangResourceKind.Category_Blocks,
             "Docs" => GalleryShellLangResourceKind.Category_Docs,
