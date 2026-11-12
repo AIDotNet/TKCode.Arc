@@ -38,7 +38,8 @@ public class GalleryNewBadgeTests
     [Fact]
     public void The_Arc_Component_Count_Includes_Tree_Table()
     {
-        GalleryCatalog.Count.ShouldBe(122);
+        // 123: the Arc components plus PageViewer and AvatarUpload, which sit in Arc's groups without an Arc page to link to.
+        GalleryCatalog.Count.ShouldBe(123);
         GalleryCatalog.Categories.Length.ShouldBe(22);
     }
 

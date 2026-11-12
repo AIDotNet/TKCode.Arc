@@ -5004,6 +5004,14 @@
         <source>The field's title beside the circle.</source>
         <target>圆形旁边的字段标题。</target>
       </trans-unit>
+      <trans-unit id="AvatarUpload.Accept">
+        <source>The accepted file types, as in an HTML file input: MIME types (`image/png`), `image/*` or extensions (`.png`), separated by commas. Null (the default) accepts PNG, JPEG, WebP, GIF and BMP. A file is identified by its first bytes before its name, so a PDF renamed to `.png` is refused, and the picker lists only these types. While `Description` is not set, the line under the title lists the accepted types and the size limit.</source>
+        <target>接受的文件类型，写法与 HTML 文件输入相同：MIME 类型（`image/png`）、`image/*` 或扩展名（`.png`），用逗号分隔。为 null（默认）时接受 PNG、JPEG、WebP、GIF 和 BMP。文件先按开头的字节、再按名字识别，所以改名为 `.png` 的 PDF 会被拒绝，文件选择器也只列出这些类型。没有设置 `Description` 时，标题下方的一行会列出接受的类型和大小限制。</target>
+      </trans-unit>
+      <trans-unit id="AvatarUpload.AllowRemove">
+        <source>Whether the Remove button shows while there is a picture (true by default). `Remove` still works from code.</source>
+        <target>有照片时是否显示“移除”按钮（默认 true）。`Remove` 仍可在代码中调用。</target>
+      </trans-unit>
       <trans-unit id="AvatarUpload.Labels">
         <source>Every word the field shows or says (English by default).</source>
         <target>字段显示或读出的所有文字（默认为英文）。</target>
@@ -5011,6 +5019,10 @@
       <trans-unit id="AvatarUpload.MaxFileSize">
         <source>The largest file accepted, in bytes (10 MB by default); null for no limit.</source>
         <target>可接受的最大文件，以字节计（默认 10 MB）；null 表示不限制。</target>
+      </trans-unit>
+      <trans-unit id="AvatarUpload.DisplayName">
+        <source>The person's name: the initials shown in the circle while there is no picture, with a person glyph when it is empty (the first letters of its first two words).</source>
+        <target>此人的姓名：没有照片时圆形里显示它的首字母（取前两个词的首字母）；为空时显示人像图标。</target>
       </trans-unit>
       <trans-unit id="AvatarUpload.MaxZoom">
         <source>How far the framing step zooms in, relative to the zoom where the picture just covers the circle (4 by default).</source>
@@ -5020,9 +5032,17 @@
         <source>The side of the saved square picture in pixels (512 by default).</source>
         <target>保存的正方形照片的边长，以像素计（默认 512）。</target>
       </trans-unit>
+      <trans-unit id="AvatarUpload.Initials">
+        <source>The initials computed from `DisplayName`.</source>
+        <target>根据 `DisplayName` 计算出的首字母。</target>
+      </trans-unit>
       <trans-unit id="AvatarUpload.Progress">
         <source>The upload's progress from 0 to 1.</source>
         <target>上传进度，从 0 到 1。</target>
+      </trans-unit>
+      <trans-unit id="AvatarUpload.JpegQuality">
+        <source>The JPEG quality of the saved picture, 1 to 100 (92 by default).</source>
+        <target>保存的照片的 JPEG 质量，1 到 100（默认 92）。</target>
       </trans-unit>
       <trans-unit id="AvatarUpload.Removed">
         <source>Raised when the picture is removed.</source>
@@ -5039,6 +5059,10 @@
       <trans-unit id="AvatarUpload.State">
         <source>What the field is doing.</source>
         <target>字段正在做什么。</target>
+      </trans-unit>
+      <trans-unit id="AvatarUpload.OutputFormat">
+        <source>The format of the saved picture (`Bytes`): `Auto` (the default) saves a PNG, and a picture whose type is unknown (one handed to `Edit` without a file name), as PNG, and any other picture as JPEG.</source>
+        <target>保存的照片的格式（`Bytes`）：`Auto`（默认）把 PNG 和类型未知的照片（调用 `Edit` 时没有文件名）保存为 PNG，其他照片保存为 JPEG。</target>
       </trans-unit>
       <trans-unit id="AvatarUpload.StatusText">
         <source>The status line under the title (the description, the progress, or what went wrong).</source>

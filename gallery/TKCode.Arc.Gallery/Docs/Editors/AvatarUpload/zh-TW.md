@@ -1,7 +1,7 @@
 ---
 title: Avatar upload
 summary: 拖入或選擇一張照片，在圓形下移動和縮放它，上傳時圓環圍繞照片逐漸填滿，失敗時可以重試。
-source-hash: 53d68d3e3206
+source-hash: 4248f03e2fd5
 ---
 
 <Demo name="Preview" />
@@ -25,21 +25,47 @@ source-hash: 53d68d3e3206
 把 `Source` 繫結到目前的頭像，並設定 `UploadHandler` 把取景後的照片傳送到伺服器。
 
 ```xml
-<arc:AvatarUpload x:Name="Photo" Label="Profile photo" />
+<arc:AvatarUpload x:Name="Photo" Label="Profile photo" DisplayName="Mina Okafor" />
 ```
 
 ```csharp
 Photo.Source = currentAvatar;
 Photo.UploadHandler = async (request, progress, cancel) =>
 {
-    // request.Image is a square bitmap of OutputSize pixels; request.SourceRect is the part of the original.
-    await api.UploadAvatarAsync(request.Image, progress, cancel);
+    // request.Bytes is the square picture as PNG or JPEG (request.ContentType), OutputSize pixels on a side;
+    // request.Image is the same picture as a bitmap, and request.SourceRect the part of the original it was cut from.
+    await api.UploadAvatarAsync(request.OpenStream(), request.ContentType, progress, cancel);
 };
 ```
 
-`AvatarUpload` 位於 Special 套件中：在 `UseArcControls()` 旁邊用 `UseArcSpecial()` 註冊。
+`AvatarUpload` 屬於 `TKCode.Arc` 套件：`UseArcControls()` 會註冊它。
 
-照片有三種來源：拖到欄位上的檔案、檔案選擇器（圓形或上傳按鈕），或者在程式碼中呼叫 `Edit(bitmap)`。檔案必須是不超過 `MaxFileSize`（10 MB）的 PNG、JPEG、WebP、GIF 或 BMP 圖片；其他檔案會被拒絕，標題下方顯示原因，並觸發 `FileRejected`。較大的照片在取景前會把長邊縮小到 2048 像素。上傳前會先觸發 `Cropped`，帶有取景後的照片；沒有 `UploadHandler` 時照片會立即套用。
+照片有四種來源：拖到欄位上的檔案、檔案選擇器（圓形或上傳按鈕）、程式碼中的 `Edit(bitmap)`，以及用 `LoadAsync(file)`、`LoadAsync(stream, name)` 或 `LoadAsync(bytes, name)` 傳入的檔案、串流或位元組（例如貼上的圖片、相機拍攝）。檔案在解碼之前先被檢查：先依 `MaxFileSize`（10 MB）檢查大小（即使串流說不出自己的長度，讀取也會在上限處停下），再依檔案開頭的位元組檢查類型，所以改名為 `.png` 的 PDF 會被拒絕，名稱古怪的照片則不會。預設類型是 PNG、JPEG、WebP、GIF 和 BMP；`Accept` 可以收窄，寫法與 HTML 檔案輸入相同：MIME 類型、`image/*` 或副檔名。被拒絕的檔案會在標題下方顯示原因，並觸發 `FileRejected`。較大的照片在取景前會把長邊縮小到 2048 像素。上傳前會先觸發 `Cropped`，帶有取景後的照片；沒有 `UploadHandler` 時照片會立即套用。
+
+`DisplayName` 提供沒有照片時圓形裡顯示的字首縮寫。`AllowRemove="False"` 會隱藏「移除」按鈕（`Remove()` 方法仍然可用）。
+
+### 範例照片
+
+設定 `Source` 給欄位一張目前的照片，用 `Edit(bitmap)` 對應用程式已有的照片取景。下面的三個人是虛構的，用程式碼繪製。
+
+<Demo name="SamplePhotos" />
+
+### 被拒絕的檔案與失敗的上傳
+
+被拒絕的檔案不會進入取景步驟：原因會用危險色取代標題下方的那一行，並被朗讀出來。上傳失敗時會保留帶紅色邊緣的新照片，原樣顯示處理常式拋出的訊息，並提供「重試」。請拋出一個說明發生了什麼、什麼沒有改變的例外。
+
+<Demo name="Failures" />
+
+| 發生了什麼 | 顯示 | 事件 |
+|---|---|---|
+| 檔案大於 `MaxFileSize` | 「holiday.png is larger than 5 MB」 | `FileRejected`（`Size`） |
+| 類型不被接受 | 「statement.pdf is not a PNG, JPG, WebP or GIF image」 | `FileRejected`（`Type`） |
+| 檔案不是平台能解碼的圖片 | 「broken.png could not be read」 | `FileRejected`（`Unreadable`） |
+| 上傳處理常式拋出例外 | 例外的訊息，以及重試和取消 | 無：`State` 變為 `Failed` |
+
+### 儲存的照片
+
+`Cropped` 和 `UploadHandler` 會收到一個 `AvatarUploadRequest`。`Bytes` 是依 `ContentType` 編碼的正方形照片，`OpenStream()` 會回傳它的串流。`OutputFormat` 選擇格式：`Auto`（預設）把 PNG 和類型未知的照片（呼叫 `Edit` 時沒有檔名）儲存為 PNG，其他照片儲存為 JPEG；`Png` 和 `Jpeg` 強制使用其一。JPEG 依 `JpegQuality`（92）儲存，因為沒有透明度，所以鋪在白色上。`SuggestedFileName` 是原檔名加上對應的副檔名。
 
 ### 狀態
 
@@ -63,7 +89,7 @@ Photo.UploadHandler = async (request, progress, cancel) =>
 
 ### 結構
 
-1. **圓形**（`Size`，96px）：頭像或空狀態；可以拖入檔案，也是開啟檔案選擇器的按鈕。
+1. **圓形**（`Size`，96px）：頭像或空狀態（`DisplayName` 的字首縮寫，沒有則是人像圖示）；可以拖入檔案，也是開啟檔案選擇器的按鈕。
 2. **進度圓環**：3px，位於圓形外 5px，使用強調色，上傳時顯示。
 3. **標題**（`Label`）和**狀態**（`Description`、進度，或用危險色顯示的問題）。
 4. **按鈕**：依狀態顯示「Upload photo」或「Change」、「Remove」、「Retry」、「Cancel upload」。
@@ -93,11 +119,12 @@ Photo.UploadHandler = async (request, progress, cancel) =>
 |---|---|
 | `AvatarUploadState` | `Empty`、`Editing`、`Uploading`、`Done`、`Failed` |
 | `AvatarUploadRejection` | `Type`、`Size`、`Unreadable` |
+| `AvatarImageFormat` | `Auto`、`Png`、`Jpeg` |
 
 ## 無障礙
 
 - 按鈕是真正的按鈕，順序固定；圓形也可以點擊，但用鍵盤選擇檔案時使用上傳或更換按鈕。
-- 狀態列是禮貌型即時區域：進度、被拒絕的檔案、失敗和結果都會在變化時讀出。
+- 一個禮貌型即時區域會朗讀結果（照片已更新、照片已移除）和依四分之一遞進的進度（「Uploading 50%」）；被拒絕的檔案或失敗的上傳會連同原因一起朗讀。
 - 取景區域是一個可以取得焦點的元素，名為「Photo position」，說明文字列出了它的按鍵；開始取景時焦點移到這裡，結束後回到選擇按鈕。
 - 失敗除了紅色邊緣，還會顯示原因。
 

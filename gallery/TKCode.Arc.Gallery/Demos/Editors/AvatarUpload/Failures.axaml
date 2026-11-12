@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AvatarUploadFailuresDemo">
+    <!-- The field's limit is 5 MB here. The two buttons hand it files it must refuse (no real file is made), and the switch makes the next upload fail. -->
+    <StackPanel Spacing="20" HorizontalAlignment="Center" Margin="0,32">
+        <arc:AvatarUpload x:Name="Upload" Label="Profile photo" DisplayName="Imani Okoro" MaxFileSize="5242880" />
+        <StackPanel Spacing="8">
+            <TextBlock Text="Break it on purpose"
+                       FontSize="12"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+            <StackPanel Orientation="Horizontal" Spacing="12">
+                <arc:Button Variant="Secondary" Size="Small" Content="Send a 12 MB photo" Click="OnTooLarge" />
+                <arc:Button Variant="Secondary" Size="Small" Content="Send a PDF" Click="OnWrongType" />
+                <arc:Switch x:Name="Fail" Content="Make the next upload fail" />
+            </StackPanel>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

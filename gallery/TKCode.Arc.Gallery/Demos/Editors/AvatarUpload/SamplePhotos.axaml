@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AvatarUploadSamplePhotosDemo">
+    <!-- Three invented people drawn in code: pick one to be the current photo, then Change to frame another. Nothing is sent anywhere. -->
+    <StackPanel Spacing="20" HorizontalAlignment="Center" Margin="0,32">
+        <arc:AvatarUpload x:Name="Upload" Label="Profile photo" DisplayName="Imani Okoro" />
+        <StackPanel Spacing="8">
+            <TextBlock Text="Use a sample as the current photo"
+                       FontSize="12"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+            <StackPanel x:Name="Samples" Orientation="Horizontal" Spacing="8" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

@@ -33,7 +33,8 @@ namespace TKCode.Arc;
 [TemplatePart(ZoomInPart, typeof(Button))]
 [TemplatePart(ZoomOutPart, typeof(Button))]
 [TemplatePart(ZoomPart, typeof(Slider))]
-[PseudoClasses(EmptyPseudoClass, EditingPseudoClass, UploadingPseudoClass, DonePseudoClass, FailedPseudoClass, DragOverPseudoClass, ErrorPseudoClass)]
+[TemplatePart(AnnouncerPart, typeof(EditorsLiveRegion))]
+[PseudoClasses(EmptyPseudoClass, EditingPseudoClass, UploadingPseudoClass, DonePseudoClass, FailedPseudoClass, DragOverPseudoClass, ErrorPseudoClass, NoRemovePseudoClass)]
 public class AvatarUpload : TemplatedControl
 {
     public const string StagePart = "PART_Stage";
@@ -48,6 +49,7 @@ public class AvatarUpload : TemplatedControl
     public const string ZoomInPart = "PART_ZoomIn";
     public const string ZoomOutPart = "PART_ZoomOut";
     public const string ZoomPart = "PART_Zoom";
+    public const string AnnouncerPart = "PART_Announcer";
     public const string EmptyPseudoClass = ":empty";
     public const string EditingPseudoClass = ":editing";
     public const string UploadingPseudoClass = ":uploading";
@@ -55,6 +57,9 @@ public class AvatarUpload : TemplatedControl
     public const string FailedPseudoClass = ":failed";
     public const string DragOverPseudoClass = ":dragover";
     public const string ErrorPseudoClass = ":error";
+
+    /// <summary>Set while <see cref="AllowRemove"/> is false: the Remove button stays hidden.</summary>
+    public const string NoRemovePseudoClass = ":no-remove";
 
     private static readonly string[] s_extensions = [".png", ".jpg", ".jpeg", ".webp", ".gif", ".bmp"];
 
@@ -86,6 +91,42 @@ public class AvatarUpload : TemplatedControl
     /// <summary>How far the framing step zooms in, relative to the zoom where the picture just covers the circle (4 by default).</summary>
     public static readonly StyledProperty<double> MaxZoomProperty =
         AvaloniaProperty.Register<AvatarUpload, double>(nameof(MaxZoom), 4);
+
+    /// <summary>
+    /// The person's name: the initials shown in the circle while there is no picture, with a person glyph when it is empty
+    /// (the first letters of its first two words).
+    /// </summary>
+    public static readonly StyledProperty<string?> DisplayNameProperty =
+        AvaloniaProperty.Register<AvatarUpload, string?>(nameof(DisplayName));
+
+    /// <summary>
+    /// The accepted file types, as in an HTML file input: MIME types (<c>image/png</c>), <c>image/*</c> or extensions
+    /// (<c>.png</c>), separated by commas. Null (the default) accepts PNG, JPEG, WebP, GIF and BMP. A file is identified by its
+    /// first bytes before its name, so a PDF renamed to <c>.png</c> is refused, and the picker lists only these types. While
+    /// <see cref="Description"/> is not set, the line under the title lists the accepted types and the size limit.
+    /// </summary>
+    public static readonly StyledProperty<string?> AcceptProperty =
+        AvaloniaProperty.Register<AvatarUpload, string?>(nameof(Accept));
+
+    /// <summary>
+    /// The format of the saved picture (<see cref="AvatarUploadRequest.Bytes"/>): <see cref="AvatarImageFormat.Auto"/> (the
+    /// default) saves a PNG, and a picture whose type is unknown (one handed to <see cref="Edit"/> without a file name), as PNG,
+    /// and any other picture as JPEG.
+    /// </summary>
+    public static readonly StyledProperty<AvatarImageFormat> OutputFormatProperty =
+        AvaloniaProperty.Register<AvatarUpload, AvatarImageFormat>(nameof(OutputFormat));
+
+    /// <summary>The JPEG quality of the saved picture, 1 to 100 (92 by default).</summary>
+    public static readonly StyledProperty<int> JpegQualityProperty =
+        AvaloniaProperty.Register<AvatarUpload, int>(nameof(JpegQuality), 92, coerce: (_, v) => Math.Clamp(v, 1, 100));
+
+    /// <summary>Whether the Remove button shows while there is a picture (true by default). <see cref="Remove"/> still works from code.</summary>
+    public static readonly StyledProperty<bool> AllowRemoveProperty =
+        AvaloniaProperty.Register<AvatarUpload, bool>(nameof(AllowRemove), true);
+
+    /// <summary>The initials computed from <see cref="DisplayName"/>.</summary>
+    public static readonly DirectProperty<AvatarUpload, string> InitialsProperty =
+        AvaloniaProperty.RegisterDirect<AvatarUpload, string>(nameof(Initials), o => o.Initials);
 
     /// <summary>The largest file accepted, in bytes (10 MB by default); null for no limit.</summary>
     public static readonly StyledProperty<long?> MaxFileSizeProperty =
@@ -151,6 +192,24 @@ public class AvatarUpload : TemplatedControl
 
     /// <summary>How far the framing step zooms in, relative to the zoom where the picture just covers the circle (4 by default).</summary>
     public double MaxZoom { get => GetValue(MaxZoomProperty); set => SetValue(MaxZoomProperty, value); }
+
+    /// <inheritdoc cref="DisplayNameProperty"/>
+    public string? DisplayName { get => GetValue(DisplayNameProperty); set => SetValue(DisplayNameProperty, value); }
+
+    /// <inheritdoc cref="AcceptProperty"/>
+    public string? Accept { get => GetValue(AcceptProperty); set => SetValue(AcceptProperty, value); }
+
+    /// <inheritdoc cref="OutputFormatProperty"/>
+    public AvatarImageFormat OutputFormat { get => GetValue(OutputFormatProperty); set => SetValue(OutputFormatProperty, value); }
+
+    /// <inheritdoc cref="JpegQualityProperty"/>
+    public int JpegQuality { get => GetValue(JpegQualityProperty); set => SetValue(JpegQualityProperty, value); }
+
+    /// <inheritdoc cref="AllowRemoveProperty"/>
+    public bool AllowRemove { get => GetValue(AllowRemoveProperty); set => SetValue(AllowRemoveProperty, value); }
+
+    /// <inheritdoc cref="InitialsProperty"/>
+    public string Initials { get => _initials; private set => SetAndRaise(InitialsProperty, ref _initials, value); }
 
     /// <summary>The largest file accepted, in bytes (10 MB by default); null for no limit.</summary>
     public long? MaxFileSize { get => GetValue(MaxFileSizeProperty); set => SetValue(MaxFileSizeProperty, value); }
@@ -223,8 +282,12 @@ public class AvatarUpload : TemplatedControl
     private Button? _zoomIn;
     private Button? _zoomOut;
     private Slider? _zoom;
+    private EditorsLiveRegion? _announcer;
+    private string _initials = string.Empty;
+    private int _announcedBucket;
     private Bitmap? _working;
     private string? _workingName;
+    private string? _workingType;
     private AvatarUploadRequest? _pendingUpload;
     private IImage? _beforeUpload;
     private CancellationTokenSource? _uploadCancel;
@@ -234,7 +297,7 @@ public class AvatarUpload : TemplatedControl
     static AvatarUpload()
     {
         FocusableProperty.OverrideDefaultValue<AvatarUpload>(false);
-        SpecialFocusModality.Watch();
+        FocusModality.Watch();
     }
 
     public AvatarUpload()
@@ -246,6 +309,11 @@ public class AvatarUpload : TemplatedControl
         AddHandler(DragDrop.DropEvent, OnDrop);
         UpdateState();
     }
+
+    /// <summary>Decodes the bytes of a picked file; tests replace it, because the headless renderer has no image decoder.</summary>
+    internal Func<Stream, Bitmap?> Decoder { get; set; } = Decode;
+
+    internal EditorsLiveRegion? Announcer => _announcer;
 
     internal AvatarUploadCropper? Cropper => _cropper;
 
@@ -268,12 +336,7 @@ public class AvatarUpload : TemplatedControl
             {
                 AllowMultiple = false,
                 Title = Label,
-                FileTypeFilter = [new FilePickerFileType(Labels.Picture)
-                {
-                    Patterns = s_extensions.Select(e => "*" + e).ToArray(),
-                    MimeTypes = ["image/png", "image/jpeg", "image/webp", "image/gif", "image/bmp"],
-                    AppleUniformTypeIdentifiers = ["public.image"]
-                }]
+                FileTypeFilter = PickerFilter()
             });
         }
         catch (Exception)
@@ -287,15 +350,10 @@ public class AvatarUpload : TemplatedControl
         }
     }
 
-    /// <summary>Checks <paramref name="file"/> (type and size), reads it and opens the framing step.</summary>
+    /// <summary>Checks <paramref name="file"/> (size, then type by its first bytes), reads it and opens the framing step.</summary>
     public async Task LoadAsync(IStorageFile file)
     {
         var name = file.Name;
-        if (!IsAcceptedName(name))
-        {
-            Reject(name, AvatarUploadRejection.Type);
-            return;
-        }
         try
         {
             var properties = await file.GetBasicPropertiesAsync();
@@ -304,6 +362,13 @@ public class AvatarUpload : TemplatedControl
                 Reject(name, AvatarUploadRejection.Size);
                 return;
             }
+        }
+        catch (Exception)
+        {
+            // A provider that cannot report a size still gets a read that stops at the limit.
+        }
+        try
+        {
             await using var stream = await file.OpenReadAsync();
             await LoadAsync(stream, name);
         }
@@ -313,7 +378,10 @@ public class AvatarUpload : TemplatedControl
         }
     }
 
-    /// <summary>Reads an image from <paramref name="stream"/> (off the UI thread) and opens the framing step.</summary>
+    /// <summary>
+    /// Reads an image from <paramref name="stream"/> and opens the framing step. The read stops at <see cref="MaxFileSize"/>,
+    /// the type is checked from the first bytes before anything is decoded, and decoding happens off the UI thread.
+    /// </summary>
     public async Task LoadAsync(Stream stream, string? fileName = null)
     {
         var name = fileName ?? Labels.Picture;
@@ -322,13 +390,72 @@ public class AvatarUpload : TemplatedControl
             Reject(name, AvatarUploadRejection.Size);
             return;
         }
+        byte[]? data;
+        try
+        {
+            data = await ReadLimitedAsync(stream, MaxFileSize);
+        }
+        catch (Exception)
+        {
+            Reject(name, AvatarUploadRejection.Unreadable);
+            return;
+        }
+        if (data is null)
+        {
+            Reject(name, AvatarUploadRejection.Size);
+            return;
+        }
+        await LoadBytesAsync(data, name);
+    }
+
+    /// <summary>
+    /// Like <see cref="LoadAsync(Stream, string?)"/> for an image you already hold as bytes: a pasted image or a camera
+    /// capture. <paramref name="fileName"/> is only used when the bytes themselves do not say what they are.
+    /// </summary>
+    public Task LoadAsync(byte[] data, string? fileName = null)
+    {
+        ArgumentNullException.ThrowIfNull(data);
+        var name = fileName ?? Labels.Picture;
+        if (MaxFileSize is { } limit && data.Length > limit)
+        {
+            Reject(name, AvatarUploadRejection.Size);
+            return Task.CompletedTask;
+        }
+        return LoadBytesAsync(data, name);
+    }
+
+    private static async Task<byte[]?> ReadLimitedAsync(Stream stream, long? limit)
+    {
+        using var buffer = new MemoryStream();
+        var chunk = new byte[81920];
+        while (true)
+        {
+            var read = await stream.ReadAsync(chunk);
+            if (read == 0)
+            {
+                return buffer.ToArray();
+            }
+            if (limit is { } max && buffer.Length + read > max)
+            {
+                return null;
+            }
+            buffer.Write(chunk, 0, read);
+        }
+    }
+
+    private async Task LoadBytesAsync(byte[] data, string name)
+    {
+        var type = AvatarImageTypes.Detect(data.AsSpan(0, Math.Min(data.Length, AvatarImageTypes.SniffLength)), name);
+        if (!AvatarImageTypes.Accepts(Accept, type, name))
+        {
+            Reject(name, AvatarUploadRejection.Type);
+            return;
+        }
         Bitmap? bitmap;
         try
         {
-            var buffer = new MemoryStream();
-            await stream.CopyToAsync(buffer);
-            buffer.Position = 0;
-            bitmap = await Task.Run(() => Decode(buffer));
+            var decode = Decoder;
+            bitmap = await Task.Run(() => decode(new MemoryStream(data, writable: false)));
         }
         catch (Exception)
         {
@@ -339,11 +466,13 @@ public class AvatarUpload : TemplatedControl
             Reject(name, AvatarUploadRejection.Unreadable);
             return;
         }
-        Edit(bitmap, name);
+        EditCore(bitmap, name, type);
     }
 
     /// <summary>Opens the framing step for a picture the app already has.</summary>
-    public void Edit(Bitmap image, string? fileName = null)
+    public void Edit(Bitmap image, string? fileName = null) => EditCore(image, fileName, AvatarImageTypes.FromName(fileName));
+
+    private void EditCore(Bitmap image, string? fileName, string? contentType)
     {
         if (State is AvatarUploadState.Uploading)
         {
@@ -351,6 +480,7 @@ public class AvatarUpload : TemplatedControl
         }
         _working = image;
         _workingName = fileName;
+        _workingType = contentType;
         ErrorMessage = null;
         _cropper?.SetImage(image);
         if (_cropper is not null)
@@ -363,7 +493,7 @@ public class AvatarUpload : TemplatedControl
         {
             if (State == AvatarUploadState.Editing)
             {
-                _cropper?.Focus(SpecialFocusModality.For(this));
+                _cropper?.Focus(FocusModality.For(this));
             }
         }, DispatcherPriority.Input);
     }
@@ -376,8 +506,16 @@ public class AvatarUpload : TemplatedControl
             return Task.CompletedTask;
         }
         var source = _cropper.CropRect();
-        var image = Crop(_working, source, Math.Max(16, OutputSize));
-        var request = new AvatarUploadRequest(image, source, _workingName);
+        // A PNG stays a PNG (and keeps its transparency); a picture of another or an unknown type is saved as JPEG, on white.
+        var png = OutputFormat switch
+        {
+            AvatarImageFormat.Png => true,
+            AvatarImageFormat.Jpeg => false,
+            _ => _workingType is null or "image/png"
+        };
+        var image = Crop(_working, source, Math.Max(16, OutputSize), opaque: !png);
+        var (bytes, contentType) = Encode(image, png, JpegQuality);
+        var request = new AvatarUploadRequest(image, source, _workingName, bytes, contentType);
         _working = null;
         _cropper.SetImage(null);
         RaiseEvent(new AvatarUploadCroppedEventArgs(CroppedEvent, request));
@@ -521,6 +659,7 @@ public class AvatarUpload : TemplatedControl
             return;
         }
         _pendingUpload = request;
+        _announcedBucket = 0;
         var generation = ++_uploadGeneration;
         _uploadCancel?.Cancel();
         var cancel = new CancellationTokenSource();
@@ -593,6 +732,7 @@ public class AvatarUpload : TemplatedControl
             {
                 _owner.Progress = Math.Clamp(value, 0, 1);
                 _owner.UpdateState();
+                _owner.AnnounceProgress();
             }
         }
     }
@@ -623,15 +763,50 @@ public class AvatarUpload : TemplatedControl
     }
 
     /// <summary>Draws the <paramref name="source"/> square of <paramref name="image"/> into a new square bitmap.</summary>
-    internal static Bitmap Crop(Bitmap image, PixelRect source, int size)
+    internal static Bitmap Crop(Bitmap image, PixelRect source, int size, bool opaque = false)
     {
         var target = new RenderTargetBitmap(new PixelSize(size, size), new Vector(96, 96));
         using (var context = target.CreateDrawingContext())
         {
-            // Both rectangles in pixels: the source rect of DrawImage is in the bitmap's pixels.
-            context.DrawImage(image, new Rect(source.X, source.Y, source.Width, source.Height), new Rect(0, 0, size, size));
+            if (opaque)
+            {
+                // A JPEG has no transparency: what is clear in the picture becomes white.
+                context.FillRectangle(Brushes.White, new Rect(0, 0, size, size));
+            }
+            using (context.PushRenderOptions(s_cropOptions))
+            {
+                // Both rectangles in pixels: the source rect of DrawImage is in the bitmap's pixels.
+                context.DrawImage(image, new Rect(source.X, source.Y, source.Width, source.Height), new Rect(0, 0, size, size));
+            }
         }
         return target;
+    }
+
+    private static readonly RenderOptions s_cropOptions = new() { BitmapInterpolationMode = BitmapInterpolationMode.HighQuality };
+
+    /// <summary>The picture as PNG, or as JPEG at <paramref name="jpegQuality"/>, and its MIME type.</summary>
+    internal static (byte[] Bytes, string ContentType) Encode(Bitmap image, bool png, int jpegQuality)
+    {
+        using var stream = new MemoryStream();
+        BitmapEncoderOptions options = png ? PngBitmapEncoderOptions.Default : new JpegBitmapEncoderOptions { Quality = Math.Clamp(jpegQuality, 1, 100) };
+        image.Save(stream, options);
+        return (stream.ToArray(), png ? "image/png" : "image/jpeg");
+    }
+
+    /// <summary>The picker's one file type: the accepted types (macOS also needs its image type identifier).</summary>
+    private IReadOnlyList<FilePickerFileType> PickerFilter()
+    {
+        var filter = FileDropzoneTypes.PickerFilter(string.IsNullOrWhiteSpace(Accept) ? AvatarImageTypes.DefaultAccept : Accept);
+        if (filter is not { Count: > 0 })
+        {
+            return [];
+        }
+        return [new FilePickerFileType(Labels.Picture)
+        {
+            Patterns = filter[0].Patterns,
+            MimeTypes = filter[0].MimeTypes,
+            AppleUniformTypeIdentifiers = ["public.image"]
+        }];
     }
 
     private void Reject(string name, AvatarUploadRejection reason)
@@ -639,7 +814,7 @@ public class AvatarUpload : TemplatedControl
         var labels = Labels;
         ErrorMessage = reason switch
         {
-            AvatarUploadRejection.Type => labels.WrongType(name),
+            AvatarUploadRejection.Type => Accept is null ? labels.WrongType(name) : labels.WrongTypeOf(name, AvatarImageTypes.Describe(Accept)),
             AvatarUploadRejection.Size => labels.TooLarge(name, FormatSize(MaxFileSize ?? 0)),
             _ => labels.Unreadable(name)
         };
@@ -696,6 +871,7 @@ public class AvatarUpload : TemplatedControl
         _zoomIn = e.NameScope.Find<Button>(ZoomInPart);
         _zoomOut = e.NameScope.Find<Button>(ZoomOutPart);
         _zoom = e.NameScope.Find<Slider>(ZoomPart);
+        _announcer = e.NameScope.Find<EditorsLiveRegion>(AnnouncerPart);
         Hook();
         if (_cropper is not null)
         {
@@ -814,9 +990,14 @@ public class AvatarUpload : TemplatedControl
             }
             UpdateState();
         }
-        else if (change.Property == LabelsProperty || change.Property == DescriptionProperty || change.Property == LabelProperty)
+        else if (change.Property == LabelsProperty || change.Property == DescriptionProperty || change.Property == LabelProperty
+            || change.Property == AcceptProperty || change.Property == MaxFileSizeProperty || change.Property == AllowRemoveProperty)
         {
             UpdateState();
+        }
+        else if (change.Property == DisplayNameProperty)
+        {
+            Initials = Avatar.ComputeInitials(DisplayName);
         }
         else if (change.Property == MaxZoomProperty && _cropper is not null)
         {
@@ -839,8 +1020,9 @@ public class AvatarUpload : TemplatedControl
             AvatarUploadState.Uploading => labels.Uploading((int)Math.Round(Progress * 100)),
             AvatarUploadState.Failed => ErrorMessage ?? labels.UploadFailed,
             _ when IsDragOver => labels.DropHint,
-            _ => ErrorMessage ?? Description
+            _ => ErrorMessage ?? EffectiveDescription
         };
+        PseudoClasses.Set(NoRemovePseudoClass, !AllowRemove);
         if (_ring is not null)
         {
             _ring.Value = state == AvatarUploadState.Uploading ? Progress : 0;
@@ -887,14 +1069,40 @@ public class AvatarUpload : TemplatedControl
         }
     }
 
+    /// <summary>
+    /// The line under the title: <see cref="Description"/> when it was set, else the accepted types and the size limit, so the line
+    /// follows <see cref="Accept"/> and <see cref="MaxFileSize"/> ("PNG, JPG or WebP, up to 10 MB" with the defaults).
+    /// </summary>
+    private string? EffectiveDescription
+    {
+        get
+        {
+            if (IsSet(DescriptionProperty))
+            {
+                return Description;
+            }
+            var types = Accept is null ? "PNG, JPG or WebP" : AvatarImageTypes.Describe(Accept);
+            return MaxFileSize is { } limit ? types + ", up to " + FormatSize(limit) : types;
+        }
+    }
+
     private void Announce(string? text)
     {
-        if (string.IsNullOrEmpty(text))
+        if (!string.IsNullOrEmpty(text))
         {
-            return;
+            _announcer?.Announce(text);
         }
-        AutomationProperties.SetLiveSetting(this, AutomationLiveSetting.Polite);
-        AutomationProperties.SetHelpText(this, text);
+    }
+
+    /// <summary>Progress is announced in quarters ("Uploading 50%"), not at every report, so a screen reader is not flooded.</summary>
+    private void AnnounceProgress()
+    {
+        var bucket = (int)(Progress * 4);
+        if (bucket > _announcedBucket && bucket < 4)
+        {
+            _announcedBucket = bucket;
+            Announce(Labels.Uploading(bucket * 25));
+        }
     }
 
     private void FocusPick()
@@ -911,7 +1119,7 @@ public class AvatarUpload : TemplatedControl
                 AvatarUploadState.Failed => _retry,
                 _ => _pick
             };
-            target?.Focus(SpecialFocusModality.For(this));
+            target?.Focus(FocusModality.For(this));
         }, DispatcherPriority.Input);
     }
 

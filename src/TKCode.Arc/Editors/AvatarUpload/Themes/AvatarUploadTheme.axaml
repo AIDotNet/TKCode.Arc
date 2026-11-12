@@ -23,6 +23,8 @@
                                                    Image="{TemplateBinding Source}"
                                                    Fill="{arc:ArcDesignTokenResource SurfaceMuted}"
                                                    GlyphBrush="{arc:ArcDesignTokenResource TextMuted}"
+                                                   Initials="{TemplateBinding Initials}"
+                                                   InitialsBrush="{arc:ArcDesignTokenResource TextSecondary}"
                                                    Scrim="{arc:ArcDesignTokenResource Scrim}"
                                                    ScrimGlyphBrush="{arc:ArcDesignTokenResource ControlThumb}" />
                             <arc:ArcRing Name="PART_Ring"
@@ -43,8 +45,7 @@
                             <TextBlock Name="PART_Status"
                                        Text="{TemplateBinding StatusText}"
                                        FontSize="{arc:ArcDesignTokenResource TypeXS}"
-                                       TextWrapping="Wrap"
-                                       AutomationProperties.LiveSetting="Polite" />
+                                       TextWrapping="Wrap" />
                             <WrapPanel Margin="{arc:AvatarUploadTokenResource ActionsMargin}"
                                        ItemSpacing="{arc:AvatarUploadTokenResource ActionsSpacing}"
                                        LineSpacing="{arc:AvatarUploadTokenResource ActionsSpacing}">
@@ -90,6 +91,7 @@
                             <arc:Button Name="PART_Save" Variant="Primary" Size="Small" />
                         </StackPanel>
                     </StackPanel>
+                    <arc:EditorsLiveRegion Name="PART_Announcer" />
                 </Panel>
             </ControlTemplate>
         </Setter>
@@ -149,6 +151,9 @@
         </Style>
         <Style Selector="^:done /template/ arc|Button#PART_Remove">
             <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:no-remove /template/ arc|Button#PART_Remove">
+            <Setter Property="IsVisible" Value="False" />
         </Style>
         <Style Selector="^:done /template/ arc|AvatarUploadStage#PART_Stage:pointerover">
             <Setter Property="ScrimAmount" Value="1" />
