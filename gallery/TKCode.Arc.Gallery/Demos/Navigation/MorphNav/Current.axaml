@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MorphNavCurrentDemo">
+    <!-- Plain items are links. Navigate reports each choice; setting Current marks the section you are in. -->
+    <Panel Height="200">
+        <TextBlock x:Name="Page" Text="Overview" FontSize="22" FontWeight="Medium" HorizontalAlignment="Center"
+                   VerticalAlignment="Center" Margin="0,40,0,0" />
+        <arc:MorphNav x:Name="Nav" BrandName="Lantern docs" Current="overview" Margin="14,14,14,0">
+            <arc:MorphNavItem Value="overview" Label="Overview" Href="/docs" />
+            <arc:MorphNavItem Value="guides" Label="Guides" Href="/docs/guides" />
+            <arc:MorphNavItem Value="api" Label="API" Href="/docs/api" />
+            <arc:MorphNavItem Value="changelog" Label="Changelog" Href="/docs/changelog" />
+        </arc:MorphNav>
+    </Panel>
+</UserControl>

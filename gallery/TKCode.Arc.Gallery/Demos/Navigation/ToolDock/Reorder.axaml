@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ToolDockReorderDemo">
+    <!-- Drag a slot sideways, or focus it and press Alt with the left or right arrow. -->
+    <StackPanel Spacing="16" HorizontalAlignment="Center" Margin="0,48,0,0">
+        <arc:ToolDock x:Name="Dock" Label="Formatting" CanReorder="True" SelectedValue="bold" HorizontalAlignment="Center">
+            <arc:ToolDockItem Value="bold" Label="Bold" Shortcut="B" Glyph="{x:Static arc:ArcIcons.Bold}" />
+            <arc:ToolDockItem Value="italic" Label="Italic" Shortcut="I" Glyph="{x:Static arc:ArcIcons.Italic}" />
+            <arc:ToolDockItem Value="underline" Label="Underline" Shortcut="U" Glyph="{x:Static arc:ArcIcons.Underline}" />
+            <arc:ToolDockItem Value="strike" Label="Strikethrough" Glyph="{x:Static arc:ArcIcons.Strikethrough}" />
+            <arc:ToolDockItem Value="code" Label="Code" Glyph="{x:Static arc:ArcIcons.Code}" />
+            <arc:ToolDockItem Value="link" Label="Link" Shortcut="K" Glyph="{x:Static arc:ArcIcons.Link}" />
+        </arc:ToolDock>
+        <TextBlock x:Name="Order" HorizontalAlignment="Center"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

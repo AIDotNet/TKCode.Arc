@@ -1,26 +1,27 @@
 ---
 title: Orbit menu
-summary: A round button that fans its actions out around itself on an arc, one after another, with the arrow keys walking around the ring.
+summary: Quick actions for one object, fanned out on an arc from a round button. A single press, drag and release runs one; a short tap leaves the arc open for clicking.
 ---
 
 <Demo name="Preview" />
 
 ## When to use
 
-`OrbitMenu` is a round trigger that keeps a few related actions folded inside it. Pressing it sends the actions out
-one after another, each springing to its place on an arc around the trigger, while the trigger's plus turns into a
-close mark. Picking an action, pressing outside or Escape folds them back in. Because every action is the same
-distance from the thumb or the pointer, the choice is quick and easy to reach.
+`OrbitMenu` puts between three and six one-step actions for a single object behind a round button. On press, the
+actions sweep out of the button onto an arc above it, and that same press can finish the job: drag in an action's
+direction, let go, and it fires. A short tap instead leaves the arc out, so the actions can be hovered and clicked like
+a regular menu. Whenever the arc is showing, a pill between the button and the arc names the action being aimed at;
+once an action fires, the button shows a check and the pill a short confirmation.
 
-- **Create menus**: a floating plus that offers photo, voice, text or file.
-- **Quick reactions** on a message or a post, on a full ring.
-- **Tool palettes** on a canvas, opening where the hand already is.
+- **A photo, a note or a message** that needs a few quick verbs: like, save, send, delete.
+- **Phones and tablets**, where one press-drag-release is quicker than opening a menu and then tapping inside it.
+- **Floating create buttons** that offer a few kinds of new item.
 
 ## When not to use
 
-- **More than about eight actions**: the arc gets crowded; use a menu with labels.
-- **Actions that need their names to be understood**: the ring shows glyphs, and names only as tooltips.
-- **Primary navigation**: places to go belong in a tab bar or a nav, not behind a button.
+- **Many actions, or names people need to read first**: a `DropdownMenu` or `ContextMenu` shows every name at once.
+- **A mode or tool that stays on after it is picked**: that belongs in a `ToolDock` or a toolbar.
+- **Only one action**: a plain button is clearer.
 
 ## Usage
 
@@ -28,43 +29,56 @@ distance from the thumb or the pointer, the choice is quick and easy to reach.
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
-    <arc:OrbitMenu Label="Create">
-        <arc:OrbitMenuAction Glyph="{x:Static arc:ArcIcons.Camera}" Label="Photo" />
-        <arc:OrbitMenuAction Glyph="{x:Static arc:ArcIcons.Mic}" Label="Voice note" />
-        <arc:OrbitMenuAction Glyph="{x:Static arc:ArcIcons.PenLine}" Label="Text note" />
+    <arc:OrbitMenu Label="Note actions">
+        <arc:OrbitMenuAction Glyph="{x:Static arc:ArcIcons.Pin}" Label="Pin" DoneText="Pinned" />
+        <arc:OrbitMenuAction Glyph="{x:Static arc:ArcIcons.Send}" Label="Send" DoneText="Sent" />
+        <arc:OrbitMenuAction Glyph="{x:Static arc:ArcIcons.Trash2}" Label="Delete" DoneText="Deleted" Tone="Danger" />
     </arc:OrbitMenu>
 </UserControl>
 ```
 
 `OrbitMenu` is in the Special package: register it with `UseArcSpecial()` next to `UseArcControls()`. Its items are
-`OrbitMenuAction` elements, each with a `Glyph` and a `Label` (the tooltip and the accessible name), or bound through
-`ItemsSource`. An action raises its own `Click` and runs its `Command`; the menu raises `ActionInvoked` with the action
-and folds back, unless `ClosesOnInvoke` is false. `IsOpen` (two-way), `Open()`, `Close()` and `Toggle()` control it
-from code; `Label` names the trigger and `Glyph` changes its glyph.
+`OrbitMenuAction` elements, or data bound through `ItemsSource` (each item's text becomes the action's label). Every
+action has a `Glyph` and a `Label`, the name the pill shows while the action is targeted and the name assistive
+technology reads. After a fire the pill shows `DoneText`, or the label when that is empty; `Tone="Danger"` paints a
+destructive action in the danger color.
 
-The menu takes only the trigger's room. The actions are drawn over what is around it, so leave them space: `Radius`
-(88 px by default) plus half an action on the sides they open to.
+When an action fires it raises its own `Click`, runs its `Command`, and the menu raises `ActionInvoked` with the action
+and its item; then the arc folds, the button shows a check and the pill shows the confirmation for about 1.4 seconds.
+`IsOpen` (two-way), `Open()`, `Close()` and `Toggle()` control the arc from code. `Label` names the button and the menu;
+the pill also shows it whenever the arc is out but no action is aimed at. `CancelText` is the pill's text when a drag
+moves away from every action. With `Announces` on (the default), confirmations are also read out by screen readers.
 
-### The arc
+### Aiming, tapping and cancelling
 
-`StartAngle` is where the first action goes and `SweepAngle` how far round the others follow, in degrees clockwise from
-the right (-90 is straight up, 180 is left). The default fans over the top from left to right. A sweep of 360 spreads
-the actions evenly round a full ring.
+Aim depends on direction, not on hitting the action. Once the pointer is more than 34 px from the button's center,
+the target is the action whose angle around the button is closest to the pointer's, even before the pointer reaches
+it. The lens slides under that action, and actions close to the pointer are drawn slightly toward it. Releasing fires
+the target. A tap that lasts under about a third of a second leaves the arc open; releasing near the center, far past
+the arc, or after holding still closes it without firing anything. A click between the actions or anywhere outside
+closes it too.
 
-<Demo name="FullRing" />
+### Placement
+
+The menu takes only the button's room in the layout and draws the arc over what is around it. `Direction` is the
+angle the arc faces, in degrees clockwise from the right: the default -90 faces up, 90 faces down and 180 faces left.
+`Spread` sets how many degrees it spans (150 by default; 360 spreads the actions round a full ring) and `Radius` how
+far out the actions sit (104 px).
+
+<Demo name="Placement" />
 
 ### Best practices
 
 **Do**
 
-- Give every action a short `Label`: it is the only name assistive technology has.
-- Point the arc into open space, such as up from a trigger at the bottom of the screen.
-- Keep to three to six actions.
+- Keep to three to six actions, each with a short `Label` and a `DoneText`.
+- Use `Tone="Danger"` for anything that deletes or removes.
+- Aim the arc where nothing important sits, with `Radius` plus about 30 px of clear room.
 
 **Avoid**
 
-- Hiding the only way to do something important behind the ring.
-- Placing the trigger where the arc would leave the window.
+- Hiding the only way to do something important behind the button.
+- Placing the button where the arc would leave the window: it is not moved back inside.
 
 ## API reference
 
@@ -74,51 +88,58 @@ the actions evenly round a full ring.
 
 ## Accessibility
 
-- The trigger is a button named by `Label` that reports whether the ring is expanded.
-- Each action is announced as a menu item named by its `Label`, and can be invoked by assistive technology. Folded
-  actions are hidden from it and from the tab order.
-- Opening from the keyboard moves focus to the first action; closing returns it to the trigger. Pointer use shows no
-  focus ring; keyboard use shows the shared ring around the trigger or the action.
+- The button is named by `Label`, reports whether the menu is expanded and that it opens a menu.
+- Each action is a menu item named by its `Label` and can be invoked by assistive technology. Folded actions are hidden
+  from it and from the tab order, and the actions take a single stop in the tab order.
+- The keyboard-focused action is the target: the lens sits under it and the pill names it, so focus is always visible.
+- With `Announces` on, a polite live region reads each confirmation.
 
 ### Keyboard interactions
 
 | Key | Action |
 |---|---|
-| Enter or Space on the trigger | Opens or closes the ring. |
-| Right or Down | Moves to the next action round the ring, wrapping. |
-| Left or Up | Moves to the previous action, wrapping. |
-| Home / End | Moves to the first or last action. |
-| Enter or Space on an action | Runs the action and folds the ring. |
-| Escape | Folds the ring and returns focus to the trigger. |
-| Tab away | Folds the ring. |
+| Enter or Space on the button | Toggles the arc; when it opens, the first action has focus. |
+| An arrow key on the button | Shows the arc with focus on the first action, or on the last one for Up. |
+| Right or Down | Next action; after the last comes the first. |
+| Left or Up | Previous action; before the first comes the last. |
+| Home / End | First or last action. |
+| Enter or Space on an action | Fires it; focus returns to the button. |
+| Escape | Folds the arc; the button gets focus back. |
+| Tab | Folds the arc, and focus goes on to the next control. |
 
 ## Motion
 
-- On opening, each action leaves the trigger 35ms after the one before, growing from 40% of its size and springing
-  out to its place with a light bounce. On closing they return in reverse order on a quick spring without bounce.
-- The trigger's glyph turns 45 degrees on a snappy spring, so a plus becomes a close mark.
-- Actions move with render transforms only; nothing is laid out while they travel.
+- Opening, the actions leave the button one by one in item order, 35 ms apart: each curves round to its spot on the
+  arc while it grows from 40% and its soft blur clears. Closing runs the other way round, and quicker.
+- A thin track draws out from the middle of the arc to both ends behind the actions.
+- Between targets the lens slides along the arc, small while it moves and full size once it arrives. Actions close to
+  the pointer are pulled slightly toward it and swell a little (mouse and pen only).
+- On the button, the ellipsis changes shape into a close mark when the arc opens and into a check after a fire. The
+  pill rises in, resizes on a spring to fit its text, and swaps text through a soft blur.
 
 | Change | Full | Reduced | Off |
 |---|---|---|---|
-| Actions out | Staggered springs from the trigger | Fade in place, 160ms | Appear |
-| Actions in | Quick springs back, in reverse order | Fade out, 180ms | Disappear |
-| Trigger glyph | Turns on a spring | Turns at once | Turns at once |
+| Actions out and in | Staggered swirl, scale and blur on springs | Fade in place | Appear and disappear |
+| Lens | Glides on a spring | Jumps, fades | Jumps |
+| Nearby actions | Lean and grow | Grow only | Grow only |
+| Button mark | Morphs on a spring | Changes at once | Changes at once |
+| Pill | Rises and grows in, text blur swap | Fades, text crossfade | Appears |
 
 ## Responsive behavior
 
-- The trigger keeps its size (52 px) at every width, comfortable for a thumb.
-- The arc keeps its `Radius`; on a phone, point it into the screen (for example up from a trigger at the bottom) and
-  leave the room it needs.
-- Actions are 44 px across, a comfortable touch target.
+- The button (56 px) and the actions (46 px) keep their size at every width; both are comfortable touch targets.
+- On touch, press, drag and release works the same; the lean toward the pointer is for mouse and pen only.
+- Nothing keeps the arc inside the window: on a phone, aim it toward the middle of the screen and leave it the room
+  it needs.
 
 ## Related
 
 - `DropdownMenu` lists actions with their names.
+- `ContextMenu` keeps secondary actions next to the selected object.
 - `ActionMorph` opens one action into a small panel.
 
 | Component | Choose it when |
 |---|---|
-| `OrbitMenu` | A few well-known actions, one quick reach away |
+| `OrbitMenu` | Three to six well-known actions on one object, one gesture away |
 | `DropdownMenu` | Actions need their names, or there are many |
 | `ActionMorph` | One action needs a field or a few options |

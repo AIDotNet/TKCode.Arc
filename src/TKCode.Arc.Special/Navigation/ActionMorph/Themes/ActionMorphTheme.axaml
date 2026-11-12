@@ -5,106 +5,69 @@
                     x:Class="TKCode.Arc.ActionMorphTheme">
 
     <!--
-        One surface holds both faces of the morph: the button and the panel. Its size follows whichever is shown on a
-        spring (both while the old one fades), and its corners and shadow move with it, so the button seems to open up
-        rather than be replaced. The surface clips its content; the keyboard ring sits outside it in the root panel.
+        The morph takes the button's square. Its surface draws the one rounded shape that changes from the button to the
+        menu and the forms (fill, hairline and shadow follow the state here; size and corners spring in code) and holds
+        the faces past the square, over what is around the morph. The keyboard ring of the button sits in the root panel.
     -->
     <ControlTheme x:Key="{x:Type arc:ActionMorph}" TargetType="arc:ActionMorph">
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="ClipToBounds" Value="False" />
-        <Setter Property="HorizontalAlignment" Value="Left" />
-        <Setter Property="VerticalAlignment" Value="Top" />
-        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
-        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
-        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
-        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+        <Setter Property="Width" Value="{arc:ActionMorphTokenResource ButtonSize}" />
+        <Setter Property="Height" Value="{arc:ActionMorphTokenResource ButtonSize}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
-        <Setter Property="Padding" Value="{arc:ActionMorphTokenResource PanelPadding}" />
-        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-        <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:ActionMorph">
-                <Panel Name="PART_Root">
-                    <Border Name="PART_Surface"
-                            ClipToBounds="True"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="{TemplateBinding CornerRadius}">
-                        <arc:SpringSizeDecorator Name="PART_Size" Axis="Both" Spring="Morph" ClipOverflow="0" CrossClipOverflow="0">
-                            <Panel>
-                                <arc:PresenceHost Name="PART_FaceHost"
-                                                  Mode="Fade"
-                                                  IsPresent="True"
-                                                  HorizontalAlignment="Left"
-                                                  VerticalAlignment="Top">
-                                    <arc:ActionMorphFace Name="PART_Face"
-                                                         Glyph="{TemplateBinding Glyph}"
-                                                         Label="{TemplateBinding Label}" />
-                                </arc:PresenceHost>
-                                <arc:PresenceHost Name="PART_PanelHost"
-                                                  Mode="Fade"
-                                                  IsPresent="False"
-                                                  HorizontalAlignment="Left"
-                                                  VerticalAlignment="Top">
-                                    <Grid ColumnDefinitions="*,Auto"
-                                          ColumnSpacing="{arc:ActionMorphTokenResource PanelSpacing}"
-                                          MinWidth="{arc:ActionMorphTokenResource PanelMinWidth}"
-                                          Margin="{TemplateBinding Padding}">
-                                        <ContentPresenter Name="PART_ContentPresenter"
-                                                          Content="{TemplateBinding Content}"
-                                                          ContentTemplate="{TemplateBinding ContentTemplate}"
-                                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
-                                        <arc:Button Name="PART_Close"
-                                                    Grid.Column="1"
-                                                    Variant="Ghost"
-                                                    Size="Small"
-                                                    VerticalAlignment="Top">
-                                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}" />
-                                        </arc:Button>
-                                    </Grid>
-                                </arc:PresenceHost>
-                            </Panel>
-                        </arc:SpringSizeDecorator>
-                    </Border>
+                <Panel Name="PART_Root" ClipToBounds="False">
+                    <arc:ActionMorphSurface Name="PART_Surface"
+                                            ButtonRadius="{arc:ArcDesignTokenResource RadiusStep28}"
+                                            PanelRadius="{arc:ArcDesignTokenResource RadiusStep24}" />
+                    <TextBlock Name="PART_Status"
+                               Height="0"
+                               Opacity="0"
+                               IsHitTestVisible="False"
+                               VerticalAlignment="Top" />
                 </Panel>
             </ControlTemplate>
         </Setter>
-        <Style Selector="^:primary">
+        <Style Selector="^ /template/ arc|ActionMorphSurface#PART_Surface">
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
-            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Accent}" />
-        </Style>
-        <Style Selector="^:primary /template/ arc|ActionMorphFace#PART_Face">
-            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
-        </Style>
-        <Style Selector="^:expanded">
-            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
-            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
-            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep20}" />
-        </Style>
-        <Style Selector="^:expanded /template/ Border#PART_Surface">
+            <Setter Property="BorderBrush" Value="Transparent" />
             <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowRaised}" />
+            <Setter Property="RenderTransformOrigin" Value="100%,100%" />
+            <Setter Property="RenderTransform" Value="scale(1)" />
         </Style>
-        <Style Selector="^:motion-full">
+        <Style Selector="^:start /template/ arc|ActionMorphSurface#PART_Surface">
+            <Setter Property="RenderTransformOrigin" Value="0%,100%" />
+        </Style>
+        <Style Selector="^:hover /template/ arc|ActionMorphSurface#PART_Surface">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        </Style>
+        <Style Selector="^:open /template/ arc|ActionMorphSurface#PART_Surface">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowFloating}" />
+        </Style>
+        <Style Selector="^:success /template/ arc|ActionMorphSurface#PART_Surface">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <!-- Arc Action morph (design reference): fill and edge 240 ms, shadow 480 ms, both on the standard curve. -->
+        <Style Selector="^:motion-full /template/ arc|ActionMorphSurface#PART_Surface">
             <Setter Property="Transitions">
                 <Transitions>
-                    <arc:ArcBrushTransition Property="Background" />
-                    <arc:ArcBrushTransition Property="BorderBrush" />
-                    <arc:SpringCornerRadiusTransition Property="CornerRadius" Spring="Morph" />
+                    <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Standard" />
+                    <arc:ArcBoxShadowsTransition Property="BoxShadow" Duration="0:0:0.48" />
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" VisualDuration="0.22" Bounce="0.05" />
                 </Transitions>
             </Setter>
         </Style>
-        <Style Selector="^:motion-full /template/ Border#PART_Surface">
-            <Setter Property="Transitions">
-                <Transitions>
-                    <arc:ArcBoxShadowsTransition Property="BoxShadow" Tween="Standard" />
-                </Transitions>
-            </Setter>
+        <!-- The press scale belongs to full motion only. -->
+        <Style Selector="^:motion-full:pressed /template/ arc|ActionMorphSurface#PART_Surface">
+            <Setter Property="RenderTransform" Value="scale(0.94)" />
         </Style>
-        <Style Selector="^:motion-reduced">
+        <Style Selector="^:motion-reduced /template/ arc|ActionMorphSurface#PART_Surface">
             <Setter Property="Transitions">
                 <Transitions>
                     <arc:ArcBrushTransition Property="Background" Tween="Instant" />
@@ -114,44 +77,500 @@
         </Style>
     </ControlTheme>
 
-    <!-- The face: glyph and label on a transparent button; hover tints it, press dims it. -->
-    <ControlTheme x:Key="{x:Type arc:ActionMorphFace}" TargetType="arc:ActionMorphFace">
+    <!-- The button face: the plus and the success check over the surface's fill. -->
+    <ControlTheme x:Key="{x:Type arc:ActionMorphTrigger}" TargetType="arc:ActionMorphTrigger">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Width" Value="{arc:ActionMorphTokenResource ButtonSize}" />
+        <Setter Property="Height" Value="{arc:ActionMorphTokenResource ButtonSize}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ActionMorphTrigger">
+                <Border Background="{TemplateBinding Background}" CornerRadius="{arc:ArcDesignTokenResource RadiusPill}">
+                    <Panel>
+                        <arc:ArcGlyph Name="PART_Plus"
+                                      Data="{x:Static arc:ArcIcons.Plus}"
+                                      Size="{arc:ActionMorphTokenResource ButtonGlyphSize}"
+                                      StrokeThickness="{arc:ActionMorphTokenResource ButtonGlyphStroke}"
+                                      Foreground="{arc:ArcDesignTokenResource AccentForeground}"
+                                      RenderTransformOrigin="50%,50%"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                        <arc:StrokeDrawGlyph Name="PART_Check"
+                                             Data="{x:Static arc:ArcIcons.Check}"
+                                             Size="{arc:ActionMorphTokenResource ButtonGlyphSize}"
+                                             StrokeThickness="{arc:ActionMorphTokenResource ButtonGlyphStroke}"
+                                             Foreground="{arc:ActionMorphTokenResource SuccessGlyph}"
+                                             RenderTransformOrigin="50%,50%"
+                                             HorizontalAlignment="Center"
+                                             VerticalAlignment="Center" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- The round back and close buttons: quiet glyphs that get a soft fill under a mouse. -->
+    <ControlTheme x:Key="{x:Type arc:ActionMorphIconButton}" TargetType="arc:ActionMorphIconButton">
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="FocusAdorner" Value="{x:Null}" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
-        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
-        <Setter Property="Height" Value="{arc:ActionMorphTokenResource FaceHeight}" />
-        <Setter Property="Padding" Value="{arc:ActionMorphTokenResource FacePadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Width" Value="{arc:ActionMorphTokenResource IconButtonSize}" />
+        <Setter Property="Height" Value="{arc:ActionMorphTokenResource IconButtonSize}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Template">
-            <ControlTemplate TargetType="arc:ActionMorphFace">
-                <Border Name="PART_Fill" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
-                    <StackPanel Orientation="Horizontal"
-                                Spacing="{arc:ActionMorphTokenResource FaceSpacing}"
-                                VerticalAlignment="Center">
+            <ControlTemplate TargetType="arc:ActionMorphIconButton">
+                <Panel Name="PART_Root">
+                    <Border Background="{TemplateBinding Background}" CornerRadius="{arc:ArcDesignTokenResource RadiusPill}">
                         <arc:ArcGlyph Data="{TemplateBinding Glyph}"
-                                      Size="{arc:ActionMorphTokenResource GlyphSize}"
+                                      Size="{arc:ActionMorphTokenResource IconButtonGlyphSize}"
                                       Foreground="{TemplateBinding Foreground}"
-                                      IsVisible="{TemplateBinding Glyph, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                      HorizontalAlignment="Center"
                                       VerticalAlignment="Center" />
-                        <TextBlock Text="{TemplateBinding Label}"
-                                   Foreground="{TemplateBinding Foreground}"
-                                   VerticalAlignment="Center" />
-                    </StackPanel>
-                </Border>
+                    </Border>
+                </Panel>
             </ControlTemplate>
         </Setter>
-        <Style Selector="^:pointerover">
-            <Setter Property="Background" Value="{arc:ActionMorphTokenResource HoverTint}" />
-        </Style>
-        <Style Selector="^:pressed">
-            <Setter Property="Opacity" Value="0.82" />
+        <Style Selector="^:hover">
+            <Setter Property="Background" Value="{arc:ActionMorphTokenResource IconButtonHoverFill}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         </Style>
         <Style Selector="^:motion-full">
             <Setter Property="Transitions">
                 <Transitions>
                     <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The quick-action menu: title row, then the rows over the gliding highlight. -->
+    <ControlTheme x:Key="{x:Type arc:ActionMorphMenu}" TargetType="arc:ActionMorphMenu">
+        <Setter Property="Width" Value="{arc:ActionMorphTokenResource MenuWidth}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="{arc:ActionMorphTokenResource PanelPadding}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ActionMorphMenu">
+                <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                    <StackPanel Spacing="{arc:ActionMorphTokenResource RowGap}">
+                        <Grid Name="PART_Header" Height="{arc:ActionMorphTokenResource HeaderHeight}" ColumnDefinitions="*,Auto">
+                            <TextBlock Text="{TemplateBinding Title}"
+                                       Margin="{arc:ActionMorphTokenResource MenuTitlePadding}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       LineHeight="{arc:ActionMorphTokenResource LabelLineHeight}"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center" />
+                            <arc:ActionMorphIconButton Name="PART_Close"
+                                                       Grid.Column="1"
+                                                       Glyph="{x:Static arc:ArcIcons.X}"
+                                                       AutomationProperties.Name="{TemplateBinding CloseLabel}" />
+                        </Grid>
+                        <Panel Name="PART_Rows" Background="Transparent">
+                            <arc:GlidingIndicator Name="PART_Highlight"
+                                                  Fill="{arc:ActionMorphTokenResource HighlightFill}"
+                                                  CornerRadius="{arc:ArcDesignTokenResource RadiusControl}" />
+                            <StackPanel Name="PART_Items" Spacing="{arc:ActionMorphTokenResource RowGap}" />
+                        </Panel>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- A menu row: glyph box, name over description, key cap. The highlight behind it marks the active row. -->
+    <ControlTheme x:Key="{x:Type arc:ActionMorphMenuItem}" TargetType="arc:ActionMorphMenuItem">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="{arc:ActionMorphTokenResource RowPadding}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ActionMorphMenuItem">
+                <Border Background="{TemplateBinding Background}"
+                        CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
+                        Padding="{TemplateBinding Padding}">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="{arc:ActionMorphTokenResource RowSpacing}">
+                        <Panel Width="{arc:ActionMorphTokenResource RowGlyphBox}"
+                               Height="{arc:ActionMorphTokenResource RowGlyphBox}"
+                               VerticalAlignment="Center">
+                            <arc:ArcGlyph Name="PART_Glyph"
+                                          Data="{TemplateBinding Glyph}"
+                                          Size="{arc:ActionMorphTokenResource RowGlyphSize}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                        </Panel>
+                        <StackPanel Grid.Column="1" Spacing="{arc:ActionMorphTokenResource RowTextGap}" VerticalAlignment="Center">
+                            <TextBlock Text="{TemplateBinding Label}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       LineHeight="{arc:ActionMorphTokenResource LabelLineHeight}"
+                                       TextTrimming="CharacterEllipsis" />
+                            <TextBlock Text="{TemplateBinding Description}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       LineHeight="{arc:ActionMorphTokenResource SmallLineHeight}"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                       TextTrimming="CharacterEllipsis"
+                                       IsVisible="{TemplateBinding Description, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                        </StackPanel>
+                        <Border Grid.Column="2"
+                                MinWidth="{arc:ActionMorphTokenResource KeySize}"
+                                Height="{arc:ActionMorphTokenResource KeySize}"
+                                Padding="{arc:ActionMorphTokenResource KeyPadding}"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusStep7}"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                VerticalAlignment="Center"
+                                IsVisible="{TemplateBinding Shortcut, Converter={x:Static ObjectConverters.IsNotNull}}">
+                            <TextBlock Text="{TemplateBinding Shortcut}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" />
+                        </Border>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:active /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A composer: title row, field, optional radio group, then the message and the submit button. -->
+    <ControlTheme x:Key="{x:Type arc:ActionMorphComposer}" TargetType="arc:ActionMorphComposer">
+        <Setter Property="Width" Value="{arc:ActionMorphTokenResource ComposerWidth}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="{arc:ActionMorphTokenResource PanelPadding}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ActionMorphComposer">
+                <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                    <StackPanel Spacing="{arc:ActionMorphTokenResource ComposerSpacing}">
+                        <Grid Name="PART_Header"
+                              Height="{arc:ActionMorphTokenResource HeaderHeight}"
+                              ColumnDefinitions="Auto,*,Auto"
+                              ColumnSpacing="{arc:ActionMorphTokenResource ComposerTitleGap}">
+                            <arc:ActionMorphIconButton Name="PART_Back"
+                                                       Glyph="{x:Static arc:ArcIcons.ArrowLeft}"
+                                                       AutomationProperties.Name="{TemplateBinding BackLabel}" />
+                            <TextBlock Grid.Column="1"
+                                       Text="{TemplateBinding Title}"
+                                       Margin="{arc:ActionMorphTokenResource ComposerTitlePadding}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       LineHeight="{arc:ActionMorphTokenResource LabelLineHeight}"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center" />
+                            <arc:ActionMorphIconButton Name="PART_Close"
+                                                       Grid.Column="2"
+                                                       Glyph="{x:Static arc:ArcIcons.X}"
+                                                       AutomationProperties.Name="{TemplateBinding CloseLabel}" />
+                        </Grid>
+                        <Panel Name="PART_FieldHost">
+                            <arc:ActionMorphField Name="PART_Field"
+                                                  PlaceholderText="{TemplateBinding Placeholder}"
+                                                  AcceptsReturn="{TemplateBinding IsMultiline}" />
+                        </Panel>
+                        <StackPanel Name="PART_ChoicesBlock"
+                                    Spacing="{arc:ActionMorphTokenResource ChoicesLabelGap}"
+                                    Margin="{arc:ActionMorphTokenResource ChoicesInset}">
+                            <TextBlock Text="{TemplateBinding ChoicesLabel}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       LineHeight="{arc:ActionMorphTokenResource SmallLineHeight}"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                       IsVisible="{TemplateBinding ChoicesLabel, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                            <arc:ActionMorphChoices Name="PART_Choices" />
+                        </StackPanel>
+                        <Grid Height="{arc:ActionMorphTokenResource FooterHeight}"
+                              Margin="{arc:ActionMorphTokenResource FooterPadding}"
+                              ColumnDefinitions="*,Auto"
+                              ColumnSpacing="{arc:ActionMorphTokenResource ComposerSpacing}">
+                            <Grid Name="PART_Message"
+                                  ColumnDefinitions="Auto,*"
+                                  ColumnSpacing="{arc:ActionMorphTokenResource SmallGlyphGap}"
+                                  VerticalAlignment="Center"
+                                  Opacity="0">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.CircleAlert}"
+                                              Size="{arc:ActionMorphTokenResource SmallGlyphSize}"
+                                              Foreground="{arc:ArcDesignTokenResource Danger}"
+                                              VerticalAlignment="Center" />
+                                <TextBlock Name="PART_MessageText"
+                                           Grid.Column="1"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           LineHeight="{arc:ActionMorphTokenResource SmallLineHeight}"
+                                           Foreground="{arc:ArcDesignTokenResource Danger}"
+                                           TextTrimming="CharacterEllipsis"
+                                           VerticalAlignment="Center" />
+                            </Grid>
+                            <arc:ActionMorphSubmit Name="PART_Submit"
+                                                   Grid.Column="1"
+                                                   Label="{TemplateBinding SubmitLabel}"
+                                                   BusyLabel="{TemplateBinding BusyLabel}" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:not(:has-choices) /template/ StackPanel#PART_ChoicesBlock">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The composer's field: a soft fill with a hairline edge that darkens on focus and turns red when invalid. -->
+    <ControlTheme x:Key="{x:Type arc:ActionMorphField}" TargetType="arc:ActionMorphField">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="{arc:ActionMorphTokenResource FieldFill}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+        <Setter Property="Padding" Value="{arc:ActionMorphTokenResource FieldPadding}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="LineHeight" Value="{arc:ActionMorphTokenResource FieldLineHeight}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="SelectionForegroundBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="PlaceholderForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="IBeam" />
+        <Setter Property="TextWrapping" Value="NoWrap" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ActionMorphField">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                    <ScrollViewer Name="PART_ScrollViewer"
+                                  HorizontalScrollBarVisibility="Hidden"
+                                  VerticalScrollBarVisibility="Disabled">
+                        <Panel Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                            <TextBlock Name="PART_Placeholder"
+                                       Foreground="{TemplateBinding PlaceholderForeground}"
+                                       Text="{TemplateBinding PlaceholderText}"
+                                       LineHeight="{TemplateBinding LineHeight}"
+                                       TextTrimming="CharacterEllipsis">
+                                <TextBlock.IsVisible>
+                                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                        <Binding ElementName="PART_TextPresenter" Path="PreeditText" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Text" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                                    </MultiBinding>
+                                </TextBlock.IsVisible>
+                            </TextBlock>
+                            <TextPresenter Name="PART_TextPresenter"
+                                           Text="{TemplateBinding Text, Mode=TwoWay}"
+                                           CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                           CaretIndex="{TemplateBinding CaretIndex}"
+                                           SelectionStart="{TemplateBinding SelectionStart}"
+                                           SelectionEnd="{TemplateBinding SelectionEnd}"
+                                           TextWrapping="{TemplateBinding TextWrapping}"
+                                           LineHeight="{TemplateBinding LineHeight}"
+                                           SelectionBrush="{TemplateBinding SelectionBrush}"
+                                           SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                           CaretBrush="{TemplateBinding CaretBrush}" />
+                        </Panel>
+                    </ScrollViewer>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:focus">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:invalid">
+            <Setter Property="BorderBrush" Value="{arc:ActionMorphTokenResource FieldInvalidStroke}" />
+        </Style>
+        <Style Selector="^:multiline">
+            <Setter Property="Height" Value="{arc:ActionMorphTokenResource MultilineHeight}" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="VerticalContentAlignment" Value="Top" />
+        </Style>
+        <Style Selector="^:multiline /template/ ScrollViewer#PART_ScrollViewer">
+            <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
+            <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The radio group: equal options on a soft track, the picked one on a raised block that glides. -->
+    <ControlTheme x:Key="{x:Type arc:ActionMorphChoices}" TargetType="arc:ActionMorphChoices">
+        <Setter Property="Height" Value="{arc:ActionMorphTokenResource ChoicesHeight}" />
+        <Setter Property="Padding" Value="{arc:ActionMorphTokenResource ChoicesPadding}" />
+        <Setter Property="Background" Value="{arc:ActionMorphTokenResource ChoicesTrackFill}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ActionMorphChoices">
+                <Border Background="{TemplateBinding Background}"
+                        CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                        Padding="{TemplateBinding Padding}">
+                    <Panel>
+                        <arc:GlidingIndicator Name="PART_Thumb"
+                                              Fill="{arc:ArcDesignTokenResource SurfaceRaised}"
+                                              Stroke="{arc:ArcDesignTokenResource Border}"
+                                              StrokeThickness="1"
+                                              BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
+                                              CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" />
+                        <UniformGrid Name="PART_Items" Rows="1" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- One option: its text, muted until picked. -->
+    <ControlTheme x:Key="{x:Type arc:ActionMorphChoice}" TargetType="arc:ActionMorphChoice">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Padding" Value="{arc:ActionMorphTokenResource ChoicePadding}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ActionMorphChoice">
+                <Panel Name="PART_Root">
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Padding="{TemplateBinding Padding}">
+                        <TextBlock Text="{TemplateBinding Content}"
+                                   Foreground="{TemplateBinding Foreground}"
+                                   LineHeight="{arc:ActionMorphTokenResource SmallLineHeight}"
+                                   TextTrimming="CharacterEllipsis"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:checked">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The submit button: the label with an Enter glyph; while the submit runs, the label drops 4 px and blurs away as a
+        spinner and the busy text rise into its place.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ActionMorphSubmit}" TargetType="arc:ActionMorphSubmit">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Height" Value="{arc:ActionMorphTokenResource FooterHeight}" />
+        <Setter Property="Padding" Value="{arc:ActionMorphTokenResource SubmitPadding}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="RenderTransform" Value="scale(1)" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ActionMorphSubmit">
+                <Panel Name="PART_Root">
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Padding="{TemplateBinding Padding}">
+                        <arc:ActionMorphSwapPanel VerticalAlignment="Center">
+                            <StackPanel Name="PART_Label" Orientation="Horizontal" Spacing="{arc:ActionMorphTokenResource SmallGlyphGap}">
+                                <TextBlock Text="{TemplateBinding Label}"
+                                           Foreground="{TemplateBinding Foreground}"
+                                           LineHeight="{arc:ActionMorphTokenResource LabelLineHeight}"
+                                           VerticalAlignment="Center" />
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.CornerDownLeft}"
+                                              Size="{arc:ActionMorphTokenResource SmallGlyphSize}"
+                                              Foreground="{TemplateBinding Foreground}"
+                                              VerticalAlignment="Center" />
+                            </StackPanel>
+                            <StackPanel Name="PART_Busy" Orientation="Horizontal" Spacing="{arc:ActionMorphTokenResource SmallGlyphGap}">
+                                <arc:ArcSpinner Width="{arc:ActionMorphTokenResource SmallGlyphSize}"
+                                                Height="{arc:ActionMorphTokenResource SmallGlyphSize}"
+                                                Foreground="{TemplateBinding Foreground}"
+                                                IsVisible="{TemplateBinding IsBusy}"
+                                                VerticalAlignment="Center" />
+                                <TextBlock Text="{TemplateBinding BusyLabel}"
+                                           Foreground="{TemplateBinding Foreground}"
+                                           LineHeight="{arc:ActionMorphTokenResource LabelLineHeight}"
+                                           VerticalAlignment="Center" />
+                            </StackPanel>
+                        </arc:ActionMorphSwapPanel>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:hover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Label">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="RenderTransform" Value="none" />
+            <Setter Property="Effect" Value="{x:Null}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Busy">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="RenderTransform" Value="translateY(4px)" />
+            <Setter Property="Effect">
+                <BlurEffect Radius="2" />
+            </Setter>
+        </Style>
+        <Style Selector="^:busy /template/ StackPanel#PART_Label">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="RenderTransform" Value="translateY(4px)" />
+            <Setter Property="Effect">
+                <BlurEffect Radius="2" />
+            </Setter>
+        </Style>
+        <Style Selector="^:busy /template/ StackPanel#PART_Busy">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="RenderTransform" Value="none" />
+            <Setter Property="Effect" Value="{x:Null}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" VisualDuration="0.12" Bounce="0.1" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.97)" />
+        </Style>
+        <!-- Arc Action morph (design reference): opacity and blur 160 ms, the 4 px drop on the 580 ms CSS spring. -->
+        <Style Selector="^:motion-full /template/ StackPanel">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" />
+                    <arc:ArcEffectTransition Property="Effect" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ StackPanel">
+            <Setter Property="Transitions">
+                <Transitions>
                     <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
                 </Transitions>
             </Setter>

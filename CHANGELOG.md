@@ -85,6 +85,13 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
   a drag past an edge of the framing area resists and springs back (the saved crop never includes the stretch). Defaults
   are unchanged. Docs add the sample-photos and failures examples.
 
+- **`ToolDock`** (`TKCode.Arc.Special`, Docks and tabs): a floating dock of tools or modes for canvas-style editors.
+  The chosen tool sits on a tint that springs over from the last one, a name and key-hint label glides over the tool under the mouse or keyboard focus
+  (never for touch), a group (`ToolDockItem.Items`) grows a tray of its members out of the dock inside one hairline
+  outline, badges roll their count and leave at 0, and `CanReorder` lets people move tools by drag or Alt+Left/Right
+  (`Reordered`). `SelectedValue` is two-way and `ItemChosen` reports every pick; the dock is one tab stop with the
+  toolbar keyboard model.
+
 ### Changed
 
 - **`TilePanel.IsAutoFill` also fills holes from the side and from below** ([#112](https://github.com/AIDotNet/TKCode.Arc/issues/112)):
@@ -94,6 +101,58 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
   `FileDropzone` in the gallery): the namespace, the class and its API are unchanged, so code compiles as before, and
   `UseArcControls()` now registers it (`UseArcSpecial()` no longer does). Its docs page moved from Special › Inputs to
   Components › Editors.
+- **Special › Navigation is now "Docks and tabs"** in the gallery, listed as Share sheet, Action morph, Morph nav,
+  Tool dock, Liquid tab bar and Orbit menu, and `MagnifyDock` moved there from Playful. Source folders, namespaces and
+  slugs are unchanged.
+- **Breaking: `OrbitMenu` is a press-drag-release menu.** Pressing the trigger opens the arc; dragging toward an action
+  and letting go fires it (heading toward an action is enough once the pointer is a little way out from the button),
+  and a tap keeps the arc open for hover and click. A lens glides under the target, actions close to the pointer are
+  drawn to it, the button's mark turns from three dots into a cross and, once an action runs, into a tick, and a pill
+  names the target, says `CancelText` when the pointer is away from every action, then shows the action's
+  `DoneText` for 1.4 s, announced when `Announces` is on. New: `Direction`, `Spread`, `CancelText`, `Announces`,
+  `OrbitMenuAction.DoneText` and `Tone` (`OrbitMenuActionTone.Danger`), `OrbitMenuActionEventArgs.Item`. Migration:
+  `StartAngle` / `SweepAngle` are replaced by `Direction` (the middle of the arc) and `Spread` (its width; the old
+  default is `Direction="-90" Spread="180"`); `Glyph`, `ClosesOnInvoke` and `OrbitMenuAction.FocusRingBrush` are
+  removed (the arc always folds and confirms, handle `ActionInvoked`; keyboard focus shows as the lens); `Radius`
+  defaults to 104; the trigger is 56 px and actions 46 px; actions no longer have tooltips.
+- **Breaking: `LiquidTabBar` selects with a lens.** The selection is a pill that travels to the chosen tab, taking its
+  width on the way without stretching, and draws what it covers in reverse colors, so outline glyphs turn solid
+  (`ActiveGlyph` to draw another); the old tab's label disappears right away and the new one appears when the lens gets
+  there; the lens tips toward a hovered tab and can be dragged or flicked. New: `Labels` (`Active`, `Always`, `None`), `LensBackground`, `LensForeground`, and on
+  `LiquidTabBarItem` `Value`, `Label`, `Glyph`, `ActiveGlyph`, `Badge` (its digits roll when it changes) and `BadgeLabel`. Migration:
+  `Viscosity` is removed; give each item a `Glyph` and a `Label` (items without a glyph are text tabs);
+  `SelectedValue` reports the item's `Value`; the mouse selects on release; Up and Down no longer move the selection;
+  set `LensBackground` / `LensForeground` to `Accent` / `AccentForeground` to keep the accent lens; `ItemsPanel`,
+  `Padding` and `CornerRadius` are no longer used.
+- **Breaking: `ShareSheet` grows from its own button into a sharing panel.** One shape springs from the button into
+  a panel with the item's title, its link and Copy, an access-level list, channel buttons with pending, done and failed
+  states (`ChannelHandler`), and recent people whose avatars fly into a "Send to" row; Send runs `SendHandler`, shows an
+  error and leaves the panel as it was if that fails, and on success shrinks to a confirmation card with Undo. Up to 520 px wide the panel
+  rises from the bottom over a dimmed page and drags down to close (`SheetOnPhones`), and `Align` picks the edge that stays put. Migration:
+  the trigger is no longer `Content` (set `Label` and `Glyph`); `ShowAt`, `Presentation`, `Subtitle`, `Actions`,
+  `ActionInvoked`, `Shared`, `ClosesOnShare` and the header and copy label properties are removed (use `Title`,
+  `Labels`, `Channels` with `ChannelHandler`, and `SendHandler` or `Sent`); `People` holds `ShareSheetPerson`;
+  `LinkCopied` passes `ShareSheetLinkCopiedEventArgs`.
+- **Breaking: `ActionMorph` goes from a button to a menu, a form and a check.** The 56 px button grows into a
+  short menu of things to create (rows with a description and a letter shortcut, a gliding highlight), then into the picked action's
+  form (one-line or multiline field, optional choices, submit with Enter or Ctrl/⌘+Enter), and folds back into the
+  button with a drawn check; the plus returns after `ResetAfter` (1.6 s). `SubmitHandler` (or `Submitted`) saves, an
+  empty submit shakes, a failed one keeps the draft with an error, each action remembers its unsent text, and `Corner` picks the
+  way the surface grows. Migration: describe each panel as an `ActionMorphAction` in `Actions` (`Title`,
+  `Placeholder`, `IsMultiline`, `Choices`, `SubmitLabel`, `SuccessLabel`, `EmptyHint`) instead of content; `Glyph`,
+  `Variant`, `CollapsesOnOutsidePress`, `ShowsCloseButton` and `ActionMorph.Closes` are removed; the control takes
+  56 × 56 in the layout and draws its surface over its neighbours, so place it last in a `Panel` at a corner.
+- **Breaking: `MorphNav` is a site navigation bar.** One surface holds the brand, the items with a gliding highlight,
+  search and one primary action; an item with links grows the bar into its panel (links in one or two columns, an
+  optional feature such as `MorphNavStory` and a footer), a neighbour's panel slides in from its side, hover opens after
+  60 ms and closes after 180 ms, search opens from the bar itself (suggestions on an empty query, at most six ranked
+  results), `IsCompact` tightens the bar, and when the nav is narrower than `CollapseBelow` (720 px) the items collapse
+  into a single Menu item. Migration:
+  `MorphNavSection` is `MorphNavItem` (`Header` → `Label`, plus a `Value`); `MorphNavLink.Text` / `Glyph` / `Tag` are
+  `Label` / `Icon` / `Href`; `Title` / `Mark` are `BrandName` / `BrandMark`; `CurrentLink` is `Current` (an item's
+  `Value`); `LinkInvoked` is `Navigate` (`MorphNavNavigateEventArgs`); `IsOpen`, `Open()`, `Close()` and `Toggle()` are
+  `Open(value)`, `ClosePanel()` and `OpenValue`; the nav's `Footer` moves to `MorphNavItem.Footer`; `PanelWidth` and
+  `CloseLabel` are removed.
 
 ### Fixed
 
@@ -104,6 +163,8 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 - **`InlineEdit` multiline reserve** ([#110](https://github.com/AIDotNet/TKCode.Arc/issues/110)): a multiline field
   now keeps 38 px for its stacked save and cancel buttons, as documented, instead of 66 px, so its text wraps 28 px
   later. The template's own padding had hidden the multiline style.
+- **`OrbitMenu` first opening**: the first time the menu opened, the actions showed at their places on the arc for a
+  moment, dropped back into the trigger and fanned out again; they now leave the trigger once.
 
 ## 1.1.0-preview.4 - 2026-11-11
 

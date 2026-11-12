@@ -137,48 +137,72 @@
         <target>操作成功后显示的标签（默认为“已保存”）。</target>
       </trans-unit>
       <trans-unit id="ActionMorph">
-        <source>One button that grows into a small inline panel for its action, such as a field to name something or a few options, and shrinks back into the button when the action is done. The surface keeps going while it changes size and shape, so the panel reads as the same object as the button. `Content` is the panel's content.</source>
-        <target>一个按钮，展开后变成一个内嵌的小面板来完成它的操作（例如输入名称的字段或几个选项），操作完成后再收回成按钮。表面在改变大小和形状的过程中保持连续，因此面板看起来和按钮是同一个对象。`Content` 是面板的内容。</target>
+        <source>A corner button for quick entries: it expands into a short list of actions, a chosen action reshapes the same surface into a small form, and a successful submit shrinks it back to the button, which then shows a check mark. Width, height and corner radius follow a spring from face to face; a deeper face enters from the right, Escape climbs one level, and every action holds on to its draft for as long as the control exists.</source>
+        <target>一个用于快速新建的角落按钮：它展开成一份简短的动作列表，所选动作把同一块表面变成小表单，提交成功后缩回按钮，按钮随即显示对勾。宽、高和圆角在各个面之间跟随弹簧变化；更深的面从右侧进入，Escape 向上退一层，每个动作在控件存在期间一直保留自己的草稿。</target>
+      </trans-unit>
+      <trans-unit id="ActionMorph.BackLabel">
+        <source>Accessible name of a form's back button.</source>
+        <target>表单返回按钮的无障碍名称。</target>
+      </trans-unit>
+      <trans-unit id="ActionMorph.BusyLabel">
+        <source>The text beside the spinner while a submission is saved.</source>
+        <target>保存提交内容时显示在转圈旁边的文字。</target>
       </trans-unit>
       <trans-unit id="ActionMorph.CloseLabel">
-        <source>Accessible name and tooltip of the close button.</source>
-        <target>关闭按钮的无障碍名称和提示。</target>
-      </trans-unit>
-      <trans-unit id="ActionMorph.Closes">
-        <source>Set on a button inside the panel: after its click the panel folds back (a Save or Create button, or an option that is applied as soon as it is picked).</source>
-        <target>设置在面板内的按钮上：点击后面板收回（如“保存”或“创建”按钮，或选中即生效的选项）。</target>
+        <source>Accessible name of the close buttons.</source>
+        <target>关闭按钮的无障碍名称。</target>
       </trans-unit>
       <trans-unit id="ActionMorph.Collapsed">
-        <source>Raised when the panel folds back into the button. Bubbles.</source>
-        <target>面板收回成按钮时触发。会冒泡。</target>
+        <source>Raised when the surface folds back into the button. Bubbles.</source>
+        <target>表面收回成按钮时触发。会冒泡。</target>
       </trans-unit>
-      <trans-unit id="ActionMorph.CollapsesOnOutsidePress">
-        <source>Whether a press outside the morph folds the panel back (default true).</source>
-        <target>在组件外按下时，面板是否收回（默认 true）。</target>
+      <trans-unit id="ActionMorph.Corner">
+        <source>The bottom corner that holds the button; the menu and forms open upward and toward the other side.</source>
+        <target>按钮所在的下方角落；菜单和表单向上、并朝另一侧展开。</target>
+      </trans-unit>
+      <trans-unit id="ActionMorph.CurrentAction">
+        <source>The action whose form is open, or null.</source>
+        <target>当前打开表单的动作，没有时为 null。</target>
+      </trans-unit>
+      <trans-unit id="ActionMorph.EmptyHint">
+        <source>Shown under an empty field on submit, for actions without their own `EmptyHint`.</source>
+        <target>提交空输入框时显示在其下方，用于没有自己 `EmptyHint` 的动作。</target>
+      </trans-unit>
+      <trans-unit id="ActionMorph.ErrorMessage">
+        <source>Shown under the field when `SubmitHandler` throws.</source>
+        <target>`SubmitHandler` 抛出异常时显示在输入框下方。</target>
       </trans-unit>
       <trans-unit id="ActionMorph.Expanded">
-        <source>Raised when the panel opens. Bubbles.</source>
-        <target>面板打开时触发。会冒泡。</target>
-      </trans-unit>
-      <trans-unit id="ActionMorph.Glyph">
-        <source>A 24 × 24 stroked glyph before the label; null shows the label alone.</source>
-        <target>标签前的 24 × 24 描边图标；为 null 时只显示标签。</target>
+        <source>Raised when the menu opens from the button. Bubbles.</source>
+        <target>菜单从按钮展开时触发。会冒泡。</target>
       </trans-unit>
       <trans-unit id="ActionMorph.IsExpanded">
-        <source>Whether the panel is open (two-way).</source>
-        <target>面板是否打开（双向）。</target>
+        <source>Whether the menu or a form is open (two-way). Setting it opens the menu or folds back into the button.</source>
+        <target>菜单或表单是否打开（双向）。设置它会打开菜单或收回成按钮。</target>
+      </trans-unit>
+      <trans-unit id="ActionMorph.IsSubmitting">
+        <source>Whether `SubmitHandler` is running.</source>
+        <target>`SubmitHandler` 是否正在运行。</target>
       </trans-unit>
       <trans-unit id="ActionMorph.Label">
-        <source>The button's label, also the accessible name of the button and of the open panel.</source>
-        <target>按钮的标签，同时也是按钮和打开后面板的无障碍名称。</target>
+        <source>The button's accessible name and the menu's title.</source>
+        <target>按钮的无障碍名称，也是菜单的标题。</target>
       </trans-unit>
-      <trans-unit id="ActionMorph.ShowsCloseButton">
-        <source>Whether the open panel shows a close button at its end (default true).</source>
-        <target>打开的面板是否在末端显示关闭按钮（默认 true）。</target>
+      <trans-unit id="ActionMorph.ResetAfter">
+        <source>How long the check stays on the button after a successful submit before the plus returns.</source>
+        <target>提交成功后对勾在按钮上停留多久，之后加号回来。</target>
       </trans-unit>
-      <trans-unit id="ActionMorph.Variant">
-        <source>The look of the button face.</source>
-        <target>按钮表面的外观。</target>
+      <trans-unit id="ActionMorph.SubmitHandler">
+        <source>Saves a submission (for example to your server). While its task runs the form shows a spinner; when it throws, the form stays up, keeps the draft and shows `ErrorMessage`. Going back or closing cancels its token. Null accepts every submission at once.</source>
+        <target>保存一次提交（例如发送到你的服务器）。它的任务运行期间表单显示转圈；它抛出异常时，表单保持打开，保留草稿并显示 `ErrorMessage`。返回或关闭会取消它的令牌。为 null 时每次提交都会立即被接受。</target>
+      </trans-unit>
+      <trans-unit id="ActionMorph.Submitted">
+        <source>Raised after a submission was accepted (after `SubmitHandler` finished). Bubbles.</source>
+        <target>提交被接受后（`SubmitHandler` 完成后）触发。会冒泡。</target>
+      </trans-unit>
+      <trans-unit id="ActionMorph.View">
+        <source>What the surface shows.</source>
+        <target>表面当前显示的内容。</target>
       </trans-unit>
       <trans-unit id="ActionSwap">
         <source>A compact action that morphs through a small set of related states (idle, working, done, and back) and keeps its place and intent. Pressing it moves to the next state, wrapping around. Width, padding, tone and icon move together on springs (P5); only the changed letters of the label rise in out of a soft blur while the rest glide (P4); icons trade places through a blur and a success tick wipes in (P15). An action that returns a task shows a working phase (`PendingLabel`, or a round spinner without one) for at least 450ms; a fault shows `FailureLabel` for 1.8s. Every change can be interrupted mid-flight. Pending keeps keyboard focus: activation is swallowed instead of disabling the button.</source>
@@ -4980,6 +5004,14 @@
         <source>An avatar field: a circle that shows the person's picture, with a button to pick one and a drop target for a file. A new picture opens a framing step where it is moved and zoomed under a circle (drag, wheel, pinch, the slider or the keyboard), then Save cuts a square of `OutputSize` pixels from it. With an `UploadHandler` the field shows the new picture at once with a progress ring until the upload ends, offers Cancel while it runs and Retry when it fails; without one, the picture is applied at once and `Cropped` hands it to the app.</source>
         <target>头像字段：一个显示头像的圆形，带有选择照片的按钮，也可以拖入文件。新照片会进入取景步骤，在圆形下移动和缩放（拖动、滚轮、双指缩放、滑块或键盘），然后保存时从中剪出 `OutputSize` 像素的正方形。设置了 `UploadHandler` 时，字段立即显示新头像，并显示进度圆环直到上传结束，进行中可以取消，失败后可以重试；没有处理程序时，头像立即应用，并通过 `Cropped` 交给应用。</target>
       </trans-unit>
+      <trans-unit id="AvatarUpload.Accept">
+        <source>The accepted file types, as in an HTML file input: MIME types (`image/png`), `image/*` or extensions (`.png`), separated by commas. Null (the default) accepts PNG, JPEG, WebP, GIF and BMP. A file is identified by its first bytes before its name, so a PDF renamed to `.png` is refused, and the picker lists only these types. While `Description` is not set, the line under the title lists the accepted types and the size limit.</source>
+        <target>接受的文件类型，写法与 HTML 文件输入相同：MIME 类型（`image/png`）、`image/*` 或扩展名（`.png`），用逗号分隔。为 null（默认）时接受 PNG、JPEG、WebP、GIF 和 BMP。文件先按开头的字节、再按名字识别，所以改名为 `.png` 的 PDF 会被拒绝，文件选择器也只列出这些类型。没有设置 `Description` 时，标题下方的一行会列出接受的类型和大小限制。</target>
+      </trans-unit>
+      <trans-unit id="AvatarUpload.AllowRemove">
+        <source>Whether the Remove button shows while there is a picture (true by default). `Remove` still works from code.</source>
+        <target>有照片时是否显示“移除”按钮（默认 true）。`Remove` 仍可在代码中调用。</target>
+      </trans-unit>
       <trans-unit id="AvatarUpload.Cropped">
         <source>Raised when a framed picture is saved, before it uploads.</source>
         <target>保存取景后的照片时、上传之前触发。</target>
@@ -4987,6 +5019,10 @@
       <trans-unit id="AvatarUpload.Description">
         <source>The line under the title: the accepted files and the size limit.</source>
         <target>标题下方的一行：可接受的文件和大小限制。</target>
+      </trans-unit>
+      <trans-unit id="AvatarUpload.DisplayName">
+        <source>The person's name: the initials shown in the circle while there is no picture, with a person glyph when it is empty (the first letters of its first two words).</source>
+        <target>此人的姓名：没有照片时圆形里显示它的首字母（取前两个词的首字母）；为空时显示人像图标。</target>
       </trans-unit>
       <trans-unit id="AvatarUpload.ErrorMessage">
         <source>The last problem: a refused file or a failed upload; null when there is none.</source>
@@ -4996,21 +5032,21 @@
         <source>Raised when a file is refused (type, size or unreadable).</source>
         <target>文件被拒绝时触发（类型、大小或无法读取）。</target>
       </trans-unit>
+      <trans-unit id="AvatarUpload.Initials">
+        <source>The initials computed from `DisplayName`.</source>
+        <target>根据 `DisplayName` 计算出的首字母。</target>
+      </trans-unit>
       <trans-unit id="AvatarUpload.IsDragOver">
         <source>True while a file is dragged over the field.</source>
         <target>有文件拖到字段上方时为 true。</target>
       </trans-unit>
+      <trans-unit id="AvatarUpload.JpegQuality">
+        <source>The JPEG quality of the saved picture, 1 to 100 (92 by default).</source>
+        <target>保存的照片的 JPEG 质量，1 到 100（默认 92）。</target>
+      </trans-unit>
       <trans-unit id="AvatarUpload.Label">
         <source>The field's title beside the circle.</source>
         <target>圆形旁边的字段标题。</target>
-      </trans-unit>
-      <trans-unit id="AvatarUpload.Accept">
-        <source>The accepted file types, as in an HTML file input: MIME types (`image/png`), `image/*` or extensions (`.png`), separated by commas. Null (the default) accepts PNG, JPEG, WebP, GIF and BMP. A file is identified by its first bytes before its name, so a PDF renamed to `.png` is refused, and the picker lists only these types. While `Description` is not set, the line under the title lists the accepted types and the size limit.</source>
-        <target>接受的文件类型，写法与 HTML 文件输入相同：MIME 类型（`image/png`）、`image/*` 或扩展名（`.png`），用逗号分隔。为 null（默认）时接受 PNG、JPEG、WebP、GIF 和 BMP。文件先按开头的字节、再按名字识别，所以改名为 `.png` 的 PDF 会被拒绝，文件选择器也只列出这些类型。没有设置 `Description` 时，标题下方的一行会列出接受的类型和大小限制。</target>
-      </trans-unit>
-      <trans-unit id="AvatarUpload.AllowRemove">
-        <source>Whether the Remove button shows while there is a picture (true by default). `Remove` still works from code.</source>
-        <target>有照片时是否显示“移除”按钮（默认 true）。`Remove` 仍可在代码中调用。</target>
       </trans-unit>
       <trans-unit id="AvatarUpload.Labels">
         <source>Every word the field shows or says (English by default).</source>
@@ -5020,29 +5056,21 @@
         <source>The largest file accepted, in bytes (10 MB by default); null for no limit.</source>
         <target>可接受的最大文件，以字节计（默认 10 MB）；null 表示不限制。</target>
       </trans-unit>
-      <trans-unit id="AvatarUpload.DisplayName">
-        <source>The person's name: the initials shown in the circle while there is no picture, with a person glyph when it is empty (the first letters of its first two words).</source>
-        <target>此人的姓名：没有照片时圆形里显示它的首字母（取前两个词的首字母）；为空时显示人像图标。</target>
-      </trans-unit>
       <trans-unit id="AvatarUpload.MaxZoom">
         <source>How far the framing step zooms in, relative to the zoom where the picture just covers the circle (4 by default).</source>
         <target>取景步骤最多放大多少，相对于照片刚好盖满圆形时的缩放（默认 4）。</target>
+      </trans-unit>
+      <trans-unit id="AvatarUpload.OutputFormat">
+        <source>The format of the saved picture (`Bytes`): `Auto` (the default) saves a PNG, and a picture whose type is unknown (one handed to `Edit` without a file name), as PNG, and any other picture as JPEG.</source>
+        <target>保存的照片的格式（`Bytes`）：`Auto`（默认）把 PNG 和类型未知的照片（调用 `Edit` 时没有文件名）保存为 PNG，其他照片保存为 JPEG。</target>
       </trans-unit>
       <trans-unit id="AvatarUpload.OutputSize">
         <source>The side of the saved square picture in pixels (512 by default).</source>
         <target>保存的正方形照片的边长，以像素计（默认 512）。</target>
       </trans-unit>
-      <trans-unit id="AvatarUpload.Initials">
-        <source>The initials computed from `DisplayName`.</source>
-        <target>根据 `DisplayName` 计算出的首字母。</target>
-      </trans-unit>
       <trans-unit id="AvatarUpload.Progress">
         <source>The upload's progress from 0 to 1.</source>
         <target>上传进度，从 0 到 1。</target>
-      </trans-unit>
-      <trans-unit id="AvatarUpload.JpegQuality">
-        <source>The JPEG quality of the saved picture, 1 to 100 (92 by default).</source>
-        <target>保存的照片的 JPEG 质量，1 到 100（默认 92）。</target>
       </trans-unit>
       <trans-unit id="AvatarUpload.Removed">
         <source>Raised when the picture is removed.</source>
@@ -5059,10 +5087,6 @@
       <trans-unit id="AvatarUpload.State">
         <source>What the field is doing.</source>
         <target>字段正在做什么。</target>
-      </trans-unit>
-      <trans-unit id="AvatarUpload.OutputFormat">
-        <source>The format of the saved picture (`Bytes`): `Auto` (the default) saves a PNG, and a picture whose type is unknown (one handed to `Edit` without a file name), as PNG, and any other picture as JPEG.</source>
-        <target>保存的照片的格式（`Bytes`）：`Auto`（默认）把 PNG 和类型未知的照片（调用 `Edit` 时没有文件名）保存为 PNG，其他照片保存为 JPEG。</target>
       </trans-unit>
       <trans-unit id="AvatarUpload.StatusText">
         <source>The status line under the title (the description, the progress, or what went wrong).</source>
@@ -18877,24 +18901,52 @@
         <target>`SendRequested` 的参数。把 `Pending` 设为发送消息的任务：输入框保持等待直到它完成，然后清空并确认；任务失败时在输入框下方显示其消息。</target>
       </trans-unit>
       <trans-unit id="LiquidTabBar">
-        <source>A row of tabs on a track, with the selection shown as a drop of color under the selected tab. When the selection changes the drop does not slide: its front end reaches for the new tab first, the drop stretches, thins and pinches at its waist, and then its back end catches up and it settles into a round pill again.</source>
-        <target>轨道上的一排标签页，选中状态显示为选中标签页下方的一滴颜色。选择改变时，液滴不是滑动：它的前端先伸向新的标签页，液滴被拉长、变细并在腰部收窄，然后后端跟上，重新稳定成圆形的胶囊。</target>
+        <source>Glyph tabs for a few sections of equal rank, each with a short label. A lens in the foreground color marks the selected tab: it travels to the next tab as one pill, taking that tab's width on the way, and the tab under it is painted again in reverse colors, which fills outline glyphs. Only one label shows at a time, the old one gone before the new one fades in. The lens can be dragged or flicked to another tab, and it tips a little toward whichever tab the mouse rests on.</source>
+        <target>用于几个同级分区的图标标签，每个附带一段简短文字。一枚前景色的透镜标出选中的标签：它作为一块胶囊移向下一个标签，途中变成那个标签的宽度；它下方的标签以反色再画一遍，描边图标因此变成实心。同一时间只显示一段文字，旧文字消失后新文字才淡入。透镜可以拖动或甩到另一个标签，鼠标停在某个标签上时，它会朝那边略微偏过去。</target>
       </trans-unit>
-      <trans-unit id="LiquidTabBar.Viscosity">
-        <source>How much the back of the drop lags behind its front while it moves, from 0 (the drop barely stretches) to 1 (a long, slow stretch). Default 0.5.</source>
-        <target>液滴移动时后端落后于前端的程度，从 0（液滴几乎不拉伸）到 1（长而缓慢的拉伸）。默认 0.5。</target>
+      <trans-unit id="LiquidTabBar.Labels">
+        <source>Where labels appear: on the selected tab only (default), on every tab, or nowhere.</source>
+        <target>文字显示在哪里：只在选中的标签上（默认）、每个标签上，或都不显示。</target>
+      </trans-unit>
+      <trans-unit id="LiquidTabBar.LensBackground">
+        <source>Fill of the lens (and of the badges outside it). Defaults to the foreground color.</source>
+        <target>透镜的填充色（也是透镜之外徽标的底色）。默认为前景色。</target>
+      </trans-unit>
+      <trans-unit id="LiquidTabBar.LensForeground">
+        <source>Color of the glyphs, labels and badges redrawn inside the lens. Defaults to the background color.</source>
+        <target>在透镜里重画的图标、文字和徽标的颜色。默认为背景色。</target>
       </trans-unit>
       <trans-unit id="LiquidTabBarItem">
-        <source>One tab of a `LiquidTabBar`: an optional glyph and its label (`Content`). A disabled tab is skipped by the arrow keys and cannot be selected.</source>
-        <target>`LiquidTabBar` 的一个标签页：可选的图标和它的标签（`Content`）。禁用的标签页会被方向键跳过，也无法被选中。</target>
+        <source>One tab of a `LiquidTabBar`: a glyph, a label shown next to it when the tab is open, and an optional badge count. A tab is 44px wide with its glyph alone and opens to fit its label; a tab without a glyph is a text tab that always shows its label. A disabled tab is skipped by the arrow keys and cannot be selected.</source>
+        <target>`LiquidTabBar` 的一个标签：一个图标、标签展开时显示在旁边的文字，以及可选的徽标计数。只显示图标时标签宽 44px，展开后容纳文字；没有图标的标签是纯文字标签，始终显示文字。禁用的标签会被方向键跳过，也无法被选中。</target>
+      </trans-unit>
+      <trans-unit id="LiquidTabBarItem.ActiveGlyph">
+        <source>The glyph drawn inside the lens, filled in; null fills in `Glyph`.</source>
+        <target>在透镜里填实绘制的图标；为 null 时填实 `Glyph`。</target>
+      </trans-unit>
+      <trans-unit id="LiquidTabBarItem.Badge">
+        <source>A count shown on the glyph's corner; its digits roll when it changes. 0 hides the badge.</source>
+        <target>显示在图标角上的计数；数值变化时数字会滚动。为 0 时隐藏徽标。</target>
+      </trans-unit>
+      <trans-unit id="LiquidTabBarItem.BadgeLabel">
+        <source>What screen readers hear for the badge, after the label (for example "3 unread"); null reads the number.</source>
+        <target>屏幕阅读器在文字之后为徽标读出的内容（例如 "3 unread"）；为 null 时读出数字。</target>
       </trans-unit>
       <trans-unit id="LiquidTabBarItem.Glyph">
-        <source>A 24 × 24 stroked glyph before the label; null shows the label alone.</source>
-        <target>标签前的 24 × 24 描边图标；为 null 时只显示标签。</target>
+        <source>A 24 × 24 stroked glyph (for example `ArcIcons.House`). Null makes a text tab that always shows its label.</source>
+        <target>24 × 24 的描边图标（例如 `ArcIcons.House`）。为 null 时是始终显示文字的纯文字标签。</target>
       </trans-unit>
       <trans-unit id="LiquidTabBarItem.IsSelected">
         <source>Whether this tab is the selected one.</source>
-        <target>此标签页是否为选中项。</target>
+        <target>此标签是否为选中项。</target>
+      </trans-unit>
+      <trans-unit id="LiquidTabBarItem.Label">
+        <source>The tab's name: shown next to the glyph while the tab is open and read by screen readers. When null, the text of `Content` or of `Value` is used.</source>
+        <target>标签的名称：标签展开时显示在图标旁边，并由屏幕阅读器读出。为 null 时使用 `Content` 或 `Value` 的文字。</target>
+      </trans-unit>
+      <trans-unit id="LiquidTabBarItem.Value">
+        <source>The value the bar reports as its `SelectedValue` while this tab is selected.</source>
+        <target>此标签被选中时，标签栏报告为 `SelectedValue` 的值。</target>
       </trans-unit>
       <trans-unit id="ListingProduct">
         <source>A product on a `ProductListing`.</source>
@@ -22237,44 +22289,108 @@
         <target>加载器现在静止显示的结果（Success 或 Error）。</target>
       </trans-unit>
       <trans-unit id="MorphNav">
-        <source>A compact navigation pill that opens into a panel of sections and links, and closes back into the pill. The pill shows your mark, a title and the page you are on; pressing it grows the same surface into the panel on a spring, its corners and shadow following, and choosing a link shrinks it back.</source>
-        <target>一个紧凑的导航胶囊，展开成包含分区和链接的面板，并可收回成胶囊。胶囊显示你的标志、标题和当前所在的页面；按下后，同一个表面用弹簧动画展开成面板，圆角和阴影随之变化，选择一个链接后再收回。</target>
+        <source>The top bar of a website, drawn as a single surface that changes shape: the brand first, then the sections, then search and a single call to action. A highlight follows the open item, else the one under the pointer or keyboard focus; a section with links stretches the surface down into its panel, resized on a spring, and search opens inside the same surface. `IsCompact` slims the bar, and a nav narrower than `CollapseBelow` gathers its sections into one menu.</source>
+        <target>网站的顶部导航栏，画成一块会变形的表面：先是品牌，然后是各个分区，最后是搜索和一个号召性操作。高亮跟随打开的项，否则跟随指针下或键盘焦点所在的项；带链接的分区把表面向下伸展成它的面板，大小由弹簧调整；搜索也在同一块表面里打开。`IsCompact` 让导航栏变得更紧凑，导航比 `CollapseBelow` 窄时把分区收进一个菜单。</target>
       </trans-unit>
-      <trans-unit id="MorphNav.CloseLabel">
-        <source>Accessible name and tooltip of the panel's close button.</source>
-        <target>面板关闭按钮的无障碍名称和提示。</target>
+      <trans-unit id="MorphNav.ActionCommand">
+        <source>Command run when the action is chosen, after `ActionInvoked`.</source>
+        <target>选择主要操作时执行的命令，在 `ActionInvoked` 之后。</target>
       </trans-unit>
-      <trans-unit id="MorphNav.CurrentLink">
-        <source>The page you are on (two-way): its link is marked in the panel and its text shows in the pill.</source>
-        <target>你当前所在的页面（双向）：它的链接在面板中会被标记，它的文字显示在胶囊中。</target>
+      <trans-unit id="MorphNav.ActionIcon">
+        <source>A 24 × 24 stroked glyph before the action's label; null shows the label alone.</source>
+        <target>主要操作标签前的 24 × 24 描边字形；为 null 时只显示标签。</target>
       </trans-unit>
-      <trans-unit id="MorphNav.Footer">
-        <source>Content at the bottom of the open panel, such as a sign-in button; null leaves it out.</source>
-        <target>打开的面板底部的内容，例如登录按钮；为 null 时不显示。</target>
+      <trans-unit id="MorphNav.ActionInvoked">
+        <source>Raised when the primary action is chosen. Bubbles.</source>
+        <target>选择主要操作时触发。会冒泡。</target>
       </trans-unit>
-      <trans-unit id="MorphNav.IsOpen">
-        <source>Whether the panel is open (two-way).</source>
-        <target>面板是否打开（双向）。</target>
+      <trans-unit id="MorphNav.ActionLabel">
+        <source>Text of the call-to-action button at the far end of the bar; null leaves the button out.</source>
+        <target>导航栏最末端号召性操作按钮的文字；为 null 时不显示该按钮。</target>
       </trans-unit>
-      <trans-unit id="MorphNav.LinkInvoked">
-        <source>Raised when a link is chosen, after it becomes `CurrentLink`. Bubbles.</source>
-        <target>选择链接时触发，在它成为 `CurrentLink` 之后。会冒泡。</target>
+      <trans-unit id="MorphNav.BrandHref">
+        <source>Where the brand leads, passed on in `Href`.</source>
+        <target>品牌指向的地址，通过 `Href` 传出。</target>
       </trans-unit>
-      <trans-unit id="MorphNav.Mark">
-        <source>A 24 × 24 stroked mark before the title; null shows the title alone.</source>
-        <target>标题前的 24 × 24 描边标志；为 null 时只显示标题。</target>
+      <trans-unit id="MorphNav.BrandMark">
+        <source>The brand mark before the name (any content, about 26 × 26), such as a logo tile.</source>
+        <target>名称前的品牌标志（任意内容，约 26 × 26），例如标志方块。</target>
+      </trans-unit>
+      <trans-unit id="MorphNav.BrandMarkTemplate">
+        <source>Template for `BrandMark` when it is data rather than a control.</source>
+        <target>`BrandMark` 是数据而不是控件时使用的模板。</target>
+      </trans-unit>
+      <trans-unit id="MorphNav.BrandName">
+        <source>Your brand's name, shown first in the bar and used as the brand button's accessible name.</source>
+        <target>你的品牌名称，显示在导航栏最前面，也用作品牌按钮的无障碍名称。</target>
+      </trans-unit>
+      <trans-unit id="MorphNav.CloseSearchLabel">
+        <source>Accessible name and tooltip of the button that closes search.</source>
+        <target>关闭搜索的按钮的无障碍名称和提示。</target>
+      </trans-unit>
+      <trans-unit id="MorphNav.CollapseBelow">
+        <source>The nav width (px) under which its sections are gathered into a single menu.</source>
+        <target>导航宽度（px）低于此值时，分区被收进一个菜单。</target>
+      </trans-unit>
+      <trans-unit id="MorphNav.Current">
+        <source>The `Value` of the section the visitor is in; that item is drawn in the foreground color and announced as the current page.</source>
+        <target>访问者当前所在分区的 `Value`；该项以前景色绘制，并被读作当前页面。</target>
+      </trans-unit>
+      <trans-unit id="MorphNav.IsCollapsed">
+        <source>Whether the items are folded into one menu (the nav is narrower than `CollapseBelow`).</source>
+        <target>各项是否已折叠成一个菜单（导航比 `CollapseBelow` 窄）。</target>
+      </trans-unit>
+      <trans-unit id="MorphNav.IsCompact">
+        <source>Slims the bar to 46 px (from 56) and tucks the brand name away; typically switched on after the page has scrolled a little.</source>
+        <target>把导航栏从 56 px 压到 46 px，并收起品牌名称；通常在页面滚动一小段之后打开。</target>
+      </trans-unit>
+      <trans-unit id="MorphNav.IsSearchOpen">
+        <source>Whether search is open.</source>
+        <target>搜索是否已打开。</target>
+      </trans-unit>
+      <trans-unit id="MorphNav.Label">
+        <source>Accessible name of the navigation landmark.</source>
+        <target>导航地标的无障碍名称。</target>
       </trans-unit>
       <trans-unit id="MorphNav.MenuLabel">
-        <source>Accessible name of the pill, which opens the panel.</source>
-        <target>胶囊的无障碍名称，按下胶囊会打开面板。</target>
+        <source>Label of the one item a folded bar shows instead of its items.</source>
+        <target>折叠后的导航栏用来代替各项的那一个项的标签。</target>
       </trans-unit>
-      <trans-unit id="MorphNav.PanelWidth">
-        <source>Width of the open panel in px; NaN (default) uses the theme's 600. It never exceeds the window less its gutters.</source>
-        <target>打开的面板的宽度，单位 px；NaN（默认）使用主题的 600。它不会超过窗口宽度减去两侧边距。</target>
+      <trans-unit id="MorphNav.Navigate">
+        <source>Raised whenever something that leads somewhere is chosen: a panel or footer link, a feature card, a search result, an item without a panel, or the brand. Bubbles.</source>
+        <target>选中任何通往某处的东西时触发：面板链接或页脚链接、特色卡片、搜索结果、没有面板的项，或品牌。会冒泡。</target>
       </trans-unit>
-      <trans-unit id="MorphNav.Title">
-        <source>Your product's or site's name, shown in the pill and at the top of the panel.</source>
-        <target>你的产品或网站的名称，显示在胶囊中和面板顶部。</target>
+      <trans-unit id="MorphNav.NoResultsFormat">
+        <source>Heading when nothing matches; `{0}` is the query.</source>
+        <target>没有匹配时的标题；`{0}` 是查询。</target>
+      </trans-unit>
+      <trans-unit id="MorphNav.OpenValue">
+        <source>The `Value` of the item whose panel is open, or null.</source>
+        <target>面板已打开的项的 `Value`，或 null。</target>
+      </trans-unit>
+      <trans-unit id="MorphNav.ResultsFormat">
+        <source>Heading of several results; `{0}` is the count.</source>
+        <target>多个结果时的标题；`{0}` 是数量。</target>
+      </trans-unit>
+      <trans-unit id="MorphNav.SearchLabel">
+        <source>Accessible name of the search button and the search input.</source>
+        <target>搜索按钮和搜索输入框的无障碍名称。</target>
+      </trans-unit>
+      <trans-unit id="MorphNav.SearchPlaceholder">
+        <source>Placeholder of the search input.</source>
+        <target>搜索输入框的占位文字。</target>
+      </trans-unit>
+      <trans-unit id="MorphNav.SearchResultsLabel">
+        <source>Accessible name of the result list.</source>
+        <target>结果列表的无障碍名称。</target>
+      </trans-unit>
+      <trans-unit id="MorphNav.SingleResultLabel">
+        <source>Heading of a single result.</source>
+        <target>只有一个结果时的标题。</target>
+      </trans-unit>
+      <trans-unit id="MorphNav.SuggestedLabel">
+        <source>Heading of the suggestions search shows for an empty query.</source>
+        <target>查询为空时搜索显示的推荐项的标题。</target>
       </trans-unit>
       <trans-unit id="MorphSelect">
         <source>Arc morph select: a select whose trigger is the list. Opening grows the trigger itself into the options surface (width, height and corners spring together, P9), a single highlight glides between options (P7), and the chosen label lifts out of the list and settles into the trigger (P8) while the trigger springs to its new width (P5). Supports groups (`Group`), icons and trailing meta, type-ahead, search for long lists and the full listbox keyboard model. Use it for property pickers and form fields with up to a few hundred options. Keyboard: Enter, Space and the arrows open on the selected option (Home / End open on the first or last); arrows, PageUp / PageDown (8 at a time) and Home / End move; Enter or Space picks; Alt+Up picks and closes; typing jumps (or searches when search is on); Escape closes and returns focus; Tab closes without picking.</source>
@@ -23749,60 +23865,60 @@
         <target>转速倍数。为 1 时内环每 64 秒转一圈，外环反向每 88 秒转一圈。0 让轨道保持静止。</target>
       </trans-unit>
       <trans-unit id="OrbitMenu">
-        <source>A round button that fans its actions out around itself on an arc. The actions leave the trigger one after another and spring to their places; the trigger's plus turns into a close mark. Arrow keys walk around the ring, Enter or Space runs the focused action, and Escape folds the ring back into the trigger.</source>
-        <target>一个圆形按钮，把它的操作沿弧线向四周展开。这些操作依次离开触发按钮，并用弹簧动画到达各自的位置；触发按钮的加号变成关闭标记。方向键在环上移动，Enter 或 Space 执行获得焦点的操作，Escape 把环收回触发按钮。</target>
+        <source>Quick actions for one object, laid out on an arc around a round trigger. A press, a drag in an action's direction and a release runs that action; a short tap keeps the arc out so an action can be clicked. The target is picked by the pointer's angle around the trigger, so the pointer need not reach the action itself. A lens slides under the target, actions near the pointer are drawn toward it, and a label pill names the target, gives the cancel hint and confirms the action that ran. The trigger shows an ellipsis at rest, a close mark while the arc is out and a check after an action runs.</source>
+        <target>一个对象的快捷操作，排列在圆形触发按钮周围的圆弧上。按住、朝某个操作的方向拖动再松手，就执行该操作；轻点一下则让圆弧保持展开，以便点击操作。目标由指针绕触发按钮的角度决定，所以指针不必碰到操作本身。透镜滑到目标下方，靠近指针的操作被吸向指针，标签胶囊说出目标、给出取消提示，并确认执行了哪个操作。触发按钮静止时显示省略号，圆弧展开时显示关闭标记，操作执行后显示对勾。</target>
       </trans-unit>
       <trans-unit id="OrbitMenu.ActionInvoked">
-        <source>Raised when one of the actions is invoked. Bubbles.</source>
-        <target>其中一个操作被调用时触发。会冒泡。</target>
+        <source>Raised when an action fires, from a release, a click, the keyboard or assistive technology. Bubbles.</source>
+        <target>某个操作被触发时引发，来源可以是松手、点击、键盘或辅助技术。会冒泡。</target>
       </trans-unit>
-      <trans-unit id="OrbitMenu.ClosesOnInvoke">
-        <source>Whether invoking an action folds the menu back (default true).</source>
-        <target>调用操作后菜单是否收回（默认 true）。</target>
+      <trans-unit id="OrbitMenu.Announces">
+        <source>Whether confirmations are announced to assistive technology through a polite live region (default true).</source>
+        <target>是否通过礼貌型实时区域把确认文字告知辅助技术（默认 true）。</target>
       </trans-unit>
-      <trans-unit id="OrbitMenu.Glyph">
-        <source>The trigger's 24 × 24 stroked glyph; it turns 45 degrees while the menu is open (a plus becomes a close mark).</source>
-        <target>触发按钮的 24 × 24 描边图标；菜单打开时它会旋转 45 度（加号变成关闭标记）。</target>
+      <trans-unit id="OrbitMenu.CancelText">
+        <source>What the pill says while a drag is away from every action (releasing there fires nothing).</source>
+        <target>拖动离开所有操作时胶囊显示的文字（在那里松手不会触发任何操作）。</target>
+      </trans-unit>
+      <trans-unit id="OrbitMenu.Direction">
+        <source>The angle the arc faces, in degrees clockwise from the right (default -90: up).</source>
+        <target>圆弧朝向的角度，单位为度，从右侧顺时针计算（默认 -90：朝上）。</target>
       </trans-unit>
       <trans-unit id="OrbitMenu.IsOpen">
-        <source>Whether the actions are out (two-way).</source>
-        <target>操作是否已展开（双向）。</target>
+        <source>Whether the arc is open (two-way).</source>
+        <target>圆弧是否展开（双向）。</target>
       </trans-unit>
       <trans-unit id="OrbitMenu.Label">
-        <source>Accessible name and tooltip of the trigger.</source>
-        <target>触发按钮的无障碍名称和提示。</target>
+        <source>Accessible name of the trigger and the menu, also the pill's text whenever the arc is out but no action is aimed at.</source>
+        <target>触发按钮和菜单的无障碍名称；圆弧展开但没有对准任何操作时，它也是胶囊上的文字。</target>
       </trans-unit>
       <trans-unit id="OrbitMenu.Radius">
-        <source>Distance from the trigger's center to each action's center in px; NaN (default) uses the theme's 88.</source>
-        <target>从触发按钮中心到每个操作中心的距离，单位 px；NaN（默认）使用主题的 88。</target>
+        <source>How far each action's center sits from the trigger's center, in px (default 104).</source>
+        <target>每个操作中心离触发按钮中心的距离，单位 px（默认 104）。</target>
       </trans-unit>
-      <trans-unit id="OrbitMenu.StartAngle">
-        <source>Angle of the first action in degrees, clockwise from the right (default -180: left of the trigger).</source>
-        <target>第一个操作的角度，单位为度，从右侧起顺时针计算（默认 -180：触发按钮的左侧）。</target>
-      </trans-unit>
-      <trans-unit id="OrbitMenu.SweepAngle">
-        <source>How far round the arc goes from the first action to the last, in degrees (default 180: over the top to the right). Negative goes counterclockwise; 360 or more spreads the actions evenly around a full ring.</source>
-        <target>弧线从第一个操作到最后一个操作转过的角度，单位为度（默认 180：从上方绕到右侧）。负值为逆时针；360 或更大会把操作均匀分布在整个圆环上。</target>
+      <trans-unit id="OrbitMenu.Spread">
+        <source>How many degrees the arc spans (default 150); 360 spreads the actions evenly round a full ring.</source>
+        <target>圆弧张开的角度（默认 150）；360 时操作均匀分布成一整圈。</target>
       </trans-unit>
       <trans-unit id="OrbitMenuAction">
-        <source>One action of an `OrbitMenu`: a round button with a glyph, named by `Label` (its tooltip and accessible name). It draws itself, circle, shadow, glyph and keyboard ring, so a ring of actions costs one element each.</source>
-        <target>`OrbitMenu` 的一个操作：带图标的圆形按钮，由 `Label`（它的提示和无障碍名称）命名。它自己绘制圆形、阴影、图标和键盘焦点环，因此一圈操作每个只需一个元素。</target>
+        <source>One action of an `OrbitMenu`: a round button with a glyph, named by `Label` (the pill text and the accessible name). It draws itself, circle, shadow and glyph, so an arc of actions costs one element each.</source>
+        <target>`OrbitMenu` 的一个操作：带图标的圆形按钮，由 `Label`（胶囊显示的文字和无障碍名称）命名。它自己绘制圆形、阴影和图标，因此一段圆弧上的操作每个只需一个元素。</target>
       </trans-unit>
       <trans-unit id="OrbitMenuAction.Background">
-        <source>Fill of the circle (set by the theme, with its hover and press states).</source>
-        <target>圆形的填充（由主题设置，包括悬停和按下状态）。</target>
+        <source>Fill of the circle (set by the theme; it fades out while the lens is under the action).</source>
+        <target>圆形的填充（由主题设置；透镜位于操作下方时它会淡出）。</target>
       </trans-unit>
       <trans-unit id="OrbitMenuAction.BorderBrush">
         <source>Color of the circle's edge.</source>
         <target>圆形边缘的颜色。</target>
       </trans-unit>
       <trans-unit id="OrbitMenuAction.Click">
-        <source>Raised when the action is invoked by a click, Enter, Space or assistive technology. Bubbles.</source>
-        <target>通过点击、Enter、Space 或辅助技术调用操作时触发。会冒泡。</target>
+        <source>Raised when the action fires: a release over it, a click, Enter, Space or assistive technology. Bubbles.</source>
+        <target>操作触发时引发：在它上方松手、点击、Enter、Space 或辅助技术。会冒泡。</target>
       </trans-unit>
       <trans-unit id="OrbitMenuAction.Command">
-        <source>Command run when the action is invoked.</source>
-        <target>调用操作时执行的命令。</target>
+        <source>Command run when the action fires.</source>
+        <target>操作触发时执行的命令。</target>
       </trans-unit>
       <trans-unit id="OrbitMenuAction.CommandParameter">
         <source>Parameter passed to `Command`.</source>
@@ -23812,9 +23928,9 @@
         <source>Corner radius of the button; the theme's pill radius draws a circle.</source>
         <target>按钮的圆角半径；使用主题的胶囊圆角半径会画出圆形。</target>
       </trans-unit>
-      <trans-unit id="OrbitMenuAction.FocusRingBrush">
-        <source>Color of the keyboard focus ring.</source>
-        <target>键盘焦点环的颜色。</target>
+      <trans-unit id="OrbitMenuAction.DoneText">
+        <source>What the pill says once the action has run, such as "Saved"; null falls back to `Label`.</source>
+        <target>操作执行后胶囊上的文字，例如 "Saved"；为 null 时改用 `Label`。</target>
       </trans-unit>
       <trans-unit id="OrbitMenuAction.Foreground">
         <source>Color of the glyph.</source>
@@ -23829,8 +23945,8 @@
         <target>图标的大小。</target>
       </trans-unit>
       <trans-unit id="OrbitMenuAction.Label">
-        <source>What the action does, in a few words: the tooltip and the accessible name.</source>
-        <target>用几个词说明这个操作的作用：提示和无障碍名称。</target>
+        <source>What the action does, in a few words: the pill shows it while the action is targeted, and it is the accessible name.</source>
+        <target>用几个词说明操作做什么：操作被对准时胶囊显示它，它也是无障碍名称。</target>
       </trans-unit>
       <trans-unit id="OrbitMenuAction.Shadow">
         <source>Shadow under the button.</source>
@@ -23839,6 +23955,10 @@
       <trans-unit id="OrbitMenuAction.Size">
         <source>Diameter of the button.</source>
         <target>按钮的直径。</target>
+      </trans-unit>
+      <trans-unit id="OrbitMenuAction.Tone">
+        <source>The action's color: `Danger` for destructive actions.</source>
+        <target>操作的颜色：破坏性操作用 `Danger`。</target>
       </trans-unit>
       <trans-unit id="OrchestratorAgent">
         <source>One agent of an `AgentOrchestrator` run: the lead or a sub-agent. Data only: an `AvaloniaObject`, so a change made by your code or by a message reaches the graph, the log and the detail panel.</source>
@@ -30893,60 +31013,68 @@
         <target>`RoleChanged` 的参数。</target>
       </trans-unit>
       <trans-unit id="ShareSheet">
-        <source>A share sheet for one item: the link with a copy button, the people you share with most, the places you can send it and a few actions. On a phone-sized viewport it rises from the bottom as a sheet you can drag away; on a wider one it opens as a popover under its trigger. `Content` is the trigger: a button there opens the sheet, or call `Open`.</source>
-        <target>针对单个项目的分享面板：带复制按钮的链接、你最常分享的人、可以发送到的位置以及几个操作。在手机尺寸的视口中，它作为可拖走的底部面板从底部升起；在更宽的视口中，它在触发按钮下方作为弹出框打开。`Content` 是触发按钮：其中的按钮会打开面板，也可以调用 `Open`。</target>
+        <source>Shares one item from a Share button that stretches, on a spring, into a sharing panel: the item's name as a heading, its link with a Copy button, the access level that goes with the link, channel buttons for posting it, recent people to pick (each pick sends their avatar to a chip) and Send. A successful send turns the same surface into a small confirmation with Undo and Done, and Done shrinks it back to the button. When the viewport is 520 px wide or less, the panel is shown as a sheet at the bottom of a dimmed page instead and can be dragged closed by its grabber.</source>
+        <target>从一个分享按钮分享单个项目：按钮借助弹簧伸展成分享面板，里面有作为标题的项目名称、带“复制”按钮的链接、链接对应的访问权限、用来发布链接的渠道按钮、可以挑选的最近联系人（每选一人，其头像就飞向一个标签）以及“发送”。发送成功后，同一个表面变成一张带“撤销”和“完成”的小确认卡片，“完成”再把它缩回按钮。视口宽度为 520 px 或更窄时，面板改为显示在变暗页面底部的底部面板，可以拖动把手将其关闭。</target>
       </trans-unit>
-      <trans-unit id="ShareSheet.ActionInvoked">
-        <source>Raised when an action row is chosen, before its command runs. Bubbles.</source>
-        <target>选择某个操作行时触发，在它的命令执行之前。会冒泡。</target>
+      <trans-unit id="ShareSheet.Access">
+        <source>The `Value` of the chosen access level (two-way). Null, or a value no level has, means the first level.</source>
+        <target>所选访问权限的 `Value`（双向）。为 null 或没有任何一项具有该值时，表示第一项。</target>
       </trans-unit>
-      <trans-unit id="ShareSheet.ClosesOnShare">
-        <source>Whether choosing a person or a destination closes the sheet (default true).</source>
-        <target>选择某个人或目的地后是否关闭面板（默认 true）。</target>
+      <trans-unit id="ShareSheet.Align">
+        <source>Where the panel is anchored to the button as it opens: the top end corner (End, the default), the top start corner (Start) or the center (Center).</source>
+        <target>面板展开时锚定在按钮的哪个位置：顶部末端的角（End，默认）、顶部起始端的角（Start）或中心（Center）。</target>
       </trans-unit>
-      <trans-unit id="ShareSheet.CopiedLabel">
-        <source>Label of the copy button after a copy.</source>
-        <target>复制之后，复制按钮的标签。</target>
+      <trans-unit id="ShareSheet.ChannelHandler">
+        <source>Posts the link to a channel. The channel's button spins while it runs, then shows the channel's done word, or "Failed" when it throws. Null finishes at once.</source>
+        <target>把链接发布到一个渠道。运行期间该渠道的按钮转圈，之后显示该渠道的完成词，抛出异常时显示 "Failed"。为 null 时立即完成。</target>
       </trans-unit>
-      <trans-unit id="ShareSheet.CopyLinkLabel">
-        <source>Label of the copy button.</source>
-        <target>复制按钮的标签。</target>
+      <trans-unit id="ShareSheet.ChannelShared">
+        <source>Raised when a channel finished posting (after `ChannelHandler` completed). Bubbles.</source>
+        <target>某个渠道发布完成时触发（`ChannelHandler` 完成之后）。会冒泡。</target>
       </trans-unit>
-      <trans-unit id="ShareSheet.DestinationsHeader">
-        <source>The heading over the destinations.</source>
-        <target>目的地上方的标题。</target>
+      <trans-unit id="ShareSheet.Glyph">
+        <source>The 24 × 24 stroked glyph before the Share button's text; null shows the text alone.</source>
+        <target>分享按钮文字前的 24 × 24 描边图标；为 null 时只显示文字。</target>
       </trans-unit>
       <trans-unit id="ShareSheet.IsOpen">
-        <source>Whether the sheet is open (two-way).</source>
-        <target>面板是否打开（双向）。</target>
+        <source>Whether the panel (or the confirmation) is open (two-way).</source>
+        <target>面板（或确认卡片）是否打开（双向）。</target>
+      </trans-unit>
+      <trans-unit id="ShareSheet.Label">
+        <source>The Share button's text (default "Share").</source>
+        <target>分享按钮的文字（默认 "Share"）。</target>
+      </trans-unit>
+      <trans-unit id="ShareSheet.Labels">
+        <source>The words the sheet shows and announces.</source>
+        <target>面板显示和播报的文字。</target>
       </trans-unit>
       <trans-unit id="ShareSheet.Link">
-        <source>The address to share; it shows with a copy button. Null hides the link row.</source>
-        <target>要分享的地址；它与复制按钮一起显示。为 Null 时隐藏链接行。</target>
+        <source>The URL to share: displayed in its own row and copied by the Copy button; null leaves the row out.</source>
+        <target>要分享的网址：单独显示在一行中，由“复制”按钮复制；为 null 时不显示该行。</target>
       </trans-unit>
       <trans-unit id="ShareSheet.LinkCopied">
-        <source>Raised when the link was copied to the clipboard. Bubbles.</source>
-        <target>链接被复制到剪贴板时触发。会冒泡。</target>
+        <source>Raised once Copy has put the link on the clipboard; the arguments say which access level was chosen at that moment. Bubbles.</source>
+        <target>“复制”把链接放到剪贴板上之后触发；参数说明当时选中的是哪个访问权限。会冒泡。</target>
       </trans-unit>
-      <trans-unit id="ShareSheet.PeopleHeader">
-        <source>The heading over the people.</source>
-        <target>人员上方的标题。</target>
+      <trans-unit id="ShareSheet.SendHandler">
+        <source>Sends the item to the people picked (to your server, say). Send waits for it with a spinner; when it throws, an error shows over the Send button and the panel stays open; when it completes, the confirmation shows. Null sends at once.</source>
+        <target>把项目发送给选中的人（例如发到你的服务器）。“发送”会转圈等待它；它抛出异常时，发送按钮上方显示错误，面板保持打开；它完成时显示确认卡片。为 null 时立即发送。</target>
       </trans-unit>
-      <trans-unit id="ShareSheet.Presentation">
-        <source>Where the sheet opens: a popover, a bottom sheet, or by the width of the viewport (default).</source>
-        <target>面板打开的位置：弹出框、底部面板，或按视口宽度决定（默认）。</target>
+      <trans-unit id="ShareSheet.SendUndone">
+        <source>Raised when Undo on the confirmation takes the last send back; take it back in your app too. Bubbles.</source>
+        <target>确认卡片上的“撤销”撤回上一次发送时触发；请在你的应用中同样撤回。会冒泡。</target>
       </trans-unit>
-      <trans-unit id="ShareSheet.Shared">
-        <source>Raised when a person or a destination is chosen. Bubbles.</source>
-        <target>选择某个人或目的地时触发。会冒泡。</target>
+      <trans-unit id="ShareSheet.Sent">
+        <source>Raised after a send succeeded (after `SendHandler` completed), with who and under which access. Bubbles.</source>
+        <target>发送成功之后触发（`SendHandler` 完成之后），附带发给了谁以及使用的访问权限。会冒泡。</target>
       </trans-unit>
-      <trans-unit id="ShareSheet.Subtitle">
-        <source>A line under the heading, usually the name of what is shared; null leaves it out.</source>
-        <target>标题下方的一行，通常是所分享内容的名称；为 null 时不显示。</target>
+      <trans-unit id="ShareSheet.SheetOnPhones">
+        <source>Whether viewports 520 px wide or narrower get a sheet docked to the bottom, with the page dimmed behind it, instead of the floating panel (default true). The sheet slides up, tracks drags on its grabber, and is dismissed by Escape, a press on the dimmed page, a long drag or Done.</source>
+        <target>视口宽度为 520 px 或更窄时，是否用停靠在底部、后方页面变暗的底部面板代替浮动面板（默认 true）。底部面板向上滑入，跟随把手的拖动，按 Escape、在变暗的页面上按下、长距离拖动或按“完成”都会让它关闭。</target>
       </trans-unit>
       <trans-unit id="ShareSheet.Title">
-        <source>The heading of the sheet.</source>
-        <target>面板的标题。</target>
+        <source>The item's name, which the panel puts in its heading as Share “name”.</source>
+        <target>项目的名称，面板在标题中把它显示为 Share “名称”。</target>
       </trans-unit>
       <trans-unit id="SheetStack">
         <source>A stack of nested modal sheets for short drill-down flows (settings, filters, account details): each level opens on top of the last, and the levels below shrink by 5%, darken and keep a strip of their top edge in view. Below `Breakpoint` the levels are bottom sheets that can be dragged or flicked down to close; from it up they are centered dialogs. The page content is the control's `Content`; the levels are declared in `Sheets` and opened by id with `Push` or a button carrying `OpenSheetProperty`.</source>
@@ -36851,6 +36979,66 @@
       <trans-unit id="ToolCallTextOutput">
         <source>A text result (a sent message, a short log): one paragraph that keeps its line breaks.</source>
         <target>文本结果（已发送的消息、简短日志）：一个保留换行的段落。</target>
+      </trans-unit>
+      <trans-unit id="ToolDock">
+        <source>A floating toolbar for an editor's frequently swapped tools and modes, such as select, pan and draw on a canvas. The tool in use sits on a soft accent tint that moves when the choice changes; a small label above the dock names the slot under the mouse or keyboard focus and follows it along; and variants of one tool can share a slot that opens a tray of them above the dock. The whole dock is drawn with a single thin outline. With `CanReorder`, people can rearrange the slots by dragging or with Alt and the arrow keys.</source>
+        <target>一条浮动工具栏，放着编辑器里经常切换的工具和模式，例如画布上的选择、平移和绘制。正在使用的工具衬着一块柔和的强调色底，选择改变时这块底随之移动；工具栏上方的小标签写出鼠标或键盘焦点所在槽位的名称，并一路跟随；同一工具的几个变体可以共用一个槽位，在工具栏上方打开装着它们的托盘。整条工具栏只用一条细描边勾勒。开启 `CanReorder` 后，用户可以拖动槽位或用 Alt 加方向键重新排列它们。</target>
+      </trans-unit>
+      <trans-unit id="ToolDock.CanReorder">
+        <source>Whether people may reorder the slots by dragging them sideways or with Alt and the left and right arrow keys. A changeable source (the inline items, or an `ItemsSource` that is an `IList`) is reordered in place and `Reordered` reports each move.</source>
+        <target>是否允许用户横向拖动槽位，或用 Alt 加左、右方向键重新排列槽位。可修改的源（内联的项，或是 `IList` 的 `ItemsSource`）会被原地重新排序，`Reordered` 报告每一次移动。</target>
+      </trans-unit>
+      <trans-unit id="ToolDock.ItemChosen">
+        <source>Raised when someone chooses an entry or a group member (by pointer, keyboard or assistive technology).</source>
+        <target>用户选中一项或组成员时引发（通过指针、键盘或辅助技术）。</target>
+      </trans-unit>
+      <trans-unit id="ToolDock.Label">
+        <source>The accessible name of the dock (a toolbar), "Tools" by default.</source>
+        <target>工具栏（一个 toolbar）的无障碍名称，默认为 "Tools"。</target>
+      </trans-unit>
+      <trans-unit id="ToolDock.Reordered">
+        <source>Raised after a slot moved: once for every neighbour it passes while dragged, and on Alt + an arrow key.</source>
+        <target>槽位移动后引发：拖动时每越过一个邻居引发一次，按 Alt 加方向键时也会引发。</target>
+      </trans-unit>
+      <trans-unit id="ToolDock.SelectedValue">
+        <source>The `Value` of the chosen entry or group member; null chooses nothing.</source>
+        <target>选中的项或组成员的 `Value`；为 null 时不选中任何项。</target>
+      </trans-unit>
+      <trans-unit id="ToolDockItem">
+        <source>One entry of a `ToolDock`: a tool or mode with a glyph, a name, an optional key hint and an optional badge. With members in `Items` the entry is a group: its slot shows the member it holds (the selected one, else the one chosen last, else the first) and choosing it opens a tray of the members above the dock.</source>
+        <target>`ToolDock` 的一项：一个带图标、名称、可选快捷键提示和可选徽标的工具或模式。`Items` 中有成员时这一项是一个组：它的槽位显示它持有的成员（选中的成员，否则是上次选的，否则是第一个），选中它会在工具栏上方打开装着成员的托盘。</target>
+      </trans-unit>
+      <trans-unit id="ToolDockItem.Badge">
+        <source>A count shown on the slot's corner; its digits roll when it changes and it leaves at 0.</source>
+        <target>显示在槽位角上的计数；变化时数字滚动，归零时退场。</target>
+      </trans-unit>
+      <trans-unit id="ToolDockItem.Glyph">
+        <source>A 24 × 24 stroked glyph. A group's slot shows the glyph of the member it holds.</source>
+        <target>24 × 24 的描边图标。组的槽位显示它持有的成员的图标。</target>
+      </trans-unit>
+      <trans-unit id="ToolDockItem.IsSelected">
+        <source>Whether this entry holds the dock's value (for a group: whether one of its members does).</source>
+        <target>这一项是否持有工具栏的值（对组而言：是否有某个成员持有）。</target>
+      </trans-unit>
+      <trans-unit id="ToolDockItem.IsTrayOpen">
+        <source>Whether this group's tray is open.</source>
+        <target>这个组的托盘是否打开。</target>
+      </trans-unit>
+      <trans-unit id="ToolDockItem.Label">
+        <source>The name shown in the floating label and read by assistive technology.</source>
+        <target>浮动标签中显示、辅助技术朗读的名称。</target>
+      </trans-unit>
+      <trans-unit id="ToolDockItem.Shortcut">
+        <source>A key hint such as "V", shown in the floating label and added to the accessible name. Display only: the page handles the key.</source>
+        <target>快捷键提示，例如 "V"，显示在浮动标签中并加入无障碍名称。只用于显示：按键由页面处理。</target>
+      </trans-unit>
+      <trans-unit id="ToolDockItem.ShownItem">
+        <source>For a group, the member its slot shows: the selected member, else the one chosen last, else the first.</source>
+        <target>对组而言，槽位显示的成员：选中的成员，否则是上次选的，否则是第一个。</target>
+      </trans-unit>
+      <trans-unit id="ToolDockItem.Value">
+        <source>What the dock reports when this entry or member is chosen (`SelectedValue`).</source>
+        <target>选中这一项或成员时工具栏报告的值（`SelectedValue`）。</target>
       </trans-unit>
       <trans-unit id="Tooltip">
         <source>A short label on hover or keyboard focus. Attach it to any control with `arc:Tooltip.Tip="Copy link"` (and optionally `arc:Tooltip.Side`). The first tooltip waits 250ms and rises 3px from its trigger; while any tooltip is open, and for 300ms after the last one closes, the next opens at once with a fade only. String content that changes while open crossfades and the bubble springs to the new size. The `Tooltip` instance itself is the bubble shown in the popup.</source>

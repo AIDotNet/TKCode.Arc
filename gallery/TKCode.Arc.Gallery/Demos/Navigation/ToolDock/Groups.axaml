@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ToolDockGroupsDemo">
+    <!-- Two groups share a slot each: press one to open its tray. A group keeps the member you chose last. -->
+    <StackPanel Spacing="16" HorizontalAlignment="Center" Margin="0,72,0,0">
+        <arc:ToolDock x:Name="Dock" Label="Drawing tools" SelectedValue="pencil" HorizontalAlignment="Center">
+            <!-- Lucide mouse-pointer-2 -->
+            <arc:ToolDockItem Value="select" Label="Select" Shortcut="V"
+                              Glyph="M4.037 4.688a.495.495 0 0 1 .651-.651l16 6.5a.5.5 0 0 1-.063.947l-6.124 1.58a2 2 0 0 0-1.438 1.435l-1.579 6.126a.5.5 0 0 1-.947.063z" />
+            <arc:ToolDockItem Value="draw" Label="Draw">
+                <arc:ToolDockItem Value="pencil" Label="Pencil" Shortcut="P" Glyph="{x:Static arc:ArcIcons.Pencil}" />
+                <arc:ToolDockItem Value="pen" Label="Pen" Glyph="{x:Static arc:ArcIcons.PenLine}" />
+                <arc:ToolDockItem Value="marker" Label="Marker" Shortcut="M" Glyph="{x:Static arc:ArcIcons.Highlighter}" />
+            </arc:ToolDockItem>
+            <arc:ToolDockItem Value="shape" Label="Shape">
+                <arc:ToolDockItem Value="square" Label="Square" Shortcut="R" Glyph="{x:Static arc:ArcIcons.Square}" />
+                <arc:ToolDockItem Value="circle" Label="Circle" Shortcut="O" Glyph="{x:Static arc:ArcIcons.Circle}" />
+                <arc:ToolDockItem Value="star" Label="Star" Glyph="{x:Static arc:ArcIcons.Star}" />
+            </arc:ToolDockItem>
+            <arc:ToolDockItem Value="eraser" Label="Eraser" Shortcut="E" Glyph="{x:Static arc:ArcIcons.Eraser}" />
+        </arc:ToolDock>
+        <TextBlock HorizontalAlignment="Center"
+                   Text="{Binding #Dock.SelectedValue, StringFormat='Tool: {0}'}"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

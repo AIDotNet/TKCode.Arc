@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LiquidTabBarActiveGlyphDemo">
+    <!-- Inside the lens a tab draws ActiveGlyph instead of its glyph: a closed folder opens, a lock unlocks. -->
+    <arc:LiquidTabBar HorizontalAlignment="Center" AutomationProperties.Name="Storage">
+        <arc:LiquidTabBarItem Label="Projects"
+                              Glyph="{x:Static arc:ArcIcons.Folder}"
+                              ActiveGlyph="{x:Static arc:ArcIcons.FolderOpen}" />
+        <arc:LiquidTabBarItem Label="Schedule"
+                              Glyph="{x:Static arc:ArcIcons.Calendar}"
+                              ActiveGlyph="{x:Static arc:ArcIcons.CalendarCheck}" />
+        <arc:LiquidTabBarItem Label="Vault"
+                              Glyph="{x:Static arc:ArcIcons.Lock}"
+                              ActiveGlyph="{x:Static arc:ArcIcons.LockOpen}" />
+    </arc:LiquidTabBar>
+</UserControl>

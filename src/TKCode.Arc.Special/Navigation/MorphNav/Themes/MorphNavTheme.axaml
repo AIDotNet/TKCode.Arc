@@ -5,181 +5,793 @@
                     x:Class="TKCode.Arc.MorphNavTheme">
 
     <!--
-        One raised surface for both states. Its size follows the pill or the panel on a spring while the other fades
-        (the old one keeps its room until it has faded), and its corners and shadow move with it. The surface clips its
-        content; the pill's keyboard ring lives in the pill, around its own box.
+        One surface for the bar, the panels and search. The stage draws the surface at its current (springing) size and
+        clips the layers to it; the bar sits at the top and the panels under it. The shadow rises while anything is open.
     -->
     <ControlTheme x:Key="{x:Type arc:MorphNav}" TargetType="arc:MorphNav">
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
-        <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Top" />
-        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
-        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
-        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
-        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep22}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:MorphNav">
-                <Panel>
-                    <Border Name="PART_Surface"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Top"
-                            ClipToBounds="True"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="{TemplateBinding CornerRadius}"
-                            BoxShadow="{arc:ArcDesignTokenResource ShadowResting}">
-                        <arc:SpringSizeDecorator Name="PART_Size" Axis="Both" Spring="Morph" ClipOverflow="0" CrossClipOverflow="0">
-                            <Panel>
-                                <arc:PresenceHost Name="PART_PillHost"
-                                                  Mode="Fade"
-                                                  IsPresent="True"
-                                                  HorizontalAlignment="Left"
-                                                  VerticalAlignment="Top">
-                                    <arc:MorphNavPill Name="PART_Pill"
-                                                      Mark="{TemplateBinding Mark}"
-                                                      Title="{TemplateBinding Title}" />
-                                </arc:PresenceHost>
-                                <arc:PresenceHost Name="PART_PanelHost"
-                                                  Mode="Fade"
-                                                  IsPresent="False"
-                                                  HorizontalAlignment="Left"
-                                                  VerticalAlignment="Top">
-                                    <StackPanel Spacing="{arc:MorphNavTokenResource PanelSpacing}"
-                                                Margin="{arc:MorphNavTokenResource PanelPadding}">
-                                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10" Margin="10,0,0,0">
-                                            <arc:ArcGlyph Data="{TemplateBinding Mark}"
-                                                          Size="18"
-                                                          Foreground="{TemplateBinding Foreground}"
-                                                          IsVisible="{TemplateBinding Mark, Converter={x:Static ObjectConverters.IsNotNull}}"
-                                                          VerticalAlignment="Center" />
-                                            <TextBlock Grid.Column="1"
-                                                       Text="{TemplateBinding Title}"
-                                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
-                                                       TextTrimming="CharacterEllipsis"
-                                                       VerticalAlignment="Center" />
-                                            <arc:Button Name="PART_Close"
-                                                        Grid.Column="2"
-                                                        Variant="Ghost"
-                                                        Size="Small">
-                                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}" />
-                                            </arc:Button>
-                                        </Grid>
-                                        <arc:MorphNavColumns Name="PART_Sections"
-                                                             MinColumnWidth="{arc:MorphNavTokenResource MinColumnWidth}"
-                                                             Gap="{arc:MorphNavTokenResource ColumnGap}" />
-                                        <ContentPresenter Name="PART_Footer"
-                                                          Content="{TemplateBinding Footer}"
-                                                          IsVisible="{TemplateBinding Footer, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                <arc:MorphNavStage Name="PART_Stage"
+                                   SurfaceBrush="{arc:MorphNavTokenResource SurfaceColor}"
+                                   OpaqueSurfaceBrush="{arc:ArcDesignTokenResource SurfaceRaised}"
+                                   ReduceTransparency="{arc:ArcDesignTokenResource ReduceTransparency}"
+                                   EdgeBrush="{arc:MorphNavTokenResource EdgeColor}"
+                                   OpenCornerRadius="{arc:ArcDesignTokenResource RadiusStep22}"
+                                   ClosedCornerRadius="{arc:ArcDesignTokenResource RadiusPill}">
+                    <Border Name="PART_Clip" ClipToBounds="True" Background="Transparent">
+                        <arc:MorphNavLayers Name="PART_Layers">
+                            <arc:MorphNavBar Name="PART_Bar">
+                                <StackPanel Orientation="Horizontal"
+                                            Spacing="{arc:MorphNavTokenResource BarSpacing}"
+                                            VerticalAlignment="Center">
+                                    <arc:MorphNavBrandButton Name="PART_Brand"
+                                                             Mark="{TemplateBinding BrandMark}"
+                                                             MarkTemplate="{TemplateBinding BrandMarkTemplate}"
+                                                             Text="{TemplateBinding BrandName}" />
+                                    <arc:MorphNavTrack Name="PART_Track" VerticalAlignment="Center" />
+                                    <StackPanel Orientation="Horizontal"
+                                                Spacing="{arc:MorphNavTokenResource ToolsSpacing}"
+                                                Margin="{arc:MorphNavTokenResource ToolsMargin}"
+                                                VerticalAlignment="Center">
+                                        <arc:MorphNavToolButton Name="PART_SearchButton" Glyph="{x:Static arc:ArcIcons.Search}" />
+                                        <arc:MorphNavActionButton Name="PART_Action"
+                                                                  Content="{TemplateBinding ActionLabel}"
+                                                                  Glyph="{TemplateBinding ActionIcon}" />
                                     </StackPanel>
-                                </arc:PresenceHost>
-                            </Panel>
-                        </arc:SpringSizeDecorator>
+                                </StackPanel>
+                            </arc:MorphNavBar>
+                        </arc:MorphNavLayers>
                     </Border>
-                </Panel>
+                </arc:MorphNavStage>
             </ControlTemplate>
         </Setter>
-        <Style Selector="^:open">
-            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Style Selector="^ /template/ arc|MorphNavStage#PART_Stage">
+            <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowRaised}" />
         </Style>
-        <Style Selector="^:open /template/ Border#PART_Surface">
+        <Style Selector="^:open /template/ arc|MorphNavStage#PART_Stage">
             <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowFloating}" />
         </Style>
-        <Style Selector="^:motion-full">
+        <Style Selector="^:motion-full /template/ arc|MorphNavStage#PART_Stage">
             <Setter Property="Transitions">
                 <Transitions>
-                    <arc:SpringCornerRadiusTransition Property="CornerRadius" Spring="Morph" />
+                    <arc:ArcBoxShadowsTransition Property="BoxShadow" Tween="Considered" />
                 </Transitions>
             </Setter>
         </Style>
-        <Style Selector="^:motion-full /template/ Border#PART_Surface">
+        <Style Selector="^:motion-reduced /template/ arc|MorphNavStage#PART_Stage">
             <Setter Property="Transitions">
                 <Transitions>
-                    <arc:ArcBoxShadowsTransition Property="BoxShadow" Tween="Standard" />
+                    <arc:ArcBoxShadowsTransition Property="BoxShadow" Tween="Fast" />
                 </Transitions>
             </Setter>
         </Style>
     </ControlTheme>
 
-    <!-- The pill: mark, title, a hairline, the current page and the menu glyph; hover tints it. -->
-    <ControlTheme x:Key="{x:Type arc:MorphNavPill}" TargetType="arc:MorphNavPill">
+    <!-- The bar: 56 px (46 compact), padded at both ends; its height follows on the compact spring. -->
+    <ControlTheme x:Key="{x:Type arc:MorphNavBar}" TargetType="arc:MorphNavBar">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Height" Value="{arc:MorphNavTokenResource BarHeight}" />
+        <Setter Property="Padding" Value="{arc:MorphNavTokenResource BarPadding}" />
+        <Style Selector="^:compact">
+            <Setter Property="Height" Value="{arc:MorphNavTokenResource CompactBarHeight}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:SpringDoubleTransition Property="Height" VisualDuration="0.38" Bounce="0" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The highlight that glides between the items. -->
+    <ControlTheme x:Key="{x:Type arc:MorphNavTrack}" TargetType="arc:MorphNavTrack">
+        <Setter Property="HighlightBrush" Value="{arc:MorphNavTokenResource HighlightColor}" />
+        <Setter Property="HighlightCornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+    </ControlTheme>
+
+    <!-- The brand: mark and name (16 px medium). Compact and folded bars fold the name away; compact shrinks the mark. -->
+    <ControlTheme x:Key="{x:Type arc:MorphNavBrandButton}" TargetType="arc:MorphNavBrandButton">
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="FocusAdorner" Value="{x:Null}" />
-        <Setter Property="ClipToBounds" Value="False" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
-        <Setter Property="Height" Value="{arc:MorphNavTokenResource PillHeight}" />
-        <Setter Property="Padding" Value="{arc:MorphNavTokenResource PillPadding}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Height" Value="{arc:MorphNavTokenResource ItemHeight}" />
+        <Setter Property="Padding" Value="{arc:MorphNavTokenResource BrandPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
         <Setter Property="Template">
-            <ControlTemplate TargetType="arc:MorphNavPill">
+            <ControlTemplate TargetType="arc:MorphNavBrandButton">
                 <Panel Name="PART_Root">
-                    <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <ContentPresenter Name="PART_Mark"
+                                              Content="{TemplateBinding Mark}"
+                                              ContentTemplate="{TemplateBinding MarkTemplate}"
+                                              Width="{arc:MorphNavTokenResource BrandMarkSize}"
+                                              Height="{arc:MorphNavTokenResource BrandMarkSize}"
+                                              HorizontalContentAlignment="Center"
+                                              VerticalContentAlignment="Center"
+                                              IsVisible="{TemplateBinding Mark, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                            <arc:MorphNavReveal Name="PART_Name" VerticalAlignment="Center">
+                                <TextBlock Name="PART_NameText"
+                                           Text="{TemplateBinding Text}"
+                                           Margin="{arc:MorphNavTokenResource BrandNameMargin}"
+                                           VerticalAlignment="Center" />
+                            </arc:MorphNavReveal>
+                        </StackPanel>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ ContentPresenter#PART_Mark">
+            <Setter Property="RenderTransform" Value="scale(1)" />
+        </Style>
+        <Style Selector="^ /template/ arc|MorphNavReveal#PART_Name">
+            <Setter Property="Amount" Value="1" />
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:compact">
+            <Setter Property="Height" Value="{arc:MorphNavTokenResource CompactItemHeight}" />
+        </Style>
+        <!-- Arc MorphNav（设计参考）: the compact mark is 0.92 of its size. -->
+        <Style Selector="^:compact /template/ ContentPresenter#PART_Mark">
+            <Setter Property="RenderTransform" Value="scale(0.92)" />
+        </Style>
+        <Style Selector="^:bare /template/ arc|MorphNavReveal#PART_Name">
+            <Setter Property="Amount" Value="0" />
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:SpringDoubleTransition Property="Height" VisualDuration="0.38" Bounce="0" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ ContentPresenter#PART_Mark">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" VisualDuration="0.38" Bounce="0" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|MorphNavReveal#PART_Name">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:SpringDoubleTransition Property="Amount" VisualDuration="0.38" Bounce="0" />
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" Delay="0:0:0.06" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ arc|MorphNavReveal#PART_Name">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A bar item: secondary text that turns to the foreground color when hovered, focused, open or current. Items with a
+        panel show a chevron that flips while the panel is open.
+    -->
+    <ControlTheme x:Key="{x:Type arc:MorphNavTrigger}" TargetType="arc:MorphNavTrigger">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Height" Value="{arc:MorphNavTokenResource ItemHeight}" />
+        <Setter Property="Padding" Value="{arc:MorphNavTokenResource ItemPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MorphNavTrigger">
+                <Panel Name="PART_Root">
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
                         <StackPanel Orientation="Horizontal"
-                                    Spacing="{arc:MorphNavTokenResource PillSpacing}"
+                                    Spacing="{arc:MorphNavTokenResource ItemSpacing}"
                                     VerticalAlignment="Center">
-                            <arc:ArcGlyph Data="{TemplateBinding Mark}"
-                                          Size="18"
-                                          Foreground="{TemplateBinding Foreground}"
-                                          IsVisible="{TemplateBinding Mark, Converter={x:Static ObjectConverters.IsNotNull}}"
-                                          VerticalAlignment="Center" />
-                            <TextBlock Text="{TemplateBinding Title}"
-                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
-                                       IsVisible="{TemplateBinding Title, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                            <TextBlock Text="{TemplateBinding Label}"
+                                       LineHeight="{arc:MorphNavTokenResource LabelLineHeight}"
                                        VerticalAlignment="Center" />
-                            <Border Width="1"
-                                    Height="16"
-                                    Background="{arc:ArcDesignTokenResource Border}"
-                                    IsVisible="{TemplateBinding Current, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                                    VerticalAlignment="Center" />
-                            <TextBlock Text="{TemplateBinding Current}"
-                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}"
-                                       IsVisible="{TemplateBinding Current, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                                       VerticalAlignment="Center" />
-                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Menu}"
-                                          Foreground="{TemplateBinding Foreground}"
+                            <arc:ArcGlyph Name="PART_Chevron"
+                                          Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                          Size="{arc:MorphNavTokenResource ChevronSize}"
+                                          IsVisible="{TemplateBinding HasPanel}"
                                           VerticalAlignment="Center" />
                         </StackPanel>
                     </Border>
                 </Panel>
             </ControlTemplate>
         </Setter>
-        <Style Selector="^:pointerover">
-            <Setter Property="Background" Value="{arc:MorphNavTokenResource LinkHoverColor}" />
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="Opacity" Value="0.8" />
+            <Setter Property="RenderTransform" Value="rotate(0deg)" />
+        </Style>
+        <Style Selector="^:open /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="RenderTransform" Value="rotate(180deg)" />
+        </Style>
+        <Style Selector="^:hover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:open">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:current">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:compact">
+            <Setter Property="Height" Value="{arc:MorphNavTokenResource CompactItemHeight}" />
+            <Setter Property="Padding" Value="{arc:MorphNavTokenResource CompactItemPadding}" />
         </Style>
         <Style Selector="^:motion-full">
             <Setter Property="Transitions">
                 <Transitions>
-                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:SpringDoubleTransition Property="Height" VisualDuration="0.38" Bounce="0" />
+                    <arc:SpringThicknessTransition Property="Padding" VisualDuration="0.38" Bounce="0" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
                 </Transitions>
             </Setter>
         </Style>
     </ControlTheme>
 
-    <!-- A link: text and its line, a muted glyph tile, a hover tint; the current page keeps the tint. -->
-    <ControlTheme x:Key="{x:Type arc:MorphNavLinkRow}" TargetType="arc:MorphNavLinkRow">
+    <!-- The search button: a round tool in secondary text; hover tints it, a press shrinks it a little. -->
+    <ControlTheme x:Key="{x:Type arc:MorphNavToolButton}" TargetType="arc:MorphNavToolButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="FocusAdorner" Value="{x:Null}" />
-        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
-        <Setter Property="SecondaryForeground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
-        <Setter Property="HoverBrush" Value="{arc:MorphNavTokenResource LinkHoverColor}" />
-        <Setter Property="TileBrush" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
-        <Setter Property="FocusRingBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
-        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
-        <Setter Property="TileCornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep9}" />
-        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
-        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
-        <Setter Property="SecondaryFontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Width" Value="{arc:MorphNavTokenResource ItemHeight}" />
+        <Setter Property="Height" Value="{arc:MorphNavTokenResource ItemHeight}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="RenderTransform" Value="scale(1)" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MorphNavToolButton">
+                <Panel Name="PART_Root">
+                    <Border Background="{TemplateBinding Background}" CornerRadius="{TemplateBinding CornerRadius}">
+                        <arc:ArcGlyph Data="{TemplateBinding Glyph}"
+                                      Size="{arc:MorphNavTokenResource ToolGlyphSize}"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:hover">
+            <Setter Property="Background" Value="{arc:MorphNavTokenResource HighlightColor}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <!-- Arc MorphNav（设计参考）: a pressed tool scales to 0.94 over 120ms. -->
+        <Style Selector="^:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.94)" />
+        </Style>
+        <Style Selector="^:compact">
+            <Setter Property="Width" Value="{arc:MorphNavTokenResource CompactItemHeight}" />
+            <Setter Property="Height" Value="{arc:MorphNavTokenResource CompactItemHeight}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Instant" />
+                    <arc:SpringDoubleTransition Property="Width" VisualDuration="0.38" Bounce="0" />
+                    <arc:SpringDoubleTransition Property="Height" VisualDuration="0.38" Bounce="0" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The primary action: foreground fill, background-colored label; hover softens the fill, a press shrinks it. -->
+    <ControlTheme x:Key="{x:Type arc:MorphNavActionButton}" TargetType="arc:MorphNavActionButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
         <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
-        <Setter Property="RowHeight" Value="{arc:MorphNavTokenResource LinkHeight}" />
-        <Setter Property="TallRowHeight" Value="{arc:MorphNavTokenResource LinkTallHeight}" />
-        <Setter Property="Inset" Value="{arc:MorphNavTokenResource LinkInset}" />
-        <Setter Property="TileSize" Value="{arc:MorphNavTokenResource LinkTileSize}" />
-        <Setter Property="GlyphSize" Value="{arc:MorphNavTokenResource LinkGlyphSize}" />
-        <Style Selector="^:current">
-            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="Height" Value="{arc:MorphNavTokenResource ItemHeight}" />
+        <Setter Property="Padding" Value="{arc:MorphNavTokenResource ActionPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="RenderTransform" Value="scale(1)" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MorphNavActionButton">
+                <Panel Name="PART_Root">
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="{arc:MorphNavTokenResource ActionSpacing}"
+                                    VerticalAlignment="Center">
+                            <arc:ArcGlyph Data="{TemplateBinding Glyph}"
+                                          Size="16"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          IsVisible="{TemplateBinding Glyph, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                          VerticalAlignment="Center" />
+                            <ContentPresenter Content="{TemplateBinding Content}"
+                                              VerticalAlignment="Center"
+                                              Foreground="{TemplateBinding Foreground}" />
+                        </StackPanel>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:hover">
+            <Setter Property="Background" Value="{arc:MorphNavTokenResource ActionHoverColor}" />
+        </Style>
+        <!-- Arc MorphNav（设计参考）: a pressed action scales to 0.97 over 120ms. -->
+        <Style Selector="^:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.97)" />
+        </Style>
+        <Style Selector="^:compact">
+            <Setter Property="Height" Value="{arc:MorphNavTokenResource CompactItemHeight}" />
+            <Setter Property="Padding" Value="{arc:MorphNavTokenResource CompactActionPadding}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Instant" />
+                    <arc:SpringDoubleTransition Property="Height" VisualDuration="0.38" Bounce="0" />
+                    <arc:SpringThicknessTransition Property="Padding" VisualDuration="0.38" Bounce="0" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A face under the bar: padded, with a hairline under the bar inset from both sides. -->
+    <ControlTheme x:Key="{x:Type arc:MorphNavFace}" TargetType="arc:MorphNavFace">
+        <Setter Property="Padding" Value="{arc:MorphNavTokenResource FacePadding}" />
+        <Setter Property="DividerBrush" Value="{arc:MorphNavTokenResource DividerColor}" />
+        <Setter Property="DividerInset" Value="{arc:MorphNavTokenResource DividerInset}" />
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:MorphNavPanelBody}" TargetType="arc:MorphNavPanelBody">
+        <Setter Property="ColumnWidth" Value="{arc:MorphNavTokenResource LinkColumnWidth}" />
+        <Setter Property="Gap" Value="{arc:MorphNavTokenResource LinkGap}" />
+        <Setter Property="FeatureWidth" Value="{arc:MorphNavTokenResource FeatureWidth}" />
+        <Setter Property="FeatureGap" Value="{arc:MorphNavTokenResource FeatureGap}" />
+        <Setter Property="TopPadding" Value="{arc:MorphNavTokenResource BodyTopPadding}" />
+        <Setter Property="FooterMargin" Value="{arc:MorphNavTokenResource FooterMargin}" />
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:MorphNavMenuBody}" TargetType="arc:MorphNavMenuBody">
+        <Setter Property="ColumnGap" Value="{arc:MorphNavTokenResource MenuColumnGap}" />
+        <Setter Property="RowGap" Value="{arc:MorphNavTokenResource LinkGap}" />
+        <Setter Property="TopPadding" Value="{arc:MorphNavTokenResource BodyTopPadding}" />
+        <Setter Property="TwoColumnWidth" Value="{arc:MorphNavTokenResource MenuTwoColumnWidth}" />
+    </ControlTheme>
+
+    <!-- Small muted text: menu group headings and the results heading. -->
+    <ControlTheme x:Key="{x:Type arc:MorphNavHeading}" TargetType="arc:MorphNavHeading">
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="LineHeight" Value="{arc:MorphNavTokenResource SmallLineHeight}" />
+        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        <Setter Property="Padding" Value="{arc:MorphNavTokenResource MenuHeadingPadding}" />
+        <Style Selector="^.tiny">
+            <Setter Property="Padding" Value="{arc:MorphNavTokenResource TinyMenuHeadingPadding}" />
+        </Style>
+        <Style Selector="^.results">
+            <Setter Property="Padding" Value="{arc:MorphNavTokenResource ResultsHeadingPadding}" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A link: glyph in muted text (foreground on hover), label 14 px medium and a 12 px muted description that wraps;
+        hover tints the row. Dense links (the folded menu) show the label alone with a smaller glyph.
+    -->
+    <ControlTheme x:Key="{x:Type arc:MorphNavLinkButton}" TargetType="arc:MorphNavLinkButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="Padding" Value="{arc:MorphNavTokenResource LinkPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep14}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MorphNavLinkButton">
+                <Panel Name="PART_Root">
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <arc:ArcShrinkRow Name="PART_Row">
+                            <Border Name="PART_IconBox"
+                                    IsVisible="{TemplateBinding Icon, Converter={x:Static ObjectConverters.IsNotNull}}">
+                                <arc:ArcGlyph Name="PART_Icon"
+                                              Data="{TemplateBinding Icon}"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+                            </Border>
+                            <StackPanel Name="PART_Text" arc:ArcShrinkRow.IsShrinkable="True">
+                                <TextBlock Name="PART_Label"
+                                           Text="{TemplateBinding Label}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           LineHeight="{arc:MorphNavTokenResource LabelLineHeight}"
+                                           TextTrimming="CharacterEllipsis" />
+                                <TextBlock Name="PART_Description"
+                                           Text="{TemplateBinding Description}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           LineHeight="{arc:MorphNavTokenResource SmallLineHeight}"
+                                           TextWrapping="Wrap"
+                                           MaxLines="2"
+                                           TextTrimming="CharacterEllipsis"
+                                           IsVisible="{TemplateBinding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                            </StackPanel>
+                        </arc:ArcShrinkRow>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|ArcShrinkRow#PART_Row">
+            <Setter Property="Spacing" Value="{arc:MorphNavTokenResource LinkSpacing}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Text">
+            <Setter Property="Spacing" Value="{arc:MorphNavTokenResource LinkTextGap}" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_IconBox">
+            <Setter Property="Width" Value="{arc:MorphNavTokenResource LinkIconSize}" />
+            <Setter Property="Height" Value="{arc:MorphNavTokenResource LinkIconSize}" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Icon">
+            <Setter Property="Size" Value="{arc:MorphNavTokenResource LinkGlyphSize}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:hover">
+            <Setter Property="Background" Value="{arc:MorphNavTokenResource LinkHoverColor}" />
+        </Style>
+        <Style Selector="^:hover /template/ arc|ArcGlyph#PART_Icon">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ arc|ArcGlyph#PART_Icon">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:dense">
+            <Setter Property="Padding" Value="{arc:MorphNavTokenResource DenseLinkPadding}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
+        </Style>
+        <Style Selector="^:dense /template/ arc|ArcShrinkRow#PART_Row">
+            <Setter Property="Spacing" Value="{arc:MorphNavTokenResource DenseLinkSpacing}" />
+        </Style>
+        <Style Selector="^:dense /template/ StackPanel#PART_Text">
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="^:dense /template/ Border#PART_IconBox">
+            <Setter Property="Width" Value="{arc:MorphNavTokenResource DenseIconSize}" />
+            <Setter Property="Height" Value="{arc:MorphNavTokenResource DenseIconSize}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="^:dense:tiny">
+            <Setter Property="Padding" Value="{arc:MorphNavTokenResource TinyLinkPadding}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph#PART_Icon">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The feature card: a 16:10 picture with rounded corners, a title and a muted line; hover tints the card. -->
+    <ControlTheme x:Key="{x:Type arc:MorphNavStoryButton}" TargetType="arc:MorphNavStoryButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="Padding" Value="{arc:MorphNavTokenResource StoryPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep14}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MorphNavStoryButton">
+                <Panel Name="PART_Root">
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Spacing="{arc:MorphNavTokenResource StorySpacing}">
+                            <arc:MorphNavAspect Aspect="{arc:MorphNavTokenResource StoryImageAspect}"
+                                                Margin="{arc:MorphNavTokenResource StoryImageMargin}"
+                                                IsVisible="{TemplateBinding Image, Converter={x:Static ObjectConverters.IsNotNull}}">
+                                <Border ClipToBounds="True"
+                                        CornerRadius="{arc:ArcDesignTokenResource RadiusStep10}"
+                                        Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+                                    <Image Source="{TemplateBinding Image}"
+                                           Stretch="UniformToFill" />
+                                </Border>
+                            </arc:MorphNavAspect>
+                            <TextBlock Text="{TemplateBinding Title}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       LineHeight="{arc:MorphNavTokenResource LabelLineHeight}"
+                                       Margin="{arc:MorphNavTokenResource StoryTextMargin}"
+                                       TextWrapping="Wrap" />
+                            <TextBlock Text="{TemplateBinding Description}"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       LineHeight="{arc:MorphNavTokenResource SmallLineHeight}"
+                                       Margin="{arc:MorphNavTokenResource StoryTextMargin}"
+                                       TextWrapping="Wrap"
+                                       IsVisible="{TemplateBinding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                        </StackPanel>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:hover">
+            <Setter Property="Background" Value="{arc:MorphNavTokenResource LinkHoverColor}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A panel's footer: a hairline, then 12 px secondary text. -->
+    <ControlTheme x:Key="{x:Type arc:MorphNavFooter}" TargetType="arc:MorphNavFooter">
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessTop}" />
+        <Setter Property="Padding" Value="{arc:MorphNavTokenResource FooterPadding}" />
+        <Setter Property="TextElement.FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+    </ControlTheme>
+
+    <!-- A footer link: secondary text and an arrow, foreground on hover. -->
+    <ControlTheme x:Key="{x:Type arc:MorphNavFooterLinkButton}" TargetType="arc:MorphNavFooterLinkButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MorphNavFooterLinkButton">
+                <Panel Name="PART_Root">
+                    <StackPanel Orientation="Horizontal"
+                                Background="{TemplateBinding Background}"
+                                Spacing="{arc:MorphNavTokenResource FooterLinkSpacing}">
+                        <ContentPresenter Content="{TemplateBinding Content}" VerticalAlignment="Center" />
+                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ArrowRight}"
+                                      Size="{arc:MorphNavTokenResource FooterGlyphSize}"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      VerticalAlignment="Center" />
+                    </StackPanel>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:hover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The search bar: glyph, a bare 16 px input and a close button; as tall as the bar. -->
+    <ControlTheme x:Key="{x:Type arc:MorphNavSearchBar}" TargetType="arc:MorphNavSearchBar">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Height" Value="{arc:MorphNavTokenResource BarHeight}" />
+        <Setter Property="Padding" Value="{arc:MorphNavTokenResource SearchBarPadding}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MorphNavSearchBar">
+                <Border Padding="{TemplateBinding Padding}" Background="Transparent">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="{arc:MorphNavTokenResource SearchBarSpacing}">
+                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Search}"
+                                      Size="{arc:MorphNavTokenResource SearchIconSize}"
+                                      Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                      VerticalAlignment="Center" />
+                        <arc:MorphNavSearchInput Name="PART_Input"
+                                                 Grid.Column="1"
+                                                 PlaceholderText="{TemplateBinding Placeholder}"
+                                                 VerticalAlignment="Stretch" />
+                        <arc:MorphNavToolButton Name="PART_Close"
+                                                Grid.Column="2"
+                                                Glyph="{x:Static arc:ArcIcons.X}"
+                                                VerticalAlignment="Center" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:compact">
+            <Setter Property="Height" Value="{arc:MorphNavTokenResource CompactBarHeight}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:SpringDoubleTransition Property="Height" VisualDuration="0.38" Bounce="0" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The bare input: no frame, 16 px text, muted placeholder. -->
+    <ControlTheme x:Key="{x:Type arc:MorphNavSearchInput}" TargetType="arc:MorphNavSearchInput">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MorphNavSearchInput">
+                <Border Background="Transparent" Padding="{TemplateBinding Padding}">
+                    <ScrollViewer Name="PART_ScrollViewer"
+                                  HorizontalScrollBarVisibility="Hidden"
+                                  VerticalScrollBarVisibility="Disabled"
+                                  VerticalAlignment="Center">
+                        <Panel>
+                            <TextBlock Name="PART_Placeholder"
+                                       Foreground="{TemplateBinding PlaceholderForeground}"
+                                       Text="{TemplateBinding PlaceholderText}"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center">
+                                <TextBlock.IsVisible>
+                                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                        <Binding ElementName="PART_TextPresenter" Path="PreeditText" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Text" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                                    </MultiBinding>
+                                </TextBlock.IsVisible>
+                            </TextBlock>
+                            <TextPresenter Name="PART_TextPresenter"
+                                           Text="{TemplateBinding Text, Mode=TwoWay}"
+                                           CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                           CaretIndex="{TemplateBinding CaretIndex}"
+                                           SelectionStart="{TemplateBinding SelectionStart}"
+                                           SelectionEnd="{TemplateBinding SelectionEnd}"
+                                           TextWrapping="NoWrap"
+                                           SelectionBrush="{TemplateBinding SelectionBrush}"
+                                           SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                           CaretBrush="{TemplateBinding CaretBrush}"
+                                           VerticalAlignment="Center" />
+                        </Panel>
+                    </ScrollViewer>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="SelectionForegroundBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="PlaceholderForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="IBeam" />
+    </ControlTheme>
+
+    <!-- The results list: rows two pixels apart. -->
+    <ControlTheme x:Key="{x:Type arc:MorphNavResultList}" TargetType="arc:MorphNavResultList">
+        <Setter Property="Spacing" Value="{arc:MorphNavTokenResource LinkGap}" />
+    </ControlTheme>
+
+    <!--
+        A search result: glyph, label and description, the group in muted text, and the enter glyph on the active row,
+        which is tinted like the bar's highlight.
+    -->
+    <ControlTheme x:Key="{x:Type arc:MorphNavResultRow}" TargetType="arc:MorphNavResultRow">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Padding" Value="{arc:MorphNavTokenResource ResultPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep14}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MorphNavResultRow">
+                <Border Background="{TemplateBinding Background}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="{arc:MorphNavTokenResource ResultSpacing}">
+                        <Border Width="{arc:MorphNavTokenResource LinkIconSize}"
+                                Height="{arc:MorphNavTokenResource LinkIconSize}"
+                                VerticalAlignment="Center"
+                                IsVisible="{TemplateBinding Icon, Converter={x:Static ObjectConverters.IsNotNull}}">
+                            <arc:ArcGlyph Data="{TemplateBinding Icon}"
+                                          Size="{arc:MorphNavTokenResource LinkGlyphSize}"
+                                          Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1"
+                                    Spacing="{arc:MorphNavTokenResource LinkTextGap}"
+                                    VerticalAlignment="Center">
+                            <TextBlock Text="{TemplateBinding Label}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       LineHeight="{arc:MorphNavTokenResource LabelLineHeight}"
+                                       TextTrimming="CharacterEllipsis" />
+                            <TextBlock Text="{TemplateBinding Description}"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       LineHeight="{arc:MorphNavTokenResource SmallLineHeight}"
+                                       TextTrimming="CharacterEllipsis"
+                                       IsVisible="{TemplateBinding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                        </StackPanel>
+                        <TextBlock Grid.Column="2"
+                                   Text="{TemplateBinding Group}"
+                                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                   VerticalAlignment="Center"
+                                   IsVisible="{TemplateBinding Group, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                        <arc:ArcGlyph Name="PART_Enter"
+                                      Grid.Column="3"
+                                      Data="{x:Static arc:ArcIcons.CornerDownLeft}"
+                                      Size="{arc:MorphNavTokenResource EnterGlyphSize}"
+                                      Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                      VerticalAlignment="Center" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Enter">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:active">
+            <Setter Property="Background" Value="{arc:MorphNavTokenResource HighlightColor}" />
+        </Style>
+        <Style Selector="^:active /template/ arc|ArcGlyph#PART_Enter">
+            <Setter Property="Opacity" Value="1" />
         </Style>
     </ControlTheme>
 </ResourceDictionary>

@@ -5,41 +5,58 @@ using Avalonia.Automation.Provider;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
+using Avalonia.Controls.Templates;
 using Avalonia.Input;
+using Avalonia.Layout;
 using Avalonia.Media;
-using Avalonia.Media.TextFormatting;
+using Avalonia.VisualTree;
 using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Primitives;
 using AvaloniaButton = Avalonia.Controls.Button;
 
 namespace TKCode.Arc;
 
-/// <summary>The closed face of a <see cref="MorphNav"/>: the mark, the title, the current page and the menu glyph.</summary>
+/// <summary>
+/// A button of a <see cref="MorphNav"/> (bar items, brand, tools, links): its keyboard ring is built on first keyboard
+/// focus, outside the face with the pill radius unless a subclass asks for another, and it carries the compact state.
+/// </summary>
 [TemplatePart("PART_Root", typeof(Panel))]
-internal sealed class MorphNavPill : AvaloniaButton
+[PseudoClasses(CompactPseudoClass, HoverPseudoClass)]
+internal abstract class MorphNavButton : AvaloniaButton
 {
-    public static readonly StyledProperty<Geometry?> MarkProperty =
-        AvaloniaProperty.Register<MorphNavPill, Geometry?>(nameof(Mark));
+    internal const string CompactPseudoClass = ":compact";
 
-    public static readonly StyledProperty<string?> TitleProperty =
-        AvaloniaProperty.Register<MorphNavPill, string?>(nameof(Title));
-
-    public static readonly StyledProperty<string?> CurrentProperty =
-        AvaloniaProperty.Register<MorphNavPill, string?>(nameof(Current));
+    /// <summary>Under a mouse or pen (not a finger): hover effects never flash on touch.</summary>
+    internal const string HoverPseudoClass = ":hover";
 
     private LazyFocusRing? _focusRing;
 
-    public Geometry? Mark { get => GetValue(MarkProperty); set => SetValue(MarkProperty, value); }
+    static MorphNavButton()
+    {
+        ClipToBoundsProperty.OverrideDefaultValue<MorphNavButton>(false);
+    }
 
-    public string? Title { get => GetValue(TitleProperty); set => SetValue(TitleProperty, value); }
+    /// <summary>Resource key of the ring's corner radius.</summary>
+    protected virtual object RingRadiusKey => ArcDesignTokens.Key(ArcDesignTokenKind.RadiusPill);
 
-    public string? Current { get => GetValue(CurrentProperty); set => SetValue(CurrentProperty, value); }
+    public void SetCompact(bool compact) => PseudoClasses.Set(CompactPseudoClass, compact);
+
+    protected override void OnPointerEntered(PointerEventArgs e)
+    {
+        base.OnPointerEntered(e);
+        PseudoClasses.Set(HoverPseudoClass, e.Pointer.Type != PointerType.Touch);
+    }
+
+    protected override void OnPointerExited(PointerEventArgs e)
+    {
+        base.OnPointerExited(e);
+        PseudoClasses.Set(HoverPseudoClass, false);
+    }
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        _focusRing ??= new LazyFocusRing(this, MorphNavTokens.Key(MorphNavTokenKind.FocusRingMargin),
-            ArcDesignTokens.Key(ArcDesignTokenKind.RadiusStep20));
+        _focusRing ??= new LazyFocusRing(this, MorphNavTokens.Key(MorphNavTokenKind.FocusRingMargin), RingRadiusKey);
         _focusRing.Attach(e.NameScope.Find<Panel>("PART_Root"));
     }
 
@@ -56,393 +73,295 @@ internal sealed class MorphNavPill : AvaloniaButton
     }
 }
 
-/// <summary>
-/// Lays a <see cref="MorphNav"/>'s sections out in equal columns, as many side by side as the width allows (at least
-/// <see cref="MinColumnWidth"/> each), wrapping into further rows.
-/// </summary>
-internal sealed class MorphNavColumns : Panel
+/// <summary>The bar: a row of the brand, the items and the tools, 56 px tall (46 compact).</summary>
+[PseudoClasses(MorphNavButton.CompactPseudoClass)]
+internal sealed class MorphNavBar : Border
 {
-    public static readonly StyledProperty<double> MinColumnWidthProperty =
-        AvaloniaProperty.Register<MorphNavColumns, double>(nameof(MinColumnWidth), 176);
+    public void SetCompact(bool compact) => PseudoClasses.Set(MorphNavButton.CompactPseudoClass, compact);
+}
 
-    public static readonly StyledProperty<double> GapProperty =
-        AvaloniaProperty.Register<MorphNavColumns, double>(nameof(Gap), 12);
+/// <summary>
+/// Shows its child at <see cref="Amount"/> of its width, clipping the rest: the brand name folds away in compact and
+/// narrow bars.
+/// </summary>
+internal sealed class MorphNavReveal : Decorator
+{
+    public static readonly StyledProperty<double> AmountProperty =
+        AvaloniaProperty.Register<MorphNavReveal, double>(nameof(Amount), 1);
 
-    static MorphNavColumns()
+    static MorphNavReveal()
     {
-        AffectsMeasure<MorphNavColumns>(MinColumnWidthProperty, GapProperty);
+        AffectsMeasure<MorphNavReveal>(AmountProperty);
+        ClipToBoundsProperty.OverrideDefaultValue<MorphNavReveal>(true);
     }
 
-    public double MinColumnWidth { get => GetValue(MinColumnWidthProperty); set => SetValue(MinColumnWidthProperty, value); }
-
-    public double Gap { get => GetValue(GapProperty); set => SetValue(GapProperty, value); }
-
-    /// <summary>How many sections sit side by side in the last layout.</summary>
-    public int Columns { get; private set; } = 1;
-
-    internal static int ColumnsFor(double width, int sections, double minColumn, double gap)
-    {
-        if (sections <= 1 || double.IsInfinity(width))
-        {
-            return Math.Max(1, double.IsInfinity(width) ? sections : 1);
-        }
-        var fit = (int)Math.Floor((width + gap) / (Math.Max(1, minColumn) + gap));
-        return Math.Clamp(fit, 1, sections);
-    }
-
-    private double ColumnWidth(double width) => (width - (Columns - 1) * Gap) / Columns;
+    public double Amount { get => GetValue(AmountProperty); set => SetValue(AmountProperty, value); }
 
     protected override Size MeasureOverride(Size availableSize)
     {
-        var count = Children.Count;
-        var width = double.IsInfinity(availableSize.Width) ? MinColumnWidth * Math.Max(1, count) + Gap * Math.Max(0, count - 1) : availableSize.Width;
-        Columns = ColumnsFor(width, count, MinColumnWidth, Gap);
-        var column = Math.Max(0, ColumnWidth(width));
-        var height = 0.0;
-        for (var start = 0; start < count; start += Columns)
+        if (Child is null)
         {
-            var row = 0.0;
-            for (var i = start; i < Math.Min(count, start + Columns); i++)
-            {
-                Children[i].Measure(new Size(column, double.PositiveInfinity));
-                row = Math.Max(row, Children[i].DesiredSize.Height);
-            }
-            height += row + (start > 0 ? Gap : 0);
+            return default;
         }
-        return new Size(width, height);
+        Child.Measure(new Size(double.PositiveInfinity, availableSize.Height));
+        var size = Child.DesiredSize;
+        return new Size(size.Width * Math.Clamp(Amount, 0, 1), size.Height);
     }
 
     protected override Size ArrangeOverride(Size finalSize)
     {
-        var count = Children.Count;
-        var column = Math.Max(0, ColumnWidth(finalSize.Width));
-        var y = 0.0;
-        for (var start = 0; start < count; start += Columns)
-        {
-            var row = 0.0;
-            for (var i = start; i < Math.Min(count, start + Columns); i++)
-            {
-                row = Math.Max(row, Children[i].DesiredSize.Height);
-            }
-            for (var i = start; i < Math.Min(count, start + Columns); i++)
-            {
-                var x = (i - start) * (column + Gap);
-                Children[i].Arrange(new Rect(x, y, column, row));
-            }
-            y += row + Gap;
-        }
+        Child?.Arrange(new Rect(0, 0, Child.DesiredSize.Width, finalSize.Height));
         return finalSize;
     }
 }
 
-/// <summary>
-/// One link of a <see cref="MorphNav"/>'s panel, drawn by itself: a glyph tile, the text and the line under it, a hover
-/// tint and the keyboard ring. Its text layouts are kept until the text, the font or the width changes, so hovering and
-/// focusing only repaint.
-/// </summary>
-[PseudoClasses(CurrentPseudoClass)]
-internal sealed class MorphNavLinkRow : Control
+/// <summary>The brand button: the mark and the name, which folds away in compact and narrow bars.</summary>
+[PseudoClasses(BarePseudoClass)]
+internal sealed class MorphNavBrandButton : MorphNavButton
 {
-    internal const string CurrentPseudoClass = ":current";
+    internal const string BarePseudoClass = ":bare";
 
-    public static readonly StyledProperty<IBrush?> ForegroundProperty =
-        AvaloniaProperty.Register<MorphNavLinkRow, IBrush?>(nameof(Foreground));
+    public static readonly StyledProperty<object?> MarkProperty =
+        AvaloniaProperty.Register<MorphNavBrandButton, object?>(nameof(Mark));
 
-    public static readonly StyledProperty<IBrush?> SecondaryForegroundProperty =
-        AvaloniaProperty.Register<MorphNavLinkRow, IBrush?>(nameof(SecondaryForeground));
+    public static readonly StyledProperty<IDataTemplate?> MarkTemplateProperty =
+        AvaloniaProperty.Register<MorphNavBrandButton, IDataTemplate?>(nameof(MarkTemplate));
 
-    public static readonly StyledProperty<IBrush?> HoverBrushProperty =
-        AvaloniaProperty.Register<MorphNavLinkRow, IBrush?>(nameof(HoverBrush));
+    public static readonly StyledProperty<string?> TextProperty =
+        AvaloniaProperty.Register<MorphNavBrandButton, string?>(nameof(Text));
 
-    public static readonly StyledProperty<IBrush?> TileBrushProperty =
-        AvaloniaProperty.Register<MorphNavLinkRow, IBrush?>(nameof(TileBrush));
+    public object? Mark { get => GetValue(MarkProperty); set => SetValue(MarkProperty, value); }
 
-    public static readonly StyledProperty<IBrush?> FocusRingBrushProperty =
-        AvaloniaProperty.Register<MorphNavLinkRow, IBrush?>(nameof(FocusRingBrush));
+    public IDataTemplate? MarkTemplate { get => GetValue(MarkTemplateProperty); set => SetValue(MarkTemplateProperty, value); }
 
-    public static readonly StyledProperty<CornerRadius> CornerRadiusProperty =
-        AvaloniaProperty.Register<MorphNavLinkRow, CornerRadius>(nameof(CornerRadius));
+    public string? Text { get => GetValue(TextProperty); set => SetValue(TextProperty, value); }
 
-    public static readonly StyledProperty<CornerRadius> TileCornerRadiusProperty =
-        AvaloniaProperty.Register<MorphNavLinkRow, CornerRadius>(nameof(TileCornerRadius));
-
-    public static readonly StyledProperty<FontFamily> FontFamilyProperty =
-        TextBlock.FontFamilyProperty.AddOwner<MorphNavLinkRow>();
-
-    public static readonly StyledProperty<double> FontSizeProperty =
-        TextBlock.FontSizeProperty.AddOwner<MorphNavLinkRow>();
-
-    public static readonly StyledProperty<double> SecondaryFontSizeProperty =
-        AvaloniaProperty.Register<MorphNavLinkRow, double>(nameof(SecondaryFontSize), 12);
-
-    public static readonly StyledProperty<FontWeight> FontWeightProperty =
-        TextBlock.FontWeightProperty.AddOwner<MorphNavLinkRow>();
-
-    public static readonly StyledProperty<double> RowHeightProperty =
-        AvaloniaProperty.Register<MorphNavLinkRow, double>(nameof(RowHeight), 36);
-
-    public static readonly StyledProperty<double> TallRowHeightProperty =
-        AvaloniaProperty.Register<MorphNavLinkRow, double>(nameof(TallRowHeight), 52);
-
-    public static readonly StyledProperty<double> InsetProperty =
-        AvaloniaProperty.Register<MorphNavLinkRow, double>(nameof(Inset), 8);
-
-    public static readonly StyledProperty<double> TileSizeProperty =
-        AvaloniaProperty.Register<MorphNavLinkRow, double>(nameof(TileSize), 32);
-
-    public static readonly StyledProperty<double> GlyphSizeProperty =
-        AvaloniaProperty.Register<MorphNavLinkRow, double>(nameof(GlyphSize), 16);
-
-    private TextLayout? _title;
-    private TextLayout? _description;
-    private double _layoutWidth = double.NaN;
-    private Pen? _glyphPen;
-    private IBrush? _glyphPenBrush;
-    private Pen? _ringPen;
-    private IBrush? _ringPenBrush;
-    private bool _pressed;
-
-    static MorphNavLinkRow()
-    {
-        AffectsMeasure<MorphNavLinkRow>(FontFamilyProperty, FontSizeProperty, SecondaryFontSizeProperty, FontWeightProperty,
-            RowHeightProperty, TallRowHeightProperty, InsetProperty, TileSizeProperty);
-        AffectsRender<MorphNavLinkRow>(HoverBrushProperty, TileBrushProperty, FocusRingBrushProperty, CornerRadiusProperty,
-            TileCornerRadiusProperty, GlyphSizeProperty);
-        FocusableProperty.OverrideDefaultValue<MorphNavLinkRow>(true);
-        CursorProperty.OverrideDefaultValue<MorphNavLinkRow>(new Cursor(StandardCursorType.Hand));
-    }
-
-    public MorphNavLinkRow(MorphNavLink link)
-    {
-        Link = link;
-        AutomationProperties.SetName(this, link.Text);
-        if (link.Description is { Length: > 0 } help)
-        {
-            AutomationProperties.SetHelpText(this, help);
-        }
-    }
-
-    public MorphNavLink Link { get; }
-
-    /// <summary>The nav that owns the row; it is told when the row is invoked.</summary>
-    public MorphNav? Owner { get; set; }
-
-    public IBrush? Foreground { get => GetValue(ForegroundProperty); set => SetValue(ForegroundProperty, value); }
-
-    public IBrush? SecondaryForeground { get => GetValue(SecondaryForegroundProperty); set => SetValue(SecondaryForegroundProperty, value); }
-
-    public IBrush? HoverBrush { get => GetValue(HoverBrushProperty); set => SetValue(HoverBrushProperty, value); }
-
-    public IBrush? TileBrush { get => GetValue(TileBrushProperty); set => SetValue(TileBrushProperty, value); }
-
-    public IBrush? FocusRingBrush { get => GetValue(FocusRingBrushProperty); set => SetValue(FocusRingBrushProperty, value); }
-
-    public CornerRadius CornerRadius { get => GetValue(CornerRadiusProperty); set => SetValue(CornerRadiusProperty, value); }
-
-    public CornerRadius TileCornerRadius { get => GetValue(TileCornerRadiusProperty); set => SetValue(TileCornerRadiusProperty, value); }
-
-    public FontFamily FontFamily { get => GetValue(FontFamilyProperty); set => SetValue(FontFamilyProperty, value); }
-
-    public double FontSize { get => GetValue(FontSizeProperty); set => SetValue(FontSizeProperty, value); }
-
-    public double SecondaryFontSize { get => GetValue(SecondaryFontSizeProperty); set => SetValue(SecondaryFontSizeProperty, value); }
-
-    public FontWeight FontWeight { get => GetValue(FontWeightProperty); set => SetValue(FontWeightProperty, value); }
-
-    public double RowHeight { get => GetValue(RowHeightProperty); set => SetValue(RowHeightProperty, value); }
-
-    public double TallRowHeight { get => GetValue(TallRowHeightProperty); set => SetValue(TallRowHeightProperty, value); }
-
-    public double Inset { get => GetValue(InsetProperty); set => SetValue(InsetProperty, value); }
-
-    public double TileSize { get => GetValue(TileSizeProperty); set => SetValue(TileSizeProperty, value); }
-
-    public double GlyphSize { get => GetValue(GlyphSizeProperty); set => SetValue(GlyphSizeProperty, value); }
-
-    /// <summary>Marks the row as the page the nav is on.</summary>
-    public void SetCurrent(bool current) => PseudoClasses.Set(CurrentPseudoClass, current);
-
-    private double TextLeft => Link.Glyph is null ? Inset + 2 : Inset + TileSize + 12;
+    /// <summary>Folds the name away (compact or narrow).</summary>
+    public void SetBare(bool bare) => PseudoClasses.Set(BarePseudoClass, bare);
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-        if (change.Property == ForegroundProperty || change.Property == SecondaryForegroundProperty
-            || change.Property == FontFamilyProperty || change.Property == FontSizeProperty
-            || change.Property == SecondaryFontSizeProperty || change.Property == FontWeightProperty)
+        if (change.Property == TextProperty)
         {
-            DropLayouts();
-            InvalidateMeasure();
-            InvalidateVisual();
-        }
-        else if (change.Property == IsPointerOverProperty)
-        {
-            InvalidateVisual();
+            AutomationProperties.SetName(this, Text);
         }
     }
 
-    private void DropLayouts()
+    protected override AutomationPeer OnCreateAutomationPeer() => new LinkPeer(this);
+
+    private sealed class LinkPeer(AvaloniaButton owner) : ButtonAutomationPeer(owner)
     {
-        _title?.Dispose();
-        _description?.Dispose();
-        _title = null;
-        _description = null;
-        _layoutWidth = double.NaN;
+        protected override AutomationControlType GetAutomationControlTypeCore() => AutomationControlType.Hyperlink;
+    }
+}
+
+/// <summary>
+/// A top-level item of the bar: its label and, for items with a panel, a chevron that flips while the panel is open. The
+/// current item and the open one read in the foreground color.
+/// </summary>
+[PseudoClasses(OpenPseudoClass, CurrentPseudoClass, PanelPseudoClass)]
+internal sealed class MorphNavTrigger : MorphNavButton
+{
+    internal const string OpenPseudoClass = ":open";
+    internal const string CurrentPseudoClass = ":current";
+    internal const string PanelPseudoClass = ":panel";
+
+    public static readonly StyledProperty<string?> LabelProperty =
+        AvaloniaProperty.Register<MorphNavTrigger, string?>(nameof(Label));
+
+    public static readonly StyledProperty<bool> HasPanelProperty =
+        AvaloniaProperty.Register<MorphNavTrigger, bool>(nameof(HasPanel));
+
+    public MorphNavTrigger(MorphNavItem? item)
+    {
+        Item = item;
     }
 
-    private void EnsureLayouts(double width)
-    {
-        var textWidth = Math.Max(1, width - TextLeft - Inset);
-        if (_title is not null && Math.Abs(_layoutWidth - textWidth) < 0.5)
-        {
-            return;
-        }
-        DropLayouts();
-        _layoutWidth = textWidth;
-        var family = FontFamily ?? FontFamily.Default;
-        _title = new TextLayout(Link.Text ?? string.Empty, new Typeface(family, FontStyle.Normal, FontWeight), FontSize, Foreground,
-            TextAlignment.Left, TextWrapping.NoWrap, TextTrimming.CharacterEllipsis, null, FlowDirection.LeftToRight, textWidth);
-        if (Link.Description is { Length: > 0 } description)
-        {
-            _description = new TextLayout(description, new Typeface(family), SecondaryFontSize, SecondaryForeground,
-                TextAlignment.Left, TextWrapping.NoWrap, TextTrimming.CharacterEllipsis, null, FlowDirection.LeftToRight, textWidth);
-        }
-    }
+    /// <summary>The item; null for the menu trigger of a folded bar.</summary>
+    public MorphNavItem? Item { get; }
 
-    protected override Size MeasureOverride(Size availableSize)
-    {
-        var height = Link.Description is { Length: > 0 } ? TallRowHeight : RowHeight;
-        var width = double.IsInfinity(availableSize.Width) ? 240 : availableSize.Width;
-        EnsureLayouts(width);
-        return new Size(width, height);
-    }
+    /// <summary>What the trigger opens: its item, or <see cref="MorphNav.MenuKey"/>.</summary>
+    public object Key => (object?)Item ?? MorphNav.MenuKey;
 
-    protected override void OnPointerPressed(PointerPressedEventArgs e)
-    {
-        base.OnPointerPressed(e);
-        if (!e.Handled && e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
-        {
-            _pressed = true;
-            e.Pointer.Capture(this);
-            e.Handled = true;
-        }
-    }
+    public string? Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
 
-    protected override void OnPointerReleased(PointerReleasedEventArgs e)
+    public bool HasPanel { get => GetValue(HasPanelProperty); set => SetValue(HasPanelProperty, value); }
+
+    public bool IsOpen { get; private set; }
+
+    public bool IsCurrent { get; private set; }
+
+    /// <summary>Whether the keyboard ring shows (the highlight follows keyboard focus only).</summary>
+    public bool IsFocusVisible => IsFocused && Classes.Contains(":focus-visible");
+
+    /// <summary>Raised after keyboard focus arrives or leaves, once the focus pseudo-classes are up to date.</summary>
+    public event EventHandler? FocusChanged;
+
+    public void SetOpen(bool open)
     {
-        base.OnPointerReleased(e);
-        if (!_pressed)
+        IsOpen = open;
+        PseudoClasses.Set(OpenPseudoClass, open);
+        if (HasPanel)
         {
-            return;
-        }
-        _pressed = false;
-        e.Pointer.Capture(null);
-        e.Handled = true;
-        if (new Rect(Bounds.Size).Contains(e.GetPosition(this)))
-        {
-            Owner?.Invoke(this);
+            AutomationProperties.SetItemStatus(this, open ? "Expanded" : "Collapsed");
         }
     }
 
-    protected override void OnPointerCaptureLost(PointerCaptureLostEventArgs e)
+    public void SetCurrent(bool current)
     {
-        base.OnPointerCaptureLost(e);
-        _pressed = false;
+        IsCurrent = current;
+        PseudoClasses.Set(CurrentPseudoClass, current);
+        AutomationProperties.SetHelpText(this, current ? "Current page" : null);
+    }
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == LabelProperty)
+        {
+            AutomationProperties.SetName(this, Label);
+        }
+        else if (change.Property == HasPanelProperty)
+        {
+            PseudoClasses.Set(PanelPseudoClass, HasPanel);
+        }
     }
 
     protected override void OnGotFocus(FocusChangedEventArgs e)
     {
         base.OnGotFocus(e);
-        InvalidateVisual();
+        FocusChanged?.Invoke(this, EventArgs.Empty);
     }
 
     protected override void OnLostFocus(FocusChangedEventArgs e)
     {
         base.OnLostFocus(e);
-        InvalidateVisual();
+        FocusChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    public override void Render(DrawingContext context)
+    protected override AutomationPeer OnCreateAutomationPeer() => new TriggerPeer(this);
+
+    /// <summary>Items with a panel expand and collapse; plain items are links.</summary>
+    private sealed class TriggerPeer(MorphNavTrigger owner) : ButtonAutomationPeer(owner), IExpandCollapseProvider
     {
-        var bounds = new Rect(Bounds.Size);
-        var radius = CornerRadius.TopLeft;
-        context.FillRectangle(Brushes.Transparent, bounds);
-        if ((IsPointerOver || Classes.Contains(CurrentPseudoClass)) && HoverBrush is { } hover)
+        private MorphNavTrigger Trigger => (MorphNavTrigger)Owner;
+
+        protected override AutomationControlType GetAutomationControlTypeCore() =>
+            Trigger.HasPanel ? AutomationControlType.Button : AutomationControlType.Hyperlink;
+
+        public ExpandCollapseState ExpandCollapseState =>
+            !Trigger.HasPanel ? ExpandCollapseState.LeafNode
+            : Trigger.IsOpen ? ExpandCollapseState.Expanded : ExpandCollapseState.Collapsed;
+
+        public bool ShowsMenu => false;
+
+        public void Expand() => Trigger.FindAncestorOfType<MorphNav>()?.OpenFromAutomation(Trigger);
+
+        public void Collapse()
         {
-            context.DrawRectangle(hover, null, new RoundedRect(bounds, radius));
-        }
-        if (Link.Glyph is { } glyph)
-        {
-            var tile = new Rect(Inset, (bounds.Height - TileSize) / 2, TileSize, TileSize);
-            if (TileBrush is { } tileBrush)
+            if (Trigger.IsOpen)
             {
-                context.DrawRectangle(tileBrush, null, new RoundedRect(tile, TileCornerRadius.TopLeft));
-            }
-            if (Foreground is { } ink)
-            {
-                if (_glyphPen is null || !ReferenceEquals(ink, _glyphPenBrush))
-                {
-                    _glyphPen = new Pen(ink, 1.75, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round);
-                    _glyphPenBrush = ink;
-                }
-                var scale = GlyphSize / 24;
-                var origin = tile.Center - new Point(GlyphSize / 2, GlyphSize / 2);
-                using (context.PushTransform(Matrix.CreateScale(scale, scale) * Matrix.CreateTranslation(origin.X, origin.Y)))
-                {
-                    context.DrawGeometry(null, _glyphPen, glyph);
-                }
+                Trigger.FindAncestorOfType<MorphNav>()?.ClosePanel();
             }
         }
-        if (_title is not null)
+    }
+}
+
+/// <summary>
+/// The row of items: lays them out side by side and hosts the highlight that glides between them, under the items.
+/// </summary>
+internal sealed class MorphNavTrack : Panel
+{
+    public static readonly StyledProperty<IBrush?> HighlightBrushProperty =
+        AvaloniaProperty.Register<MorphNavTrack, IBrush?>(nameof(HighlightBrush));
+
+    public static readonly StyledProperty<CornerRadius> HighlightCornerRadiusProperty =
+        AvaloniaProperty.Register<MorphNavTrack, CornerRadius>(nameof(HighlightCornerRadius));
+
+    public MorphNavTrack()
+    {
+        Highlight = new GlidingIndicator { IsHitTestVisible = false };
+        Children.Add(Highlight);
+    }
+
+    public IBrush? HighlightBrush { get => GetValue(HighlightBrushProperty); set => SetValue(HighlightBrushProperty, value); }
+
+    public CornerRadius HighlightCornerRadius { get => GetValue(HighlightCornerRadiusProperty); set => SetValue(HighlightCornerRadiusProperty, value); }
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == HighlightBrushProperty)
         {
-            var left = TextLeft;
-            var block = _title.Height + (_description?.Height ?? 0);
-            var top = (bounds.Height - block) / 2;
-            _title.Draw(context, new Point(left, top));
-            _description?.Draw(context, new Point(left, top + _title.Height));
+            Highlight.Fill = HighlightBrush;
         }
-        if (Classes.Contains(":focus-visible") && FocusRingBrush is { } ring)
+        else if (change.Property == HighlightCornerRadiusProperty)
         {
-            if (_ringPen is null || !ReferenceEquals(ring, _ringPenBrush))
+            Highlight.CornerRadius = HighlightCornerRadius;
+        }
+    }
+
+    public GlidingIndicator Highlight { get; }
+
+    /// <summary>Raised after every arrange, so the highlight can follow items whose size changed.</summary>
+    public event EventHandler? Arranged;
+
+    protected override Size MeasureOverride(Size availableSize)
+    {
+        double width = 0;
+        double height = 0;
+        foreach (var child in Children)
+        {
+            if (ReferenceEquals(child, Highlight))
             {
-                _ringPen = new Pen(ring, 2);
-                _ringPenBrush = ring;
+                continue;
             }
-            // Inside the row: the panel clips its content while it moves.
-            context.DrawRectangle(null, _ringPen, new RoundedRect(bounds.Deflate(1), Math.Max(0, radius - 1)));
+            child.Measure(new Size(double.PositiveInfinity, availableSize.Height));
+            if (!child.IsVisible)
+            {
+                continue;
+            }
+            width += child.DesiredSize.Width;
+            height = Math.Max(height, child.DesiredSize.Height);
         }
+        Highlight.Measure(Size.Infinity);
+        return new Size(width, height);
     }
 
-    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    protected override Size ArrangeOverride(Size finalSize)
     {
-        base.OnDetachedFromVisualTree(e);
-        DropLayouts();
-    }
-
-    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
-    {
-        base.OnAttachedToVisualTree(e);
-        InvalidateMeasure();
-    }
-
-    protected override AutomationPeer OnCreateAutomationPeer() => new MorphNavLinkRowAutomationPeer(this);
-
-    private sealed class MorphNavLinkRowAutomationPeer : ControlAutomationPeer, IInvokeProvider
-    {
-        public MorphNavLinkRowAutomationPeer(MorphNavLinkRow owner) : base(owner)
+        double x = 0;
+        foreach (var child in Children)
         {
+            if (ReferenceEquals(child, Highlight) || !child.IsVisible)
+            {
+                continue;
+            }
+            var size = child.DesiredSize;
+            child.Arrange(new Rect(x, (finalSize.Height - size.Height) / 2, size.Width, size.Height));
+            x += size.Width;
         }
-
-        protected override AutomationControlType GetAutomationControlTypeCore() => AutomationControlType.Hyperlink;
-
-        protected override bool IsContentElementCore() => true;
-
-        protected override bool IsControlElementCore() => true;
-
-        public void Invoke()
-        {
-            var row = (MorphNavLinkRow)Owner;
-            row.Owner?.Invoke(row);
-        }
+        Highlight.Arrange(new Rect(finalSize));
+        Arranged?.Invoke(this, EventArgs.Empty);
+        return finalSize;
     }
+}
+
+/// <summary>A round icon button of the bar (search) and of the search bar (close).</summary>
+internal sealed class MorphNavToolButton : MorphNavButton
+{
+    public static readonly StyledProperty<Geometry?> GlyphProperty =
+        AvaloniaProperty.Register<MorphNavToolButton, Geometry?>(nameof(Glyph));
+
+    public Geometry? Glyph { get => GetValue(GlyphProperty); set => SetValue(GlyphProperty, value); }
+}
+
+/// <summary>The call-to-action button at the far end of the bar, filled with the foreground color.</summary>
+internal sealed class MorphNavActionButton : MorphNavButton
+{
+    public static readonly StyledProperty<Geometry?> GlyphProperty =
+        AvaloniaProperty.Register<MorphNavActionButton, Geometry?>(nameof(Glyph));
+
+    public Geometry? Glyph { get => GetValue(GlyphProperty); set => SetValue(GlyphProperty, value); }
 }

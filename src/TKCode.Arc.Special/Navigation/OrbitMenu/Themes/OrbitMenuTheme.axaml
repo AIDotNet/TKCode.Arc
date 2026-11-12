@@ -5,8 +5,9 @@
                     x:Class="TKCode.Arc.OrbitMenuTheme">
 
     <!--
-        The trigger's box is the menu's box. The actions live in a panel of no size on the trigger's center, drawn
-        before the trigger so they come out from under it; nothing clips, so they can travel outside the box.
+        The trigger's box is the menu's box. Everything else sits in panels of no size on the trigger's center and is
+        moved out with render transforms: under the trigger the hover field, the track and the lens (created on first
+        use), above it the actions, and on top the label pill. Nothing clips, so the arc can travel outside the box.
     -->
     <ControlTheme x:Key="{x:Type arc:OrbitMenu}" TargetType="arc:OrbitMenu">
         <Setter Property="ClipToBounds" Value="False" />
@@ -14,20 +15,25 @@
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="ItemsPanel">
             <ItemsPanelTemplate>
-                <arc:OrbitMenuOrbit />
+                <arc:OrbitMenuOrbit KeyboardNavigation.TabNavigation="Once" />
             </ItemsPanelTemplate>
         </Setter>
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:OrbitMenu">
                 <Panel ClipToBounds="False">
+                    <arc:OrbitMenuOrbit Name="PART_Under" ClipToBounds="False" />
+                    <arc:OrbitMenuTrigger Name="PART_Trigger" />
                     <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" ClipToBounds="False" />
-                    <arc:OrbitMenuTrigger Name="PART_Trigger" Glyph="{TemplateBinding Glyph}" />
+                    <arc:OrbitMenuOrbit Name="PART_Over" ClipToBounds="False" />
                 </Panel>
             </ControlTemplate>
         </Setter>
     </ControlTheme>
 
-    <!-- The trigger: an accent circle with a raised shadow; its glyph turns a quarter of a half turn while the menu is open. -->
+    <!--
+        The trigger: an inverse circle with an ellipsis while closed; open, it turns to glass (a translucent raised surface
+        with a hairline edge) and shrinks a little, and holding it presses it in further.
+    -->
     <ControlTheme x:Key="{x:Type arc:OrbitMenuTrigger}" TargetType="arc:OrbitMenuTrigger">
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="FocusAdorner" Value="{x:Null}" />
@@ -35,84 +41,129 @@
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="Width" Value="{arc:OrbitMenuTokenResource TriggerSize}" />
         <Setter Property="Height" Value="{arc:OrbitMenuTokenResource TriggerSize}" />
-        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
-        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="1" />
         <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="RenderTransform" Value="scale(1)" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:OrbitMenuTrigger">
                 <Panel Name="PART_Root">
                     <Border Name="PART_Face"
                             Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
                             CornerRadius="{TemplateBinding CornerRadius}"
                             BoxShadow="{arc:ArcDesignTokenResource ShadowRaised}">
-                        <arc:ArcGlyph Name="PART_Glyph"
-                                      Data="{TemplateBinding Glyph}"
-                                      Size="{arc:OrbitMenuTokenResource TriggerGlyphSize}"
-                                      StrokeThickness="2"
-                                      Foreground="{TemplateBinding Foreground}"
-                                      HorizontalAlignment="Center"
-                                      VerticalAlignment="Center"
-                                      RenderTransform="rotate(0deg)" />
+                        <arc:OrbitMenuGlyph Name="PART_Glyph"
+                                            Foreground="{TemplateBinding Foreground}"
+                                            Size="{arc:OrbitMenuTokenResource TriggerGlyphSize}"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center" />
                     </Border>
                 </Panel>
             </ControlTemplate>
         </Setter>
-        <Style Selector="^:pointerover">
-            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        <Style Selector="^:hover">
+            <Setter Property="Background" Value="{arc:OrbitMenuTokenResource TriggerHoverFill}" />
         </Style>
-        <Style Selector="^:pressed /template/ Border#PART_Face">
-            <Setter Property="RenderTransform" Value="scale(0.95)" />
+        <Style Selector="^:open">
+            <Setter Property="Background" Value="{arc:OrbitMenuTokenResource GlassFill}" />
+            <Setter Property="BorderBrush" Value="{arc:OrbitMenuTokenResource GlassEdge}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="RenderTransform" Value="scale(0.94)" />
         </Style>
-        <Style Selector="^:open /template/ arc|ArcGlyph#PART_Glyph">
-            <Setter Property="RenderTransform" Value="rotate(45deg)" />
+        <Style Selector="^:holding">
+            <Setter Property="RenderTransform" Value="scale(0.92)" />
+        </Style>
+        <Style Selector="^:open:holding">
+            <Setter Property="RenderTransform" Value="scale(0.865)" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.45" />
+            <Setter Property="Cursor" Value="No" />
         </Style>
         <Style Selector="^:motion-full">
             <Setter Property="Transitions">
                 <Transitions>
-                    <arc:ArcBrushTransition Property="Background" />
-                </Transitions>
-            </Setter>
-        </Style>
-        <Style Selector="^:motion-full /template/ arc|ArcGlyph#PART_Glyph">
-            <Setter Property="Transitions">
-                <Transitions>
-                    <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
-                </Transitions>
-            </Setter>
-        </Style>
-        <Style Selector="^:motion-full /template/ Border#PART_Face">
-            <Setter Property="Transitions">
-                <Transitions>
-                    <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                    <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Standard" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Standard" />
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Settle" />
                 </Transitions>
             </Setter>
         </Style>
     </ControlTheme>
 
-    <!-- An action: a raised surface circle with a glyph; hover and press tint it. -->
+    <!--
+        An action: a nearly opaque raised circle with a hairline edge and a glyph. Targeted, its own fill, edge and
+        shadow give way to the lens under it and the glyph takes the lens's inverse color (a danger glyph stays red).
+    -->
     <ControlTheme x:Key="{x:Type arc:OrbitMenuAction}" TargetType="arc:OrbitMenuAction">
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="FocusAdorner" Value="{x:Null}" />
-        <Setter Property="Size" Value="{arc:OrbitMenuTokenResource ActionSize}" />
-        <Setter Property="GlyphSize" Value="{arc:OrbitMenuTokenResource ActionGlyphSize}" />
-        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="Size" Value="{arc:OrbitMenuActionTokenResource Size}" />
+        <Setter Property="GlyphSize" Value="{arc:OrbitMenuActionTokenResource GlyphSize}" />
+        <Setter Property="Background" Value="{arc:OrbitMenuActionTokenResource Fill}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
-        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="BorderBrush" Value="{arc:OrbitMenuActionTokenResource Edge}" />
         <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
         <Setter Property="Shadow" Value="{arc:ArcDesignTokenResource ShadowRaised}" />
-        <Setter Property="FocusRingBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
-        <Style Selector="^:pointerover">
-            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Style Selector="^:danger">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
         </Style>
-        <Style Selector="^:pressed">
-            <Setter Property="Background" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Style Selector="^:targeted">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
+        </Style>
+        <Style Selector="^:targeted:danger">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
         </Style>
         <Style Selector="^:motion-full">
             <Setter Property="Transitions">
                 <Transitions>
-                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
                 </Transitions>
             </Setter>
         </Style>
+    </ControlTheme>
+
+    <!-- The lens under the targeted action: the foreground color (a danger tint under a danger action), raised. -->
+    <ControlTheme x:Key="{x:Type arc:OrbitMenuLens}" TargetType="arc:OrbitMenuLens">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Size" Value="{arc:OrbitMenuActionTokenResource Size}" />
+        <Setter Property="Fill" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Shadow" Value="{arc:ArcDesignTokenResource ShadowRaised}" />
+        <Style Selector="^:danger">
+            <Setter Property="Fill" Value="{arc:OrbitMenuTokenResource DangerLensFill}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Fill" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The arc behind the actions: a hairline in the strong border color. -->
+    <ControlTheme x:Key="{x:Type arc:OrbitMenuTrack}" TargetType="arc:OrbitMenuTrack">
+        <Setter Property="Stroke" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="Thickness" Value="{arc:OrbitMenuTokenResource TrackThickness}" />
+    </ControlTheme>
+
+    <!-- The label pill: glass like the open trigger, its text in the body font. -->
+    <ControlTheme x:Key="{x:Type arc:OrbitMenuPill}" TargetType="arc:OrbitMenuPill">
+        <Setter Property="Background" Value="{arc:OrbitMenuTokenResource GlassFill}" />
+        <Setter Property="BorderBrush" Value="{arc:OrbitMenuTokenResource GlassEdge}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowRaised}" />
+        <Setter Property="Height" Value="{arc:OrbitMenuTokenResource PillHeight}" />
+        <Setter Property="Padding" Value="{arc:OrbitMenuTokenResource PillPadding}" />
     </ControlTheme>
 </ResourceDictionary>

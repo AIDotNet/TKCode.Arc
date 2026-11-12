@@ -211,6 +211,12 @@
         <target state="translated">光标</target>
       </segment>
     </unit>
+    <unit id="Category_DocksTabs">
+      <segment>
+        <source>Docks and tabs</source>
+        <target state="translated">程序坞与标签栏</target>
+      </segment>
+    </unit>
     <unit id="Category_Data">
       <segment>
         <source>Data</source>

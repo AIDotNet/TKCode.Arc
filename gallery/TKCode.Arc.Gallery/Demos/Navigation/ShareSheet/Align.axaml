@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ShareSheetAlignDemo">
+    <!-- Start keeps the button's left edge, End its right edge, Center grows evenly around it. -->
+    <Grid ColumnDefinitions="*,*,*" MinHeight="120" VerticalAlignment="Top">
+        <arc:ShareSheet Title="Field notes" Link="https://harbor.example/doc/field-notes" Align="Start" Label="Start"
+                        HorizontalAlignment="Left">
+            <arc:ShareSheet.People>
+                <arc:ShareSheetPerson Id="ines" Name="Ines Duarte" />
+                <arc:ShareSheetPerson Id="omar" Name="Omar Haddad" />
+                <arc:ShareSheetPerson Id="sofie" Name="Sofie Lind" />
+            </arc:ShareSheet.People>
+        </arc:ShareSheet>
+        <arc:ShareSheet Grid.Column="1" Title="Field notes" Link="https://harbor.example/doc/field-notes" Align="Center"
+                        Label="Center" HorizontalAlignment="Center">
+            <arc:ShareSheet.People>
+                <arc:ShareSheetPerson Id="ines" Name="Ines Duarte" />
+                <arc:ShareSheetPerson Id="omar" Name="Omar Haddad" />
+                <arc:ShareSheetPerson Id="sofie" Name="Sofie Lind" />
+            </arc:ShareSheet.People>
+        </arc:ShareSheet>
+        <arc:ShareSheet Grid.Column="2" Title="Field notes" Link="https://harbor.example/doc/field-notes" Align="End"
+                        Label="End" HorizontalAlignment="Right">
+            <arc:ShareSheet.People>
+                <arc:ShareSheetPerson Id="ines" Name="Ines Duarte" />
+                <arc:ShareSheetPerson Id="omar" Name="Omar Haddad" />
+                <arc:ShareSheetPerson Id="sofie" Name="Sofie Lind" />
+            </arc:ShareSheet.People>
+        </arc:ShareSheet>
+    </Grid>
+</UserControl>

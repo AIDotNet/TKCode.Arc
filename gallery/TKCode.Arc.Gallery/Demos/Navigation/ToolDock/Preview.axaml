@@ -1,0 +1,64 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ToolDockPreviewDemo">
+    <!-- A moodboard with a tool dock at the bottom. Hover a tool for its name, press Shapes for its tray, drag a tool
+         sideways to reorder, and press V, H, R, O, T, N or C with the board focused to switch tools. -->
+    <StackPanel Spacing="12" HorizontalAlignment="Center">
+        <Border x:Name="Board"
+                Width="680" Height="372"
+                Focusable="True"
+                FocusAdorner="{x:Null}"
+                CornerRadius="{arc:ArcDesignTokenResource RadiusSurface}"
+                Background="{arc:ArcDesignTokenResource Surface}"
+                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                BorderThickness="1"
+                ClipToBounds="True">
+            <Panel>
+                <Panel x:Name="Dots" />
+                <Canvas x:Name="Sheet" />
+                <arc:Button x:Name="Reset"
+                            Variant="Secondary"
+                            HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,14,14,0"
+                            IsVisible="False"
+                            AutomationProperties.Name="Reset board"
+                            arc:Tooltip.Tip="Reset board">
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.RotateCcw}" Size="15" />
+                </arc:Button>
+                <arc:ToolDock x:Name="Dock"
+                              Label="Canvas tools"
+                              CanReorder="True"
+                              SelectedValue="select"
+                              HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,18">
+                    <!-- Lucide mouse-pointer-2 -->
+                    <arc:ToolDockItem Value="select" Label="Select" Shortcut="V"
+                                      Glyph="M4.037 4.688a.495.495 0 0 1 .651-.651l16 6.5a.5.5 0 0 1-.063.947l-6.124 1.58a2 2 0 0 0-1.438 1.435l-1.579 6.126a.5.5 0 0 1-.947.063z" />
+                    <!-- Lucide hand -->
+                    <arc:ToolDockItem Value="pan" Label="Pan" Shortcut="H"
+                                      Glyph="M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2 M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2 M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8 M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15" />
+                    <arc:ToolDockItem Value="shapes" Label="Shapes">
+                        <arc:ToolDockItem Value="rectangle" Label="Rectangle" Shortcut="R" Glyph="{x:Static arc:ArcIcons.Square}" />
+                        <arc:ToolDockItem Value="ellipse" Label="Ellipse" Shortcut="O" Glyph="{x:Static arc:ArcIcons.Circle}" />
+                        <!-- Lucide diamond -->
+                        <arc:ToolDockItem Value="diamond" Label="Diamond"
+                                          Glyph="M2.7 10.3a2.41 2.41 0 0 0 0 3.41l7.59 7.59a2.41 2.41 0 0 0 3.41 0l7.59-7.59a2.41 2.41 0 0 0 0-3.41l-7.59-7.59a2.41 2.41 0 0 0-3.41 0Z" />
+                        <!-- Lucide hexagon -->
+                        <arc:ToolDockItem Value="hexagon" Label="Hexagon"
+                                          Glyph="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                    </arc:ToolDockItem>
+                    <arc:ToolDockItem Value="text" Label="Text" Shortcut="T" Glyph="{x:Static arc:ArcIcons.Type}" />
+                    <!-- Lucide sticky-note -->
+                    <arc:ToolDockItem Value="note" Label="Note" Shortcut="N"
+                                      Glyph="M21 9a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 15 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2z M15 3v5a1 1 0 0 0 1 1h5" />
+                    <arc:ToolDockItem x:Name="CommentTool" Value="comment" Label="Comment" Shortcut="C"
+                                      Glyph="{x:Static arc:ArcIcons.MessageCircle}" />
+                </arc:ToolDock>
+            </Panel>
+        </Border>
+        <TextBlock x:Name="Status"
+                   AutomationProperties.LiveSetting="Polite"
+                   HorizontalAlignment="Center"
+                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

@@ -13,7 +13,8 @@ five AI explainers and the five AI components (agent status, tool call, agent pl
 window) and the six surfaces (sheet stack, wallet stack, control center, holo card, card to article, link unfurl)
 and the three cursor components (dot grid, gravity well, ink fluid)
 and the three audio components (voice orb, now playing, voice recorder)
-and the five loaders (stretch refresh, morph loader, skeleton morph, black hole, charge session) in
+and the five loaders (stretch refresh, morph loader, skeleton morph, black hole, charge session)
+and the six docks and tabs components (share sheet, action morph, morph nav, tool dock, liquid tab bar, orbit menu) in
 `TKCode.Arc.Special`, and the Split and Immersive login blocks, Onboarding illustration and Multi-step form and the seven Pricing blocks (pricing calculator, usage
 pricing, cart drawer, checkout summary, live checkout, seat manager, credit top-up) in
 `TKCode.Arc.Blocks`) are
