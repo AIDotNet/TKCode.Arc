@@ -8,7 +8,14 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0), `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` (from 1.1.0-preview.1).
 
-## Unreleased
+## 1.1.0-preview.6 - 2026-11-13
+
+The first published build since 1.1.0-preview.4. 1.1.0-preview.5 was prepared but never pushed to NuGet, so this release
+also carries everything listed under it below. New here: the `ImportWizard` block (a four step CSV import with column
+matching, inline fixes and batched import), `Size` on `Combobox`, `MultiSelect`, `TreeSelect` and `Cascader`, hover
+popovers and `ButtonVariant.Text`, sizable slider thumbs and tracks, and a slider without a header row. The gallery and
+docs site now live in their own repository, [AIDotNet/ArcGallery](https://github.com/AIDotNet/ArcGallery). No breaking
+changes from 1.1.0-preview.5. Install it with `--version 1.1.0-preview.6` (or `--prerelease`).
 
 ### Added
 
@@ -32,11 +39,17 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
   ([#101](https://github.com/AIDotNet/TKCode.Arc/issues/101)): size the thumbs and the track of one slider from the
   control or a style. The theme still fills the default from the control's token; the value used to sit on the template's
   rail as a local value, which no style could override.
-
 - **`Size` on `Combobox`, `MultiSelect`, `TreeSelect` and `Cascader`** ([#115](https://github.com/AIDotNet/TKCode.Arc/issues/115)):
   the same `ControlSize` as `Select`, `Input` and `DatePicker` (Small 36, Medium 44 default, Large 50). Their trigger height
   was fixed at 44, so a row of fields set to `Height="36"` overflowed the slot and their text sat about 4px below a
   neighbouring `TextBlock`. Use `Size="Small"` for 36px rows instead of `Height`. Existing layouts are unchanged (the default stays Medium).
+
+### Changed
+
+- **The gallery moved to [AIDotNet/ArcGallery](https://github.com/AIDotNet/ArcGallery)**: the docs site, the demos, the
+  screenshots, the desktop and browser hosts, `tools/docshots` and the tests that go through the demos left this
+  repository. The packages are unchanged. The gallery builds against a checkout of this repository next to it
+  (`ArcRoot`), and its releases carry the same version tags.
 
 ### Fixed
 
@@ -51,7 +64,7 @@ The Docks and tabs group of `TKCode.Arc.Special` is rebuilt (`OrbitMenu`, `Liqui
 and `MorphNav` change their API, with migrations below; `ToolDock` is new), `AvatarUpload` moves to the Editors group,
 and feedback from apps (#107–#112) adds `WindowCaptionButtons`, settings page options, content and media tokens and
 automatic sizing for `WaterfallPanel` and `TilePanel`. There are breaking changes from 1.1.0-preview.4 in those five
-Special controls only. Install it with `--version 1.1.0-preview.5` (or `--prerelease`).
+Special controls only. This version was not published to NuGet; its changes first ship in 1.1.0-preview.6.
 
 ### Added
 
@@ -1353,7 +1366,8 @@ ArcTheme.Apply(t => t
 
 First preview release.
 
-[1.1.0-preview.5]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.1.0-preview.4...v1.1.0-preview.5
+[1.1.0-preview.6]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.1.0-preview.4...v1.1.0-preview.6
+[1.1.0-preview.5]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.1.0-preview.4...v1.1.0-preview.6
 [1.0.0]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.4.0-preview.6...v1.0.0
 [0.4.0-preview.6]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.4.0-preview.5...v0.4.0-preview.6
 [0.4.0-preview.5]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.4.0-preview.4...v0.4.0-preview.5
