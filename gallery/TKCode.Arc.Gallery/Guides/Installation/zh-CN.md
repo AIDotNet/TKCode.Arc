@@ -1,6 +1,6 @@
 ---
 title: 安装
-source-hash: 8bb1f630df5f
+source-hash: d69101b9c83a
 ---
 
 # 安装
@@ -35,9 +35,9 @@ dotnet run
 ## 1. 添加包
 
 ```bash
-dotnet add package TKCode.Arc --version 1.1.0-preview.4
-dotnet add package TKCode.Arc.Fonts --version 1.1.0-preview.4           # 可选：Geist 与 Geist Mono
-dotnet add package TKCode.Arc.Icons.Lucide --version 1.1.0-preview.4    # 可选：完整的 Lucide 图标集
+dotnet add package TKCode.Arc --version 1.1.0-preview.5
+dotnet add package TKCode.Arc.Fonts --version 1.1.0-preview.5           # 可选：Geist 与 Geist Mono
+dotnet add package TKCode.Arc.Icons.Lucide --version 1.1.0-preview.5    # 可选：完整的 Lucide 图标集
 dotnet add package Avalonia.Fonts.Inter --version 12.1.5                 # 可选：正文使用的 Inter
 ```
 
@@ -45,9 +45,9 @@ dotnet add package Avalonia.Fonts.Inter --version 12.1.5                 # 可�
 
 ```xml
 <ItemGroup>
-    <PackageVersion Include="TKCode.Arc" Version="1.1.0-preview.4" />
-    <PackageVersion Include="TKCode.Arc.Fonts" Version="1.1.0-preview.4" />
-    <PackageVersion Include="TKCode.Arc.Icons.Lucide" Version="1.1.0-preview.4" />
+    <PackageVersion Include="TKCode.Arc" Version="1.1.0-preview.5" />
+    <PackageVersion Include="TKCode.Arc.Fonts" Version="1.1.0-preview.5" />
+    <PackageVersion Include="TKCode.Arc.Icons.Lucide" Version="1.1.0-preview.5" />
     <PackageVersion Include="Avalonia.Fonts.Inter" Version="12.1.5" />
 </ItemGroup>
 ```
@@ -173,14 +173,14 @@ Arc 自有的图标字形（`{x:Static arc:ArcIcons.Check}` 以及另外 186 个
 `TKCode.Arc.Blocks`（页面级区块）、`TKCode.Arc.AdvancedCharts`（`DataGrid`）和 `TKCode.Arc.Special`（AI 动画讲解）是独立的包。按需添加，并在 `UseArc(...)` 中注册：
 
 ```bash
-dotnet add package TKCode.Arc.Blocks --version 1.1.0-preview.4
-dotnet add package TKCode.Arc.AdvancedCharts --version 1.1.0-preview.4
-dotnet add package TKCode.Arc.Special --version 1.1.0-preview.4
-dotnet add package TKCode.Arc.Workflow --version 1.1.0-preview.4
-dotnet add package TKCode.Arc.Dock --version 1.1.0-preview.4    # 可选：IDE 式停靠布局（UseArcDock()）
-dotnet add package TKCode.Arc.Themes.Pixel --version 1.1.0-preview.4    # 可选：像素风主题（UseArcPixelTheme()）
-dotnet add package TKCode.Arc.Themes.Corners --version 1.1.0-preview.4    # 可选：全局圆角风格（UseArcCorners()）
-dotnet add package TKCode.Arc.Mobile --version 1.1.0-preview.4    # 可选：移动端控件，尚未在真机上验证（UseArcMobile()）
+dotnet add package TKCode.Arc.Blocks --version 1.1.0-preview.5
+dotnet add package TKCode.Arc.AdvancedCharts --version 1.1.0-preview.5
+dotnet add package TKCode.Arc.Special --version 1.1.0-preview.5
+dotnet add package TKCode.Arc.Workflow --version 1.1.0-preview.5
+dotnet add package TKCode.Arc.Dock --version 1.1.0-preview.5    # 可选：IDE 式停靠布局（UseArcDock()）
+dotnet add package TKCode.Arc.Themes.Pixel --version 1.1.0-preview.5    # 可选：像素风主题（UseArcPixelTheme()）
+dotnet add package TKCode.Arc.Themes.Corners --version 1.1.0-preview.5    # 可选：全局圆角风格（UseArcCorners()）
+dotnet add package TKCode.Arc.Mobile --version 1.1.0-preview.5    # 可选：移动端控件，尚未在真机上验证（UseArcMobile()）
 ```
 
 ```csharp
@@ -202,9 +202,9 @@ dotnet add package TKCode.Arc.Mobile --version 1.1.0-preview.4    # 可选：移
 `TKCode.Arc.Pdf`（`PdfViewer`）还需要一个渲染器：桌面上是带 PDFium 的 `TKCode.Arc.Pdf.Native`，单平台应用中约 7.5 MB；WebAssembly 中是带 pdf.js 的 `TKCode.Arc.Pdf.Browser`：
 
 ```bash
-dotnet add package TKCode.Arc.Pdf --version 1.1.0-preview.4
-dotnet add package TKCode.Arc.Pdf.Native --version 1.1.0-preview.4     # desktop
-dotnet add package TKCode.Arc.Pdf.Browser --version 1.1.0-preview.4    # browser
+dotnet add package TKCode.Arc.Pdf --version 1.1.0-preview.5
+dotnet add package TKCode.Arc.Pdf.Native --version 1.1.0-preview.5     # desktop
+dotnet add package TKCode.Arc.Pdf.Browser --version 1.1.0-preview.5    # browser
 ```
 
 ```csharp
@@ -219,9 +219,9 @@ await ArcPdfBrowser.UseAsync();                     // browser, before the app s
 `TKCode.Arc.Video`（`VideoPlayer`、`VideoSurface`）通过平台自带的播放器播放，由后端决定：桌面上是 `TKCode.Arc.Video.Native`（Media Foundation、AVFoundation 或 GStreamer，应用不需要附带编解码器），WebAssembly 中是 `TKCode.Arc.Video.Browser`：
 
 ```bash
-dotnet add package TKCode.Arc.Video --version 1.1.0-preview.4
-dotnet add package TKCode.Arc.Video.Native --version 1.1.0-preview.4     # desktop
-dotnet add package TKCode.Arc.Video.Browser --version 1.1.0-preview.4    # browser
+dotnet add package TKCode.Arc.Video --version 1.1.0-preview.5
+dotnet add package TKCode.Arc.Video.Native --version 1.1.0-preview.5     # desktop
+dotnet add package TKCode.Arc.Video.Browser --version 1.1.0-preview.5    # browser
 ```
 
 ```csharp

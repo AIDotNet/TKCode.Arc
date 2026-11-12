@@ -8,7 +8,13 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0), `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` (from 1.1.0-preview.1).
 
-## Unreleased
+## 1.1.0-preview.5 - 2026-11-12
+
+The Docks and tabs group of `TKCode.Arc.Special` is rebuilt (`OrbitMenu`, `LiquidTabBar`, `ShareSheet`, `ActionMorph`
+and `MorphNav` change their API, with migrations below; `ToolDock` is new), `AvatarUpload` moves to the Editors group,
+and feedback from apps (#107–#112) adds `WindowCaptionButtons`, settings page options, content and media tokens and
+automatic sizing for `WaterfallPanel` and `TilePanel`. There are breaking changes from 1.1.0-preview.4 in those five
+Special controls only. Install it with `--version 1.1.0-preview.5` (or `--prerelease`).
 
 ### Added
 
@@ -1304,6 +1310,7 @@ ArcTheme.Apply(t => t
 
 First preview release.
 
+[1.1.0-preview.5]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.1.0-preview.4...v1.1.0-preview.5
 [1.0.0]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.4.0-preview.6...v1.0.0
 [0.4.0-preview.6]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.4.0-preview.5...v0.4.0-preview.6
 [0.4.0-preview.5]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.4.0-preview.4...v0.4.0-preview.5

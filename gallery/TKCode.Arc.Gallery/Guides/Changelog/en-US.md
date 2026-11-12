@@ -10,6 +10,170 @@ between releases. The same list is kept in `CHANGELOG.md` in the repository.
 NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Foundation` (from 0.3.2), `TKCode.Arc.Fonts` and
 `TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special`, `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`, `TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0), `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` (from 1.1.0-preview.1).
 
+## 1.1.0-preview.5 (2026-11-12)
+
+The Docks and tabs group of `TKCode.Arc.Special` is rebuilt (`OrbitMenu`, `LiquidTabBar`, `ShareSheet`, `ActionMorph`
+and `MorphNav` change their API, with migrations below; `ToolDock` is new), `AvatarUpload` moves to the Editors group,
+and feedback from apps (#107–#112) adds `WindowCaptionButtons`, settings page options, content and media tokens and
+automatic sizing for `WaterfallPanel` and `TilePanel`. There are breaking changes from 1.1.0-preview.4 in those five
+Special controls only. Install it with `--version 1.1.0-preview.5` (or `--prerelease`).
+
+### Added
+
+- **`WaterfallPanel` and `TilePanel` lay out items of one template by themselves**
+  ([#112](https://github.com/AIDotNet/TKCode.Arc/issues/112), from [#86](https://github.com/AIDotNet/TKCode.Arc/issues/86)):
+  `WaterfallPanel.ItemSizing="Varied"` gives each child a height (a width in rows) between `MinItemSize` and `MaxItemSize`
+  instead of measuring its content, so cards built from one template still form a masonry wall; an unset bound follows
+  the lane size. `TilePanel.IsAutoSpan` gives children that set no span 1×1, 1×2, 2×1 or 2×2, placed at the first free
+  cell and keeping larger tiles apart; with `IsAutoFill` and `Rows` set, the automatic tiles are sized to cover the
+  whole `Columns` × `Rows` grid. Both panels pick sizes from the child's index and a new `Seed` property, never from
+  random values during layout: the same items, seed and grid always give the same result, and resizing never reshuffles
+  it. The defaults (`Content` sizing, auto span off) keep today's layouts.
+- **`InlineEdit.ReserveActionSpace`** ([#110](https://github.com/AIDotNet/TKCode.Arc/issues/110)): `False` drops the
+  66 px a single line keeps after its text for the save and cancel buttons, so the box hugs its text and a tag or badge
+  can follow the name. At rest nothing is drawn past the frame (no pencil hint, saving spinner or result mark); while
+  editing the buttons overlay what follows and the control draws above its later siblings in the same panel. The
+  reserve does not come back while editing, so neither the text nor the tag jumps when the buttons appear. A multiline
+  field keeps its 38 px. The default (`True`) is unchanged.
+- **Content-width and media tokens** ([#110](https://github.com/AIDotNet/TKCode.Arc/issues/110)):
+  `ContentMaxWidthSM` / `MD` / `LG` / `XL` (640 / 760 / 880 / 1120) cap a page's content column (a reading column or
+  a single form, a settings page, a document page, full-width sections), and `MediaSizeSM` / `MD` / `LG` / `XL`
+  (64 / 128 / 192 / 256) size square media (a thumbnail in a row, a card preview, a QR code or cover art, a large image
+  preview). Use them as `{arc:ArcDesignTokenResource ContentMaxWidthMD}` and override them like any ArcDesign token.
+  They are appended to `ArcDesignTokenKind`, so the existing members keep their numbers.
+- **`AvatarSize.LargePlus`** ([#110](https://github.com/AIDotNet/TKCode.Arc/issues/110)): a 64 px avatar between
+  `Large` (48) and `XLarge` (88), with `TypeLG` initials and a 13 px status dot set 2 px in from the corner. It is
+  appended to the enum, so the existing members keep their values; `AvatarGroup` draws it as `Large`.
+- **`SettingsSection.BadgeTone`** ([#109](https://github.com/AIDotNet/TKCode.Arc/issues/109), `TKCode.Arc.Blocks`):
+  colors the section's navigation badge with a `BadgeTone` (`Warning` for "Needs attention", `Danger` for a failed
+  check). `Neutral`, the default, keeps today's look.
+- **`SettingsRow.Details` and `SettingsRow.Leading`** ([#109](https://github.com/AIDotNet/TKCode.Arc/issues/109),
+  `TKCode.Arc.Blocks`): `Details` takes any content under the description, such as a status line, an error or a row of
+  tags (text is small and muted). `Leading` takes any content in place of the icon tile, such as an `Avatar`; it keeps
+  its own size and `LabelWidth` includes it. `Icon` is unchanged.
+- **`SettingsPage.SelectedValue`** ([#109](https://github.com/AIDotNet/TKCode.Arc/issues/109), `TKCode.Arc.Blocks`):
+  the new `SettingsSection.Value` identifies a section (an enum member or a route key), and the page's two-way
+  `SelectedValue` is the selected section's `Value`, so the shown section binds to a view model property. Setting
+  `SelectedValue` selects the matching section. A section without a `Value` reports itself, as before;
+  `SelectedValueBinding` reads the value some other way.
+- **Public item containers for `RadioGroup`, `RadioCards` and `ToggleGroup`**
+  ([#109](https://github.com/AIDotNet/TKCode.Arc/issues/109)): `RadioGroupItem`, `RadioCard` and `ToggleGroupItem` (and
+  their base `TogglesItem`, which only the library derives from) are public. Data-bound items work like Avalonia's
+  `ListBoxItem`: a style on `arc|RadioGroupItem` or the group's `ItemContainerTheme` can bind an item's `Description`,
+  `Icon`, `Meta`, `IsEnabled` and `AutomationProperties.Name`, so items no longer have to be `RadioOption` or
+  `ToggleGroupOption` to get them. Each container has its own token (`RadioGroupItem.MinRowHeight`,
+  `RadioCard.GlyphSize`, and `ToggleGroupItem.PressScale`, `PressDownDuration` and `PressUpDuration` for the press that
+  was fixed before); the defaults keep today's look, and the existing `RadioGroup`, `RadioCards` and `ToggleGroup` tokens
+  are unchanged.
+- **`WindowCaptionButtons`** ([#107](https://github.com/AIDotNet/TKCode.Arc/issues/107)): minimize, maximize /
+  restore and close as a control of their own, for a window whose content reaches the top (an `ArcWindow` with
+  `IsTitleBarVisible="False"`). Put them anywhere in your own header: they drive the window they are in, show restore
+  while it is maximized, follow `CanResize`, `CanMaximize` and `CanMinimize`, carry the system roles while they drive
+  it (Snap Layouts on Windows 11), and keep the localized tooltips. `ShowMinimizeButton`, `ShowMaximizeButton` and
+  `ShowCloseButton` hide a button, and `IsPreview` draws them without driving the window. `TitleBar` now draws its
+  caption buttons with this control and gives up their roles while `CaptionButtons` is `System` or `None`, so the
+  window keeps one set.
+- **`PageHeader.IsTitleBar`** ([#107](https://github.com/AIDotNet/TKCode.Arc/issues/107), `TKCode.Arc.Blocks`):
+  `True` makes the header, never the body, the window's title bar: dragging its empty part, title or description
+  moves the window and a double click maximizes it, while the breadcrumbs, the compact title, the actions, the meta
+  row and the tabs keep their clicks. On Windows the header is the system caption and those parts are user content.
+  `False` (the default) changes nothing.
+- **`ArcOverlayHost` in apps** ([#107](https://github.com/AIDotNet/TKCode.Arc/issues/107), `TKCode.Arc.Core`): the
+  docs no longer say an app does not need it. Put the app's content in a host and the title bar beside it, and a
+  dialog, drawer or sheet opened from the content covers the host only, never the title bar and its caption buttons
+  (Window caption buttons page).
+- **`AvatarUpload` checks files by their first bytes and saves encoded pictures**: the type of a picked, dropped or loaded
+  file is decided from its first bytes before its name (a PDF renamed to `.png` is refused, a photo with an odd name is
+  not), after the size check, and a read stops at `MaxFileSize` even when the stream cannot say how long it is. New
+  `Accept` narrows the types (MIME types, `image/*` or extensions) and the picker follows it; `LoadAsync(byte[], name)`
+  takes a pasted image or a camera capture. `AvatarUploadRequest` gains `Bytes`, `ContentType`, `SuggestedFileName` and
+  `OpenStream()`: the saved square picture encoded by the new `OutputFormat` (`Auto` keeps a PNG, and a picture of unknown type, as PNG and saves
+  other pictures as JPEG; `Png`, `Jpeg`) and `JpegQuality` (92), a JPEG on white. `DisplayName` shows initials while there is no
+  picture, `AllowRemove` hides the Remove button, results and progress in quarters are announced through a live region, and
+  a drag past an edge of the framing area resists and springs back (the saved crop never includes the stretch). Defaults
+  are unchanged. Docs add the sample-photos and failures examples.
+
+- **`ToolDock`** (`TKCode.Arc.Special`, Docks and tabs): a floating dock of tools or modes for canvas-style editors.
+  The chosen tool sits on a tint that springs over from the last one, a name and key-hint label glides over the tool under the mouse or keyboard focus
+  (never for touch), a group (`ToolDockItem.Items`) grows a tray of its members out of the dock inside one hairline
+  outline, badges roll their count and leave at 0, and `CanReorder` lets people move tools by drag or Alt+Left/Right
+  (`Reordered`). `SelectedValue` is two-way and `ItemChosen` reports every pick; the dock is one tab stop with the
+  toolbar keyboard model.
+
+### Changed
+
+- **`TilePanel.IsAutoFill` also fills holes from the side and from below** ([#112](https://github.com/AIDotNet/TKCode.Arc/issues/112)):
+  after tiles grow right and down, every hole still empty is offered to the tiles around it, so a neighbour on the
+  right or below can grow over it too. Tiles still never move, overlap or shrink, and the span limits still hold.
+- **`AvatarUpload` moved from `TKCode.Arc.Special` to `TKCode.Arc`** (Editors group, between `SignaturePad` and
+  `FileDropzone` in the gallery): the namespace, the class and its API are unchanged, so code compiles as before, and
+  `UseArcControls()` now registers it (`UseArcSpecial()` no longer does). Its docs page moved from Special › Inputs to
+  Components › Editors.
+- **Special › Navigation is now "Docks and tabs"** in the gallery, listed as Share sheet, Action morph, Morph nav,
+  Tool dock, Liquid tab bar and Orbit menu, and `MagnifyDock` moved there from Playful. Source folders, namespaces and
+  slugs are unchanged.
+- **Breaking: `OrbitMenu` is a press-drag-release menu.** Pressing the trigger opens the arc; dragging toward an action
+  and letting go fires it (heading toward an action is enough once the pointer is a little way out from the button),
+  and a tap keeps the arc open for hover and click. A lens glides under the target, actions close to the pointer are
+  drawn to it, the button's mark turns from three dots into a cross and, once an action runs, into a tick, and a pill
+  names the target, says `CancelText` when the pointer is away from every action, then shows the action's
+  `DoneText` for 1.4 s, announced when `Announces` is on. New: `Direction`, `Spread`, `CancelText`, `Announces`,
+  `OrbitMenuAction.DoneText` and `Tone` (`OrbitMenuActionTone.Danger`), `OrbitMenuActionEventArgs.Item`. Migration:
+  `StartAngle` / `SweepAngle` are replaced by `Direction` (the middle of the arc) and `Spread` (its width; the old
+  default is `Direction="-90" Spread="180"`); `Glyph`, `ClosesOnInvoke` and `OrbitMenuAction.FocusRingBrush` are
+  removed (the arc always folds and confirms, handle `ActionInvoked`; keyboard focus shows as the lens); `Radius`
+  defaults to 104; the trigger is 56 px and actions 46 px; actions no longer have tooltips.
+- **Breaking: `LiquidTabBar` selects with a lens.** The selection is a pill that travels to the chosen tab, taking its
+  width on the way without stretching, and draws what it covers in reverse colors, so outline glyphs turn solid
+  (`ActiveGlyph` to draw another); the old tab's label disappears right away and the new one appears when the lens gets
+  there; the lens tips toward a hovered tab and can be dragged or flicked. New: `Labels` (`Active`, `Always`, `None`), `LensBackground`, `LensForeground`, and on
+  `LiquidTabBarItem` `Value`, `Label`, `Glyph`, `ActiveGlyph`, `Badge` (its digits roll when it changes) and `BadgeLabel`. Migration:
+  `Viscosity` is removed; give each item a `Glyph` and a `Label` (items without a glyph are text tabs);
+  `SelectedValue` reports the item's `Value`; the mouse selects on release; Up and Down no longer move the selection;
+  set `LensBackground` / `LensForeground` to `Accent` / `AccentForeground` to keep the accent lens; `ItemsPanel`,
+  `Padding` and `CornerRadius` are no longer used.
+- **Breaking: `ShareSheet` grows from its own button into a sharing panel.** One shape springs from the button into
+  a panel with the item's title, its link and Copy, an access-level list, channel buttons with pending, done and failed
+  states (`ChannelHandler`), and recent people whose avatars fly into a "Send to" row; Send runs `SendHandler`, shows an
+  error and leaves the panel as it was if that fails, and on success shrinks to a confirmation card with Undo. Up to 520 px wide the panel
+  rises from the bottom over a dimmed page and drags down to close (`SheetOnPhones`), and `Align` picks the edge that stays put. Migration:
+  the trigger is no longer `Content` (set `Label` and `Glyph`); `ShowAt`, `Presentation`, `Subtitle`, `Actions`,
+  `ActionInvoked`, `Shared`, `ClosesOnShare` and the header and copy label properties are removed (use `Title`,
+  `Labels`, `Channels` with `ChannelHandler`, and `SendHandler` or `Sent`); `People` holds `ShareSheetPerson`;
+  `LinkCopied` passes `ShareSheetLinkCopiedEventArgs`.
+- **Breaking: `ActionMorph` goes from a button to a menu, a form and a check.** The 56 px button grows into a
+  short menu of things to create (rows with a description and a letter shortcut, a gliding highlight), then into the picked action's
+  form (one-line or multiline field, optional choices, submit with Enter or Ctrl/⌘+Enter), and folds back into the
+  button with a drawn check; the plus returns after `ResetAfter` (1.6 s). `SubmitHandler` (or `Submitted`) saves, an
+  empty submit shakes, a failed one keeps the draft with an error, each action remembers its unsent text, and `Corner` picks the
+  way the surface grows. Migration: describe each panel as an `ActionMorphAction` in `Actions` (`Title`,
+  `Placeholder`, `IsMultiline`, `Choices`, `SubmitLabel`, `SuccessLabel`, `EmptyHint`) instead of content; `Glyph`,
+  `Variant`, `CollapsesOnOutsidePress`, `ShowsCloseButton` and `ActionMorph.Closes` are removed; the control takes
+  56 × 56 in the layout and draws its surface over its neighbours, so place it last in a `Panel` at a corner.
+- **Breaking: `MorphNav` is a site navigation bar.** One surface holds the brand, the items with a gliding highlight,
+  search and one primary action; an item with links grows the bar into its panel (links in one or two columns, an
+  optional feature such as `MorphNavStory` and a footer), a neighbour's panel slides in from its side, hover opens after
+  60 ms and closes after 180 ms, search opens from the bar itself (suggestions on an empty query, at most six ranked
+  results), `IsCompact` tightens the bar, and when the nav is narrower than `CollapseBelow` (720 px) the items collapse
+  into a single Menu item. Migration:
+  `MorphNavSection` is `MorphNavItem` (`Header` → `Label`, plus a `Value`); `MorphNavLink.Text` / `Glyph` / `Tag` are
+  `Label` / `Icon` / `Href`; `Title` / `Mark` are `BrandName` / `BrandMark`; `CurrentLink` is `Current` (an item's
+  `Value`); `LinkInvoked` is `Navigate` (`MorphNavNavigateEventArgs`); `IsOpen`, `Open()`, `Close()` and `Toggle()` are
+  `Open(value)`, `ClosePanel()` and `OpenValue`; the nav's `Footer` moves to `MorphNavItem.Footer`; `PanelWidth` and
+  `CloseLabel` are removed.
+
+### Fixed
+
+- **Avatar status dot size** ([#110](https://github.com/AIDotNet/TKCode.Arc/issues/110)): the dot now follows the
+  avatar's size as documented (8 px with a 1.5 px ring at `Small`, 10 px at `Medium`, 12 px at `Large`, 14 px at
+  `XLarge`), and the Busy bar spans the dot at every size. Before, every avatar drew the 10 px medium dot: the old
+  template's local values hid the size styles.
+- **`InlineEdit` multiline reserve** ([#110](https://github.com/AIDotNet/TKCode.Arc/issues/110)): a multiline field
+  now keeps 38 px for its stacked save and cancel buttons, as documented, instead of 66 px, so its text wraps 28 px
+  later. The template's own padding had hidden the multiline style.
+- **`OrbitMenu` first opening**: the first time the menu opened, the actions showed at their places on the arc for a
+  moment, dropped back into the trigger and fanned out again; they now leave the trigger once.
+
 ## 1.1.0-preview.4 (2026-11-11)
 
 Feedback from apps moving to Arc (#102–#110): new options on `PageHeader`, `Dialog`, `CommandPalette`, `Avatar`,

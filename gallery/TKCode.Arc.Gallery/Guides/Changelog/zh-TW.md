@@ -1,6 +1,6 @@
 ---
 title: 更新日誌
-source-hash: 4231e90c2020
+source-hash: d98231ccb287
 ---
 
 # 更新日誌
@@ -8,6 +8,44 @@ source-hash: 4231e90c2020
 TKCode.Arc 的所有重要變更，最新的在前。版本遵循[語意化版本](https://semver.org/)。從 1.0.0 起，破壞性 API 變更只在新的主版本中出現；更早的 `-preview` 版本在各發行版本之間可能變更 API。同一份清單也保存在儲存庫的 `CHANGELOG.md` 中。
 
 每次發行附帶的 NuGet 套件：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Foundation`（0.3.2 起）、`TKCode.Arc.Fonts` 、`TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 、`TKCode.Arc.Special`、`TKCode.Arc.Workflow`、`TKCode.Arc.Dock`（0.4.0-preview.2 起）、`TKCode.Arc.Themes.Pixel`、`TKCode.Arc.Themes.Corners`、`TKCode.Arc.Mobile`、`TKCode.Arc.Terminal`、`TKCode.Arc.Audio`、`TKCode.Arc.Audio.Native`、`TKCode.Arc.Audio.Browser`、`TKCode.Arc.Templates`（0.4.0-preview.6 起）、`TKCode.Arc.Pdf`、`TKCode.Arc.Pdf.Native` 和 `TKCode.Arc.Pdf.Browser`（1.0.0 起），`TKCode.Arc.Video`、`TKCode.Arc.Video.Native` 和 `TKCode.Arc.Video.Browser`（1.1.0-preview.1 起）。
+
+## 1.1.0-preview.5（2026-11-12）
+
+`TKCode.Arc.Special` 的 Docks and tabs 群組重新建構（`OrbitMenu`、`LiquidTabBar`、`ShareSheet`、`ActionMorph` 與 `MorphNav` 的 API 會變更，遷移方式見下文；`ToolDock` 為新增），`AvatarUpload` 移至 Editors 群組，來自應用程式的回饋（#107–#112）新增 `WindowCaptionButtons`、設定頁選項、內容與媒體權杖，並為 `WaterfallPanel` 與 `TilePanel` 加入自動尺寸。從 1.1.0-preview.4 起的破壞性變更僅限於這五個 Special 控制項。安裝時使用 `--version 1.1.0-preview.5`（或 `--prerelease`）。
+
+### 新增
+
+- **`WaterfallPanel` 與 `TilePanel` 自行排列同一範本的項目**（[#112](https://github.com/AIDotNet/TKCode.Arc/issues/112)，源自 [#86](https://github.com/AIDotNet/TKCode.Arc/issues/86)）：`WaterfallPanel.ItemSizing="Varied"` 會為每個子項目指定高度（以列數計的寬度），介於 `MinItemSize` 與 `MaxItemSize` 之間，而不是量測其內容，因此由同一範本建立的卡片仍能組成瀑布流牆；未設定的上下限跟隨欄寬。`TilePanel.IsAutoSpan` 會讓沒有設定跨度的子項目取得 1×1、1×2、2×1 或 2×2，放在第一個空格並讓較大的磚塊彼此分開；同時設定 `IsAutoFill` 與 `Rows` 時，自動磚塊會調整大小以覆蓋整個 `Columns` × `Rows` 格線。兩個面板都依子項目的索引與新的 `Seed` 屬性決定尺寸，配置版面時絕不使用隨機值：相同的項目、種子值與格線永遠得到相同結果，調整大小也不會重新洗牌。預設值（`Content` 尺寸與關閉的自動跨度）保留現有版面。
+- **`InlineEdit.ReserveActionSpace`**（[#110](https://github.com/AIDotNet/TKCode.Arc/issues/110)）：`False` 會取消單行在文字後保留的 66 px，供儲存與取消按鈕使用，因此方塊貼合文字，標籤或徽章可以接在名稱後面。靜止時框外不繪製任何東西（沒有鉛筆提示、儲存中的旋轉指示或結果標記）；編輯時按鈕覆蓋其後的內容，且控制項會繪製在同一面板中較後面的兄弟之上。編輯時保留區不會回來，因此按鈕出現時文字與標籤都不會跳動。多行欄位仍保留其 38 px。預設值（`True`）不變。
+- **內容寬度與媒體權杖**（[#110](https://github.com/AIDotNet/TKCode.Arc/issues/110)）：`ContentMaxWidthSM` / `MD` / `LG` / `XL`（640 / 760 / 880 / 1120）限制頁面的內容欄寬（閱讀欄或單一表單、設定頁、文件頁、全寬區段），`MediaSizeSM` / `MD` / `LG` / `XL`（64 / 128 / 192 / 256）設定正方形媒體的大小（列中的縮圖、卡片預覽、QR code 或封面圖、大型圖片預覽）。以 `{arc:ArcDesignTokenResource ContentMaxWidthMD}` 使用，並可像任何 ArcDesign 權杖 一樣覆寫。兩者都附加在 `ArcDesignTokenKind` 之後，因此既有成員的數值不變。
+- **`AvatarSize.LargePlus`**（[#110](https://github.com/AIDotNet/TKCode.Arc/issues/110)）：介於 `Large`（48）與 `XLarge`（88）之間的 64 px 頭像，使用 `TypeLG` 首字母，以及距角落內縮 2 px 的 13 px 狀態點。它附加在列舉之後，因此既有成員的值不變；`AvatarGroup` 會將它繪製為 `Large`。
+- **`SettingsSection.BadgeTone`**（[#109](https://github.com/AIDotNet/TKCode.Arc/issues/109)，`TKCode.Arc.Blocks`）：以 `BadgeTone` 為區段的導覽徽章上色（「Needs attention」用 `Warning`，失敗的檢查用 `Danger`）。預設值 `Neutral` 保留現有外觀。
+- **`SettingsRow.Details` 與 `SettingsRow.Leading`**（[#109](https://github.com/AIDotNet/TKCode.Arc/issues/109)，`TKCode.Arc.Blocks`）：`Details` 可放置描述下方的任何內容，例如狀態行、錯誤或一排標籤（文字為小字且淡色）。`Leading` 可放置任何內容取代圖示方塊，例如 `Avatar`；它保留自己的尺寸，`LabelWidth` 會將它計算在內。`Icon` 不變。
+- **`SettingsPage.SelectedValue`**（[#109](https://github.com/AIDotNet/TKCode.Arc/issues/109)，`TKCode.Arc.Blocks`）：新的 `SettingsSection.Value` 可識別區段（列舉成員或路由鍵），頁面的雙向 `SelectedValue` 即為被選取區段的 `Value`，因此顯示的區段可以繫結到檢視模型屬性。設定 `SelectedValue` 會選取相符的區段。沒有 `Value` 的區段仍像以前一樣回報自己；`SelectedValueBinding` 則以其他方式讀取值。
+- **`RadioGroup`、`RadioCards` 與 `ToggleGroup` 的公開項目容器**（[#109](https://github.com/AIDotNet/TKCode.Arc/issues/109)）：`RadioGroupItem`、`RadioCard` 與 `ToggleGroupItem`（以及其基底 `TogglesItem`，只有程式庫本身會衍生它）皆為公開。資料繫結的項目運作方式與 Avalonia 的 `ListBoxItem` 相同：`arc|RadioGroupItem` 上的樣式或群組的 `ItemContainerTheme` 可以繫結項目的 `Description`、`Icon`、`Meta`、`IsEnabled` 與 `AutomationProperties.Name`，因此項目不必是 `RadioOption` 或 `ToggleGroupOption` 也能取得這些功能。每個容器都有自己的權杖（`RadioGroupItem.MinRowHeight`、`RadioCard.GlyphSize`，以及 `ToggleGroupItem.PressScale`、`PressDownDuration` 與 `PressUpDuration`，用於先前固定不變的按壓效果）；預設值保留現有外觀，既有的 `RadioGroup`、`RadioCards` 與 `ToggleGroup` 權杖 不變。
+- **`WindowCaptionButtons`**（[#107](https://github.com/AIDotNet/TKCode.Arc/issues/107)）：最小化、最大化/還原與關閉，成為獨立的控制項，適用於內容延伸至頂端的視窗（`IsTitleBarVisible="False"` 的 `ArcWindow`）。可放在你自己的標題區任何位置：它們驅動所在的視窗，最大化時顯示還原，遵循 `CanResize`、`CanMaximize` 與 `CanMinimize`，驅動視窗時帶有系統角色（Windows 11 的 Snap Layouts），並保留已在地化的工具提示。`ShowMinimizeButton`、`ShowMaximizeButton` 與 `ShowCloseButton` 可隱藏按鈕，`IsPreview` 則只繪製按鈕而不驅動視窗。`TitleBar` 現在改用此控制項繪製其標題列按鈕；當 `CaptionButtons` 為 `System` 或 `None` 時，它會放棄這些按鈕的角色，讓視窗只保有一組按鈕。
+- **`PageHeader.IsTitleBar`**（[#107](https://github.com/AIDotNet/TKCode.Arc/issues/107)，`TKCode.Arc.Blocks`）：`True` 讓頁首（而非內容）成為視窗的標題列：拖曳其空白部分、標題或說明會移動視窗，連按兩下則會最大化；麵包屑、精簡標題、操作、中繼資料列與標籤頁仍保留其點擊。在 Windows 上，頁首即為系統標題列，這些部分仍是使用者內容。`False`（預設值）不改變任何東西。
+- **`ArcOverlayHost` 用於應用程式**（[#107](https://github.com/AIDotNet/TKCode.Arc/issues/107)，`TKCode.Arc.Core`）：文件不再說應用程式不需要它。將應用程式的內容放入覆蓋層主機，標題列放在旁邊，從內容開啟的對話方塊、抽屜或面板只會覆蓋主機，絕不會覆蓋標題列及其標題按鈕（見 Window caption buttons 頁面）。
+- **`AvatarUpload` 以檔案開頭的位元組檢查檔案，並儲存編碼後的圖片**：挑選、拖放或載入的檔案，其類型先以開頭位元組判斷，再看檔名（更名為 `.png` 的 PDF 會被拒絕，檔名古怪的照片則不會），且在大小檢查之後進行；即使串流無法說明長度，讀取也會在 `MaxFileSize` 停止。新的 `Accept` 可縮小類型範圍（MIME 類型、`image/*` 或副檔名），選取器也會跟著調整；`LoadAsync(byte[], name)` 接受貼上的圖片或相機拍攝。`AvatarUploadRequest` 新增 `Bytes`、`ContentType`、`SuggestedFileName` 與 `OpenStream()`：儲存的正方形圖片依新的 `OutputFormat` 編碼（`Auto` 保留 PNG 格式，未知類型的圖片以 PNG 儲存，其他圖片以 JPEG 儲存；可選 `Png`、`Jpeg`），以及 `JpegQuality`（92），JPEG 以白色為底。沒有圖片時 `DisplayName` 會顯示首字母，`AllowRemove` 會隱藏移除按鈕，結果與以四分之一為單位的進度會透過即時區域播報，拖曳超出取景區邊緣時會產生阻力並彈回（儲存的裁切永遠不包含拉伸的部分）。預設值不變。文件新增了範例照片與失敗情況的範例。
+
+- **`ToolDock`**（`TKCode.Arc.Special`，Docks and tabs）：用於畫布式編輯器的浮動工具或模式列。被選取的工具會位於色調上，色調以彈簧效果從上一個工具滑過來；名稱與快捷鍵提示標籤會滑過滑鼠或鍵盤焦點所在的工具（觸控時永不出現）；群組（`ToolDockItem.Items`）會從列中展開出其成員的托盤，並包在一條細線框內；徽章會滾動其計數，數字為 0 時消失；`CanReorder` 讓人們可用拖曳或 Alt+左/右鍵重新排列工具（`Reordered`）。`SelectedValue` 為雙向，`ItemChosen` 回報每次的選取；此列為單一 Tab 停駐點，並採用工具列的鍵盤模式。
+
+### 變更
+
+- **`TilePanel.IsAutoFill` 也從側邊與下方填補空隙**（[#112](https://github.com/AIDotNet/TKCode.Arc/issues/112)）：磚塊向右與向下成長後，每個仍為空的空隙都會提供給周圍的磚塊，因此右側或下方的鄰居也能覆蓋過去。磚塊仍不會移動、重疊或縮小，跨度上限依然有效。
+- **`AvatarUpload` 從 `TKCode.Arc.Special` 移至 `TKCode.Arc`**（圖庫中的 Editors 群組，位於 `SignaturePad` 與 `FileDropzone` 之間）：命名空間、類別與其 API 不變，因此程式碼的編譯方式與以前相同，而 `UseArcControls()` 現在會註冊它（`UseArcSpecial()` 不再註冊）。其文件頁面從 Special › Inputs 移至 Components › Editors。
+- **圖庫中的 Special › Navigation 現在稱為「Docks and tabs」**，列出 Share sheet、Action morph、Morph nav、Tool dock、Liquid tab bar 與 Orbit menu，`MagnifyDock` 也從 Playful 移入此處。原始碼資料夾、命名空間與 slug 不變。
+- **破壞性變更：`OrbitMenu` 變成按下—拖曳—放開的選單。** 按下觸發鈕會展開圓弧；拖曳向某個動作並放開即觸發它（指標離開按鈕一小段距離後，朝向動作即已足夠），點按則讓圓弧保持展開，以供懸停與點擊。一個透鏡會滑到目標下方，靠近指標的動作會被吸向它，按鈕的標記會由三個點變成叉號，動作執行後變成勾號；一個膠囊會標示目標，指標不在任何動作上時顯示 `CancelText`，然後顯示該動作的 `DoneText` 1.4 s，若 `Announces` 開啟則會播報。新增：`Direction`、`Spread`、`CancelText`、`Announces`、`OrbitMenuAction.DoneText` 與 `Tone`（`OrbitMenuActionTone.Danger`）、`OrbitMenuActionEventArgs.Item`。遷移：`StartAngle` / `SweepAngle` 改為 `Direction`（圓弧的中央）與 `Spread`（其寬度；舊的預設值為 `Direction="-90" Spread="180"`）；`Glyph`、`ClosesOnInvoke` 與 `OrbitMenuAction.FocusRingBrush` 已移除（圓弧一律收合並確認，請處理 `ActionInvoked`；鍵盤焦點以透鏡顯示）；`Radius` 預設為 104；觸發鈕為 56 px，動作為 46 px；動作不再有工具提示。
+- **破壞性變更：`LiquidTabBar` 以透鏡選取。** 選取項目是一個會滑向所選標籤的膠囊，途中採用其寬度而不拉伸，並以反色繪製它所覆蓋的內容，因此線條圖示會變成實心（`ActiveGlyph` 可繪製另一個）；舊標籤的文字立即消失，新標籤的文字則在透鏡到達時出現；透鏡會朝向被懸停的標籤傾斜，且可以被拖曳或輕彈。新增：`Labels`（`Active`、`Always`、`None`）、`LensBackground`、`LensForeground`，以及 `LiquidTabBarItem` 上的 `Value`、`Label`、`Glyph`、`ActiveGlyph`、`Badge`（變更時其數字會滾動）與 `BadgeLabel`。遷移：`Viscosity` 已移除；為每個項目設定 `Glyph` 與 `Label`（沒有圖示的項目為文字標籤）；`SelectedValue` 回報項目的 `Value`；滑鼠在放開時選取；上與下方向鍵不再移動選取；若要保留強調色透鏡，請將 `LensBackground` / `LensForeground` 設為 `Accent` / `AccentForeground`；`ItemsPanel`、`Padding` 與 `CornerRadius` 不再使用。
+- **破壞性變更：`ShareSheet` 從自己的按鈕擴展為分享面板。** 單一形狀會從按鈕彈出為一個面板，包含項目的標題、連結與複製，一份存取層級清單，帶有等待中、完成與失敗狀態的頻道按鈕（`ChannelHandler`），以及近期聯絡人，其頭像會飛入「Send to」列；傳送會執行 `SendHandler`，失敗時顯示錯誤並保留面板原樣，成功時收縮為附有復原的確認卡片。寬度最多 520 px 時，面板會從底部升起，覆蓋在變暗的頁面上，並可向下拖曳關閉（`SheetOnPhones`），而 `Align` 決定哪一側保持不動。遷移：觸發鈕不再以 `Content` 設定（請設定 `Label` 與 `Glyph`）；`ShowAt`、`Presentation`、`Subtitle`、`Actions`、`ActionInvoked`、`Shared`、`ClosesOnShare` 以及標題與複製標籤屬性已移除（請改用 `Title`、`Labels`、搭配 `ChannelHandler` 的 `Channels`，以及 `SendHandler` 或 `Sent`）；`People` 持有 `ShareSheetPerson`；`LinkCopied` 傳遞 `ShareSheetLinkCopiedEventArgs`。
+- **破壞性變更：`ActionMorph` 從按鈕變為選單、表單與勾號。** 56 px 的按鈕會先展開為一個簡短的建立項目選單（每列有說明與字母快捷鍵，並帶有滑動的反白），再展開為所選動作的表單（單行或多行欄位、可選的選項，可按 Enter 或 Ctrl/⌘+Enter 送出），最後摺回按鈕並以繪製的勾號收尾；加號會在 `ResetAfter`（1.6 s）後回來。`SubmitHandler`（或 `Submitted`）負責儲存，空白送出會抖動，失敗的送出會保留草稿並顯示錯誤，每個動作都會記住其未送出的文字，`Corner` 決定表面展開的方式。遷移：請在 `Actions` 中將每個面板描述為 `ActionMorphAction`（`Title`、`Placeholder`、`IsMultiline`、`Choices`、`SubmitLabel`、`SuccessLabel`、`EmptyHint`），而非以內容描述；`Glyph`、`Variant`、`CollapsesOnOutsidePress`、`ShowsCloseButton` 與 `ActionMorph.Closes` 已移除；此控制項在佈局中佔用 56 × 56，並將其表面繪製於鄰近項目之上，因此請將它放在 `Panel` 中位於角落的最後一個。
+- **破壞性變更：`MorphNav` 是網站導覽列。** 單一表面容納品牌、可帶有滑動反白的項目、搜尋與一個主要動作；帶有連結的項目會讓導覽列展開為其面板（連結分為一欄或兩欄，可選的功能區如 `MorphNavStory` 與頁尾），相鄰項目的面板會從其側邊滑入，懸停 60 ms 後開啟、180 ms 後關閉，搜尋從導覽列本身開啟（空白查詢時顯示建議，最多六個排序後的結果），`IsCompact` 讓導覽列更緊湊，而當導覽列窄於 `CollapseBelow`（720 px）時，項目會收合為單一的選單項目。遷移：`MorphNavSection` 是 `MorphNavItem`（`Header` → `Label`，另加 `Value`）；`MorphNavLink.Text` / `Glyph` / `Tag` 是 `Label` / `Icon` / `Href`；`Title` / `Mark` 是 `BrandName` / `BrandMark`；`CurrentLink` 是 `Current`（項目的 `Value`）；`LinkInvoked` 是 `Navigate`（`MorphNavNavigateEventArgs`）；`IsOpen`、`Open()`、`Close()` 與 `Toggle()` 是 `Open(value)`、`ClosePanel()` 與 `OpenValue`；導覽列的 `Footer` 移至 `MorphNavItem.Footer`；`PanelWidth` 與 `CloseLabel` 已移除。
+
+### 修復
+
+- **Avatar 狀態點大小**（[#110](https://github.com/AIDotNet/TKCode.Arc/issues/110)）：圓點現在依文件所述跟隨頭像的尺寸（`Small` 為 8 px 加 1.5 px 的圓環，`Medium` 為 10 px，`Large` 為 12 px，`XLarge` 為 14 px），忙碌橫槓在所有尺寸下都橫跨圓點。先前每個頭像都繪製 10 px 的中型圓點：舊範本中的區域值隱藏了尺寸樣式。
+- **`InlineEdit` 多行保留空間**（[#110](https://github.com/AIDotNet/TKCode.Arc/issues/110)）：多行欄位現在如文件所述為其堆疊的儲存與取消按鈕保留 38 px，而非 66 px，因此文字換行的位置會再往後 28 px。範本本身的內距曾隱藏多行樣式。
+- **`OrbitMenu` 首次開啟**：菜單第一次開啟時，動作會先短暫顯示在圓弧上的位置，然後落回觸發鈕再重新展開；現在它們只會從觸發鈕離開一次。
 
 ## 1.1.0-preview.4（2026-11-11）
 
