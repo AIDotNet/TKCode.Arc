@@ -6,6 +6,7 @@ using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
+using Avalonia.Styling;
 using Avalonia.Threading;
 
 namespace TKCode.Arc.Tests.Sliders;
@@ -209,6 +210,27 @@ public class ElasticSliderTests
             var thumb = rail.Thumbs[0].Bounds;
             (thumb.Top + thumb.Height / 2).ShouldBe(rail.Bounds.Height / 2, 0.01);
             thumb.Height.ShouldBe(24);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Thumb_Diameter_And_Track_Thickness_Follow_A_User_Style()
+    {
+        var (slider, window) = Show(new ElasticSlider { Label = "Width", Value = 50 });
+        try
+        {
+            slider.Rail!.Thumbs[0].Bounds.Width.ShouldBe(24);
+            window.Styles.Add(new Style(x => x.OfType<ElasticSlider>())
+            {
+                Setters = { new Setter(ElasticSlider.ThumbDiameterProperty, 18.0), new Setter(ElasticSlider.TrackThicknessProperty, 12.0) },
+            });
+            Dispatcher.UIThread.RunJobs();
+            slider.Rail!.Thumbs[0].Bounds.Width.ShouldBe(18);
+            slider.Rail!.TrackThickness.ShouldBe(12);
         }
         finally
         {

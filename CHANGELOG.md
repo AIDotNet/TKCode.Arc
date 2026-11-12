@@ -8,6 +8,32 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0), `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` (from 1.1.0-preview.1).
 
+## Unreleased
+
+### Added
+
+- **`Popover.TriggerMode`, `OpenDelay`, `CloseDelay` and `HasShadow`** ([#101](https://github.com/AIDotNet/TKCode.Arc/issues/101)):
+  `TriggerMode="Hover"` opens the panel after the pointer rests on the trigger for `OpenDelay` (100 ms) and closes it once
+  the pointer has been away from both the trigger and the panel for `CloseDelay` (140 ms). Hovering does not take focus;
+  `Enter` / `Space` on the trigger opens it for the keyboard and moves focus in, and a touch tap toggles it. `Manual` ignores
+  the trigger (`IsOpen` / `ShowAt`). `HasShadow="False"` drops the popup's floating shadow, which stayed visible around a
+  `PopoverSurface` made transparent by a style. Defaults (`Click`, shadow on) are unchanged. New enum `PopoverTriggerMode`.
+- **`ButtonVariant.Text`** ([#101](https://github.com/AIDotNet/TKCode.Arc/issues/101)): a button that is only its content,
+  with no fill, border, padding or minimum height (`Size` does not apply). Secondary text at rest, foreground on hover,
+  dimmed while pressed, muted when disabled. Use it for icon and label-only actions where `Ghost` still adds a hover
+  fill and padding.
+- **`ThumbDiameter` and `TrackThickness` on `Slider`, `ElasticSlider` and `RangeHistogramSlider`**
+  ([#101](https://github.com/AIDotNet/TKCode.Arc/issues/101)): size the thumbs and the track of one slider from the
+  control or a style. The theme still fills the default from the control's token; the value used to sit on the template's
+  rail as a local value, which no style could override.
+
+### Fixed
+
+- **`Slider` without a label and without a readout no longer keeps its header row**
+  ([#101](https://github.com/AIDotNet/TKCode.Arc/issues/101)): with `IsValueVisible="False"` and no `Label`, the empty
+  header still took its line height above the control row, so the slider sat off the vertical centre of a toolbar or
+  table cell. The row now leaves the layout (`:headerless`), and the slider is as tall as its control row.
+
 ## 1.1.0-preview.5 - 2026-11-12
 
 The Docks and tabs group of `TKCode.Arc.Special` is rebuilt (`OrbitMenu`, `LiquidTabBar`, `ShareSheet`, `ActionMorph`

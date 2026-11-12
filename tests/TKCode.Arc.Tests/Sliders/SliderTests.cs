@@ -7,6 +7,7 @@ using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
+using Avalonia.Styling;
 using Avalonia.Threading;
 
 namespace TKCode.Arc.Tests.Sliders;
@@ -320,6 +321,63 @@ public class SliderTests
             var thumb = rail.Thumbs[0].Bounds;
             (thumb.Top + thumb.Height / 2).ShouldBe(rail.Bounds.Height / 2, 0.01);
             thumb.Height.ShouldBe(22);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Header_Row_Collapses_Without_A_Label_And_A_Readout()
+    {
+        // Issue #101: an empty label still took its line height above the control row and pushed the slider off center.
+        var slider = new Slider { Value = 40, IsValueVisible = false };
+        var (_, window) = Show(slider);
+        try
+        {
+            var header = TestHelpers.Descendant<DockPanel>(slider, "PART_Header");
+            header.IsVisible.ShouldBeFalse();
+            slider.Bounds.Height.ShouldBe(slider.Rail!.Bounds.Height, 0.01);
+
+            slider.Label = "Volume";
+            Dispatcher.UIThread.RunJobs();
+            header.IsVisible.ShouldBeTrue();
+            slider.Bounds.Height.ShouldBeGreaterThan(slider.Rail!.Bounds.Height);
+
+            slider.Label = null;
+            slider.IsValueVisible = true;
+            Dispatcher.UIThread.RunJobs();
+            header.IsVisible.ShouldBeTrue();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Thumb_Diameter_Follows_The_Control_Property_And_A_User_Style()
+    {
+        var slider = new Slider { Label = "Volume", Value = 50 };
+        var (_, window) = Show(slider);
+        try
+        {
+            Thumb(slider, 0).Bounds.Width.ShouldBe(22);
+
+            slider.ThumbDiameter = 30;
+            Dispatcher.UIThread.RunJobs();
+            Thumb(slider, 0).Bounds.Width.ShouldBe(30);
+            slider.Rail!.TrackLeft.ShouldBe(15);
+
+            slider.ClearValue(Slider.ThumbDiameterProperty);
+            window.Styles.Add(new Style(x => x.OfType<Slider>())
+            {
+                Setters = { new Setter(Slider.ThumbDiameterProperty, 16.0), new Setter(Slider.TrackThicknessProperty, 10.0) },
+            });
+            Dispatcher.UIThread.RunJobs();
+            Thumb(slider, 0).Bounds.Width.ShouldBe(16);
+            slider.Rail!.TrackThickness.ShouldBe(10);
         }
         finally
         {

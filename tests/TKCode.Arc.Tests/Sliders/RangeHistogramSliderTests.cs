@@ -7,6 +7,7 @@ using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
+using Avalonia.Styling;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 
@@ -468,6 +469,27 @@ public class RangeHistogramSliderTests
             slider.GuideOf(0).Opacity.ShouldBe(1);
             Release(window, from - new Point(400, 0));
             slider.GuideOf(0).Opacity.ShouldBe(0);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Thumb_Diameter_And_Track_Thickness_Follow_A_User_Style()
+    {
+        var (slider, window) = Show(new RangeHistogramSlider { Label = "Price" });
+        try
+        {
+            slider.Rail!.Thumbs[0].Bounds.Width.ShouldBe(22);
+            window.Styles.Add(new Style(x => x.OfType<RangeHistogramSlider>())
+            {
+                Setters = { new Setter(RangeHistogramSlider.ThumbDiameterProperty, 28.0), new Setter(RangeHistogramSlider.TrackThicknessProperty, 8.0) },
+            });
+            Dispatcher.UIThread.RunJobs();
+            slider.Rail!.Thumbs[0].Bounds.Width.ShouldBe(28);
+            slider.Rail!.TrackThickness.ShouldBe(8);
         }
         finally
         {

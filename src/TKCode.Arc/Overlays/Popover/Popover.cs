@@ -7,6 +7,7 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
 using AvaloniaButton = Avalonia.Controls.Button;
 
@@ -27,6 +28,23 @@ public enum PopoverAlignment
     Start,
     Center,
     End
+}
+
+/// <summary>What on the trigger opens a <see cref="Popover"/>.</summary>
+public enum PopoverTriggerMode
+{
+    /// <summary>A click (or Enter / Space on the trigger) toggles the panel; focus moves into it.</summary>
+    Click,
+
+    /// <summary>
+    /// The pointer resting on the trigger opens the panel (after <see cref="Popover.OpenDelay"/>) and leaving both the
+    /// trigger and the panel closes it (after <see cref="Popover.CloseDelay"/>). Focus stays where it is. Enter / Space on
+    /// the trigger opens it for the keyboard (focus then moves into the panel) and a touch tap toggles it.
+    /// </summary>
+    Hover,
+
+    /// <summary>Nothing on the trigger opens it: set <see cref="Popover.IsOpen"/>, or call <see cref="Popover.ShowAt"/>.</summary>
+    Manual
 }
 
 /// <summary>
@@ -72,6 +90,28 @@ public class Popover : ContentControl
     public static readonly StyledProperty<bool> IsModalProperty =
         AvaloniaProperty.Register<Popover, bool>(nameof(IsModal));
 
+    /// <summary>
+    /// Draws the floating shadow around the panel (default true). Turn it off, and style <see cref="PopoverSurface"/> with a
+    /// transparent <c>Background</c> and no border, to show the content on its own.
+    /// </summary>
+    public static readonly StyledProperty<bool> HasShadowProperty =
+        AvaloniaProperty.Register<Popover, bool>(nameof(HasShadow), true);
+
+    /// <summary>What on the trigger opens the panel: <see cref="PopoverTriggerMode.Click"/> (default), <see cref="PopoverTriggerMode.Hover"/> or <see cref="PopoverTriggerMode.Manual"/>.</summary>
+    public static readonly StyledProperty<PopoverTriggerMode> TriggerModeProperty =
+        AvaloniaProperty.Register<Popover, PopoverTriggerMode>(nameof(TriggerMode), PopoverTriggerMode.Click);
+
+    /// <summary>Hover time before the panel opens in <see cref="PopoverTriggerMode.Hover"/> mode (default 100ms).</summary>
+    public static readonly StyledProperty<TimeSpan> OpenDelayProperty =
+        AvaloniaProperty.Register<Popover, TimeSpan>(nameof(OpenDelay), TimeSpan.FromMilliseconds(100));
+
+    /// <summary>
+    /// Time the pointer may be away from both the trigger and the panel before it closes in <see cref="PopoverTriggerMode.Hover"/>
+    /// mode (default 140ms; long enough to cross the gap between them).
+    /// </summary>
+    public static readonly StyledProperty<TimeSpan> CloseDelayProperty =
+        AvaloniaProperty.Register<Popover, TimeSpan>(nameof(CloseDelay), TimeSpan.FromMilliseconds(140));
+
     /// <summary>Attaches a popover to any control: a click on the control toggles it.</summary>
     public static readonly AttachedProperty<Popover?> AttachProperty =
         AvaloniaProperty.RegisterAttached<Popover, Control, Popover?>("Attach");
@@ -98,6 +138,18 @@ public class Popover : ContentControl
     /// <summary>Modal: presses outside are swallowed (they only close the popover). Default false.</summary>
     public bool IsModal { get => GetValue(IsModalProperty); set => SetValue(IsModalProperty, value); }
 
+    /// <inheritdoc cref="TriggerModeProperty"/>
+    public PopoverTriggerMode TriggerMode { get => GetValue(TriggerModeProperty); set => SetValue(TriggerModeProperty, value); }
+
+    /// <inheritdoc cref="OpenDelayProperty"/>
+    public TimeSpan OpenDelay { get => GetValue(OpenDelayProperty); set => SetValue(OpenDelayProperty, value); }
+
+    /// <inheritdoc cref="CloseDelayProperty"/>
+    public TimeSpan CloseDelay { get => GetValue(CloseDelayProperty); set => SetValue(CloseDelayProperty, value); }
+
+    /// <inheritdoc cref="HasShadowProperty"/>
+    public bool HasShadow { get => GetValue(HasShadowProperty); set => SetValue(HasShadowProperty, value); }
+
     #endregion
 
     /// <summary>Raised when the popover opens.</summary>
@@ -116,6 +168,12 @@ public class Popover : ContentControl
     private Control? _attachedTarget;
     private Control? _showAnchor;
     private Control? _hookedTrigger;
+    private PopoverTriggerMode _hookedMode;
+    private DispatcherTimer? _openTimer;
+    private DispatcherTimer? _closeTimer;
+    private bool _overTrigger;
+    private bool _overSurface;
+    private bool _focusOnOpen;
     private bool _parentedToTarget;
     private bool _pendingOpen;
     private DismissReason _pendingReason = DismissReason.Programmatic;
@@ -208,6 +266,15 @@ public class Popover : ContentControl
                 CloseCore();
             }
         }
+        else if (change.Property == HasShadowProperty)
+        {
+            ApplyShadow();
+        }
+        else if (change.Property == TriggerModeProperty)
+        {
+            // Hook the trigger again for the new mode (the attached target counts as the trigger).
+            HookTrigger(_hookedTrigger);
+        }
         else if (IsOpen && (change.Property == PlacementProperty || change.Property == AlignmentProperty || change.Property == OffsetProperty))
         {
             ShowPresence();
@@ -222,14 +289,23 @@ public class Popover : ContentControl
         {
             return;
         }
-        if (trigger is AvaloniaButton button)
+        _hookedMode = TriggerMode;
+        switch (_hookedMode)
         {
-            button.Click += OnTriggerClick;
-        }
-        else
-        {
-            trigger.Tapped += OnTriggerTapped;
-            trigger.KeyDown += OnTriggerKeyDown;
+            case PopoverTriggerMode.Click when trigger is AvaloniaButton button:
+                button.Click += OnTriggerClick;
+                break;
+            case PopoverTriggerMode.Click:
+                trigger.Tapped += OnTriggerTapped;
+                trigger.KeyDown += OnTriggerKeyDown;
+                break;
+            case PopoverTriggerMode.Hover:
+                trigger.PointerEntered += OnTriggerPointerEntered;
+                trigger.PointerExited += OnTriggerPointerExited;
+                // A button handles its own Enter / Space and taps, so these listen to handled events too.
+                trigger.AddHandler(KeyDownEvent, OnTriggerHoverKeyDown, RoutingStrategies.Bubble, handledEventsToo: true);
+                trigger.AddHandler(TappedEvent, OnTriggerTouchTapped, RoutingStrategies.Bubble, handledEventsToo: true);
+                break;
         }
         trigger.DetachedFromVisualTree += OnTriggerDetached;
         // The panel is measured against the trigger, so it answers presses with color only.
@@ -246,22 +322,34 @@ public class Popover : ContentControl
         {
             return;
         }
-        if (_hookedTrigger is AvaloniaButton button)
+        var trigger = _hookedTrigger;
+        switch (_hookedMode)
         {
-            button.Click -= OnTriggerClick;
+            case PopoverTriggerMode.Click when trigger is AvaloniaButton button:
+                button.Click -= OnTriggerClick;
+                break;
+            case PopoverTriggerMode.Click:
+                trigger.Tapped -= OnTriggerTapped;
+                trigger.KeyDown -= OnTriggerKeyDown;
+                break;
+            case PopoverTriggerMode.Hover:
+                trigger.PointerEntered -= OnTriggerPointerEntered;
+                trigger.PointerExited -= OnTriggerPointerExited;
+                trigger.RemoveHandler(KeyDownEvent, OnTriggerHoverKeyDown);
+                trigger.RemoveHandler(TappedEvent, OnTriggerTouchTapped);
+                break;
         }
-        else
-        {
-            _hookedTrigger.Tapped -= OnTriggerTapped;
-            _hookedTrigger.KeyDown -= OnTriggerKeyDown;
-        }
-        _hookedTrigger.DetachedFromVisualTree -= OnTriggerDetached;
+        trigger.DetachedFromVisualTree -= OnTriggerDetached;
         _hookedTrigger = null;
+        StopHoverTimers();
+        _overTrigger = false;
     }
 
     private void OnTriggerDetached(object? sender, VisualTreeAttachmentEventArgs e)
     {
         // The trigger left the window (page navigated away): close without the exit.
+        StopHoverTimers();
+        _overTrigger = false;
         if (IsOpen && ReferenceEquals(sender, Anchor))
         {
             Close();
@@ -293,6 +381,161 @@ public class Popover : ContentControl
         SetCurrentValue(IsOpenProperty, true);
     }
 
+    #region Hover
+
+    private void OnTriggerPointerEntered(object? sender, PointerEventArgs e)
+    {
+        if (e.Pointer.Type == PointerType.Touch)
+        {
+            return;
+        }
+        _overTrigger = true;
+        _closeTimer?.Stop();
+        if (IsOpen)
+        {
+            return;
+        }
+        if (OpenDelay <= TimeSpan.Zero)
+        {
+            OpenFromHover(sender as Control);
+            return;
+        }
+        _openTimer ??= CreateTimer(OpenIfHovering);
+        _openTimer.Stop();
+        _openTimer.Interval = OpenDelay;
+        _openTimer.Start();
+    }
+
+    private void OnTriggerPointerExited(object? sender, PointerEventArgs e)
+    {
+        if (e.Pointer.Type == PointerType.Touch)
+        {
+            return;
+        }
+        _overTrigger = false;
+        ScheduleClose();
+    }
+
+    private void OnSurfacePointerEntered(object? sender, PointerEventArgs e)
+    {
+        if (TriggerMode != PopoverTriggerMode.Hover || e.Pointer.Type == PointerType.Touch)
+        {
+            return;
+        }
+        _overSurface = true;
+        _closeTimer?.Stop();
+    }
+
+    private void OnSurfacePointerExited(object? sender, PointerEventArgs e)
+    {
+        if (TriggerMode != PopoverTriggerMode.Hover || e.Pointer.Type == PointerType.Touch)
+        {
+            return;
+        }
+        _overSurface = false;
+        ScheduleClose();
+    }
+
+    private void OnTriggerHoverKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.Key is Key.Enter or Key.Space && !IsOpen)
+        {
+            // Without a pointer there is no hovering: the keyboard opens it and goes into the panel.
+            _openTimer?.Stop();
+            _focusOnOpen = true;
+            OpenFromHover(sender as Control);
+        }
+    }
+
+    private void OnTriggerTouchTapped(object? sender, TappedEventArgs e)
+    {
+        if (e.Pointer?.Type == PointerType.Touch)
+        {
+            _focusOnOpen = true;
+            Toggle(sender as Control);
+        }
+    }
+
+    private void OpenIfHovering()
+    {
+        if (_overTrigger && !IsOpen)
+        {
+            OpenFromHover(_hookedTrigger);
+        }
+    }
+
+    private void OpenFromHover(Control? trigger)
+    {
+        _showAnchor = trigger;
+        SetCurrentValue(IsOpenProperty, true);
+    }
+
+    private void ScheduleClose()
+    {
+        _openTimer?.Stop();
+        if (!IsOpen)
+        {
+            return;
+        }
+        if (CloseDelay <= TimeSpan.Zero)
+        {
+            CloseIfAway();
+            return;
+        }
+        _closeTimer ??= CreateTimer(CloseIfAway);
+        _closeTimer.Stop();
+        _closeTimer.Interval = CloseDelay;
+        _closeTimer.Start();
+    }
+
+    private void CloseIfAway()
+    {
+        if (!_overTrigger && !_overSurface)
+        {
+            Close(DismissReason.Programmatic);
+        }
+    }
+
+    private void StopHoverTimers()
+    {
+        _openTimer?.Stop();
+        _closeTimer?.Stop();
+    }
+
+    private static DispatcherTimer CreateTimer(Action tick)
+    {
+        var timer = new DispatcherTimer(DispatcherPriority.Normal);
+        timer.Tick += (_, _) =>
+        {
+            timer.Stop();
+            tick();
+        };
+        return timer;
+    }
+
+    /// <summary>An open is waiting for its delay (tests).</summary>
+    internal bool IsOpenScheduled => _openTimer?.IsEnabled == true;
+
+    /// <summary>A close is waiting for its delay (tests).</summary>
+    internal bool IsCloseScheduled => _closeTimer?.IsEnabled == true;
+
+    /// <summary>Runs the pending open and close now, as if their delays had passed (tests: headless timers only fire inside a frame).</summary>
+    internal void FlushTimers()
+    {
+        if (_openTimer?.IsEnabled == true)
+        {
+            _openTimer.Stop();
+            OpenIfHovering();
+        }
+        if (_closeTimer?.IsEnabled == true)
+        {
+            _closeTimer.Stop();
+            CloseIfAway();
+        }
+    }
+
+    #endregion
+
     private void UpdateTriggerState()
     {
         if (_hookedTrigger is { } trigger)
@@ -306,6 +549,28 @@ public class Popover : ContentControl
 
     #region Open / close
 
+    /// <summary>
+    /// The popup draws the shadow from the <c>ShadowFloating</c> token at style priority. Without a shadow the popup gets
+    /// an empty one as a local value; with one the local value is cleared and the token applies again.
+    /// </summary>
+    private void ApplyShadow()
+    {
+        if (_presence is not { } presence)
+        {
+            return;
+        }
+        if (HasShadow)
+        {
+            presence.Popup.ClearValue(ArcPopup.PopupRootShadowProperty);
+            presence.Popup.ClearValue(ArcPopup.OverlayHostShadowProperty);
+        }
+        else
+        {
+            presence.Popup.PopupRootShadow = default;
+            presence.Popup.OverlayHostShadow = default;
+        }
+    }
+
     private void EnsurePresence()
     {
         if (_presence is not null)
@@ -315,7 +580,10 @@ public class Popover : ContentControl
         _surface = new PopoverSurface();
         _surface.Bind(ContentProperty, this.GetObservable(ContentProperty));
         _surface.Bind(ContentTemplateProperty, this.GetObservable(ContentTemplateProperty));
+        _surface.PointerEntered += OnSurfacePointerEntered;
+        _surface.PointerExited += OnSurfacePointerExited;
         _presence = new OverlayAnchoredPresence(_surface, OverlayAnchoredMotion.Popover);
+        ApplyShadow();
         LogicalChildren.Add(_presence.Popup);
         _presence.Hidden += (_, _) => ReleaseParent();
         _presence.OutsidePressed += (_, e) =>
@@ -365,9 +633,13 @@ public class Popover : ContentControl
         _pendingReason = DismissReason.Programmatic;
         ShowPresence();
         UpdateTriggerState();
-        // Focus moves into the panel (first focusable element, or the panel itself).
-        var target = FocusManager.FindFirstFocusableElement(_surface!) ?? _surface;
-        target?.Focus(NavigationMethod.Unspecified);
+        // Focus moves into the panel (first focusable element, or the panel itself); a panel opened by hovering leaves it where it is.
+        if (TriggerMode != PopoverTriggerMode.Hover || _focusOnOpen)
+        {
+            var target = FocusManager.FindFirstFocusableElement(_surface!) ?? _surface;
+            target?.Focus(NavigationMethod.Unspecified);
+        }
+        _focusOnOpen = false;
         Opened?.Invoke(this, EventArgs.Empty);
     }
 
@@ -391,6 +663,9 @@ public class Popover : ContentControl
     private void CloseCore()
     {
         _pendingOpen = false;
+        _focusOnOpen = false;
+        _overSurface = false;
+        StopHoverTimers();
         var reason = _pendingReason;
         _pendingReason = DismissReason.Programmatic;
         var anchor = Anchor;

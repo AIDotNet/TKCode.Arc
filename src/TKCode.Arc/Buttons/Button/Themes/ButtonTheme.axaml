@@ -115,6 +115,26 @@
             </Style>
         </Style>
 
+        <!-- Text: the content alone (issue #101). Declared after the size styles so its zero padding and height win over
+             :small / :large; only the label color answers the pointer. -->
+        <Style Selector="^:text">
+            <Setter Property="MinHeight" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Style Selector="^:pointerover">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            </Style>
+            <Style Selector="^:pressed">
+                <Setter Property="Opacity" Value="{arc:ButtonTokenResource PressedOpacity}" />
+            </Style>
+            <Style Selector="^:disabled">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            </Style>
+        </Style>
+
         <Style Selector="^:danger">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />

@@ -65,7 +65,7 @@ public sealed class SliderRangeChangedEventArgs : RoutedEventArgs
 /// </summary>
 [TemplatePart(RailPart, typeof(Control))]
 [TemplatePart(MarksPart, typeof(Control))]
-[PseudoClasses(DraggingPseudoClass, RangePseudoClass, MarksPseudoClass)]
+[PseudoClasses(DraggingPseudoClass, RangePseudoClass, MarksPseudoClass, HeaderlessPseudoClass)]
 public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMarkHost
 {
     public const string RailPart = "PART_Rail";
@@ -77,6 +77,8 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
     public const string DraggingPseudoClass = ":dragging";
     public const string RangePseudoClass = ":range";
     public const string MarksPseudoClass = ":marks";
+    /// <summary>Set while there is neither a <see cref="Label"/> nor a visible readout; the theme then collapses the header row.</summary>
+    public const string HeaderlessPseudoClass = ":headerless";
 
     /// <summary>Pixels of rubber-band travel past a limit.</summary>
     internal const double Stretch = 9;
@@ -127,6 +129,17 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
     public static readonly StyledProperty<bool> IsValueVisibleProperty =
         AvaloniaProperty.Register<Slider, bool>(nameof(IsValueVisible), true);
 
+    /// <summary>
+    /// Diameter of the thumbs in device-independent pixels. The theme sets it from the <c>SliderToken</c>; set it on the
+    /// control, or from a style, to size the thumbs of one slider.
+    /// </summary>
+    public static readonly StyledProperty<double> ThumbDiameterProperty =
+        AvaloniaProperty.Register<Slider, double>(nameof(ThumbDiameter), 22);
+
+    /// <summary>Thickness of the track in device-independent pixels. The theme sets it from the <c>SliderToken</c>.</summary>
+    public static readonly StyledProperty<double> TrackThicknessProperty =
+        AvaloniaProperty.Register<Slider, double>(nameof(TrackThickness), 6);
+
     /// <summary>Accessible name of the lower range thumb; when null it is the Label with ", minimum" appended.</summary>
     public static readonly StyledProperty<string?> LowerThumbNameProperty =
         AvaloniaProperty.Register<Slider, string?>(nameof(LowerThumbName));
@@ -161,6 +174,10 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
     public int MinStepsBetweenThumbs { get => GetValue(MinStepsBetweenThumbsProperty); set => SetValue(MinStepsBetweenThumbsProperty, value); }
     public Func<double, string>? ValueFormatter { get => GetValue(ValueFormatterProperty); set => SetValue(ValueFormatterProperty, value); }
     public bool IsValueVisible { get => GetValue(IsValueVisibleProperty); set => SetValue(IsValueVisibleProperty, value); }
+    /// <inheritdoc cref="ThumbDiameterProperty"/>
+    public double ThumbDiameter { get => GetValue(ThumbDiameterProperty); set => SetValue(ThumbDiameterProperty, value); }
+    /// <inheritdoc cref="TrackThicknessProperty"/>
+    public double TrackThickness { get => GetValue(TrackThicknessProperty); set => SetValue(TrackThicknessProperty, value); }
     /// <inheritdoc cref="LowerThumbNameProperty"/>
     public string? LowerThumbName { get => GetValue(LowerThumbNameProperty); set => SetValue(LowerThumbNameProperty, value); }
     /// <inheritdoc cref="UpperThumbNameProperty"/>
@@ -525,6 +542,14 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
         else if (change.Property == LabelProperty || change.Property == LowerThumbNameProperty || change.Property == UpperThumbNameProperty)
         {
             UpdateThumbs();
+            if (change.Property == LabelProperty)
+            {
+                UpdateHeaderPseudoClass();
+            }
+        }
+        else if (change.Property == IsValueVisibleProperty)
+        {
+            UpdateHeaderPseudoClass();
         }
         else if (change.Property == IsEffectivelyEnabledProperty)
         {
@@ -570,8 +595,13 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
     {
         PseudoClasses.Set(RangePseudoClass, IsRange);
         PseudoClasses.Set(DraggingPseudoClass, _dragging >= 0);
+        UpdateHeaderPseudoClass();
         UpdateRangeReadout();
     }
+
+    /// <summary>The header row (label and readout) is empty without a label and with the readout hidden; the theme then takes it out of the layout.</summary>
+    private void UpdateHeaderPseudoClass() =>
+        PseudoClasses.Set(HeaderlessPseudoClass, string.IsNullOrEmpty(Label) && !IsValueVisible);
 
     /// <summary>
     /// The dash and the high readout exist only once the slider has been a range (most sliders never are); afterwards

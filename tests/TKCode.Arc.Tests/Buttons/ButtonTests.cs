@@ -161,4 +161,38 @@ public class ButtonTests
         morphPeak.ShouldBeGreaterThan(morphFinal + 0.5);
         quickPeak.ShouldBeLessThanOrEqualTo(quickFinal + 0.01);
     }
+
+    [AvaloniaFact]
+    public void Text_Variant_Is_The_Content_Alone_At_Any_Size()
+    {
+        // Issue #101: a button that shows only its label or icon, without a fill, a border, padding or a minimum height.
+        var left = Avalonia.Layout.HorizontalAlignment.Left;
+        var text = new Button { Variant = ButtonVariant.Text, Content = "Edit", HorizontalAlignment = left };
+        var large = new Button { Variant = ButtonVariant.Text, Size = ControlSize.Large, Content = "Edit", HorizontalAlignment = left };
+        var ghost = new Button { Variant = ButtonVariant.Ghost, Content = "Edit", HorizontalAlignment = left };
+        var panel = new Avalonia.Controls.StackPanel { Children = { text, large, ghost } };
+        var window = TestHelpers.Show(panel);
+        try
+        {
+            text.Classes.Contains(Button.TextPseudoClass).ShouldBeTrue();
+            text.Classes.Contains(Button.GhostPseudoClass).ShouldBeFalse();
+            text.Padding.ShouldBe(default);
+            text.BorderThickness.ShouldBe(default);
+            text.MinHeight.ShouldBe(0);
+            text.Bounds.Height.ShouldBeLessThan(ghost.Bounds.Height);
+            text.Bounds.Width.ShouldBeLessThan(ghost.Bounds.Width);
+            large.Bounds.Size.ShouldBe(text.Bounds.Size);
+            ((Avalonia.Media.ISolidColorBrush)text.Background!).Color.A.ShouldBe((byte)0);
+            ((Avalonia.Media.ISolidColorBrush)text.Foreground!).Color
+                .ShouldBe(ArcTokens.GetColor(text, TKCode.Arc.DesignTokens.ArcDesignTokenKind.TextSecondary));
+
+            text.Variant = ButtonVariant.Primary;
+            text.Classes.Contains(Button.TextPseudoClass).ShouldBeFalse();
+            text.Padding.ShouldNotBe(default);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }
