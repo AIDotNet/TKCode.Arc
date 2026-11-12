@@ -82,23 +82,27 @@ lists each release and its migration notes.
 | Path | Contents |
 |---|---|
 | `src/` | The libraries above and their source generators. |
-| `gallery/` | The gallery and documentation site, with desktop and browser hosts. |
 | `tests/` | Unit, headless Avalonia and generator snapshot tests, with token and preset baselines. |
 | `templates/` | The source of `TKCode.Arc.Templates`. |
 | `native/` | Native shims and libraries for the terminal, audio and video. |
-| `tools/` | Generators and scripts for icons, fonts, docs screenshots, native libraries and packaging. |
+| `tools/` | Generators and scripts for icons, native libraries, templates and packaging. |
+
+The gallery and documentation site, with its desktop and browser hosts, the docs pages and the demos, is a separate repository:
+[AIDotNet/ArcGallery](https://github.com/AIDotNet/ArcGallery). It builds against a checkout of this one.
 
 ## Working on the library
 
-Building needs the .NET 11 SDK (see `global.json`) and the .NET 10 runtime, which the tests and the gallery run on.
+Building needs the .NET 11 SDK (see `global.json`) and the .NET 10 runtime, which the tests run on.
 
 ```bash
 dotnet build TKCode.Arc.slnx
 dotnet test tests/TKCode.Arc.Core.Tests
 dotnet test tests/TKCode.Arc.Foundation.Tests
 dotnet test tests/TKCode.Arc.Tests
-dotnet run --project gallery/TKCode.Arc.Gallery.Desktop -f net10.0
 ```
+
+To run the gallery, clone [ArcGallery](https://github.com/AIDotNet/ArcGallery) next to this repository as `../ArcGallery`
+(or anywhere, with `ARC_ROOT` pointing at this checkout) and run `dotnet run --project gallery/TKCode.Arc.Gallery.Desktop -f net10.0` there.
 
 PDFium and pdf.js are not committed: `tools/pdf/sync-native.sh` and `tools/pdf/sync-pdfjs.sh` download them and check their
 checksums. Without them the desktop gallery shows a simulated document in the PDF demos, and a browser build has no pdf.js to

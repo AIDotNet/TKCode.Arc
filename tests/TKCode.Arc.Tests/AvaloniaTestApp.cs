@@ -1,6 +1,6 @@
 using TKCode.Arc;
-using TKCode.Arc.Gallery;
-using TKCode.Arc.Gallery.Shell;
+using TKCode.Arc.Mobile;
+using TKCode.Arc.Themes.Corners;
 using TKCode.Arc.Themes.Pixel;
 using Avalonia;
 using Avalonia.Headless;
@@ -18,9 +18,7 @@ public static class TestAppBuilder
 {
     public static AppBuilder BuildAvaloniaApp()
     {
-        // The top bar's GitHub button asks GitHub for the star count; tests have no network and no use for it.
-        GalleryGitHub.StarsProvider = static () => Task.FromResult<int?>(null);
-        // The runtime XAML loader reads the xmlns definitions of the assemblies loaded when it first runs; the guide tests parse Lucide XAML.
+        // The runtime XAML loader reads the xmlns definitions of the assemblies loaded when it first runs; tests that parse Lucide XAML need this one.
         _ = typeof(TKCode.Arc.Icons.Lucide.LucideIcon).Assembly;
         return Build();
     }
@@ -29,9 +27,16 @@ public static class TestAppBuilder
         AppBuilder.Configure<TestApplication>()
                   .UseHeadless(new AvaloniaHeadlessPlatformOptions())
                   .UseArc(arc => arc.UseArcControls()
+                                    .UseArcBlocks()
+                                    .UseArcAdvancedCharts()
+                                    .UseArcWorkflow()
+                                    .UseArcDock()
                                     .UseArcVideo()
                                     .UseArcPdf()
-                                    .UseArcGallery()
+                                    .UseArcMobile()
+                                    .UseArcPixelTheme()
+                                    .UseArcCorners()
+                                    .UseArcSpecial()
                                     .UseLanguages(LanguageTags.EnUS, [LanguageTags.EnUS, LanguageTags.ZhCN, LanguageTags.ZhTW]));
 }
 

@@ -8,7 +8,7 @@
         <ArcLucideGenerator>true</ArcLucideGenerator>
     </PropertyGroup>
     <ItemGroup>
-        <!-- The Docs-section XAML examples, loaded at run time (GalleryGuidesTests), and a declared-only icon (LucideIconTests). -->
+        <!-- A declared-only icon (LucideIconTests). -->
         <LucideIcon Include="Sparkles;circle-dashed" />
     </ItemGroup>
     <ItemGroup>
@@ -30,9 +30,7 @@
         <ProjectReference Include="../../src/TKCode.Arc.Pdf/TKCode.Arc.Pdf.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Themes.Corners/TKCode.Arc.Themes.Corners.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Themes.Pixel/TKCode.Arc.Themes.Pixel.csproj" />
-        <ProjectReference Include="../../gallery/TKCode.Arc.Gallery/TKCode.Arc.Gallery.csproj" />
-        <ProjectReference Include="../../gallery/TKCode.Arc.Gallery.Llms/TKCode.Arc.Gallery.Llms.csproj" />
-        <!-- The Docs-section pages show Lucide icons in their XAML examples. -->
+        <!-- LucideIconTests and the XAML loaded at run time need the Lucide assembly. -->
         <ProjectReference Include="../../src/TKCode.Arc.Icons.Lucide/TKCode.Arc.Icons.Lucide.csproj" />
         <!-- PropertyGrid tests use [PropertyGridModel] types: the Foundation generator registers them (no themes or tokens here). -->
         <ProjectReference Include="../../src/TKCode.Arc.Foundation.Generators/TKCode.Arc.Foundation.Generators.csproj"

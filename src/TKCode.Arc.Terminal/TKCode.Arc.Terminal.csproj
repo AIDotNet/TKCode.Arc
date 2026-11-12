@@ -17,6 +17,7 @@
         <InternalsVisibleTo Include="TKCode.Terminal.Core.Tests" />
         <InternalsVisibleTo Include="TKCode.Terminal.Avalonia.Tests" />
         <InternalsVisibleTo Include="TKCode.Arc.Tests" />
+        <InternalsVisibleTo Include="TKCode.Arc.Gallery.Tests" />
     </ItemGroup>
     <!-- libghostty-vt per RID. The binaries are not committed: tools/terminal/sync-native.sh copies them in from the TKCode build. -->
     <ItemGroup>

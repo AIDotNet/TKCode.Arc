@@ -15,6 +15,7 @@
     </ItemGroup>
     <ItemGroup>
         <InternalsVisibleTo Include="TKCode.Arc.Tests" />
+        <InternalsVisibleTo Include="TKCode.Arc.Gallery.Tests" />
         <InternalsVisibleTo Include="TKCode.Arc.Pdf.Native.Tests" />
         <!-- PdfDateText, shared by the backends. -->
         <InternalsVisibleTo Include="TKCode.Arc.Pdf.Native" />

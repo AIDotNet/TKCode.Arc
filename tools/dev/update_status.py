@@ -2,14 +2,16 @@
 
 Usage: python3 -I tools/dev/update_status.py [repo-root]
 A component counts as implemented when src/TKCode.Arc/<Category>/<Class>/<Class>.cs exists and some file under
-gallery/TKCode.Arc.Gallery/Pages registers it with Register("<Class>", ...). Rows already at 已验收 are left alone.
+<gallery>/gallery/TKCode.Arc.Gallery/Pages registers it with Register("<Class>", ...). Rows already at 已验收 are left alone.
+<gallery> is the ArcGallery checkout (https://github.com/AIDotNet/ArcGallery): $ARC_GALLERY_ROOT, else ../ArcGallery.
 """
 import glob, os, re, sys
 
 root = sys.argv[1] if len(sys.argv) > 1 else os.getcwd()
+gallery_root = os.environ.get("ARC_GALLERY_ROOT") or os.path.join(root, "..", "ArcGallery")
 doc = os.path.join(root, "design/components/overview.md")
 registered = set()
-for path in glob.glob(os.path.join(root, "gallery/TKCode.Arc.Gallery/Pages/**/*.cs"), recursive=True):
+for path in glob.glob(os.path.join(gallery_root, "gallery/TKCode.Arc.Gallery/Pages/**/*.cs"), recursive=True):
     registered.update(re.findall(r'Register\("([A-Za-z]+)"', open(path, encoding="utf-8").read()))
 
 def implemented(cls):

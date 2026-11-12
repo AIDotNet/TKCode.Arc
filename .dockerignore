@@ -1,9 +1,0 @@
-**/bin
-**/obj
-.git
-.github
-design
-docs
-tests
-tools
-!tools/pdf/sync-pdfjs.sh

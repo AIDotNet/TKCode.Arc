@@ -14,6 +14,7 @@
     </ItemGroup>
     <ItemGroup>
         <InternalsVisibleTo Include="TKCode.Arc.Tests" />
+        <InternalsVisibleTo Include="TKCode.Arc.Gallery.Tests" />
     </ItemGroup>
     <ItemGroup>
         <!-- Unicode emoji-test.txt and CLDR annotations (Unicode License v3), built by tools/emoji/generate_emoji.py. -->

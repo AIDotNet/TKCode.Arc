@@ -91,7 +91,7 @@ the public domain. Made with Natural Earth. Free vector and raster map data at h
 - Inter (SIL Open Font License 1.1), used through the `Avalonia.Fonts.Inter` package.
 - Geist and Geist Mono (SIL Open Font License 1.1, Copyright (c) 2023 Vercel, in collaboration with basement.studio), bundled in the optional `TKCode.Arc.Fonts` package; the full license text ships as `licenses/Geist-OFL.txt` (source: `src/TKCode.Arc.Fonts/Assets/OFL.txt`).
 - Silkscreen (SIL Open Font License 1.1, Copyright 2001 The Silkscreen Project Authors) and VT323 (SIL Open Font License 1.1, Copyright 2011 The VT323 Project Authors), bundled in `TKCode.Arc.Fonts` for the pixel theme as `fonts:ArcPixel`; the license texts ship as `licenses/Silkscreen-OFL.txt` and `licenses/VT323-OFL.txt` (sources: `src/TKCode.Arc.Fonts/Assets/`).
-- Noto Sans SC (SIL Open Font License 1.1, © 2014-2021 Adobe), subset to the characters of the gallery (`tools/fonts/subset-noto-sans-sc.py`) as `NotoSansSC-Subset.otf` in the gallery's WebAssembly host, which has no system fonts for Chinese text; the license text ships beside it as `wwwroot/fonts/OFL.txt`.
+- Noto Sans SC (SIL Open Font License 1.1, © 2014-2021 Adobe), subset to the characters of the gallery (`tools/fonts/subset-noto-sans-sc.py` in the [ArcGallery](https://github.com/AIDotNet/ArcGallery) repository) as `NotoSansSC-Subset.otf` in the gallery's WebAssembly host, which has no system fonts for Chinese text; the license text ships beside it as `wwwroot/fonts/OFL.txt`.
 
 ## StreamMark — Markdown rendering and code highlighting
 
@@ -162,7 +162,7 @@ and paints the result in its own palette.
 
 TextMateSharp runs its regular expressions on the native Oniguruma library through Onigwrap (native libraries per
 runtime identifier). Onigwrap: MIT License, Copyright (c) 2024 Aikawa Yataro, derived from fluentCODE/onigwrap
-(MIT License, Copyright (c) 2015 Fluent Solutions). The Gallery's WebAssembly host links
+(MIT License, Copyright (c) 2015 Fluent Solutions). The Gallery's WebAssembly host (the [ArcGallery](https://github.com/AIDotNet/ArcGallery) repository) links
 `gallery/TKCode.Arc.Gallery.Browser/native/onigwrap/<version>/st/libonigwrap.a`, compiled from Onigwrap 1.0.11 and
 Oniguruma 6.9.10 by `tools/onigwrap/build-wasm.sh` (the package has no build for the Emscripten of .NET 11). Oniguruma:
 

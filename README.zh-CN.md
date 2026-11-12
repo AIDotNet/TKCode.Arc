@@ -79,23 +79,26 @@ Arc 遵循[语义化版本](https://semver.org/)：从 1.0.0 起，破坏性 API
 | 路径 | 内容 |
 |---|---|
 | `src/` | 上述各个库及其源生成器。 |
-| `gallery/` | 组件库与文档站点，包含桌面和浏览器宿主。 |
 | `tests/` | 单元测试、Avalonia 无头测试和生成器快照测试，以及令牌和预设基线。 |
 | `templates/` | `TKCode.Arc.Templates` 的源码。 |
 | `native/` | 终端、音频和视频用到的原生封装与原生库。 |
-| `tools/` | 图标、字体、文档截图、原生库和打包相关的生成器与脚本。 |
+| `tools/` | 图标、原生库、模板和打包相关的生成器与脚本。 |
+
+组件库与文档站点（含桌面和浏览器宿主、文档页和示例）在单独的仓库：[AIDotNet/ArcGallery](https://github.com/AIDotNet/ArcGallery)，它基于本仓库的检出构建。
 
 ## 参与开发
 
-构建需要 .NET 11 SDK（见 `global.json`）和 .NET 10 运行时，测试和组件库站点都运行在 .NET 10 上。
+构建需要 .NET 11 SDK（见 `global.json`）和 .NET 10 运行时，测试运行在 .NET 10 上。
 
 ```bash
 dotnet build TKCode.Arc.slnx
 dotnet test tests/TKCode.Arc.Core.Tests
 dotnet test tests/TKCode.Arc.Foundation.Tests
 dotnet test tests/TKCode.Arc.Tests
-dotnet run --project gallery/TKCode.Arc.Gallery.Desktop -f net10.0
 ```
+
+要运行组件库站点，请把 [ArcGallery](https://github.com/AIDotNet/ArcGallery) 克隆到本仓库旁边（目录名 `../ArcGallery`，放在别处则用 `ARC_ROOT` 指向本仓库），然后在那里执行
+`dotnet run --project gallery/TKCode.Arc.Gallery.Desktop -f net10.0`。
 
 PDFium 和 pdf.js 没有提交到仓库：`tools/pdf/sync-native.sh` 和 `tools/pdf/sync-pdfjs.sh` 会下载它们并校验校验和。缺少它们时，桌面版组件库的
 PDF 示例会显示模拟文档，浏览器构建也没有 pdf.js 可导入。

@@ -4,14 +4,17 @@
   python3 tools/pdf/make-sample.py
 
 Writes:
-  gallery/TKCode.Arc.Gallery/Assets/Pdf/arc-sample.pdf         12 pages, English and Chinese text, outline, internal and external
+  tests/TKCode.Arc.Pdf.Native.Tests/Samples/arc-sample.pdf  12 pages, English and Chinese text, outline, internal and external
                                                                links, page labels, one landscape page.
-  gallery/TKCode.Arc.Gallery/Assets/Pdf/arc-sample-locked.pdf  3 pages, standard security handler (RC4 128-bit, revision 3).
+  tests/TKCode.Arc.Pdf.Native.Tests/Samples/arc-sample-locked.pdf  3 pages, standard security handler (RC4 128-bit, revision 3).
                                                                The password to open it is LOCKED_PASSWORD below: "arc-sample".
   tests/TKCode.Arc.Pdf.Native.Tests/Fixtures/rotated.pdf         /Rotate 0, 90, 180, 270 and a page whose MediaBox does not start at 0.
   tests/TKCode.Arc.Pdf.Native.Tests/Fixtures/cyclic-outline.pdf  an outline whose sibling and child links run in circles.
   tests/TKCode.Arc.Pdf.Native.Tests/Fixtures/deep-outline.pdf    an outline chain of 100 levels.
   tests/TKCode.Arc.Pdf.Native.Tests/Fixtures/corrupt.pdf         a PDF header followed by noise.
+
+The gallery (https://github.com/AIDotNet/ArcGallery) keeps copies of the two samples in gallery/TKCode.Arc.Gallery/Assets/Pdf: copy them
+there after regenerating them.
 
 The Chinese text uses the standard CID font reference STSong-Light with the UniGB-UCS2-H encoding and embeds nothing, so whether it
 shows depends on the fonts of the machine (the text can be extracted either way). All text is written for this file.
@@ -21,7 +24,7 @@ import os
 import zlib
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-SAMPLES = os.path.join(ROOT, "gallery", "TKCode.Arc.Gallery", "Assets", "Pdf")
+SAMPLES = os.path.join(ROOT, "tests", "TKCode.Arc.Pdf.Native.Tests", "Samples")
 FIXTURES = os.path.join(ROOT, "tests", "TKCode.Arc.Pdf.Native.Tests", "Fixtures")
 
 LOCKED_PASSWORD = "arc-sample"

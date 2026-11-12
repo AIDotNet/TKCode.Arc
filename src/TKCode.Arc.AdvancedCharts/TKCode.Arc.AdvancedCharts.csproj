@@ -14,5 +14,6 @@
     </ItemGroup>
     <ItemGroup>
         <InternalsVisibleTo Include="TKCode.Arc.Tests" />
+        <InternalsVisibleTo Include="TKCode.Arc.Gallery.Tests" />
     </ItemGroup>
 </Project>

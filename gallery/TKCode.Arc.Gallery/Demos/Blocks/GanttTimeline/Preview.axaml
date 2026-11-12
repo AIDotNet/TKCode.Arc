@@ -1,7 +1,0 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-             x:Class="TKCode.Arc.Gallery.Demos.GanttTimelinePreviewDemo">
-    <!-- The "Studio relaunch" plan from GanttTimelineDemoData: four phases, ten tasks, two milestones. -->
-    <arc:GanttTimeline x:Name="Timeline" />
-</UserControl>

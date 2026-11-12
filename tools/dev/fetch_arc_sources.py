@@ -1,6 +1,7 @@
 """Downloads the MIT-licensed source of Arc's free components (only the slugs in the gallery catalog) and unpacks it.
 
-Usage: python3 -I tools/dev/fetch_arc_sources.py <repo-root> <out-dir>
+Usage: python3 -I tools/dev/fetch_arc_sources.py <ArcGallery-root> <out-dir>
+(the catalog lives in the ArcGallery repository, https://github.com/AIDotNet/ArcGallery)
 Writes <out-dir>/<slug>/<file> plus <out-dir>/<slug>/_meta.json (title, description, docs). Uses curl.
 Pro components are never requested: the catalog lists only the 112 free components.
 """
