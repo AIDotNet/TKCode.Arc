@@ -48,6 +48,10 @@ public sealed class AvatarUploadLabels
     /// <summary>A refused file of the wrong type, from its name.</summary>
     public Func<string, string> WrongType { get; init; } = name => name + " is not a PNG, JPG, WebP or GIF image";
 
+    /// <summary>A refused file of the wrong type while <see cref="AvatarUpload.Accept"/> is set, from its name and the accepted types in words ("PNG or JPEG").</summary>
+    public Func<string, string, string> WrongTypeOf { get; init; } = (name, types) =>
+        name + " is not " + (types.Length > 0 && "AEIOU".Contains(types[0]) ? "an " : "a ") + types + " image";
+
     /// <summary>A refused file that is too large, from its name and the limit ("10 MB").</summary>
     public Func<string, string, string> TooLarge { get; init; } = (name, limit) => name + " is larger than " + limit;
 

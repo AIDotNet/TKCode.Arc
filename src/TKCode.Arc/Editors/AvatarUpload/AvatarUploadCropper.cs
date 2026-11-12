@@ -52,6 +52,11 @@ internal sealed class AvatarUploadCropper : Control
     private bool _applyingZoom;
     private double _pinchStartZoom;
     private MotionValue<double>? _zoomMotion;
+    // A drag past an edge: the picture follows the finger through a virtual view that is not clamped, and what the clamp
+    // swallowed is shown as a stretch with resistance (RubberBand) that springs back when the finger lets go.
+    private PanZoomTransform? _dragView;
+    private Vector _stretch;
+    private MotionValue<Vector>? _stretchMotion;
     private StreamGeometry? _scrim;
     private Size _scrimSize;
     private Pen? _ringPen;
@@ -95,6 +100,9 @@ internal sealed class AvatarUploadCropper : Control
 
     internal PanZoomTransform View => _view;
 
+    /// <summary>How far the picture is shown past its edge while a drag pulls it there, in pixels (zero at rest).</summary>
+    internal Vector Stretch => _stretch;
+
     /// <summary>Raised on Enter (save) and Escape (cancel).</summary>
     public event Action<bool>? Committed;
 
@@ -129,6 +137,7 @@ internal sealed class AvatarUploadCropper : Control
     {
         _image = image;
         _zoomMotion?.Stop();
+        SettleStretch();
         Reset();
     }
 
@@ -165,13 +174,19 @@ internal sealed class AvatarUploadCropper : Control
     /// <summary>Keeps the circle inside the picture.</summary>
     private void Clamp()
     {
+        _view = Clamped(_view);
+    }
+
+    /// <summary><paramref name="view"/> moved so that the circle is inside the picture.</summary>
+    private PanZoomTransform Clamped(PanZoomTransform view)
+    {
         if (_image is null)
         {
-            return;
+            return view;
         }
         var px = _image.PixelSize;
-        var world = _view.ScreenToWorld(Circle);
-        var origin = _view.Origin;
+        var world = view.ScreenToWorld(Circle);
+        var origin = view.Origin;
         if (world.Width >= px.Width)
         {
             origin = origin.WithX(origin.X + (px.Width - world.Width) / 2 - world.X);
@@ -196,7 +211,76 @@ internal sealed class AvatarUploadCropper : Control
         {
             origin = origin.WithY(origin.Y - (world.Bottom - px.Height));
         }
-        _view = _view with { Origin = origin };
+        return view with { Origin = origin };
+    }
+
+    private void SetStretch(Vector stretch)
+    {
+        if (_stretch != stretch)
+        {
+            _stretch = stretch;
+            InvalidateVisual();
+        }
+    }
+
+    /// <summary>
+    /// Moves the picture with the finger: inside the picture it follows exactly; past an edge it follows less and less
+    /// (<see cref="RubberBand"/>, against the circle's diameter) and shows the stretch until it is let go.
+    /// </summary>
+    private void DragBy(Vector screenDelta)
+    {
+        if (_image is null)
+        {
+            return;
+        }
+        var drag = (_dragView ?? _view).PanBy(screenDelta);
+        _dragView = drag;
+        _view = Clamped(drag);
+        var over = (_view.Origin - drag.Origin) * _view.Zoom;
+        var diameter = Math.Max(1, Circle.Width);
+        SetStretch(new Vector(RubberBand.Apply(over.X, diameter), RubberBand.Apply(over.Y, diameter)));
+    }
+
+    /// <summary>A finger picks the picture up: a stretch still springing back is taken over without a jump.</summary>
+    private void BeginDrag()
+    {
+        _stretchMotion?.Stop();
+        _dragView = null;
+        if (_stretch == default)
+        {
+            return;
+        }
+        // The raw finger distance that shows as the current stretch, so the picture is held where it is on screen.
+        var diameter = Math.Max(1, Circle.Width);
+        var raw = new Vector(RubberBand.Invert(_stretch.X, diameter), RubberBand.Invert(_stretch.Y, diameter));
+        _dragView = _view with { Origin = new Point(_view.Origin.X - raw.X / _view.Zoom, _view.Origin.Y - raw.Y / _view.Zoom) };
+    }
+
+    /// <summary>The finger lets go: a picture pulled past an edge springs back (at once with motion off).</summary>
+    private void EndDrag()
+    {
+        _dragView = null;
+        if (_stretch == default)
+        {
+            return;
+        }
+        if (_stretchMotion is null)
+        {
+            // Code-driven: it must start from the stretch the finger left and keep the release's momentum, which a style
+            // transition on a drawn offset cannot do.
+            _stretchMotion = new MotionValue<Vector>(this, _stretch, MotionVectors.Vector);
+            _stretchMotion.Changed += v => SetStretch(v);
+        }
+        _stretchMotion.Jump(_stretch);
+        _ = _stretchMotion.AnimateTo(default, MotionSpec.Spring(ArcSpring.Snappy));
+    }
+
+    /// <summary>Drops any stretch and drag in progress (a key, a zoom or a new picture takes over).</summary>
+    private void SettleStretch()
+    {
+        _dragView = null;
+        _stretchMotion?.Stop();
+        SetStretch(default);
     }
 
     /// <summary>Moves the picture by a distance on screen.</summary>
@@ -206,6 +290,7 @@ internal sealed class AvatarUploadCropper : Control
         {
             return;
         }
+        SettleStretch();
         _view = _view.PanBy(screenDelta);
         Clamp();
         InvalidateVisual();
@@ -315,6 +400,7 @@ internal sealed class AvatarUploadCropper : Control
             return;
         }
         _zoomMotion?.Stop();
+        BeginDrag();
         _dragLast = point.Position;
         e.Pointer.Capture(this);
         Focus(NavigationMethod.Pointer);
@@ -329,7 +415,7 @@ internal sealed class AvatarUploadCropper : Control
             return;
         }
         var position = e.GetPosition(this);
-        PanBy(position - last);
+        DragBy(position - last);
         _dragLast = position;
         e.Handled = true;
     }
@@ -340,6 +426,7 @@ internal sealed class AvatarUploadCropper : Control
         if (_dragLast is not null)
         {
             _dragLast = null;
+            EndDrag();
             e.Pointer.Capture(null);
             e.Handled = true;
         }
@@ -348,7 +435,11 @@ internal sealed class AvatarUploadCropper : Control
     protected override void OnPointerCaptureLost(PointerCaptureLostEventArgs e)
     {
         base.OnPointerCaptureLost(e);
-        _dragLast = null;
+        if (_dragLast is not null)
+        {
+            _dragLast = null;
+            EndDrag();
+        }
     }
 
     protected override void OnPointerWheelChanged(PointerWheelEventArgs e)
@@ -462,7 +553,7 @@ internal sealed class AvatarUploadCropper : Control
             if (_image is { } image)
             {
                 var px = image.PixelSize;
-                var dest = _view.WorldToScreen(new Rect(0, 0, px.Width, px.Height));
+                var dest = _view.WorldToScreen(new Rect(0, 0, px.Width, px.Height)).Translate(_stretch);
                 // The source rectangle is in pixels (see the implementation guide's DrawImage pitfall).
                 context.DrawImage(image, new Rect(0, 0, px.Width, px.Height), dest);
             }

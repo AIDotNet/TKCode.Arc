@@ -16,11 +16,14 @@ public class GallerySmokeTests
     [AvaloniaFact]
     public void Catalog_Lists_All_Components()
     {
-        GalleryCatalog.Count.ShouldBe(122);
+        GalleryCatalog.Count.ShouldBe(123);
         GalleryCatalog.Categories.Length.ShouldBe(22);
         // PageViewer sits in Arc's Media group but has no Arc original to link to (design/components/pdf/pdf.md, section 1).
-        GalleryCatalog.Categories.ShouldAllBe(c => c.IsArc && c.Entries.Where(e => e.ClassName != "PageViewer").All(e => e.IsArc && e.ArcUrl != null));
+        // AvatarUpload sits in the Editors group but is an independent implementation of a Pro-like component, so it does not
+        // link to an Arc page (design/decisions/0043, design/components/editors/avatar-upload.md).
+        GalleryCatalog.Categories.ShouldAllBe(c => c.IsArc && c.Entries.Where(e => e.ClassName != "PageViewer" && e.ClassName != "AvatarUpload").All(e => e.IsArc && e.ArcUrl != null));
         GalleryCatalog.AllEntries.First(e => e.ClassName == "PageViewer").ArcUrl.ShouldBeNull();
+        GalleryCatalog.AllEntries.First(e => e.ClassName == "AvatarUpload").ArcUrl.ShouldBeNull();
         // Extras (TKCode components with no Arc original) are listed separately and not counted.
         GalleryCatalog.Extras.ShouldAllBe(c => !c.IsArc && c.Entries.All(e => !e.IsArc && e.ArcUrl == null));
         GalleryCatalog.Special.ShouldAllBe(c => !c.IsArc && c.Entries.All(e => !e.IsArc && e.ArcUrl == null));

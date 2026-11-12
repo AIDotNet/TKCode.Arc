@@ -92,6 +92,7 @@ public static partial class GalleryCatalog
             new("RichTextEditor", "Rich text editor", "rich-text-editor", 9, "A lightweight editor with markdown shortcuts, a floating toolbar, a slash menu, and HTML and markdown output."),
             new("SignaturePad", "Signature pad", "signature-pad", 9, "Smooth ink that thins with speed, with undo, replay, and PNG or SVG export."),
             new("FileDropzone", "File dropzone", "file-dropzone", 9, "A generous target for dropping one or more files."),
+            new("AvatarUpload", "Avatar upload", "avatar-upload", 0, "Drop or pick a photo, move and zoom it under a circle, and watch a ring fill around it while it uploads, with Retry when it fails.", IsArc: false, AddedOn: "2026-11-09"),
         ]),
         new("Navigation", "Navigation", "导航",
         [

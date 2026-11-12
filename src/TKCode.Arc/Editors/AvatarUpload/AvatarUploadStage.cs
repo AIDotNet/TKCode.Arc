@@ -1,6 +1,8 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Documents;
 using Avalonia.Media;
+using Avalonia.Media.TextFormatting;
 
 namespace TKCode.Arc;
 
@@ -32,6 +34,13 @@ internal sealed class AvatarUploadStage : Control
     public static readonly StyledProperty<IBrush?> ScrimGlyphBrushProperty =
         AvaloniaProperty.Register<AvatarUploadStage, IBrush?>(nameof(ScrimGlyphBrush));
 
+    /// <summary>The person's initials, drawn in the disc while there is no picture; empty shows the person glyph instead.</summary>
+    public static readonly StyledProperty<string?> InitialsProperty =
+        AvaloniaProperty.Register<AvatarUploadStage, string?>(nameof(Initials));
+
+    public static readonly StyledProperty<IBrush?> InitialsBrushProperty =
+        AvaloniaProperty.Register<AvatarUploadStage, IBrush?>(nameof(InitialsBrush));
+
     /// <summary>How much of the scrim shows (0 to 1), animated by the theme.</summary>
     public static readonly StyledProperty<double> ScrimAmountProperty =
         AvaloniaProperty.Register<AvatarUploadStage, double>(nameof(ScrimAmount));
@@ -48,11 +57,14 @@ internal sealed class AvatarUploadStage : Control
     private Pen? _edgePen;
     private Pen? _glyphPen;
     private Pen? _scrimGlyphPen;
+    // The initials are laid out once per text, size, brush and font; the disc redraws on every hover and drag-over frame.
+    private TextLayout? _initialsLayout;
+    private (string Text, double Size, IBrush Brush, FontFamily Family) _initialsKey;
 
     static AvatarUploadStage()
     {
         AffectsRender<AvatarUploadStage>(ImageProperty, FillProperty, EdgeProperty, IsDashedProperty, GlyphBrushProperty, ScrimProperty,
-            ScrimGlyphBrushProperty, ScrimAmountProperty, IsScrimGlyphVisibleProperty);
+            ScrimGlyphBrushProperty, ScrimAmountProperty, IsScrimGlyphVisibleProperty, InitialsProperty, InitialsBrushProperty);
     }
 
     public IImage? Image { get => GetValue(ImageProperty); set => SetValue(ImageProperty, value); }
@@ -68,6 +80,10 @@ internal sealed class AvatarUploadStage : Control
     public IBrush? Scrim { get => GetValue(ScrimProperty); set => SetValue(ScrimProperty, value); }
 
     public IBrush? ScrimGlyphBrush { get => GetValue(ScrimGlyphBrushProperty); set => SetValue(ScrimGlyphBrushProperty, value); }
+
+    public string? Initials { get => GetValue(InitialsProperty); set => SetValue(InitialsProperty, value); }
+
+    public IBrush? InitialsBrush { get => GetValue(InitialsBrushProperty); set => SetValue(InitialsBrushProperty, value); }
 
     public double ScrimAmount { get => GetValue(ScrimAmountProperty); set => SetValue(ScrimAmountProperty, value); }
 
@@ -119,7 +135,12 @@ internal sealed class AvatarUploadStage : Control
             {
                 context.DrawEllipse(fill, null, center, r, r);
             }
-            if (GlyphBrush is { } glyph)
+            if (!string.IsNullOrEmpty(Initials) && InitialsBrush is { } initialsBrush)
+            {
+                var layout = InitialsLayout(Initials, d * 0.36, initialsBrush);
+                layout.Draw(context, new Point(center.X - layout.WidthIncludingTrailingWhitespace / 2, center.Y - layout.Height / 2));
+            }
+            else if (GlyphBrush is { } glyph)
             {
                 var glyphSize = d * 0.42;
                 _glyphPen = GlyphPen(_glyphPen, glyph, glyphSize);
@@ -148,6 +169,19 @@ internal sealed class AvatarUploadStage : Control
                 }
             }
         }
+    }
+
+    private TextLayout InitialsLayout(string text, double size, IBrush brush)
+    {
+        var family = TextElement.GetFontFamily(this);
+        var key = (text, Math.Round(size * 4) / 4, brush, family);
+        if (_initialsLayout is null || _initialsKey != key)
+        {
+            _initialsLayout?.Dispose();
+            _initialsKey = key;
+            _initialsLayout = new TextLayout(text, new Typeface(family, FontStyle.Normal, FontWeight.SemiBold), size, brush);
+        }
+        return _initialsLayout;
     }
 
     private EllipseGeometry CircleClip(Size size, Rect circle)

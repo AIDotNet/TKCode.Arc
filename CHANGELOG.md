@@ -74,12 +74,26 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
   docs no longer say an app does not need it. Put the app's content in a host and the title bar beside it, and a
   dialog, drawer or sheet opened from the content covers the host only, never the title bar and its caption buttons
   (Window caption buttons page).
+- **`AvatarUpload` checks files by their first bytes and saves encoded pictures**: the type of a picked, dropped or loaded
+  file is decided from its first bytes before its name (a PDF renamed to `.png` is refused, a photo with an odd name is
+  not), after the size check, and a read stops at `MaxFileSize` even when the stream cannot say how long it is. New
+  `Accept` narrows the types (MIME types, `image/*` or extensions) and the picker follows it; `LoadAsync(byte[], name)`
+  takes a pasted image or a camera capture. `AvatarUploadRequest` gains `Bytes`, `ContentType`, `SuggestedFileName` and
+  `OpenStream()`: the saved square picture encoded by the new `OutputFormat` (`Auto` keeps a PNG, and a picture of unknown type, as PNG and saves
+  other pictures as JPEG; `Png`, `Jpeg`) and `JpegQuality` (92), a JPEG on white. `DisplayName` shows initials while there is no
+  picture, `AllowRemove` hides the Remove button, results and progress in quarters are announced through a live region, and
+  a drag past an edge of the framing area resists and springs back (the saved crop never includes the stretch). Defaults
+  are unchanged. Docs add the sample-photos and failures examples.
 
 ### Changed
 
 - **`TilePanel.IsAutoFill` also fills holes from the side and from below** ([#112](https://github.com/AIDotNet/TKCode.Arc/issues/112)):
   after tiles grow right and down, every hole still empty is offered to the tiles around it, so a neighbour on the
   right or below can grow over it too. Tiles still never move, overlap or shrink, and the span limits still hold.
+- **`AvatarUpload` moved from `TKCode.Arc.Special` to `TKCode.Arc`** (Editors group, between `SignaturePad` and
+  `FileDropzone` in the gallery): the namespace, the class and its API are unchanged, so code compiles as before, and
+  `UseArcControls()` now registers it (`UseArcSpecial()` no longer does). Its docs page moved from Special › Inputs to
+  Components › Editors.
 
 ### Fixed
 
