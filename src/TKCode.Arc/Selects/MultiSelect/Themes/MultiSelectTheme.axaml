@@ -24,8 +24,6 @@
                                    VerticalAlignment="Top"
                                    AutomationProperties.LiveSetting="Polite" />
                         <Border Name="PART_Trigger"
-                                MinHeight="{arc:ArcDesignTokenResource ControlSizeMD}"
-                                Padding="{arc:MultiSelectTokenResource TriggerPadding}"
                                 BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                 CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
                                 Background="{arc:ArcDesignTokenResource Surface}"
@@ -124,6 +122,20 @@
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
 
         <!-- The trigger anchors the menu, so press feedback stays in color; it never scales. -->
+        <!-- Size: the trigger height of the text fields (Small 36, Medium 44, Large 50). -->
+        <Style Selector="^ /template/ Border#PART_Trigger">
+            <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeMD}" />
+            <Setter Property="Padding" Value="{arc:MultiSelectTokenResource TriggerPadding}" />
+        </Style>
+        <Style Selector="^[Size=Small] /template/ Border#PART_Trigger">
+            <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+            <!-- The value row is 26 tall; with the default 5px vertical padding the trigger would be 38. -->
+            <Setter Property="Padding" Value="12,3,11,3" />
+        </Style>
+        <Style Selector="^[Size=Large] /template/ Border#PART_Trigger">
+            <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeLG}" />
+        </Style>
+
         <Style Selector="^ /template/ Border#PART_Trigger:pointerover">
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />

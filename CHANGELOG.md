@@ -33,6 +33,11 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
   control or a style. The theme still fills the default from the control's token; the value used to sit on the template's
   rail as a local value, which no style could override.
 
+- **`Size` on `Combobox`, `MultiSelect`, `TreeSelect` and `Cascader`** ([#115](https://github.com/AIDotNet/TKCode.Arc/issues/115)):
+  the same `ControlSize` as `Select`, `Input` and `DatePicker` (Small 36, Medium 44 default, Large 50). Their trigger height
+  was fixed at 44, so a row of fields set to `Height="36"` overflowed the slot and their text sat about 4px below a
+  neighbouring `TextBlock`. Use `Size="Small"` for 36px rows instead of `Height`. Existing layouts are unchanged (the default stays Medium).
+
 ### Fixed
 
 - **`Slider` without a label and without a readout no longer keeps its header row**

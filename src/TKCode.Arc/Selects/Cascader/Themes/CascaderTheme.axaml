@@ -24,7 +24,6 @@
                                    VerticalAlignment="Top"
                                    AutomationProperties.LiveSetting="Polite" />
                         <Border Name="PART_Trigger"
-                                MinHeight="{arc:ArcDesignTokenResource ControlSizeMD}"
                                 Padding="{arc:CascaderTokenResource TriggerPadding}"
                                 BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                 CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
@@ -112,6 +111,17 @@
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
 
         <!-- Hover, press and open answer in color only: the trigger anchors the menu and never scales. -->
+        <!-- Size: the trigger height of the text fields (Small 36, Medium 44, Large 50). -->
+        <Style Selector="^ /template/ Border#PART_Trigger">
+            <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeMD}" />
+        </Style>
+        <Style Selector="^[Size=Small] /template/ Border#PART_Trigger">
+            <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+        </Style>
+        <Style Selector="^[Size=Large] /template/ Border#PART_Trigger">
+            <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeLG}" />
+        </Style>
+
         <Style Selector="^ /template/ Border#PART_Trigger:pointerover">
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />

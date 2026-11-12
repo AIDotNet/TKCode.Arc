@@ -155,6 +155,17 @@ public class Combobox : SelectingItemsControl, ISelectOptionHost, ISelectFieldAu
     private MotionValue<double>? _settle;
     private TranslateTransform? _settleShift;
 
+    /// <summary>Trigger height: Small 36, Medium 44 (default), Large 50, as for the text fields.</summary>
+    public static readonly StyledProperty<ControlSize> SizeProperty =
+        Field.SizeProperty.AddOwner<Combobox>();
+
+    /// <summary>Trigger height: Small 36, Medium 44 (default), Large 50, as for the text fields.</summary>
+    public ControlSize Size
+    {
+        get => GetValue(SizeProperty);
+        set => SetValue(SizeProperty, value);
+    }
+
     static Combobox()
     {
         FocusableProperty.OverrideDefaultValue<Combobox>(false);
