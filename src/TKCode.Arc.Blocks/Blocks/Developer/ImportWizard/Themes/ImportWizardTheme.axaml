@@ -1,0 +1,215 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ImportWizardTheme">
+
+    <!--
+        The CSV import card (Arc Import wizard, design reference, ADR 0045). A card up to 760 wide: 1px Border, radius
+        RadiusSurface (34), Surface, no shadow, contents clipped. On top the step bar (padding 24, 24, 24, 0; 16 when
+        compact), below it the deck that holds the shown step (built in code, one view per visit) inside a height spring,
+        so the card springs to every step's height on the smooth spring. Two hidden live regions: polite (counts, results)
+        and assertive (errors).
+    -->
+    <ControlTheme x:Key="{x:Type arc:ImportWizard}" TargetType="arc:ImportWizard">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="MaxWidth" Value="{arc:ImportWizardTokenResource MaxWidth}" />
+        <Setter Property="CompactWidth" Value="{arc:ImportWizardTokenResource CompactWidth}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <!-- Arc's card sets -0.01em on its 14px text and every text inherits -0.14px. -->
+        <Setter Property="TextElement.LetterSpacing" Value="-0.14" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ImportWizard">
+                <Border Name="PART_Frame"
+                        ClipToBounds="True"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                    <DockPanel>
+                        <Border Name="PART_Header" DockPanel.Dock="Top">
+                            <arc:ImportWizardStepper Name="PART_Stepper" />
+                        </Border>
+                        <arc:DeveloperAnnouncer Name="PART_Announcer" DockPanel.Dock="Bottom" />
+                        <arc:DeveloperAnnouncer Name="PART_AlertAnnouncer" DockPanel.Dock="Bottom" IsAssertive="True" />
+                        <arc:SpringSizeDecorator Name="PART_Size" Axis="Height" Spring="Smooth">
+                            <arc:ImportWizardDeck Name="PART_Deck" />
+                        </arc:SpringSizeDecorator>
+                    </DockPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Border#PART_Header">
+            <Setter Property="Padding" Value="{arc:ImportWizardTokenResource HeaderPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_Header">
+            <Setter Property="Padding" Value="{arc:ImportWizardTokenResource CompactHeaderPadding}" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The card's own buttons: 36 tall, padding 0 16, a capsule, 14px label, pressed scale 0.97 (160ms). Primary: Accent
+        with AccentForeground, no hover change, 0.3 opacity when disabled. Ghost: Surface, 1px Border, Foreground, hover
+        SurfaceMuted. Keyboard focus: a 2px FocusRing 2 outside the capsule.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ImportWizardButton}" TargetType="arc:ImportWizardButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Height" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+        <Setter Property="Padding" Value="16,0" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="RenderTransform" Value="scale(1)" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ImportWizardButton">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            Margin="-4"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            BorderThickness="2"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" />
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Content}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:primary">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        </Style>
+        <Style Selector="^:ghost">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Style Selector="^:pointerover">
+                <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            </Style>
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.97)" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.3" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+    <!-- The drop zone: a button whose fill, dashed edge and focus ring are drawn in code; the theme only hosts its content. -->
+    <ControlTheme x:Key="{x:Type arc:ImportWizardDropZone}" TargetType="arc:ImportWizardDropZone">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Padding" Value="24,48" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ImportWizardDropZone">
+                <ContentPresenter Name="PART_ContentPresenter"
+                                  Content="{TemplateBinding Content}"
+                                  Padding="{TemplateBinding Padding}"
+                                  HorizontalContentAlignment="Center"
+                                  VerticalContentAlignment="Center" />
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- A 30px round icon button (remove file): TextMuted on transparent; hover SurfaceMuted with Foreground. -->
+    <ControlTheme x:Key="{x:Type arc:ImportWizardIconButton}" TargetType="arc:ImportWizardIconButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Width" Value="30" />
+        <Setter Property="Height" Value="30" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ImportWizardIconButton">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            Margin="-4"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            BorderThickness="2"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" />
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Content}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          HorizontalContentAlignment="Center"
+                                          VerticalContentAlignment="Center" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

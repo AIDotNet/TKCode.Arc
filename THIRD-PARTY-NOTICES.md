@@ -16,7 +16,7 @@ and the three audio components (voice orb, now playing, voice recorder)
 and the five loaders (stretch refresh, morph loader, skeleton morph, black hole, charge session)
 and the six docks and tabs components (share sheet, action morph, morph nav, tool dock, liquid tab bar, orbit menu) in
 `TKCode.Arc.Special`, and the Split and Immersive login blocks, Onboarding illustration and Multi-step form and the seven Pricing blocks (pricing calculator, usage
-pricing, cart drawer, checkout summary, live checkout, seat manager, credit top-up) in
+pricing, cart drawer, checkout summary, live checkout, seat manager, credit top-up) and the Import wizard block in
 `TKCode.Arc.Blocks`) are
 original TKCode designs that take the behavior and look Arc publishes as a design reference; their code, copy,
 sample data and images are written from scratch (the Showpieces' land outlines come from Natural Earth, below).
