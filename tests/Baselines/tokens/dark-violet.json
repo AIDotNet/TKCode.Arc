@@ -3860,6 +3860,23 @@
       "FocusRingMargin": "-4,-4,-4,-4",
       "SurfaceMinHeight": "240"
     },
+    "ImportWizard": {
+      "CellMaxWidth": "220",
+      "CompactConfidenceWidth": "84",
+      "CompactHeaderPadding": "16,16,16,0",
+      "CompactStepPadding": "16,16,16,16",
+      "CompactWidth": "520",
+      "ConfidenceWidth": "92",
+      "DropZoneHeight": "180",
+      "HeaderPadding": "24,24,24,0",
+      "LikelyColor": "#FFBEBEBE",
+      "MaxWidth": "760",
+      "ProgressWidth": "360",
+      "StepPadding": "24,24,24,24",
+      "StepSpacing": "20",
+      "StrongText": "#FFE1E1E1",
+      "SummaryWidth": "420"
+    },
     "InViewTitle": {
       "TitleLeading": "1.1"
     },

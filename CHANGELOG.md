@@ -12,6 +12,12 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 
 ### Added
 
+- **`ImportWizard`** (`TKCode.Arc.Blocks`, Blocks › Developer): a four step CSV import in one card. Drop or choose a file
+  and preview it, match its columns to your fields with a confidence for each guess, fix or clean up the cells with
+  problems while the counts roll down, then import the good rows in batches and read the summary. Describe the fields as
+  `ImportTarget`s (header names, synonyms, a validator, a safe fix, a value sniffer), send batches with
+  `ImportBatchAction` and read `Completed`; with no action the import is simulated. Built from Arc's Pro Import wizard as
+  a design reference (ADR 0045) with our own code, copy and sample data.
 - **`Popover.TriggerMode`, `OpenDelay`, `CloseDelay` and `HasShadow`** ([#101](https://github.com/AIDotNet/TKCode.Arc/issues/101)):
   `TriggerMode="Hover"` opens the panel after the pointer rests on the trigger for `OpenDelay` (100 ms) and closes it once
   the pointer has been away from both the trigger and the panel for `CloseDelay` (140 ms). Hovering does not take focus;
