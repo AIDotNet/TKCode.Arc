@@ -8,6 +8,9 @@
         <Setter Property="FocusAdorner" Value="{x:Null}" />
         <Setter Property="ClipToBounds" Value="False" />
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <!-- Sizes live on the control, not on the template parts: a template part's local value would beat a user style. -->
+        <Setter Property="ThumbDiameter" Value="{arc:RangeHistogramSliderTokenResource ThumbDiameter}" />
+        <Setter Property="TrackThickness" Value="{arc:RangeHistogramSliderTokenResource TrackThickness}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
@@ -50,8 +53,8 @@
                                             ThumbBrush="{arc:ArcDesignTokenResource ControlThumb}"
                                             ThumbShadow="{arc:ArcDesignTokenResource ControlThumbShadow}"
                                             RingBrush="{arc:ArcDesignTokenResource FocusRing}"
-                                            ThumbDiameter="{arc:RangeHistogramSliderTokenResource ThumbDiameter}"
-                                            TrackThickness="{arc:RangeHistogramSliderTokenResource TrackThickness}" />
+                                            ThumbDiameter="{TemplateBinding ThumbDiameter}"
+                                            TrackThickness="{TemplateBinding TrackThickness}" />
                 </Grid>
             </ControlTemplate>
         </Setter>

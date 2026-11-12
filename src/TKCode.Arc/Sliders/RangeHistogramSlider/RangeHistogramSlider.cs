@@ -64,6 +64,17 @@ public class RangeHistogramSlider : TemplatedControl, ISliderRailOwner, ISliderT
     public static readonly StyledProperty<string?> LabelProperty =
         AvaloniaProperty.Register<RangeHistogramSlider, string?>(nameof(Label));
 
+    /// <summary>
+    /// Diameter of the thumbs in device-independent pixels. The theme sets it from the token; set it on the control, or
+    /// from a style, to size the thumbs of one slider.
+    /// </summary>
+    public static readonly StyledProperty<double> ThumbDiameterProperty =
+        AvaloniaProperty.Register<RangeHistogramSlider, double>(nameof(ThumbDiameter), 22);
+
+    /// <summary>Thickness of the track in device-independent pixels. The theme sets it from the token.</summary>
+    public static readonly StyledProperty<double> TrackThicknessProperty =
+        AvaloniaProperty.Register<RangeHistogramSlider, double>(nameof(TrackThickness), 4);
+
     /// <summary>The raw values the histogram counts, such as every listing's price. Assign a new list to redraw the bars.</summary>
     public static readonly StyledProperty<IReadOnlyList<double>?> DataProperty =
         AvaloniaProperty.Register<RangeHistogramSlider, IReadOnlyList<double>?>(nameof(Data));
@@ -136,6 +147,10 @@ public class RangeHistogramSlider : TemplatedControl, ISliderRailOwner, ISliderT
 
     /// <inheritdoc cref="LabelProperty"/>
     public string? Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
+    /// <inheritdoc cref="ThumbDiameterProperty"/>
+    public double ThumbDiameter { get => GetValue(ThumbDiameterProperty); set => SetValue(ThumbDiameterProperty, value); }
+    /// <inheritdoc cref="TrackThicknessProperty"/>
+    public double TrackThickness { get => GetValue(TrackThicknessProperty); set => SetValue(TrackThicknessProperty, value); }
 
     /// <inheritdoc cref="DataProperty"/>
     public IReadOnlyList<double>? Data { get => GetValue(DataProperty); set => SetValue(DataProperty, value); }

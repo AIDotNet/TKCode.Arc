@@ -48,8 +48,8 @@
                                                ThumbBrush="{arc:ArcDesignTokenResource ControlThumb}"
                                                ThumbShadow="{arc:ArcDesignTokenResource ControlThumbShadow}"
                                                RingBrush="{arc:ArcDesignTokenResource FocusRing}"
-                                               ThumbDiameter="{arc:ElasticSliderTokenResource ThumbDiameter}"
-                                               TrackThickness="{arc:ElasticSliderTokenResource TrackThickness}"
+                                               ThumbDiameter="{TemplateBinding ThumbDiameter}"
+                                               TrackThickness="{TemplateBinding TrackThickness}"
                                                TickDiameter="{arc:ElasticSliderTokenResource TickDiameter}"
                                                BubbleGap="{arc:ElasticSliderTokenResource TagGap}"
                                                BubbleBackground="{arc:ArcDesignTokenResource Foreground}"
@@ -78,6 +78,9 @@
                 </Grid>
             </ControlTemplate>
         </Setter>
+        <!-- Sizes live on the control, not on the template parts: a template part's local value would beat a user style. -->
+        <Setter Property="ThumbDiameter" Value="{arc:ElasticSliderTokenResource ThumbDiameter}" />
+        <Setter Property="TrackThickness" Value="{arc:ElasticSliderTokenResource TrackThickness}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />

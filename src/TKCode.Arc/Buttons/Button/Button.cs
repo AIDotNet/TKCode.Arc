@@ -17,7 +17,13 @@ public enum ButtonVariant
     Primary,
     Secondary,
     Ghost,
-    Danger
+    Danger,
+
+    /// <summary>
+    /// Just the content: no fill, no border, no padding and no minimum height, so the button is as large as its label or
+    /// icon. Only the label color answers hover, press and disabled. <see cref="Button.Size"/> does not apply.
+    /// </summary>
+    Text
 }
 
 /// <summary>
@@ -26,7 +32,7 @@ public enum ButtonVariant
 /// shows a spinner while keeping keyboard focus (clicks are swallowed instead of disabling the button).
 /// </summary>
 [PseudoClasses(LoadingPseudoClass, NarrowPseudoClass, WidePseudoClass, RaisedPseudoClass, PrimaryPseudoClass, SecondaryPseudoClass,
-    GhostPseudoClass, DangerPseudoClass, SmallPseudoClass, LargePseudoClass, PressScalePseudoClass)]
+    GhostPseudoClass, DangerPseudoClass, TextPseudoClass, SmallPseudoClass, LargePseudoClass, PressScalePseudoClass)]
 public class Button : AvaloniaButton
 {
     public const string LoadingPseudoClass = ":loading";
@@ -45,6 +51,9 @@ public class Button : AvaloniaButton
     /// <inheritdoc cref="PrimaryPseudoClass"/>
     public const string DangerPseudoClass = ":danger";
 
+    /// <inheritdoc cref="PrimaryPseudoClass"/>
+    public const string TextPseudoClass = ":text";
+
     /// <summary><see cref="Size"/> Small or Large as a pseudo-class (Medium has none).</summary>
     public const string SmallPseudoClass = ":small";
 
@@ -59,7 +68,7 @@ public class Button : AvaloniaButton
 
     #region 公共属性定义
 
-    /// <summary>Visual style: Primary (default), Secondary, Ghost or Danger.</summary>
+    /// <summary>Visual style: Primary (default), Secondary, Ghost, Danger or Text (the content alone, without any chrome).</summary>
     public static readonly StyledProperty<ButtonVariant> VariantProperty =
         AvaloniaProperty.Register<Button, ButtonVariant>(nameof(Variant), ButtonVariant.Primary);
 
@@ -149,6 +158,7 @@ public class Button : AvaloniaButton
         PseudoClasses.Set(SecondaryPseudoClass, variant == ButtonVariant.Secondary);
         PseudoClasses.Set(GhostPseudoClass, variant == ButtonVariant.Ghost);
         PseudoClasses.Set(DangerPseudoClass, variant == ButtonVariant.Danger);
+        PseudoClasses.Set(TextPseudoClass, variant == ButtonVariant.Text);
     }
 
     private void UpdateSizePseudoClasses()

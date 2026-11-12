@@ -77,6 +77,17 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
     public static readonly StyledProperty<bool> IsValueVisibleProperty =
         AvaloniaProperty.Register<ElasticSlider, bool>(nameof(IsValueVisible), true);
 
+    /// <summary>
+    /// Diameter of the thumbs in device-independent pixels. The theme sets it from the token; set it on the control, or
+    /// from a style, to size the thumbs of one slider.
+    /// </summary>
+    public static readonly StyledProperty<double> ThumbDiameterProperty =
+        AvaloniaProperty.Register<ElasticSlider, double>(nameof(ThumbDiameter), 24);
+
+    /// <summary>Thickness of the track in device-independent pixels. The theme sets it from the token.</summary>
+    public static readonly StyledProperty<double> TrackThicknessProperty =
+        AvaloniaProperty.Register<ElasticSlider, double>(nameof(TrackThickness), 8);
+
     /// <summary>Icon before the track; pushed outward when the track is pulled past its start.</summary>
     public static readonly StyledProperty<object?> StartIconProperty =
         AvaloniaProperty.Register<ElasticSlider, object?>(nameof(StartIcon));
@@ -98,6 +109,10 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
     /// <inheritdoc cref="ValueFormatterProperty"/>
     public Func<double, string>? ValueFormatter { get => GetValue(ValueFormatterProperty); set => SetValue(ValueFormatterProperty, value); }
     public bool IsValueVisible { get => GetValue(IsValueVisibleProperty); set => SetValue(IsValueVisibleProperty, value); }
+    /// <inheritdoc cref="ThumbDiameterProperty"/>
+    public double ThumbDiameter { get => GetValue(ThumbDiameterProperty); set => SetValue(ThumbDiameterProperty, value); }
+    /// <inheritdoc cref="TrackThicknessProperty"/>
+    public double TrackThickness { get => GetValue(TrackThicknessProperty); set => SetValue(TrackThicknessProperty, value); }
     public object? StartIcon { get => GetValue(StartIconProperty); set => SetValue(StartIconProperty, value); }
     public object? EndIcon { get => GetValue(EndIconProperty); set => SetValue(EndIconProperty, value); }
 

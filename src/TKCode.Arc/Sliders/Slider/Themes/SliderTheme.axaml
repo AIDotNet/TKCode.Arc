@@ -52,8 +52,8 @@
                                         ThumbBrush="{arc:ArcDesignTokenResource ControlThumb}"
                                         ThumbShadow="{arc:ArcDesignTokenResource ControlThumbShadow}"
                                         RingBrush="{arc:ArcDesignTokenResource FocusRing}"
-                                        ThumbDiameter="{arc:SliderTokenResource ThumbDiameter}"
-                                        TrackThickness="{arc:SliderTokenResource TrackThickness}"
+                                        ThumbDiameter="{TemplateBinding ThumbDiameter}"
+                                        TrackThickness="{TemplateBinding TrackThickness}"
                                         TickDiameter="{arc:SliderTokenResource TickDiameter}"
                                         BubbleGap="{arc:SliderTokenResource BubbleGap}"
                                         BubbleBackground="{arc:ArcDesignTokenResource Foreground}"
@@ -84,9 +84,16 @@
                 </Grid>
             </ControlTemplate>
         </Setter>
+        <!-- Sizes live on the control, not on the template parts: a template part's local value would beat a user style. -->
+        <Setter Property="ThumbDiameter" Value="{arc:SliderTokenResource ThumbDiameter}" />
+        <Setter Property="TrackThickness" Value="{arc:SliderTokenResource TrackThickness}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <!-- No label and no readout: the header row would only add its line height above the control row (issue #101). -->
+        <Style Selector="^:headerless /template/ DockPanel#PART_Header">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
         <Style Selector="^:disabled">
             <Setter Property="Opacity" Value="{arc:SliderTokenResource DisabledOpacity}" />
             <Style Selector="^ /template/ arc|SliderRail#PART_Rail">
