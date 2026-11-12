@@ -83,13 +83,17 @@
                             CornerRadius="{TemplateBinding CornerRadius}"
                             ClipToBounds="True">
                         <DockPanel>
-                            <Panel DockPanel.Dock="Top">
+                            <Panel Name="PART_HeaderArea" DockPanel.Dock="Top" Background="Transparent">
                                 <!-- The header doubles as the drag handle. -->
-                                <Border Name="PART_Header"
-                                        Background="Transparent"
-                                        Padding="{arc:DrawerSurfaceTokenResource SectionPadding}"
-                                        BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}"
-                                        BorderBrush="{arc:ArcDesignTokenResource Border}">
+                                <Border Name="PART_Header" Background="Transparent">
+                                    <Panel>
+                                    <ContentPresenter Name="PART_CustomHeader"
+                                                      IsVisible="False"
+                                                      Content="{TemplateBinding HeaderContent}" />
+                                    <Border Name="PART_DefaultHeader"
+                                            Padding="{arc:DrawerSurfaceTokenResource SectionPadding}"
+                                            BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}"
+                                            BorderBrush="{arc:ArcDesignTokenResource Border}">
                                     <Grid ColumnDefinitions="*,Auto"
                                           ColumnSpacing="{arc:DrawerSurfaceTokenResource HeaderGap}">
                                         <StackPanel>
@@ -126,6 +130,8 @@
                                                     AutomationProperties.Name="{TemplateBinding CloseButtonName}"
                                                     Margin="{arc:DrawerSurfaceTokenResource CloseButtonMargin}" />
                                     </Grid>
+                                    </Border>
+                                    </Panel>
                                 </Border>
                                 <Border Name="PART_Grabber"
                                         IsVisible="False"
@@ -214,17 +220,31 @@
         <Style Selector="^:bottom:narrow">
             <Setter Property="CornerRadius" Value="{arc:DrawerSurfaceTokenResource NarrowRadiusBottom}" />
         </Style>
-        <Style Selector="^:bottom /template/ Border#PART_Grabber">
+        <Style Selector="^:grabber /template/ Border#PART_Grabber">
             <Setter Property="IsVisible" Value="True" />
         </Style>
         <Style Selector="^:top /template/ Border#PART_Header, ^:bottom /template/ Border#PART_Header">
             <Setter Property="Cursor" Value="SizeNorthSouth" />
         </Style>
-        <Style Selector="^:narrow /template/ Border#PART_Header">
+        <Style Selector="^:narrow /template/ Border#PART_DefaultHeader">
             <Setter Property="Padding" Value="{arc:DrawerSurfaceTokenResource NarrowSectionPadding}" />
         </Style>
         <Style Selector="^:narrow /template/ StackPanel#PART_BodyContent">
             <Setter Property="Margin" Value="{arc:DrawerSurfaceTokenResource NarrowSectionPadding}" />
+        </Style>
+        <!-- Full screen: no radius, hairline or gutter. Listed after the per-side and :narrow styles so it wins. -->
+        <Style Selector="^:fullscreen">
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style Selector="^:custom-header /template/ ContentPresenter#PART_CustomHeader">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:custom-header /template/ Border#PART_DefaultHeader">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:no-header /template/ Border#PART_Header">
+            <Setter Property="IsVisible" Value="False" />
         </Style>
         <Style Selector="^:has-description /template/ arc|ArcContentSwap#PART_Description">
             <Setter Property="IsVisible" Value="True" />

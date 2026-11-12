@@ -19,8 +19,7 @@ namespace TKCode.Arc;
 /// </code>
 /// The header is a drag handle: it follows the pointer toward the edge and rubber-bands the other way; past a third
 /// of the panel, or on a flick toward the edge faster than 500px/s, the drawer closes and keeps the flick's velocity;
-/// otherwise it springs back. A click, Escape or the scrim closes it with a quicker tween. The close button is always
-/// there; under reduced motion dragging is off and the panel only fades.
+/// otherwise it springs back. A click, Escape or the scrim closes it with a quicker tween. The close button is there unless <see cref="ModalOverlay.ShowCloseButton"/> or <see cref="ShowHeader"/> is off; under reduced motion dragging is off and the panel only fades.
 /// </summary>
 public class Drawer : ModalOverlay
 {
@@ -35,6 +34,47 @@ public class Drawer : ModalOverlay
 
     /// <summary>Edge the panel is anchored to (default Right).</summary>
     public DrawerSide Side { get => GetValue(SideProperty); set => SetValue(SideProperty, value); }
+
+    /// <summary>Fills the viewport along the panel's axis, without corner radius or hairline.</summary>
+    public static readonly StyledProperty<bool> IsFullScreenProperty =
+        DrawerSurface.IsFullScreenProperty.AddOwner<Drawer>();
+
+    /// <summary>False hides the whole header; write your own at the top of the content.</summary>
+    public static readonly StyledProperty<bool> ShowHeaderProperty =
+        DrawerSurface.ShowHeaderProperty.AddOwner<Drawer>();
+
+    /// <summary>Content that replaces the default title row of the header.</summary>
+    public static readonly StyledProperty<object?> HeaderContentProperty =
+        DrawerSurface.HeaderContentProperty.AddOwner<Drawer>();
+
+    /// <summary>Shows the grabber bar; null (default) shows it on bottom drawers only.</summary>
+    public static readonly StyledProperty<bool?> ShowGrabberProperty =
+        DrawerSurface.ShowGrabberProperty.AddOwner<Drawer>();
+
+    /// <summary>Corner radius of the panel; null (default) follows the theme.</summary>
+    public static readonly StyledProperty<CornerRadius?> PanelCornerRadiusProperty =
+        DrawerSurface.PanelCornerRadiusProperty.AddOwner<Drawer>();
+
+    /// <summary>Fixed height of top and bottom panels; null sizes to the content.</summary>
+    public static readonly StyledProperty<double?> PanelHeightProperty =
+        DrawerSurface.PanelHeightProperty.AddOwner<Drawer>();
+
+    /// <summary>Width of left and right panels; null follows the theme (30rem).</summary>
+    public static readonly StyledProperty<double?> PanelSizeProperty =
+        AvaloniaProperty.Register<Drawer, double?>(nameof(PanelSize));
+
+    /// <summary>Maximum height of top and bottom panels; null follows the theme (32rem).</summary>
+    public static readonly StyledProperty<double?> PanelMaxHeightProperty =
+        AvaloniaProperty.Register<Drawer, double?>(nameof(PanelMaxHeight));
+
+    public bool IsFullScreen { get => GetValue(IsFullScreenProperty); set => SetValue(IsFullScreenProperty, value); }
+    public bool ShowHeader { get => GetValue(ShowHeaderProperty); set => SetValue(ShowHeaderProperty, value); }
+    public object? HeaderContent { get => GetValue(HeaderContentProperty); set => SetValue(HeaderContentProperty, value); }
+    public bool? ShowGrabber { get => GetValue(ShowGrabberProperty); set => SetValue(ShowGrabberProperty, value); }
+    public CornerRadius? PanelCornerRadius { get => GetValue(PanelCornerRadiusProperty); set => SetValue(PanelCornerRadiusProperty, value); }
+    public double? PanelHeight { get => GetValue(PanelHeightProperty); set => SetValue(PanelHeightProperty, value); }
+    public double? PanelSize { get => GetValue(PanelSizeProperty); set => SetValue(PanelSizeProperty, value); }
+    public double? PanelMaxHeight { get => GetValue(PanelMaxHeightProperty); set => SetValue(PanelMaxHeightProperty, value); }
 
     private DragTracker? _drag;
     private double _panStart;
@@ -51,6 +91,13 @@ public class Drawer : ModalOverlay
     {
         var surface = new DrawerSurface();
         surface.Bind(DrawerSurface.SideProperty, this.GetObservable(SideProperty));
+        surface.Bind(DrawerSurface.IsFullScreenProperty, this.GetObservable(IsFullScreenProperty));
+        surface.Bind(DrawerSurface.ShowHeaderProperty, this.GetObservable(ShowHeaderProperty));
+        surface.Bind(DrawerSurface.HeaderContentProperty, this.GetObservable(HeaderContentProperty));
+        surface.Bind(DrawerSurface.ShowGrabberProperty, this.GetObservable(ShowGrabberProperty));
+        surface.Bind(DrawerSurface.PanelCornerRadiusProperty, this.GetObservable(PanelCornerRadiusProperty));
+        surface.Bind(DrawerSurface.PanelHeightProperty, this.GetObservable(PanelHeightProperty));
+        SyncThemeDefaults(surface);
         surface.TemplateApplied += (_, _) => AttachDrag();
         return surface;
     }
@@ -64,6 +111,10 @@ public class Drawer : ModalOverlay
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
+        if ((change.Property == PanelSizeProperty || change.Property == PanelMaxHeightProperty) && Surface is DrawerSurface surface)
+        {
+            SyncThemeDefaults(surface);
+        }
         if (change.Property == SideProperty)
         {
             if (Presence is { } presence)
@@ -71,6 +122,27 @@ public class Drawer : ModalOverlay
                 presence.Side = ToModalSide(Side);
             }
             AttachDrag();
+        }
+    }
+
+    // Size properties whose default comes from the theme: null hands the value back to it.
+    private void SyncThemeDefaults(DrawerSurface surface)
+    {
+        if (PanelSize is { } size)
+        {
+            surface.SetValue(DrawerSurface.PanelSizeProperty, size);
+        }
+        else
+        {
+            surface.ClearValue(DrawerSurface.PanelSizeProperty);
+        }
+        if (PanelMaxHeight is { } maxHeight)
+        {
+            surface.SetValue(DrawerSurface.PanelMaxHeightProperty, maxHeight);
+        }
+        else
+        {
+            surface.ClearValue(DrawerSurface.PanelMaxHeightProperty);
         }
     }
 
@@ -90,7 +162,7 @@ public class Drawer : ModalOverlay
     {
         _drag?.Dispose();
         _drag = null;
-        if ((Surface as DrawerSurface)?.Header is not { } header)
+        if ((Surface as DrawerSurface)?.DragArea is not { } header)
         {
             return;
         }

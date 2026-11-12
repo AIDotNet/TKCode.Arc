@@ -18,6 +18,12 @@ Special controls only. Install it with `--version 1.1.0-preview.5` (or `--prerel
 
 ### Added
 
+- **`Drawer` full screen, custom header, grabber and size** ([#116](https://github.com/AIDotNet/TKCode.Arc/issues/116)):
+  `IsFullScreen` fills the window along the panel's axis and drops the corner radius, hairline and gutter; `ShowHeader`
+  hides the whole header and `HeaderContent` replaces its title row with your own content; `ShowGrabber` shows or hides
+  the grabber (default `null`: bottom drawers only); `PanelCornerRadius` overrides the theme radius (`0` for square
+  corners); `PanelSize`, `PanelMaxHeight` and `PanelHeight` set the size on the drawer itself. Defaults are unchanged.
+  With a hidden or replaced header the default close button is gone too, so give the person another way to close.
 - **`WaterfallPanel` and `TilePanel` lay out items of one template by themselves**
   ([#112](https://github.com/AIDotNet/TKCode.Arc/issues/112), from [#86](https://github.com/AIDotNet/TKCode.Arc/issues/86)):
   `WaterfallPanel.ItemSizing="Varied"` gives each child a height (a width in rows) between `MinItemSize` and `MaxItemSize`

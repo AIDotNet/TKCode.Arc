@@ -81,6 +81,156 @@ public class DrawerTests
         }
     }
 
+    private static bool GrabberVisible(DrawerSurface surface) =>
+        surface.GetVisualDescendants().OfType<Border>().First(b => b.Name == "PART_Grabber").IsVisible;
+
+    [AvaloniaFact]
+    public void FullScreen_Side_Drawer_Fills_The_Viewport_Without_Radius_Or_Hairline()
+    {
+        var drawer = new Drawer { Title = "Player", IsFullScreen = true, Content = "Body" };
+        var window = TestHelpers.Show(new StackPanel { Children = { drawer } });
+        try
+        {
+            window.Width = 1000;
+            window.Height = 600;
+            Dispatcher.UIThread.RunJobs();
+            drawer.IsOpen = true;
+            Dispatcher.UIThread.RunJobs();
+            var surface = (DrawerSurface)drawer.Surface!;
+            surface.Bounds.Width.ShouldBe(1000, 0.5);
+            surface.Bounds.Height.ShouldBe(600, 0.5);
+            surface.CornerRadius.ShouldBe(new CornerRadius(0));
+            surface.BorderThickness.ShouldBe(new Thickness(0));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void FullScreen_Bottom_Drawer_Fills_The_Height()
+    {
+        var drawer = new Drawer { Title = "Player", Side = DrawerSide.Bottom, IsFullScreen = true, Content = new Border { Height = 40 } };
+        var window = TestHelpers.Show(new StackPanel { Children = { drawer } });
+        try
+        {
+            drawer.IsOpen = true;
+            Dispatcher.UIThread.RunJobs();
+            var surface = (DrawerSurface)drawer.Surface!;
+            surface.Bounds.Height.ShouldBe(300, 0.5);
+            surface.Bounds.Width.ShouldBe(400, 0.5);
+            surface.CornerRadius.ShouldBe(new CornerRadius(0));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Panel_Size_Height_And_Corner_Radius_Can_Be_Set_On_The_Drawer()
+    {
+        var drawer = new Drawer { Title = "Share", Side = DrawerSide.Bottom, PanelHeight = 200, PanelCornerRadius = new CornerRadius(0), Content = new Border { Height = 40 } };
+        var window = TestHelpers.Show(new StackPanel { Children = { drawer } });
+        try
+        {
+            drawer.IsOpen = true;
+            Dispatcher.UIThread.RunJobs();
+            var surface = (DrawerSurface)drawer.Surface!;
+            surface.Bounds.Height.ShouldBe(200, 0.5);
+            surface.CornerRadius.ShouldBe(new CornerRadius(0));
+            drawer.PanelCornerRadius = null;
+            Dispatcher.UIThread.RunJobs();
+            surface.CornerRadius.ShouldNotBe(new CornerRadius(0));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Panel_Size_Overrides_The_Theme_Width_And_Null_Restores_It()
+    {
+        var drawer = new Drawer { Title = "Filters", PanelSize = 300 };
+        var window = TestHelpers.Show(new StackPanel { Children = { drawer } });
+        try
+        {
+            window.Width = 1000;
+            window.Height = 600;
+            Dispatcher.UIThread.RunJobs();
+            drawer.IsOpen = true;
+            Dispatcher.UIThread.RunJobs();
+            var surface = (DrawerSurface)drawer.Surface!;
+            surface.Bounds.Width.ShouldBe(300, 0.5);
+            drawer.PanelSize = null;
+            Dispatcher.UIThread.RunJobs();
+            surface.Bounds.Width.ShouldBe(480, 0.5);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Header_Can_Be_Hidden_Or_Replaced()
+    {
+        var drawer = new Drawer { Title = "Player", Content = "Body" };
+        var window = TestHelpers.Show(new StackPanel { Children = { drawer } });
+        try
+        {
+            drawer.IsOpen = true;
+            Dispatcher.UIThread.RunJobs();
+            var surface = (DrawerSurface)drawer.Surface!;
+            surface.Header!.IsVisible.ShouldBeTrue();
+            surface.CloseButton!.IsEffectivelyVisible.ShouldBeTrue();
+
+            var custom = new Border { Height = 30, Name = "Custom" };
+            drawer.HeaderContent = custom;
+            Dispatcher.UIThread.RunJobs();
+            surface.GetVisualDescendants().OfType<Border>().First(b => b.Name == "PART_DefaultHeader").IsVisible.ShouldBeFalse();
+            surface.CloseButton.IsEffectivelyVisible.ShouldBeFalse();
+            custom.IsEffectivelyVisible.ShouldBeTrue();
+
+            drawer.HeaderContent = null;
+            drawer.ShowHeader = false;
+            Dispatcher.UIThread.RunJobs();
+            surface.Header.IsVisible.ShouldBeFalse();
+            surface.DragArea.ShouldNotBeNull();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Grabber_Follows_ShowGrabber_Over_The_Side_Default()
+    {
+        var drawer = new Drawer { Title = "Share", Side = DrawerSide.Bottom, Content = "Body" };
+        var window = TestHelpers.Show(new StackPanel { Children = { drawer } });
+        try
+        {
+            drawer.IsOpen = true;
+            Dispatcher.UIThread.RunJobs();
+            var surface = (DrawerSurface)drawer.Surface!;
+            GrabberVisible(surface).ShouldBeTrue();
+            drawer.ShowGrabber = false;
+            Dispatcher.UIThread.RunJobs();
+            GrabberVisible(surface).ShouldBeFalse();
+            drawer.Side = DrawerSide.Right;
+            drawer.ShowGrabber = true;
+            Dispatcher.UIThread.RunJobs();
+            GrabberVisible(surface).ShouldBeTrue();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     [AvaloniaFact]
     public void Dragging_The_Header_Past_A_Third_Closes_With_A_Gesture()
     {
