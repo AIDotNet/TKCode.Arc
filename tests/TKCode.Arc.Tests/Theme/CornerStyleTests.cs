@@ -232,9 +232,9 @@ public class CornerStyleTests
         var half = await RadiiAsync(types, ArcCornerStyle.Scale(0.5));
         normal.Values.Sum(list => list.Count).ShouldBeGreaterThan(400, "the walk must find the rounded elements, or the comparison proves nothing");
 
-        // Controls whose collapsed shape is a pill drawn at half its height (a computed 22, not the token's 9999): a pill keeps its
-        // shape under Scale, and only Square flattens it.
-        string[] pillShapes = ["ExpandingSearch"];
+        // Controls whose collapsed shape is a pill drawn at half its height (a computed 22, or 28 for the MorphNav bar, not the token's
+        // 9999): a pill keeps its shape under Scale, and only Square flattens it.
+        string[] pillShapes = ["ExpandingSearch", "MorphNav"];
 
         var offenders = new SortedSet<string>(StringComparer.Ordinal);
         foreach (var (type, radii) in normal.Where(entry => !pillShapes.Contains(entry.Key)))

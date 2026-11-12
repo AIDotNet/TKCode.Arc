@@ -244,7 +244,7 @@
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="Padding" Value="{arc:ShareSheetTokenResource OptionPadding}" />
-        <Setter Property="CornerRadius" Value="{arc:ShareSheetTokenResource OptionRadius}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep14}" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="Template">
@@ -365,7 +365,7 @@
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
-        <Setter Property="CornerRadius" Value="{arc:ShareSheetTokenResource PersonRadius}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep18}" />
         <Setter Property="Padding" Value="{arc:ShareSheetTokenResource PersonPadding}" />
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
@@ -633,7 +633,7 @@
                                 Background="{arc:ShareSheetTokenResource CardColor}"
                                 BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
                                 BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
-                                CornerRadius="{arc:ShareSheetTokenResource CardRadius}"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusStep20}"
                                 ClipToBounds="True">
                             <StackPanel>
                                 <Grid Name="PART_LinkRow"
@@ -811,7 +811,7 @@
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:ShareSheetSheetFrame">
                 <Border Background="{arc:ArcDesignTokenResource SurfaceRaised}"
-                        CornerRadius="{arc:ShareSheetTokenResource SheetRadius}"
+                        CornerRadius="{arc:ArcDesignTokenResource RadiusStep28}"
                         BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}"
                         ClipToBounds="True">
                     <DockPanel>

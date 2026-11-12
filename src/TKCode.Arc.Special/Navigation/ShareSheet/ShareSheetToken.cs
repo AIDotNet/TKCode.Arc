@@ -62,9 +62,6 @@ internal sealed class ShareSheetToken : AbstractControlDesignToken
     /// <summary>Size of the round close button in the bottom sheet (a larger touch target).</summary>
     public double SheetCloseSize { get; set; }
 
-    /// <summary>Corner radius of the card that holds the link and the access level.</summary>
-    public CornerRadius CardRadius { get; set; }
-
     /// <summary>Fill of the link card (the muted surface, slightly see-through).</summary>
     public Color CardColor { get; set; }
 
@@ -103,9 +100,6 @@ internal sealed class ShareSheetToken : AbstractControlDesignToken
 
     /// <summary>Padding of an access option.</summary>
     public Thickness OptionPadding { get; set; }
-
-    /// <summary>Corner radius of an access option.</summary>
-    public CornerRadius OptionRadius { get; set; }
 
     /// <summary>Fill of the chosen access option.</summary>
     public Color OptionSelectedColor { get; set; }
@@ -166,9 +160,6 @@ internal sealed class ShareSheetToken : AbstractControlDesignToken
 
     /// <summary>Gap between a person's avatar and their name.</summary>
     public double PersonGap { get; set; }
-
-    /// <summary>Corner radius of a person's button.</summary>
-    public CornerRadius PersonRadius { get; set; }
 
     /// <summary>Size of a recent person's avatar.</summary>
     public double PersonAvatarSize { get; set; }
@@ -248,9 +239,6 @@ internal sealed class ShareSheetToken : AbstractControlDesignToken
     /// <summary>Space between the bottom sheet and the viewport's sides and bottom.</summary>
     public Thickness SheetMargin { get; set; }
 
-    /// <summary>Corner radius of the bottom sheet.</summary>
-    public CornerRadius SheetRadius { get; set; }
-
     /// <summary>Height of the grabber row at the top of the bottom sheet.</summary>
     public double GrabberRowHeight { get; set; }
 
@@ -302,7 +290,6 @@ internal sealed class ShareSheetToken : AbstractControlDesignToken
         TextIndent = new Thickness(8, 0, 0, 0);
         CloseSize = 32;
         SheetCloseSize = 36;
-        CardRadius = new CornerRadius(20);
         CardColor = Oklch.WithAlpha(n.SurfaceMuted, 0.7);
         LinkRowHeight = 48;
         LinkRowPadding = new Thickness(14, 0, 6, 0);
@@ -316,7 +303,6 @@ internal sealed class ShareSheetToken : AbstractControlDesignToken
         AccessListPadding = new Thickness(6, 0, 6, 6);
         OptionGap = 2;
         OptionPadding = new Thickness(8);
-        OptionRadius = new CornerRadius(14);
         OptionSelectedColor = Oklch.WithAlpha(n.Foreground, 0.04);
         HoverColor = Oklch.WithAlpha(n.Foreground, 0.05);
         LineGap = 1;
@@ -337,7 +323,6 @@ internal sealed class ShareSheetToken : AbstractControlDesignToken
         PeopleGap = 4;
         PersonPadding = new Thickness(2, 8, 2, 6);
         PersonGap = 6;
-        PersonRadius = new CornerRadius(18);
         PersonAvatarSize = 40;
         PickedRingMargin = new Thickness(-4);
         PickedRingThickness = new Thickness(2);
@@ -364,7 +349,6 @@ internal sealed class ShareSheetToken : AbstractControlDesignToken
         SentButtonHeight = 40;
         SheetBreakpoint = 520;
         SheetMargin = new Thickness(8);
-        SheetRadius = new CornerRadius(30);
         GrabberRowHeight = 22;
         GrabberWidth = 36;
         GrabberHeight = 4;
