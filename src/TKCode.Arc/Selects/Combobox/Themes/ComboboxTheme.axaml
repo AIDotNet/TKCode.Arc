@@ -24,7 +24,6 @@
                                    VerticalAlignment="Top"
                                    AutomationProperties.LiveSetting="Polite" />
                         <Border Name="PART_Frame"
-                                MinHeight="{arc:ArcDesignTokenResource ControlSizeMD}"
                                 Padding="{arc:ComboboxTokenResource FieldPadding}"
                                 BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                 CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
@@ -111,6 +110,17 @@
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+
+        <!-- Size: the trigger height of the text fields (Small 36, Medium 44, Large 50). -->
+        <Style Selector="^ /template/ Border#PART_Frame">
+            <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeMD}" />
+        </Style>
+        <Style Selector="^[Size=Small] /template/ Border#PART_Frame">
+            <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+        </Style>
+        <Style Selector="^[Size=Large] /template/ Border#PART_Frame">
+            <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeLG}" />
+        </Style>
 
         <Style Selector="^ /template/ Border#PART_Frame:pointerover">
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />

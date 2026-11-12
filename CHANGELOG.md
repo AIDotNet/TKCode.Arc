@@ -8,6 +8,15 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0), `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` (from 1.1.0-preview.1).
 
+## Unreleased
+
+### Added
+
+- **`Size` on `Combobox`, `MultiSelect`, `TreeSelect` and `Cascader`** ([#115](https://github.com/AIDotNet/TKCode.Arc/issues/115)):
+  the same `ControlSize` as `Select`, `Input` and `DatePicker` (Small 36, Medium 44 default, Large 50). Their trigger height
+  was fixed at 44, so a row of fields set to `Height="36"` overflowed the slot and their text sat about 4px below a
+  neighbouring `TextBlock`. Use `Size="Small"` for 36px rows instead of `Height`. Existing layouts are unchanged (the default stays Medium).
+
 ## 1.1.0-preview.5 - 2026-11-12
 
 The Docks and tabs group of `TKCode.Arc.Special` is rebuilt (`OrbitMenu`, `LiquidTabBar`, `ShareSheet`, `ActionMorph`

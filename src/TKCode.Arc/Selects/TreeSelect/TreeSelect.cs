@@ -407,6 +407,17 @@ public class TreeSelect : TemplatedControl, ISelectFieldAutomation
     private PresenceHost? _emptyHost;
     private TextBlock? _announcer;
 
+    /// <summary>Trigger height: Small 36, Medium 44 (default), Large 50, as for the text fields.</summary>
+    public static readonly StyledProperty<ControlSize> SizeProperty =
+        Field.SizeProperty.AddOwner<TreeSelect>();
+
+    /// <summary>Trigger height: Small 36, Medium 44 (default), Large 50, as for the text fields.</summary>
+    public ControlSize Size
+    {
+        get => GetValue(SizeProperty);
+        set => SetValue(SizeProperty, value);
+    }
+
     static TreeSelect()
     {
         FocusableProperty.OverrideDefaultValue<TreeSelect>(true);

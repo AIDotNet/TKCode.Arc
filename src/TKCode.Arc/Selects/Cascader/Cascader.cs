@@ -324,6 +324,17 @@ public class Cascader : TemplatedControl, ISelectFieldAutomation, ICascaderColum
     private bool _pressedOnTrigger;
     private bool _rendered;
 
+    /// <summary>Trigger height: Small 36, Medium 44 (default), Large 50, as for the text fields.</summary>
+    public static readonly StyledProperty<ControlSize> SizeProperty =
+        Field.SizeProperty.AddOwner<Cascader>();
+
+    /// <summary>Trigger height: Small 36, Medium 44 (default), Large 50, as for the text fields.</summary>
+    public ControlSize Size
+    {
+        get => GetValue(SizeProperty);
+        set => SetValue(SizeProperty, value);
+    }
+
     static Cascader()
     {
         FocusableProperty.OverrideDefaultValue<Cascader>(true);
