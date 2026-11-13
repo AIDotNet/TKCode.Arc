@@ -1,0 +1,49 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.Mobile.ListCellTheme">
+
+    <!-- List cell: any content in a 48+ high row with the list item's padding and hairline separator (hidden on the last
+         row of the group). It does not respond to a press: no pressed shade, no hover, no motion of its own. -->
+    <ControlTheme x:Key="{x:Type arcm:ListCell}" TargetType="arcm:ListCell">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arcm:ListCell">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}">
+                    <Grid>
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          Padding="{TemplateBinding Padding}"
+                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        <Border Name="PART_Separator"
+                                Height="1"
+                                Margin="{arcm:ListCellTokenResource SeparatorInset}"
+                                Background="{arc:ArcDesignTokenResource Border}"
+                                VerticalAlignment="Bottom" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="MinHeight" Value="{arcm:ListCellTokenResource RowHeight}" />
+        <Setter Property="Padding" Value="{arcm:ListCellTokenResource ContentPadding}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.5" />
+        </Style>
+        <Style Selector="^:nth-last-child(1) /template/ Border#PART_Separator">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

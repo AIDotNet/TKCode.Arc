@@ -70,7 +70,8 @@ public partial class RichTextEditor : TemplatedControl
         AvaloniaProperty.Register<RichTextEditor, RichTextEditorProfile>(nameof(Profile));
 
     public static readonly StyledProperty<bool> IsReadOnlyProperty =
-        AvaloniaProperty.Register<RichTextEditor, bool>(nameof(IsReadOnly));
+        AvaloniaProperty.Register<RichTextEditor, bool>(nameof(IsReadOnly),
+            coerce: (o, v) => v || o.GetValue(Form.IsReadOnlyProperty));
 
     public static readonly StyledProperty<bool> IsAutoFocusEnabledProperty =
         AvaloniaProperty.Register<RichTextEditor, bool>(nameof(IsAutoFocusEnabled));
@@ -767,6 +768,11 @@ public partial class RichTextEditor : TemplatedControl
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
+        if (change.Property == Form.IsReadOnlyProperty)
+        {
+            // Form.IsReadOnly (inherited) makes the editor read-only with its form or section.
+            CoerceValue(IsReadOnlyProperty);
+        }
         if (change.Property == HtmlProperty)
         {
             if (!_writingValue && !string.Equals(Html, _lastHtml, StringComparison.Ordinal))

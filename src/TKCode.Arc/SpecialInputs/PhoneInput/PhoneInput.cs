@@ -77,7 +77,7 @@ public partial class PhoneInput : FieldTextBox, ICustomKeyboardNavigation
     /// <summary>Defines the <see cref="Value"/> property.</summary>
     public static readonly StyledProperty<string> ValueProperty =
         AvaloniaProperty.Register<PhoneInput, string>(nameof(Value), string.Empty, defaultBindingMode: BindingMode.TwoWay,
-            coerce: (_, value) => value ?? string.Empty);
+            coerce: (_, value) => value ?? string.Empty, enableDataValidation: true);
 
     /// <summary>Defines the <see cref="Country"/> property.</summary>
     public static readonly StyledProperty<string> CountryProperty =
@@ -579,7 +579,7 @@ public partial class PhoneInput : FieldTextBox, ICustomKeyboardNavigation
     protected override void UpdateAutomation()
     {
         base.UpdateAutomation();
-        AutomationProperties.SetHelpText(this, FieldText.HelpText(Description, DisplayErrorMessage));
+        FormFieldHost.SetHelpText(this, FieldText.HelpText(Description, DisplayErrorMessage));
     }
 
     // ---------------------------------------------------------------- announcements

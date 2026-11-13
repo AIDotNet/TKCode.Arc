@@ -125,11 +125,19 @@ public class Sheet : ContentControl
         AvaloniaProperty.RegisterDirect<Sheet, int>(nameof(DetentIndex), o => o.DetentIndex);
 
     /// <summary>
-    /// The height of the bottom safe area (the home indicator) in px, kept free under the content. The sheet does not read
-    /// the platform: bind it to the page, for example <c>SafeAreaBottom="{Binding SafeArea.Bottom, ElementName=Page}"</c>.
+    /// The height of the bottom safe area (the home indicator) in px, kept free under the content. Leave it unset and a
+    /// sheet in a <see cref="Page"/> keeps the bottom of the page's safe area free by itself (see
+    /// <see cref="EffectiveSafeAreaBottom"/>); set it (a value, a style or a binding) to use your own height instead, 0 for none.
     /// </summary>
     public static readonly StyledProperty<double> SafeAreaBottomProperty =
         AvaloniaProperty.Register<Sheet, double>(nameof(SafeAreaBottom));
+
+    /// <summary>
+    /// The space the sheet keeps free under its content: <see cref="SafeAreaBottom"/> when it is set, otherwise the bottom of
+    /// the safe area of the page the sheet is in (<see cref="Page.InheritedSafeAreaProperty"/>), 0 outside a page.
+    /// </summary>
+    public static readonly DirectProperty<Sheet, double> EffectiveSafeAreaBottomProperty =
+        AvaloniaProperty.RegisterDirect<Sheet, double>(nameof(EffectiveSafeAreaBottom), o => o.EffectiveSafeAreaBottom);
 
     private readonly TranslateTransform _translate = new();
     private Border? _scrim;
@@ -150,6 +158,7 @@ public class Sheet : ContentControl
     private int _detentIndex;
     private SheetDetents? _observedDetents;
     private bool _watching;
+    private double _effectiveSafeAreaBottom;
 
     /// <inheritdoc cref="IsOpenProperty"/>
     public bool IsOpen
@@ -204,7 +213,19 @@ public class Sheet : ContentControl
     public double SafeAreaBottom
     {
         get => GetValue(SafeAreaBottomProperty);
-        set => SetValue(SafeAreaBottomProperty, value);
+        set
+        {
+            SetValue(SafeAreaBottomProperty, value);
+            // Setting the value it already has (0, the default) raises no change, but it now wins over the page's.
+            UpdateSafeArea();
+        }
+    }
+
+    /// <inheritdoc cref="EffectiveSafeAreaBottomProperty"/>
+    public double EffectiveSafeAreaBottom
+    {
+        get => _effectiveSafeAreaBottom;
+        private set => SetAndRaise(EffectiveSafeAreaBottomProperty, ref _effectiveSafeAreaBottom, value);
     }
 
     /// <summary>The sheet came to rest on another detent.</summary>
@@ -344,11 +365,20 @@ public class Sheet : ContentControl
             WatchDetents();
             OnDetentsChanged(null, null);
         }
+        else if (change.Property == SafeAreaBottomProperty || change.Property == Page.InheritedSafeAreaProperty)
+        {
+            UpdateSafeArea();
+        }
     }
+
+    /// <summary>An explicit <see cref="SafeAreaBottom"/> wins; otherwise the page's safe area reaches the sheet by inheritance.</summary>
+    private void UpdateSafeArea()
+        => EffectiveSafeAreaBottom = Math.Max(0, IsSet(SafeAreaBottomProperty) ? SafeAreaBottom : Page.GetInheritedSafeArea(this).Bottom);
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
+        UpdateSafeArea();
         _watching = true;
         WatchDetents();
         OnDetentsChanged(null, null);

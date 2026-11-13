@@ -66,7 +66,8 @@ public class TimePicker : TemplatedControl, IPickerAutomation
 
     /// <summary>The chosen time (two-way). Arc's default is 09:00; null shows the placeholder.</summary>
     public static readonly StyledProperty<TimeOnly?> SelectedTimeProperty =
-        AvaloniaProperty.Register<TimePicker, TimeOnly?>(nameof(SelectedTime), new TimeOnly(9, 0), defaultBindingMode: BindingMode.TwoWay);
+        AvaloniaProperty.Register<TimePicker, TimeOnly?>(nameof(SelectedTime), new TimeOnly(9, 0), defaultBindingMode: BindingMode.TwoWay,
+            enableDataValidation: true);
 
     /// <summary>Whether the list is open (two-way).</summary>
     public static readonly StyledProperty<bool> IsDropDownOpenProperty =
@@ -86,7 +87,12 @@ public class TimePicker : TemplatedControl, IPickerAutomation
     public static readonly StyledProperty<string?> LabelProperty = Field.LabelProperty.AddOwner<TimePicker>();
     public static readonly StyledProperty<string?> DescriptionProperty = Field.DescriptionProperty.AddOwner<TimePicker>();
     public static readonly StyledProperty<string?> ErrorMessageProperty = Field.ErrorMessageProperty.AddOwner<TimePicker>();
-    public static readonly StyledProperty<bool> IsLabelVisibleProperty = Field.IsLabelVisibleProperty.AddOwner<TimePicker>();
+    public static readonly StyledProperty<bool> IsLabelVisibleProperty =
+        Field.IsLabelVisibleProperty.AddOwner<TimePicker>(new StyledPropertyMetadata<bool>(coerce: (o, v) => v && !FormFieldHost.IsHosted((TimePicker)o)));
+
+    /// <summary>The error actually shown: <see cref="ErrorMessage"/>, else the validation message of the <see cref="SelectedTime"/> binding.</summary>
+    public static readonly DirectProperty<TimePicker, string?> EffectiveErrorMessageProperty =
+        AvaloniaProperty.RegisterDirect<TimePicker, string?>(nameof(EffectiveErrorMessage), o => o.EffectiveErrorMessage);
     public static readonly StyledProperty<ControlSize> SizeProperty = Field.SizeProperty.AddOwner<TimePicker>();
 
     /// <summary>Shown while there is no time (Arc: "Select a time").</summary>
@@ -140,7 +146,37 @@ public class TimePicker : TemplatedControl, IPickerAutomation
     public double MaxDropDownHeight { get => GetValue(MaxDropDownHeightProperty); set => SetValue(MaxDropDownHeightProperty, value); }
 
     /// <summary>True while an error is shown.</summary>
-    public bool IsInvalid => !string.IsNullOrEmpty(ErrorMessage);
+    public bool IsInvalid => _isInvalid;
+
+    /// <summary>The error actually shown.</summary>
+    public string? EffectiveErrorMessage
+    {
+        get => _effectiveError;
+        private set => SetAndRaise(EffectiveErrorMessageProperty, ref _effectiveError, value);
+    }
+
+    private bool _isInvalid;
+    private string? _effectiveError;
+    private string? _validationMessage;
+
+    protected override void UpdateDataValidation(AvaloniaProperty property, BindingValueType state, Exception? error)
+    {
+        base.UpdateDataValidation(property, state, error);
+        _validationMessage = FormFieldHost.ValidationMessage(state, error);
+        UpdateEffectiveError();
+    }
+
+    private void UpdateEffectiveError()
+    {
+        EffectiveErrorMessage = FormFieldHost.EffectiveError(this, ErrorMessage, _validationMessage);
+        var invalid = FormFieldHost.IsInvalid(FormFieldHost.StateOf(this), !string.IsNullOrEmpty(ErrorMessage), _validationMessage is not null);
+        if (invalid != _isInvalid)
+        {
+            _isInvalid = invalid;
+            RaisePropertyChanged(IsInvalidProperty, !invalid, invalid);
+        }
+        UpdateAutomation();
+    }
 
     /// <summary>Raised when <see cref="SelectedTime"/> changes.</summary>
     public event EventHandler<TimePickerSelectedTimeChangedEventArgs>? SelectedTimeChanged
@@ -312,7 +348,12 @@ public class TimePicker : TemplatedControl, IPickerAutomation
         }
         else if (change.Property == ErrorMessageProperty)
         {
-            RaisePropertyChanged(IsInvalidProperty, !string.IsNullOrEmpty(change.GetOldValue<string?>()), IsInvalid);
+            UpdateEffectiveError();
+        }
+        else if (change.Property == FormFieldHost.StateProperty)
+        {
+            CoerceValue(IsLabelVisibleProperty);
+            UpdateEffectiveError();
         }
         else if (change.Property == LabelProperty || change.Property == DescriptionProperty)
         {
@@ -338,7 +379,7 @@ public class TimePicker : TemplatedControl, IPickerAutomation
 
     private void UpdateAutomation()
     {
-        AutomationProperties.SetHelpText(this, FieldText.HelpText(Description, ErrorMessage));
+        FormFieldHost.SetHelpText(this, FieldText.HelpText(Description, EffectiveErrorMessage));
         if (_panel is not null)
         {
             AutomationProperties.SetName(_panel, $"{Label} options".Trim());

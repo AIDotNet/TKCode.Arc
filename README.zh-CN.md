@@ -29,7 +29,7 @@ TKCode.Arc 是面向 Avalonia 12 的 .NET 应用 UI 套件。它移植了 Arc �
 |---|---|
 | `TKCode.Arc` | 22 个分组共 112 个组件，目录结构与 Arc 侧边栏一致；另有布局面板和扩展控件，如支持流式渲染的 `Markdown`、`PropertyGrid`、`Cascader` 和 `TransferBox`。 |
 | `TKCode.Arc.Blocks` | 页面级组合：AI 对话、定价与结账、账单、仪表盘、设置、团队管理等。 |
-| `TKCode.Arc.AdvancedCharts` | `DataGrid`（区域选择、行内编辑、填充柄、剪贴板、分组、导出）、`Sunburst`、`SankeyFlow`、`FunnelChart`、`RadarChart`、`RealtimeStream` 和 `RaceBarChart`。 |
+| `TKCode.Arc.AdvancedCharts` | `DataGrid`（区域选择、行内编辑、填充柄、剪贴板、分组、导出）、`Sunburst`、`SankeyFlow`、`FunnelChart`、`RadarChart`、`RealtimeStream`、`RaceBarChart` 和 `WindRoseChart`。 |
 | `TKCode.Arc.Special` | AI 原理动画、指针特效、加载动画、背景表面和插画。 |
 | `TKCode.Arc.Mobile` | 触控优先的控件，触控目标为 44px。 |
 

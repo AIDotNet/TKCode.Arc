@@ -1,0 +1,62 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.RadialMenuTheme">
+    <ControlTheme x:Key="{x:Type arc:RadialMenu}" TargetType="arc:RadialMenu">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <!-- A menu placed in a layout is a dial of its own size; a floating one is placed by its host. -->
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="InnerRadius" Value="{arc:RadialMenuTokenResource InnerRadius}" />
+        <Setter Property="OuterRadius" Value="{arc:RadialMenuTokenResource OuterRadius}" />
+        <Setter Property="SectorGap" Value="{arc:RadialMenuTokenResource SectorGap}" />
+        <Setter Property="PlatePadding" Value="{arc:RadialMenuTokenResource PlatePadding}" />
+        <Setter Property="ViewportMargin" Value="{arc:RadialMenuTokenResource ViewportMargin}" />
+        <Setter Property="CenterLabelPadding" Value="{arc:RadialMenuTokenResource CenterLabelPadding}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:RadialMenu">
+                <Panel>
+                    <!-- The raised plate under the sectors: a disc, or a rounded band plus a centre disc for a sector. -->
+                    <arc:RadialMenuPlate Name="PART_Plate"
+                                         Background="{TemplateBinding Background}"
+                                         BorderBrush="{TemplateBinding BorderBrush}"
+                                         BorderThickness="{TemplateBinding BorderThickness}"
+                                         BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}"
+                                         CornerRadius="{arc:ArcDesignTokenResource RadiusStep16}" />
+                    <ItemsPresenter Name="PART_ItemsPresenter"
+                                    ItemsPanel="{TemplateBinding ItemsPanel}" />
+                    <!-- The centre: the highlighted item's label, or CenterContent while nothing is highlighted. -->
+                    <Panel Name="PART_Center"
+                           Width="{TemplateBinding CenterLabelWidth}"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           IsHitTestVisible="False">
+                        <ContentPresenter Name="PART_CenterContent"
+                                          Content="{TemplateBinding CenterContent}"
+                                          IsVisible="{TemplateBinding ShowsCenterContent}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          HorizontalContentAlignment="Center"
+                                          TextWrapping="Wrap" />
+                        <arc:ArcContentSwap Name="PART_CenterLabel"
+                                            Mode="Label"
+                                            HorizontalContentAlignment="Center"
+                                            VerticalContentAlignment="Center" />
+                    </Panel>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ ContentPresenter#PART_CenterContent">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

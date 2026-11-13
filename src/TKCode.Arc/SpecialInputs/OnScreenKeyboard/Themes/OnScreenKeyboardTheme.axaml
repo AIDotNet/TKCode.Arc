@@ -1,0 +1,113 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.OnScreenKeyboardTheme">
+
+    <!-- A key: a key cap drawn by the presenter (edge, bottom lip, face, label or glyph). Character keys are the lightest,
+         function keys a step darker, Enter is the primary (foreground fill). Hover is mouse-only (:hover, set in code). -->
+    <ControlTheme x:Key="{x:Type arc:OnScreenKeyboardKeyPresenter}" TargetType="arc:OnScreenKeyboardKeyPresenter">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="Background" Value="{arc:OnScreenKeyboardTokenResource KeyBackground}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="EdgeBrush" Value="{arc:OnScreenKeyboardTokenResource KeyEdge}" />
+        <Setter Property="LipBrush" Value="{arc:OnScreenKeyboardTokenResource KeyLip}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXL}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="LipThickness" Value="{arc:OnScreenKeyboardTokenResource KeyLipThickness}" />
+        <Setter Property="GlyphSize" Value="{arc:OnScreenKeyboardTokenResource GlyphSize}" />
+
+        <!-- Labels longer than one character ("123", "ABC", "Done") use the small medium-weight size. -->
+        <Style Selector="^:word">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        </Style>
+        <Style Selector="^:function">
+            <Setter Property="Background" Value="{arc:OnScreenKeyboardTokenResource FunctionKeyBackground}" />
+        </Style>
+        <Style Selector="^:hover">
+            <Setter Property="Background" Value="{arc:OnScreenKeyboardTokenResource KeyHoverBackground}" />
+        </Style>
+        <Style Selector="^:function:hover">
+            <Setter Property="Background" Value="{arc:OnScreenKeyboardTokenResource FunctionKeyHoverBackground}" />
+        </Style>
+        <!-- Shift while on looks like a character key, with a filled glyph (the state never rests on colour alone). -->
+        <Style Selector="^:active">
+            <Setter Property="Background" Value="{arc:OnScreenKeyboardTokenResource KeyBackground}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="Background" Value="{arc:OnScreenKeyboardTokenResource KeyPressedBackground}" />
+        </Style>
+        <Style Selector="^:function:pressed">
+            <Setter Property="Background" Value="{arc:OnScreenKeyboardTokenResource KeyBackground}" />
+        </Style>
+        <!-- Enter: the primary button's look, foreground fill with background ink. -->
+        <Style Selector="^:primary">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
+            <Setter Property="EdgeBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="LipBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:primary:pressed">
+            <Setter Property="Opacity" Value="{arc:OnScreenKeyboardTokenResource PrimaryPressedOpacity}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="Opacity" Value="{arc:OnScreenKeyboardTokenResource DisabledOpacity}" />
+        </Style>
+
+        <!-- Press: the key sinks on a snappy spring and its fill fades; reduced motion keeps only a quick fill change. -->
+        <Style Selector="^:motion-full">
+            <Setter Property="RenderTransform" Value="scale(1)" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^:pressed">
+                <Setter Property="RenderTransform" Value="scale(0.95)" />
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:OnScreenKeyboard}" TargetType="arc:OnScreenKeyboard">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:OnScreenKeyboard">
+                <Border Name="PART_Tray"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Panel>
+                        <arc:OnScreenKeyboardPanel Name="PART_Keys"
+                                                   KeyHeight="{arc:OnScreenKeyboardTokenResource KeyHeight}"
+                                                   KeyUnitWidth="{arc:OnScreenKeyboardTokenResource KeyUnitWidth}"
+                                                   KeyGap="{arc:OnScreenKeyboardTokenResource KeyGap}"
+                                                   RowGap="{arc:OnScreenKeyboardTokenResource RowGap}" />
+                        <arc:SpecialInputsLiveRegion Name="PART_Live" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="{arc:OnScreenKeyboardTokenResource TrayBackground}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep20}" />
+        <Setter Property="Padding" Value="{arc:OnScreenKeyboardTokenResource TrayPadding}" />
+        <Setter Property="ClipToBounds" Value="False" />
+    </ControlTheme>
+</ResourceDictionary>

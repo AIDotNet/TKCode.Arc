@@ -65,7 +65,7 @@ public class DatePicker : FieldTextBox
 
     /// <summary>The picked date (two-way). Null shows the placeholder.</summary>
     public static readonly StyledProperty<DateOnly?> SelectedDateProperty =
-        AvaloniaProperty.Register<DatePicker, DateOnly?>(nameof(SelectedDate), defaultBindingMode: BindingMode.TwoWay);
+        AvaloniaProperty.Register<DatePicker, DateOnly?>(nameof(SelectedDate), defaultBindingMode: BindingMode.TwoWay, enableDataValidation: true);
 
     /// <summary>Whether the calendar popup is open (two-way).</summary>
     public static readonly StyledProperty<bool> IsDropDownOpenProperty =
@@ -448,7 +448,7 @@ public class DatePicker : FieldTextBox
     {
         var label = Label;
         var shown = SelectedDate is null ? Placeholder : _formatted;
-        AutomationProperties.SetHelpText(this, FieldText.HelpText(string.IsNullOrEmpty(Description) ? shown : $"{shown}. {Description}", EffectiveErrorMessage));
+        FormFieldHost.SetHelpText(this, FieldText.HelpText(string.IsNullOrEmpty(Description) ? shown : $"{shown}. {Description}", EffectiveErrorMessage));
         if (_panel is not null)
         {
             AutomationProperties.SetName(_panel, $"{label} calendar".Trim());

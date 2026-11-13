@@ -45,7 +45,7 @@
                             </StackPanel>
                             <Border Name="PART_SafeArea"
                                     DockPanel.Dock="Bottom"
-                                    Height="{TemplateBinding SafeAreaBottom}" />
+                                    Height="{TemplateBinding EffectiveSafeAreaBottom}" />
                             <ScrollViewer Name="PART_Body"
                                           HorizontalScrollBarVisibility="Disabled"
                                           VerticalScrollBarVisibility="Auto">

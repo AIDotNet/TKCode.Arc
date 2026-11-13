@@ -53,6 +53,13 @@ public class Switch : ToggleButton
 
     protected override Type StyleKeyOverride => typeof(Switch);
 
+    static Switch()
+    {
+        // A view model's error on IsChecked reaches the switch (Avalonia's ToggleButton does not ask for it); a FormItem
+        // around it shows the error.
+        IsCheckedProperty.OverrideMetadata<Switch>(new StyledPropertyMetadata<bool?>(enableDataValidation: true));
+    }
+
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);

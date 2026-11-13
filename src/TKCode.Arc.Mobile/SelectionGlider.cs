@@ -1,31 +1,36 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.VisualTree;
 using TKCode.Arc.Primitives;
 
 namespace TKCode.Arc.Mobile;
 
 /// <summary>
-/// Keeps one <see cref="GlidingIndicator"/> (P7) under the selected container of a list box. A selection change glides;
-/// anything else that moves the target (the container resizing, the first layout) snaps, and the very first show fades in
-/// place. The glider is drawn in render, so the glide never relayouts. Under reduced motion or Off the indicator jumps.
+/// Keeps one <see cref="GlidingIndicator"/> (P7) under the selected container of a list box (or any selecting items
+/// control). A selection change glides; anything else that moves the target (the container resizing, the first layout)
+/// snaps, and the very first show fades in place. A selected container that is hidden has no indicator. The glider is
+/// drawn in render, so the glide never relayouts. Under reduced motion or Off the indicator jumps.
 /// </summary>
 internal sealed class SelectionGlider
 {
-    private readonly ListBox _owner;
+    private readonly SelectingItemsControl _owner;
     private readonly GlidingIndicator _glider;
     private readonly Func<Control, Control?> _target;
+    private readonly bool _insetByHalfStroke;
     private Rect? _last;
     private bool _attached;
 
-    /// <param name="owner">The list box whose selection the indicator follows.</param>
+    /// <param name="owner">The control whose selection the indicator follows.</param>
     /// <param name="glider">The indicator, in the same coordinate space as the items (a sibling of the items presenter).</param>
     /// <param name="target">Picks the control whose bounds the indicator covers, given the selected container.</param>
-    public SelectionGlider(ListBox owner, GlidingIndicator glider, Func<Control, Control?> target)
+    /// <param name="insetByHalfStroke">Insets the indicator by half its stroke, so a ring is drawn inside the target's bounds.</param>
+    public SelectionGlider(SelectingItemsControl owner, GlidingIndicator glider, Func<Control, Control?> target, bool insetByHalfStroke = false)
     {
         _owner = owner;
         _glider = glider;
         _target = target;
+        _insetByHalfStroke = insetByHalfStroke;
     }
 
     /// <summary>The indicator being driven.</summary>
@@ -120,7 +125,7 @@ internal sealed class SelectionGlider
         var container = index >= 0 ? _owner.ContainerFromIndex(index) : null;
         var host = container is null ? null : _target(container);
         Track(container, host);
-        if (host is null)
+        if (container is null || host is null || !container.IsVisible || !host.IsVisible)
         {
             if (_last is not null)
             {
@@ -129,7 +134,7 @@ internal sealed class SelectionGlider
             }
             return;
         }
-        if (!host.IsVisible || host.Bounds.Width <= 0 || host.Bounds.Height <= 0
+        if (host.Bounds.Width <= 0 || host.Bounds.Height <= 0
             || !host.IsAttachedToVisualTree() || !_glider.IsAttachedToVisualTree())
         {
             return;
@@ -140,6 +145,10 @@ internal sealed class SelectionGlider
             return;
         }
         var rect = new Rect(origin.Value, host.Bounds.Size);
+        if (_insetByHalfStroke)
+        {
+            rect = rect.Deflate(_glider.StrokeThickness / 2);
+        }
         if (_last == rect)
         {
             return;

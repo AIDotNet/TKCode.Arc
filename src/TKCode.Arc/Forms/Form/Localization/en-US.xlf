@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="2.1" srcLang="en-US" xmlns="urn:oasis:names:tc:xliff:document:2.0">
+  <file id="TKCode.Arc.Localization.FormLangResourceKind">
+    <unit id="Optional">
+      <segment>
+        <source>Optional</source>
+      </segment>
+    </unit>
+    <unit id="Validating">
+      <segment>
+        <source>Checking…</source>
+      </segment>
+    </unit>
+    <unit id="InvalidSummaryOne">
+      <segment>
+        <source>1 field needs attention</source>
+      </segment>
+    </unit>
+    <unit id="InvalidSummaryMany">
+      <segment>
+        <source>{0} fields need attention</source>
+      </segment>
+    </unit>
+  </file>
+</xliff>

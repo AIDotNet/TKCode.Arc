@@ -168,6 +168,7 @@ public class Combobox : SelectingItemsControl, ISelectOptionHost, ISelectFieldAu
 
     static Combobox()
     {
+        SelectionDataValidation.Enable<Combobox>();
         FocusableProperty.OverrideDefaultValue<Combobox>(false);
         SelectionModeProperty.OverrideDefaultValue<Combobox>(SelectionMode.Single);
     }

@@ -174,6 +174,8 @@ public class ChipGroup : SelectingItemsControl
 
     static ChipGroup()
     {
+        SelectionDataValidation.Enable<ChipGroup>();
+        SelectedItemsProperty.OverrideMetadata<ChipGroup>(new DirectPropertyMetadata<IList?>(enableDataValidation: true));
         FocusableProperty.OverrideDefaultValue<ChipGroup>(false);
         SelectionModeProperty.OverrideDefaultValue<ChipGroup>(SelectionMode.Multiple | SelectionMode.Toggle);
     }

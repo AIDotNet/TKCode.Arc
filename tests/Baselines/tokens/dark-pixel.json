@@ -3472,6 +3472,14 @@
       "InlinePadding": "14,8,14,8",
       "ItemRadius": "0,0,0,0"
     },
+    "Form": {
+      "AutoLabelMaxWidth": "240",
+      "ErrorScrollMargin": "24"
+    },
+    "FormItem": {
+      "LabelColumnGap": "16",
+      "RequiredMarkGap": "4"
+    },
     "FunnelChart": {
       "DotRadius": "2.5",
       "HeaderGap": "10",
@@ -5582,6 +5590,25 @@
       "OperatorWidth": "84",
       "ValueWidth": "168"
     },
+    "OnScreenKeyboard": {
+      "DisabledOpacity": "0.45",
+      "FunctionKeyBackground": "#FF282828",
+      "FunctionKeyHoverBackground": "#FF2E2E2E",
+      "GlyphSize": "24",
+      "KeyBackground": "#FF333333",
+      "KeyEdge": "#FF353535",
+      "KeyGap": "6",
+      "KeyHeight": "46",
+      "KeyHoverBackground": "#FF383838",
+      "KeyLip": "#FF141414",
+      "KeyLipThickness": "2",
+      "KeyPressedBackground": "#FF282828",
+      "KeyUnitWidth": "52",
+      "PrimaryPressedOpacity": "0.84",
+      "RowGap": "8",
+      "TrayBackground": "#FF191919",
+      "TrayPadding": "8,8,8,8"
+    },
     "OnboardingChecklist": {
       "ActionGap": "8",
       "ActionMargin": "0,12,0,0",
@@ -6387,6 +6414,21 @@
       "MarkerRadius": "4",
       "StrokeThickness": "2",
       "TooltipGap": "10"
+    },
+    "RadialMenu": {
+      "CenterLabelPadding": "10",
+      "InnerRadius": "44",
+      "OuterRadius": "124",
+      "PlatePadding": "6",
+      "SectorGap": "4",
+      "ViewportMargin": "8"
+    },
+    "RadialMenuItem": {
+      "ContentPadding": "6,6,6,6",
+      "ContentSpacing": "3",
+      "DisabledOpacity": "0.4",
+      "IconSize": "20",
+      "SectorFill": "#0FF2F2F2"
     },
     "RadioCard": {
       "GlyphSize": "18"
@@ -9553,6 +9595,16 @@
       "ToolbarGap": "12",
       "ToolbarItemHeight": "36",
       "ToolbarRowGap": "10"
+    },
+    "WindRoseChart": {
+      "CompactLabelGap": "6",
+      "HoleRatio": "0.18",
+      "LabelGap": "10",
+      "LegendGap": "14",
+      "SectorFill": "0.84",
+      "SegmentCorner": "2",
+      "SegmentGap": "2",
+      "TooltipGap": "12"
     },
     "WindowCaptionButtons": {
       "ButtonSize": "30",

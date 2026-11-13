@@ -6,7 +6,8 @@
                     x:Class="TKCode.Arc.Mobile.ActionSheetItemTheme">
 
     <!-- Action row: a 56 high centered label in accent color (danger color when destructive) under a hairline that the
-         first row of a card omits; a finger on it shades the row with SurfaceMuted; no hover state. -->
+         first row of a card omits; a check mark at the end when checked; a finger on it shades the row with SurfaceMuted;
+         no hover state. -->
     <ControlTheme x:Key="{x:Type arcm:ActionSheetItem}" TargetType="arcm:ActionSheetItem">
         <Setter Property="FocusAdorner" Value="{x:Null}" />
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
@@ -17,11 +18,20 @@
                         BorderBrush="{arc:ArcDesignTokenResource Border}"
                         BorderThickness="0,1,0,0"
                         Padding="{TemplateBinding Padding}">
-                    <ContentPresenter Name="PART_ContentPresenter"
-                                      Content="{TemplateBinding Content}"
-                                      ContentTemplate="{TemplateBinding ContentTemplate}"
-                                      HorizontalAlignment="Center"
+                    <Grid>
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                        <arc:ArcGlyph Name="PART_Check"
+                                      Data="{x:Static arc:ArcIcons.Check}"
+                                      IsVisible="{TemplateBinding IsChecked}"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      Size="{arcm:ActionSheetItemTokenResource CheckExtent}"
+                                      HorizontalAlignment="Right"
                                       VerticalAlignment="Center" />
+                    </Grid>
                 </Border>
             </ControlTemplate>
         </Setter>
@@ -39,6 +49,9 @@
         <!-- No :pointerover style on purpose: a finger does not hover. -->
         <Style Selector="^:destructive">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:checked /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Margin" Value="{arcm:ActionSheetItemTokenResource CheckedContentMargin}" />
         </Style>
         <Style Selector="^:pressed">
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />

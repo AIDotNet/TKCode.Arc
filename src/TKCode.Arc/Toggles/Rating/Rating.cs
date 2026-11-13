@@ -61,7 +61,7 @@ public class Rating : TemplatedControl
 
     /// <summary>The committed value; 0 means not rated. It is shown rounded to the nearest step.</summary>
     public static readonly StyledProperty<double> ValueProperty =
-        AvaloniaProperty.Register<Rating, double>(nameof(Value), defaultBindingMode: Avalonia.Data.BindingMode.TwoWay);
+        AvaloniaProperty.Register<Rating, double>(nameof(Value), defaultBindingMode: Avalonia.Data.BindingMode.TwoWay, enableDataValidation: true);
 
     /// <summary>The number of stars.</summary>
     public static readonly StyledProperty<int> MaximumProperty =
@@ -69,7 +69,8 @@ public class Rating : TemplatedControl
 
     /// <summary>Shows the value without taking input.</summary>
     public static readonly StyledProperty<bool> IsReadOnlyProperty =
-        AvaloniaProperty.Register<Rating, bool>(nameof(IsReadOnly));
+        AvaloniaProperty.Register<Rating, bool>(nameof(IsReadOnly),
+            coerce: (o, v) => v || o.GetValue(Form.IsReadOnlyProperty));
 
     /// <summary>The size of the stars.</summary>
     public static readonly StyledProperty<ControlSize> SizeProperty =
@@ -230,6 +231,11 @@ public class Rating : TemplatedControl
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
+        if (change.Property == Form.IsReadOnlyProperty)
+        {
+            // Form.IsReadOnly (inherited) makes the editor read-only with its form or section.
+            CoerceValue(IsReadOnlyProperty);
+        }
         if (change.Property == ValueProperty)
         {
             Refresh();

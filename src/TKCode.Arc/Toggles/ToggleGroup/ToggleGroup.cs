@@ -120,6 +120,7 @@ public class ToggleGroup : SelectingItemsControl
 
     static ToggleGroup()
     {
+        SelectionDataValidation.Enable<ToggleGroup>();
         FocusableProperty.OverrideDefaultValue<ToggleGroup>(false);
         KeyboardNavigation.TabNavigationProperty.OverrideDefaultValue<ToggleGroup>(KeyboardNavigationMode.Once);
     }

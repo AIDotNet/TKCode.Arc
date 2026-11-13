@@ -64,8 +64,12 @@ public class Checkbox : AvaloniaCheckBox
         AvaloniaProperty.Register<Checkbox, string?>(nameof(Description));
 
     /// <summary>Marks the choice as invalid (the square takes the danger border).</summary>
+    /// <remarks>
+    /// Also true while the <c>IsChecked</c> binding reports a validation error (inside a <see cref="FormItem"/>: while the
+    /// item shows its errors).
+    /// </remarks>
     public static readonly StyledProperty<bool> IsInvalidProperty =
-        AvaloniaProperty.Register<Checkbox, bool>(nameof(IsInvalid));
+        AvaloniaProperty.Register<Checkbox, bool>(nameof(IsInvalid), coerce: CoerceIsInvalid);
 
     /// <summary>The field must be checked before a form is submitted (reported to assistive technology).</summary>
     public static readonly StyledProperty<bool> IsRequiredProperty =
@@ -115,7 +119,28 @@ public class Checkbox : AvaloniaCheckBox
     private LazyFocusRing? _focusRing;
     private bool _syncing;
 
+    private bool _hasValidationError;
+
     protected override Type StyleKeyOverride => typeof(Checkbox);
+
+    static Checkbox()
+    {
+        // A view model's error on IsChecked reaches the checkbox (Avalonia's ToggleButton does not ask for it).
+        IsCheckedProperty.OverrideMetadata<Checkbox>(new StyledPropertyMetadata<bool?>(enableDataValidation: true));
+    }
+
+    private static bool CoerceIsInvalid(AvaloniaObject target, bool value)
+    {
+        var box = (Checkbox)target;
+        return value || FormFieldHost.IsInvalid(FormFieldHost.StateOf(box), false, box._hasValidationError);
+    }
+
+    protected override void UpdateDataValidation(AvaloniaProperty property, BindingValueType state, Exception? error)
+    {
+        base.UpdateDataValidation(property, state, error);
+        _hasValidationError = FormFieldHost.HasError(state, error);
+        CoerceValue(IsInvalidProperty);
+    }
 
     /// <summary>Unchecked and indeterminate both become checked; checked becomes unchecked (Radix). With
     /// <see cref="ToggleButton.IsThreeState"/> the Avalonia cycle (unchecked, checked, indeterminate) is used instead.</summary>
@@ -247,6 +272,10 @@ public class Checkbox : AvaloniaCheckBox
         else if (change.Property == IsInvalidProperty)
         {
             PseudoClasses.Set(InvalidPseudoClass, IsInvalid);
+        }
+        else if (change.Property == FormFieldHost.StateProperty)
+        {
+            CoerceValue(IsInvalidProperty);
         }
         else if (change.Property == IsRequiredProperty)
         {

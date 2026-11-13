@@ -72,7 +72,7 @@
                             </Border>
                             <Border Name="PART_SafeArea"
                                     Grid.Row="2"
-                                    Height="{TemplateBinding SafeAreaBottom}" />
+                                    Height="{TemplateBinding EffectiveSafeAreaBottom}" />
                         </Grid>
                     </Border>
                 </Grid>

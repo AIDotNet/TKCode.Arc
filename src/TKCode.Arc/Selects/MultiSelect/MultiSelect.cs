@@ -204,6 +204,8 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
 
     static MultiSelect()
     {
+        SelectionDataValidation.Enable<MultiSelect>();
+        SelectedItemsProperty.OverrideMetadata<MultiSelect>(new DirectPropertyMetadata<IList?>(enableDataValidation: true));
         FocusableProperty.OverrideDefaultValue<MultiSelect>(true);
         SelectionModeProperty.OverrideDefaultValue<MultiSelect>(SelectionMode.Multiple | SelectionMode.Toggle);
         FocusModality.Watch();

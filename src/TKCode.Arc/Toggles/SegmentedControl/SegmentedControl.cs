@@ -71,6 +71,7 @@ public class SegmentedControl : SelectingItemsControl
 
     static SegmentedControl()
     {
+        SelectionDataValidation.Enable<SegmentedControl>();
         FocusableProperty.OverrideDefaultValue<SegmentedControl>(false);
         KeyboardNavigation.TabNavigationProperty.OverrideDefaultValue<SegmentedControl>(KeyboardNavigationMode.Once);
     }

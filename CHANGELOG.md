@@ -43,6 +43,117 @@ its migration; it is deleted only in a new major version, after at least two sta
   changed, and not when the same one is chosen again; `ItemInvoked` stays the "the user chose it" event.
 - **`ToolDock.ItemInvoked`** ([#117](https://github.com/AIDotNet/TKCode.Arc/issues/117)): the new name of `ItemChosen`
   (see Deprecated).
+- **`WindRoseChart`** ([#65](https://github.com/AIDotNet/TKCode.Arc/issues/65), `TKCode.Arc.AdvancedCharts`): a wind
+  rose. Each direction sector is a petal stacked by wind-speed bin from a calm circle outward, on a percent (calm
+  included) or count axis with an automatic or fixed maximum and step; the calm share sits in the centre. 8, 16 or 32
+  sectors get compass labels in the current language (any count from 4 to 72 works), with a start angle, clockwise or
+  counter-clockwise sectors and custom labels. Bins have their own limits, labels and colors, or a light/dark-aware ramp
+  from the theme's first chart color, and a legend whose entries highlight their bin. Data come as `WindRoseRow`
+  (direction + values per bin), `WindRoseRecord` (direction, bin, value) or any objects through member bindings, and
+  `WindRoseBinning.Bin` turns raw observations (degrees and speed) into rows and a calm count. New data springs every
+  band to its new length; hover and the arrow keys read a sector with a tooltip and a screen-reader reading,
+  `ItemInvoked` reports a chosen sector and, with `IsSelectionEnabled`, `SelectedIndex` and `SelectionChanged` follow it.
+- **Mobile `ListCell`** ([#111](https://github.com/AIDotNet/TKCode.Arc/issues/111), `TKCode.Arc.Mobile`): a row of a
+  `ListGroup` that holds any content (text, a QR code, a button of its own) and does not respond to a press. It has a
+  `ListItem`'s height, padding and separator, so cells and items mix in one group, and the group uses it as the row
+  whether it is written inline or is the root of the `ItemTemplate`.
+- **Mobile `ListItem.Leading`** ([#111](https://github.com/AIDotNet/TKCode.Arc/issues/111), `TKCode.Arc.Mobile`): any
+  content before the title, such as an avatar. It shares the first column with `Icon` (and replaces it when both are
+  set), so the `Subtitle` stays beside it instead of moving under it. New `ListItemToken` tokens: `LeadingMargin` and the
+  avatar sizes `AvatarSizeSM` / `MD` / `LG` / `XL` / `2XL` (32 / 40 / 48 / 64 / 88), usable as
+  `{arcm:ListItemTokenResource AvatarSizeXL}`.
+- **Mobile `Picker`** ([#111](https://github.com/AIDotNet/TKCode.Arc/issues/111), `TKCode.Arc.Mobile`): a list row that
+  shows the current value at its end (or `PlaceholderText`) and opens an action sheet of the choices with the current one
+  checked. `ItemsSource` or inline `Items`, two-way `SelectedItem` and `SelectedIndex`, `DisplayMemberBinding` or
+  `ItemTemplate` for the text, `SheetTitle`, `SheetMessage`, `CancelText` and `IsOpen`; `SelectionChanged`
+  (`PickerSelectionChangedEventArgs`) for every change and `ItemInvoked` when a row is chosen. It opens over the page it
+  is in without anything added to the page, and Enter or Space open it.
+- **Mobile `ActionSheetItem.IsChecked`** ([#111](https://github.com/AIDotNet/TKCode.Arc/issues/111),
+  `TKCode.Arc.Mobile`): a check mark at the end of the row that is the current choice (`:checked`), with the label kept
+  centered. New `ActionSheetItemToken` tokens `CheckExtent` and `CheckedContentMargin`.
+- **Mobile `RadioCards`** ([#111](https://github.com/AIDotNet/TKCode.Arc/issues/111), `TKCode.Arc.Mobile`): a grid of
+  selectable cards (`RadioCard`, from `RadioCardOption`s with `Value`, `Label`, `Description`, `Icon`, `IsEnabled` and
+  `IsVisible`, or from `ItemsSource`) in `Columns` equal columns. A ring glides to the selected card and its radio dot
+  springs in; a press shades the card (and scales it under full motion), with no hover state. `ShowIndicator="False"`
+  leaves the ring alone for compact swatches. One tab stop, arrow keys move through the grid. Token identities
+  `MobileRadioCards` and `MobileRadioCard`.
+- **`Page.InheritedSafeArea`** ([#111](https://github.com/AIDotNet/TKCode.Arc/issues/111), `TKCode.Arc.Mobile`): the page
+  passes its `SafeArea` down as an inherited attached property (read it with `Page.GetInheritedSafeArea`); it is the
+  page's safe area in `Overlay` and zero in the header, content and footer, which the page already insets.
+  `Sheet.EffectiveSafeAreaBottom` is the space a sheet keeps under its content.
+- **`Form` and `FormItem`** ([#85](https://github.com/AIDotNet/TKCode.Arc/issues/85), `TKCode.Arc`, new `Forms/` folder): a
+  light form scope. The rules stay in the view model (`INotifyDataErrorInfo`, for example CommunityToolkit.Mvvm's
+  `ObservableValidator`); the form collects the errors the bindings report through Avalonia's `DataValidationErrors`
+  (no reflection, AOT and trimming safe) and decides when and where they show. A `FormItem` (a `Field`) joins the nearest
+  form when it enters the logical tree, so items in an `ItemsControl` template need no registration; it draws the label
+  with a required asterisk or "Optional" mark (`IsRequired`, `RequiredIndicator`), the description, a "Checking…" row while
+  `IsValidating`, and the first error (`Errors` keeps all of them; an explicit `ErrorMessage`, such as a server error,
+  wins and shows at once). Inherited attached properties set on the form, a section or an item: `LabelPlacement` (Top, or
+  Left in a column that lines up through `Grid.IsSharedSizeScope`), `LabelWidth`, `ErrorTrigger` (Change, Blur (default) or
+  Submit), `ErrorPlacement` (Inline, Tooltip or None), `RequiredIndicator` and `IsReadOnly`. `SubmitAsync()` shows every
+  error, runs `ValidateCommand`, waits for running asynchronous checks, then raises `SubmitFailed`
+  (`FormSubmitFailedEventArgs`: `InvalidItems`, `FirstInvalidItem`, `FormErrors`, `SuppressFocus`) and scrolls to and
+  focuses the first invalid item in document order, or raises `Submitted` and runs `SubmitCommand`. Also `Validate()`,
+  `ValidateAsync()`, `ResetFields()` (`ResetCommand`, `FieldsReset`), `ClearValidation()` (the issue's `ClearValidate()`),
+  `FocusFirstError()`, `GetInvalidItems()`, read-only `HasErrors`, `ErrorCount`, `IsValidating` and `IsSubmitAttempted`, the
+  optional `ErrorSource` (the view model's `HasErrors` covers fields that are not mounted; its entity-level errors are in
+  `FormErrors`), `IsValidationEnabled` on the form and on items (disabled, hidden and read-only items are skipped too) and
+  `arc:Form.Action="Submit"` / `"Reset"` for buttons (with `IsDefault="True"` Enter submits). Arc fields inside an item
+  leave their label and error rows to it and turn red only while it shows its errors. A failed submit announces one
+  summary ("2 fields need attention") instead of every error; the texts are localized (en-US, zh-CN, zh-TW). Tokens
+  `FormToken` and `FormItemToken`.
+- **Data validation on the value properties of the Arc fields** ([#85](https://github.com/AIDotNet/TKCode.Arc/issues/85)):
+  a view model's error on a bound value now reaches the control, as it already did for `Text` and `SelectedItem`, so these
+  controls work in a `Form`: `Checkbox` and `Switch` (`IsChecked`); `NumberField`, `MoneyInput` and `PhoneInput` (`Value`)
+  and `DatePicker` (`SelectedDate`), which show the error in their own error row like `Text` errors; `TimePicker`
+  (`SelectedTime`), `DateRangePicker` (`SelectedRange`), `ColorPicker` (`Color`) and `TagInput` (`Value`), which show it in
+  their error row and get a read-only `EffectiveErrorMessage` (the explicit `ErrorMessage`, else the validation message);
+  `Select`, `Combobox`, `MorphSelect`, `MultiSelect`, `RadioGroup`, `RadioCards`, `SegmentedControl`, `ChipGroup` and
+  `ToggleGroup` (`SelectedValue`, `SelectedIndex`, and `SelectedItems` on `MultiSelect` and `ChipGroup`); `Cascader`
+  (`SelectedItem`, `SelectedValue`), `TreeSelect` (`SelectedItem`, `SelectedValue`, `SelectedValues`), `Slider` (`Value`,
+  `LowerValue`, `UpperValue`), `Rating`, `ScrubInput` and `ShortcutRecorder` (`Value`) and `EnumSelector` (`SelectedEnum`).
+  Like Avalonia, a control keeps one set of errors: with two validated properties bound, the last report wins.
+- **`Field` hooks for derived fields** ([#85](https://github.com/AIDotNet/TKCode.Arc/issues/85)): the protected
+  `GetLabelTarget()` (the control the label names and focuses), `GetAutomationErrorText()`, `UpdateContentAutomation()` and
+  `LabelElement`, used by `FormItem`.
+- **`RadialMenu`** ([#82](https://github.com/AIDotNet/TKCode.Arc/issues/82), `TKCode.Arc`): a pie menu of
+  `RadialMenuItem` commands (`Header`, `Icon`, `Command`, `CommandParameter`, `IsEnabled`, `IsVisible`) in a full circle or
+  a sector (`StartAngle`, `SweepAngle`, `InnerRadius`, `OuterRadius`, `SectorGap`). Attach it to any control with
+  `arc:RadialMenu.Menu`: by default a right press or a press and hold opens it at the pointer (`Trigger`: `RightPress`,
+  `Hold`, `Click`), and the ContextMenu key or Shift+F10 opens it on the control. Click an item, or keep holding, move
+  toward an item and release (the direction chooses, even beyond the ring; releasing in the centre cancels), or use the
+  arrow keys, Tab, a letter and Enter. `ItemInvoked`, each item's command and `ItemInvokedCommand` report the choice;
+  `SelectedItem` (two-way, with `SelectionChanged`) is the highlighted item, which the centre names. `ItemsSource`,
+  `ItemTemplate` and `TextSelector` cover MVVM; `IsOpen`, `PlacementTarget`, `Placement`, `Open`, `OpenAt` and `Close`
+  open it from code. Near the edge of the window the ring shifts so it stays whole. Docs page in the gallery under
+  Extras.
+- **`OnScreenKeyboard`** ([#73](https://github.com/AIDotNet/TKCode.Arc/issues/73), `TKCode.Arc`, Extras › Content): a
+  touch keyboard for kiosks, touch panels and HMIs without a physical keyboard. `Preset` picks QWERTY (letters, a numbers
+  and symbols page and a second symbols page, Shift with caps lock on a double tap), a number pad with the culture's
+  decimal separator (`Numeric`, `SignedNumeric`) or a PIN pad (`Digits`); `Layout` takes your own
+  `OnScreenKeyboardLayout` of pages, rows and `OnScreenKeyboardKey`s, so other languages and special keypads are data.
+  Keys type into the focused text input of the window (Arc `Input`, `Textarea`, `NumberField`, Avalonia `TextBox`...) or
+  into `Target`, through Avalonia's text input event (so the caret and selection are respected) and, for Backspace,
+  Enter, Tab and the arrows, as key presses; they never take focus. Backspace and the arrows repeat while held
+  (`RepeatDelay`, `RepeatInterval`, `TimeProvider`). `ItemInvoked` is raised for every key and can be handled to take a
+  key over (a PIN display, a Clear key). The attached `OnScreenKeyboard.Popup` / `PopupLayout` opens a keyboard under a
+  field while it has focus.
+
+### Changed
+
+- **Mobile `Sheet` and `ActionSheet` keep the page's bottom safe area free by themselves**
+  ([#111](https://github.com/AIDotNet/TKCode.Arc/issues/111), `TKCode.Arc.Mobile`): a sheet in `Page.Overlay` whose
+  `SafeAreaBottom` is not set now leaves the bottom of the page's `SafeArea` free under its content, so binding
+  `SafeAreaBottom` to the page is no longer needed. A set `SafeAreaBottom` (a value, a style or a binding) still wins;
+  set it to `0` to keep the old layout. Where the safe area is zero (desktop, the tests) nothing changes.
+- **A validation error now marks `Checkbox` and `TimePicker` invalid** ([#85](https://github.com/AIDotNet/TKCode.Arc/issues/85)):
+  `Checkbox.IsInvalid` is also true while the `IsChecked` binding reports an error (the square takes the danger border),
+  and `TimePicker.IsInvalid` while the `SelectedTime` binding does; `TagInput.IsInvalid` follows its `Value` binding the
+  same way. Without a binding error nothing changes. Inside a `FormItem` the fields turn invalid only while the item shows
+  its errors.
+- **`Form.IsReadOnly` reaches the read-only editors** ([#85](https://github.com/AIDotNet/TKCode.Arc/issues/85)): the
+  `IsReadOnly` of the Arc text fields, `Cascader`, `TreeSelect`, `Rating`, `TokenTextEditor` and `RichTextEditor` reads true
+  while an ancestor sets `arc:Form.IsReadOnly="True"`. Their own default (`false`) is unchanged.
 
 ### Fixed
 

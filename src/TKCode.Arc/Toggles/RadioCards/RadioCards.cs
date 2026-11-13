@@ -89,6 +89,7 @@ public class RadioCards : SelectingItemsControl
 
     static RadioCards()
     {
+        SelectionDataValidation.Enable<RadioCards>();
         FocusableProperty.OverrideDefaultValue<RadioCards>(false);
         KeyboardNavigation.TabNavigationProperty.OverrideDefaultValue<RadioCards>(KeyboardNavigationMode.Once);
         AffectsMeasure<RadioCards>(LayoutProperty, MinColumnWidthProperty);

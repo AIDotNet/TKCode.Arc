@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="2.1" srcLang="en-US" xmlns="urn:oasis:names:tc:xliff:document:2.0">
+  <file id="TKCode.Arc.Localization.WindRoseChartLangResourceKind">
+    <unit id="N">
+      <segment>
+        <source>N</source>
+      </segment>
+    </unit>
+    <unit id="NbE">
+      <segment>
+        <source>NbE</source>
+      </segment>
+    </unit>
+    <unit id="NNE">
+      <segment>
+        <source>NNE</source>
+      </segment>
+    </unit>
+    <unit id="NEbN">
+      <segment>
+        <source>NEbN</source>
+      </segment>
+    </unit>
+    <unit id="NE">
+      <segment>
+        <source>NE</source>
+      </segment>
+    </unit>
+    <unit id="NEbE">
+      <segment>
+        <source>NEbE</source>
+      </segment>
+    </unit>
+    <unit id="ENE">
+      <segment>
+        <source>ENE</source>
+      </segment>
+    </unit>
+    <unit id="EbN">
+      <segment>
+        <source>EbN</source>
+      </segment>
+    </unit>
+    <unit id="E">
+      <segment>
+        <source>E</source>
+      </segment>
+    </unit>
+    <unit id="EbS">
+      <segment>
+        <source>EbS</source>
+      </segment>
+    </unit>
+    <unit id="ESE">
+      <segment>
+        <source>ESE</source>
+      </segment>
+    </unit>
+    <unit id="SEbE">
+      <segment>
+        <source>SEbE</source>
+      </segment>
+    </unit>
+    <unit id="SE">
+      <segment>
+        <source>SE</source>
+      </segment>
+    </unit>
+    <unit id="SEbS">
+      <segment>
+        <source>SEbS</source>
+      </segment>
+    </unit>
+    <unit id="SSE">
+      <segment>
+        <source>SSE</source>
+      </segment>
+    </unit>
+    <unit id="SbE">
+      <segment>
+        <source>SbE</source>
+      </segment>
+    </unit>
+    <unit id="S">
+      <segment>
+        <source>S</source>
+      </segment>
+    </unit>
+    <unit id="SbW">
+      <segment>
+        <source>SbW</source>
+      </segment>
+    </unit>
+    <unit id="SSW">
+      <segment>
+        <source>SSW</source>
+      </segment>
+    </unit>
+    <unit id="SWbS">
+      <segment>
+        <source>SWbS</source>
+      </segment>
+    </unit>
+    <unit id="SW">
+      <segment>
+        <source>SW</source>
+      </segment>
+    </unit>
+    <unit id="SWbW">
+      <segment>
+        <source>SWbW</source>
+      </segment>
+    </unit>
+    <unit id="WSW">
+      <segment>
+        <source>WSW</source>
+      </segment>
+    </unit>
+    <unit id="WbS">
+      <segment>
+        <source>WbS</source>
+      </segment>
+    </unit>
+    <unit id="W">
+      <segment>
+        <source>W</source>
+      </segment>
+    </unit>
+    <unit id="WbN">
+      <segment>
+        <source>WbN</source>
+      </segment>
+    </unit>
+    <unit id="WNW">
+      <segment>
+        <source>WNW</source>
+      </segment>
+    </unit>
+    <unit id="NWbW">
+      <segment>
+        <source>NWbW</source>
+      </segment>
+    </unit>
+    <unit id="NW">
+      <segment>
+        <source>NW</source>
+      </segment>
+    </unit>
+    <unit id="NWbN">
+      <segment>
+        <source>NWbN</source>
+      </segment>
+    </unit>
+    <unit id="NNW">
+      <segment>
+        <source>NNW</source>
+      </segment>
+    </unit>
+    <unit id="NbW">
+      <segment>
+        <source>NbW</source>
+      </segment>
+    </unit>
+    <unit id="Calm">
+      <segment>
+        <source>Calm</source>
+      </segment>
+    </unit>
+    <unit id="Total">
+      <segment>
+        <source>Total</source>
+      </segment>
+    </unit>
+  </file>
+</xliff>

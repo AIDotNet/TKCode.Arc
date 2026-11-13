@@ -26,6 +26,7 @@ public class RadioGroup : HeaderedSelectingItemsControl
 
     static RadioGroup()
     {
+        SelectionDataValidation.Enable<RadioGroup>();
         FocusableProperty.OverrideDefaultValue<RadioGroup>(false);
         KeyboardNavigation.TabNavigationProperty.OverrideDefaultValue<RadioGroup>(KeyboardNavigationMode.Once);
     }

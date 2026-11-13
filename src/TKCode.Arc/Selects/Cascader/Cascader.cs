@@ -94,11 +94,11 @@ public class Cascader : TemplatedControl, ISelectFieldAutomation, ICascaderColum
 
     /// <summary>The selected node (two-way), or null.</summary>
     public static readonly StyledProperty<object?> SelectedItemProperty =
-        AvaloniaProperty.Register<Cascader, object?>(nameof(SelectedItem), defaultBindingMode: BindingMode.TwoWay);
+        AvaloniaProperty.Register<Cascader, object?>(nameof(SelectedItem), defaultBindingMode: BindingMode.TwoWay, enableDataValidation: true);
 
     /// <summary>Value of the selected node (two-way). A value that the data does not contain (yet) is kept: the field shows the placeholder until the data arrives, then resolves it.</summary>
     public static readonly StyledProperty<object?> SelectedValueProperty =
-        AvaloniaProperty.Register<Cascader, object?>(nameof(SelectedValue), defaultBindingMode: BindingMode.TwoWay);
+        AvaloniaProperty.Register<Cascader, object?>(nameof(SelectedValue), defaultBindingMode: BindingMode.TwoWay, enableDataValidation: true);
 
     /// <summary>The nodes from the root to the selected node; empty when nothing is selected.</summary>
     public static readonly DirectProperty<Cascader, IReadOnlyList<object>> SelectedPathProperty =
@@ -130,7 +130,8 @@ public class Cascader : TemplatedControl, ISelectFieldAutomation, ICascaderColum
 
     /// <summary>The menu opens for looking, but the value cannot be changed or cleared.</summary>
     public static readonly StyledProperty<bool> IsReadOnlyProperty =
-        AvaloniaProperty.Register<Cascader, bool>(nameof(IsReadOnly));
+        AvaloniaProperty.Register<Cascader, bool>(nameof(IsReadOnly),
+            coerce: (o, v) => v || o.GetValue(Form.IsReadOnlyProperty));
 
     /// <summary>Whether the menu is open (two-way).</summary>
     public static readonly StyledProperty<bool> IsOpenProperty =
@@ -464,6 +465,11 @@ public class Cascader : TemplatedControl, ISelectFieldAutomation, ICascaderColum
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
+        if (change.Property == Form.IsReadOnlyProperty)
+        {
+            // Form.IsReadOnly (inherited) makes the editor read-only with its form or section.
+            CoerceValue(IsReadOnlyProperty);
+        }
         var property = change.Property;
         if (property == IsOpenProperty)
         {

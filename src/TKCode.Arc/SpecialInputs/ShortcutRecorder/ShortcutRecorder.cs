@@ -60,7 +60,7 @@ public class ShortcutRecorder : TemplatedControl
 
     /// <summary>The recorded shortcut (two-way); null means none.</summary>
     public static readonly StyledProperty<KeyGesture?> ValueProperty =
-        AvaloniaProperty.Register<ShortcutRecorder, KeyGesture?>(nameof(Value), defaultBindingMode: BindingMode.TwoWay);
+        AvaloniaProperty.Register<ShortcutRecorder, KeyGesture?>(nameof(Value), defaultBindingMode: BindingMode.TwoWay, enableDataValidation: true);
 
     /// <summary>What the reset button restores (Arc: <c>resetValue</c>, defaulting to <c>defaultValue</c>).</summary>
     public static readonly StyledProperty<KeyGesture?> ResetValueProperty =

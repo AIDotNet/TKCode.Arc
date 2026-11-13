@@ -59,7 +59,7 @@ public abstract class FieldTextBox : AvaloniaTextBox
 
     /// <summary>When false the label is hidden visually but still names the field.</summary>
     public static readonly StyledProperty<bool> IsLabelVisibleProperty =
-        Field.IsLabelVisibleProperty.AddOwner<FieldTextBox>();
+        Field.IsLabelVisibleProperty.AddOwner<FieldTextBox>(new StyledPropertyMetadata<bool>(coerce: CoerceIsLabelVisible));
 
     /// <summary>Frame height: Small 36, Medium 44 (default), Large 50.</summary>
     public static readonly StyledProperty<ControlSize> SizeProperty =
@@ -124,7 +124,24 @@ public abstract class FieldTextBox : AvaloniaTextBox
     private string? _appliedName;
 
     private static bool CoerceIsInvalid(AvaloniaObject target, bool value)
-        => value || !string.IsNullOrEmpty(((FieldTextBox)target).EffectiveErrorMessage);
+    {
+        var box = (FieldTextBox)target;
+        return value || FormFieldHost.IsInvalid(FormFieldHost.StateOf(box), !string.IsNullOrEmpty(box.ErrorMessage),
+                                                !string.IsNullOrEmpty(box._validationMessage));
+    }
+
+    // Inside a form item the item draws the label, so the field's own label row stays hidden (it still names the field).
+    private static bool CoerceIsLabelVisible(AvaloniaObject target, bool value)
+        => value && !FormFieldHost.IsHosted((FieldTextBox)target);
+
+    // Form.IsReadOnly (inherited) makes every text field of the form or section read-only.
+    private static bool CoerceIsReadOnly(AvaloniaObject target, bool value)
+        => value || ((FieldTextBox)target).GetValue(Form.IsReadOnlyProperty);
+
+    static FieldTextBox()
+    {
+        IsReadOnlyProperty.OverrideMetadata<FieldTextBox>(new StyledPropertyMetadata<bool>(coerce: CoerceIsReadOnly));
+    }
 
     protected FieldTextBox()
     {
@@ -173,18 +190,27 @@ public abstract class FieldTextBox : AvaloniaTextBox
         {
             UpdateSizePseudoClasses();
         }
+        else if (change.Property == FormFieldHost.StateProperty)
+        {
+            CoerceValue(IsLabelVisibleProperty);
+            UpdateEffectiveError();
+            UpdateAutomation();
+        }
+        else if (change.Property == Form.IsReadOnlyProperty)
+        {
+            CoerceValue(IsReadOnlyProperty);
+        }
     }
 
     protected override void UpdateDataValidation(AvaloniaProperty property, BindingValueType state, Exception? error)
     {
         base.UpdateDataValidation(property, state, error);
-        if (property == TextProperty)
-        {
-            _validationMessage = state.HasFlag(BindingValueType.DataValidationError) || state.HasFlag(BindingValueType.BindingError)
-                ? ValidationText(error)
-                : null;
-            UpdateEffectiveError();
-        }
+        // Text, and the typed value of a derived field (NumberField.Value, DatePicker.SelectedDate, ...): only properties
+        // registered with data validation get here. Like DataValidationErrors, the last report wins.
+        _validationMessage = state.HasFlag(BindingValueType.DataValidationError) || state.HasFlag(BindingValueType.BindingError)
+            ? ValidationText(error)
+            : null;
+        UpdateEffectiveError();
     }
 
     private static string? ValidationText(Exception? error) => error switch
@@ -196,7 +222,12 @@ public abstract class FieldTextBox : AvaloniaTextBox
     };
 
     private void UpdateEffectiveError()
-        => EffectiveErrorMessage = !string.IsNullOrEmpty(ErrorMessage) ? ErrorMessage : _validationMessage;
+    {
+        // Inside a form item the item shows the error (and decides when), so the field's own error row stays closed.
+        EffectiveErrorMessage = FormFieldHost.IsHosted(this) ? null
+            : !string.IsNullOrEmpty(ErrorMessage) ? ErrorMessage : _validationMessage;
+        CoerceValue(IsInvalidProperty);
+    }
 
     /// <summary>Names the editor after its label and describes it with the description and error.</summary>
     protected virtual void UpdateAutomation()
@@ -207,6 +238,6 @@ public abstract class FieldTextBox : AvaloniaTextBox
             _appliedName = Label;
             AutomationProperties.SetName(this, Label ?? string.Empty);
         }
-        AutomationProperties.SetHelpText(this, FieldText.HelpText(Description, EffectiveErrorMessage));
+        FormFieldHost.SetHelpText(this, FieldText.HelpText(Description, EffectiveErrorMessage));
     }
 }
