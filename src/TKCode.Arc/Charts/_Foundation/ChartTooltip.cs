@@ -136,7 +136,8 @@ internal sealed class ChartTooltip
             width = Math.Max(width, w);
             height += h + (i > 0 ? LineGap : 0);
         }
-        _size = new Size(Math.Clamp(width + 24, _minWidth, maxWidth), height + 20);
+        // A plot narrower than the minimum card width caps the minimum too (Math.Clamp throws when min > max).
+        _size = new Size(Math.Clamp(width + 24, Math.Min(_minWidth, maxWidth), maxWidth), height + 20);
         return _size;
     }
 

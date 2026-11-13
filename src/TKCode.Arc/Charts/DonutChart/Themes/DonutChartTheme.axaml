@@ -28,6 +28,7 @@
                                                 MinHeight="{arc:DonutChartTokenResource CenterLineHeight}"
                                                 TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}"
                                                 TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}" />
+                            <!-- Its own line height: in a Card the body's 1.4 × 14px is inherited and would clip the total. -->
                             <arc:ArcContentSwap Name="PART_CenterValue"
                                                 Mode="Roll"
                                                 HorizontalAlignment="Center"
@@ -35,7 +36,8 @@
                                                 TextElement.Foreground="{TemplateBinding Foreground}"
                                                 TextElement.FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
                                                 TextElement.FontSize="{arc:ArcDesignTokenResource Type2XL}"
-                                                TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                                TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                TextBlock.LineHeight="NaN" />
                             <arc:ArcContentSwap Name="PART_CenterMeta"
                                                 Mode="Roll"
                                                 HorizontalAlignment="Center"

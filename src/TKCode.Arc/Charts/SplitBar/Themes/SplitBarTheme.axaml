@@ -4,72 +4,232 @@
                     x:ClassModifier="internal"
                     x:Class="TKCode.Arc.SplitBarTheme">
 
-    <!-- The header (title and rolling sum), the drawn bar and the legend. -->
+    <!-- The header (title, description and the readout), the drawn bar with its label lane, and the legend. -->
     <ControlTheme x:Key="{x:Type arc:SplitBar}" TargetType="arc:SplitBar">
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="ClipToBounds" Value="False" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
-        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontSize" Value="{arc:SplitBarTokenResource BodyFontSize}" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:SplitBar">
-                <StackPanel Spacing="{arc:SplitBarTokenResource SectionGap}">
-                    <Grid Name="PART_Header" ColumnDefinitions="*,Auto">
-                        <TextBlock Name="PART_Title"
-                                   Text="{TemplateBinding Title}"
-                                   VerticalAlignment="Center"
-                                   TextTrimming="CharacterEllipsis"
-                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
-                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
-                        <StackPanel Grid.Column="1"
-                                    Orientation="Horizontal"
-                                    Spacing="4"
-                                    Margin="12,0,0,0"
-                                    IsVisible="{TemplateBinding IsSumVisible}">
-                            <arc:RollingDigits Name="PART_Sum"
-                                               VerticalAlignment="Center"
-                                               AutomationProperties.AccessibilityView="Raw"
-                                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
-                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
-                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
-                            <TextBlock Name="PART_OfTotal"
-                                       VerticalAlignment="Center"
+                <Panel>
+                    <StackPanel Spacing="{arc:SplitBarTokenResource SectionGap}">
+                        <arc:SplitBarHeadPanel Name="PART_Header"
+                                               ColumnGap="{arc:SplitBarTokenResource HeadColumnGap}"
+                                               RowGap="{arc:SplitBarTokenResource HeadRowGap}">
+                            <StackPanel Name="PART_Heading" Spacing="{arc:SplitBarTokenResource TitleGap}">
+                                <TextBlock Name="PART_Title"
+                                           Text="{TemplateBinding Title}"
+                                           IsVisible="{TemplateBinding Title, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                           TextTrimming="CharacterEllipsis"
+                                           FontSize="{arc:SplitBarTokenResource TitleFontSize}"
+                                           LineHeight="{arc:SplitBarTokenResource TitleLineHeight}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <TextBlock Name="PART_Description"
+                                           Text="{TemplateBinding Description}"
+                                           IsVisible="{TemplateBinding Description, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                           TextWrapping="Wrap"
+                                           LineHeight="{arc:SplitBarTokenResource BodyLineHeight}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </StackPanel>
+                            <arc:SplitBarReadout Name="PART_Readout"
+                                                 IsVisible="{TemplateBinding IsSumVisible}"
+                                                 AutomationProperties.AccessibilityView="Raw">
+                                <StackPanel Name="PART_TotalLine" Orientation="Horizontal" Spacing="8">
+                                    <TextBlock Name="PART_TotalLabel"
+                                               VerticalAlignment="Bottom"
+                                               LineHeight="{arc:SplitBarTokenResource BodyLineHeight}"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    <arc:RollingDigits Name="PART_Sum"
+                                                       VerticalAlignment="Bottom"
+                                                       Falloff="Linear"
+                                                       FontSize="{arc:SplitBarTokenResource ReadoutFontSize}"
+                                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    <TextBlock Name="PART_OfTotal"
+                                               VerticalAlignment="Bottom"
+                                               LineHeight="{arc:SplitBarTokenResource BodyLineHeight}"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    <TextBlock Name="PART_Unit"
+                                               VerticalAlignment="Bottom"
+                                               LineHeight="{arc:SplitBarTokenResource BodyLineHeight}"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                </StackPanel>
+                                <arc:SplitBarReadoutLine Name="PART_LineA" />
+                                <arc:SplitBarReadoutLine Name="PART_LineB" />
+                            </arc:SplitBarReadout>
+                        </arc:SplitBarHeadPanel>
+                        <arc:SplitBarTrack Name="PART_Track" />
+                        <WrapPanel Name="PART_Legend"
+                                   Margin="-8,0,0,0"
+                                   ItemSpacing="{arc:SplitBarTokenResource LegendItemGap}"
+                                   LineSpacing="{arc:SplitBarTokenResource LegendLineGap}"
+                                   IsVisible="{TemplateBinding IsLegendVisible}" />
+                    </StackPanel>
+                    <!-- The polite live region: what the arrow keys reach, and parts switched off or on. -->
+                    <TextBlock Name="PART_Status"
+                               Width="1"
+                               Height="1"
+                               Opacity="0"
+                               IsHitTestVisible="False"
+                               ClipToBounds="True"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- The drawn bar: tinted parts over the muted track, chart series colors then two neutrals for parts without their own. -->
+    <ControlTheme x:Key="{x:Type arc:SplitBarTrack}" TargetType="arc:SplitBarTrack">
+        <Setter Property="TrackBrush" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="SurfaceBrush" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="FocusBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+        <Setter Property="LeaderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="Series1" Value="{arc:ArcDesignTokenResource Series1}" />
+        <Setter Property="Series2" Value="{arc:ArcDesignTokenResource Series2}" />
+        <Setter Property="Series3" Value="{arc:ArcDesignTokenResource Series3}" />
+        <Setter Property="Series4" Value="{arc:ArcDesignTokenResource Series4}" />
+        <Setter Property="Neutral1" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="Neutral2" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="BarRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
+        <Setter Property="SegmentRadius" Value="{arc:ArcDesignTokenResource RadiusStep4}" />
+        <Setter Property="BarHeight" Value="{arc:SplitBarTokenResource BarHeight}" />
+        <Setter Property="SegmentGap" Value="{arc:SplitBarTokenResource SegmentGap}" />
+        <Setter Property="HighlightLift" Value="{arc:SplitBarTokenResource HighlightLift}" />
+        <Setter Property="DimOpacity" Value="{arc:SplitBarTokenResource DimOpacity}" />
+        <Setter Property="CapWidth" Value="{arc:SplitBarTokenResource CapWidth}" />
+        <Setter Property="FillMix" Value="{arc:SplitBarTokenResource FillMix}" />
+        <Setter Property="HighlightFillMix" Value="{arc:SplitBarTokenResource HighlightFillMix}" />
+        <Setter Property="HighlightGrow" Value="{arc:SplitBarTokenResource HighlightGrow}" />
+        <Setter Property="LabelInset" Value="{arc:SplitBarTokenResource LabelInset}" />
+        <Setter Property="LabelFitPadding" Value="{arc:SplitBarTokenResource LabelFitPadding}" />
+        <Setter Property="LabelNameGap" Value="{arc:SplitBarTokenResource LabelNameGap}" />
+        <Setter Property="LaneNameGap" Value="{arc:SplitBarTokenResource LaneNameGap}" />
+        <Setter Property="LaneHeight" Value="{arc:SplitBarTokenResource LaneHeight}" />
+        <Setter Property="LaneLabelTop" Value="{arc:SplitBarTokenResource LaneLabelTop}" />
+        <Setter Property="LeaderDepth" Value="{arc:SplitBarTokenResource LeaderDepth}" />
+        <Setter Property="LaneLabelGap" Value="{arc:SplitBarTokenResource LaneLabelGap}" />
+        <Setter Property="LabelFontSize" Value="{arc:SplitBarTokenResource LabelFontSize}" />
+        <Setter Property="SectionGap" Value="{arc:SplitBarTokenResource SectionGap}" />
+        <Setter Property="Cursor" Value="Arrow" />
+    </ControlTheme>
+
+    <!-- A swatch: the part's tinted fill with its solid strip, solid in the readout, hollow for a part that is off. -->
+    <ControlTheme x:Key="{x:Type arc:SplitBarSwatch}" TargetType="arc:SplitBarSwatch">
+        <Setter Property="Surface" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="RingBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="Size" Value="{arc:SplitBarTokenResource DotSize}" />
+        <Setter Property="CapWidth" Value="{arc:SplitBarTokenResource CapWidth}" />
+        <Setter Property="FillMix" Value="{arc:SplitBarTokenResource FillMix}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep3}" />
+    </ControlTheme>
+
+    <!-- The readout line of the highlighted part: color, name, share and value, on one baseline. -->
+    <ControlTheme x:Key="{x:Type arc:SplitBarReadoutLine}" TargetType="arc:SplitBarReadoutLine">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SplitBarReadoutLine">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <arc:SplitBarSwatch Name="PART_Swatch"
+                                        IsSolid="True"
+                                        VerticalAlignment="Bottom"
+                                        Margin="0,0,0,6"
+                                        Size="{arc:SplitBarTokenResource ReadoutSwatchSize}"
+                                        CornerRadius="{arc:ArcDesignTokenResource RadiusStep2}" />
+                    <TextBlock Name="PART_Name"
+                               VerticalAlignment="Bottom"
+                               LineHeight="{arc:SplitBarTokenResource BodyLineHeight}"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                    <arc:RollingDigits Name="PART_Share"
+                                       VerticalAlignment="Bottom"
+                                       Decimals="1"
+                                       Suffix="%"
+                                       Falloff="Linear"
+                                       FontSize="{arc:SplitBarTokenResource ReadoutFontSize}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                    <arc:RollingDigits Name="PART_Value"
+                                       VerticalAlignment="Bottom"
+                                       Falloff="Linear"
                                        Foreground="{arc:ArcDesignTokenResource TextMuted}" />
-                        </StackPanel>
-                    </Grid>
-                    <arc:SplitBarTrack Name="PART_Track" />
-                    <WrapPanel Name="PART_Legend"
-                               ItemSpacing="{arc:SplitBarTokenResource LegendItemGap}"
-                               LineSpacing="{arc:SplitBarTokenResource LegendLineGap}"
-                               IsVisible="{TemplateBinding IsLegendVisible}" />
                 </StackPanel>
             </ControlTemplate>
         </Setter>
     </ControlTheme>
 
-    <!-- The drawn bar: chart series colors for parts without their own, pill-shaped parts over the empty track. -->
-    <ControlTheme x:Key="{x:Type arc:SplitBarTrack}" TargetType="arc:SplitBarTrack">
-        <Setter Property="TrackBrush" Value="{arc:ArcDesignTokenResource ControlTrack}" />
-        <Setter Property="FocusBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
-        <Setter Property="Series1" Value="{arc:ArcDesignTokenResource Series1}" />
-        <Setter Property="Series2" Value="{arc:ArcDesignTokenResource Series2}" />
-        <Setter Property="Series3" Value="{arc:ArcDesignTokenResource Series3}" />
-        <Setter Property="Series4" Value="{arc:ArcDesignTokenResource Series4}" />
-        <Setter Property="SegmentRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
-        <Setter Property="BarHeight" Value="{arc:SplitBarTokenResource BarHeight}" />
-        <Setter Property="SegmentGap" Value="{arc:SplitBarTokenResource SegmentGap}" />
-        <Setter Property="HighlightLift" Value="{arc:SplitBarTokenResource HighlightLift}" />
-        <Setter Property="DimOpacity" Value="{arc:SplitBarTokenResource DimOpacity}" />
+    <!-- A legend entry: a toggle with the swatch, the name and the share; muted, struck through and "Off" while off. -->
+    <ControlTheme x:Key="{x:Type arc:SplitBarLegendItem}" TargetType="arc:SplitBarLegendItem">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="{arc:SplitBarTokenResource LegendItemPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep10}" />
+        <Setter Property="FontSize" Value="{arc:SplitBarTokenResource BodyFontSize}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="Cursor" Value="Hand" />
-    </ControlTheme>
-
-    <!-- A legend dot. -->
-    <ControlTheme x:Key="{x:Type arc:SplitBarLegendDot}" TargetType="arc:SplitBarLegendDot">
-        <Setter Property="RingBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
-        <Setter Property="Series1" Value="{arc:ArcDesignTokenResource Series1}" />
-        <Setter Property="Series2" Value="{arc:ArcDesignTokenResource Series2}" />
-        <Setter Property="Series3" Value="{arc:ArcDesignTokenResource Series3}" />
-        <Setter Property="Series4" Value="{arc:ArcDesignTokenResource Series4}" />
-        <Setter Property="DotSize" Value="{arc:SplitBarTokenResource DotSize}" />
+        <Setter Property="MinHeight" Value="32" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SplitBarLegendItem">
+                <Panel>
+                    <Border Name="PART_Background"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                            <StackPanel Name="PART_Label" Orientation="Horizontal" Spacing="8">
+                                <arc:SplitBarSwatch Name="PART_Swatch" VerticalAlignment="Center" Margin="0,2,0,0" />
+                                <TextBlock Name="PART_Name"
+                                           VerticalAlignment="Center"
+                                           LineHeight="{arc:SplitBarTokenResource BodyLineHeight}"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            </StackPanel>
+                            <Panel MinWidth="{arc:SplitBarTokenResource LegendShareMinWidth}" VerticalAlignment="Center">
+                                <arc:RollingDigits Name="PART_Share"
+                                                   HorizontalAlignment="Left"
+                                                   Falloff="Linear"
+                                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <TextBlock Name="PART_Off"
+                                           Text="Off"
+                                           IsVisible="False"
+                                           LineHeight="{arc:SplitBarTokenResource BodyLineHeight}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </Panel>
+                        </StackPanel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep14}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:highlighted">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:remainder">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:off /template/ TextBlock#PART_Name">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
     </ControlTheme>
 </ResourceDictionary>

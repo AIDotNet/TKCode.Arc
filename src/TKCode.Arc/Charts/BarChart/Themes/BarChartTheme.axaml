@@ -29,13 +29,15 @@
                                                FontSize="{arc:ArcDesignTokenResource Type3XL}"
                                                FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
                                                Foreground="{TemplateBinding Foreground}" />
+                            <!-- Its own line height: in a Card the body's 1.4 × 14px is inherited and would clip the value. -->
                             <arc:ArcContentSwap Name="PART_ValueText"
                                                 Mode="Roll"
                                                 IsVisible="False"
                                                 VerticalAlignment="Bottom"
                                                 TextElement.FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
                                                 TextElement.FontSize="{arc:ArcDesignTokenResource Type3XL}"
-                                                TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                                TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                TextBlock.LineHeight="NaN" />
                             <TextBlock Text="{TemplateBinding Unit}"
                                        VerticalAlignment="Bottom"
                                        Margin="{arc:BarChartTokenResource UnitMargin}"

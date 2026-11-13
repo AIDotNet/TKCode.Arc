@@ -1,115 +1,242 @@
-using System.Globalization;
 using Avalonia;
 using Avalonia.Automation;
+using Avalonia.Automation.Peers;
+using Avalonia.Automation.Provider;
 using Avalonia.Controls;
+using Avalonia.Controls.Metadata;
+using Avalonia.Controls.Primitives;
 using Avalonia.Input;
-using Avalonia.Layout;
 using Avalonia.Media;
-using Avalonia.Media.Immutable;
-using TKCode.Arc.DesignTokens;
-using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
 
 namespace TKCode.Arc;
 
 /// <summary>
-/// One legend entry of a <see cref="SplitBar"/>: a color dot, the label, the value (rolling) and the share. Pointing at
-/// it highlights its part in the bar. The entry for the empty rest has a hollow dot and takes no pointer highlight.
+/// One legend entry of a <see cref="SplitBar"/>: a toggle button with the part's swatch, its name and its share. Pressing
+/// it switches the part off or back on; pointing at it highlights the part in the bar. A part that is off shows a hollow
+/// swatch, a struck-through name and the word Off. The entry for the empty rest is plain text with a hollow swatch.
 /// </summary>
-internal sealed class SplitBarLegendItem : Control
+[TemplatePart("PART_Label", typeof(Control))]
+[TemplatePart("PART_Swatch", typeof(SplitBarSwatch))]
+[TemplatePart("PART_Name", typeof(TextBlock))]
+[TemplatePart("PART_Share", typeof(RollingDigits))]
+[TemplatePart("PART_Off", typeof(TextBlock))]
+[PseudoClasses(":off", ":highlighted", ":remainder")]
+internal sealed class SplitBarLegendItem : TemplatedControl
 {
     private readonly SplitBar _owner;
     private readonly SplitBarSlot? _slot;
-    private readonly SplitBarLegendDot _dot = new() { VerticalAlignment = VerticalAlignment.Center };
-    private readonly TextBlock _label = new() { VerticalAlignment = VerticalAlignment.Center, TextTrimming = TextTrimming.CharacterEllipsis };
-    private readonly RollingDigits _value = new() { VerticalAlignment = VerticalAlignment.Center };
-    private readonly TextBlock _percent = new() { VerticalAlignment = VerticalAlignment.Center };
-    private readonly ArcShrinkRow _row = new() { Spacing = 6 };
+    private readonly TranslateTransform _shake = new();
+    private Control? _label;
+    private SplitBarSwatch? _swatch;
+    private TextBlock? _name;
+    private RollingDigits? _share;
+    private TextBlock? _off;
+    private string? _labelText;
+    private double _shareValue;
+    private double _value;
+    private bool _isOff;
     private bool _shown;
+    private bool _pressed;
 
     public SplitBarLegendItem(SplitBar owner, SplitBarSlot? slot)
     {
         _owner = owner;
         _slot = slot;
-        _dot.IsHollow = slot is null;
-        ArcShrinkRow.SetIsShrinkable(_label, true);
-        ArcTokens.Bind(_label, TextBlock.ForegroundProperty, ArcDesignTokenKind.TextSecondary);
-        ArcTokens.Bind(_value, RollingDigits.ForegroundProperty, ArcDesignTokenKind.Foreground);
-        ArcTokens.Bind(_value, RollingDigits.FontWeightProperty, ArcDesignTokenKind.WeightMedium);
-        ArcTokens.Bind(_percent, TextBlock.ForegroundProperty, ArcDesignTokenKind.TextMuted);
-        _percent.FontFeatures = SplitBarText.Tabular;
-        AutomationProperties.SetAccessibilityView(_value, AccessibilityView.Raw);
-        _row.Children.Add(_dot);
-        _row.Children.Add(_label);
-        _row.Children.Add(_value);
-        _row.Children.Add(_percent);
-        VisualChildren.Add(_row);
-        LogicalChildren.Add(_row);
-        AutomationProperties.SetAccessibilityView(this, AccessibilityView.Raw);
+        Focusable = slot is not null;
+        PseudoClasses.Set(":remainder", slot is null);
+        if (slot is null)
+        {
+            AutomationProperties.SetAccessibilityView(this, AccessibilityView.Raw);
+        }
     }
 
     /// <summary>The part this entry stands for; null for the empty rest.</summary>
     public SplitBarSlot? Slot => _slot;
 
     /// <summary>The label shown (tests).</summary>
-    public string? LabelText => _label.Text;
+    public string? LabelText => _labelText;
 
-    /// <summary>The share shown (tests).</summary>
-    public string? PercentText => _percent.IsVisible ? _percent.Text : null;
+    /// <summary>The share shown ("41.6%"), "Off" for a part that is off, null when values show instead (tests).</summary>
+    public string? PercentText => _isOff ? "Off" : _owner.ShowsPercent ? SplitBar.FormatShare(_shareValue) : null;
 
-    /// <summary>The value the digits roll to (tests).</summary>
-    public double ShownValue => _value.Value;
+    /// <summary>The value of the part (tests).</summary>
+    public double ShownValue => _value;
 
-    public void Update(int colorIndex)
+    /// <summary>True while the part is off.</summary>
+    public bool IsOff => _isOff;
+
+    /// <summary>The horizontal shake of the swatch and name (px; tests).</summary>
+    public double ShakeOffset => _shake.X;
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        _label = e.NameScope.Find<Control>("PART_Label");
+        _swatch = e.NameScope.Find<SplitBarSwatch>("PART_Swatch");
+        _name = e.NameScope.Find<TextBlock>("PART_Name");
+        _share = e.NameScope.Find<RollingDigits>("PART_Share");
+        _off = e.NameScope.Find<TextBlock>("PART_Off");
+        if (_label is not null)
+        {
+            _label.RenderTransform = _shake;
+        }
+        if (_share is not null)
+        {
+            _share.WheelMotion = SplitBar.DigitMotion;
+        }
+        _shown = false;
+        Apply(false);
+    }
+
+    public void Update(int colorIndex, bool animate)
     {
         if (_slot is null)
         {
             return;
         }
-        var segment = _slot.Segment;
-        _dot.Index = colorIndex;
-        _dot.Brush = segment.Brush;
-        _label.Text = segment.Label;
-        SetValue(Math.Max(0, segment.Value), _owner.ShareOf(segment));
+        _labelText = _slot.Segment.Label;
+        _shareValue = _slot.BaseShare;
+        _value = Math.Max(0, _slot.Segment.Value);
+        _isOff = _slot.Segment.IsHidden;
+        Apply(animate);
     }
 
-    public void UpdateRemainder(string label, double value, double share)
+    public void UpdateRemainder(string label, double value, double share, bool animate)
     {
-        _label.Text = label;
-        SetValue(value, share);
+        _labelText = label;
+        _value = value;
+        _shareValue = share;
+        _isOff = false;
+        Apply(animate);
     }
 
-    public void SetDim(double dim) => Opacity = 1 - Math.Clamp(dim, 0, 1) * 0.45;
-
-    private void SetValue(double value, double share)
+    private void Apply(bool animate)
     {
-        _value.Decimals = _owner.ValueDecimals;
-        _value.Prefix = _owner.ValuePrefix;
-        _value.Suffix = _owner.ValueSuffix;
-        // The first value shows at once; later ones roll.
-        _value.IsInstant = !_shown || !ArcMotion.IsFull(_owner);
-        _value.Value = value;
-        _shown = true;
-        _percent.IsVisible = _owner.ShowsPercent;
-        _percent.Text = (share * 100).ToString("0", CultureInfo.InvariantCulture) + "%";
+        PseudoClasses.Set(":off", _isOff);
+        if (_swatch is not null)
+        {
+            _swatch.IsHollow = _isOff || _slot is null;
+            _swatch.Brush = _slot is null ? null : _owner.Track?.CapBrush(_slot);
+        }
+        if (_name is not null)
+        {
+            _name.Text = _labelText;
+            // The strike line is drawn in the strong border color, quieter than the muted name.
+            _name.TextDecorations = _isOff ? Strike(_owner.Track?.Neutral2) : null;
+        }
+        if (_off is not null)
+        {
+            _off.IsVisible = _isOff;
+        }
+        if (_share is not null)
+        {
+            _share.IsVisible = !_isOff;
+            if (!_isOff)
+            {
+                // The first figures show at once; later ones roll.
+                _share.IsInstant = !_shown || !animate;
+                if (_owner.ShowsPercent)
+                {
+                    _share.Decimals = 1;
+                    _share.Prefix = null;
+                    _share.Suffix = "%";
+                    _share.Value = Math.Round(_shareValue * 1000) / 10;
+                }
+                else
+                {
+                    _share.Decimals = _owner.ValueDecimals;
+                    _share.Prefix = _owner.ValuePrefix;
+                    _share.Suffix = _owner.ValueSuffix;
+                    _share.Value = _value;
+                }
+                _shown = true;
+            }
+        }
+        if (_slot is not null)
+        {
+            AutomationProperties.SetName(this, _isOff
+                ? $"{_labelText}, hidden"
+                : $"{_labelText}, {SplitBar.FormatShare(_shareValue)}");
+        }
     }
 
-    protected override Size MeasureOverride(Size availableSize)
+    private TextDecorationCollection? _strike;
+    private IBrush? _strikeBrush;
+
+    private TextDecorationCollection Strike(IBrush? brush)
     {
-        _row.Measure(availableSize);
-        return _row.DesiredSize;
+        if (_strike is null || !ReferenceEquals(brush, _strikeBrush))
+        {
+            _strikeBrush = brush;
+            _strike = new TextDecorationCollection
+            {
+                new TextDecoration { Location = TextDecorationLocation.Strikethrough, Stroke = brush }
+            };
+        }
+        return _strike;
     }
 
-    protected override Size ArrangeOverride(Size finalSize)
+    public void SetHighlighted(bool highlighted) => PseudoClasses.Set(":highlighted", highlighted);
+
+    public void SetShake(double offset) => _shake.X = offset;
+
+    private int IndexOf() => _slot is null ? -1 : _owner.IndexOf(_slot);
+
+    /// <summary>Switches the part (the last part that is on refuses).</summary>
+    internal void Toggle()
     {
-        _row.Arrange(new Rect(finalSize));
-        return finalSize;
+        var index = IndexOf();
+        if (index >= 0)
+        {
+            _owner.Toggle(index);
+        }
+    }
+
+    protected override void OnKeyDown(KeyEventArgs e)
+    {
+        base.OnKeyDown(e);
+        if (!e.Handled && _slot is not null && (e.Key == Key.Enter || e.Key == Key.Space))
+        {
+            Toggle();
+            e.Handled = true;
+        }
+    }
+
+    protected override void OnPointerPressed(PointerPressedEventArgs e)
+    {
+        base.OnPointerPressed(e);
+        if (_slot is not null && e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+        {
+            _pressed = true;
+            e.Handled = true;
+        }
+    }
+
+    protected override void OnPointerReleased(PointerReleasedEventArgs e)
+    {
+        base.OnPointerReleased(e);
+        if (_pressed)
+        {
+            _pressed = false;
+            e.Handled = true;
+            if (new Rect(Bounds.Size).Contains(e.GetPosition(this)))
+            {
+                Toggle();
+            }
+        }
+    }
+
+    protected override void OnPointerCaptureLost(PointerCaptureLostEventArgs e)
+    {
+        base.OnPointerCaptureLost(e);
+        _pressed = false;
     }
 
     protected override void OnPointerEntered(PointerEventArgs e)
     {
         base.OnPointerEntered(e);
-        if (_slot is null || e.Pointer.Type == PointerType.Touch)
+        if (_slot is null || e.Pointer.Type == PointerType.Touch || _slot.Segment.IsHidden)
         {
             return;
         }
@@ -123,132 +250,25 @@ internal sealed class SplitBarLegendItem : Control
     protected override void OnPointerExited(PointerEventArgs e)
     {
         base.OnPointerExited(e);
-        if (_slot is not null && _owner.HighlightedIndex == IndexOf())
+        if (_slot is not null && _owner.HighlightedIndex >= 0 && _owner.HighlightedIndex == IndexOf())
         {
             _owner.SetCurrentValue(SplitBar.HighlightedIndexProperty, -1);
         }
     }
 
-    private int IndexOf()
+    protected override AutomationPeer OnCreateAutomationPeer() => new LegendItemPeer(this);
+
+    private sealed class LegendItemPeer(SplitBarLegendItem owner) : ControlAutomationPeer(owner), IToggleProvider
     {
-        var index = 0;
-        foreach (var slot in _owner.Slots)
-        {
-            if (ReferenceEquals(slot, _slot))
-            {
-                return index;
-            }
-            if (!slot.IsLeaving)
-            {
-                index++;
-            }
-        }
-        return -1;
-    }
-}
+        public ToggleState ToggleState => owner.IsOff ? ToggleState.Off : ToggleState.On;
 
-/// <summary>A legend dot: the part's color (or its series color), or a hollow ring for the empty rest.</summary>
-internal sealed class SplitBarLegendDot : Control
-{
-    internal static readonly StyledProperty<IBrush?> BrushProperty =
-        AvaloniaProperty.Register<SplitBarLegendDot, IBrush?>(nameof(Brush));
+        public void Toggle() => owner.Toggle();
 
-    internal static readonly StyledProperty<IBrush?> RingBrushProperty =
-        AvaloniaProperty.Register<SplitBarLegendDot, IBrush?>(nameof(RingBrush));
+        protected override AutomationControlType GetAutomationControlTypeCore() => AutomationControlType.Button;
 
-    internal static readonly StyledProperty<IBrush?> Series1Property = SplitBarTrack.Series1Property.AddOwner<SplitBarLegendDot>();
+        protected override bool IsContentElementCore() => owner.Slot is not null;
 
-    internal static readonly StyledProperty<IBrush?> Series2Property = SplitBarTrack.Series2Property.AddOwner<SplitBarLegendDot>();
-
-    internal static readonly StyledProperty<IBrush?> Series3Property = SplitBarTrack.Series3Property.AddOwner<SplitBarLegendDot>();
-
-    internal static readonly StyledProperty<IBrush?> Series4Property = SplitBarTrack.Series4Property.AddOwner<SplitBarLegendDot>();
-
-    internal static readonly StyledProperty<double> DotSizeProperty =
-        AvaloniaProperty.Register<SplitBarLegendDot, double>(nameof(DotSize), 8);
-
-    private int _index;
-    private bool _isHollow;
-    private IPen? _ringPen;
-    private IBrush? _ringPenBrush;
-
-    static SplitBarLegendDot()
-    {
-        AffectsRender<SplitBarLegendDot>(BrushProperty, RingBrushProperty, Series1Property, Series2Property, Series3Property, Series4Property);
-        AffectsMeasure<SplitBarLegendDot>(DotSizeProperty);
-    }
-
-    public IBrush? Brush { get => GetValue(BrushProperty); set => SetValue(BrushProperty, value); }
-
-    public IBrush? RingBrush { get => GetValue(RingBrushProperty); set => SetValue(RingBrushProperty, value); }
-
-    public IBrush? Series1 { get => GetValue(Series1Property); set => SetValue(Series1Property, value); }
-
-    public IBrush? Series2 { get => GetValue(Series2Property); set => SetValue(Series2Property, value); }
-
-    public IBrush? Series3 { get => GetValue(Series3Property); set => SetValue(Series3Property, value); }
-
-    public IBrush? Series4 { get => GetValue(Series4Property); set => SetValue(Series4Property, value); }
-
-    public double DotSize { get => GetValue(DotSizeProperty); set => SetValue(DotSizeProperty, value); }
-
-    public int Index
-    {
-        get => _index;
-        set
-        {
-            if (_index != value)
-            {
-                _index = value;
-                InvalidateVisual();
-            }
-        }
-    }
-
-    public bool IsHollow
-    {
-        get => _isHollow;
-        set
-        {
-            _isHollow = value;
-            InvalidateVisual();
-        }
-    }
-
-    protected override Size MeasureOverride(Size availableSize) => new(DotSize, DotSize);
-
-    public override void Render(DrawingContext context)
-    {
-        var size = DotSize;
-        var center = new Point(Bounds.Width / 2, Bounds.Height / 2);
-        if (_isHollow)
-        {
-            if (RingBrush is { } ring)
-            {
-                if (!ReferenceEquals(ring, _ringPenBrush))
-                {
-                    _ringPenBrush = ring;
-                    _ringPen = new ImmutablePen(ring.ToImmutable(), 1.5);
-                }
-                context.DrawEllipse(null, _ringPen, center, size / 2 - 0.75, size / 2 - 0.75);
-            }
-            return;
-        }
-        var brush = Brush ?? (_index % 4) switch
-        {
-            0 => Series1,
-            1 => Series2,
-            2 => Series3,
-            _ => Series4
-        };
-        if (brush is null)
-        {
-            return;
-        }
-        using (context.PushOpacity(Brush is null ? SplitBarTrack.SeriesOpacity(_index) : 1))
-        {
-            context.DrawEllipse(brush, null, center, size / 2, size / 2);
-        }
+        protected override bool IsControlElementCore() => owner.Slot is not null;
     }
 }
 

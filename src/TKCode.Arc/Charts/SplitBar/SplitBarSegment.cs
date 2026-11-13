@@ -6,7 +6,8 @@ namespace TKCode.Arc;
 
 /// <summary>
 /// One part of a <see cref="SplitBar"/>: a label, a value and an optional color. Changing <see cref="Value"/> springs the
-/// bar to the new shares; the bar listens to its segments while it is on screen.
+/// bar to the new shares; the bar listens to its segments while it is on screen. <see cref="IsHidden"/> switches the part
+/// off (the legend does it too): it collapses in place and the others fill the bar.
 /// </summary>
 public class SplitBarSegment : AvaloniaObject
 {
@@ -21,6 +22,13 @@ public class SplitBarSegment : AvaloniaObject
     /// <summary>The segment's color; null takes the next chart series color.</summary>
     public static readonly StyledProperty<IBrush?> BrushProperty =
         AvaloniaProperty.Register<SplitBarSegment, IBrush?>(nameof(Brush));
+
+    /// <summary>
+    /// True while the part is switched off: it takes no room in the bar, its legend entry reads "Off" and the shares are
+    /// worked out over the parts that are on. The legend and Enter on the bar switch it.
+    /// </summary>
+    public static readonly StyledProperty<bool> IsHiddenProperty =
+        AvaloniaProperty.Register<SplitBarSegment, bool>(nameof(IsHidden), defaultBindingMode: Avalonia.Data.BindingMode.TwoWay);
 
     /// <summary>Creates an empty segment (set <see cref="Label"/> and <see cref="Value"/>).</summary>
     public SplitBarSegment()
@@ -43,6 +51,12 @@ public class SplitBarSegment : AvaloniaObject
 
     /// <summary>The segment's color; null takes the next chart series color.</summary>
     public IBrush? Brush { get => GetValue(BrushProperty); set => SetValue(BrushProperty, value); }
+
+    /// <summary>
+    /// True while the part is switched off: it takes no room in the bar, its legend entry reads "Off" and the shares are
+    /// worked out over the parts that are on. The legend and Enter on the bar switch it.
+    /// </summary>
+    public bool IsHidden { get => GetValue(IsHiddenProperty); set => SetValue(IsHiddenProperty, value); }
 }
 
 /// <summary>Arguments of <see cref="SplitBar.SegmentInvoked"/>.</summary>
@@ -64,4 +78,21 @@ public sealed class SplitBarSegmentEventArgs : RoutedEventArgs
 
     /// <summary>Its share of the bar's total, from 0 to 1.</summary>
     public double Share { get; }
+}
+
+/// <summary>Arguments of <see cref="SplitBar.HiddenChanged"/>.</summary>
+public sealed class SplitBarHiddenChangedEventArgs : RoutedEventArgs
+{
+    internal SplitBarHiddenChangedEventArgs(RoutedEvent routedEvent, object source, SplitBarSegment segment, bool isHidden)
+        : base(routedEvent, source)
+    {
+        Segment = segment;
+        IsHidden = isHidden;
+    }
+
+    /// <summary>The segment that was switched off or back on.</summary>
+    public SplitBarSegment Segment { get; }
+
+    /// <summary>True when it was switched off.</summary>
+    public bool IsHidden { get; }
 }
