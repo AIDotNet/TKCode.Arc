@@ -8,6 +8,123 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0), `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` (from 1.1.0-preview.1).
 
+## 1.1.0 - 2026-11-13
+
+The first feature release after 1.0.0. It brings together everything shipped in `1.1.0-preview.1` to `1.1.0-preview.7`
+(`1.1.0-preview.5` was prepared but never published; its changes first shipped in preview.6): new components in every
+package (`TreeSelect`, `Form`, `RadialMenu`, `OnScreenKeyboard`, `WindRoseChart`, the Special glass, docks, photo and
+data groups, 59 blocks), the video packages on NuGet, apps' feedback on `PageHeader`, `Dialog`, `Drawer`, `Slider`,
+`Popover` and the settings blocks, one convention for item classes and selection events, and a lot of fixes. **There are
+no breaking changes from 1.0.0** (an API comparison of the nine packages that shipped in 1.0.0 and have a `net10.0`
+build, `TKCode.Arc`, `.Core`, `.Foundation`, `.Blocks`, `.AdvancedCharts`, `.Special`, `.Workflow`, `.Dock` and `.Mobile`,
+found none), and nothing is removed: the few members that were renamed stay as `[Obsolete]`
+aliases (see Deprecated). Install it without `--prerelease`. The notes of each preview, with every detail and issue
+link, follow below.
+
+### Upgrading from 1.0.0
+
+- **Packages**: they depend on Avalonia 12.1.5 or any later 12.x release (`[12.1.5, 13.0.0)`), so an app can update
+  Avalonia within version 12 without waiting for an Arc release. All packages are still released on one version; keep
+  them on the same one. `TKCode.Arc.Video`, `.Video.Native` and `.Video.Browser` are new on NuGet (23 packages in all).
+- **Look and behavior changes you may notice**: the avatar status dot follows the avatar's size (it was always the
+  10 px medium dot); an `InlineEdit` multiline field keeps 38 px for its buttons instead of 66; a validation error on a
+  bound value now marks `Checkbox`, `TimePicker` and `TagInput` invalid; `Gauge` numbers scale with a small ring;
+  `ArcWindow` draws its top frame line on Windows; `TilePanel.IsAutoFill` also fills holes from the side and from below;
+  `ChatThread` bubbles follow the theme's corner style; loaders hold still and breathe in opacity under reduced motion
+  instead of freezing. In Arc Mobile a `Sheet` or `ActionSheet` in a page keeps the page's bottom inset unless
+  `SafeAreaBottom` is set (set it to `0` for the old layout).
+- **`Sidebar`** collapses again when it is made narrower or wider: set `ExpandedWidth` instead of `Width`. Under
+  NativeAOT or trimming map its `ItemsSource` with the new `*MemberBinding` properties.
+- **Moved**: `AvatarUpload` moved from `TKCode.Arc.Special` to `TKCode.Arc` (same namespace and API; `UseArcControls()`
+  now registers it and `UseArcSpecial()` no longer does).
+- **Deprecated members** keep working; move to the new names when convenient (see Deprecated).
+
+### Added
+
+- **`TKCode.Arc`, inputs and selection**: `TreeSelect` (one or many nodes, three-state checks, search, thousands of
+  nodes); `Rating`; `ToggleGroup` and `SlotText`; `RangeHistogramSlider`, `RulerSlider` and `ThumbDiameter` /
+  `TrackThickness` on every slider; `Size` on `Combobox`, `MultiSelect`, `TreeSelect` and `Cascader`; `Form` and
+  `FormItem` with data validation on the value properties of the Arc fields (`Checkbox`, `Switch`, `NumberField`,
+  `DatePicker`, `Select`, `Slider` and many more); `OnScreenKeyboard` (QWERTY, number and PIN pads, your own
+  layouts); public item containers `RadioGroupItem`, `RadioCard` and `ToggleGroupItem`.
+- **`TKCode.Arc`, layout and feedback**: `Sticky` (like CSS `position: sticky`); `BackToTop`; `RadialMenu`;
+  `OnboardingChecklist`; `SplitBar`, `MetricTicker` and `PresenceStack`; `Popover` hover trigger (`TriggerMode`,
+  `OpenDelay`, `CloseDelay`, `HasShadow`); `ButtonVariant.Text`; `Drawer` full screen, custom header, grabber and size;
+  `Dialog.ShowHeader`; `Tooltip.ShowOnDisabled`; `WindowCaptionButtons`; `WaterfallPanel.ItemSizing` and
+  `TilePanel.IsAutoSpan` (items of one template lay out by themselves); `InlineEdit.ReserveActionSpace` and `Labels`;
+  `EmptyState.Size`; more `AvatarStatus` values (`Busy`, `Away`, `Connecting`) and `AvatarSize.LargePlus`; diff
+  coloring in `CodeBlock`, Markdown fences and the rich text editor; `AvatarUpload` checks files by their first bytes
+  and saves PNG or JPEG.
+- **`TKCode.Arc.Core`**: `ArcMotion.MaxFrameRate` caps how often live loops repaint; content-width tokens
+  (`ContentMaxWidthSM` to `XL`) and media tokens (`MediaSizeSM` to `XL`); the `ArcBusyPulse` reduced-motion pulse.
+- **`TKCode.Arc.Blocks`**: 59 new blocks in AI (`AgentRun`, `ResearchRun`, `AgentTasks`, `McpServers`, `KnowledgeBase`,
+  `EvalSuite` and more), support and content, commerce and finance, analytics and projects, marketing sections (`HeroSection`,
+  `FaqSection`, `ContactSection`, `StatsBand`, `BlogGrid`, `ComparisonTable`, `ChangelogFeed`, `LogoMarquee`), and app shell, auth
+  and settings (`DocsSidebar`, `InboxSidebar`, `SelectionToolbar`, `TwoFactorSetup`, `ImportWizard`). `Sidebar` gets
+  `ExpandedWidth`, `SelectionChanged` and item visibility; `PageHeader` gets `IsHeaderOnly`, `Size` and `IsTitleBar`;
+  `CommandPalette` can list results from the app (`IsFilteringEnabled`); `SettingsPage.SelectedValue`,
+  `SettingsSection.BadgeTone`, `SettingsRow.Details` and `Leading`.
+- **`TKCode.Arc.Special`**: new groups, designed independently from the components' names: Glass (`GlassCard`,
+  `GlassMenu`, `GlassSegmented`, `GlassTabBar`), Docks and tabs (`MorphNav`, `LiquidTabBar`, `OrbitMenu`, `ActionMorph`,
+  `ShareSheet`, `ToolDock`), Photos (`ProductGallery`, `LightboxGallery`, `PhotoGrid`, `CoverFlow`), Data and widgets
+  (`BookingPill`, `ActivityRings`, `TimeDial`, `DateReel`, `KeycapKeyboard`), Inputs and publishing (`EmojiPicker`,
+  `ConfirmPopover`, `UndoToast`, `MegaMenuMorph`, `TocProgress`, `ShareAccess`), the explainers `DnsResolution`,
+  `ModelTraining` and `BranchGraph`, and Playful and Cursor (`SandText`, `TypewriterTerminal`, `PrizeWheel`,
+  `MagnifyDock`, `ImageTrail`).
+- **`TKCode.Arc.AdvancedCharts`**: `WindRoseChart`.
+- **`TKCode.Arc.Mobile`**: `ListCell`, `ListItem.Leading`, `Picker`, `RadioCards`, `ActionSheetItem.IsChecked`,
+  `Page.InheritedSafeArea`.
+- **Video on NuGet**: `TKCode.Arc.Video`, `.Video.Native` and `.Video.Browser` (`VideoPlayer` and `VideoSurface` over
+  Media Foundation, AVFoundation or GStreamer, and the browser's video element in WebAssembly).
+- **Gallery** (now its own repository, [AIDotNet/ArcGallery](https://github.com/AIDotNet/ArcGallery)): docs and demos for
+  every new component in English, 简体中文 and 繁體中文.
+
+### Changed
+
+- **Item classes and selection events follow one convention** ([#117](https://github.com/AIDotNet/TKCode.Arc/issues/117),
+  [#114](https://github.com/AIDotNet/TKCode.Arc/issues/114)): `IsEnabled` and `IsVisible` on the item classes of
+  `Sidebar`, `DocsSidebar`, `InboxSidebar`, `SiteHeader`, `Stepper`, `SegmentedControl`, `ToggleGroup`, `RadioGroup`,
+  `RadioCards`, `BillingToggle`, `CommandPalette` and `SelectionToolbar`; `SelectionChanged` on every control with a
+  selection and `ItemInvoked` for "the user chose it". A published member is from now on never removed or renamed in one
+  step; it stays as `[Obsolete]` and is deleted only in a new major version, after two stable releases.
+- **Performance**: `GhostMascot`, `CubeMascot`, `AiMascot`, `LiquidTabBar`, `AiSpark` and `RadarChart` allocate far less
+  per frame and look the same.
+- **The gallery moved to its own repository**; the packages are unchanged.
+
+### Fixed
+
+- **Under NativeAOT**, `Sidebar` no longer produces trim warnings (new `LabelMemberBinding`, `KeyMemberBinding`,
+  `IconMemberBinding`, `BadgeMemberBinding`, `IsEnabledMemberBinding`, `ChildrenMemberBinding`).
+- **Layout**: `Combobox` is as tall as its trigger again; `Slider` and `ElasticSlider` without a label and readout keep
+  no empty header row; `TextFilterBox` and `NumberFilterBox` no longer overlap; the avatar status dot and `InlineEdit`
+  multiline reserve use their documented sizes; `Gauge` numbers stay inside a small ring; `Table` no longer throws on a
+  narrow phone layout or after a source change without layout; `SettingsGroup` rows from `ItemsSource` have no stray
+  hairline; `ListGroup` with a `ListItem` template no longer wraps the row twice.
+- **Popups and overlays**: `Dialog`, `Drawer`, `BottomSheet` and `Tooltip` no longer show dark square corners below
+  rounded ones; `MegaMenuMorph` no longer opens and closes while the pointer rests on a trigger; the content of a modal
+  appears once in the logical tree; `OrbitMenu` opens once.
+- **Motion**: loaders and spinners no longer freeze under reduced motion.
+- **Bindings**: `ToggleGroup` with a custom `SelectedValueBinding` reports the bound value.
+- **Windows**: `ArcWindow` draws its top edge; the gallery app starts again on Windows 10 builds before 21H2.
+
+### Deprecated
+
+Nothing is removed. Each of these keeps working, is marked `[Obsolete]` and stays for at least two stable releases; it can
+only be deleted in a new major version.
+
+- **`IsDisabled` and `IsDisabledProperty` on `SegmentedOption`, `ToggleGroupOption`, `RadioOption` and `RadioCardOption`**:
+  use `IsEnabled`, which is the inverse (`IsDisabled="True"` becomes `IsEnabled="False"`). The two stay in step.
+- **`ItemSelected` and `ItemSelectedEvent` on `CommandPalette`, `CommandPaletteDialog`, `ExpandingSearch` and
+  `AiCommandPalette`**: use `ItemInvoked`; both are raised, so a handler on the old name keeps being called.
+- **`ToolDock.ItemChosen` and `ItemChosenEvent`** (new in preview.5, never in a stable release): use `ItemInvoked`.
+
+### Known limitations
+
+- `TKCode.Arc.Mobile` is previewed in a desktop phone frame and is not yet verified on Android or iOS devices.
+- `PdfViewer`: documents without embedded Chinese, Japanese or Korean fonts depend on the machine's fonts, there is no
+  touch drag selection, plain-text web addresses are links only with PDFium, and the Liberation fonts are not in the
+  browser package.
+
 ## 1.1.0-preview.7 - 2026-11-13
 
 New components: `Form` and `FormItem`, with data validation on the value properties of the Arc fields
@@ -1550,6 +1667,7 @@ ArcTheme.Apply(t => t
 
 First preview release.
 
+[1.1.0]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.0.0...v1.1.0
 [1.1.0-preview.7]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.1.0-preview.6...v1.1.0-preview.7
 [1.1.0-preview.6]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.1.0-preview.4...v1.1.0-preview.6
 [1.1.0-preview.5]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.1.0-preview.4...v1.1.0-preview.6
