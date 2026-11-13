@@ -1,0 +1,1121 @@
+[
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "specification/v0_9/catalogs/basic/catalog.json"
+  ],
+  "description": "Emits VALIDATION_FAILED with /theme/primaryColor when createSurface theme property has wrong type.",
+  "expectError": {
+   "category": "ValidationError",
+   "path": "/theme/primaryColor",
+   "rendererError": {
+    "error": {
+     "code": "VALIDATION_FAILED",
+     "message": "primaryColor",
+     "path": "/theme/primaryColor",
+     "surfaceId": "main"
+    },
+    "version": "v0.9"
+   },
+   "surfaceId": "main"
+  },
+  "features": [
+   "F-CORE-26",
+   "F-CORE-42"
+  ],
+  "name": "test_error_response_create_surface_invalid_theme_property",
+  "payload": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json",
+     "surfaceId": "main",
+     "theme": {
+      "primaryColor": 12345
+     }
+    },
+    "version": "v0.9"
+   }
+  ],
+  "protocolVersion": "v0.9"
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Emits CATALOG_NOT_FOUND when createSurface references an unregistered catalogId.",
+  "expectError": {
+   "category": "CatalogError",
+   "rendererError": {
+    "error": {
+     "code": "CATALOG_NOT_FOUND",
+     "message": "unknown_catalog",
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   },
+   "surfaceId": "main"
+  },
+  "features": [
+   "F-CORE-26",
+   "F-CORE-42"
+  ],
+  "name": "test_error_response_create_surface_unknown_catalog_id",
+  "payload": [
+   {
+    "createSurface": {
+     "catalogId": "https://example.com/unknown_catalog.json",
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   }
+  ],
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "specification/v0_9/catalogs/basic/catalog.json"
+  ],
+  "description": "Emits CATALOG_NOT_FOUND when createSurface binds a v0.9 catalog to a v1.0 surface.",
+  "expectError": {
+   "category": "CatalogError",
+   "rendererError": {
+    "error": {
+     "code": "CATALOG_NOT_FOUND",
+     "message": "v0_9",
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   },
+   "surfaceId": "main"
+  },
+  "name": "test_error_response_create_surface_incompatible_catalog_version",
+  "payload": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json",
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   }
+  ],
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Emits INTEGRITY_ERROR when createSurface is sent for an already existing surfaceId.",
+  "expectError": {
+   "category": "IntegrityError",
+   "rendererError": {
+    "error": {
+     "code": "INTEGRITY_ERROR",
+     "message": "already exists",
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   },
+   "surfaceId": "main"
+  },
+  "name": "test_error_response_create_surface_duplicate_surface_id",
+  "payload": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   },
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   }
+  ],
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Emits INTEGRITY_ERROR when updateComponents targets a non-existent surfaceId.",
+  "expectError": {
+   "category": "IntegrityError",
+   "rendererError": {
+    "error": {
+     "code": "INTEGRITY_ERROR",
+     "message": "missing_surface",
+     "surfaceId": "missing_surface"
+    },
+    "version": "1.0"
+   },
+   "surfaceId": "missing_surface"
+  },
+  "features": [
+   "F-CORE-26",
+   "F-CORE-42"
+  ],
+  "name": "test_error_response_update_components_unknown_surface",
+  "payload": [
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "component": "Text",
+       "id": "root",
+       "text": "Hello"
+      }
+     ],
+     "surfaceId": "missing_surface"
+    },
+    "version": "1.0"
+   }
+  ],
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Emits INTEGRITY_ERROR when updateComponents contains duplicate component IDs in the same batch.",
+  "expectError": {
+   "category": "IntegrityError",
+   "rendererError": {
+    "error": {
+     "code": "INTEGRITY_ERROR",
+     "message": "root",
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   },
+   "surfaceId": "main"
+  },
+  "features": [
+   "F-CORE-26",
+   "F-CORE-42"
+  ],
+  "name": "test_error_response_update_components_duplicate_id_in_batch",
+  "payload": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "component": "Text",
+       "id": "root",
+       "text": "First"
+      },
+      {
+       "component": "Text",
+       "id": "root",
+       "text": "Duplicate"
+      }
+     ],
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   }
+  ],
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Emits VALIDATION_FAILED with /components/0/component when component type is unknown in strict mode.",
+  "expectError": {
+   "category": "ValidationError",
+   "path": "/components/0/component",
+   "rendererError": {
+    "error": {
+     "code": "VALIDATION_FAILED",
+     "message": "NonExistentWidget",
+     "path": "/components/0/component",
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   },
+   "surfaceId": "main"
+  },
+  "features": [
+   "F-CORE-26",
+   "F-CORE-42"
+  ],
+  "name": "test_error_response_update_components_unknown_type_strict",
+  "payload": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "component": "NonExistentWidget",
+       "id": "root"
+      }
+     ],
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   }
+  ],
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Emits VALIDATION_FAILED with /components/0/text when a component property has the wrong type.",
+  "expectError": {
+   "category": "ValidationError",
+   "path": "/components/0/text",
+   "rendererError": {
+    "error": {
+     "code": "VALIDATION_FAILED",
+     "message": "text",
+     "path": "/components/0/text",
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   },
+   "surfaceId": "main"
+  },
+  "features": [
+   "F-CORE-26",
+   "F-CORE-42"
+  ],
+  "name": "test_error_response_update_components_invalid_property_type",
+  "payload": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "component": "Text",
+       "id": "root",
+       "text": 12345
+      }
+     ],
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   }
+  ],
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Emits VALIDATION_FAILED when a component includes an undeclared extra property in strict mode.",
+  "expectError": {
+   "category": "ValidationError",
+   "rendererError": {
+    "error": {
+     "code": "VALIDATION_FAILED",
+     "message": "unknownExtraProp",
+     "path": "/components/0/unknownExtraProp",
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   },
+   "surfaceId": "main"
+  },
+  "name": "test_error_response_update_components_extra_forbidden_property",
+  "payload": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "component": "Text",
+       "id": "root",
+       "text": "Hello",
+       "unknownExtraProp": true
+      }
+     ],
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   }
+  ],
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Emits VALIDATION_FAILED with /components/0/id when a v1.0 component ID violates UAX #31.",
+  "expectError": {
+   "category": "ValidationError",
+   "path": "/components/0/id",
+   "rendererError": {
+    "error": {
+     "code": "VALIDATION_FAILED",
+     "message": "123-invalid",
+     "path": "/components/0/id",
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   },
+   "surfaceId": "main"
+  },
+  "name": "test_error_response_update_components_invalid_uax31_id",
+  "payload": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "component": "Text",
+       "id": "123-invalid",
+       "text": "Hello"
+      }
+     ],
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   }
+  ],
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "validate",
+  "catalog": {
+   "catalogId": "test-comp-catalog",
+   "components": {
+    "Container": {
+     "properties": {
+      "children": {
+       "$ref": "common_types.json#/$defs/ChildList"
+      },
+      "component": {
+       "const": "Container"
+      }
+     },
+     "required": [
+      "component"
+     ],
+     "type": "object"
+    },
+    "RestrictedItem": {
+     "allowedParents": [
+      "SpecialList"
+     ],
+     "properties": {
+      "component": {
+       "const": "RestrictedItem"
+      }
+     },
+     "required": [
+      "component"
+     ],
+     "type": "object"
+    }
+   },
+   "protocolVersion": "1.0"
+  },
+  "description": "Emits UNALLOWED_PARENT with /components/1 when a child component is placed inside a disallowed parent.",
+  "expectError": {
+   "category": "ValidationError",
+   "code": "UNALLOWED_PARENT",
+   "details": [
+    {
+     "code": "UNALLOWED_PARENT",
+     "path": "/components/1",
+     "surfaceId": "main"
+    }
+   ],
+   "path": "/components/1",
+   "rendererError": {
+    "error": {
+     "code": "UNALLOWED_PARENT",
+     "message": "RestrictedItem",
+     "path": "/components/1",
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   },
+   "surfaceId": "main"
+  },
+  "name": "test_error_response_update_components_unallowed_parent",
+  "payload": [
+   {
+    "createSurface": {
+     "catalogId": "test-comp-catalog",
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "children": [
+        "item1"
+       ],
+       "component": "Container",
+       "id": "root"
+      },
+      {
+       "component": "RestrictedItem",
+       "id": "item1"
+      }
+     ],
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   }
+  ],
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "validate",
+  "catalog": {
+   "catalogId": "test-comp-catalog",
+   "components": {
+    "RestrictedItem": {
+     "allowedParents": [
+      "SpecialList"
+     ],
+     "properties": {
+      "component": {
+       "const": "RestrictedItem"
+      }
+     },
+     "required": [
+      "component"
+     ],
+     "type": "object"
+    }
+   },
+   "protocolVersion": "1.0"
+  },
+  "description": "Emits UNALLOWED_PARENT with /components/0 when the root component does not allow Surface as parent.",
+  "expectError": {
+   "category": "ValidationError",
+   "code": "UNALLOWED_PARENT",
+   "details": [
+    {
+     "code": "UNALLOWED_PARENT",
+     "path": "/components/0",
+     "surfaceId": "main"
+    }
+   ],
+   "path": "/components/0",
+   "rendererError": {
+    "error": {
+     "code": "UNALLOWED_PARENT",
+     "message": "RestrictedItem",
+     "path": "/components/0",
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   },
+   "surfaceId": "main"
+  },
+  "name": "test_error_response_update_components_unallowed_parent_root",
+  "payload": [
+   {
+    "createSurface": {
+     "catalogId": "test-comp-catalog",
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "component": "RestrictedItem",
+       "id": "root"
+      }
+     ],
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   }
+  ],
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "validate",
+  "catalog": {
+   "catalogId": "test-comp-catalog",
+   "components": {
+    "OtherItem": {
+     "properties": {
+      "component": {
+       "const": "OtherItem"
+      }
+     },
+     "required": [
+      "component"
+     ],
+     "type": "object"
+    },
+    "StrictList": {
+     "allowedChildren": [
+      "ListItem"
+     ],
+     "properties": {
+      "children": {
+       "$ref": "common_types.json#/$defs/ChildList"
+      },
+      "component": {
+       "const": "StrictList"
+      }
+     },
+     "required": [
+      "component"
+     ],
+     "type": "object"
+    }
+   },
+   "protocolVersion": "1.0"
+  },
+  "description": "Emits UNALLOWED_CHILD with /components/0/children/0 when a parent references a disallowed child type.",
+  "expectError": {
+   "category": "ValidationError",
+   "code": "UNALLOWED_CHILD",
+   "details": [
+    {
+     "code": "UNALLOWED_CHILD",
+     "path": "/components/0/children/0",
+     "surfaceId": "main"
+    }
+   ],
+   "path": "/components/0/children/0",
+   "rendererError": {
+    "error": {
+     "code": "UNALLOWED_CHILD",
+     "message": "OtherItem",
+     "path": "/components/0/children/0",
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   },
+   "surfaceId": "main"
+  },
+  "name": "test_error_response_update_components_unallowed_child",
+  "payload": [
+   {
+    "createSurface": {
+     "catalogId": "test-comp-catalog",
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "children": [
+        "item1"
+       ],
+       "component": "StrictList",
+       "id": "root"
+      },
+      {
+       "component": "OtherItem",
+       "id": "item1"
+      }
+     ],
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   }
+  ],
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Emits RECURSION_LIMIT_EXCEEDED when components form a cycle in strict mode.",
+  "expectError": {
+   "category": "RecursionError",
+   "rendererError": {
+    "error": {
+     "code": "RECURSION_LIMIT_EXCEEDED",
+     "message": "root",
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   },
+   "surfaceId": "main"
+  },
+  "name": "test_error_response_update_components_circular_reference",
+  "payload": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "children": [
+        "child1"
+       ],
+       "component": "Column",
+       "id": "root"
+      },
+      {
+       "children": [
+        "root"
+       ],
+       "component": "Column",
+       "id": "child1"
+      }
+     ],
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   }
+  ],
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Emits INTEGRITY_ERROR when a component references a non-existent child ID in strict mode.",
+  "expectError": {
+   "category": "IntegrityError",
+   "rendererError": {
+    "error": {
+     "code": "INTEGRITY_ERROR",
+     "message": "missing_child",
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   },
+   "surfaceId": "main"
+  },
+  "name": "test_error_response_update_components_dangling_child_strict",
+  "payload": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "children": [
+        "missing_child"
+       ],
+       "component": "Column",
+       "id": "root"
+      }
+     ],
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   }
+  ],
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Emits INTEGRITY_ERROR when a component is unreachable from root in strict mode.",
+  "expectError": {
+   "category": "IntegrityError",
+   "rendererError": {
+    "error": {
+     "code": "INTEGRITY_ERROR",
+     "message": "orphan1",
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   },
+   "surfaceId": "main"
+  },
+  "name": "test_error_response_update_components_orphaned_component_strict",
+  "payload": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "component": "Text",
+       "id": "root",
+       "text": "Root"
+      },
+      {
+       "component": "Text",
+       "id": "orphan1",
+       "text": "Orphan"
+      }
+     ],
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   }
+  ],
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Accepts dangling child references and orphaned components without error when strictMode is false.",
+  "name": "test_error_response_update_components_buffered_streaming_non_strict",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "surfaceId": "main"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "component": "Text",
+         "id": "orphan1",
+         "text": "Buffered child"
+        },
+        {
+         "children": [
+          "orphan1",
+          "dangling_child"
+         ],
+         "component": "Column",
+         "id": "root"
+        }
+       ],
+       "surfaceId": "main"
+      },
+      "version": "1.0"
+     }
+    ]
+   },
+   {
+    "payload": [
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "component": "Text",
+         "id": "dangling_child",
+         "text": "Arrived later"
+        }
+       ],
+       "surfaceId": "main"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": false
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Emits INTEGRITY_ERROR when updateDataModel targets a non-existent surfaceId.",
+  "expectError": {
+   "category": "IntegrityError",
+   "rendererError": {
+    "error": {
+     "code": "INTEGRITY_ERROR",
+     "message": "missing_surface",
+     "surfaceId": "missing_surface"
+    },
+    "version": "1.0"
+   },
+   "surfaceId": "missing_surface"
+  },
+  "name": "test_error_response_update_data_model_unknown_surface",
+  "payload": [
+   {
+    "updateDataModel": {
+     "path": "/user/name",
+     "surfaceId": "missing_surface",
+     "value": "Alice"
+    },
+    "version": "1.0"
+   }
+  ],
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Emits DATA_ERROR when updateDataModel targets a forbidden prototype-pollution path segment.",
+  "expectError": {
+   "category": "DataError",
+   "rendererError": {
+    "error": {
+     "code": "DATA_ERROR",
+     "message": "__proto__",
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   },
+   "surfaceId": "main"
+  },
+  "name": "test_error_response_update_data_model_prototype_pollution",
+  "payload": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateDataModel": {
+     "path": "/__proto__/polluted",
+     "surfaceId": "main",
+     "value": true
+    },
+    "version": "1.0"
+   }
+  ],
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Emits VALIDATION_FAILED with /path when updateDataModel path is not a valid JSON Pointer.",
+  "expectError": {
+   "category": "ValidationError",
+   "path": "/path",
+   "rendererError": {
+    "error": {
+     "code": "VALIDATION_FAILED",
+     "message": "path",
+     "path": "/path",
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   },
+   "surfaceId": "main"
+  },
+  "name": "test_error_response_update_data_model_invalid_json_pointer",
+  "payload": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "surfaceId": "main"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateDataModel": {
+     "path": "not_a_pointer",
+     "surfaceId": "main",
+     "value": "Alice"
+    },
+    "version": "1.0"
+   }
+  ],
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Emits VALIDATION_FAILED with surfaceId '' and /surfaceId when deleteSurface omits surfaceId.",
+  "expectError": {
+   "category": "ValidationError",
+   "path": "/surfaceId",
+   "rendererError": {
+    "error": {
+     "code": "VALIDATION_FAILED",
+     "message": "surfaceId",
+     "path": "/surfaceId",
+     "surfaceId": ""
+    },
+    "version": "1.0"
+   },
+   "surfaceId": ""
+  },
+  "name": "test_error_response_delete_surface_missing_surface_id",
+  "payload": [
+   {
+    "deleteSurface": {},
+    "version": "1.0"
+   }
+  ],
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Emits INVALID_FUNCTION_CALL correlated by functionCallId without surfaceId when callFunction is missing.",
+  "expectError": {
+   "category": "ValidationError",
+   "functionCallId": "call-err-1",
+   "rendererError": {
+    "error": {
+     "code": "INVALID_FUNCTION_CALL",
+     "functionCallId": "call-err-1",
+     "message": "callFunction"
+    },
+    "version": "1.0"
+   }
+  },
+  "features": [
+   "F-CORE-05",
+   "F-CORE-26"
+  ],
+  "name": "test_error_response_call_renderer_function_missing_call_function",
+  "payload": [
+   {
+    "callRendererFunction": {
+     "functionCallId": "call-err-1"
+    },
+    "version": "1.0"
+   }
+  ],
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Emits INVALID_FUNCTION_CALL correlated by functionCallId when callFunction.args is not an object.",
+  "expectError": {
+   "category": "ValidationError",
+   "functionCallId": "call-err-2",
+   "rendererError": {
+    "error": {
+     "code": "INVALID_FUNCTION_CALL",
+     "functionCallId": "call-err-2",
+     "message": "args"
+    },
+    "version": "1.0"
+   }
+  },
+  "name": "test_error_response_call_renderer_function_non_object_args",
+  "payload": [
+   {
+    "callRendererFunction": {
+     "callFunction": {
+      "@call": "formatString",
+      "args": "not_an_object",
+      "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json"
+     },
+     "functionCallId": "call-err-2"
+    },
+    "version": "1.0"
+   }
+  ],
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Emits INVALID_FUNCTION_CALL correlated by functionCallId when callFunction omits required catalogId.",
+  "expectError": {
+   "category": "ValidationError",
+   "functionCallId": "call-err-3",
+   "rendererError": {
+    "error": {
+     "code": "INVALID_FUNCTION_CALL",
+     "functionCallId": "call-err-3",
+     "message": "catalogId"
+    },
+    "version": "1.0"
+   }
+  },
+  "name": "test_error_response_call_renderer_function_missing_catalog_id",
+  "payload": [
+   {
+    "callRendererFunction": {
+     "callFunction": {
+      "@call": "formatString",
+      "args": {
+       "value": "hello"
+      }
+     },
+     "functionCallId": "call-err-3"
+    },
+    "version": "1.0"
+   }
+  ],
+  "protocolVersion": "1.0"
+ }
+]

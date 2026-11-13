@@ -1,0 +1,865 @@
+[
+ {
+  "action": "common_types_schema",
+  "description": "The v0.9 common types schema generated from the SDK models matches specification/v0_9/json/common_types.json exactly.",
+  "expectFile": "specification/v0_9/json/common_types.json",
+  "features": [
+   "F-CORE-07"
+  ],
+  "name": "test_v09_common_types_schema_matches_specification",
+  "protocolVersion": "v0.9"
+ },
+ {
+  "action": "common_types_schema",
+  "description": "The v0.9.1 common types schema generated from the SDK models matches specification/v0_9_1/json/common_types.json exactly.",
+  "expectFile": "specification/v0_9_1/json/common_types.json",
+  "features": [
+   "F-CORE-07"
+  ],
+  "name": "test_v091_common_types_schema_matches_specification",
+  "protocolVersion": "v0.9.1"
+ },
+ {
+  "action": "common_types_schema",
+  "description": "The v1.0 common types schema generated from the SDK models matches specification/v1_0/json/common_types.json exactly.",
+  "expectFile": "specification/v1_0/json/common_types.json",
+  "features": [
+   "F-CORE-07"
+  ],
+  "name": "test_v10_common_types_schema_matches_specification",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "validate_common_type",
+  "definition": "Extensions",
+  "description": "Extensions accepts any value under keys that are Unicode identifiers (UAX 31) and rejects every other key.",
+  "features": [
+   "F-CORE-09"
+  ],
+  "name": "test_v10_extensions_keys_are_unicode_identifiers",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "value": {
+     "vendor": {
+      "any": "value"
+     }
+    }
+   },
+   {
+    "value": {
+     "a2ui_theme": "dark"
+    }
+   },
+   {
+    "value": {
+     "_private": 1
+    }
+   },
+   {
+    "value": {
+     "ünïcode": true
+    }
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {
+     "1st": 1
+    }
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {
+     "has-dash": 1
+    }
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {
+     "has space": 1
+    }
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {
+     "": 1
+    }
+   }
+  ]
+ },
+ {
+  "action": "validate_common_type",
+  "definition": "ComponentCommon",
+  "description": "ComponentCommon `@metadata` accepts an extensions object and rejects any other key.",
+  "name": "test_v10_component_metadata_only_holds_extensions",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "value": {
+     "@metadata": {
+      "extensions": {
+       "vendor": {
+        "tag": 1
+       }
+      }
+     },
+     "id": "c1"
+    }
+   },
+   {
+    "value": {
+     "@metadata": {},
+     "id": "c1"
+    }
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {
+     "@metadata": {
+      "owner": "me"
+     },
+     "id": "c1"
+    }
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {
+     "@metadata": {
+      "extensions": {
+       "bad-key": 1
+      }
+     },
+     "id": "c1"
+    }
+   }
+  ]
+ },
+ {
+  "action": "validate_common_type",
+  "definition": "FunctionResponse",
+  "description": "FunctionResponse requires exactly one of value and error. A null value still counts as present.",
+  "features": [
+   "F-CORE-25"
+  ],
+  "name": "test_v10_function_response_has_exactly_one_outcome",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "value": {
+     "functionCallId": "call_1",
+     "value": 3
+    }
+   },
+   {
+    "value": {
+     "functionCallId": "call_1",
+     "value": null
+    }
+   },
+   {
+    "value": {
+     "error": {
+      "code": "E",
+      "message": "failed"
+     },
+     "functionCallId": "call_1"
+    }
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {
+     "functionCallId": "call_1"
+    }
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {
+     "error": {
+      "code": "E",
+      "message": "failed"
+     },
+     "functionCallId": "call_1",
+     "value": 3
+    }
+   }
+  ]
+ },
+ {
+  "action": "validate_common_type",
+  "definition": "IndexSystemFunction",
+  "description": "IndexSystemFunction requires @call to be present and equal to \"@index\".",
+  "features": [
+   "F-CORE-21"
+  ],
+  "name": "test_v10_index_system_function_requires_call",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "value": {
+     "@call": "@index"
+    }
+   },
+   {
+    "value": {
+     "@call": "@index",
+     "args": {
+      "offset": 1
+     }
+    }
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {}
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {
+     "@call": "now"
+    }
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {
+     "@call": "@index",
+     "args": {
+      "offset": 1,
+      "step": 2
+     }
+    }
+   }
+  ]
+ },
+ {
+  "action": "validate_common_type",
+  "definition": "Surface",
+  "description": "Surface accepts an optional component const of \"Surface\" and child const of \"root\", and rejects any other value or any other key.",
+  "name": "test_v10_surface_component_is_surface",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "value": {}
+   },
+   {
+    "value": {
+     "child": "root",
+     "component": "Surface"
+    }
+   },
+   {
+    "value": {
+     "child": "root"
+    }
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {
+     "component": "Text"
+    }
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {
+     "child": "main"
+    }
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {
+     "child": "root",
+     "component": "Surface",
+     "id": "surface"
+    }
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {
+     "extra": 1
+    }
+   }
+  ]
+ },
+ {
+  "action": "validate_common_type",
+  "definition": "DynamicValue",
+  "description": "A DynamicValue object is a literal object only when it has no @path, @call or unescaped single-@ key, so an invalid binding or call is not accepted as a literal.",
+  "name": "test_v10_dynamic_value_object_branches_are_exclusive",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "value": {
+     "label": "x"
+    }
+   },
+   {
+    "value": {
+     "path": "/a"
+    }
+   },
+   {
+    "value": {
+     "@@path": "/a"
+    }
+   },
+   {
+    "value": {
+     "@path": "/a"
+    }
+   },
+   {
+    "value": {
+     "@call": "now"
+    }
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {
+     "@path": "/a",
+     "extra": 1
+    }
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {
+     "@call": "now",
+     "@path": "/a",
+     "extra": 1
+    }
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {
+     "@call": "now",
+     "@path": "/a"
+    }
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {
+     "@unknown": 1
+    }
+   }
+  ]
+ },
+ {
+  "action": "validate_common_type",
+  "definition": "Surface",
+  "description": "Surface rejects null for its optional component and child fields.",
+  "name": "test_v10_surface_rejects_explicit_null",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {
+     "component": null
+    }
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {
+     "child": null
+    }
+   }
+  ]
+ },
+ {
+  "action": "validate_common_type",
+  "definition": "IndexSystemFunction",
+  "description": "IndexSystemFunction rejects null for its optional args object.",
+  "name": "test_v10_index_system_function_rejects_null_args",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {
+     "@call": "@index",
+     "args": null
+    }
+   }
+  ]
+ },
+ {
+  "action": "validate_common_type",
+  "definition": "ComponentCommon",
+  "description": "ComponentCommon rejects null for its optional `@catalogId` string.",
+  "name": "test_v10_component_common_rejects_null_catalog_id",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {
+     "@catalogId": null,
+     "id": "c1"
+    }
+   }
+  ]
+ },
+ {
+  "action": "validate_common_type",
+  "definition": "FunctionResponse",
+  "description": "FunctionResponse rejects null for error, which must be an error object when present. A null value, by contrast, is a valid return value.",
+  "name": "test_v10_function_response_rejects_null_error",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {
+     "error": null,
+     "functionCallId": "call_1"
+    }
+   }
+  ]
+ },
+ {
+  "action": "validate_common_type",
+  "definition": "FunctionCall",
+  "description": "FunctionCall accepts @call, catalogId and args, and rejects any other key.",
+  "name": "test_v10_function_call_rejects_unknown_keys",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "value": {
+     "@call": "x"
+    }
+   },
+   {
+    "value": {
+     "@call": "x",
+     "args": {
+      "a": 1
+     },
+     "catalogId": "c"
+    }
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {
+     "@call": "x",
+     "bogus": 1
+    }
+   }
+  ]
+ },
+ {
+  "action": "validate_common_type",
+  "definition": "FunctionCall",
+  "description": "FunctionCall accepts call, args and returnType, and rejects any other key.",
+  "name": "test_v09_function_call_rejects_unknown_keys",
+  "protocolVersion": "v0.9",
+  "steps": [
+   {
+    "value": {
+     "call": "x"
+    }
+   },
+   {
+    "value": {
+     "args": {
+      "a": 1
+     },
+     "call": "x",
+     "returnType": "string"
+    }
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {
+     "bogus": 1,
+     "call": "x"
+    }
+   }
+  ]
+ },
+ {
+  "action": "validate_common_type",
+  "definition": "DynamicValue",
+  "description": "DynamicValue accepts a scalar or array literal, a data binding or a function call. It has no literal object branch, so an object that is neither a binding nor a call, or that mixes both, is rejected.",
+  "name": "test_v09_dynamic_value_branches_are_exclusive",
+  "protocolVersion": "v0.9",
+  "steps": [
+   {
+    "value": "text"
+   },
+   {
+    "value": 3
+   },
+   {
+    "value": true
+   },
+   {
+    "value": [
+     "a",
+     "b"
+    ]
+   },
+   {
+    "value": {
+     "path": "/a"
+    }
+   },
+   {
+    "value": {
+     "call": "now"
+    }
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {
+     "label": "x"
+    }
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {
+     "call": "now",
+     "path": "/a"
+    }
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {
+     "extra": 1,
+     "path": "/a"
+    }
+   }
+  ]
+ },
+ {
+  "action": "validate_common_type",
+  "definition": "ChildList",
+  "description": "ChildList is either an array of component IDs or a template with exactly componentId and path.",
+  "name": "test_v09_child_list_is_ids_or_template",
+  "protocolVersion": "v0.9",
+  "steps": [
+   {
+    "value": [
+     "header",
+     "body"
+    ]
+   },
+   {
+    "value": {
+     "componentId": "row",
+     "path": "/items"
+    }
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": "header"
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {
+     "componentId": "row"
+    }
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {
+     "componentId": "row",
+     "extra": 1,
+     "path": "/items"
+    }
+   }
+  ]
+ },
+ {
+  "action": "validate_common_type",
+  "definition": "Action",
+  "description": "Action holds exactly one of event and functionCall.",
+  "name": "test_v09_action_is_event_or_function_call",
+  "protocolVersion": "v0.9",
+  "steps": [
+   {
+    "value": {
+     "event": {
+      "name": "submit"
+     }
+    }
+   },
+   {
+    "value": {
+     "functionCall": {
+      "args": {
+       "url": "https://example.com"
+      },
+      "call": "openUrl"
+     }
+    }
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {}
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {
+     "event": {
+      "name": "submit"
+     },
+     "functionCall": {
+      "call": "now"
+     }
+    }
+   }
+  ]
+ },
+ {
+  "action": "validate_common_type",
+  "definition": "FunctionCall",
+  "description": "FunctionCall accepts call, args and returnType, and rejects any other key.",
+  "name": "test_v091_function_call_rejects_unknown_keys",
+  "protocolVersion": "v0.9.1",
+  "steps": [
+   {
+    "value": {
+     "call": "x"
+    }
+   },
+   {
+    "value": {
+     "args": {
+      "a": 1
+     },
+     "call": "x",
+     "returnType": "string"
+    }
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {
+     "bogus": 1,
+     "call": "x"
+    }
+   }
+  ]
+ },
+ {
+  "action": "validate_common_type",
+  "definition": "DynamicValue",
+  "description": "DynamicValue accepts a scalar or array literal, a data binding or a function call. It has no literal object branch, so an object that is neither a binding nor a call, or that mixes both, is rejected.",
+  "features": [
+   "F-CORE-16"
+  ],
+  "name": "test_v091_dynamic_value_branches_are_exclusive",
+  "protocolVersion": "v0.9.1",
+  "steps": [
+   {
+    "value": "text"
+   },
+   {
+    "value": 3
+   },
+   {
+    "value": true
+   },
+   {
+    "value": [
+     "a",
+     "b"
+    ]
+   },
+   {
+    "value": {
+     "path": "/a"
+    }
+   },
+   {
+    "value": {
+     "call": "now"
+    }
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {
+     "label": "x"
+    }
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {
+     "call": "now",
+     "path": "/a"
+    }
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {
+     "extra": 1,
+     "path": "/a"
+    }
+   }
+  ]
+ },
+ {
+  "action": "validate_common_type",
+  "definition": "ChildList",
+  "description": "ChildList is either an array of component IDs or a template with exactly componentId and path.",
+  "features": [
+   "F-CORE-13"
+  ],
+  "name": "test_v091_child_list_is_ids_or_template",
+  "protocolVersion": "v0.9.1",
+  "steps": [
+   {
+    "value": [
+     "header",
+     "body"
+    ]
+   },
+   {
+    "value": {
+     "componentId": "row",
+     "path": "/items"
+    }
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": "header"
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {
+     "componentId": "row"
+    }
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {
+     "componentId": "row",
+     "extra": 1,
+     "path": "/items"
+    }
+   }
+  ]
+ },
+ {
+  "action": "validate_common_type",
+  "definition": "Action",
+  "description": "Action holds exactly one of event and functionCall.",
+  "features": [
+   "F-CORE-28"
+  ],
+  "name": "test_v091_action_is_event_or_function_call",
+  "protocolVersion": "v0.9.1",
+  "steps": [
+   {
+    "value": {
+     "event": {
+      "name": "submit"
+     }
+    }
+   },
+   {
+    "value": {
+     "functionCall": {
+      "args": {
+       "url": "https://example.com"
+      },
+      "call": "openUrl"
+     }
+    }
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {}
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "value": {
+     "event": {
+      "name": "submit"
+     },
+     "functionCall": {
+      "call": "now"
+     }
+    }
+   }
+  ]
+ }
+]

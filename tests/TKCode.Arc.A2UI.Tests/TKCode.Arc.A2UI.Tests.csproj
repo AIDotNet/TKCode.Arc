@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>$(ArcTestTargetFramework)</TargetFramework>
+        <OutputType>Exe</OutputType>
+        <IsPackable>false</IsPackable>
+        <NoWarn>$(NoWarn);CS0436</NoWarn>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" />
+        <PackageReference Include="xunit.v3" />
+        <PackageReference Include="xunit.runner.visualstudio" />
+        <PackageReference Include="Shouldly" />
+        <PackageReference Include="Avalonia.Headless.XUnit" />
+        <ProjectReference Include="../../src/TKCode.Arc.A2UI/TKCode.Arc.A2UI.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <!-- Official A2UI conformance suites (Apache-2.0), converted from YAML by tools/a2ui/sync-conformance.sh. -->
+        <None Include="Conformance/**/*.json" CopyToOutputDirectory="PreserveNewest" />
+        <None Include="Conformance/NOTICE.md" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+</Project>

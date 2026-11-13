@@ -1,0 +1,157 @@
+[
+ {
+  "action": "resolve_path",
+  "args": {
+   "contextPath": "/user",
+   "path": "name"
+  },
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "Resolves a relative path against a scoped context path.",
+  "expect": "/user/name",
+  "features": [
+   "F-CORE-15"
+  ],
+  "name": "test_resolve_path_relative_against_context"
+ },
+ {
+  "action": "resolve_path",
+  "args": {
+   "contextPath": "/user",
+   "path": "address/city"
+  },
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "Resolves a multi-segment relative path against a scoped context path.",
+  "expect": "/user/address/city",
+  "features": [
+   "F-CORE-15"
+  ],
+  "name": "test_resolve_path_nested_relative_against_context"
+ },
+ {
+  "action": "resolve_path",
+  "args": {
+   "contextPath": "/user",
+   "path": "/list/0"
+  },
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "An absolute path starting with `/` ignores the context path.",
+  "expect": "/list/0",
+  "features": [
+   "F-CORE-14",
+   "F-CORE-15"
+  ],
+  "name": "test_resolve_path_absolute_ignores_context"
+ },
+ {
+  "action": "resolve_path",
+  "args": {
+   "contextPath": "/",
+   "path": "user/name"
+  },
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "Resolves a relative path against the root context `/`.",
+  "expect": "/user/name",
+  "name": "test_resolve_path_relative_against_root"
+ },
+ {
+  "action": "resolve_path",
+  "args": {
+   "path": "foo"
+  },
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "Resolves a relative path when no context path is provided.",
+  "expect": "/foo",
+  "name": "test_resolve_path_relative_without_context"
+ },
+ {
+  "action": "resolve_path",
+  "args": {
+   "contextPath": "/bar/",
+   "path": "foo"
+  },
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "Strips a trailing slash on the context path before joining a relative path.",
+  "expect": "/bar/foo",
+  "name": "test_resolve_path_context_with_trailing_slash"
+ },
+ {
+  "action": "resolve_path",
+  "args": {
+   "contextPath": "/user",
+   "path": ""
+  },
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "An empty relative path resolves to the current context path.",
+  "expect": "/user",
+  "name": "test_resolve_path_empty_in_scoped_context"
+ },
+ {
+  "action": "resolve_path",
+  "args": {
+   "contextPath": "/user/",
+   "path": ""
+  },
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "An empty relative path in a context with a trailing slash resolves to the trimmed context path.",
+  "expect": "/user",
+  "name": "test_resolve_path_empty_in_trailing_slash_context"
+ },
+ {
+  "action": "resolve_path",
+  "args": {
+   "contextPath": "/user",
+   "path": "."
+  },
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "A `.` path resolves to the current context path.",
+  "expect": "/user",
+  "features": [
+   "F-CORE-15"
+  ],
+  "name": "test_resolve_path_dot_in_scoped_context"
+ },
+ {
+  "action": "resolve_path",
+  "args": {
+   "contextPath": "/",
+   "path": ""
+  },
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "An empty relative path in the root context resolves to `/`.",
+  "expect": "/",
+  "name": "test_resolve_path_empty_in_root_context"
+ },
+ {
+  "action": "resolve_path",
+  "args": {
+   "contextPath": "/",
+   "path": "."
+  },
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "A `.` path in the root context resolves to `/`.",
+  "expect": "/",
+  "name": "test_resolve_path_dot_in_root_context"
+ }
+]

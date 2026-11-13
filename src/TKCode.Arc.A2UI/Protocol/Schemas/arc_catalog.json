@@ -1,0 +1,616 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/AIDotNet/TKCode.Arc/a2ui/catalogs/arc/v1",
+  "catalogId": "https://github.com/AIDotNet/TKCode.Arc/a2ui/catalogs/arc/v1",
+  "protocolVersion": "1.0",
+  "title": "Arc catalog",
+  "description": "Charts, data and input components drawn with TKCode.Arc controls. Use next to the basic catalog: set \"@catalogId\" on the component.",
+  "instructions": "Rich components for dashboards, documents and workflows. BarChart compares a few values; LineChart shows trends of one or more series; DonutChart shows parts of a whole; Sparkline is a tiny trend beside a value; Metric is one headline number. Table lists records (bind rows to a list in the data model; columns pick keys). Timeline shows dated events; Stepper shows where a multi-step flow is; Progress shows completion; Alert, Badge and Avatar carry status and people. Markdown is rich text and CodeBlock is source code; Accordion folds sections, each one child component. Switch, SegmentedControl and Rating are inputs bound two-way to the data model like the basic inputs. Bind data-heavy properties to the data model and change them with updateDataModel.",
+  "components": {
+    "BarChart": {
+      "type": "object",
+      "description": "Bars comparing a few values (up to 48).",
+      "properties": {
+        "component": {
+          "const": "BarChart"
+        },
+        "title": {
+          "$ref": "common_types.json#/$defs/DynamicString",
+          "description": "Chart title."
+        },
+        "labels": {
+          "$ref": "common_types.json#/$defs/DynamicStringList",
+          "description": "One label per bar."
+        },
+        "values": {
+          "$ref": "common_types.json#/$defs/DynamicValue",
+          "description": "One number per bar (a list, or a binding to a list)."
+        },
+        "unit": {
+          "type": "string",
+          "description": "Unit shown with values, for example 'users'."
+        },
+        "height": {
+          "type": "number",
+          "description": "Plot height in px, 120-600 (default 180)."
+        },
+        "weight": {
+          "type": "number",
+          "description": "Flex weight inside a Row or Column."
+        }
+      },
+      "required": [
+        "component",
+        "labels",
+        "values"
+      ]
+    },
+    "LineChart": {
+      "type": "object",
+      "description": "Trends of one or more series over the same labels.",
+      "properties": {
+        "component": {
+          "const": "LineChart"
+        },
+        "title": {
+          "$ref": "common_types.json#/$defs/DynamicString"
+        },
+        "labels": {
+          "$ref": "common_types.json#/$defs/DynamicStringList",
+          "description": "X axis labels."
+        },
+        "series": {
+          "$ref": "common_types.json#/$defs/DynamicValue",
+          "description": "[{\"name\": string, \"values\": number[]}] with one value per label, or a binding to such a list."
+        },
+        "unit": {
+          "type": "string"
+        },
+        "height": {
+          "type": "number",
+          "description": "Plot height in px, 120-600 (default 200); match a taller card beside it."
+        },
+        "weight": {
+          "type": "number",
+          "description": "Flex weight inside a Row or Column."
+        }
+      },
+      "required": [
+        "component",
+        "labels",
+        "series"
+      ]
+    },
+    "DonutChart": {
+      "type": "object",
+      "description": "Parts of a whole, with the total in the middle.",
+      "properties": {
+        "component": {
+          "const": "DonutChart"
+        },
+        "title": {
+          "$ref": "common_types.json#/$defs/DynamicString"
+        },
+        "labels": {
+          "$ref": "common_types.json#/$defs/DynamicStringList"
+        },
+        "values": {
+          "$ref": "common_types.json#/$defs/DynamicValue",
+          "description": "One number per label."
+        },
+        "totalLabel": {
+          "type": "string",
+          "description": "Text under the total in the middle."
+        },
+        "weight": {
+          "type": "number",
+          "description": "Flex weight inside a Row or Column."
+        }
+      },
+      "required": [
+        "component",
+        "labels",
+        "values"
+      ]
+    },
+    "Sparkline": {
+      "type": "object",
+      "description": "A tiny trend beside a value.",
+      "properties": {
+        "component": {
+          "const": "Sparkline"
+        },
+        "label": {
+          "$ref": "common_types.json#/$defs/DynamicString"
+        },
+        "values": {
+          "$ref": "common_types.json#/$defs/DynamicValue",
+          "description": "Numbers, oldest first."
+        },
+        "value": {
+          "$ref": "common_types.json#/$defs/DynamicString"
+        },
+        "change": {
+          "$ref": "common_types.json#/$defs/DynamicString"
+        },
+        "weight": {
+          "type": "number",
+          "description": "Flex weight inside a Row or Column."
+        }
+      },
+      "required": [
+        "component",
+        "values"
+      ]
+    },
+    "Metric": {
+      "type": "object",
+      "description": "One headline number.",
+      "properties": {
+        "component": {
+          "const": "Metric"
+        },
+        "label": {
+          "$ref": "common_types.json#/$defs/DynamicString"
+        },
+        "value": {
+          "$ref": "common_types.json#/$defs/DynamicNumber",
+          "description": "The number."
+        },
+        "prefix": {
+          "type": "string",
+          "description": "For example '$'."
+        },
+        "suffix": {
+          "type": "string",
+          "description": "For example '%' or ' users'."
+        },
+        "decimals": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4
+        },
+        "change": {
+          "$ref": "common_types.json#/$defs/DynamicString",
+          "description": "For example '+12%' (a leading '-' shows a decrease)."
+        },
+        "context": {
+          "$ref": "common_types.json#/$defs/DynamicString",
+          "description": "For example 'vs last week'."
+        },
+        "weight": {
+          "type": "number",
+          "description": "Flex weight inside a Row or Column."
+        }
+      },
+      "required": [
+        "component",
+        "label",
+        "value"
+      ]
+    },
+    "Table": {
+      "type": "object",
+      "description": "Records in rows; columns pick keys of each row object.",
+      "properties": {
+        "component": {
+          "const": "Table"
+        },
+        "caption": {
+          "$ref": "common_types.json#/$defs/DynamicString"
+        },
+        "columns": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "key": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "numeric": {
+                "type": "boolean"
+              },
+              "format": {
+                "type": "string",
+                "description": "currency:<ISO code>, percent or number"
+              }
+            },
+            "required": [
+              "key"
+            ]
+          }
+        },
+        "rows": {
+          "$ref": "common_types.json#/$defs/DynamicValue",
+          "description": "A list of objects keyed by column key, usually a binding."
+        },
+        "weight": {
+          "type": "number",
+          "description": "Flex weight inside a Row or Column."
+        }
+      },
+      "required": [
+        "component",
+        "columns",
+        "rows"
+      ]
+    },
+    "Timeline": {
+      "type": "object",
+      "description": "Dated events, newest first.",
+      "properties": {
+        "component": {
+          "const": "Timeline"
+        },
+        "label": {
+          "type": "string"
+        },
+        "events": {
+          "$ref": "common_types.json#/$defs/DynamicValue",
+          "description": "[{\"id\", \"at\": ISO 8601, \"title\", \"actor\"?, \"meta\"?}]"
+        },
+        "weight": {
+          "type": "number",
+          "description": "Flex weight inside a Row or Column."
+        }
+      },
+      "required": [
+        "component",
+        "events"
+      ]
+    },
+    "Stepper": {
+      "type": "object",
+      "description": "Where a multi-step flow is.",
+      "properties": {
+        "component": {
+          "const": "Stepper"
+        },
+        "steps": {
+          "$ref": "common_types.json#/$defs/DynamicValue",
+          "description": "[{\"label\", \"description\"?}]"
+        },
+        "current": {
+          "$ref": "common_types.json#/$defs/DynamicNumber",
+          "description": "0-based index of the current step; the step count means all done."
+        },
+        "orientation": {
+          "type": "string",
+          "enum": [
+            "horizontal",
+            "vertical"
+          ]
+        },
+        "weight": {
+          "type": "number",
+          "description": "Flex weight inside a Row or Column."
+        }
+      },
+      "required": [
+        "component",
+        "steps"
+      ]
+    },
+    "Progress": {
+      "type": "object",
+      "description": "Completion of a task.",
+      "properties": {
+        "component": {
+          "const": "Progress"
+        },
+        "label": {
+          "$ref": "common_types.json#/$defs/DynamicString"
+        },
+        "value": {
+          "$ref": "common_types.json#/$defs/DynamicNumber"
+        },
+        "max": {
+          "type": "number"
+        },
+        "weight": {
+          "type": "number",
+          "description": "Flex weight inside a Row or Column."
+        }
+      },
+      "required": [
+        "component",
+        "value"
+      ]
+    },
+    "Alert": {
+      "type": "object",
+      "description": "A status message with a tone.",
+      "properties": {
+        "component": {
+          "const": "Alert"
+        },
+        "tone": {
+          "$ref": "common_types.json#/$defs/DynamicString",
+          "description": "info, success, warning or danger."
+        },
+        "title": {
+          "$ref": "common_types.json#/$defs/DynamicString"
+        },
+        "text": {
+          "$ref": "common_types.json#/$defs/DynamicString"
+        },
+        "weight": {
+          "type": "number",
+          "description": "Flex weight inside a Row or Column."
+        }
+      },
+      "required": [
+        "component",
+        "title"
+      ]
+    },
+    "Badge": {
+      "type": "object",
+      "description": "A short status label.",
+      "properties": {
+        "component": {
+          "const": "Badge"
+        },
+        "text": {
+          "$ref": "common_types.json#/$defs/DynamicString"
+        },
+        "tone": {
+          "$ref": "common_types.json#/$defs/DynamicString",
+          "description": "neutral, info, success, warning or danger."
+        },
+        "weight": {
+          "type": "number",
+          "description": "Flex weight inside a Row or Column."
+        }
+      },
+      "required": [
+        "component",
+        "text"
+      ]
+    },
+    "Avatar": {
+      "type": "object",
+      "description": "A person's avatar (initials when there is no picture).",
+      "properties": {
+        "component": {
+          "const": "Avatar"
+        },
+        "name": {
+          "$ref": "common_types.json#/$defs/DynamicString"
+        },
+        "imageUrl": {
+          "$ref": "common_types.json#/$defs/DynamicString"
+        },
+        "weight": {
+          "type": "number",
+          "description": "Flex weight inside a Row or Column."
+        }
+      },
+      "required": [
+        "component",
+        "name"
+      ]
+    },
+    "Markdown": {
+      "type": "object",
+      "description": "Rich text: headings, lists, tables, code, links. HTML is not rendered.",
+      "properties": {
+        "component": {
+          "const": "Markdown"
+        },
+        "text": {
+          "$ref": "common_types.json#/$defs/DynamicString",
+          "description": "Markdown source."
+        },
+        "weight": {
+          "type": "number",
+          "description": "Flex weight inside a Row or Column."
+        }
+      },
+      "required": [
+        "component",
+        "text"
+      ]
+    },
+    "CodeBlock": {
+      "type": "object",
+      "description": "Source code with syntax highlighting and a copy button.",
+      "properties": {
+        "component": {
+          "const": "CodeBlock"
+        },
+        "code": {
+          "$ref": "common_types.json#/$defs/DynamicString"
+        },
+        "language": {
+          "type": "string",
+          "description": "For example csharp, json, python, bash."
+        },
+        "fileName": {
+          "$ref": "common_types.json#/$defs/DynamicString"
+        },
+        "weight": {
+          "type": "number",
+          "description": "Flex weight inside a Row or Column."
+        }
+      },
+      "required": [
+        "component",
+        "code"
+      ]
+    },
+    "Accordion": {
+      "type": "object",
+      "description": "Collapsible sections; each shows one child component.",
+      "properties": {
+        "component": {
+          "const": "Accordion"
+        },
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "$ref": "common_types.json#/$defs/DynamicString",
+                "description": "Section title."
+              },
+              "child": {
+                "$ref": "common_types.json#/$defs/Child",
+                "description": "The ID of the section's component."
+              }
+            },
+            "required": [
+              "title",
+              "child"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "multiple": {
+          "type": "boolean",
+          "description": "Several sections may be open at once."
+        },
+        "expanded": {
+          "type": "integer",
+          "description": "Index of the section open at first; -1 for none."
+        },
+        "weight": {
+          "type": "number",
+          "description": "Flex weight inside a Row or Column."
+        }
+      },
+      "required": [
+        "component",
+        "items"
+      ]
+    },
+    "Switch": {
+      "type": "object",
+      "description": "An on/off setting (two-way bound).",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/Checkable"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "Switch"
+            },
+            "label": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "value": {
+              "$ref": "common_types.json#/$defs/DynamicBoolean"
+            },
+            "weight": {
+              "type": "number",
+              "description": "Flex weight inside a Row or Column."
+            }
+          },
+          "required": [
+            "component",
+            "label",
+            "value"
+          ]
+        }
+      ]
+    },
+    "SegmentedControl": {
+      "type": "object",
+      "description": "One choice from 2-5 short options shown side by side (two-way bound).",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/Checkable"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "SegmentedControl"
+            },
+            "options": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "label": {
+                    "$ref": "common_types.json#/$defs/DynamicString"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "label",
+                  "value"
+                ]
+              }
+            },
+            "value": {
+              "$ref": "common_types.json#/$defs/DynamicString",
+              "description": "The chosen option's value."
+            },
+            "weight": {
+              "type": "number",
+              "description": "Flex weight inside a Row or Column."
+            }
+          },
+          "required": [
+            "component",
+            "options",
+            "value"
+          ]
+        }
+      ]
+    },
+    "Rating": {
+      "type": "object",
+      "description": "Stars (two-way bound unless readOnly).",
+      "allOf": [
+        {
+          "$ref": "common_types.json#/$defs/Checkable"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "component": {
+              "const": "Rating"
+            },
+            "label": {
+              "$ref": "common_types.json#/$defs/DynamicString"
+            },
+            "value": {
+              "$ref": "common_types.json#/$defs/DynamicNumber"
+            },
+            "max": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10
+            },
+            "allowHalf": {
+              "type": "boolean"
+            },
+            "readOnly": {
+              "type": "boolean"
+            },
+            "weight": {
+              "type": "number",
+              "description": "Flex weight inside a Row or Column."
+            }
+          },
+          "required": [
+            "component",
+            "value"
+          ]
+        }
+      ]
+    }
+  }
+}

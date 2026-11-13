@@ -1,0 +1,373 @@
+[
+ {
+  "action": "validate",
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies RFC 6901 JSON Pointer escape sequence resolution (~0 for ~ and ~1 for /).",
+  "expect": {
+   "surfaces": {
+    "s1": {
+     "dataModel": {
+      "a/b": {
+       "c~d": "escaped_value"
+      },
+      "slash/key": 100
+     }
+    }
+   }
+  },
+  "features": [
+   "F-CORE-14"
+  ],
+  "name": "test_pointer_escape_characters",
+  "steps": [
+   {
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "basic",
+       "dataModel": {
+        "a/b": {
+         "c~d": "original_value"
+        },
+        "slash/key": 100
+       },
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   },
+   {
+    "payload": [
+     {
+      "updateDataModel": {
+       "path": "/a~1b/c~0d",
+       "surfaceId": "s1",
+       "value": "escaped_value"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "validate",
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies numeric array indexing in JSON Pointers (/items/0, /items/1).",
+  "expect": {
+   "surfaces": {
+    "s1": {
+     "dataModel": {
+      "items": [
+       "first",
+       "updated_second",
+       "third"
+      ]
+     }
+    }
+   }
+  },
+  "features": [
+   "F-CORE-14"
+  ],
+  "name": "test_pointer_array_indexing",
+  "steps": [
+   {
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "basic",
+       "dataModel": {
+        "items": [
+         "first",
+         "second",
+         "third"
+        ]
+       },
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   },
+   {
+    "payload": [
+     {
+      "updateDataModel": {
+       "path": "/items/1",
+       "surfaceId": "s1",
+       "value": "updated_second"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "validate",
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies automatic intermediate object creation when setting deep uncreated JSON Pointer paths.",
+  "expect": {
+   "surfaces": {
+    "s1": {
+     "dataModel": {
+      "deeply": {
+       "nested": {
+        "structure": {
+         "key": "vivified_value"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "features": [
+   "F-CORE-18"
+  ],
+  "name": "test_pointer_auto_vivification",
+  "steps": [
+   {
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "basic",
+       "dataModel": {},
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   },
+   {
+    "payload": [
+     {
+      "updateDataModel": {
+       "path": "/deeply/nested/structure/key",
+       "surfaceId": "s1",
+       "value": "vivified_value"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "validate",
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies advanced RFC 6901 escape sequence combinations (~10 for /0, ~00 for ~0, ~11 for /1, and ~01 for ~1).",
+  "expect": {
+   "surfaces": {
+    "s1": {
+     "dataModel": {
+      "m/0": "updated3",
+      "m/1": "updated1",
+      "m~0": "updated0",
+      "m~1": "updated2"
+     }
+    }
+   }
+  },
+  "features": [
+   "F-CORE-14"
+  ],
+  "name": "test_pointer_extended_escape_sequences",
+  "steps": [
+   {
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "basic",
+       "dataModel": {
+        "m/0": "val3",
+        "m/1": "val1",
+        "m~0": "val0",
+        "m~1": "val2"
+       },
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   },
+   {
+    "payload": [
+     {
+      "updateDataModel": {
+       "path": "/m~00",
+       "surfaceId": "s1",
+       "value": "updated0"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateDataModel": {
+       "path": "/m~11",
+       "surfaceId": "s1",
+       "value": "updated1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateDataModel": {
+       "path": "/m~01",
+       "surfaceId": "s1",
+       "value": "updated2"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateDataModel": {
+       "path": "/m~10",
+       "surfaceId": "s1",
+       "value": "updated3"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "validate",
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies rejection of leading zero array indices (e.g. /items/01) per RFC 6901 §4.",
+  "name": "test_pointer_reject_leading_zero_array_index",
+  "steps": [
+   {
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "basic",
+       "dataModel": {
+        "items": [
+         "a",
+         "b",
+         "c"
+        ]
+       },
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   },
+   {
+    "expectError": {
+     "category": "DataError",
+     "message": "non-numeric segment"
+    },
+    "payload": [
+     {
+      "updateDataModel": {
+       "path": "/items/01",
+       "surfaceId": "s1",
+       "value": "invalid"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "validate",
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies DataError when writing nested path through primitive intermediate node.",
+  "features": [
+   "F-CORE-18"
+  ],
+  "name": "test_pointer_reject_write_through_primitive",
+  "steps": [
+   {
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "basic",
+       "dataModel": {
+        "user": "Alice"
+       },
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   },
+   {
+    "expectError": {
+     "category": "DataError",
+     "message": "Cannot set path"
+    },
+    "payload": [
+     {
+      "updateDataModel": {
+       "path": "/user/name/first",
+       "surfaceId": "s1",
+       "value": "Alice"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "validate",
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies DataError when setting non-numeric key on array target.",
+  "name": "test_pointer_reject_non_numeric_array_segment",
+  "steps": [
+   {
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "basic",
+       "dataModel": {
+        "items": [
+         "a",
+         "b",
+         "c"
+        ]
+       },
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   },
+   {
+    "expectError": {
+     "category": "DataError",
+     "message": "non-numeric segment"
+    },
+    "payload": [
+     {
+      "updateDataModel": {
+       "path": "/items/invalidKey",
+       "surfaceId": "s1",
+       "value": "value"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ }
+]

@@ -1,0 +1,42 @@
+[
+ {
+  "action": "agent_to_renderer_schema",
+  "description": "The v0.8 server_to_client schema generated from the SDK models matches specification/v0_8/json/server_to_client.json exactly.",
+  "expectFile": "specification/v0_8/json/server_to_client.json",
+  "features": [
+   "F-CORE-07"
+  ],
+  "name": "test_v08_agent_to_renderer_schema_matches_specification",
+  "protocolVersion": "v0.8"
+ },
+ {
+  "action": "agent_to_renderer_schema",
+  "description": "The v0.9 server_to_client schema generated from the SDK models matches specification/v0_9/json/server_to_client.json exactly.",
+  "expectFile": "specification/v0_9/json/server_to_client.json",
+  "features": [
+   "F-CORE-07"
+  ],
+  "name": "test_v09_agent_to_renderer_schema_matches_specification",
+  "protocolVersion": "v0.9"
+ },
+ {
+  "action": "agent_to_renderer_schema",
+  "description": "The v0.9.1 server_to_client schema generated from the SDK models matches specification/v0_9_1/json/server_to_client.json exactly.",
+  "expectFile": "specification/v0_9_1/json/server_to_client.json",
+  "features": [
+   "F-CORE-07"
+  ],
+  "name": "test_v091_agent_to_renderer_schema_matches_specification",
+  "protocolVersion": "v0.9.1"
+ },
+ {
+  "action": "agent_to_renderer_schema",
+  "description": "The v1.0 agent_to_renderer schema generated from the SDK models matches specification/v1_0/json/agent_to_renderer.json exactly.",
+  "expectFile": "specification/v1_0/json/agent_to_renderer.json",
+  "features": [
+   "F-CORE-07"
+  ],
+  "name": "test_v10_agent_to_renderer_schema_matches_specification",
+  "protocolVersion": "1.0"
+ }
+]

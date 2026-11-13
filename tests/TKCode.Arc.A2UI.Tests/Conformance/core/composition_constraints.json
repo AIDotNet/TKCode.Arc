@@ -1,0 +1,747 @@
+[
+ {
+  "action": "process_messages",
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies root components treating Surface as canonical parent container when allowedParents includes Surface.",
+  "expect": {
+   "surfaces": {
+    "s1": {
+     "components": {
+      "root": {
+       "children": [
+        "t1"
+       ],
+       "component": "Column"
+      },
+      "t1": {
+       "component": "Text",
+       "text": "Hello World"
+      }
+     }
+    }
+   }
+  },
+  "features": [
+   "F-CORE-11",
+   "F-CORE-12"
+  ],
+  "name": "test_composition_surface_implicit_parent_container",
+  "steps": [
+   {
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "basic",
+       "components": [
+        {
+         "children": [
+          "t1"
+         ],
+         "component": "Column",
+         "id": "root"
+        },
+        {
+         "component": "Text",
+         "id": "t1",
+         "text": "Hello World"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "validationConfig": {}
+ },
+ {
+  "action": "process_messages",
+  "catalog": {
+   "catalogId": "custom",
+   "components": {
+    "ColumnHeader": {
+     "allowedParents": [
+      "Column"
+     ],
+     "type": "object"
+    },
+    "Row": {
+     "properties": {
+      "children": {
+       "$ref": "#/$defs/ChildList"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies validation error thrown when component is placed under an unallowed parent component type.",
+  "expectError": {
+   "category": "ValidationError",
+   "code": "UNALLOWED_PARENT",
+   "details": [
+    {
+     "code": "UNALLOWED_PARENT",
+     "path": "/components/1",
+     "surfaceId": "s1"
+    }
+   ],
+   "message": "Component 'invalid_header' (ColumnHeader) cannot be placed under parent 'root' (Row). Allowed parents: ['Column'].",
+   "path": "/components/1",
+   "rendererError": {
+    "error": {
+     "code": "UNALLOWED_PARENT",
+     "message": "Component 'invalid_header' (ColumnHeader) cannot be placed under parent 'root' (Row). Allowed parents: ['Column'].",
+     "path": "/components/1",
+     "surfaceId": "s1"
+    },
+    "version": "1.0"
+   },
+   "surfaceId": "s1"
+  },
+  "features": [
+   "F-CORE-12"
+  ],
+  "name": "test_composition_unallowed_parent_error",
+  "steps": [
+   {
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "custom",
+       "components": [
+        {
+         "children": [
+          "invalid_header"
+         ],
+         "component": "Row",
+         "id": "root"
+        },
+        {
+         "component": "ColumnHeader",
+         "id": "invalid_header"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "validationConfig": {}
+ },
+ {
+  "action": "validate",
+  "catalog": {
+   "catalogSchema": {
+    "catalogId": "custom",
+    "components": {
+     "ColumnHeader": {
+      "allowedParents": [
+       "Column"
+      ]
+     }
+    }
+   },
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies validation error thrown when root component does not allow Surface as its implicit parent.",
+  "expectError": {
+   "category": "ValidationError",
+   "code": "UNALLOWED_PARENT",
+   "details": [
+    {
+     "code": "UNALLOWED_PARENT",
+     "path": "/components/0",
+     "surfaceId": "s1"
+    }
+   ],
+   "message": "Component 'root' (ColumnHeader) cannot be placed under parent 'Surface' (Surface). Allowed parents: ['Column'].",
+   "path": "/components/0",
+   "rendererError": {
+    "error": {
+     "code": "UNALLOWED_PARENT",
+     "message": "Component 'root' (ColumnHeader) cannot be placed under parent 'Surface' (Surface). Allowed parents: ['Column'].",
+     "path": "/components/0",
+     "surfaceId": "s1"
+    },
+    "version": "1.0"
+   },
+   "surfaceId": "s1"
+  },
+  "name": "test_composition_unallowed_parent_root_error",
+  "steps": [
+   {
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "custom",
+       "components": [
+        {
+         "component": "ColumnHeader",
+         "id": "root"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "process_messages",
+  "catalog": {
+   "catalogId": "custom",
+   "components": {
+    "RestrictedBox": {
+     "allowedChildren": [
+      "Text",
+      "Button"
+     ],
+     "properties": {
+      "children": {
+       "$ref": "#/$defs/ChildList"
+      }
+     },
+     "type": "object"
+    },
+    "Video": {
+     "type": "object"
+    }
+   },
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies validation error thrown when container contains an unallowed child component type.",
+  "expectError": {
+   "category": "ValidationError",
+   "code": "UNALLOWED_CHILD",
+   "details": [
+    {
+     "code": "UNALLOWED_CHILD",
+     "path": "/components/0/children/0",
+     "surfaceId": "s1"
+    }
+   ],
+   "message": "Container 'root' (RestrictedBox) cannot contain child 'v1' (Video). Allowed children: ['Text', 'Button'].",
+   "path": "/components/0/children/0",
+   "rendererError": {
+    "error": {
+     "code": "UNALLOWED_CHILD",
+     "message": "Container 'root' (RestrictedBox) cannot contain child 'v1' (Video). Allowed children: ['Text', 'Button'].",
+     "path": "/components/0/children/0",
+     "surfaceId": "s1"
+    },
+    "version": "1.0"
+   },
+   "surfaceId": "s1"
+  },
+  "features": [
+   "F-CORE-12"
+  ],
+  "name": "test_composition_unallowed_child_error",
+  "steps": [
+   {
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "custom",
+       "components": [
+        {
+         "children": [
+          "v1"
+         ],
+         "component": "RestrictedBox",
+         "id": "root"
+        },
+        {
+         "component": "Video",
+         "id": "v1"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "validationConfig": {}
+ },
+ {
+  "action": "process_messages",
+  "catalog": {
+   "catalogId": "custom",
+   "components": {
+    "Box": {
+     "properties": {
+      "children": {
+       "$ref": "#/$defs/ChildList"
+      }
+     },
+     "type": "object"
+    },
+    "Header": {
+     "allowedParents": [
+      "Box"
+     ],
+     "type": "object"
+    }
+   },
+   "protocolVersion": "1.0"
+  },
+  "description": "A container rewritten to drop a child leaves a component that nothing references. Only the surface's root is checked against Surface in allowedParents, so when orphans are allowed the update is accepted, even though the child's allowedParents does not include Surface. The other checks are on, so the processor checks the whole surface.",
+  "expect": {
+   "surfaces": {
+    "s1": {
+     "components": {
+      "h": {
+       "component": "Header"
+      },
+      "root": {
+       "children": [],
+       "component": "Box"
+      }
+     }
+    }
+   }
+  },
+  "name": "test_composition_dropped_child_is_not_checked_against_surface",
+  "steps": [
+   {
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "custom",
+       "components": [
+        {
+         "children": [
+          "h"
+         ],
+         "component": "Box",
+         "id": "root"
+        },
+        {
+         "component": "Header",
+         "id": "h"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   },
+   {
+    "payload": [
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "children": [],
+         "component": "Box",
+         "id": "root"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "validationConfig": {
+   "allowOrphanComponents": true
+  }
+ },
+ {
+  "action": "process_messages",
+  "catalog": {
+   "catalogId": "custom",
+   "components": {
+    "Box": {
+     "properties": {
+      "children": {
+       "$ref": "#/$defs/ChildList"
+      }
+     },
+     "type": "object"
+    },
+    "Header": {
+     "allowedParents": [
+      "Box"
+     ],
+     "type": "object"
+    }
+   },
+   "protocolVersion": "1.0"
+  },
+  "description": "The same payloads as test_composition_dropped_child_is_not_checked_against_surface, when references to components that have not arrived are also allowed. An SDK may then check only the components each update changes; the dropped child is still not checked against Surface.",
+  "expect": {
+   "surfaces": {
+    "s1": {
+     "components": {
+      "h": {
+       "component": "Header"
+      },
+      "root": {
+       "children": [],
+       "component": "Box"
+      }
+     }
+    }
+   }
+  },
+  "name": "test_composition_dropped_child_is_not_checked_against_surface_when_references_may_dangle",
+  "steps": [
+   {
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "custom",
+       "components": [
+        {
+         "children": [
+          "h"
+         ],
+         "component": "Box",
+         "id": "root"
+        },
+        {
+         "component": "Header",
+         "id": "h"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   },
+   {
+    "payload": [
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "children": [],
+         "component": "Box",
+         "id": "root"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "validationConfig": {
+   "allowDanglingReferences": true,
+   "allowOrphanComponents": true
+  }
+ },
+ {
+  "action": "process_messages",
+  "catalog": {
+   "catalogId": "custom",
+   "components": {
+    "Box": {
+     "properties": {
+      "children": {
+       "$ref": "#/$defs/ChildList"
+      }
+     },
+     "type": "object"
+    },
+    "Header": {
+     "allowedParents": [
+      "Box"
+     ],
+     "type": "object"
+    }
+   },
+   "protocolVersion": "1.0"
+  },
+  "description": "The same payloads as test_composition_dropped_child_is_not_checked_against_surface, when orphans are not allowed. The topology check reports the dropped child as unreachable from the root; it is not reported as UNALLOWED_PARENT against Surface.",
+  "name": "test_composition_dropped_child_is_reported_as_orphan",
+  "steps": [
+   {
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "custom",
+       "components": [
+        {
+         "children": [
+          "h"
+         ],
+         "component": "Box",
+         "id": "root"
+        },
+        {
+         "component": "Header",
+         "id": "h"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   },
+   {
+    "expectError": {
+     "category": "IntegrityError",
+     "message": "Component 'h' is not reachable from 'root'"
+    },
+    "payload": [
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "children": [],
+         "component": "Box",
+         "id": "root"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "validationConfig": {
+   "allowOrphanComponents": false
+  }
+ },
+ {
+  "action": "process_messages",
+  "catalog": {
+   "catalogId": "custom",
+   "components": {
+    "Box": {
+     "properties": {
+      "children": {
+       "$ref": "#/$defs/ChildList"
+      }
+     },
+     "type": "object"
+    },
+    "Card": {
+     "allowedParents": [
+      "Box"
+     ],
+     "type": "object"
+    }
+   },
+   "protocolVersion": "1.0"
+  },
+  "description": "The surface's root is checked against Surface in allowedParents even when another component also lists it as a child. The other component is an orphan, which the config allows.",
+  "name": "test_composition_root_referenced_by_another_component_checked_against_surface",
+  "steps": [
+   {
+    "expectError": {
+     "category": "ValidationError",
+     "code": "UNALLOWED_PARENT",
+     "message": "Component 'root' (Card) cannot be placed under parent 'Surface' (Surface). Allowed parents: ['Box']."
+    },
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "custom",
+       "components": [
+        {
+         "component": "Card",
+         "id": "root"
+        },
+        {
+         "children": [
+          "root"
+         ],
+         "component": "Box",
+         "id": "box"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "validationConfig": {
+   "allowOrphanComponents": true
+  }
+ },
+ {
+  "action": "process_messages",
+  "catalog": {
+   "catalogId": "custom",
+   "components": {
+    "Box": {
+     "properties": {
+      "children": {
+       "$ref": "#/$defs/ChildList"
+      }
+     },
+     "type": "object"
+    },
+    "Card": {
+     "properties": {
+      "children": {
+       "$ref": "#/$defs/ChildList"
+      }
+     },
+     "type": "object"
+    },
+    "Header": {
+     "allowedParents": [
+      "Box"
+     ],
+     "type": "object"
+    }
+   },
+   "protocolVersion": "1.0"
+  },
+  "description": "Every parent of a component is checked against its allowedParents. Here the disallowed parent comes first in surface order.",
+  "features": [
+   "F-CORE-12"
+  ],
+  "name": "test_composition_multiple_parents_disallowed_first",
+  "steps": [
+   {
+    "expectError": {
+     "category": "ValidationError",
+     "code": "UNALLOWED_PARENT",
+     "message": "Component 'h' (Header) cannot be placed under parent 'card' (Card). Allowed parents: ['Box']."
+    },
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "custom",
+       "components": [
+        {
+         "children": [
+          "card",
+          "b"
+         ],
+         "component": "Box",
+         "id": "root"
+        },
+        {
+         "children": [
+          "h"
+         ],
+         "component": "Card",
+         "id": "card"
+        },
+        {
+         "children": [
+          "h"
+         ],
+         "component": "Box",
+         "id": "b"
+        },
+        {
+         "component": "Header",
+         "id": "h"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "validationConfig": {}
+ },
+ {
+  "action": "process_messages",
+  "catalog": {
+   "catalogId": "custom",
+   "components": {
+    "Box": {
+     "properties": {
+      "children": {
+       "$ref": "#/$defs/ChildList"
+      }
+     },
+     "type": "object"
+    },
+    "Card": {
+     "properties": {
+      "children": {
+       "$ref": "#/$defs/ChildList"
+      }
+     },
+     "type": "object"
+    },
+    "Header": {
+     "allowedParents": [
+      "Box"
+     ],
+     "type": "object"
+    }
+   },
+   "protocolVersion": "1.0"
+  },
+  "description": "The same as test_composition_multiple_parents_disallowed_first, with the disallowed parent second in surface order.",
+  "name": "test_composition_multiple_parents_disallowed_second",
+  "steps": [
+   {
+    "expectError": {
+     "category": "ValidationError",
+     "code": "UNALLOWED_PARENT",
+     "message": "Component 'h' (Header) cannot be placed under parent 'card' (Card). Allowed parents: ['Box']."
+    },
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "custom",
+       "components": [
+        {
+         "children": [
+          "b",
+          "card"
+         ],
+         "component": "Box",
+         "id": "root"
+        },
+        {
+         "children": [
+          "h"
+         ],
+         "component": "Box",
+         "id": "b"
+        },
+        {
+         "children": [
+          "h"
+         ],
+         "component": "Card",
+         "id": "card"
+        },
+        {
+         "component": "Header",
+         "id": "h"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "validationConfig": {}
+ }
+]

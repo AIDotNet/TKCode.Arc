@@ -1,0 +1,4178 @@
+[
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests schema validation of v1.0 message envelopes (inline components, optional catalogId, data deletion) against the basic v1.0 catalog schema.",
+  "features": [
+   "F-CORE-07",
+   "F-CORE-11"
+  ],
+  "name": "test_validator_1_0",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/catalogs/basic/v1/catalog.json",
+       "components": [
+        {
+         "component": "Text",
+         "id": "root",
+         "text": "Inline Text"
+        }
+       ],
+       "dataModel": {
+        "counter": 100
+       },
+       "sendDataModel": true,
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   },
+   {
+    "messages": [
+     {
+      "createSurface": {
+       "surfaceId": "s_nocat"
+      },
+      "version": "1.0"
+     }
+    ]
+   },
+   {
+    "messages": [
+     {
+      "updateDataModel": {
+       "path": "/user/token",
+       "surfaceId": "s1",
+       "value": null
+      },
+      "version": "1.0"
+     }
+    ]
+   },
+   {
+    "expectError": {
+     "category": "ValidationError",
+     "details": [
+      {
+       "code": "missing_field",
+       "path": "messages.0.version"
+      }
+     ]
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "surfaceId": "s1"
+      }
+     }
+    ]
+   },
+   {
+    "expectError": {
+     "category": "ValidationError",
+     "details": [
+      {
+       "code": "type_mismatch",
+       "path": "messages.0.createSurface.surfaceId"
+      }
+     ]
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "surfaceId": 123
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "validate",
+  "catalog": {
+   "catalogId": "custom",
+   "components": {
+    "Canvas": {
+     "properties": {
+      "children": {
+       "items": {
+        "$ref": "common_types.json#/$defs/ComponentId"
+       },
+       "type": "array"
+      },
+      "component": {
+       "const": "Canvas"
+      },
+      "id": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "component",
+      "children"
+     ],
+     "type": "object"
+    },
+    "Chart": {
+     "properties": {
+      "chartType": {
+       "enum": [
+        "doughnut",
+        "pie"
+       ]
+      },
+      "component": {
+       "const": "Chart"
+      },
+      "id": {
+       "type": "string"
+      },
+      "title": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "component"
+     ],
+     "type": "object"
+    }
+   }
+  },
+  "description": "Tests component property schema validation in v1.0 against custom catalog schema.",
+  "name": "test_custom_catalog_1_0",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "custom",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "children": [
+          "c1",
+          "c2"
+         ],
+         "component": "Canvas",
+         "id": "root"
+        },
+        {
+         "chartType": "doughnut",
+         "component": "Chart",
+         "id": "c1",
+         "title": "Chart 1"
+        },
+        {
+         "chartType": "pie",
+         "component": "Chart",
+         "id": "c2",
+         "title": "Chart 2"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   },
+   {
+    "expectError": {
+     "category": "ValidationError",
+     "details": [
+      {
+       "code": "invalid_value",
+       "path": "/chartType",
+       "surfaceId": "s1"
+      }
+     ],
+     "path": "/components/0/chartType",
+     "rendererError": {
+      "error": {
+       "code": "VALIDATION_FAILED",
+       "message": "chartType",
+       "path": "/components/0/chartType",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     "surfaceId": "s1"
+    },
+    "messages": [
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "chartType": "bar",
+         "component": "Chart",
+         "id": "c1"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   },
+   {
+    "expectError": {
+     "category": "ValidationError",
+     "details": [
+      {
+       "code": "missing_field",
+       "path": "/children",
+       "surfaceId": "s1"
+      }
+     ],
+     "path": "/components/0/children",
+     "rendererError": {
+      "error": {
+       "code": "VALIDATION_FAILED",
+       "message": "children",
+       "path": "/components/0/children",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     "surfaceId": "s1"
+    },
+    "messages": [
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "component": "Canvas",
+         "id": "c1"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   },
+   {
+    "expectError": {
+     "category": "ValidationError",
+     "details": [
+      {
+       "code": "invalid_value",
+       "path": "/component",
+       "surfaceId": "s1"
+      }
+     ],
+     "path": "/components/0/component",
+     "rendererError": {
+      "error": {
+       "code": "VALIDATION_FAILED",
+       "message": "UnknownComponent",
+       "path": "/components/0/component",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     "surfaceId": "s1"
+    },
+    "messages": [
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "component": "UnknownComponent",
+         "id": "c1"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that circular component references fail validation in v1.0 strict mode.",
+  "features": [
+   "F-CORE-12"
+  ],
+  "name": "test_v10_topology_circular_reference_error",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": "Circular component reference",
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/catalogs/basic/v1/catalog.json",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "children": [
+          "c1"
+         ],
+         "component": "Column",
+         "id": "root"
+        },
+        {
+         "children": [
+          "root"
+         ],
+         "component": "Column",
+         "id": "c1"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": true
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that dangling child references fail validation in v1.0 strict mode.",
+  "features": [
+   "F-CORE-12"
+  ],
+  "name": "test_v10_topology_dangling_child_reference_error",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": "Dangling reference",
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/catalogs/basic/v1/catalog.json",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "children": [
+          "missing_child"
+         ],
+         "component": "Column",
+         "id": "root"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": true
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that self-referencing components fail validation in v1.0 strict mode.",
+  "features": [
+   "F-CORE-12"
+  ],
+  "name": "test_v10_topology_self_reference_error",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": "Self-reference detected",
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/catalogs/basic/v1/catalog.json",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "children": [
+          "root"
+         ],
+         "component": "Column",
+         "id": "root"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": true
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that unreachable orphaned components fail validation in v1.0 strict mode.",
+  "features": [
+   "F-CORE-12"
+  ],
+  "name": "test_v10_topology_orphaned_component_error",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": "is not reachable from",
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/catalogs/basic/v1/catalog.json",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "component": "Text",
+         "id": "root",
+         "text": "Root"
+        },
+        {
+         "component": "Text",
+         "id": "orphan",
+         "text": "Orphan"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": true
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that component updates missing root component fail validation in v1.0 strict mode.",
+  "features": [
+   "F-CORE-12"
+  ],
+  "name": "test_v10_topology_missing_root_component_error",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": "Missing root component",
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/catalogs/basic/v1/catalog.json",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "component": "Text",
+         "id": "c1",
+         "text": "No Root"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": true
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that unknown component types fail schema validation in v1.0.",
+  "name": "test_v10_unknown_component_type",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": {
+     "category": "ValidationError",
+     "path": "/components/0/component",
+     "rendererError": {
+      "error": {
+       "code": "VALIDATION_FAILED",
+       "message": "UnknownWidget",
+       "path": "/components/0/component",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     "surfaceId": "s1"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/catalogs/basic/v1/catalog.json",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "component": "UnknownWidget",
+         "foo": "bar",
+         "id": "root"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that extra unknown component properties fail schema validation in v1.0.",
+  "name": "test_v10_unknown_component_property",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": {
+     "category": "ValidationError",
+     "rendererError": {
+      "error": {
+       "code": "VALIDATION_FAILED",
+       "message": "Button",
+       "path": "/components/0",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     "surfaceId": "s1"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/catalogs/basic/v1/catalog.json",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "component": "Button",
+         "id": "root",
+         "label": "Click Me",
+         "unknownAttribute": "someValue"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that unknown nested functions fail schema validation in v1.0.",
+  "name": "test_v10_unknown_nested_function",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": {
+     "category": "ValidationError",
+     "rendererError": {
+      "error": {
+       "code": "VALIDATION_FAILED",
+       "message": "unknownFunc",
+       "path": "/components/0/action/functionCall",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     "surfaceId": "s1"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/catalogs/basic/v1/catalog.json",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "action": {
+          "functionCall": {
+           "@call": "unknownFunc",
+           "args": {
+            "arg": "val"
+           }
+          }
+         },
+         "child": "t1",
+         "component": "Button",
+         "id": "root"
+        },
+        {
+         "component": "Text",
+         "id": "t1",
+         "text": "Click Me"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "validate",
+  "description": "Tests that having multiple action keys in a single message envelope fails validation in v1.0.",
+  "name": "test_v10_multiple_action_envelope_error",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "surfaceId": "s1"
+      },
+      "deleteSurface": {
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "validate",
+  "description": "Tests that invalid JSON Pointer path syntax fails validation in v1.0.",
+  "name": "test_v10_invalid_json_pointer_path_error",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "messages": [
+     {
+      "updateDataModel": {
+       "path": "invalid path [0]",
+       "surfaceId": "s1",
+       "value": "data"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that component IDs violating UAX#31 identifier syntax fail validation in v1.0.",
+  "name": "test_v10_uax31_invalid_identifier_error",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": {
+     "category": "ValidationError",
+     "message": "Component id '123invalid_id' must be a valid",
+     "path": "/components/1/id",
+     "rendererError": {
+      "error": {
+       "code": "VALIDATION_FAILED",
+       "message": "123invalid_id",
+       "path": "/components/1/id",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     "surfaceId": "s1"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/catalogs/basic/v1/catalog.json",
+       "components": [
+        {
+         "children": [
+          "123invalid_id"
+         ],
+         "component": "Column",
+         "id": "root"
+        },
+        {
+         "component": "Text",
+         "id": "123invalid_id",
+         "text": "Invalid ID"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that a component referenced only as a list template is reachable from the root in v1.0 strict mode.",
+  "name": "test_v10_topology_template_child_reachable",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "children": {
+          "componentId": "item",
+          "path": "/items"
+         },
+         "component": "List",
+         "id": "root"
+        },
+        {
+         "component": "Text",
+         "id": "item",
+         "text": "Reachable"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": true
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that a list template naming a component that does not exist fails validation in v1.0 strict mode.",
+  "name": "test_v10_topology_template_dangling_reference_error",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": {
+     "category": "ValidationError",
+     "message": "references non-existent component 'missing_id'"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "children": {
+          "componentId": "missing_id",
+          "path": "/items"
+         },
+         "component": "List",
+         "id": "root"
+        },
+        {
+         "component": "Text",
+         "id": "item",
+         "text": "Unused"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": true
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that a data binding path with an invalid JSON Pointer escape ('~2') fails validation in v1.0.",
+  "name": "test_v10_invalid_binding_path_error",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": {
+     "category": "ValidationError",
+     "message": "Invalid path syntax"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "component": "Text",
+         "id": "root",
+         "text": {
+          "@path": "/invalid/escape/~2"
+         }
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": true
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that a chain of nested components deeper than the global limit (50) fails validation in v1.0 strict mode.",
+  "name": "test_v10_component_nesting_depth_limit_exceeded_error",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": {
+     "category": "ValidationError",
+     "message": "Global recursion limit exceeded"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "child": "c0",
+         "component": "Card",
+         "id": "root"
+        },
+        {
+         "child": "c1",
+         "component": "Card",
+         "id": "c0"
+        },
+        {
+         "child": "c2",
+         "component": "Card",
+         "id": "c1"
+        },
+        {
+         "child": "c3",
+         "component": "Card",
+         "id": "c2"
+        },
+        {
+         "child": "c4",
+         "component": "Card",
+         "id": "c3"
+        },
+        {
+         "child": "c5",
+         "component": "Card",
+         "id": "c4"
+        },
+        {
+         "child": "c6",
+         "component": "Card",
+         "id": "c5"
+        },
+        {
+         "child": "c7",
+         "component": "Card",
+         "id": "c6"
+        },
+        {
+         "child": "c8",
+         "component": "Card",
+         "id": "c7"
+        },
+        {
+         "child": "c9",
+         "component": "Card",
+         "id": "c8"
+        },
+        {
+         "child": "c10",
+         "component": "Card",
+         "id": "c9"
+        },
+        {
+         "child": "c11",
+         "component": "Card",
+         "id": "c10"
+        },
+        {
+         "child": "c12",
+         "component": "Card",
+         "id": "c11"
+        },
+        {
+         "child": "c13",
+         "component": "Card",
+         "id": "c12"
+        },
+        {
+         "child": "c14",
+         "component": "Card",
+         "id": "c13"
+        },
+        {
+         "child": "c15",
+         "component": "Card",
+         "id": "c14"
+        },
+        {
+         "child": "c16",
+         "component": "Card",
+         "id": "c15"
+        },
+        {
+         "child": "c17",
+         "component": "Card",
+         "id": "c16"
+        },
+        {
+         "child": "c18",
+         "component": "Card",
+         "id": "c17"
+        },
+        {
+         "child": "c19",
+         "component": "Card",
+         "id": "c18"
+        },
+        {
+         "child": "c20",
+         "component": "Card",
+         "id": "c19"
+        },
+        {
+         "child": "c21",
+         "component": "Card",
+         "id": "c20"
+        },
+        {
+         "child": "c22",
+         "component": "Card",
+         "id": "c21"
+        },
+        {
+         "child": "c23",
+         "component": "Card",
+         "id": "c22"
+        },
+        {
+         "child": "c24",
+         "component": "Card",
+         "id": "c23"
+        },
+        {
+         "child": "c25",
+         "component": "Card",
+         "id": "c24"
+        },
+        {
+         "child": "c26",
+         "component": "Card",
+         "id": "c25"
+        },
+        {
+         "child": "c27",
+         "component": "Card",
+         "id": "c26"
+        },
+        {
+         "child": "c28",
+         "component": "Card",
+         "id": "c27"
+        },
+        {
+         "child": "c29",
+         "component": "Card",
+         "id": "c28"
+        },
+        {
+         "child": "c30",
+         "component": "Card",
+         "id": "c29"
+        },
+        {
+         "child": "c31",
+         "component": "Card",
+         "id": "c30"
+        },
+        {
+         "child": "c32",
+         "component": "Card",
+         "id": "c31"
+        },
+        {
+         "child": "c33",
+         "component": "Card",
+         "id": "c32"
+        },
+        {
+         "child": "c34",
+         "component": "Card",
+         "id": "c33"
+        },
+        {
+         "child": "c35",
+         "component": "Card",
+         "id": "c34"
+        },
+        {
+         "child": "c36",
+         "component": "Card",
+         "id": "c35"
+        },
+        {
+         "child": "c37",
+         "component": "Card",
+         "id": "c36"
+        },
+        {
+         "child": "c38",
+         "component": "Card",
+         "id": "c37"
+        },
+        {
+         "child": "c39",
+         "component": "Card",
+         "id": "c38"
+        },
+        {
+         "child": "c40",
+         "component": "Card",
+         "id": "c39"
+        },
+        {
+         "child": "c41",
+         "component": "Card",
+         "id": "c40"
+        },
+        {
+         "child": "c42",
+         "component": "Card",
+         "id": "c41"
+        },
+        {
+         "child": "c43",
+         "component": "Card",
+         "id": "c42"
+        },
+        {
+         "child": "c44",
+         "component": "Card",
+         "id": "c43"
+        },
+        {
+         "child": "c45",
+         "component": "Card",
+         "id": "c44"
+        },
+        {
+         "child": "c46",
+         "component": "Card",
+         "id": "c45"
+        },
+        {
+         "child": "c47",
+         "component": "Card",
+         "id": "c46"
+        },
+        {
+         "child": "c48",
+         "component": "Card",
+         "id": "c47"
+        },
+        {
+         "child": "c49",
+         "component": "Card",
+         "id": "c48"
+        },
+        {
+         "child": "c50",
+         "component": "Card",
+         "id": "c49"
+        },
+        {
+         "child": "c51",
+         "component": "Card",
+         "id": "c50"
+        },
+        {
+         "child": "c52",
+         "component": "Card",
+         "id": "c51"
+        },
+        {
+         "child": "c53",
+         "component": "Card",
+         "id": "c52"
+        },
+        {
+         "child": "c54",
+         "component": "Card",
+         "id": "c53"
+        },
+        {
+         "child": "c55",
+         "component": "Card",
+         "id": "c54"
+        },
+        {
+         "component": "Text",
+         "id": "c55",
+         "text": "Leaf"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": true
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that a chain of 41 nested components, within the global limit (50), passes validation in v1.0 strict mode.",
+  "name": "test_v10_component_nesting_depth_within_limit",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "child": "c0",
+         "component": "Card",
+         "id": "root"
+        },
+        {
+         "child": "c1",
+         "component": "Card",
+         "id": "c0"
+        },
+        {
+         "child": "c2",
+         "component": "Card",
+         "id": "c1"
+        },
+        {
+         "child": "c3",
+         "component": "Card",
+         "id": "c2"
+        },
+        {
+         "child": "c4",
+         "component": "Card",
+         "id": "c3"
+        },
+        {
+         "child": "c5",
+         "component": "Card",
+         "id": "c4"
+        },
+        {
+         "child": "c6",
+         "component": "Card",
+         "id": "c5"
+        },
+        {
+         "child": "c7",
+         "component": "Card",
+         "id": "c6"
+        },
+        {
+         "child": "c8",
+         "component": "Card",
+         "id": "c7"
+        },
+        {
+         "child": "c9",
+         "component": "Card",
+         "id": "c8"
+        },
+        {
+         "child": "c10",
+         "component": "Card",
+         "id": "c9"
+        },
+        {
+         "child": "c11",
+         "component": "Card",
+         "id": "c10"
+        },
+        {
+         "child": "c12",
+         "component": "Card",
+         "id": "c11"
+        },
+        {
+         "child": "c13",
+         "component": "Card",
+         "id": "c12"
+        },
+        {
+         "child": "c14",
+         "component": "Card",
+         "id": "c13"
+        },
+        {
+         "child": "c15",
+         "component": "Card",
+         "id": "c14"
+        },
+        {
+         "child": "c16",
+         "component": "Card",
+         "id": "c15"
+        },
+        {
+         "child": "c17",
+         "component": "Card",
+         "id": "c16"
+        },
+        {
+         "child": "c18",
+         "component": "Card",
+         "id": "c17"
+        },
+        {
+         "child": "c19",
+         "component": "Card",
+         "id": "c18"
+        },
+        {
+         "child": "c20",
+         "component": "Card",
+         "id": "c19"
+        },
+        {
+         "child": "c21",
+         "component": "Card",
+         "id": "c20"
+        },
+        {
+         "child": "c22",
+         "component": "Card",
+         "id": "c21"
+        },
+        {
+         "child": "c23",
+         "component": "Card",
+         "id": "c22"
+        },
+        {
+         "child": "c24",
+         "component": "Card",
+         "id": "c23"
+        },
+        {
+         "child": "c25",
+         "component": "Card",
+         "id": "c24"
+        },
+        {
+         "child": "c26",
+         "component": "Card",
+         "id": "c25"
+        },
+        {
+         "child": "c27",
+         "component": "Card",
+         "id": "c26"
+        },
+        {
+         "child": "c28",
+         "component": "Card",
+         "id": "c27"
+        },
+        {
+         "child": "c29",
+         "component": "Card",
+         "id": "c28"
+        },
+        {
+         "child": "c30",
+         "component": "Card",
+         "id": "c29"
+        },
+        {
+         "child": "c31",
+         "component": "Card",
+         "id": "c30"
+        },
+        {
+         "child": "c32",
+         "component": "Card",
+         "id": "c31"
+        },
+        {
+         "child": "c33",
+         "component": "Card",
+         "id": "c32"
+        },
+        {
+         "child": "c34",
+         "component": "Card",
+         "id": "c33"
+        },
+        {
+         "child": "c35",
+         "component": "Card",
+         "id": "c34"
+        },
+        {
+         "child": "c36",
+         "component": "Card",
+         "id": "c35"
+        },
+        {
+         "child": "c37",
+         "component": "Card",
+         "id": "c36"
+        },
+        {
+         "child": "c38",
+         "component": "Card",
+         "id": "c37"
+        },
+        {
+         "child": "c39",
+         "component": "Card",
+         "id": "c38"
+        },
+        {
+         "child": "c40",
+         "component": "Card",
+         "id": "c39"
+        },
+        {
+         "component": "Text",
+         "id": "c40",
+         "text": "Leaf"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": true
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that two surfaces are each validated against their own component tree in v1.0 strict mode.",
+  "name": "test_v10_multi_surface_independent_roots",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "surfaceId": "surface_a"
+      },
+      "version": "1.0"
+     },
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "surfaceId": "surface_b"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "child": "child_a",
+         "component": "Card",
+         "id": "root"
+        },
+        {
+         "component": "Text",
+         "id": "child_a",
+         "text": "Hello A"
+        }
+       ],
+       "surfaceId": "surface_a"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "child": "child_b",
+         "component": "Card",
+         "id": "root"
+        },
+        {
+         "component": "Text",
+         "id": "child_b",
+         "text": "Hello B"
+        }
+       ],
+       "surfaceId": "surface_b"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": true
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that a missing root on one of two surfaces fails validation in v1.0 strict mode.",
+  "name": "test_v10_multi_surface_missing_root_error",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": {
+     "category": "ValidationError",
+     "message": "Missing root component"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "surfaceId": "surface_a"
+      },
+      "version": "1.0"
+     },
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "surfaceId": "surface_b"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "component": "Text",
+         "id": "root",
+         "text": "Hello A"
+        }
+       ],
+       "surfaceId": "surface_a"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "component": "Text",
+         "id": "not_root",
+         "text": "Hello B"
+        }
+       ],
+       "surfaceId": "surface_b"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": true
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that an updateComponents message that omits the root component passes once the root has been sent, in v1.0 strict mode.",
+  "name": "test_v10_incremental_update_without_root",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "children": [
+          "card"
+         ],
+         "component": "Column",
+         "id": "root"
+        },
+        {
+         "child": "text",
+         "component": "Card",
+         "id": "card"
+        },
+        {
+         "component": "Text",
+         "id": "text",
+         "text": "Initial"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "child": "text",
+         "component": "Card",
+         "id": "card"
+        },
+        {
+         "component": "Text",
+         "id": "text",
+         "text": "Updated"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": true
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that an incremental updateComponents message introducing a self-reference fails validation in v1.0 strict mode.",
+  "name": "test_v10_incremental_update_self_reference_error",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": {
+     "category": "ValidationError",
+     "message": "Self-reference detected"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "children": [
+          "card"
+         ],
+         "component": "Column",
+         "id": "root"
+        },
+        {
+         "child": "text",
+         "component": "Card",
+         "id": "card"
+        },
+        {
+         "component": "Text",
+         "id": "text",
+         "text": "Initial"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "child": "card",
+         "component": "Card",
+         "id": "card"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": true
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that an incremental updateComponents message introducing a cycle fails validation in v1.0 strict mode.",
+  "name": "test_v10_incremental_update_circular_reference_error",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": {
+     "category": "ValidationError",
+     "message": "Circular reference detected"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "children": [
+          "card"
+         ],
+         "component": "Column",
+         "id": "root"
+        },
+        {
+         "child": "text",
+         "component": "Card",
+         "id": "card"
+        },
+        {
+         "component": "Text",
+         "id": "text",
+         "text": "Initial"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "child": "loop",
+         "component": "Card",
+         "id": "card"
+        },
+        {
+         "child": "card",
+         "component": "Card",
+         "id": "loop"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": true
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that an incremental updateComponents message listing the same component ID twice fails validation in v1.0 strict mode.",
+  "name": "test_v10_incremental_update_duplicate_component_id_error",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": {
+     "category": "ValidationError",
+     "message": "Duplicate component ID"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "children": [
+          "card"
+         ],
+         "component": "Column",
+         "id": "root"
+        },
+        {
+         "child": "text",
+         "component": "Card",
+         "id": "card"
+        },
+        {
+         "component": "Text",
+         "id": "text",
+         "text": "Initial"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "component": "Text",
+         "id": "text",
+         "text": "A"
+        },
+        {
+         "component": "Text",
+         "id": "text",
+         "text": "B"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": true
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that nested function calls exceeding the maximum depth (5) fail validation in v1.0 strict mode.",
+  "name": "test_v10_recursion_limit_function_call_depth_exceeded_error",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": {
+     "category": "ValidationError",
+     "message": "functionCall depth"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "component": "Text",
+         "id": "root",
+         "text": {
+          "@call": "f1",
+          "args": {
+           "v": {
+            "@call": "f2",
+            "args": {
+             "v": {
+              "@call": "f3",
+              "args": {
+               "v": {
+                "@call": "f4",
+                "args": {
+                 "v": {
+                  "@call": "f5",
+                  "args": {
+                   "v": {
+                    "@call": "f6",
+                    "args": {}
+                   }
+                  }
+                 }
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": true
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that an updateDataModel value nested deeper than the global limit (50) fails validation in v1.0.",
+  "name": "test_v10_data_model_nesting_depth_limit_exceeded_error",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": {
+     "category": "ValidationError",
+     "message": "Global recursion limit exceeded"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "component": "Text",
+         "id": "root",
+         "text": "Hello"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateDataModel": {
+       "path": "/",
+       "surfaceId": "s1",
+       "value": {
+        "level": 0,
+        "next": {
+         "level": 1,
+         "next": {
+          "level": 2,
+          "next": {
+           "level": 3,
+           "next": {
+            "level": 4,
+            "next": {
+             "level": 5,
+             "next": {
+              "level": 6,
+              "next": {
+               "level": 7,
+               "next": {
+                "level": 8,
+                "next": {
+                 "level": 9,
+                 "next": {
+                  "level": 10,
+                  "next": {
+                   "level": 11,
+                   "next": {
+                    "level": 12,
+                    "next": {
+                     "level": 13,
+                     "next": {
+                      "level": 14,
+                      "next": {
+                       "level": 15,
+                       "next": {
+                        "level": 16,
+                        "next": {
+                         "level": 17,
+                         "next": {
+                          "level": 18,
+                          "next": {
+                           "level": 19,
+                           "next": {
+                            "level": 20,
+                            "next": {
+                             "level": 21,
+                             "next": {
+                              "level": 22,
+                              "next": {
+                               "level": 23,
+                               "next": {
+                                "level": 24,
+                                "next": {
+                                 "level": 25,
+                                 "next": {
+                                  "level": 26,
+                                  "next": {
+                                   "level": 27,
+                                   "next": {
+                                    "level": 28,
+                                    "next": {
+                                     "level": 29,
+                                     "next": {
+                                      "level": 30,
+                                      "next": {
+                                       "level": 31,
+                                       "next": {
+                                        "level": 32,
+                                        "next": {
+                                         "level": 33,
+                                         "next": {
+                                          "level": 34,
+                                          "next": {
+                                           "level": 35,
+                                           "next": {
+                                            "level": 36,
+                                            "next": {
+                                             "level": 37,
+                                             "next": {
+                                              "level": 38,
+                                              "next": {
+                                               "level": 39,
+                                               "next": {
+                                                "level": 40,
+                                                "next": {
+                                                 "level": 41,
+                                                 "next": {
+                                                  "level": 42,
+                                                  "next": {
+                                                   "level": 43,
+                                                   "next": {
+                                                    "level": 44,
+                                                    "next": {
+                                                     "level": 45,
+                                                     "next": {
+                                                      "level": 46,
+                                                      "next": {
+                                                       "level": 47,
+                                                       "next": {
+                                                        "level": 48,
+                                                        "next": {
+                                                         "level": 49,
+                                                         "next": {
+                                                          "level": 50,
+                                                          "next": {
+                                                           "level": 51,
+                                                           "next": {
+                                                            "level": 52,
+                                                            "next": {
+                                                             "level": 53,
+                                                             "next": {
+                                                              "level": 54,
+                                                              "next": {
+                                                               "level": 55
+                                                              }
+                                                             }
+                                                            }
+                                                           }
+                                                          }
+                                                         }
+                                                        }
+                                                       }
+                                                      }
+                                                     }
+                                                    }
+                                                   }
+                                                  }
+                                                 }
+                                                }
+                                               }
+                                              }
+                                             }
+                                            }
+                                           }
+                                          }
+                                         }
+                                        }
+                                       }
+                                      }
+                                     }
+                                    }
+                                   }
+                                  }
+                                 }
+                                }
+                               }
+                              }
+                             }
+                            }
+                           }
+                          }
+                         }
+                        }
+                       }
+                      }
+                     }
+                    }
+                   }
+                  }
+                 }
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": true
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that a dangling child reference inside a structured array item (Tabs.tabs[].child) fails validation in v1.0 strict mode.",
+  "name": "test_v10_topology_structured_array_item_dangling_child_error",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": {
+     "category": "ValidationError",
+     "message": "missing_tab"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "component": "Tabs",
+         "id": "root",
+         "tabs": [
+          {
+           "child": "tab_one",
+           "title": "Overview"
+          },
+          {
+           "child": "missing_tab",
+           "title": "Details"
+          }
+         ]
+        },
+        {
+         "component": "Text",
+         "id": "tab_one",
+         "text": "First"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": true
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that a plain string property whose value happens to match another component's ID does not make that component reachable in v1.0 strict mode.",
+  "name": "test_v10_topology_plain_string_property_not_treated_as_child_ref",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": {
+     "category": "ValidationError",
+     "message": "orphan_id"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "component": "Text",
+         "id": "root",
+         "text": "orphan_id"
+        },
+        {
+         "component": "Text",
+         "id": "orphan_id",
+         "text": "Still orphaned"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": true
+ },
+ {
+  "action": "validate",
+  "catalog": {
+   "catalogId": "custom",
+   "components": {
+    "Stack": {
+     "properties": {
+      "component": {
+       "const": "Stack"
+      },
+      "id": {
+       "type": "string"
+      },
+      "slots": {
+       "items": {
+        "$ref": "common_types.json#/$defs/ComponentId"
+       },
+       "type": "array"
+      }
+     },
+     "required": [
+      "component",
+      "slots"
+     ],
+     "type": "object"
+    }
+   }
+  },
+  "description": "Tests that every item of an array property whose items are ComponentId is a child reference, whatever the property is called, so an item naming no component fails validation in v1.0 strict mode even when no other item names one.",
+  "name": "test_v10_topology_component_id_array_dangling_reference_error",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": {
+     "category": "ValidationError",
+     "message": "missing_slot"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "custom",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "component": "Stack",
+         "id": "root",
+         "slots": [
+          "missing_slot"
+         ]
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": true
+ },
+ {
+  "action": "validate",
+  "catalog": {
+   "catalogId": "custom",
+   "components": {
+    "Stack": {
+     "properties": {
+      "component": {
+       "const": "Stack"
+      },
+      "id": {
+       "type": "string"
+      },
+      "slots": {
+       "items": {
+        "$ref": "common_types.json#/$defs/ComponentId"
+       },
+       "type": "array"
+      }
+     },
+     "required": [
+      "component",
+      "slots"
+     ],
+     "type": "object"
+    }
+   }
+  },
+  "description": "Tests that a component named in an array property whose items are ComponentId is reachable from the root in v1.0 strict mode, whatever the property is called.",
+  "name": "test_v10_topology_component_id_array_child_reachable",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "custom",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "component": "Stack",
+         "id": "root",
+         "slots": [
+          "first"
+         ]
+        },
+        {
+         "component": "Stack",
+         "id": "first",
+         "slots": []
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": true
+ },
+ {
+  "action": "validate",
+  "catalog": {
+   "catalogId": "custom",
+   "components": {
+    "Label": {
+     "properties": {
+      "component": {
+       "const": "Label"
+      },
+      "id": {
+       "type": "string"
+      },
+      "text": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "component",
+      "text"
+     ],
+     "type": "object"
+    },
+    "Stack": {
+     "properties": {
+      "component": {
+       "const": "Stack"
+      },
+      "id": {
+       "type": "string"
+      },
+      "slots": {
+       "items": {
+        "$ref": "common_types.json#/$defs/ComponentId"
+       },
+       "type": "array"
+      }
+     },
+     "required": [
+      "component",
+      "slots"
+     ],
+     "type": "object"
+    }
+   }
+  },
+  "description": "A property declared as an array of ComponentId directly (an array whose items are a ComponentId $ref, not a ChildList) is read as a list of child references. With one held and one missing item, the missing item is reported as a dangling reference at its index in v1.0 strict mode.",
+  "name": "test_v10_topology_component_id_array_partial_dangling_reference_error",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": {
+     "category": "ValidationError",
+     "message": "references non-existent component 'missing' in field 'slots[1]'"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "custom",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "component": "Stack",
+         "id": "root",
+         "slots": [
+          "held",
+          "missing"
+         ]
+        },
+        {
+         "component": "Label",
+         "id": "held",
+         "text": "held"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": true
+ },
+ {
+  "action": "validate",
+  "catalog": {
+   "catalogId": "custom",
+   "components": {
+    "Label": {
+     "properties": {
+      "component": {
+       "const": "Label"
+      },
+      "id": {
+       "type": "string"
+      },
+      "text": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "component",
+      "text"
+     ],
+     "type": "object"
+    },
+    "Stack": {
+     "properties": {
+      "component": {
+       "const": "Stack"
+      },
+      "id": {
+       "type": "string"
+      },
+      "slots": {
+       "items": {
+        "$ref": "common_types.json#/$defs/ComponentId"
+       },
+       "type": "array"
+      }
+     },
+     "required": [
+      "component",
+      "slots"
+     ],
+     "type": "object"
+    }
+   }
+  },
+  "description": "A property declared as an array of ComponentId directly (an array whose items are a ComponentId $ref, not a ChildList) is read as a list of child references, so a cycle through it is detected in v1.0 strict mode.",
+  "name": "test_v10_topology_component_id_array_circular_reference_error",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": {
+     "category": "ValidationError",
+     "message": "Circular reference detected"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "custom",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "component": "Stack",
+         "id": "root",
+         "slots": [
+          "loop_a"
+         ]
+        },
+        {
+         "component": "Stack",
+         "id": "loop_a",
+         "slots": [
+          "loop_b"
+         ]
+        },
+        {
+         "component": "Stack",
+         "id": "loop_b",
+         "slots": [
+          "loop_a"
+         ]
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": true
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that a ChildList template object missing its required 'path' property fails schema validation in v1.0.",
+  "name": "test_v10_child_list_template_missing_path_error",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "children": {
+          "componentId": "item"
+         },
+         "component": "List",
+         "id": "root"
+        },
+        {
+         "component": "Text",
+         "id": "item",
+         "text": "Item"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": true
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that an updateDataModel message with an invalid JSON Pointer escape ('~2') fails validation in v1.0.",
+  "name": "test_v10_update_data_model_invalid_path_error",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": {
+     "category": "ValidationError",
+     "message": "Invalid path syntax"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateDataModel": {
+       "path": "/user/~2invalid",
+       "surfaceId": "s1",
+       "value": "Alice"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": true
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that a function call passing an argument of the wrong type fails schema validation in v1.0.",
+  "name": "test_v10_function_argument_schema_mismatch_error",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": {
+     "category": "ValidationError",
+     "path": "/components/0/text/args/value",
+     "rendererError": {
+      "error": {
+       "code": "VALIDATION_FAILED",
+       "message": "value",
+       "path": "/components/0/text/args/value",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     "surfaceId": "s1"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "component": "Text",
+         "id": "root",
+         "text": {
+          "@call": "formatNumber",
+          "args": {
+           "value": "not_a_number"
+          }
+         }
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": true
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that updating the same component ID across separate updateComponents messages succeeds in v1.0 strict mode.",
+  "name": "test_v10_incremental_update_same_component_id_across_messages",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "component": "Text",
+         "id": "root",
+         "text": "Initial"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "component": "Text",
+         "id": "root",
+         "text": "Updated"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": true
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that a chain of nested components at the exact global depth limit (50) passes validation in v1.0 strict mode.",
+  "name": "test_v10_component_nesting_depth_at_limit",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "child": "c0",
+         "component": "Card",
+         "id": "root"
+        },
+        {
+         "child": "c1",
+         "component": "Card",
+         "id": "c0"
+        },
+        {
+         "child": "c2",
+         "component": "Card",
+         "id": "c1"
+        },
+        {
+         "child": "c3",
+         "component": "Card",
+         "id": "c2"
+        },
+        {
+         "child": "c4",
+         "component": "Card",
+         "id": "c3"
+        },
+        {
+         "child": "c5",
+         "component": "Card",
+         "id": "c4"
+        },
+        {
+         "child": "c6",
+         "component": "Card",
+         "id": "c5"
+        },
+        {
+         "child": "c7",
+         "component": "Card",
+         "id": "c6"
+        },
+        {
+         "child": "c8",
+         "component": "Card",
+         "id": "c7"
+        },
+        {
+         "child": "c9",
+         "component": "Card",
+         "id": "c8"
+        },
+        {
+         "child": "c10",
+         "component": "Card",
+         "id": "c9"
+        },
+        {
+         "child": "c11",
+         "component": "Card",
+         "id": "c10"
+        },
+        {
+         "child": "c12",
+         "component": "Card",
+         "id": "c11"
+        },
+        {
+         "child": "c13",
+         "component": "Card",
+         "id": "c12"
+        },
+        {
+         "child": "c14",
+         "component": "Card",
+         "id": "c13"
+        },
+        {
+         "child": "c15",
+         "component": "Card",
+         "id": "c14"
+        },
+        {
+         "child": "c16",
+         "component": "Card",
+         "id": "c15"
+        },
+        {
+         "child": "c17",
+         "component": "Card",
+         "id": "c16"
+        },
+        {
+         "child": "c18",
+         "component": "Card",
+         "id": "c17"
+        },
+        {
+         "child": "c19",
+         "component": "Card",
+         "id": "c18"
+        },
+        {
+         "child": "c20",
+         "component": "Card",
+         "id": "c19"
+        },
+        {
+         "child": "c21",
+         "component": "Card",
+         "id": "c20"
+        },
+        {
+         "child": "c22",
+         "component": "Card",
+         "id": "c21"
+        },
+        {
+         "child": "c23",
+         "component": "Card",
+         "id": "c22"
+        },
+        {
+         "child": "c24",
+         "component": "Card",
+         "id": "c23"
+        },
+        {
+         "child": "c25",
+         "component": "Card",
+         "id": "c24"
+        },
+        {
+         "child": "c26",
+         "component": "Card",
+         "id": "c25"
+        },
+        {
+         "child": "c27",
+         "component": "Card",
+         "id": "c26"
+        },
+        {
+         "child": "c28",
+         "component": "Card",
+         "id": "c27"
+        },
+        {
+         "child": "c29",
+         "component": "Card",
+         "id": "c28"
+        },
+        {
+         "child": "c30",
+         "component": "Card",
+         "id": "c29"
+        },
+        {
+         "child": "c31",
+         "component": "Card",
+         "id": "c30"
+        },
+        {
+         "child": "c32",
+         "component": "Card",
+         "id": "c31"
+        },
+        {
+         "child": "c33",
+         "component": "Card",
+         "id": "c32"
+        },
+        {
+         "child": "c34",
+         "component": "Card",
+         "id": "c33"
+        },
+        {
+         "child": "c35",
+         "component": "Card",
+         "id": "c34"
+        },
+        {
+         "child": "c36",
+         "component": "Card",
+         "id": "c35"
+        },
+        {
+         "child": "c37",
+         "component": "Card",
+         "id": "c36"
+        },
+        {
+         "child": "c38",
+         "component": "Card",
+         "id": "c37"
+        },
+        {
+         "child": "c39",
+         "component": "Card",
+         "id": "c38"
+        },
+        {
+         "child": "c40",
+         "component": "Card",
+         "id": "c39"
+        },
+        {
+         "child": "c41",
+         "component": "Card",
+         "id": "c40"
+        },
+        {
+         "child": "c42",
+         "component": "Card",
+         "id": "c41"
+        },
+        {
+         "child": "c43",
+         "component": "Card",
+         "id": "c42"
+        },
+        {
+         "child": "c44",
+         "component": "Card",
+         "id": "c43"
+        },
+        {
+         "child": "c45",
+         "component": "Card",
+         "id": "c44"
+        },
+        {
+         "child": "c46",
+         "component": "Card",
+         "id": "c45"
+        },
+        {
+         "child": "c47",
+         "component": "Card",
+         "id": "c46"
+        },
+        {
+         "child": "c48",
+         "component": "Card",
+         "id": "c47"
+        },
+        {
+         "child": "c49",
+         "component": "Card",
+         "id": "c48"
+        },
+        {
+         "component": "Text",
+         "id": "c49",
+         "text": "Leaf"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": true
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that a chain of nested components one past the global depth limit (51) fails validation with RecursionError in v1.0 strict mode.",
+  "name": "test_v10_component_nesting_depth_one_past_limit_error",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": {
+     "category": "RecursionError",
+     "message": "Global recursion limit exceeded"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "child": "c0",
+         "component": "Card",
+         "id": "root"
+        },
+        {
+         "child": "c1",
+         "component": "Card",
+         "id": "c0"
+        },
+        {
+         "child": "c2",
+         "component": "Card",
+         "id": "c1"
+        },
+        {
+         "child": "c3",
+         "component": "Card",
+         "id": "c2"
+        },
+        {
+         "child": "c4",
+         "component": "Card",
+         "id": "c3"
+        },
+        {
+         "child": "c5",
+         "component": "Card",
+         "id": "c4"
+        },
+        {
+         "child": "c6",
+         "component": "Card",
+         "id": "c5"
+        },
+        {
+         "child": "c7",
+         "component": "Card",
+         "id": "c6"
+        },
+        {
+         "child": "c8",
+         "component": "Card",
+         "id": "c7"
+        },
+        {
+         "child": "c9",
+         "component": "Card",
+         "id": "c8"
+        },
+        {
+         "child": "c10",
+         "component": "Card",
+         "id": "c9"
+        },
+        {
+         "child": "c11",
+         "component": "Card",
+         "id": "c10"
+        },
+        {
+         "child": "c12",
+         "component": "Card",
+         "id": "c11"
+        },
+        {
+         "child": "c13",
+         "component": "Card",
+         "id": "c12"
+        },
+        {
+         "child": "c14",
+         "component": "Card",
+         "id": "c13"
+        },
+        {
+         "child": "c15",
+         "component": "Card",
+         "id": "c14"
+        },
+        {
+         "child": "c16",
+         "component": "Card",
+         "id": "c15"
+        },
+        {
+         "child": "c17",
+         "component": "Card",
+         "id": "c16"
+        },
+        {
+         "child": "c18",
+         "component": "Card",
+         "id": "c17"
+        },
+        {
+         "child": "c19",
+         "component": "Card",
+         "id": "c18"
+        },
+        {
+         "child": "c20",
+         "component": "Card",
+         "id": "c19"
+        },
+        {
+         "child": "c21",
+         "component": "Card",
+         "id": "c20"
+        },
+        {
+         "child": "c22",
+         "component": "Card",
+         "id": "c21"
+        },
+        {
+         "child": "c23",
+         "component": "Card",
+         "id": "c22"
+        },
+        {
+         "child": "c24",
+         "component": "Card",
+         "id": "c23"
+        },
+        {
+         "child": "c25",
+         "component": "Card",
+         "id": "c24"
+        },
+        {
+         "child": "c26",
+         "component": "Card",
+         "id": "c25"
+        },
+        {
+         "child": "c27",
+         "component": "Card",
+         "id": "c26"
+        },
+        {
+         "child": "c28",
+         "component": "Card",
+         "id": "c27"
+        },
+        {
+         "child": "c29",
+         "component": "Card",
+         "id": "c28"
+        },
+        {
+         "child": "c30",
+         "component": "Card",
+         "id": "c29"
+        },
+        {
+         "child": "c31",
+         "component": "Card",
+         "id": "c30"
+        },
+        {
+         "child": "c32",
+         "component": "Card",
+         "id": "c31"
+        },
+        {
+         "child": "c33",
+         "component": "Card",
+         "id": "c32"
+        },
+        {
+         "child": "c34",
+         "component": "Card",
+         "id": "c33"
+        },
+        {
+         "child": "c35",
+         "component": "Card",
+         "id": "c34"
+        },
+        {
+         "child": "c36",
+         "component": "Card",
+         "id": "c35"
+        },
+        {
+         "child": "c37",
+         "component": "Card",
+         "id": "c36"
+        },
+        {
+         "child": "c38",
+         "component": "Card",
+         "id": "c37"
+        },
+        {
+         "child": "c39",
+         "component": "Card",
+         "id": "c38"
+        },
+        {
+         "child": "c40",
+         "component": "Card",
+         "id": "c39"
+        },
+        {
+         "child": "c41",
+         "component": "Card",
+         "id": "c40"
+        },
+        {
+         "child": "c42",
+         "component": "Card",
+         "id": "c41"
+        },
+        {
+         "child": "c43",
+         "component": "Card",
+         "id": "c42"
+        },
+        {
+         "child": "c44",
+         "component": "Card",
+         "id": "c43"
+        },
+        {
+         "child": "c45",
+         "component": "Card",
+         "id": "c44"
+        },
+        {
+         "child": "c46",
+         "component": "Card",
+         "id": "c45"
+        },
+        {
+         "child": "c47",
+         "component": "Card",
+         "id": "c46"
+        },
+        {
+         "child": "c48",
+         "component": "Card",
+         "id": "c47"
+        },
+        {
+         "child": "c49",
+         "component": "Card",
+         "id": "c48"
+        },
+        {
+         "child": "c50",
+         "component": "Card",
+         "id": "c49"
+        },
+        {
+         "component": "Text",
+         "id": "c50",
+         "text": "Leaf"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": true
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that nested function calls at the exact maximum depth (5) pass validation in v1.0 strict mode.",
+  "name": "test_v10_recursion_limit_function_call_depth_at_limit",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "component": "Text",
+         "id": "root",
+         "text": {
+          "@call": "formatString",
+          "args": {
+           "value": {
+            "@call": "formatString",
+            "args": {
+             "value": {
+              "@call": "formatString",
+              "args": {
+               "value": {
+                "@call": "formatString",
+                "args": {
+                 "value": {
+                  "@call": "formatString",
+                  "args": {
+                   "value": "At limit"
+                  }
+                 }
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": true
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that nested function calls one past the maximum depth (6) fail validation with RecursionError in v1.0 strict mode.",
+  "name": "test_v10_recursion_limit_function_call_depth_one_past_limit_error",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": {
+     "category": "RecursionError",
+     "message": "functionCall depth"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "component": "Text",
+         "id": "root",
+         "text": {
+          "@call": "formatString",
+          "args": {
+           "value": {
+            "@call": "formatString",
+            "args": {
+             "value": {
+              "@call": "formatString",
+              "args": {
+               "value": {
+                "@call": "formatString",
+                "args": {
+                 "value": {
+                  "@call": "formatString",
+                  "args": {
+                   "value": {
+                    "@call": "formatString",
+                    "args": {
+                     "value": "One past limit"
+                    }
+                   }
+                  }
+                 }
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": true
+ },
+ {
+  "action": "validate",
+  "catalog": {
+   "catalogId": "astral_v10",
+   "components": {
+    "Stack": {
+     "properties": {
+      "children": {
+       "items": {
+        "$ref": "common_types.json#/$defs/ComponentId"
+       },
+       "type": "array"
+      },
+      "component": {
+       "const": "Stack"
+      },
+      "id": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "component",
+      "children"
+     ],
+     "type": "object"
+    },
+    "𝑥Label": {
+     "properties": {
+      "component": {
+       "const": "𝑥Label"
+      },
+      "id": {
+       "type": "string"
+      },
+      "text": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "component",
+      "text"
+     ],
+     "type": "object"
+    }
+   }
+  },
+  "description": "Tests that an astral-plane UAX",
+  "name": "test_v10_uax31_astral_plane_identifier_accepted",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "astral_v10",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "children": [
+          "𝑥Label"
+         ],
+         "component": "Stack",
+         "id": "root"
+        },
+        {
+         "component": "𝑥Label",
+         "id": "𝑥Label",
+         "text": "Astral plane"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": true
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that an astral-plane non-identifier character (U+1F600 '😀') used as a component type fails UAX",
+  "name": "test_v10_uax31_astral_non_identifier_component_type_error",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": {
+     "category": "ValidationError",
+     "message": "😀"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "component": "😀",
+         "id": "root"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": false
+ },
+ {
+  "action": "validate",
+  "catalog": {
+   "catalogId": "arcana",
+   "components": {
+    "Label": {
+     "properties": {
+      "component": {
+       "const": "Label"
+      },
+      "id": {
+       "type": "string"
+      },
+      "text": {
+       "$ref": "common_types.json#/$defs/DynamicString"
+      }
+     },
+     "required": [
+      "component",
+      "text"
+     ],
+     "type": "object"
+    }
+   },
+   "functions": {
+    "getMoonPhase": {
+     "allowedCallers": "agentOnly",
+     "properties": {
+      "@call": {
+       "const": "getMoonPhase"
+      },
+      "args": {
+       "additionalProperties": false,
+       "properties": {
+        "date": {
+         "type": "string"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "required": [
+      "@call"
+     ],
+     "returnType": "string",
+     "type": "object"
+    }
+   }
+  },
+  "description": "Tests that a component property bound to a function whose allowedCallers is agentOnly fails validation in v1.0, since a binding is a renderer call and agentOnly functions can't be bound to component properties. The error is a validation error, raised before any binding is evaluated.",
+  "name": "test_v10_agent_only_function_in_binding_error",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": {
+     "category": "ValidationError",
+     "rendererError": {
+      "error": {
+       "code": "VALIDATION_FAILED",
+       "message": "agentOnly",
+       "path": "/components/0/text",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     "surfaceId": "s1"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "arcana",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "component": "Label",
+         "id": "root",
+         "text": {
+          "@call": "getMoonPhase",
+          "args": {
+           "date": "today"
+          }
+         }
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "validate",
+  "catalog": {
+   "catalogId": "arcana",
+   "components": {
+    "Trigger": {
+     "properties": {
+      "action": {
+       "$ref": "common_types.json#/$defs/Action"
+      },
+      "component": {
+       "const": "Trigger"
+      },
+      "id": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "component",
+      "action"
+     ],
+     "type": "object"
+    }
+   },
+   "functions": {
+    "getMoonPhase": {
+     "allowedCallers": "agentOnly",
+     "properties": {
+      "@call": {
+       "const": "getMoonPhase"
+      },
+      "args": {
+       "additionalProperties": false,
+       "type": "object"
+      }
+     },
+     "required": [
+      "@call"
+     ],
+     "returnType": "string",
+     "type": "object"
+    },
+    "getTide": {
+     "allowedCallers": "rendererOrAgent",
+     "properties": {
+      "@call": {
+       "const": "getTide"
+      },
+      "args": {
+       "additionalProperties": false,
+       "type": "object"
+      }
+     },
+     "required": [
+      "@call"
+     ],
+     "returnType": "string",
+     "type": "object"
+    }
+   }
+  },
+  "description": "Tests that an action functionCall of a function whose allowedCallers is agentOnly fails validation in v1.0, since renderer UI actions can't run agentOnly functions, while a rendererOrAgent function can be.",
+  "name": "test_v10_agent_only_function_in_action_error",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "arcana",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "action": {
+          "functionCall": {
+           "@call": "getTide"
+          }
+         },
+         "component": "Trigger",
+         "id": "root"
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   },
+   {
+    "expectError": {
+     "category": "ValidationError",
+     "rendererError": {
+      "error": {
+       "code": "VALIDATION_FAILED",
+       "message": "agentOnly",
+       "path": "/components/0/action/functionCall",
+       "surfaceId": "s2"
+      },
+      "version": "1.0"
+     },
+     "surfaceId": "s2"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "arcana",
+       "surfaceId": "s2"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "action": {
+          "functionCall": {
+           "@call": "getMoonPhase"
+          }
+         },
+         "component": "Trigger",
+         "id": "root"
+        }
+       ],
+       "surfaceId": "s2"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json",
+   "conformance/test_data/catalogs/allowed_callers_catalog_v1_0.json"
+  ],
+  "description": "Tests that a component property bound to an agentOnly function of another catalog than the component's, or holding one nested in the args of a renderer call, fails validation in v1.0.",
+  "name": "test_v10_agent_only_function_cross_catalog_and_nested_error",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": {
+     "category": "ValidationError",
+     "rendererError": {
+      "error": {
+       "code": "VALIDATION_FAILED",
+       "message": "agentOnly",
+       "path": "/components/0/text",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     "surfaceId": "s1"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "component": "Text",
+         "id": "root",
+         "text": {
+          "@call": "readSessionToken",
+          "catalogId": "https://a2ui.org/catalogs/v10/allowed_callers"
+         }
+        }
+       ],
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   },
+   {
+    "expectError": {
+     "category": "ValidationError",
+     "rendererError": {
+      "error": {
+       "code": "VALIDATION_FAILED",
+       "message": "agentOnly",
+       "path": "/components/0/text/args/value",
+       "surfaceId": "s2"
+      },
+      "version": "1.0"
+     },
+     "surfaceId": "s2"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "surfaceId": "s2"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "component": "Text",
+         "id": "root",
+         "text": {
+          "@call": "formatString",
+          "args": {
+           "value": {
+            "@call": "readSessionToken",
+            "catalogId": "https://a2ui.org/catalogs/v10/allowed_callers"
+           }
+          }
+         }
+        }
+       ],
+       "surfaceId": "s2"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that PayloadValidator accepts @metadata, @accessibility, and @checks on v1.0 components while continuing to accept legacy bare metadata, accessibility, and checks during the v1.0 transition window (#1376).",
+  "name": "test_v10_validate_at_prefixed_component_envelope_mixins",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "surfaceId": "s_at_mixins"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "@accessibility": {
+          "description": "Enter your work email",
+          "label": "Email address"
+         },
+         "@checks": [
+          {
+           "condition": {
+            "@call": "required",
+            "args": {
+             "value": ""
+            }
+           },
+           "message": "Email is required"
+          }
+         ],
+         "@metadata": {
+          "extensions": {
+           "com_example_field": "email"
+          }
+         },
+         "component": "TextField",
+         "id": "root",
+         "label": "Email",
+         "value": ""
+        }
+       ],
+       "surfaceId": "s_at_mixins"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that PayloadValidator validates component @metadata.extensions (and legacy metadata.extensions) keys as UAX 31 identifiers and rejects keys containing dots or hyphens (#3466).",
+  "name": "test_v10_validate_component_metadata_invalid_extension_key_error",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "surfaceId": "s_bad_at_meta"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "@metadata": {
+          "extensions": {
+           "com.example.invalid": "v1"
+          }
+         },
+         "component": "Text",
+         "id": "root",
+         "text": "Hello"
+        }
+       ],
+       "surfaceId": "s_bad_at_meta"
+      },
+      "version": "1.0"
+     }
+    ]
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "surfaceId": "s_bad_bare_meta"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "component": "Text",
+         "id": "root",
+         "metadata": {
+          "extensions": {
+           "com-example-invalid": "v1"
+          }
+         },
+         "text": "Hello"
+        }
+       ],
+       "surfaceId": "s_bad_bare_meta"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that supplying both @metadata and legacy bare metadata (or both @accessibility and bare accessibility) on a v1.0 component whose schema does not declare a custom property of that bare name fails validation.",
+  "name": "test_v10_validate_component_envelope_conflict_at_and_bare_error",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "surfaceId": "s_conflict_meta"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "@metadata": {
+          "extensions": {
+           "com_example_a": "1"
+          }
+         },
+         "component": "Text",
+         "id": "root",
+         "metadata": {
+          "extensions": {
+           "com_example_b": "2"
+          }
+         },
+         "text": "Conflict"
+        }
+       ],
+       "surfaceId": "s_conflict_meta"
+      },
+      "version": "1.0"
+     }
+    ]
+   },
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "surfaceId": "s_conflict_a11y"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "@accessibility": {
+          "label": "New a11y"
+         },
+         "accessibility": {
+          "label": "Old a11y"
+         },
+         "component": "Text",
+         "id": "root",
+         "text": "Conflict"
+        }
+       ],
+       "surfaceId": "s_conflict_a11y"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "validate",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that supplying @checks on a non-checkable v1.0 component such as Text fails schema validation.",
+  "name": "test_v10_validate_at_checks_on_non_checkable_component_error",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "surfaceId": "s_non_checkable"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "@checks": [
+          {
+           "condition": true,
+           "message": "Should fail"
+          }
+         ],
+         "component": "Text",
+         "id": "root",
+         "text": "Not checkable"
+        }
+       ],
+       "surfaceId": "s_non_checkable"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ }
+]

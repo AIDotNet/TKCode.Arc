@@ -1,0 +1,1389 @@
+[
+ {
+  "action": "handle_rpc",
+  "args": {
+   "functionMetadata": {
+    "playMedia": {
+     "allowedCallers": "rendererOrAgent",
+     "requiresUserActivation": false
+    }
+   },
+   "message": {
+    "callRendererFunction": {
+     "callFunction": {
+      "@call": "playMedia",
+      "args": {
+       "autoplay": true,
+       "mediaId": "video-789"
+      },
+      "catalogId": "media_catalog"
+     },
+     "functionCallId": "call-101"
+    },
+    "version": "1.0"
+   }
+  },
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies agent-initiated callRendererFunction on a function with allowedCallers=rendererOrAgent.",
+  "expect": {
+   "response": {
+    "rendererFunctionResponse": {
+     "functionCallId": "call-101",
+     "value": {
+      "playing": true,
+      "timestamp": 0
+     }
+    },
+    "version": "1.0"
+   }
+  },
+  "features": [
+   "F-CORE-05",
+   "F-CORE-25"
+  ],
+  "name": "test_rpc_call_renderer_function_success"
+ },
+ {
+  "action": "handle_rpc",
+  "args": {
+   "functionMetadata": {
+    "internalStateReset": {
+     "allowedCallers": "rendererOnly",
+     "requiresUserActivation": false
+    }
+   },
+   "message": {
+    "callRendererFunction": {
+     "callFunction": {
+      "@call": "internalStateReset",
+      "args": {},
+      "catalogId": "system_catalog"
+     },
+     "functionCallId": "call-102"
+    },
+    "version": "1.0"
+   }
+  },
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies callRendererFunction fails with INVALID_FUNCTION_CALL when allowedCallers is rendererOnly.",
+  "expect": {
+   "response": {
+    "rendererFunctionResponse": {
+     "error": {
+      "code": "INVALID_FUNCTION_CALL",
+      "message": "Function 'internalStateReset' cannot be called by agent (allowedCallers is rendererOnly)."
+     },
+     "functionCallId": "call-102"
+    },
+    "version": "1.0"
+   }
+  },
+  "features": [
+   "F-CORE-05",
+   "F-CORE-39"
+  ],
+  "name": "test_rpc_call_renderer_function_unauthorized_caller"
+ },
+ {
+  "action": "handle_rpc",
+  "args": {
+   "functionMetadata": {
+    "openExternalUrl": {
+     "allowedCallers": "rendererOrAgent",
+     "requiresUserActivation": true
+    }
+   },
+   "message": {
+    "callRendererFunction": {
+     "callFunction": {
+      "@call": "openExternalUrl",
+      "args": {
+       "url": "https://example.com/details"
+      },
+      "catalogId": "basic"
+     },
+     "functionCallId": "call-103"
+    },
+    "version": "1.0"
+   },
+   "userActivationPresent": true
+  },
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies callRendererFunction execution when requiresUserActivation is true and user gesture is present.",
+  "expect": {
+   "response": {
+    "rendererFunctionResponse": {
+     "functionCallId": "call-103",
+     "value": {
+      "opened": true
+     }
+    },
+    "version": "1.0"
+   }
+  },
+  "features": [
+   "F-CORE-05",
+   "F-CORE-39"
+  ],
+  "name": "test_rpc_call_renderer_function_requires_user_activation"
+ },
+ {
+  "action": "handle_rpc",
+  "args": {
+   "inboundResponse": {
+    "agentFunctionResponse": {
+     "functionCallId": "agent-call-55",
+     "value": {
+      "inStock": 12,
+      "price": "$29.99"
+     }
+    },
+    "version": "1.0"
+   },
+   "outboundCall": {
+    "callFunction": {
+     "@call": "queryInventory",
+     "args": {
+      "sku": "ITEM-404"
+     },
+     "catalogId": "store_catalog"
+    },
+    "functionCallId": "agent-call-55",
+    "surfaceId": "main_surface"
+   }
+  },
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies renderer-initiated callAgentFunction message generation and response correlation via functionCallId.",
+  "expect": {
+   "correlatedCallId": "agent-call-55",
+   "result": {
+    "inStock": 12,
+    "price": "$29.99"
+   }
+  },
+  "features": [
+   "F-CORE-06",
+   "F-CORE-24"
+  ],
+  "name": "test_rpc_call_agent_function_dispatch"
+ },
+ {
+  "action": "handle_rpc",
+  "args": {
+   "functionMetadata": {
+    "openExternalUrl": {
+     "allowedCallers": "rendererOrAgent",
+     "requiresUserActivation": true
+    }
+   },
+   "message": {
+    "callRendererFunction": {
+     "callFunction": {
+      "@call": "openExternalUrl",
+      "args": {
+       "url": "https://example.com/details"
+      },
+      "catalogId": "basic"
+     },
+     "functionCallId": "call-104"
+    },
+    "version": "1.0"
+   },
+   "userActivationPresent": false
+  },
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies callRendererFunction fails with INVALID_FUNCTION_CALL when requiresUserActivation is true but user gesture context is absent.",
+  "expect": {
+   "response": {
+    "rendererFunctionResponse": {
+     "error": {
+      "code": "INVALID_FUNCTION_CALL",
+      "message": "Function 'openExternalUrl' requires user activation context to execute."
+     },
+     "functionCallId": "call-104"
+    },
+    "version": "1.0"
+   }
+  },
+  "features": [
+   "F-CORE-05",
+   "F-CORE-39"
+  ],
+  "name": "test_rpc_call_renderer_function_user_activation_denied"
+ },
+ {
+  "action": "handle_rpc",
+  "args": {
+   "functionMetadata": {
+    "failingFunction": {
+     "allowedCallers": "rendererOrAgent",
+     "requiresUserActivation": false
+    }
+   },
+   "message": {
+    "callRendererFunction": {
+     "callFunction": {
+      "@call": "failingFunction",
+      "args": {},
+      "catalogId": "basic"
+     },
+     "functionCallId": "call-105"
+    },
+    "version": "1.0"
+   }
+  },
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies callRendererFunction handles runtime function execution exceptions and returns EXECUTION_ERROR.",
+  "expect": {
+   "response": {
+    "rendererFunctionResponse": {
+     "error": {
+      "code": "EXECUTION_ERROR",
+      "message": "An error occurred during function execution."
+     },
+     "functionCallId": "call-105"
+    },
+    "version": "1.0"
+   }
+  },
+  "features": [
+   "F-CORE-05",
+   "F-CORE-25"
+  ],
+  "name": "test_rpc_call_renderer_function_execution_exception"
+ },
+ {
+  "action": "handle_rpc",
+  "args": {
+   "functionMetadata": {
+    "syncState": {
+     "allowedCallers": "agentOnly",
+     "requiresUserActivation": false
+    }
+   },
+   "message": {
+    "callRendererFunction": {
+     "callFunction": {
+      "@call": "syncState",
+      "args": {},
+      "catalogId": "basic"
+     },
+     "functionCallId": "call-106"
+    },
+    "version": "1.0"
+   }
+  },
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies agent-initiated callRendererFunction on a function with allowedCallers=agentOnly.",
+  "expect": {
+   "response": {
+    "rendererFunctionResponse": {
+     "functionCallId": "call-106",
+     "value": null
+    },
+    "version": "1.0"
+   }
+  },
+  "features": [
+   "F-CORE-05",
+   "F-CORE-39"
+  ],
+  "name": "test_rpc_call_renderer_function_agent_only_boundary"
+ },
+ {
+  "action": "handle_rpc",
+  "args": {
+   "functionMetadata": {},
+   "message": {
+    "callRendererFunction": {
+     "callFunction": {
+      "@call": "unknownFunc",
+      "args": {},
+      "catalogId": "basic"
+     },
+     "functionCallId": "call-107"
+    },
+    "version": "1.0"
+   }
+  },
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies callRendererFunction fails with INVALID_FUNCTION_CALL when calling an unregistered function.",
+  "expect": {
+   "response": {
+    "rendererFunctionResponse": {
+     "error": {
+      "code": "INVALID_FUNCTION_CALL",
+      "message": "Function not found: unknownFunc"
+     },
+     "functionCallId": "call-107"
+    },
+    "version": "1.0"
+   }
+  },
+  "name": "test_rpc_call_renderer_function_unregistered_function"
+ },
+ {
+  "action": "handle_rpc",
+  "args": {
+   "functionMetadata": {
+    "playMedia": {
+     "allowedCallers": "rendererOrAgent"
+    }
+   },
+   "message": {
+    "callRendererFunction": {
+     "callFunction": {
+      "@call": "playMedia",
+      "args": {},
+      "catalogId": "non_existent_catalog"
+     },
+     "functionCallId": "call-108"
+    },
+    "version": "1.0"
+   }
+  },
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies callRendererFunction fails with INVALID_FUNCTION_CALL when specifying an unregistered catalogId.",
+  "expect": {
+   "response": {
+    "rendererFunctionResponse": {
+     "error": {
+      "code": "INVALID_FUNCTION_CALL",
+      "message": "Catalog not found: non_existent_catalog"
+     },
+     "functionCallId": "call-108"
+    },
+    "version": "1.0"
+   }
+  },
+  "name": "test_rpc_call_renderer_function_unregistered_catalog"
+ },
+ {
+  "action": "handle_rpc",
+  "args": {
+   "message": {
+    "callRendererFunction": {
+     "functionCallId": "call-109"
+    },
+    "version": "1.0"
+   }
+  },
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies envelope/schema validation error when callRendererFunction is missing required callFunction property.",
+  "expect": {
+   "error": {
+    "code": "INVALID_FUNCTION_CALL",
+    "functionCallId": "call-109",
+    "message": "callFunction"
+   }
+  },
+  "expectError": {
+   "category": "ValidationError",
+   "functionCallId": "call-109",
+   "rendererError": {
+    "error": {
+     "code": "INVALID_FUNCTION_CALL",
+     "functionCallId": "call-109",
+     "message": "callFunction"
+    },
+    "version": "1.0"
+   }
+  },
+  "name": "test_rpc_call_renderer_function_invalid_payload_missing_call_function"
+ },
+ {
+  "action": "handle_rpc",
+  "args": {
+   "message": {
+    "callRendererFunction": {
+     "callFunction": {
+      "@call": "playMedia",
+      "args": "not-an-object",
+      "catalogId": "media_catalog"
+     },
+     "functionCallId": "call-110"
+    },
+    "version": "1.0"
+   }
+  },
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies envelope/schema validation error when callRendererFunction has non-object args.",
+  "expect": {
+   "error": {
+    "code": "INVALID_FUNCTION_CALL",
+    "functionCallId": "call-110",
+    "message": "args"
+   }
+  },
+  "expectError": {
+   "category": "ValidationError",
+   "functionCallId": "call-110",
+   "rendererError": {
+    "error": {
+     "code": "INVALID_FUNCTION_CALL",
+     "functionCallId": "call-110",
+     "message": "args"
+    },
+    "version": "1.0"
+   }
+  },
+  "name": "test_rpc_call_renderer_function_invalid_payload_non_object_args"
+ },
+ {
+  "action": "handle_rpc",
+  "args": {
+   "functionMetadata": {
+    "playMedia": {
+     "allowedCallers": "rendererOrAgent"
+    }
+   },
+   "message": {
+    "callRendererFunction": {
+     "callFunction": {
+      "@call": "playMedia",
+      "args": {
+       "mediaId": "video-789"
+      },
+      "catalogId": "media_catalog"
+     },
+     "functionCallId": "call-111",
+     "surfaceId": "unknown_surface"
+    },
+    "version": "1.0"
+   }
+  },
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies callRendererFunction targeting an unknown surfaceId returns rendererFunctionResponse with INVALID_FUNCTION_CALL.",
+  "expect": {
+   "response": {
+    "rendererFunctionResponse": {
+     "error": {
+      "code": "INVALID_FUNCTION_CALL",
+      "message": "unknown_surface"
+     },
+     "functionCallId": "call-111"
+    },
+    "version": "1.0"
+   }
+  },
+  "name": "test_rpc_call_renderer_function_unknown_surface_id"
+ },
+ {
+  "action": "handle_rpc",
+  "args": {
+   "functionMetadata": {
+    "playMedia": {
+     "allowedCallers": "rendererOrAgent",
+     "requiresUserActivation": false
+    }
+   },
+   "message": {
+    "callRendererFunction": {
+     "callFunction": {
+      "@call": "playMedia",
+      "args": {
+       "mediaId": "video-789"
+      }
+     },
+     "functionCallId": "call-110"
+    },
+    "version": "1.0"
+   }
+  },
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies a callRendererFunction whose callFunction has no catalogId fails schema validation, even when a held catalog defines the function.",
+  "expect": {
+   "error": {
+    "message": "catalogId"
+   }
+  },
+  "name": "test_rpc_call_renderer_function_invalid_payload_missing_catalog_id"
+ },
+ {
+  "action": "handle_rpc",
+  "args": {
+   "message": {
+    "agentFunctionResponse": {
+     "functionCallId": "call-unknown-1",
+     "value": {
+      "status": "verified"
+     }
+    },
+    "version": "1.0"
+   }
+  },
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies an inbound agentFunctionResponse whose functionCallId matches no pending call is ignored, raising no error, sending no outbound message, reporting no surface error, and leaving no pending calls.",
+  "expect": {
+   "response": null
+  },
+  "name": "test_rpc_agent_function_response_unknown_call_id_ignored"
+ },
+ {
+  "action": "handle_rpc",
+  "args": {
+   "inboundResponse": {
+    "agentFunctionResponse": {
+     "functionCallId": "call-201",
+     "value": {
+      "status": "verified"
+     }
+    },
+    "version": "1.0"
+   },
+   "outboundCall": {
+    "callFunction": {
+     "@call": "fetchData",
+     "args": {
+      "query": "status"
+     },
+     "catalogId": "basic"
+    },
+    "functionCallId": "call-201",
+    "surfaceId": "main_surface"
+   }
+  },
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies an outbound callAgentFunction correlates with and resolves from a matching inbound agentFunctionResponse.",
+  "expect": {
+   "result": {
+    "status": "verified"
+   }
+  },
+  "name": "test_rpc_agent_function_response_correlates_pending_call"
+ },
+ {
+  "action": "handle_rpc",
+  "args": {
+   "functionMetadata": {
+    "calculateTax": {
+     "allowedCallers": "rendererOrAgent",
+     "parameters": {
+      "properties": {
+       "amount": {
+        "type": "number"
+       }
+      },
+      "required": [
+       "amount"
+      ],
+      "type": "object"
+     }
+    }
+   },
+   "message": {
+    "callRendererFunction": {
+     "callFunction": {
+      "@call": "calculateTax",
+      "args": {
+       "amount": "invalid_string_amount"
+      },
+      "catalogId": "basic"
+     },
+     "functionCallId": "call-301"
+    },
+    "version": "1.0"
+   }
+  },
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies callRendererFunction returns INVALID_FUNCTION_CALL when argument schema validation fails.",
+  "expect": {
+   "response": {
+    "rendererFunctionResponse": {
+     "error": {
+      "code": "INVALID_FUNCTION_CALL",
+      "message": "Invalid"
+     },
+     "functionCallId": "call-301"
+    },
+    "version": "1.0"
+   }
+  },
+  "name": "test_rpc_call_renderer_function_invalid_argument_schema"
+ },
+ {
+  "action": "handle_rpc",
+  "args": {
+   "catalogId": "v0_9_cat",
+   "catalogVersion": "v0.9",
+   "functionMetadata": {
+    "playMedia": {
+     "allowedCallers": "rendererOrAgent"
+    }
+   },
+   "message": {
+    "callRendererFunction": {
+     "callFunction": {
+      "@call": "playMedia",
+      "args": {
+       "mediaId": "vid1"
+      },
+      "catalogId": "v0_9_cat"
+     },
+     "functionCallId": "call-302"
+    },
+    "version": "1.0"
+   }
+  },
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies callRendererFunction returns INVALID_FUNCTION_CALL when catalog protocol version mismatches message protocol version.",
+  "expect": {
+   "response": {
+    "rendererFunctionResponse": {
+     "error": {
+      "code": "INVALID_FUNCTION_CALL",
+      "message": "does not match message protocol version"
+     },
+     "functionCallId": "call-302"
+    },
+    "version": "1.0"
+   }
+  },
+  "name": "test_rpc_call_renderer_function_protocol_version_mismatch"
+ },
+ {
+  "action": "handle_rpc",
+  "args": {
+   "outboundCall": {
+    "callFunction": {
+     "@call": "longRunningTask",
+     "args": {},
+     "catalogId": "basic"
+    },
+    "functionCallId": "call-timeout-1",
+    "surfaceId": "main_surface",
+    "timeoutMs": 10
+   }
+  },
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies callAgentFunction timeout emitting TIMEOUT error code.",
+  "expectError": {
+   "code": "TIMEOUT"
+  },
+  "features": [
+   "F-CORE-39"
+  ],
+  "name": "test_rpc_call_agent_function_timeout_handling"
+ },
+ {
+  "action": "handle_rpc",
+  "args": {
+   "outboundCall": {
+    "callFunction": {
+     "@call": "fetchData",
+     "args": {},
+     "catalogId": "basic"
+    },
+    "functionCallId": "call-dup-1",
+    "surfaceId": "main_surface"
+   },
+   "secondOutboundCall": {
+    "callFunction": {
+     "@call": "fetchData",
+     "args": {},
+     "catalogId": "basic"
+    },
+    "functionCallId": "call-dup-1",
+    "surfaceId": "main_surface"
+   }
+  },
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies callAgentFunction rejecting duplicate pending functionCallId with DUPLICATE error code.",
+  "expectError": {
+   "code": "DUPLICATE"
+  },
+  "name": "test_rpc_call_agent_function_duplicate_call_id_error"
+ },
+ {
+  "action": "handle_rpc",
+  "args": {
+   "afterCall": "cancel",
+   "outboundCall": {
+    "callFunction": {
+     "@call": "fetchData",
+     "args": {},
+     "catalogId": "basic"
+    },
+    "functionCallId": "call-cancel-1",
+    "surfaceId": "main_surface"
+   }
+  },
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies cancelling the surface's pending calls (the surface-scoped cancellation, not a per-call signal) rejects the in-flight callAgentFunction with CANCELLED error code.",
+  "expectError": {
+   "code": "CANCELLED"
+  },
+  "name": "test_rpc_call_agent_function_cancelled"
+ },
+ {
+  "action": "handle_rpc",
+  "args": {
+   "afterCall": "dispose",
+   "outboundCall": {
+    "callFunction": {
+     "@call": "fetchData",
+     "args": {},
+     "catalogId": "basic"
+    },
+    "functionCallId": "call-disposed-1",
+    "surfaceId": "main_surface"
+   }
+  },
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies disposing RPC state rejects the in-flight callAgentFunction with CANCELLED (expect.inFlightError) and a callAgentFunction made after dispose with DISPOSED (expectError).",
+  "expect": {
+   "inFlightError": {
+    "code": "CANCELLED"
+   }
+  },
+  "expectError": {
+   "code": "DISPOSED"
+  },
+  "name": "test_rpc_call_agent_function_disposed"
+ },
+ {
+  "action": "handle_rpc",
+  "args": {
+   "outboundCall": {
+    "callFunction": {
+     "@call": "fetchData",
+     "args": {},
+     "catalogId": "basic"
+    },
+    "functionCallId": "call-no-listener-1",
+    "surfaceId": "main_surface"
+   },
+   "outboundListener": false
+  },
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies callAgentFunction without an outbound listener rejects with NO_LISTENER error code.",
+  "expectError": {
+   "code": "NO_LISTENER"
+  },
+  "name": "test_rpc_call_agent_function_no_listener"
+ },
+ {
+  "action": "handle_rpc",
+  "args": {
+   "lateInboundResponse": {
+    "agentFunctionResponse": {
+     "functionCallId": "call-late-timeout-1",
+     "value": {
+      "status": "too-late"
+     }
+    },
+    "version": "1.0"
+   },
+   "outboundCall": {
+    "callFunction": {
+     "@call": "longRunningTask",
+     "args": {},
+     "catalogId": "basic"
+    },
+    "functionCallId": "call-late-timeout-1",
+    "surfaceId": "main_surface",
+    "timeoutMs": 10
+   }
+  },
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies a late agentFunctionResponse arriving after callAgentFunction times out is ignored without mutating settled state.",
+  "expect": {
+   "lateResponseIgnored": true
+  },
+  "expectError": {
+   "code": "TIMEOUT"
+  },
+  "name": "test_rpc_call_agent_function_late_response_after_timeout_ignored"
+ },
+ {
+  "action": "handle_rpc",
+  "args": {
+   "afterCall": "dispose",
+   "lateInboundResponse": {
+    "agentFunctionResponse": {
+     "functionCallId": "call-late-dispose-1",
+     "value": {
+      "status": "too-late"
+     }
+    },
+    "version": "1.0"
+   },
+   "outboundCall": {
+    "callFunction": {
+     "@call": "fetchData",
+     "args": {},
+     "catalogId": "basic"
+    },
+    "functionCallId": "call-late-dispose-1",
+    "surfaceId": "main_surface"
+   }
+  },
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies a late agentFunctionResponse arriving after RPC state is disposed is ignored without mutating settled state.",
+  "expect": {
+   "inFlightError": {
+    "code": "CANCELLED"
+   },
+   "lateResponseIgnored": true
+  },
+  "expectError": {
+   "code": "DISPOSED"
+  },
+  "name": "test_rpc_call_agent_function_late_response_after_dispose_ignored"
+ },
+ {
+  "action": "handle_rpc",
+  "args": {
+   "dataModel": {
+    "media": {
+     "id": "video-456"
+    },
+    "prefix": "now-"
+   },
+   "functionMetadata": {
+    "echoArgs": {
+     "allowedCallers": "rendererOrAgent",
+     "requiresUserActivation": false
+    }
+   },
+   "message": {
+    "callRendererFunction": {
+     "callFunction": {
+      "@call": "echoArgs",
+      "args": {
+       "formatted": {
+        "@call": "formatString",
+        "args": {
+         "value": "${/prefix}${/media/id}"
+        },
+        "catalogId": "basic"
+       },
+       "mediaId": {
+        "@path": "/media/id"
+       }
+      },
+      "catalogId": "media_catalog"
+     },
+     "functionCallId": "call-401",
+     "surfaceId": "media_surface"
+    },
+    "version": "1.0"
+   },
+   "surfaceId": "media_surface"
+  },
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies callRendererFunction with surfaceId resolves @path and @call in callFunction.args against the target surface's root DataContext (/).",
+  "expect": {
+   "response": {
+    "rendererFunctionResponse": {
+     "functionCallId": "call-401",
+     "value": {
+      "formatted": "now-video-456",
+      "mediaId": "video-456"
+     }
+    },
+    "version": "1.0"
+   }
+  },
+  "name": "test_rpc_call_renderer_function_with_surface_id_and_dynamic_args"
+ },
+ {
+  "action": "handle_rpc",
+  "args": {
+   "dataModel": {
+    "count": 2
+   },
+   "functionMetadata": {
+    "echoArgs": {
+     "allowedCallers": "rendererOrAgent",
+     "requiresUserActivation": false
+    }
+   },
+   "message": {
+    "callRendererFunction": {
+     "callFunction": {
+      "@call": "echoArgs",
+      "args": {
+       "formatted": {
+        "@call": "formatString",
+        "args": {
+         "value": "Clips: ${pluralize(value: /count, one: 'clip', other: 'clips')}"
+        },
+        "catalogId": "basic"
+       }
+      },
+      "catalogId": "media_catalog"
+     },
+     "functionCallId": "call-401b",
+     "surfaceId": "media_surface"
+    },
+    "version": "1.0"
+   },
+   "surfaceId": "media_surface"
+  },
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies that a formatString call inside callRendererFunction arguments scopes nested ${...} template calls to formatString's catalogId rather than the surface default catalog or outer RPC catalog.",
+  "expect": {
+   "response": {
+    "rendererFunctionResponse": {
+     "functionCallId": "call-401b",
+     "value": {
+      "formatted": "Clips: clips"
+     }
+    },
+    "version": "1.0"
+   }
+  },
+  "name": "test_rpc_call_renderer_function_format_string_arg_inherits_catalog"
+ },
+ {
+  "action": "handle_rpc",
+  "args": {
+   "dataModel": {
+    "secret": "should-not-leak"
+   },
+   "functionMetadata": {
+    "echoArgs": {
+     "allowedCallers": "rendererOrAgent",
+     "requiresUserActivation": false
+    }
+   },
+   "message": {
+    "callRendererFunction": {
+     "callFunction": {
+      "@call": "echoArgs",
+      "args": {
+       "constant": "safe",
+       "leaked": {
+        "@path": "/secret"
+       }
+      },
+      "catalogId": "media_catalog"
+     },
+     "functionCallId": "call-402"
+    },
+    "version": "1.0"
+   },
+   "surfaceId": "existing_surface"
+  },
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies that when surfaceId is omitted on callRendererFunction, @path in callFunction.args resolves against an isolated empty {} data model even when a surface with data exists.",
+  "expect": {
+   "response": {
+    "rendererFunctionResponse": {
+     "functionCallId": "call-402",
+     "value": {
+      "constant": "safe",
+      "leaked": null
+     }
+    },
+    "version": "1.0"
+   }
+  },
+  "name": "test_rpc_call_renderer_function_without_surface_id_isolated_data_model"
+ },
+ {
+  "action": "handle_rpc",
+  "args": {
+   "dataModel": {},
+   "functionMetadata": {
+    "echoArgs": {
+     "allowedCallers": "rendererOrAgent",
+     "requiresUserActivation": false
+    }
+   },
+   "message": {
+    "callRendererFunction": {
+     "callFunction": {
+      "@call": "echoArgs",
+      "args": {
+       "idx": {
+        "@call": "@index"
+       }
+      },
+      "catalogId": "basic"
+     },
+     "functionCallId": "call-403",
+     "surfaceId": "main_surface"
+    },
+    "version": "1.0"
+   },
+   "surfaceId": "main_surface"
+  },
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies that evaluating @index at the root DataContext in callRendererFunction fails with EXECUTION_ERROR.",
+  "expect": {
+   "response": {
+    "rendererFunctionResponse": {
+     "error": {
+      "code": "EXECUTION_ERROR",
+      "message": "index"
+     },
+     "functionCallId": "call-403"
+    },
+    "version": "1.0"
+   }
+  },
+  "name": "test_rpc_call_renderer_function_index_at_root_execution_error"
+ },
+ {
+  "action": "handle_rpc",
+  "args": {
+   "uiBindingScenario": {
+    "catalogId": "store_catalog",
+    "component": {
+     "component": "Text",
+     "id": "root",
+     "text": {
+      "@call": "fetchRemoteGreeting",
+      "args": {
+       "user": "Ada"
+      },
+      "catalogId": "store_catalog"
+     }
+    },
+    "inboundResponseValue": "Hello from agent, Ada!",
+    "surfaceId": "main_surface"
+   }
+  },
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies a component property bound to an agent function initially resolves to null/undefined while emitting outbound callAgentFunction, and updates reactively when agentFunctionResponse arrives.",
+  "expect": {
+   "initialValue": null,
+   "outboundCall": {
+    "callAgentFunction": {
+     "callFunction": {
+      "@call": "fetchRemoteGreeting",
+      "args": {
+       "user": "Ada"
+      },
+      "catalogId": "store_catalog"
+     },
+     "surfaceId": "main_surface"
+    },
+    "version": "1.0"
+   },
+   "resolvedValue": "Hello from agent, Ada!"
+  },
+  "features": [
+   "F-CORE-24",
+   "F-CORE-28",
+   "F-CORE-29"
+  ],
+  "name": "test_rpc_ui_binding_triggers_call_agent_function_async_resolution"
+ },
+ {
+  "action": "handle_rpc",
+  "args": {
+   "uiActionFallbackScenario": {
+    "actionPayload": {
+     "functionCall": {
+      "@call": "undeclaredAgentAction",
+      "args": {
+       "orderId": "ord-99"
+      },
+      "catalogId": "store_catalog"
+     }
+    },
+    "catalogId": "store_catalog",
+    "inboundResponseValue": {
+     "accepted": true
+    },
+    "surfaceId": "main_surface"
+   }
+  },
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies an undeclared function invoked from a UI action in relaxed mode falls back to dispatching callAgentFunction to the agent.",
+  "expect": {
+   "outboundCall": {
+    "callAgentFunction": {
+     "callFunction": {
+      "@call": "undeclaredAgentAction",
+      "args": {
+       "orderId": "ord-99"
+      },
+      "catalogId": "store_catalog"
+     },
+     "surfaceId": "main_surface"
+    },
+    "version": "1.0"
+   },
+   "result": {
+    "accepted": true
+   }
+  },
+  "name": "test_rpc_ui_action_missing_local_function_fallback_to_agent"
+ },
+ {
+  "action": "handle_rpc",
+  "args": {
+   "uiBindingScenario": {
+    "catalogId": "store_catalog",
+    "components": [
+     {
+      "children": [
+       "bound_text",
+       "sibling_text"
+      ],
+      "component": "Column",
+      "id": "root"
+     },
+     {
+      "component": "Text",
+      "id": "bound_text",
+      "text": {
+       "@call": "remoteTitle",
+       "args": {
+        "itemId": "item-42"
+       },
+       "catalogId": "store_catalog"
+      }
+     },
+     {
+      "component": "Text",
+      "id": "sibling_text",
+      "text": "Static subtitle"
+     }
+    ],
+    "inboundResponseError": {
+     "code": "EXECUTION_ERROR",
+     "message": "Backend unavailable"
+    },
+    "observe": {
+     "componentId": "bound_text",
+     "property": "text"
+    },
+    "surfaceId": "main_surface"
+   }
+  },
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies that when a dynamic value binding calling an agent function receives an error response, the binding resolves to null, sibling components render intact, and the surface reports EXPRESSION_ERROR with the failed call's functionCallId.",
+  "expect": {
+   "initialValue": null,
+   "outboundCall": {
+    "callAgentFunction": {
+     "callFunction": {
+      "@call": "remoteTitle",
+      "args": {
+       "itemId": "item-42"
+      },
+      "catalogId": "store_catalog"
+     },
+     "surfaceId": "main_surface"
+    },
+    "version": "1.0"
+   },
+   "resolvedValue": null,
+   "siblings": {
+    "sibling_text": {
+     "text": "Static subtitle"
+    }
+   },
+   "surfaceError": {
+    "code": "EXPRESSION_ERROR",
+    "functionCallId": "$outboundCallId"
+   }
+  },
+  "name": "test_rpc_ui_binding_agent_error_resolves_null"
+ },
+ {
+  "action": "handle_rpc",
+  "args": {
+   "uiBindingScenario": {
+    "catalogId": "store_catalog",
+    "component": {
+     "checks": [
+      {
+       "condition": {
+        "@call": "remoteCheck",
+        "args": {
+         "username": "ada"
+        },
+        "catalogId": "store_catalog"
+       },
+       "message": "Name is taken"
+      }
+     ],
+     "component": "TextField",
+     "id": "root",
+     "label": "Username",
+     "value": "ada"
+    },
+    "inboundResponseError": {
+     "code": "EXECUTION_ERROR",
+     "message": "Directory service unavailable"
+    },
+    "surfaceId": "main_surface"
+   }
+  },
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies that when a CheckRule condition calling an agent function receives an error response, the check rule evaluates to invalid with the rule's message and the surface reports EXPRESSION_ERROR with the failed call's functionCallId.",
+  "expect": {
+   "outboundCall": {
+    "callAgentFunction": {
+     "callFunction": {
+      "@call": "remoteCheck",
+      "args": {
+       "username": "ada"
+      },
+      "catalogId": "store_catalog"
+     },
+     "surfaceId": "main_surface"
+    },
+    "version": "1.0"
+   },
+   "surfaceError": {
+    "code": "EXPRESSION_ERROR",
+    "functionCallId": "$outboundCallId"
+   },
+   "validationResult": {
+    "message": "Name is taken",
+    "severity": "error",
+    "valid": false
+   }
+  },
+  "name": "test_rpc_ui_check_agent_error_invalidates_rule"
+ },
+ {
+  "action": "handle_rpc",
+  "args": {
+   "uiActionFallbackScenario": {
+    "actionPayload": {
+     "functionCall": {
+      "@call": "finish",
+      "args": {
+       "steps": [
+        {
+         "@call": "markStarted",
+         "args": {},
+         "catalogId": "store_catalog"
+        },
+        {
+         "@call": "remoteStep",
+         "args": {},
+         "catalogId": "store_catalog"
+        }
+       ]
+      },
+      "catalogId": "store_catalog"
+     }
+    },
+    "catalogId": "store_catalog",
+    "inboundResponseError": {
+     "code": "EXECUTION_ERROR",
+     "message": "Remote step failed"
+    },
+    "localFunctions": {
+     "finish": {
+      "effect": {
+       "setData": {
+        "path": "/finished",
+        "value": true
+       }
+      },
+      "returnType": "boolean"
+     },
+     "markStarted": {
+      "effect": {
+       "setData": {
+        "path": "/started",
+        "value": true
+       }
+      },
+      "returnType": "boolean"
+     }
+    },
+    "surfaceId": "main_surface"
+   }
+  },
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies that when an agent function call in an action pipeline receives an error response, earlier effects are preserved, the remaining pipeline halts, and the surface reports EXPRESSION_ERROR with the failed call's functionCallId.",
+  "expect": {
+   "dataModel": {
+    "started": true
+   },
+   "outboundCall": {
+    "callAgentFunction": {
+     "callFunction": {
+      "@call": "remoteStep",
+      "args": {},
+      "catalogId": "store_catalog"
+     },
+     "surfaceId": "main_surface"
+    },
+    "version": "1.0"
+   },
+   "surfaceError": {
+    "code": "EXPRESSION_ERROR",
+    "functionCallId": "$outboundCallId"
+   }
+  },
+  "name": "test_rpc_ui_action_agent_error_halts_pipeline"
+ }
+]

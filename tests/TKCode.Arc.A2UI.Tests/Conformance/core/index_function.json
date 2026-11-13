@@ -1,0 +1,282 @@
+[
+ {
+  "action": "validate",
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies built-in @index function evaluation during collection template iteration.",
+  "expect": {
+   "surfaces": {
+    "main": {
+     "components": {
+      "item_index_0": {
+       "text": "0"
+      },
+      "item_index_1": {
+       "text": "1"
+      },
+      "item_index_2": {
+       "text": "2"
+      },
+      "item_text_0": {
+       "text": "Buy Milk"
+      },
+      "item_text_1": {
+       "text": "Clean Kitchen"
+      },
+      "item_text_2": {
+       "text": "Pay Bills"
+      }
+     }
+    }
+   }
+  },
+  "features": [
+   "F-CORE-21"
+  ],
+  "name": "test_index_function_in_collection_loop",
+  "steps": [
+   {
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "basic",
+       "components": [
+        {
+         "children": [
+          "list"
+         ],
+         "component": "Column",
+         "id": "root"
+        },
+        {
+         "children": {
+          "componentId": "row",
+          "path": "/tasks"
+         },
+         "component": "List",
+         "id": "list"
+        },
+        {
+         "children": [
+          "item_index",
+          "item_text"
+         ],
+         "component": "Row",
+         "id": "row"
+        },
+        {
+         "component": "Text",
+         "id": "item_index",
+         "text": {
+          "@call": "@index",
+          "args": {}
+         }
+        },
+        {
+         "component": "Text",
+         "id": "item_text",
+         "text": {
+          "@path": ""
+         }
+        }
+       ],
+       "dataModel": {
+        "tasks": [
+         "Buy Milk",
+         "Clean Kitchen",
+         "Pay Bills"
+        ]
+       },
+       "surfaceId": "main"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "validate",
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies built-in @index function with offset argument (@index(1) for 1-based indexing).",
+  "expect": {
+   "surfaces": {
+    "main": {
+     "components": {
+      "text_0": {
+       "text": "1"
+      },
+      "text_1": {
+       "text": "2"
+      }
+     }
+    }
+   }
+  },
+  "features": [
+   "F-CORE-21"
+  ],
+  "name": "test_index_function_with_offset",
+  "steps": [
+   {
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "basic",
+       "components": [
+        {
+         "children": {
+          "componentId": "text",
+          "path": "/players"
+         },
+         "component": "List",
+         "id": "root"
+        },
+        {
+         "component": "Text",
+         "id": "text",
+         "text": {
+          "@call": "@index",
+          "args": {
+           "offset": 1
+          }
+         }
+        }
+       ],
+       "dataModel": {
+        "players": [
+         "Alice",
+         "Bob"
+        ]
+       },
+       "surfaceId": "main"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "validate",
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies built-in @index function evaluation inside a deeply nested child property path of a template list.",
+  "expect": {
+   "surfaces": {
+    "main": {
+     "components": {
+      "nested_text_0": {
+       "text": "1"
+      },
+      "nested_text_1": {
+       "text": "2"
+      }
+     }
+    }
+   }
+  },
+  "features": [
+   "F-CORE-21"
+  ],
+  "name": "test_index_function_nested_path",
+  "steps": [
+   {
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "basic",
+       "components": [
+        {
+         "children": {
+          "componentId": "col",
+          "path": "/users"
+         },
+         "component": "List",
+         "id": "root"
+        },
+        {
+         "children": [
+          "nested_text"
+         ],
+         "component": "Column",
+         "id": "col"
+        },
+        {
+         "component": "Text",
+         "id": "nested_text",
+         "text": {
+          "@call": "@index",
+          "args": {
+           "offset": 1
+          }
+         }
+        }
+       ],
+       "dataModel": {
+        "users": [
+         {
+          "address": {
+           "city": "Seattle"
+          },
+          "name": "Alice"
+         },
+         {
+          "address": {
+           "city": "Portland"
+          },
+          "name": "Bob"
+         }
+        ]
+       },
+       "surfaceId": "main"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "validate",
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies error thrown when @index function is called outside a collection iteration scope.",
+  "features": [
+   "F-CORE-21"
+  ],
+  "name": "test_index_function_outside_loop_error",
+  "steps": [
+   {
+    "expectError": {
+     "category": "ValidationError",
+     "message": "@index function can only be evaluated inside a collection template iteration scope."
+    },
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "basic",
+       "components": [
+        {
+         "component": "Text",
+         "id": "root",
+         "text": {
+          "@call": "@index",
+          "args": {}
+         }
+        }
+       ],
+       "surfaceId": "main"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ }
+]

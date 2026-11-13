@@ -1,0 +1,2157 @@
+[
+ {
+  "action": "from_json",
+  "catalogId": "https://a2ui.org/specification/v0_8/standard_catalog_definition.json",
+  "catalogPath": "specification/v0_8/json/standard_catalog_definition.json",
+  "description": "Tests that loading the published v0.8 basic catalog with fromJson yields a catalog equivalent to the SDK's own v0.8 basic catalog implementation. The v0.8 document has no $ref, so there is no self-contained check.",
+  "expect": {
+   "matchesBuiltinCatalog": true
+  },
+  "features": [
+   "F-CORE-08"
+  ],
+  "name": "test_v08_basic_catalog_from_json",
+  "protocolVersion": "v0.8"
+ },
+ {
+  "action": "from_json",
+  "catalogPath": "specification/v0_9/catalogs/basic/catalog.json",
+  "description": "Tests that the published v0.9 basic catalog loads with fromJson into a catalog equivalent to the SDK's own v0.9 basic catalog implementation, with its common_types references localised so every $ref resolves within the resolved catalog schema.",
+  "expect": {
+   "matchesBuiltinCatalog": true,
+   "selfContained": true
+  },
+  "features": [
+   "F-CORE-08"
+  ],
+  "name": "test_v09_basic_catalog_from_json",
+  "protocolVersion": "v0.9"
+ },
+ {
+  "action": "from_json",
+  "catalogPath": "catalogs/basic/v1/catalog.json",
+  "description": "Tests that the published v1 basic catalog loads with fromJson into a catalog equivalent to the SDK's own v1 basic catalog implementation, with its common_types references localised so every $ref resolves within the resolved catalog schema.",
+  "expect": {
+   "matchesBuiltinCatalog": true,
+   "selfContained": true
+  },
+  "features": [
+   "F-CORE-08",
+   "F-CORE-35"
+  ],
+  "name": "test_v10_basic_catalog_from_json",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "from_json",
+  "catalog": {
+   "components": {
+    "Text": {
+     "type": "object"
+    }
+   }
+  },
+  "description": "Tests that Catalog.from_json raises CatalogError when catalogId is missing.",
+  "expectError": {
+   "category": "CatalogError",
+   "message": "catalog_id must be provided or exist in catalog schema"
+  },
+  "features": [
+   "F-CORE-08"
+  ],
+  "name": "test_catalog_from_json_missing_catalog_id_error"
+ },
+ {
+  "action": "from_json",
+  "catalog": {
+   "catalogId": "https://a2ui.org/catalogs/original",
+   "components": {
+    "Text": {
+     "type": "object"
+    }
+   }
+  },
+  "catalogId": "https://a2ui.org/catalogs/overridden",
+  "description": "Tests overriding catalogId during Catalog.from_json.",
+  "expect": {
+   "catalogId": "https://a2ui.org/catalogs/overridden",
+   "components": {
+    "Text": {
+     "type": "object"
+    }
+   },
+   "protocolVersion": "v0.9"
+  },
+  "features": [
+   "F-CORE-08"
+  ],
+  "name": "test_catalog_from_json_override_catalog_id"
+ },
+ {
+  "action": "from_json",
+  "catalog": {
+   "catalogId": "https://a2ui.org/catalogs/v10/attributes",
+   "components": {
+    "CustomCard": {
+     "allowedChildren": [
+      "Button"
+     ],
+     "allowedParents": [
+      "Surface",
+      "Row"
+     ],
+     "description": "A custom card layout.",
+     "type": "object"
+    }
+   },
+   "functions": {
+    "fetchData": {
+     "allowedCallers": "agentOnly",
+     "requiresUserActivation": false,
+     "returnType": "object"
+    }
+   },
+   "protocolVersion": "1.0"
+  },
+  "description": "Tests parsing allowedParents, allowedChildren, allowedCallers, and requiresUserActivation in a v1.0 catalog schema.",
+  "expect": {
+   "catalogId": "https://a2ui.org/catalogs/v10/attributes",
+   "components": {
+    "CustomCard": {
+     "allowedChildren": [
+      "Button"
+     ],
+     "allowedParents": [
+      "Surface",
+      "Row"
+     ],
+     "description": "A custom card layout.",
+     "type": "object"
+    }
+   },
+   "functions": {
+    "fetchData": {
+     "allowedCallers": "agentOnly",
+     "requiresUserActivation": false,
+     "returnType": "object"
+    }
+   },
+   "protocolVersion": "1.0"
+  },
+  "features": [
+   "F-CORE-35",
+   "F-CORE-37"
+  ],
+  "name": "test_v10_catalog_from_json_v1_0_attributes"
+ },
+ {
+  "action": "from_json",
+  "catalog": {
+   "catalogId": "https://a2ui.org/catalogs/v10/user_activation_agent_only",
+   "functions": {
+    "openUrl": {
+     "allowedCallers": "agentOnly",
+     "requiresUserActivation": true,
+     "returnType": "void"
+    }
+   },
+   "protocolVersion": "1.0"
+  },
+  "description": "Tests that a v1.0 catalog function with requiresUserActivation set to true and allowedCallers set to agentOnly raises CatalogError.",
+  "expectError": {
+   "category": "CatalogError",
+   "message": "requiresUserActivation"
+  },
+  "features": [
+   "F-CORE-37"
+  ],
+  "name": "test_v10_catalog_from_json_user_activation_agent_only_error"
+ },
+ {
+  "action": "from_json",
+  "catalog": {
+   "catalogId": "https://a2ui.org/catalogs/v10/user_activation_renderer_or_agent",
+   "functions": {
+    "openUrl": {
+     "allowedCallers": "rendererOrAgent",
+     "requiresUserActivation": true,
+     "returnType": "void"
+    }
+   },
+   "protocolVersion": "1.0"
+  },
+  "description": "Tests that a v1.0 catalog function with requiresUserActivation set to true and allowedCallers set to rendererOrAgent raises CatalogError.",
+  "expectError": {
+   "category": "CatalogError",
+   "message": "requiresUserActivation"
+  },
+  "features": [
+   "F-CORE-37"
+  ],
+  "name": "test_v10_catalog_from_json_user_activation_renderer_or_agent_error"
+ },
+ {
+  "action": "from_json",
+  "catalog": {
+   "catalogId": "https://a2ui.org/catalogs/v10/user_activation_renderer_only",
+   "functions": {
+    "copyToClipboard": {
+     "requiresUserActivation": true,
+     "returnType": "void"
+    },
+    "openUrl": {
+     "allowedCallers": "rendererOnly",
+     "requiresUserActivation": true,
+     "returnType": "void"
+    }
+   },
+   "protocolVersion": "1.0"
+  },
+  "description": "Tests that a v1.0 catalog function with requiresUserActivation set to true is accepted when allowedCallers is rendererOnly or omitted.",
+  "expect": {
+   "catalogId": "https://a2ui.org/catalogs/v10/user_activation_renderer_only",
+   "functions": [
+    "openUrl",
+    "copyToClipboard"
+   ]
+  },
+  "features": [
+   "F-CORE-37"
+  ],
+  "name": "test_v10_catalog_from_json_user_activation_renderer_only"
+ },
+ {
+  "action": "from_json",
+  "catalog": {
+   "$defs": {
+    "anyFunction": {
+     "oneOf": [
+      {
+       "$ref": "#/functions/good"
+      }
+     ]
+    }
+   },
+   "catalogId": "https://a2ui.org/catalogs/v10/user_activation_left_out_of_union",
+   "functions": {
+    "bad": {
+     "allowedCallers": "agentOnly",
+     "requiresUserActivation": true,
+     "returnType": "void"
+    },
+    "good": {
+     "returnType": "void"
+    }
+   },
+   "protocolVersion": "1.0"
+  },
+  "description": "Tests that a v1.0 catalog function with requiresUserActivation set to true and allowedCallers set to agentOnly raises CatalogError even when $defs.anyFunction leaves the function out.",
+  "expectError": {
+   "category": "CatalogError",
+   "message": "requiresUserActivation"
+  },
+  "features": [
+   "F-CORE-37"
+  ],
+  "name": "test_v10_catalog_from_json_user_activation_error_in_function_left_out_of_union"
+ },
+ {
+  "action": "from_json",
+  "catalog": {
+   "catalogId": "https://a2ui.org/catalogs/v09/user_activation_agent_only",
+   "functions": {
+    "openUrl": {
+     "allowedCallers": "agentOnly",
+     "requiresUserActivation": true,
+     "returnType": "void"
+    }
+   },
+   "protocolVersion": "v0.9"
+  },
+  "description": "Tests that a v0.9 catalog function with requiresUserActivation set to true and allowedCallers set to agentOnly loads, because only the v1.0 catalog_definition.json restricts that pair.",
+  "expect": {
+   "catalogId": "https://a2ui.org/catalogs/v09/user_activation_agent_only",
+   "functions": [
+    "openUrl"
+   ]
+  },
+  "features": [
+   "F-CORE-37"
+  ],
+  "name": "test_v09_catalog_from_json_user_activation_agent_only_loads"
+ },
+ {
+  "action": "from_json",
+  "catalog": {
+   "catalogId": "https://a2ui.org/catalogs/v10/uax31",
+   "components": {
+    "MyComponent_1": {
+     "type": "object"
+    }
+   },
+   "functions": {
+    "format_text_1": {
+     "returnType": "string"
+    }
+   },
+   "protocolVersion": "1.0"
+  },
+  "description": "Tests parsing valid UAX#31 component and function identifiers in a v1.0 catalog.",
+  "expect": {
+   "catalogId": "https://a2ui.org/catalogs/v10/uax31",
+   "components": {
+    "MyComponent_1": {
+     "type": "object"
+    }
+   },
+   "functions": {
+    "format_text_1": {
+     "returnType": "string"
+    }
+   },
+   "protocolVersion": "1.0"
+  },
+  "features": [
+   "F-CORE-09"
+  ],
+  "name": "test_v10_catalog_from_json_uax31_validation"
+ },
+ {
+  "action": "from_json",
+  "catalog": {
+   "catalogId": "https://a2ui.org/catalogs/v10/reserved_at_function",
+   "functions": {
+    "@index": {
+     "returnType": "number"
+    }
+   },
+   "protocolVersion": "1.0"
+  },
+  "description": "Tests that @-prefixed function names (such as @index) are reserved for protocol system functions and cannot be declared in a v1.0 catalog.",
+  "expectError": {
+   "category": "CatalogError"
+  },
+  "name": "test_v10_catalog_from_json_rejects_at_prefixed_function_name"
+ },
+ {
+  "action": "from_json",
+  "catalog": {
+   "catalogId": "https://a2ui.org/catalogs/v10/invalid_uax31",
+   "components": {
+    "My-Component": {
+     "type": "object"
+    }
+   },
+   "protocolVersion": "1.0"
+  },
+  "description": "Tests that invalid UAX#31 component identifier with hyphen raises CatalogError under v1.0.",
+  "expectError": {
+   "category": "CatalogError",
+   "message": "Invalid UAX #31 component identifier"
+  },
+  "features": [
+   "F-CORE-09"
+  ],
+  "name": "test_v10_catalog_from_json_invalid_uax31_identifier_error"
+ },
+ {
+  "action": "from_json",
+  "catalog": {
+   "catalogId": "https://a2ui.org/catalogs/v10/other_catalog_ref",
+   "components": {
+    "FancyText": {
+     "allOf": [
+      {
+       "$ref": "basic_catalog.json#/components/Text"
+      }
+     ],
+     "properties": {
+      "badge": {
+       "type": "string"
+      },
+      "component": {
+       "const": "FancyText"
+      }
+     },
+     "required": [
+      "component"
+     ],
+     "type": "object"
+    }
+   },
+   "protocolVersion": "1.0"
+  },
+  "description": "Tests that a v1.0 catalog whose component inherits a component of another catalog through an external $ref raises CatalogError when loaded.",
+  "expectError": {
+   "category": "CatalogError",
+   "message": "Unsupported external $ref"
+  },
+  "name": "test_v10_catalog_from_json_rejects_ref_to_another_catalog"
+ },
+ {
+  "action": "from_json",
+  "catalog": {
+   "catalogId": "https://a2ui.org/catalogs/v10/absolute_uri_ref",
+   "components": {
+    "FancyButton": {
+     "properties": {
+      "action": {
+       "$ref": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json#/components/Button/properties/action"
+      },
+      "component": {
+       "const": "FancyButton"
+      }
+     },
+     "required": [
+      "component",
+      "action"
+     ],
+     "type": "object"
+    }
+   },
+   "protocolVersion": "1.0"
+  },
+  "description": "Tests that a v1.0 catalog property that references another catalog by absolute URI raises CatalogError when loaded, without fetching the URI.",
+  "expectError": {
+   "category": "CatalogError",
+   "message": "Unsupported external $ref"
+  },
+  "features": [
+   "F-CORE-44"
+  ],
+  "name": "test_v10_catalog_from_json_rejects_absolute_uri_ref"
+ },
+ {
+  "action": "from_json",
+  "catalog": {
+   "catalogId": "https://a2ui.org/catalogs/v10/function_arg_ref",
+   "functions": {
+    "formatBadge": {
+     "properties": {
+      "@call": {
+       "const": "formatBadge"
+      },
+      "args": {
+       "properties": {
+        "value": {
+         "$ref": "other_catalog.json#/functions/formatString/properties/args/properties/value"
+        }
+       },
+       "required": [
+        "value"
+       ],
+       "type": "object"
+      }
+     },
+     "required": [
+      "@call",
+      "args"
+     ],
+     "returnType": "string",
+     "type": "object"
+    }
+   },
+   "protocolVersion": "1.0"
+  },
+  "description": "Tests that a v1.0 function whose argument schema references another catalog raises CatalogError when loaded.",
+  "expectError": {
+   "category": "CatalogError",
+   "message": "Unsupported external $ref"
+  },
+  "name": "test_v10_catalog_from_json_rejects_external_ref_in_function_args"
+ },
+ {
+  "action": "from_json",
+  "catalog": {
+   "catalogId": "https://a2ui.org/catalogs/v10/allowed_refs",
+   "components": {
+    "Label": {
+     "allOf": [
+      {
+       "$ref": "common_types.json#/$defs/Checkable"
+      }
+     ],
+     "properties": {
+      "caption": {
+       "$ref": "https://a2ui.org/specification/v1_0/common_types.json#/$defs/DynamicString"
+      },
+      "component": {
+       "const": "Label"
+      },
+      "text": {
+       "$ref": "common_types.json#/$defs/DynamicString"
+      }
+     },
+     "required": [
+      "component",
+      "text"
+     ],
+     "type": "object"
+    },
+    "Wrapper": {
+     "properties": {
+      "child": {
+       "$ref": "common_types.json#/$defs/ComponentId"
+      },
+      "component": {
+       "const": "Wrapper"
+      }
+     },
+     "required": [
+      "component",
+      "child"
+     ],
+     "type": "object"
+    }
+   },
+   "protocolVersion": "1.0"
+  },
+  "description": "Tests that local references and common_types.json references, in relative or absolute form, remain valid $ref targets in a v1.0 catalog.",
+  "expect": {
+   "components": [
+    "Label",
+    "Wrapper"
+   ]
+  },
+  "features": [
+   "F-CORE-44"
+  ],
+  "name": "test_v10_catalog_from_json_accepts_local_and_common_types_refs"
+ },
+ {
+  "action": "from_json",
+  "catalog": {
+   "catalogId": "https://a2ui.org/catalogs/v09/hyphen_allowed",
+   "components": {
+    "My-Component": {
+     "type": "object"
+    }
+   },
+   "protocolVersion": "v0.9"
+  },
+  "description": "Tests that v0.9 catalogs permit hyphenated component identifiers.",
+  "expect": {
+   "catalogId": "https://a2ui.org/catalogs/v09/hyphen_allowed",
+   "components": {
+    "My-Component": {
+     "type": "object"
+    }
+   },
+   "protocolVersion": "v0.9"
+  },
+  "name": "test_v09_catalog_from_json_allows_hyphen_identifiers"
+ },
+ {
+  "action": "from_json",
+  "catalog": {
+   "components": {
+    "123InvalidComponent": {
+     "type": "object"
+    }
+   }
+  },
+  "catalogId": "custom",
+  "description": "Tests that component type names violating UAX#31 fail catalog validation in v1.0.",
+  "expectError": {
+   "category": "CatalogError"
+  },
+  "name": "test_v10_uax31_invalid_component_name",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "from_json",
+  "catalog": {
+   "components": {
+    "ValidComponent": {
+     "properties": {
+      "invalid-prop-name!": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   }
+  },
+  "catalogId": "custom",
+  "description": "Tests that component property names violating UAX#31 fail catalog validation in v1.0.",
+  "expectError": {
+   "category": "CatalogError"
+  },
+  "name": "test_v10_uax31_invalid_property_name",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "from_json",
+  "catalog": {
+   "functions": {
+    "invalid-func-name!": {
+     "returnType": "string"
+    }
+   }
+  },
+  "catalogId": "custom",
+  "description": "Tests that function names violating UAX#31 fail catalog validation in v1.0.",
+  "expectError": {
+   "category": "CatalogError"
+  },
+  "name": "test_v10_uax31_invalid_function_name",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "from_json",
+  "catalog": {
+   "functions": {
+    "validFunc": {
+     "parameters": {
+      "123invalid_arg": {
+       "type": "string"
+      }
+     },
+     "returnType": "string"
+    }
+   }
+  },
+  "catalogId": "custom",
+  "description": "Tests that function argument names violating UAX#31 fail catalog validation in v1.0.",
+  "expectError": {
+   "category": "CatalogError"
+  },
+  "name": "test_v10_uax31_invalid_argument_name",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "from_json",
+  "catalog": {
+   "components": {
+    "Component_ℓ": {
+     "properties": {
+      "property_ℓ": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "functions": {
+    "func_ℓ": {
+     "parameters": {
+      "arg_ℓ": {
+       "type": "string"
+      }
+     },
+     "returnType": "string"
+    }
+   }
+  },
+  "catalogId": "custom",
+  "description": "Tests that valid non-ASCII UAX#31 identifiers (e.g. Mathematical Script Small L ℓ, U+2112) pass catalog validation in v1.0.",
+  "name": "test_v10_uax31_valid_non_ascii_identifier",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "from_json",
+  "catalog": {
+   "components": {
+    "Component–Name": {
+     "type": "object"
+    }
+   }
+  },
+  "catalogId": "custom",
+  "description": "Tests that component names containing En Dash (–, U+2013) fail UAX#31 catalog validation in v1.0.",
+  "expectError": {
+   "category": "CatalogError"
+  },
+  "name": "test_v10_uax31_invalid_en_dash_component_name",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "from_json",
+  "catalog": {
+   "components": {
+    "ValidComponent": {
+     "properties": {
+      "prop—name": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   }
+  },
+  "catalogId": "custom",
+  "description": "Tests that property names containing Em Dash (—, U+2014) fail UAX#31 catalog validation in v1.0.",
+  "expectError": {
+   "category": "CatalogError"
+  },
+  "name": "test_v10_uax31_invalid_em_dash_property_name",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "from_json",
+  "catalog": {
+   "functions": {
+    "func֊name": {
+     "returnType": "string"
+    }
+   }
+  },
+  "catalogId": "custom",
+  "description": "Tests that function names containing Armenian Hyphen (֊, U+058A) fail UAX#31 catalog validation in v1.0.",
+  "expectError": {
+   "category": "CatalogError"
+  },
+  "name": "test_v10_uax31_invalid_armenian_hyphen_function_name",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "from_json",
+  "catalogPath": "specification/v0_9/catalogs/basic/catalog.json",
+  "description": "Tests that the published v0.9 basic catalog accepts a Button whose action calls a catalog function, and rejects a call to a function the catalog does not define.",
+  "expect": {
+   "invalidComponents": [
+    {
+     "action": {
+      "functionCall": {
+       "args": {},
+       "call": "notAFunction"
+      }
+     },
+     "child": "txt1",
+     "component": "Button",
+     "id": "btn1"
+    }
+   ],
+   "validComponents": [
+    {
+     "action": {
+      "functionCall": {
+       "args": {
+        "url": "https://example.com"
+       },
+       "call": "openUrl"
+      }
+     },
+     "child": "txt1",
+     "component": "Button",
+     "id": "btn1"
+    }
+   ]
+  },
+  "name": "test_v09_published_basic_catalog_validates_function_calls",
+  "protocolVersion": "v0.9"
+ },
+ {
+  "action": "from_json",
+  "catalogPath": "specification/v0_9/catalogs/basic/catalog.json",
+  "description": "Tests that the published v0.9 basic catalog rejects a function call carrying a key that its function definition does not declare.",
+  "expect": {
+   "invalidComponents": [
+    {
+     "action": {
+      "functionCall": {
+       "args": {
+        "url": "https://example.com"
+       },
+       "bogus": 1,
+       "call": "openUrl"
+      }
+     },
+     "child": "txt1",
+     "component": "Button",
+     "id": "btn1"
+    }
+   ]
+  },
+  "name": "test_v09_published_basic_catalog_rejects_function_call_extra_key",
+  "protocolVersion": "v0.9"
+ },
+ {
+  "action": "from_json",
+  "catalogPath": "specification/v0_9/catalogs/minimal/catalog.json",
+  "description": "Tests that the published v0.9 minimal catalog loads with its common_types references localised, so every $ref resolves within the resolved catalog schema.",
+  "expect": {
+   "selfContained": true
+  },
+  "features": [
+   "F-CORE-44"
+  ],
+  "name": "test_v09_published_minimal_catalog_is_self_contained",
+  "protocolVersion": "v0.9"
+ },
+ {
+  "action": "from_json",
+  "catalogPath": "specification/v0_9/catalogs/minimal/catalog.json",
+  "description": "Tests that the published v0.9 minimal catalog accepts a Button whose action calls a catalog function, and rejects a call to a function the catalog does not define.",
+  "expect": {
+   "invalidComponents": [
+    {
+     "action": {
+      "functionCall": {
+       "args": {},
+       "call": "notAFunction"
+      }
+     },
+     "child": "txt1",
+     "component": "Button",
+     "id": "btn1"
+    }
+   ],
+   "validComponents": [
+    {
+     "action": {
+      "functionCall": {
+       "args": {
+        "value": "hello"
+       },
+       "call": "capitalize"
+      }
+     },
+     "child": "txt1",
+     "component": "Button",
+     "id": "btn1"
+    }
+   ]
+  },
+  "name": "test_v09_published_minimal_catalog_validates_function_calls",
+  "protocolVersion": "v0.9"
+ },
+ {
+  "action": "from_json",
+  "catalogPath": "specification/v0_9/catalogs/minimal/catalog.json",
+  "description": "Tests that the published v0.9 minimal catalog rejects a function call carrying a key that its function definition does not declare.",
+  "expect": {
+   "invalidComponents": [
+    {
+     "action": {
+      "functionCall": {
+       "args": {
+        "value": "hello"
+       },
+       "bogus": 1,
+       "call": "capitalize"
+      }
+     },
+     "child": "txt1",
+     "component": "Button",
+     "id": "btn1"
+    }
+   ]
+  },
+  "name": "test_v09_published_minimal_catalog_rejects_function_call_extra_key",
+  "protocolVersion": "v0.9"
+ },
+ {
+  "action": "from_json",
+  "catalogPath": "specification/v0_9_1/catalogs/basic/catalog.json",
+  "description": "Tests that the published v0.9.1 basic catalog loads with its common_types references localised, so every $ref resolves within the resolved catalog schema.",
+  "expect": {
+   "selfContained": true
+  },
+  "features": [
+   "F-CORE-44"
+  ],
+  "name": "test_v091_published_basic_catalog_is_self_contained",
+  "protocolVersion": "v0.9.1"
+ },
+ {
+  "action": "from_json",
+  "catalogPath": "specification/v0_9_1/catalogs/basic/catalog.json",
+  "description": "Tests that the published v0.9.1 basic catalog accepts a Button whose action calls a catalog function, and rejects a call to a function the catalog does not define.",
+  "expect": {
+   "invalidComponents": [
+    {
+     "action": {
+      "functionCall": {
+       "args": {},
+       "call": "notAFunction"
+      }
+     },
+     "child": "txt1",
+     "component": "Button",
+     "id": "btn1"
+    }
+   ],
+   "validComponents": [
+    {
+     "action": {
+      "functionCall": {
+       "args": {
+        "url": "https://example.com"
+       },
+       "call": "openUrl"
+      }
+     },
+     "child": "txt1",
+     "component": "Button",
+     "id": "btn1"
+    }
+   ]
+  },
+  "name": "test_v091_published_basic_catalog_validates_function_calls",
+  "protocolVersion": "v0.9.1"
+ },
+ {
+  "action": "from_json",
+  "catalogPath": "specification/v0_9_1/catalogs/basic/catalog.json",
+  "description": "Tests that the published v0.9.1 basic catalog rejects a function call carrying a key that its function definition does not declare.",
+  "expect": {
+   "invalidComponents": [
+    {
+     "action": {
+      "functionCall": {
+       "args": {
+        "url": "https://example.com"
+       },
+       "bogus": 1,
+       "call": "openUrl"
+      }
+     },
+     "child": "txt1",
+     "component": "Button",
+     "id": "btn1"
+    }
+   ]
+  },
+  "name": "test_v091_published_basic_catalog_rejects_function_call_extra_key",
+  "protocolVersion": "v0.9.1"
+ },
+ {
+  "action": "from_json",
+  "catalogPath": "catalogs/basic/v1/catalog.json",
+  "description": "Tests that the published v1.0 basic catalog accepts a Button whose action calls a catalog function, and rejects a call to a function the catalog does not define.",
+  "expect": {
+   "invalidComponents": [
+    {
+     "action": {
+      "functionCall": {
+       "@call": "notAFunction",
+       "args": {}
+      }
+     },
+     "child": "txt1",
+     "component": "Button",
+     "id": "btn1"
+    }
+   ],
+   "validComponents": [
+    {
+     "action": {
+      "functionCall": {
+       "@call": "openUrl",
+       "args": {
+        "url": "https://example.com"
+       }
+      }
+     },
+     "child": "txt1",
+     "component": "Button",
+     "id": "btn1"
+    }
+   ]
+  },
+  "name": "test_v10_published_basic_catalog_validates_function_calls",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "from_json",
+  "catalogPath": "catalogs/basic/v1/catalog.json",
+  "description": "Tests that the published v1.0 basic catalog rejects a function call carrying a key that its function definition does not declare.",
+  "expect": {
+   "invalidComponents": [
+    {
+     "action": {
+      "functionCall": {
+       "@call": "openUrl",
+       "args": {
+        "url": "https://example.com"
+       },
+       "bogus": 1
+      }
+     },
+     "child": "txt1",
+     "component": "Button",
+     "id": "btn1"
+    }
+   ]
+  },
+  "name": "test_v10_published_basic_catalog_rejects_function_call_extra_key",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "from_json",
+  "catalogPath": "catalogs/basic/v1/catalog.json",
+  "description": "Tests that the published v1.0 basic catalog accepts a TextField that binds its value to a data path, and rejects a TextField without a value.",
+  "expect": {
+   "invalidComponents": [
+    {
+     "component": "TextField",
+     "id": "email",
+     "label": "Email"
+    }
+   ],
+   "validComponents": [
+    {
+     "component": "TextField",
+     "id": "email",
+     "label": "Email",
+     "value": {
+      "@path": "/formData/email"
+     }
+    }
+   ]
+  },
+  "name": "test_v10_published_basic_catalog_requires_text_field_value",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "from_json",
+  "catalogPath": "catalogs/mcp/v1/catalog.json",
+  "description": "Tests that the published v1.0 MCP catalog loads with its common_types references localised, so every $ref resolves within the resolved catalog schema.",
+  "expect": {
+   "selfContained": true
+  },
+  "features": [
+   "F-CORE-44"
+  ],
+  "name": "test_v10_published_mcp_catalog_is_self_contained",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "from_json",
+  "catalogPath": "catalogs/vegachart/v0_9/catalog.json",
+  "description": "Tests that the published v0.9 VegaChart catalog loads with its common_types references localised, so every $ref resolves within the resolved catalog schema.",
+  "expect": {
+   "selfContained": true
+  },
+  "name": "test_v09_published_vegachart_catalog_is_self_contained",
+  "protocolVersion": "v0.9"
+ },
+ {
+  "action": "from_json",
+  "catalogPath": "catalogs/vegachart/v1/catalog.json",
+  "description": "Tests that the published v1.0 VegaChart catalog loads with its common_types references localised, so every $ref resolves within the resolved catalog schema.",
+  "expect": {
+   "selfContained": true
+  },
+  "name": "test_v10_published_vegachart_catalog_is_self_contained",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "from_json",
+  "catalogPath": "catalogs/basic/v1/catalog.json",
+  "description": "Tests that validating a component against the published v1.0 basic catalog alone checks every nested function call that names no catalogId, or names this catalog, against this catalog. That includes a call nested in another call's args, in @index's args, and in the args of a call that names another catalog. A call that names another catalog runs there, so this catalog cannot judge its function or args and accepts it; the message processor checks it against the catalog it resolves to.",
+  "expect": {
+   "invalidComponents": [
+    {
+     "component": "Text",
+     "id": "t5",
+     "text": {
+      "@call": "notAFunction",
+      "args": {},
+      "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json"
+     }
+    },
+    {
+     "component": "Text",
+     "id": "t6",
+     "text": {
+      "@call": "formatString",
+      "args": {
+       "extra": 1,
+       "value": "hi"
+      },
+      "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json"
+     }
+    },
+    {
+     "component": "Text",
+     "id": "t7",
+     "text": {
+      "@call": "shout",
+      "args": {
+       "value": {
+        "@call": "notAFunction",
+        "args": {}
+       }
+      },
+      "catalogId": "other-catalog"
+     }
+    },
+    {
+     "component": "Text",
+     "id": "t2",
+     "text": {
+      "@call": "notAFunction",
+      "args": {}
+     }
+    },
+    {
+     "component": "Text",
+     "id": "t3",
+     "text": {
+      "@call": "formatString",
+      "args": {
+       "value": {
+        "@call": "notAFunction",
+        "args": {}
+       }
+      }
+     }
+    },
+    {
+     "component": "Text",
+     "id": "t4",
+     "text": {
+      "@call": "@index",
+      "args": {
+       "offset": {
+        "@call": "notAFunction",
+        "args": {}
+       }
+      }
+     }
+    }
+   ],
+   "validComponents": [
+    {
+     "component": "Text",
+     "id": "t1",
+     "text": {
+      "@call": "formatString",
+      "args": {
+       "value": 3
+      },
+      "catalogId": "other-catalog"
+     }
+    },
+    {
+     "component": "Text",
+     "id": "t1b",
+     "text": {
+      "@call": "shout",
+      "args": {
+       "loud": true,
+       "value": "hi"
+      },
+      "catalogId": "other-catalog"
+     }
+    }
+   ]
+  },
+  "name": "test_v10_published_basic_catalog_validates_nested_calls",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "from_json",
+  "catalogPath": "catalogs/basic/v1/catalog.json",
+  "description": "Tests that validating a component against the published v1.0 basic catalog alone still rejects what it can judge without resolving a nested call's catalog: a function name that is not a valid identifier (even when the call names another catalog), an argument name that is not a valid identifier, and a call to @foo in the reserved @ namespace, where v1.0 defines only @index.",
+  "expect": {
+   "invalidComponents": [
+    {
+     "component": "Text",
+     "id": "t1",
+     "text": {
+      "@call": "not-a-function",
+      "catalogId": "other-catalog"
+     }
+    },
+    {
+     "component": "Text",
+     "id": "t2",
+     "text": {
+      "@call": "formatString",
+      "args": {
+       "bad-arg": "x"
+      },
+      "catalogId": "other-catalog"
+     }
+    },
+    {
+     "component": "Text",
+     "id": "t3",
+     "text": {
+      "@call": "@foo",
+      "catalogId": "other-catalog"
+     }
+    }
+   ]
+  },
+  "name": "test_v10_published_basic_catalog_rejects_nested_call_bad_identifiers",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "from_json",
+  "catalog": {
+   "$defs": {
+    "anyComponent": {
+     "discriminator": {
+      "propertyName": "component"
+     },
+     "oneOf": [
+      {
+       "$ref": "#/components/Listed"
+      }
+     ]
+    },
+    "anyFunction": {
+     "oneOf": [
+      {
+       "$ref": "#/functions/listed"
+      }
+     ]
+    }
+   },
+   "catalogId": "https://a2ui.org/catalogs/v10/filtered",
+   "components": {
+    "Listed": {
+     "type": "object"
+    },
+    "Unlisted": {
+     "type": "object"
+    }
+   },
+   "functions": {
+    "listed": {
+     "returnType": "string"
+    },
+    "unlisted": {
+     "returnType": "string"
+    }
+   },
+   "protocolVersion": "1.0"
+  },
+  "description": "Tests that a catalog loaded from a document whose anyComponent and anyFunction unions list only some of its entries defines only the listed ones.",
+  "expect": {
+   "components": [
+    "Listed"
+   ],
+   "functions": [
+    "listed"
+   ]
+  },
+  "name": "test_v10_catalog_from_json_filters_entries_by_unions"
+ },
+ {
+  "action": "from_json",
+  "catalog": {
+   "$defs": {
+    "ColorToken": {
+     "enum": [
+      "primary",
+      "secondary",
+      "accent"
+     ],
+     "type": "string"
+    },
+    "ColorValue": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/ColorToken"
+      },
+      {
+       "pattern": "^#[0-9a-fA-F]{6}$",
+       "type": "string"
+      }
+     ]
+    },
+    "CompositeOption": {
+     "allOf": [
+      {
+       "$ref": "#/$defs/SelectOption"
+      },
+      {
+       "properties": {
+        "disabled": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      }
+     ],
+     "type": "object",
+     "unevaluatedProperties": false
+    },
+    "SelectOption": {
+     "properties": {
+      "component": {
+       "type": "string"
+      },
+      "label": {
+       "type": "string"
+      },
+      "value": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "label",
+      "value"
+     ],
+     "type": "object"
+    },
+    "Weight": {
+     "description": "Relative flex weight.",
+     "minimum": 1,
+     "type": "number"
+    },
+    "anyComponent": {
+     "discriminator": {
+      "propertyName": "component"
+     },
+     "oneOf": [
+      {
+       "$ref": "#/components/SelectBox"
+      }
+     ]
+    }
+   },
+   "catalogId": "https://a2ui.org/catalogs/v10/leaf_defs",
+   "components": {
+    "SelectBox": {
+     "allOf": [
+      {
+       "$ref": "common_types.json#/$defs/ComponentCommon"
+      },
+      {
+       "properties": {
+        "color": {
+         "$ref": "#/$defs/ColorValue"
+        },
+        "component": {
+         "const": "SelectBox"
+        },
+        "composite": {
+         "$ref": "#/$defs/CompositeOption"
+        },
+        "label": {
+         "$ref": "common_types.json#/$defs/DynamicString"
+        },
+        "options": {
+         "items": {
+          "$ref": "#/$defs/SelectOption"
+         },
+         "type": "array"
+        },
+        "weight": {
+         "$ref": "#/$defs/Weight",
+         "default": 2,
+         "description": "Custom flex weight override."
+        }
+       },
+       "required": [
+        "component",
+        "label"
+       ],
+       "type": "object"
+      }
+     ],
+     "description": "A selector with reusable leaf definitions.",
+     "type": "object",
+     "unevaluatedProperties": false
+    }
+   },
+   "metadata": {
+    "displayName": "Leaf Defs Catalog",
+    "extensions": {
+     "x-vendor": "acme"
+    }
+   },
+   "protocolVersion": "1.0"
+  },
+  "description": "Tests that a v1.0 catalog declaring leaf $defs (token enums, open string unions, nested objects with a component property, and allOf-composed leaf definitions) resolves them in memory, produces a self-contained validationSchema, and validates component instances against all leaf definition constraints.",
+  "expect": {
+   "catalogId": "https://a2ui.org/catalogs/v10/leaf_defs",
+   "components": [
+    "SelectBox"
+   ],
+   "invalidComponents": [
+    {
+     "color": "not-a-color",
+     "component": "SelectBox",
+     "id": "sb_bad_color",
+     "label": "Invalid color"
+    },
+    {
+     "component": "SelectBox",
+     "id": "sb_bad_weight",
+     "label": "Invalid weight",
+     "weight": 0
+    },
+    {
+     "component": "SelectBox",
+     "id": "sb_bad_option",
+     "label": "Missing required value in SelectOption",
+     "options": [
+      {
+       "label": "Only label"
+      }
+     ]
+    },
+    {
+     "component": "SelectBox",
+     "composite": {
+      "extra": true,
+      "label": "Default",
+      "value": "default"
+     },
+     "id": "sb_extra_composite_prop",
+     "label": "Extra property on closed CompositeOption"
+    }
+   ],
+   "protocolVersion": "1.0",
+   "selfContained": true,
+   "validComponents": [
+    {
+     "color": "primary",
+     "component": "SelectBox",
+     "composite": {
+      "disabled": false,
+      "label": "Default",
+      "value": "default"
+     },
+     "id": "sb1",
+     "label": "Choose a theme",
+     "options": [
+      {
+       "component": "Icon",
+       "label": "Dark",
+       "value": "dark"
+      }
+     ],
+     "weight": 3
+    },
+    {
+     "color": "#1a2b3c",
+     "component": "SelectBox",
+     "id": "sb2",
+     "label": "Custom hex color"
+    }
+   ]
+  },
+  "name": "test_v10_catalog_from_json_leaf_defs",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "to_json",
+  "builtinCatalog": "basic",
+  "description": "Tests that toJson of the SDK's own v0.8 basic catalog equals the published v0.8 basic catalog.",
+  "expectFile": "specification/v0_8/json/standard_catalog_definition.json",
+  "name": "test_v08_basic_catalog_to_json",
+  "protocolVersion": "v0.8"
+ },
+ {
+  "action": "to_json",
+  "builtinCatalog": "basic",
+  "description": "Tests that toJson of the SDK's own v0.9 basic catalog equals the published v0.9 basic catalog.",
+  "expectFile": "specification/v0_9/catalogs/basic/catalog.json",
+  "name": "test_v09_basic_catalog_to_json",
+  "protocolVersion": "v0.9"
+ },
+ {
+  "action": "to_json",
+  "builtinCatalog": "basic",
+  "description": "Tests that toJson of the SDK's own v1 basic catalog equals the published v1 basic catalog.",
+  "expectFile": "catalogs/basic/v1/catalog.json",
+  "name": "test_v10_basic_catalog_to_json",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "round_trip",
+  "catalogId": "https://a2ui.org/specification/v0_8/standard_catalog_definition.json",
+  "catalogPath": "specification/v0_8/json/standard_catalog_definition.json",
+  "description": "Tests that the published v0.8 basic catalog, which declares no catalogId, round-trips without gaining one.",
+  "name": "test_v08_basic_catalog_round_trip",
+  "protocolVersion": "v0.8"
+ },
+ {
+  "action": "round_trip",
+  "catalogPath": "catalogs/basic/v1/catalog.json",
+  "description": "Tests that the published v1 basic catalog round-trips with its allOf mixins, common_types.json references, metadata and $defs unions intact.",
+  "name": "test_v10_basic_catalog_round_trip",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "round_trip",
+  "catalogPath": "specification/v0_9/catalogs/basic/catalog.json",
+  "description": "Tests that the published v0.9 basic catalog round-trips with its absolute common types references, local CatalogComponentCommon mixin and theme intact.",
+  "name": "test_v09_basic_catalog_round_trip",
+  "protocolVersion": "v0.9"
+ },
+ {
+  "action": "round_trip",
+  "catalogPath": "specification/v0_9_1/catalogs/basic/catalog.json",
+  "description": "Tests that the published v0.9.1 basic catalog round-trips unchanged.",
+  "name": "test_v091_basic_catalog_round_trip",
+  "protocolVersion": "v0.9.1"
+ },
+ {
+  "action": "round_trip",
+  "catalogPath": "specification/v0_9/catalogs/minimal/catalog.json",
+  "description": "Tests that the published v0.9 minimal catalog round-trips unchanged.",
+  "name": "test_v09_minimal_catalog_round_trip",
+  "protocolVersion": "v0.9"
+ },
+ {
+  "action": "round_trip",
+  "catalogPath": "catalogs/mcp/catalog.json",
+  "description": "Tests that the MCP catalog, whose anyComponent is not a oneOf union, round-trips unchanged.",
+  "name": "test_mcp_catalog_round_trip",
+  "protocolVersion": "v0.9"
+ },
+ {
+  "action": "round_trip",
+  "catalogPath": "catalogs/mcp/v1/catalog.json",
+  "description": "Tests that the published v1 MCP catalog round-trips with its McpApp component, its functions, their common_types.json references and its $defs unions intact.",
+  "name": "test_v10_mcp_catalog_round_trip",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "round_trip",
+  "catalogPath": "conformance/test_data/catalogs/function_metadata_catalog_v1_0.json",
+  "description": "Tests that function descriptions, return types, allowedCallers and requiresUserActivation round-trip in the v1.0 function shape. The basic catalogs declare no allowedCallers.",
+  "name": "test_v10_custom_catalog_round_trip_function_metadata"
+ },
+ {
+  "action": "round_trip",
+  "catalog": {
+   "$defs": {
+    "ColorToken": {
+     "enum": [
+      "primary",
+      "secondary",
+      "accent"
+     ],
+     "type": "string"
+    },
+    "ColorValue": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/ColorToken"
+      },
+      {
+       "pattern": "^#[0-9a-fA-F]{6}$",
+       "type": "string"
+      }
+     ]
+    },
+    "PrimaryWeight": {
+     "$ref": "#/$defs/Weight"
+    },
+    "SelectOption": {
+     "additionalProperties": false,
+     "properties": {
+      "component": {
+       "type": "string"
+      },
+      "label": {
+       "type": "string"
+      },
+      "value": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "label",
+      "value"
+     ],
+     "type": "object"
+    },
+    "UnusedToken": {
+     "const": "unused",
+     "type": "string"
+    },
+    "Weight": {
+     "description": "Relative flex weight.",
+     "minimum": 1,
+     "type": "number"
+    },
+    "anyComponent": {
+     "discriminator": {
+      "propertyName": "component"
+     },
+     "oneOf": [
+      {
+       "$ref": "#/components/SelectBox"
+      }
+     ]
+    },
+    "anyFunction": {
+     "not": {}
+    }
+   },
+   "catalogId": "https://a2ui.org/catalogs/v10/leaf_defs_round_trip",
+   "components": {
+    "SelectBox": {
+     "allOf": [
+      {
+       "$ref": "common_types.json#/$defs/ComponentCommon"
+      },
+      {
+       "properties": {
+        "color": {
+         "$ref": "#/$defs/ColorValue"
+        },
+        "component": {
+         "const": "SelectBox"
+        },
+        "customWeight": {
+         "$ref": "#/$defs/Weight",
+         "default": 2,
+         "description": "Custom flex weight override."
+        },
+        "label": {
+         "$ref": "common_types.json#/$defs/DynamicString"
+        },
+        "options": {
+         "items": {
+          "$ref": "#/$defs/SelectOption"
+         },
+         "type": "array"
+        },
+        "primaryWeight": {
+         "$ref": "#/$defs/PrimaryWeight"
+        },
+        "weight": {
+         "$ref": "#/$defs/Weight"
+        }
+       },
+       "required": [
+        "component",
+        "label"
+       ],
+       "type": "object"
+      }
+     ],
+     "description": "A selector with reusable leaf definitions.",
+     "type": "object",
+     "unevaluatedProperties": false
+    }
+   },
+   "metadata": {
+    "displayName": "Leaf Defs Round Trip",
+    "extensions": {
+     "x-vendor": "acme"
+    }
+   },
+   "protocolVersion": "1.0"
+  },
+  "description": "Tests that a v1.0 catalog with leaf $defs, chained leaf $defs, call-site description and default overrides on $ref properties, unused leaf $defs, and metadata.extensions round-trips with its $defs and property $ref pointers intact.",
+  "name": "test_v10_custom_catalog_round_trip_leaf_defs",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "validation_schema",
+  "catalogId": "https://a2ui.org/specification/v0_8/standard_catalog_definition.json",
+  "catalogPath": "specification/v0_8/json/standard_catalog_definition.json",
+  "description": "Tests that the validationSchema of the published v0.8 basic catalog, loaded with fromJson, equals the golden bundled schema.",
+  "expectFile": "conformance/test_data/validation_schema/test_v08_basic_validation_schema.json",
+  "name": "test_v08_basic_validation_schema",
+  "protocolVersion": "v0.8"
+ },
+ {
+  "action": "validation_schema",
+  "catalogPath": "specification/v0_9/catalogs/basic/catalog.json",
+  "description": "Tests that the validationSchema of the published v0.9 basic catalog, loaded with fromJson, equals the golden bundled schema, which flattens envelopes, adds the id envelope and inlines the referenced v0.9 common types.",
+  "expectFile": "conformance/test_data/validation_schema/test_v09_basic_validation_schema.json",
+  "name": "test_v09_basic_validation_schema",
+  "protocolVersion": "v0.9"
+ },
+ {
+  "action": "validation_schema",
+  "catalogPath": "catalogs/basic/v1/catalog.json",
+  "description": "Tests that the validationSchema of the published v1 basic catalog, loaded with fromJson, equals the golden bundled schema, which flattens envelopes, adds the id envelope and inlines the referenced v1 common types.",
+  "expectFile": "conformance/test_data/validation_schema/test_v10_basic_validation_schema.json",
+  "name": "test_v10_basic_validation_schema",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "validation_schema",
+  "catalog": {
+   "$defs": {
+    "CatalogComponentCommon": {
+     "properties": {
+      "weight": {
+       "type": "number"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "catalogId": "https://a2ui.org/catalogs/v09/flattening",
+   "components": {
+    "Toggle": {
+     "allOf": [
+      {
+       "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentCommon"
+      },
+      {
+       "$ref": "#/$defs/CatalogComponentCommon"
+      },
+      {
+       "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/Checkable"
+      },
+      {
+       "properties": {
+        "component": {
+         "const": "Toggle"
+        },
+        "label": {
+         "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/DynamicString"
+        },
+        "weight": {
+         "minimum": 1,
+         "type": "integer"
+        }
+       },
+       "required": [
+        "component",
+        "label"
+       ],
+       "type": "object"
+      }
+     ],
+     "type": "object",
+     "unevaluatedProperties": false
+    }
+   }
+  },
+  "description": "Tests that validationSchema flattens a v0.9 component that mixes in ComponentCommon, Checkable and a local $defs mixin, and that a property the component declares itself wins over the one its mixin declares.",
+  "expectFile": "conformance/test_data/validation_schema/test_v09_custom_validation_schema_flattening.json",
+  "name": "test_v09_custom_validation_schema_flattening",
+  "protocolVersion": "v0.9"
+ },
+ {
+  "action": "validation_schema",
+  "catalog": {
+   "$defs": {
+    "ColorToken": {
+     "enum": [
+      "primary",
+      "secondary",
+      "accent"
+     ],
+     "type": "string"
+    },
+    "ColorValue": {
+     "anyOf": [
+      {
+       "$ref": "#/$defs/ColorToken"
+      },
+      {
+       "pattern": "^#[0-9a-fA-F]{6}$",
+       "type": "string"
+      }
+     ]
+    },
+    "Weight": {
+     "description": "Relative flex weight.",
+     "minimum": 1,
+     "type": "number"
+    },
+    "anyComponent": {
+     "discriminator": {
+      "propertyName": "component"
+     },
+     "oneOf": [
+      {
+       "$ref": "#/components/SelectBox"
+      }
+     ]
+    }
+   },
+   "catalogId": "https://a2ui.org/catalogs/v10/leaf_defs_validation_schema",
+   "components": {
+    "SelectBox": {
+     "allOf": [
+      {
+       "$ref": "common_types.json#/$defs/ComponentCommon"
+      },
+      {
+       "properties": {
+        "color": {
+         "$ref": "#/$defs/ColorValue"
+        },
+        "component": {
+         "const": "SelectBox"
+        },
+        "customWeight": {
+         "$ref": "#/$defs/Weight",
+         "default": 2,
+         "description": "Custom flex weight override."
+        },
+        "label": {
+         "$ref": "common_types.json#/$defs/DynamicString"
+        },
+        "weight": {
+         "$ref": "#/$defs/Weight"
+        }
+       },
+       "required": [
+        "component",
+        "label"
+       ],
+       "type": "object"
+      }
+     ],
+     "description": "A selector with reusable leaf definitions.",
+     "type": "object",
+     "unevaluatedProperties": false
+    }
+   },
+   "protocolVersion": "1.0"
+  },
+  "description": "Tests that the validationSchema of a v1.0 catalog with leaf $defs and call-site overrides preserves the leaf $defs and property $ref pointers while flattening ComponentCommon and inlining referenced common types.",
+  "expectFile": "conformance/test_data/validation_schema/test_v10_custom_validation_schema_leaf_defs.json",
+  "name": "test_v10_custom_validation_schema_leaf_defs",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "derive",
+  "args": {
+   "catalogId": "https://a2ui.org/catalogs/v10/derived",
+   "components": [
+    "Text",
+    "Button"
+   ],
+   "functions": [
+    "upper"
+   ]
+  },
+  "catalogPath": "conformance/test_data/catalogs/derive_source_catalog_v1_0.json",
+  "description": "A name keeps the source catalog's entry of that name, and the entries the lists leave out are not in the derived catalog.",
+  "expect": {
+   "catalogId": "https://a2ui.org/catalogs/v10/derived",
+   "components": {
+    "Button": {
+     "properties": {
+      "label": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "Text": {
+     "properties": {
+      "text": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "text"
+     ],
+     "type": "object"
+    }
+   },
+   "functions": [
+    "upper"
+   ],
+   "protocolVersion": "1.0"
+  },
+  "features": [
+   "F-CORE-37"
+  ],
+  "name": "test_v10_catalog_derive_keeps_named_entries"
+ },
+ {
+  "action": "derive",
+  "args": {
+   "catalogId": "https://a2ui.org/catalogs/v10/derived",
+   "components": [
+    "Text",
+    {
+     "Card": {
+      "properties": {
+       "title": {
+        "type": "string"
+       }
+      },
+      "type": "object"
+     }
+    },
+    {
+     "Button": {
+      "properties": {
+       "label": {
+        "type": "string"
+       },
+       "primary": {
+        "type": "boolean"
+       }
+      },
+      "type": "object"
+     }
+    }
+   ],
+   "functions": [
+    "upper",
+    {
+     "reverse": {
+      "properties": {
+       "args": {
+        "type": "object"
+       },
+       "call": {
+        "const": "reverse"
+       },
+       "returnType": {
+        "const": "string"
+       }
+      },
+      "type": "object"
+     }
+    }
+   ]
+  },
+  "catalogPath": "conformance/test_data/catalogs/derive_source_catalog_v1_0.json",
+  "description": "A new entry is added to the derived catalog, and a new entry with the name of one of the source's entries replaces it.",
+  "expect": {
+   "components": {
+    "Button": {
+     "properties": {
+      "label": {
+       "type": "string"
+      },
+      "primary": {
+       "type": "boolean"
+      }
+     },
+     "type": "object"
+    },
+    "Card": {
+     "properties": {
+      "title": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "Text": {
+     "properties": {
+      "text": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "text"
+     ],
+     "type": "object"
+    }
+   },
+   "functions": [
+    "upper",
+    "reverse"
+   ]
+  },
+  "features": [
+   "F-CORE-37"
+  ],
+  "name": "test_v10_catalog_derive_adds_and_replaces_entries"
+ },
+ {
+  "action": "derive",
+  "args": {
+   "catalogId": "https://a2ui.org/catalogs/v10/derived",
+   "components": [
+    "Text"
+   ]
+  },
+  "catalogPath": "conformance/test_data/catalogs/derive_source_catalog_v1_0.json",
+  "description": "Leaving a list out keeps all of the source catalog's entries of that kind.",
+  "expect": {
+   "components": [
+    "Text"
+   ],
+   "functions": [
+    "upper",
+    "lower"
+   ]
+  },
+  "name": "test_v10_catalog_derive_keeps_every_entry_of_an_omitted_list"
+ },
+ {
+  "action": "derive",
+  "args": {
+   "catalogId": "https://a2ui.org/catalogs/v10/derived"
+  },
+  "catalogPath": "conformance/test_data/catalogs/derive_source_catalog_v1_0.json",
+  "description": "The derived catalog keeps the source's protocol version and theme, and drops its $id, title, description and instructions.",
+  "expect": {
+   "absentKeys": [
+    "$id",
+    "title",
+    "description",
+    "instructions"
+   ],
+   "catalogId": "https://a2ui.org/catalogs/v10/derived",
+   "components": [
+    "Text",
+    "Image",
+    "Button"
+   ],
+   "functions": [
+    "upper",
+    "lower"
+   ],
+   "protocolVersion": "1.0",
+   "theme": {
+    "properties": {
+     "primaryColor": {
+      "type": "string"
+     }
+    },
+    "type": "object"
+   }
+  },
+  "name": "test_v10_catalog_derive_drops_fields_that_describe_the_source"
+ },
+ {
+  "action": "derive",
+  "args": {
+   "catalogId": "https://a2ui.org/catalogs/v10/derived",
+   "components": [
+    "Text"
+   ],
+   "instructions": "Write components of https://a2ui.org/catalogs/v10/derived."
+  },
+  "catalogPath": "conformance/test_data/catalogs/derive_source_catalog_v1_0.json",
+  "description": "The derived catalog carries the instructions passed to derive, in place of the source's.",
+  "expect": {
+   "instructions": "Write components of https://a2ui.org/catalogs/v10/derived."
+  },
+  "name": "test_v10_catalog_derive_sets_instructions"
+ },
+ {
+  "action": "derive",
+  "args": {
+   "catalogId": "https://a2ui.org/catalogs/v10/derived",
+   "components": [
+    "Text",
+    "Slider"
+   ]
+  },
+  "catalogPath": "conformance/test_data/catalogs/derive_source_catalog_v1_0.json",
+  "description": "A component name that is not an entry of the source catalog raises CatalogError.",
+  "expectError": {
+   "category": "CatalogError",
+   "message": "Slider"
+  },
+  "name": "test_v10_catalog_derive_unknown_component_error"
+ },
+ {
+  "action": "derive",
+  "args": {
+   "catalogId": "https://a2ui.org/catalogs/v10/derived",
+   "functions": [
+    "capitalize"
+   ]
+  },
+  "catalogPath": "conformance/test_data/catalogs/derive_source_catalog_v1_0.json",
+  "description": "A function name that is not an entry of the source catalog raises CatalogError.",
+  "expectError": {
+   "category": "CatalogError",
+   "message": "capitalize"
+  },
+  "name": "test_v10_catalog_derive_unknown_function_error"
+ },
+ {
+  "action": "derive",
+  "args": {
+   "catalogId": "https://a2ui.org/catalogs/v09/derived",
+   "components": [
+    "Image"
+   ]
+  },
+  "catalog": {
+   "catalogId": "https://a2ui.org/catalogs/v09/derive_source",
+   "components": {
+    "Image": {
+     "properties": {
+      "url": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "Text": {
+     "properties": {
+      "text": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "protocolVersion": "v0.9"
+  },
+  "description": "A catalog derived from a v0.9 catalog is a v0.9 catalog.",
+  "expect": {
+   "catalogId": "https://a2ui.org/catalogs/v09/derived",
+   "components": {
+    "Image": {
+     "properties": {
+      "url": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "protocolVersion": "v0.9"
+  },
+  "name": "test_v09_catalog_derive_keeps_protocol_version"
+ },
+ {
+  "action": "from_json",
+  "catalogPath": "conformance/test_data/catalogs/component_metadata_catalog_v1_0.json",
+  "description": "Tests that a v1.0 catalog whose component definitions carry metadata.extensions exposes each component's envelope on the loaded ComponentApi, and reports none for components that define no metadata.",
+  "expect": {
+   "catalogId": "conformance/component-metadata",
+   "componentMetadata": {
+    "Button": {
+     "extensions": {
+      "com_example_policy": "interactive"
+     }
+    },
+    "Card": null,
+    "Column": null,
+    "Text": {
+     "extensions": {
+      "a2ui_experimental": "preview",
+      "com_example_telemetry": {
+       "track": true
+      }
+     }
+    }
+   },
+   "components": [
+    "Text",
+    "Button",
+    "Card",
+    "Column"
+   ]
+  },
+  "name": "test_v10_catalog_from_json_component_metadata",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "from_json",
+  "catalogPath": "conformance/test_data/catalogs/component_metadata_invalid_key_catalog_v1_0.json",
+  "description": "Tests that a v1.0 catalog whose component metadata.extensions has a key that is not a UAX 31 identifier is rejected at load.",
+  "expectError": {
+   "category": "ValidationError"
+  },
+  "features": [
+   "F-CORE-09"
+  ],
+  "name": "test_v10_catalog_from_json_component_metadata_invalid_uax31_key_error",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "round_trip",
+  "catalogPath": "conformance/test_data/catalogs/component_metadata_catalog_v1_0.json",
+  "description": "Tests that ComponentDefinition.metadata envelopes survive fromJson followed by toJson unchanged.",
+  "name": "test_v10_component_metadata_catalog_round_trip",
+  "protocolVersion": "1.0"
+ }
+]

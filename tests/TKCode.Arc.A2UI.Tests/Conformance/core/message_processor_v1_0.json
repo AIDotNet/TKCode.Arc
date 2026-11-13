@@ -1,0 +1,6342 @@
+[
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests v1.0 createSurface message with inline components and initial dataModel initialization.",
+  "expect": {
+   "surfaces": {
+    "s_v10": {
+     "components": [
+      {
+       "children": [
+        "text1"
+       ],
+       "component": "Column",
+       "id": "root"
+      },
+      {
+       "component": "Text",
+       "id": "text1",
+       "text": "Inline Text"
+      }
+     ],
+     "dataModel": {
+      "counter": 42
+     },
+     "exists": true,
+     "sendDataModel": true
+    }
+   }
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "test-catalog-v10",
+     "components": [
+      {
+       "children": [
+        "text1"
+       ],
+       "component": "Column",
+       "id": "root"
+      },
+      {
+       "component": "Text",
+       "id": "text1",
+       "text": "Inline Text"
+      }
+     ],
+     "dataModel": {
+      "counter": 42
+     },
+     "sendDataModel": true,
+     "surfaceId": "s_v10"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_create_surface_inline_initialization",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that v1.0 createSurface permits omitting catalogId.",
+  "expect": {
+   "surfaces": {
+    "s_v10_nocat": {
+     "exists": true
+    }
+   }
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "surfaceId": "s_v10_nocat"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_create_surface_optional_catalog_id",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests v1.0 createSurface with metadata and extension descriptors.",
+  "expect": {
+   "surfaces": {
+    "s_v10_meta": {
+     "exists": true
+    }
+   }
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "test-catalog-v10",
+     "metadata": {
+      "extensions": {
+       "a2ui_experimental": {
+        "streaming": true
+       }
+      }
+     },
+     "surfaceId": "s_v10_meta"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_create_surface_with_metadata_extensions",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that v1.0 createSurface rejects metadata extensions whose key is not a Unicode identifier (UAX 31).",
+  "expectError": {
+   "category": "ValidationError"
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "test-catalog-v10",
+     "metadata": {
+      "extensions": {
+       "a2ui:experimental": {
+        "streaming": true
+       }
+      }
+     },
+     "surfaceId": "s_v10_meta_bad_key"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_create_surface_metadata_extension_key_must_be_identifier",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that v1.0 createSurface rejects metadata keys other than extensions.",
+  "expectError": {
+   "category": "ValidationError"
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "test-catalog-v10",
+     "metadata": {
+      "owner": "me"
+     },
+     "surfaceId": "s_v10_meta_bad_field"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_create_surface_metadata_only_holds_extensions",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "process_messages",
+  "catalogs": [
+   {
+    "catalogId": "main-catalog",
+    "protocolVersion": "1.0"
+   },
+   {
+    "catalogId": "charts-catalog",
+    "protocolVersion": "1.0"
+   }
+  ],
+  "description": "Tests that individual components in v1.0 can specify a catalogId override different from the surface default.",
+  "expect": {
+   "surfaces": {
+    "s_v10_multi": {
+     "components": [
+      {
+       "children": [
+        "c1"
+       ],
+       "component": "Column",
+       "id": "root"
+      },
+      {
+       "component": "PieChart",
+       "data": [
+        10,
+        20,
+        30
+       ],
+       "id": "c1"
+      }
+     ],
+     "exists": true
+    }
+   }
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "main-catalog",
+     "surfaceId": "s_v10_multi"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "children": [
+        "c1"
+       ],
+       "component": "Column",
+       "id": "root"
+      },
+      {
+       "catalogId": "charts-catalog",
+       "component": "PieChart",
+       "data": [
+        10,
+        20,
+        30
+       ],
+       "id": "c1"
+      }
+     ],
+     "surfaceId": "s_v10_multi"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_component_catalog_override"
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that updating a path with value null deletes the key from the data model in v1.0.",
+  "expect": {
+   "surfaces": {
+    "s_v10_del": {
+     "dataModel": {
+      "user": {
+       "name": "Alice"
+      }
+     }
+    }
+   }
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "test-catalog-v10",
+     "dataModel": {
+      "user": {
+       "name": "Alice",
+       "temporaryToken": "abc123xyz"
+      }
+     },
+     "surfaceId": "s_v10_del"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateDataModel": {
+     "path": "/user/temporaryToken",
+     "surfaceId": "s_v10_del",
+     "value": null
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_update_data_model_deletion",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "get_renderer_capabilities",
+  "args": {
+   "includeInlineCatalogs": false,
+   "version": "1.0"
+  },
+  "catalogs": [
+   {
+    "catalogId": "cat-v10",
+    "protocolVersion": "1.0"
+   }
+  ],
+  "description": "Tests generating v1.0 renderer capabilities structure.",
+  "expect": {
+   "1.0": {
+    "supportedCatalogIds": [
+     "cat-v10"
+    ]
+   }
+  },
+  "features": [
+   "F-CORE-31"
+  ],
+  "name": "test_v10_get_renderer_capabilities"
+ },
+ {
+  "action": "get_renderer_capabilities",
+  "args": {
+   "includeInlineCatalogs": true,
+   "version": "1.0"
+  },
+  "catalogs": [
+   {
+    "$defs": {
+     "anyComponent": {
+      "discriminator": {
+       "propertyName": "component"
+      },
+      "oneOf": [
+       {
+        "$ref": "#/components/Button"
+       }
+      ]
+     },
+     "anyFunction": {
+      "not": {}
+     }
+    },
+    "catalogId": "cat-v10",
+    "components": {
+     "Button": {
+      "properties": {
+       "component": {
+        "const": "Button"
+       },
+       "label": {
+        "description": "The button label",
+        "type": "string"
+       }
+      },
+      "required": [
+       "component",
+       "label"
+      ],
+      "type": "object"
+     }
+    },
+    "protocolVersion": "1.0"
+   }
+  ],
+  "description": "Tests that v1.0 inline catalogs list each component as a plain schema, without the v0.9 ComponentCommon allOf envelope, because v1.0 applies ComponentCommon at the message envelope, and advertise both unions that catalog_definition.json requires, with an empty one as not {}.",
+  "expect": {
+   "1.0": {
+    "inlineCatalogs": [
+     {
+      "$defs": {
+       "anyComponent": {
+        "discriminator": {
+         "propertyName": "component"
+        },
+        "oneOf": [
+         {
+          "$ref": "#/components/Button"
+         }
+        ]
+       },
+       "anyFunction": {
+        "not": {}
+       }
+      },
+      "catalogId": "cat-v10",
+      "components": {
+       "Button": {
+        "properties": {
+         "component": {
+          "const": "Button"
+         },
+         "label": {
+          "description": "The button label",
+          "type": "string"
+         }
+        },
+        "required": [
+         "component",
+         "label"
+        ],
+        "type": "object"
+       }
+      },
+      "protocolVersion": "1.0"
+     }
+    ],
+    "supportedCatalogIds": [
+     "cat-v10"
+    ]
+   }
+  },
+  "features": [
+   "F-CORE-31"
+  ],
+  "name": "test_v10_get_renderer_capabilities_inline_catalogs"
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that sending a single message envelope containing multiple update actions raises a ValidationError.",
+  "expectError": {
+   "category": "ValidationError",
+   "message": "Message contains multiple conflicting update actions"
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "test-catalog-v10",
+     "surfaceId": "s1"
+    },
+    "deleteSurface": {
+     "surfaceId": "s1"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_multiple_update_types_error"
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that message processor correctly processes message list arrays and wrapped container payloads.",
+  "expect": {
+   "surfaces": {
+    "s1": {
+     "exists": true
+    },
+    "s2": {
+     "exists": true
+    }
+   }
+  },
+  "messages": {
+   "messages": [
+    {
+     "createSurface": {
+      "catalogId": "test-catalog-v10",
+      "surfaceId": "s1"
+     },
+     "version": "1.0"
+    },
+    {
+     "createSurface": {
+      "catalogId": "test-catalog-v10",
+      "surfaceId": "s2"
+     },
+     "version": "1.0"
+    }
+   ]
+  },
+  "name": "test_batch_message_array_and_wrapper"
+ },
+ {
+  "action": "process_messages",
+  "description": "Tests that v1.0 MessageProcessor rejects v0.8 beginRendering action when protocolVersion is v1.0.",
+  "expectError": {
+   "category": "ValidationError",
+   "message": "action 'beginRendering' is not supported in protocol version 1.0"
+  },
+  "messages": [
+   {
+    "beginRendering": {
+     "catalogId": "test-catalog-v10",
+     "surfaceId": "s_v10_invalid"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_rejects_v08_begin_rendering_action",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that a v1.0 action with a non-string surfaceId raises a ValidationError.",
+  "expectError": {
+   "category": "ValidationError",
+   "message": "surfaceId must be a string"
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "test-catalog-v10",
+     "surfaceId": 12345
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_non_string_surface_id_error"
+ },
+ {
+  "action": "process_messages",
+  "catalogs": [
+   {
+    "catalogId": "cat-v10",
+    "protocolVersion": "1.0"
+   },
+   {
+    "catalogId": "cat-v09",
+    "protocolVersion": "v0.9"
+   }
+  ],
+  "description": "Tests that updating a component with a catalog of a different protocol version raises CatalogError.",
+  "expectError": {
+   "category": "CatalogError",
+   "rendererError": {
+    "error": {
+     "code": "CATALOG_NOT_FOUND",
+     "message": "cat-v09",
+     "surfaceId": "s_mismatch"
+    },
+    "version": "1.0"
+   },
+   "surfaceId": "s_mismatch"
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "cat-v10",
+     "surfaceId": "s_mismatch"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "catalogId": "cat-v09",
+       "component": "Button",
+       "id": "c1"
+      }
+     ],
+     "surfaceId": "s_mismatch"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_update_components_mismatched_catalog_protocol_version_error"
+ },
+ {
+  "action": "process_messages",
+  "description": "Verifies rejecting unsupported protocol version strings (v99.0).",
+  "expectError": {
+   "category": "ValidationError",
+   "message": "Unsupported protocol version 'v99.0'"
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "surfaceId": "s1"
+    },
+    "version": "v99.0"
+   }
+  ],
+  "name": "test_unsupported_protocol_version_error"
+ },
+ {
+  "action": "process_messages",
+  "description": "Verifies processing messages with version v0.9.1.",
+  "expect": {
+   "surfaces": {
+    "s_v091": {
+     "exists": true
+    }
+   }
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "basic",
+     "surfaceId": "s_v091"
+    },
+    "version": "v0.9.1"
+   }
+  ],
+  "name": "test_v091_version_string_compatibility",
+  "protocolVersion": "v0.9.1"
+ },
+ {
+  "action": "process_messages",
+  "description": "Verifies ValidationError on missing version field during process_messages.",
+  "expectError": {
+   "category": "ValidationError",
+   "message": "Missing required version field"
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "basic",
+     "surfaceId": "s1"
+    }
+   }
+  ],
+  "name": "test_missing_version_field_in_v10_process_messages_error"
+ },
+ {
+  "action": "process_messages",
+  "description": "Verifies create, component update, data update, and component mutation within a single batch array.",
+  "expect": {
+   "surfaces": {
+    "s_pipeline": {
+     "components": [
+      {
+       "component": "Column",
+       "id": "root"
+      },
+      {
+       "component": "Text",
+       "id": "text1"
+      }
+     ],
+     "dataModel": {
+      "status": "ready"
+     },
+     "exists": true
+    }
+   }
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "test-catalog-v10",
+     "surfaceId": "s_pipeline"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "children": [
+        "text1"
+       ],
+       "component": "Column",
+       "id": "root"
+      },
+      {
+       "component": "Text",
+       "id": "text1",
+       "text": "Initial"
+      }
+     ],
+     "surfaceId": "s_pipeline"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateDataModel": {
+     "path": "/status",
+     "surfaceId": "s_pipeline",
+     "value": "ready"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "component": "Text",
+       "id": "text1",
+       "text": "Updated"
+      }
+     ],
+     "surfaceId": "s_pipeline"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_batch_multi_stage_lifecycle_pipeline",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "process_messages",
+  "description": "Verifies IntegrityError on duplicate component IDs within a single updateComponents message.",
+  "expectError": {
+   "category": "IntegrityError",
+   "rendererError": {
+    "error": {
+     "code": "INTEGRITY_ERROR",
+     "message": "c1",
+     "surfaceId": "s_dup"
+    },
+    "version": "1.0"
+   },
+   "surfaceId": "s_dup"
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "basic",
+     "surfaceId": "s_dup"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "children": [
+        "c1"
+       ],
+       "component": "Column",
+       "id": "root"
+      },
+      {
+       "component": "Text",
+       "id": "c1",
+       "text": "First"
+      },
+      {
+       "component": "Text",
+       "id": "c1",
+       "text": "Duplicate"
+      }
+     ],
+     "surfaceId": "s_dup"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_batch_duplicate_component_ids_in_same_message_error",
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "process_messages",
+  "description": "Verifies candidate topology pre-flight cycle check aborts without mutating existing valid component tree.",
+  "name": "test_batch_atomic_rollback_on_candidate_topology_cycle",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expect": {
+     "surfaces": {
+      "s_cycle": {
+       "components": [
+        {
+         "component": "Column",
+         "id": "root"
+        },
+        {
+         "component": "Text",
+         "id": "c1"
+        }
+       ],
+       "exists": true
+      }
+     }
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "basic",
+       "components": [
+        {
+         "children": [
+          "c1"
+         ],
+         "component": "Column",
+         "id": "root"
+        },
+        {
+         "component": "Text",
+         "id": "c1",
+         "text": "Valid Text"
+        }
+       ],
+       "surfaceId": "s_cycle"
+      },
+      "version": "1.0"
+     }
+    ]
+   },
+   {
+    "expectError": {
+     "category": "IntegrityError",
+     "rendererError": {
+      "error": {
+       "code": "RECURSION_LIMIT_EXCEEDED",
+       "message": "Circular",
+       "surfaceId": "s_cycle"
+      },
+      "version": "1.0"
+     },
+     "surfaceId": "s_cycle"
+    },
+    "messages": [
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "children": [
+          "c2"
+         ],
+         "component": "Column",
+         "id": "c1"
+        },
+        {
+         "children": [
+          "c1"
+         ],
+         "component": "Column",
+         "id": "c2"
+        }
+       ],
+       "surfaceId": "s_cycle"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": true
+ },
+ {
+  "action": "process_messages",
+  "description": "Verifies updating components on a deleted surface raises IntegrityError.",
+  "name": "test_update_components_on_deleted_surface_error",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expect": {
+     "surfaces": {
+      "s_del": {
+       "exists": false
+      }
+     }
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "basic",
+       "surfaceId": "s_del"
+      },
+      "version": "1.0"
+     },
+     {
+      "deleteSurface": {
+       "surfaceId": "s_del"
+      },
+      "version": "1.0"
+     }
+    ]
+   },
+   {
+    "expectError": {
+     "category": "IntegrityError"
+    },
+    "messages": [
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "component": "Text",
+         "id": "root",
+         "text": "Fail"
+        }
+       ],
+       "surfaceId": "s_del"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "process_messages",
+  "description": "Verifies updating data model on a deleted surface raises IntegrityError.",
+  "name": "test_update_data_model_on_deleted_surface_error",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expect": {
+     "surfaces": {
+      "s_del_data": {
+       "exists": false
+      }
+     }
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "basic",
+       "surfaceId": "s_del_data"
+      },
+      "version": "1.0"
+     },
+     {
+      "deleteSurface": {
+       "surfaceId": "s_del_data"
+      },
+      "version": "1.0"
+     }
+    ]
+   },
+   {
+    "expectError": {
+     "category": "IntegrityError"
+    },
+    "messages": [
+     {
+      "updateDataModel": {
+       "path": "/key",
+       "surfaceId": "s_del_data",
+       "value": "value"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "process_messages",
+  "description": "Verifies deleting a non-existent surface ID executes cleanly as a no-op.",
+  "expect": {
+   "surfaces": {
+    "non_existent_surface_id": {
+     "exists": false
+    }
+   }
+  },
+  "messages": [
+   {
+    "deleteSurface": {
+     "surfaceId": "non_existent_surface_id"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_delete_non_existent_surface_is_safe_noop",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "process_messages",
+  "description": "Verifies strictMode false accepts components unreachable from root.",
+  "expect": {
+   "surfaces": {
+    "s_permissive_orphan": {
+     "components": [
+      {
+       "component": "Column",
+       "id": "root"
+      },
+      {
+       "component": "Text",
+       "id": "orphan_comp"
+      }
+     ],
+     "exists": true
+    }
+   }
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "test-catalog-v10",
+     "components": [
+      {
+       "children": [],
+       "component": "Column",
+       "id": "root"
+      },
+      {
+       "component": "Text",
+       "id": "orphan_comp",
+       "text": "Unreachable Text"
+      }
+     ],
+     "surfaceId": "s_permissive_orphan"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_permissive_mode_allows_orphan_components",
+  "protocolVersion": "1.0",
+  "strictMode": false
+ },
+ {
+  "action": "process_messages",
+  "description": "Verifies strictMode false accepts containers referencing uncreated child IDs.",
+  "expect": {
+   "surfaces": {
+    "s_permissive_dangling": {
+     "components": [
+      {
+       "component": "Column",
+       "id": "root"
+      }
+     ],
+     "exists": true
+    }
+   }
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "test-catalog-v10",
+     "components": [
+      {
+       "children": [
+        "uncreated_child_node"
+       ],
+       "component": "Column",
+       "id": "root"
+      }
+     ],
+     "surfaceId": "s_permissive_dangling"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_permissive_mode_allows_dangling_references",
+  "protocolVersion": "1.0",
+  "strictMode": false
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "A strict processor accepts an orphan component in a call whose validationConfig allows orphans, and rejects one in the next call, which has no validationConfig.",
+  "name": "test_v10_call_validation_config_relaxes_strict_processor",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expect": {
+     "surfaces": {
+      "s_relaxed_call": {
+       "components": [
+        {
+         "component": "Text",
+         "id": "root"
+        },
+        {
+         "component": "Text",
+         "id": "orphan"
+        }
+       ],
+       "exists": true
+      }
+     }
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/catalogs/basic/v1/catalog.json",
+       "components": [
+        {
+         "component": "Text",
+         "id": "root",
+         "text": "Root"
+        },
+        {
+         "component": "Text",
+         "id": "orphan",
+         "text": "Orphan"
+        }
+       ],
+       "surfaceId": "s_relaxed_call"
+      },
+      "version": "1.0"
+     }
+    ],
+    "validationConfig": {
+     "allowOrphanComponents": true
+    }
+   },
+   {
+    "expectError": {
+     "message": "is not reachable from"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/catalogs/basic/v1/catalog.json",
+       "components": [
+        {
+         "component": "Text",
+         "id": "root",
+         "text": "Root"
+        },
+        {
+         "component": "Text",
+         "id": "orphan",
+         "text": "Orphan"
+        }
+       ],
+       "surfaceId": "s_strict_call"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": true
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "A processor created without validation rules rejects an orphan component in a call whose validationConfig is strict, and accepts one in the next call, which has no validationConfig.",
+  "name": "test_v10_call_validation_config_tightens_permissive_processor",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": {
+     "message": "is not reachable from"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/catalogs/basic/v1/catalog.json",
+       "components": [
+        {
+         "component": "Text",
+         "id": "root",
+         "text": "Root"
+        },
+        {
+         "component": "Text",
+         "id": "orphan",
+         "text": "Orphan"
+        }
+       ],
+       "surfaceId": "s_strict_call"
+      },
+      "version": "1.0"
+     }
+    ],
+    "validationConfig": {}
+   },
+   {
+    "expect": {
+     "surfaces": {
+      "s_permissive_call": {
+       "components": [
+        {
+         "component": "Text",
+         "id": "root"
+        },
+        {
+         "component": "Text",
+         "id": "orphan"
+        }
+       ],
+       "exists": true
+      }
+     }
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/catalogs/basic/v1/catalog.json",
+       "components": [
+        {
+         "component": "Text",
+         "id": "root",
+         "text": "Root"
+        },
+        {
+         "component": "Text",
+         "id": "orphan",
+         "text": "Orphan"
+        }
+       ],
+       "surfaceId": "s_permissive_call"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": false
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "A call whose validationConfig allows only orphans still rejects a dangling child reference, since the rules it leaves out are strict, even on a processor created without validation rules.",
+  "name": "test_v10_call_validation_config_leaves_out_rules_as_strict",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": {
+     "message": "Dangling reference"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/catalogs/basic/v1/catalog.json",
+       "components": [
+        {
+         "children": [
+          "missing_child"
+         ],
+         "component": "Column",
+         "id": "root"
+        }
+       ],
+       "surfaceId": "s_dangling_call"
+      },
+      "version": "1.0"
+     }
+    ],
+    "validationConfig": {
+     "allowOrphanComponents": true
+    }
+   }
+  ],
+  "strictMode": false
+ },
+ {
+  "action": "process_messages",
+  "description": "Verifies updating container property without redefining children preserves existing child relationships.",
+  "expect": {
+   "surfaces": {
+    "s_partial_parent": {
+     "components": [
+      {
+       "component": "Column",
+       "id": "root"
+      },
+      {
+       "component": "Text",
+       "id": "text_child"
+      }
+     ],
+     "exists": true
+    }
+   }
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "test-catalog-v10",
+     "components": [
+      {
+       "children": [
+        "text_child"
+       ],
+       "component": "Column",
+       "id": "root"
+      },
+      {
+       "component": "Text",
+       "id": "text_child",
+       "text": "Child Text"
+      }
+     ],
+     "surfaceId": "s_partial_parent"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "component": "Text",
+       "id": "text_child",
+       "text": "Updated Child Text"
+      }
+     ],
+     "surfaceId": "s_partial_parent"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_composition_constraints_preserved_on_partial_parent_update",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "validate",
+  "description": "Verifies object nesting exceeding limit (>50) raises RecursionError.",
+  "name": "test_global_recursion_depth_limit_exceeded_error",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectError": {
+     "category": "RecursionError",
+     "message": "Global recursion limit exceeded"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "basic",
+       "surfaceId": "s_rec"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "component": "Text",
+         "id": "root",
+         "meta": {
+          "l1": {
+           "l2": {
+            "l3": {
+             "l4": {
+              "l5": {
+               "l6": {
+                "l7": {
+                 "l8": {
+                  "l9": {
+                   "l10": {
+                    "l11": {
+                     "l12": {
+                      "l13": {
+                       "l14": {
+                        "l15": {
+                         "l16": {
+                          "l17": {
+                           "l18": {
+                            "l19": {
+                             "l20": {
+                              "l21": {
+                               "l22": {
+                                "l23": {
+                                 "l24": {
+                                  "l25": {
+                                   "l26": {
+                                    "l27": {
+                                     "l28": {
+                                      "l29": {
+                                       "l30": {
+                                        "l31": {
+                                         "l32": {
+                                          "l33": {
+                                           "l34": {
+                                            "l35": {
+                                             "l36": {
+                                              "l37": {
+                                               "l38": {
+                                                "l39": {
+                                                 "l40": {
+                                                  "l41": {
+                                                   "l42": {
+                                                    "l43": {
+                                                     "l44": {
+                                                      "l45": {
+                                                       "l46": {
+                                                        "l47": {
+                                                         "l48": {
+                                                          "l49": {
+                                                           "l50": {
+                                                            "l51": {
+                                                             "l52": "too deep"
+                                                            }
+                                                           }
+                                                          }
+                                                         }
+                                                        }
+                                                       }
+                                                      }
+                                                     }
+                                                    }
+                                                   }
+                                                  }
+                                                 }
+                                                }
+                                               }
+                                              }
+                                             }
+                                            }
+                                           }
+                                          }
+                                         }
+                                        }
+                                       }
+                                      }
+                                     }
+                                    }
+                                   }
+                                  }
+                                 }
+                                }
+                               }
+                              }
+                             }
+                            }
+                           }
+                          }
+                         }
+                        }
+                       }
+                      }
+                     }
+                    }
+                   }
+                  }
+                 }
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+         },
+         "text": "Deep"
+        }
+       ],
+       "surfaceId": "s_rec"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": true
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "catalogs": [
+   {
+    "catalogId": "custom-v10",
+    "components": {
+     "Badge": {
+      "properties": {
+       "component": {
+        "const": "Badge"
+       },
+       "label": {
+        "$ref": "common_types.json#/$defs/DynamicString"
+       }
+      },
+      "required": [
+       "component",
+       "label"
+      ],
+      "type": "object"
+     }
+    },
+    "functions": {
+     "shout": {
+      "properties": {
+       "@call": {
+        "const": "shout"
+       },
+       "args": {
+        "additionalProperties": false,
+        "properties": {
+         "value": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "value"
+        ],
+        "type": "object"
+       }
+      },
+      "required": [
+       "@call",
+       "args"
+      ],
+      "returnType": "string",
+      "type": "object"
+     }
+    },
+    "protocolVersion": "1.0"
+   }
+  ],
+  "description": "A component that names no catalogId on a surface that names no default catalog cannot be resolved, so the update fails instead of falling back to the first registered catalog.",
+  "expectError": {
+   "category": "CatalogError",
+   "message": "has no default catalogId",
+   "rendererError": {
+    "error": {
+     "code": "CATALOG_NOT_FOUND",
+     "message": "has no default catalogId",
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   "surfaceId": "s"
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "component": "Text",
+       "id": "root",
+       "text": "Hello"
+      }
+     ],
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_component_without_catalog_id_on_surface_without_default_errors",
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "catalogs": [
+   {
+    "catalogId": "custom-v10",
+    "components": {
+     "Badge": {
+      "properties": {
+       "component": {
+        "const": "Badge"
+       },
+       "label": {
+        "$ref": "common_types.json#/$defs/DynamicString"
+       }
+      },
+      "required": [
+       "component",
+       "label"
+      ],
+      "type": "object"
+     }
+    },
+    "functions": {
+     "shout": {
+      "properties": {
+       "@call": {
+        "const": "shout"
+       },
+       "args": {
+        "additionalProperties": false,
+        "properties": {
+         "value": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "value"
+        ],
+        "type": "object"
+       }
+      },
+      "required": [
+       "@call",
+       "args"
+      ],
+      "returnType": "string",
+      "type": "object"
+     }
+    },
+    "protocolVersion": "1.0"
+   }
+  ],
+  "description": "A surface without a default catalog accepts components that each name their catalog.",
+  "expect": {
+   "surfaces": {
+    "s": {
+     "components": [
+      {
+       "children": [
+        "greeting",
+        "badge"
+       ],
+       "component": "Column",
+       "id": "root"
+      },
+      {
+       "component": "Text",
+       "id": "greeting",
+       "text": "Hello"
+      },
+      {
+       "component": "Badge",
+       "id": "badge",
+       "label": "New"
+      }
+     ],
+     "exists": true
+    }
+   }
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "children": [
+        "greeting",
+        "badge"
+       ],
+       "component": "Column",
+       "id": "root"
+      },
+      {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "component": "Text",
+       "id": "greeting",
+       "text": "Hello"
+      },
+      {
+       "catalogId": "custom-v10",
+       "component": "Badge",
+       "id": "badge",
+       "label": "New"
+      }
+     ],
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_components_naming_catalogs_on_surface_without_default",
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "process_messages",
+  "catalogs": [
+   {
+    "catalogId": "closed-v10",
+    "components": {
+     "Tag": {
+      "additionalProperties": false,
+      "properties": {
+       "label": {
+        "type": "string"
+       }
+      },
+      "type": "object"
+     }
+    },
+    "functions": {},
+    "protocolVersion": "1.0"
+   }
+  ],
+  "description": "A component's catalogId belongs to the component envelope (ComponentCommon), not to its properties. A catalog whose component schema is closed and declares no catalogId accepts a component that names that catalog.",
+  "expect": {
+   "surfaces": {
+    "s": {
+     "components": [
+      {
+       "component": "Tag",
+       "id": "root",
+       "label": "Hello"
+      }
+     ],
+     "exists": true
+    }
+   }
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "catalogId": "closed-v10",
+       "component": "Tag",
+       "id": "root",
+       "label": "Hello"
+      }
+     ],
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_component_from_named_catalog_with_closed_schema_accepted",
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "catalogs": [
+   {
+    "catalogId": "custom-v10",
+    "components": {
+     "Badge": {
+      "properties": {
+       "component": {
+        "const": "Badge"
+       },
+       "label": {
+        "$ref": "common_types.json#/$defs/DynamicString"
+       }
+      },
+      "required": [
+       "component",
+       "label"
+      ],
+      "type": "object"
+     }
+    },
+    "functions": {
+     "shout": {
+      "properties": {
+       "@call": {
+        "const": "shout"
+       },
+       "args": {
+        "additionalProperties": false,
+        "properties": {
+         "value": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "value"
+        ],
+        "type": "object"
+       }
+      },
+      "required": [
+       "@call",
+       "args"
+      ],
+      "returnType": "string",
+      "type": "object"
+     }
+    },
+    "protocolVersion": "1.0"
+   }
+  ],
+  "description": "Under strictMode: true (allow_unknown_elements=False), a function call that names a catalogId is validated against that catalog's function schema, which does not declare formatString. With strictMode: false, the call is accepted at processing time so a renderer can route it via callAgentFunction.",
+  "expectError": {
+   "category": "ValidationError",
+   "message": "Unrecognized function 'formatString'",
+   "rendererError": {
+    "error": {
+     "code": "VALIDATION_FAILED",
+     "message": "Unrecognized function 'formatString'",
+     "path": "/components/0/text",
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   "surfaceId": "s"
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "component": "Text",
+       "id": "root",
+       "text": {
+        "@call": "formatString",
+        "args": {
+         "value": "Hello"
+        },
+        "catalogId": "custom-v10"
+       }
+      }
+     ],
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_function_call_naming_catalog_without_that_function_errors",
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "catalogs": [
+   {
+    "catalogId": "custom-v10",
+    "components": {
+     "Badge": {
+      "properties": {
+       "component": {
+        "const": "Badge"
+       },
+       "label": {
+        "$ref": "common_types.json#/$defs/DynamicString"
+       }
+      },
+      "required": [
+       "component",
+       "label"
+      ],
+      "type": "object"
+     }
+    },
+    "functions": {
+     "shout": {
+      "properties": {
+       "@call": {
+        "const": "shout"
+       },
+       "args": {
+        "additionalProperties": false,
+        "properties": {
+         "phrase": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "phrase"
+        ],
+        "type": "object"
+       }
+      },
+      "required": [
+       "@call",
+       "args"
+      ],
+      "returnType": "string",
+      "type": "object"
+     }
+    },
+    "protocolVersion": "1.0"
+   }
+  ],
+  "description": "A function call that names a catalogId has its args validated against that catalog's function definition.",
+  "expectError": {
+   "category": "ValidationError",
+   "message": "phrase",
+   "rendererError": {
+    "error": {
+     "code": "VALIDATION_FAILED",
+     "message": "phrase",
+     "path": "/components/0/text/args/phrase",
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   "surfaceId": "s"
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "component": "Text",
+       "id": "root",
+       "text": {
+        "@call": "shout",
+        "args": {
+         "phrase": 3
+        },
+        "catalogId": "custom-v10"
+       }
+      }
+     ],
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_function_call_naming_catalog_with_invalid_args_errors",
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "catalogs": [
+   {
+    "catalogId": "custom-v10",
+    "components": {
+     "Badge": {
+      "properties": {
+       "component": {
+        "const": "Badge"
+       },
+       "label": {
+        "$ref": "common_types.json#/$defs/DynamicString"
+       }
+      },
+      "required": [
+       "component",
+       "label"
+      ],
+      "type": "object"
+     }
+    },
+    "functions": {
+     "shout": {
+      "properties": {
+       "@call": {
+        "const": "shout"
+       },
+       "args": {
+        "additionalProperties": false,
+        "properties": {
+         "value": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "value"
+        ],
+        "type": "object"
+       }
+      },
+      "required": [
+       "@call",
+       "args"
+      ],
+      "returnType": "string",
+      "type": "object"
+     }
+    },
+    "protocolVersion": "1.0"
+   }
+  ],
+  "description": "A component from the surface default catalog may call a function from another catalog by naming its catalogId.",
+  "expect": {
+   "surfaces": {
+    "s": {
+     "exists": true
+    }
+   }
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "component": "Text",
+       "id": "root",
+       "text": {
+        "@call": "shout",
+        "args": {
+         "value": "Hello"
+        },
+        "catalogId": "custom-v10"
+       }
+      }
+     ],
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_function_call_naming_catalog_with_valid_args",
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "process_messages",
+  "catalogs": [
+   {
+    "catalogId": "agent-fns-v10",
+    "components": {
+     "Badge": {
+      "properties": {
+       "component": {
+        "const": "Badge"
+       },
+       "label": {
+        "$ref": "common_types.json#/$defs/DynamicString"
+       }
+      },
+      "required": [
+       "component",
+       "label"
+      ],
+      "type": "object"
+     }
+    },
+    "functions": {
+     "fetchGreeting": {
+      "properties": {
+       "@call": {
+        "const": "fetchGreeting"
+       },
+       "args": {
+        "additionalProperties": false,
+        "properties": {
+         "name": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "name"
+        ],
+        "type": "object"
+       }
+      },
+      "required": [
+       "@call",
+       "args"
+      ],
+      "returnType": "string",
+      "type": "object"
+     }
+    },
+    "protocolVersion": "1.0"
+   }
+  ],
+  "description": "Under strictMode: true, a function call that names no catalogId is checked against the surface default catalog, and a function that catalog declares without an implementation (schema-only, as for a function that runs on the agent) passes. Strict validation rejects only functions no catalog declares; a renderer that validates strictly can declare the agent's functions this way and still route calls to them via callAgentFunction.",
+  "expect": {
+   "surfaces": {
+    "s": {
+     "components": [
+      {
+       "component": "Badge",
+       "id": "root"
+      }
+     ],
+     "exists": true
+    }
+   }
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "agent-fns-v10",
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "component": "Badge",
+       "id": "root",
+       "label": {
+        "@call": "fetchGreeting",
+        "args": {
+         "name": "Ada"
+        }
+       }
+      }
+     ],
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_strict_function_call_to_schema_only_function_of_surface_catalog",
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "catalogs": [
+   {
+    "catalogId": "custom-v10",
+    "components": {
+     "Badge": {
+      "properties": {
+       "component": {
+        "const": "Badge"
+       },
+       "label": {
+        "$ref": "common_types.json#/$defs/DynamicString"
+       }
+      },
+      "required": [
+       "component",
+       "label"
+      ],
+      "type": "object"
+     }
+    },
+    "functions": {
+     "shout": {
+      "properties": {
+       "@call": {
+        "const": "shout"
+       },
+       "args": {
+        "additionalProperties": false,
+        "properties": {
+         "value": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "value"
+        ],
+        "type": "object"
+       }
+      },
+      "required": [
+       "@call",
+       "args"
+      ],
+      "returnType": "string",
+      "type": "object"
+     }
+    },
+    "protocolVersion": "1.0"
+   }
+  ],
+  "description": "A function call that names a catalogId the client does not have is rejected.",
+  "expectError": {
+   "category": "CatalogError",
+   "message": "Catalog not found: missing-catalog"
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "component": "Text",
+       "id": "root",
+       "text": {
+        "@call": "shout",
+        "args": {
+         "value": "Hello"
+        },
+        "catalogId": "missing-catalog"
+       }
+      }
+     ],
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_function_call_naming_unknown_catalog_errors",
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "A function call whose catalogId is an empty string names a catalog, so it does not fall back to the surface default. No catalog has an empty ID, so the call is rejected.",
+  "expectError": {
+   "category": "CatalogError",
+   "message": "Catalog not found"
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "component": "Text",
+       "id": "root",
+       "text": {
+        "@call": "formatString",
+        "args": {
+         "value": "Hello"
+        },
+        "catalogId": ""
+       }
+      }
+     ],
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_function_call_with_empty_catalog_id_errors",
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "A component's catalogId must be a string. A number is rejected as invalid instead of being ignored, which would resolve the component to the surface default.",
+  "expectError": {
+   "category": "ValidationError",
+   "message": "catalogId"
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "catalogId": 123,
+       "component": "Text",
+       "id": "root",
+       "text": "Hello"
+      }
+     ],
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_component_with_non_string_catalog_id_errors",
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "catalogs": [
+   {
+    "catalogId": "custom-v10",
+    "components": {
+     "Badge": {
+      "properties": {
+       "component": {
+        "const": "Badge"
+       },
+       "label": {
+        "$ref": "common_types.json#/$defs/DynamicString"
+       }
+      },
+      "required": [
+       "component",
+       "label"
+      ],
+      "type": "object"
+     }
+    },
+    "functions": {
+     "shout": {
+      "properties": {
+       "@call": {
+        "const": "shout"
+       },
+       "args": {
+        "additionalProperties": false,
+        "properties": {
+         "value": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "value"
+        ],
+        "type": "object"
+       }
+      },
+      "required": [
+       "@call",
+       "args"
+      ],
+      "returnType": "string",
+      "type": "object"
+     }
+    },
+    "protocolVersion": "1.0"
+   }
+  ],
+  "description": "A function call that names no catalogId resolves against the surface default catalog, not the catalog of the component that contains it. formatString is declared by the basic catalog only.",
+  "expect": {
+   "surfaces": {
+    "s": {
+     "exists": true
+    }
+   }
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "catalogId": "custom-v10",
+       "component": "Badge",
+       "id": "root",
+       "label": {
+        "@call": "formatString",
+        "args": {
+         "value": "Hello"
+        }
+       }
+      }
+     ],
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_function_call_without_catalog_id_uses_surface_default",
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Under strictMode: true (allow_unknown_elements=False), a function call that names no catalogId is validated against the surface default catalog's function schema, which does not declare notAFunction. With strictMode: false, the call is accepted at processing time so a renderer can route it via callAgentFunction.",
+  "expectError": {
+   "category": "ValidationError",
+   "message": "Unrecognized function 'notAFunction'"
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "component": "Text",
+       "id": "root",
+       "text": {
+        "@call": "notAFunction",
+        "args": {}
+       }
+      }
+     ],
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_function_call_without_catalog_id_to_unknown_function_errors",
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "catalogs": [
+   {
+    "catalogId": "custom-v10",
+    "components": {
+     "Badge": {
+      "properties": {
+       "component": {
+        "const": "Badge"
+       },
+       "label": {
+        "$ref": "common_types.json#/$defs/DynamicString"
+       }
+      },
+      "required": [
+       "component",
+       "label"
+      ],
+      "type": "object"
+     }
+    },
+    "functions": {
+     "shout": {
+      "properties": {
+       "@call": {
+        "const": "shout"
+       },
+       "args": {
+        "additionalProperties": false,
+        "properties": {
+         "value": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "value"
+        ],
+        "type": "object"
+       }
+      },
+      "required": [
+       "@call",
+       "args"
+      ],
+      "returnType": "string",
+      "type": "object"
+     }
+    },
+    "protocolVersion": "1.0"
+   }
+  ],
+  "description": "A function call that names no catalogId on a surface without a default catalog cannot be resolved, even when the component's own catalog declares the function.",
+  "expectError": {
+   "category": "CatalogError",
+   "message": "has no default catalogId",
+   "rendererError": {
+    "error": {
+     "code": "CATALOG_NOT_FOUND",
+     "message": "has no default catalogId",
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   "surfaceId": "s"
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "catalogId": "custom-v10",
+       "component": "Badge",
+       "id": "root",
+       "label": {
+        "@call": "shout",
+        "args": {
+         "value": "Hello"
+        }
+       }
+      }
+     ],
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_function_call_without_catalog_id_on_surface_without_default_errors",
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "@index is a universal system function that belongs to no catalog, so a template may call it without a catalogId on a surface that has no default catalog.",
+  "expect": {
+   "surfaces": {
+    "s": {
+     "exists": true
+    }
+   }
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "children": {
+        "componentId": "row",
+        "path": "/items"
+       },
+       "component": "List",
+       "id": "root"
+      },
+      {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "component": "Text",
+       "id": "row",
+       "text": {
+        "@call": "@index",
+        "args": {
+         "offset": 1
+        }
+       }
+      }
+     ],
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_index_function_on_surface_without_default",
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "@index is accepted on a surface whose default catalog is the basic catalog; it is not looked up as a catalog function.",
+  "expect": {
+   "surfaces": {
+    "s": {
+     "exists": true
+    }
+   }
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "children": {
+        "componentId": "row",
+        "path": "/items"
+       },
+       "component": "List",
+       "id": "root"
+      },
+      {
+       "component": "Text",
+       "id": "row",
+       "text": {
+        "@call": "@index",
+        "args": {
+         "offset": 1
+        }
+       }
+      }
+     ],
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_index_function_on_surface_with_default",
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "An update that names no catalogId resolves against the surface default, not the catalog of the component's earlier version, so it fails on a surface without a default catalog.",
+  "expectError": {
+   "category": "CatalogError",
+   "message": "has no default catalogId",
+   "rendererError": {
+    "error": {
+     "code": "CATALOG_NOT_FOUND",
+     "message": "has no default catalogId",
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   "surfaceId": "s"
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "component": "Text",
+       "id": "root",
+       "text": "Hello"
+      }
+     ],
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "component": "Text",
+       "id": "root",
+       "text": "Goodbye"
+      }
+     ],
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_component_update_without_catalog_id_on_surface_without_default_errors",
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "catalogs": [
+   {
+    "catalogId": "custom-v10",
+    "components": {
+     "Badge": {
+      "properties": {
+       "component": {
+        "const": "Badge"
+       },
+       "label": {
+        "$ref": "common_types.json#/$defs/DynamicString"
+       }
+      },
+      "required": [
+       "component",
+       "label"
+      ],
+      "type": "object"
+     }
+    },
+    "protocolVersion": "1.0"
+   }
+  ],
+  "description": "An update that names no catalogId resolves against the surface default catalog even when the component's earlier version named another catalog. The basic catalog declares no Badge, so the update is rejected.",
+  "name": "test_v10_component_update_without_catalog_id_uses_surface_default",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expect": {
+     "surfaces": {
+      "s": {
+       "components": [
+        {
+         "component": "Badge",
+         "id": "root"
+        }
+       ],
+       "exists": true
+      }
+     }
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "surfaceId": "s"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "catalogId": "custom-v10",
+         "component": "Badge",
+         "id": "root",
+         "label": "First"
+        }
+       ],
+       "surfaceId": "s"
+      },
+      "version": "1.0"
+     }
+    ]
+   },
+   {
+    "expectError": {
+     "category": "ValidationError",
+     "message": "'Badge'"
+    },
+    "messages": [
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "component": "Badge",
+         "id": "root",
+         "label": "Second"
+        }
+       ],
+       "surfaceId": "s"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": true
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "catalogs": [
+   {
+    "catalogId": "custom-v10",
+    "components": {
+     "Badge": {
+      "properties": {
+       "component": {
+        "const": "Badge"
+       },
+       "label": {
+        "$ref": "common_types.json#/$defs/DynamicString"
+       }
+      },
+      "required": [
+       "component",
+       "label"
+      ],
+      "type": "object"
+     },
+     "Tags": {
+      "properties": {
+       "component": {
+        "const": "Tags"
+       },
+       "items": {
+        "type": "array"
+       }
+      },
+      "required": [
+       "component",
+       "items"
+      ],
+      "type": "object"
+     }
+    },
+    "functions": {
+     "shout": {
+      "properties": {
+       "@call": {
+        "const": "shout"
+       },
+       "args": {
+        "additionalProperties": false,
+        "properties": {
+         "value": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "value"
+        ],
+        "type": "object"
+       }
+      },
+      "required": [
+       "@call",
+       "args"
+      ],
+      "returnType": "string",
+      "type": "object"
+     },
+     "wrap": {
+      "properties": {
+       "@call": {
+        "const": "wrap"
+       },
+       "args": {
+        "additionalProperties": false,
+        "properties": {
+         "value": {}
+        },
+        "required": [
+         "value"
+        ],
+        "type": "object"
+       }
+      },
+      "required": [
+       "@call",
+       "args"
+      ],
+      "returnType": "string",
+      "type": "object"
+     }
+    },
+    "protocolVersion": "1.0"
+   }
+  ],
+  "description": "A call nested in the args of another call resolves its catalog on its own and does not inherit the catalog of the call around it. The outer wrap names custom-v10; the inner shout names no catalogId, so it resolves to the surface default (the basic catalog), which under strictMode: true rejects shout because the basic catalog does not declare it.",
+  "expectError": {
+   "category": "ValidationError",
+   "message": "Unrecognized function 'shout'"
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "component": "Text",
+       "id": "root",
+       "text": {
+        "@call": "wrap",
+        "args": {
+         "value": {
+          "@call": "shout",
+          "args": {
+           "value": "hi"
+          }
+         }
+        },
+        "catalogId": "custom-v10"
+       }
+      }
+     ],
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_nested_call_in_args_resolves_its_own_catalog",
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "catalogs": [
+   {
+    "catalogId": "custom-v10",
+    "components": {
+     "Badge": {
+      "properties": {
+       "component": {
+        "const": "Badge"
+       },
+       "label": {
+        "$ref": "common_types.json#/$defs/DynamicString"
+       }
+      },
+      "required": [
+       "component",
+       "label"
+      ],
+      "type": "object"
+     },
+     "Tags": {
+      "properties": {
+       "component": {
+        "const": "Tags"
+       },
+       "items": {
+        "type": "array"
+       }
+      },
+      "required": [
+       "component",
+       "items"
+      ],
+      "type": "object"
+     }
+    },
+    "functions": {
+     "shout": {
+      "properties": {
+       "@call": {
+        "const": "shout"
+       },
+       "args": {
+        "additionalProperties": false,
+        "properties": {
+         "value": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "value"
+        ],
+        "type": "object"
+       }
+      },
+      "required": [
+       "@call",
+       "args"
+      ],
+      "returnType": "string",
+      "type": "object"
+     },
+     "wrap": {
+      "properties": {
+       "@call": {
+        "const": "wrap"
+       },
+       "args": {
+        "additionalProperties": false,
+        "properties": {
+         "value": {}
+        },
+        "required": [
+         "value"
+        ],
+        "type": "object"
+       }
+      },
+      "required": [
+       "@call",
+       "args"
+      ],
+      "returnType": "string",
+      "type": "object"
+     }
+    },
+    "protocolVersion": "1.0"
+   }
+  ],
+  "description": "A call nested in the args of another call is accepted when it names the catalog that declares it, even though the surface default (the basic catalog) does not declare it.",
+  "expect": {
+   "surfaces": {
+    "s": {
+     "exists": true
+    }
+   }
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "component": "Text",
+       "id": "root",
+       "text": {
+        "@call": "wrap",
+        "args": {
+         "value": {
+          "@call": "shout",
+          "args": {
+           "value": "hi"
+          },
+          "catalogId": "custom-v10"
+         }
+        },
+        "catalogId": "custom-v10"
+       }
+      }
+     ],
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_nested_call_in_args_naming_its_catalog",
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "catalogs": [
+   {
+    "catalogId": "custom-v10",
+    "components": {
+     "Badge": {
+      "properties": {
+       "component": {
+        "const": "Badge"
+       },
+       "label": {
+        "$ref": "common_types.json#/$defs/DynamicString"
+       }
+      },
+      "required": [
+       "component",
+       "label"
+      ],
+      "type": "object"
+     },
+     "Tags": {
+      "properties": {
+       "component": {
+        "const": "Tags"
+       },
+       "items": {
+        "type": "array"
+       }
+      },
+      "required": [
+       "component",
+       "items"
+      ],
+      "type": "object"
+     }
+    },
+    "functions": {
+     "shout": {
+      "properties": {
+       "@call": {
+        "const": "shout"
+       },
+       "args": {
+        "additionalProperties": false,
+        "properties": {
+         "value": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "value"
+        ],
+        "type": "object"
+       }
+      },
+      "required": [
+       "@call",
+       "args"
+      ],
+      "returnType": "string",
+      "type": "object"
+     },
+     "wrap": {
+      "properties": {
+       "@call": {
+        "const": "wrap"
+       },
+       "args": {
+        "additionalProperties": false,
+        "properties": {
+         "value": {}
+        },
+        "required": [
+         "value"
+        ],
+        "type": "object"
+       }
+      },
+      "required": [
+       "@call",
+       "args"
+      ],
+      "returnType": "string",
+      "type": "object"
+     }
+    },
+    "protocolVersion": "1.0"
+   }
+  ],
+  "description": "On a surface without a default catalog, a call nested in the args of a call that names custom-v10 cannot be resolved when it names no catalogId itself, even though custom-v10 declares it.",
+  "expectError": {
+   "category": "CatalogError",
+   "message": "has no default catalogId",
+   "rendererError": {
+    "error": {
+     "code": "CATALOG_NOT_FOUND",
+     "message": "has no default catalogId",
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   "surfaceId": "s"
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "catalogId": "custom-v10",
+       "component": "Badge",
+       "id": "root",
+       "label": {
+        "@call": "wrap",
+        "args": {
+         "value": {
+          "@call": "shout",
+          "args": {
+           "value": "hi"
+          }
+         }
+        },
+        "catalogId": "custom-v10"
+       }
+      }
+     ],
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_nested_call_in_args_on_surface_without_default_errors",
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "catalogs": [
+   {
+    "catalogId": "custom-v10",
+    "components": {
+     "Badge": {
+      "properties": {
+       "component": {
+        "const": "Badge"
+       },
+       "label": {
+        "$ref": "common_types.json#/$defs/DynamicString"
+       }
+      },
+      "required": [
+       "component",
+       "label"
+      ],
+      "type": "object"
+     },
+     "Tags": {
+      "properties": {
+       "component": {
+        "const": "Tags"
+       },
+       "items": {
+        "type": "array"
+       }
+      },
+      "required": [
+       "component",
+       "items"
+      ],
+      "type": "object"
+     }
+    },
+    "functions": {
+     "shout": {
+      "properties": {
+       "@call": {
+        "const": "shout"
+       },
+       "args": {
+        "additionalProperties": false,
+        "properties": {
+         "value": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "value"
+        ],
+        "type": "object"
+       }
+      },
+      "required": [
+       "@call",
+       "args"
+      ],
+      "returnType": "string",
+      "type": "object"
+     },
+     "wrap": {
+      "properties": {
+       "@call": {
+        "const": "wrap"
+       },
+       "args": {
+        "additionalProperties": false,
+        "properties": {
+         "value": {}
+        },
+        "required": [
+         "value"
+        ],
+        "type": "object"
+       }
+      },
+      "required": [
+       "@call",
+       "args"
+      ],
+      "returnType": "string",
+      "type": "object"
+     }
+    },
+    "protocolVersion": "1.0"
+   }
+  ],
+  "description": "@index needs no catalog, but a call in its args is still resolved and checked. Here the offset calls notAFunction, which under strictMode: true is rejected because the surface default (the basic catalog) does not declare it.",
+  "expectError": {
+   "category": "ValidationError",
+   "message": "Unrecognized function 'notAFunction'"
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "children": {
+        "componentId": "row",
+        "path": "/items"
+       },
+       "component": "List",
+       "id": "root"
+      },
+      {
+       "component": "Text",
+       "id": "row",
+       "text": {
+        "@call": "@index",
+        "args": {
+         "offset": {
+          "@call": "notAFunction",
+          "args": {}
+         }
+        }
+       }
+      }
+     ],
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_call_in_index_args_is_checked",
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "catalogs": [
+   {
+    "catalogId": "custom-v10",
+    "components": {
+     "Badge": {
+      "properties": {
+       "component": {
+        "const": "Badge"
+       },
+       "label": {
+        "$ref": "common_types.json#/$defs/DynamicString"
+       }
+      },
+      "required": [
+       "component",
+       "label"
+      ],
+      "type": "object"
+     },
+     "Tags": {
+      "properties": {
+       "component": {
+        "const": "Tags"
+       },
+       "items": {
+        "type": "array"
+       }
+      },
+      "required": [
+       "component",
+       "items"
+      ],
+      "type": "object"
+     }
+    },
+    "functions": {
+     "shout": {
+      "properties": {
+       "@call": {
+        "const": "shout"
+       },
+       "args": {
+        "additionalProperties": false,
+        "properties": {
+         "value": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "value"
+        ],
+        "type": "object"
+       }
+      },
+      "required": [
+       "@call",
+       "args"
+      ],
+      "returnType": "string",
+      "type": "object"
+     },
+     "wrap": {
+      "properties": {
+       "@call": {
+        "const": "wrap"
+       },
+       "args": {
+        "additionalProperties": false,
+        "properties": {
+         "value": {}
+        },
+        "required": [
+         "value"
+        ],
+        "type": "object"
+       }
+      },
+      "required": [
+       "@call",
+       "args"
+      ],
+      "returnType": "string",
+      "type": "object"
+     }
+    },
+    "protocolVersion": "1.0"
+   }
+  ],
+  "description": "On a surface without a default catalog, @index itself is accepted, but a call in its args that names no catalogId cannot be resolved.",
+  "expectError": {
+   "category": "CatalogError",
+   "message": "has no default catalogId",
+   "rendererError": {
+    "error": {
+     "code": "CATALOG_NOT_FOUND",
+     "message": "has no default catalogId",
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   "surfaceId": "s"
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "children": {
+        "componentId": "row",
+        "path": "/items"
+       },
+       "component": "List",
+       "id": "root"
+      },
+      {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "component": "Text",
+       "id": "row",
+       "text": {
+        "@call": "@index",
+        "args": {
+         "offset": {
+          "@call": "formatNumber",
+          "args": {
+           "value": 1
+          }
+         }
+        }
+       }
+      }
+     ],
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_call_in_index_args_on_surface_without_default_errors",
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "catalogs": [
+   {
+    "catalogId": "custom-v10",
+    "components": {
+     "Badge": {
+      "properties": {
+       "component": {
+        "const": "Badge"
+       },
+       "label": {
+        "$ref": "common_types.json#/$defs/DynamicString"
+       }
+      },
+      "required": [
+       "component",
+       "label"
+      ],
+      "type": "object"
+     },
+     "Tags": {
+      "properties": {
+       "component": {
+        "const": "Tags"
+       },
+       "items": {
+        "type": "array"
+       }
+      },
+      "required": [
+       "component",
+       "items"
+      ],
+      "type": "object"
+     }
+    },
+    "functions": {
+     "shout": {
+      "properties": {
+       "@call": {
+        "const": "shout"
+       },
+       "args": {
+        "additionalProperties": false,
+        "properties": {
+         "value": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "value"
+        ],
+        "type": "object"
+       }
+      },
+      "required": [
+       "@call",
+       "args"
+      ],
+      "returnType": "string",
+      "type": "object"
+     },
+     "wrap": {
+      "properties": {
+       "@call": {
+        "const": "wrap"
+       },
+       "args": {
+        "additionalProperties": false,
+        "properties": {
+         "value": {}
+        },
+        "required": [
+         "value"
+        ],
+        "type": "object"
+       }
+      },
+      "required": [
+       "@call",
+       "args"
+      ],
+      "returnType": "string",
+      "type": "object"
+     }
+    },
+    "protocolVersion": "1.0"
+   }
+  ],
+  "description": "Calls inside a list property, and inside objects nested in that list, are resolved one by one; each names custom-v10, which declares shout.",
+  "expect": {
+   "surfaces": {
+    "s": {
+     "exists": true
+    }
+   }
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "catalogId": "custom-v10",
+       "component": "Tags",
+       "id": "root",
+       "items": [
+        {
+         "@call": "shout",
+         "args": {
+          "value": "a"
+         },
+         "catalogId": "custom-v10"
+        },
+        {
+         "nested": [
+          {
+           "@call": "shout",
+           "args": {
+            "value": "b"
+           },
+           "catalogId": "custom-v10"
+          }
+         ]
+        }
+       ]
+      }
+     ],
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_calls_in_lists_naming_their_catalog",
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "catalogs": [
+   {
+    "catalogId": "custom-v10",
+    "components": {
+     "Badge": {
+      "properties": {
+       "component": {
+        "const": "Badge"
+       },
+       "label": {
+        "$ref": "common_types.json#/$defs/DynamicString"
+       }
+      },
+      "required": [
+       "component",
+       "label"
+      ],
+      "type": "object"
+     },
+     "Tags": {
+      "properties": {
+       "component": {
+        "const": "Tags"
+       },
+       "items": {
+        "type": "array"
+       }
+      },
+      "required": [
+       "component",
+       "items"
+      ],
+      "type": "object"
+     }
+    },
+    "functions": {
+     "shout": {
+      "properties": {
+       "@call": {
+        "const": "shout"
+       },
+       "args": {
+        "additionalProperties": false,
+        "properties": {
+         "value": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "value"
+        ],
+        "type": "object"
+       }
+      },
+      "required": [
+       "@call",
+       "args"
+      ],
+      "returnType": "string",
+      "type": "object"
+     },
+     "wrap": {
+      "properties": {
+       "@call": {
+        "const": "wrap"
+       },
+       "args": {
+        "additionalProperties": false,
+        "properties": {
+         "value": {}
+        },
+        "required": [
+         "value"
+        ],
+        "type": "object"
+       }
+      },
+      "required": [
+       "@call",
+       "args"
+      ],
+      "returnType": "string",
+      "type": "object"
+     }
+    },
+    "protocolVersion": "1.0"
+   }
+  ],
+  "description": "A call inside an object nested in a list property is resolved like any other call: it names no catalogId, so it resolves to the surface default (the basic catalog), which under strictMode: true rejects shout because the basic catalog does not declare it, even though the component and the list's first call use custom-v10.",
+  "expectError": {
+   "category": "ValidationError",
+   "message": "Unrecognized function 'shout'"
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "catalogId": "custom-v10",
+       "component": "Tags",
+       "id": "root",
+       "items": [
+        {
+         "@call": "shout",
+         "args": {
+          "value": "a"
+         },
+         "catalogId": "custom-v10"
+        },
+        {
+         "nested": [
+          {
+           "@call": "shout",
+           "args": {
+            "value": "b"
+           }
+          }
+         ]
+        }
+       ]
+      }
+     ],
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_call_in_list_without_catalog_id_uses_surface_default",
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "catalogs": [
+   {
+    "catalogId": "custom-v10",
+    "components": {
+     "Badge": {
+      "properties": {
+       "component": {
+        "const": "Badge"
+       },
+       "label": {
+        "$ref": "common_types.json#/$defs/DynamicString"
+       }
+      },
+      "required": [
+       "component",
+       "label"
+      ],
+      "type": "object"
+     },
+     "Tags": {
+      "properties": {
+       "component": {
+        "const": "Tags"
+       },
+       "items": {
+        "type": "array"
+       }
+      },
+      "required": [
+       "component",
+       "items"
+      ],
+      "type": "object"
+     }
+    },
+    "functions": {
+     "shout": {
+      "properties": {
+       "@call": {
+        "const": "shout"
+       },
+       "args": {
+        "additionalProperties": false,
+        "properties": {
+         "phrase": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "phrase"
+        ],
+        "type": "object"
+       }
+      },
+      "required": [
+       "@call",
+       "args"
+      ],
+      "returnType": "string",
+      "type": "object"
+     },
+     "wrap": {
+      "properties": {
+       "@call": {
+        "const": "wrap"
+       },
+       "args": {
+        "additionalProperties": false,
+        "properties": {
+         "value": {}
+        },
+        "required": [
+         "value"
+        ],
+        "type": "object"
+       }
+      },
+      "required": [
+       "@call",
+       "args"
+      ],
+      "returnType": "string",
+      "type": "object"
+     }
+    },
+    "protocolVersion": "1.0"
+   }
+  ],
+  "description": "A call inside an object nested in a list property has its args checked against the catalog it names; custom-v10's shout requires a string phrase.",
+  "expectError": {
+   "category": "ValidationError",
+   "message": "phrase"
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "catalogId": "custom-v10",
+       "component": "Tags",
+       "id": "root",
+       "items": [
+        {
+         "nested": [
+          {
+           "@call": "shout",
+           "args": {
+            "phrase": 2
+           },
+           "catalogId": "custom-v10"
+          }
+         ]
+        }
+       ]
+      }
+     ],
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_call_in_list_with_invalid_args_errors",
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "catalogs": [
+   {
+    "catalogId": "custom-v10",
+    "components": {
+     "Badge": {
+      "properties": {
+       "component": {
+        "const": "Badge"
+       },
+       "label": {
+        "$ref": "common_types.json#/$defs/DynamicString"
+       }
+      },
+      "required": [
+       "component",
+       "label"
+      ],
+      "type": "object"
+     },
+     "Tags": {
+      "properties": {
+       "component": {
+        "const": "Tags"
+       },
+       "items": {
+        "type": "array"
+       }
+      },
+      "required": [
+       "component",
+       "items"
+      ],
+      "type": "object"
+     }
+    },
+    "functions": {
+     "shout": {
+      "properties": {
+       "@call": {
+        "const": "shout"
+       },
+       "args": {
+        "additionalProperties": false,
+        "properties": {
+         "value": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "value"
+        ],
+        "type": "object"
+       }
+      },
+      "required": [
+       "@call",
+       "args"
+      ],
+      "returnType": "string",
+      "type": "object"
+     },
+     "wrap": {
+      "properties": {
+       "@call": {
+        "const": "wrap"
+       },
+       "args": {
+        "additionalProperties": false,
+        "properties": {
+         "value": {}
+        },
+        "required": [
+         "value"
+        ],
+        "type": "object"
+       }
+      },
+      "required": [
+       "@call",
+       "args"
+      ],
+      "returnType": "string",
+      "type": "object"
+     }
+    },
+    "protocolVersion": "1.0"
+   }
+  ],
+  "description": "The @ namespace is reserved for system functions, and v1.0 defines only @index. A call to @foo is rejected rather than looked up in a catalog.",
+  "expectError": {
+   "category": "ValidationError",
+   "message": "@foo"
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "component": "Text",
+       "id": "root",
+       "text": {
+        "@call": "@foo"
+       }
+      }
+     ],
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_undefined_system_function_errors",
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "A function call's name must be a UAX #31 identifier. An empty name is not one, so the call is rejected rather than skipped.",
+  "expectError": {
+   "category": "ValidationError",
+   "message": "valid UAX #31 identifier"
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "component": "Text",
+       "id": "root",
+       "text": {
+        "@call": ""
+       }
+      }
+     ],
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_function_call_with_empty_name_errors",
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "catalogs": [
+   {
+    "catalogId": "custom-v10",
+    "components": {
+     "Badge": {
+      "properties": {
+       "component": {
+        "const": "Badge"
+       },
+       "label": {
+        "$ref": "common_types.json#/$defs/DynamicString"
+       }
+      },
+      "required": [
+       "component",
+       "label"
+      ],
+      "type": "object"
+     },
+     "Tags": {
+      "properties": {
+       "component": {
+        "const": "Tags"
+       },
+       "items": {
+        "type": "array"
+       }
+      },
+      "required": [
+       "component",
+       "items"
+      ],
+      "type": "object"
+     }
+    },
+    "functions": {
+     "shout": {
+      "properties": {
+       "@call": {
+        "const": "shout"
+       },
+       "args": {
+        "additionalProperties": false,
+        "properties": {
+         "value": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "value"
+        ],
+        "type": "object"
+       }
+      },
+      "required": [
+       "@call",
+       "args"
+      ],
+      "returnType": "string",
+      "type": "object"
+     },
+     "wrap": {
+      "properties": {
+       "@call": {
+        "const": "wrap"
+       },
+       "args": {
+        "additionalProperties": false,
+        "properties": {
+         "value": {}
+        },
+        "required": [
+         "value"
+        ],
+        "type": "object"
+       }
+      },
+      "required": [
+       "@call",
+       "args"
+      ],
+      "returnType": "string",
+      "type": "object"
+     }
+    },
+    "protocolVersion": "1.0"
+   }
+  ],
+  "description": "Catalog resolution does not depend on strict validation. With strictMode off, a call that names no catalogId on a surface without a default catalog is still rejected.",
+  "expectError": {
+   "category": "CatalogError",
+   "message": "has no default catalogId",
+   "rendererError": {
+    "error": {
+     "code": "CATALOG_NOT_FOUND",
+     "message": "has no default catalogId",
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   "surfaceId": "s"
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "component": "Text",
+       "id": "root",
+       "text": {
+        "@call": "formatString",
+        "args": {
+         "value": "hi"
+        }
+       }
+      }
+     ],
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_call_without_catalog_id_on_surface_without_default_errors_without_strict_mode",
+  "protocolVersion": "1.0",
+  "strictMode": false
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "catalogs": [
+   {
+    "catalogId": "custom-v10",
+    "components": {
+     "Badge": {
+      "properties": {
+       "component": {
+        "const": "Badge"
+       },
+       "label": {
+        "$ref": "common_types.json#/$defs/DynamicString"
+       }
+      },
+      "required": [
+       "component",
+       "label"
+      ],
+      "type": "object"
+     },
+     "Tags": {
+      "properties": {
+       "component": {
+        "const": "Tags"
+       },
+       "items": {
+        "type": "array"
+       }
+      },
+      "required": [
+       "component",
+       "items"
+      ],
+      "type": "object"
+     }
+    },
+    "functions": {
+     "shout": {
+      "properties": {
+       "@call": {
+        "const": "shout"
+       },
+       "args": {
+        "additionalProperties": false,
+        "properties": {
+         "value": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "value"
+        ],
+        "type": "object"
+       }
+      },
+      "required": [
+       "@call",
+       "args"
+      ],
+      "returnType": "string",
+      "type": "object"
+     },
+     "wrap": {
+      "properties": {
+       "@call": {
+        "const": "wrap"
+       },
+       "args": {
+        "additionalProperties": false,
+        "properties": {
+         "value": {}
+        },
+        "required": [
+         "value"
+        ],
+        "type": "object"
+       }
+      },
+      "required": [
+       "@call",
+       "args"
+      ],
+      "returnType": "string",
+      "type": "object"
+     }
+    },
+    "protocolVersion": "1.0"
+   }
+  ],
+  "description": "Catalog resolution does not depend on strict validation. With strictMode off, a call that names a catalogId the client does not have is still rejected.",
+  "expectError": {
+   "category": "CatalogError",
+   "message": "Catalog not found: missing-catalog"
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "component": "Text",
+       "id": "root",
+       "text": {
+        "@call": "formatString",
+        "args": {
+         "value": "hi"
+        },
+        "catalogId": "missing-catalog"
+       }
+      }
+     ],
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_call_naming_unknown_catalog_errors_without_strict_mode",
+  "protocolVersion": "1.0",
+  "strictMode": false
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "With strictMode off (default renderer processing), a function call whose catalog resolves is accepted even when that local catalog does not declare the function, so the renderer can forward it to the agent via callAgentFunction.",
+  "expect": {
+   "surfaces": {
+    "s": {
+     "exists": true
+    }
+   }
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "component": "Text",
+       "id": "root",
+       "text": {
+        "@call": "notAFunction",
+        "args": {}
+       }
+      }
+     ],
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_call_to_undeclared_function_without_strict_mode_accepted",
+  "protocolVersion": "1.0",
+  "strictMode": false
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "catalogs": [
+   {
+    "catalogId": "custom-v10",
+    "components": {
+     "Badge": {
+      "properties": {
+       "component": {
+        "const": "Badge"
+       },
+       "label": {
+        "$ref": "common_types.json#/$defs/DynamicString"
+       }
+      },
+      "required": [
+       "component",
+       "label"
+      ],
+      "type": "object"
+     },
+     "Tags": {
+      "properties": {
+       "component": {
+        "const": "Tags"
+       },
+       "items": {
+        "type": "array"
+       }
+      },
+      "required": [
+       "component",
+       "items"
+      ],
+      "type": "object"
+     }
+    },
+    "functions": {
+     "shout": {
+      "properties": {
+       "@call": {
+        "const": "shout"
+       },
+       "args": {
+        "additionalProperties": false,
+        "properties": {
+         "value": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "value"
+        ],
+        "type": "object"
+       }
+      },
+      "required": [
+       "@call",
+       "args"
+      ],
+      "returnType": "string",
+      "type": "object"
+     },
+     "wrap": {
+      "properties": {
+       "@call": {
+        "const": "wrap"
+       },
+       "args": {
+        "additionalProperties": false,
+        "properties": {
+         "value": {}
+        },
+        "required": [
+         "value"
+        ],
+        "type": "object"
+       }
+      },
+      "required": [
+       "@call",
+       "args"
+      ],
+      "returnType": "string",
+      "type": "object"
+     }
+    },
+    "protocolVersion": "1.0"
+   },
+   {
+    "catalogId": "v09-catalog",
+    "components": {
+     "Badge": {
+      "properties": {
+       "component": {
+        "const": "Badge"
+       },
+       "label": {
+        "$ref": "common_types.json#/$defs/DynamicString"
+       }
+      },
+      "required": [
+       "component",
+       "label"
+      ],
+      "type": "object"
+     }
+    },
+    "protocolVersion": "v0.9"
+   }
+  ],
+  "description": "Every catalog a v1.0 surface uses must be built for v1.0. A call that names v09-catalog, a v0.9 catalog the client has, cannot be resolved on a v1.0 surface. The message check only requires the error to name the catalog, since SDKs word the reason differently.",
+  "expectError": {
+   "category": "CatalogError",
+   "message": "v09-catalog"
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "component": "Text",
+       "id": "root",
+       "text": {
+        "@call": "formatString",
+        "args": {
+         "value": "hi"
+        },
+        "catalogId": "v09-catalog"
+       }
+      }
+     ],
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_call_naming_catalog_of_other_protocol_version_errors",
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "catalogs": [
+   {
+    "catalogId": "custom-v10",
+    "components": {
+     "Badge": {
+      "properties": {
+       "component": {
+        "const": "Badge"
+       },
+       "label": {
+        "$ref": "common_types.json#/$defs/DynamicString"
+       }
+      },
+      "required": [
+       "component",
+       "label"
+      ],
+      "type": "object"
+     },
+     "Tags": {
+      "properties": {
+       "component": {
+        "const": "Tags"
+       },
+       "items": {
+        "type": "array"
+       }
+      },
+      "required": [
+       "component",
+       "items"
+      ],
+      "type": "object"
+     }
+    },
+    "functions": {
+     "shout": {
+      "properties": {
+       "@call": {
+        "const": "shout"
+       },
+       "args": {
+        "additionalProperties": false,
+        "properties": {
+         "value": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "value"
+        ],
+        "type": "object"
+       }
+      },
+      "required": [
+       "@call",
+       "args"
+      ],
+      "returnType": "string",
+      "type": "object"
+     },
+     "wrap": {
+      "properties": {
+       "@call": {
+        "const": "wrap"
+       },
+       "args": {
+        "additionalProperties": false,
+        "properties": {
+         "value": {}
+        },
+        "required": [
+         "value"
+        ],
+        "type": "object"
+       }
+      },
+      "required": [
+       "@call",
+       "args"
+      ],
+      "returnType": "string",
+      "type": "object"
+     }
+    },
+    "protocolVersion": "1.0"
+   }
+  ],
+  "description": "A call's catalogId must be a string. A number is rejected as invalid instead of being ignored, which would resolve the call to the surface default.",
+  "expectError": {
+   "category": "ValidationError"
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "component": "Text",
+       "id": "root",
+       "text": {
+        "@call": "formatString",
+        "args": {
+         "value": "hi"
+        },
+        "catalogId": 3
+       }
+      }
+     ],
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_call_with_non_string_catalog_id_errors",
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "catalogs": [
+   {
+    "catalogId": "custom-v10",
+    "components": {
+     "Badge": {
+      "properties": {
+       "component": {
+        "const": "Badge"
+       },
+       "label": {
+        "$ref": "common_types.json#/$defs/DynamicString"
+       }
+      },
+      "required": [
+       "component",
+       "label"
+      ],
+      "type": "object"
+     },
+     "Tags": {
+      "properties": {
+       "component": {
+        "const": "Tags"
+       },
+       "items": {
+        "type": "array"
+       }
+      },
+      "required": [
+       "component",
+       "items"
+      ],
+      "type": "object"
+     }
+    },
+    "functions": {
+     "shout": {
+      "properties": {
+       "@call": {
+        "const": "shout"
+       },
+       "args": {
+        "additionalProperties": false,
+        "properties": {
+         "value": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "value"
+        ],
+        "type": "object"
+       }
+      },
+      "required": [
+       "@call",
+       "args"
+      ],
+      "returnType": "string",
+      "type": "object"
+     },
+     "wrap": {
+      "properties": {
+       "@call": {
+        "const": "wrap"
+       },
+       "args": {
+        "additionalProperties": false,
+        "properties": {
+         "value": {}
+        },
+        "required": [
+         "value"
+        ],
+        "type": "object"
+       }
+      },
+      "required": [
+       "@call",
+       "args"
+      ],
+      "returnType": "string",
+      "type": "object"
+     }
+    },
+    "protocolVersion": "1.0"
+   }
+  ],
+  "description": "A component that names a catalogId is validated against that catalog, not the surface default. custom-v10 declares no Text, although the default (the basic catalog) does.",
+  "expectError": {
+   "category": "ValidationError",
+   "message": "Text"
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "catalogId": "custom-v10",
+       "component": "Text",
+       "id": "root",
+       "text": "Hello"
+      }
+     ],
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_component_naming_catalog_is_checked_against_that_catalog",
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "There is no fallback to the catalogs the client supports, even when the case supplies only one. A component that names no catalogId on a surface without a default catalog is rejected.",
+  "expectError": {
+   "category": "CatalogError",
+   "message": "has no default catalogId",
+   "rendererError": {
+    "error": {
+     "code": "CATALOG_NOT_FOUND",
+     "message": "has no default catalogId",
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   "surfaceId": "s"
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "component": "Text",
+       "id": "root",
+       "text": "Hello"
+      }
+     ],
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_component_without_catalog_id_errors_with_a_single_catalog",
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "get_renderer_data_model",
+  "args": {
+   "version": "1.0"
+  },
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "A v1.0 surface created without a default catalog keeps the protocol version of the message that created it, so it is part of a v1.0 data model request. Its data model is empty.",
+  "expect": {
+   "surfaces": {
+    "s": {}
+   },
+   "version": "1.0"
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "sendDataModel": true,
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_get_renderer_data_model_includes_surface_without_default",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "get_renderer_data_model",
+  "args": {
+   "version": "v0.9"
+  },
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "A v1.0 surface created without a default catalog is not part of a v0.9 data model request, so the request finds no surface to report.",
+  "expect": null,
+  "messages": [
+   {
+    "createSurface": {
+     "sendDataModel": true,
+     "surfaceId": "s"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_get_renderer_data_model_excludes_surface_without_default_from_v09",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "get_renderer_data_model",
+  "args": {
+   "version": "v0.9"
+  },
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json",
+   "specification/v0_9/catalogs/basic/catalog.json"
+  ],
+  "description": "With a v1.0 surface that has no default catalog and a v0.9 surface side by side, a v0.9 data model request reports only the v0.9 surface. The surfaces are created in separate steps, one batch per protocol version.",
+  "expect": {
+   "surfaces": {
+    "t": {}
+   },
+   "version": "v0.9"
+  },
+  "name": "test_v10_get_renderer_data_model_filters_by_surface_protocol_version",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "messages": [
+     {
+      "createSurface": {
+       "sendDataModel": true,
+       "surfaceId": "s"
+      },
+      "version": "1.0"
+     }
+    ]
+   },
+   {
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json",
+       "sendDataModel": true,
+       "surfaceId": "t"
+      },
+      "version": "v0.9"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that v1.0 updateComponents keeps ComponentCommon.metadata apart from component properties and exposes it as component metadata.",
+  "expect": {
+   "surfaces": {
+    "s_v10_comp_meta": {
+     "components": [
+      {
+       "@metadata": {
+        "extensions": {
+         "com_example_trace": "t1"
+        }
+       },
+       "component": "Text",
+       "id": "root",
+       "text": "Hello"
+      }
+     ],
+     "exists": true,
+     "metadata": {
+      "extensions": {
+       "com_example_session": "abc"
+      }
+     }
+    }
+   }
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "test-catalog-v10",
+     "metadata": {
+      "extensions": {
+       "com_example_session": "abc"
+      }
+     },
+     "surfaceId": "s_v10_comp_meta"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "component": "Text",
+       "id": "root",
+       "metadata": {
+        "extensions": {
+         "com_example_trace": "t1"
+        }
+       },
+       "text": "Hello"
+      }
+     ],
+     "surfaceId": "s_v10_comp_meta"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_update_components_stores_component_metadata",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that a later v1.0 updateComponents entry replaces a component's metadata in full rather than merging it.",
+  "expect": {
+   "surfaces": {
+    "s_v10_comp_meta_replace": {
+     "components": [
+      {
+       "@metadata": {
+        "extensions": {
+         "com_example_state": "final"
+        }
+       },
+       "component": "Text",
+       "id": "root",
+       "text": "Hello"
+      }
+     ],
+     "exists": true
+    }
+   }
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "test-catalog-v10",
+     "surfaceId": "s_v10_comp_meta_replace"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "component": "Text",
+       "id": "root",
+       "metadata": {
+        "extensions": {
+         "com_example_state": "draft",
+         "com_example_trace": "t1"
+        }
+       },
+       "text": "Hello"
+      }
+     ],
+     "surfaceId": "s_v10_comp_meta_replace"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "component": "Text",
+       "id": "root",
+       "metadata": {
+        "extensions": {
+         "com_example_state": "final"
+        }
+       },
+       "text": "Hello"
+      }
+     ],
+     "surfaceId": "s_v10_comp_meta_replace"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_update_components_replaces_component_metadata",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that a v1.0 updateComponents entry without metadata clears the component's previously stored metadata, because an update replaces the definition in full.",
+  "expect": {
+   "surfaces": {
+    "s_v10_comp_meta_clear": {
+     "components": [
+      {
+       "@metadata": null,
+       "component": "Text",
+       "id": "root",
+       "text": "Hello"
+      }
+     ],
+     "exists": true
+    }
+   }
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "test-catalog-v10",
+     "surfaceId": "s_v10_comp_meta_clear"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "component": "Text",
+       "id": "root",
+       "metadata": {
+        "extensions": {
+         "com_example_trace": "t1"
+        }
+       },
+       "text": "Hello"
+      }
+     ],
+     "surfaceId": "s_v10_comp_meta_clear"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "component": "Text",
+       "id": "root",
+       "text": "Hello"
+      }
+     ],
+     "surfaceId": "s_v10_comp_meta_clear"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_update_components_omitted_metadata_clears_component_metadata",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that v1.0 updateComponents rejects component metadata extensions whose key is not a Unicode identifier (UAX 31) when the component is first created.",
+  "expectError": {
+   "category": "ValidationError"
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "test-catalog-v10",
+     "surfaceId": "s_v10_comp_meta_bad_key"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "component": "Text",
+       "id": "root",
+       "metadata": {
+        "extensions": {
+         "com.example.trace": "t1"
+        }
+       },
+       "text": "Hello"
+      }
+     ],
+     "surfaceId": "s_v10_comp_meta_bad_key"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_update_components_metadata_extension_key_must_be_identifier",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that v1.0 updateComponents rejects an invalid UAX 31 extension key on an existing component and leaves the previously stored metadata untouched.",
+  "expectError": {
+   "category": "ValidationError"
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "test-catalog-v10",
+     "surfaceId": "s_v10_comp_meta_bad_key_update"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "component": "Text",
+       "id": "root",
+       "metadata": {
+        "extensions": {
+         "com_example_trace": "t1"
+        }
+       },
+       "text": "Hello"
+      }
+     ],
+     "surfaceId": "s_v10_comp_meta_bad_key_update"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "component": "Text",
+       "id": "root",
+       "metadata": {
+        "extensions": {
+         "com-example-trace": "t2"
+        }
+       },
+       "text": "Hello"
+      }
+     ],
+     "surfaceId": "s_v10_comp_meta_bad_key_update"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_update_components_metadata_extension_key_must_be_identifier_on_update",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Multi-step strictMode: false incremental streaming case verifying that out-of-order child components arriving before root emit zero errors and assemble cleanly once root arrives.",
+  "name": "test_v10_permissive_incremental_streaming_out_of_order_before_root",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expect": {
+     "surfaces": {
+      "s_stream": {
+       "components": [
+        {
+         "component": "Text",
+         "id": "leaf_text",
+         "text": "Streamed Leaf"
+        }
+       ],
+       "exists": true
+      }
+     }
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "surfaceId": "s_stream"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "component": "Text",
+         "id": "leaf_text",
+         "text": "Streamed Leaf"
+        }
+       ],
+       "surfaceId": "s_stream"
+      },
+      "version": "1.0"
+     }
+    ]
+   },
+   {
+    "expect": {
+     "surfaces": {
+      "s_stream": {
+       "components": [
+        {
+         "component": "Text",
+         "id": "leaf_text",
+         "text": "Streamed Leaf"
+        },
+        {
+         "child": "leaf_text",
+         "component": "Card",
+         "id": "mid_card"
+        }
+       ],
+       "exists": true
+      }
+     }
+    },
+    "messages": [
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "child": "leaf_text",
+         "component": "Card",
+         "id": "mid_card"
+        }
+       ],
+       "surfaceId": "s_stream"
+      },
+      "version": "1.0"
+     }
+    ]
+   },
+   {
+    "expect": {
+     "surfaces": {
+      "s_stream": {
+       "components": [
+        {
+         "component": "Text",
+         "id": "leaf_text",
+         "text": "Streamed Leaf"
+        },
+        {
+         "child": "leaf_text",
+         "component": "Card",
+         "id": "mid_card"
+        },
+        {
+         "children": [
+          "mid_card"
+         ],
+         "component": "Column",
+         "id": "root"
+        }
+       ],
+       "exists": true
+      }
+     }
+    },
+    "messages": [
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "children": [
+          "mid_card"
+         ],
+         "component": "Column",
+         "id": "root"
+        }
+       ],
+       "surfaceId": "s_stream"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "strictMode": false
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that a v1.0 createSurface message carrying a theme property is rejected with a ValidationError in strict mode.",
+  "expectError": {
+   "category": "ValidationError"
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "surfaceId": "s1",
+     "theme": {
+      "primaryColor": "#ff0000"
+     }
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_create_surface_theme_rejected_strict",
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that v1.0 updateComponents accepts @metadata on a component, stores it on ComponentModel.metadata, replaces it on subsequent updateComponents, and clears it when omitted.",
+  "name": "test_v10_update_components_stores_at_prefixed_component_metadata",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expect": {
+     "surfaces": {
+      "s_v10_at_meta": {
+       "components": [
+        {
+         "@metadata": {
+          "extensions": {
+           "com_example_trace": "t1"
+          }
+         },
+         "component": "Text",
+         "id": "root",
+         "text": "Hello @metadata"
+        }
+       ],
+       "exists": true
+      }
+     }
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "test-catalog-v10",
+       "surfaceId": "s_v10_at_meta"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "@metadata": {
+          "extensions": {
+           "com_example_trace": "t1"
+          }
+         },
+         "component": "Text",
+         "id": "root",
+         "text": "Hello @metadata"
+        }
+       ],
+       "surfaceId": "s_v10_at_meta"
+      },
+      "version": "1.0"
+     }
+    ]
+   },
+   {
+    "expect": {
+     "surfaces": {
+      "s_v10_at_meta": {
+       "components": [
+        {
+         "@metadata": {
+          "extensions": {
+           "com_example_state": "updated"
+          }
+         },
+         "component": "Text",
+         "id": "root",
+         "text": "Hello @metadata"
+        }
+       ],
+       "exists": true
+      }
+     }
+    },
+    "messages": [
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "@metadata": {
+          "extensions": {
+           "com_example_state": "updated"
+          }
+         },
+         "component": "Text",
+         "id": "root",
+         "text": "Hello @metadata"
+        }
+       ],
+       "surfaceId": "s_v10_at_meta"
+      },
+      "version": "1.0"
+     }
+    ]
+   },
+   {
+    "expect": {
+     "surfaces": {
+      "s_v10_at_meta": {
+       "components": [
+        {
+         "@metadata": null,
+         "component": "Text",
+         "id": "root",
+         "text": "Hello @metadata"
+        }
+       ],
+       "exists": true
+      }
+     }
+    },
+    "messages": [
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "component": "Text",
+         "id": "root",
+         "text": "Hello @metadata"
+        }
+       ],
+       "surfaceId": "s_v10_at_meta"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "process_messages",
+  "catalogs": [
+   {
+    "catalogId": "custom-v10-table-cat",
+    "components": {
+     "CustomTable": {
+      "properties": {
+       "accessibility": {
+        "type": "string"
+       },
+       "catalogId": {
+        "type": "string"
+       },
+       "checks": {
+        "items": {
+         "type": "string"
+        },
+        "type": "array"
+       },
+       "metadata": {
+        "additionalProperties": false,
+        "properties": {
+         "pageNumber": {
+          "type": "number"
+         },
+         "pageSize": {
+          "type": "number"
+         }
+        },
+        "type": "object"
+       }
+      },
+      "required": [
+       "component",
+       "metadata"
+      ],
+      "type": "object"
+     }
+    }
+   }
+  ],
+  "description": "Tests that a v1.0 custom catalog component whose schema declares its own 'metadata', 'catalogId', 'accessibility', and 'checks' properties can receive those bare custom properties alongside @metadata and @accessibility envelope mixins without collision (#1376).",
+  "expect": {
+   "surfaces": {
+    "s_v10_coexist": {
+     "components": [
+      {
+       "@metadata": {
+        "extensions": {
+         "com_example_vendor": "acme"
+        }
+       },
+       "accessibility": "compact-mode",
+       "catalogId": "custom-prop-catalog",
+       "checks": [
+        "non_empty_rows"
+       ],
+       "component": "CustomTable",
+       "id": "root",
+       "metadata": {
+        "pageNumber": 0,
+        "pageSize": 20
+       }
+      }
+     ],
+     "exists": true
+    }
+   }
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "custom-v10-table-cat",
+     "surfaceId": "s_v10_coexist"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "@accessibility": {
+        "label": "Quarterly revenue table"
+       },
+       "@metadata": {
+        "extensions": {
+         "com_example_vendor": "acme"
+        }
+       },
+       "accessibility": "compact-mode",
+       "catalogId": "custom-prop-catalog",
+       "checks": [
+        "non_empty_rows"
+       ],
+       "component": "CustomTable",
+       "id": "root",
+       "metadata": {
+        "pageNumber": 0,
+        "pageSize": 20
+       }
+      }
+     ],
+     "surfaceId": "s_v10_coexist"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_at_prefixed_envelope_coexists_with_custom_component_properties",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "process_messages",
+  "catalogs": [
+   {
+    "catalogId": "legacy-route-main",
+    "components": {
+     "Label": {
+      "properties": {
+       "text": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "component"
+      ],
+      "type": "object"
+     }
+    }
+   },
+   {
+    "catalogId": "legacy-route-other",
+    "components": {
+     "Label": {
+      "properties": {
+       "catalogId": {
+        "type": "string"
+       },
+       "text": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "component"
+      ],
+      "type": "object"
+     }
+    }
+   }
+  ],
+  "description": "Tests that during the v1.0 transition a legacy bare 'catalogId' that the component's schema in the surface default catalog does not declare routes the component to the catalog it names, and is not kept as a property even when the component's schema in that catalog declares a 'catalogId' property of its own.",
+  "expect": {
+   "surfaces": {
+    "s_v10_legacy_route": {
+     "components": [
+      {
+       "component": "Label",
+       "id": "root",
+       "text": "Hi"
+      }
+     ],
+     "exists": true
+    }
+   }
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "legacy-route-main",
+     "surfaceId": "s_v10_legacy_route"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "catalogId": "legacy-route-other",
+       "component": "Label",
+       "id": "root",
+       "text": "Hi"
+      }
+     ],
+     "surfaceId": "s_v10_legacy_route"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_legacy_catalog_id_routes_by_default_catalog_schema",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "process_messages",
+  "catalogs": [
+   {
+    "catalogId": "legacy-route-int-main",
+    "components": {
+     "Label": {
+      "properties": {
+       "text": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "component"
+      ],
+      "type": "object"
+     }
+    }
+   },
+   {
+    "catalogId": "legacy-route-int-other",
+    "components": {
+     "Label": {
+      "properties": {
+       "catalogId": {
+        "type": "integer"
+       },
+       "text": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "component"
+      ],
+      "type": "object"
+     }
+    }
+   }
+  ],
+  "description": "Tests that during the v1.0 transition a legacy bare 'catalogId' that the component's schema in the surface default catalog does not declare routes the component to the catalog it names, and is not validated as the component's own 'catalogId' property there, even when that property is not a string.",
+  "expect": {
+   "surfaces": {
+    "s_v10_legacy_route_int": {
+     "components": [
+      {
+       "component": "Label",
+       "id": "root",
+       "text": "Hi"
+      }
+     ],
+     "exists": true
+    }
+   }
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "legacy-route-int-main",
+     "surfaceId": "s_v10_legacy_route_int"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "catalogId": "legacy-route-int-other",
+       "component": "Label",
+       "id": "root",
+       "text": "Hi"
+      }
+     ],
+     "surfaceId": "s_v10_legacy_route_int"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_legacy_catalog_id_routes_when_target_declares_non_string_catalog_id",
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "process_messages",
+  "catalogs": [
+   {
+    "catalogId": "at-route-int-main",
+    "components": {
+     "Label": {
+      "properties": {
+       "text": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "component"
+      ],
+      "type": "object"
+     }
+    }
+   },
+   {
+    "catalogId": "at-route-int-other",
+    "components": {
+     "Label": {
+      "properties": {
+       "catalogId": {
+        "type": "integer"
+       },
+       "text": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "component"
+      ],
+      "type": "object"
+     }
+    }
+   }
+  ],
+  "description": "Tests that a v1.0 '@catalogId' routes a component to a catalog whose schema for it declares an optional 'catalogId' property of another type, which the payload omits. The routing catalog ID is not validated as that property.",
+  "expect": {
+   "surfaces": {
+    "s_v10_at_route_int": {
+     "components": [
+      {
+       "component": "Label",
+       "id": "root",
+       "text": "Hi"
+      }
+     ],
+     "exists": true
+    }
+   }
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "at-route-int-main",
+     "surfaceId": "s_v10_at_route_int"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "@catalogId": "at-route-int-other",
+       "component": "Label",
+       "id": "root",
+       "text": "Hi"
+      }
+     ],
+     "surfaceId": "s_v10_at_route_int"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_at_catalog_id_routes_when_target_declares_optional_custom_catalog_id",
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "process_messages",
+  "catalogs": [
+   {
+    "catalogId": "at-meta-omit-cat",
+    "components": {
+     "Note": {
+      "properties": {
+       "metadata": {
+        "type": "string"
+       },
+       "text": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "component"
+      ],
+      "type": "object"
+     }
+    }
+   }
+  ],
+  "description": "Tests that a v1.0 component whose schema declares an optional 'metadata' property of its own, which the payload omits, accepts and stores '@metadata' envelope metadata. The envelope metadata is not validated as that property.",
+  "expect": {
+   "surfaces": {
+    "s_v10_at_meta_omit": {
+     "components": [
+      {
+       "@metadata": {
+        "extensions": {
+         "com_example_trace": "t1"
+        }
+       },
+       "component": "Note",
+       "id": "root",
+       "text": "Hi"
+      }
+     ],
+     "exists": true
+    }
+   }
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "at-meta-omit-cat",
+     "surfaceId": "s_v10_at_meta_omit"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "@metadata": {
+        "extensions": {
+         "com_example_trace": "t1"
+        }
+       },
+       "component": "Note",
+       "id": "root",
+       "text": "Hi"
+      }
+     ],
+     "surfaceId": "s_v10_at_meta_omit"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_at_metadata_with_omitted_optional_custom_metadata_property",
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that v1.0 updateComponents rejects a component whose '@catalogId' is null instead of resolving it to the surface default catalog.",
+  "expectError": {
+   "category": "ValidationError"
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "test-catalog-v10",
+     "surfaceId": "s_v10_null_at_cat"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "@catalogId": null,
+       "component": "Text",
+       "id": "root",
+       "text": "Hello"
+      }
+     ],
+     "surfaceId": "s_v10_null_at_cat"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_update_components_rejects_null_at_catalog_id",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "process_messages",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Tests that v1.0 updateComponents rejects a component whose legacy bare 'catalogId', which its schema doesn't declare as a property of its own, is null instead of resolving it to the surface default catalog.",
+  "expectError": {
+   "category": "ValidationError"
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "test-catalog-v10",
+     "surfaceId": "s_v10_null_legacy_cat"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "catalogId": null,
+       "component": "Text",
+       "id": "root",
+       "text": "Hello"
+      }
+     ],
+     "surfaceId": "s_v10_null_legacy_cat"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_update_components_rejects_null_legacy_catalog_id",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "process_messages",
+  "catalogs": [
+   {
+    "catalogId": "combiner-custom-cat",
+    "components": {
+     "Pager": {
+      "allOf": [
+       {
+        "anyOf": [
+         {
+          "properties": {
+           "catalogId": {
+            "type": "string"
+           }
+          }
+         }
+        ],
+        "oneOf": [
+         {
+          "properties": {
+           "metadata": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "metadata"
+          ]
+         },
+         {
+          "properties": {
+           "mode": {
+            "const": "none"
+           }
+          },
+          "required": [
+           "mode"
+          ]
+         }
+        ]
+       }
+      ],
+      "properties": {
+       "text": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "component"
+      ],
+      "type": "object"
+     }
+    }
+   }
+  ],
+  "description": "Tests that a v1.0 component whose schema declares its own 'metadata' in a 'oneOf' branch and its own 'catalogId' in an 'anyOf' branch, both nested in an 'allOf' member, keeps the bare 'metadata' and 'catalogId' as component properties alongside '@metadata' envelope metadata, without a conflict between the bare and '@' forms.",
+  "expect": {
+   "surfaces": {
+    "s_v10_combiner_custom": {
+     "components": [
+      {
+       "@metadata": {
+        "extensions": {
+         "com_example_trace": "t1"
+        }
+       },
+       "catalogId": "page-catalog",
+       "component": "Pager",
+       "id": "root",
+       "metadata": "page-2",
+       "text": "Hi"
+      }
+     ],
+     "exists": true
+    }
+   }
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "combiner-custom-cat",
+     "surfaceId": "s_v10_combiner_custom"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "@metadata": {
+        "extensions": {
+         "com_example_trace": "t1"
+        }
+       },
+       "catalogId": "page-catalog",
+       "component": "Pager",
+       "id": "root",
+       "metadata": "page-2",
+       "text": "Hi"
+      }
+     ],
+     "surfaceId": "s_v10_combiner_custom"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_custom_envelope_properties_declared_in_combiner_branches",
+  "protocolVersion": "1.0",
+  "strictMode": true
+ },
+ {
+  "action": "process_messages",
+  "catalogs": [
+   {
+    "catalogId": "inline-rule-cat",
+    "components": {
+     "InlineCommon": {
+      "properties": {
+       "catalogId": {
+        "type": "string"
+       },
+       "id": {
+        "type": "string"
+       },
+       "metadata": {
+        "properties": {
+         "extensions": {
+          "type": "object"
+         }
+        },
+        "type": "object"
+       },
+       "text": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "component"
+      ],
+      "type": "object"
+     },
+     "InlineIdOtherTypes": {
+      "properties": {
+       "catalogId": {
+        "type": "integer"
+       },
+       "id": {
+        "type": "string"
+       },
+       "metadata": {
+        "type": "string"
+       },
+       "text": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "component"
+      ],
+      "type": "object"
+     },
+     "NoInlineId": {
+      "properties": {
+       "catalogId": {
+        "type": "string"
+       },
+       "metadata": {
+        "properties": {
+         "extensions": {
+          "type": "object"
+         }
+        },
+        "type": "object"
+       },
+       "text": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "component"
+      ],
+      "type": "object"
+     }
+    }
+   }
+  ],
+  "description": "Tests that during the v1.0 transition a bare 'catalogId' or 'metadata' declared inline in a component's 'properties' is the standard ComponentCommon mixin only when the same 'properties' block also declares 'id' and the property has the standard shape (a string 'catalogId', or an object 'metadata' whose only property is 'extensions'). Otherwise it is a property of the component, kept beside '@metadata' envelope metadata.",
+  "expect": {
+   "surfaces": {
+    "s_v10_inline_common": {
+     "components": [
+      {
+       "@metadata": {
+        "extensions": {
+         "com_example_trace": "t1"
+        }
+       },
+       "component": "InlineCommon",
+       "id": "root",
+       "text": "Hi"
+      }
+     ],
+     "exists": true
+    },
+    "s_v10_inline_other_types": {
+     "components": [
+      {
+       "@metadata": {
+        "extensions": {
+         "com_example_trace": "t2"
+        }
+       },
+       "catalogId": 7,
+       "component": "InlineIdOtherTypes",
+       "id": "root",
+       "metadata": "page-2",
+       "text": "Hi"
+      }
+     ],
+     "exists": true
+    },
+    "s_v10_no_inline_id": {
+     "components": [
+      {
+       "@metadata": {
+        "extensions": {
+         "com_example_trace": "t3"
+        }
+       },
+       "catalogId": "not-a-catalog",
+       "component": "NoInlineId",
+       "id": "root",
+       "metadata": {
+        "extensions": {
+         "com_example_page": "p2"
+        }
+       },
+       "text": "Hi"
+      }
+     ],
+     "exists": true
+    }
+   }
+  },
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "inline-rule-cat",
+     "surfaceId": "s_v10_inline_common"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "catalogId": "inline-rule-cat",
+       "component": "InlineCommon",
+       "id": "root",
+       "metadata": {
+        "extensions": {
+         "com_example_trace": "t1"
+        }
+       },
+       "text": "Hi"
+      }
+     ],
+     "surfaceId": "s_v10_inline_common"
+    },
+    "version": "1.0"
+   },
+   {
+    "createSurface": {
+     "catalogId": "inline-rule-cat",
+     "surfaceId": "s_v10_inline_other_types"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "@metadata": {
+        "extensions": {
+         "com_example_trace": "t2"
+        }
+       },
+       "catalogId": 7,
+       "component": "InlineIdOtherTypes",
+       "id": "root",
+       "metadata": "page-2",
+       "text": "Hi"
+      }
+     ],
+     "surfaceId": "s_v10_inline_other_types"
+    },
+    "version": "1.0"
+   },
+   {
+    "createSurface": {
+     "catalogId": "inline-rule-cat",
+     "surfaceId": "s_v10_no_inline_id"
+    },
+    "version": "1.0"
+   },
+   {
+    "updateComponents": {
+     "components": [
+      {
+       "@metadata": {
+        "extensions": {
+         "com_example_trace": "t3"
+        }
+       },
+       "catalogId": "not-a-catalog",
+       "component": "NoInlineId",
+       "id": "root",
+       "metadata": {
+        "extensions": {
+         "com_example_page": "p2"
+        }
+       },
+       "text": "Hi"
+      }
+     ],
+     "surfaceId": "s_v10_no_inline_id"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_v10_inline_catalog_id_and_metadata_standard_only_beside_inline_id",
+  "protocolVersion": "1.0"
+ }
+]

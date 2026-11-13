@@ -1,0 +1,2122 @@
+[
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "A model created without data starts as an empty object.",
+  "features": [
+   "F-CORE-14"
+  ],
+  "name": "test_data_model_initializes_empty",
+  "steps": [
+   {
+    "expect": {},
+    "op": "get",
+    "path": "/"
+   }
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "The root path returns the whole data model.",
+  "features": [
+   "F-CORE-14"
+  ],
+  "initial": {
+   "items": [
+    "a",
+    "b",
+    "c"
+   ],
+   "user": {
+    "name": "Alice",
+    "settings": {
+     "theme": "dark"
+    }
+   }
+  },
+  "name": "test_data_model_retrieves_root",
+  "steps": [
+   {
+    "expect": {
+     "items": [
+      "a",
+      "b",
+      "c"
+     ],
+     "user": {
+      "name": "Alice",
+      "settings": {
+       "theme": "dark"
+      }
+     }
+    },
+    "op": "get",
+    "path": "/"
+   }
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "Nested object paths resolve segment by segment.",
+  "features": [
+   "F-CORE-14"
+  ],
+  "initial": {
+   "items": [
+    "a",
+    "b",
+    "c"
+   ],
+   "user": {
+    "name": "Alice",
+    "settings": {
+     "theme": "dark"
+    }
+   }
+  },
+  "name": "test_data_model_retrieves_nested_path",
+  "steps": [
+   {
+    "expect": "Alice",
+    "op": "get",
+    "path": "/user/name"
+   },
+   {
+    "expect": "dark",
+    "op": "get",
+    "path": "/user/settings/theme"
+   }
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "List elements resolve by numeric segment.",
+  "features": [
+   "F-CORE-14"
+  ],
+  "initial": {
+   "items": [
+    "a",
+    "b",
+    "c"
+   ],
+   "user": {
+    "name": "Alice",
+    "settings": {
+     "theme": "dark"
+    }
+   }
+  },
+  "name": "test_data_model_retrieves_list_items",
+  "steps": [
+   {
+    "expect": "a",
+    "op": "get",
+    "path": "/items/0"
+   },
+   {
+    "expect": "b",
+    "op": "get",
+    "path": "/items/1"
+   }
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "Paths that do not exist resolve to no value.",
+  "features": [
+   "F-CORE-18"
+  ],
+  "initial": {
+   "items": [
+    "a",
+    "b",
+    "c"
+   ],
+   "user": {
+    "name": "Alice",
+    "settings": {
+     "theme": "dark"
+    }
+   }
+  },
+  "name": "test_data_model_absent_for_missing_paths",
+  "steps": [
+   {
+    "expect_absent": true,
+    "op": "get",
+    "path": "/user/age"
+   },
+   {
+    "expect_absent": true,
+    "op": "get",
+    "path": "/unknown/path"
+   }
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "Traversing through a segment that holds no value yields no value.",
+  "initial": {
+   "items": [
+    "a",
+    "b",
+    "c"
+   ],
+   "user": {
+    "name": "Alice",
+    "settings": {
+     "theme": "dark"
+    }
+   }
+  },
+  "name": "test_data_model_absent_through_empty_segment",
+  "steps": [
+   {
+    "op": "set",
+    "path": "/nullable/inner",
+    "value": 1
+   },
+   {
+    "op": "delete",
+    "path": "/nullable/inner"
+   },
+   {
+    "expect_absent": true,
+    "op": "get",
+    "path": "/nullable/deep/path"
+   }
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "Setting an existing path replaces its value.",
+  "features": [
+   "F-CORE-17"
+  ],
+  "initial": {
+   "items": [
+    "a",
+    "b",
+    "c"
+   ],
+   "user": {
+    "name": "Alice",
+    "settings": {
+     "theme": "dark"
+    }
+   }
+  },
+  "name": "test_data_model_sets_existing_path",
+  "steps": [
+   {
+    "op": "set",
+    "path": "/user/name",
+    "value": "Bob"
+   },
+   {
+    "expect": "Bob",
+    "op": "get",
+    "path": "/user/name"
+   }
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "Setting a new key on an existing object adds it.",
+  "features": [
+   "F-CORE-17"
+  ],
+  "initial": {
+   "items": [
+    "a",
+    "b",
+    "c"
+   ],
+   "user": {
+    "name": "Alice",
+    "settings": {
+     "theme": "dark"
+    }
+   }
+  },
+  "name": "test_data_model_sets_new_path",
+  "steps": [
+   {
+    "op": "set",
+    "path": "/user/age",
+    "value": 30
+   },
+   {
+    "expect": 30,
+    "op": "get",
+    "path": "/user/age"
+   }
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "Missing intermediate objects are created on write.",
+  "features": [
+   "F-CORE-18"
+  ],
+  "initial": {
+   "items": [
+    "a",
+    "b",
+    "c"
+   ],
+   "user": {
+    "name": "Alice",
+    "settings": {
+     "theme": "dark"
+    }
+   }
+  },
+  "name": "test_data_model_creates_intermediate_objects",
+  "steps": [
+   {
+    "op": "set",
+    "path": "/a/b/c",
+    "value": "foo"
+   },
+   {
+    "expect": "foo",
+    "op": "get",
+    "path": "/a/b/c"
+   },
+   {
+    "expect_type": "object",
+    "op": "get",
+    "path": "/a/b"
+   }
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "Deleting a path removes the key from its parent object.",
+  "features": [
+   "F-CORE-03"
+  ],
+  "initial": {
+   "items": [
+    "a",
+    "b",
+    "c"
+   ],
+   "user": {
+    "name": "Alice",
+    "settings": {
+     "theme": "dark"
+    }
+   }
+  },
+  "name": "test_data_model_delete_removes_key",
+  "steps": [
+   {
+    "op": "delete",
+    "path": "/user/name"
+   },
+   {
+    "expect_absent": true,
+    "op": "get",
+    "path": "/user/name"
+   },
+   {
+    "expect": {
+     "settings": {
+      "theme": "dark"
+     }
+    },
+    "op": "get",
+    "path": "/user"
+   }
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "Writing a numeric segment into a missing path creates a list.",
+  "initial": {
+   "items": [
+    "a",
+    "b",
+    "c"
+   ],
+   "user": {
+    "name": "Alice",
+    "settings": {
+     "theme": "dark"
+    }
+   }
+  },
+  "name": "test_data_model_list_set_and_get",
+  "steps": [
+   {
+    "op": "set",
+    "path": "/list/0",
+    "value": "hello"
+   },
+   {
+    "expect": "hello",
+    "op": "get",
+    "path": "/list/0"
+   },
+   {
+    "expect_type": "list",
+    "op": "get",
+    "path": "/list"
+   }
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "Writing successive indices appends to a list.",
+  "initial": {
+   "items": [
+    "a",
+    "b",
+    "c"
+   ],
+   "user": {
+    "name": "Alice",
+    "settings": {
+     "theme": "dark"
+    }
+   }
+  },
+  "name": "test_data_model_list_append",
+  "steps": [
+   {
+    "op": "set",
+    "path": "/list/0",
+    "value": "hello"
+   },
+   {
+    "op": "set",
+    "path": "/list/1",
+    "value": "world"
+   },
+   {
+    "expect": [
+     "hello",
+     "world"
+    ],
+    "op": "get",
+    "path": "/list"
+   }
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "Writing an existing index replaces that element.",
+  "initial": {
+   "items": [
+    "a",
+    "b",
+    "c"
+   ],
+   "user": {
+    "name": "Alice",
+    "settings": {
+     "theme": "dark"
+    }
+   }
+  },
+  "name": "test_data_model_list_update_index",
+  "steps": [
+   {
+    "op": "set",
+    "path": "/items/1",
+    "value": "updated"
+   },
+   {
+    "expect": [
+     "a",
+     "updated",
+     "c"
+    ],
+    "op": "get",
+    "path": "/items"
+   }
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "Auto-vivification picks a list or an object based on the next segment.",
+  "initial": {
+   "items": [
+    "a",
+    "b",
+    "c"
+   ],
+   "user": {
+    "name": "Alice",
+    "settings": {
+     "theme": "dark"
+    }
+   }
+  },
+  "name": "test_data_model_creates_nested_structures",
+  "steps": [
+   {
+    "op": "set",
+    "path": "/a/b/0/c",
+    "value": 123
+   },
+   {
+    "expect": 123,
+    "op": "get",
+    "path": "/a/b/0/c"
+   },
+   {
+    "expect_type": "list",
+    "op": "get",
+    "path": "/a/b"
+   },
+   {
+    "expect_type": "object",
+    "op": "get",
+    "path": "/a/b/0"
+   },
+   {
+    "op": "set",
+    "path": "/x/y/z",
+    "value": "hello"
+   },
+   {
+    "expect": "hello",
+    "op": "get",
+    "path": "/x/y/z"
+   },
+   {
+    "op": "set",
+    "path": "/nestedList/0/0",
+    "value": "inner"
+   },
+   {
+    "expect": "inner",
+    "op": "get",
+    "path": "/nestedList/0/0"
+   },
+   {
+    "expect_type": "list",
+    "op": "get",
+    "path": "/nestedList"
+   },
+   {
+    "expect_type": "list",
+    "op": "get",
+    "path": "/nestedList/0"
+   }
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "Out of range and non numeric list indices resolve to no value on read.",
+  "initial": {
+   "items": [
+    "a",
+    "b",
+    "c"
+   ],
+   "user": {
+    "name": "Alice",
+    "settings": {
+     "theme": "dark"
+    }
+   }
+  },
+  "name": "test_data_model_get_out_of_range_index",
+  "steps": [
+   {
+    "expect_absent": true,
+    "op": "get",
+    "path": "/items/99"
+   },
+   {
+    "expect_absent": true,
+    "op": "get",
+    "path": "/items/-1"
+   },
+   {
+    "expect_absent": true,
+    "op": "get",
+    "path": "/items/invalid"
+   }
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "A trailing slash is not a distinct path.",
+  "initial": {
+   "items": [
+    "a",
+    "b",
+    "c"
+   ],
+   "user": {
+    "name": "Alice",
+    "settings": {
+     "theme": "dark"
+    }
+   }
+  },
+  "name": "test_data_model_normalizes_trailing_slash",
+  "steps": [
+   {
+    "expect_notified": [
+     "/foo"
+    ],
+    "op": "set",
+    "path": "/foo/",
+    "value": "bar"
+   },
+   {
+    "expect": "bar",
+    "op": "get",
+    "path": "/foo/"
+   },
+   {
+    "expect": "bar",
+    "op": "get",
+    "path": "/foo"
+   }
+  ],
+  "watch": [
+   "/foo"
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "Setting the root path replaces the whole model.",
+  "features": [
+   "F-CORE-03"
+  ],
+  "initial": {
+   "items": [
+    "a",
+    "b",
+    "c"
+   ],
+   "user": {
+    "name": "Alice",
+    "settings": {
+     "theme": "dark"
+    }
+   }
+  },
+  "name": "test_data_model_replaces_root",
+  "steps": [
+   {
+    "expect_notified": [
+     "/"
+    ],
+    "expect_values": {
+     "/": {
+      "newRoot": "foo"
+     }
+    },
+    "op": "set",
+    "path": "/",
+    "value": {
+     "newRoot": "foo"
+    }
+   },
+   {
+    "expect": {
+     "newRoot": "foo"
+    },
+    "op": "get",
+    "path": ""
+   }
+  ],
+  "watch": [
+   "/",
+   "/unrelated"
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "A ~1 escape addresses a key containing a slash (RFC 6901).",
+  "initial": {
+   "items": [
+    "a",
+    "b",
+    "c"
+   ],
+   "user": {
+    "name": "Alice",
+    "settings": {
+     "theme": "dark"
+    }
+   }
+  },
+  "name": "test_data_model_escaped_slash",
+  "steps": [
+   {
+    "op": "set",
+    "path": "/user/detailed~1info",
+    "value": "some info"
+   },
+   {
+    "expect": "some info",
+    "op": "get",
+    "path": "/user/detailed~1info"
+   },
+   {
+    "expect": {
+     "detailed/info": "some info",
+     "name": "Alice",
+     "settings": {
+      "theme": "dark"
+     }
+    },
+    "op": "get",
+    "path": "/user"
+   }
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "A ~0 escape addresses a key containing a tilde (RFC 6901).",
+  "initial": {
+   "items": [
+    "a",
+    "b",
+    "c"
+   ],
+   "user": {
+    "name": "Alice",
+    "settings": {
+     "theme": "dark"
+    }
+   }
+  },
+  "name": "test_data_model_escaped_tilde",
+  "steps": [
+   {
+    "op": "set",
+    "path": "/user/profile~0name",
+    "value": "profile~name"
+   },
+   {
+    "expect": "profile~name",
+    "op": "get",
+    "path": "/user/profile~0name"
+   },
+   {
+    "expect": {
+     "name": "Alice",
+     "profile~name": "profile~name",
+     "settings": {
+      "theme": "dark"
+     }
+    },
+    "op": "get",
+    "path": "/user"
+   }
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "Both escapes may appear in one segment.",
+  "initial": {
+   "items": [
+    "a",
+    "b",
+    "c"
+   ],
+   "user": {
+    "name": "Alice",
+    "settings": {
+     "theme": "dark"
+    }
+   }
+  },
+  "name": "test_data_model_escaped_mixed",
+  "steps": [
+   {
+    "op": "set",
+    "path": "/user/a~0b~1c",
+    "value": "value"
+   },
+   {
+    "expect": "value",
+    "op": "get",
+    "path": "/user/a~0b~1c"
+   },
+   {
+    "expect": {
+     "a~b/c": "value",
+     "name": "Alice",
+     "settings": {
+      "theme": "dark"
+     }
+    },
+    "op": "get",
+    "path": "/user"
+   }
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "A ~01 sequence decodes to ~1, not to a slash.",
+  "initial": {
+   "items": [
+    "a",
+    "b",
+    "c"
+   ],
+   "user": {
+    "name": "Alice",
+    "settings": {
+     "theme": "dark"
+    }
+   }
+  },
+  "name": "test_data_model_escape_order",
+  "steps": [
+   {
+    "op": "set",
+    "path": "/user/a~01b",
+    "value": "value"
+   },
+   {
+    "expect": "value",
+    "op": "get",
+    "path": "/user/a~01b"
+   },
+   {
+    "expect": {
+     "a~1b": "value",
+     "name": "Alice",
+     "settings": {
+      "theme": "dark"
+     }
+    },
+    "op": "get",
+    "path": "/user"
+   }
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "Writing through a primitive intermediate segment is an error.",
+  "initial": {
+   "items": [
+    "a",
+    "b",
+    "c"
+   ],
+   "user": {
+    "name": "Alice",
+    "settings": {
+     "theme": "dark"
+    }
+   }
+  },
+  "name": "test_data_model_rejects_write_through_primitive",
+  "steps": [
+   {
+    "op": "set",
+    "path": "/user/name",
+    "value": "not an object"
+   },
+   {
+    "expect_error": {
+     "category": "DataError",
+     "message": "Cannot set path"
+    },
+    "op": "set",
+    "path": "/user/name/first",
+    "value": "Alice"
+   }
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "Writing through a primitive list element is an error.",
+  "initial": {
+   "items": [
+    "a",
+    "b",
+    "c"
+   ],
+   "user": {
+    "name": "Alice",
+    "settings": {
+     "theme": "dark"
+    }
+   }
+  },
+  "name": "test_data_model_rejects_write_through_list_primitive",
+  "steps": [
+   {
+    "expect_error": {
+     "category": "DataError",
+     "message": "Cannot set path"
+    },
+    "op": "set",
+    "path": "/items/0/foo",
+    "value": "bar"
+   }
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "A non numeric segment cannot address a list element on write.",
+  "initial": {
+   "items": [
+    "a",
+    "b",
+    "c"
+   ],
+   "user": {
+    "name": "Alice",
+    "settings": {
+     "theme": "dark"
+    }
+   }
+  },
+  "name": "test_data_model_rejects_non_numeric_list_segment",
+  "steps": [
+   {
+    "expect_error": {
+     "category": "DataError",
+     "message": "non-numeric segment"
+    },
+    "op": "set",
+    "path": "/items/foo",
+    "value": "bar"
+   }
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "A non numeric intermediate segment cannot address a list element.",
+  "initial": {
+   "items": [
+    "a",
+    "b",
+    "c"
+   ],
+   "user": {
+    "name": "Alice",
+    "settings": {
+     "theme": "dark"
+    }
+   }
+  },
+  "name": "test_data_model_rejects_non_numeric_list_segment_intermediate",
+  "steps": [
+   {
+    "expect_error": {
+     "category": "DataError",
+     "message": "non-numeric segment"
+    },
+    "op": "set",
+    "path": "/items/foo/bar",
+    "value": "value"
+   }
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "An observer fires when its own path is written.",
+  "features": [
+   "F-CORE-40"
+  ],
+  "initial": {
+   "items": [
+    "a",
+    "b",
+    "c"
+   ],
+   "user": {
+    "name": "Alice",
+    "settings": {
+     "theme": "dark"
+    }
+   }
+  },
+  "name": "test_data_model_notifies_exact_path",
+  "steps": [
+   {
+    "expect_notified": [
+     "/user/name"
+    ],
+    "expect_values": {
+     "/user/name": "Charlie"
+    },
+    "op": "set",
+    "path": "/user/name",
+    "value": "Charlie"
+   }
+  ],
+  "watch": [
+   "/user/name"
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "An observer on a container fires when a descendant is written.",
+  "features": [
+   "F-CORE-40"
+  ],
+  "initial": {
+   "items": [
+    "a",
+    "b",
+    "c"
+   ],
+   "user": {
+    "name": "Alice",
+    "settings": {
+     "theme": "dark"
+    }
+   }
+  },
+  "name": "test_data_model_notifies_ancestor",
+  "steps": [
+   {
+    "expect_notified": [
+     "/user"
+    ],
+    "expect_values": {
+     "/user": {
+      "name": "Dave",
+      "settings": {
+       "theme": "dark"
+      }
+     }
+    },
+    "op": "set",
+    "path": "/user/name",
+    "value": "Dave"
+   }
+  ],
+  "watch": [
+   "/user"
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "An observer on a leaf fires when an ancestor is replaced.",
+  "features": [
+   "F-CORE-40"
+  ],
+  "initial": {
+   "items": [
+    "a",
+    "b",
+    "c"
+   ],
+   "user": {
+    "name": "Alice",
+    "settings": {
+     "theme": "dark"
+    }
+   }
+  },
+  "name": "test_data_model_notifies_descendant",
+  "steps": [
+   {
+    "expect_notified": [
+     "/user/settings/theme"
+    ],
+    "expect_values": {
+     "/user/settings/theme": "light"
+    },
+    "op": "set",
+    "path": "/user/settings",
+    "value": {
+     "theme": "light"
+    }
+   }
+  ],
+  "watch": [
+   "/user/settings/theme"
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "A root observer fires on any write.",
+  "initial": {
+   "items": [
+    "a",
+    "b",
+    "c"
+   ],
+   "user": {
+    "name": "Alice",
+    "settings": {
+     "theme": "dark"
+    }
+   }
+  },
+  "name": "test_data_model_notifies_root_observer",
+  "steps": [
+   {
+    "expect_notified": [
+     "/"
+    ],
+    "op": "set",
+    "path": "/newProp",
+    "value": "test"
+   }
+  ],
+  "watch": [
+   "/"
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "A container observer sees the updated container value.",
+  "initial": {
+   "items": [
+    "a",
+    "b",
+    "c"
+   ],
+   "user": {
+    "name": "Alice",
+    "settings": {
+     "theme": "dark"
+    }
+   }
+  },
+  "name": "test_data_model_notifies_parent_on_child_write",
+  "steps": [
+   {
+    "op": "set",
+    "path": "/parent",
+    "value": {
+     "child": "initial"
+    }
+   },
+   {
+    "expect_values": {
+     "/parent": {
+      "child": "updated"
+     }
+    },
+    "op": "set",
+    "path": "/parent/child",
+    "value": "updated"
+   }
+  ],
+  "watch": [
+   "/parent"
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "An observer does not fire for an unrelated path.",
+  "features": [
+   "F-CORE-40"
+  ],
+  "initial": {
+   "a": 1,
+   "b": 2
+  },
+  "name": "test_data_model_does_not_notify_unrelated",
+  "steps": [
+   {
+    "expect_notified": [],
+    "op": "set",
+    "path": "/a",
+    "value": 99
+   }
+  ],
+  "watch": [
+   "/b"
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "A sibling whose name merely shares a prefix is not a descendant.",
+  "features": [
+   "F-CORE-40"
+  ],
+  "initial": {
+   "foo": 1,
+   "foobar": 2
+  },
+  "name": "test_data_model_does_not_notify_prefix_sibling",
+  "steps": [
+   {
+    "expect_notified": [
+     "/foo"
+    ],
+    "op": "set",
+    "path": "/foo",
+    "value": 99
+   }
+  ],
+  "watch": [
+   "/foo",
+   "/foobar"
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "Every observer on a path is notified.",
+  "initial": {
+   "items": [
+    "a",
+    "b",
+    "c"
+   ],
+   "user": {
+    "name": "Alice",
+    "settings": {
+     "theme": "dark"
+    }
+   }
+  },
+  "name": "test_data_model_multiple_observers_same_path",
+  "steps": [
+   {
+    "expect_notified": [
+     "/user/name",
+     "/user/name"
+    ],
+    "expect_values": {
+     "/user/name": "Eve"
+    },
+    "op": "set",
+    "path": "/user/name",
+    "value": "Eve"
+   }
+  ],
+  "watch": [
+   "/user/name",
+   "/user/name"
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "Observing a path that does not exist yet starts empty and fires on creation.",
+  "initial": {
+   "items": [
+    "a",
+    "b",
+    "c"
+   ],
+   "user": {
+    "name": "Alice",
+    "settings": {
+     "theme": "dark"
+    }
+   }
+  },
+  "name": "test_data_model_observe_absent_path",
+  "steps": [
+   {
+    "expect_absent": true,
+    "op": "get",
+    "path": "/non/existent"
+   },
+   {
+    "expect_notified": [
+     "/non/existent"
+    ],
+    "expect_values": {
+     "/non/existent": "exists now"
+    },
+    "op": "set",
+    "path": "/non/existent",
+    "value": "exists now"
+   }
+  ],
+  "watch": [
+   "/non/existent"
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "Disposing the model detaches every observer.",
+  "features": [
+   "F-CORE-40"
+  ],
+  "initial": {
+   "items": [
+    "a",
+    "b",
+    "c"
+   ],
+   "user": {
+    "name": "Alice",
+    "settings": {
+     "theme": "dark"
+    }
+   }
+  },
+  "name": "test_data_model_stops_notifying_after_dispose",
+  "steps": [
+   {
+    "op": "dispose"
+   },
+   {
+    "expect_notified": [],
+    "op": "set",
+    "path": "/foo",
+    "value": "bar"
+   }
+  ],
+  "watch": [
+   "/"
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "An observer on a descendant path does not fire when an ancestor is rewritten but the observer's own value is still absent.",
+  "name": "test_data_model_does_not_notify_unchanged_descendant",
+  "steps": [
+   {
+    "expect_notified": [],
+    "op": "set",
+    "path": "/a",
+    "value": {
+     "c": 1
+    }
+   }
+  ],
+  "watch": [
+   "/a/b"
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "Writing a path the value it already holds does not fire its observers.",
+  "initial": {
+   "k": "v"
+  },
+  "name": "test_data_model_does_not_notify_same_value_rewrite",
+  "steps": [
+   {
+    "expect_notified": [],
+    "op": "set",
+    "path": "/k",
+    "value": "v"
+   },
+   {
+    "expect_notified": [
+     "/k"
+    ],
+    "op": "set",
+    "path": "/k",
+    "value": "w"
+   }
+  ],
+  "watch": [
+   "/k"
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "Deleting a child property notifies both the child path and ancestor containers.",
+  "initial": {
+   "user": {
+    "name": "Alice",
+    "settings": {
+     "theme": "dark"
+    }
+   }
+  },
+  "name": "test_data_model_reactivity_child_deletion_notifies_parent_and_child",
+  "steps": [
+   {
+    "expect_notified": [
+     "/user",
+     "/user/name"
+    ],
+    "expect_values": {
+     "/user": {
+      "settings": {
+       "theme": "dark"
+      }
+     }
+    },
+    "op": "delete",
+    "path": "/user/name"
+   },
+   {
+    "expect_absent": true,
+    "op": "get",
+    "path": "/user/name"
+   }
+  ],
+  "watch": [
+   "/user",
+   "/user/name"
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "Updating an array element notifies both the element observer and the array observer.",
+  "initial": {
+   "items": [
+    "a",
+    "b",
+    "c"
+   ]
+  },
+  "name": "test_data_model_reactivity_array_element_update_notifies_array",
+  "steps": [
+   {
+    "expect_notified": [
+     "/items",
+     "/items/1"
+    ],
+    "expect_values": {
+     "/items": [
+      "a",
+      "updated",
+      "c"
+     ],
+     "/items/1": "updated"
+    },
+    "op": "set",
+    "path": "/items/1",
+    "value": "updated"
+   }
+  ],
+  "watch": [
+   "/items",
+   "/items/1"
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "Deleting a parent container notifies observers on nested descendant paths whose values become absent.",
+  "initial": {
+   "user": {
+    "settings": {
+     "theme": "dark"
+    }
+   }
+  },
+  "name": "test_data_model_reactivity_ancestor_deletion_notifies_descendants",
+  "steps": [
+   {
+    "expect_notified": [
+     "/user",
+     "/user/settings",
+     "/user/settings/theme"
+    ],
+    "op": "delete",
+    "path": "/user"
+   },
+   {
+    "expect_absent": true,
+    "op": "get",
+    "path": "/user/settings/theme"
+   }
+  ],
+  "watch": [
+   "/user",
+   "/user/settings",
+   "/user/settings/theme"
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "Deleting a list index past the end of the list leaves the list unchanged rather than padding it out to that index.",
+  "initial": {
+   "items": [
+    "a",
+    "b",
+    "c"
+   ]
+  },
+  "name": "test_data_model_delete_out_of_range_list_index_is_noop",
+  "steps": [
+   {
+    "op": "delete",
+    "path": "/items/10"
+   },
+   {
+    "expect": [
+     "a",
+     "b",
+     "c"
+    ],
+    "op": "get",
+    "path": "/items"
+   }
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "Replacing the root notifies observers on descendant paths whose values change or become absent.",
+  "initial": {
+   "stale": "present",
+   "user": {
+    "name": "Alice"
+   }
+  },
+  "name": "test_data_model_notifies_descendant_on_root_replacement",
+  "steps": [
+   {
+    "expect_notified": [
+     "/user/name",
+     "/stale"
+    ],
+    "expect_values": {
+     "/user/name": "Bob"
+    },
+    "op": "set",
+    "path": "/",
+    "value": {
+     "user": {
+      "name": "Bob"
+     }
+    }
+   },
+   {
+    "expect_absent": true,
+    "op": "get",
+    "path": "/stale"
+   }
+  ],
+  "watch": [
+   "/user/name",
+   "/stale"
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "Paths containing __proto__, constructor, or prototype are rejected on both read and write with DataError.",
+  "initial": {
+   "user": {
+    "name": "Alice"
+   }
+  },
+  "name": "test_data_model_rejects_forbidden_path_segments",
+  "steps": [
+   {
+    "expect_error": {
+     "category": "DataError",
+     "message": "Forbidden path segment"
+    },
+    "op": "set",
+    "path": "/__proto__/polluted",
+    "value": "hacked"
+   },
+   {
+    "expect_error": {
+     "category": "DataError",
+     "message": "Forbidden path segment"
+    },
+    "op": "get",
+    "path": "/__proto__/polluted"
+   },
+   {
+    "expect_error": {
+     "category": "DataError",
+     "message": "Forbidden path segment"
+    },
+    "op": "set",
+    "path": "/constructor/prototype/polluted",
+    "value": "hacked"
+   },
+   {
+    "expect_error": {
+     "category": "DataError",
+     "message": "Forbidden path segment"
+    },
+    "op": "get",
+    "path": "/constructor/prototype/polluted"
+   },
+   {
+    "expect_error": {
+     "category": "DataError",
+     "message": "Forbidden path segment"
+    },
+    "op": "set",
+    "path": "/user/prototype/polluted",
+    "value": "hacked"
+   },
+   {
+    "expect_error": {
+     "category": "DataError",
+     "message": "Forbidden path segment"
+    },
+    "op": "get",
+    "path": "/user/prototype/polluted"
+   }
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "Unset keys like toString, valueOf, and hasOwnProperty are absent on read, and can be written and read back as ordinary keys.",
+  "initial": {},
+  "name": "test_data_model_allows_own_properties_named_after_object_methods",
+  "steps": [
+   {
+    "expect_absent": true,
+    "op": "get",
+    "path": "/toString"
+   },
+   {
+    "expect_absent": true,
+    "op": "get",
+    "path": "/valueOf"
+   },
+   {
+    "expect_absent": true,
+    "op": "get",
+    "path": "/hasOwnProperty"
+   },
+   {
+    "op": "set",
+    "path": "/toString",
+    "value": "custom toString"
+   },
+   {
+    "expect": "custom toString",
+    "op": "get",
+    "path": "/toString"
+   },
+   {
+    "op": "set",
+    "path": "/valueOf/nested",
+    "value": "custom valueOf"
+   },
+   {
+    "expect": "custom valueOf",
+    "op": "get",
+    "path": "/valueOf/nested"
+   }
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "Deleting a deep path that does not exist is a no-op that neither vivifies intermediate containers nor notifies observers.",
+  "initial": {},
+  "name": "test_data_model_delete_absent_deep_path_is_noop",
+  "steps": [
+   {
+    "expect_notified": [],
+    "op": "delete",
+    "path": "/nonexistent/child/path"
+   },
+   {
+    "expect": {},
+    "op": "get",
+    "path": "/"
+   },
+   {
+    "expect_absent": true,
+    "op": "get",
+    "path": "/nonexistent"
+   }
+  ],
+  "watch": [
+   "/",
+   "/nonexistent"
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "Writing an index past the current end of a list pads intermediate positions with null/absent values.",
+  "initial": {},
+  "name": "test_data_model_sparse_list_write_pads_with_null",
+  "steps": [
+   {
+    "op": "set",
+    "path": "/data/lists/1/value",
+    "value": 42
+   },
+   {
+    "expect": 42,
+    "op": "get",
+    "path": "/data/lists/1/value"
+   },
+   {
+    "expect_absent": true,
+    "op": "get",
+    "path": "/data/lists/0"
+   },
+   {
+    "expect_type": "list",
+    "op": "get",
+    "path": "/data/lists"
+   }
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "List indices exceeding the maximum supported bound (10000) are rejected with DataError.",
+  "initial": {
+   "items": [
+    "a",
+    "b",
+    "c"
+   ]
+  },
+  "name": "test_data_model_rejects_excessive_list_index",
+  "steps": [
+   {
+    "op": "set",
+    "path": "/items/10000",
+    "value": "max_element"
+   },
+   {
+    "expect": "max_element",
+    "op": "get",
+    "path": "/items/10000"
+   },
+   {
+    "expect_error": {
+     "category": "DataError"
+    },
+    "op": "set",
+    "path": "/items/10001",
+    "value": "x"
+   },
+   {
+    "expect_error": {
+     "category": "DataError"
+    },
+    "op": "set",
+    "path": "/items/999999999",
+    "value": "x"
+   },
+   {
+    "expect_error": {
+     "category": "DataError"
+    },
+    "op": "set",
+    "path": "/items/10001/name",
+    "value": "x"
+   },
+   {
+    "expect_error": {
+     "category": "DataError"
+    },
+    "op": "set",
+    "path": "/newArray/10000000",
+    "value": "x"
+   },
+   {
+    "expect_error": {
+     "category": "DataError"
+    },
+    "op": "set",
+    "path": "/newArray/10000000/field",
+    "value": "x"
+   }
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "Leading-zero list indices (RFC 6901 §4) resolve to absent on read and raise DataError on write.",
+  "initial": {
+   "items": [
+    "a",
+    "b",
+    "c"
+   ]
+  },
+  "name": "test_data_model_rejects_leading_zero_list_index",
+  "steps": [
+   {
+    "expect_absent": true,
+    "op": "get",
+    "path": "/items/01"
+   },
+   {
+    "expect_error": {
+     "category": "DataError",
+     "message": "non-numeric segment"
+    },
+    "op": "set",
+    "path": "/items/01",
+    "value": "value"
+   },
+   {
+    "expect_error": {
+     "category": "DataError",
+     "message": "non-numeric segment"
+    },
+    "op": "set",
+    "path": "/items/01/nested",
+    "value": "value"
+   }
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "Writing a child path when the root itself holds a primitive (including falsy primitives) raises DataError and leaves the root intact.",
+  "initial": {},
+  "name": "test_data_model_rejects_write_through_primitive_root",
+  "steps": [
+   {
+    "op": "set",
+    "path": "/",
+    "value": 1
+   },
+   {
+    "expect_error": {
+     "category": "DataError",
+     "message": "Cannot set path"
+    },
+    "op": "set",
+    "path": "/a",
+    "value": 2
+   },
+   {
+    "expect": 1,
+    "op": "get",
+    "path": "/"
+   },
+   {
+    "op": "set",
+    "path": "/",
+    "value": false
+   },
+   {
+    "expect_error": {
+     "category": "DataError",
+     "message": "Cannot set path"
+    },
+    "op": "set",
+    "path": "/a",
+    "value": 2
+   },
+   {
+    "expect": false,
+    "op": "get",
+    "path": "/"
+   },
+   {
+    "op": "set",
+    "path": "/",
+    "value": 0
+   },
+   {
+    "expect_error": {
+     "category": "DataError",
+     "message": "Cannot set path"
+    },
+    "op": "set",
+    "path": "/a",
+    "value": 2
+   },
+   {
+    "expect": 0,
+    "op": "get",
+    "path": "/"
+   },
+   {
+    "op": "set",
+    "path": "/",
+    "value": ""
+   },
+   {
+    "expect_error": {
+     "category": "DataError",
+     "message": "Cannot set path"
+    },
+    "op": "set",
+    "path": "/a",
+    "value": 2
+   },
+   {
+    "expect": "",
+    "op": "get",
+    "path": "/"
+   }
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "Writing through an explicit null value in an object or list replaces the null slot with a container.",
+  "features": [
+   "F-CORE-18"
+  ],
+  "initial": {
+   "counts": [
+    null
+   ],
+   "user": null
+  },
+  "name": "test_data_model_set_through_null_placeholder_vivifies",
+  "steps": [
+   {
+    "op": "set",
+    "path": "/user/name",
+    "value": "Bob"
+   },
+   {
+    "op": "set",
+    "path": "/counts/0/total",
+    "value": 1
+   },
+   {
+    "expect": "Bob",
+    "op": "get",
+    "path": "/user/name"
+   },
+   {
+    "expect": 1,
+    "op": "get",
+    "path": "/counts/0/total"
+   }
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "Multiple or trailing slashes in a path are collapsed into canonical segments on read, write, and watch.",
+  "initial": {},
+  "name": "test_data_model_normalizes_empty_path_segments",
+  "steps": [
+   {
+    "expect_notified": [
+     "/a/b"
+    ],
+    "expect_values": {
+     "/a/b": "val"
+    },
+    "op": "set",
+    "path": "//a///b//",
+    "value": "val"
+   },
+   {
+    "expect": "val",
+    "op": "get",
+    "path": "/a/b"
+   },
+   {
+    "expect": "val",
+    "op": "get",
+    "path": "//a///b//"
+   },
+   {
+    "expect": {
+     "a": {
+      "b": "val"
+     }
+    },
+    "op": "get",
+    "path": "///"
+   }
+  ],
+  "watch": [
+   "/a/b"
+  ]
+ },
+ {
+  "action": "data_model",
+  "catalog": {
+   "protocolVersion": "v0.9"
+  },
+  "description": "Mutating an object passed to set after the call does not alter the committed data model state or trigger watcher notifications.",
+  "initial": {},
+  "name": "test_data_model_set_defensive_copy_isolates_caller_mutation",
+  "steps": [
+   {
+    "expect_notified": [
+     "/profile",
+     "/profile/name"
+    ],
+    "expect_values": {
+     "/profile": {
+      "name": "Alice",
+      "roles": [
+       "admin"
+      ]
+     },
+     "/profile/name": "Alice"
+    },
+    "op": "set",
+    "path": "/profile",
+    "value": {
+     "name": "Alice",
+     "roles": [
+      "admin"
+     ]
+    }
+   },
+   {
+    "expect_notified": [],
+    "op": "mutate_input",
+    "path": "/name",
+    "value": "Mallory"
+   },
+   {
+    "expect": {
+     "name": "Alice",
+     "roles": [
+      "admin"
+     ]
+    },
+    "op": "get",
+    "path": "/profile"
+   },
+   {
+    "expect": "Alice",
+    "op": "get",
+    "path": "/profile/name"
+   }
+  ],
+  "watch": [
+   "/profile",
+   "/profile/name"
+  ]
+ }
+]

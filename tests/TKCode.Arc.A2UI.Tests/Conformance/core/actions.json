@@ -1,0 +1,489 @@
+[
+ {
+  "action": "dispatch_action",
+  "actionPayload": {
+   "event": {
+    "name": "submit"
+   }
+  },
+  "description": "Verifies dispatching a basic server event with name only.",
+  "expectDispatched": {
+   "name": "submit"
+  },
+  "features": [
+   "F-CORE-23"
+  ],
+  "name": "test_action_event_basic"
+ },
+ {
+  "action": "dispatch_action",
+  "actionPayload": {
+   "event": {
+    "context": {
+     "active": true,
+     "limit": 10,
+     "query": "books"
+    },
+    "name": "filter_change"
+   }
+  },
+  "description": "Verifies event action preserves literal context properties.",
+  "expectDispatched": {
+   "context": {
+    "active": true,
+    "limit": 10,
+    "query": "books"
+   },
+   "name": "filter_change"
+  },
+  "features": [
+   "F-CORE-23"
+  ],
+  "name": "test_action_event_with_literal_context"
+ },
+ {
+  "action": "dispatch_action",
+  "actionPayload": {
+   "event": {
+    "context": {
+     "call": "external",
+     "path": "/custom/file.txt",
+     "regular": "data"
+    },
+    "name": "save"
+   }
+  },
+  "description": "Verifies context keys literally named 'path' and 'call' are preserved as literal keys (D1).",
+  "expectDispatched": {
+   "context": {
+    "call": "external",
+    "path": "/custom/file.txt",
+    "regular": "data"
+   },
+   "name": "save"
+  },
+  "features": [
+   "F-CORE-16",
+   "F-CORE-23"
+  ],
+  "name": "test_action_event_context_literal_keys_path_and_call"
+ },
+ {
+  "action": "dispatch_action",
+  "actionPayload": {
+   "event": {
+    "context": {
+     "role": {
+      "path": "/user/role"
+     },
+     "staticKey": "constant",
+     "userId": {
+      "path": "/user/id"
+     }
+    },
+    "name": "user_action"
+   }
+  },
+  "dataModel": {
+   "user": {
+    "id": "u_123",
+    "role": "admin"
+   }
+  },
+  "description": "Verifies event action dynamically resolves bound context values from DataModel.",
+  "expectDispatched": {
+   "context": {
+    "role": "admin",
+    "staticKey": "constant",
+    "userId": "u_123"
+   },
+   "name": "user_action"
+  },
+  "features": [
+   "F-CORE-14",
+   "F-CORE-23"
+  ],
+  "name": "test_action_event_with_data_binding"
+ },
+ {
+  "action": "dispatch_action",
+  "actionPayload": {
+   "event": {
+    "context": {
+     "selectedId": {
+      "path": "id"
+     },
+     "selectedTitle": {
+      "path": "title"
+     }
+    },
+    "name": "select_item"
+   }
+  },
+  "dataModel": {
+   "items": [
+    {
+     "id": "id_0",
+     "title": "Item 0"
+    },
+    {
+     "id": "id_1",
+     "title": "Item 1"
+    }
+   ]
+  },
+  "description": "Verifies event action resolves relative data bindings against the provided scope.",
+  "expectDispatched": {
+   "context": {
+    "selectedId": "id_1",
+    "selectedTitle": "Item 1"
+   },
+   "name": "select_item"
+  },
+  "features": [
+   "F-CORE-15",
+   "F-CORE-23"
+  ],
+  "name": "test_action_event_with_relative_scope",
+  "scope": "/items/1"
+ },
+ {
+  "action": "dispatch_action",
+  "actionPayload": {
+   "event": {
+    "context": {
+     "score": 5
+    },
+    "name": "feedback",
+    "userMessage": "User requested additional details"
+   }
+  },
+  "description": "Verifies event action preserves and dispatches userMessage.",
+  "expectDispatched": {
+   "context": {
+    "score": 5
+   },
+   "name": "feedback",
+   "userMessage": "User requested additional details"
+  },
+  "features": [
+   "F-CORE-23"
+  ],
+  "name": "test_action_event_with_user_message"
+ },
+ {
+  "action": "dispatch_action",
+  "actionPayload": {
+   "context": {
+    "target": "btn1"
+   },
+   "name": "click"
+  },
+  "description": "Verifies v0.9 direct action name shorthand is dispatched as an event.",
+  "expectDispatched": {
+   "context": {
+    "target": "btn1"
+   },
+   "name": "click"
+  },
+  "features": [
+   "F-CORE-23"
+  ],
+  "name": "test_action_direct_name_shorthand"
+ },
+ {
+  "action": "dispatch_action",
+  "actionPayload": {
+   "event": {
+    "context": {
+     "form": "signup"
+    },
+    "name": "submit"
+   }
+  },
+  "description": "Verifies that metadata passed to dispatchAction is attached to the dispatched action as action.metadata (v1.0 extension envelope).",
+  "expectDispatched": {
+   "context": {
+    "form": "signup"
+   },
+   "metadata": {
+    "extensions": {
+     "a2ui_experimental": {
+      "trace": 7
+     },
+     "com_example_attestation": "signed"
+    }
+   },
+   "name": "submit"
+  },
+  "features": [
+   "F-CORE-23"
+  ],
+  "metadata": {
+   "extensions": {
+    "a2ui_experimental": {
+     "trace": 7
+    },
+    "com_example_attestation": "signed"
+   }
+  },
+  "name": "test_action_event_with_dispatch_metadata",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "dispatch_action",
+  "actionPayload": {
+   "event": {
+    "name": "submit"
+   }
+  },
+  "description": "Verifies that an action dispatched without metadata carries no action.metadata envelope.",
+  "expectDispatched": {
+   "metadata": null,
+   "name": "submit"
+  },
+  "name": "test_action_event_without_dispatch_metadata_has_none",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "dispatch_action",
+  "actionPayload": {
+   "event": {
+    "name": "submit"
+   }
+  },
+  "description": "Verifies that dispatchAction rejects metadata whose extensions key is not a UAX 31 identifier and dispatches nothing.",
+  "expectError": {
+   "category": "ValidationError"
+  },
+  "metadata": {
+   "extensions": {
+    "com-example-attestation": "signed"
+   }
+  },
+  "name": "test_action_event_dispatch_metadata_invalid_uax31_key_error",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "dispatch_action",
+  "actionPayload": {
+   "event": {
+    "context": {
+     "escapedKey": {
+      "@@path": "/literal/not/bound"
+     },
+     "itemIndex": {
+      "@call": "@index"
+     },
+     "itemTitle": {
+      "@path": "title"
+     },
+     "oneBasedIndex": {
+      "@call": "@index",
+      "args": {
+       "offset": 1
+      }
+     },
+     "upperTitle": {
+      "@call": "formatString",
+      "args": {
+       "value": "Selected: ${title}"
+      }
+     }
+    },
+    "name": "item_selected"
+   }
+  },
+  "dataModel": {
+   "items": [
+    {
+     "title": "First"
+    },
+    {
+     "title": "Second"
+    }
+   ]
+  },
+  "description": "Verifies v1.0 @path and @call context bindings, @@ literal prefix unescaping, and @index inside template scope.",
+  "expectDispatched": {
+   "context": {
+    "escapedKey": {
+     "@path": "/literal/not/bound"
+    },
+    "itemIndex": 1,
+    "itemTitle": "Second",
+    "oneBasedIndex": 2,
+    "upperTitle": "Selected: Second"
+   },
+   "name": "item_selected",
+   "sourceComponentId": "row_btn",
+   "surfaceId": "main_surface",
+   "timestampIso8601": true
+  },
+  "name": "test_action_v10_event_with_at_path_and_at_call_context",
+  "protocolVersion": "1.0",
+  "scope": "/items/1",
+  "sourceComponentId": "row_btn",
+  "surfaceId": "main_surface"
+ },
+ {
+  "action": "dispatch_action",
+  "actionPayload": {
+   "event": {
+    "context": {
+     "author": {
+      "@path": "/user"
+     },
+     "call": "sync",
+     "path": "/documents/report.md"
+    },
+    "name": "save_document"
+   }
+  },
+  "dataModel": {
+   "user": "Ada"
+  },
+  "description": "Verifies v1.0 literal 'path' and 'call' keys inside event.context are preserved as literal keys through GenericBinder / NodeResolver without being misread as v0.9 bindings.",
+  "expectDispatched": {
+   "context": {
+    "author": "Ada",
+    "call": "sync",
+    "path": "/documents/report.md"
+   },
+   "name": "save_document",
+   "sourceComponentId": "save_btn",
+   "surfaceId": "main_surface",
+   "timestampIso8601": true
+  },
+  "name": "test_action_v10_event_context_literal_path_and_call_keys",
+  "protocolVersion": "1.0",
+  "sourceComponentId": "save_btn",
+  "surfaceId": "main_surface"
+ },
+ {
+  "action": "dispatch_action",
+  "actionPayload": {
+   "functionCall": {
+    "@call": "incrementCounter",
+    "args": {
+     "path": "/count",
+     "step": 2
+    }
+   }
+  },
+  "dataModel": {
+   "count": 1
+  },
+  "description": "Verifies a local functionCall action executes locally, mutates dataModel, and dispatches no outbound event (expectDispatched is null).",
+  "expectDataModel": {
+   "count": 3
+  },
+  "expectDispatched": null,
+  "name": "test_action_function_call_local_mutation_no_event_dispatched",
+  "protocolVersion": "1.0",
+  "sourceComponentId": "inc_btn",
+  "surfaceId": "main_surface"
+ },
+ {
+  "action": "dispatch_action",
+  "actionPayload": {
+   "functionCall": {
+    "@call": "openUrl",
+    "args": {
+     "url": "https://example.com"
+    }
+   }
+  },
+  "description": "Verifies openUrl functionCall action succeeds when userActivation is true and dispatches no outbound event.",
+  "expectDispatched": null,
+  "name": "test_action_function_call_open_url_with_user_activation_allowed",
+  "protocolVersion": "1.0",
+  "sourceComponentId": "link_btn",
+  "surfaceId": "main_surface",
+  "userActivation": true
+ },
+ {
+  "action": "dispatch_action",
+  "actionPayload": {
+   "functionCall": {
+    "@call": "openUrl",
+    "args": {
+     "url": "https://example.com"
+    }
+   }
+  },
+  "description": "Verifies openUrl functionCall action fails when userActivation is false and emits EXECUTION_ERROR / INVALID_ACTION on surface.onError.",
+  "expectDispatched": null,
+  "expectError": {
+   "message": "openUrl",
+   "surfaceId": "main_surface"
+  },
+  "name": "test_action_function_call_open_url_without_user_activation_denied",
+  "protocolVersion": "1.0",
+  "sourceComponentId": "link_btn",
+  "surfaceId": "main_surface",
+  "userActivation": false
+ },
+ {
+  "action": "dispatch_action",
+  "actionPayload": {
+   "event": {
+    "context": {
+     "foo": "bar"
+    }
+   }
+  },
+  "description": "Verifies dispatch_action with a missing event name emits INVALID_ACTION on surface.onError.",
+  "expectDispatched": null,
+  "expectError": {
+   "code": "INVALID_ACTION",
+   "surfaceId": "main_surface"
+  },
+  "name": "test_action_event_missing_name_error",
+  "protocolVersion": "1.0",
+  "sourceComponentId": "bad_btn",
+  "surfaceId": "main_surface"
+ },
+ {
+  "action": "dispatch_action",
+  "actionPayload": {
+   "event": {
+    "name": "submit",
+    "userMessage": 12345
+   }
+  },
+  "description": "Verifies dispatch_action with a non-string userMessage emits INVALID_ACTION on surface.onError.",
+  "expectDispatched": null,
+  "expectError": {
+   "code": "INVALID_ACTION",
+   "surfaceId": "main_surface"
+  },
+  "name": "test_action_event_non_string_user_message_error",
+  "protocolVersion": "1.0",
+  "sourceComponentId": "bad_msg_btn",
+  "surfaceId": "main_surface"
+ },
+ {
+  "action": "dispatch_action",
+  "actionPayload": {
+   "functionCall": {
+    "@call": "failingAction",
+    "args": {}
+   }
+  },
+  "description": "Verifies a failing local functionCall action emits EXECUTION_ERROR on surface.onError and dispatches no outbound event.",
+  "expectDispatched": null,
+  "expectError": {
+   "code": "EXECUTION_ERROR",
+   "surfaceId": "main_surface"
+  },
+  "features": [
+   "F-CORE-28",
+   "F-CORE-30"
+  ],
+  "name": "test_action_function_call_execution_error",
+  "protocolVersion": "1.0",
+  "sourceComponentId": "fail_btn",
+  "surfaceId": "main_surface"
+ }
+]

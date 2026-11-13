@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <!-- Trimming and Native AOT / WebAssembly: the analyzers report any reflection-based JSON or code. -->
+        <IsAotCompatible>true</IsAotCompatible>
+        <TargetFrameworks>$(ArcTargetFrameworks)</TargetFrameworks>
+        <AssemblyName>TKCode.Arc.A2UI</AssemblyName>
+        <RootNamespace>TKCode.Arc</RootNamespace>
+        <PackageId>TKCode.Arc.A2UI</PackageId>
+        <Description>A2UI 1.0 renderer for TKCode.Arc: reads the agent-to-user interface message stream, keeps surfaces, components and data models, evaluates bindings and functions, and draws the basic catalog and the Arc catalog with Arc controls.</Description>
+        <!-- TKCode.Arc and Core contain generated types with identical names. -->
+        <NoWarn>$(NoWarn);CS0436</NoWarn>
+        <ArcFoundationGenerator>true</ArcFoundationGenerator>
+        <!-- The Lucide generator compiles in the icons the basic catalog maps to (A2UIIcons). -->
+        <ArcLucideGenerator>true</ArcLucideGenerator>
+        <!-- Not packed until the renderer milestone (M3) ships its controls. -->
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="../TKCode.Arc/TKCode.Arc.csproj" />
+        <ProjectReference Include="../TKCode.Arc.Icons.Lucide/TKCode.Arc.Icons.Lucide.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <!-- Official A2UI 1.0 schemas (Apache-2.0, a2ui-project/a2ui@f2c410ae). -->
+        <EmbeddedResource Include="Protocol/Schemas/*.json" LogicalName="TKCode.Arc.A2UI.Schemas.%(Filename)%(Extension)" />
+    </ItemGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="TKCode.Arc.A2UI.Tests" />
+        <InternalsVisibleTo Include="TKCode.Arc.Gallery.Tests" />
+    </ItemGroup>
+</Project>

@@ -1,0 +1,617 @@
+[
+ {
+  "action": "validate",
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies CheckRule evaluation capturing dynamic ValidationResult object returned from custom validation function.",
+  "expect": {
+   "surfaces": {
+    "form_surface": {
+     "isValid": {
+      "root": false
+     },
+     "validationErrors": {
+      "root": [
+       "Please enter a valid email address (e.g. user@example.com)."
+      ]
+     },
+     "validationResult": {
+      "root": {
+       "code": "INVALID_EMAIL",
+       "message": "Please enter a valid email address (e.g. user@example.com).",
+       "severity": "error",
+       "valid": false
+      }
+     },
+     "validationResults": {
+      "root": [
+       {
+        "code": "INVALID_EMAIL",
+        "message": "Please enter a valid email address (e.g. user@example.com).",
+        "severity": "error",
+        "valid": false
+       }
+      ]
+     }
+    }
+   }
+  },
+  "features": [
+   "F-CORE-27"
+  ],
+  "name": "test_validation_result_dynamic_object_return",
+  "steps": [
+   {
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "basic",
+       "components": [
+        {
+         "@checks": [
+          {
+           "condition": {
+            "@call": "email",
+            "args": {
+             "value": {
+              "@path": "/email"
+             }
+            }
+           }
+          }
+         ],
+         "component": "TextField",
+         "id": "root",
+         "label": "Email",
+         "value": {
+          "@path": "/email"
+         }
+        }
+       ],
+       "dataModel": {
+        "email": "invalid-email-address"
+       },
+       "surfaceId": "form_surface"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "validate",
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies CheckRule evaluation when validation function returns primitive boolean, falling back to CheckRule message.",
+  "expect": {
+   "surfaces": {
+    "form_surface": {
+     "isValid": {
+      "root": false
+     },
+     "validationErrors": {
+      "root": [
+       "Must be 18 or older."
+      ]
+     },
+     "validationResult": {
+      "root": {
+       "message": "Must be 18 or older.",
+       "valid": false
+      }
+     },
+     "validationResults": {
+      "root": [
+       {
+        "message": "Must be 18 or older.",
+        "severity": "error",
+        "valid": false
+       }
+      ]
+     }
+    }
+   }
+  },
+  "features": [
+   "F-CORE-27"
+  ],
+  "name": "test_validation_result_boolean_fallback",
+  "steps": [
+   {
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "basic",
+       "components": [
+        {
+         "@checks": [
+          {
+           "condition": {
+            "@call": "numeric",
+            "args": {
+             "min": 18,
+             "value": {
+              "@path": "/age"
+             }
+            }
+           },
+           "message": "Must be 18 or older."
+          }
+         ],
+         "component": "TextField",
+         "id": "root",
+         "label": "Age",
+         "value": {
+          "@path": "/age"
+         }
+        }
+       ],
+       "dataModel": {
+        "age": 15
+       },
+       "surfaceId": "form_surface"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "validate",
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies that CheckRules returning severity warning or info populate validationResults while keeping isValid true and validationErrors empty.",
+  "expect": {
+   "surfaces": {
+    "form_surface": {
+     "isValid": {
+      "root": true
+     },
+     "validationErrors": {
+      "root": []
+     },
+     "validationResults": {
+      "root": [
+       {
+        "code": "WEAK_PASSWORD",
+        "message": "Password could be stronger.",
+        "severity": "warning",
+        "valid": false
+       },
+       {
+        "code": "PASSWORD_HINT",
+        "message": "Consider adding symbols.",
+        "severity": "info",
+        "valid": false
+       }
+      ]
+     }
+    }
+   }
+  },
+  "features": [
+   "F-CORE-27"
+  ],
+  "name": "test_validation_result_warning_and_info_non_blocking",
+  "steps": [
+   {
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "basic",
+       "components": [
+        {
+         "@checks": [
+          {
+           "condition": {
+            "@path": "/warningCheck"
+           }
+          },
+          {
+           "condition": {
+            "@path": "/infoCheck"
+           }
+          }
+         ],
+         "component": "TextField",
+         "id": "root",
+         "label": "Password",
+         "value": {
+          "@path": "/password"
+         }
+        }
+       ],
+       "dataModel": {
+        "infoCheck": {
+         "code": "PASSWORD_HINT",
+         "message": "Consider adding symbols.",
+         "severity": "info",
+         "valid": false
+        },
+        "password": "secret",
+        "warningCheck": {
+         "code": "WEAK_PASSWORD",
+         "message": "Password could be stronger.",
+         "severity": "warning",
+         "valid": false
+        }
+       },
+       "surfaceId": "form_surface"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "validate",
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies that a component with two failing error rules and one failing warning rule preserves declaration order in validationErrors and validationResults.",
+  "expect": {
+   "surfaces": {
+    "form_surface": {
+     "isValid": {
+      "root": false
+     },
+     "validationErrors": {
+      "root": [
+       "Must be a valid email address.",
+       "Email must be at least 10 characters."
+      ]
+     },
+     "validationResults": {
+      "root": [
+       {
+        "code": "INVALID_EMAIL",
+        "message": "Must be a valid email address.",
+        "severity": "error",
+        "valid": false
+       },
+       {
+        "code": "DOMAIN_WARNING",
+        "message": "External domain requires approval.",
+        "severity": "warning",
+        "valid": false
+       },
+       {
+        "message": "Email must be at least 10 characters.",
+        "severity": "error",
+        "valid": false
+       }
+      ]
+     }
+    }
+   }
+  },
+  "features": [
+   "F-CORE-27"
+  ],
+  "name": "test_validation_result_multiple_rules_preserve_order",
+  "steps": [
+   {
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "basic",
+       "components": [
+        {
+         "@checks": [
+          {
+           "condition": {
+            "@call": "email",
+            "args": {
+             "value": {
+              "@path": "/email"
+             }
+            }
+           },
+           "message": "Must be a valid email address."
+          },
+          {
+           "condition": {
+            "@path": "/warningCheck"
+           }
+          },
+          {
+           "condition": {
+            "@call": "length",
+            "args": {
+             "min": 10,
+             "value": {
+              "@path": "/email"
+             }
+            }
+           },
+           "message": "Email must be at least 10 characters."
+          }
+         ],
+         "component": "TextField",
+         "id": "root",
+         "label": "Corporate Email",
+         "value": {
+          "@path": "/email"
+         }
+        }
+       ],
+       "dataModel": {
+        "email": "bad",
+        "warningCheck": {
+         "code": "DOMAIN_WARNING",
+         "message": "External domain requires approval.",
+         "severity": "warning",
+         "valid": false
+        }
+       },
+       "surfaceId": "form_surface"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "validate",
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies that failing validation recovers reactively when updateDataModel provides a valid value in a subsequent step.",
+  "features": [
+   "F-CORE-27"
+  ],
+  "name": "test_validation_result_reactive_recovery_on_data_update",
+  "steps": [
+   {
+    "expect": {
+     "surfaces": {
+      "form_surface": {
+       "isValid": {
+        "root": false
+       },
+       "validationErrors": {
+        "root": [
+         "Please enter a valid email address (e.g. user@example.com)."
+        ]
+       },
+       "validationResults": {
+        "root": [
+         {
+          "code": "INVALID_EMAIL",
+          "message": "Please enter a valid email address (e.g. user@example.com).",
+          "severity": "error",
+          "valid": false
+         }
+        ]
+       }
+      }
+     }
+    },
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "basic",
+       "components": [
+        {
+         "@checks": [
+          {
+           "condition": {
+            "@call": "email",
+            "args": {
+             "value": {
+              "@path": "/email"
+             }
+            }
+           }
+          }
+         ],
+         "component": "TextField",
+         "id": "root",
+         "label": "Email",
+         "value": {
+          "@path": "/email"
+         }
+        }
+       ],
+       "dataModel": {
+        "email": "not-an-email"
+       },
+       "surfaceId": "form_surface"
+      },
+      "version": "1.0"
+     }
+    ]
+   },
+   {
+    "expect": {
+     "surfaces": {
+      "form_surface": {
+       "isValid": {
+        "root": true
+       },
+       "validationErrors": {
+        "root": []
+       },
+       "validationResults": {
+        "root": []
+       }
+      }
+     }
+    },
+    "payload": [
+     {
+      "updateDataModel": {
+       "path": "/email",
+       "surfaceId": "form_surface",
+       "value": "user@example.com"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "validate",
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies that ValidationResult objects returned by functions inside logical and, or, and not expressions are coerced via their .valid boolean property.",
+  "expect": {
+   "surfaces": {
+    "form_surface": {
+     "isValid": {
+      "and_field": false,
+      "not_field": true,
+      "or_field": true
+     },
+     "validationErrors": {
+      "and_field": [
+       "And check failed."
+      ],
+      "not_field": [],
+      "or_field": []
+     },
+     "validationResults": {
+      "and_field": [
+       {
+        "message": "And check failed.",
+        "severity": "error",
+        "valid": false
+       }
+      ],
+      "not_field": [],
+      "or_field": []
+     }
+    }
+   }
+  },
+  "features": [
+   "F-CORE-27"
+  ],
+  "name": "test_validation_result_coercion_in_logical_and_or_not",
+  "steps": [
+   {
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "basic",
+       "components": [
+        {
+         "children": [
+          "and_field",
+          "or_field",
+          "not_field"
+         ],
+         "component": "Column",
+         "id": "root"
+        },
+        {
+         "@checks": [
+          {
+           "condition": {
+            "@call": "and",
+            "args": {
+             "values": [
+              {
+               "@call": "email",
+               "args": {
+                "value": {
+                 "@path": "/email"
+                }
+               }
+              },
+              {
+               "@path": "/allowOverride"
+              }
+             ]
+            }
+           },
+           "message": "And check failed."
+          }
+         ],
+         "component": "TextField",
+         "id": "and_field",
+         "label": "And Field",
+         "value": {
+          "@path": "/email"
+         }
+        },
+        {
+         "@checks": [
+          {
+           "condition": {
+            "@call": "or",
+            "args": {
+             "values": [
+              {
+               "@call": "email",
+               "args": {
+                "value": {
+                 "@path": "/email"
+                }
+               }
+              },
+              {
+               "@path": "/allowOverride"
+              }
+             ]
+            }
+           },
+           "message": "Or check failed."
+          }
+         ],
+         "component": "TextField",
+         "id": "or_field",
+         "label": "Or Field",
+         "value": {
+          "@path": "/email"
+         }
+        },
+        {
+         "@checks": [
+          {
+           "condition": {
+            "@call": "not",
+            "args": {
+             "value": {
+              "@call": "email",
+              "args": {
+               "value": {
+                "@path": "/email"
+               }
+              }
+             }
+            }
+           },
+           "message": "Not check failed."
+          }
+         ],
+         "component": "TextField",
+         "id": "not_field",
+         "label": "Not Field",
+         "value": {
+          "@path": "/email"
+         }
+        }
+       ],
+       "dataModel": {
+        "allowOverride": true,
+        "email": "invalid-email"
+       },
+       "surfaceId": "form_surface"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ }
+]

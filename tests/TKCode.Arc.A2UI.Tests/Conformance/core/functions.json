@@ -1,0 +1,1900 @@
+[
+ {
+  "action": "validate",
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies formatDate TR35 token expansion (yyyy-MM-dd).",
+  "expect": {
+   "surfaces": {
+    "main": {
+     "components": {
+      "root": {
+       "component": "Text",
+       "text": "2026-09-04"
+      }
+     }
+    }
+   }
+  },
+  "features": [
+   "F-CORE-19",
+   "F-CORE-22"
+  ],
+  "name": "test_function_format_date_tr35_tokens",
+  "steps": [
+   {
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "basic",
+       "components": [
+        {
+         "component": "Text",
+         "id": "root",
+         "text": {
+          "@call": "formatDate",
+          "args": {
+           "format": "yyyy-MM-dd",
+           "value": "2026-09-04T12:00:00Z"
+          }
+         }
+        }
+       ],
+       "surfaceId": "main"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "validate",
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies formatCurrency with currency symbol, decimals, and grouping separators.",
+  "expect": {
+   "surfaces": {
+    "main": {
+     "components": {
+      "root": {
+       "component": "Text",
+       "text": "$1,234.50"
+      }
+     }
+    }
+   }
+  },
+  "features": [
+   "F-CORE-19",
+   "F-CORE-22"
+  ],
+  "name": "test_function_format_currency_locale_and_symbol",
+  "steps": [
+   {
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "basic",
+       "components": [
+        {
+         "component": "Text",
+         "id": "root",
+         "text": {
+          "@call": "formatCurrency",
+          "args": {
+           "currency": "USD",
+           "decimals": 2,
+           "value": 1234.5
+          }
+         }
+        }
+       ],
+       "surfaceId": "main"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "validate",
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies pluralize resolving CLDR categories (one, other).",
+  "expect": {
+   "surfaces": {
+    "main": {
+     "components": {
+      "t1": {
+       "component": "Text",
+       "text": "1 item"
+      },
+      "t2": {
+       "component": "Text",
+       "text": "5 items"
+      }
+     }
+    }
+   }
+  },
+  "features": [
+   "F-CORE-19",
+   "F-CORE-22"
+  ],
+  "name": "test_function_pluralize_categories",
+  "steps": [
+   {
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "basic",
+       "components": [
+        {
+         "children": [
+          "t1",
+          "t2"
+         ],
+         "component": "Column",
+         "id": "root"
+        },
+        {
+         "component": "Text",
+         "id": "t1",
+         "text": {
+          "@call": "pluralize",
+          "args": {
+           "one": "1 item",
+           "other": "items",
+           "value": 1
+          }
+         }
+        },
+        {
+         "component": "Text",
+         "id": "t2",
+         "text": {
+          "@call": "pluralize",
+          "args": {
+           "one": "1 item",
+           "other": "5 items",
+           "value": 5
+          }
+         }
+        }
+       ],
+       "surfaceId": "main"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "validate",
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies and, or, and not logical function evaluations.",
+  "expect": {
+   "surfaces": {
+    "main": {
+     "components": {
+      "t_and": {
+       "component": "Text",
+       "text": false
+      },
+      "t_not": {
+       "component": "Text",
+       "text": true
+      },
+      "t_or": {
+       "component": "Text",
+       "text": true
+      }
+     }
+    }
+   }
+  },
+  "features": [
+   "F-CORE-22"
+  ],
+  "name": "test_function_logical_and_or_not",
+  "steps": [
+   {
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "basic",
+       "components": [
+        {
+         "children": [
+          "t_and",
+          "t_or",
+          "t_not"
+         ],
+         "component": "Column",
+         "id": "root"
+        },
+        {
+         "component": "Text",
+         "id": "t_and",
+         "text": {
+          "@call": "and",
+          "args": {
+           "values": [
+            true,
+            false
+           ]
+          }
+         }
+        },
+        {
+         "component": "Text",
+         "id": "t_or",
+         "text": {
+          "@call": "or",
+          "args": {
+           "values": [
+            true,
+            false
+           ]
+          }
+         }
+        },
+        {
+         "component": "Text",
+         "id": "t_not",
+         "text": {
+          "@call": "not",
+          "args": {
+           "value": false
+          }
+         }
+        }
+       ],
+       "surfaceId": "main"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "validate",
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies ValidationError when a function is invoked with an argument of the wrong type.",
+  "name": "test_function_invalid_argument_schema_error",
+  "steps": [
+   {
+    "expectError": {
+     "category": "ValidationError"
+    },
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "basic",
+       "components": [
+        {
+         "component": "Text",
+         "id": "root",
+         "text": {
+          "@call": "formatNumber",
+          "args": {
+           "value": "not_a_number"
+          }
+         }
+        }
+       ],
+       "surfaceId": "main"
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "value": "hello"
+  },
+  "description": "Verifies required returns true for non-empty string.",
+  "expect": true,
+  "features": [
+   "F-CORE-22"
+  ],
+  "function": "required",
+  "name": "test_evaluate_function_required_string_valid"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "value": ""
+  },
+  "description": "Verifies required returns false for empty string.",
+  "expect": false,
+  "features": [
+   "F-CORE-22"
+  ],
+  "function": "required",
+  "name": "test_evaluate_function_required_string_empty"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "value": null
+  },
+  "description": "Verifies required returns false for null.",
+  "expect": false,
+  "features": [
+   "F-CORE-22"
+  ],
+  "function": "required",
+  "name": "test_evaluate_function_required_null"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "value": [
+    1,
+    2
+   ]
+  },
+  "description": "Verifies required returns true for non-empty array.",
+  "expect": true,
+  "function": "required",
+  "name": "test_evaluate_function_required_array_valid"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "value": []
+  },
+  "description": "Verifies required returns false for empty array.",
+  "expect": false,
+  "function": "required",
+  "name": "test_evaluate_function_required_array_empty"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "value": {}
+  },
+  "description": "Verifies required returns true for empty object (D20).",
+  "expect": true,
+  "function": "required",
+  "name": "test_evaluate_function_required_object_empty"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "pattern": "^[0-9]+$",
+   "value": "12345"
+  },
+  "description": "Verifies regex returns true on matching string.",
+  "expect": true,
+  "features": [
+   "F-CORE-20",
+   "F-CORE-22"
+  ],
+  "function": "regex",
+  "name": "test_evaluate_function_regex_match"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "pattern": "^[0-9]+$",
+   "value": "abc"
+  },
+  "description": "Verifies regex returns false on non-matching string.",
+  "expect": false,
+  "features": [
+   "F-CORE-20",
+   "F-CORE-22"
+  ],
+  "function": "regex",
+  "name": "test_evaluate_function_regex_mismatch"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "pattern": "[invalid(",
+   "value": "abc"
+  },
+  "description": "Verifies regex raises ExpressionError on invalid regex pattern (D21).",
+  "expectError": {
+   "category": "ExpressionError"
+  },
+  "features": [
+   "F-CORE-20",
+   "F-CORE-22"
+  ],
+  "function": "regex",
+  "name": "test_evaluate_function_regex_invalid_pattern"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "pattern": "^abc$",
+   "value": "abc\n"
+  },
+  "description": "Verifies $ matches only at the very end of the string and not before a trailing newline.",
+  "expect": {
+   "valid": false
+  },
+  "function": "regex",
+  "name": "test_evaluate_function_regex_v10_dollar_does_not_match_before_trailing_newline",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "pattern": "^\\d+$",
+   "value": "١٢٣"
+  },
+  "description": "Verifies \\d matches only ASCII digits 0-9 and rejects non-ASCII decimal digits.",
+  "expect": {
+   "valid": false
+  },
+  "function": "regex",
+  "name": "test_evaluate_function_regex_v10_digit_class_ascii_only",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "pattern": "^\\w+$",
+   "value": "café"
+  },
+  "description": "Verifies \\w matches only ASCII word characters [A-Za-z0-9_].",
+  "expect": {
+   "valid": false
+  },
+  "function": "regex",
+  "name": "test_evaluate_function_regex_v10_word_class_ascii_only",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "pattern": "^a.b$",
+   "value": "a\nb"
+  },
+  "description": "Verifies . does not match across line terminators.",
+  "expect": {
+   "valid": false
+  },
+  "function": "regex",
+  "name": "test_evaluate_function_regex_v10_dot_excludes_newline",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "pattern": "^abc$",
+   "value": "ABC"
+  },
+  "description": "Verifies regex matching is case-sensitive.",
+  "expect": {
+   "valid": false
+  },
+  "function": "regex",
+  "name": "test_evaluate_function_regex_v10_case_sensitive",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "pattern": "\\b",
+   "value": "é"
+  },
+  "description": "Verifies \\b uses ASCII word boundaries and does not treat non-ASCII letters as word characters.",
+  "expect": {
+   "valid": false
+  },
+  "function": "regex",
+  "name": "test_evaluate_function_regex_v10_word_boundary_ascii_only",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "pattern": "abc",
+   "value": "xxabcxx"
+  },
+  "description": "Verifies regex uses substring search semantics when unanchored.",
+  "expect": {
+   "valid": true
+  },
+  "function": "regex",
+  "name": "test_evaluate_function_regex_v10_search_semantics",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "pattern": "^.$",
+   "value": "😀"
+  },
+  "description": "Verifies . matches a single astral Unicode code point in Unicode mode.",
+  "expect": {
+   "valid": true
+  },
+  "function": "regex",
+  "name": "test_evaluate_function_regex_v10_astral_dot_matches_single_code_point",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "pattern": "^\\u{1F600}+$",
+   "value": "😀😀"
+  },
+  "description": "Verifies braced Unicode code point escapes (\\u{H...}) match astral characters.",
+  "expect": {
+   "valid": true
+  },
+  "function": "regex",
+  "name": "test_evaluate_function_regex_v10_braced_unicode_escape",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "pattern": "(a)\\1",
+   "value": "aa"
+  },
+  "description": "Verifies backreferences are rejected with UNSUPPORTED_SYNTAX.",
+  "expectError": {
+   "category": "ExpressionError",
+   "message": "UNSUPPORTED_SYNTAX"
+  },
+  "function": "regex",
+  "name": "test_evaluate_function_regex_v10_rejects_backreference",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "pattern": "(?<=a)b",
+   "value": "ab"
+  },
+  "description": "Verifies lookbehind assertions are rejected with UNSUPPORTED_SYNTAX.",
+  "expectError": {
+   "category": "ExpressionError",
+   "message": "UNSUPPORTED_SYNTAX"
+  },
+  "function": "regex",
+  "name": "test_evaluate_function_regex_v10_rejects_lookbehind",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "pattern": "(?<n>a)",
+   "value": "a"
+  },
+  "description": "Verifies named capture groups are rejected with UNSUPPORTED_SYNTAX.",
+  "expectError": {
+   "category": "ExpressionError",
+   "message": "UNSUPPORTED_SYNTAX"
+  },
+  "function": "regex",
+  "name": "test_evaluate_function_regex_v10_rejects_named_group",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "pattern": "(?i)a",
+   "value": "a"
+  },
+  "description": "Verifies inline flag modifiers are rejected with UNSUPPORTED_SYNTAX.",
+  "expectError": {
+   "category": "ExpressionError",
+   "message": "UNSUPPORTED_SYNTAX"
+  },
+  "function": "regex",
+  "name": "test_evaluate_function_regex_v10_rejects_inline_flag",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "pattern": "\\p{L}",
+   "value": "a"
+  },
+  "description": "Verifies Unicode property escapes are rejected with UNSUPPORTED_SYNTAX.",
+  "expectError": {
+   "category": "ExpressionError",
+   "message": "UNSUPPORTED_SYNTAX"
+  },
+  "function": "regex",
+  "name": "test_evaluate_function_regex_v10_rejects_unicode_property",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "pattern": "(a+)+$",
+   "value": "aaa"
+  },
+  "description": "Verifies unbounded quantifier nesting (a+)+$ is rejected with NESTED_QUANTIFIER.",
+  "expectError": {
+   "category": "ExpressionError",
+   "message": "NESTED_QUANTIFIER"
+  },
+  "function": "regex",
+  "name": "test_evaluate_function_regex_v10_rejects_nested_quantifier_plus",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "pattern": "(a*){2,5}",
+   "value": "aaa"
+  },
+  "description": "Verifies bounded quantifier with upper bound > 1 over unbounded inner quantifier is rejected with NESTED_QUANTIFIER.",
+  "expectError": {
+   "category": "ExpressionError",
+   "message": "NESTED_QUANTIFIER"
+  },
+  "function": "regex",
+  "name": "test_evaluate_function_regex_v10_rejects_nested_quantifier_bounded_outer",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "pattern": "(a|ab)*c",
+   "value": "abc"
+  },
+  "description": "Verifies unbounded repetition of alternation with overlapping first sets (a|ab)*c is rejected with OVERLAPPING_ALTERNATION.",
+  "expectError": {
+   "category": "ExpressionError",
+   "message": "OVERLAPPING_ALTERNATION"
+  },
+  "function": "regex",
+  "name": "test_evaluate_function_regex_v10_rejects_overlapping_alternation_prefix",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "pattern": "(\\d|[0-5])+",
+   "value": "123"
+  },
+  "description": "Verifies unbounded repetition of alternation with overlapping character classes (\\d|[0-5])+ is rejected with OVERLAPPING_ALTERNATION.",
+  "expectError": {
+   "category": "ExpressionError",
+   "message": "OVERLAPPING_ALTERNATION"
+  },
+  "function": "regex",
+  "name": "test_evaluate_function_regex_v10_rejects_overlapping_alternation_class",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "pattern": "\\d+\\d+",
+   "value": "12"
+  },
+  "description": "Verifies adjacent unbounded quantifiers with overlapping character sets \\d+\\d+ are rejected with ADJACENT_OVERLAP.",
+  "expectError": {
+   "category": "ExpressionError",
+   "message": "ADJACENT_OVERLAP"
+  },
+  "function": "regex",
+  "name": "test_evaluate_function_regex_v10_rejects_adjacent_overlap_direct",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "pattern": "\\d+\\s*\\d+",
+   "value": "12"
+  },
+  "description": "Verifies unbounded quantifiers with overlapping character sets separated only by nullable items \\d+\\s*\\d+ are rejected with ADJACENT_OVERLAP.",
+  "expectError": {
+   "category": "ExpressionError",
+   "message": "ADJACENT_OVERLAP"
+  },
+  "function": "regex",
+  "name": "test_evaluate_function_regex_v10_rejects_adjacent_overlap_across_nullable",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "pattern": "(?:ab+)?c",
+   "value": "abbc"
+  },
+  "description": "Verifies optional outer group over unbounded inner quantifier (?:ab+)?c is accepted.",
+  "expect": {
+   "valid": true
+  },
+  "function": "regex",
+  "name": "test_evaluate_function_regex_v10_accepts_optional_outer_group",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "pattern": "(a|b)*c",
+   "value": "abac"
+  },
+  "description": "Verifies unbounded repetition over disjoint alternation (a|b)*c is accepted.",
+  "expect": {
+   "valid": true
+  },
+  "function": "regex",
+  "name": "test_evaluate_function_regex_v10_accepts_disjoint_alternation",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "pattern": "\\w+\\s+\\w+",
+   "value": "hello world"
+  },
+  "description": "Verifies unbounded quantifiers separated by a non-nullable disjoint item \\w+\\s+\\w+ are accepted.",
+  "expect": {
+   "valid": true
+  },
+  "function": "regex",
+  "name": "test_evaluate_function_regex_v10_accepts_non_nullable_separator",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "pattern": "^[a-z]+@[a-z]+\\.com$",
+   "value": "ada@example.com"
+  },
+  "description": "Verifies standard anchored email-like pattern ^[a-z]+@[a-z]+\\.com$ is accepted.",
+  "expect": {
+   "valid": true
+  },
+  "function": "regex",
+  "name": "test_evaluate_function_regex_v10_accepts_anchored_email_like",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "pattern": "^(?=.*\\d).{8,}$",
+   "value": "secret42"
+  },
+  "description": "Verifies positive lookahead before unbounded dot ^(?=.*\\d).{8,}$ is accepted.",
+  "expect": {
+   "valid": true
+  },
+  "function": "regex",
+  "name": "test_evaluate_function_regex_v10_accepts_lookahead_password_like",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "pattern": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+   "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "description": "Verifies a 256-code-point pattern at the maximum pattern length boundary is accepted.",
+  "expect": {
+   "valid": true
+  },
+  "function": "regex",
+  "name": "test_evaluate_function_regex_v10_accepts_256_code_point_pattern",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "pattern": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+   "value": "a"
+  },
+  "description": "Verifies a 257-code-point pattern exceeding the 256-code-point limit is rejected with PATTERN_TOO_LONG.",
+  "expectError": {
+   "category": "ExpressionError",
+   "message": "PATTERN_TOO_LONG"
+  },
+  "function": "regex",
+  "name": "test_evaluate_function_regex_v10_rejects_257_code_point_pattern",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "pattern": "^a+$",
+   "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "description": "Verifies a 4,096-code-point value at the maximum value length boundary is matched normally.",
+  "expect": {
+   "valid": true
+  },
+  "function": "regex",
+  "name": "test_evaluate_function_regex_v10_accepts_4096_code_point_value",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "pattern": "^a+$",
+   "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "description": "Verifies a 4,097-code-point value exceeding the 4,096-code-point cap returns invalid without raising an error.",
+  "expect": {
+   "valid": false
+  },
+  "function": "regex",
+  "name": "test_evaluate_function_regex_v10_value_exceeding_4096_code_points_returns_invalid",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "pattern": "(a+)+$",
+   "value": "aaa"
+  },
+  "description": "Verifies the static regex safety guard also rejects unsafe patterns on v0.9 with NESTED_QUANTIFIER.",
+  "expectError": {
+   "category": "ExpressionError",
+   "message": "NESTED_QUANTIFIER"
+  },
+  "function": "regex",
+  "name": "test_evaluate_function_regex_v09_rejects_nested_quantifier",
+  "protocolVersion": "v0.9"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "pattern": "^a+$",
+   "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "description": "Verifies a 4,097-code-point value exceeding the 4,096-code-point cap returns false on v0.9 without raising an error.",
+  "expect": false,
+  "function": "regex",
+  "name": "test_evaluate_function_regex_v09_value_exceeding_4096_code_points_returns_false",
+  "protocolVersion": "v0.9"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "value": "user@example.com"
+  },
+  "description": "Verifies email returns true on standard email address.",
+  "expect": true,
+  "features": [
+   "F-CORE-22"
+  ],
+  "function": "email",
+  "name": "test_evaluate_function_email_valid"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "value": "invalid-email"
+  },
+  "description": "Verifies email returns false on missing domain.",
+  "expect": false,
+  "function": "email",
+  "name": "test_evaluate_function_email_invalid_no_domain"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "value": "test@test.c"
+  },
+  "description": "Verifies email returns false on single-character TLD (D22).",
+  "expect": false,
+  "function": "email",
+  "name": "test_evaluate_function_email_invalid_single_char_tld"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "max": 10,
+   "min": 3,
+   "value": "hello"
+  },
+  "description": "Verifies length returns true when string is within bounds.",
+  "expect": true,
+  "features": [
+   "F-CORE-22"
+  ],
+  "function": "length",
+  "name": "test_evaluate_function_length_string_valid"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "min": 3,
+   "value": "hi"
+  },
+  "description": "Verifies length returns false when string is shorter than min.",
+  "expect": false,
+  "function": "length",
+  "name": "test_evaluate_function_length_string_too_short"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "max": 5,
+   "value": "hello world"
+  },
+  "description": "Verifies length returns false when string is longer than max.",
+  "expect": false,
+  "function": "length",
+  "name": "test_evaluate_function_length_string_too_long"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "max": 4,
+   "min": 2,
+   "value": [
+    "a",
+    "b",
+    "c"
+   ]
+  },
+  "description": "Verifies length counts array elements, not character length (D24).",
+  "expect": true,
+  "function": "length",
+  "name": "test_evaluate_function_length_array_count_valid"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "min": 2,
+   "value": [
+    "a"
+   ]
+  },
+  "description": "Verifies length returns false when array has fewer elements than min (D24).",
+  "expect": false,
+  "function": "length",
+  "name": "test_evaluate_function_length_array_count_too_short"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "max": 10,
+   "value": null
+  },
+  "description": "Verifies length counts a null value, such as an unset field, as length 0.",
+  "expect": true,
+  "function": "length",
+  "name": "test_evaluate_function_length_null_value",
+  "protocolVersion": "v0.9"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "min": 1,
+   "value": null
+  },
+  "description": "Verifies length rejects a null value when min is greater than 0.",
+  "expect": false,
+  "function": "length",
+  "name": "test_evaluate_function_length_null_value_too_short",
+  "protocolVersion": "v0.9"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "max": 100,
+   "min": 0,
+   "value": 42.5
+  },
+  "description": "Verifies numeric returns true for float within bounds.",
+  "expect": true,
+  "features": [
+   "F-CORE-22"
+  ],
+  "function": "numeric",
+  "name": "test_evaluate_function_numeric_valid_float"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "max": 100,
+   "min": 0,
+   "value": "42.5"
+  },
+  "description": "Verifies numeric returns true for valid numeric string.",
+  "expect": true,
+  "function": "numeric",
+  "name": "test_evaluate_function_numeric_valid_string"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "min": 0,
+   "value": -5
+  },
+  "description": "Verifies numeric returns false when value is below min.",
+  "expect": false,
+  "function": "numeric",
+  "name": "test_evaluate_function_numeric_too_small"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "max": 100,
+   "value": 150
+  },
+  "description": "Verifies numeric returns false when value is above max.",
+  "expect": false,
+  "function": "numeric",
+  "name": "test_evaluate_function_numeric_too_large"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "value": "not_a_number"
+  },
+  "description": "Verifies numeric returns false for unparseable string without raising (D23).",
+  "expect": false,
+  "function": "numeric",
+  "name": "test_evaluate_function_numeric_unparseable_string"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "values": [
+    true,
+    true
+   ]
+  },
+  "description": "Verifies and returns true when all values are true.",
+  "expect": true,
+  "function": "and",
+  "name": "test_evaluate_function_and_all_true"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "values": [
+    true,
+    false
+   ]
+  },
+  "description": "Verifies and returns false when any value is false.",
+  "expect": false,
+  "function": "and",
+  "name": "test_evaluate_function_and_one_false"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "values": [
+    1,
+    "non-empty"
+   ]
+  },
+  "description": "Verifies and coerces non-\"true\" strings to false under DynamicBoolean rules.",
+  "expect": false,
+  "function": "and",
+  "name": "test_evaluate_function_and_truthiness_coercion_true"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "values": [
+    "TRUE",
+    2
+   ]
+  },
+  "description": "Verifies and coerces case-insensitive \"true\" strings and non-zero numbers to true.",
+  "expect": true,
+  "function": "and",
+  "name": "test_evaluate_function_and_coercion_string_true"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "values": [
+    1,
+    ""
+   ]
+  },
+  "description": "Verifies and coerces an empty string to false under DynamicBoolean rules.",
+  "expect": false,
+  "function": "and",
+  "name": "test_evaluate_function_and_truthiness_coercion_false"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "values": [
+    true
+   ]
+  },
+  "description": "Verifies and requires at least 2 values per schema.",
+  "expectError": {
+   "category": "ExpressionError"
+  },
+  "function": "and",
+  "name": "test_evaluate_function_and_fewer_than_two_values_error"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "values": [
+    false,
+    false
+   ]
+  },
+  "description": "Verifies or returns false when all values are false.",
+  "expect": false,
+  "function": "or",
+  "name": "test_evaluate_function_or_all_false"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "values": [
+    false,
+    true
+   ]
+  },
+  "description": "Verifies or returns true when at least one value is true.",
+  "expect": true,
+  "function": "or",
+  "name": "test_evaluate_function_or_one_true"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "values": [
+    0,
+    "yes"
+   ]
+  },
+  "description": "Verifies or coerces 0 and non-\"true\" strings to false under DynamicBoolean rules.",
+  "expect": false,
+  "function": "or",
+  "name": "test_evaluate_function_or_truthiness_coercion_true"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "values": [
+    null,
+    {}
+   ]
+  },
+  "description": "Verifies or coerces null and non-ValidationResult objects to false.",
+  "expect": false,
+  "function": "or",
+  "name": "test_evaluate_function_or_coercion_null_and_object"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "values": [
+    false
+   ]
+  },
+  "description": "Verifies or requires at least 2 values per schema.",
+  "expectError": {
+   "category": "ExpressionError"
+  },
+  "function": "or",
+  "name": "test_evaluate_function_or_fewer_than_two_values_error"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "value": true
+  },
+  "description": "Verifies not returns false for true.",
+  "expect": false,
+  "function": "not",
+  "name": "test_evaluate_function_not_true"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "value": false
+  },
+  "description": "Verifies not returns true for false.",
+  "expect": true,
+  "function": "not",
+  "name": "test_evaluate_function_not_false"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "value": ""
+  },
+  "description": "Verifies not returns true when an empty string coerces to false.",
+  "expect": true,
+  "function": "not",
+  "name": "test_evaluate_function_not_truthiness_falsy"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "value": "hello"
+  },
+  "description": "Verifies not returns true when a non-\"true\" string coerces to false.",
+  "expect": true,
+  "function": "not",
+  "name": "test_evaluate_function_not_truthiness_truthy"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "values": [
+    {
+     "valid": true
+    },
+    {
+     "code": "required",
+     "message": "Required",
+     "valid": false
+    }
+   ]
+  },
+  "description": "Verifies and reads a failing ValidationResult operand as false in v1.0.",
+  "expect": false,
+  "function": "and",
+  "name": "test_evaluate_function_and_validation_result_operands",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "values": [
+    {
+     "valid": false
+    },
+    {
+     "valid": false
+    }
+   ]
+  },
+  "description": "Verifies or over two failing ValidationResult operands is false in v1.0.",
+  "expect": false,
+  "function": "or",
+  "name": "test_evaluate_function_or_validation_result_operands",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "value": {
+    "valid": false
+   }
+  },
+  "description": "Verifies not inverts the validity of a ValidationResult operand in v1.0.",
+  "expect": true,
+  "function": "not",
+  "name": "test_evaluate_function_not_validation_result_operand",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "value": {
+    "valid": false
+   }
+  },
+  "description": "Verifies v0.9 also coerces a ValidationResult object by its boolean valid member.",
+  "expect": true,
+  "function": "not",
+  "name": "test_evaluate_function_not_validation_result_operand_v0_9",
+  "protocolVersion": "v0.9"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "one": "1 item",
+   "other": "{n} items",
+   "value": 0,
+   "zero": "No items"
+  },
+  "description": "Verifies pluralize selects explicit zero category over CLDR (D27).",
+  "expect": "No items",
+  "function": "pluralize",
+  "name": "test_evaluate_function_pluralize_explicit_zero"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "one": "1 item",
+   "other": "{n} items",
+   "value": 1,
+   "zero": "No items"
+  },
+  "description": "Verifies pluralize selects explicit one category.",
+  "expect": "1 item",
+  "function": "pluralize",
+  "name": "test_evaluate_function_pluralize_explicit_one"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "one": "1 item",
+   "other": "{n} items",
+   "two": "A couple items",
+   "value": 2,
+   "zero": "No items"
+  },
+  "description": "Verifies pluralize selects explicit two category (D27).",
+  "expect": "A couple items",
+  "function": "pluralize",
+  "name": "test_evaluate_function_pluralize_explicit_two"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "other": "default",
+   "value": 0,
+   "zero": ""
+  },
+  "description": "Verifies pluralize preserves explicit empty string without falling back to other (D27).",
+  "expect": "",
+  "function": "pluralize",
+  "name": "test_evaluate_function_pluralize_explicit_empty_string"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "one": "1 item",
+   "other": "Many items",
+   "value": 5
+  },
+  "description": "Verifies pluralize falls back to other for unlisted category.",
+  "expect": "Many items",
+  "function": "pluralize",
+  "name": "test_evaluate_function_pluralize_cldr_other"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "decimals": 2,
+   "grouping": true,
+   "value": 1234.567
+  },
+  "description": "Verifies formatNumber formats with decimals and grouping.",
+  "expect": "1,234.57",
+  "function": "formatNumber",
+  "name": "test_evaluate_function_format_number_decimals"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "decimals": 0,
+   "grouping": false,
+   "value": 1234.567
+  },
+  "description": "Verifies formatNumber formats with zero decimals and no grouping.",
+  "expect": "1235",
+  "function": "formatNumber",
+  "name": "test_evaluate_function_format_number_zero_decimals"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "currency": "USD",
+   "decimals": 2,
+   "value": 99.99
+  },
+  "description": "Verifies formatCurrency formats USD currency.",
+  "expect": "$99.99",
+  "function": "formatCurrency",
+  "name": "test_evaluate_function_format_currency_usd"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "format": "yyyy-MM-dd",
+   "value": "2026-08-26T12:00:00Z"
+  },
+  "description": "Verifies formatDate formats date with custom pattern.",
+  "expect": "2026-08-26",
+  "function": "formatDate",
+  "name": "test_evaluate_function_format_date_custom_pattern"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "format": "ISO",
+   "value": "2026-08-26T12:00:00.000Z"
+  },
+  "description": "Verifies formatDate normalizes ISO output to UTC YYYY-MM-DDTHH:mm:ss.sssZ (D29).",
+  "expect": "2026-08-26T12:00:00.000Z",
+  "function": "formatDate",
+  "name": "test_evaluate_function_format_date_iso_normalized"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "format": "yyyy-MM-dd",
+   "value": "2026-02-30"
+  },
+  "description": "Verifies formatDate returns an empty string for a day that does not exist, rather than rolling it into the next month.",
+  "expect": "",
+  "function": "formatDate",
+  "name": "test_evaluate_function_format_date_impossible_day"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "format": "yyyy-MM-dd",
+   "value": "2026-13-01"
+  },
+  "description": "Verifies formatDate returns an empty string for a month that does not exist, rather than rolling it into the next year.",
+  "expect": "",
+  "function": "formatDate",
+  "name": "test_evaluate_function_format_date_impossible_month"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "format": "yyyy-MM-dd HH:mm",
+   "value": "2026-09-04T23:30:00Z"
+  },
+  "description": "Verifies formatDate renders the time fields of a UTC timestamp as written, whatever the host time zone.",
+  "expect": "2026-09-04 23:30",
+  "function": "formatDate",
+  "name": "test_evaluate_function_format_date_utc_time"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "format": "yyyy-MM-dd HH:mm",
+   "value": "2026-09-04T23:30:00"
+  },
+  "description": "Verifies formatDate reads a timestamp without an offset as written (as UTC), never as host-local time.",
+  "expect": "2026-09-04 23:30",
+  "function": "formatDate",
+  "name": "test_evaluate_function_format_date_without_offset"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "format": "yyyy-MM-dd HH:mm",
+   "value": "2026-09-04T23:30:00-05:00"
+  },
+  "description": "Verifies formatDate renders a timestamp with an offset in that offset, so the written wall-clock date and time are kept.",
+  "expect": "2026-09-04 23:30",
+  "function": "formatDate",
+  "name": "test_evaluate_function_format_date_keeps_written_offset",
+  "protocolVersion": "1.0"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "value": "Hello World"
+  },
+  "description": "Verifies formatString evaluates static template string.",
+  "expect": "Hello World",
+  "function": "formatString",
+  "name": "test_evaluate_function_format_string_basic"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "value": "Greeting: ${null}"
+  },
+  "description": "Verifies formatString coerces null expression to empty string (D18).",
+  "expect": "Greeting: ",
+  "function": "formatString",
+  "name": "test_evaluate_function_format_string_null_coercion"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "url": "https://example.com"
+  },
+  "description": "Verifies openUrl accepts valid https scheme.",
+  "expect": null,
+  "function": "openUrl",
+  "name": "test_evaluate_function_open_url_valid_https"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "url": "javascript:alert(1)"
+  },
+  "description": "Verifies openUrl rejects disallowed URL scheme (D30).",
+  "expectError": {
+   "category": "ExpressionError"
+  },
+  "function": "openUrl",
+  "name": "test_evaluate_function_open_url_disallowed_scheme"
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "value": "Hello"
+  },
+  "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json",
+   "conformance/test_data/catalogs/custom_catalog_v1_0.json"
+  ],
+  "description": "Verifies a v1.0 call that names a catalogId runs in that catalog rather than the surface default. The default is the conformance custom catalog, which declares no formatString; the call names the basic catalog, which does.",
+  "expect": "Hello",
+  "function": "formatString",
+  "name": "test_evaluate_function_v10_runs_in_named_catalog",
+  "protocolVersion": "1.0",
+  "surface": {
+   "catalogId": "conformance/custom"
+  }
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "value": "Hello"
+  },
+  "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Verifies a v1.0 call that names a catalogId runs on a surface that has no default catalog.",
+  "expect": "Hello",
+  "function": "formatString",
+  "name": "test_evaluate_function_v10_runs_in_named_catalog_on_surface_without_default",
+  "protocolVersion": "1.0",
+  "surface": {}
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "value": "Hello"
+  },
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json",
+   "conformance/test_data/catalogs/custom_catalog_v1_0.json"
+  ],
+  "description": "Verifies a v1.0 call that names no catalogId runs in the surface default catalog (the basic catalog), while the conformance custom catalog is also available on the surface.",
+  "expect": "Hello",
+  "function": "formatString",
+  "name": "test_evaluate_function_v10_runs_in_surface_default",
+  "protocolVersion": "1.0",
+  "surface": {
+   "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json"
+  }
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "value": "Hello"
+  },
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Verifies a v1.0 call that names no catalogId fails with a CatalogError on a surface that has no default catalog, even though the only available catalog declares the function. There is no fallback to the available catalogs.",
+  "expectError": {
+   "category": "CatalogError",
+   "message": "has no default catalogId"
+  },
+  "function": "formatString",
+  "name": "test_evaluate_function_v10_without_catalog_id_on_surface_without_default_errors",
+  "protocolVersion": "1.0",
+  "surface": {}
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "value": "Hello"
+  },
+  "catalogId": "missing-catalog",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Verifies a v1.0 call that names a catalogId the surface does not have fails with a CatalogError, rather than falling back to the surface default, which declares the function.",
+  "expectError": {
+   "category": "CatalogError",
+   "message": "Catalog not found: missing-catalog"
+  },
+  "function": "formatString",
+  "name": "test_evaluate_function_v10_unknown_catalog_id_errors",
+  "protocolVersion": "1.0",
+  "surface": {
+   "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json"
+  }
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "value": "Hello"
+  },
+  "catalogId": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json",
+   "specification/v0_9/catalogs/basic/catalog.json"
+  ],
+  "description": "Verifies a v1.0 call that names the v0.9 basic catalog fails with a CatalogError. The client has that catalog, but a v1.0 surface only makes v1.0 catalogs available.",
+  "expectError": {
+   "category": "CatalogError",
+   "message": "Catalog not found"
+  },
+  "function": "formatString",
+  "name": "test_evaluate_function_v10_catalog_of_other_protocol_version_errors",
+  "protocolVersion": "1.0",
+  "surface": {
+   "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json"
+  }
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "value": {
+    "@call": "formatString",
+    "args": {
+     "value": "hi"
+    }
+   }
+  },
+  "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Verifies a call nested in the args of a v1.0 call resolves its catalog on its own. The outer call names the basic catalog; the inner call names no catalogId, and the surface has no default catalog, so the inner call fails with a CatalogError.",
+  "expectError": {
+   "category": "CatalogError",
+   "message": "has no default catalogId"
+  },
+  "function": "formatString",
+  "name": "test_evaluate_function_v10_nested_call_does_not_inherit_catalog",
+  "protocolVersion": "1.0",
+  "surface": {}
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "value": "Count: ${pluralize(value: 2, one: 'drop', other: 'drops')}"
+  },
+  "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Verifies a function call inside a formatString ${...} template expression inherits the catalogId that formatString itself resolved to. Because ${...} has no syntax for naming a catalogId, a template call such as ${pluralize(...)} runs in formatString's catalog even when the surface has no default catalog.",
+  "expect": "Count: drops",
+  "function": "formatString",
+  "name": "test_evaluate_function_v10_format_string_template_call_inherits_catalog_without_default",
+  "protocolVersion": "1.0",
+  "surface": {}
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "value": "Count: ${pluralize(value: 2, one: 'drop', other: 'drops')}"
+  },
+  "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json",
+   "conformance/test_data/catalogs/custom_catalog_v1_0.json"
+  ],
+  "description": "Verifies a function call inside a formatString ${...} template expression runs in the catalog that formatString names rather than the surface default catalog. The surface default is the conformance custom catalog, which declares no pluralize; formatString names the basic catalog, so ${pluralize(...)} resolves in the basic catalog.",
+  "expect": "Count: drops",
+  "function": "formatString",
+  "name": "test_evaluate_function_v10_format_string_template_call_inherits_named_catalog_over_default",
+  "protocolVersion": "1.0",
+  "surface": {
+   "catalogId": "conformance/custom"
+  }
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "value": "Count: ${pluralize(value: 1, one: formatNumber(value: 42, grouping: false), other: 'many')} (${not(value: not(value: true))})"
+  },
+  "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Verifies nested function calls at multiple depths inside a formatString ${...} template expression all inherit the catalogId that formatString itself resolved to on a defaultless surface.",
+  "expect": "Count: 42 (true)",
+  "function": "formatString",
+  "name": "test_evaluate_function_v10_format_string_template_call_inherits_catalog_nested",
+  "protocolVersion": "1.0",
+  "surface": {}
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "value": "${noSuchFn()}"
+  },
+  "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Verifies a formatString ${...} template call missing from the inherited catalog fails with an ExpressionError naming the missing function, rather than a CatalogError complaining that the surface has no default catalogId.",
+  "expectError": {
+   "category": "ExpressionError",
+   "message": "noSuchFn"
+  },
+  "function": "formatString",
+  "name": "test_evaluate_function_v10_format_string_template_call_missing_in_inherited_catalog_errors",
+  "protocolVersion": "1.0",
+  "surface": {}
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "value": "${@index()}"
+  },
+  "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Verifies ${@index()} inside a formatString call on a defaultless v1.0 surface remains catalogless and fails with the collection-scope ExpressionError at root rather than an error for stamping a catalogId onto @index.",
+  "expectError": {
+   "category": "ExpressionError",
+   "message": "@index function can only be evaluated inside a collection template iteration scope."
+  },
+  "function": "formatString",
+  "name": "test_evaluate_function_v10_format_string_index_stays_catalogless_without_default",
+  "protocolVersion": "1.0",
+  "surface": {}
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "value": "Hello"
+  },
+  "catalogId": "missing-catalog",
+  "catalogPaths": [
+   "specification/v0_9/catalogs/basic/catalog.json"
+  ],
+  "description": "Verifies a catalogId on a call is ignored before v1.0. On a v0.9 surface the call runs in the surface catalog, so naming a catalog the client does not have is not an error.",
+  "expect": "Hello",
+  "function": "formatString",
+  "name": "test_evaluate_function_v09_ignores_call_catalog_id",
+  "protocolVersion": "v0.9",
+  "surface": {
+   "catalogId": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json"
+  }
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "decimals": 0,
+   "grouping": {
+    "@call": "required",
+    "args": {
+     "value": ""
+    }
+   },
+   "value": 1234
+  },
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Verifies a failing ValidationResult bound to formatNumber's DynamicBoolean grouping argument reads as false, turning grouping off. An object is truthy in most languages, so an engine that does not coerce it groups the digits.",
+  "expect": "1234",
+  "function": "formatNumber",
+  "name": "test_evaluate_function_v10_validation_result_coerced_in_format_number_grouping",
+  "protocolVersion": "1.0",
+  "surface": {
+   "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json"
+  }
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "decimals": 0,
+   "grouping": {
+    "@call": "required",
+    "args": {
+     "value": "x"
+    }
+   },
+   "value": 1234
+  },
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Verifies a passing ValidationResult bound to formatNumber's DynamicBoolean grouping argument reads as true, keeping grouping on.",
+  "expect": "1,234",
+  "function": "formatNumber",
+  "name": "test_evaluate_function_v10_validation_result_coerced_in_format_number_grouping_valid",
+  "protocolVersion": "1.0",
+  "surface": {
+   "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json"
+  }
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "value": {
+    "@call": "required",
+    "args": {
+     "value": ""
+    }
+   }
+  },
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Verifies a ValidationResult resolved from a nested validation call into not's DynamicBoolean operand is read by its validity when the call runs on a surface.",
+  "expect": true,
+  "features": [
+   "F-CORE-27"
+  ],
+  "function": "not",
+  "name": "test_evaluate_function_v10_validation_result_coerced_in_not_operand_on_surface",
+  "protocolVersion": "1.0",
+  "surface": {
+   "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json"
+  }
+ },
+ {
+  "action": "evaluate_function",
+  "args": {
+   "values": [
+    {
+     "@call": "required",
+     "args": {
+      "value": {
+       "@path": "/email"
+      }
+     }
+    },
+    {
+     "@call": "required",
+     "args": {
+      "value": {
+       "@path": "/phone"
+      }
+     }
+    }
+   ]
+  },
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "dataModel": {
+   "email": "a@b.c",
+   "phone": ""
+  },
+  "description": "Verifies the ValidationResults resolved from nested validation calls into and's DynamicBoolean operands are read by their validity when the call runs on a surface, as in the specification's enable-when-valid example.",
+  "expect": false,
+  "features": [
+   "F-CORE-27"
+  ],
+  "function": "and",
+  "name": "test_evaluate_function_v10_validation_result_coerced_in_and_operands_on_surface",
+  "protocolVersion": "1.0",
+  "surface": {
+   "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json"
+  }
+ },
+ {
+  "action": "evaluate_function",
+  "args": {},
+  "catalogPaths": [
+   "conformance/test_data/catalogs/allowed_callers_catalog_v1_0.json"
+  ],
+  "description": "Verifies a v1.0 call on a surface to a function whose allowedCallers is agentOnly fails with an ExpressionError and does not run.",
+  "expectError": {
+   "category": "ExpressionError",
+   "message": "cannot be called by renderer"
+  },
+  "features": [
+   "F-CORE-34"
+  ],
+  "function": "readSessionToken",
+  "name": "test_evaluate_function_v10_agent_only_function_errors",
+  "protocolVersion": "1.0",
+  "surface": {
+   "catalogId": "https://a2ui.org/catalogs/v10/allowed_callers"
+  }
+ }
+]

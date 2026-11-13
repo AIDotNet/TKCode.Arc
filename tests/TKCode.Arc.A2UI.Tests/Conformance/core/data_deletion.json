@@ -1,0 +1,367 @@
+[
+ {
+  "action": "validate",
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies that updateDataModel with value=null deletes the specified JSON Pointer path.",
+  "expect": {
+   "surfaces": {
+    "s1": {
+     "dataModel": {
+      "user": {
+       "profile": {
+        "name": "Alice"
+       }
+      }
+     }
+    }
+   }
+  },
+  "features": [
+   "F-CORE-03"
+  ],
+  "name": "test_data_deletion_value_null",
+  "steps": [
+   {
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "basic",
+       "dataModel": {
+        "user": {
+         "profile": {
+          "bio": "Software Engineer",
+          "name": "Alice"
+         }
+        }
+       },
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   },
+   {
+    "payload": [
+     {
+      "updateDataModel": {
+       "path": "/user/profile/bio",
+       "surfaceId": "s1",
+       "value": null
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "validate",
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies deleting a child property via value=null preserves sibling keys in parent object.",
+  "expect": {
+   "surfaces": {
+    "s1": {
+     "dataModel": {
+      "settings": {
+       "notifications": {
+        "push": false,
+        "sms": true
+       }
+      }
+     }
+    }
+   }
+  },
+  "name": "test_data_deletion_nested_pointer_sibling_preservation",
+  "steps": [
+   {
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "basic",
+       "dataModel": {
+        "settings": {
+         "notifications": {
+          "email": true,
+          "push": false,
+          "sms": true
+         }
+        }
+       },
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   },
+   {
+    "payload": [
+     {
+      "updateDataModel": {
+       "path": "/settings/notifications/email",
+       "surfaceId": "s1",
+       "value": null
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "validate",
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies deleting a top-level JSON Pointer path via value=null.",
+  "expect": {
+   "surfaces": {
+    "s1": {
+     "dataModel": {
+      "persistentData": "keep"
+     }
+    }
+   }
+  },
+  "features": [
+   "F-CORE-03"
+  ],
+  "name": "test_data_deletion_top_level_key",
+  "steps": [
+   {
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "basic",
+       "dataModel": {
+        "persistentData": "keep",
+        "transientData": "remove"
+       },
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   },
+   {
+    "payload": [
+     {
+      "updateDataModel": {
+       "path": "/transientData",
+       "surfaceId": "s1",
+       "value": null
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "validate",
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies deleting an intermediate parent object key via value=null recursively removes all nested child properties.",
+  "expect": {
+   "surfaces": {
+    "s1": {
+     "dataModel": {
+      "settings": {
+       "theme": "dark"
+      }
+     }
+    }
+   }
+  },
+  "name": "test_data_deletion_parent_object_recursive",
+  "steps": [
+   {
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "basic",
+       "dataModel": {
+        "settings": {
+         "notifications": {
+          "email": true,
+          "push": false,
+          "sms": true
+         },
+         "theme": "dark"
+        }
+       },
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   },
+   {
+    "payload": [
+     {
+      "updateDataModel": {
+       "path": "/settings/notifications",
+       "surfaceId": "s1",
+       "value": null
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "validate",
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies deleting the only top-level key via value=null results in an empty dataModel.",
+  "expect": {
+   "surfaces": {
+    "s1": {
+     "dataModel": {}
+    }
+   }
+  },
+  "name": "test_data_deletion_all_keys_empty_data_model",
+  "steps": [
+   {
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "basic",
+       "dataModel": {
+        "user": {
+         "profile": {
+          "name": "Alice"
+         }
+        }
+       },
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   },
+   {
+    "payload": [
+     {
+      "updateDataModel": {
+       "path": "/user",
+       "surfaceId": "s1",
+       "value": null
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "validate",
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies deleting array element via value=null preserves outer array length and structure with null.",
+  "expect": {
+   "surfaces": {
+    "s1": {
+     "dataModel": {
+      "items": [
+       "a",
+       null,
+       "c"
+      ]
+     }
+    }
+   }
+  },
+  "name": "test_data_deletion_array_index_preservation",
+  "steps": [
+   {
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "basic",
+       "dataModel": {
+        "items": [
+         "a",
+         "b",
+         "c"
+        ]
+       },
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   },
+   {
+    "payload": [
+     {
+      "updateDataModel": {
+       "path": "/items/1",
+       "surfaceId": "s1",
+       "value": null
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "action": "validate",
+  "catalog": {
+   "protocolVersion": "1.0"
+  },
+  "description": "Verifies updating root path / with value=null resets data model to empty object.",
+  "expect": {
+   "surfaces": {
+    "s1": {
+     "dataModel": {}
+    }
+   }
+  },
+  "features": [
+   "F-CORE-03"
+  ],
+  "name": "test_data_deletion_root_replacement",
+  "steps": [
+   {
+    "payload": [
+     {
+      "createSurface": {
+       "catalogId": "basic",
+       "dataModel": {
+        "count": 42,
+        "user": {
+         "name": "Alice"
+        }
+       },
+       "surfaceId": "s1"
+      },
+      "version": "1.0"
+     }
+    ]
+   },
+   {
+    "payload": [
+     {
+      "updateDataModel": {
+       "path": "/",
+       "surfaceId": "s1",
+       "value": null
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ]
+ }
+]

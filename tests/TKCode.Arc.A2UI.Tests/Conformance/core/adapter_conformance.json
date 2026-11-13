@@ -1,0 +1,2516 @@
+[
+ {
+  "action": "render_surface",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Verifies that nested Column, Row, Card, Text, and Button components render in declared hierarchy and order.",
+  "features": [
+   "F-RND-02",
+   "F-RND-12",
+   "F-RND-14",
+   "F-BP-01",
+   "F-BP-02",
+   "F-BP-03",
+   "F-BP-04",
+   "F-BP-05",
+   "F-BP-13",
+   "F-BP-16"
+  ],
+  "name": "tree_hierarchy_declared_order",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectOutbound": [],
+    "expectViewTree": {
+     "children": [
+      {
+       "children": [
+        {
+         "id": "title_text",
+         "text": "Welcome to A2UI",
+         "type": "Text"
+        }
+       ],
+       "id": "header_card",
+       "type": "Card"
+      },
+      {
+       "children": [
+        {
+         "children": [
+          {
+           "id": "primary_btn_label",
+           "text": "Get Started",
+           "type": "Text"
+          }
+         ],
+         "id": "primary_btn",
+         "type": "Button"
+        },
+        {
+         "id": "secondary_text",
+         "text": "Learn More",
+         "type": "Text"
+        }
+       ],
+       "id": "action_row",
+       "type": "Row"
+      }
+     ],
+     "id": "root",
+     "type": "Column"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "surfaceId": "adapter_surface"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "children": [
+          "header_card",
+          "action_row"
+         ],
+         "component": "Column",
+         "id": "root"
+        },
+        {
+         "child": "title_text",
+         "component": "Card",
+         "id": "header_card"
+        },
+        {
+         "component": "Text",
+         "id": "title_text",
+         "text": "Welcome to A2UI"
+        },
+        {
+         "children": [
+          "primary_btn",
+          "secondary_text"
+         ],
+         "component": "Row",
+         "id": "action_row"
+        },
+        {
+         "action": {
+          "event": {
+           "name": "get_started"
+          }
+         },
+         "child": "primary_btn_label",
+         "component": "Button",
+         "id": "primary_btn"
+        },
+        {
+         "component": "Text",
+         "id": "primary_btn_label",
+         "text": "Get Started"
+        },
+        {
+         "component": "Text",
+         "id": "secondary_text",
+         "text": "Learn More"
+        }
+       ],
+       "surfaceId": "adapter_surface"
+      },
+      "version": "1.0"
+     }
+    ],
+    "op": "process_messages"
+   }
+  ]
+ },
+ {
+  "action": "render_surface",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Verifies that a single v1.0 createSurface message with inline components and dataModel renders immediately without follow-up messages.",
+  "features": [
+   "F-RND-01",
+   "F-RND-04",
+   "F-RND-18",
+   "F-BP-02",
+   "F-BP-09",
+   "F-BP-14",
+   "F-BP-16"
+  ],
+  "name": "single_message_v10_surface_render",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectDataModel": {
+     "greeting": "Hello Inline v1.0"
+    },
+    "expectViewTree": {
+     "children": [
+      {
+       "id": "greeting_text",
+       "text": "Hello Inline v1.0",
+       "type": "Text"
+      }
+     ],
+     "id": "root",
+     "type": "Card"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "components": [
+        {
+         "child": "greeting_text",
+         "component": "Card",
+         "id": "root"
+        },
+        {
+         "component": "Text",
+         "id": "greeting_text",
+         "text": {
+          "@path": "/greeting"
+         }
+        }
+       ],
+       "dataModel": {
+        "greeting": "Hello Inline v1.0"
+       },
+       "surfaceId": "adapter_surface"
+      },
+      "version": "1.0"
+     }
+    ],
+    "op": "process_messages"
+   }
+  ]
+ },
+ {
+  "action": "render_surface",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Verifies that a pending child renders a non-crashing placeholder and upgrades in place when its definition arrives without remounting the parent container.",
+  "features": [
+   "F-RND-01",
+   "F-RND-17",
+   "F-BP-03",
+   "F-BP-16"
+  ],
+  "name": "progressive_arrival_placeholder_upgrade_in_place",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectViewTree": {
+     "children": [
+      {
+       "id": "deferred_text",
+       "state": "pending"
+      }
+     ],
+     "id": "root",
+     "type": "Card"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "components": [
+        {
+         "child": "deferred_text",
+         "component": "Card",
+         "id": "root"
+        }
+       ],
+       "surfaceId": "adapter_surface"
+      },
+      "version": "1.0"
+     }
+    ],
+    "op": "process_messages"
+   },
+   {
+    "expectSameViewIdentity": [
+     "root"
+    ],
+    "expectViewTree": {
+     "children": [
+      {
+       "id": "deferred_text",
+       "state": "resolved",
+       "text": "Arrived Safely",
+       "type": "Text"
+      }
+     ],
+     "id": "root",
+     "type": "Card"
+    },
+    "messages": [
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "component": "Text",
+         "id": "deferred_text",
+         "text": "Arrived Safely"
+        }
+       ],
+       "surfaceId": "adapter_surface"
+      },
+      "version": "1.0"
+     }
+    ],
+    "op": "process_messages"
+   }
+  ]
+ },
+ {
+  "action": "render_surface",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Verifies List repeater rendering, @index evaluation, and item insertion, reordering, and deletion while preserving surviving view identity.",
+  "features": [
+   "F-RND-03",
+   "F-RND-12",
+   "F-BP-04",
+   "F-BP-16"
+  ],
+  "name": "dynamic_repeater_list_insert_delete_reorder_and_index",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectViewTree": {
+     "children": [
+      {
+       "id": "item_row",
+       "text": "0: Alpha",
+       "type": "Text"
+      },
+      {
+       "id": "item_row",
+       "text": "1: Beta",
+       "type": "Text"
+      }
+     ],
+     "id": "root",
+     "type": "List"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "components": [
+        {
+         "children": {
+          "componentId": "item_row",
+          "path": "/items"
+         },
+         "component": "List",
+         "id": "root"
+        },
+        {
+         "component": "Text",
+         "id": "item_row",
+         "text": {
+          "@call": "formatString",
+          "args": {
+           "value": "${@index()}: ${name}"
+          }
+         }
+        }
+       ],
+       "dataModel": {
+        "items": [
+         {
+          "name": "Alpha"
+         },
+         {
+          "name": "Beta"
+         }
+        ]
+       },
+       "surfaceId": "adapter_surface"
+      },
+      "version": "1.0"
+     }
+    ],
+    "op": "process_messages"
+   },
+   {
+    "expectSameViewIdentity": [
+     "root",
+     "root/children/0"
+    ],
+    "expectViewTree": {
+     "children": [
+      {
+       "id": "item_row",
+       "text": "0: Alpha",
+       "type": "Text"
+      },
+      {
+       "id": "item_row",
+       "text": "1: Gamma",
+       "type": "Text"
+      },
+      {
+       "id": "item_row",
+       "text": "2: Beta",
+       "type": "Text"
+      }
+     ],
+     "id": "root",
+     "type": "List"
+    },
+    "messages": [
+     {
+      "updateDataModel": {
+       "path": "/items",
+       "surfaceId": "adapter_surface",
+       "value": [
+        {
+         "name": "Alpha"
+        },
+        {
+         "name": "Gamma"
+        },
+        {
+         "name": "Beta"
+        }
+       ]
+      },
+      "version": "1.0"
+     }
+    ],
+    "op": "process_messages"
+   },
+   {
+    "expectSameViewIdentity": [
+     "root",
+     "root/children/0"
+    ],
+    "expectViewTree": {
+     "children": [
+      {
+       "id": "item_row",
+       "text": "0: Beta",
+       "type": "Text"
+      }
+     ],
+     "id": "root",
+     "type": "List"
+    },
+    "messages": [
+     {
+      "updateDataModel": {
+       "path": "/items",
+       "surfaceId": "adapter_surface",
+       "value": [
+        {
+         "name": "Beta"
+        }
+       ]
+      },
+      "version": "1.0"
+     }
+    ],
+    "op": "process_messages"
+   }
+  ]
+ },
+ {
+  "action": "render_surface",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Verifies that user input on a TextField with a writable @path binding mutates the DataModel and reactively updates dependent Text components.",
+  "features": [
+   "F-RND-04",
+   "F-RND-05",
+   "F-RND-14",
+   "F-BP-05",
+   "F-BP-16"
+  ],
+  "name": "two_way_binding_control_write_updates_dependents",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectViewTree": {
+     "children": [
+      {
+       "id": "name_input",
+       "type": "TextField",
+       "value": "Ada"
+      },
+      {
+       "id": "preview_text",
+       "text": "Ada",
+       "type": "Text"
+      }
+     ],
+     "id": "root",
+     "type": "Column"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "components": [
+        {
+         "children": [
+          "name_input",
+          "preview_text"
+         ],
+         "component": "Column",
+         "id": "root"
+        },
+        {
+         "component": "TextField",
+         "id": "name_input",
+         "label": "Username",
+         "value": {
+          "@path": "/username"
+         }
+        },
+        {
+         "component": "Text",
+         "id": "preview_text",
+         "text": {
+          "@path": "/username"
+         }
+        }
+       ],
+       "dataModel": {
+        "username": "Ada"
+       },
+       "surfaceId": "adapter_surface"
+      },
+      "version": "1.0"
+     }
+    ],
+    "op": "process_messages"
+   },
+   {
+    "expectDataModel": {
+     "username": "Grace"
+    },
+    "expectViewTree": {
+     "children": [
+      {
+       "id": "name_input",
+       "type": "TextField",
+       "value": "Grace"
+      },
+      {
+       "id": "preview_text",
+       "text": "Grace",
+       "type": "Text"
+      }
+     ],
+     "id": "root",
+     "type": "Column"
+    },
+    "inputValue": "Grace",
+    "op": "user_input",
+    "targetNode": "name_input"
+   }
+  ]
+ },
+ {
+  "action": "render_surface",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Verifies that an event action dispatches an outbound action event with resolved context, whereas a local functionCall action executes locally without emitting an outbound action event.",
+  "features": [
+   "F-RND-06",
+   "F-RND-07",
+   "F-BP-06",
+   "F-BP-16"
+  ],
+  "name": "action_execution_event_vs_local_function_call",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "components": [
+        {
+         "children": [
+          "event_btn",
+          "func_btn"
+         ],
+         "component": "Row",
+         "id": "root"
+        },
+        {
+         "action": {
+          "event": {
+           "context": {
+            "sku": {
+             "@path": "/itemId"
+            }
+           },
+           "name": "buy_item"
+          }
+         },
+         "child": "event_btn_label",
+         "component": "Button",
+         "id": "event_btn"
+        },
+        {
+         "component": "Text",
+         "id": "event_btn_label",
+         "text": "Buy"
+        },
+        {
+         "action": {
+          "functionCall": {
+           "@call": "incrementCounter",
+           "args": {
+            "path": "/counter",
+            "step": 5
+           }
+          }
+         },
+         "child": "func_btn_label",
+         "component": "Button",
+         "id": "func_btn"
+        },
+        {
+         "component": "Text",
+         "id": "func_btn_label",
+         "text": "Increment"
+        }
+       ],
+       "dataModel": {
+        "counter": 10,
+        "itemId": "sku-42"
+       },
+       "surfaceId": "adapter_surface"
+      },
+      "version": "1.0"
+     }
+    ],
+    "op": "process_messages"
+   },
+   {
+    "expectActions": [
+     {
+      "context": {
+       "sku": "sku-42"
+      },
+      "name": "buy_item",
+      "sourceComponentId": "event_btn",
+      "surfaceId": "adapter_surface"
+     }
+    ],
+    "expectOutbound": [
+     {
+      "action": {
+       "context": {
+        "sku": "sku-42"
+       },
+       "name": "buy_item",
+       "sourceComponentId": "event_btn",
+       "surfaceId": "adapter_surface",
+       "timestamp": {
+        "$match": "any"
+       }
+      },
+      "version": "1.0"
+     }
+    ],
+    "op": "user_gesture",
+    "targetNode": "event_btn",
+    "userActivation": true
+   },
+   {
+    "expectActions": [],
+    "expectDataModel": {
+     "counter": 15,
+     "itemId": "sku-42"
+    },
+    "expectOutbound": [],
+    "op": "user_gesture",
+    "targetNode": "func_btn",
+    "userActivation": true
+   }
+  ]
+ },
+ {
+  "action": "render_surface",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Verifies that a function with requiresUserActivation=true succeeds when triggered by a user gesture (userActivation=true) and is blocked when invoked programmatically (userActivation=false).",
+  "features": [
+   "F-RND-08",
+   "F-BP-06",
+   "F-BP-16"
+  ],
+  "name": "user_activation_gated_function_gesture_vs_programmatic",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "components": [
+        {
+         "action": {
+          "functionCall": {
+           "@call": "openUrl",
+           "args": {
+            "url": "https://example.com"
+           }
+          }
+         },
+         "child": "link_label",
+         "component": "Button",
+         "id": "root"
+        },
+        {
+         "component": "Text",
+         "id": "link_label",
+         "text": "Open External Site"
+        }
+       ],
+       "surfaceId": "adapter_surface"
+      },
+      "version": "1.0"
+     }
+    ],
+    "op": "process_messages"
+   },
+   {
+    "expectActions": [],
+    "expectErrors": [],
+    "expectOutbound": [],
+    "op": "user_gesture",
+    "targetNode": "root",
+    "userActivation": true
+   },
+   {
+    "expectActions": [],
+    "expectErrors": [
+     {
+      "message": "openUrl",
+      "surfaceId": "adapter_surface"
+     }
+    ],
+    "expectOutbound": [
+     {
+      "error": {
+       "code": "EXPRESSION_ERROR",
+       "message": {
+        "$match": "any"
+       },
+       "surfaceId": "adapter_surface"
+      },
+      "version": "1.0"
+     }
+    ],
+    "op": "programmatic_invoke",
+    "targetNode": "root",
+    "userActivation": false
+   }
+  ]
+ },
+ {
+  "action": "render_surface",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "catalogs": [
+   {
+    "catalogId": "https://example.com/catalogs/badges/v1/catalog.json",
+    "components": {
+     "StatusBadge": {
+      "properties": {
+       "badgeText": {
+        "$ref": "common_types.json#/$defs/DynamicString"
+       },
+       "component": {
+        "const": "StatusBadge"
+       }
+      },
+      "required": [
+       "component",
+       "badgeText"
+      ],
+      "type": "object"
+     }
+    },
+    "protocolVersion": "1.0"
+   }
+  ],
+  "description": "Verifies that a single v1.0 surface renders components from both the default basic catalog and a secondary custom catalog via component-level catalogId overrides.",
+  "features": [
+   "F-RND-19",
+   "F-RND-20",
+   "F-BP-10",
+   "F-BP-11",
+   "F-BP-12",
+   "F-BP-16"
+  ],
+  "name": "multi_catalog_mixed_surface_rendering",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectViewTree": {
+     "children": [
+      {
+       "id": "heading_text",
+       "text": "System Status",
+       "type": "Text"
+      },
+      {
+       "badgeText": "Operational",
+       "id": "custom_badge",
+       "type": "StatusBadge"
+      }
+     ],
+     "id": "root",
+     "type": "Column"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "components": [
+        {
+         "children": [
+          "heading_text",
+          "custom_badge"
+         ],
+         "component": "Column",
+         "id": "root"
+        },
+        {
+         "component": "Text",
+         "id": "heading_text",
+         "text": "System Status"
+        },
+        {
+         "badgeText": "Operational",
+         "catalogId": "https://example.com/catalogs/badges/v1/catalog.json",
+         "component": "StatusBadge",
+         "id": "custom_badge"
+        }
+       ],
+       "surfaceId": "adapter_surface"
+      },
+      "version": "1.0"
+     }
+    ],
+    "op": "process_messages"
+   }
+  ]
+ },
+ {
+  "action": "render_surface",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Verifies that a failing check with severity=error marks the control invalid (isValid=false), whereas severity=warning and severity=info surface diagnostic feedback and hints while keeping the control valid/enabled (isValid=true).",
+  "features": [
+   "F-RND-09",
+   "F-BP-16"
+  ],
+  "name": "validation_results_error_disables_warning_allows",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectViewTree": {
+     "children": [
+      {
+       "id": "email_input",
+       "isValid": false,
+       "type": "TextField",
+       "validationErrors": [
+        "Please enter a valid email address (e.g. user@example.com)."
+       ]
+      },
+      {
+       "id": "nickname_input",
+       "isValid": true,
+       "type": "TextField",
+       "validationErrors": [],
+       "validationResults": [
+        {
+         "code": "SHORT_NICKNAME",
+         "message": "Nickname is short but allowed.",
+         "severity": "warning",
+         "valid": false
+        }
+       ]
+      },
+      {
+       "hints": [
+        "Optional: add a phone number"
+       ],
+       "id": "phone_input",
+       "isValid": true,
+       "type": "TextField",
+       "validationErrors": [],
+       "validationResults": [
+        {
+         "code": "OPTIONAL_PHONE",
+         "message": "Optional: add a phone number",
+         "severity": "info",
+         "valid": false
+        }
+       ]
+      }
+     ],
+     "id": "root",
+     "type": "Column"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "components": [
+        {
+         "children": [
+          "email_input",
+          "nickname_input",
+          "phone_input"
+         ],
+         "component": "Column",
+         "id": "root"
+        },
+        {
+         "checks": [
+          {
+           "condition": {
+            "@call": "email",
+            "args": {
+             "value": {
+              "@path": "/email"
+             }
+            }
+           },
+           "message": "Please enter a valid email address (e.g. user@example.com)."
+          }
+         ],
+         "component": "TextField",
+         "id": "email_input",
+         "label": "Email",
+         "value": {
+          "@path": "/email"
+         }
+        },
+        {
+         "checks": [
+          {
+           "condition": {
+            "@path": "/nicknameWarning"
+           }
+          }
+         ],
+         "component": "TextField",
+         "id": "nickname_input",
+         "label": "Nickname",
+         "value": {
+          "@path": "/nickname"
+         }
+        },
+        {
+         "checks": [
+          {
+           "condition": {
+            "@path": "/phoneInfo"
+           }
+          }
+         ],
+         "component": "TextField",
+         "id": "phone_input",
+         "label": "Phone",
+         "value": {
+          "@path": "/phone"
+         }
+        }
+       ],
+       "dataModel": {
+        "email": "not-an-email",
+        "nickname": "al",
+        "nicknameWarning": {
+         "code": "SHORT_NICKNAME",
+         "message": "Nickname is short but allowed.",
+         "severity": "warning",
+         "valid": false
+        },
+        "phone": "",
+        "phoneInfo": {
+         "code": "OPTIONAL_PHONE",
+         "message": "Optional: add a phone number",
+         "severity": "info",
+         "valid": false
+        }
+       },
+       "surfaceId": "adapter_surface"
+      },
+      "version": "1.0"
+     }
+    ],
+    "op": "process_messages"
+   }
+  ]
+ },
+ {
+  "action": "render_surface",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Verifies that explicit AccessibilityAttributes (label, description, live, hidden) and implicit child text label inference are applied and override correctly.",
+  "features": [
+   "F-RND-15",
+   "F-BP-07",
+   "F-BP-16"
+  ],
+  "name": "accessibility_attributes_and_implicit_label_override",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectAccessibilityTree": {
+     "explicit_btn": {
+      "description": "Discards unsaved edits",
+      "label": "Close Dialog",
+      "role": "button"
+     },
+     "hidden_note": {
+      "hidden": true
+     },
+     "implicit_btn": {
+      "label": "Save Changes",
+      "role": "button"
+     },
+     "live_banner": {
+      "live": "polite"
+     }
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "components": [
+        {
+         "children": [
+          "implicit_btn",
+          "explicit_btn",
+          "live_banner",
+          "hidden_note"
+         ],
+         "component": "Column",
+         "id": "root"
+        },
+        {
+         "action": {
+          "event": {
+           "name": "save"
+          }
+         },
+         "child": "implicit_btn_text",
+         "component": "Button",
+         "id": "implicit_btn"
+        },
+        {
+         "component": "Text",
+         "id": "implicit_btn_text",
+         "text": "Save Changes"
+        },
+        {
+         "accessibility": {
+          "description": "Discards unsaved edits",
+          "label": "Close Dialog"
+         },
+         "action": {
+          "event": {
+           "name": "close"
+          }
+         },
+         "child": "explicit_btn_text",
+         "component": "Button",
+         "id": "explicit_btn"
+        },
+        {
+         "component": "Text",
+         "id": "explicit_btn_text",
+         "text": "X"
+        },
+        {
+         "accessibility": {
+          "live": "polite"
+         },
+         "component": "Text",
+         "id": "live_banner",
+         "text": "Sync complete"
+        },
+        {
+         "accessibility": {
+          "hidden": true
+         },
+         "component": "Text",
+         "id": "hidden_note",
+         "text": "Internal debug ID"
+        }
+       ],
+       "surfaceId": "adapter_surface"
+      },
+      "version": "1.0"
+     }
+    ],
+    "op": "process_messages"
+   }
+  ]
+ },
+ {
+  "action": "render_surface",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Verifies that when a v1.0 createSurface includes a theme under permissive mode (strictMode: false), the processor drops the theme field and the surface renders identically to a surface created without a theme.",
+  "features": [
+   "F-RND-01",
+   "F-RND-18",
+   "F-BP-09",
+   "F-BP-14",
+   "F-BP-16"
+  ],
+  "name": "v10_theme_dropped_in_permissive_mode_renders_like_none",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectErrors": [],
+    "expectThemeAbsent": true,
+    "expectViewTree": {
+     "children": [
+      {
+       "id": "body_text",
+       "text": "Theme Independent v1.0",
+       "type": "Text"
+      }
+     ],
+     "id": "root",
+     "type": "Card"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "components": [
+        {
+         "child": "body_text",
+         "component": "Card",
+         "id": "root"
+        },
+        {
+         "component": "Text",
+         "id": "body_text",
+         "text": "Theme Independent v1.0"
+        }
+       ],
+       "surfaceId": "adapter_surface",
+       "theme": {
+        "primaryColor": "#FF00AA"
+       }
+      },
+      "version": "1.0"
+     }
+    ],
+    "op": "process_messages"
+   }
+  ],
+  "strictMode": false
+ },
+ {
+  "action": "render_surface",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Verifies that unknown component types and same-scope cyclic references render safe fallback placeholders and emit UNKNOWN_COMPONENT_TYPE and CYCLIC_REFERENCE diagnostics on surface.onError.",
+  "features": [
+   "F-RND-17",
+   "F-BP-03",
+   "F-BP-16"
+  ],
+  "name": "fallback_states_unknown_type_and_cyclic_diagnostics",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectErrors": [
+     {
+      "code": "UNKNOWN_COMPONENT_TYPE",
+      "surfaceId": "adapter_surface"
+     },
+     {
+      "code": "CYCLIC_REFERENCE",
+      "surfaceId": "adapter_surface"
+     }
+    ],
+    "expectOutbound": [
+     {
+      "error": {
+       "code": "UNKNOWN_COMPONENT_TYPE",
+       "message": {
+        "$match": "any"
+       },
+       "surfaceId": "adapter_surface"
+      },
+      "version": "1.0"
+     },
+     {
+      "error": {
+       "code": "CYCLIC_REFERENCE",
+       "message": {
+        "$match": "any"
+       },
+       "surfaceId": "adapter_surface"
+      },
+      "version": "1.0"
+     }
+    ],
+    "expectViewTree": {
+     "children": [
+      {
+       "id": "unknown_widget",
+       "occupiesLayout": false,
+       "state": "unknown-type"
+      },
+      {
+       "children": [
+        {
+         "id": "root",
+         "occupiesLayout": false,
+         "state": "cyclic"
+        }
+       ],
+       "id": "cycle_card",
+       "type": "Card"
+      }
+     ],
+     "id": "root",
+     "type": "Column"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "components": [
+        {
+         "children": [
+          "unknown_widget",
+          "cycle_card"
+         ],
+         "component": "Column",
+         "id": "root"
+        },
+        {
+         "component": "UnregisteredFutureWidget",
+         "id": "unknown_widget"
+        },
+        {
+         "child": "root",
+         "component": "Card",
+         "id": "cycle_card"
+        }
+       ],
+       "surfaceId": "adapter_surface"
+      },
+      "version": "1.0"
+     }
+    ],
+    "op": "process_messages"
+   }
+  ]
+ },
+ {
+  "action": "render_surface",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Verifies that unmounting the surface view disposes its NodeResolver and releases all active reactive subscriptions on the SurfaceModel and DataModel.",
+  "features": [
+   "F-RND-21",
+   "F-BP-08",
+   "F-BP-16"
+  ],
+  "name": "teardown_unmount_releases_subscriptions",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectViewTree": {
+     "children": [
+      {
+       "id": "status_text",
+       "text": "Mounted",
+       "type": "Text"
+      }
+     ],
+     "id": "root",
+     "type": "Card"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "components": [
+        {
+         "child": "status_text",
+         "component": "Card",
+         "id": "root"
+        },
+        {
+         "component": "Text",
+         "id": "status_text",
+         "text": {
+          "@path": "/status"
+         }
+        }
+       ],
+       "dataModel": {
+        "status": "Mounted"
+       },
+       "surfaceId": "adapter_surface"
+      },
+      "version": "1.0"
+     }
+    ],
+    "op": "process_messages"
+   },
+   {
+    "expectActiveSubscriptions": 0,
+    "op": "unmount_surface"
+   }
+  ]
+ },
+ {
+  "action": "render_surface",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Verifies that processing a deleteSurface message removes the surface from the group, unmounts the rendered view, and releases all active reactive subscriptions.",
+  "features": [
+   "F-RND-01",
+   "F-RND-21",
+   "F-BP-08"
+  ],
+  "name": "delete_surface_unmounts_view",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectViewTree": {
+     "children": [
+      {
+       "id": "status_text",
+       "text": "Active",
+       "type": "Text"
+      }
+     ],
+     "id": "root",
+     "type": "Card"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "components": [
+        {
+         "child": "status_text",
+         "component": "Card",
+         "id": "root"
+        },
+        {
+         "component": "Text",
+         "id": "status_text",
+         "text": {
+          "@path": "/status"
+         }
+        }
+       ],
+       "dataModel": {
+        "status": "Active"
+       },
+       "surfaceId": "adapter_surface"
+      },
+      "version": "1.0"
+     }
+    ],
+    "op": "process_messages"
+   },
+   {
+    "expectActiveSubscriptions": 0,
+    "expectSurfaceRemoved": true,
+    "messages": [
+     {
+      "deleteSurface": {
+       "surfaceId": "adapter_surface"
+      },
+      "version": "1.0"
+     }
+    ],
+    "op": "process_messages"
+   }
+  ]
+ },
+ {
+  "action": "render_surface",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Verifies that replacing a component with a different type under the same id creates a new view identity rather than reusing the prior component's stateful view.",
+  "features": [
+   "F-RND-01",
+   "F-RND-21",
+   "F-BP-04",
+   "F-BP-08"
+  ],
+  "name": "type_change_under_same_id_resets_view_state",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectViewTree": {
+     "children": [
+      {
+       "id": "field",
+       "type": "TextField",
+       "value": "Initial"
+      }
+     ],
+     "id": "root",
+     "type": "Card"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "components": [
+        {
+         "child": "field",
+         "component": "Card",
+         "id": "root"
+        },
+        {
+         "component": "TextField",
+         "id": "field",
+         "label": "Note",
+         "value": {
+          "@path": "/note"
+         }
+        }
+       ],
+       "dataModel": {
+        "note": "Initial"
+       },
+       "surfaceId": "adapter_surface"
+      },
+      "version": "1.0"
+     }
+    ],
+    "op": "process_messages"
+   },
+   {
+    "expectDataModel": {
+     "note": "Typed in TextField"
+    },
+    "inputValue": "Typed in TextField",
+    "op": "user_input",
+    "targetNode": "field"
+   },
+   {
+    "expectNewViewIdentity": [
+     "root/children/0"
+    ],
+    "expectViewTree": {
+     "children": [
+      {
+       "id": "field",
+       "text": "Now a static label",
+       "type": "Text"
+      }
+     ],
+     "id": "root",
+     "type": "Card"
+    },
+    "messages": [
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "component": "Text",
+         "id": "field",
+         "text": "Now a static label"
+        }
+       ],
+       "surfaceId": "adapter_surface"
+      },
+      "version": "1.0"
+     }
+    ],
+    "op": "process_messages"
+   }
+  ]
+ },
+ {
+  "action": "render_surface",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Verifies that when a parent component removes a child from its children list, the unreferenced child node is disposed and releases its data model subscriptions.",
+  "features": [
+   "F-RND-21",
+   "F-BP-08"
+  ],
+  "name": "removed_components_release_subscriptions",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectViewTree": {
+     "children": [
+      {
+       "id": "kept_child",
+       "text": "Kept",
+       "type": "Text"
+      },
+      {
+       "id": "old_child",
+       "text": "Old",
+       "type": "Text"
+      }
+     ],
+     "id": "root",
+     "type": "Column"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "components": [
+        {
+         "children": [
+          "kept_child",
+          "old_child"
+         ],
+         "component": "Column",
+         "id": "root"
+        },
+        {
+         "component": "Text",
+         "id": "kept_child",
+         "text": {
+          "@path": "/kept"
+         }
+        },
+        {
+         "component": "Text",
+         "id": "old_child",
+         "text": {
+          "@path": "/old"
+         }
+        }
+       ],
+       "dataModel": {
+        "kept": "Kept",
+        "old": "Old"
+       },
+       "surfaceId": "adapter_surface"
+      },
+      "version": "1.0"
+     }
+    ],
+    "op": "process_messages"
+   },
+   {
+    "expectDisposedNodes": [
+     "old_child"
+    ],
+    "expectViewTree": {
+     "children": [
+      {
+       "id": "kept_child",
+       "text": "Kept",
+       "type": "Text"
+      }
+     ],
+     "id": "root",
+     "type": "Column"
+    },
+    "messages": [
+     {
+      "updateComponents": {
+       "components": [
+        {
+         "children": [
+          "kept_child"
+         ],
+         "component": "Column",
+         "id": "root"
+        }
+       ],
+       "surfaceId": "adapter_surface"
+      },
+      "version": "1.0"
+     }
+    ],
+    "op": "process_messages"
+   }
+  ]
+ },
+ {
+  "action": "render_surface",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Verifies that user_input on CheckBox, ChoicePicker, Slider, and DateTimeInput writes back to bound @path entries in DataModel and updates dependent views.",
+  "features": [
+   "F-RND-05",
+   "F-RND-14",
+   "F-BP-05"
+  ],
+  "name": "two_way_binding_inputs_checkbox_choice_slider_datetime",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectViewTree": {
+     "children": [
+      {
+       "id": "agree_box",
+       "type": "CheckBox",
+       "value": false
+      },
+      {
+       "id": "choice_picker",
+       "type": "ChoicePicker",
+       "value": [
+        "opt_a"
+       ]
+      },
+      {
+       "id": "level_slider",
+       "type": "Slider",
+       "value": 10
+      },
+      {
+       "id": "when_input",
+       "type": "DateTimeInput",
+       "value": "2025-01-01T08:00:00"
+      },
+      {
+       "id": "summary_text",
+       "text": "agreed=false choice=[\"opt_a\"] level=10 when=2025-01-01T08:00:00",
+       "type": "Text"
+      }
+     ],
+     "id": "root",
+     "type": "Column"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "components": [
+        {
+         "children": [
+          "agree_box",
+          "choice_picker",
+          "level_slider",
+          "when_input",
+          "summary_text"
+         ],
+         "component": "Column",
+         "id": "root"
+        },
+        {
+         "component": "CheckBox",
+         "id": "agree_box",
+         "label": "Agree",
+         "value": {
+          "@path": "/form/agreed"
+         }
+        },
+        {
+         "component": "ChoicePicker",
+         "id": "choice_picker",
+         "label": "Pick one",
+         "options": [
+          {
+           "label": "Option A",
+           "value": "opt_a"
+          },
+          {
+           "label": "Option B",
+           "value": "opt_b"
+          }
+         ],
+         "value": {
+          "@path": "/form/choice"
+         },
+         "variant": "mutuallyExclusive"
+        },
+        {
+         "component": "Slider",
+         "id": "level_slider",
+         "label": "Level",
+         "max": 100,
+         "min": 0,
+         "value": {
+          "@path": "/form/level"
+         }
+        },
+        {
+         "component": "DateTimeInput",
+         "enableDate": true,
+         "enableTime": true,
+         "id": "when_input",
+         "label": "When",
+         "value": {
+          "@path": "/form/when"
+         }
+        },
+        {
+         "component": "Text",
+         "id": "summary_text",
+         "text": {
+          "@call": "formatString",
+          "args": {
+           "value": "agreed=${/form/agreed} choice=${/form/choice} level=${/form/level} when=${/form/when}"
+          }
+         }
+        }
+       ],
+       "dataModel": {
+        "form": {
+         "agreed": false,
+         "choice": [
+          "opt_a"
+         ],
+         "level": 10,
+         "when": "2025-01-01T08:00:00"
+        }
+       },
+       "surfaceId": "adapter_surface"
+      },
+      "version": "1.0"
+     }
+    ],
+    "op": "process_messages"
+   },
+   {
+    "expectDataModel": {
+     "form": {
+      "agreed": true,
+      "choice": [
+       "opt_a"
+      ],
+      "level": 10,
+      "when": "2025-01-01T08:00:00"
+     }
+    },
+    "expectViewTree": {
+     "children": [
+      {
+       "id": "agree_box",
+       "type": "CheckBox",
+       "value": true
+      },
+      {
+       "id": "choice_picker",
+       "type": "ChoicePicker",
+       "value": [
+        "opt_a"
+       ]
+      },
+      {
+       "id": "level_slider",
+       "type": "Slider",
+       "value": 10
+      },
+      {
+       "id": "when_input",
+       "type": "DateTimeInput",
+       "value": "2025-01-01T08:00:00"
+      },
+      {
+       "id": "summary_text",
+       "text": "agreed=true choice=[\"opt_a\"] level=10 when=2025-01-01T08:00:00",
+       "type": "Text"
+      }
+     ],
+     "id": "root",
+     "type": "Column"
+    },
+    "inputValue": true,
+    "op": "user_input",
+    "targetNode": "agree_box"
+   },
+   {
+    "expectDataModel": {
+     "form": {
+      "agreed": true,
+      "choice": [
+       "opt_b"
+      ],
+      "level": 10,
+      "when": "2025-01-01T08:00:00"
+     }
+    },
+    "expectViewTree": {
+     "children": [
+      {
+       "id": "agree_box",
+       "type": "CheckBox",
+       "value": true
+      },
+      {
+       "id": "choice_picker",
+       "type": "ChoicePicker",
+       "value": [
+        "opt_b"
+       ]
+      },
+      {
+       "id": "level_slider",
+       "type": "Slider",
+       "value": 10
+      },
+      {
+       "id": "when_input",
+       "type": "DateTimeInput",
+       "value": "2025-01-01T08:00:00"
+      },
+      {
+       "id": "summary_text",
+       "text": "agreed=true choice=[\"opt_b\"] level=10 when=2025-01-01T08:00:00",
+       "type": "Text"
+      }
+     ],
+     "id": "root",
+     "type": "Column"
+    },
+    "inputValue": [
+     "opt_b"
+    ],
+    "op": "user_input",
+    "targetNode": "choice_picker"
+   },
+   {
+    "expectDataModel": {
+     "form": {
+      "agreed": true,
+      "choice": [
+       "opt_b"
+      ],
+      "level": 42,
+      "when": "2025-01-01T08:00:00"
+     }
+    },
+    "expectViewTree": {
+     "children": [
+      {
+       "id": "agree_box",
+       "type": "CheckBox",
+       "value": true
+      },
+      {
+       "id": "choice_picker",
+       "type": "ChoicePicker",
+       "value": [
+        "opt_b"
+       ]
+      },
+      {
+       "id": "level_slider",
+       "type": "Slider",
+       "value": 42
+      },
+      {
+       "id": "when_input",
+       "type": "DateTimeInput",
+       "value": "2025-01-01T08:00:00"
+      },
+      {
+       "id": "summary_text",
+       "text": "agreed=true choice=[\"opt_b\"] level=42 when=2025-01-01T08:00:00",
+       "type": "Text"
+      }
+     ],
+     "id": "root",
+     "type": "Column"
+    },
+    "inputValue": 42,
+    "op": "user_input",
+    "targetNode": "level_slider"
+   },
+   {
+    "expectDataModel": {
+     "form": {
+      "agreed": true,
+      "choice": [
+       "opt_b"
+      ],
+      "level": 42,
+      "when": "2025-01-31T09:30:00"
+     }
+    },
+    "expectViewTree": {
+     "children": [
+      {
+       "id": "agree_box",
+       "type": "CheckBox",
+       "value": true
+      },
+      {
+       "id": "choice_picker",
+       "type": "ChoicePicker",
+       "value": [
+        "opt_b"
+       ]
+      },
+      {
+       "id": "level_slider",
+       "type": "Slider",
+       "value": 42
+      },
+      {
+       "id": "when_input",
+       "type": "DateTimeInput",
+       "value": "2025-01-31T09:30:00"
+      },
+      {
+       "id": "summary_text",
+       "text": "agreed=true choice=[\"opt_b\"] level=42 when=2025-01-31T09:30:00",
+       "type": "Text"
+      }
+     ],
+     "id": "root",
+     "type": "Column"
+    },
+    "inputValue": "2025-01-31T09:30:00",
+    "op": "user_input",
+    "targetNode": "when_input"
+   }
+  ]
+ },
+ {
+  "action": "render_surface",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Verifies that Image, Video, AudioPlayer, and Icon resolve bound and literal url and name properties and update when the data model changes.\n",
+  "features": [
+   "F-RND-04",
+   "F-RND-13",
+   "F-BP-05"
+  ],
+  "name": "media_components_bind_url_and_name",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectViewTree": {
+     "children": [
+      {
+       "id": "hero_img",
+       "type": "Image",
+       "url": "https://example.com/banner-v1.png"
+      },
+      {
+       "id": "intro_video",
+       "type": "Video",
+       "url": "https://example.com/intro.mp4"
+      },
+      {
+       "id": "podcast_audio",
+       "type": "AudioPlayer",
+       "url": "https://example.com/podcast-ep1.mp3"
+      },
+      {
+       "id": "status_icon",
+       "name": "check",
+       "type": "Icon"
+      }
+     ],
+     "id": "root",
+     "type": "Column"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "components": [
+        {
+         "children": [
+          "hero_img",
+          "intro_video",
+          "podcast_audio",
+          "status_icon"
+         ],
+         "component": "Column",
+         "id": "root"
+        },
+        {
+         "component": "Image",
+         "description": "Hero banner",
+         "id": "hero_img",
+         "url": {
+          "@path": "/media/imageUrl"
+         }
+        },
+        {
+         "component": "Video",
+         "id": "intro_video",
+         "url": {
+          "@path": "/media/videoUrl"
+         }
+        },
+        {
+         "component": "AudioPlayer",
+         "description": "Episode 1",
+         "id": "podcast_audio",
+         "url": {
+          "@path": "/media/audioUrl"
+         }
+        },
+        {
+         "component": "Icon",
+         "id": "status_icon",
+         "name": "check"
+        }
+       ],
+       "dataModel": {
+        "media": {
+         "audioUrl": "https://example.com/podcast-ep1.mp3",
+         "imageUrl": "https://example.com/banner-v1.png",
+         "videoUrl": "https://example.com/intro.mp4"
+        }
+       },
+       "surfaceId": "adapter_surface"
+      },
+      "version": "1.0"
+     }
+    ],
+    "op": "process_messages"
+   },
+   {
+    "expectViewTree": {
+     "children": [
+      {
+       "id": "hero_img",
+       "type": "Image",
+       "url": "https://example.com/banner-v2.png"
+      },
+      {
+       "id": "intro_video",
+       "type": "Video",
+       "url": "https://example.com/intro.mp4"
+      },
+      {
+       "id": "podcast_audio",
+       "type": "AudioPlayer",
+       "url": "https://example.com/podcast-ep1.mp3"
+      },
+      {
+       "id": "status_icon",
+       "name": "check",
+       "type": "Icon"
+      }
+     ],
+     "id": "root",
+     "type": "Column"
+    },
+    "messages": [
+     {
+      "updateDataModel": {
+       "path": "/media/imageUrl",
+       "surfaceId": "adapter_surface",
+       "value": "https://example.com/banner-v2.png"
+      },
+      "version": "1.0"
+     }
+    ],
+    "op": "process_messages"
+   }
+  ]
+ },
+ {
+  "action": "render_surface",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Verifies that Tabs initially renders the first tab's child component and switches to the selected tab's child component on user_input.\n",
+  "features": [
+   "F-RND-12",
+   "F-BP-05"
+  ],
+  "name": "tabs_switch_content",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectViewTree": {
+     "children": [
+      {
+       "id": "tab_one_text",
+       "text": "First tab content",
+       "type": "Text"
+      }
+     ],
+     "id": "root",
+     "type": "Tabs"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "components": [
+        {
+         "component": "Tabs",
+         "id": "root",
+         "tabs": [
+          {
+           "child": "tab_one_text",
+           "title": "First"
+          },
+          {
+           "child": "tab_two_text",
+           "title": "Second"
+          }
+         ]
+        },
+        {
+         "component": "Text",
+         "id": "tab_one_text",
+         "text": "First tab content"
+        },
+        {
+         "component": "Text",
+         "id": "tab_two_text",
+         "text": "Second tab content"
+        }
+       ],
+       "surfaceId": "adapter_surface"
+      },
+      "version": "1.0"
+     }
+    ],
+    "op": "process_messages"
+   },
+   {
+    "expectViewTree": {
+     "children": [
+      {
+       "id": "tab_two_text",
+       "text": "Second tab content",
+       "type": "Text"
+      }
+     ],
+     "id": "root",
+     "type": "Tabs"
+    },
+    "inputValue": 1,
+    "op": "user_input",
+    "targetNode": "root"
+   }
+  ]
+ },
+ {
+  "action": "render_surface",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Verifies that Modal initially mounts its trigger child and mounts its content child once the trigger is activated via user_gesture.\n",
+  "features": [
+   "F-RND-06",
+   "F-RND-12",
+   "F-BP-05"
+  ],
+  "name": "modal_open_shows_content",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectViewTree": {
+     "children": [
+      {
+       "children": [
+        {
+         "id": "open_btn_text",
+         "text": "Open Details",
+         "type": "Text"
+        }
+       ],
+       "id": "open_btn",
+       "type": "Button"
+      }
+     ],
+     "id": "root",
+     "type": "Modal"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "components": [
+        {
+         "component": "Modal",
+         "content": "modal_body",
+         "id": "root",
+         "trigger": "open_btn"
+        },
+        {
+         "action": {
+          "event": {
+           "name": "open_modal"
+          }
+         },
+         "child": "open_btn_text",
+         "component": "Button",
+         "id": "open_btn"
+        },
+        {
+         "component": "Text",
+         "id": "open_btn_text",
+         "text": "Open Details"
+        },
+        {
+         "component": "Text",
+         "id": "modal_body",
+         "text": "Modal dialog content"
+        }
+       ],
+       "surfaceId": "adapter_surface"
+      },
+      "version": "1.0"
+     }
+    ],
+    "op": "process_messages"
+   },
+   {
+    "expectActions": [
+     {
+      "context": {},
+      "name": "open_modal",
+      "sourceComponentId": "open_btn",
+      "surfaceId": "adapter_surface"
+     }
+    ],
+    "expectViewTree": {
+     "children": [
+      {
+       "children": [
+        {
+         "id": "open_btn_text",
+         "text": "Open Details",
+         "type": "Text"
+        }
+       ],
+       "id": "open_btn",
+       "type": "Button"
+      },
+      {
+       "id": "modal_body",
+       "text": "Modal dialog content",
+       "type": "Text"
+      }
+     ],
+     "id": "root",
+     "type": "Modal"
+    },
+    "op": "user_gesture",
+    "targetNode": "open_btn"
+   }
+  ]
+ },
+ {
+  "action": "render_surface",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "description": "Verifies that Divider renders its axis property alongside bound Slider and DateTimeInput components.\n",
+  "features": [
+   "F-RND-12",
+   "F-RND-14",
+   "F-BP-05"
+  ],
+  "name": "divider_and_slider_datetime_render",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectViewTree": {
+     "children": [
+      {
+       "axis": "vertical",
+       "id": "sep",
+       "type": "Divider"
+      },
+      {
+       "id": "vol_slider",
+       "type": "Slider",
+       "value": 25
+      },
+      {
+       "id": "dt_input",
+       "type": "DateTimeInput",
+       "value": "2025-06-15"
+      }
+     ],
+     "id": "root",
+     "type": "Column"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "components": [
+        {
+         "children": [
+          "sep",
+          "vol_slider",
+          "dt_input"
+         ],
+         "component": "Column",
+         "id": "root"
+        },
+        {
+         "axis": "vertical",
+         "component": "Divider",
+         "id": "sep"
+        },
+        {
+         "component": "Slider",
+         "id": "vol_slider",
+         "label": "Volume",
+         "max": 100,
+         "min": 0,
+         "value": {
+          "@path": "/vol"
+         }
+        },
+        {
+         "component": "DateTimeInput",
+         "enableDate": true,
+         "enableTime": false,
+         "id": "dt_input",
+         "label": "Schedule",
+         "value": {
+          "@path": "/date"
+         }
+        }
+       ],
+       "dataModel": {
+        "date": "2025-06-15",
+        "vol": 25
+       },
+       "surfaceId": "adapter_surface"
+      },
+      "version": "1.0"
+     }
+    ],
+    "op": "process_messages"
+   }
+  ]
+ },
+ {
+  "action": "render_surface",
+  "catalogPaths": [
+   "catalogs/basic/v1/catalog.json"
+  ],
+  "catalogs": [
+   {
+    "catalogId": "https://example.com/catalogs/account/v1/catalog.json",
+    "functions": {
+     "lookupAccount": {
+      "allowedCallers": "rendererOrAgent",
+      "properties": {
+       "@call": {
+        "const": "lookupAccount"
+       },
+       "args": {
+        "additionalProperties": false,
+        "properties": {
+         "accountId": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "accountId"
+        ],
+        "type": "object"
+       }
+      },
+      "required": [
+       "@call",
+       "args"
+      ],
+      "returnType": "string",
+      "type": "object"
+     }
+    },
+    "protocolVersion": "1.0"
+   }
+  ],
+  "description": "Verifies that when an agent function called by a button action returns an error response, the pipeline halts, subsequent local data model mutations do not execute, the surface reports EXPRESSION_ERROR, an error outbound envelope is emitted, and the view tree remains mounted.",
+  "features": [
+   "F-RND-11",
+   "F-BP-06"
+  ],
+  "name": "agent_function_action_failure_reports_expression_error",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "expectViewTree": {
+     "children": [
+      {
+       "children": [
+        {
+         "id": "btn_label",
+         "type": "Text"
+        }
+       ],
+       "id": "btn",
+       "type": "Button"
+      }
+     ],
+     "id": "root",
+     "type": "Column"
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "components": [
+        {
+         "children": [
+          "btn"
+         ],
+         "component": "Column",
+         "id": "root"
+        },
+        {
+         "action": {
+          "functionCall": {
+           "@call": "incrementCounter",
+           "args": {
+            "path": "/counter",
+            "step": {
+             "@call": "lookupAccount",
+             "args": {
+              "accountId": "acc-123"
+             },
+             "catalogId": "https://example.com/catalogs/account/v1/catalog.json"
+            }
+           }
+          }
+         },
+         "child": "btn_label",
+         "component": "Button",
+         "id": "btn"
+        },
+        {
+         "component": "Text",
+         "id": "btn_label",
+         "text": "Lookup and Increment"
+        }
+       ],
+       "dataModel": {
+        "counter": 10
+       },
+       "surfaceId": "adapter_surface"
+      },
+      "version": "1.0"
+     }
+    ],
+    "op": "process_messages"
+   },
+   {
+    "expectActions": [],
+    "expectOutbound": [
+     {
+      "callAgentFunction": {
+       "callFunction": {
+        "@call": "lookupAccount",
+        "args": {
+         "accountId": "acc-123"
+        },
+        "catalogId": "https://example.com/catalogs/account/v1/catalog.json"
+       },
+       "functionCallId": {
+        "$match": "any"
+       },
+       "surfaceId": "adapter_surface"
+      },
+      "version": "1.0"
+     }
+    ],
+    "op": "user_gesture",
+    "targetNode": "btn",
+    "userActivation": true
+   },
+   {
+    "expectDataModel": {
+     "counter": 10
+    },
+    "expectErrors": [
+     {
+      "code": "EXPRESSION_ERROR",
+      "surfaceId": "adapter_surface"
+     }
+    ],
+    "expectOutbound": [
+     {
+      "error": {
+       "code": "EXPRESSION_ERROR",
+       "functionCallId": {
+        "$match": "any"
+       },
+       "message": {
+        "$match": "any"
+       }
+      },
+      "version": "1.0"
+     }
+    ],
+    "expectViewTree": {
+     "children": [
+      {
+       "children": [
+        {
+         "id": "btn_label",
+         "type": "Text"
+        }
+       ],
+       "id": "btn",
+       "type": "Button"
+      }
+     ],
+     "id": "root",
+     "type": "Column"
+    },
+    "messages": [
+     {
+      "agentFunctionResponse": {
+       "error": {
+        "code": "EXECUTION_ERROR",
+        "message": "Account lookup failed"
+       },
+       "functionCallId": {
+        "$ref": "lastCallId"
+       }
+      },
+      "version": "1.0"
+     }
+    ],
+    "op": "process_messages"
+   }
+  ]
+ }
+]

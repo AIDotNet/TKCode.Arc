@@ -1,0 +1,782 @@
+[
+ {
+  "action": "accessibility_check",
+  "assertions": {
+   "accessibilityTree": {
+    "btn1": {
+     "description": "Silences notifications about this conversation",
+     "label": "Mute Notifications"
+    },
+    "status_text": {
+     "live": "polite"
+    }
+   },
+   "axeCore": [
+    "button-name",
+    "aria-valid-attr-value",
+    "aria-allowed-attr"
+   ]
+  },
+  "catalogPath": "catalogs/basic/v1/catalog.json",
+  "description": "Verifies plumbing of AccessibilityAttributes (label, description, live, hidden) to accessibility node trees and axe-core rules.",
+  "features": [
+   "F-RND-15",
+   "F-BP-07"
+  ],
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "components": [
+      {
+       "children": [
+        "btn1",
+        "status_text"
+       ],
+       "component": "Column",
+       "id": "root"
+      },
+      {
+       "@accessibility": {
+        "description": "Silences notifications about this conversation",
+        "label": "Mute Notifications"
+       },
+       "action": {
+        "event": {
+         "name": "tap"
+        }
+       },
+       "child": "btn1_label",
+       "component": "Button",
+       "id": "btn1"
+      },
+      {
+       "component": "Text",
+       "id": "btn1_label",
+       "text": "Mute"
+      },
+      {
+       "@accessibility": {
+        "live": "polite"
+       },
+       "component": "Text",
+       "id": "status_text",
+       "text": "Status: Active"
+      }
+     ],
+     "surfaceId": "a11y_surface"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_accessibility_attributes_plumbing",
+  "protocolVersion": "1.0",
+  "surface": {
+   "children": [
+    "btn1",
+    "status_text"
+   ],
+   "component": "Column",
+   "components": {
+    "btn1": {
+     "@accessibility": {
+      "description": "Silences notifications about this conversation",
+      "label": "Mute Notifications"
+     },
+     "action": {
+      "event": {
+       "name": "tap"
+      }
+     },
+     "child": "btn1_label",
+     "component": "Button",
+     "title": "Mute"
+    },
+    "btn1_label": {
+     "component": "Text",
+     "text": "Mute"
+    },
+    "status_text": {
+     "@accessibility": {
+      "live": "polite"
+     },
+     "component": "Text",
+     "text": "Status: Active"
+    }
+   },
+   "id": "root"
+  }
+ },
+ {
+  "action": "accessibility_check",
+  "assertions": {
+   "accessibilityTree": {
+    "alert_box": {
+     "label": "Critical Alert",
+     "live": "assertive"
+    }
+   },
+   "axeCore": [
+    "aria-valid-attr-value"
+   ]
+  },
+  "catalogPath": "catalogs/basic/v1/catalog.json",
+  "description": "Verifies assertive live region announcement for critical alert banner updates.",
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "components": [
+      {
+       "child": "alert_box",
+       "component": "Card",
+       "id": "root"
+      },
+      {
+       "@accessibility": {
+        "label": "Critical Alert",
+        "live": "assertive"
+       },
+       "component": "Text",
+       "id": "alert_box",
+       "text": "Connection Lost!"
+      }
+     ],
+     "surfaceId": "a11y_surface"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_accessibility_live_region_assertive",
+  "protocolVersion": "1.0",
+  "surface": {
+   "child": "alert_box",
+   "component": "Card",
+   "components": {
+    "alert_box": {
+     "@accessibility": {
+      "label": "Critical Alert",
+      "live": "assertive"
+     },
+     "component": "Text",
+     "text": "Connection Lost!"
+    }
+   },
+   "id": "root"
+  }
+ },
+ {
+  "action": "accessibility_check",
+  "assertions": {
+   "accessibilityTree": {
+    "root": {
+     "hidden": true
+    }
+   },
+   "axeCore": [
+    "aria-hidden-focus"
+   ]
+  },
+  "catalogPath": "catalogs/basic/v1/catalog.json",
+  "description": "Verifies that setting hidden=true hides the component and its children from assistive technologies.",
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "components": [
+      {
+       "@accessibility": {
+        "hidden": true
+       },
+       "children": [
+        "visible_text",
+        "decorative_icon"
+       ],
+       "component": "Column",
+       "id": "root"
+      },
+      {
+       "component": "Text",
+       "id": "visible_text",
+       "text": "Visible Content"
+      },
+      {
+       "component": "Icon",
+       "id": "decorative_icon",
+       "name": "star"
+      }
+     ],
+     "surfaceId": "a11y_surface"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_accessibility_hidden_subtree",
+  "protocolVersion": "1.0",
+  "surface": {
+   "@accessibility": {
+    "hidden": true
+   },
+   "children": [
+    "visible_text",
+    "decorative_icon"
+   ],
+   "component": "Column",
+   "components": {
+    "decorative_icon": {
+     "component": "Icon",
+     "name": "star"
+    },
+    "visible_text": {
+     "component": "Text",
+     "text": "Visible Content"
+    }
+   },
+   "id": "root"
+  }
+ },
+ {
+  "action": "accessibility_check",
+  "assertions": {
+   "accessibilityTree": {
+    "submit_btn": {
+     "label": "Submit Form"
+    }
+   },
+   "axeCore": [
+    "button-name"
+   ]
+  },
+  "catalogPath": "catalogs/basic/v1/catalog.json",
+  "description": "Verifies default screen reader semantic inference from visible text properties when explicit accessibility attributes are omitted.",
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "components": [
+      {
+       "children": [
+        "submit_btn"
+       ],
+       "component": "Column",
+       "id": "root"
+      },
+      {
+       "action": {
+        "event": {
+         "name": "tap"
+        }
+       },
+       "child": "submit_btn_label",
+       "component": "Button",
+       "id": "submit_btn"
+      },
+      {
+       "component": "Text",
+       "id": "submit_btn_label",
+       "text": "Submit Form"
+      }
+     ],
+     "surfaceId": "a11y_surface"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_accessibility_implicit_label_inference",
+  "protocolVersion": "1.0",
+  "surface": {
+   "children": [
+    "submit_btn"
+   ],
+   "component": "Column",
+   "components": {
+    "submit_btn": {
+     "action": {
+      "event": {
+       "name": "tap"
+      }
+     },
+     "child": "submit_btn_label",
+     "component": "Button",
+     "title": "Submit Form"
+    },
+    "submit_btn_label": {
+     "component": "Text",
+     "text": "Submit Form"
+    }
+   },
+   "id": "root"
+  }
+ },
+ {
+  "action": "accessibility_check",
+  "assertions": {
+   "accessibilityTree": {
+    "btn": {
+     "label": "Submit Feedback",
+     "role": "button"
+    },
+    "check_box": {
+     "checked": true,
+     "label": "Accept Terms and Conditions",
+     "role": "checkbox"
+    },
+    "choice_picker": {
+     "label": "Select Preference",
+     "role": "radiogroup"
+    },
+    "text_input": {
+     "description": "Enter a valid email address",
+     "role": "textbox"
+    }
+   },
+   "axeCore": [
+    "button-name",
+    "aria-valid-attr-value",
+    "aria-allowed-attr"
+   ]
+  },
+  "catalogPath": "catalogs/basic/v1/catalog.json",
+  "description": "Verifies accessibility role mapping and ARIA states for Button, TextField, CheckBox, ChoicePicker.",
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "components": [
+      {
+       "children": [
+        "btn",
+        "text_input",
+        "check_box",
+        "choice_picker"
+       ],
+       "component": "Column",
+       "id": "root"
+      },
+      {
+       "@accessibility": {
+        "label": "Submit Feedback"
+       },
+       "action": {
+        "event": {
+         "name": "tap"
+        }
+       },
+       "child": "btn_label",
+       "component": "Button",
+       "id": "btn"
+      },
+      {
+       "component": "Text",
+       "id": "btn_label",
+       "text": "Submit"
+      },
+      {
+       "@accessibility": {
+        "description": "Enter a valid email address"
+       },
+       "component": "TextField",
+       "id": "text_input",
+       "label": "Your Email",
+       "value": ""
+      },
+      {
+       "@accessibility": {
+        "label": "Accept Terms and Conditions"
+       },
+       "component": "CheckBox",
+       "id": "check_box",
+       "label": "I agree to terms",
+       "value": true
+      },
+      {
+       "@accessibility": {
+        "label": "Select Preference"
+       },
+       "component": "ChoicePicker",
+       "id": "choice_picker",
+       "options": [
+        {
+         "label": "Option 1",
+         "value": "1"
+        },
+        {
+         "label": "Option 2",
+         "value": "2"
+        }
+       ],
+       "value": [
+        "1"
+       ],
+       "variant": "mutuallyExclusive"
+      }
+     ],
+     "surfaceId": "a11y_surface"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_accessibility_interactive_roles_and_states",
+  "protocolVersion": "1.0",
+  "surface": {
+   "children": [
+    "btn",
+    "text_input",
+    "check_box",
+    "choice_picker"
+   ],
+   "component": "Column",
+   "components": {
+    "btn": {
+     "@accessibility": {
+      "label": "Submit Feedback"
+     },
+     "action": {
+      "event": {
+       "name": "tap"
+      }
+     },
+     "child": "btn_label",
+     "component": "Button",
+     "title": "Submit"
+    },
+    "btn_label": {
+     "component": "Text",
+     "text": "Submit"
+    },
+    "check_box": {
+     "@accessibility": {
+      "label": "Accept Terms and Conditions"
+     },
+     "checked": true,
+     "component": "CheckBox",
+     "label": "I agree to terms",
+     "value": true
+    },
+    "choice_picker": {
+     "@accessibility": {
+      "label": "Select Preference"
+     },
+     "component": "ChoicePicker",
+     "options": [
+      {
+       "label": "Option 1",
+       "value": "1"
+      },
+      {
+       "label": "Option 2",
+       "value": "2"
+      }
+     ],
+     "selectedIndex": 0,
+     "value": [
+      "1"
+     ],
+     "variant": "mutuallyExclusive"
+    },
+    "text_input": {
+     "@accessibility": {
+      "description": "Enter a valid email address"
+     },
+     "component": "TextField",
+     "label": "Your Email",
+     "value": ""
+    }
+   },
+   "id": "root"
+  }
+ },
+ {
+  "action": "accessibility_check",
+  "assertions": {
+   "accessibilityTree": {
+    "dynamic_btn": {
+     "hidden": {
+      "path": "/isButtonHidden"
+     },
+     "label": {
+      "path": "/buttonLabel"
+     }
+    },
+    "dynamic_status": {
+     "hidden": {
+      "path": "/isStatusHidden"
+     }
+    }
+   },
+   "axeCore": [
+    "button-name",
+    "aria-hidden-focus"
+   ]
+  },
+  "catalogPath": "catalogs/basic/v1/catalog.json",
+  "description": "Verifies dynamic data bindings in accessibility attributes (label, hidden) reactively update accessibility trees.",
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "components": [
+      {
+       "children": [
+        "dynamic_btn",
+        "dynamic_status"
+       ],
+       "component": "Column",
+       "id": "root"
+      },
+      {
+       "@accessibility": {
+        "hidden": {
+         "@path": "/isButtonHidden"
+        },
+        "label": {
+         "@path": "/buttonLabel"
+        }
+       },
+       "action": {
+        "event": {
+         "name": "tap"
+        }
+       },
+       "child": "dynamic_btn_label",
+       "component": "Button",
+       "id": "dynamic_btn"
+      },
+      {
+       "component": "Text",
+       "id": "dynamic_btn_label",
+       "text": "Dynamic Action"
+      },
+      {
+       "@accessibility": {
+        "hidden": {
+         "@path": "/isStatusHidden"
+        }
+       },
+       "component": "Text",
+       "id": "dynamic_status",
+       "text": "Status"
+      }
+     ],
+     "dataModel": {
+      "buttonLabel": "Mute Audio",
+      "isButtonHidden": false,
+      "isStatusHidden": true
+     },
+     "surfaceId": "a11y_surface"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_accessibility_dynamic_label_and_hidden_binding",
+  "protocolVersion": "1.0",
+  "steps": [
+   {
+    "assertions": {
+     "accessibilityTree": {
+      "dynamic_btn": {
+       "hidden": false,
+       "label": "Mute Audio"
+      },
+      "dynamic_status": {
+       "hidden": true
+      }
+     },
+     "axeCore": [
+      "button-name",
+      "aria-hidden-focus"
+     ]
+    },
+    "messages": [
+     {
+      "createSurface": {
+       "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+       "components": [
+        {
+         "children": [
+          "dynamic_btn",
+          "dynamic_status"
+         ],
+         "component": "Column",
+         "id": "root"
+        },
+        {
+         "@accessibility": {
+          "hidden": {
+           "@path": "/isButtonHidden"
+          },
+          "label": {
+           "@path": "/buttonLabel"
+          }
+         },
+         "action": {
+          "event": {
+           "name": "tap"
+          }
+         },
+         "child": "dynamic_btn_label",
+         "component": "Button",
+         "id": "dynamic_btn"
+        },
+        {
+         "component": "Text",
+         "id": "dynamic_btn_label",
+         "text": "Dynamic Action"
+        },
+        {
+         "@accessibility": {
+          "hidden": {
+           "@path": "/isStatusHidden"
+          }
+         },
+         "component": "Text",
+         "id": "dynamic_status",
+         "text": "Status"
+        }
+       ],
+       "dataModel": {
+        "buttonLabel": "Mute Audio",
+        "isButtonHidden": false,
+        "isStatusHidden": true
+       },
+       "surfaceId": "a11y_surface"
+      },
+      "version": "1.0"
+     }
+    ]
+   },
+   {
+    "assertions": {
+     "accessibilityTree": {
+      "dynamic_btn": {
+       "hidden": true,
+       "label": "Unmute Audio"
+      },
+      "dynamic_status": {
+       "hidden": true
+      }
+     },
+     "axeCore": [
+      "button-name",
+      "aria-hidden-focus"
+     ]
+    },
+    "messages": [
+     {
+      "updateDataModel": {
+       "path": "/buttonLabel",
+       "surfaceId": "a11y_surface",
+       "value": "Unmute Audio"
+      },
+      "version": "1.0"
+     },
+     {
+      "updateDataModel": {
+       "path": "/isButtonHidden",
+       "surfaceId": "a11y_surface",
+       "value": true
+      },
+      "version": "1.0"
+     }
+    ]
+   }
+  ],
+  "surface": {
+   "children": [
+    "dynamic_btn",
+    "dynamic_status"
+   ],
+   "component": "Column",
+   "components": {
+    "dynamic_btn": {
+     "@accessibility": {
+      "hidden": {
+       "@path": "/isButtonHidden"
+      },
+      "label": {
+       "@path": "/buttonLabel"
+      }
+     },
+     "action": {
+      "event": {
+       "name": "tap"
+      }
+     },
+     "child": "dynamic_btn_label",
+     "component": "Button",
+     "title": "Dynamic Action"
+    },
+    "dynamic_btn_label": {
+     "component": "Text",
+     "text": "Dynamic Action"
+    },
+    "dynamic_status": {
+     "@accessibility": {
+      "hidden": {
+       "@path": "/isStatusHidden"
+      }
+     },
+     "component": "Text",
+     "text": "Status"
+    }
+   },
+   "id": "root"
+  }
+ },
+ {
+  "action": "accessibility_check",
+  "assertions": {
+   "accessibilityTree": {
+    "legacy_text": {
+     "label": "Legacy Label"
+    }
+   }
+  },
+  "catalogPath": "catalogs/basic/v1/catalog.json",
+  "description": "Verifies that a v1.0 component carrying the legacy bare accessibility key, which its schema does not declare as a custom property, still exposes its accessibility attributes during the transition window.",
+  "messages": [
+   {
+    "createSurface": {
+     "catalogId": "https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json",
+     "components": [
+      {
+       "children": [
+        "legacy_text"
+       ],
+       "component": "Column",
+       "id": "root"
+      },
+      {
+       "accessibility": {
+        "label": "Legacy Label"
+       },
+       "component": "Text",
+       "id": "legacy_text",
+       "text": "Legacy"
+      }
+     ],
+     "surfaceId": "a11y_surface"
+    },
+    "version": "1.0"
+   }
+  ],
+  "name": "test_accessibility_v1_0_legacy_bare_accessibility_dual_read",
+  "protocolVersion": "1.0",
+  "surface": {
+   "children": [
+    "legacy_text"
+   ],
+   "component": "Column",
+   "components": {
+    "legacy_text": {
+     "accessibility": {
+      "label": "Legacy Label"
+     },
+     "component": "Text",
+     "text": "Legacy"
+    }
+   },
+   "id": "root"
+  }
+ }
+]
