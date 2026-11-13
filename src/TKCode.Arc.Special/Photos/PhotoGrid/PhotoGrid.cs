@@ -6,6 +6,7 @@ using Avalonia.Automation.Peers;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Data;
+using Avalonia.Interactivity;
 using Avalonia.Input;
 using Avalonia.Metadata;
 using Avalonia.Threading;
@@ -58,6 +59,12 @@ public class PhotoGrid : Control
     /// <summary>The selected photo, which opens wide on its own row; -1 for none. Two-way.</summary>
     public static readonly StyledProperty<int> SelectedIndexProperty =
         AvaloniaProperty.Register<PhotoGrid, int>(nameof(SelectedIndex), -1, defaultBindingMode: BindingMode.TwoWay);
+
+    /// <summary>
+    /// Raised when <see cref="SelectedIndex"/> changes, whether a photo was opened or closed or the index was set in code or through a binding.
+    /// </summary>
+    public static readonly RoutedEvent<PhotosSelectionChangedEventArgs> SelectionChangedEvent =
+        RoutedEvent.Register<PhotoGrid, PhotosSelectionChangedEventArgs>(nameof(SelectionChanged), RoutingStrategies.Bubble);
 
     /// <summary>The tallest the selected photo is drawn (default from the theme, 520).</summary>
     public static readonly StyledProperty<double> SelectedMaxHeightProperty =
@@ -153,6 +160,13 @@ public class PhotoGrid : Control
         set => SetValue(SelectedIndexProperty, value);
     }
 
+    /// <inheritdoc cref="SelectionChangedEvent"/>
+    public event EventHandler<PhotosSelectionChangedEventArgs>? SelectionChanged
+    {
+        add => AddHandler(SelectionChangedEvent, value);
+        remove => RemoveHandler(SelectionChangedEvent, value);
+    }
+
     /// <inheritdoc cref="SelectedMaxHeightProperty"/>
     public double SelectedMaxHeight
     {
@@ -246,9 +260,11 @@ public class PhotoGrid : Control
         }
         if (SelectedIndex >= photos.Count)
         {
+            var was = SelectedIndex;
             _syncing = true;
             SetCurrentValue(SelectedIndexProperty, -1);
             _syncing = false;
+            RaiseSelectionChanged(was);
         }
         _focusIndex = Math.Clamp(_focusIndex, 0, Math.Max(0, photos.Count - 1));
         _itemsChanged = true;
@@ -347,6 +363,7 @@ public class PhotoGrid : Control
                 var tile = _tiles[SelectedIndex];
                 Dispatcher.UIThread.Post(() => BringIntoView(tile), DispatcherPriority.Loaded);
             }
+            RaiseSelectionChanged(change.GetOldValue<int>());
         }
         else if (change.Property == ImageNameFormatProperty)
         {
@@ -359,6 +376,15 @@ public class PhotoGrid : Control
         else if (change.Property == IsSelectionEnabledProperty && !change.GetNewValue<bool>() && SelectedIndex >= 0)
         {
             SetCurrentValue(SelectedIndexProperty, -1);
+        }
+    }
+
+    private void RaiseSelectionChanged(int oldIndex)
+    {
+        var newIndex = SelectedIndex;
+        if (newIndex != oldIndex)
+        {
+            RaiseEvent(new PhotosSelectionChangedEventArgs(SelectionChangedEvent, oldIndex, newIndex));
         }
     }
 

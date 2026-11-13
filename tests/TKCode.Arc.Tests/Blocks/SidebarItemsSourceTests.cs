@@ -32,6 +32,18 @@ public class SidebarItemsSourceTests
         public bool CanAdd { get; set; }
         public ObservableCollection<MenuNode> Children { get; } = new();
 
+        public bool Visible
+        {
+            get => _visible;
+            set
+            {
+                _visible = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Visible)));
+            }
+        }
+
+        private bool _visible = true;
+
         public event PropertyChangedEventHandler? PropertyChanged;
     }
 
@@ -69,6 +81,28 @@ public class SidebarItemsSourceTests
 
         parent.Title = "Renamed";
         items[0].Label.ShouldBe("Renamed");
+    }
+
+    [AvaloniaFact]
+    public void IsVisibleMember_follows_a_data_members_visibility_and_the_binding_wins_over_the_path()
+    {
+        var node = new MenuNode { Key = "p", Title = "Parent" };
+        var sidebar = Make(new ObservableCollection<MenuNode> { node });
+        sidebar.IsVisibleMember = nameof(MenuNode.Visible);
+
+        var item = sidebar.Sections[0].Items[0];
+        item.IsVisible.ShouldBeTrue();
+        node.Visible = false;
+        item.IsVisible.ShouldBeFalse();
+        node.Visible = true;
+        item.IsVisible.ShouldBeTrue();
+
+        // The compiled binding wins when both are set, and keeps the page trimming and NativeAOT safe.
+        sidebar.IsVisibleMember = "Missing";
+        sidebar.IsVisibleMemberBinding = Compiled(nameof(MenuNode.Visible), n => n.Visible, typeof(bool));
+        item = sidebar.Sections[0].Items[0];
+        node.Visible = false;
+        item.IsVisible.ShouldBeFalse();
     }
 
     private static BindingBase Compiled(string name, Func<MenuNode, object?> get, Type type)

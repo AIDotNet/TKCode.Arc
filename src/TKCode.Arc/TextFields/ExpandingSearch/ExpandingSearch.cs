@@ -114,8 +114,13 @@ public class ExpandingSearch : TemplatedControl
         AvaloniaProperty.Register<ExpandingSearch, ICommand?>(nameof(SelectCommand));
 
     /// <summary>Raised when a result or suggestion is chosen (after the field folds back).</summary>
+    public static readonly RoutedEvent<ExpandingSearchItemSelectedEventArgs> ItemInvokedEvent =
+        RoutedEvent.Register<ExpandingSearch, ExpandingSearchItemSelectedEventArgs>(nameof(ItemInvoked), RoutingStrategies.Bubble);
+
+    /// <summary>The former name of <see cref="ItemInvokedEvent"/>; it is raised together with it.</summary>
+    [Obsolete("Use ItemInvoked instead (deprecated in 1.1.0). It is raised together with ItemInvoked.")]
     public static readonly RoutedEvent<ExpandingSearchItemSelectedEventArgs> ItemSelectedEvent =
-        RoutedEvent.Register<ExpandingSearch, ExpandingSearchItemSelectedEventArgs>(nameof(ItemSelected), RoutingStrategies.Bubble);
+        RoutedEvent.Register<ExpandingSearch, ExpandingSearchItemSelectedEventArgs>("ItemSelected", RoutingStrategies.Bubble);
 
     public string Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
     public IEnumerable<ExpandingSearchItem>? ItemsSource { get => GetValue(ItemsSourceProperty); set => SetValue(ItemsSourceProperty, value); }
@@ -134,11 +139,21 @@ public class ExpandingSearch : TemplatedControl
     [Content]
     public AvaloniaList<ExpandingSearchItem> Items { get; } = new();
 
-    /// <summary>Raised when a result or suggestion is chosen.</summary>
+    /// <inheritdoc cref="ItemInvokedEvent"/>
+    public event EventHandler<ExpandingSearchItemSelectedEventArgs>? ItemInvoked
+    {
+        add => AddHandler(ItemInvokedEvent, value);
+        remove => RemoveHandler(ItemInvokedEvent, value);
+    }
+
+    /// <inheritdoc cref="ItemSelectedEvent"/>
+    [Obsolete("Use ItemInvoked instead (deprecated in 1.1.0). It is raised together with ItemInvoked.")]
     public event EventHandler<ExpandingSearchItemSelectedEventArgs>? ItemSelected
     {
+#pragma warning disable CS0618 // the alias adds its handlers to the event it stands for
         add => AddHandler(ItemSelectedEvent, value);
         remove => RemoveHandler(ItemSelectedEvent, value);
+#pragma warning restore CS0618
     }
 
     /// <summary>Whether the results panel is open.</summary>
@@ -676,7 +691,10 @@ public class ExpandingSearch : TemplatedControl
     private void Choose(ExpandingSearchItem item)
     {
         Collapse(returnFocus: true);
+        RaiseEvent(new ExpandingSearchItemSelectedEventArgs(ItemInvokedEvent, item));
+#pragma warning disable CS0618 // the former name keeps being raised until a major version removes it
         RaiseEvent(new ExpandingSearchItemSelectedEventArgs(ItemSelectedEvent, item));
+#pragma warning restore CS0618
         ExpandingSearchCommands.Execute(SelectCommand, item);
     }
 

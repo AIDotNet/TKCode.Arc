@@ -56,7 +56,8 @@ public class RadioGroup : HeaderedSelectingItemsControl
         {
             row.Content = option.Label ?? option.Value?.ToString();
             row.Description = option.Description;
-            row.IsEnabled = !option.IsDisabled;
+            row.IsEnabled = option.IsEnabled;
+            row.IsVisible = option.IsVisible;
         }
     }
 

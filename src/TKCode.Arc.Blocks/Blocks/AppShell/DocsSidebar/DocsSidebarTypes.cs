@@ -20,6 +20,18 @@ public class DocsSidebarPage : AvaloniaObject
     public static readonly StyledProperty<string?> BadgeProperty =
         AvaloniaProperty.Register<DocsSidebarPage, string?>(nameof(Badge));
 
+    /// <summary>Whether the page can be chosen. A disabled page is dimmed, skipped by the arrow keys and by <see cref="DocsSidebar.GetAdjacentPage"/>.</summary>
+    public static readonly StyledProperty<bool> IsEnabledProperty =
+        AvaloniaProperty.Register<DocsSidebarPage, bool>(nameof(IsEnabled), true);
+
+    /// <summary>
+    /// Whether the page is shown. A hidden page takes no room, is skipped by the arrow keys, search and
+    /// <see cref="DocsSidebar.GetAdjacentPage"/>, and a hidden parent hides its sub-pages. It stays in <see cref="Pages"/>
+    /// and keeps being the current page when it is.
+    /// </summary>
+    public static readonly StyledProperty<bool> IsVisibleProperty =
+        AvaloniaProperty.Register<DocsSidebarPage, bool>(nameof(IsVisible), true);
+
     public DocsSidebarPage()
     {
     }
@@ -40,6 +52,12 @@ public class DocsSidebarPage : AvaloniaObject
     /// <inheritdoc cref="BadgeProperty"/>
     public string? Badge { get => GetValue(BadgeProperty); set => SetValue(BadgeProperty, value); }
 
+    /// <inheritdoc cref="IsEnabledProperty"/>
+    public bool IsEnabled { get => GetValue(IsEnabledProperty); set => SetValue(IsEnabledProperty, value); }
+
+    /// <inheritdoc cref="IsVisibleProperty"/>
+    public bool IsVisible { get => GetValue(IsVisibleProperty); set => SetValue(IsVisibleProperty, value); }
+
     /// <summary>The sub-pages (the XAML content). One level is shown.</summary>
     [Content]
     public AvaloniaList<DocsSidebarPage> Pages { get; } = new();
@@ -58,6 +76,10 @@ public class DocsSidebarSection : AvaloniaObject
     public static readonly StyledProperty<bool> IsExpandedProperty =
         AvaloniaProperty.Register<DocsSidebarSection, bool>(nameof(IsExpanded), true, defaultBindingMode: Avalonia.Data.BindingMode.TwoWay);
 
+    /// <summary>Whether the section (its heading and its pages) is shown. A hidden section takes no room and its pages leave search and <see cref="DocsSidebar.GetAdjacentPage"/>.</summary>
+    public static readonly StyledProperty<bool> IsVisibleProperty =
+        AvaloniaProperty.Register<DocsSidebarSection, bool>(nameof(IsVisible), true);
+
     public DocsSidebarSection()
     {
     }
@@ -73,6 +95,9 @@ public class DocsSidebarSection : AvaloniaObject
 
     /// <inheritdoc cref="IsExpandedProperty"/>
     public bool IsExpanded { get => GetValue(IsExpandedProperty); set => SetValue(IsExpandedProperty, value); }
+
+    /// <inheritdoc cref="IsVisibleProperty"/>
+    public bool IsVisible { get => GetValue(IsVisibleProperty); set => SetValue(IsVisibleProperty, value); }
 
     /// <summary>The pages of the section (the XAML content).</summary>
     [Content]
@@ -100,6 +125,27 @@ public sealed class DocsSidebarPageEventArgs : RoutedEventArgs
 
     /// <summary>The page that was chosen (now the current page).</summary>
     public DocsSidebarPage Page { get; }
+}
+
+/// <summary>Arguments of <see cref="DocsSidebar.SelectionChanged"/>: the page that is current now.</summary>
+public sealed class DocsSidebarSelectionChangedEventArgs : RoutedEventArgs
+{
+    public DocsSidebarSelectionChangedEventArgs(RoutedEvent routedEvent, string? oldKey, string? newKey, DocsSidebarPage? newPage)
+        : base(routedEvent)
+    {
+        OldKey = oldKey;
+        NewKey = newKey;
+        NewPage = newPage;
+    }
+
+    /// <summary>The key that was current before.</summary>
+    public string? OldKey { get; }
+
+    /// <summary>The key that is current now (<see cref="DocsSidebar.CurrentKey"/>).</summary>
+    public string? NewKey { get; }
+
+    /// <summary>The page with the new key, or null when no page has it (or the key is null).</summary>
+    public DocsSidebarPage? NewPage { get; }
 }
 
 /// <summary>Arguments of <see cref="DocsSidebar.VersionChanged"/>.</summary>

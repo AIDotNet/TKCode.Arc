@@ -117,4 +117,49 @@ public class InboxSidebarTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void Hidden_And_Disabled_Folders_Follow_Live_And_SelectionChanged_Reports_The_Key()
+    {
+        var mail = new InboxSidebar { Height = 640 };
+        var window = TestHelpers.Show(mail);
+        try
+        {
+            Settle();
+            var sidebar = TestHelpers.Descendant<Sidebar>(mail, InboxSidebar.SidebarPart);
+            var sent = mail.ShownFolders.Single(f => f.Key == "sent");
+            var item = sidebar.Sections[0].Items.Single(i => i.Key == "sent");
+            item.IsVisible.ShouldBeTrue();
+            item.IsEnabled.ShouldBeTrue();
+            sent.IsVisible = false;
+            item.IsVisible.ShouldBeFalse();
+            sent.IsVisible = true;
+            item.IsVisible.ShouldBeTrue();
+            sent.IsEnabled = false;
+            item.IsEnabled.ShouldBeFalse();
+            sent.IsEnabled = true;
+
+            var changes = new List<InboxSidebarSelectionChangedEventArgs>();
+            mail.SelectionChanged += (_, e) => changes.Add(e);
+            mail.SelectedKey = "sent";
+            changes.Count.ShouldBe(1);
+            changes[0].OldKey.ShouldBe("inbox");
+            changes[0].NewKey.ShouldBe("sent");
+            changes[0].NewFolder.ShouldBe(sent);
+            changes[0].NewLabel.ShouldBeNull();
+            // The same key again is no change.
+            mail.SelectedKey = "sent";
+            changes.Count.ShouldBe(1);
+            // A label key reports the label.
+            var label = mail.ShownLabels[0];
+            mail.SelectedKey = label.Key;
+            changes.Count.ShouldBe(2);
+            changes[1].NewLabel.ShouldBe(label);
+            changes[1].NewFolder.ShouldBeNull();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

@@ -126,6 +126,7 @@ public class SelectionToolbar : ContentControl
     #endregion
 
     private readonly List<(SelectionToolbarAction Action, AvaloniaButton Button, TextBlock Label)> _buttons = new();
+    private readonly List<IDisposable> _actionBindings = new();
     private IReadOnlyList<SelectionToolbarAction> _shownActions = [];
     private PresenceHost? _barHost;
     private Border? _bar;
@@ -245,6 +246,11 @@ public class SelectionToolbar : ContentControl
         {
             button.Click -= OnActionClick;
         }
+        foreach (var binding in _actionBindings)
+        {
+            binding.Dispose();
+        }
+        _actionBindings.Clear();
         _actions.Children.Clear();
         _buttons.Clear();
         // Destructive actions go last, after a gap, so they are not hit by a slip of the arrow keys.
@@ -265,9 +271,11 @@ public class SelectionToolbar : ContentControl
                 Size = ControlSize.Small,
                 Content = row,
                 Tag = action,
-                IsEnabled = action.IsEnabled,
                 VerticalAlignment = VerticalAlignment.Center
             };
+            // The bar follows an action's state live: an app switches actions off or hides them as the selection changes.
+            _actionBindings.Add(button.Bind(InputElement.IsEnabledProperty, action.GetObservable(SelectionToolbarAction.IsEnabledProperty)));
+            _actionBindings.Add(button.Bind(Visual.IsVisibleProperty, action.GetObservable(SelectionToolbarAction.IsVisibleProperty)));
             if (action.IsDestructive)
             {
                 ArcTokens.Bind(button, ForegroundProperty, ArcDesignTokenKind.Danger);

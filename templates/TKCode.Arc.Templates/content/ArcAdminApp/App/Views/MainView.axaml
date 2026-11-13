@@ -141,7 +141,7 @@
 
         <!-- The command palette: jump to a page or run an action. Each item's Id is a page key or an action of
              MainViewModel.RunCommand. -->
-        <arc:CommandPaletteDialog x:Name="Palette" PlaceholderText="Search pages and actions" ItemSelected="OnCommandSelected">
+        <arc:CommandPaletteDialog x:Name="Palette" PlaceholderText="Search pages and actions" ItemInvoked="OnCommandSelected">
             <arc:CommandPaletteItem Id="dashboard" Label="Dashboard" Group="Go to" Icon="{lucide:LucideGeometry LayoutDashboard}" />
             <arc:CommandPaletteItem Id="customers" Label="Customers" Group="Go to" Icon="{x:Static arc:ArcIcons.Users}" />
             <arc:CommandPaletteItem Id="team" Label="Team" Group="Go to" Icon="{lucide:LucideGeometry UserCog}" />

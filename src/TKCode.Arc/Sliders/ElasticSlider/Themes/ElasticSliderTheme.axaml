@@ -12,7 +12,7 @@
             <ControlTemplate TargetType="arc:ElasticSlider">
                 <!-- Top-aligned grid, not a stack: in a parent shorter than the slider the control row (*) gives way down to
                      RailMinHeight instead of spilling out the bottom (issue #42); otherwise every row takes its natural height. -->
-                <Grid RowDefinitions="Auto,*" RowSpacing="{arc:ElasticSliderTokenResource RowGap}" VerticalAlignment="Top">
+                <Grid Name="PART_Body" RowDefinitions="Auto,*" VerticalAlignment="Top">
                     <DockPanel Name="PART_Header">
                         <!-- While the tag rides the thumb it carries the value, so the readout steps back. -->
                         <TextBlock Name="PART_Readout"
@@ -84,6 +84,17 @@
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <!-- The gap between the header and the control row is a style, not a template value, so that it can go with the header. -->
+        <Style Selector="^ /template/ Grid#PART_Body">
+            <Setter Property="RowSpacing" Value="{arc:ElasticSliderTokenResource RowGap}" />
+        </Style>
+        <!-- No label and no readout: the header row and the gap below it would only push the control row down (issue #101). -->
+        <Style Selector="^:headerless /template/ DockPanel#PART_Header">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:headerless /template/ Grid#PART_Body">
+            <Setter Property="RowSpacing" Value="0" />
+        </Style>
         <Style Selector="^:tag /template/ TextBlock#PART_Readout">
             <Setter Property="Opacity" Value="0" />
         </Style>

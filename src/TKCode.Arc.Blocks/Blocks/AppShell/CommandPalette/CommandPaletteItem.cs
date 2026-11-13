@@ -9,7 +9,7 @@ namespace TKCode.Arc;
 
 /// <summary>
 /// One command of a <see cref="CommandPalette"/>: a label with an optional description, group, icon, shortcut and
-/// search keywords. Choosing it raises <see cref="CommandPalette.ItemSelected"/> and runs its <see cref="Command"/>.
+/// search keywords. Choosing it raises <see cref="CommandPalette.ItemInvoked"/> and runs its <see cref="Command"/>.
 /// </summary>
 public class CommandPaletteItem : AvaloniaObject
 {
@@ -44,6 +44,10 @@ public class CommandPaletteItem : AvaloniaObject
     /// <summary>False dims the row; it cannot be highlighted or chosen.</summary>
     public static readonly StyledProperty<bool> IsEnabledProperty =
         AvaloniaProperty.Register<CommandPaletteItem, bool>(nameof(IsEnabled), true);
+
+    /// <summary>False hides the command: it is not listed, found by the search or reachable by the arrow keys. It stays in the items.</summary>
+    public static readonly StyledProperty<bool> IsVisibleProperty =
+        AvaloniaProperty.Register<CommandPaletteItem, bool>(nameof(IsVisible), true);
 
     /// <summary>Executed (when it can execute) after the command is chosen.</summary>
     public static readonly StyledProperty<ICommand?> CommandProperty =
@@ -80,6 +84,9 @@ public class CommandPaletteItem : AvaloniaObject
 
     /// <inheritdoc cref="IsEnabledProperty"/>
     public bool IsEnabled { get => GetValue(IsEnabledProperty); set => SetValue(IsEnabledProperty, value); }
+
+    /// <inheritdoc cref="IsVisibleProperty"/>
+    public bool IsVisible { get => GetValue(IsVisibleProperty); set => SetValue(IsVisibleProperty, value); }
 
     /// <inheritdoc cref="CommandProperty"/>
     public ICommand? Command { get => GetValue(CommandProperty); set => SetValue(CommandProperty, value); }
@@ -140,7 +147,7 @@ public class CommandPaletteItem : AvaloniaObject
     public override string ToString() => Label;
 }
 
-/// <summary>Arguments of <see cref="CommandPalette.ItemSelected"/>.</summary>
+/// <summary>Arguments of <see cref="CommandPalette.ItemInvoked"/>.</summary>
 public sealed class CommandPaletteItemSelectedEventArgs : RoutedEventArgs
 {
     /// <summary>Creates the arguments for <paramref name="item"/>.</summary>
@@ -182,7 +189,7 @@ internal static class CommandPaletteFilter
         var index = new Dictionary<string, CommandPaletteGroup>(StringComparer.Ordinal);
         foreach (var item in items)
         {
-            if (item is null || !Matches(item, normalized))
+            if (item is null || !item.IsVisible || !Matches(item, normalized))
             {
                 continue;
             }

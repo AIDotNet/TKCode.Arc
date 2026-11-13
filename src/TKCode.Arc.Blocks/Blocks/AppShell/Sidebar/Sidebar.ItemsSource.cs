@@ -63,6 +63,12 @@ public partial class Sidebar
     public static readonly StyledProperty<string?> IsEnabledMemberProperty =
         AvaloniaProperty.Register<Sidebar, string?>(nameof(IsEnabledMember));
 
+    /// <summary>The property path of an item's visibility (a bool; false hides the page, see <see cref="SidebarItem.IsVisible"/>).
+    /// Resolved with reflection, so trimmed and NativeAOT apps use <see cref="IsVisibleMemberBinding"/> instead, which wins
+    /// when both are set.</summary>
+    public static readonly StyledProperty<string?> IsVisibleMemberProperty =
+        AvaloniaProperty.Register<Sidebar, string?>(nameof(IsVisibleMember));
+
     /// <inheritdoc cref="ItemsSourceProperty"/>
     public IEnumerable? ItemsSource
     {
@@ -119,12 +125,20 @@ public partial class Sidebar
         set => SetValue(IsEnabledMemberProperty, value);
     }
 
+    /// <inheritdoc cref="IsVisibleMemberProperty"/>
+    public string? IsVisibleMember
+    {
+        get => GetValue(IsVisibleMemberProperty);
+        set => SetValue(IsVisibleMemberProperty, value);
+    }
+
     private BindingBase? _labelBinding;
     private BindingBase? _keyBinding;
     private BindingBase? _iconBinding;
     private BindingBase? _badgeBinding;
     private BindingBase? _childrenBinding;
     private BindingBase? _isEnabledBinding;
+    private BindingBase? _isVisibleBinding;
 
     /// <summary>
     /// Binding that reads an item's label, e.g. <c>{Binding Title, DataType=local:MenuNode}</c> (for items that are not
@@ -181,6 +195,14 @@ public partial class Sidebar
         set => SetMemberBinding(ref _isEnabledBinding, value);
     }
 
+    /// <summary>Binding that reads an item's visibility (a bool; false hides the page, see <see cref="SidebarItem.IsVisible"/>); it wins over <see cref="IsVisibleMember"/>.</summary>
+    [AssignBinding]
+    public BindingBase? IsVisibleMemberBinding
+    {
+        get => _isVisibleBinding;
+        set => SetMemberBinding(ref _isVisibleBinding, value);
+    }
+
     private void SetMemberBinding(ref BindingBase? field, BindingBase? value)
     {
         if (ReferenceEquals(field, value))
@@ -211,6 +233,9 @@ public partial class Sidebar
 
         public static readonly StyledProperty<bool> IsEnabledProperty =
             AvaloniaProperty.Register<MemberReader, bool>("IsEnabled", true);
+
+        public static readonly StyledProperty<bool> IsVisibleProperty =
+            AvaloniaProperty.Register<MemberReader, bool>("IsVisible", true);
 
         public static readonly StyledProperty<IEnumerable?> ChildrenProperty =
             AvaloniaProperty.Register<MemberReader, IEnumerable?>("Children");
@@ -253,7 +278,7 @@ public partial class Sidebar
         }
         else if (p == TrailingTemplateProperty || p == LabelMemberProperty || p == KeyMemberProperty ||
                  p == IconMemberProperty || p == BadgeMemberProperty || p == ChildrenMemberProperty ||
-                 p == IsEnabledMemberProperty)
+                 p == IsEnabledMemberProperty || p == IsVisibleMemberProperty)
         {
             SyncBound(reset: true);
         }
@@ -356,6 +381,8 @@ public partial class Sidebar
                 BindMember(entry, MemberBinding(_badgeBinding, BadgeMember), MemberReader.BadgeProperty, SidebarItem.BadgeProperty);
                 BindMember(entry, MemberBinding(_isEnabledBinding, IsEnabledMember), MemberReader.IsEnabledProperty,
                     SidebarItem.IsEnabledProperty);
+                BindMember(entry, MemberBinding(_isVisibleBinding, IsVisibleMember), MemberReader.IsVisibleProperty,
+                    SidebarItem.IsVisibleProperty);
                 if (MemberBinding(_childrenBinding, ChildrenMember) is { } childrenBinding)
                 {
                     entry.HasChildren = true;

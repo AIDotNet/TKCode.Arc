@@ -277,10 +277,15 @@ public partial class SiteHeader
         var index = 0;
         foreach (var item in _resolved)
         {
+            if (!item.IsVisible)
+            {
+                continue;
+            }
             var captured = item;
             var group = HasPanel(item);
             var row = new SiteSheetRow
             {
+                IsEnabled = item.IsEnabled,
                 Label = item.Label,
                 IsGroup = group,
                 IsExpandable = group,

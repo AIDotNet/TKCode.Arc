@@ -134,7 +134,8 @@ public class RadioCards : SelectingItemsControl
                 var icon => icon
             };
             card.DisabledReason = option.DisabledReason;
-            card.IsEnabled = !option.IsDisabled;
+            card.IsEnabled = option.IsEnabled;
+            card.IsVisible = option.IsVisible;
         }
     }
 

@@ -147,7 +147,7 @@ public class ToolDockTests
         try
         {
             ToolDockItemEventArgs? chosen = null;
-            dock.ItemChosen += (_, e) => chosen = e;
+            dock.ItemInvoked += (_, e) => chosen = e;
             Click(window, Slot(dock, 4));
             dock.SelectedValue.ShouldBe("pen");
             chosen.ShouldNotBeNull();
@@ -710,6 +710,43 @@ public class ToolDockTests
             pan.SlotLift.ShouldBe(1, 0.001);
             pan.PressDip.ShouldBe(1, 0.001);
             pan.SlotOffset.ShouldBe(0);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void ItemInvoked_And_The_Obsolete_ItemChosen_Report_Every_Choice_While_SelectionChanged_Reports_Real_Changes()
+    {
+        var dock = Dock();
+        var window = TestHelpers.Show(dock);
+        try
+        {
+            var invoked = new List<object?>();
+            var chosen = new List<object?>();
+            var changes = new List<ToolDockSelectionChangedEventArgs>();
+            dock.ItemInvoked += (_, e) => invoked.Add(e.Value);
+#pragma warning disable CS0618 // the former name must keep working until a major version removes it
+            dock.ItemChosen += (_, e) => chosen.Add(e.Value);
+#pragma warning restore CS0618
+            dock.SelectionChanged += (_, e) => changes.Add(e);
+
+            Click(window, Slot(dock, 4));
+            Click(window, Slot(dock, 4));
+            invoked.ShouldBe(["pen", "pen"]);
+            chosen.ShouldBe(["pen", "pen"]);
+            changes.Count.ShouldBe(1);
+            changes[0].NewValue.ShouldBe("pen");
+
+            dock.SelectedValue = "text";
+            Dispatcher.UIThread.RunJobs();
+            changes.Count.ShouldBe(2);
+            changes[1].OldValue.ShouldBe("pen");
+            changes[1].NewValue.ShouldBe("text");
+            // Setting the value in code is not a choice.
+            invoked.Count.ShouldBe(2);
         }
         finally
         {

@@ -198,7 +198,11 @@ public class AiCommandPaletteTests
         items[2].Command = new RelayCommand(p => ran.Add(p));
         var (palette, window, _) = Open(p => p.Items.AddRange(items));
         AiCommandPaletteItem? selected = null;
-        palette.ItemSelected += (_, e) => selected = e.Item;
+        palette.ItemInvoked += (_, e) => selected = e.Item;
+        AiCommandPaletteItem? selectedByOldName = null;
+#pragma warning disable CS0618 // the former name must keep working until a major version removes it
+        palette.ItemSelected += (_, e) => selectedByOldName = e.Item;
+#pragma warning restore CS0618
 
         Press(window, PhysicalKey.ArrowUp);
         Assert.Equal(1, palette.SearchList!.ActiveIndex);
@@ -208,6 +212,7 @@ public class AiCommandPaletteTests
         Assert.Equal("Invite teammate", palette.SearchList.ActiveRow!.Title);
         Press(window, PhysicalKey.Enter);
         Assert.Same(items[2], selected);
+        Assert.Same(items[2], selectedByOldName);
         Assert.Equal([items[2]], ran);
         Assert.True(palette.Input!.IsFocused);
     }

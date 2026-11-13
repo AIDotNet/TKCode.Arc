@@ -89,6 +89,12 @@ public class CoverFlow : TemplatedControl
     public static readonly RoutedEvent<CoverFlowItemInvokedEventArgs> ItemInvokedEvent =
         RoutedEvent.Register<CoverFlow, CoverFlowItemInvokedEventArgs>(nameof(ItemInvoked), RoutingStrategies.Bubble);
 
+    /// <summary>
+    /// Raised when <see cref="SelectedIndex"/> changes, whether a cover was brought to the centre or the index was set in code or through a binding.
+    /// </summary>
+    public static readonly RoutedEvent<PhotosSelectionChangedEventArgs> SelectionChangedEvent =
+        RoutedEvent.Register<CoverFlow, PhotosSelectionChangedEventArgs>(nameof(SelectionChanged), RoutingStrategies.Bubble);
+
     private readonly PhotosItemFeed<CoverFlowItem> _feed;
     private CoverFlowStage? _stage;
     private ArcContentSwap? _caption;
@@ -182,6 +188,13 @@ public class CoverFlow : TemplatedControl
     {
         add => AddHandler(ItemInvokedEvent, value);
         remove => RemoveHandler(ItemInvokedEvent, value);
+    }
+
+    /// <inheritdoc cref="SelectionChangedEvent"/>
+    public event EventHandler<PhotosSelectionChangedEventArgs>? SelectionChanged
+    {
+        add => AddHandler(SelectionChangedEvent, value);
+        remove => RemoveHandler(SelectionChangedEvent, value);
     }
 
     /// <summary>The number of covers.</summary>
@@ -279,6 +292,16 @@ public class CoverFlow : TemplatedControl
             _stage.GoTo(Math.Max(0, clamped), animate: false);
         }
         UpdateState(Math.Max(-1, clamped));
+        RaiseSelectionChanged(index);
+    }
+
+    private void RaiseSelectionChanged(int oldIndex)
+    {
+        var newIndex = SelectedIndex;
+        if (newIndex != oldIndex)
+        {
+            RaiseEvent(new PhotosSelectionChangedEventArgs(SelectionChangedEvent, oldIndex, newIndex));
+        }
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -304,6 +327,7 @@ public class CoverFlow : TemplatedControl
                 _stage?.GoTo(index, animate: true, _gestureVelocity ?? 0);
             }
             UpdateState(index);
+            RaiseSelectionChanged(change.GetOldValue<int>());
         }
         else if (change.Property == TiltAngleProperty || change.Property == ShowsReflectionProperty)
         {

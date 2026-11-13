@@ -20,6 +20,24 @@ public sealed class ToolDockItemEventArgs : RoutedEventArgs
     public object? Value { get; }
 }
 
+/// <summary>Carries a change of the selected value of a <see cref="ToolDock"/>.</summary>
+public sealed class ToolDockSelectionChangedEventArgs : RoutedEventArgs
+{
+    /// <summary>Creates the arguments for a change from <paramref name="oldValue"/> to <paramref name="newValue"/>.</summary>
+    public ToolDockSelectionChangedEventArgs(RoutedEvent routedEvent, object? oldValue, object? newValue)
+        : base(routedEvent)
+    {
+        OldValue = oldValue;
+        NewValue = newValue;
+    }
+
+    /// <summary>The <see cref="ToolDock.SelectedValue"/> before.</summary>
+    public object? OldValue { get; }
+
+    /// <summary>The <see cref="ToolDock.SelectedValue"/> now.</summary>
+    public object? NewValue { get; }
+}
+
 /// <summary>Carries a move of an item along a <see cref="ToolDock"/>.</summary>
 public sealed class ToolDockReorderedEventArgs : RoutedEventArgs
 {

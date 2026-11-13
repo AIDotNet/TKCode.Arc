@@ -261,6 +261,30 @@ public class PhotoGridTests
         origin.ShouldBe(shown.TopLeft);
         corner.ShouldBe(shown.BottomRight);
     }
+
+    [AvaloniaFact]
+    public void SelectionChanged_Reports_Opening_And_Closing_A_Photo()
+    {
+        var grid = Grid();
+        var window = TestHelpers.Show(grid);
+        try
+        {
+            var changes = new List<PhotosSelectionChangedEventArgs>();
+            grid.SelectionChanged += (_, e) => changes.Add(e);
+            grid.SelectedIndex = 2;
+            changes.Count.ShouldBe(1);
+            changes[0].OldIndex.ShouldBe(-1);
+            changes[0].NewIndex.ShouldBe(2);
+            grid.SelectedIndex = -1;
+            changes.Count.ShouldBe(2);
+            changes[1].OldIndex.ShouldBe(2);
+            changes[1].NewIndex.ShouldBe(-1);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }
 
 file static class PhotoGridVisuals

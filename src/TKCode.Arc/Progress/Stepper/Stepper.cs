@@ -306,14 +306,14 @@ public class Stepper : TemplatedControl
     {
         base.OnAttachedToVisualTree(e);
         ObserveSource();
-        var steps = CurrentSteps();
-        if (!steps.SequenceEqual(_items.Select(i => i.Step)))
+        var all = AllSteps();
+        if (!VisibleOf(all).SequenceEqual(_items.Select(i => i.Step)))
         {
             Rebuild();
         }
         else
         {
-            SubscribeSteps(steps);
+            SubscribeSteps(all);
             Update(animate: false);
         }
     }
@@ -357,7 +357,13 @@ public class Stepper : TemplatedControl
         }
     }
 
-    private List<StepperStep> CurrentSteps()
+    /// <summary>The steps that are shown (hidden ones are left out).</summary>
+    private List<StepperStep> CurrentSteps() => VisibleOf(AllSteps());
+
+    private static List<StepperStep> VisibleOf(List<StepperStep> all) => all.FindAll(static step => step.IsVisible);
+
+    /// <summary>Every step, hidden ones included: the stepper listens to all of them, so showing one again rebuilds the list.</summary>
+    private List<StepperStep> AllSteps()
     {
         var list = new List<StepperStep>();
         IEnumerable source = ItemsSource ?? Steps;
@@ -377,8 +383,9 @@ public class Stepper : TemplatedControl
 
     private void Rebuild()
     {
-        var steps = CurrentSteps();
-        SubscribeSteps(steps);
+        var all = AllSteps();
+        var steps = VisibleOf(all);
+        SubscribeSteps(all);
         if (_panel is null)
         {
             Update(animate: false);
@@ -402,7 +409,16 @@ public class Stepper : TemplatedControl
         Update(animate: false);
     }
 
-    private void OnStepChanged(object? sender, AvaloniaPropertyChangedEventArgs e) => Update(animate: true);
+    private void OnStepChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+    {
+        if (e.Property == StepperStep.IsVisibleProperty)
+        {
+            // The list of shown steps changed: the items are built again (the ones that stay keep their controls).
+            Rebuild();
+            return;
+        }
+        Update(animate: true);
+    }
 
     /// <summary>Delay of step <paramref name="index"/> when progress moved from <paramref name="from"/> to <paramref name="active"/>.</summary>
     internal static double DelayAt(int index, int from, int active, double gap)
@@ -457,7 +473,7 @@ public class Stepper : TemplatedControl
                 : i < active ? StepperGlyphKind.Check
                 : StepperGlyphKind.Number;
             var detail = step.Error ?? (Details == StepperDetails.All || current ? step.Description : null);
-            var clickable = IsNavigable && i < active;
+            var clickable = IsNavigable && i < active && step.IsEnabled;
             var delay = reduced ? 0 : DelayAt(i, from, active, gap);
             _items[i].Configure(i, count, status, kind, current, clickable, i <= active, IsNavigable, vertical, compact, detail,
                 delay, reduced ? 0 : ringDelay, i < active, animate);
@@ -484,7 +500,7 @@ public class Stepper : TemplatedControl
     /// <summary>Chooses a completed step (as a click or Enter would).</summary>
     public void Select(int index)
     {
-        if (!IsNavigable || index < 0 || index >= _items.Count || index >= CurrentIndex)
+        if (!IsNavigable || index < 0 || index >= _items.Count || index >= CurrentIndex || !_items[index].Step.IsEnabled)
         {
             return;
         }

@@ -144,6 +144,13 @@ public class InboxSidebar : TemplatedControl
     public static readonly RoutedEvent<InboxSidebarItemEventArgs> ItemInvokedEvent =
         RoutedEvent.Register<InboxSidebar, InboxSidebarItemEventArgs>(nameof(ItemInvoked), RoutingStrategies.Bubble);
 
+    /// <summary>
+    /// Raised when <see cref="SelectedKey"/> changes, whether a folder or label was chosen or the key was set in code or
+    /// through a binding. Choosing the folder that is already open raises <see cref="ItemInvoked"/> only.
+    /// </summary>
+    public static readonly RoutedEvent<InboxSidebarSelectionChangedEventArgs> SelectionChangedEvent =
+        RoutedEvent.Register<InboxSidebar, InboxSidebarSelectionChangedEventArgs>(nameof(SelectionChanged), RoutingStrategies.Bubble);
+
     /// <inheritdoc cref="ComposeRequestedEvent"/>
     public event EventHandler<RoutedEventArgs>? ComposeRequested
     {
@@ -163,6 +170,13 @@ public class InboxSidebar : TemplatedControl
     {
         add => AddHandler(ItemInvokedEvent, value);
         remove => RemoveHandler(ItemInvokedEvent, value);
+    }
+
+    /// <inheritdoc cref="SelectionChangedEvent"/>
+    public event EventHandler<InboxSidebarSelectionChangedEventArgs>? SelectionChanged
+    {
+        add => AddHandler(SelectionChangedEvent, value);
+        remove => RemoveHandler(SelectionChangedEvent, value);
     }
 
     #endregion
@@ -283,6 +297,13 @@ public class InboxSidebar : TemplatedControl
                 _sidebar.SelectedKey = SelectedKey;
                 _syncing = false;
             }
+            var newKey = change.GetNewValue<string?>();
+            RaiseEvent(new InboxSidebarSelectionChangedEventArgs(
+                SelectionChangedEvent,
+                change.GetOldValue<string?>(),
+                newKey,
+                ShownFolders.FirstOrDefault(f => newKey is not null && f.Key == newKey),
+                ShownLabels.FirstOrDefault(l => newKey is not null && l.Key == newKey)));
         }
         else if (change.Property == IsCollapsedProperty)
         {
@@ -382,6 +403,8 @@ public class InboxSidebar : TemplatedControl
         item.Icon = folder.Icon;
         item.Badge = FormatCount(folder.Count, Labels.Culture);
         item.IsUnread = folder.IsCountUnread && folder.Count > 0;
+        item.IsEnabled = folder.IsEnabled;
+        item.IsVisible = folder.IsVisible;
     }
 
     private void Apply(SidebarItem item, InboxSidebarLabel label)
@@ -389,6 +412,8 @@ public class InboxSidebar : TemplatedControl
         item.Key = label.Key;
         item.Label = label.Title;
         item.Badge = FormatCount(label.Count, Labels.Culture);
+        item.IsEnabled = label.IsEnabled;
+        item.IsVisible = label.IsVisible;
         if (item.Icon is not Ellipse dot)
         {
             dot = new Ellipse();

@@ -61,7 +61,7 @@ public class ExpandingSearchItem : AvaloniaObject
     public override string ToString() => Title;
 }
 
-/// <summary>Arguments of <see cref="ExpandingSearch.ItemSelected"/>.</summary>
+/// <summary>Arguments of <see cref="ExpandingSearch.ItemInvoked"/>.</summary>
 public sealed class ExpandingSearchItemSelectedEventArgs : RoutedEventArgs
 {
     public ExpandingSearchItemSelectedEventArgs(RoutedEvent routedEvent, ExpandingSearchItem item)

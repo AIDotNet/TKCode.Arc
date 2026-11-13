@@ -21,7 +21,7 @@ public class RadioCardsTests
         {
             new RadioCardOption("starter", "Starter", "For individuals", "$9"),
             new RadioCardOption("team", "Team", "For small teams", "$29") { Icon = ArcIcons.Check },
-            new RadioCardOption("enterprise", "Enterprise", "Custom contracts", "Contact us") { IsDisabled = true, DisabledReason = "Talk to sales first" },
+            new RadioCardOption("enterprise", "Enterprise", "Custom contracts", "Contact us") { IsEnabled = false, DisabledReason = "Talk to sales first" },
             new RadioCardOption("growth", "Growth", "For scaling teams", "$59")
         }
     };

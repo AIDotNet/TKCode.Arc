@@ -30,7 +30,8 @@ public class InlineOptionBindingTests
         {
             [nameof(Text)] = "Bound text",
             [nameof(Value)] = "bound-value",
-            [nameof(Flag)] = true,
+            // Not the default of IsEnabled (true), so a binding that was never applied shows up.
+            [nameof(Flag)] = false,
             [nameof(Number)] = 42d,
             [nameof(Glyph)] = ArcIcons.Heart,
             [nameof(Content)] = "Bound content",
@@ -73,18 +74,18 @@ public class InlineOptionBindingTests
     private static readonly Dictionary<string, Case> s_cases = new()
     {
         ["SegmentedOption"] = new(
-            """<arc:SegmentedControl><arc:SegmentedOption Value="{Binding Value}" Label="{Binding Text}" Accessory="{Binding Content}" IsDisabled="{Binding Flag}" /></arc:SegmentedControl>""",
+            """<arc:SegmentedControl><arc:SegmentedOption Value="{Binding Value}" Label="{Binding Text}" Accessory="{Binding Content}" IsEnabled="{Binding Flag}" /></arc:SegmentedControl>""",
             root => (AvaloniaObject)Find<SegmentedControl>(root).Items[0]!,
-            [(SegmentedOption.ValueProperty, "Value"), (SegmentedOption.LabelProperty, "Text"), (SegmentedOption.AccessoryProperty, "Content"), (SegmentedOption.IsDisabledProperty, "Flag")]),
+            [(SegmentedOption.ValueProperty, "Value"), (SegmentedOption.LabelProperty, "Text"), (SegmentedOption.AccessoryProperty, "Content"), (SegmentedOption.IsEnabledProperty, "Flag")]),
         ["RadioOption"] = new(
-            """<arc:RadioGroup Header="Plan"><arc:RadioOption Value="{Binding Value}" Label="{Binding Text}" Description="{Binding Text}" IsDisabled="{Binding Flag}" /></arc:RadioGroup>""",
+            """<arc:RadioGroup Header="Plan"><arc:RadioOption Value="{Binding Value}" Label="{Binding Text}" Description="{Binding Text}" IsEnabled="{Binding Flag}" /></arc:RadioGroup>""",
             root => (AvaloniaObject)Find<RadioGroup>(root).Items[0]!,
-            [(RadioOption.ValueProperty, "Value"), (RadioOption.LabelProperty, "Text"), (RadioOption.DescriptionProperty, "Text"), (RadioOption.IsDisabledProperty, "Flag")]),
+            [(RadioOption.ValueProperty, "Value"), (RadioOption.LabelProperty, "Text"), (RadioOption.DescriptionProperty, "Text"), (RadioOption.IsEnabledProperty, "Flag")]),
         ["RadioCardOption"] = new(
-            """<arc:RadioCards><arc:RadioCardOption Value="{Binding Value}" Label="{Binding Text}" Description="{Binding Text}" Meta="{Binding Content}" Icon="{Binding Glyph}" IsDisabled="{Binding Flag}" DisabledReason="{Binding Text}" /></arc:RadioCards>""",
+            """<arc:RadioCards><arc:RadioCardOption Value="{Binding Value}" Label="{Binding Text}" Description="{Binding Text}" Meta="{Binding Content}" Icon="{Binding Glyph}" IsEnabled="{Binding Flag}" DisabledReason="{Binding Text}" /></arc:RadioCards>""",
             root => (AvaloniaObject)Find<RadioCards>(root).Items[0]!,
             [(RadioCardOption.ValueProperty, "Value"), (RadioCardOption.LabelProperty, "Text"), (RadioCardOption.DescriptionProperty, "Text"), (RadioCardOption.MetaProperty, "Content"),
-             (RadioCardOption.IconProperty, "Glyph"), (RadioCardOption.IsDisabledProperty, "Flag"), (RadioCardOption.DisabledReasonProperty, "Text")]),
+             (RadioCardOption.IconProperty, "Glyph"), (RadioCardOption.IsEnabledProperty, "Flag"), (RadioCardOption.DisabledReasonProperty, "Text")]),
         ["BillingToggleOption"] = new(
             """<arc:BillingToggle><arc:BillingToggleOption Value="{Binding Value}" Label="{Binding Text}" Badge="{Binding Text}" ActiveBadge="{Binding Text}" /></arc:BillingToggle>""",
             root => (AvaloniaObject)Find<BillingToggle>(root).Items[0]!,
@@ -210,10 +211,10 @@ public class InlineOptionBindingTests
     }
 
     [AvaloniaFact]
-    public void RadioGroup_Rows_Follow_Label_Description_And_IsDisabled()
+    public void RadioGroup_Rows_Follow_Label_Description_And_IsEnabled()
     {
-        var model = new Model { Flag = false };
-        var root = Host("""<arc:RadioGroup Header="Plan"><arc:RadioOption Value="hobby" Label="Hobby" /><arc:RadioOption Value="{Binding Value}" Label="{Binding Text}" Description="{Binding Content}" IsDisabled="{Binding Flag}" /></arc:RadioGroup>""", model);
+        var model = new Model { Flag = true };
+        var root = Host("""<arc:RadioGroup Header="Plan"><arc:RadioOption Value="hobby" Label="Hobby" /><arc:RadioOption Value="{Binding Value}" Label="{Binding Text}" Description="{Binding Content}" IsEnabled="{Binding Flag}" /></arc:RadioGroup>""", model);
         var window = TestHelpers.Show(root);
         try
         {
@@ -224,7 +225,7 @@ public class InlineOptionBindingTests
             row.IsEnabled.ShouldBeTrue();
             model.Text = "Pro";
             model.Content = "For growing teams";
-            model.Flag = true;
+            model.Flag = false;
             Dispatcher.UIThread.RunJobs();
             row.Content.ShouldBe("Pro");
             row.Description.ShouldBe("For growing teams");
@@ -310,10 +311,10 @@ public class InlineOptionBindingTests
     }
 
     [AvaloniaFact]
-    public void SegmentedControl_Segments_Follow_Label_Accessory_And_IsDisabled()
+    public void SegmentedControl_Segments_Follow_Label_Accessory_And_IsEnabled()
     {
-        var model = new Model { Flag = false, Text = "Day" };
-        var root = Host("""<arc:SegmentedControl><arc:SegmentedOption Value="day" Label="{Binding Text}" Accessory="{Binding Content}" IsDisabled="{Binding Flag}" /><arc:SegmentedOption Value="week" Label="Week" /></arc:SegmentedControl>""", model);
+        var model = new Model { Flag = true, Text = "Day" };
+        var root = Host("""<arc:SegmentedControl><arc:SegmentedOption Value="day" Label="{Binding Text}" Accessory="{Binding Content}" IsEnabled="{Binding Flag}" /><arc:SegmentedOption Value="week" Label="Week" /></arc:SegmentedControl>""", model);
         var window = TestHelpers.Show(root);
         try
         {
@@ -322,7 +323,7 @@ public class InlineOptionBindingTests
             segment.Accessory.ShouldBe("Bound content");
             model.Text = "日";
             model.Content = "3";
-            model.Flag = true;
+            model.Flag = false;
             Dispatcher.UIThread.RunJobs();
             segment.Content.ShouldBe("日");
             segment.Accessory.ShouldBe("3");
@@ -337,8 +338,8 @@ public class InlineOptionBindingTests
     [AvaloniaFact]
     public void RadioCards_Follow_Label_Meta_And_DisabledReason()
     {
-        var model = new Model { Flag = false };
-        var root = Host("""<arc:RadioCards><arc:RadioCardOption Value="pro" Label="{Binding Text}" Meta="{Binding Content}" Icon="{Binding Glyph}" DisabledReason="{Binding Value}" IsDisabled="{Binding Flag}" /></arc:RadioCards>""", model);
+        var model = new Model { Flag = true };
+        var root = Host("""<arc:RadioCards><arc:RadioCardOption Value="pro" Label="{Binding Text}" Meta="{Binding Content}" Icon="{Binding Glyph}" DisabledReason="{Binding Value}" IsEnabled="{Binding Flag}" /></arc:RadioCards>""", model);
         var window = TestHelpers.Show(root);
         try
         {
@@ -349,7 +350,7 @@ public class InlineOptionBindingTests
             glyph.Data.ShouldBeSameAs(ArcIcons.Heart);
             model.Text = "Scale";
             model.Content = "$99";
-            model.Flag = true;
+            model.Flag = false;
             Dispatcher.UIThread.RunJobs();
             card.Content.ShouldBe("Scale");
             card.Meta.ShouldBe("$99");

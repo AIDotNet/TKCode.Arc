@@ -27,7 +27,7 @@ namespace TKCode.Arc;
 /// </summary>
 [TemplatePart(RailPart, typeof(Control))]
 [TemplatePart(MarksPart, typeof(Control))]
-[PseudoClasses(DraggingPseudoClass, TagPseudoClass, MarksPseudoClass)]
+[PseudoClasses(DraggingPseudoClass, TagPseudoClass, MarksPseudoClass, HeaderlessPseudoClass)]
 public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMarkHost
 {
     public const string RailPart = "PART_Rail";
@@ -39,6 +39,9 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
     /// <summary>Set while the value tag rides the thumb; the readout steps back.</summary>
     public const string TagPseudoClass = ":tag";
     public const string MarksPseudoClass = ":marks";
+
+    /// <summary>Set while there is neither a <see cref="Label"/> nor a visible readout; the theme then takes the header row, and the gap below it, out of the layout.</summary>
+    public const string HeaderlessPseudoClass = ":headerless";
 
     /// <summary>Pixels the track may stretch past a limit.</summary>
     internal const double Stretch = 26;
@@ -192,6 +195,7 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
 
     public ElasticSlider()
     {
+        UpdateHeaderPseudoClass();
     }
 
     /// <summary>
@@ -355,8 +359,20 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
         else if (change.Property == LabelProperty || change.Property == IsEffectivelyEnabledProperty)
         {
             UpdateThumb();
+            if (change.Property == LabelProperty)
+            {
+                UpdateHeaderPseudoClass();
+            }
+        }
+        else if (change.Property == IsValueVisibleProperty)
+        {
+            UpdateHeaderPseudoClass();
         }
     }
+
+    /// <summary>The header row (label and readout) is empty without a label and with the readout hidden.</summary>
+    private void UpdateHeaderPseudoClass() =>
+        PseudoClasses.Set(HeaderlessPseudoClass, string.IsNullOrEmpty(Label) && !IsValueVisible);
 
     /// <summary>Values from outside a drag (keys, bindings, a clicked mark) spring the thumb from wherever it is on screen.</summary>
     private void SyncThumb(bool animate)

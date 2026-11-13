@@ -8,6 +8,68 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0), `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` (from 1.1.0-preview.1).
 
+## Unreleased
+
+Item classes and selection events get one convention ([#117](https://github.com/AIDotNet/TKCode.Arc/issues/117)),
+starting with `Sidebar` ([#114](https://github.com/AIDotNet/TKCode.Arc/issues/114)). From now on a published member is
+never removed or renamed in one step: the old one stays as `[Obsolete]`, forwards to the new one, and is listed here with
+its migration; it is deleted only in a new major version, after at least two stable releases.
+
+### Added
+
+- **`Sidebar.SelectionChanged`** ([#114](https://github.com/AIDotNet/TKCode.Arc/issues/114), `TKCode.Arc.Blocks`): a routed
+  event raised whenever `SelectedItem` changes, whether a page was chosen, `SelectedItem` or `SelectedKey` was set in code
+  or through a binding, or the selection was cleared. `SidebarSelectionChangedEventArgs` carries `OldItem`, `NewItem`,
+  `OldKey` and `NewKey`. Choosing the page that is already selected raises `ItemInvoked` only, as before.
+- **`SidebarItem.IsVisible` and `SidebarSection.IsVisible`** ([#114](https://github.com/AIDotNet/TKCode.Arc/issues/114),
+  `TKCode.Arc.Blocks`): a hidden page (or section) takes no room, leaves the arrow keys, type-ahead, the filter and the rail
+  menu, and a hidden parent hides its pages. The page stays in the collection and keeps being selected when it is the
+  selected page; only the selection block is not drawn. For data-bound pages, `IsVisibleMember` and `IsVisibleMemberBinding`
+  read a data member like `IsEnabledMember` does. The default (`true`) changes nothing.
+- **`IsEnabled` and `IsVisible` on the item classes of the navigation and option controls**
+  ([#117](https://github.com/AIDotNet/TKCode.Arc/issues/117)): `DocsSidebarPage`, `InboxSidebarFolder`,
+  `InboxSidebarLabel`, `SiteHeaderItem`, `StepperStep`, `SegmentedOption`, `ToggleGroupOption`, `RadioOption`,
+  `RadioCardOption` and `BillingToggleOption` get both; `DocsSidebarSection`, `CommandPaletteItem` and `SelectionToolbarAction` get `IsVisible` (the
+  last two already had `IsEnabled`). A hidden item takes no room and is skipped by the arrow keys, type-ahead, the search
+  and the filter; a disabled one is dimmed and skipped by the arrow keys. Both follow later changes. When the hidden option
+  is the selected one, the control keeps its selection and only the indicator is not drawn. `DocsSidebar.GetAdjacentPage`
+  skips hidden and disabled pages. In a `Stepper` a hidden step is as if it were not in the list (`CurrentIndex` counts the
+  visible steps) and a disabled completed step cannot be chosen. The default (`true`) for both changes nothing.
+- **`SelectionChanged` events** ([#117](https://github.com/AIDotNet/TKCode.Arc/issues/117)): `InboxSidebar`
+  (`InboxSidebarSelectionChangedEventArgs`: `OldKey`, `NewKey`, `NewFolder`, `NewLabel`), `DocsSidebar`
+  (`DocsSidebarSelectionChangedEventArgs`: `OldKey`, `NewKey`, `NewPage`; raised when `CurrentKey` changes), `ToolDock`
+  (`ToolDockSelectionChangedEventArgs`: `OldValue`, `NewValue`) and `CoverFlow`, `PhotoGrid` and `ProductGallery`
+  (`PhotosSelectionChangedEventArgs`: `OldIndex`, `NewIndex`). Each is raised when the selection changes, however it
+  changed, and not when the same one is chosen again; `ItemInvoked` stays the "the user chose it" event.
+- **`ToolDock.ItemInvoked`** ([#117](https://github.com/AIDotNet/TKCode.Arc/issues/117)): the new name of `ItemChosen`
+  (see Deprecated).
+
+### Fixed
+
+- **`Combobox` is as tall as its trigger again** ([#121](https://github.com/AIDotNet/TKCode.Arc/issues/121)): its
+  popup sat in the template's stack panel, whose spacing added 8px below the frame, so a `Size="Small"` Combobox measured
+  44 instead of 36 and sat 4px higher than a `Size="Small"` button beside it. The `Height="36"` workaround can go.
+- **`ElasticSlider` without a label and without a readout no longer keeps its header row** (follow-up to
+  [#101](https://github.com/AIDotNet/TKCode.Arc/issues/101)): the same empty header, and the 8px gap below it, pushed
+  the control row down. With `IsValueVisible="False"` and no `Label` both leave the layout (`:headerless`).
+
+### Deprecated
+
+Nothing is removed. Each of these keeps working, is marked `[Obsolete]` and stays for at least two stable releases; it can
+only be deleted in a new major version.
+
+- **`IsDisabled` and `IsDisabledProperty` on `SegmentedOption`, `ToggleGroupOption`, `RadioOption` and `RadioCardOption`**
+  ([#117](https://github.com/AIDotNet/TKCode.Arc/issues/117)): use `IsEnabled`, which is the inverse (`IsDisabled="True"`
+  becomes `IsEnabled="False"`). The two stay in step in both directions, so XAML, bindings and code written against either
+  name behave the same. The controls and the gallery use `IsEnabled` now.
+- **`ToolDock.ItemChosen` and `ItemChosenEvent`** ([#117](https://github.com/AIDotNet/TKCode.Arc/issues/117)): use
+  `ItemInvoked`. Both are raised for every choice, so a handler on the old name keeps being called.
+- **`ItemSelected` and `ItemSelectedEvent` on `CommandPalette`, `CommandPaletteDialog`, `ExpandingSearch` and
+  `AiCommandPalette`** ([#117](https://github.com/AIDotNet/TKCode.Arc/issues/117)): use `ItemInvoked`, which is raised for
+  the same choice (the event argument types keep their names). Both are raised, so a handler on the old name keeps being
+  called; in XAML, `ItemSelected="OnPicked"` becomes `ItemInvoked="OnPicked"`. The project templates (`ArcAdminApp`,
+  `ArcDevtoolApp`) and the gallery use `ItemInvoked` now.
+
 ## 1.1.0-preview.6 - 2026-11-13
 
 The first published build since 1.1.0-preview.4. 1.1.0-preview.5 was prepared but never pushed to NuGet, so this release
