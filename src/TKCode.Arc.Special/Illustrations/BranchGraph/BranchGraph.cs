@@ -8,42 +8,78 @@ using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Interactivity;
+using Avalonia.Layout;
 using Avalonia.Metadata;
 using Avalonia.Threading;
+using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
 
 namespace TKCode.Arc;
 
 /// <summary>
-/// A git-style history: one row per commit, each branch in its own colored lane, curves where a branch splits off and
-/// where it merges back, merge commits drawn as rings, and pills for branch heads and tags. Its story draws the history
-/// commit by commit (the edges draw in, the dot pops, the branch label moves up) with a caption that says what each
-/// commit did. Play, pause, step, restart and a 0.5× / 1× / 2× speed control drive it; <see cref="StartsFinished"/> or
-/// reduced motion opens it on the whole history. Selecting a commit (click, or the arrow keys on the focused graph)
-/// highlights everything it descends from and dims the rest.
+/// A git commit graph that previews how a pull request lands. Each commit is a row (newest on top) with its branch's
+/// colored lane on the left, the message and branch pills, the author, the short hash and the date; merge commits get a
+/// ring and an icon. The strategy control in the header switches between the history as it is (Before) and three
+/// previews computed from the data: Merge (a merge commit on top joins both lines), Rebase (the pull request's commits
+/// lift like cards and are replayed on the target's tip with new hashes) and Squash (they fold into one commit). The
+/// graph draws in on first sight, from the oldest commit up; while nobody interacts it cycles Before → Rebase → Merge →
+/// Squash, 2.6 s after each change settles. Hovering or arrowing to a commit shows its message, author and diff stats
+/// and dims the other branches; a click or a tap pins that card.
+/// <para>
+/// The <see cref="Explainer"/> clock drives the cycle: <see cref="Explainer.AutoPlay"/> starts it on first sight,
+/// <see cref="Explainer.IsPlaying"/> is true while it cycles, <see cref="Explainer.Pause"/> holds it (picks by the reader
+/// still animate), <see cref="Explainer.StepForward"/> moves to the next strategy, <see cref="Explainer.Restart"/> draws the
+/// graph in again and cycles from Before, and <see cref="Explainer.Speed"/> scales every animation (0 shows each state at
+/// once). The cycle always repeats, so <see cref="Explainer.IsLooping"/> has no effect; <see cref="Explainer.Finished"/>
+/// is raised each time it returns to Before. The first pick, tap or key press stops it for good, and a pointer resting
+/// on the commits holds it. <see cref="Explainer.AreControlsVisible"/> shows the strategy control. Under reduced motion
+/// every state shows at once and nothing cycles.
+/// </para>
 /// </summary>
 [TemplatePart(StagePart, typeof(BranchGraphStage))]
-[TemplatePart(ExplainerChapterKit.StatusPart, typeof(ExplainerStatus))]
-[TemplatePart(ExplainerChapterKit.CaptionPart, typeof(ArcContentSwap))]
-[TemplatePart(ExplainerChapterKit.SpeedPart, typeof(SegmentedControl))]
+[TemplatePart(StrategyPart, typeof(SegmentedControl))]
+[TemplatePart(SummaryPart, typeof(TextBlock))]
+[TemplatePart(HeaderPart, typeof(Grid))]
+[TemplatePart(HeadingPart, typeof(Control))]
+[TemplatePart(TitlePart, typeof(TextBlock))]
+[TemplatePart(NumberPart, typeof(TextBlock))]
 public class BranchGraph : Explainer
 {
-    /// <summary>The drawn graph.</summary>
+    /// <summary>The commit list and its graph.</summary>
     public const string StagePart = "PART_Stage";
+
+    /// <summary>The strategy control (a <see cref="SegmentedControl"/>).</summary>
+    public const string StrategyPart = "PART_Strategy";
+
+    /// <summary>The summary line under the commits.</summary>
+    public const string SummaryPart = "PART_Summary";
+
+    /// <summary>The header row (title and strategy control).</summary>
+    public const string HeaderPart = "PART_Header";
+
+    /// <summary>The heading: icon, title and pull request number.</summary>
+    public const string HeadingPart = "PART_Heading";
+
+    /// <summary>The title.</summary>
+    public const string TitlePart = "PART_Title";
+
+    /// <summary>The pull request number.</summary>
+    public const string NumberPart = "PART_Number";
 
     /// <summary>The history from a view model, oldest first; when set it replaces <see cref="Commits"/>.</summary>
     public static readonly StyledProperty<IEnumerable<BranchGraphCommit>?> ItemsSourceProperty =
         AvaloniaProperty.Register<BranchGraph, IEnumerable<BranchGraphCommit>?>(nameof(ItemsSource));
 
-    /// <summary>Puts the newest commit on top, as <c>git log</c> does (default false: oldest on top, so the story grows downward).</summary>
+    /// <summary>No longer has an effect: the newest commit is always on top.</summary>
+    [Obsolete("No longer has an effect: the newest commit is always on top (deprecated in 1.2.0).")]
     public static readonly StyledProperty<bool> IsNewestFirstProperty =
         AvaloniaProperty.Register<BranchGraph, bool>(nameof(IsNewestFirst));
 
-    /// <summary>Opens on the whole history instead of playing it (Play still replays the story). Use it for a plain graph.</summary>
+    /// <summary>Opens with every commit drawn (no first-load sweep) and without the autoplay cycle. Use it for a still graph.</summary>
     public static readonly StyledProperty<bool> StartsFinishedProperty =
         AvaloniaProperty.Register<BranchGraph, bool>(nameof(StartsFinished));
 
-    /// <summary>The commit whose history is highlighted; null for none. Clicks and the arrow keys on the graph set it.</summary>
+    /// <summary>The commit whose detail card is pinned; null for none. A click, a tap or the arrow keys on the commits set it, Escape clears it.</summary>
     public static readonly StyledProperty<BranchGraphCommit?> SelectedCommitProperty =
         AvaloniaProperty.Register<BranchGraph, BranchGraphCommit?>(nameof(SelectedCommit), defaultBindingMode: BindingMode.TwoWay);
 
@@ -51,7 +87,7 @@ public class BranchGraph : Explainer
     public static readonly StyledProperty<BranchGraphLabels> LabelsProperty =
         AvaloniaProperty.Register<BranchGraph, BranchGraphLabels>(nameof(Labels), new BranchGraphLabels());
 
-    /// <summary>How many commits the story has drawn so far.</summary>
+    /// <summary>How many commits have been drawn (the first-load sweep draws them one by one).</summary>
     public static readonly DirectProperty<BranchGraph, int> RevealedCountProperty =
         AvaloniaProperty.RegisterDirect<BranchGraph, int>(nameof(RevealedCount), o => o.RevealedCount);
 
@@ -59,29 +95,64 @@ public class BranchGraph : Explainer
     public static readonly RoutedEvent<BranchGraphCommitEventArgs> CommitDrawnEvent =
         RoutedEvent.Register<BranchGraph, BranchGraphCommitEventArgs>(nameof(CommitDrawn), RoutingStrategies.Bubble);
 
-    internal static readonly StyledProperty<Thickness> BodyPaddingProperty =
-        AvaloniaProperty.Register<BranchGraph, Thickness>(nameof(BodyPadding), new Thickness(24, 24, 24, 0));
+    /// <summary>The preview shown: the history as it is, or the pull request merged, rebased or squashed (default Before).</summary>
+    public static readonly StyledProperty<BranchGraphStrategy> SelectedStrategyProperty =
+        AvaloniaProperty.Register<BranchGraph, BranchGraphStrategy>(nameof(SelectedStrategy), defaultBindingMode: BindingMode.TwoWay);
 
-    internal static readonly StyledProperty<Thickness> FooterPaddingProperty =
-        AvaloniaProperty.Register<BranchGraph, Thickness>(nameof(FooterPadding), new Thickness(24, 16, 24, 24));
+    /// <summary>Raised when <see cref="SelectedStrategy"/> changes, by the reader, by code or by the autoplay cycle.</summary>
+    public static readonly RoutedEvent<BranchGraphSelectionChangedEventArgs> SelectionChangedEvent =
+        RoutedEvent.Register<BranchGraph, BranchGraphSelectionChangedEventArgs>(nameof(SelectionChanged), RoutingStrategies.Bubble);
 
-    /// <summary>Seconds per commit at speed 1.</summary>
-    internal const double CommitSeconds = 1.6;
+    /// <summary>The pull request's title: the heading (unless <see cref="Explainer.Title"/> is set) and the squashed commit's message.</summary>
+    public static readonly StyledProperty<string?> PullRequestTitleProperty =
+        AvaloniaProperty.Register<BranchGraph, string?>(nameof(PullRequestTitle));
 
-    /// <summary>When, within a commit's beat, its edges finish drawing and its dot appears.</summary>
-    internal const double EdgeSeconds = 0.5;
+    /// <summary>The pull request's number, shown as "#N" after the heading (0 shows none).</summary>
+    public static readonly StyledProperty<int> PullRequestNumberProperty =
+        AvaloniaProperty.Register<BranchGraph, int>(nameof(PullRequestNumber));
+
+    /// <summary>The pull request's branch, whose commits merge, rebase or squash; null picks the newest branch not merged yet.</summary>
+    public static readonly StyledProperty<string?> SourceBranchProperty =
+        AvaloniaProperty.Register<BranchGraph, string?>(nameof(SourceBranch));
+
+    /// <summary>The branch the pull request lands on; null takes the first branch of the history (usually main).</summary>
+    public static readonly StyledProperty<string?> TargetBranchProperty =
+        AvaloniaProperty.Register<BranchGraph, string?>(nameof(TargetBranch));
+
+    /// <summary>The pause after a change settles before the autoplay cycle picks the next strategy (seconds at speed 1).</summary>
+    internal const double Dwell = 2.6;
+
+    /// <summary>When the pointer leaves, the cycle goes on after at most this long.</summary>
+    internal const double ResumeAfterHover = 1.2;
+
+    private static readonly BranchGraphStrategy[] s_cycle =
+        [BranchGraphStrategy.Rebase, BranchGraphStrategy.Merge, BranchGraphStrategy.Squash, BranchGraphStrategy.Before];
 
     private static readonly IReadOnlyList<BranchGraphCommit> s_sample = BranchGraphSamples.CreateCommits();
-    private readonly ExplainerChapterKit _kit;
     private INotifyCollectionChanged? _observedSource;
     private BranchGraphStage? _stage;
+    private SegmentedControl? _strategy;
+    private TextBlock? _summary;
+    private Grid? _header;
+    private Control? _heading;
+    private TextBlock? _title;
+    private TextBlock? _number;
     private IReadOnlyList<BranchGraphCommit> _history = Array.Empty<BranchGraphCommit>();
-    private BranchGraphPlan _plan = BranchGraphPlan.Empty;
-    private readonly List<double> _revealedAt = new();
+    private BranchGraphModel? _model;
+    private ViewportVisibility? _sight;
+    private SegmentedOption[] _options = [];
     private int _revealed;
-    private string? _caption;
+    private bool _drawn;
+    private bool _usesSample;
     private bool _rebuildPending;
-    private bool _pauseCheckPending;
+    private bool _autoPicking;
+    private bool _userPicking;
+    private bool _syncingStrategy;
+    private bool _syncingCommit;
+    private bool _cycle;
+    private bool _hovered;
+    private bool _loopRestart;
+    private bool _loopPending;
 
     static BranchGraph()
     {
@@ -89,10 +160,9 @@ public class BranchGraph : Explainer
         AutomationProperties.ControlTypeOverrideProperty.OverrideDefaultValue<BranchGraph>(AutomationControlType.Group);
     }
 
-    /// <summary>Creates a graph that plays the sample history until it is given commits.</summary>
+    /// <summary>Creates a graph that previews the sample pull request until it is given commits.</summary>
     public BranchGraph()
     {
-        _kit = new ExplainerChapterKit(this);
         Commits.CollectionChanged += (_, _) =>
         {
             if (ItemsSource is null)
@@ -100,30 +170,46 @@ public class BranchGraph : Explainer
                 ScheduleRebuild();
             }
         };
-        AutomationProperties.SetName(this, Title);
+        UpdateAccessibleName();
     }
 
-    /// <summary>The history, oldest first (the XAML content). While it is empty and <see cref="ItemsSource"/> is null, an invented sample history plays.</summary>
+    /// <summary>The history, oldest first (the XAML content). While it is empty and <see cref="ItemsSource"/> is null, an invented sample pull request is shown.</summary>
     [Content]
     public AvaloniaList<BranchGraphCommit> Commits { get; } = new();
 
-    /// <summary>The history from a view model, oldest first; when set it replaces <see cref="Commits"/>.</summary>
+    /// <inheritdoc cref="ItemsSourceProperty"/>
     public IEnumerable<BranchGraphCommit>? ItemsSource { get => GetValue(ItemsSourceProperty); set => SetValue(ItemsSourceProperty, value); }
 
-    /// <summary>Puts the newest commit on top, as <c>git log</c> does (default false: oldest on top, so the story grows downward).</summary>
+    /// <summary>No longer has an effect: the newest commit is always on top.</summary>
+    [Obsolete("No longer has an effect: the newest commit is always on top (deprecated in 1.2.0).")]
     public bool IsNewestFirst { get => GetValue(IsNewestFirstProperty); set => SetValue(IsNewestFirstProperty, value); }
 
-    /// <summary>Opens on the whole history instead of playing it (Play still replays the story). Use it for a plain graph.</summary>
+    /// <inheritdoc cref="StartsFinishedProperty"/>
     public bool StartsFinished { get => GetValue(StartsFinishedProperty); set => SetValue(StartsFinishedProperty, value); }
 
-    /// <summary>The commit whose history is highlighted; null for none. Clicks and the arrow keys on the graph set it.</summary>
+    /// <inheritdoc cref="SelectedCommitProperty"/>
     public BranchGraphCommit? SelectedCommit { get => GetValue(SelectedCommitProperty); set => SetValue(SelectedCommitProperty, value); }
 
-    /// <summary>Every word the card shows or announces.</summary>
+    /// <inheritdoc cref="LabelsProperty"/>
     public BranchGraphLabels Labels { get => GetValue(LabelsProperty); set => SetValue(LabelsProperty, value); }
 
-    /// <summary>How many commits the story has drawn so far.</summary>
+    /// <inheritdoc cref="RevealedCountProperty"/>
     public int RevealedCount { get => _revealed; private set => SetAndRaise(RevealedCountProperty, ref _revealed, value); }
+
+    /// <inheritdoc cref="SelectedStrategyProperty"/>
+    public BranchGraphStrategy SelectedStrategy { get => GetValue(SelectedStrategyProperty); set => SetValue(SelectedStrategyProperty, value); }
+
+    /// <inheritdoc cref="PullRequestTitleProperty"/>
+    public string? PullRequestTitle { get => GetValue(PullRequestTitleProperty); set => SetValue(PullRequestTitleProperty, value); }
+
+    /// <inheritdoc cref="PullRequestNumberProperty"/>
+    public int PullRequestNumber { get => GetValue(PullRequestNumberProperty); set => SetValue(PullRequestNumberProperty, value); }
+
+    /// <inheritdoc cref="SourceBranchProperty"/>
+    public string? SourceBranch { get => GetValue(SourceBranchProperty); set => SetValue(SourceBranchProperty, value); }
+
+    /// <inheritdoc cref="TargetBranchProperty"/>
+    public string? TargetBranch { get => GetValue(TargetBranchProperty); set => SetValue(TargetBranchProperty, value); }
 
     /// <summary>Raised as each commit is drawn, with the commit, its index and what it did.</summary>
     public event EventHandler<BranchGraphCommitEventArgs>? CommitDrawn
@@ -132,34 +218,59 @@ public class BranchGraph : Explainer
         remove => RemoveHandler(CommitDrawnEvent, value);
     }
 
-    internal Thickness BodyPadding { get => GetValue(BodyPaddingProperty); set => SetValue(BodyPaddingProperty, value); }
+    /// <summary>Raised when <see cref="SelectedStrategy"/> changes, by the reader, by code or by the autoplay cycle.</summary>
+    public event EventHandler<BranchGraphSelectionChangedEventArgs>? SelectionChanged
+    {
+        add => AddHandler(SelectionChangedEvent, value);
+        remove => RemoveHandler(SelectionChangedEvent, value);
+    }
 
-    internal Thickness FooterPadding { get => GetValue(FooterPaddingProperty); set => SetValue(FooterPaddingProperty, value); }
+    internal BranchGraphModel? GraphModel => _model;
 
-    internal BranchGraphPlan Plan => _plan;
-
-    internal double StoryTime => Now;
-
-    internal bool Animates => IsTravelEnabled;
-
-    /// <summary>When each drawn commit started drawing (story time).</summary>
-    internal IReadOnlyList<double> RevealedAt => _revealedAt;
-
-    internal string? CaptionText => _kit.CaptionText;
-
-    internal string? StatusText => _kit.StatusText;
+    internal bool IsDrawn => _drawn;
 
     internal BranchGraphStage? Stage => _stage;
 
-    private protected override double StepSpeed => 2 * Math.Max(1, Speed);
+    internal SegmentedControl? StrategyControl => _strategy;
 
-    /// <summary>The words for a commit: message, id, branch, author, and its tag.</summary>
-    internal string Describe(BranchGraphNode node)
+    /// <summary>The summary line now.</summary>
+    internal string SummaryText => _model?[SelectedStrategy].Summary ?? string.Empty;
+
+    /// <summary>The heading shown: <see cref="Explainer.Title"/> when set, otherwise the pull request's title.</summary>
+    internal string HeadingText => IsSet(TitleProperty) ? Title ?? string.Empty : EffectiveTitle ?? Title ?? string.Empty;
+
+    /// <summary>True while the autoplay cycle may still pick (no reader has interacted).</summary>
+    internal bool IsCycling => _cycle;
+
+    private string? EffectiveTitle => !string.IsNullOrWhiteSpace(PullRequestTitle) ? PullRequestTitle : _usesSample ? BranchGraphSamples.PullRequestTitle : null;
+
+    private int EffectiveNumber => PullRequestNumber > 0 ? PullRequestNumber : _usesSample ? BranchGraphSamples.PullRequestNumber : 0;
+
+    private protected override bool IsClockHeld => _hovered && IsPlaying;
+
+    /// <summary>A step moves to the next strategy at once; the pick animates from there.</summary>
+    private protected override bool StepsPlayThrough => false;
+
+    private protected override bool OpensFinishedWhenReduced => false;
+
+    /// <summary>A commit's accessible name in a preview.</summary>
+    internal string Describe(BranchGraphItem item, BranchGraphLayout layout)
     {
-        var text = Labels.Describe(node.Commit.Message ?? string.Empty, node.Id, node.Branch, node.Commit.Author ?? string.Empty);
-        if (!string.IsNullOrEmpty(node.Commit.Tag))
+        var labels = Labels;
+        var text = labels.Describe(item.Message, layout.Hash[item.Index], item.Branch, item.Author);
+        if (item.Date.Length > 0)
         {
-            text += ", " + node.Commit.Tag;
+            text += ", " + item.Date;
+        }
+        text += ".";
+        if (item.Additions is not null || item.Deletions is not null || item.Files is not null)
+        {
+            text += " " + labels.Stats(item.Additions ?? 0, item.Deletions ?? 0, item.Files ?? 0) + ".";
+        }
+        var heads = layout.Pills[item.Index];
+        if (heads.Length > 0)
+        {
+            text += " " + labels.Heads(string.Join(" and ", heads.Select(p => p.Text))) + ".";
         }
         return text;
     }
@@ -167,23 +278,75 @@ public class BranchGraph : Explainer
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        _kit.Apply(e.NameScope);
+        if (_strategy is not null)
+        {
+            _strategy.SelectionChanged -= OnStrategyPicked;
+        }
         _stage = e.NameScope.Find<BranchGraphStage>(StagePart);
+        _strategy = e.NameScope.Find<SegmentedControl>(StrategyPart);
+        _summary = e.NameScope.Find<TextBlock>(SummaryPart);
+        _header = e.NameScope.Find<Grid>(HeaderPart);
+        _heading = e.NameScope.Find<Control>(HeadingPart);
+        _title = e.NameScope.Find<TextBlock>(TitlePart);
+        _number = e.NameScope.Find<TextBlock>(NumberPart);
+        if (_strategy is not null)
+        {
+            _strategy.SelectionChanged += OnStrategyPicked;
+        }
+        UpdateOptions();
         _stage?.Attach(this);
-        _kit.SetSpeedLabel(Labels.Speed);
-        UpdateStatus(force: true);
-        _kit.SetCaption(CurrentCaption(), animate: false);
+        UpdateChrome();
         UpdateSizing(Bounds.Width);
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
-        if (StartsFinished && !IsFinished && _revealed == 0)
+        _sight?.Dispose();
+        _sight = null;
+        if (!_drawn)
         {
-            SetCurrentValue(AutoPlayProperty, false);
-            JumpToEnd();
+            if (StartsFinished)
+            {
+                DrawAtOnce();
+            }
+            else
+            {
+                _sight = new ViewportVisibility(this, 0.6, once: true);
+                _sight.VisibilityChanged += OnFirstSight;
+            }
         }
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        _sight?.Dispose();
+        _sight = null;
+    }
+
+    private void OnFirstSight(object? sender, bool visible)
+    {
+        if (!visible || _drawn)
+        {
+            return;
+        }
+        _drawn = true;
+        if (StartsFinished || !ArcMotion.IsFull(this))
+        {
+            _stage?.ShowAll();
+        }
+        else
+        {
+            _stage?.StartSweep();
+        }
+    }
+
+    private void DrawAtOnce()
+    {
+        _drawn = true;
+        SetCurrentValue(AutoPlayProperty, false);
+        _stage?.ShowAll();
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -194,42 +357,149 @@ public class BranchGraph : Explainer
             ObserveSource(IsAttached ? ItemsSource : null);
             ScheduleRebuild();
         }
-        else if (change.Property == IsNewestFirstProperty)
+        else if (change.Property == PullRequestTitleProperty || change.Property == PullRequestNumberProperty ||
+                 change.Property == SourceBranchProperty || change.Property == TargetBranchProperty)
         {
-            _stage?.Relayout();
+            ScheduleRebuild();
+            UpdateChrome();
+        }
+        else if (change.Property == SelectedStrategyProperty)
+        {
+            OnStrategyChanged(change.GetOldValue<BranchGraphStrategy>(), change.GetNewValue<BranchGraphStrategy>());
         }
         else if (change.Property == SelectedCommitProperty)
         {
-            _stage?.OnSelectionChanged();
+            if (!_syncingCommit)
+            {
+                _stage?.SetActiveCommit(SelectedCommit);
+            }
         }
-        else if (change.Property == StartsFinishedProperty && StartsFinished && IsAttached && _revealed == 0)
+        else if (change.Property == StartsFinishedProperty && StartsFinished && IsAttached && !_drawn)
         {
-            SetCurrentValue(AutoPlayProperty, false);
-            JumpToEnd();
+            DrawAtOnce();
         }
         else if (change.Property == LabelsProperty)
         {
-            _kit.SetSpeedLabel(Labels.Speed);
-            UpdateStatus(force: true);
-            _kit.SetCaption(CurrentCaption(), animate: false);
-            _stage?.Changed();
+            ScheduleRebuild();
+            UpdateOptions();
+            UpdateChrome();
         }
         else if (change.Property == TitleProperty)
         {
-            AutomationProperties.SetName(this, Title);
+            UpdateChrome();
         }
-        else if (change.Property == SpeedProperty)
+        else if (change.Property == AreControlsVisibleProperty)
         {
-            _kit.UpdateSpeed();
+            UpdateChrome();
         }
-        else if (change.Property == IsSteppingProperty || change.Property == IsFinishedProperty)
+        else if (change.Property == IsPlayingProperty)
         {
-            UpdateStatus();
+            if (IsPlaying)
+            {
+                _cycle = true;
+            }
+            else if (!IsFinished)
+            {
+                // Paused or stepped: the reader holds the preview.
+                _cycle = false;
+            }
         }
         else if (change.Property == BoundsProperty)
         {
             UpdateSizing(change.GetNewValue<Rect>().Width);
         }
+    }
+
+    private void OnStrategyChanged(BranchGraphStrategy oldValue, BranchGraphStrategy newValue)
+    {
+        var user = _userPicking;
+        if (!_autoPicking)
+        {
+            StopCycle();
+        }
+        _stage?.GoTo(newValue);
+        SyncStrategyControl();
+        UpdateChrome();
+        RaiseEvent(new BranchGraphSelectionChangedEventArgs(SelectionChangedEvent, this, oldValue, newValue, user));
+        if (user)
+        {
+            Announce(SummaryText);
+        }
+        if (_autoPicking)
+        {
+            AnnounceBeat(SummaryText);
+        }
+    }
+
+    private void OnStrategyPicked(object? sender, SelectionChangedEventArgs e)
+    {
+        if (_syncingStrategy || _strategy?.SelectedItem is not SegmentedOption { Value: BranchGraphStrategy value } || value == SelectedStrategy)
+        {
+            return;
+        }
+        _userPicking = true;
+        try
+        {
+            SetCurrentValue(SelectedStrategyProperty, value);
+        }
+        finally
+        {
+            _userPicking = false;
+        }
+    }
+
+    /// <summary>The reader took over (a pick, a tap, a key): the autoplay cycle stops for good.</summary>
+    internal void OnUserInteraction() => StopCycle();
+
+    private void StopCycle()
+    {
+        _cycle = false;
+        if (IsPlaying)
+        {
+            Pause();
+        }
+        else if (!_drawn && AutoPlay)
+        {
+            SetCurrentValue(AutoPlayProperty, false);
+        }
+    }
+
+    /// <summary>The pointer rests on the commits (holds the cycle) or left them (the cycle goes on within a second or so).</summary>
+    internal void OnHoverChanged(bool hovered)
+    {
+        if (hovered == _hovered)
+        {
+            return;
+        }
+        _hovered = hovered;
+        ClockHoldChanged();
+        if (!hovered && IsPlaying && Script.NextBeatTime() is { } next && next - Now > ResumeAfterHover)
+        {
+            Advance(next - Now - ResumeAfterHover);
+        }
+    }
+
+    internal void OnActiveChanged(BranchGraphCommit? commit)
+    {
+        _syncingCommit = true;
+        try
+        {
+            SetCurrentValue(SelectedCommitProperty, commit);
+        }
+        finally
+        {
+            _syncingCommit = false;
+        }
+    }
+
+    internal void OnCommitDrawn(BranchGraphItem item)
+    {
+        if (item.Commit is null)
+        {
+            return;
+        }
+        RevealedCount = Math.Min(_history.Count, RevealedCount + 1);
+        RaiseEvent(new BranchGraphCommitEventArgs(CommitDrawnEvent, this, item.Commit, item.CommitIndex, item.Kind));
     }
 
     private protected override void WatchData(bool watch) => ObserveSource(watch ? ItemsSource : null);
@@ -260,191 +530,264 @@ public class BranchGraph : Explainer
         Dispatcher.UIThread.Post(() =>
         {
             _rebuildPending = false;
-            var finished = IsFinished || StartsFinished;
             Rebuild();
-            if (finished && !IsPlaying && _revealed == 0 && (StartsFinished || IsAttached))
-            {
-                JumpToEnd();
-            }
         }, DispatcherPriority.Background);
     }
 
     private protected override void BuildStory(ExplainerScript script)
     {
-        if (ItemsSource is { } source)
+        if (!_loopRestart || _model is null)
         {
-            _history = source.Where(c => c is not null).ToArray();
+            if (ItemsSource is { } source)
+            {
+                _history = source.Where(c => c is not null).ToArray();
+                _usesSample = false;
+            }
+            else if (Commits.Count > 0)
+            {
+                _history = Commits.ToArray();
+                _usesSample = false;
+            }
+            else
+            {
+                _history = s_sample;
+                _usesSample = true;
+            }
+            _model = BranchGraphModel.Build(_history, Labels, EffectiveTitle, EffectiveNumber, SourceBranch, TargetBranch);
         }
-        else if (Commits.Count > 0)
+        var model = _model;
+        if (model.MergeItem < 0)
         {
-            _history = Commits.ToArray();
+            script.Length = 0.1;
+            return;
         }
-        else
+        // The cycle: after the first-load sweep (or right away on a repeat), each pick waits for the last to settle plus the dwell.
+        var t = _loopRestart ? 0 : SweepSeconds(model);
+        var current = BranchGraphStrategy.Before;
+        foreach (var strategy in s_cycle)
         {
-            _history = s_sample;
+            t += Dwell;
+            var pick = strategy;
+            script.At(t, () => AutoPick(pick), isStop: true);
+            t += BranchGraphStage.DurationOf(model, current, strategy);
+            current = strategy;
         }
-        _plan = BranchGraphPlan.Build(_history);
-        _stage?.SetPlan(_plan);
-        var t = 0.4;
-        for (var i = 0; i < _plan.Nodes.Length; i++)
-        {
-            var index = i;
-            script.At(t, () => Reveal(index));
-            script.At(t + CommitSeconds - 0.3, AnnounceCaption, isStop: true);
-            t += CommitSeconds;
-        }
-        script.At(t, Finish, isStop: true);
         script.Length = t;
     }
 
-    private void Reveal(int index)
+    /// <summary>How long the first-load sweep of <paramref name="model"/> takes at speed 1.</summary>
+    private static double SweepSeconds(BranchGraphModel model)
     {
-        var node = _plan.Nodes[index];
-        while (_revealedAt.Count <= index)
-        {
-            _revealedAt.Add(Now);
-        }
-        _revealedAt[index] = Now;
-        RevealedCount = index + 1;
-        _caption = CaptionOf(node);
-        _kit.SetCaption(_caption, Animates);
-        _stage?.OnReveal(index);
-        UpdateStatus();
-        if (Animates)
-        {
-            RequestFrames(CommitSeconds);
-        }
-        RaiseEvent(new BranchGraphCommitEventArgs(CommitDrawnEvent, this, node.Commit, index, node.Kind));
+        var rows = model[BranchGraphStrategy.Before].RowCount;
+        return BranchGraphMotion.SweepStart + Math.Max(0, rows - 1) * 44 / BranchGraphMotion.SweepSpeed + BranchGraphMotion.LandSettle;
     }
 
-    private string CaptionOf(BranchGraphNode node)
+    private void AutoPick(BranchGraphStrategy strategy)
     {
-        var labels = Labels;
-        var message = node.Commit.Message ?? node.Id;
-        var text = node.Kind switch
+        _autoPicking = true;
+        try
         {
-            BranchGraphCommitKind.Branch => labels.BranchCaption(node.Branch, node.Other ?? string.Empty, _plan.Nodes[node.Parents[0]].Id),
-            BranchGraphCommitKind.Merge => labels.MergeCaption(node.Other ?? string.Empty, node.Branch),
-            _ when node.Index == 0 => labels.FirstCaption(node.Branch),
-            _ => labels.CommitCaption(message, node.Branch)
-        };
-        if (!string.IsNullOrEmpty(node.Commit.Tag))
-        {
-            text += labels.TagCaption(node.Commit.Tag);
+            SetCurrentValue(SelectedStrategyProperty, strategy);
         }
-        return text;
+        finally
+        {
+            _autoPicking = false;
+        }
     }
-
-    private string DoneCaption() => Labels.DoneCaption(_plan.Nodes.Length, _plan.Branches.Length, _plan.MergeCount);
-
-    private void Finish()
-    {
-        _caption = DoneCaption();
-        _kit.SetCaption(_caption, Animates);
-        UpdateStatus();
-        _stage?.Changed();
-    }
-
-    private void AnnounceCaption() => AnnounceBeat(_caption);
-
-    private string CurrentCaption() => _caption ?? Labels.ReadyCaption(_plan.Nodes.Length);
 
     private protected override void ResetScene()
     {
-        var had = _revealed > 0;
-        _revealedAt.Clear();
+        if (_loopRestart)
+        {
+            return;
+        }
         RevealedCount = 0;
-        _caption = null;
-        _kit.SetCaption(CurrentCaption(), Animates && had);
-        _stage?.Changed();
-        UpdateStatus();
         if (SelectedCommit is { } selected && !_history.Contains(selected))
         {
-            SetCurrentValue(SelectedCommitProperty, null);
+            OnActiveChanged(null);
         }
-    }
-
-    private protected override void OnTimeChanged()
-    {
-        _stage?.Tick();
-        UpdateStatus();
+        if (_model is not null && _stage is not null)
+        {
+            _stage.SetModel(_model, SelectedStrategy, drawn: false);
+            if (_drawn)
+            {
+                if (StartsFinished || !ArcMotion.IsFull(this))
+                {
+                    _stage.ShowAll();
+                }
+                else
+                {
+                    _stage.StartSweep();
+                }
+            }
+        }
+        UpdateOptions();
+        UpdateChrome();
     }
 
     private protected override void OnFinished()
     {
-        UpdateStatus();
-        Announce(DoneCaption());
-    }
-
-    private protected override void OnPlaybackChanged()
-    {
-        UpdateStatus();
-        if (!IsPlaying && !_pauseCheckPending)
-        {
-            _pauseCheckPending = true;
-            Dispatcher.UIThread.Post(() =>
-            {
-                _pauseCheckPending = false;
-                if (!IsPlaying && !IsStepping && !IsFinished && _revealed > 0 && IsReaderDriven)
-                {
-                    Announce(_caption);
-                }
-            }, DispatcherPriority.Background);
-        }
-    }
-
-    private void UpdateStatus(bool force = false)
-    {
-        var phase = _kit.PhaseOf(_revealed > 0);
-        var labels = Labels;
-        var text = phase switch
-        {
-            ExplainerChapterPhase.Playing => labels.Drawing,
-            ExplainerChapterPhase.Paused => labels.Paused,
-            ExplainerChapterPhase.Done => labels.Done,
-            _ => labels.Ready
-        };
-        _kit.SetStatus(phase, text, force);
-    }
-
-    private void UpdateSizing(double width)
-    {
-        if (width <= 0)
+        if (!_cycle || _model is null || _model.MergeItem < 0 || _loopPending)
         {
             return;
         }
-        var padding = ExplainerChapterKit.CardPadding(width);
-        var body = new Thickness(padding, padding, padding, AreControlsVisible ? 0 : padding);
-        if (body != BodyPadding)
+        // The cycle goes round again from Before, without drawing the graph in again.
+        _loopPending = true;
+        Dispatcher.UIThread.Post(() =>
         {
-            SetCurrentValue(BodyPaddingProperty, body);
-        }
-        var footer = new Thickness(padding, 16, padding, padding);
-        if (footer != FooterPadding)
+            _loopPending = false;
+            if (!_cycle || !IsFinished || !IsAttached)
+            {
+                return;
+            }
+            _loopRestart = true;
+            try
+            {
+                Restart();
+            }
+            finally
+            {
+                _loopRestart = false;
+            }
+        }, DispatcherPriority.Background);
+    }
+
+    private void UpdateOptions()
+    {
+        var labels = Labels;
+        _options =
+        [
+            new SegmentedOption(BranchGraphStrategy.Before, labels.Before),
+            new SegmentedOption(BranchGraphStrategy.Merge, labels.Merge),
+            new SegmentedOption(BranchGraphStrategy.Rebase, labels.Rebase),
+            new SegmentedOption(BranchGraphStrategy.Squash, labels.Squash)
+        ];
+        if (_strategy is not null)
         {
-            SetCurrentValue(FooterPaddingProperty, footer);
+            _syncingStrategy = true;
+            try
+            {
+                _strategy.ItemsSource = _options;
+            }
+            finally
+            {
+                _syncingStrategy = false;
+            }
+            AutomationProperties.SetName(_strategy, labels.StrategyGroup);
         }
-        _kit.SetSpeedLabelVisible(width >= 420);
+        SyncStrategyControl();
+    }
+
+    private void SyncStrategyControl()
+    {
+        if (_strategy is null)
+        {
+            return;
+        }
+        _syncingStrategy = true;
+        try
+        {
+            _strategy.SelectedIndex = (int)SelectedStrategy;
+        }
+        finally
+        {
+            _syncingStrategy = false;
+        }
+    }
+
+    private void UpdateChrome()
+    {
+        var heading = HeadingText;
+        if (_title is not null)
+        {
+            _title.Text = heading;
+        }
+        var number = EffectiveNumber;
+        if (_number is not null)
+        {
+            _number.Text = number > 0 ? "#" + number : string.Empty;
+            _number.IsVisible = number > 0;
+        }
+        if (_heading is not null)
+        {
+            _heading.IsVisible = heading.Length > 0;
+        }
+        if (_strategy is not null)
+        {
+            _strategy.IsVisible = AreControlsVisible && _model is { MergeItem: >= 0 };
+        }
+        if (_summary is not null)
+        {
+            _summary.Text = SummaryText;
+        }
+        _stage?.UpdateSummary();
+        UpdateAccessibleName();
+    }
+
+    private void UpdateAccessibleName()
+    {
+        var heading = HeadingText;
+        var name = _model is { Source: { } source } && heading.Length > 0 ? Labels.GraphName(heading, source, _model.Target) : heading;
+        AutomationProperties.SetName(this, name.Length > 0 ? name : Title);
+    }
+
+    /// <summary>Under 600 px the strategy control takes the header's second row, stretched.</summary>
+    internal const double NarrowWidth = 600;
+
+    private void UpdateSizing(double width)
+    {
+        if (width <= 0 || _header is null || _strategy is null)
+        {
+            return;
+        }
+        var narrow = width < NarrowWidth;
+        Grid.SetRow(_strategy, narrow ? 1 : 0);
+        Grid.SetColumn(_strategy, narrow ? 0 : 1);
+        Grid.SetColumnSpan(_strategy, narrow ? 2 : 1);
+        _strategy.HorizontalAlignment = narrow ? HorizontalAlignment.Stretch : HorizontalAlignment.Right;
+        _strategy.Margin = narrow ? new Thickness(0, 8, 0, 0) : default;
+        PseudoClasses.Set(":narrow", narrow);
     }
 }
 
-/// <summary>The invented sample history a <see cref="BranchGraph"/> plays when it is given no commits.</summary>
+/// <summary>The invented sample pull request a <see cref="BranchGraph"/> shows when it is given no commits.</summary>
 public static class BranchGraphSamples
 {
+    /// <summary>The sample pull request's title.</summary>
+    internal const string PullRequestTitle = "Search filters";
+
+    /// <summary>The sample pull request's number.</summary>
+    internal const int PullRequestNumber = 317;
+
     /// <summary>
-    /// A fresh copy of the sample history: nine commits of a small garden app on main, a feature branch and a hotfix
-    /// branch, with two merges and a release tag. The names and messages are invented.
+    /// A fresh copy of the sample history, oldest first: a small shop's catalog on main, a feature branch adding search
+    /// filters (the pull request) and a short fix branch that was merged back. The names and messages are invented.
     /// </summary>
     public static IReadOnlyList<BranchGraphCommit> CreateCommits() =>
     [
-        new("a1f3c0", "main", "Initial commit", author: "Mira"),
-        new("b7d2e4", "main", "Add plant list", author: "Mira"),
-        new("c4e9a1", "feature/search", "Add search box", author: "Teo"),
-        new("d2a8f7", "main", "Fix watering times", author: "Mira"),
-        new("e6b1c3", "feature/search", "Filter by season", author: "Teo"),
-        new("f9c5d2", "hotfix/login", "Fix login redirect", parents: "d2a8f7", author: "Ines"),
-        new("0a7e4b", "main", "Merge hotfix/login", parents: "d2a8f7, f9c5d2", author: "Ines"),
-        new("1b3f6c", "feature/search", "Show search results", author: "Teo"),
-        new("2c8d0e", "main", "Merge feature/search", parents: "0a7e4b, 1b3f6c", author: "Mira", tag: "v1.2.0")
+        Commit("3c1e8a2", "main", "Set up the catalog page", "Priya Shah", "5 days ago", 388, 0, 14,
+            "Lists every product with its photo, price and stock."),
+        Commit("7a0f4d1", "main", "Add product cards", "Priya Shah", "4 days ago", 146, 12, 6, null),
+        Commit("d94b2c7", "feat/filters", "Add a filter sidebar", "Leo Martin", "3 days ago", 212, 35, 8,
+            "Splits the catalog into a sidebar and a results grid."),
+        Commit("51e6ab9", "fix/currency", "Format prices per locale", "Noor Haddad", "3 days ago", 22, 9, 3,
+            "Prices follow the shopper's locale instead of always showing dollars.", parents: "7a0f4d1"),
+        Commit("8f2d330", "main", "Merge branch fix/currency", "Noor Haddad", "2 days ago", 22, 9, 3, null, parents: "7a0f4d1, 51e6ab9"),
+        Commit("2be97f0", "feat/filters", "Filter by price range", "Leo Martin", "Yesterday", 97, 14, 5,
+            "A two-handle slider narrows the results as it moves."),
+        Commit("e6c1a84", "main", "Upgrade the image loader", "Sam Ortega", "6 hours ago", 18, 18, 2,
+            "Moves to the new loader API and drops a deprecated flag."),
+        Commit("0d7f5b3", "feat/filters", "Remember filters in the link", "Leo Martin", "1 hour ago", 131, 27, 4,
+            "Shared links open with the same filters applied.")
     ];
+
+    private static BranchGraphCommit Commit(string id, string branch, string message, string author, string date, int added, int removed,
+        int files, string? body, string? parents = null) => new(id, branch, message, parents, author)
+    {
+        Date = date,
+        Additions = added,
+        Deletions = removed,
+        Files = files,
+        Body = body
+    };
 }

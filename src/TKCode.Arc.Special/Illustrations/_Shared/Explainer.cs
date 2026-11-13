@@ -300,6 +300,15 @@ public abstract class Explainer : TemplatedControl
     /// <summary>Whether reduced motion opens the card on its finished story (default true).</summary>
     private protected virtual bool OpensFinishedWhenReduced => true;
 
+    /// <summary>
+    /// True while the story clock holds still although the story plays (a pointer resting on the card); call
+    /// <see cref="ClockHoldChanged"/> when it changes. Default false.
+    /// </summary>
+    private protected virtual bool IsClockHeld => false;
+
+    /// <summary>Picks up a change of <see cref="IsClockHeld"/>.</summary>
+    private protected void ClockHoldChanged() => UpdateLoop();
+
     /// <summary>Builds the beats of the story from the current data into <paramref name="script"/>.</summary>
     private protected abstract void BuildStory(ExplainerScript script);
 
@@ -545,7 +554,7 @@ public abstract class Explainer : TemplatedControl
                 return true;
             }
         }
-        else if (IsPlaying || _stepTarget is not null)
+        else if ((IsPlaying && !IsClockHeld) || _stepTarget is not null)
         {
             var target = _now + dt * (_stepTarget is not null ? StepSpeed : Speed);
             if (_stepTarget is { } step && target >= step)
@@ -637,7 +646,7 @@ public abstract class Explainer : TemplatedControl
     private void UpdateCanStep() => CanStep = !_script.IsFinished || _now < _script.Length;
 
     private bool WantsFrames()
-        => _loopWait >= 0 || _stepTarget is not null || _wall < _framesUntil || (IsPlaying && Speed > 0 && !IsFinished);
+        => _loopWait >= 0 || _stepTarget is not null || _wall < _framesUntil || (IsPlaying && Speed > 0 && !IsFinished && !IsClockHeld);
 
     private void UpdateLoop()
     {

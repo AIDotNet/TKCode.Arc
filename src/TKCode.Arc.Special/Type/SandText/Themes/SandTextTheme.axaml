@@ -1,0 +1,24 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.SandTextTheme">
+
+    <!--
+        The sand draws itself (one bitmap, one pixel per grain, scaled without smoothing); the template only hosts the
+        root panel. The grains take the accent color, as Arc's sand does.
+    -->
+    <ControlTheme x:Key="{x:Type arc:SandText}" TargetType="arc:SandText">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource DisplayFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:SandTextTokenResource DefaultFontSize}" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SandText">
+                <Panel Name="PART_Root" />
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

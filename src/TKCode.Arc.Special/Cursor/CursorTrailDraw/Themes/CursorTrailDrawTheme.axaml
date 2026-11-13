@@ -1,0 +1,408 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.CursorTrailDrawTheme">
+
+    <!--
+        The whiteboard card: a header (title and item count) over the stage. The stage holds the drawing board, the hint
+        of an empty board, the snap chip at the top and the floating toolbar at the bottom. Below 560 px the stage turns
+        4:5 and the toolbar buttons shrink to 38, below 360 px to 30.
+    -->
+    <ControlTheme x:Key="{x:Type arc:CursorTrailDraw}" TargetType="arc:CursorTrailDraw">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep24}" />
+        <Setter Property="Padding" Value="{arc:CursorTrailDrawTokenResource CardPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CursorTrailDraw">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Grid RowDefinitions="Auto,*" RowSpacing="{arc:CursorTrailDrawTokenResource CardSpacing}">
+                        <TextBlock Name="PART_Status"
+                                   Width="1"
+                                   Height="1"
+                                   Opacity="0"
+                                   ClipToBounds="True"
+                                   IsHitTestVisible="False"
+                                   HorizontalAlignment="Left"
+                                   VerticalAlignment="Top" />
+                        <Grid Name="PART_Header" ColumnDefinitions="*,Auto">
+                            <TextBlock Name="PART_Title"
+                                       Text="{TemplateBinding Label}"
+                                       FontWeight="Medium"
+                                       VerticalAlignment="Bottom"
+                                       TextTrimming="CharacterEllipsis"
+                                       FontSize="{arc:CursorTrailDrawTokenResource TitleFontSize}"
+                                       LetterSpacing="{arc:CursorTrailDrawTokenResource TitleLetterSpacing}"
+                                       AutomationProperties.HeadingLevel="3" />
+                            <TextBlock Name="PART_Count"
+                                       Grid.Column="1"
+                                       Margin="16,0,0,0"
+                                       VerticalAlignment="Bottom"
+                                       FontFeatures="+tnum"
+                                       FontSize="{arc:CursorTrailDrawTokenResource SmallFontSize}"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                       AutomationProperties.AccessibilityView="Raw" />
+                        </Grid>
+                        <Border Name="PART_Stage"
+                                Grid.Row="1"
+                                ClipToBounds="True"
+                                BorderThickness="1"
+                                Background="{arc:CursorTrailDrawTokenResource StageBackground}"
+                                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusStep16}"
+                                BoxShadow="{arc:CursorTrailDrawTokenResource StageHighlight}">
+                            <Panel>
+                                <arc:CursorTrailDrawBoard Name="PART_Board"
+                                                          GridBrush="{arc:ArcDesignTokenResource Border}"
+                                                          InkBrush="{arc:ArcDesignTokenResource Foreground}"
+                                                          AccentInkBrush="{arc:ArcDesignTokenResource Accent}"
+                                                          DangerInkBrush="{arc:ArcDesignTokenResource Danger}"
+                                                          GridSpacing="{arc:CursorTrailDrawTokenResource GridSpacing}"
+                                                          GridDotRadius="{arc:CursorTrailDrawTokenResource GridDotRadius}"
+                                                          CleanWidth="{arc:CursorTrailDrawTokenResource CleanWidth}"
+                                                          CursorRadii="{arc:CursorTrailDrawTokenResource CursorRadii}"
+                                                          CursorThickness="{arc:CursorTrailDrawTokenResource CursorThickness}"
+                                                          LaserWidth="{arc:CursorTrailDrawTokenResource LaserWidth}" />
+                                <TextBlock Name="PART_Hint"
+                                           IsHitTestVisible="False"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           TextAlignment="Center"
+                                           TextWrapping="Wrap"
+                                           AutomationProperties.AccessibilityView="Raw"
+                                           Margin="{arc:CursorTrailDrawTokenResource HintMargin}"
+                                           FontSize="{arc:CursorTrailDrawTokenResource SmallFontSize}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                <Border Name="PART_Chip"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Top"
+                                        Height="40"
+                                        RenderTransformOrigin="50%,50%"
+                                        Margin="{arc:CursorTrailDrawTokenResource ChipMargin}"
+                                        Padding="{arc:CursorTrailDrawTokenResource ChipPadding}"
+                                        CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                        Background="{arc:CursorTrailDrawTokenResource ToolbarBackground}"
+                                        BoxShadow="{arc:CursorTrailDrawTokenResource ToolbarShadow}">
+                                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="{arc:CursorTrailDrawTokenResource ChipSpacing}">
+                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Check}"
+                                                      VerticalAlignment="Center"
+                                                      Size="{arc:CursorTrailDrawTokenResource ChipCheckSize}"
+                                                      StrokeThickness="{arc:CursorTrailDrawTokenResource IconStroke}"
+                                                      Foreground="{arc:ArcDesignTokenResource Accent}" />
+                                        <TextBlock Name="PART_ChipText"
+                                                   Grid.Column="1"
+                                                   VerticalAlignment="Center"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   FontSize="{arc:CursorTrailDrawTokenResource SmallFontSize}" />
+                                        <arc:CursorTrailDrawChipButton Name="PART_Keep" Grid.Column="2" Content="Keep original" />
+                                    </Grid>
+                                </Border>
+                                <Border Name="PART_Toolbar"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Bottom"
+                                        Margin="{arc:CursorTrailDrawTokenResource ToolbarMargin}"
+                                        CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                        Background="{arc:CursorTrailDrawTokenResource ToolbarBackground}"
+                                        BoxShadow="{arc:CursorTrailDrawTokenResource ToolbarShadow}">
+                                    <arc:CursorTrailDrawToolbarRow Name="PART_ToolbarRow" AutomationProperties.Name="Drawing tools">
+                                        <StackPanel Name="PART_Tools" Orientation="Horizontal">
+                                            <arc:CursorTrailDrawToolButton Name="PART_Pen"
+                                                                           IsToggle="True"
+                                                                           AutomationProperties.Name="Pen"
+                                                                           ToolTip.Tip="Pen (P)">
+                                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.PenLine}" Size="{arc:CursorTrailDrawTokenResource IconSize}" StrokeThickness="{arc:CursorTrailDrawTokenResource IconStroke}" />
+                                            </arc:CursorTrailDrawToolButton>
+                                            <arc:CursorTrailDrawToolButton Name="PART_Laser"
+                                                                           IsToggle="True"
+                                                                           AutomationProperties.Name="Laser pointer"
+                                                                           ToolTip.Tip="Laser pointer (L)">
+                                                <arc:ArcGlyph Data="{x:Static arc:CursorTrailDrawIcons.Wand}" Size="{arc:CursorTrailDrawTokenResource IconSize}" StrokeThickness="{arc:CursorTrailDrawTokenResource IconStroke}" />
+                                            </arc:CursorTrailDrawToolButton>
+                                        </StackPanel>
+                                        <Border Classes="divider" />
+                                        <StackPanel Name="PART_Swatches" Orientation="Horizontal" />
+                                        <Border Classes="divider" />
+                                        <StackPanel Name="PART_Actions" Orientation="Horizontal">
+                                            <arc:CursorTrailDrawToolButton Name="PART_Snap"
+                                                                           IsToggle="True"
+                                                                           AutomationProperties.Name="Snap shapes"
+                                                                           ToolTip.Tip="Snap shapes (S)">
+                                                <arc:ArcGlyph Data="{x:Static arc:CursorTrailDrawIcons.Shapes}" Size="{arc:CursorTrailDrawTokenResource IconSize}" StrokeThickness="{arc:CursorTrailDrawTokenResource IconStroke}" />
+                                            </arc:CursorTrailDrawToolButton>
+                                            <arc:CursorTrailDrawToolButton Name="PART_Undo"
+                                                                           AutomationProperties.Name="Undo last item"
+                                                                           ToolTip.Tip="Undo (Ctrl or Cmd+Z)">
+                                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Undo2}" Size="{arc:CursorTrailDrawTokenResource IconSize}" StrokeThickness="{arc:CursorTrailDrawTokenResource IconStroke}" />
+                                            </arc:CursorTrailDrawToolButton>
+                                            <arc:CursorTrailDrawToolButton Name="PART_Clear"
+                                                                           AutomationProperties.Name="Clear the board"
+                                                                           ToolTip.Tip="Clear the board">
+                                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Trash2}" Size="{arc:CursorTrailDrawTokenResource IconSize}" StrokeThickness="{arc:CursorTrailDrawTokenResource IconStroke}" />
+                                            </arc:CursorTrailDrawToolButton>
+                                        </StackPanel>
+                                    </arc:CursorTrailDrawToolbarRow>
+                                </Border>
+                            </Panel>
+                        </Border>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Sizes. -->
+        <Style Selector="^ /template/ Grid#PART_Header">
+            <Setter Property="Margin" Value="{arc:CursorTrailDrawTokenResource HeaderPadding}" />
+        </Style>
+        <Style Selector="^ /template/ arc|CursorTrailDrawBoard#PART_Board">
+            <Setter Property="Aspect" Value="{arc:CursorTrailDrawTokenResource StageAspect}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Toolbar">
+            <Setter Property="Padding" Value="{arc:CursorTrailDrawTokenResource ToolbarPadding}" />
+        </Style>
+        <Style Selector="^ /template/ arc|CursorTrailDrawToolbarRow#PART_ToolbarRow">
+            <Setter Property="Spacing" Value="{arc:CursorTrailDrawTokenResource ToolbarSpacing}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Tools">
+            <Setter Property="Spacing" Value="{arc:CursorTrailDrawTokenResource ToolbarSpacing}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Swatches">
+            <Setter Property="Spacing" Value="{arc:CursorTrailDrawTokenResource ToolbarSpacing}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Actions">
+            <Setter Property="Spacing" Value="{arc:CursorTrailDrawTokenResource ToolbarSpacing}" />
+        </Style>
+        <Style Selector="^ /template/ Border.divider">
+            <Setter Property="Width" Value="1" />
+            <Setter Property="Height" Value="{arc:CursorTrailDrawTokenResource DividerHeight}" />
+            <Setter Property="Margin" Value="{arc:CursorTrailDrawTokenResource DividerMargin}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+        <Style Selector="^ /template/ arc|CursorTrailDrawToolButton">
+            <Setter Property="Width" Value="{arc:CursorTrailDrawTokenResource ToolSize}" />
+            <Setter Property="Height" Value="{arc:CursorTrailDrawTokenResource ToolSize}" />
+        </Style>
+        <Style Selector="^:laser /template/ StackPanel#PART_Swatches">
+            <Setter Property="Opacity" Value="{arc:CursorTrailDrawTokenResource DimmedGroupOpacity}" />
+        </Style>
+
+        <Style Selector="^:compact">
+            <Style Selector="^ /template/ Grid#PART_Header">
+                <Setter Property="Margin" Value="{arc:CursorTrailDrawTokenResource HeaderPaddingCompact}" />
+            </Style>
+            <Style Selector="^ /template/ arc|CursorTrailDrawBoard#PART_Board">
+                <Setter Property="Aspect" Value="{arc:CursorTrailDrawTokenResource StageAspectCompact}" />
+            </Style>
+            <Style Selector="^ /template/ arc|CursorTrailDrawToolButton">
+                <Setter Property="Width" Value="{arc:CursorTrailDrawTokenResource ToolSizeCompact}" />
+                <Setter Property="Height" Value="{arc:CursorTrailDrawTokenResource ToolSizeCompact}" />
+            </Style>
+        </Style>
+        <Style Selector="^:narrow">
+            <Style Selector="^ /template/ arc|CursorTrailDrawToolButton">
+                <Setter Property="Width" Value="{arc:CursorTrailDrawTokenResource ToolSizeNarrow}" />
+                <Setter Property="Height" Value="{arc:CursorTrailDrawTokenResource ToolSizeNarrow}" />
+            </Style>
+            <Style Selector="^ /template/ arc|CursorTrailDrawToolButton.swatch">
+                <Setter Property="Width" Value="{arc:CursorTrailDrawTokenResource SwatchWidthNarrow}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Toolbar">
+                <Setter Property="Padding" Value="{arc:CursorTrailDrawTokenResource ToolbarPaddingNarrow}" />
+            </Style>
+            <Style Selector="^ /template/ arc|CursorTrailDrawToolbarRow#PART_ToolbarRow">
+                <Setter Property="Spacing" Value="0" />
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_Tools">
+                <Setter Property="Spacing" Value="0" />
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_Swatches">
+                <Setter Property="Spacing" Value="0" />
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_Actions">
+                <Setter Property="Spacing" Value="0" />
+            </Style>
+            <Style Selector="^ /template/ Border.divider">
+                <Setter Property="Margin" Value="{arc:CursorTrailDrawTokenResource DividerMarginNarrow}" />
+            </Style>
+        </Style>
+
+        <!-- Hint and swatch group fades: 150 ms on the standard curve. -->
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ TextBlock#PART_Hint">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <DoubleTransition Property="Opacity" Duration="0:0:0.15" Easing="0.22,1,0.36,1" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_Swatches">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <DoubleTransition Property="Opacity" Duration="0:0:0.15" Easing="0.22,1,0.36,1" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- Toolbar buttons: round, secondary text; hover tints, the picked one wears the accent and a 14% accent disc. -->
+    <ControlTheme x:Key="{x:Type arc:CursorTrailDrawToolButton}" TargetType="arc:CursorTrailDrawToolButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Width" Value="{arc:CursorTrailDrawTokenResource ToolSize}" />
+        <Setter Property="Height" Value="{arc:CursorTrailDrawTokenResource ToolSize}" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="HighlightBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="RenderTransform" Value="scale(1)" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CursorTrailDrawToolButton">
+                <Panel>
+                    <Border Background="{TemplateBinding Background}" CornerRadius="{TemplateBinding CornerRadius}" />
+                    <Border Name="PART_Highlight"
+                            IsVisible="False"
+                            Background="{TemplateBinding HighlightBrush}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Opacity="{arc:CursorTrailDrawTokenResource HighlightOpacity}" />
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:CursorTrailDrawTokenResource ToolHoverBackground}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:checked">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:checked /template/ Border#PART_Highlight">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^.swatch:checked /template/ Border#PART_Highlight">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Opacity" Value="{arc:CursorTrailDrawTokenResource DisabledOpacity}" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <!-- Press squeeze and the picked color's growth on a critically damped spring (≈ stiffness 330, damping 36). -->
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.15" Easing="0.22,1,0.36,1" />
+                    <BrushTransition Property="Foreground" Duration="0:0:0.15" Easing="0.22,1,0.36,1" />
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" VisualDuration="0.288" Bounce="0" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^:pressed">
+                <Setter Property="RenderTransform" Value="scale(0.94)" />
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- The chip's button: 32 px pill on the muted surface. -->
+    <ControlTheme x:Key="{x:Type arc:CursorTrailDrawChipButton}" TargetType="arc:CursorTrailDrawChipButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Height" Value="{arc:CursorTrailDrawTokenResource ChipButtonHeight}" />
+        <Setter Property="Padding" Value="{arc:CursorTrailDrawTokenResource ChipButtonPadding}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontSize" Value="{arc:CursorTrailDrawTokenResource SmallFontSize}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="RenderTransform" Value="scale(1)" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CursorTrailDrawChipButton">
+                <Panel>
+                    <Border Background="{TemplateBinding Background}" CornerRadius="{TemplateBinding CornerRadius}" Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          FontSize="{TemplateBinding FontSize}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource ControlTrack}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.15" Easing="0.22,1,0.36,1" />
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" VisualDuration="0.288" Bounce="0" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^:pressed">
+                <Setter Property="RenderTransform" Value="scale(0.94)" />
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- A color dot: 16 px with a faint edge; the picked one grows to 112% inside a ring of its own color. -->
+    <ControlTheme x:Key="{x:Type arc:CursorTrailDrawSwatch}" TargetType="arc:CursorTrailDrawSwatch">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Edge" Value="{arc:CursorTrailDrawTokenResource SwatchEdge}" />
+        <Setter Property="DotSize" Value="{arc:CursorTrailDrawTokenResource SwatchSize}" />
+        <Setter Property="RingSize" Value="{arc:CursorTrailDrawTokenResource SwatchRingSize}" />
+        <Setter Property="RingThickness" Value="{arc:CursorTrailDrawTokenResource SwatchRingThickness}" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="RenderTransform" Value="scale(1)" />
+        <Style Selector="^:selected">
+            <Setter Property="RenderTransform" Value="scale(1.12)" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" VisualDuration="0.288" Bounce="0" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

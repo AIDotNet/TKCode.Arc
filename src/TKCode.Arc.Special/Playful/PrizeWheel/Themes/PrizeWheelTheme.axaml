@@ -5,32 +5,118 @@
                     x:Class="TKCode.Arc.PrizeWheelTheme">
 
     <!--
-        The wheel draws itself: slices alternating between two surfaces with hairline edges, pegs on a raised rim, a hub
-        that names the action, and a flapper pointer at the top. The winning slice fills with the accent once the wheel
-        rests. A polite live region announces the prize; the focus ring is created on the first keyboard focus.
+        The wheel draws itself (slices, rim, pegs, pointer, hub); the reward panel beside it is ordinary controls: the
+        idle text, a slot where the reward card lands (an invisible sizer card reserves the tallest card's height) and
+        the odds list. A polite live region announces the spin, the prize and the copy; the hub's focus ring is created on
+        the first keyboard focus.
     -->
     <ControlTheme x:Key="{x:Type arc:PrizeWheel}" TargetType="arc:PrizeWheel">
         <Setter Property="FocusAdorner" Value="{x:Null}" />
         <Setter Property="ClipToBounds" Value="False" />
-        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="AccentBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:PrizeWheelTokenResource TextFontSize}" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:PrizeWheel">
                 <Panel Name="PART_Root">
-                    <arc:PrizeWheelFace Name="PART_Face"
-                                        Foreground="{TemplateBinding Foreground}"
-                                        FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
-                                        SliceFill="{arc:ArcDesignTokenResource Surface}"
-                                        AlternateSliceFill="{arc:ArcDesignTokenResource SurfaceMuted}"
-                                        WinnerFill="{arc:ArcDesignTokenResource Accent}"
-                                        WinnerForeground="{arc:ArcDesignTokenResource AccentForeground}"
-                                        RimFill="{arc:ArcDesignTokenResource SurfaceRaised}"
-                                        LineBrush="{arc:ArcDesignTokenResource Border}"
-                                        PegFill="{arc:ArcDesignTokenResource BorderStrong}"
-                                        PointerFill="{arc:ArcDesignTokenResource Foreground}"
-                                        HubFill="{arc:ArcDesignTokenResource SurfaceRaised}"
-                                        RimWidth="{arc:PrizeWheelTokenResource RimWidth}"
-                                        PointerLength="{arc:PrizeWheelTokenResource PointerLength}" />
+                    <arc:PrizeWheelLayout Name="PART_Layout"
+                                          StageMaxSize="{arc:PrizeWheelTokenResource StageMaxSize}"
+                                          PanelWidth="{arc:PrizeWheelTokenResource PanelWidth}"
+                                          StackedPanelMaxWidth="{arc:PrizeWheelTokenResource StackedPanelMaxWidth}"
+                                          SideBySideMinWidth="{arc:PrizeWheelTokenResource SideBySideMinWidth}"
+                                          ColumnGap="{arc:PrizeWheelTokenResource ColumnGap}"
+                                          RowGap="{arc:PrizeWheelTokenResource RowGap}">
+                        <arc:PrizeWheelStage Name="PART_Stage" Cursor="Hand">
+                            <arc:PrizeWheelFace Name="PART_Face"
+                                                FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                                                Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                SliceFill="{arc:ArcDesignTokenResource SurfaceRaised}"
+                                                AlternateSliceFill="{arc:PrizeWheelTokenResource SliceAlternate}"
+                                                LabelBrush="{arc:ArcDesignTokenResource TextSecondary}"
+                                                MutedBrush="{arc:ArcDesignTokenResource TextMuted}"
+                                                AccentBrush="{TemplateBinding AccentBrush}"
+                                                AccentForeground="{arc:ArcDesignTokenResource AccentForeground}"
+                                                DividerBrush="{arc:ArcDesignTokenResource Border}"
+                                                EdgeBrush="{arc:ArcDesignTokenResource BorderStrong}"
+                                                RimBrush="{arc:PrizeWheelTokenResource RimColor}"
+                                                RimSheenStart="{arc:PrizeWheelTokenResource RimSheenStart}"
+                                                RimSheenEnd="{arc:PrizeWheelTokenResource RimSheenEnd}"
+                                                HairlineBrush="{arc:PrizeWheelTokenResource OuterHairline}"
+                                                PegFill="{arc:PrizeWheelTokenResource PegFill}"
+                                                PegStroke="{arc:PrizeWheelTokenResource PegStroke}"
+                                                PegHighlight="{arc:PrizeWheelTokenResource PegHighlight}"
+                                                PointerStroke="{arc:PrizeWheelTokenResource PointerStroke}"
+                                                HubTop="{arc:PrizeWheelTokenResource HubTop}"
+                                                HubMiddle="{arc:PrizeWheelTokenResource HubMiddle}"
+                                                HubBottom="{arc:PrizeWheelTokenResource HubBottom}"
+                                                HubForeground="{arc:PrizeWheelTokenResource HubForeground}"
+                                                HubShadow="{arc:PrizeWheelTokenResource HubShadow}"
+                                                WheelShadow="{arc:PrizeWheelTokenResource WheelShadow}"
+                                                HubFontSize="{arc:PrizeWheelTokenResource HubFontSize}"
+                                                HubCompactFontSize="{arc:PrizeWheelTokenResource HubCompactFontSize}"
+                                                RimWidth="{arc:PrizeWheelTokenResource RimWidth}"
+                                                PointerLength="{arc:PrizeWheelTokenResource PointerLength}" />
+                            <Panel Name="PART_HubFocus" IsHitTestVisible="False" />
+                        </arc:PrizeWheelStage>
+                        <Grid Name="PART_Panel"
+                              RowDefinitions="Auto,Auto"
+                              RowSpacing="{arc:PrizeWheelTokenResource PanelSpacing}"
+                              IsVisible="{TemplateBinding IsPanelVisible}">
+                            <arc:PrizeWheelSlot Name="PART_Slot">
+                                <StackPanel Name="PART_Idle" Spacing="{arc:PrizeWheelTokenResource TextSpacing}">
+                                    <TextBlock Name="PART_Title"
+                                               Text="{TemplateBinding Title}"
+                                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               FontSize="{arc:PrizeWheelTokenResource TitleFontSize}"
+                                               LineHeight="{arc:PrizeWheelTokenResource TitleLineHeight}"
+                                               LetterSpacing="{arc:PrizeWheelTokenResource TitleLetterSpacing}"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                               TextWrapping="Wrap" />
+                                    <TextBlock Name="PART_Description"
+                                               Text="{TemplateBinding Description}"
+                                               LineHeight="{arc:PrizeWheelTokenResource TextLineHeight}"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                               TextWrapping="Wrap" />
+                                    <TextBlock Name="PART_Hint"
+                                               Text="{TemplateBinding DisplayHint}"
+                                               Margin="{arc:PrizeWheelTokenResource HintMargin}"
+                                               LineHeight="{arc:PrizeWheelTokenResource TextLineHeight}"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                               TextWrapping="Wrap" />
+                                </StackPanel>
+                                <arc:PrizeWheelCard Name="PART_Sizer"
+                                                    Opacity="0"
+                                                    IsHitTestVisible="False"
+                                                    IsEnabled="False"
+                                                    Focusable="False"
+                                                    AutomationProperties.AccessibilityView="Raw"
+                                                    CopyText="{TemplateBinding CopyText}"
+                                                    SpinAgainText="{TemplateBinding SpinAgainText}"
+                                                    IsSpinAgainVisible="{TemplateBinding IsSpinAgainVisible}" />
+                                <arc:PrizeWheelCard Name="PART_Card"
+                                                    IsVisible="False"
+                                                    CopyText="{TemplateBinding CopyText}"
+                                                    CopiedText="{TemplateBinding CopiedText}"
+                                                    CopyFailedText="{TemplateBinding CopyFailedText}"
+                                                    SpinAgainText="{TemplateBinding SpinAgainText}"
+                                                    IsSpinAgainVisible="{TemplateBinding IsSpinAgainVisible}" />
+                            </arc:PrizeWheelSlot>
+                            <StackPanel Grid.Row="1"
+                                        Spacing="{arc:PrizeWheelTokenResource TextSpacing}"
+                                        IsVisible="{TemplateBinding IsOddsVisible}">
+                                <TextBlock Text="{TemplateBinding OddsTitle}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                <arc:PrizeWheelOddsList Name="PART_Odds"
+                                                        ColumnGap="{arc:PrizeWheelTokenResource OddsColumnGap}"
+                                                        TwoColumnMinWidth="{arc:PrizeWheelTokenResource OddsTwoColumnMinWidth}"
+                                                        LineBrush="{arc:ArcDesignTokenResource BorderSubtle}" />
+                            </StackPanel>
+                        </Grid>
+                    </arc:PrizeWheelLayout>
                     <TextBlock Name="PART_Status"
                                Width="1"
                                Height="1"
@@ -42,5 +128,175 @@
                 </Panel>
             </ControlTemplate>
         </Setter>
+
+        <Style Selector="^ /template/ StackPanel#PART_Idle">
+            <Setter Property="RenderTransform" Value="translateY(0px)" />
+        </Style>
+        <Style Selector="^:won /template/ StackPanel#PART_Idle">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="RenderTransform" Value="translateY(-4px)" />
+        </Style>
+        <Style Selector="^:spinning /template/ arc|PrizeWheelStage#PART_Stage">
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:claimed /template/ arc|PrizeWheelStage#PART_Stage">
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:motion-full /template/ StackPanel#PART_Idle">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The reward card: prize, detail, the code in a dashed box with Copy, and "Spin again". -->
+    <ControlTheme x:Key="{x:Type arc:PrizeWheelCard}" TargetType="arc:PrizeWheelCard">
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep24}" />
+        <Setter Property="Padding" Value="{arc:PrizeWheelTokenResource CardPadding}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:PrizeWheelCard">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        BoxShadow="{arc:PrizeWheelTokenResource CardShadow}"
+                        Padding="{TemplateBinding Padding}">
+                    <StackPanel Spacing="{arc:PrizeWheelTokenResource TextSpacing}">
+                        <TextBlock Name="PART_Prize"
+                                   Text="{TemplateBinding Prize}"
+                                   FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   FontSize="{arc:ArcDesignTokenResource Type2XL}"
+                                   LineHeight="{arc:PrizeWheelTokenResource PrizeLineHeight}"
+                                   LetterSpacing="{arc:PrizeWheelTokenResource PrizeLetterSpacing}"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                   TextWrapping="Wrap" />
+                        <TextBlock Name="PART_Detail"
+                                   Text="{TemplateBinding Detail}"
+                                   LineHeight="{arc:PrizeWheelTokenResource TextLineHeight}"
+                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                   TextWrapping="Wrap" />
+                        <arc:PrizeWheelDashedBox Name="PART_CodeBox"
+                                                 Margin="{arc:PrizeWheelTokenResource CodeBoxMargin}"
+                                                 Padding="{arc:PrizeWheelTokenResource CodeBoxPadding}"
+                                                 BorderBrush="{arc:ArcDesignTokenResource BorderStrong}"
+                                                 CornerRadius="{arc:ArcDesignTokenResource RadiusStep14}">
+                            <arc:PrizeWheelCodeLayout Gap="{arc:PrizeWheelTokenResource CodeBoxGap}">
+                                <TextBlock Name="PART_Code"
+                                           Text="{TemplateBinding Code}"
+                                           FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                                           LineHeight="{arc:PrizeWheelTokenResource TextLineHeight}"
+                                           FontFeatures="+tnum"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                           VerticalAlignment="Center"
+                                           TextTrimming="CharacterEllipsis" />
+                                <arc:CopyButton Name="PART_Copy"
+                                                Value="{TemplateBinding Code}"
+                                                Label="{TemplateBinding CopyText}"
+                                                CopiedLabel="{TemplateBinding CopiedText}"
+                                                FailedLabel="{TemplateBinding CopyFailedText}"
+                                                ResetAfter="0:0:1.8"
+                                                Height="{arc:PrizeWheelTokenResource ActionHeight}"
+                                                MinHeight="{arc:PrizeWheelTokenResource ActionHeight}"
+                                                Padding="{arc:PrizeWheelTokenResource ActionPadding}"
+                                                CornerRadius="{arc:ArcDesignTokenResource RadiusStep8}"
+                                                BorderThickness="0"
+                                                FontSize="{arc:PrizeWheelTokenResource TextFontSize}"
+                                                Background="{arc:ArcDesignTokenResource Foreground}"
+                                                Foreground="{arc:ArcDesignTokenResource Background}" />
+                            </arc:PrizeWheelCodeLayout>
+                        </arc:PrizeWheelDashedBox>
+                        <arc:Button Name="PART_SpinAgain"
+                                    Variant="Ghost"
+                                    Size="Small"
+                                    HorizontalAlignment="Left"
+                                    IsVisible="{TemplateBinding IsSpinAgainVisible}"
+                                    Margin="{arc:PrizeWheelTokenResource SpinAgainMargin}"
+                                    Height="{arc:PrizeWheelTokenResource ActionHeight}"
+                                    MinHeight="{arc:PrizeWheelTokenResource ActionHeight}"
+                                    Padding="{arc:PrizeWheelTokenResource ActionPadding}"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusStep14}"
+                                    FontSize="{arc:PrizeWheelTokenResource TextFontSize}"
+                                    Foreground="{arc:ArcDesignTokenResource TextSecondary}">
+                            <StackPanel Orientation="Horizontal" Spacing="{arc:PrizeWheelTokenResource ActionIconGap}">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.RotateCw}"
+                                              Size="{arc:PrizeWheelTokenResource ActionIconSize}"
+                                              StrokeThickness="1.75"
+                                              VerticalAlignment="Center" />
+                                <TextBlock Text="{TemplateBinding SpinAgainText}" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </arc:Button>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:not(:code) /template/ arc|PrizeWheelDashedBox#PART_CodeBox">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+    </ControlTheme>
+
+    <!-- One odds row: label (with a dot after the featured prize) and chance; the won row turns to the text color. -->
+    <ControlTheme x:Key="{x:Type arc:PrizeWheelOddsRow}" TargetType="arc:PrizeWheelOddsRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessBottom}" />
+        <Setter Property="Padding" Value="{arc:PrizeWheelTokenResource OddsRowPadding}" />
+        <Setter Property="FontSize" Value="{arc:PrizeWheelTokenResource TextFontSize}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:PrizeWheelOddsRow">
+                <Border BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Padding="{TemplateBinding Padding}">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{arc:PrizeWheelTokenResource TextSpacing}">
+                        <arc:ArcShrinkRow VerticalAlignment="Center">
+                            <TextBlock Text="{TemplateBinding Label}"
+                                       LineHeight="{arc:PrizeWheelTokenResource TextLineHeight}"
+                                       TextTrimming="CharacterEllipsis"
+                                       arc:ArcShrinkRow.IsShrinkable="True" />
+                            <Ellipse Name="PART_Dot"
+                                     Width="{arc:PrizeWheelTokenResource FeaturedDotSize}"
+                                     Height="{arc:PrizeWheelTokenResource FeaturedDotSize}"
+                                     Margin="{arc:PrizeWheelTokenResource FeaturedDotMargin}"
+                                     VerticalAlignment="Center"
+                                     Fill="{arc:ArcDesignTokenResource Accent}"
+                                     IsVisible="False" />
+                        </arc:ArcShrinkRow>
+                        <TextBlock Name="PART_Chance"
+                                   Grid.Column="1"
+                                   Text="{TemplateBinding Chance}"
+                                   LineHeight="{arc:PrizeWheelTokenResource TextLineHeight}"
+                                   FontFeatures="+tnum"
+                                   VerticalAlignment="Center" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ TextBlock#PART_Chance">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:featured /template/ Ellipse#PART_Dot">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:won">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Style Selector="^ /template/ TextBlock#PART_Chance">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            </Style>
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+        </Style>
     </ControlTheme>
 </ResourceDictionary>

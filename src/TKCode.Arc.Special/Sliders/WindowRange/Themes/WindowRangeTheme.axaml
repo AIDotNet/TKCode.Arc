@@ -1,0 +1,81 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.WindowRangeTheme">
+
+    <!--
+        Readouts (start | length | end), the plot (chart, frame, live dot and the three focus stops) and the tick labels.
+        The plot draws everything itself and moves only through its own springs, so there are no transitions here.
+    -->
+    <ControlTheme x:Key="{x:Type arc:WindowRange}" TargetType="arc:WindowRange">
+        <!-- The plot draws the focus rings; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:WindowRange">
+                <StackPanel Spacing="{arc:WindowRangeTokenResource RowGap}">
+                    <Grid Name="PART_Readouts" ColumnDefinitions="*,Auto,*"
+                          ColumnSpacing="{arc:WindowRangeTokenResource ReadoutGap}">
+                        <arc:WindowRangeReadout Name="PART_StartReadout"
+                                                HorizontalAlignment="Left"
+                                                Foreground="{TemplateBinding Foreground}"
+                                                FontFamily="{TemplateBinding FontFamily}"
+                                                FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                FontSize="{arc:WindowRangeTokenResource ReadoutFontSize}"
+                                                LineHeight="{arc:WindowRangeTokenResource ReadoutLineHeight}" />
+                        <arc:WindowRangeReadout Name="PART_SpanReadout"
+                                                Grid.Column="1"
+                                                HorizontalAlignment="Center"
+                                                Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                FontFamily="{TemplateBinding FontFamily}"
+                                                FontSize="{arc:WindowRangeTokenResource ReadoutFontSize}"
+                                                LineHeight="{arc:WindowRangeTokenResource ReadoutLineHeight}" />
+                        <arc:WindowRangeReadout Name="PART_EndReadout"
+                                                Grid.Column="2"
+                                                HorizontalAlignment="Right"
+                                                Foreground="{TemplateBinding Foreground}"
+                                                FontFamily="{TemplateBinding FontFamily}"
+                                                FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                FontSize="{arc:WindowRangeTokenResource ReadoutFontSize}"
+                                                LineHeight="{arc:WindowRangeTokenResource ReadoutLineHeight}" />
+                    </Grid>
+                    <arc:WindowRangePlot Name="PART_Plot"
+                                         Height="{TemplateBinding ChartHeight}"
+                                         CornerRadius="{arc:ArcDesignTokenResource RadiusStep12}"
+                                         EdgeWidth="{arc:WindowRangeTokenResource EdgeWidth}"
+                                         EdgeRadius="{arc:WindowRangeTokenResource EdgeRadius}"
+                                         BandThickness="{arc:WindowRangeTokenResource BandThickness}"
+                                         GripWidth="{arc:WindowRangeTokenResource GripWidth}"
+                                         GripHeight="{arc:WindowRangeTokenResource GripHeight}"
+                                         GripOpacity="{arc:WindowRangeTokenResource GripOpacity}"
+                                         ChartTopInset="{arc:WindowRangeTokenResource ChartTopInset}"
+                                         ChartBottomInset="{arc:WindowRangeTokenResource ChartBottomInset}"
+                                         LineThickness="{arc:WindowRangeTokenResource LineThickness}"
+                                         MutedOpacity="{arc:WindowRangeTokenResource MutedOpacity}"
+                                         AreaOpacity="{arc:WindowRangeTokenResource AreaOpacity}"
+                                         MutedAreaOpacity="{arc:WindowRangeTokenResource MutedAreaOpacity}"
+                                         TintOpacity="{arc:WindowRangeTokenResource TintOpacity}"
+                                         DotDiameter="{arc:WindowRangeTokenResource DotDiameter}"
+                                         FrameBrush="{arc:ArcDesignTokenResource ControlOn}"
+                                         GripBrush="{arc:ArcDesignTokenResource ControlThumbOn}"
+                                         LineBrush="{arc:ArcDesignTokenResource Series1}"
+                                         FocusBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <arc:WindowRangeAxis Name="PART_Axis"
+                                         Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                         FontFamily="{TemplateBinding FontFamily}"
+                                         FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                         LineHeight="{arc:WindowRangeTokenResource TickLineHeight}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{arc:WindowRangeTokenResource DisabledOpacity}" />
+            <Style Selector="^ /template/ arc|WindowRangePlot#PART_Plot">
+                <Setter Property="Cursor" Value="No" />
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

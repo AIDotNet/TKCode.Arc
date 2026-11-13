@@ -1,0 +1,50 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.KeycapKeyboardTheme">
+
+    <!--
+        The keyboard has no template: it hosts its text area, a glow layer and one light keycap control per key, and draws
+        the plate itself. Keycaps draw their housing, cap, face and legend from these values; the accent key, the glow,
+        the press tint and the caret follow the accent. Key motion runs on the keyboard's own frame loop (sixty keys with
+        four values each, and a plate that morphs between boards), so there are no Transitions here.
+    -->
+    <ControlTheme x:Key="{x:Type arc:KeycapKeyboard}" TargetType="arc:KeycapKeyboard">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="MaxWidth" Value="{arc:KeycapKeyboardTokenResource MaxBoardWidth}" />
+        <Setter Property="MaxKeyUnit" Value="{arc:KeycapKeyboardTokenResource MaxKeyUnit}" />
+        <Setter Property="TextGap" Value="{arc:KeycapKeyboardTokenResource TextGap}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="TextFontFamily" Value="{arc:ArcDesignTokenResource DisplayFontFamily}" />
+        <Setter Property="PlaceholderBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="AccentBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="AccentForegroundBrush" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        <Setter Property="BindingTextBrush" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        <Setter Property="BindingFaceBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="FocusBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+        <Setter Property="PlateBrush" Value="{arc:KeycapKeyboardTokenResource PlateColor}" />
+        <Setter Property="PlateBorderBrush" Value="{arc:KeycapKeyboardTokenResource PlateBorderColor}" />
+        <Setter Property="PlateShadowBrush" Value="{arc:KeycapKeyboardTokenResource PlateShadowColor}" />
+        <Setter Property="HousingBrush" Value="{arc:KeycapKeyboardTokenResource KeySkirtColor}" />
+        <Setter Property="HousingShadowBrush" Value="{arc:KeycapKeyboardTokenResource HousingShadowColor}" />
+        <Setter Property="CapTopBrush" Value="{arc:KeycapKeyboardTokenResource CapTopColor}" />
+        <Setter Property="CapBottomBrush" Value="{arc:KeycapKeyboardTokenResource CapBottomColor}" />
+        <Setter Property="CapRingBrush" Value="{arc:KeycapKeyboardTokenResource CapRingColor}" />
+        <Setter Property="CapLipBrush" Value="{arc:KeycapKeyboardTokenResource CapLipColor}" />
+        <Setter Property="FaceTopBrush" Value="{arc:KeycapKeyboardTokenResource FaceTopColor}" />
+        <Setter Property="FaceBottomBrush" Value="{arc:KeycapKeyboardTokenResource FaceBottomColor}" />
+        <Setter Property="FaceShadeBrush" Value="{arc:KeycapKeyboardTokenResource FaceShadeColor}" />
+        <Setter Property="FaceLightBrush" Value="{arc:KeycapKeyboardTokenResource FaceLightColor}" />
+        <Setter Property="LegendBrush" Value="{arc:KeycapKeyboardTokenResource LegendColor}" />
+        <Setter Property="CornerLegendBrush" Value="{arc:KeycapKeyboardTokenResource CornerLegendColor}" />
+        <Setter Property="GlowOpacity" Value="{arc:KeycapKeyboardTokenResource GlowOpacity}" />
+        <Setter Property="PressTintOpacity" Value="{arc:KeycapKeyboardTokenResource PressTintOpacity}" />
+        <Setter Property="AccentPressTintOpacity" Value="{arc:KeycapKeyboardTokenResource AccentPressTintOpacity}" />
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.5" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

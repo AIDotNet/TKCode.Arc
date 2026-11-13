@@ -17,7 +17,7 @@ internal enum ExplainerChapterPhase
 }
 
 /// <summary>
-/// The card chrome shared by the chaptered explainers (<c>DnsResolution</c>, <c>ModelTraining</c>, <c>BranchGraph</c>):
+/// The card chrome shared by the chaptered explainers (<c>DnsResolution</c>, <c>ModelTraining</c>):
 /// the status line, the caption that crossfades from chapter to chapter, and the 0.5× / 1× / 2× speed control in the
 /// footer, kept in step with <see cref="Explainer.Speed"/>. Each explainer owns one and hands it its template.
 /// </summary>

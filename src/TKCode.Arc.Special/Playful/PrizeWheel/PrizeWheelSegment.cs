@@ -3,10 +3,10 @@ using Avalonia.Media;
 
 namespace TKCode.Arc;
 
-/// <summary>One slice of a <see cref="PrizeWheel"/>: its prize and its odds.</summary>
+/// <summary>One slice of a <see cref="PrizeWheel"/>: its prize, what the reward card says about it, and its odds.</summary>
 public class PrizeWheelSegment : AvaloniaObject
 {
-    /// <summary>The prize, written on the slice. Keep it short: a word or two.</summary>
+    /// <summary>The prize, written on the slice. Keep it short: about 14 characters at most.</summary>
     public static readonly StyledProperty<string?> LabelProperty =
         AvaloniaProperty.Register<PrizeWheelSegment, string?>(nameof(Label));
 
@@ -21,6 +21,21 @@ public class PrizeWheelSegment : AvaloniaObject
     /// <summary>The label color on a slice with its own <see cref="Fill"/>; the wheel's text color by default.</summary>
     public static readonly StyledProperty<IBrush?> ForegroundProperty =
         AvaloniaProperty.Register<PrizeWheelSegment, IBrush?>(nameof(Foreground));
+
+    /// <summary>A line under the prize in the reward card, such as what the reward is good for.</summary>
+    public static readonly StyledProperty<string?> DetailProperty =
+        AvaloniaProperty.Register<PrizeWheelSegment, string?>(nameof(Detail));
+
+    /// <summary>The code the reward card shows with a Copy button; no code box when it is empty.</summary>
+    public static readonly StyledProperty<string?> CodeProperty =
+        AvaloniaProperty.Register<PrizeWheelSegment, string?>(nameof(Code));
+
+    /// <summary>
+    /// Marks the rare top prize: its slice and label are tinted with the accent and the odds list shows a dot after it.
+    /// Mark one slice at most.
+    /// </summary>
+    public static readonly StyledProperty<bool> IsFeaturedProperty =
+        AvaloniaProperty.Register<PrizeWheelSegment, bool>(nameof(IsFeatured));
 
     public PrizeWheelSegment()
     {
@@ -58,6 +73,27 @@ public class PrizeWheelSegment : AvaloniaObject
     {
         get => GetValue(ForegroundProperty);
         set => SetValue(ForegroundProperty, value);
+    }
+
+    /// <inheritdoc cref="DetailProperty"/>
+    public string? Detail
+    {
+        get => GetValue(DetailProperty);
+        set => SetValue(DetailProperty, value);
+    }
+
+    /// <inheritdoc cref="CodeProperty"/>
+    public string? Code
+    {
+        get => GetValue(CodeProperty);
+        set => SetValue(CodeProperty, value);
+    }
+
+    /// <inheritdoc cref="IsFeaturedProperty"/>
+    public bool IsFeatured
+    {
+        get => GetValue(IsFeaturedProperty);
+        set => SetValue(IsFeaturedProperty, value);
     }
 
     internal event EventHandler? Changed;

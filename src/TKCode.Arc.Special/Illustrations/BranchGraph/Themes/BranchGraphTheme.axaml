@@ -4,93 +4,192 @@
                     x:ClassModifier="internal"
                     x:Class="TKCode.Arc.BranchGraphTheme">
 
-    <!-- The card: header (title, status, two-line caption), the stage, and the footer with playback and speed. -->
+    <!-- A segment of the strategy control: 32 high, at least 64 wide, a pill, regular 13 px labels. -->
+    <ControlTheme x:Key="BranchGraphStrategyItem" TargetType="arc:SegmentedItem">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SegmentedItem">
+                <Panel>
+                    <Border Name="PART_Segment"
+                            MinHeight="{arc:BranchGraphTokenResource StrategySegmentHeight}"
+                            MinWidth="{arc:BranchGraphTokenResource StrategySegmentMinWidth}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Padding="{TemplateBinding Padding}"
+                            Background="Transparent">
+                        <ContentPresenter Name="PART_Label"
+                                          Content="{TemplateBinding Content}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          TextWrapping="NoWrap" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Padding" Value="{arc:BranchGraphTokenResource StrategySegmentPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Style Selector="^:selected">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The strategy control: a pill track with an inset hairline and a raised pill that glides to the pick. -->
+    <ControlTheme x:Key="BranchGraphStrategyBar" TargetType="arc:SegmentedControl">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SegmentedControl">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <ScrollViewer Name="PART_ScrollViewer"
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  VerticalScrollBarVisibility="Disabled">
+                        <Panel Name="PART_Track" Margin="{arc:BranchGraphTokenResource StrategyTrackInset}">
+                            <arc:GlidingIndicator Name="PART_Selection"
+                                                  Spring="Smooth"
+                                                  StrokeThickness="1"
+                                                  Stroke="{arc:ArcDesignTokenResource BorderSubtle}"
+                                                  Fill="{arc:ArcDesignTokenResource SurfaceRaised}"
+                                                  BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
+                                                  CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" />
+                            <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
+                        </Panel>
+                    </ScrollViewer>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+                <UniformGrid Rows="1" />
+            </ItemsPanelTemplate>
+        </Setter>
+        <Setter Property="ItemContainerTheme" Value="{StaticResource BranchGraphStrategyItem}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontWeight" Value="Normal" />
+    </ControlTheme>
+
+    <!-- The card: header (icon, title, number, strategy control), the commits, and the summary line. -->
     <ControlTheme x:Key="{x:Type arc:BranchGraph}" TargetType="arc:BranchGraph">
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="ClipToBounds" Value="False" />
-        <Setter Property="MaxWidth" Value="760" />
+        <Setter Property="MaxWidth" Value="920" />
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
         <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
-        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep24}" />
+        <Setter Property="Padding" Value="{arc:BranchGraphTokenResource CardPadding}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
-        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontSize" Value="13" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:BranchGraph">
                 <Border Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}"
                         CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}"
                         ClipToBounds="False">
-                    <Grid RowDefinitions="Auto,Auto">
-                        <StackPanel Margin="{TemplateBinding BodyPadding}">
-                            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
-                                <TextBlock Text="{TemplateBinding Title}"
-                                           MinHeight="{arc:BranchGraphTokenResource HeaderRowHeight}"
+                    <Grid RowDefinitions="Auto,Auto,Auto">
+                        <Grid Name="PART_Header"
+                              ColumnDefinitions="*,Auto"
+                              RowDefinitions="Auto,Auto"
+                              MinHeight="{arc:BranchGraphTokenResource HeaderRowHeight}"
+                              Margin="{arc:BranchGraphTokenResource HeaderPadding}">
+                            <arc:ArcShrinkRow Name="PART_Heading"
+                                              Spacing="{arc:BranchGraphTokenResource HeadingGap}"
+                                              VerticalAlignment="Center">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.GitBranch}"
+                                              Size="16"
+                                              StrokeThickness="1.75"
+                                              VerticalAlignment="Center"
+                                              Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                <TextBlock Name="PART_Title"
+                                           arc:ArcShrinkRow.IsShrinkable="True"
                                            VerticalAlignment="Center"
-                                           FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
-                                           FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                           FontSize="15"
                                            FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
-                                           LineHeight="{arc:BranchGraphTokenResource TitleLineHeight}"
-                                           Padding="0,2"
                                            TextTrimming="CharacterEllipsis"
                                            Foreground="{arc:ArcDesignTokenResource Foreground}" />
-                                <arc:ExplainerStatus Name="PART_Status" Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center" />
-                                <arc:ArcContentSwap Name="PART_Caption"
-                                                    Grid.Row="1"
-                                                    Grid.ColumnSpan="2"
-                                                    Mode="Crossfade"
-                                                    HorizontalContentAlignment="Left"
-                                                    VerticalContentAlignment="Top"
-                                                    Margin="{arc:BranchGraphTokenResource CaptionMargin}"
-                                                    MinHeight="{arc:BranchGraphTokenResource CaptionMinHeight}" />
-                                <arc:ExplainerAnnouncer Name="PART_Announcer" Grid.Row="1" />
-                            </Grid>
-                            <arc:BranchGraphStage Name="PART_Stage" Margin="0,20,0,0" />
-                        </StackPanel>
-                        <Border Grid.Row="1"
-                                Margin="0,20,0,0"
-                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
-                                BorderBrush="{arc:ArcDesignTokenResource Border}"
-                                Padding="{TemplateBinding FooterPadding}"
-                                IsVisible="{TemplateBinding AreControlsVisible}">
-                            <arc:AgentLoopFooterPanel>
-                                <StackPanel Orientation="Horizontal" Spacing="{arc:BranchGraphTokenResource ButtonGap}" VerticalAlignment="Center">
-                                    <arc:ExplainerIconButton Name="PART_PlayButton" />
-                                    <arc:ExplainerIconButton Name="PART_StepButton" />
-                                    <arc:ExplainerIconButton Name="PART_RestartButton" />
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" Spacing="{arc:BranchGraphTokenResource SpeedGap}" VerticalAlignment="Center">
-                                    <TextBlock Name="PART_SpeedLabel" VerticalAlignment="Center" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
-                                    <arc:SegmentedControl Name="PART_Speed" VerticalAlignment="Center" />
-                                </StackPanel>
-                            </arc:AgentLoopFooterPanel>
+                                <TextBlock Name="PART_Number"
+                                           VerticalAlignment="Center"
+                                           FontSize="13"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </arc:ArcShrinkRow>
+                            <arc:SegmentedControl Name="PART_Strategy"
+                                                  Grid.Column="1"
+                                                  Margin="16,0,0,0"
+                                                  HorizontalAlignment="Right"
+                                                  Theme="{StaticResource BranchGraphStrategyBar}" />
+                        </Grid>
+                        <arc:BranchGraphStage Name="PART_Stage"
+                                              Grid.Row="1"
+                                              Margin="0,8,0,0" />
+                        <Border Grid.Row="2"
+                                Margin="0,8,0,0"
+                                MinHeight="{arc:BranchGraphTokenResource FooterMinHeight}"
+                                Padding="{arc:BranchGraphTokenResource FooterPadding}">
+                            <TextBlock Name="PART_Summary"
+                                       VerticalAlignment="Center"
+                                       TextWrapping="Wrap"
+                                       FontSize="13"
+                                       LineHeight="18.2"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
                         </Border>
+                        <arc:ExplainerAnnouncer Name="PART_Announcer" />
                     </Grid>
                 </Border>
             </ControlTemplate>
         </Setter>
     </ControlTheme>
 
-    <!-- The graph's inks: lanes in the four chart series colors, tags in the warning color, the selected row on the
-         accent's subtle fill. -->
+    <!-- The commits' inks: lanes in the chart series (the first follows the accent), the stage on the page background,
+         lifted rows and the detail card raised with the floating shadow. -->
     <ControlTheme x:Key="{x:Type arc:BranchGraphStage}" TargetType="arc:BranchGraphStage">
         <Setter Property="Lane1" Value="{arc:ArcDesignTokenResource Series1}" />
         <Setter Property="Lane2" Value="{arc:ArcDesignTokenResource Series2}" />
         <Setter Property="Lane3" Value="{arc:ArcDesignTokenResource Series3}" />
         <Setter Property="Lane4" Value="{arc:ArcDesignTokenResource Series4}" />
+        <Setter Property="StageInk" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="StageBorderInk" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
         <Setter Property="SurfaceInk" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="RaisedInk" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
         <Setter Property="HoverInk" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
-        <Setter Property="SelectedInk" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="CardBorderInk" Value="{arc:ArcDesignTokenResource Border}" />
         <Setter Property="FocusInk" Value="{arc:ArcDesignTokenResource FocusRing}" />
-        <Setter Property="TagInk" Value="{arc:ArcDesignTokenResource Warning}" />
         <Setter Property="TextInk" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="SecondaryInk" Value="{arc:ArcDesignTokenResource TextSecondary}" />
         <Setter Property="MutedInk" Value="{arc:ArcDesignTokenResource TextMuted}" />
-        <Setter Property="RowRadius" Value="{arc:ArcDesignTokenResource RadiusStep10}" />
-        <Setter Property="PillRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="SuccessInk" Value="{arc:ArcDesignTokenResource Success}" />
+        <Setter Property="DangerInk" Value="{arc:ArcDesignTokenResource Danger}" />
+        <Setter Property="CardShadow" Value="{arc:ArcDesignTokenResource ShadowFloating}" />
+        <Setter Property="StageRadius" Value="{arc:ArcDesignTokenResource RadiusStep16}" />
+        <Setter Property="RowRadius" Value="{arc:ArcDesignTokenResource RadiusStep14}" />
+        <Setter Property="CardRadius" Value="{arc:ArcDesignTokenResource RadiusStep18}" />
+        <Setter Property="BlockRadius" Value="{arc:ArcDesignTokenResource RadiusStep2}" />
         <Setter Property="RowHeight" Value="{arc:BranchGraphTokenResource RowHeight}" />
         <Setter Property="LaneGap" Value="{arc:BranchGraphTokenResource LaneGap}" />
+        <Setter Property="LaneStart" Value="{arc:BranchGraphTokenResource LaneStart}" />
+        <Setter Property="GutterWidth" Value="{arc:BranchGraphTokenResource GutterWidth}" />
+        <Setter Property="DetailWidth" Value="{arc:BranchGraphTokenResource DetailWidth}" />
+        <Setter Property="MonoFontFamily" Value="{arc:ArcDesignTokenResource MonoFontFamily}" />
     </ControlTheme>
 </ResourceDictionary>

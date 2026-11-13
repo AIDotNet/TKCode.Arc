@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Builds the emoji table of EmojiPicker (src/TKCode.Arc.Special/Inputs/EmojiPicker/Data/emoji.txt).
+"""Builds the emoji table of EmojiPicker (src/TKCode.Arc.Special/Pickers/EmojiPicker/Data/emoji.txt).
 
 Sources (both under the Unicode License v3, https://www.unicode.org/license.txt):
   - emoji-test.txt from https://unicode.org/Public/emoji/<version>/emoji-test.txt (groups, order, names, versions,

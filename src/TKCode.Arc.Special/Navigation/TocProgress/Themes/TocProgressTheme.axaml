@@ -1,0 +1,197 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.TocProgressTheme">
+
+    <!--
+        The table of contents: a header with the title and the minutes left (or the percentage), then the list (rows and
+        line, built in code and placed into PART_ListHost). In compact mode the header and list give way to a pill button
+        with a progress ring and the current section, which opens the same list in a popup.
+    -->
+    <ControlTheme x:Key="{x:Type arc:TocProgress}" TargetType="arc:TocProgress">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:TocProgressTokenResource RowFontSize}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TocProgress">
+                <Panel>
+                    <StackPanel Name="PART_ListView" Spacing="{arc:TocProgressTokenResource HeaderGap}">
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                            <TextBlock Name="PART_Title"
+                                       Margin="2,0,0,0"
+                                       FontSize="{arc:TocProgressTokenResource RowFontSize}"
+                                       LineHeight="{arc:TocProgressTokenResource RowLineHeight}"
+                                       LetterSpacing="{arc:TocProgressTokenResource RowLetterSpacing}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center" />
+                            <arc:ArcContentSwap Name="PART_TimeLeft"
+                                                Grid.Column="1"
+                                                Mode="Roll"
+                                                HorizontalContentAlignment="Right"
+                                                TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                VerticalAlignment="Center"
+                                                IsVisible="False" />
+                            <TextBlock Name="PART_Percent"
+                                       Grid.Column="1"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                       VerticalAlignment="Center"
+                                       IsVisible="False" />
+                        </Grid>
+                        <Decorator Name="PART_ListHost" />
+                    </StackPanel>
+                    <Button Name="PART_Compact"
+                            Theme="{StaticResource ArcTocProgressCompactTheme}"
+                            IsVisible="False"
+                            HorizontalAlignment="Left">
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <arc:ArcRing Name="PART_CompactRing"
+                                         Width="{arc:TocProgressTokenResource CompactRingSize}"
+                                         Height="{arc:TocProgressTokenResource CompactRingSize}"
+                                         Thickness="{arc:TocProgressTokenResource CompactRingThickness}"
+                                         IsRoundCap="True"
+                                         Foreground="{arc:ArcDesignTokenResource Accent}"
+                                         TrackBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                         VerticalAlignment="Center" />
+                            <arc:ArcContentSwap Name="PART_CompactText"
+                                                Mode="Label"
+                                                MaxWidth="220"
+                                                VerticalAlignment="Center" />
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                          Size="14"
+                                          Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                          VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                    <arc:ArcPopup Name="PART_Popup"
+                                  Placement="BottomEdgeAlignedLeft"
+                                  MarginToAnchor="8"
+                                  IsLightDismissEnabled="True">
+                        <Border Background="{arc:ArcDesignTokenResource SurfaceRaised}"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+                                Padding="{arc:TocProgressTokenResource PopupPadding}"
+                                Width="{arc:TocProgressTokenResource PopupWidth}">
+                            <Decorator Name="PART_PopupHost" />
+                        </Border>
+                    </arc:ArcPopup>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:compact /template/ StackPanel#PART_ListView">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:compact /template/ Button#PART_Compact">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The compact button: a pill on the surface with a hairline edge that darkens on hover. -->
+    <ControlTheme x:Key="ArcTocProgressCompactTheme" TargetType="Button">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Height" Value="{arc:TocProgressTokenResource CompactHeight}" />
+        <Setter Property="Padding" Value="{arc:TocProgressTokenResource CompactPadding}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="Button">
+                <Panel>
+                    <Border Name="PART_Ring"
+                            Margin="-4"
+                            IsVisible="False"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" />
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          VerticalAlignment="Center" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_Ring">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The list: the line's track in a neutral between the border and the muted text, the read part and the marker in the
+        accent.
+    -->
+    <ControlTheme x:Key="{x:Type arc:TocProgressList}" TargetType="arc:TocProgressList">
+        <Setter Property="TrackBrush" Value="{arc:TocProgressTokenResource TrackColor}" />
+        <Setter Property="FillBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="TextSize" Value="{arc:TocProgressTokenResource RowFontSize}" />
+        <Setter Property="TextLineHeight" Value="{arc:TocProgressTokenResource RowLineHeight}" />
+        <Setter Property="TextLetterSpacing" Value="{arc:TocProgressTokenResource RowLetterSpacing}" />
+        <Setter Property="RailThickness" Value="{arc:TocProgressTokenResource RailThickness}" />
+        <Setter Property="FillThickness" Value="{arc:TocProgressTokenResource FillThickness}" />
+        <Setter Property="RailGutter" Value="{arc:TocProgressTokenResource RailGutter}" />
+        <Setter Property="LevelIndent" Value="{arc:TocProgressTokenResource LevelIndent}" />
+        <Setter Property="LaneStart" Value="{arc:TocProgressTokenResource LaneStart}" />
+        <Setter Property="BendHeight" Value="{arc:TocProgressTokenResource BendHeight}" />
+        <Setter Property="DotSize" Value="{arc:TocProgressTokenResource DotSize}" />
+        <Setter Property="DotGap" Value="{arc:TocProgressTokenResource DotGap}" />
+        <Setter Property="RowPadding" Value="{arc:TocProgressTokenResource RowPadding}" />
+    </ControlTheme>
+
+    <!--
+        A row: upcoming rows muted, read rows in the secondary text color, the current row (and an upcoming row under the
+        pointer) in the full text color; the color eases over 240ms. Keyboard focus adds a quiet fill under the shared ring.
+    -->
+    <ControlTheme x:Key="{x:Type arc:TocProgressRow}" TargetType="arc:TocProgressRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="FocusFill" Value="{arc:TocProgressTokenResource FocusFill}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep10}" />
+        <Style Selector="^:read">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:read:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:active">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>
