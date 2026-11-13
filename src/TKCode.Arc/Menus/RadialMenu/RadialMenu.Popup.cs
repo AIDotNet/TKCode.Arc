@@ -435,9 +435,9 @@ public partial class RadialMenu
         {
             size = host.Bounds.Size;
         }
-        if ((size.Width <= 0 || size.Height <= 0) && _openTarget is not null && TopLevel.GetTopLevel(_openTarget) is { } topLevel)
+        if ((size.Width <= 0 || size.Height <= 0) && _openTarget is not null && ArcViewport.GetSize(_openTarget) is { } viewport)
         {
-            size = topLevel.ClientSize;
+            size = viewport;
         }
         return size;
     }
