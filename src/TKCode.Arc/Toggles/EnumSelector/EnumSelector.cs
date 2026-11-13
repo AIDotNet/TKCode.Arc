@@ -72,7 +72,7 @@ public class EnumSelector : TemplatedControl
 
     /// <summary>The selected value (two-way): a member, a combination of members of a <c>[Flags]</c> enum, or null for none.</summary>
     public static readonly StyledProperty<object?> SelectedEnumProperty =
-        AvaloniaProperty.Register<EnumSelector, object?>(nameof(SelectedEnum), defaultBindingMode: BindingMode.TwoWay);
+        AvaloniaProperty.Register<EnumSelector, object?>(nameof(SelectedEnum), defaultBindingMode: BindingMode.TwoWay, enableDataValidation: true);
 
     /// <summary>Radio options or checkboxes; <see cref="EnumSelectorDisplayMode.Auto"/> picks by <see cref="HasFlags"/>.</summary>
     public static readonly StyledProperty<EnumSelectorDisplayMode> DisplayModeProperty =

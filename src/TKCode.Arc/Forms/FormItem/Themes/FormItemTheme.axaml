@@ -1,0 +1,102 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.FormItemTheme">
+    <ControlTheme x:Key="{x:Type arc:FormItem}" TargetType="arc:FormItem">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:FormItem">
+                <!-- FormItem sets the rows / columns for the label placement (Top: label above the body; Left: label column). -->
+                <Grid Name="PART_Layout">
+                    <Panel Name="PART_LabelRow">
+                        <arc:ArcShrinkRow Name="PART_LabelLine"
+                                          Spacing="{arc:FormItemTokenResource RequiredMarkGap}"
+                                          VerticalAlignment="Center">
+                            <TextBlock Name="PART_Label"
+                                       Text="{TemplateBinding Label}"
+                                       TextWrapping="Wrap"
+                                       arc:ArcShrinkRow.IsShrinkable="True">
+                                <TextBlock.IsVisible>
+                                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="IsLabelVisible" />
+                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Label" Converter="{x:Static StringConverters.IsNotNullOrEmpty}" />
+                                    </MultiBinding>
+                                </TextBlock.IsVisible>
+                            </TextBlock>
+                            <TextBlock Name="PART_Asterisk"
+                                       Text="*"
+                                       IsVisible="False"
+                                       AutomationProperties.AccessibilityView="Raw" />
+                            <TextBlock Name="PART_Optional"
+                                       Text="{arc:FormLangResource Optional}"
+                                       IsVisible="False"
+                                       AutomationProperties.AccessibilityView="Raw" />
+                        </arc:ArcShrinkRow>
+                    </Panel>
+                    <StackPanel Name="PART_Body">
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        <arc:FieldMessage Name="PART_Description"
+                                          Kind="Description"
+                                          Swap="{TemplateBinding MessageSwap}"
+                                          Text="{TemplateBinding Description}" />
+                        <!-- Text is set by FormItem: the shown error, inline and without an ErrorTemplate. -->
+                        <arc:FieldMessage Name="PART_Error"
+                                          Kind="Error"
+                                          Swap="{TemplateBinding MessageSwap}" />
+                    </StackPanel>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+
+        <Style Selector="^ /template/ Panel#PART_LabelRow">
+            <Setter Property="Margin" Value="{arc:FieldTokenResource LabelMargin}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Label">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="LineHeight" Value="{arc:FieldTokenResource LabelLineHeight}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Asterisk">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="LineHeight" Value="{arc:FieldTokenResource LabelLineHeight}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Optional">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="LineHeight" Value="{arc:FieldTokenResource LabelLineHeight}" />
+        </Style>
+        <Style Selector="^:small /template/ TextBlock">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="{arc:FieldTokenResource LabelLineHeightSM}" />
+        </Style>
+
+        <!-- Left: the label column is as tall as a field of the item's size, with the label centred on the field's text. -->
+        <Style Selector="^:label-left /template/ Grid#PART_Layout">
+            <Setter Property="ColumnSpacing" Value="{arc:FormItemTokenResource LabelColumnGap}" />
+        </Style>
+        <Style Selector="^:label-left /template/ Panel#PART_LabelRow">
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeMD}" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+        </Style>
+        <Style Selector="^:label-left:small /template/ Panel#PART_LabelRow">
+            <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+        </Style>
+        <Style Selector="^:label-left:large /template/ Panel#PART_LabelRow">
+            <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeLG}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

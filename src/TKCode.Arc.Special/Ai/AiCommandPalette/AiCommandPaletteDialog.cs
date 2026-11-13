@@ -17,7 +17,7 @@ namespace TKCode.Arc;
 /// the top of the window over a dimmed scrim, or bind <see cref="IsOpen"/>. It renders nothing in place.
 /// <code>
 /// &lt;arc:AiCommandPaletteDialog x:Name="Palette" IsOpen="{Binding IsPaletteOpen}"&gt;
-///     &lt;arc:AiCommandPalette Responder="{Binding Ask}" ItemSelected="OnItemSelected" /&gt;
+///     &lt;arc:AiCommandPalette Responder="{Binding Ask}" ItemInvoked="OnItemSelected" /&gt;
 /// &lt;/arc:AiCommandPaletteDialog&gt;
 /// &lt;arc:Button Content="Search" arc:AiCommandPaletteDialog.Opens="{Binding #Palette}" /&gt;
 /// </code>
@@ -199,13 +199,13 @@ public class AiCommandPaletteDialog : Control
         if (_shown is not null)
         {
             _shown.CloseRequested -= OnCloseRequested;
-            _shown.ItemSelected -= OnItemSelected;
+            _shown.ItemInvoked -= OnItemSelected;
             _frame.Children.Remove(_shown);
         }
         _shown = palette;
         palette.IsElevated = true;
         palette.CloseRequested += OnCloseRequested;
-        palette.ItemSelected += OnItemSelected;
+        palette.ItemInvoked += OnItemSelected;
         _frame.Children.Add(palette);
         AutomationProperties.SetName(_frame, palette.Labels.PaletteName);
     }

@@ -148,7 +148,7 @@ public class ScrubInput : TemplatedControl
 
     /// <summary>The value (two-way, default 0).</summary>
     public static readonly StyledProperty<double> ValueProperty =
-        AvaloniaProperty.Register<ScrubInput, double>(nameof(Value), defaultBindingMode: BindingMode.TwoWay);
+        AvaloniaProperty.Register<ScrubInput, double>(nameof(Value), defaultBindingMode: BindingMode.TwoWay, enableDataValidation: true);
 
     /// <summary>Lower limit (default negative infinity: none).</summary>
     public static readonly StyledProperty<double> MinimumProperty =

@@ -125,6 +125,13 @@ public class DocsSidebar : TemplatedControl
     public static readonly RoutedEvent<DocsSidebarPageEventArgs> PageInvokedEvent =
         RoutedEvent.Register<DocsSidebar, DocsSidebarPageEventArgs>(nameof(PageInvoked), RoutingStrategies.Bubble);
 
+    /// <summary>
+    /// Raised when <see cref="CurrentKey"/> changes, whether a page was chosen or the key was set in code, through a
+    /// binding or by your router. Choosing the page that is already current raises <see cref="PageInvoked"/> only.
+    /// </summary>
+    public static readonly RoutedEvent<DocsSidebarSelectionChangedEventArgs> SelectionChangedEvent =
+        RoutedEvent.Register<DocsSidebar, DocsSidebarSelectionChangedEventArgs>(nameof(SelectionChanged), RoutingStrategies.Bubble);
+
     /// <summary>Raised when another version is chosen in the switcher.</summary>
     public static readonly RoutedEvent<DocsSidebarVersionChangedEventArgs> VersionChangedEvent =
         RoutedEvent.Register<DocsSidebar, DocsSidebarVersionChangedEventArgs>(nameof(VersionChanged), RoutingStrategies.Bubble);
@@ -134,6 +141,13 @@ public class DocsSidebar : TemplatedControl
     {
         add => AddHandler(PageInvokedEvent, value);
         remove => RemoveHandler(PageInvokedEvent, value);
+    }
+
+    /// <inheritdoc cref="SelectionChangedEvent"/>
+    public event EventHandler<DocsSidebarSelectionChangedEventArgs>? SelectionChanged
+    {
+        add => AddHandler(SelectionChangedEvent, value);
+        remove => RemoveHandler(SelectionChangedEvent, value);
     }
 
     /// <inheritdoc cref="VersionChangedEvent"/>
@@ -186,6 +200,7 @@ public class DocsSidebar : TemplatedControl
 
     private IReadOnlyList<DocsSidebarSection> _shown;
     private readonly Dictionary<DocsSidebarPage, SidebarItem> _items = new();
+    private readonly List<IDisposable> _pageBindings = new();
     private readonly Dictionary<DocsSidebarSection, SidebarSection> _sections = new();
     private Sidebar? _sidebar;
     private DropdownMenu? _versionMenu;
@@ -218,11 +233,55 @@ public class DocsSidebar : TemplatedControl
     /// <summary>The page before (<paramref name="direction"/> −1) or after (+1) the current one in reading order, or null at the ends.</summary>
     public DocsSidebarPage? GetAdjacentPage(int direction)
     {
-        // Parents with sub-pages are folders, not pages to read.
-        var pages = AllPages().Where(p => p.Pages.Count == 0).ToList();
-        var index = pages.FindIndex(p => p.Key == CurrentKey);
-        var target = index + Math.Sign(direction);
-        return index < 0 || target < 0 || target >= pages.Count ? null : pages[target];
+        var pages = ReadingOrder();
+        var index = pages.FindIndex(p => p.Page.Key == CurrentKey);
+        if (index < 0)
+        {
+            return null;
+        }
+        var step = Math.Sign(direction);
+        if (step == 0)
+        {
+            return pages[index].Page;
+        }
+        // Hidden and disabled pages are not reachable from the sidebar, so a "next" link must not point at them.
+        for (var at = index + step; at >= 0 && at < pages.Count; at += step)
+        {
+            if (pages[at].Reachable)
+            {
+                return pages[at].Page;
+            }
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// The pages to read in order, each with whether the sidebar lets a person reach it. Parents with sub-pages are
+    /// folders, not pages to read.
+    /// </summary>
+    private List<(DocsSidebarPage Page, bool Reachable)> ReadingOrder()
+    {
+        var order = new List<(DocsSidebarPage, bool)>();
+        foreach (var section in _shown)
+        {
+            foreach (var page in section.Pages)
+            {
+                var open = section.IsVisible && page.IsVisible && page.IsEnabled;
+                if (page.Pages.Count == 0)
+                {
+                    order.Add((page, open));
+                    continue;
+                }
+                foreach (var child in page.Pages)
+                {
+                    if (child.Pages.Count == 0)
+                    {
+                        order.Add((child, open && child.IsVisible && child.IsEnabled));
+                    }
+                }
+            }
+        }
+        return order;
     }
 
     /// <summary>Puts the caret in the search box and selects its text.</summary>
@@ -339,6 +398,9 @@ public class DocsSidebar : TemplatedControl
                 _syncing = false;
             }
             RevealCurrent();
+            var newKey = change.GetNewValue<string?>();
+            RaiseEvent(new DocsSidebarSelectionChangedEventArgs(
+                SelectionChangedEvent, change.GetOldValue<string?>(), newKey, newKey is null ? null : Find(newKey)));
         }
         else if (change.Property == SearchTextProperty)
         {
@@ -403,12 +465,19 @@ public class DocsSidebar : TemplatedControl
             section.PropertyChanged -= OnSectionPropertyChanged;
             built.PropertyChanged -= OnBuiltSectionPropertyChanged;
         }
+        foreach (var binding in _pageBindings)
+        {
+            binding.Dispose();
+        }
+        _pageBindings.Clear();
         _items.Clear();
         _sections.Clear();
         _sidebar.Sections.Clear();
         foreach (var section in _shown)
         {
             var built = new SidebarSection { Header = section.Title, IsCollapsible = true, IsExpanded = section.IsExpanded };
+            // Hiding a section (or a page) follows live, so an app can switch parts of the menu as its data changes.
+            _pageBindings.Add(built.Bind(SidebarSection.IsVisibleProperty, section.GetObservable(DocsSidebarSection.IsVisibleProperty)));
             foreach (var page in section.Pages)
             {
                 var item = Item(page);
@@ -433,6 +502,8 @@ public class DocsSidebar : TemplatedControl
     private SidebarItem Item(DocsSidebarPage page)
     {
         var item = new SidebarItem { Key = page.Key, Label = page.Title, Badge = page.Badge, Tag = page };
+        _pageBindings.Add(item.Bind(SidebarItem.IsEnabledProperty, page.GetObservable(DocsSidebarPage.IsEnabledProperty)));
+        _pageBindings.Add(item.Bind(SidebarItem.IsVisibleProperty, page.GetObservable(DocsSidebarPage.IsVisibleProperty)));
         _items[page] = item;
         return item;
     }

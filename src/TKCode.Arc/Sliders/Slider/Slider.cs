@@ -111,11 +111,11 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
 
     /// <summary>Lower end of the range when IsRange is true (two-way, default 0).</summary>
     public static readonly StyledProperty<double> LowerValueProperty =
-        AvaloniaProperty.Register<Slider, double>(nameof(LowerValue), 0, defaultBindingMode: BindingMode.TwoWay);
+        AvaloniaProperty.Register<Slider, double>(nameof(LowerValue), 0, defaultBindingMode: BindingMode.TwoWay, enableDataValidation: true);
 
     /// <summary>Upper end of the range when IsRange is true (two-way, default 100).</summary>
     public static readonly StyledProperty<double> UpperValueProperty =
-        AvaloniaProperty.Register<Slider, double>(nameof(UpperValue), 100, defaultBindingMode: BindingMode.TwoWay);
+        AvaloniaProperty.Register<Slider, double>(nameof(UpperValue), 100, defaultBindingMode: BindingMode.TwoWay, enableDataValidation: true);
 
     /// <summary>The closest the two range thumbs may sit, in steps.</summary>
     public static readonly StyledProperty<int> MinStepsBetweenThumbsProperty =
@@ -271,6 +271,8 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
 
     static Slider()
     {
+        // As Avalonia's own Slider: a view model's error on Value reaches the slider (RangeBase does not ask for it).
+        ValueProperty.OverrideMetadata<Slider>(new StyledPropertyMetadata<double>(enableDataValidation: true));
         FocusableProperty.OverrideDefaultValue<Slider>(false);
         SmallChangeProperty.OverrideDefaultValue<Slider>(1);
     }

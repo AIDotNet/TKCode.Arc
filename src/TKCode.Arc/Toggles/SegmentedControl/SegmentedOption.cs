@@ -20,7 +20,19 @@ public class SegmentedOption : AvaloniaObject, ITogglesValueSource
     public static readonly StyledProperty<object?> AccessoryProperty =
         AvaloniaProperty.Register<SegmentedOption, object?>(nameof(Accessory));
 
-    /// <summary>A disabled segment cannot be selected and is skipped by the arrow keys.</summary>
+    /// <summary>Whether the segment can be chosen. A disabled segment is dimmed and skipped by the arrow keys.</summary>
+    public static readonly StyledProperty<bool> IsEnabledProperty =
+        AvaloniaProperty.Register<SegmentedOption, bool>(nameof(IsEnabled), true);
+
+    /// <summary>
+    /// Whether the segment is shown. A hidden segment takes no room and is skipped by the arrow keys; it stays in the
+    /// control's items, so when it is the selected one the selection is kept and only the indicator is not drawn.
+    /// </summary>
+    public static readonly StyledProperty<bool> IsVisibleProperty =
+        AvaloniaProperty.Register<SegmentedOption, bool>(nameof(IsVisible), true);
+
+    /// <summary>The former name of <see cref="IsEnabledProperty"/>, inverted; it stays in step with it.</summary>
+    [Obsolete("Use IsEnabled instead (deprecated in 1.1.0). IsDisabled is the inverse of IsEnabled.")]
     public static readonly StyledProperty<bool> IsDisabledProperty =
         AvaloniaProperty.Register<SegmentedOption, bool>(nameof(IsDisabled));
 
@@ -44,8 +56,24 @@ public class SegmentedOption : AvaloniaObject, ITogglesValueSource
     /// <inheritdoc cref="AccessoryProperty"/>
     public object? Accessory { get => GetValue(AccessoryProperty); set => SetValue(AccessoryProperty, value); }
 
+    /// <inheritdoc cref="IsEnabledProperty"/>
+    public bool IsEnabled { get => GetValue(IsEnabledProperty); set => SetValue(IsEnabledProperty, value); }
+
+    /// <inheritdoc cref="IsVisibleProperty"/>
+    public bool IsVisible { get => GetValue(IsVisibleProperty); set => SetValue(IsVisibleProperty, value); }
+
     /// <inheritdoc cref="IsDisabledProperty"/>
+    [Obsolete("Use IsEnabled instead (deprecated in 1.1.0). IsDisabled is the inverse of IsEnabled.")]
     public bool IsDisabled { get => GetValue(IsDisabledProperty); set => SetValue(IsDisabledProperty, value); }
+
+    /// <inheritdoc />
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+#pragma warning disable CS0618 // the alias is kept in step with its replacement
+        TogglesOptionState.KeepDisabledAliasInStep(this, change, IsEnabledProperty, IsDisabledProperty);
+#pragma warning restore CS0618
+    }
 
     object? ITogglesValueSource.ToggleValue => Value;
 

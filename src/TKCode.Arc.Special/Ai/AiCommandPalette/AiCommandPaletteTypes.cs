@@ -315,7 +315,7 @@ public sealed class AiCommandPaletteAskContext
     public void SetSources(IReadOnlyList<AiCommandPaletteSource> sources) => _setSources(sources);
 }
 
-/// <summary>Arguments of <see cref="AiCommandPalette.ItemSelected"/>: the page or action that was chosen.</summary>
+/// <summary>Arguments of <see cref="AiCommandPalette.ItemInvoked"/>: the page or action that was chosen.</summary>
 public class AiCommandPaletteItemEventArgs : RoutedEventArgs
 {
     /// <summary>Creates the arguments.</summary>

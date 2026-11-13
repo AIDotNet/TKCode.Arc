@@ -29,6 +29,10 @@ public class SelectionToolbarAction : AvaloniaObject
     public static readonly StyledProperty<bool> IsEnabledProperty =
         AvaloniaProperty.Register<SelectionToolbarAction, bool>(nameof(IsEnabled), true);
 
+    /// <summary>Whether the action is on the bar. A hidden action takes no room; it stays in the actions.</summary>
+    public static readonly StyledProperty<bool> IsVisibleProperty =
+        AvaloniaProperty.Register<SelectionToolbarAction, bool>(nameof(IsVisible), true);
+
     /// <summary>Runs when the action is chosen; the parameter is the selected count.</summary>
     public static readonly StyledProperty<ICommand?> CommandProperty =
         AvaloniaProperty.Register<SelectionToolbarAction, ICommand?>(nameof(Command));
@@ -59,6 +63,9 @@ public class SelectionToolbarAction : AvaloniaObject
 
     /// <inheritdoc cref="IsEnabledProperty"/>
     public bool IsEnabled { get => GetValue(IsEnabledProperty); set => SetValue(IsEnabledProperty, value); }
+
+    /// <inheritdoc cref="IsVisibleProperty"/>
+    public bool IsVisible { get => GetValue(IsVisibleProperty); set => SetValue(IsVisibleProperty, value); }
 
     /// <inheritdoc cref="CommandProperty"/>
     public ICommand? Command { get => GetValue(CommandProperty); set => SetValue(CommandProperty, value); }

@@ -159,7 +159,7 @@ public class NumberField : FieldTextBox
 
     /// <summary>The value (two-way). Arc's <c>value</c> / <c>onValueChange</c>.</summary>
     public static readonly StyledProperty<decimal> ValueProperty =
-        AvaloniaProperty.Register<NumberField, decimal>(nameof(Value), 0m, defaultBindingMode: BindingMode.TwoWay);
+        AvaloniaProperty.Register<NumberField, decimal>(nameof(Value), 0m, defaultBindingMode: BindingMode.TwoWay, enableDataValidation: true);
 
     /// <summary>Lower limit and step-grid origin (default 0).</summary>
     public static readonly StyledProperty<decimal> MinimumProperty =
@@ -1505,7 +1505,7 @@ public class NumberField : FieldTextBox
         if (WarnNote is { Length: > 0 } note)
         {
             var help = AutomationProperties.GetHelpText(this);
-            AutomationProperties.SetHelpText(this, string.IsNullOrEmpty(help) ? note : $"{help} {note}");
+            FormFieldHost.SetHelpText(this, string.IsNullOrEmpty(help) ? note : $"{help} {note}");
         }
     }
 }

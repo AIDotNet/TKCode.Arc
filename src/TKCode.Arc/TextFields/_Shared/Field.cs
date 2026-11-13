@@ -144,8 +144,8 @@ public class Field : ContentControl
     private void OnLabelPressed(object? sender, PointerPressedEventArgs e)
     {
         // <label for> semantics: the label focuses its editor. Inside an editor's own template the editor already
-        // receives the press, so only a standalone field forwards it.
-        if (TemplatedParent is not null || Content is not Control content)
+        // receives the press, so only a standalone field forwards it (GetLabelTarget returns null there).
+        if (GetLabelTarget() is not { } content)
         {
             return;
         }
@@ -157,9 +157,26 @@ public class Field : ContentControl
         }
     }
 
-    private void UpdateContentAutomation()
+    /// <summary>The label part of the applied template (<see cref="LabelPart"/>), or null before the template is applied.</summary>
+    protected TextBlock? LabelElement => _label;
+
+    /// <summary>
+    /// The control the label names and focuses when clicked. The default is the content when the field is not part of
+    /// another control's template; a derived field can point it at a specific editor.
+    /// </summary>
+    protected virtual Control? GetLabelTarget() => TemplatedParent is null ? Content as Control : null;
+
+    /// <summary>The error text that <see cref="UpdateContentAutomation"/> adds to the help text; the default is <see cref="ErrorMessage"/>.</summary>
+    protected virtual string? GetAutomationErrorText() => ErrorMessage;
+
+    /// <summary>
+    /// Writes the accessible label, name and help text onto <see cref="GetLabelTarget"/>: <c>LabeledBy</c> the label,
+    /// the name from <see cref="Label"/> unless the app set one, and the help text from <see cref="Description"/> and
+    /// <see cref="GetAutomationErrorText"/>. Called when any of them changes.
+    /// </summary>
+    protected virtual void UpdateContentAutomation()
     {
-        if (TemplatedParent is not null || Content is not Control content)
+        if (GetLabelTarget() is not { } content)
         {
             return;
         }
@@ -172,7 +189,7 @@ public class Field : ContentControl
             _appliedName = Label;
             AutomationProperties.SetName(content, Label ?? string.Empty);
         }
-        AutomationProperties.SetHelpText(content, FieldText.HelpText(Description, ErrorMessage));
+        AutomationProperties.SetHelpText(content, FieldText.HelpText(Description, GetAutomationErrorText()));
     }
 
     private string? _appliedName;

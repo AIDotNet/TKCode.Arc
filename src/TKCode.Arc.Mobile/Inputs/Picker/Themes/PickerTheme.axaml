@@ -1,0 +1,75 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.Mobile.PickerTheme">
+
+    <!-- Picker: a list item row (the ListItem theme's setters, press shade, separator rule and motion) whose trailing column
+         shows the value, or the placeholder in TextMuted, filled in code into PART_Value. A keyboard-focused picker shades
+         like a pressed row. -->
+    <ControlTheme x:Key="{x:Type arcm:Picker}" TargetType="arcm:Picker" BasedOn="{StaticResource {x:Type arcm:ListItem}}">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arcm:Picker">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}">
+                    <Grid>
+                        <Grid Name="PART_Row"
+                              ColumnDefinitions="Auto,*,Auto,Auto"
+                              Margin="{TemplateBinding Padding}">
+                            <arc:ArcGlyph Name="PART_Icon"
+                                          Grid.Column="0"
+                                          Data="{TemplateBinding Icon}"
+                                          IsVisible="{TemplateBinding Icon, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          Size="{arcm:ListItemTokenResource IconExtent}"
+                                          Margin="{arcm:ListItemTokenResource LeadingMargin}"
+                                          VerticalAlignment="Center" />
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <ContentPresenter Name="PART_ContentPresenter"
+                                                  Content="{TemplateBinding Content}"
+                                                  ContentTemplate="{TemplateBinding ContentTemplate}" />
+                                <TextBlock Name="PART_Subtitle"
+                                           Text="{TemplateBinding Subtitle}"
+                                           IsVisible="{TemplateBinding Subtitle, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                           TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+                            <ContentPresenter Name="PART_Value"
+                                              Grid.Column="2"
+                                              Margin="{arcm:ListItemTokenResource TrailingMargin}"
+                                              MaxWidth="{arcm:PickerTokenResource ValueMaxWidth}"
+                                              HorizontalAlignment="Right"
+                                              VerticalAlignment="Center" />
+                            <arc:ArcGlyph Name="PART_Chevron"
+                                          Grid.Column="3"
+                                          Data="{x:Static arc:ArcIcons.ChevronRight}"
+                                          IsVisible="{TemplateBinding ShowChevron}"
+                                          Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                          Size="{arcm:ListItemTokenResource ChevronExtent}"
+                                          Margin="{arcm:ListItemTokenResource TrailingMargin}"
+                                          VerticalAlignment="Center" />
+                        </Grid>
+                        <Border Name="PART_Separator"
+                                Height="1"
+                                Margin="{arcm:ListItemTokenResource SeparatorInset}"
+                                Background="{arc:ArcDesignTokenResource Border}"
+                                VerticalAlignment="Bottom" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- The value's color is a style, not a template value, so the placeholder state can change it. -->
+        <Style Selector="^ /template/ ContentPresenter#PART_Value">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:placeholder /template/ ContentPresenter#PART_Value">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:focus-visible">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

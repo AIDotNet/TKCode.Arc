@@ -749,7 +749,7 @@ public class LlmCostCalculator : TemplatedControl
                 // Custom cannot be picked: it lights up on its own when the sliders match no preset.
                 if (_presets.ItemsSource is IList<SegmentedOption> options && options.Count > 0)
                 {
-                    options[^1].IsDisabled = matched is not null;
+                    options[^1].IsEnabled = matched is null;
                     if (_presets.ContainerFromIndex(options.Count - 1) is { } custom)
                     {
                         custom.IsEnabled = matched is null;

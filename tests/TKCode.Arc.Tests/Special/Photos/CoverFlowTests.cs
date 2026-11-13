@@ -227,4 +227,34 @@ public class CoverFlowTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void SelectionChanged_Reports_The_Old_And_New_Index_Once_Per_Change()
+    {
+        var flow = Flow();
+        var window = TestHelpers.Show(flow);
+        try
+        {
+            var changes = new List<PhotosSelectionChangedEventArgs>();
+            flow.SelectionChanged += (_, e) => changes.Add(e);
+            flow.SelectedIndex = 3;
+            changes.Count.ShouldBe(1);
+            changes[0].OldIndex.ShouldBe(0);
+            changes[0].NewIndex.ShouldBe(3);
+            flow.SelectNext();
+            changes.Count.ShouldBe(2);
+            changes[1].NewIndex.ShouldBe(4);
+            // The same index again is no change; an index past the end settles on the last cover.
+            flow.SelectedIndex = 4;
+            changes.Count.ShouldBe(2);
+            flow.SelectedIndex = 99;
+            changes.Count.ShouldBe(3);
+            changes[2].OldIndex.ShouldBe(4);
+            changes[2].NewIndex.ShouldBe(5);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

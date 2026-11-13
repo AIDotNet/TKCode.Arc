@@ -53,9 +53,24 @@ public partial class ToolDock : ItemsControl
     public static readonly StyledProperty<string> LabelProperty =
         AvaloniaProperty.Register<ToolDock, string>(nameof(Label), "Tools");
 
-    /// <summary>Raised when someone chooses an entry or a group member (by pointer, keyboard or assistive technology).</summary>
+    /// <summary>
+    /// Raised when someone chooses an entry or a group member (by pointer, keyboard or assistive technology), also when it
+    /// already was the selected one.
+    /// </summary>
+    public static readonly RoutedEvent<ToolDockItemEventArgs> ItemInvokedEvent =
+        RoutedEvent.Register<ToolDock, ToolDockItemEventArgs>(nameof(ItemInvoked), RoutingStrategies.Bubble);
+
+    /// <summary>The former name of <see cref="ItemInvokedEvent"/>; it is raised together with it.</summary>
+    [Obsolete("Use ItemInvoked instead (deprecated in 1.1.0). It is raised together with ItemInvoked.")]
     public static readonly RoutedEvent<ToolDockItemEventArgs> ItemChosenEvent =
-        RoutedEvent.Register<ToolDock, ToolDockItemEventArgs>(nameof(ItemChosen), RoutingStrategies.Bubble);
+        RoutedEvent.Register<ToolDock, ToolDockItemEventArgs>("ItemChosen", RoutingStrategies.Bubble);
+
+    /// <summary>
+    /// Raised when <see cref="SelectedValue"/> changes, whether an entry was chosen or the value was set in code or through a
+    /// binding. Choosing the selected entry again raises <see cref="ItemInvoked"/> only.
+    /// </summary>
+    public static readonly RoutedEvent<ToolDockSelectionChangedEventArgs> SelectionChangedEvent =
+        RoutedEvent.Register<ToolDock, ToolDockSelectionChangedEventArgs>(nameof(SelectionChanged), RoutingStrategies.Bubble);
 
     /// <summary>Raised after a slot moved: once for every neighbour it passes while dragged, and on Alt + an arrow key.</summary>
     public static readonly RoutedEvent<ToolDockReorderedEventArgs> ReorderedEvent =
@@ -84,11 +99,28 @@ public partial class ToolDock : ItemsControl
     /// <inheritdoc cref="LabelProperty"/>
     public string Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
 
+    /// <inheritdoc cref="ItemInvokedEvent"/>
+    public event EventHandler<ToolDockItemEventArgs>? ItemInvoked
+    {
+        add => AddHandler(ItemInvokedEvent, value);
+        remove => RemoveHandler(ItemInvokedEvent, value);
+    }
+
     /// <inheritdoc cref="ItemChosenEvent"/>
+    [Obsolete("Use ItemInvoked instead (deprecated in 1.1.0). It is raised together with ItemInvoked.")]
     public event EventHandler<ToolDockItemEventArgs>? ItemChosen
     {
+#pragma warning disable CS0618 // the alias adds its handlers to the event it stands for
         add => AddHandler(ItemChosenEvent, value);
         remove => RemoveHandler(ItemChosenEvent, value);
+#pragma warning restore CS0618
+    }
+
+    /// <inheritdoc cref="SelectionChangedEvent"/>
+    public event EventHandler<ToolDockSelectionChangedEventArgs>? SelectionChanged
+    {
+        add => AddHandler(SelectionChangedEvent, value);
+        remove => RemoveHandler(SelectionChangedEvent, value);
     }
 
     /// <inheritdoc cref="ReorderedEvent"/>
@@ -187,6 +219,7 @@ public partial class ToolDock : ItemsControl
         if (change.Property == SelectedValueProperty)
         {
             SyncSelection(animate: true);
+            RaiseEvent(new ToolDockSelectionChangedEventArgs(SelectionChangedEvent, change.OldValue, change.NewValue));
         }
         else if (change.Property == CanReorderProperty)
         {
@@ -321,7 +354,10 @@ public partial class ToolDock : ItemsControl
         SetCurrentValue(SelectedValueProperty, chosen.Value);
         // The value may not have changed (choosing the selected tool again); the group still shows the chosen member.
         group?.Sync(SelectedValue, animate: true);
+        RaiseEvent(new ToolDockItemEventArgs(ItemInvokedEvent, chosen));
+#pragma warning disable CS0618 // the former name keeps being raised until a major version removes it
         RaiseEvent(new ToolDockItemEventArgs(ItemChosenEvent, chosen));
+#pragma warning restore CS0618
     }
 
     // ---- Focus ---------------------------------------------------------------------------------------------------

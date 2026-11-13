@@ -502,7 +502,7 @@ public partial class SiteHeader : TemplatedControl
         {
             return;
         }
-        if (_openValue is not null && (ItemByValue(_openValue) is not { } open || !HasPanel(open)))
+        if (_openValue is not null && (ItemByValue(_openValue) is not { IsVisible: true, IsEnabled: true } open || !HasPanel(open)))
         {
             ClosePanelCore(false);
         }
@@ -535,9 +535,14 @@ public partial class SiteHeader : TemplatedControl
         var centered = Variant == SiteHeaderVariant.Centered;
         foreach (var item in _resolved)
         {
+            if (!item.IsVisible)
+            {
+                continue;
+            }
             var panel = HasPanel(item);
             var button = new SiteNavButton
             {
+                IsEnabled = item.IsEnabled,
                 Label = item.Label,
                 HasChevron = panel,
                 IsExpandable = panel,

@@ -1,0 +1,18 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.WindRoseChartTheme">
+    <ControlTheme x:Key="{x:Type arc:WindRoseChart}" TargetType="arc:WindRoseChart">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="LabelGap" Value="{arc:WindRoseChartTokenResource LabelGap}" />
+        <Setter Property="CompactLabelGap" Value="{arc:WindRoseChartTokenResource CompactLabelGap}" />
+        <Setter Property="HoleRatio" Value="{arc:WindRoseChartTokenResource HoleRatio}" />
+        <Setter Property="SectorFill" Value="{arc:WindRoseChartTokenResource SectorFill}" />
+        <Setter Property="SegmentGap" Value="{arc:WindRoseChartTokenResource SegmentGap}" />
+        <Setter Property="SegmentCorner" Value="{arc:WindRoseChartTokenResource SegmentCorner}" />
+        <Setter Property="LegendGap" Value="{arc:WindRoseChartTokenResource LegendGap}" />
+        <Setter Property="TooltipGap" Value="{arc:WindRoseChartTokenResource TooltipGap}" />
+    </ControlTheme>
+</ResourceDictionary>

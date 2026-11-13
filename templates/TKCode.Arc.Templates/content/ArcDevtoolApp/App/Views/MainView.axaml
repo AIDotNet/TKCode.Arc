@@ -124,7 +124,7 @@
         </arc:DockLayout>
 
         <!-- The command palette (Cmd+K / Ctrl+K). The "Files" entries are added in MainView.axaml.cs. -->
-        <arc:CommandPaletteDialog x:Name="Palette" PlaceholderText="Run a command or open a file" ItemSelected="OnCommandSelected">
+        <arc:CommandPaletteDialog x:Name="Palette" PlaceholderText="Run a command or open a file" ItemInvoked="OnCommandSelected">
             <arc:CommandPaletteItem Id="run" Label="Run build" Group="Build" Icon="{x:Static arc:ArcIcons.Play}" />
             <arc:CommandPaletteItem Id="save-all" Label="Save all" Group="File" Icon="{x:Static arc:ArcIcons.Download}" />
             <arc:CommandPaletteItem Id="reset-layout" Label="Reset layout" Group="View" Icon="{x:Static arc:ArcIcons.LayoutGrid}" />

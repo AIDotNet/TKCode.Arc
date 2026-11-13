@@ -146,6 +146,14 @@ public partial class Sidebar : TemplatedControl
         RoutedEvent.Register<Sidebar, SidebarItemInvokedEventArgs>(nameof(ItemInvoked), RoutingStrategies.Bubble);
 
     /// <summary>
+    /// Raised when <see cref="SelectedItem"/> changes, whether a page was chosen, <see cref="SelectedItem"/> or
+    /// <see cref="SelectedKey"/> was set in code or through a binding, or the selection was cleared. Choosing the page that
+    /// is already selected raises <see cref="ItemInvoked"/> only.
+    /// </summary>
+    public static readonly RoutedEvent<SidebarSelectionChangedEventArgs> SelectionChangedEvent =
+        RoutedEvent.Register<Sidebar, SidebarSelectionChangedEventArgs>(nameof(SelectionChanged), RoutingStrategies.Bubble);
+
+    /// <summary>
     /// Width of the open sidebar (default 240, the theme's <c>ExpandedWidth</c> token); collapsing springs from it to the
     /// 64px rail and expanding springs back to it. Set this, not <c>Width</c>, to make the sidebar narrower or wider: the
     /// sidebar drives its own <c>Width</c> to animate the collapse, so a <c>Width</c> set on it fixes it at that width and
@@ -297,6 +305,13 @@ public partial class Sidebar : TemplatedControl
     {
         add => AddHandler(ItemInvokedEvent, value);
         remove => RemoveHandler(ItemInvokedEvent, value);
+    }
+
+    /// <inheritdoc cref="SelectionChangedEvent"/>
+    public event EventHandler<SidebarSelectionChangedEventArgs>? SelectionChanged
+    {
+        add => AddHandler(SelectionChangedEvent, value);
+        remove => RemoveHandler(SelectionChangedEvent, value);
     }
 
     #endregion
@@ -626,6 +641,7 @@ public partial class Sidebar : TemplatedControl
             {
                 Reveal(row);
             }
+            RaiseEvent(new SidebarSelectionChangedEventArgs(SelectionChangedEvent, change.GetOldValue<SidebarItem?>(), item));
         }
         else if (change.Property == SelectedKeyProperty)
         {
@@ -1313,6 +1329,15 @@ public partial class Sidebar : TemplatedControl
         {
             Refresh(animate: true);
         }
+        else if (e.Property == SidebarSection.IsVisibleProperty)
+        {
+            if (!e.GetNewValue<bool>())
+            {
+                // A rail menu of a page in the hidden section must not stay open.
+                _flyout?.Close(returnFocus: false);
+            }
+            Refresh(animate: false);
+        }
     }
 
     private void OnItemPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
@@ -1338,6 +1363,16 @@ public partial class Sidebar : TemplatedControl
             {
                 Refresh(animate: false);
             }
+        }
+        else if (e.Property == SidebarItem.IsVisibleProperty)
+        {
+            if (!e.GetNewValue<bool>() && _flyoutNode is { } open &&
+                _byItem.TryGetValue(item, out var node) && (ReferenceEquals(node, open) || ReferenceEquals(node.Parent, open)))
+            {
+                // The rail menu lists the page (or belongs to it): close it instead of leaving a stale entry.
+                _flyout?.Close(returnFocus: false);
+            }
+            Refresh(animate: false);
         }
         else if (e.Property == SidebarItem.KeyProperty)
         {
@@ -1387,17 +1422,20 @@ public partial class Sidebar : TemplatedControl
             foreach (var node in sectionNode.SectionItems)
             {
                 var item = node.Item!;
+                var visible = item.IsVisible;
                 var selfMatch = !filtering || Matches(item.Label, query);
                 var childMatch = false;
                 foreach (var child in node.Children)
                 {
-                    var match = filtering && Matches(child.Item!.Label, query);
+                    // A hidden page, or a page of a hidden parent, is neither shown nor a filter match.
+                    var childVisible = visible && child.Item!.IsVisible;
+                    var match = filtering && childVisible && Matches(child.Item!.Label, query);
                     childMatch |= match;
-                    child.IsShown = !filtering || selfMatch || match;
+                    child.IsShown = childVisible && (!filtering || selfMatch || match);
                     child.Row!.IsVisible = child.IsShown;
                     child.Row.IsRail = rail;
                 }
-                node.IsShown = selfMatch || childMatch;
+                node.IsShown = visible && (selfMatch || childMatch);
                 node.Root!.IsVisible = node.IsShown;
                 var row = node.Row!;
                 row.IsRail = rail;
@@ -1418,7 +1456,7 @@ public partial class Sidebar : TemplatedControl
 
             var titled = !string.IsNullOrEmpty(section.Header);
             var collapsible = titled && section.IsCollapsible;
-            sectionNode.IsShown = shown > 0 || (!filtering && sectionNode.SectionItems.Count == 0 && titled);
+            sectionNode.IsShown = section.IsVisible && (shown > 0 || (!filtering && sectionNode.SectionItems.Count == 0 && titled));
             sectionNode.SectionRoot!.IsVisible = sectionNode.IsShown;
             sectionNode.IsOpen = rail || !collapsible || section.IsExpanded || filtering;
             sectionNode.SectionBody!.IsExpanded = sectionNode.IsOpen;
@@ -1479,11 +1517,12 @@ public partial class Sidebar : TemplatedControl
 
     /// <summary>
     /// The row the marker rests on: the selected page when it is visible, otherwise its parent when the parent is closed
-    /// or the sidebar is the rail; nothing when the page is folded away in a closed section or filtered out.
+    /// or the sidebar is the rail; nothing when the page is folded away in a closed section, filtered out or hidden
+    /// (<see cref="SidebarItem.IsVisible"/>: the page stays selected, the block is simply not drawn).
     /// </summary>
     private SidebarNode? MarkerNode()
     {
-        if (SelectedItem is not { } selected || !_byItem.TryGetValue(selected, out var node) ||
+        if (SelectedItem is not { IsVisible: true } selected || !_byItem.TryGetValue(selected, out var node) ||
             !_bySection.TryGetValue(node.Section, out var section) || !section.IsShown || !section.IsOpen)
         {
             return null;
@@ -1791,6 +1830,10 @@ public partial class Sidebar : TemplatedControl
         menu.Items.Add(new MenuEntryLabel { Text = node.Item!.Label });
         foreach (var child in node.Children)
         {
+            if (!child.IsShown)
+            {
+                continue;
+            }
             var item = child.Item!;
             menu.Items.Add(new MenuEntry
             {

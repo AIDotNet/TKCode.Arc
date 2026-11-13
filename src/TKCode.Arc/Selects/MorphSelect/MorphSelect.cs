@@ -236,6 +236,7 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
 
     static MorphSelect()
     {
+        SelectionDataValidation.Enable<MorphSelect>();
         FocusableProperty.OverrideDefaultValue<MorphSelect>(true);
         SelectionModeProperty.OverrideDefaultValue<MorphSelect>(SelectionMode.Single);
         FocusModality.Watch();

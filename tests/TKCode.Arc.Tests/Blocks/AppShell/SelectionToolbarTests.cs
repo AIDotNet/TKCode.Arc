@@ -107,4 +107,38 @@ public class SelectionToolbarTests
 
         public void Execute(object? parameter) => run(parameter);
     }
+
+    [AvaloniaFact]
+    public void Actions_Follow_IsEnabled_And_IsVisible_Live()
+    {
+        var archive = new SelectionToolbarAction { Key = "archive", Label = "Archive" };
+        var move = new SelectionToolbarAction { Key = "move", Label = "Move" };
+        var toolbar = new SelectionToolbar { Content = new Border { Height = 300 }, TotalCount = 10, SelectedCount = 2, Width = 800 };
+        toolbar.Actions.AddRange([archive, move]);
+        var window = TestHelpers.Show(toolbar);
+        try
+        {
+            Settle();
+            var buttons = TestHelpers.Descendant<Panel>(toolbar, SelectionToolbar.ActionsPart).Children.OfType<AvaloniaButton>().ToList();
+            buttons.Count.ShouldBe(2);
+            buttons[1].IsVisible.ShouldBeTrue();
+            buttons[1].IsEnabled.ShouldBeTrue();
+
+            move.IsEnabled = false;
+            buttons[1].IsEnabled.ShouldBeFalse();
+            buttons[0].IsEnabled.ShouldBeTrue();
+            move.IsEnabled = true;
+            buttons[1].IsEnabled.ShouldBeTrue();
+
+            move.IsVisible = false;
+            buttons[1].IsVisible.ShouldBeFalse();
+            buttons[0].IsVisible.ShouldBeTrue();
+            move.IsVisible = true;
+            buttons[1].IsVisible.ShouldBeTrue();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

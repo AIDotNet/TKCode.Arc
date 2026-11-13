@@ -107,11 +107,11 @@ public class TreeSelect : TemplatedControl, ISelectFieldAutomation
 
     /// <summary>The selected node of a single-select field (two-way), or null.</summary>
     public static readonly StyledProperty<object?> SelectedItemProperty =
-        AvaloniaProperty.Register<TreeSelect, object?>(nameof(SelectedItem), defaultBindingMode: BindingMode.TwoWay);
+        AvaloniaProperty.Register<TreeSelect, object?>(nameof(SelectedItem), defaultBindingMode: BindingMode.TwoWay, enableDataValidation: true);
 
     /// <summary>Value of the selected node of a single-select field (two-way). A value the data does not contain (yet) is kept and resolved when the data arrives.</summary>
     public static readonly StyledProperty<object?> SelectedValueProperty =
-        AvaloniaProperty.Register<TreeSelect, object?>(nameof(SelectedValue), defaultBindingMode: BindingMode.TwoWay);
+        AvaloniaProperty.Register<TreeSelect, object?>(nameof(SelectedValue), defaultBindingMode: BindingMode.TwoWay, enableDataValidation: true);
 
     /// <summary>The selected nodes in tree order: the checked nodes that <see cref="CheckStrategy"/> reports, or the single selected node.</summary>
     public static readonly DirectProperty<TreeSelect, IReadOnlyList<object>> SelectedItemsProperty =
@@ -120,7 +120,7 @@ public class TreeSelect : TemplatedControl, ISelectFieldAutomation
     /// <summary>Values of <see cref="SelectedItems"/> (two-way). Setting it checks the nodes with these values (a parent's value checks its enabled descendants); values written before the data arrives are applied when it does.</summary>
     public static readonly DirectProperty<TreeSelect, IReadOnlyList<object?>> SelectedValuesProperty =
         AvaloniaProperty.RegisterDirect<TreeSelect, IReadOnlyList<object?>>(nameof(SelectedValues), o => o.SelectedValues,
-            (o, v) => o.SelectedValues = v, Array.Empty<object?>(), BindingMode.TwoWay);
+            (o, v) => o.SelectedValues = v, Array.Empty<object?>(), BindingMode.TwoWay, enableDataValidation: true);
 
     /// <summary>The text of the field: the selected node's label or full path (single), or the checked labels joined by commas (multiple).</summary>
     public static readonly DirectProperty<TreeSelect, string?> SelectedTextProperty =
@@ -168,7 +168,8 @@ public class TreeSelect : TemplatedControl, ISelectFieldAutomation
 
     /// <summary>The menu opens for looking, but the selection cannot be changed or cleared.</summary>
     public static readonly StyledProperty<bool> IsReadOnlyProperty =
-        AvaloniaProperty.Register<TreeSelect, bool>(nameof(IsReadOnly));
+        AvaloniaProperty.Register<TreeSelect, bool>(nameof(IsReadOnly),
+            coerce: (o, v) => v || o.GetValue(Form.IsReadOnlyProperty));
 
     /// <summary>Whether the menu is open (two-way).</summary>
     public static readonly StyledProperty<bool> IsOpenProperty =
@@ -623,6 +624,11 @@ public class TreeSelect : TemplatedControl, ISelectFieldAutomation
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
+        if (change.Property == Form.IsReadOnlyProperty)
+        {
+            // Form.IsReadOnly (inherited) makes the editor read-only with its form or section.
+            CoerceValue(IsReadOnlyProperty);
+        }
         var property = change.Property;
         if (property == IsOpenProperty)
         {

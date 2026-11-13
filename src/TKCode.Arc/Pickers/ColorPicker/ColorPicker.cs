@@ -99,7 +99,8 @@ public class ColorPicker : TemplatedControl, IPickerAutomation
 
     /// <summary>The color (two-way). Arc's default is #2F6BFF.</summary>
     public static readonly StyledProperty<Color> ColorProperty =
-        AvaloniaProperty.Register<ColorPicker, Color>(nameof(Color), Color.Parse("#2F6BFF"), defaultBindingMode: BindingMode.TwoWay);
+        AvaloniaProperty.Register<ColorPicker, Color>(nameof(Color), Color.Parse("#2F6BFF"), defaultBindingMode: BindingMode.TwoWay,
+            enableDataValidation: true);
 
     /// <summary>The color as upper-case CSS hex (#RRGGBB, or #RRGGBBAA when translucent).</summary>
     public static readonly DirectProperty<ColorPicker, string> HexValueProperty =
@@ -115,6 +116,33 @@ public class ColorPicker : TemplatedControl, IPickerAutomation
 
     public static readonly StyledProperty<string?> DescriptionProperty = Field.DescriptionProperty.AddOwner<ColorPicker>();
     public static readonly StyledProperty<string?> ErrorMessageProperty = Field.ErrorMessageProperty.AddOwner<ColorPicker>();
+
+    /// <summary>The error actually shown: <see cref="ErrorMessage"/>, else the validation message of the <see cref="Color"/> binding.</summary>
+    public static readonly DirectProperty<ColorPicker, string?> EffectiveErrorMessageProperty =
+        AvaloniaProperty.RegisterDirect<ColorPicker, string?>(nameof(EffectiveErrorMessage), o => o.EffectiveErrorMessage);
+
+    private string? _effectiveError;
+    private string? _validationMessage;
+
+    /// <summary>The error actually shown.</summary>
+    public string? EffectiveErrorMessage
+    {
+        get => _effectiveError;
+        private set => SetAndRaise(EffectiveErrorMessageProperty, ref _effectiveError, value);
+    }
+
+    protected override void UpdateDataValidation(AvaloniaProperty property, BindingValueType state, Exception? error)
+    {
+        base.UpdateDataValidation(property, state, error);
+        _validationMessage = FormFieldHost.ValidationMessage(state, error);
+        UpdateEffectiveError();
+    }
+
+    private void UpdateEffectiveError()
+    {
+        EffectiveErrorMessage = FormFieldHost.EffectiveError(this, ErrorMessage, _validationMessage);
+        UpdateAutomation();
+    }
 
     /// <summary>Trigger height: Medium (default) is the 44px swatch with its name; Small is a 36px swatch with the value only,
     /// the height of a small text field.</summary>
@@ -414,6 +442,10 @@ public class ColorPicker : TemplatedControl, IPickerAutomation
                 _closeReturnsFocus = false;
             }
         }
+        else if (change.Property == ErrorMessageProperty || change.Property == FormFieldHost.StateProperty)
+        {
+            UpdateEffectiveError();
+        }
         else if (change.Property == LabelProperty)
         {
             UpdateAutomation();
@@ -564,7 +596,7 @@ public class ColorPicker : TemplatedControl, IPickerAutomation
 
     private void UpdateAutomation()
     {
-        AutomationProperties.SetHelpText(this, FieldText.HelpText(Description, ErrorMessage));
+        FormFieldHost.SetHelpText(this, FieldText.HelpText(Description, EffectiveErrorMessage));
         if (_panel is not null)
         {
             AutomationProperties.SetName(_panel, $"{Label} color".Trim());

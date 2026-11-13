@@ -91,9 +91,9 @@ internal static class TogglesNavigation
         }
     }
 
-    /// <summary>Whether the container at <paramref name="index"/> can take focus and selection.</summary>
+    /// <summary>Whether the container at <paramref name="index"/> can take focus and selection (disabled and hidden ones cannot).</summary>
     public static bool IsUsable(SelectingItemsControl owner, int index)
-        => owner.IsEffectivelyEnabled && owner.ContainerFromIndex(index) is not { IsEnabled: false };
+        => owner.IsEffectivelyEnabled && owner.ContainerFromIndex(index) is not ({ IsEnabled: false } or { IsVisible: false });
 
     /// <summary>
     /// Handles an arrow / Home / End key that reached the group from one of its items: selects the target, focuses it
@@ -322,7 +322,8 @@ internal sealed class TogglesIndicatorTracker
         Watch(container);
         if (container is null || !container.IsVisible || container.Bounds.Width <= 0 || container.Bounds.Height <= 0)
         {
-            if (_placed && (container is null || index < 0))
+            // A hidden selected container takes the indicator with it (the selection itself is kept).
+            if (_placed && (container is null || index < 0 || !container.IsVisible))
             {
                 _indicator.Hide(animate: false);
                 _placed = false;

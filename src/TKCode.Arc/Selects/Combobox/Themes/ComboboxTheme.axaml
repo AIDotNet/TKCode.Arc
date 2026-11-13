@@ -85,6 +85,16 @@
                                 <Decorator Name="PART_InputHost" VerticalAlignment="Center" />
                             </DockPanel>
                         </Border>
+                        <!-- The popup sits in the frame's panel, not in the StackPanel: a visible child there would add the
+                             StackPanel's spacing below the frame (#121). Its placement target is set in code. -->
+                        <arc:ArcPopup Name="PART_Popup"
+                                      Placement="Bottom"
+                                      MarginToAnchor="{arc:ComboboxTokenResource PopoverOffset}"
+                                      EnterOffset="6"
+                                      EnterScale="0.97"
+                                      IsLightDismissEnabled="True"
+                                      TakesFocusFromNativeControl="False"
+                                      WindowManagerAddShadowHint="False" />
                     </Panel>
                     <TextBlock Name="PART_Description"
                                Text="{TemplateBinding Description}"
@@ -92,14 +102,6 @@
                                TextWrapping="Wrap"
                                FontSize="{arc:ArcDesignTokenResource TypeXS}"
                                Foreground="{arc:ArcDesignTokenResource TextMuted}" />
-                    <arc:ArcPopup Name="PART_Popup"
-                                  Placement="Bottom"
-                                  MarginToAnchor="{arc:ComboboxTokenResource PopoverOffset}"
-                                  EnterOffset="6"
-                                  EnterScale="0.97"
-                                  IsLightDismissEnabled="True"
-                                  TakesFocusFromNativeControl="False"
-                                  WindowManagerAddShadowHint="False" />
                 </StackPanel>
             </ControlTemplate>
         </Setter>

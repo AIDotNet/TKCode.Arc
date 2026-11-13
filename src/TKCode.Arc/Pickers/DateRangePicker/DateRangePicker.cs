@@ -52,7 +52,8 @@ public class DateRangePicker : TemplatedControl, IPickerAutomation
 
     /// <summary>The applied range (two-way). Null shows the placeholder.</summary>
     public static readonly StyledProperty<DateRange?> SelectedRangeProperty =
-        AvaloniaProperty.Register<DateRangePicker, DateRange?>(nameof(SelectedRange), defaultBindingMode: BindingMode.TwoWay);
+        AvaloniaProperty.Register<DateRangePicker, DateRange?>(nameof(SelectedRange), defaultBindingMode: BindingMode.TwoWay,
+            enableDataValidation: true);
 
     /// <summary>Whether the panel is open (two-way).</summary>
     public static readonly StyledProperty<bool> IsDropDownOpenProperty =
@@ -64,10 +65,38 @@ public class DateRangePicker : TemplatedControl, IPickerAutomation
 
     /// <summary>Arc names the trigger with its label but does not show it; set true for a visible field label.</summary>
     public static readonly StyledProperty<bool> IsLabelVisibleProperty =
-        Field.IsLabelVisibleProperty.AddOwner<DateRangePicker>(new StyledPropertyMetadata<bool>(false));
+        Field.IsLabelVisibleProperty.AddOwner<DateRangePicker>(new StyledPropertyMetadata<bool>(false,
+            coerce: (o, v) => v && !FormFieldHost.IsHosted((DateRangePicker)o)));
 
     public static readonly StyledProperty<string?> DescriptionProperty = Field.DescriptionProperty.AddOwner<DateRangePicker>();
     public static readonly StyledProperty<string?> ErrorMessageProperty = Field.ErrorMessageProperty.AddOwner<DateRangePicker>();
+
+    /// <summary>The error actually shown: <see cref="ErrorMessage"/>, else the validation message of the <see cref="SelectedRange"/> binding.</summary>
+    public static readonly DirectProperty<DateRangePicker, string?> EffectiveErrorMessageProperty =
+        AvaloniaProperty.RegisterDirect<DateRangePicker, string?>(nameof(EffectiveErrorMessage), o => o.EffectiveErrorMessage);
+
+    private string? _effectiveError;
+    private string? _validationMessage;
+
+    /// <summary>The error actually shown.</summary>
+    public string? EffectiveErrorMessage
+    {
+        get => _effectiveError;
+        private set => SetAndRaise(EffectiveErrorMessageProperty, ref _effectiveError, value);
+    }
+
+    protected override void UpdateDataValidation(AvaloniaProperty property, BindingValueType state, Exception? error)
+    {
+        base.UpdateDataValidation(property, state, error);
+        _validationMessage = FormFieldHost.ValidationMessage(state, error);
+        UpdateEffectiveError();
+    }
+
+    private void UpdateEffectiveError()
+    {
+        EffectiveErrorMessage = FormFieldHost.EffectiveError(this, ErrorMessage, _validationMessage);
+        UpdateAutomation();
+    }
 
     /// <summary>Shown while no range is applied (Arc: "Select dates").</summary>
     public static readonly StyledProperty<string> PlaceholderProperty =
@@ -380,9 +409,18 @@ public class DateRangePicker : TemplatedControl, IPickerAutomation
         {
             StyleSurface();
         }
-        else if (change.Property == LabelProperty || change.Property == DescriptionProperty || change.Property == ErrorMessageProperty)
+        else if (change.Property == LabelProperty || change.Property == DescriptionProperty)
         {
             UpdateAutomation();
+        }
+        else if (change.Property == ErrorMessageProperty)
+        {
+            UpdateEffectiveError();
+        }
+        else if (change.Property == FormFieldHost.StateProperty)
+        {
+            CoerceValue(IsLabelVisibleProperty);
+            UpdateEffectiveError();
         }
     }
 
@@ -396,7 +434,7 @@ public class DateRangePicker : TemplatedControl, IPickerAutomation
 
     private void UpdateAutomation()
     {
-        AutomationProperties.SetHelpText(this, FieldText.HelpText(Description, ErrorMessage));
+        FormFieldHost.SetHelpText(this, FieldText.HelpText(Description, EffectiveErrorMessage));
         if (_panel is not null)
         {
             AutomationProperties.SetName(_panel, Label ?? string.Empty);

@@ -186,6 +186,7 @@ public class Select : SelectingItemsControl, ISelectOptionHost, ISelectFieldAuto
 
     static Select()
     {
+        SelectionDataValidation.Enable<Select>();
         FocusableProperty.OverrideDefaultValue<Select>(true);
         SelectionModeProperty.OverrideDefaultValue<Select>(SelectionMode.Single);
         IsTextSearchEnabledProperty.OverrideDefaultValue<Select>(false);

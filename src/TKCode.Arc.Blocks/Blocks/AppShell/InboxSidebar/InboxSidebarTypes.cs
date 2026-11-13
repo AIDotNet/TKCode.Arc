@@ -59,6 +59,17 @@ public class InboxSidebarFolder : AvaloniaObject
     public static readonly StyledProperty<bool> IsCountUnreadProperty =
         AvaloniaProperty.Register<InboxSidebarFolder, bool>(nameof(IsCountUnread), true);
 
+    /// <summary>Whether the folder can be chosen. A disabled row is dimmed and skipped by the arrow keys.</summary>
+    public static readonly StyledProperty<bool> IsEnabledProperty =
+        AvaloniaProperty.Register<InboxSidebarFolder, bool>(nameof(IsEnabled), true);
+
+    /// <summary>
+    /// Whether the folder is shown. A hidden folder takes no room and is skipped by the arrow keys and the filter; it stays
+    /// in the list, so when it is selected <see cref="InboxSidebar.SelectedKey"/> keeps it and only the selection block is not drawn.
+    /// </summary>
+    public static readonly StyledProperty<bool> IsVisibleProperty =
+        AvaloniaProperty.Register<InboxSidebarFolder, bool>(nameof(IsVisible), true);
+
     public InboxSidebarFolder()
     {
     }
@@ -87,6 +98,12 @@ public class InboxSidebarFolder : AvaloniaObject
     /// <inheritdoc cref="IsCountUnreadProperty"/>
     public bool IsCountUnread { get => GetValue(IsCountUnreadProperty); set => SetValue(IsCountUnreadProperty, value); }
 
+    /// <inheritdoc cref="IsEnabledProperty"/>
+    public bool IsEnabled { get => GetValue(IsEnabledProperty); set => SetValue(IsEnabledProperty, value); }
+
+    /// <inheritdoc cref="IsVisibleProperty"/>
+    public bool IsVisible { get => GetValue(IsVisibleProperty); set => SetValue(IsVisibleProperty, value); }
+
     public override string ToString() => Title;
 }
 
@@ -112,6 +129,17 @@ public class InboxSidebarLabel : AvaloniaObject
     /// <summary>Unread messages with this label; 0 shows nothing.</summary>
     public static readonly StyledProperty<int> CountProperty =
         AvaloniaProperty.Register<InboxSidebarLabel, int>(nameof(Count));
+
+    /// <summary>Whether the label can be chosen. A disabled row is dimmed and skipped by the arrow keys.</summary>
+    public static readonly StyledProperty<bool> IsEnabledProperty =
+        AvaloniaProperty.Register<InboxSidebarLabel, bool>(nameof(IsEnabled), true);
+
+    /// <summary>
+    /// Whether the label is shown. A hidden label takes no room and is skipped by the arrow keys and the filter; it stays
+    /// in the list, so when it is selected <see cref="InboxSidebar.SelectedKey"/> keeps it and only the selection block is not drawn.
+    /// </summary>
+    public static readonly StyledProperty<bool> IsVisibleProperty =
+        AvaloniaProperty.Register<InboxSidebarLabel, bool>(nameof(IsVisible), true);
 
     public InboxSidebarLabel()
     {
@@ -140,7 +168,39 @@ public class InboxSidebarLabel : AvaloniaObject
     /// <inheritdoc cref="CountProperty"/>
     public int Count { get => GetValue(CountProperty); set => SetValue(CountProperty, value); }
 
+    /// <inheritdoc cref="IsEnabledProperty"/>
+    public bool IsEnabled { get => GetValue(IsEnabledProperty); set => SetValue(IsEnabledProperty, value); }
+
+    /// <inheritdoc cref="IsVisibleProperty"/>
+    public bool IsVisible { get => GetValue(IsVisibleProperty); set => SetValue(IsVisibleProperty, value); }
+
     public override string ToString() => Title;
+}
+
+/// <summary>Arguments of <see cref="InboxSidebar.SelectionChanged"/>: the folder or label that is selected now.</summary>
+public sealed class InboxSidebarSelectionChangedEventArgs : RoutedEventArgs
+{
+    public InboxSidebarSelectionChangedEventArgs(
+        RoutedEvent routedEvent, string? oldKey, string? newKey, InboxSidebarFolder? newFolder, InboxSidebarLabel? newLabel)
+        : base(routedEvent)
+    {
+        OldKey = oldKey;
+        NewKey = newKey;
+        NewFolder = newFolder;
+        NewLabel = newLabel;
+    }
+
+    /// <summary>The key that was selected before.</summary>
+    public string? OldKey { get; }
+
+    /// <summary>The key selected now (<see cref="InboxSidebar.SelectedKey"/>).</summary>
+    public string? NewKey { get; }
+
+    /// <summary>The folder that is selected now, when the new key names a folder.</summary>
+    public InboxSidebarFolder? NewFolder { get; }
+
+    /// <summary>The label that is selected now, when the new key names a label.</summary>
+    public InboxSidebarLabel? NewLabel { get; }
 }
 
 /// <summary>Arguments of <see cref="InboxSidebar.ItemInvoked"/>: the folder or label that was chosen.</summary>

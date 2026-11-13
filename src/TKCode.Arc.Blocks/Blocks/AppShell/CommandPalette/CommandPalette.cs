@@ -160,8 +160,13 @@ public class CommandPalette : TemplatedControl
         AvaloniaProperty.RegisterDirect<CommandPalette, string>(nameof(EffectiveShortcutHint), o => o.EffectiveShortcutHint);
 
     /// <summary>Raised when a command is chosen (Enter, or a click), after the query was cleared.</summary>
+    public static readonly RoutedEvent<CommandPaletteItemSelectedEventArgs> ItemInvokedEvent =
+        RoutedEvent.Register<CommandPalette, CommandPaletteItemSelectedEventArgs>(nameof(ItemInvoked), RoutingStrategies.Bubble);
+
+    /// <summary>The former name of <see cref="ItemInvokedEvent"/>; it is raised together with it.</summary>
+    [Obsolete("Use ItemInvoked instead (deprecated in 1.1.0). It is raised together with ItemInvoked.")]
     public static readonly RoutedEvent<CommandPaletteItemSelectedEventArgs> ItemSelectedEvent =
-        RoutedEvent.Register<CommandPalette, CommandPaletteItemSelectedEventArgs>(nameof(ItemSelected), RoutingStrategies.Bubble);
+        RoutedEvent.Register<CommandPalette, CommandPaletteItemSelectedEventArgs>("ItemSelected", RoutingStrategies.Bubble);
 
     /// <summary>
     /// Raised by Escape in an empty field or by the "Esc" button: the host should close the palette. Escape is not marked
@@ -268,11 +273,21 @@ public class CommandPalette : TemplatedControl
     /// <summary>Index of <see cref="ActiveItem"/> in <see cref="VisibleItems"/>, or -1.</summary>
     public int ActiveIndex => _activeIndex;
 
+    /// <inheritdoc cref="ItemInvokedEvent"/>
+    public event EventHandler<CommandPaletteItemSelectedEventArgs>? ItemInvoked
+    {
+        add => AddHandler(ItemInvokedEvent, value);
+        remove => RemoveHandler(ItemInvokedEvent, value);
+    }
+
     /// <inheritdoc cref="ItemSelectedEvent"/>
+    [Obsolete("Use ItemInvoked instead (deprecated in 1.1.0). It is raised together with ItemInvoked.")]
     public event EventHandler<CommandPaletteItemSelectedEventArgs>? ItemSelected
     {
+#pragma warning disable CS0618 // the alias adds its handlers to the event it stands for
         add => AddHandler(ItemSelectedEvent, value);
         remove => RemoveHandler(ItemSelectedEvent, value);
+#pragma warning restore CS0618
     }
 
     /// <inheritdoc cref="CloseRequestedEvent"/>
@@ -1212,7 +1227,10 @@ public class CommandPalette : TemplatedControl
         // opener) has the last word.
         Clear();
         FocusInput();
+        RaiseEvent(new CommandPaletteItemSelectedEventArgs(ItemInvokedEvent, item));
+#pragma warning disable CS0618 // the former name keeps being raised until a major version removes it
         RaiseEvent(new CommandPaletteItemSelectedEventArgs(ItemSelectedEvent, item));
+#pragma warning restore CS0618
         Execute(SelectCommand, item);
         Execute(item.Command, item.CommandParameter);
     }

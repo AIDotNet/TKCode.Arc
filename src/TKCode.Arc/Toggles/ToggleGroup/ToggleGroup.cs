@@ -120,6 +120,7 @@ public class ToggleGroup : SelectingItemsControl
 
     static ToggleGroup()
     {
+        SelectionDataValidation.Enable<ToggleGroup>();
         FocusableProperty.OverrideDefaultValue<ToggleGroup>(false);
         KeyboardNavigation.TabNavigationProperty.OverrideDefaultValue<ToggleGroup>(KeyboardNavigationMode.Once);
     }
@@ -162,7 +163,8 @@ public class ToggleGroup : SelectingItemsControl
         var textFromLabel = option.Content is null && option.Icon is null;
         target.Content = textFromLabel ? option.Label ?? option.Value?.ToString() : option.Content;
         target.Icon = option.Icon;
-        target.IsEnabled = !option.IsDisabled;
+        target.IsEnabled = option.IsEnabled;
+        target.IsVisible = option.IsVisible;
         AutomationProperties.SetName(target, option.Label);
         Tooltip.SetTip(target, option.Title ?? (textFromLabel ? null : option.Label));
     }
@@ -306,7 +308,7 @@ public class ToggleGroup : SelectingItemsControl
         }
     }
 
-    private bool IsPressedAt(int index) => index >= 0 && index < ItemCount && ContainerFromIndex(index) is ToggleGroupItem { IsSelected: true };
+    private bool IsPressedAt(int index) => index >= 0 && index < ItemCount && ContainerFromIndex(index) is ToggleGroupItem { IsSelected: true, IsVisible: true };
 
     private int IndexOfValue(object? value)
     {

@@ -202,6 +202,8 @@ public class BillingToggle : SelectingItemsControl
             option.Content = data.Label ?? data.Value;
             option.Badge = data.Badge;
             option.ActiveBadge = data.ActiveBadge;
+            option.IsEnabled = data.IsEnabled;
+            option.IsVisible = data.IsVisible;
         }
     }
 

@@ -11,7 +11,7 @@
                            Label="{TemplateBinding Label}"
                            IsLabelVisible="False"
                            Description="{TemplateBinding Description}"
-                           ErrorMessage="{TemplateBinding ErrorMessage}">
+                           ErrorMessage="{TemplateBinding EffectiveErrorMessage}">
                     <Panel HorizontalAlignment="Left">
                         <Border Name="PART_Trigger"
                                 BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"

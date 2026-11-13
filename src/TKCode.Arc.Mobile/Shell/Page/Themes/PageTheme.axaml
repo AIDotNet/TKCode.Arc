@@ -5,12 +5,13 @@
                     x:ClassModifier="internal"
                     x:Class="TKCode.Arc.Mobile.PageTheme">
 
-    <!-- Page: Background fill, the safe area as padding, header / content (optionally scrolling) / footer in three rows, and an overlay slot over all of it. -->
+    <!-- Page: Background fill, the safe area as padding, header / content (optionally scrolling) / footer in three rows, and
+         an overlay slot over all of it. Page.cs adds overlays it hosts (a Picker's sheet) to PART_Root after PART_Overlay. -->
     <ControlTheme x:Key="{x:Type arcm:Page}" TargetType="arcm:Page">
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arcm:Page">
-                <Grid>
+                <Grid Name="PART_Root">
                 <!-- PART_Safe: Page.cs sets its padding to the safe area, or to the keyboard's height while it is up. -->
                 <Border Name="PART_Safe"
                         Background="{TemplateBinding Background}"

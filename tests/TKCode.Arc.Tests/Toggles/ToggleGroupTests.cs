@@ -238,7 +238,7 @@ public class ToggleGroupTests
         var options = new[]
         {
             new ToggleGroupOption("a", "A"),
-            new ToggleGroupOption("b", "B") { IsDisabled = true },
+            new ToggleGroupOption("b", "B") { IsEnabled = false },
             new ToggleGroupOption("c", "C"),
         };
         var group = new ToggleGroup { Label = "Style", ItemsSource = options };
@@ -468,7 +468,7 @@ public class ToggleGroupTests
         try
         {
             option.Label = "Renamed";
-            option.IsDisabled = true;
+            option.IsEnabled = false;
             Dispatcher.UIThread.RunJobs();
             Item(group, 0).Content.ShouldBe("Renamed");
             Item(group, 0).IsEnabled.ShouldBeFalse();

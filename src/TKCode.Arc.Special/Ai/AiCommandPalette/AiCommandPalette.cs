@@ -162,8 +162,13 @@ public partial class AiCommandPalette : TemplatedControl
         AvaloniaProperty.Register<AiCommandPalette, AiCommandPaletteLabels>(nameof(Labels), AiCommandPaletteLabels.Default);
 
     /// <summary>Raised when a page or action is chosen with Enter or a click. Close your dialog or navigate here. Bubbles.</summary>
+    public static readonly RoutedEvent<AiCommandPaletteItemEventArgs> ItemInvokedEvent =
+        RoutedEvent.Register<AiCommandPalette, AiCommandPaletteItemEventArgs>(nameof(ItemInvoked), RoutingStrategies.Bubble);
+
+    /// <summary>The former name of <see cref="ItemInvokedEvent"/>; it is raised together with it.</summary>
+    [Obsolete("Use ItemInvoked instead (deprecated in 1.1.0). It is raised together with ItemInvoked.")]
     public static readonly RoutedEvent<AiCommandPaletteItemEventArgs> ItemSelectedEvent =
-        RoutedEvent.Register<AiCommandPalette, AiCommandPaletteItemEventArgs>(nameof(ItemSelected), RoutingStrategies.Bubble);
+        RoutedEvent.Register<AiCommandPalette, AiCommandPaletteItemEventArgs>("ItemSelected", RoutingStrategies.Bubble);
 
     /// <summary>Raised after a suggested action finishes, with the label it ended on ("Created ENG-2481"). Bubbles.</summary>
     public static readonly RoutedEvent<AiCommandPaletteActionEventArgs> ActionCompletedEvent =
@@ -227,11 +232,21 @@ public partial class AiCommandPalette : TemplatedControl
     [Content]
     public AvaloniaList<AiCommandPaletteItem> Items { get; } = [];
 
+    /// <inheritdoc cref="ItemInvokedEvent"/>
+    public event EventHandler<AiCommandPaletteItemEventArgs>? ItemInvoked
+    {
+        add => AddHandler(ItemInvokedEvent, value);
+        remove => RemoveHandler(ItemInvokedEvent, value);
+    }
+
     /// <inheritdoc cref="ItemSelectedEvent"/>
+    [Obsolete("Use ItemInvoked instead (deprecated in 1.1.0). It is raised together with ItemInvoked.")]
     public event EventHandler<AiCommandPaletteItemEventArgs>? ItemSelected
     {
+#pragma warning disable CS0618 // the alias adds its handlers to the event it stands for
         add => AddHandler(ItemSelectedEvent, value);
         remove => RemoveHandler(ItemSelectedEvent, value);
+#pragma warning restore CS0618
     }
 
     /// <inheritdoc cref="ActionCompletedEvent"/>
@@ -934,7 +949,10 @@ public partial class AiCommandPalette : TemplatedControl
 
     private void SelectItem(AiCommandPaletteItem item)
     {
+        RaiseEvent(new AiCommandPaletteItemEventArgs(ItemInvokedEvent, item));
+#pragma warning disable CS0618 // the former name keeps being raised until a major version removes it
         RaiseEvent(new AiCommandPaletteItemEventArgs(ItemSelectedEvent, item));
+#pragma warning restore CS0618
         var parameter = item.CommandParameter ?? item;
         if (item.Command is { } command && command.CanExecute(parameter))
         {

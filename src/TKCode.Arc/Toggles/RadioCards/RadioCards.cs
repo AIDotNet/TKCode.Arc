@@ -89,6 +89,7 @@ public class RadioCards : SelectingItemsControl
 
     static RadioCards()
     {
+        SelectionDataValidation.Enable<RadioCards>();
         FocusableProperty.OverrideDefaultValue<RadioCards>(false);
         KeyboardNavigation.TabNavigationProperty.OverrideDefaultValue<RadioCards>(KeyboardNavigationMode.Once);
         AffectsMeasure<RadioCards>(LayoutProperty, MinColumnWidthProperty);
@@ -134,7 +135,8 @@ public class RadioCards : SelectingItemsControl
                 var icon => icon
             };
             card.DisabledReason = option.DisabledReason;
-            card.IsEnabled = !option.IsDisabled;
+            card.IsEnabled = option.IsEnabled;
+            card.IsVisible = option.IsVisible;
         }
     }
 

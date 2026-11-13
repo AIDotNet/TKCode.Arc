@@ -10,7 +10,7 @@
                     <arc:Field Name="PART_Field"
                                Label="{TemplateBinding Label}"
                                Description="{TemplateBinding Description}"
-                               ErrorMessage="{TemplateBinding ErrorMessage}"
+                               ErrorMessage="{TemplateBinding EffectiveErrorMessage}"
                                IsLabelVisible="{TemplateBinding IsLabelVisible}">
                         <arc:FieldFrame Name="PART_Frame"
                                         Cursor="IBeam"

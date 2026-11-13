@@ -70,7 +70,7 @@ public class MoneyInput : FieldTextBox
 
     /// <summary>The amount in major units (12.5 for $12.50); null is empty. Two-way by default.</summary>
     public static readonly StyledProperty<decimal?> ValueProperty =
-        AvaloniaProperty.Register<MoneyInput, decimal?>(nameof(Value), defaultBindingMode: BindingMode.TwoWay);
+        AvaloniaProperty.Register<MoneyInput, decimal?>(nameof(Value), defaultBindingMode: BindingMode.TwoWay, enableDataValidation: true);
 
     /// <summary>ISO 4217 code of the amount ("USD" by default). Two-way by default.</summary>
     public static readonly StyledProperty<string> CurrencyProperty =
@@ -803,7 +803,7 @@ public class MoneyInput : FieldTextBox
         {
             parts.Add(message);
         }
-        AutomationProperties.SetHelpText(this, string.Join(" ", parts));
+        FormFieldHost.SetHelpText(this, string.Join(" ", parts));
     }
 
     // ------------------------------------------------------------------ editing model (Arc applyRaw / setAmount / nudge)

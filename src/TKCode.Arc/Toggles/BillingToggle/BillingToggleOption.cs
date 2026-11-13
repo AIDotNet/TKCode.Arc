@@ -24,6 +24,17 @@ public class BillingToggleOption : AvaloniaObject, ITogglesValueSource
     public static readonly StyledProperty<string?> ActiveBadgeProperty =
         AvaloniaProperty.Register<BillingToggleOption, string?>(nameof(ActiveBadge));
 
+    /// <summary>Whether the period can be chosen. A disabled period is dimmed and skipped by the arrow keys.</summary>
+    public static readonly StyledProperty<bool> IsEnabledProperty =
+        AvaloniaProperty.Register<BillingToggleOption, bool>(nameof(IsEnabled), true);
+
+    /// <summary>
+    /// Whether the period is shown. A hidden period takes no room and is skipped by the arrow keys; it stays in the
+    /// toggle's items, so when it is the selected one the selection is kept and only the indicator is not drawn.
+    /// </summary>
+    public static readonly StyledProperty<bool> IsVisibleProperty =
+        AvaloniaProperty.Register<BillingToggleOption, bool>(nameof(IsVisible), true);
+
     public BillingToggleOption()
     {
     }
@@ -47,6 +58,12 @@ public class BillingToggleOption : AvaloniaObject, ITogglesValueSource
 
     /// <inheritdoc cref="ActiveBadgeProperty"/>
     public string? ActiveBadge { get => GetValue(ActiveBadgeProperty); set => SetValue(ActiveBadgeProperty, value); }
+
+    /// <inheritdoc cref="IsEnabledProperty"/>
+    public bool IsEnabled { get => GetValue(IsEnabledProperty); set => SetValue(IsEnabledProperty, value); }
+
+    /// <inheritdoc cref="IsVisibleProperty"/>
+    public bool IsVisible { get => GetValue(IsVisibleProperty); set => SetValue(IsVisibleProperty, value); }
 
     object? ITogglesValueSource.ToggleValue => Value;
 

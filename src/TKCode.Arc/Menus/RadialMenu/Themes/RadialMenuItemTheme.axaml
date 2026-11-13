@@ -1,0 +1,81 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.RadialMenuItemTheme">
+    <ControlTheme x:Key="{x:Type arc:RadialMenuItem}" TargetType="arc:RadialMenuItem">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="{arc:RadialMenuItemTokenResource SectorFill}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep10}" />
+        <Setter Property="Padding" Value="{arc:RadialMenuItemTokenResource ContentPadding}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <!-- The item covers the whole ring square, so its centre is the ring's: a scale pushes the sector outward. -->
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:RadialMenuItem">
+                <StackPanel Name="PART_Content"
+                            Spacing="{arc:RadialMenuItemTokenResource ContentSpacing}">
+                    <Panel Name="PART_IconSlot"
+                           HorizontalAlignment="Center"
+                           IsVisible="{TemplateBinding HasIcon}">
+                        <arc:ArcGlyph Name="PART_Icon"
+                                      Data="{TemplateBinding IconGeometry}"
+                                      Size="{arc:RadialMenuItemTokenResource IconSize}"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                        <ContentPresenter Name="PART_IconContent"
+                                          Content="{TemplateBinding IconContent}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                    </Panel>
+                    <ContentPresenter Name="PART_Header"
+                                      Content="{TemplateBinding Header}"
+                                      ContentTemplate="{TemplateBinding EffectiveHeaderTemplate}"
+                                      IsVisible="{TemplateBinding ShowsHeader}"
+                                      HorizontalAlignment="Center"
+                                      HorizontalContentAlignment="Center" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:highlighted">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        </Style>
+        <Style Selector="^:disabled /template/ StackPanel#PART_Content">
+            <Setter Property="Opacity" Value="{arc:RadialMenuItemTokenResource DisabledOpacity}" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="RenderTransform" Value="scale(1)" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="Foreground" />
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                </Transitions>
+            </Setter>
+            <!-- The highlighted sector steps out toward the pointer (Full motion only; Reduced and Off keep it still). -->
+            <Style Selector="^:highlighted">
+                <Setter Property="RenderTransform" Value="scale(1.04)" />
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

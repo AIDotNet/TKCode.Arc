@@ -181,7 +181,7 @@ public class RadioGroupTests
     {
         var group = new RadioGroup
         {
-            ItemsSource = new[] { new RadioOption("a", "A"), new RadioOption("b", "B") { IsDisabled = true }, new RadioOption("c", "C") },
+            ItemsSource = new[] { new RadioOption("a", "A"), new RadioOption("b", "B") { IsEnabled = false }, new RadioOption("c", "C") },
             SelectedValue = "a"
         };
         var window = TestHelpers.Show(group);

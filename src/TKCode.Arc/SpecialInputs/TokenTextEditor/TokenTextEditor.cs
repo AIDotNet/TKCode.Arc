@@ -87,7 +87,8 @@ public class TokenTextEditor : TemplatedControl
 
     /// <summary>Defines the <see cref="IsReadOnly"/> property.</summary>
     public static readonly StyledProperty<bool> IsReadOnlyProperty =
-        AvaloniaProperty.Register<TokenTextEditor, bool>(nameof(IsReadOnly));
+        AvaloniaProperty.Register<TokenTextEditor, bool>(nameof(IsReadOnly),
+            coerce: (o, v) => v || o.GetValue(Form.IsReadOnlyProperty));
 
     /// <summary>Defines the <see cref="MinLines"/> property.</summary>
     public static readonly StyledProperty<int> MinLinesProperty =
@@ -782,6 +783,11 @@ public class TokenTextEditor : TemplatedControl
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
+        if (change.Property == Form.IsReadOnlyProperty)
+        {
+            // Form.IsReadOnly (inherited) makes the editor read-only with its form or section.
+            CoerceValue(IsReadOnlyProperty);
+        }
         if (change.Property == TextProperty)
         {
             if (!_settingText)

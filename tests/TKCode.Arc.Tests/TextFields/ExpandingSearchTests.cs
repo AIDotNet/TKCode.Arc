@@ -71,7 +71,11 @@ public class ExpandingSearchTests
         try
         {
             ExpandingSearchItem? chosen = null;
-            search.ItemSelected += (_, e) => chosen = e.Item;
+            search.ItemInvoked += (_, e) => chosen = e.Item;
+            ExpandingSearchItem? chosenByOldName = null;
+#pragma warning disable CS0618 // the former name must keep working until a major version removes it
+            search.ItemSelected += (_, e) => chosenByOldName = e.Item;
+#pragma warning restore CS0618
             search.Expand();
             Dispatcher.UIThread.RunJobs();
             window.KeyTextInput("report");
@@ -86,6 +90,7 @@ public class ExpandingSearchTests
             Dispatcher.UIThread.RunJobs();
             chosen.ShouldNotBeNull();
             chosen!.Id.ShouldBe("auto");
+            chosenByOldName.ShouldBeSameAs(chosen);
             search.IsExpanded.ShouldBeFalse();
             search.IsPanelOpen.ShouldBeFalse();
             search.Query.ShouldBe(string.Empty);

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="2.1" srcLang="en-US" trgLang="zh-CN" xmlns="urn:oasis:names:tc:xliff:document:2.0">
+  <file id="TKCode.Arc.Localization.FormLangResourceKind">
+    <unit id="Optional">
+      <segment>
+        <source>Optional</source>
+        <target state="translated">选填</target>
+      </segment>
+    </unit>
+    <unit id="Validating">
+      <segment>
+        <source>Checking…</source>
+        <target state="translated">正在检查…</target>
+      </segment>
+    </unit>
+    <unit id="InvalidSummaryOne">
+      <segment>
+        <source>1 field needs attention</source>
+        <target state="translated">有 1 个字段需要处理</target>
+      </segment>
+    </unit>
+    <unit id="InvalidSummaryMany">
+      <segment>
+        <source>{0} fields need attention</source>
+        <target state="translated">有 {0} 个字段需要处理</target>
+      </segment>
+    </unit>
+  </file>
+</xliff>

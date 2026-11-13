@@ -237,4 +237,34 @@ public class ElasticSliderTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void Header_Row_And_Its_Gap_Leave_The_Layout_Without_A_Label_And_A_Readout()
+    {
+        // The follow-up to issue #101: the empty header kept its line height and the row gap above the control row.
+        var (slider, window) = Show(new ElasticSlider { Value = 40, IsValueVisible = false });
+        try
+        {
+            var header = TestHelpers.Descendant<DockPanel>(slider, "PART_Header");
+            header.IsVisible.ShouldBeFalse();
+            slider.Classes.Contains(ElasticSlider.HeaderlessPseudoClass).ShouldBeTrue();
+            slider.Bounds.Height.ShouldBe(slider.Rail!.Bounds.Height, 0.01);
+
+            slider.Label = "Width";
+            Dispatcher.UIThread.RunJobs();
+            header.IsVisible.ShouldBeTrue();
+            slider.Classes.Contains(ElasticSlider.HeaderlessPseudoClass).ShouldBeFalse();
+            // The label row plus the gap to the control row.
+            slider.Bounds.Height.ShouldBeGreaterThan(slider.Rail!.Bounds.Height + 8);
+
+            slider.Label = null;
+            slider.IsValueVisible = true;
+            Dispatcher.UIThread.RunJobs();
+            header.IsVisible.ShouldBeTrue();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

@@ -1,0 +1,186 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.Mobile.RadioCardsTheme">
+
+    <!-- Mobile radio cards: the cards in equal-width columns (RadioCardsPanel) and one ControlOn ring above them that
+         glides to the selected card (P7, drawn in render, never relayouts). -->
+    <ControlTheme x:Key="{x:Type arcm:RadioCards}" TargetType="arcm:RadioCards">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arcm:RadioCards">
+                <Panel>
+                    <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
+                    <arc:GlidingIndicator Name="PART_Ring"
+                                          Stroke="{arc:ArcDesignTokenResource ControlOn}"
+                                          StrokeThickness="{arcm:RadioCardsTokenResource RingThickness}"
+                                          CornerRadius="{arc:ArcDesignTokenResource RadiusStep15}"
+                                          IsHitTestVisible="False" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+                <arcm:RadioCardsPanel />
+            </ItemsPanelTemplate>
+        </Setter>
+        <Setter Property="ColumnGap" Value="{arcm:RadioCardsTokenResource ColumnGap}" />
+        <Setter Property="RowGap" Value="{arcm:RadioCardsTokenResource RowGap}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+    </ControlTheme>
+
+    <!-- One card: a Surface card with a Border outline and a 16 radius; the icon and a 22px radio indicator (like arcm:Radio)
+         in the first row, the label and the description under them. A finger shades it with SurfaceMuted and, with full
+         motion, presses it to 0.97; no hover state. The selected card's indicator takes ControlOn and its dot springs in. -->
+    <ControlTheme x:Key="{x:Type arcm:RadioCard}" TargetType="arcm:RadioCard">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arcm:RadioCard">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep16}"
+                            Padding="{TemplateBinding Padding}">
+                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto">
+                            <ContentPresenter Name="PART_Icon"
+                                              Grid.Row="0"
+                                              Grid.Column="0"
+                                              IsVisible="False"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="Center" />
+                            <Panel Name="PART_IndicatorHost"
+                                   Grid.Row="0"
+                                   Grid.Column="1"
+                                   Width="{arcm:RadioCardTokenResource IndicatorSize}"
+                                   Height="{arcm:RadioCardTokenResource IndicatorSize}"
+                                   Margin="{arcm:RadioCardTokenResource IndicatorMargin}"
+                                   VerticalAlignment="Top">
+                                <Border Name="PART_Indicator"
+                                        Background="Transparent"
+                                        BorderThickness="{arcm:RadioCardTokenResource IndicatorBorderWidth}"
+                                        CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" />
+                                <Border Name="PART_Dot"
+                                        Width="{arcm:RadioCardTokenResource DotSize}"
+                                        Height="{arcm:RadioCardTokenResource DotSize}"
+                                        Background="{arc:ArcDesignTokenResource ControlOn}"
+                                        CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                        RenderTransformOrigin="50%,50%"
+                                        RenderTransform="scale(0.2)"
+                                        Opacity="0"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center" />
+                            </Panel>
+                            <!-- With an icon the label and description span the card under the icon row; without one the
+                                 label shares the first row with the indicator (styles below). -->
+                            <ContentPresenter Name="PART_ContentPresenter"
+                                              Grid.Row="1"
+                                              Grid.Column="0"
+                                              Grid.ColumnSpan="2"
+                                              Content="{TemplateBinding Content}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              TextWrapping="Wrap"
+                                              FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                            <TextBlock Name="PART_Description"
+                                       Grid.Row="2"
+                                       Grid.Column="0"
+                                       Grid.ColumnSpan="2"
+                                       Text="{TemplateBinding Description}"
+                                       IsVisible="{TemplateBinding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                       Margin="{arcm:RadioCardTokenResource DescriptionMargin}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                       TextWrapping="Wrap" />
+                        </Grid>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Padding" Value="{arcm:RadioCardTokenResource CardPadding}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Top" />
+        <Setter Property="RenderTransform" Value="scale(1)" />
+
+        <!-- The indicator's outline is a style, not a template value, so the selected state can change it. -->
+        <Style Selector="^ /template/ Border#PART_Indicator">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:icon /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Margin" Value="{arcm:RadioCardTokenResource LabelMargin}" />
+        </Style>
+        <Style Selector="^:not(:icon) /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Grid.Row" Value="0" />
+            <Setter Property="Grid.ColumnSpan" Value="1" />
+        </Style>
+        <!-- Without the indicator (RadioCards.ShowIndicator="False") the gliding ring alone marks the selection. -->
+        <Style Selector="^:no-indicator /template/ Panel#PART_IndicatorHost">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+
+        <!-- No :pointerover style on purpose: a finger does not hover. -->
+        <Style Selector="^:selected">
+            <Style Selector="^ /template/ Border#PART_Indicator">
+                <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource ControlOn}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Dot">
+                <Setter Property="Opacity" Value="1" />
+                <Setter Property="RenderTransform" Value="scale(1)" />
+            </Style>
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{arcm:RadioCardTokenResource DisabledOpacity}" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                </Transitions>
+            </Setter>
+            <!-- P1: the press scale exists under full motion only, so reduced motion and Off never leave a card scaled. -->
+            <Style Selector="^:pressed">
+                <Setter Property="RenderTransform" Value="scale(0.97)" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Indicator">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <!-- The dot springs in and out; the spring keeps its speed if the choice flips mid-way. -->
+            <Style Selector="^ /template/ Border#PART_Dot">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

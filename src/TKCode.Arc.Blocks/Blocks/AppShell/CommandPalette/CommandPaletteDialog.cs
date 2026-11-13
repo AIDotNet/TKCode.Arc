@@ -25,7 +25,7 @@ namespace TKCode.Arc;
 /// (Ctrl+K elsewhere) or from a button, and closes it with a key. It renders nothing in place; while
 /// <see cref="IsOpen"/> is true it shows the palette near the top centre of the window over a dimmed scrim.
 /// <code>
-/// &lt;arc:CommandPaletteDialog x:Name="Palette" PlaceholderText="Search project commands" ItemSelected="OnRun"&gt;
+/// &lt;arc:CommandPaletteDialog x:Name="Palette" PlaceholderText="Search project commands" ItemInvoked="OnRun"&gt;
 ///     &lt;arc:CommandPaletteItem Id="share" Label="Share project" Group="Project" Shortcut="S" /&gt;
 /// &lt;/arc:CommandPaletteDialog&gt;
 /// &lt;arc:Button Content="Open" arc:CommandPaletteDialog.Opens="{Binding #Palette}" /&gt;
@@ -136,7 +136,7 @@ public class CommandPaletteDialog : TemplatedControl
     public static readonly StyledProperty<bool> IsShortcutEnabledProperty =
         AvaloniaProperty.Register<CommandPaletteDialog, bool>(nameof(IsShortcutEnabled), true);
 
-    /// <summary>Choosing a command closes the dialog, before <see cref="ItemSelected"/> is raised (default true).</summary>
+    /// <summary>Choosing a command closes the dialog, before <see cref="ItemInvoked"/> is raised (default true).</summary>
     public static readonly StyledProperty<bool> CloseOnSelectProperty =
         AvaloniaProperty.Register<CommandPaletteDialog, bool>(nameof(CloseOnSelect), true);
 
@@ -185,8 +185,13 @@ public class CommandPaletteDialog : TemplatedControl
     /// close, so a handler that opens another dialog finds the focus back on the page; the palette then runs
     /// <see cref="SelectCommand"/> and the command's own <see cref="CommandPaletteItem.Command"/>.
     /// </summary>
+    public static readonly RoutedEvent<CommandPaletteItemSelectedEventArgs> ItemInvokedEvent =
+        RoutedEvent.Register<CommandPaletteDialog, CommandPaletteItemSelectedEventArgs>(nameof(ItemInvoked), RoutingStrategies.Bubble);
+
+    /// <summary>The former name of <see cref="ItemInvokedEvent"/>; it is raised together with it.</summary>
+    [Obsolete("Use ItemInvoked instead (deprecated in 1.1.0). It is raised together with ItemInvoked.")]
     public static readonly RoutedEvent<CommandPaletteItemSelectedEventArgs> ItemSelectedEvent =
-        RoutedEvent.Register<CommandPaletteDialog, CommandPaletteItemSelectedEventArgs>(nameof(ItemSelected), RoutingStrategies.Bubble);
+        RoutedEvent.Register<CommandPaletteDialog, CommandPaletteItemSelectedEventArgs>("ItemSelected", RoutingStrategies.Bubble);
 
     /// <inheritdoc cref="IsOpenProperty"/>
     public bool IsOpen { get => GetValue(IsOpenProperty); set => SetValue(IsOpenProperty, value); }
@@ -298,11 +303,21 @@ public class CommandPaletteDialog : TemplatedControl
     /// <summary>Raised when the dialog closes (the exit may still be playing).</summary>
     public event EventHandler<OverlayClosedEventArgs>? Closed;
 
+    /// <inheritdoc cref="ItemInvokedEvent"/>
+    public event EventHandler<CommandPaletteItemSelectedEventArgs>? ItemInvoked
+    {
+        add => AddHandler(ItemInvokedEvent, value);
+        remove => RemoveHandler(ItemInvokedEvent, value);
+    }
+
     /// <inheritdoc cref="ItemSelectedEvent"/>
+    [Obsolete("Use ItemInvoked instead (deprecated in 1.1.0). It is raised together with ItemInvoked.")]
     public event EventHandler<CommandPaletteItemSelectedEventArgs>? ItemSelected
     {
+#pragma warning disable CS0618 // the alias adds its handlers to the event it stands for
         add => AddHandler(ItemSelectedEvent, value);
         remove => RemoveHandler(ItemSelectedEvent, value);
+#pragma warning restore CS0618
     }
 
     /// <summary>Opens the dialog.</summary>
@@ -517,7 +532,7 @@ public class CommandPaletteDialog : TemplatedControl
         _palette.SetCurrentValue(CommandPalette.QueryProperty, Query);
         _palette.PropertyChanged += OnPalettePropertyChanged;
         _palette.ItemsSource = ItemsSource ?? Items;
-        _palette.ItemSelected += OnPaletteItemSelected;
+        _palette.ItemInvoked += OnPaletteItemSelected;
         _palette.CloseRequested += OnPaletteCloseRequested;
 
         _frame = new CommandPaletteFrame { PanelWidth = PanelWidth, TopRatio = PanelTopRatio };
@@ -646,7 +661,10 @@ public class CommandPaletteDialog : TemplatedControl
         {
             RequestClose(DismissReason.Action);
         }
+        RaiseEvent(new CommandPaletteItemSelectedEventArgs(ItemInvokedEvent, e.Item));
+#pragma warning disable CS0618 // the former name keeps being raised until a major version removes it
         RaiseEvent(new CommandPaletteItemSelectedEventArgs(ItemSelectedEvent, e.Item));
+#pragma warning restore CS0618
     }
 
     private void OnPaletteCloseRequested(object? sender, CommandPaletteCloseRequestedEventArgs e)

@@ -300,7 +300,7 @@ public partial class SiteHeader
         {
             return;
         }
-        var buttons = _resolved.Select(i => _buttons.GetValueOrDefault(i.Value)).Where(b => b is not null).Cast<SiteNavButton>().ToList();
+        var buttons = _resolved.Select(i => _buttons.GetValueOrDefault(i.Value)).Where(b => b is { IsEnabled: true }).Cast<SiteNavButton>().ToList();
         var index = buttons.IndexOf(nav);
         if (index < 0 || buttons.Count == 0)
         {

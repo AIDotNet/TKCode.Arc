@@ -32,7 +32,7 @@ terminal, a PDF viewer, and audio and video playback.
 |---|---|
 | `TKCode.Arc` | The 112 components in 22 groups, organized like Arc's sidebar, plus layout panels and extras such as `Markdown` (with streaming), `PropertyGrid`, `Cascader` and `TransferBox`. |
 | `TKCode.Arc.Blocks` | Page-level compositions: AI chat, pricing and checkout, billing, dashboards, settings, team management and more. |
-| `TKCode.Arc.AdvancedCharts` | `DataGrid` (range selection, inline editing, fill handle, clipboard, grouping, export), `Sunburst`, `SankeyFlow`, `FunnelChart`, `RadarChart`, `RealtimeStream` and `RaceBarChart`. |
+| `TKCode.Arc.AdvancedCharts` | `DataGrid` (range selection, inline editing, fill handle, clipboard, grouping, export), `Sunburst`, `SankeyFlow`, `FunnelChart`, `RadarChart`, `RealtimeStream`, `RaceBarChart` and `WindRoseChart`. |
 | `TKCode.Arc.Special` | Animated AI explainers, pointer effects, loaders, surfaces and illustrations. |
 | `TKCode.Arc.Mobile` | Touch-first controls with 44px touch targets. |
 

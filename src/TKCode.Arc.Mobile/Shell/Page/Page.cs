@@ -69,6 +69,18 @@ public class Page : ContentControl
     public static readonly AttachedProperty<KeyboardInsetSource?> KeyboardInsetSourceProperty =
         AvaloniaProperty.RegisterAttached<Page, AvaloniaObject, KeyboardInsetSource?>("KeyboardInsetSource", null, true);
 
+    /// <summary>
+    /// The safe area that a control still has to keep clear of, read with <see cref="GetInheritedSafeArea"/> (it is
+    /// inherited). A page sets it to its <see cref="SafeArea"/>, so an overlay in <see cref="Overlay"/> (a
+    /// <see cref="Sheet"/>, an <see cref="ActionSheet"/>, the sheet of a <see cref="Picker"/>) keeps clear of the home
+    /// indicator by itself. It is zero inside the header, the content and the footer, which the page already insets.
+    /// </summary>
+    public static readonly AttachedProperty<Thickness> InheritedSafeAreaProperty =
+        AvaloniaProperty.RegisterAttached<Page, AvaloniaObject, Thickness>("InheritedSafeArea", default, true);
+
+    /// <summary>Gets the safe area <paramref name="element"/> still has to keep clear of, as the nearest <see cref="Page"/> above it reports.</summary>
+    public static Thickness GetInheritedSafeArea(AvaloniaObject element) => element.GetValue(InheritedSafeAreaProperty);
+
     /// <summary>Gets the height the soft keyboard covers for <paramref name="element"/>, as the nearest <see cref="Page"/> above it reports.</summary>
     public static double GetKeyboardInset(AvaloniaObject element) => element.GetValue(KeyboardInsetProperty);
 
@@ -85,6 +97,8 @@ public class Page : ContentControl
     }
 
     private ScrollViewer? _scroller;
+    private Panel? _root;
+    private readonly List<Control> _hosted = [];
     private Border? _safe;
     private Control? _footer;
     private MotionValue<double>? _shown;
@@ -157,6 +171,23 @@ public class Page : ContentControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
+        var hosted = _hosted.ToArray();
+        foreach (var overlay in hosted)
+        {
+            (overlay.Parent as Panel)?.Children.Remove(overlay);
+        }
+        _root = e.NameScope.Find<Panel>("PART_Root");
+        if (_root is not null)
+        {
+            foreach (var overlay in hosted)
+            {
+                _root.Children.Add(overlay);
+            }
+        }
+        else
+        {
+            _hosted.Clear();
+        }
         if (_scroller is not null)
         {
             _scroller.ScrollChanged -= OnScrollChanged;
@@ -167,6 +198,8 @@ public class Page : ContentControl
             _scroller.ScrollChanged += OnScrollChanged;
         }
         _safe = e.NameScope.Find<Border>("PART_Safe");
+        // The header, content and footer are already inside the safe area: nothing in them needs to keep clear of it again.
+        _safe?.SetValue(InheritedSafeAreaProperty, default(Thickness));
         if (_footer is not null)
         {
             _footer.SizeChanged -= OnFooterSizeChanged;
@@ -205,6 +238,7 @@ public class Page : ContentControl
         }
         else if (change.Property == SafeAreaProperty)
         {
+            SetValue(InheritedSafeAreaProperty, SafeArea);
             ApplyInsets(_shown?.Value ?? 0);
         }
         else if (change.Property == KeyboardInsetSourceProperty && _topLevel is not null)
@@ -221,6 +255,34 @@ public class Page : ContentControl
     {
         base.OnGotFocus(e);
         ScrollFocusedIntoView();
+    }
+
+    /// <summary>
+    /// Shows <paramref name="overlay"/> over the whole page, above <see cref="Overlay"/>, like an overlay placed there (a
+    /// <see cref="Picker"/> mounts its sheet this way). False when the page's template has no host for it.
+    /// </summary>
+    internal bool HostOverlay(Control overlay)
+    {
+        if (_root is null)
+        {
+            return false;
+        }
+        if (!_hosted.Contains(overlay))
+        {
+            (overlay.Parent as Panel)?.Children.Remove(overlay);
+            _hosted.Add(overlay);
+            _root.Children.Add(overlay);
+        }
+        return true;
+    }
+
+    /// <summary>Takes an overlay shown with <see cref="HostOverlay"/> off the page.</summary>
+    internal void UnhostOverlay(Control overlay)
+    {
+        if (_hosted.Remove(overlay))
+        {
+            (overlay.Parent as Panel)?.Children.Remove(overlay);
+        }
     }
 
     /// <summary>Follows the keyboard inset source of the tree, or else the platform's input pane.</summary>

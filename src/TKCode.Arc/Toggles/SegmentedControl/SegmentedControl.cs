@@ -71,6 +71,7 @@ public class SegmentedControl : SelectingItemsControl
 
     static SegmentedControl()
     {
+        SelectionDataValidation.Enable<SegmentedControl>();
         FocusableProperty.OverrideDefaultValue<SegmentedControl>(false);
         KeyboardNavigation.TabNavigationProperty.OverrideDefaultValue<SegmentedControl>(KeyboardNavigationMode.Once);
     }
@@ -105,7 +106,8 @@ public class SegmentedControl : SelectingItemsControl
         {
             segment.Content = option.Label ?? option.Value?.ToString();
             segment.Accessory = option.Accessory;
-            segment.IsEnabled = !option.IsDisabled;
+            segment.IsEnabled = option.IsEnabled;
+            segment.IsVisible = option.IsVisible;
         }
     }
 

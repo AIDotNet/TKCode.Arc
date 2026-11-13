@@ -70,7 +70,7 @@ public class TagInput : TemplatedControl
     /// <summary>The tags (two-way). Never null: setting null reads back as an empty list.</summary>
     public static readonly StyledProperty<IReadOnlyList<string>> ValueProperty =
         AvaloniaProperty.Register<TagInput, IReadOnlyList<string>>(nameof(Value), Array.Empty<string>(),
-            defaultBindingMode: BindingMode.TwoWay, coerce: CoerceTags);
+            defaultBindingMode: BindingMode.TwoWay, coerce: CoerceTags, enableDataValidation: true);
 
     /// <summary>The visible label (Arc: required). Also the accessible name of the editor.</summary>
     public static readonly StyledProperty<string?> LabelProperty =
@@ -90,7 +90,35 @@ public class TagInput : TemplatedControl
 
     /// <summary>When false the label is hidden visually but still names the editor.</summary>
     public static readonly StyledProperty<bool> IsLabelVisibleProperty =
-        AvaloniaProperty.Register<TagInput, bool>(nameof(IsLabelVisible), true);
+        AvaloniaProperty.Register<TagInput, bool>(nameof(IsLabelVisible), true, coerce: (o, v) => v && !FormFieldHost.IsHosted((TagInput)o));
+
+    /// <summary>The error actually shown: <see cref="ErrorMessage"/>, else the validation message of the <see cref="Value"/> binding.</summary>
+    public static readonly DirectProperty<TagInput, string?> EffectiveErrorMessageProperty =
+        AvaloniaProperty.RegisterDirect<TagInput, string?>(nameof(EffectiveErrorMessage), o => o.EffectiveErrorMessage);
+
+    private string? _effectiveError;
+    private string? _validationMessage;
+
+    /// <summary>The error actually shown.</summary>
+    public string? EffectiveErrorMessage
+    {
+        get => _effectiveError;
+        private set => SetAndRaise(EffectiveErrorMessageProperty, ref _effectiveError, value);
+    }
+
+    protected override void UpdateDataValidation(AvaloniaProperty property, BindingValueType state, Exception? error)
+    {
+        base.UpdateDataValidation(property, state, error);
+        _validationMessage = FormFieldHost.ValidationMessage(state, error);
+        UpdateEffectiveError();
+    }
+
+    private void UpdateEffectiveError()
+    {
+        EffectiveErrorMessage = FormFieldHost.EffectiveError(this, ErrorMessage, _validationMessage);
+        CoerceValue(IsInvalidProperty);
+        UpdateEditorAutomation();
+    }
 
     /// <summary>Invalid state (danger border). Always true while <see cref="ErrorMessage"/> is not empty.</summary>
     public static readonly StyledProperty<bool> IsInvalidProperty =
@@ -282,8 +310,12 @@ public class TagInput : TemplatedControl
         }
         else if (change.Property == ErrorMessageProperty)
         {
-            CoerceValue(IsInvalidProperty);
-            UpdateEditorAutomation();
+            UpdateEffectiveError();
+        }
+        else if (change.Property == FormFieldHost.StateProperty)
+        {
+            CoerceValue(IsLabelVisibleProperty);
+            UpdateEffectiveError();
         }
         else if (change.Property == IsInvalidProperty)
         {
@@ -325,7 +357,7 @@ public class TagInput : TemplatedControl
         }
         var editor = _panel.Editor;
         AutomationProperties.SetName(editor, Label ?? string.Empty);
-        AutomationProperties.SetHelpText(editor, FieldText.HelpText(Description, ErrorMessage));
+        FormFieldHost.SetHelpText(editor, FieldText.HelpText(Description, EffectiveErrorMessage));
     }
 
     private void UpdatePlaceholder(bool animate)
@@ -689,8 +721,11 @@ public class TagInput : TemplatedControl
     private static IReadOnlyList<string> CoerceTags(AvaloniaObject target, IReadOnlyList<string> value) =>
         value ?? Array.Empty<string>();
 
-    private static bool CoerceIsInvalid(AvaloniaObject target, bool value) =>
-        value || !string.IsNullOrEmpty(((TagInput)target).ErrorMessage);
+    private static bool CoerceIsInvalid(AvaloniaObject target, bool value)
+    {
+        var tags = (TagInput)target;
+        return value || FormFieldHost.IsInvalid(FormFieldHost.StateOf(tags), !string.IsNullOrEmpty(tags.ErrorMessage), tags._validationMessage is not null);
+    }
 
     private static int? CoerceMaxTags(AvaloniaObject target, int? value) => value is < 0 ? 0 : value;
 }

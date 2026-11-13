@@ -138,6 +138,15 @@ public sealed class SiteHeaderItem : SiteHeaderData
     /// <summary>Identifies <see cref="Feature"/>.</summary>
     public static readonly StyledProperty<SiteHeaderFeature?> FeatureProperty = AvaloniaProperty.Register<SiteHeaderItem, SiteHeaderFeature?>(nameof(Feature));
 
+    /// <summary>Whether the item can be chosen. A disabled item is dimmed, opens no panel and is skipped by the arrow keys.</summary>
+    public static readonly StyledProperty<bool> IsEnabledProperty = AvaloniaProperty.Register<SiteHeaderItem, bool>(nameof(IsEnabled), true);
+
+    /// <summary>
+    /// Whether the item is shown, in the bar and in the menu sheet. A hidden item takes no room and is skipped by the arrow
+    /// keys; it stays in the items, so <c>Current</c> may still name it.
+    /// </summary>
+    public static readonly StyledProperty<bool> IsVisibleProperty = AvaloniaProperty.Register<SiteHeaderItem, bool>(nameof(IsVisible), true);
+
     private readonly AvaloniaList<SiteHeaderLink> _links = new();
 
     /// <summary>Creates an empty item.</summary>
@@ -178,6 +187,12 @@ public sealed class SiteHeaderItem : SiteHeaderData
 
     /// <summary>The card beside the links of the panel.</summary>
     public SiteHeaderFeature? Feature { get => GetValue(FeatureProperty); set => SetValue(FeatureProperty, value); }
+
+    /// <inheritdoc cref="IsEnabledProperty"/>
+    public bool IsEnabled { get => GetValue(IsEnabledProperty); set => SetValue(IsEnabledProperty, value); }
+
+    /// <inheritdoc cref="IsVisibleProperty"/>
+    public bool IsVisible { get => GetValue(IsVisibleProperty); set => SetValue(IsVisibleProperty, value); }
 
     /// <inheritdoc />
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)

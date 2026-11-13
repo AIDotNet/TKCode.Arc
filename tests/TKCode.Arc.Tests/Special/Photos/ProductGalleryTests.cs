@@ -212,4 +212,29 @@ public class ProductGalleryTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void SelectionChanged_Reports_The_Old_And_New_Index()
+    {
+        var gallery = Gallery();
+        var window = TestHelpers.Show(gallery);
+        try
+        {
+            var changes = new List<PhotosSelectionChangedEventArgs>();
+            gallery.SelectionChanged += (_, e) => changes.Add(e);
+            gallery.SelectedIndex = 2;
+            changes.Count.ShouldBe(1);
+            changes[0].OldIndex.ShouldBe(0);
+            changes[0].NewIndex.ShouldBe(2);
+            gallery.SelectNext();
+            changes.Count.ShouldBe(2);
+            changes[1].NewIndex.ShouldBe(3);
+            gallery.SelectedIndex = 3;
+            changes.Count.ShouldBe(2);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

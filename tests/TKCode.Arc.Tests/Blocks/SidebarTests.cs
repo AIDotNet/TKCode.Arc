@@ -1565,4 +1565,210 @@ public class SidebarTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void SelectionChanged_Reports_Each_Change_Of_The_Selected_Page_But_Not_A_Repeated_Choice()
+    {
+        var s = new Sample();
+        var changes = new List<SidebarSelectionChangedEventArgs>();
+        var invoked = 0;
+        s.Sidebar.SelectionChanged += (_, e) => changes.Add(e);
+        s.Sidebar.ItemInvoked += (_, _) => invoked++;
+        var window = Show(s.Sidebar);
+        try
+        {
+            changes.ShouldBeEmpty();
+
+            // Choosing a page: the old page is null, the key follows the page.
+            s.Sidebar.OnViewClicked(Row(s.Sidebar, s.Inbox).Node);
+            changes.Count.ShouldBe(1);
+            changes[0].OldItem.ShouldBeNull();
+            changes[0].NewItem.ShouldBe(s.Inbox);
+            changes[0].OldKey.ShouldBeNull();
+            changes[0].NewKey.ShouldBe("inbox");
+            invoked.ShouldBe(1);
+
+            // Choosing the selected page again is an invocation, not a change.
+            s.Sidebar.OnViewClicked(Row(s.Sidebar, s.Inbox).Node);
+            changes.Count.ShouldBe(1);
+            invoked.ShouldBe(2);
+
+            // A key set in code (or bound to a route) is a change too, and carries both pages.
+            s.Sidebar.SelectedKey = "issues";
+            changes.Count.ShouldBe(2);
+            changes[1].OldItem.ShouldBe(s.Inbox);
+            changes[1].NewItem.ShouldBe(s.Issues);
+            changes[1].OldKey.ShouldBe("inbox");
+            changes[1].NewKey.ShouldBe("issues");
+            invoked.ShouldBe(2);
+
+            s.Sidebar.SelectedItem = s.Home;
+            changes.Count.ShouldBe(3);
+            changes[2].NewKey.ShouldBe("home");
+
+            // Parents and actions are never selected, so nothing changes and nothing is raised.
+            s.Sidebar.SelectedItem = s.Projects;
+            changes.Count.ShouldBe(3);
+
+            // A key that names no page clears the selection.
+            s.Sidebar.SelectedKey = "nowhere";
+            changes.Count.ShouldBe(4);
+            changes[3].OldItem.ShouldBe(s.Home);
+            changes[3].NewItem.ShouldBeNull();
+            changes[3].NewKey.ShouldBeNull();
+            changes[3].RoutedEvent.ShouldBe(Sidebar.SelectionChangedEvent);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void SelectionChanged_Is_Raised_Once_When_A_Key_Set_Before_The_Pages_Finds_Its_Page()
+    {
+        var sidebar = new Sidebar { SelectedKey = "inbox" };
+        var inboxItem = new SidebarItem { Key = "inbox", Label = "Inbox" };
+        var changes = new List<SidebarSelectionChangedEventArgs>();
+        sidebar.SelectionChanged += (_, e) => changes.Add(e);
+        sidebar.Sections.Add(new SidebarSection { Items = { new SidebarItem { Key = "home", Label = "Home" }, inboxItem } });
+        var window = Show(sidebar);
+        try
+        {
+            changes.Count.ShouldBe(1);
+            changes[0].OldItem.ShouldBeNull();
+            changes[0].NewItem.ShouldBe(inboxItem);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Hidden_Page_Takes_No_Room_Leaves_The_Arrow_Keys_And_Keeps_Its_Selection()
+    {
+        var s = new Sample();
+        var window = Show(s.Sidebar);
+        try
+        {
+            s.Inbox.IsVisible.ShouldBeTrue();
+            var all = Navigable(s.Sidebar);
+            var inbox = Row(s.Sidebar, s.Inbox);
+            var issuesTop = Row(s.Sidebar, s.Issues).Bounds.Top;
+            var inboxHeight = inbox.Bounds.Height;
+            inboxHeight.ShouldBe(32);
+
+            s.Inbox.IsVisible = false;
+            window.UpdateLayout();
+            inbox.IsVisible.ShouldBeFalse();
+            Navigable(s.Sidebar).ShouldBe(all.Where(l => l != "Inbox").ToList());
+            // The page below moves up into the freed room.
+            Row(s.Sidebar, s.Issues).Bounds.Top.ShouldBeLessThanOrEqualTo(issuesTop - inboxHeight);
+            s.Inbox.IsVisible = true;
+            window.UpdateLayout();
+            inbox.IsVisible.ShouldBeTrue();
+            Navigable(s.Sidebar).ShouldBe(all);
+            Row(s.Sidebar, s.Issues).Bounds.Top.ShouldBe(issuesTop);
+
+            // The selected page stays selected while hidden; only the block is not drawn.
+            s.Sidebar.SelectedItem = s.Issues;
+            s.Sidebar.MarkerRow.ShouldBe(Row(s.Sidebar, s.Issues));
+            s.Issues.IsVisible = false;
+            s.Sidebar.SelectedItem.ShouldBe(s.Issues);
+            s.Sidebar.SelectedKey.ShouldBe("issues");
+            s.Sidebar.MarkerRow.ShouldBeNull();
+            s.Issues.IsVisible = true;
+            s.Sidebar.MarkerRow.ShouldBe(Row(s.Sidebar, s.Issues));
+
+            // A hidden page of an open parent: the parent does not take the block, the page is just gone.
+            s.Projects.IsExpanded = true;
+            s.Sidebar.SelectedItem = s.Beacon;
+            s.Sidebar.MarkerRow.ShouldBe(Row(s.Sidebar, s.Beacon));
+            s.Beacon.IsVisible = false;
+            Navigable(s.Sidebar).ShouldNotContain("Beacon");
+            Navigable(s.Sidebar).ShouldContain("Atlas");
+            s.Sidebar.SelectedItem.ShouldBe(s.Beacon);
+            s.Sidebar.MarkerRow.ShouldBeNull();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Hidden_Parent_Hides_Its_Pages_And_A_Hidden_Section_Hides_Its_Heading_And_Pages()
+    {
+        var s = new Sample();
+        s.Projects.IsExpanded = true;
+        var window = Show(s.Sidebar);
+        try
+        {
+            Navigable(s.Sidebar).ShouldContain("Cobalt");
+            s.Projects.IsVisible = false;
+            Navigable(s.Sidebar).ShouldNotContain("Projects");
+            Navigable(s.Sidebar).ShouldNotContain("Atlas");
+            Navigable(s.Sidebar).ShouldNotContain("Cobalt");
+            Row(s.Sidebar, s.Projects).IsEffectivelyVisible.ShouldBeFalse();
+            Row(s.Sidebar, s.Atlas).IsEffectivelyVisible.ShouldBeFalse();
+            s.Projects.IsVisible = true;
+            Navigable(s.Sidebar).ShouldContain("Cobalt");
+
+            s.Favorites.IsVisible = false;
+            Navigable(s.Sidebar).ShouldNotContain("Favorites");
+            Navigable(s.Sidebar).ShouldNotContain("Q4 roadmap");
+            s.Sidebar.HeaderOf(s.Favorites).ShouldNotBeNull().IsEffectivelyVisible.ShouldBeFalse();
+            s.Favorites.IsVisible = true;
+            Navigable(s.Sidebar).ShouldContain("Favorites");
+            Navigable(s.Sidebar).ShouldContain("Q4 roadmap");
+
+            // A section whose pages are all hidden has nothing to show, heading included.
+            s.Roadmap.IsVisible = false;
+            s.Archive.IsVisible = false;
+            s.Reviews.IsVisible = false;
+            Navigable(s.Sidebar).ShouldNotContain("Favorites");
+            s.Sidebar.HeaderOf(s.Favorites).ShouldNotBeNull().IsEffectivelyVisible.ShouldBeFalse();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Hidden_Pages_Are_No_Filter_Match_And_Are_Missing_From_The_Rail_Menu()
+    {
+        var s = new Sample();
+        s.Beacon.IsVisible = false;
+        var window = Show(s.Sidebar);
+        try
+        {
+            s.Sidebar.FilterText = "beacon";
+            Navigable(s.Sidebar).ShouldBeEmpty();
+            // A page under a hidden parent is no match either.
+            s.Sidebar.FilterText = string.Empty;
+            s.Projects.IsVisible = false;
+            s.Sidebar.FilterText = "atlas";
+            Navigable(s.Sidebar).ShouldBeEmpty();
+            s.Sidebar.FilterText = string.Empty;
+            s.Projects.IsVisible = true;
+
+            s.Sidebar.IsCollapsed = true;
+            Dispatcher.UIThread.RunJobs();
+            s.Sidebar.Activate(Row(s.Sidebar, s.Projects).Node, NavigationMethod.Pointer);
+            Dispatcher.UIThread.RunJobs();
+            var menu = s.Sidebar.Flyout.ShouldNotBeNull();
+            menu.IsOpen.ShouldBeTrue();
+            menu.Items.OfType<MenuEntry>().Select(e => e.Header).ShouldBe(["Atlas", "Cobalt"]);
+
+            // Hiding a page the open menu lists closes it.
+            s.Cobalt.IsVisible = false;
+            menu.IsOpen.ShouldBeFalse();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

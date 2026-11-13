@@ -239,4 +239,44 @@ public class StepperTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void A_Hidden_Step_Is_Left_Out_And_A_Disabled_Completed_Step_Cannot_Be_Chosen()
+    {
+        var one = new StepperStep("One");
+        var two = new StepperStep("Two");
+        var three = new StepperStep("Three");
+        var stepper = new Stepper { Steps = { one, two, three }, CurrentIndex = 1, IsNavigable = true, Width = 640 };
+        var selected = new List<int>();
+        stepper.StepSelected += (_, e) => selected.Add(e.Index);
+        var window = TestHelpers.Show(stepper);
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            stepper.Items.Count.ShouldBe(3);
+
+            // A hidden step is as if it were not there: CurrentIndex now counts One and Three.
+            two.IsVisible = false;
+            Dispatcher.UIThread.RunJobs();
+            stepper.Items.Select(i => i.Step).ShouldBe([one, three]);
+            two.IsVisible = true;
+            Dispatcher.UIThread.RunJobs();
+            stepper.Items.Select(i => i.Step).ShouldBe([one, two, three]);
+
+            stepper.CurrentIndex = 2;
+            Dispatcher.UIThread.RunJobs();
+            one.IsEnabled = false;
+            stepper.Select(0);
+            selected.ShouldBeEmpty();
+            stepper.CurrentIndex.ShouldBe(2);
+            one.IsEnabled = true;
+            stepper.Select(0);
+            selected.ShouldBe([0]);
+            stepper.CurrentIndex.ShouldBe(0);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

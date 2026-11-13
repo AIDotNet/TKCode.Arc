@@ -2,7 +2,10 @@ using Avalonia;
 
 namespace TKCode.Arc.Mobile;
 
-/// <summary>Geometry of <see cref="ListItem"/>: a 48px row, a 22px icon, a 16px chevron and a hairline separator.</summary>
+/// <summary>
+/// Geometry of <see cref="ListItem"/>: a 48px row, a 22px icon, a 16px chevron and a hairline separator, plus the avatar
+/// sizes for its <see cref="ListItem.Leading"/> slot and for profile rows and headers.
+/// </summary>
 [ControlDesignToken]
 internal sealed class ListItemToken : AbstractControlDesignToken
 {
@@ -27,6 +30,26 @@ internal sealed class ListItemToken : AbstractControlDesignToken
     /// <summary>How far the separator is inset from the row's start: 16.</summary>
     public Thickness SeparatorInset { get; set; }
 
+    // Appended (ListItemTokenKind numbers tokens in declaration order).
+
+    /// <summary>Space after the first column (the icon or the leading content): 12 on the right.</summary>
+    public Thickness LeadingMargin { get; set; }
+
+    /// <summary>Avatar side in a compact row or beside a comment: 32.</summary>
+    public double AvatarSizeSM { get; set; }
+
+    /// <summary>Avatar side in a contact or account row, the usual <see cref="ListItem.Leading"/> avatar: 40.</summary>
+    public double AvatarSizeMD { get; set; }
+
+    /// <summary>Avatar side in a row that leads with a person: 48.</summary>
+    public double AvatarSizeLG { get; set; }
+
+    /// <summary>Avatar side in the profile row at the top of a settings screen: 64.</summary>
+    public double AvatarSizeXL { get; set; }
+
+    /// <summary>Avatar side in a profile header: 88.</summary>
+    public double AvatarSize2XL { get; set; }
+
     public override void CalculateTokenValues(bool isDarkMode)
     {
         base.CalculateTokenValues(isDarkMode);
@@ -37,5 +60,11 @@ internal sealed class ListItemToken : AbstractControlDesignToken
         TrailingMargin = new Thickness(8, 0, 0, 0);
         ChevronExtent = 16;
         SeparatorInset = new Thickness(16, 0, 0, 0);
+        LeadingMargin = new Thickness(0, 0, 12, 0);
+        AvatarSizeSM = 32;
+        AvatarSizeMD = 40;
+        AvatarSizeLG = 48;
+        AvatarSizeXL = 64;
+        AvatarSize2XL = 88;
     }
 }

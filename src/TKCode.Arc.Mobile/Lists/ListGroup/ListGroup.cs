@@ -5,13 +5,14 @@ using Avalonia.Controls.Templates;
 namespace TKCode.Arc.Mobile;
 
 /// <summary>
-/// A card of <see cref="ListItem"/> rows with an optional <see cref="Header"/> above it and <see cref="Footer"/> under it,
-/// the way settings screens group their rows. Put it in a scrolling <see cref="Page"/>.
+/// A card of <see cref="ListItem"/> and <see cref="ListCell"/> rows with an optional <see cref="Header"/> above it and
+/// <see cref="Footer"/> under it, the way settings screens group their rows. Put it in a scrolling <see cref="Page"/>.
 /// <para>
-/// Each data item becomes a <see cref="ListItem"/> row. When the item template's root is itself a
-/// <see cref="ListItem"/>, that row is the container (it is not wrapped in a second row), so its <c>Title</c>,
-/// <c>Subtitle</c>, <c>Command</c> and so on can be bound in the template. A template that returns plain content is
-/// shown inside a row; style that row with a <c>ListItem</c> selector in <c>ListGroup.Styles</c>.
+/// A <see cref="ListItem"/> (or a <see cref="Picker"/>) or a <see cref="ListCell"/> written in the group is the row as it
+/// is. Any other item becomes a <see cref="ListItem"/> row. When the item template's root is itself a
+/// <see cref="ListItem"/> or a <see cref="ListCell"/>, that row is the container (it is not wrapped in a second row), so
+/// its <c>Title</c>, <c>Subtitle</c>, <c>Command</c> and so on can be bound in the template. A template that returns plain
+/// content is shown inside a row; style that row with a <c>ListItem</c> selector in <c>ListGroup.Styles</c>.
 /// </para>
 /// </summary>
 public class ListGroup : ItemsControl
@@ -41,28 +42,37 @@ public class ListGroup : ItemsControl
     protected override Type StyleKeyOverride => typeof(ListGroup);
 
     protected override bool NeedsContainerOverride(object? item, int index, out object? recycleKey)
-        => NeedsContainer<ListItem>(item, out recycleKey);
+    {
+        if (item is ListCell)
+        {
+            // A content cell is a row of its own, like a ListItem.
+            recycleKey = null;
+            return false;
+        }
+        return NeedsContainer<ListItem>(item, out recycleKey);
+    }
 
-    // Rows the item template built itself: they are the container and keep the content the template gave them. Weak,
-    // so a removed row is not kept alive; a recycled one stays a template row and only takes the new item.
-    private readonly System.Runtime.CompilerServices.ConditionalWeakTable<ListItem, object> _templateRows = new();
+    // Rows the item template built itself (a ListItem or a ListCell): they are the container and keep the content the
+    // template gave them. Weak, so a removed row is not kept alive; a recycled one stays a template row and only takes the
+    // new item.
+    private readonly System.Runtime.CompilerServices.ConditionalWeakTable<Control, object> _templateRows = new();
 
     protected override Control CreateContainerForItemOverride(object? item, int index, object? recycleKey)
     {
-        if (this.FindDataTemplate(item, ItemTemplate)?.Build(item) is ListItem row)
+        if (this.FindDataTemplate(item, ItemTemplate)?.Build(item) is { } built and (ListItem or ListCell))
         {
-            _templateRows.AddOrUpdate(row, row);
-            return row;
+            _templateRows.AddOrUpdate(built, built);
+            return built;
         }
         return new ListItem();
     }
 
     protected override void PrepareContainerForItemOverride(Control container, object? item, int index)
     {
-        if (container is ListItem row && _templateRows.TryGetValue(row, out _))
+        if (_templateRows.TryGetValue(container, out _))
         {
             // The base would set the item as the row's content (with the template again): only the bindings need it.
-            row.DataContext = item;
+            container.DataContext = item;
             return;
         }
         base.PrepareContainerForItemOverride(container, item, index);
@@ -70,9 +80,9 @@ public class ListGroup : ItemsControl
 
     protected override void ClearContainerForItemOverride(Control container)
     {
-        if (container is ListItem row && _templateRows.TryGetValue(row, out _))
+        if (_templateRows.TryGetValue(container, out _))
         {
-            row.ClearValue(DataContextProperty);
+            container.ClearValue(DataContextProperty);
             return;
         }
         base.ClearContainerForItemOverride(container);

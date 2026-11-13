@@ -25,6 +25,13 @@ public class SidebarSection : AvaloniaObject
     public static readonly StyledProperty<bool> IsExpandedProperty =
         AvaloniaProperty.Register<SidebarSection, bool>(nameof(IsExpanded), true, defaultBindingMode: BindingMode.TwoWay);
 
+    /// <summary>
+    /// Whether the section (its heading and its pages) is shown. A hidden section takes no room and its pages leave the
+    /// arrow-key order and the filter; its pages stay in <see cref="Items"/>, so a selected page of it stays selected.
+    /// </summary>
+    public static readonly StyledProperty<bool> IsVisibleProperty =
+        AvaloniaProperty.Register<SidebarSection, bool>(nameof(IsVisible), true);
+
     /// <inheritdoc cref="HeaderProperty"/>
     public string? Header
     {
@@ -44,6 +51,13 @@ public class SidebarSection : AvaloniaObject
     {
         get => GetValue(IsExpandedProperty);
         set => SetValue(IsExpandedProperty, value);
+    }
+
+    /// <inheritdoc cref="IsVisibleProperty"/>
+    public bool IsVisible
+    {
+        get => GetValue(IsVisibleProperty);
+        set => SetValue(IsVisibleProperty, value);
     }
 
     /// <summary>The pages of this section, in order (the XAML content).</summary>
@@ -97,6 +111,14 @@ public class SidebarItem : AvaloniaObject
     /// <summary>Whether the page can be chosen. Disabled rows are dimmed and skipped by the arrow keys.</summary>
     public static readonly StyledProperty<bool> IsEnabledProperty =
         AvaloniaProperty.Register<SidebarItem, bool>(nameof(IsEnabled), true);
+
+    /// <summary>
+    /// Whether the page is shown. A hidden page takes no room, is skipped by the arrow keys, typing and the filter, and a
+    /// hidden parent hides its pages with it. It stays in the collection: when it is the selected page,
+    /// <see cref="Sidebar.SelectedItem"/> and <see cref="Sidebar.SelectedKey"/> keep it and only the selection block is not drawn.
+    /// </summary>
+    public static readonly StyledProperty<bool> IsVisibleProperty =
+        AvaloniaProperty.Register<SidebarItem, bool>(nameof(IsVisible), true);
 
     /// <summary>Runs when the page is chosen (with <see cref="CommandParameter"/>).</summary>
     public static readonly StyledProperty<ICommand?> CommandProperty =
@@ -173,6 +195,13 @@ public class SidebarItem : AvaloniaObject
         set => SetValue(IsEnabledProperty, value);
     }
 
+    /// <inheritdoc cref="IsVisibleProperty"/>
+    public bool IsVisible
+    {
+        get => GetValue(IsVisibleProperty);
+        set => SetValue(IsVisibleProperty, value);
+    }
+
     /// <inheritdoc cref="CommandProperty"/>
     public ICommand? Command
     {
@@ -216,6 +245,32 @@ public sealed class SidebarItemInvokedEventArgs : RoutedEventArgs
 
     /// <summary>The page that was chosen (it is now <see cref="Sidebar.SelectedItem"/>).</summary>
     public SidebarItem Item { get; }
+}
+
+/// <summary>Arguments of <see cref="Sidebar.SelectionChanged"/>.</summary>
+public sealed class SidebarSelectionChangedEventArgs : RoutedEventArgs
+{
+    /// <summary>Creates the arguments for a change from <paramref name="oldItem"/> to <paramref name="newItem"/>.</summary>
+    public SidebarSelectionChangedEventArgs(RoutedEvent routedEvent, SidebarItem? oldItem, SidebarItem? newItem)
+        : base(routedEvent)
+    {
+        OldItem = oldItem;
+        NewItem = newItem;
+        OldKey = oldItem?.Key;
+        NewKey = newItem?.Key;
+    }
+
+    /// <summary>The page that was selected before; null when none was.</summary>
+    public SidebarItem? OldItem { get; }
+
+    /// <summary>The page that is selected now; null when the selection was cleared (or <see cref="Sidebar.SelectedKey"/> names no page).</summary>
+    public SidebarItem? NewItem { get; }
+
+    /// <summary>The <see cref="SidebarItem.Key"/> of <see cref="OldItem"/>.</summary>
+    public string? OldKey { get; }
+
+    /// <summary>The <see cref="SidebarItem.Key"/> of <see cref="NewItem"/>.</summary>
+    public string? NewKey { get; }
 }
 
 /// <summary>Where an open <see cref="Sidebar"/> shows its collapse button.</summary>

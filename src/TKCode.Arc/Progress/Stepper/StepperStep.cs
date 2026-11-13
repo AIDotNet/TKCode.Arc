@@ -38,6 +38,17 @@ public class StepperStep : AvaloniaObject
     public static readonly StyledProperty<string?> ErrorProperty =
         AvaloniaProperty.Register<StepperStep, string?>(nameof(Error));
 
+    /// <summary>Whether a completed step can be chosen to go back to it. A disabled step is not clickable and <see cref="Stepper.Select"/> ignores it.</summary>
+    public static readonly StyledProperty<bool> IsEnabledProperty =
+        AvaloniaProperty.Register<StepperStep, bool>(nameof(IsEnabled), true);
+
+    /// <summary>
+    /// Whether the step is shown. A hidden step is as if it were not in the list (a step that does not apply to this flow):
+    /// <see cref="Stepper.CurrentIndex"/> counts the visible steps only. It stays in the steps, so showing it again brings it back.
+    /// </summary>
+    public static readonly StyledProperty<bool> IsVisibleProperty =
+        AvaloniaProperty.Register<StepperStep, bool>(nameof(IsVisible), true);
+
     public StepperStep()
     {
     }
@@ -59,6 +70,12 @@ public class StepperStep : AvaloniaObject
 
     /// <summary>Marks the step as failed: the marker becomes an alert and this message replaces the description.</summary>
     public string? Error { get => GetValue(ErrorProperty); set => SetValue(ErrorProperty, value); }
+
+    /// <inheritdoc cref="IsEnabledProperty"/>
+    public bool IsEnabled { get => GetValue(IsEnabledProperty); set => SetValue(IsEnabledProperty, value); }
+
+    /// <inheritdoc cref="IsVisibleProperty"/>
+    public bool IsVisible { get => GetValue(IsVisibleProperty); set => SetValue(IsVisibleProperty, value); }
 
     public override string ToString() => Label ?? string.Empty;
 }

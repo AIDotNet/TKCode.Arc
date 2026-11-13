@@ -43,6 +43,26 @@ public class SelectFieldSizeTests
         TriggerHeight(Create(name), ControlSize.Large).ShouldBe(50);
     }
 
+    /// <summary>
+    /// Without a label or a description the field is exactly as tall as its trigger, so it centers with a button of the
+    /// same size. The Combobox's popup used to sit in the template's StackPanel and added its spacing below (#121).
+    /// </summary>
+    [AvaloniaTheory]
+    [MemberData(nameof(Fields))]
+    public void Without_Label_Or_Description_The_Field_Is_As_Tall_As_Its_Trigger(string name)
+    {
+        foreach (var (size, expected) in new[] { (ControlSize.Small, 36d), (ControlSize.Medium, 44d), (ControlSize.Large, 50d) })
+        {
+            var field = Create(name);
+            field.SetValue(Field.SizeProperty, size);
+            var window = TestHelpers.Show(new StackPanel { Children = { field } }, Motion.ArcMotionLevel.Off);
+            Dispatcher.UIThread.RunJobs();
+            field.DesiredSize.Height.ShouldBe(expected, $"{name} {size}");
+            field.Bounds.Height.ShouldBe(expected, $"{name} {size}");
+            window.Close();
+        }
+    }
+
     [AvaloniaTheory]
     [MemberData(nameof(Fields))]
     public void Small_Fits_A_36px_Slot_So_Text_Centers_With_A_Neighbouring_Label(string name)
