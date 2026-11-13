@@ -8,7 +8,18 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0), `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` (from 1.1.0-preview.1).
 
-## Unreleased
+## 1.1.0-preview.7 - 2026-11-13
+
+New components: `Form` and `FormItem`, with data validation on the value properties of the Arc fields
+([#85](https://github.com/AIDotNet/TKCode.Arc/issues/85)), `RadialMenu` ([#82](https://github.com/AIDotNet/TKCode.Arc/issues/82)),
+`OnScreenKeyboard` ([#73](https://github.com/AIDotNet/TKCode.Arc/issues/73)) and `WindRoseChart`
+([#65](https://github.com/AIDotNet/TKCode.Arc/issues/65)). Arc Mobile gets `ListCell`, `ListItem.Leading`, `Picker`,
+`RadioCards` and sheets that keep the page's bottom safe area free ([#111](https://github.com/AIDotNet/TKCode.Arc/issues/111)).
+Item classes get `IsEnabled` and `IsVisible`, and controls with a selection get `SelectionChanged`, and a `Size="Small"`
+`Combobox` measures 36 again ([#121](https://github.com/AIDotNet/TKCode.Arc/issues/121)). Nothing is removed: renamed
+members stay as `[Obsolete]` aliases (see Deprecated). One behavior change, in Arc Mobile: a sheet in a page now keeps
+the page's bottom inset unless `SafeAreaBottom` is set (see Changed). Install it with `--version 1.1.0-preview.7` (or
+`--prerelease`).
 
 Item classes and selection events get one convention ([#117](https://github.com/AIDotNet/TKCode.Arc/issues/117)),
 starting with `Sidebar` ([#114](https://github.com/AIDotNet/TKCode.Arc/issues/114)). From now on a published member is
@@ -1539,6 +1550,7 @@ ArcTheme.Apply(t => t
 
 First preview release.
 
+[1.1.0-preview.7]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.1.0-preview.6...v1.1.0-preview.7
 [1.1.0-preview.6]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.1.0-preview.4...v1.1.0-preview.6
 [1.1.0-preview.5]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.1.0-preview.4...v1.1.0-preview.6
 [1.0.0]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.4.0-preview.6...v1.0.0
