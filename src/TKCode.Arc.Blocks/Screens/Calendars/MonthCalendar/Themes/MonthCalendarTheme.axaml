@@ -1,0 +1,29 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.MonthCalendarTheme">
+
+    <!--
+        The month calendar screen (Arc Month calendar, design reference). The template is a root panel; the control builds
+        the screen shell (sidebar, main card with header and month, day panel) into it in code, because every part is
+        rebuilt from the screen's state. Text: Inter 13 / 18.2, letter spacing −0.13; titles use the display font.
+    -->
+    <ControlTheme x:Key="{x:Type arc:MonthCalendar}" TargetType="arc:MonthCalendar">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="MinHeight" Value="480" />
+        <Setter Property="ClipToBounds" Value="True" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:MonthCalendarTokenResource TextSize}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="DayPanelWidth" Value="{arc:MonthCalendarTokenResource PanelWidth}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MonthCalendar">
+                <Panel Name="PART_Root" />
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

@@ -21,7 +21,7 @@ public partial class ViewportSourceScanTests
         // A floating Dock window is a window: its own client size.
         "TKCode.Arc.Dock/DockFloating/DockFloatingWindow.cs",
         // Dragging a card near the window's edge scrolls: the edge that matters is the window's.
-        "TKCode.Arc.Blocks/Blocks/Projects/KanbanBoard/KanbanBoard.Drag.cs",
+        "TKCode.Arc.Blocks/Screens/Projects/KanbanBoard/KanbanBoard.Drag.cs",
         // Fallbacks after ArcViewport (only reached when the control is not in a window).
         "TKCode.Arc/Messages/ToastStack/ToastHost.cs"
     ];
