@@ -228,6 +228,10 @@ public class CornerStyleTests
     public async Task Scale_Halves_Every_Radius_On_Screen()
     {
         var types = ControlTypes();
+        // A throwaway first pass: the first instance of a control in the process loads its theme and builds some parts lazily
+        // (the first SupportConversation has one hidden ChatThread avatar fewer than every later one), which would show up as a
+        // different element count between the two measured passes.
+        await RadiiAsync(types, ArcCornerStyle.Default);
         var normal = await RadiiAsync(types, ArcCornerStyle.Default);
         var half = await RadiiAsync(types, ArcCornerStyle.Scale(0.5));
         normal.Values.Sum(list => list.Count).ShouldBeGreaterThan(400, "the walk must find the rounded elements, or the comparison proves nothing");
@@ -242,7 +246,11 @@ public class CornerStyleTests
             var scaled = half[type];
             if (scaled.Count != radii.Count)
             {
-                offenders.Add($"{type}: {radii.Count} rounded elements by default, {scaled.Count} at half");
+                var defaultNames = radii.Select(r => r.Name).ToList();
+                var halfNames = scaled.Select(r => r.Name).ToList();
+                var onlyDefault = defaultNames.Where(n => !halfNames.Remove(n)).Distinct();
+                var onlyHalf = halfNames.Distinct();
+                offenders.Add($"{type}: {radii.Count} rounded elements by default, {scaled.Count} at half (only default: [{string.Join(", ", onlyDefault)}]; only half: [{string.Join(", ", onlyHalf)}])");
                 continue;
             }
             for (var i = 0; i < radii.Count; i++)

@@ -8,6 +8,159 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0), `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` (from 1.1.0-preview.1).
 
+## Unreleased
+
+### Added
+
+- `KeycapKeyboard` is now a typing board: sculpted keycaps (housing, cap and
+  dished face) scaled from one key unit, an accent Return or space bar, a glow under pressed keys and the typed text
+  above the board. New members: `Value` (two-way) and `ValueChanged`, `Layout` (`KeycapLayout.Compact` or `Letters`),
+  `Rows` with the new `KeycapRow` item class (custom rows such as a macro pad), `MaxLength` (280), `Placeholder`,
+  `ShowsText` and `Clear()`. Every key is a tab stop and an accessibility button; the text area is a read-only text box.
+- `PrizeWheel` (Special): the reward panel and gestures of a promo wheel. New properties `IsPanelVisible`,
+  `IsOddsVisible`, `IsSingleSpin`, `DriftSpeed`, `IsDriftPaused`, `AccentBrush`, `WinnerPicker`, `Title`,
+  `Description`, `HintText`, `WeakHintText`, `SpinAgainText`, `ClaimedText`, `CopyText`, `CopiedText`,
+  `CopyFailedText`, `OddsTitle`, `SpinningText`, `WonAnnouncement` and `CodeAnnouncement`; events `SelectionChanged`
+  (`PrizeWheelSelectionChangedEventArgs`, raised when `Result` changes) and `CodeCopied`; pseudo-classes `:charging`,
+  `:won` and `:claimed`. `PrizeWheelSegment` gains `Detail`, `Code` and `IsFeatured`.
+- `BranchGraph`: `SelectedStrategy` (`BranchGraphStrategy`: `Before`, `Merge`, `Rebase`, `Squash`) and `SelectionChanged`
+  (`BranchGraphSelectionChangedEventArgs` with `OldValue`, `NewValue`, `IsUserChange`); `PullRequestTitle`,
+  `PullRequestNumber`, `SourceBranch` and `TargetBranch`. `BranchGraphCommit`: `Hash`, `Body`, `AuthorAvatar`,
+  `AuthorColor`, `Date`, `Additions`, `Deletions` and `Files`. `BranchGraphLabels`: the strategy names, the summaries, the
+  merge and squash messages and the accessible names.
+- `BlockCatalog.ScreenGroups`: the Screens groups (Dashboards, Projects, Calendars, People and customers, Inbox and
+  support, Commerce), listed after the Blocks groups as on uiarc.dev. Blocks filed under them have their `Group` set to a
+  screen group code (`Dashboards`, `ScreenProjects`, `Calendars`, `PeopleCustomers`, `InboxSupport`, `ScreenCommerce`).
+- `BlockCatalog.Groups` has a new `Agents` group.
+- `WindowRange` (TKCode.Arc.Special, gallery: Components › Sliders): a movable window over a live area chart. Drag its
+  edges to resize it, drag or flick it to pan with momentum, or press elsewhere on the chart to glide it there; the start,
+  length and end readouts roll to their new values, new `Data` morphs the chart, and `IsLive` pulses a dot on the latest
+  point. `Start` / `End`, `SetRange`, `ValueChanged`, `ValueCommitted`, `MinSpan` / `MaxSpan`, `ValueFormatter`,
+  `SpanFormatter`, `Ticks` (`WindowRangeTick`) and three keyboard sliders (start edge, window, end edge).
+- **`SandText.DigRadius`, `IsDigEnabled`, `Palette`, `HeadingLevel` and `FontSizeRatio`** (`TKCode.Arc.Special`): how far
+  the pointer digs (14 px), whether it digs, the grain colors (default: the text color, now the accent), the heading level
+  reported to assistive technology (2) and a font size that follows the control's width.
+- `CursorTrailDraw` (Special › Cursor, `TKCode.Arc.Special`): a sketching whiteboard. Ink follows the pointer with
+  smoothing and takes its width from pen pressure or speed, tapering at both ends; the laser pointer leaves a trail that
+  fades on its own; rough circles, ellipses, boxes, squares, triangles, four sided shapes and lines snap to clean shapes
+  on a spring when the pen lifts, with a chip to keep them as drawn. Items are reported in board units (1000 wide)
+  through `ItemsChanged` and load back with `SetItems`. New types: `CursorTrailDrawInk`, `CursorTrailDrawItem`,
+  `CursorTrailDrawTool`, `CursorTrailDrawShape`, `CursorTrailDrawChange`, `CursorTrailDrawItemsChangedEventArgs`.
+- `MonthCalendar` (TKCode.Arc.Blocks, Screens › Calendars): a calendar app screen around a month. A month grid packs
+  all-day and multi-day bars and timed chips into lanes with "N more", a docked day panel (resizable 300–460, a sheet
+  below 1080) shows busy time, the schedule, free gaps to block as focus time, event details with replies, guests, notes,
+  a link to copy and a calendar picker, and a new event form; chips drag to another day, dragging across days plans a
+  span, moves and deletes undo from a toast; a sidebar (a sheet below 900) has Calendar, Upcoming, Invitations, calendar
+  toggles with Only and All, teammates' months and an account menu (week start, weekends); narrower than 560 the month
+  shows load meters and the day's list. Data types `MonthCalendarEvent`, `MonthCalendarSource`, `MonthCalendarPerson`,
+  `MonthCalendarAttendee`, `MonthCalendarLabels`, enums `MonthCalendarRsvp`, `MonthCalendarTone`, `MonthCalendarView`,
+  and the events `EventCreating`, `EventCreated`, `EventChanged`, `EventDeleted`, `RsvpChanged`, `EventInvoked`,
+  `MonthChanged` and `SelectedDateChanged`.
+- `SplitBar`: `Description`, `Unit`, `TotalLabel` ("Total"), `SplitBarSegment.IsHidden` (two-way) and the
+  `HiddenChanged` event (`SplitBarHiddenChangedEventArgs` with `Segment` and `IsHidden`); template part `PART_Status`
+  (`SplitBar.StatusPart`), a polite live region.
+
+- `TocProgress`: `ReadingOffset` (the reading line in pixels below the top of the viewport; chosen headings scroll to
+  it), `ShowsTimeLeft` (true) and `ReadingTime` (minutes; estimated from the article's words at 230 a minute when not
+  set) for the minutes left beside the title, which roll to each new value and end on Finished with a check.
+  `TocProgressLabels` gains `TimeLeft` and `Finished`.
+
+### Changed
+
+- `KeycapKeyboard`: a plain keyboard now shows a text area above the board and types into `Value`; `ShowsText="False"`
+  hides it. The compact board follows Arc's 60% layout (no arrow keys; ctrl, opt and cmd on the bottom row unless
+  `Platform` is set, Windows boards read ctrl, win and alt). Keys grow up to 54 px unless `KeySize` is set, the board
+  is at most 760 px wide, and the keyboard itself is no longer a tab stop (its keys and text area are). A clicked Ctrl,
+  Alt or Command key holds only when there are `Bindings`; a clicked Shift latches for the next character. A lit
+  `Shortcut` draws its keys in the accent; a clicked key types on pointer down, and `KeyInvoked` still comes on release.
+  The theme tokens `KeySize`, `KeyGap`, `KeyDepth` and `PlatePadding` of `KeycapKeyboard` are kept but no longer read.
+- `PrizeWheel` looks and moves like a promo wheel (Arc Prize wheel, design reference): a metal rim and hub, radial
+  labels, a capsule pointer that bends against the pegs, and a reward panel beside the wheel (title, description and
+  hint, then a reward card with the prize, its detail and a code to copy, and the odds list), under it below 736 px of
+  width. The panel shows by default; set `IsPanelVisible` to `False` to keep the old wheel-only look. A person spins it
+  by flicking the wheel or by holding the hub (or Enter / Space) to wind it up and letting go; a click on the face no
+  longer spins it, a click on the hub does. Gesture spins are driven by their speed; `Duration` and `Turns` now apply
+  only to spins started from code (`Spin()`, `SpinTo()`). The wheel drifts slowly before its first spin
+  (`DriftSpeed`, `IsDriftPaused`). The live region now says "You won {prize}." (`WonAnnouncement`) instead of the prize
+  alone. Without a size the wheel is up to 480 px instead of 360. `SizesByWeight` keeps its default (`True`); set it
+  to `False` for equal slices. The `PrizeWheel` token values `RimWidth` and `PointerLength` are now in the wheel's
+  400-unit drawing box (16 and 29).
+- `BranchGraph` was rebuilt as a merge strategy preview, aligned with Arc's Branch graph (ADR 0047): newest commit on
+  top, 44 px rows with author, hash and date columns, a strategy control (Before, Merge, Rebase, Squash) instead of the
+  playback buttons, caption and speed control, a summary line, a detail card on hover or keyboard focus, and the
+  first-load sweep. The `Explainer` members map onto the autoplay cycle (Before → Rebase → Merge → Squash):
+  `AutoPlay` starts it, `Pause()` holds it, `StepForward()` picks the next strategy, `Restart()` draws the graph in
+  again, `Speed` scales the animations, `AreControlsVisible` shows the strategy control; `IsLooping` has no effect (the
+  cycle always repeats). `StartsFinished` skips the sweep and the cycle; `CommitDrawn` and `RevealedCount` follow the
+  sweep; `SelectedCommit` is the commit whose card is pinned (it no longer highlights ancestors). `Tag` shows as a pill in
+  the branch's color. `BranchGraphSamples.CreateCommits()` returns a new invented history (a pull request on
+  `feat/filters`).
+- Catalog groups follow uiarc.dev's sidebar (2026-11-14). `BlockCatalog`: the agent blocks (`AgentRun`, `AgentTasks`,
+  `AgentApprovals`, `AgentRoutines`, `AgentOrchestrator`, `McpServers`, `KnowledgeBase`, `EvalSuite`, `AgentBuilder`,
+  `AgentGallery`) moved from `Ai` to `Agents`; `CallInsights` and `LeadScoring` to `Ai`; `TwoFactorSetup` to `Auth`;
+  `OnboardingSurvey` and `SpendAlert` to `Settings`; `WalletCard` to `Commerce`; `ActivityFeed` to `Support`;
+  `FeedbackBoard` and `SmartScheduler` to `Projects`; `ComparisonTable` to `Features`; `TeamShowcase` to `Content`; the
+  whole-page blocks (`MetricsDashboard`, `MarketTerminal`, `KanbanBoard`, `ProjectBoard`, `GanttTimeline`,
+  `WeekCalendar`, `TeamDirectory`, `InboxTriage`, `SupportConversation`, `HelpCenter`, `ProductListing`,
+  `ProductDetail`, `InvoiceStudio`) to the Screens groups; blocks within a group are in Arc's order. Code that filters
+  `BlockCatalog.Blocks` by a group code may need the new codes. Class names, namespaces and packages are unchanged.
+- Source folders follow the groups: `TKCode.Arc.Blocks` screens are under `Screens/<Group>/`; in `TKCode.Arc.Special`,
+  `SandText`, `TypewriterTerminal` and `KeycapKeyboard` are under `Type/`, `Photos/` is `Galleries/`, the docks and tabs
+  under `DocksTabs/` (with `MagnifyDock`), `EmojiPicker` under `Pickers/`, `ConfirmPopover` and `ShareAccess` under
+  `Overlays/`, `UndoToast` under `Messages/`, `MegaMenuMorph` and `TocProgress` under `Navigation/`. No type moved to
+  another package.
+- **`SandText` is now a falling-sand headline** (`TKCode.Arc.Special`, ADR 0047): grains pour into the letters from above,
+  the pointer (mouse, pen or a dragging finger) digs through them and the grains pile up under the text, the letters heal
+  about 0.7 s after the last dig and the spilled sand disappears, and a new `Text` collapses the old letters into dunes
+  while the new word pours in. The control fills its width and is 1.55 em tall (it measured to its text before), uses the
+  accent color and the Medium weight, takes no keyboard focus (it was a button with `Trigger="Click"`) and reads as a
+  heading. Under reduced motion the letters are always formed and a new text swaps at once. `IsDissolved`, `Dissolve()`,
+  `Gather()` and `Toggle()` keep working: the letters fall and disappear, and pour back. `Gathered` is raised whenever a
+  pour leaves the letters whole (first show, a new text, `Gather()` or healing); `Dissolved` when the last grain has gone.
+- `TocProgress` follows Arc's table of contents progress: the rail is now a line that steps into one lane per heading
+  level with an S bend between levels, a 1.5px track, the read part in the accent and a 7px marker with a small gap
+  around it; each section fills the line from its heading to the next, and the reading position follows the scroll on a
+  critically damped spring. Rows use 13px regular text (the current row is no longer medium weight), wrap instead of
+  ending in an ellipsis, brighten upcoming rows on hover and show a quiet fill under the keyboard focus ring. Every row is
+  now a tab stop. Near the end of the article the reading line eases down to the bottom of the viewport. The header shows
+  the minutes left instead of the percentage by default; `ShowsTimeLeft="False"` brings the percentage back
+  (`ShowsPercent`). A chosen heading no longer stays highlighted for the whole glide: the marker traces through the
+  sections in between (`ActiveChanged` is raised for each), and a heading the article cannot bring to the line stays
+  current until the reader scrolls. Before the first heading `ActiveIndex` is still -1, but the first row shows as current.
+- `SplitBar` looks and moves like Arc's Split bar (design reference, ADR 0047): a 44 px bar with tinted parts and a solid
+  strip at each part's end, labels inside the parts that fit them and in a lane with leader lines for the others, a
+  readout that swaps between the total and the highlighted part, and a legend of toggles. Highlighting widens the part
+  (at least 4.5% of the bar, or enough for its label) instead of lifting it, and dims the others to half. Shares read
+  with one decimal; legend entries show the share, or the value with `ShowsPercent="False"` (they showed both), and
+  `IsSumVisible` now shows or hides that readout. Keyboard: focusing the bar no longer highlights the first part, the arrow keys wrap, and Enter or
+  Space switch the highlighted part off after `SegmentInvoked` unless a handler marks the event handled. Default colors
+  are series 1 to 4 then two neutrals (they were lighter rounds of the four series). The `SplitBar` token keeps its
+  names with new values (`BarHeight` 44, `SegmentGap` 2, `DimOpacity` 0.5, `HighlightLift` 0, `DotSize` 12,
+  `LegendItemGap` 4, `LegendLineGap` 2) and gains geometry, type and fill values for the new parts.
+
+### Deprecated
+
+Nothing is removed. Each of these keeps working, is marked `[Obsolete]` and stays for at least two stable releases.
+
+- **`SandText.Trigger`**: use `IsDigEnabled`. `Trigger="None"` sets `IsDigEnabled` to false,
+  `Click` and `Hover` set it to true; the pointer digs in both cases.
+- **`SandText.Drift`, `Duration`, `Distance` and `MaxGrains`**: they keep their values but no longer change anything,
+  because the sand follows fixed physics with one grain per `GrainSize` cell. Use `DigRadius` for the reach of the pointer
+  and `GrainSize` for the grain size. The enums `SandTextTrigger` and `SandTextDrift` stay for these members.
+- `BranchGraph.IsNewestFirst` (and `IsNewestFirstProperty`): no longer has an effect, the newest commit is always on top.
+  Remove it.
+- `BranchGraphLabels.Ready`, `Drawing`, `Paused`, `Done`, `Speed`, `ReadyCaption`, `FirstCaption`, `CommitCaption`,
+  `BranchCaption`, `MergeCaption`, `TagCaption` and `DoneCaption`: the graph has no status line, caption or speed control
+  any more; they keep their values but are not shown. Use `BeforeSummary`, `MergeSummary`, `RebaseSummary` and
+  `SquashSummary` for the words under the graph.
+
+### Fixed
+
+- Charts: a `LineChart` (and the other charts that share its tooltip) narrower than the tooltip's minimum width no
+  longer throws `ArgumentException` from `Math.Clamp` while laying out; the tooltip shrinks to the plot.
+- `DonutChart` and `BarChart` placed in a `Card`: the large total (`PART_CenterValue`) and value (`PART_ValueText`)
+  no longer inherit the card body's 1.4 × 14px line height, which clipped them; they keep the font's own line height.
+
 ## 1.1.0 - 2026-11-13
 
 The first feature release after 1.0.0. It brings together everything shipped in `1.1.0-preview.1` to `1.1.0-preview.7`
