@@ -21,6 +21,13 @@ namespace TKCode.Arc;
 /// kept for a new frame target.
 /// </para>
 /// <para>
+/// Failures: every call into the platform can throw a Java exception (<c>IllegalStateException</c> in a wrong state,
+/// <c>IllegalArgumentException</c> for a speed the device refuses, <c>UnsupportedOperationException</c> from an
+/// <c>ImageReader</c> whose format the decoder does not produce, ...). None of them may leave a MediaPlayer callback, the timer or
+/// the frame callback, because there nothing catches them and the app dies: they end in <see cref="VideoPlaybackState.Failed"/>
+/// (loading, playing, picture size) or are traced and skipped (volume, rate, seeking, one frame, text tracks).
+/// </para>
+/// <para>
 /// Embedded text: MediaPlayer's timed text tracks (MP4 3GPP timed text); each cue is reported from the position it
 /// arrives at, without an end (the next cue, or an empty one, ends it).
 /// </para>
@@ -42,6 +49,8 @@ internal sealed class AndroidVideoPlayer : VideoPlayerBase, IVideoFrameOwner, IV
     private bool _wantPlay;
     private bool _buffering;
     private bool _leased;
+    private bool _frameFailureTraced;
+    private TimeSpan _lastPosition;
     private bool _redeliver;
     private long _frameToken;
     private byte[] _pixels = [];
@@ -75,8 +84,15 @@ internal sealed class AndroidVideoPlayer : VideoPlayerBase, IVideoFrameOwner, IV
             {
                 return TimeSpan.Zero;
             }
-            var position = TimeSpan.FromMilliseconds(Math.Max(0, _player.CurrentPosition));
-            return Duration > TimeSpan.Zero && position > Duration ? Duration : position;
+            try
+            {
+                _lastPosition = TimeSpan.FromMilliseconds(Math.Max(0, _player.CurrentPosition));
+            }
+            catch (Exception exception) when (IsPlatformFailure(exception))
+            {
+                // The player is between states (a failure is on its way): the last known position stands.
+            }
+            return Duration > TimeSpan.Zero && _lastPosition > Duration ? Duration : _lastPosition;
         }
     }
 
@@ -127,7 +143,7 @@ internal sealed class AndroidVideoPlayer : VideoPlayerBase, IVideoFrameOwner, IV
             ApplyGain();
             _player.PrepareAsync();
         }
-        catch (Exception exception) when (exception is Java.Lang.Exception or InvalidOperationException or ArgumentException)
+        catch (Exception exception) when (IsPlatformFailure(exception))
         {
             _prepared = null;
             Fail(VideoErrorKind.Network, exception.Message, exception);
@@ -159,12 +175,20 @@ internal sealed class AndroidVideoPlayer : VideoPlayerBase, IVideoFrameOwner, IV
             return;
         }
         _wantPlay = true;
-        if (State == VideoPlaybackState.Ended)
+        try
         {
-            _player.SeekTo(0);
+            if (State == VideoPlaybackState.Ended)
+            {
+                _player.SeekTo(0);
+            }
+            ApplyRate();
+            _player.Start();
         }
-        ApplyRate();
-        _player.Start();
+        catch (Exception exception) when (IsPlatformFailure(exception))
+        {
+            FailPlayback(VideoErrorKind.Decode, exception);
+            return;
+        }
         _ticker.Change(s_positionTick, s_positionTick);
         SetState(_buffering ? VideoPlaybackState.Buffering : VideoPlaybackState.Playing);
         RaisePositionChanged();
@@ -177,9 +201,16 @@ internal sealed class AndroidVideoPlayer : VideoPlayerBase, IVideoFrameOwner, IV
         {
             return;
         }
-        if (_player.IsPlaying)
+        try
         {
-            _player.Pause();
+            if (_player.IsPlaying)
+            {
+                _player.Pause();
+            }
+        }
+        catch (Exception exception) when (IsPlatformFailure(exception))
+        {
+            TraceFailure("pausing", exception);
         }
         _ticker.Change(Timeout.Infinite, Timeout.Infinite);
         if (State is VideoPlaybackState.Playing or VideoPlaybackState.Buffering)
@@ -196,13 +227,21 @@ internal sealed class AndroidVideoPlayer : VideoPlayerBase, IVideoFrameOwner, IV
             return;
         }
         var ms = (long)Math.Clamp(position.TotalMilliseconds, 0, Math.Max(0, Duration.TotalMilliseconds));
-        if (OperatingSystem.IsAndroidVersionAtLeast(26))
+        try
         {
-            _player.SeekTo(ms, mode == VideoSeekMode.Accurate ? MediaPlayerSeekMode.Closest : MediaPlayerSeekMode.PreviousSync);
+            if (OperatingSystem.IsAndroidVersionAtLeast(26))
+            {
+                _player.SeekTo(ms, mode == VideoSeekMode.Accurate ? MediaPlayerSeekMode.Closest : MediaPlayerSeekMode.PreviousSync);
+            }
+            else
+            {
+                _player.SeekTo((int)ms);
+            }
         }
-        else
+        catch (Exception exception) when (IsPlatformFailure(exception))
         {
-            _player.SeekTo((int)ms);
+            TraceFailure("seeking", exception);
+            return;
         }
         if (State == VideoPlaybackState.Ended)
         {
@@ -250,10 +289,10 @@ internal sealed class AndroidVideoPlayer : VideoPlayerBase, IVideoFrameOwner, IV
             }
             _selectedText = index;
         }
-        catch (Exception exception) when (exception is Java.Lang.Exception or InvalidOperationException)
+        catch (Exception exception) when (IsPlatformFailure(exception))
         {
             // A track the device cannot render: leave the selection as it was.
-            System.Diagnostics.Trace.TraceWarning($"TKCode.Arc.Video.Native: selecting text track {index} failed: {exception.Message}");
+            TraceFailure($"selecting text track {index}", exception);
         }
     }
 
@@ -261,9 +300,17 @@ internal sealed class AndroidVideoPlayer : VideoPlayerBase, IVideoFrameOwner, IV
 
     protected override void OnLoopingChanged()
     {
-        if (!IsDisposed)
+        if (IsDisposed)
+        {
+            return;
+        }
+        try
         {
             _player.Looping = IsLooping;
+        }
+        catch (Exception exception) when (IsPlatformFailure(exception))
+        {
+            TraceFailure("setting looping", exception);
         }
     }
 
@@ -307,19 +354,27 @@ internal sealed class AndroidVideoPlayer : VideoPlayerBase, IVideoFrameOwner, IV
         {
             return;
         }
-        _isPrepared = true;
-        var duration = _player.Duration;
-        SetDuration(duration > 0 ? TimeSpan.FromMilliseconds(duration) : TimeSpan.Zero);
-        SetSeekable(duration > 0);
-        if (_player.VideoWidth > 0 && _player.VideoHeight > 0)
+        try
         {
-            EnsureReader(_player.VideoWidth, _player.VideoHeight);
+            _isPrepared = true;
+            var duration = _player.Duration;
+            SetDuration(duration > 0 ? TimeSpan.FromMilliseconds(duration) : TimeSpan.Zero);
+            SetSeekable(duration > 0);
+            if (_player.VideoWidth > 0 && _player.VideoHeight > 0)
+            {
+                EnsureReader(_player.VideoWidth, _player.VideoHeight);
+            }
+            ReadTextTracks();
+            SetState(VideoPlaybackState.Paused);
+            _prepared?.TrySetResult();
+            _prepared = null;
+            RaiseFrameAvailable();
         }
-        ReadTextTracks();
-        SetState(VideoPlaybackState.Paused);
-        _prepared?.TrySetResult();
-        _prepared = null;
-        RaiseFrameAvailable();
+        catch (Exception exception) when (IsPlatformFailure(exception))
+        {
+            FailPlayback(VideoErrorKind.Unsupported, exception);
+            return;
+        }
         if (_wantPlay)
         {
             Play();
@@ -402,9 +457,17 @@ internal sealed class AndroidVideoPlayer : VideoPlayerBase, IVideoFrameOwner, IV
 
     private void OnVideoSizeChanged(object? sender, MediaPlayer.VideoSizeChangedEventArgs e)
     {
-        if (!IsDisposed && e.Width > 0 && e.Height > 0)
+        if (IsDisposed || e.Width <= 0 || e.Height <= 0)
+        {
+            return;
+        }
+        try
         {
             EnsureReader(e.Width, e.Height);
+        }
+        catch (Exception exception) when (IsPlatformFailure(exception))
+        {
+            FailPlayback(VideoErrorKind.Unsupported, exception);
         }
     }
 
@@ -414,7 +477,16 @@ internal sealed class AndroidVideoPlayer : VideoPlayerBase, IVideoFrameOwner, IV
         {
             return;
         }
-        var text = e.Text?.Text ?? "";
+        string text;
+        try
+        {
+            text = e.Text?.Text ?? "";
+        }
+        catch (Exception exception) when (IsPlatformFailure(exception))
+        {
+            TraceFailure("reading a timed text cue", exception);
+            return;
+        }
         var markup = text.Replace("&", "&amp;", StringComparison.Ordinal).Replace("<", "&lt;", StringComparison.Ordinal).Replace(">", "&gt;", StringComparison.Ordinal);
         EmbeddedCue?.Invoke(this, new VideoEmbeddedCueEventArgs(_selectedText, Position, null, markup));
     }
@@ -437,16 +509,20 @@ internal sealed class AndroidVideoPlayer : VideoPlayerBase, IVideoFrameOwner, IV
         SetNaturalSize(size);
     }
 
-    /// <summary>Takes the newest image, converts it at the fitted target size into <see cref="_pixels"/>. False when no new image waits.</summary>
+    /// <summary>
+    /// Takes the newest image, converts it at the fitted target size into <see cref="_pixels"/>. False when no new image waits, or
+    /// when this one cannot be read (traced once; the next image may be fine).
+    /// </summary>
     private unsafe bool ConvertLatest(PixelSize target)
     {
-        using var image = _reader!.AcquireLatestImage();
-        if (image is null)
-        {
-            return false;
-        }
+        Image? image = null;
         try
         {
+            image = _reader!.AcquireLatestImage();
+            if (image is null)
+            {
+                return false;
+            }
             var planes = image.GetPlanes();
             if (planes is not { Length: >= 3 })
             {
@@ -454,22 +530,54 @@ internal sealed class AndroidVideoPlayer : VideoPlayerBase, IVideoFrameOwner, IV
             }
             var width = image.Width;
             var height = image.Height;
+            var y = PlaneSpan(planes[0]);
+            var u = PlaneSpan(planes[1]);
+            var v = PlaneSpan(planes[2]);
+            var yRowStride = planes[0].RowStride;
+            var chromaRowStride = planes[1].RowStride;
+            var chromaPixelStride = planes[1].PixelStride;
+            if (!VideoYuv.PlanesFit(width, height, y.Length, yRowStride, u.Length, v.Length, chromaRowStride, chromaPixelStride))
+            {
+                TraceFrameFailure("an image whose planes are smaller than its size");
+                return false;
+            }
             var size = Fit(width, height, target);
             var length = size.Width * size.Height * 4;
             if (_pixels.Length < length)
             {
                 _pixels = new byte[length];
             }
-            VideoYuv.ToBgra(PlaneSpan(planes[0]), planes[0].RowStride, PlaneSpan(planes[1]), PlaneSpan(planes[2]),
-                planes[1].RowStride, planes[1].PixelStride, width, height, _pixels, size.Width, size.Height);
+            VideoYuv.ToBgra(y, yRowStride, u, v, chromaRowStride, chromaPixelStride, width, height, _pixels, size.Width, size.Height);
             _pixelsSize = size;
             _pixelsTime = Position;
             _hasPixels = true;
             return true;
         }
+        catch (Exception exception) when (IsPlatformFailure(exception))
+        {
+            TraceFrameFailure(exception.Message);
+            return false;
+        }
         finally
         {
-            image.Close();
+            try
+            {
+                image?.Close();
+                image?.Dispose();
+            }
+            catch (Exception exception) when (IsPlatformFailure(exception))
+            {
+                TraceFrameFailure(exception.Message);
+            }
+        }
+    }
+
+    private void TraceFrameFailure(string message)
+    {
+        if (!_frameFailureTraced)
+        {
+            _frameFailureTraced = true;
+            System.Diagnostics.Trace.TraceWarning($"TKCode.Arc.Video.Native: a video frame could not be read: {message}");
         }
     }
 
@@ -498,17 +606,27 @@ internal sealed class AndroidVideoPlayer : VideoPlayerBase, IVideoFrameOwner, IV
     {
         var indexes = new List<int>();
         var infos = new List<VideoEmbeddedTextTrackInfo>();
-        var tracks = _player.GetTrackInfo() ?? [];
-        for (var i = 0; i < tracks.Length; i++)
+        try
         {
-            if (tracks[i].TrackType != MediaTrackType.Timedtext)
+            var tracks = _player.GetTrackInfo() ?? [];
+            for (var i = 0; i < tracks.Length; i++)
             {
-                continue;
+                if (tracks[i].TrackType != MediaTrackType.Timedtext)
+                {
+                    continue;
+                }
+                var language = tracks[i].Language;
+                infos.Add(new VideoEmbeddedTextTrackInfo(infos.Count, VideoTextTrackKind.Subtitles,
+                    string.IsNullOrEmpty(language) || language == "und" ? null : language, null));
+                indexes.Add(i);
             }
-            var language = tracks[i].Language;
-            infos.Add(new VideoEmbeddedTextTrackInfo(infos.Count, VideoTextTrackKind.Subtitles,
-                string.IsNullOrEmpty(language) || language == "und" ? null : language, null));
-            indexes.Add(i);
+        }
+        catch (Exception exception) when (IsPlatformFailure(exception))
+        {
+            // Some devices throw while listing the tracks of a stream they play fine: the video plays without text tracks.
+            TraceFailure("listing the tracks", exception);
+            indexes.Clear();
+            infos.Clear();
         }
         _textIndexes = [.. indexes];
         _selectedText = -1;
@@ -527,11 +645,19 @@ internal sealed class AndroidVideoPlayer : VideoPlayerBase, IVideoFrameOwner, IV
         _wantPlay = false;
         _buffering = false;
         _hasPixels = false;
+        _lastPosition = TimeSpan.Zero;
         _ticker.Change(Timeout.Infinite, Timeout.Infinite);
-        _player.Reset();
-        if (_reader is not null)
+        try
         {
-            _player.SetSurface(_reader.Surface);
+            _player.Reset();
+            if (_reader is not null)
+            {
+                _player.SetSurface(_reader.Surface);
+            }
+        }
+        catch (Exception exception) when (IsPlatformFailure(exception))
+        {
+            TraceFailure("resetting the player", exception);
         }
         SetDuration(TimeSpan.Zero);
         SetBuffered([]);
@@ -547,10 +673,18 @@ internal sealed class AndroidVideoPlayer : VideoPlayerBase, IVideoFrameOwner, IV
 
     private void ApplyGain()
     {
-        if (!IsDisposed)
+        if (IsDisposed)
+        {
+            return;
+        }
+        try
         {
             var gain = (float)EffectiveGain;
             _player.SetVolume(gain, gain);
+        }
+        catch (Exception exception) when (IsPlatformFailure(exception))
+        {
+            TraceFailure("setting the volume", exception);
         }
     }
 
@@ -565,8 +699,33 @@ internal sealed class AndroidVideoPlayer : VideoPlayerBase, IVideoFrameOwner, IV
             // Setting the speed starts playback, so it is only applied when playing or about to play.
             _player.PlaybackParams = (_player.PlaybackParams ?? new PlaybackParams()).SetSpeed((float)PlaybackRate)!;
         }
-        catch (Java.Lang.IllegalStateException)
+        catch (Exception exception) when (IsPlatformFailure(exception))
         {
+            // IllegalStateException (wrong state) or IllegalArgumentException (a speed this device does not support): the
+            // video keeps playing at the speed it has.
+            TraceFailure($"setting the playback rate {PlaybackRate}", exception);
         }
     }
+
+    /// <summary>Ends the current media in <see cref="VideoPlaybackState.Failed"/> after a platform call threw.</summary>
+    private void FailPlayback(VideoErrorKind kind, Exception exception)
+    {
+        _isPrepared = false;
+        _wantPlay = false;
+        _ticker.Change(Timeout.Infinite, Timeout.Infinite);
+        Fail(kind, exception.Message, exception);
+        _prepared?.TrySetResult();
+        _prepared = null;
+    }
+
+    /// <summary>
+    /// The exceptions a call into <c>MediaPlayer</c> or <c>ImageReader</c> raises: Java ones (<c>IllegalStateException</c>,
+    /// <c>IllegalArgumentException</c>, <c>UnsupportedOperationException</c>, <c>IOException</c>, ...) and the .NET ones the
+    /// bindings add.
+    /// </summary>
+    private static bool IsPlatformFailure(Exception exception) =>
+        exception is Java.Lang.Throwable or InvalidOperationException or ArgumentException or NotSupportedException;
+
+    private static void TraceFailure(string what, Exception exception) =>
+        System.Diagnostics.Trace.TraceWarning($"TKCode.Arc.Video.Native: {what} failed: {exception.Message}");
 }

@@ -63,6 +63,28 @@ public class VideoYuvTests
     public void A_Too_Small_Destination_Is_Refused() =>
         Should.Throw<ArgumentException>(() => VideoYuv.ToBgra(new byte[4], 2, new byte[1], new byte[1], 1, 1, 2, 2, new byte[3], 1, 1));
 
+    [Theory]
+    // Planar (I420).
+    [InlineData(64, 48, 64, 64 * 48, 32 * 24, 32, 1)]
+    // NV21 layout: the first chroma plane starts one byte into the interleaved buffer, so it is one byte short.
+    [InlineData(64, 48, 64, 64 * 48, 64 * 24 - 1, 64, 2)]
+    // Padded rows.
+    [InlineData(64, 48, 80, 80 * 48, 80 * 24 - 1, 80, 2)]
+    // Odd sizes round the chroma up.
+    [InlineData(65, 49, 66, 66 * 49, 33 * 25, 33, 1)]
+    public void Planes_Of_The_Promised_Size_Fit(int width, int height, int yStride, int yLength, int uLength, int chromaStride, int chromaPixelStride) =>
+        VideoYuv.PlanesFit(width, height, yLength, yStride, uLength, uLength + chromaPixelStride - 1, chromaStride, chromaPixelStride).ShouldBeTrue();
+
+    [Theory]
+    [InlineData(64, 48, 64, 64 * 48 - 1, 32 * 24, 32, 1)] // luma one byte short
+    [InlineData(64, 48, 64, 64 * 48, 32 * 24 - 1, 32, 1)] // chroma one byte short (planar: no slack)
+    [InlineData(64, 48, 64, 64 * 48, 0, 32, 1)] // an empty plane
+    [InlineData(64, 48, 32, 64 * 48, 32 * 24, 32, 1)] // luma stride smaller than the width
+    [InlineData(64, 48, 64, 64 * 48, 32 * 24, 0, 1)] // no chroma stride
+    [InlineData(0, 48, 64, 64 * 48, 32 * 24, 32, 1)] // no picture
+    public void Planes_Smaller_Than_The_Picture_Do_Not_Fit(int width, int height, int yStride, int yLength, int chromaLength, int chromaStride, int chromaPixelStride) =>
+        VideoYuv.PlanesFit(width, height, yLength, yStride, chromaLength, chromaLength, chromaStride, chromaPixelStride).ShouldBeFalse();
+
     private static (byte B, byte G, byte R, byte A) ConvertSolid(int y, int u, int v, int width, int height, int chromaPixelStride)
     {
         var yPlane = Enumerable.Repeat((byte)y, width * height).ToArray();

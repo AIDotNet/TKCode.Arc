@@ -18,6 +18,22 @@ internal static class VideoYuv
     public static bool IsHd(int width, int height) => width >= 1280 || height >= 720;
 
     /// <summary>
+    /// Whether every sample <see cref="ToBgra"/> reads for a <paramref name="width"/> × <paramref name="height"/> picture lies inside
+    /// the three plane buffers (given their lengths in bytes). A decoder's buffers can be shorter than the strides promise, and
+    /// reading past them would throw; interleaved chroma (pixel stride 2) leaves the first chroma plane one byte short, which fits.
+    /// </summary>
+    public static bool PlanesFit(int width, int height, int yLength, int yRowStride, int uLength, int vLength, int chromaRowStride, int chromaPixelStride)
+    {
+        if (width <= 0 || height <= 0 || yRowStride < width || chromaRowStride <= 0 || chromaPixelStride <= 0)
+        {
+            return false;
+        }
+        var lastLuma = (long)(height - 1) * yRowStride + width - 1;
+        var lastChroma = (long)((height - 1) >> 1) * chromaRowStride + (long)((width - 1) >> 1) * chromaPixelStride;
+        return lastLuma < yLength && lastChroma < uLength && lastChroma < vLength;
+    }
+
+    /// <summary>
     /// Converts a <paramref name="width"/> × <paramref name="height"/> 4:2:0 picture to opaque BGRA at
     /// <paramref name="targetWidth"/> × <paramref name="targetHeight"/> (nearest sample, no larger than the picture), rows of
     /// <paramref name="targetWidth"/> * 4 bytes. The chroma planes are addressed like Android's <c>Image.Plane</c>:

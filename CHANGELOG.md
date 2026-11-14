@@ -156,6 +156,13 @@ Nothing is removed. Each of these keeps working, is marked `[Obsolete]` and stay
 
 ### Fixed
 
+- Video on Android (`TKCode.Arc.Video.Native`): playback no longer closes the app when the platform throws. A Java
+  exception from `MediaPlayer` or `ImageReader` (listing the tracks, creating the picture reader, `Start`, an unsupported
+  playback rate, an image the decoder produced in a format the reader refuses) used to leave the `MediaPlayer` callback or
+  the frame callback and end the process. Loading, starting and a failed picture reader now put the player in
+  `VideoPlaybackState.Failed` and raise `Failed`; volume, looping, rate, seeking, a text track list and a single unreadable
+  frame are skipped (traced). A frame whose planes are smaller than their strides promise is dropped instead of throwing
+  `IndexOutOfRangeException`.
 - Charts: a `LineChart` (and the other charts that share its tooltip) narrower than the tooltip's minimum width no
   longer throws `ArgumentException` from `Math.Clamp` while laying out; the tooltip shrinks to the plot.
 - `DonutChart` and `BarChart` placed in a `Card`: the large total (`PART_CenterValue`) and value (`PART_ValueText`)
