@@ -1,3 +1,4 @@
+using System.Globalization;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
@@ -22,6 +23,8 @@ public class MonthCalendarTests
     {
         var c = new MonthCalendar
         {
+            // The expected texts are en-US (12-hour times); CI machines can run under the invariant culture.
+            Culture = CultureInfo.GetCultureInfo("en-US"),
             Today = Today,
             Month = Today,
             SelectedDate = Today,
