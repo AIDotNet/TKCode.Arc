@@ -12,8 +12,10 @@
         <ArcFoundationGenerator>true</ArcFoundationGenerator>
         <!-- The Lucide generator compiles in the icons the basic catalog maps to (A2UIIcons). -->
         <ArcLucideGenerator>true</ArcLucideGenerator>
-        <!-- Not packed until the renderer milestone (M3) ships its controls. -->
+        <!-- Not packed until the renderer milestone (M3) ships its controls. ArcPackingDeferred tells CI's library check
+             that this is on purpose; remove both when the package ships. -->
         <IsPackable>false</IsPackable>
+        <ArcPackingDeferred>true</ArcPackingDeferred>
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="../TKCode.Arc/TKCode.Arc.csproj" />

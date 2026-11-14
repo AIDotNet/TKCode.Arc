@@ -135,14 +135,17 @@ jobs:
           failed=0
           for project in src/*/*.csproj; do
             name="$(basename "$project" .csproj)"
-            values="$(dotnet msbuild "$project" -getProperty:ArcIsLibrary -getProperty:IsPackable -getProperty:GenerateDocumentationFile | tr -d '\r')"
+            values="$(dotnet msbuild "$project" -getProperty:ArcIsLibrary -getProperty:IsPackable -getProperty:GenerateDocumentationFile -getProperty:ArcPackingDeferred | tr -d '\r')"
             echo "$name: $(echo "$values" | tr -d ' \n')"
             if ! echo "$values" | grep -q '"ArcIsLibrary": "true"'; then
               echo "::error::$name does not count as a library (ArcIsLibrary is not true)"
               failed=1
             fi
             # The analyzer project switches packing and documentation off itself; it ships inside TKCode.Arc.Foundation.
-            if [[ "$name" != *.Generators ]] && ! echo "$values" | grep -q '"IsPackable": "true"'; then
+            # A package that is not released yet says so with ArcPackingDeferred (and keeps every other default).
+            if echo "$values" | grep -q '"ArcPackingDeferred": "true"'; then
+              echo "::notice::$name is not packed yet (ArcPackingDeferred)"
+            elif [[ "$name" != *.Generators ]] && ! echo "$values" | grep -q '"IsPackable": "true"'; then
               echo "::error::$name is not packable"
               failed=1
             fi
