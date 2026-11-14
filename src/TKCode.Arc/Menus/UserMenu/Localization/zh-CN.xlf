@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="2.1" srcLang="en-US" trgLang="zh-CN" xmlns="urn:oasis:names:tc:xliff:document:2.0">
+  <file id="TKCode.Arc.Localization.UserMenuLangResourceKind">
+    <unit id="AccountMenu">
+      <segment>
+        <source>Account menu</source>
+        <target state="translated">账户菜单</target>
+      </segment>
+    </unit>
+    <unit id="Status">
+      <segment>
+        <source>Status</source>
+        <target state="translated">状态</target>
+      </segment>
+    </unit>
+    <unit id="StatusAvailable">
+      <segment>
+        <source>Available</source>
+        <target state="translated">在线</target>
+      </segment>
+    </unit>
+    <unit id="StatusBusy">
+      <segment>
+        <source>Busy</source>
+        <target state="translated">忙碌</target>
+      </segment>
+    </unit>
+    <unit id="StatusAway">
+      <segment>
+        <source>Away</source>
+        <target state="translated">离开</target>
+      </segment>
+    </unit>
+    <unit id="Theme">
+      <segment>
+        <source>Theme</source>
+        <target state="translated">主题</target>
+      </segment>
+    </unit>
+    <unit id="ThemeLight">
+      <segment>
+        <source>Light</source>
+        <target state="translated">浅色</target>
+      </segment>
+    </unit>
+    <unit id="ThemeDark">
+      <segment>
+        <source>Dark</source>
+        <target state="translated">深色</target>
+      </segment>
+    </unit>
+    <unit id="ThemeSystem">
+      <segment>
+        <source>System</source>
+        <target state="translated">跟随系统</target>
+      </segment>
+    </unit>
+    <unit id="SignOut">
+      <segment>
+        <source>Sign out</source>
+        <target state="translated">退出登录</target>
+      </segment>
+    </unit>
+    <unit id="SigningOut">
+      <segment>
+        <source>Signing out</source>
+        <target state="translated">正在退出登录</target>
+      </segment>
+    </unit>
+  </file>
+</xliff>

@@ -14,6 +14,8 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 
 - `ColorPicker`: `TriggerChipPart`, `TriggerNamePart` and `TriggerHexPart` name the trigger's chip, label and hex
   (declared with `[TemplatePart]`); a custom template keeps these names for the popup header to fold onto them.
+- `UserMenu.StatusLabel`, `ThemeLabel`, `SignOutLabel` and `SigningOutLabel`: replace the text of the Status, Theme and
+  Sign out rows (and the text shown while signing out) with the app's own. `null` (the default) uses the localized text.
 - `KeycapKeyboard` is now a typing board: sculpted keycaps (housing, cap and
   dished face) scaled from one key unit, an accent Return or space bar, a glow under pressed keys and the typed text
   above the board. New members: `Value` (two-way) and `ValueChanged`, `Layout` (`KeycapLayout.Compact` or `Letters`),
@@ -163,6 +165,9 @@ Nothing is removed. Each of these keeps working, is marked `[Obsolete]` and stay
   The morphing header now meets the actual trigger's chip size and text position when folding back after Done,
   including Small's 24px chip and hex-only line, without changing the fully open panel layout. The label line moves
   with the hex as it folds, so the hex no longer slides through it.
+- `UserMenu` follows the app's language (#123): the Status, Theme and Sign out rows, "Signing out", the status and theme
+  choice names and the accessible names were always English. They now come from the new `UserMenuLangResourceKind`
+  catalog (en-US, zh-CN, zh-TW) and change when the language does, even while the menu is open.
 - Video on Android (`TKCode.Arc.Video.Native`): playback no longer closes the app when the platform throws. A Java
   exception from `MediaPlayer` or `ImageReader` (listing the tracks, creating the picture reader, `Start`, an unsupported
   playback rate, an image the decoder produced in a format the reader refuses) used to leave the `MediaPlayer` callback or

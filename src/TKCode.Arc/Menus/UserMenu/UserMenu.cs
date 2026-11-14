@@ -1,5 +1,6 @@
 using System.Collections;
 using TKCode.Arc.DesignTokens;
+using TKCode.Arc.Localization;
 using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Automation;
@@ -12,6 +13,7 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Metadata;
+using Avalonia.Threading;
 using AvaloniaButton = Avalonia.Controls.Button;
 
 namespace TKCode.Arc;
@@ -61,6 +63,11 @@ public class UserMenuStatusChangedEventArgs : RoutedEventArgs
 /// closes it and returns focus to the avatar. When <see cref="SignOutAction"/> returns an unfinished task the row shows
 /// a spinner and "Signing out", and the menu closes once it settles. Below a 640px wide window the menu opens as a
 /// bottom sheet that follows a downward drag.
+/// <para>
+/// The built-in text (the Status, Theme and Sign out rows, the choice names and the accessible names) follows the app's
+/// language; <see cref="StatusLabel"/>, <see cref="ThemeLabel"/>, <see cref="SignOutLabel"/> and
+/// <see cref="SigningOutLabel"/> replace the row text with the app's own.
+/// </para>
 /// <para>
 /// The panel scales out of the avatar on a spring that never overshoots, rows fade in 16ms apart, one highlight glides
 /// between rows and the switch thumbs slide on Arc's CSS spring.
@@ -121,9 +128,25 @@ public class UserMenu : TemplatedControl
     public static readonly StyledProperty<Func<Task>?> SignOutActionProperty =
         AvaloniaProperty.Register<UserMenu, Func<Task>?>(nameof(SignOutAction));
 
-    /// <summary>Shortcut hint for the sign-out row (for example "⇧⌘Q").</summary>
+    /// <summary>Shortcut hint shown at the end of the sign-out row (for example "⇧⌘Q"); it does not replace the row's text (<see cref="SignOutLabel"/>).</summary>
     public static readonly StyledProperty<string?> SignOutGestureTextProperty =
         AvaloniaProperty.Register<UserMenu, string?>(nameof(SignOutGestureText));
+
+    /// <summary>Text of the presence switch row; null uses the localized "Status" (which follows the language).</summary>
+    public static readonly StyledProperty<string?> StatusLabelProperty =
+        AvaloniaProperty.Register<UserMenu, string?>(nameof(StatusLabel));
+
+    /// <summary>Text of the theme switch row; null uses the localized "Theme" (which follows the language).</summary>
+    public static readonly StyledProperty<string?> ThemeLabelProperty =
+        AvaloniaProperty.Register<UserMenu, string?>(nameof(ThemeLabel));
+
+    /// <summary>Text of the sign-out row; null uses the localized "Sign out" (which follows the language).</summary>
+    public static readonly StyledProperty<string?> SignOutLabelProperty =
+        AvaloniaProperty.Register<UserMenu, string?>(nameof(SignOutLabel));
+
+    /// <summary>Text of the sign-out row while an asynchronous <see cref="SignOutAction"/> runs; null uses the localized "Signing out" (which follows the language).</summary>
+    public static readonly StyledProperty<string?> SigningOutLabelProperty =
+        AvaloniaProperty.Register<UserMenu, string?>(nameof(SigningOutLabel));
 
     /// <summary>Whether the menu is open; two-way bound.</summary>
     public static readonly StyledProperty<bool> IsOpenProperty =
@@ -230,10 +253,39 @@ public class UserMenu : TemplatedControl
         set => SetValue(SignOutActionProperty, value);
     }
 
+    /// <inheritdoc cref="SignOutGestureTextProperty"/>
     public string? SignOutGestureText
     {
         get => GetValue(SignOutGestureTextProperty);
         set => SetValue(SignOutGestureTextProperty, value);
+    }
+
+    /// <inheritdoc cref="StatusLabelProperty"/>
+    public string? StatusLabel
+    {
+        get => GetValue(StatusLabelProperty);
+        set => SetValue(StatusLabelProperty, value);
+    }
+
+    /// <inheritdoc cref="ThemeLabelProperty"/>
+    public string? ThemeLabel
+    {
+        get => GetValue(ThemeLabelProperty);
+        set => SetValue(ThemeLabelProperty, value);
+    }
+
+    /// <inheritdoc cref="SignOutLabelProperty"/>
+    public string? SignOutLabel
+    {
+        get => GetValue(SignOutLabelProperty);
+        set => SetValue(SignOutLabelProperty, value);
+    }
+
+    /// <inheritdoc cref="SigningOutLabelProperty"/>
+    public string? SigningOutLabel
+    {
+        get => GetValue(SigningOutLabelProperty);
+        set => SetValue(SigningOutLabelProperty, value);
     }
 
     /// <inheritdoc cref="IsOpenProperty"/>
@@ -327,16 +379,16 @@ public class UserMenu : TemplatedControl
 
     private static readonly UserMenuChoiceOption[] s_statusOptions =
     [
-        new("Available", null, UserMenuStatus.Available),
-        new("Busy", null, UserMenuStatus.Busy),
-        new("Away", null, UserMenuStatus.Away)
+        new(UserMenuLangResourceKind.StatusAvailable, null, UserMenuStatus.Available),
+        new(UserMenuLangResourceKind.StatusBusy, null, UserMenuStatus.Busy),
+        new(UserMenuLangResourceKind.StatusAway, null, UserMenuStatus.Away)
     ];
 
     private static readonly UserMenuChoiceOption[] s_themeOptions =
     [
-        new("Light", ArcIcons.Sun, null),
-        new("Dark", ArcIcons.Moon, null),
-        new("System", ArcIcons.Monitor, null)
+        new(UserMenuLangResourceKind.ThemeLight, ArcIcons.Sun, null),
+        new(UserMenuLangResourceKind.ThemeDark, ArcIcons.Moon, null),
+        new(UserMenuLangResourceKind.ThemeSystem, ArcIcons.Monitor, null)
     ];
 
     private readonly MenuEntrySeparator _itemsSeparator = new();
@@ -351,6 +403,7 @@ public class UserMenu : TemplatedControl
     private AvaloniaButton? _trigger;
     private TopLevel? _topLevel;
     private IDisposable? _viewportWatch;
+    private ArcLanguageManager? _languages;
     private bool _keyboardActivation;
     private bool _compact;
 
@@ -368,15 +421,55 @@ public class UserMenu : TemplatedControl
             }
         };
 
-        _signOutLabel = new ArcContentSwap { Mode = ContentSwapMode.BlurSwap, Content = "Sign out" };
+        _signOutLabel = new ArcContentSwap { Mode = ContentSwapMode.BlurSwap };
         _signOut = new MenuEntry { Header = _signOutLabel, Icon = ArcIcons.LogOut, StaysOpenOnClick = true };
-        TextSearch.SetText(_signOut, "Sign out");
-        AutomationProperties.SetName(_signOut, "Sign out");
         _signOut.Click += (_, _) => _ = SignOutAsync();
 
         Items.CollectionChanged += (_, _) => RebuildRows();
         RebuildRows();
+        UpdateSignOutText();
         UpdateAutomationName();
+    }
+
+    /// <summary><paramref name="label"/>, or the text of <paramref name="kind"/> in the current language.</summary>
+    private static string Text(string? label, UserMenuLangResourceKind kind) => label ?? UserMenuLangResources.Get(kind);
+
+    private string StatusText => Text(StatusLabel, UserMenuLangResourceKind.Status);
+
+    private string ThemeText => Text(ThemeLabel, UserMenuLangResourceKind.Theme);
+
+    private string SignOutText => Text(SignOutLabel, UserMenuLangResourceKind.SignOut);
+
+    private string SigningOutText => Text(SigningOutLabel, UserMenuLangResourceKind.SigningOut);
+
+    /// <summary>The sign-out row's shown, searched and announced text (and its help text while signing out).</summary>
+    private void UpdateSignOutText()
+    {
+        _signOutLabel.Content = IsSigningOut ? SigningOutText : SignOutText;
+        TextSearch.SetText(_signOut, SignOutText);
+        AutomationProperties.SetName(_signOut, SignOutText);
+        AutomationProperties.SetHelpText(_signOut, IsSigningOut ? SigningOutText : null);
+    }
+
+    /// <summary>Every built-in text again, in the current language (labels that are set stay as they are).</summary>
+    private void UpdateTexts()
+    {
+        UpdateSignOutText();
+        _statusRow?.SetLabel(StatusText);
+        _themeRow?.SetLabel(ThemeText);
+        UpdateAutomationName();
+    }
+
+    private void OnLanguageChanged(object? sender, LanguageChangedEventArgs e)
+    {
+        if (Dispatcher.UIThread.CheckAccess())
+        {
+            UpdateTexts();
+        }
+        else
+        {
+            Dispatcher.UIThread.Post(UpdateTexts);
+        }
     }
 
     /// <summary>The avatar trigger the menu returns focus to.</summary>
@@ -430,6 +523,13 @@ public class UserMenu : TemplatedControl
         _viewportWatch?.Dispose();
         _viewportWatch = ArcViewport.Observe(this, _ => UpdateCompact());
         UpdateCompact();
+        _languages = ArcLanguageManager.Current;
+        if (_languages is not null)
+        {
+            _languages.Changed += OnLanguageChanged;
+        }
+        // The language may have changed while the menu was out of the tree.
+        UpdateTexts();
     }
 
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
@@ -438,6 +538,11 @@ public class UserMenu : TemplatedControl
         _viewportWatch?.Dispose();
         _viewportWatch = null;
         _topLevel = null;
+        if (_languages is not null)
+        {
+            _languages.Changed -= OnLanguageChanged;
+            _languages = null;
+        }
     }
 
     protected override void OnLoaded(RoutedEventArgs e)
@@ -510,6 +615,18 @@ public class UserMenu : TemplatedControl
         {
             _signOut.InputGestureText = change.GetNewValue<string?>();
         }
+        else if (change.Property == SignOutLabelProperty || change.Property == SigningOutLabelProperty)
+        {
+            UpdateSignOutText();
+        }
+        else if (change.Property == StatusLabelProperty)
+        {
+            _statusRow?.SetLabel(StatusText);
+        }
+        else if (change.Property == ThemeLabelProperty)
+        {
+            _themeRow?.SetLabel(ThemeText);
+        }
         else if (change.Property == PanelAlignmentProperty)
         {
             Menu.Alignment = change.GetNewValue<MenuAlignment>();
@@ -522,12 +639,13 @@ public class UserMenu : TemplatedControl
 
     private void UpdateAutomationName()
     {
-        var name = $"Account menu, {DisplayName}";
+        var accountMenu = UserMenuLangResources.Get(UserMenuLangResourceKind.AccountMenu);
+        var name = $"{accountMenu}, {DisplayName}";
         if (IsStatusVisible)
         {
             name += ", " + s_statusOptions[(int)Status].Label;
         }
-        AutomationProperties.SetName(Menu, "Account menu");
+        AutomationProperties.SetName(Menu, accountMenu);
         if (_trigger is not null)
         {
             AutomationProperties.SetName(_trigger, name);
@@ -592,7 +710,7 @@ public class UserMenu : TemplatedControl
                 var dot = new UserMenuPresenceDot { DotSize = 10 };
                 ArcTokens.Bind(dot, UserMenuPresenceDot.SurfaceBrushProperty, ArcDesignTokenKind.SurfaceRaised);
                 dot.Bind(UserMenuPresenceDot.StatusProperty, this.GetObservable(StatusProperty));
-                _statusRow = new UserMenuChoiceRow("Status", dot, s_statusOptions);
+                _statusRow = new UserMenuChoiceRow(StatusText, dot, s_statusOptions);
                 _statusRow.Segments.SelectedIndex = (int)Status;
                 _statusRow.Segments.SelectionChanged += index =>
                 {
@@ -610,7 +728,7 @@ public class UserMenu : TemplatedControl
         {
             if (_themeRow is null)
             {
-                _themeRow = new UserMenuChoiceRow("Theme", ArcIcons.SunMoon, s_themeOptions);
+                _themeRow = new UserMenuChoiceRow(ThemeText, ArcIcons.SunMoon, s_themeOptions);
                 _themeRow.Segments.SelectedIndex = (int)ThemePreference;
                 _themeRow.Segments.SelectionChanged += index =>
                 {
@@ -638,9 +756,8 @@ public class UserMenu : TemplatedControl
         // Async sign out keeps the menu open with its progress on the row, then closes once it settles.
         IsSigningOut = true;
         PseudoClasses.Set(SigningOutPseudoClass, true);
-        _signOutLabel.Content = "Signing out";
+        UpdateSignOutText();
         _signOut.Icon = new ArcSpinner { Width = 16, Height = 16 };
-        AutomationProperties.SetHelpText(_signOut, "Busy");
         try
         {
             await task;
@@ -653,9 +770,8 @@ public class UserMenu : TemplatedControl
         {
             IsSigningOut = false;
             PseudoClasses.Set(SigningOutPseudoClass, false);
-            _signOutLabel.Content = "Sign out";
+            UpdateSignOutText();
             _signOut.Icon = ArcIcons.LogOut;
-            AutomationProperties.SetHelpText(_signOut, null);
             Menu.Close(returnFocus: false);
         }
     }
