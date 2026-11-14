@@ -1,4 +1,5 @@
 using TKCode.Arc.DesignTokens;
+using TKCode.Arc.Localization;
 using TKCode.Arc.Motion;
 using Avalonia;
 using Avalonia.Automation;
@@ -11,8 +12,12 @@ using Avalonia.Media.Immutable;
 
 namespace TKCode.Arc;
 
-/// <summary>One option of an inline user-menu switch: a Lucide glyph or a presence status.</summary>
-internal readonly record struct UserMenuChoiceOption(string Label, Geometry? Glyph, UserMenuStatus? Status);
+/// <summary>One option of an inline user-menu switch: a Lucide glyph or a presence status, named by its localized text.</summary>
+internal readonly record struct UserMenuChoiceOption(UserMenuLangResourceKind Text, Geometry? Glyph, UserMenuStatus? Status)
+{
+    /// <summary>The option's name in the current language (the accessible help text of its row).</summary>
+    public string Label => UserMenuLangResources.Get(Text);
+}
 
 /// <summary>
 /// An inline switch row of the user menu (Theme, Status). It is one stop in the menu: ArrowUp / ArrowDown pass over
@@ -25,8 +30,8 @@ internal sealed class UserMenuChoiceRow : MenuEntry
 
     public UserMenuChoiceRow(string label, object icon, IReadOnlyList<UserMenuChoiceOption> options)
     {
-        Segments = new UserMenuSegments(options, label);
-        _label = new TextBlock { Text = label, VerticalAlignment = VerticalAlignment.Center, TextTrimming = TextTrimming.CharacterEllipsis };
+        Segments = new UserMenuSegments(options);
+        _label = new TextBlock { VerticalAlignment = VerticalAlignment.Center, TextTrimming = TextTrimming.CharacterEllipsis };
         DockPanel.SetDock(Segments, Dock.Right);
         var panel = new DockPanel();
         panel.Children.Add(Segments);
@@ -34,9 +39,16 @@ internal sealed class UserMenuChoiceRow : MenuEntry
         Header = panel;
         Icon = icon;
         Padding = new Thickness(8, 0, 4, 0);
+        Segments.SelectionChanged += _ => UpdateHelpText();
+        SetLabel(label);
+    }
+
+    /// <summary>The row's text (shown, searched and announced); also refreshes the option name after a language change.</summary>
+    public void SetLabel(string label)
+    {
+        _label.Text = label;
         TextSearch.SetText(this, label);
         AutomationProperties.SetName(this, label);
-        Segments.SelectionChanged += _ => UpdateHelpText();
         UpdateHelpText();
     }
 
@@ -118,7 +130,6 @@ internal sealed class UserMenuSegments : Control
     private const double Inset = 2;
 
     private readonly IReadOnlyList<UserMenuChoiceOption> _options;
-    private readonly string _group;
     private readonly Pen?[] _glyphPens = new Pen?[3];
     private readonly IBrush?[] _glyphPenBrushes = new IBrush?[3];
     private MotionValue<double>? _thumb;
@@ -130,10 +141,9 @@ internal sealed class UserMenuSegments : Control
     private Pen? _thumbRing;
     private BoxShadows _thumbShadow;
 
-    public UserMenuSegments(IReadOnlyList<UserMenuChoiceOption> options, string group)
+    public UserMenuSegments(IReadOnlyList<UserMenuChoiceOption> options)
     {
         _options = options;
-        _group = group;
         Cursor = new Cursor(StandardCursorType.Hand);
         VerticalAlignment = VerticalAlignment.Center;
         ArcTokens.Bind(this, ForegroundBrushProperty, ArcDesignTokenKind.Foreground);

@@ -1,9 +1,12 @@
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using TKCode.Arc.Localization;
+using TKCode.Arc.Primitives;
 using AvaloniaButton = Avalonia.Controls.Button;
 
 namespace TKCode.Arc.Tests.Menus;
@@ -165,6 +168,118 @@ public class UserMenuTests
             menu.Close();
             Dispatcher.UIThread.RunJobs();
             menu.IsOpen.ShouldBeFalse();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Built_In_Text_Follows_The_Language()
+    {
+        var menu = CreateMenu();
+        menu.IsStatusVisible = true;
+        menu.Status = UserMenuStatus.Busy;
+        var window = Show(menu);
+        var languages = ArcLanguageManager.Current!;
+        try
+        {
+            menu.Open();
+            Dispatcher.UIThread.RunJobs();
+            var rows = menu.Menu.Items.OfType<MenuEntry>().ToList();
+            var (status, theme, signOut) = (rows[3], rows[4], rows[5]);
+            TextSearchText(status).ShouldBe("Status");
+            AutomationProperties.GetHelpText(status).ShouldBe("Busy");
+
+            languages.Set(LanguageTags.ZhCN);
+            Dispatcher.UIThread.RunJobs();
+            TextSearchText(status).ShouldBe("状态");
+            AutomationProperties.GetHelpText(status).ShouldBe("忙碌");
+            TextSearchText(theme).ShouldBe("主题");
+            AutomationProperties.GetHelpText(theme).ShouldBe("跟随系统");
+            TextSearchText(signOut).ShouldBe("退出登录");
+            ((ArcContentSwap)signOut.Header!).Content.ShouldBe("退出登录");
+            AutomationProperties.GetName(Trigger(menu)).ShouldBe("账户菜单, Ada Lovelace, 忙碌");
+            AutomationProperties.GetName(menu.Menu).ShouldBe("账户菜单");
+
+            languages.Set(LanguageTags.ZhTW);
+            Dispatcher.UIThread.RunJobs();
+            TextSearchText(status).ShouldBe("狀態");
+            ((ArcContentSwap)signOut.Header!).Content.ShouldBe("登出");
+        }
+        finally
+        {
+            languages.Set(LanguageTags.EnUS);
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Labels_Replace_The_Localized_Text()
+    {
+        var menu = CreateMenu();
+        menu.IsStatusVisible = true;
+        menu.StatusLabel = "Presence";
+        var window = Show(menu);
+        var languages = ArcLanguageManager.Current!;
+        try
+        {
+            menu.Open();
+            Dispatcher.UIThread.RunJobs();
+            var rows = menu.Menu.Items.OfType<MenuEntry>().ToList();
+            var (status, theme, signOut) = (rows[3], rows[4], rows[5]);
+            TextSearchText(status).ShouldBe("Presence");
+            AutomationProperties.GetName(status).ShouldBe("Presence");
+
+            menu.ThemeLabel = "Appearance";
+            menu.SignOutLabel = "Log out";
+            TextSearchText(theme).ShouldBe("Appearance");
+            TextSearchText(signOut).ShouldBe("Log out");
+            AutomationProperties.GetName(signOut).ShouldBe("Log out");
+            ((ArcContentSwap)signOut.Header!).Content.ShouldBe("Log out");
+
+            languages.Set(LanguageTags.ZhCN);
+            Dispatcher.UIThread.RunJobs();
+            TextSearchText(status).ShouldBe("Presence");
+            TextSearchText(signOut).ShouldBe("Log out");
+
+            menu.SignOutLabel = null;
+            menu.StatusLabel = null;
+            TextSearchText(signOut).ShouldBe("退出登录");
+            TextSearchText(status).ShouldBe("状态");
+        }
+        finally
+        {
+            languages.Set(LanguageTags.EnUS);
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public async Task Signing_Out_Shows_The_Signing_Out_Label()
+    {
+        var menu = CreateMenu();
+        var gate = new TaskCompletionSource();
+        menu.SignOutAction = () => gate.Task;
+        menu.SignOutLabel = "Log out";
+        menu.SigningOutLabel = "Logging out…";
+        var window = Show(menu);
+        try
+        {
+            menu.Open();
+            Dispatcher.UIThread.RunJobs();
+            var signOut = menu.Menu.Items.OfType<MenuEntry>().Last();
+            var label = (ArcContentSwap)signOut.Header!;
+            signOut.PerformClick();
+            Dispatcher.UIThread.RunJobs();
+            label.Content.ShouldBe("Logging out…");
+            AutomationProperties.GetHelpText(signOut).ShouldBe("Logging out…");
+            gate.SetResult();
+            await Task.Yield();
+            Dispatcher.UIThread.RunJobs();
+            label.Content.ShouldBe("Log out");
+            AutomationProperties.GetHelpText(signOut).ShouldBeNull();
         }
         finally
         {
