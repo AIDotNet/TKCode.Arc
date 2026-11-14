@@ -265,6 +265,10 @@ public class ColorPicker : TemplatedControl, IPickerAutomation
     private readonly TranslateTransform _bodyShift = new();
     private readonly MatrixTransform _headChipMorph = new();
     private readonly TranslateTransform _headHexShift = new();
+    private double _headerProgress;
+    private double _headerStartHeight;
+    private double _headerStartProgress;
+    private bool _headerFolding;
     private MotionValue<double>? _fade;
     private PickerRevealScroll? _reveal;
     private double _shift;
@@ -816,6 +820,15 @@ public class ColorPicker : TemplatedControl, IPickerAutomation
         var from = TriggerShape;
         var to = PanelShape;
         _surface.Contain(from, to);
+        if (_popup.IsOpen)
+        {
+            BeginHeaderMotion(folding: false, _surface.Shape.Height);
+        }
+        else
+        {
+            _headerProgress = 0;
+            BeginHeaderMotion(folding: false, from.Height);
+        }
         if (!_popup.IsOpen)
         {
             _surface.ShadowRoom = PickerMorphPlacement.Room(this, _trigger, _surface, fit.Scroll);
@@ -904,6 +917,7 @@ public class ColorPicker : TemplatedControl, IPickerAutomation
         }
         _peer?.RaiseExpandChanged(false);
         var level = IsLoaded ? ArcMotion.GetEffectiveLevel(this) : ArcMotionLevel.Off;
+        BeginHeaderMotion(folding: true, _surface.Shape.Height);
         if (level == ArcMotionLevel.Full)
         {
             await _surface.MorphTo(TriggerShape, CloseSpring, 1, MotionSpec.Instant);
@@ -945,9 +959,24 @@ public class ColorPicker : TemplatedControl, IPickerAutomation
         var span = to.Height - from.Height;
         var q = span > 1 ? Math.Clamp((_surface.Shape.Height - from.Height) / span, 0, 1.2) : 1;
         var headerSpan = (_panel.Head?.Bounds.Height ?? from.Height) - from.Height;
-        // Once the body is hidden, keep the chip centered in the shrinking capsule, not the full panel height.
-        var headerProgress = headerSpan > 1 ? (_surface.Shape.Height - from.Height) / headerSpan : q;
-        ApplyHeaderProgress(Math.Clamp(headerProgress, 0, 1));
+        // Opening, the header unfolds over the whole reveal. Folding after Done, it waits for the body to be hidden and
+        // then keeps the chip centered in the shrinking capsule: the last header-to-trigger interval only.
+        double Curve(double height)
+        {
+            if (!_headerFolding)
+            {
+                return span > 1 ? Math.Clamp((height - from.Height) / span, 0, 1) : 1;
+            }
+            return headerSpan > 1 ? Math.Clamp((height - from.Height) / headerSpan, 0, 1) : Math.Min(q, 1);
+        }
+        // A reversal (reopen while folding, close while opening) starts where the header is and blends into the new curve
+        // by the end of the motion, so the header never jumps.
+        var height = _surface.Shape.Height;
+        var end = _headerFolding ? from.Height : to.Height;
+        var reach = _headerStartHeight - end;
+        var carry = Math.Abs(reach) > 1 ? Math.Clamp((height - end) / reach, 0, 1) : 0;
+        _headerProgress = Math.Clamp(Curve(height) + (_headerStartProgress - Curve(_headerStartHeight)) * carry, 0, 1);
+        ApplyHeaderProgress(_headerProgress);
         var opacity = Math.Clamp((q - 0.35) / (0.9 - 0.35), 0, 1);
         if (_panel.Body is { } body)
         {
@@ -958,6 +987,14 @@ public class ColorPicker : TemplatedControl, IPickerAutomation
             actions.Opacity = opacity;
         }
         _bodyShift.Y = -10 * (1 - Math.Min(q, 1));
+    }
+
+    /// <summary>Starts the header's open or fold curve from the shape's current height and the header's current progress.</summary>
+    private void BeginHeaderMotion(bool folding, double startHeight)
+    {
+        _headerFolding = folding;
+        _headerStartHeight = startHeight;
+        _headerStartProgress = _headerProgress;
     }
 
     /// <summary>The header meets the actual trigger at the handoff, including Small's smaller chip and hex-only line.</summary>

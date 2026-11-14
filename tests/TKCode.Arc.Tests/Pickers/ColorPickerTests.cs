@@ -78,6 +78,80 @@ public class ColorPickerTests
         }
     }
 
+    [AvaloniaFact]
+    public void Small_Header_Unfolds_With_The_Reveal_Without_A_Snap()
+    {
+        var clock = new TKCode.Arc.Motion.ManualFrameClock();
+        using var installed = clock.Install();
+        var picker = new ColorPicker { Size = ControlSize.Small, Label = "Accent" };
+        var window = TestHelpers.Show(picker, TKCode.Arc.Motion.ArcMotionLevel.Full);
+        window.Width = 640;
+        window.Height = 720;
+        void Step()
+        {
+            clock.Advance(TimeSpan.FromMilliseconds(16));
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+        }
+        double ChipWidth()
+        {
+            var chip = picker.Panel!.HeadChip!;
+            var left = chip.TranslatePoint(default, picker.Surface!)!.Value;
+            var right = chip.TranslatePoint(new Point(chip.Bounds.Width, 0), picker.Surface!)!.Value;
+            return right.X - left.X;
+        }
+        try
+        {
+            for (var frame = 0; frame < 80; frame++)
+            {
+                Step();
+            }
+            var triggerChip = TestHelpers.Descendant<ColorPickerChip>(picker, "PART_TriggerChip");
+            // The very first open: the header is already folded to the trigger's 24px chip when the popup opens.
+            picker.IsDropDownOpen = true;
+            var openingChip = picker.Panel!.HeadChip!;
+            (openingChip.Bounds.Width * openingChip.RenderTransform!.Value.M11).ShouldBe(triggerChip.Bounds.Width, 0.5);
+            Dispatcher.UIThread.RunJobs();
+            ChipWidth().ShouldBe(triggerChip.Bounds.Width, 0.5);
+            var fullWidth = picker.Panel!.HeadChip!.Bounds.Width;
+            fullWidth.ShouldBeGreaterThan(triggerChip.Bounds.Width + 4);
+            var maxStep = (fullWidth - triggerChip.Bounds.Width) / 2;
+            var previous = ChipWidth();
+            for (var frame = 0; frame < 6; frame++)
+            {
+                Step();
+                var width = ChipWidth();
+                Math.Abs(width - previous).ShouldBeLessThan(maxStep);
+                previous = width;
+            }
+            // Done while still opening folds back from where the header is, without jumping to the fold curve.
+            picker.Panel.DoneButton!.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Avalonia.Controls.Button.ClickEvent));
+            for (var frame = 0; frame < 100 && picker.Popup!.IsOpen; frame++)
+            {
+                Step();
+                var width = ChipWidth();
+                Math.Abs(width - previous).ShouldBeLessThan(maxStep);
+                previous = width;
+            }
+            previous.ShouldBe(triggerChip.Bounds.Width, 1);
+            TestHelpers.PumpUntil(() => !picker.Popup!.IsOpen).ShouldBeTrue();
+            for (var frame = 0; frame < 30; frame++)
+            {
+                Step();
+            }
+            Open(picker);
+            for (var frame = 0; frame < 100; frame++)
+            {
+                Step();
+            }
+            ChipWidth().ShouldBe(fullWidth, 0.5);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     [AvaloniaTheory]
     [InlineData(ControlSize.Small)]
     [InlineData(ControlSize.Medium)]
