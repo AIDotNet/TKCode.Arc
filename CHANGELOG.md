@@ -8,7 +8,16 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0), `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` (from 1.1.0-preview.1).
 
-## Unreleased
+## 1.1.1-preview.1 - 2026-11-14
+
+New components: `MonthCalendar` (`TKCode.Arc.Blocks`, Screens › Calendars), a calendar app screen around a month, and
+`WindowRange` and `CursorTrailDraw` (`TKCode.Arc.Special`). `KeycapKeyboard` becomes a typing board, and `PrizeWheel`,
+`BranchGraph`, `SandText`, `SplitBar` and `TocProgress` are rebuilt after their Arc designs (see Changed for what looks
+and behaves differently). The Blocks catalog follows uiarc.dev's groups: a new Agents group, and the whole-page blocks
+move to the new Screens groups (`BlockCatalog.ScreenGroups`), so code that filters `BlockCatalog.Blocks` by a group code
+may need the new codes. `UserMenu` follows the app's language ([#123](https://github.com/AIDotNet/TKCode.Arc/issues/123)),
+and `ColorPicker`'s header folds back onto its trigger. Nothing is removed: members that no longer apply stay as
+`[Obsolete]` (see Deprecated). Install it with `--version 1.1.1-preview.1` (or `--prerelease`).
 
 ### Added
 
@@ -63,7 +72,6 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 - `SplitBar`: `Description`, `Unit`, `TotalLabel` ("Total"), `SplitBarSegment.IsHidden` (two-way) and the
   `HiddenChanged` event (`SplitBarHiddenChangedEventArgs` with `Segment` and `IsHidden`); template part `PART_Status`
   (`SplitBar.StatusPart`), a polite live region.
-
 - `TocProgress`: `ReadingOffset` (the reading line in pixels below the top of the viewport; chosen headings scroll to
   it), `ShowsTimeLeft` (true) and `ReadingTime` (minutes; estimated from the article's words at 230 a minute when not
   set) for the minutes left beside the title, which roll to each new value and end on Finished with a check.
@@ -165,7 +173,7 @@ Nothing is removed. Each of these keeps working, is marked `[Obsolete]` and stay
   The morphing header now meets the actual trigger's chip size and text position when folding back after Done,
   including Small's 24px chip and hex-only line, without changing the fully open panel layout. The label line moves
   with the hex as it folds, so the hex no longer slides through it.
-- `UserMenu` follows the app's language (#123): the Status, Theme and Sign out rows, "Signing out", the status and theme
+- `UserMenu` follows the app's language ([#123](https://github.com/AIDotNet/TKCode.Arc/issues/123)): the Status, Theme and Sign out rows, "Signing out", the status and theme
   choice names and the accessible names were always English. They now come from the new `UserMenuLangResourceKind`
   catalog (en-US, zh-CN, zh-TW) and change when the language does, even while the menu is open.
 - Video on Android (`TKCode.Arc.Video.Native`): playback no longer closes the app when the platform throws. A Java
@@ -1839,6 +1847,7 @@ ArcTheme.Apply(t => t
 
 First preview release.
 
+[1.1.1-preview.1]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.1.0...v1.1.1-preview.1
 [1.1.0]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.0.0...v1.1.0
 [1.1.0-preview.7]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.1.0-preview.6...v1.1.0-preview.7
 [1.1.0-preview.6]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.1.0-preview.4...v1.1.0-preview.6
