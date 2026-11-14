@@ -11,6 +11,123 @@ namespace TKCode.Arc.Tests.Pickers;
 
 public class ColorPickerTests
 {
+    [AvaloniaTheory]
+    [InlineData(ControlSize.Small, "")]
+    [InlineData(ControlSize.Small, "Accent")]
+    [InlineData(ControlSize.Medium, "")]
+    [InlineData(ControlSize.Medium, "Accent")]
+    public void Confirm_Closes_With_The_Trigger_Header_Geometry(ControlSize size, string label)
+    {
+        var clock = new TKCode.Arc.Motion.ManualFrameClock();
+        using var installed = clock.Install();
+        var picker = new ColorPicker { Size = size, Label = label };
+        var window = TestHelpers.Show(picker, TKCode.Arc.Motion.ArcMotionLevel.Full);
+        window.Width = 640;
+        window.Height = 720;
+        void Step()
+        {
+            clock.Advance(TimeSpan.FromMilliseconds(16));
+            Dispatcher.UIThread.RunJobs();
+            window.UpdateLayout();
+        }
+        try
+        {
+            for (var frame = 0; frame < 80; frame++)
+            {
+                Step();
+            }
+            Open(picker);
+            for (var frame = 0; frame < 100; frame++)
+            {
+                Step();
+            }
+            picker.Panel!.DoneButton!.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Avalonia.Controls.Button.ClickEvent));
+            var surface = picker.Surface!;
+            var trigger = TestHelpers.Descendant<Border>(picker, "PART_Trigger");
+            var triggerChip = TestHelpers.Descendant<ColorPickerChip>(picker, "PART_TriggerChip");
+            var triggerHex = TestHelpers.Descendant<TextBlock>(picker, "PART_TriggerHex");
+            var header = TestHelpers.Descendant<Control>(picker.Panel, "PART_Head");
+            var checkedClosingFrame = false;
+            for (var frame = 0; frame < 100; frame++)
+            {
+                Step();
+                if (picker.Popup!.IsOpen && surface.Shape.Height >= trigger.Bounds.Height && surface.Shape.Height <= header.Bounds.Height)
+                {
+                    var chipCenter = CenterY(picker.Panel.HeadChip!, surface) - surface.ShapeRect.Y;
+                    chipCenter.ShouldBe(surface.Shape.Height / 2, 1);
+                }
+                if (picker.Popup!.IsOpen && surface.Shape.Height <= trigger.Bounds.Height + 0.5)
+                {
+                    checkedClosingFrame = true;
+                    var headChip = picker.Panel.HeadChip!;
+                    var headCenter = headChip.TranslatePoint(new Point(headChip.Bounds.Width / 2, headChip.Bounds.Height / 2), surface)!.Value;
+                    var triggerCenter = triggerChip.TranslatePoint(new Point(triggerChip.Bounds.Width / 2, triggerChip.Bounds.Height / 2), trigger)!.Value;
+                    (headCenter.Y - surface.ShapeRect.Y).ShouldBe(triggerCenter.Y, 1);
+                    (CenterY(picker.Panel.HeadHex!, surface) - surface.ShapeRect.Y).ShouldBe(CenterY(triggerHex, trigger), 1);
+                    var left = headChip.TranslatePoint(default, surface)!.Value;
+                    var right = headChip.TranslatePoint(new Point(headChip.Bounds.Width, 0), surface)!.Value;
+                    (right.X - left.X).ShouldBe(triggerChip.Bounds.Width, 1);
+                }
+            }
+            checkedClosingFrame.ShouldBeTrue();
+            TestHelpers.PumpUntil(() => !picker.Popup!.IsOpen).ShouldBeTrue();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTheory]
+    [InlineData(ControlSize.Small)]
+    [InlineData(ControlSize.Medium)]
+    public void Empty_Label_Does_Not_Offset_The_Hex_In_The_Trigger_Or_Panel(ControlSize size)
+    {
+        var picker = new ColorPicker { Size = size, Label = "" };
+        var window = Show(picker);
+        try
+        {
+            var triggerName = TestHelpers.Descendant<TextBlock>(picker, "PART_TriggerName");
+            var triggerHex = picker.GetVisualDescendants().OfType<TextBlock>().Single(text => text.Text == picker.HexValue);
+            var triggerChip = TestHelpers.Descendant<ColorPickerChip>(picker, "PART_TriggerChip");
+            triggerName.IsVisible.ShouldBeFalse();
+            CenterY(triggerHex, picker).ShouldBe(CenterY(triggerChip, picker), 1);
+
+            Open(picker);
+            var panel = picker.Panel!;
+            panel.HeadName!.IsVisible.ShouldBeFalse();
+            CenterY(panel.HeadHex!, panel).ShouldBe(CenterY(panel.HeadChip!, panel), 1);
+
+            // A label changed while open updates both places; Small remains hex-only in the trigger.
+            picker.Label = "Accent";
+            Dispatcher.UIThread.RunJobs();
+            triggerName.IsVisible.ShouldBe(size != ControlSize.Small);
+            panel.HeadName.IsVisible.ShouldBeTrue();
+            panel.HeadName.Text.ShouldBe("Accent");
+
+            picker.Label = "";
+            Dispatcher.UIThread.RunJobs();
+            triggerName.IsVisible.ShouldBeFalse();
+            panel.HeadName.IsVisible.ShouldBeFalse();
+            CenterY(triggerHex, picker).ShouldBe(CenterY(triggerChip, picker), 1);
+            CenterY(panel.HeadHex!, panel).ShouldBe(CenterY(panel.HeadChip!, panel), 1);
+
+            picker.IsDropDownOpen = false;
+            Dispatcher.UIThread.RunJobs();
+            Open(picker);
+            panel.HeadName.IsVisible.ShouldBeFalse();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    private static double CenterY(Control control, Visual relativeTo)
+    {
+        return control.TranslatePoint(new Point(0, control.Bounds.Height / 2), relativeTo)!.Value.Y;
+    }
+
     private static Window Show(Control content)
     {
         var window = TestHelpers.Show(content);

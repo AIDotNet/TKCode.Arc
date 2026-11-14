@@ -156,6 +156,10 @@ Nothing is removed. Each of these keeps working, is marked `[Obsolete]` and stay
 
 ### Fixed
 
+- `ColorPicker`: an empty label no longer reserves a blank line in the trigger or popup header, keeping the hex value
+  vertically centered beside its color chip. Labels changed while the panel is open update their visibility too.
+  The morphing header now meets the actual trigger's chip size and text position when folding back after Done,
+  including Small's 24px chip and hex-only line, without changing the fully open panel layout.
 - Video on Android (`TKCode.Arc.Video.Native`): playback no longer closes the app when the platform throws. A Java
   exception from `MediaPlayer` or `ImageReader` (listing the tracks, creating the picture reader, `Start`, an unsupported
   playback rate, an image the decoder produced in a format the reader refuses) used to leave the `MediaPlayer` callback or

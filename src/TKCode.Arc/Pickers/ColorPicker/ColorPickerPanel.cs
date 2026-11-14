@@ -25,6 +25,7 @@ internal sealed class ColorPickerPanel : TemplatedControl
 
     public double PreferredWidth { get => GetValue(PreferredWidthProperty); set => SetValue(PreferredWidthProperty, value); }
 
+    public Control? Head { get; private set; }
     public ColorPickerChip? HeadChip { get; private set; }
     public TextBlock? HeadName { get; private set; }
     public TextBlock? HeadHex { get; private set; }
@@ -52,6 +53,7 @@ internal sealed class ColorPickerPanel : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
+        Head = e.NameScope.Find<Control>("PART_Head");
         HeadChip = e.NameScope.Find<ColorPickerChip>("PART_HeadChip");
         HeadName = e.NameScope.Find<TextBlock>("PART_HeadName");
         HeadHex = e.NameScope.Find<TextBlock>("PART_HeadHex");

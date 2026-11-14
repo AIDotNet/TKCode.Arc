@@ -254,12 +254,17 @@ public class ColorPicker : TemplatedControl, IPickerAutomation
     private bool _syncingColor;
     private bool _syncingInput;
     private Control? _trigger;
+    private Control? _triggerChip;
+    private TextBlock? _triggerHex;
+    private TextBlock? _triggerName;
     private PickerMorphPopup? _popup;
     private PickerMorphSurface? _surface;
     private ColorPickerPanel? _panel;
     private PickerAutomationPeer? _peer;
     private PickerShake? _shake;
     private readonly TranslateTransform _bodyShift = new();
+    private readonly MatrixTransform _headChipMorph = new();
+    private readonly TranslateTransform _headHexShift = new();
     private MotionValue<double>? _fade;
     private PickerRevealScroll? _reveal;
     private double _shift;
@@ -365,6 +370,9 @@ public class ColorPicker : TemplatedControl, IPickerAutomation
             _popup.Child = null;
         }
         _trigger = e.NameScope.Find<Control>(TriggerPart);
+        _triggerChip = e.NameScope.Find<Control>("PART_TriggerChip");
+        _triggerHex = e.NameScope.Find<TextBlock>("PART_TriggerHex");
+        _triggerName = e.NameScope.Find<TextBlock>("PART_TriggerName");
         _popup = e.NameScope.Find<PickerMorphPopup>(PopupPart);
         if (_trigger is not null)
         {
@@ -452,6 +460,7 @@ public class ColorPicker : TemplatedControl, IPickerAutomation
             if (_panel?.HeadName is { } name)
             {
                 name.Text = Label;
+                name.IsVisible = !string.IsNullOrEmpty(Label);
             }
         }
         else if (change.Property == PanelFillProperty || change.Property == PanelBorderProperty || change.Property == FloatShadowProperty)
@@ -632,6 +641,7 @@ public class ColorPicker : TemplatedControl, IPickerAutomation
         if (_panel.HeadName is { } name)
         {
             name.Text = Label;
+            name.IsVisible = !string.IsNullOrEmpty(Label);
         }
     }
 
@@ -652,6 +662,15 @@ public class ColorPicker : TemplatedControl, IPickerAutomation
         _surface.ContentResized += (_, _) => Dispatcher.UIThread.Post(Relayout);
         _popup.Child = _surface;
         _panel.ApplyTemplate();
+        if (_panel.HeadChip is { } headChip)
+        {
+            headChip.RenderTransformOrigin = RelativePoint.TopLeft;
+            headChip.RenderTransform = _headChipMorph;
+        }
+        if (_panel.HeadHex is { } headHex)
+        {
+            headHex.RenderTransform = _headHexShift;
+        }
         StyleSurface();
         if (_panel.Body is { } body)
         {
@@ -925,6 +944,10 @@ public class ColorPicker : TemplatedControl, IPickerAutomation
         var to = PanelShape;
         var span = to.Height - from.Height;
         var q = span > 1 ? Math.Clamp((_surface.Shape.Height - from.Height) / span, 0, 1.2) : 1;
+        var headerSpan = (_panel.Head?.Bounds.Height ?? from.Height) - from.Height;
+        // Once the body is hidden, keep the chip centered in the shrinking capsule, not the full panel height.
+        var headerProgress = headerSpan > 1 ? (_surface.Shape.Height - from.Height) / headerSpan : q;
+        ApplyHeaderProgress(Math.Clamp(headerProgress, 0, 1));
         var opacity = Math.Clamp((q - 0.35) / (0.9 - 0.35), 0, 1);
         if (_panel.Body is { } body)
         {
@@ -935,6 +958,38 @@ public class ColorPicker : TemplatedControl, IPickerAutomation
             actions.Opacity = opacity;
         }
         _bodyShift.Y = -10 * (1 - Math.Min(q, 1));
+    }
+
+    /// <summary>The header meets the actual trigger at the handoff, including Small's smaller chip and hex-only line.</summary>
+    private void ApplyHeaderProgress(double progress)
+    {
+        if (_panel is null || _trigger is null || _triggerChip is null || _triggerHex is null
+            || _panel.HeadChip is not { Bounds.Width: > 0, Bounds.Height: > 0 } chip || _panel.HeadHex is not { } hex)
+        {
+            return;
+        }
+        var chipTarget = _triggerChip.TranslatePoint(default, _trigger);
+        var chipPosition = chip.TranslatePoint(default, _panel);
+        var hexTarget = _triggerHex.TranslatePoint(default, _trigger);
+        var hexPosition = hex.TranslatePoint(default, _panel);
+        if (chipTarget is null || chipPosition is null || hexTarget is null || hexPosition is null)
+        {
+            return;
+        }
+        var folded = 1 - progress;
+        // Remove our previous render offsets; layout itself stays fixed while the surface morphs.
+        var chipOrigin = chipPosition.Value - new Vector(_headChipMorph.Matrix.M31, _headChipMorph.Matrix.M32);
+        var hexOrigin = hexPosition.Value - new Vector(_headHexShift.X, _headHexShift.Y);
+        var scaleX = 1 + (_triggerChip.Bounds.Width / chip.Bounds.Width - 1) * folded;
+        var scaleY = 1 + (_triggerChip.Bounds.Height / chip.Bounds.Height - 1) * folded;
+        _headChipMorph.Matrix = Matrix.CreateScale(scaleX, scaleY)
+            * Matrix.CreateTranslation((chipTarget.Value.X - chipOrigin.X) * folded, (chipTarget.Value.Y - chipOrigin.Y) * folded);
+        _headHexShift.X = (hexTarget.Value.X - hexOrigin.X) * folded;
+        _headHexShift.Y = (hexTarget.Value.Y - hexOrigin.Y) * folded;
+        if (_panel.HeadName is { } name)
+        {
+            name.Opacity = _triggerName?.IsVisible == false ? progress : 1;
+        }
     }
 
     private void StartOutsideWatch()
