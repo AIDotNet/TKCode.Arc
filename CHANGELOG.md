@@ -12,6 +12,8 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 
 ### Added
 
+- `ColorPicker`: `TriggerChipPart`, `TriggerNamePart` and `TriggerHexPart` name the trigger's chip, label and hex
+  (declared with `[TemplatePart]`); a custom template keeps these names for the popup header to fold onto them.
 - `KeycapKeyboard` is now a typing board: sculpted keycaps (housing, cap and
   dished face) scaled from one key unit, an accent Return or space bar, a glow under pressed keys and the typed text
   above the board. New members: `Value` (two-way) and `ValueChanged`, `Layout` (`KeycapLayout.Compact` or `Letters`),
@@ -159,7 +161,8 @@ Nothing is removed. Each of these keeps working, is marked `[Obsolete]` and stay
 - `ColorPicker`: an empty label no longer reserves a blank line in the trigger or popup header, keeping the hex value
   vertically centered beside its color chip. Labels changed while the panel is open update their visibility too.
   The morphing header now meets the actual trigger's chip size and text position when folding back after Done,
-  including Small's 24px chip and hex-only line, without changing the fully open panel layout.
+  including Small's 24px chip and hex-only line, without changing the fully open panel layout. The label line moves
+  with the hex as it folds, so the hex no longer slides through it.
 - Video on Android (`TKCode.Arc.Video.Native`): playback no longer closes the app when the platform throws. A Java
   exception from `MediaPlayer` or `ImageReader` (listing the tracks, creating the picture reader, `Start`, an unsupported
   playback rate, an image the decoder produced in a format the reader refuses) used to leave the `MediaPlayer` callback or
