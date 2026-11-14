@@ -82,11 +82,20 @@ public sealed class ColorPickerSwatchesChangedEventArgs : RoutedEventArgs
 /// draft, then closes and returns focus. The eyedropper is not offered: Avalonia has no cross-platform screen color API.
 /// </summary>
 [TemplatePart(TriggerPart, typeof(Control))]
+[TemplatePart(TriggerChipPart, typeof(Control))]
+[TemplatePart(TriggerNamePart, typeof(TextBlock))]
+[TemplatePart(TriggerHexPart, typeof(TextBlock))]
 [TemplatePart(PopupPart, typeof(ArcPopup))]
 [PseudoClasses(OpenPseudoClass)]
 public class ColorPicker : TemplatedControl, IPickerAutomation
 {
     public const string TriggerPart = "PART_Trigger";
+    /// <summary>The trigger's color chip; the popup header's chip folds onto it.</summary>
+    public const string TriggerChipPart = "PART_TriggerChip";
+    /// <summary>The trigger's label line (hidden in Small or without a label).</summary>
+    public const string TriggerNamePart = "PART_TriggerName";
+    /// <summary>The trigger's hex value; the popup header's hex folds onto it.</summary>
+    public const string TriggerHexPart = "PART_TriggerHex";
     public const string PopupPart = "PART_Popup";
     public const string OpenPseudoClass = ":open";
 
@@ -265,6 +274,8 @@ public class ColorPicker : TemplatedControl, IPickerAutomation
     private readonly TranslateTransform _bodyShift = new();
     private readonly MatrixTransform _headChipMorph = new();
     private readonly TranslateTransform _headHexShift = new();
+    private readonly TranslateTransform _headNameShift = new();
+    private HeaderGeometry? _headerGeometry;
     private double _headerProgress;
     private double _headerStartHeight;
     private double _headerStartProgress;
@@ -368,21 +379,24 @@ public class ColorPicker : TemplatedControl, IPickerAutomation
             _trigger.PointerPressed -= OnTriggerPressed;
             _trigger.PointerReleased -= OnTriggerReleased;
             _trigger.PointerCaptureLost -= OnTriggerCaptureLost;
+            _trigger.LayoutUpdated -= OnHeaderLayoutUpdated;
         }
         if (_popup is not null)
         {
             _popup.Child = null;
         }
         _trigger = e.NameScope.Find<Control>(TriggerPart);
-        _triggerChip = e.NameScope.Find<Control>("PART_TriggerChip");
-        _triggerHex = e.NameScope.Find<TextBlock>("PART_TriggerHex");
-        _triggerName = e.NameScope.Find<TextBlock>("PART_TriggerName");
+        _triggerChip = e.NameScope.Find<Control>(TriggerChipPart);
+        _triggerHex = e.NameScope.Find<TextBlock>(TriggerHexPart);
+        _triggerName = e.NameScope.Find<TextBlock>(TriggerNamePart);
+        _headerGeometry = null;
         _popup = e.NameScope.Find<PickerMorphPopup>(PopupPart);
         if (_trigger is not null)
         {
             _trigger.PointerPressed += OnTriggerPressed;
             _trigger.PointerReleased += OnTriggerReleased;
             _trigger.PointerCaptureLost += OnTriggerCaptureLost;
+            _trigger.LayoutUpdated += OnHeaderLayoutUpdated;
         }
         if (_popup is not null)
         {
@@ -461,11 +475,7 @@ public class ColorPicker : TemplatedControl, IPickerAutomation
         else if (change.Property == LabelProperty)
         {
             UpdateAutomation();
-            if (_panel?.HeadName is { } name)
-            {
-                name.Text = Label;
-                name.IsVisible = !string.IsNullOrEmpty(Label);
-            }
+            SyncHeadName();
         }
         else if (change.Property == PanelFillProperty || change.Property == PanelBorderProperty || change.Property == FloatShadowProperty)
         {
@@ -642,7 +652,13 @@ public class ColorPicker : TemplatedControl, IPickerAutomation
         {
             AutomationProperties.SetName(input, $"{Label} in {s_formatNames[(int)Format]}");
         }
-        if (_panel.HeadName is { } name)
+        SyncHeadName();
+    }
+
+    /// <summary>The header's label line shows the label, and leaves no blank line when there is none.</summary>
+    private void SyncHeadName()
+    {
+        if (_panel?.HeadName is { } name)
         {
             name.Text = Label;
             name.IsVisible = !string.IsNullOrEmpty(Label);
@@ -665,16 +681,9 @@ public class ColorPicker : TemplatedControl, IPickerAutomation
         _surface.OutsidePressed += (_, _) => SetCurrentValue(IsDropDownOpenProperty, false);
         _surface.ContentResized += (_, _) => Dispatcher.UIThread.Post(Relayout);
         _popup.Child = _surface;
+        _panel.LayoutUpdated += OnHeaderLayoutUpdated;
         _panel.ApplyTemplate();
-        if (_panel.HeadChip is { } headChip)
-        {
-            headChip.RenderTransformOrigin = RelativePoint.TopLeft;
-            headChip.RenderTransform = _headChipMorph;
-        }
-        if (_panel.HeadHex is { } headHex)
-        {
-            headHex.RenderTransform = _headHexShift;
-        }
+        AttachHeaderTransforms();
         StyleSurface();
         if (_panel.Body is { } body)
         {
@@ -997,34 +1006,77 @@ public class ColorPicker : TemplatedControl, IPickerAutomation
         _headerStartProgress = _headerProgress;
     }
 
+    /// <summary>
+    /// Where the header's chip and hex sit in the panel and in the trigger (each panel-relative, layout positions without
+    /// the morph). Laid out once per layout pass: the shape steps only repaint, so every motion frame reuses it.
+    /// </summary>
+    private readonly record struct HeaderGeometry(Rect Chip, Rect TriggerChip, Point Hex, Point TriggerHex);
+
+    private void OnHeaderLayoutUpdated(object? sender, EventArgs e) => _headerGeometry = null;
+
+    /// <summary>The morph transforms go on the header's parts.</summary>
+    private void AttachHeaderTransforms()
+    {
+        _headerGeometry = null;
+        if (_panel is null)
+        {
+            return;
+        }
+        if (_panel.HeadChip is { } chip)
+        {
+            chip.RenderTransformOrigin = RelativePoint.TopLeft;
+            chip.RenderTransform = _headChipMorph;
+        }
+        if (_panel.HeadHex is { } hex)
+        {
+            hex.RenderTransform = _headHexShift;
+        }
+        if (_panel.HeadName is { } name)
+        {
+            name.RenderTransform = _headNameShift;
+        }
+    }
+
+    private HeaderGeometry? MeasureHeader()
+    {
+        // Every part must be laid out: a trigger or panel waiting for its first arrange would scale the chip to nothing.
+        if (_panel is null || _trigger is null
+            || _triggerChip is not { Bounds.Width: > 0, Bounds.Height: > 0 } triggerChip || _triggerHex is not { } triggerHex
+            || _panel.HeadChip is not { Bounds.Width: > 0, Bounds.Height: > 0 } chip || _panel.HeadHex is not { } hex)
+        {
+            return null;
+        }
+        // The panel sits at the trigger's top-left corner in the surface, so trigger space is panel space.
+        if (LayoutPosition(chip, _panel) is not { } chipAt || LayoutPosition(hex, _panel) is not { } hexAt
+            || LayoutPosition(triggerChip, _trigger) is not { } triggerChipAt || LayoutPosition(triggerHex, _trigger) is not { } triggerHexAt)
+        {
+            return null;
+        }
+        return new HeaderGeometry(new Rect(chipAt, chip.Bounds.Size), new Rect(triggerChipAt, triggerChip.Bounds.Size), hexAt, triggerHexAt);
+    }
+
+    /// <summary>A part's layout position in <paramref name="ancestor"/>, leaving out its own render transform (the morph).</summary>
+    private static Point? LayoutPosition(Control part, Visual ancestor) =>
+        part.GetVisualParent() is { } parent ? parent.TranslatePoint(part.Bounds.Position, ancestor) : null;
+
     /// <summary>The header meets the actual trigger at the handoff, including Small's smaller chip and hex-only line.</summary>
     private void ApplyHeaderProgress(double progress)
     {
-        if (_panel is null || _trigger is null || _triggerChip is null || _triggerHex is null
-            || _panel.HeadChip is not { Bounds.Width: > 0, Bounds.Height: > 0 } chip || _panel.HeadHex is not { } hex)
+        if (_panel is null || (_headerGeometry ??= MeasureHeader()) is not { } geometry)
         {
             return;
         }
-        var chipTarget = _triggerChip.TranslatePoint(default, _trigger);
-        var chipPosition = chip.TranslatePoint(default, _panel);
-        var hexTarget = _triggerHex.TranslatePoint(default, _trigger);
-        var hexPosition = hex.TranslatePoint(default, _panel);
-        if (chipTarget is null || chipPosition is null || hexTarget is null || hexPosition is null)
-        {
-            return;
-        }
-        var folded = 1 - progress;
-        // Remove our previous render offsets; layout itself stays fixed while the surface morphs.
-        var chipOrigin = chipPosition.Value - new Vector(_headChipMorph.Matrix.M31, _headChipMorph.Matrix.M32);
-        var hexOrigin = hexPosition.Value - new Vector(_headHexShift.X, _headHexShift.Y);
-        var scaleX = 1 + (_triggerChip.Bounds.Width / chip.Bounds.Width - 1) * folded;
-        var scaleY = 1 + (_triggerChip.Bounds.Height / chip.Bounds.Height - 1) * folded;
-        _headChipMorph.Matrix = Matrix.CreateScale(scaleX, scaleY)
-            * Matrix.CreateTranslation((chipTarget.Value.X - chipOrigin.X) * folded, (chipTarget.Value.Y - chipOrigin.Y) * folded);
-        _headHexShift.X = (hexTarget.Value.X - hexOrigin.X) * folded;
-        _headHexShift.Y = (hexTarget.Value.Y - hexOrigin.Y) * folded;
+        // The chip's box flies between the two boxes, so its center stays centered in the capsule the whole way.
+        var chip = SharedElementMath.FlightRect(SharedElementMode.Bounds, geometry.TriggerChip, geometry.Chip, progress);
+        _headChipMorph.Matrix = SharedElementMath.Place(geometry.Chip.Size, Matrix.CreateTranslation(geometry.Chip.X, geometry.Chip.Y), chip);
+        var hex = SharedElementMath.Lerp(geometry.TriggerHex, geometry.Hex, progress) - geometry.Hex;
+        _headHexShift.X = hex.X;
+        _headHexShift.Y = hex.Y;
         if (_panel.HeadName is { } name)
         {
+            // The label line moves with the hex below it, so the hex never slides through it; it fades where the trigger has none.
+            _headNameShift.X = hex.X;
+            _headNameShift.Y = hex.Y;
             name.Opacity = _triggerName?.IsVisible == false ? progress : 1;
         }
     }

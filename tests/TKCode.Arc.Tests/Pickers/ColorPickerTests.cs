@@ -12,11 +12,13 @@ namespace TKCode.Arc.Tests.Pickers;
 public class ColorPickerTests
 {
     [AvaloniaTheory]
-    [InlineData(ControlSize.Small, "")]
-    [InlineData(ControlSize.Small, "Accent")]
-    [InlineData(ControlSize.Medium, "")]
-    [InlineData(ControlSize.Medium, "Accent")]
-    public void Confirm_Closes_With_The_Trigger_Header_Geometry(ControlSize size, string label)
+    [InlineData(ControlSize.Small, "", false)]
+    [InlineData(ControlSize.Small, "Accent", false)]
+    [InlineData(ControlSize.Medium, "", false)]
+    [InlineData(ControlSize.Medium, "Accent", false)]
+    [InlineData(ControlSize.Small, "", true)]
+    [InlineData(ControlSize.Small, "Accent", true)]
+    public void Confirm_Closes_With_The_Trigger_Header_Geometry(ControlSize size, string label, bool reapplyTemplate)
     {
         var clock = new TKCode.Arc.Motion.ManualFrameClock();
         using var installed = clock.Install();
@@ -41,6 +43,25 @@ public class ColorPickerTests
             {
                 Step();
             }
+            if (reapplyTemplate)
+            {
+                // A new template while open: the panel reopens before the new trigger is laid out, and the fold
+                // still meets the new trigger's parts.
+                var template = picker.Template;
+                var oldChip = TestHelpers.Descendant<ColorPickerChip>(picker, "PART_TriggerChip");
+                picker.Template = null;
+                picker.ApplyTemplate();
+                picker.Template = template;
+                picker.ApplyTemplate();
+                var chip = picker.Panel!.HeadChip!;
+                (chip.Bounds.Width * chip.RenderTransform!.Value.M11).ShouldBeGreaterThan(0);
+                for (var frame = 0; frame < 10; frame++)
+                {
+                    Step();
+                }
+                TestHelpers.Descendant<ColorPickerChip>(picker, "PART_TriggerChip").ShouldNotBeSameAs(oldChip);
+                picker.IsDropDownOpen.ShouldBeTrue();
+            }
             picker.Panel!.DoneButton!.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Avalonia.Controls.Button.ClickEvent));
             var surface = picker.Surface!;
             var trigger = TestHelpers.Descendant<Border>(picker, "PART_Trigger");
@@ -54,7 +75,15 @@ public class ColorPickerTests
                 if (picker.Popup!.IsOpen && surface.Shape.Height >= trigger.Bounds.Height && surface.Shape.Height <= header.Bounds.Height)
                 {
                     var chipCenter = CenterY(picker.Panel.HeadChip!, surface) - surface.ShapeRect.Y;
-                    chipCenter.ShouldBe(surface.Shape.Height / 2, 1);
+                    chipCenter.ShouldBe(surface.Shape.Height / 2, 0.25);
+                }
+                if (picker.Popup!.IsOpen && picker.Panel.HeadName!.IsVisible)
+                {
+                    // The label line moves with the hex, so the hex never slides up through it.
+                    var name = picker.Panel.HeadName;
+                    var nameBottom = name.TranslatePoint(new Point(0, name.Bounds.Height), surface)!.Value.Y;
+                    var hexTop = picker.Panel.HeadHex!.TranslatePoint(default, surface)!.Value.Y;
+                    nameBottom.ShouldBeLessThanOrEqualTo(hexTop + 0.5);
                 }
                 if (picker.Popup!.IsOpen && surface.Shape.Height <= trigger.Bounds.Height + 0.5)
                 {
