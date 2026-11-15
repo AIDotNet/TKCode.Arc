@@ -14,8 +14,10 @@
                         BorderBrush="{arc:ArcDesignTokenResource Border}"
                         BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                         CornerRadius="{arc:ArcDesignTokenResource RadiusSurface}"
-                        BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
-                        ClipToBounds="True">
+                        BoxShadow="{arc:ArcDesignTokenResource ShadowResting}">
+                    <!-- The clip sits on an inner border: ClipToBounds on the border that draws the shadow would cut the
+                         shadow off at the card's edge, leaving straight vertical edges beside the rounded corners. -->
+                    <Border CornerRadius="{arc:ArcDesignTokenResource RadiusSurface}" ClipToBounds="True">
                     <StackPanel Orientation="Vertical">
                         <arc:ExpandableCardTrigger Name="PART_Trigger">
                             <Grid ColumnDefinitions="*,Auto">
@@ -67,6 +69,7 @@
                             </Panel>
                         </arc:ExpandableCardPanel>
                     </StackPanel>
+                    </Border>
                 </Border>
             </ControlTemplate>
         </Setter>
