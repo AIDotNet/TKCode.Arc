@@ -26,6 +26,12 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
   inherited, so `UnavailableCaptionButtons="Hide"` on the window reaches its title bar; the macOS traffic lights stay
   the system's. `TitleBar` also gains `ShowMinimizeButton`, `ShowMaximizeButton` and `ShowCloseButton`.
 
+### Fixed
+
+- `ExpandableCard` no longer cuts its shadow off at the card's edge ([#129](https://github.com/AIDotNet/TKCode.Arc/issues/129)): the clip that keeps the header and details
+  inside the rounded corners sat on the border that draws the shadow, which left straight vertical edges beside the
+  corners. The clip now sits on an inner border.
+
 ## 1.1.1-preview.1 - 2026-11-14
 
 New components: `MonthCalendar` (`TKCode.Arc.Blocks`, Screens › Calendars), a calendar app screen around a month, and
@@ -191,9 +197,6 @@ Nothing is removed. Each of these keeps working, is marked `[Obsolete]` and stay
   The morphing header now meets the actual trigger's chip size and text position when folding back after Done,
   including Small's 24px chip and hex-only line, without changing the fully open panel layout. The label line moves
   with the hex as it folds, so the hex no longer slides through it.
-- `ExpandableCard` no longer cuts its shadow off at the card's edge ([#129](https://github.com/AIDotNet/TKCode.Arc/issues/129)): the clip that keeps the header and details
-  inside the rounded corners sat on the border that draws the shadow, which left straight vertical edges beside the
-  corners. The clip now sits on an inner border.
 - `UserMenu` follows the app's language ([#123](https://github.com/AIDotNet/TKCode.Arc/issues/123)): the Status, Theme and Sign out rows, "Signing out", the status and theme
   choice names and the accessible names were always English. They now come from the new `UserMenuLangResourceKind`
   catalog (en-US, zh-CN, zh-TW) and change when the language does, even while the menu is open.
