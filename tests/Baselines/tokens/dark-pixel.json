@@ -7965,6 +7965,19 @@
       "StageLineHeight": "20",
       "TipSize": "7"
     },
+    "SlideToConfirm": {
+      "DisabledOpacity": "0.52",
+      "GrabReach": "36",
+      "InsetShadowColor": "#38000000",
+      "LabelFontSize": "13",
+      "StatusGap": "14",
+      "TallFromWidth": "360",
+      "TallLabelFontSize": "15",
+      "TallTrackHeight": "64",
+      "ThumbInk": "#FF141414",
+      "ThumbShadow": "0 1 2 0 #73000000 | 0 3 7 0 #4D000000",
+      "TrackHeight": "56"
+    },
     "Slider": {
       "BubbleBorder": "1,1,1,1",
       "BubbleBorderColor": "#FF94B0C2",
