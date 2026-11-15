@@ -8,10 +8,11 @@ English | [简体中文](https://github.com/AIDotNet/TKCode.Arc/blob/main/README
 **The visual language and spring motion of [Arc](https://uiarc.dev), as native Avalonia controls.**
 
 TKCode.Arc is a UI kit for .NET applications on Avalonia 12. It ports Arc's 112 free components and adds what a full
-product needs around them: page-level blocks, a spreadsheet-style data grid, a workflow canvas, IDE-style docking, a
-terminal, a PDF viewer, and audio and video playback.
+product needs around them: page-level blocks and whole screens, a spreadsheet-style data grid, a workflow canvas,
+IDE-style docking, a terminal, a PDF viewer, and audio and video playback.
 
 **[Live gallery and documentation](https://docs.tkcode.si/)** · [Changelog](https://github.com/AIDotNet/TKCode.Arc/blob/main/CHANGELOG.md)
+
 ## Why Arc
 
 - **Native controls.** Every control derives from Avalonia base types and uses public Avalonia APIs only.
@@ -19,21 +20,63 @@ terminal, a PDF viewer, and audio and video playback.
   presets and whole-theme packages apply across every control.
 - **Motion built in.** A spring engine drives the components, with Full, Reduced and Off levels for the whole app.
 - **Ready for NativeAOT.** The libraries are built as trimming and AOT compatible.
-- **Documented in three languages.** Each of the 300+ component and block pages has live examples and a generated API
+- **Documented in three languages.** Each of the 400+ component and block pages has live examples and a generated API
   table, in English, 简体中文 and 繁體中文.
 - **Readable by AI assistants.** The site publishes [`llms.txt`](https://docs.tkcode.si/llms.txt), every page as
   Markdown and an [agent skill](https://docs.tkcode.si/skills/tkcode-arc/SKILL.md).
 
+## Quick start
+
+Start from a template:
+
+```bash
+dotnet new install TKCode.Arc.Templates
+dotnet new tkcode-arc -n MyApp          # add --layout sidebar|header|dock, --mvvm toolkit, --i18n, --tests ...
+cd MyApp
+dotnet run
+```
+
+Or add Arc to an existing Avalonia 12 app:
+
+```bash
+dotnet add package TKCode.Arc
+```
+
+```csharp
+using TKCode.Arc;
+
+public static AppBuilder BuildAvaloniaApp() =>
+    AppBuilder.Configure<App>()
+              .UsePlatformDetect()
+              .UseArc(arc => arc
+                  .UseArcControls()   // Arc's controls, themes and design tokens
+                  .WithTheme(t => t.Appearance(ArcAppearance.System).Accent(ArcAccentPreset.Neutral)));
+```
+
+```xml
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
+    <arc:Button Content="Save" />
+</Window>
+```
+
+Each further package registers itself in the same `UseArc(...)` call: `UseArcBlocks()`, `UseArcSpecial()`,
+`UseArcAdvancedCharts()`, `UseArcMobile()`, `UseArcWorkflow()`, `UseArcDock()`, `UseArcPdf()`, `UseArcVideo()`,
+`UseArcPixelTheme()` and `UseArcCorners()`. Change the theme at run time with
+`ArcTheme.Apply(t => t.Appearance(...).Accent(...))`.
+
 ## What's inside
+
+All 23 packages are released together on one version; keep them on the same one.
 
 ### Components
 
 | Package | Contents |
 |---|---|
-| `TKCode.Arc` | The 112 components in 22 groups, organized like Arc's sidebar, plus layout panels and extras such as `Markdown` (with streaming), `PropertyGrid`, `Cascader` and `TransferBox`. |
-| `TKCode.Arc.Blocks` | Page-level compositions: AI chat, pricing and checkout, billing, dashboards, settings, team management and more. |
+| `TKCode.Arc` | The 112 components in Arc's 22 sidebar groups, plus layout panels and extras such as `Markdown` (with streaming), `Form`, `TreeSelect`, `PropertyGrid`, `Cascader` and `TransferBox`. |
+| `TKCode.Arc.Blocks` | Page-level compositions grouped as on uiarc.dev (AI, Agents, auth, settings, commerce, marketing, support and more), and whole screens: dashboards, projects, calendars, people and customers, inbox and support, commerce. |
 | `TKCode.Arc.AdvancedCharts` | `DataGrid` (range selection, inline editing, fill handle, clipboard, grouping, export), `Sunburst`, `SankeyFlow`, `FunnelChart`, `RadarChart`, `RealtimeStream`, `RaceBarChart` and `WindRoseChart`. |
-| `TKCode.Arc.Special` | Animated AI explainers, pointer effects, loaders, surfaces and illustrations. |
+| `TKCode.Arc.Special` | Animated AI explainers, glass, docks and tabs, galleries, data widgets, type effects, cursor effects, playful controls, loaders, surfaces and illustrations. |
 | `TKCode.Arc.Mobile` | Touch-first controls with 44px touch targets. |
 
 ### Application features
@@ -45,7 +88,7 @@ terminal, a PDF viewer, and audio and video playback.
 | `TKCode.Arc.Terminal` | `TerminalView` over libghostty-vt, with the native libraries bundled. |
 | `TKCode.Arc.Pdf`, `.Pdf.Native`, `.Pdf.Browser` | `PdfViewer` with thumbnails, outline, search, text selection and links, using PDFium on desktop and pdf.js on WebAssembly. |
 | `TKCode.Arc.Audio`, `.Audio.Native`, `.Audio.Browser` | The `IAudioPlayer` abstraction, with miniaudio on desktop and HTML audio on WebAssembly. |
-| `TKCode.Arc.Video`, `.Video.Native`, `.Video.Browser` | `VideoPlayer` and `VideoSurface` over each platform's own player. |
+| `TKCode.Arc.Video`, `.Video.Native`, `.Video.Browser` | `VideoPlayer` and `VideoSurface` over each platform's own player (Media Foundation, AVFoundation, GStreamer on desktop, and the browser's video element on WebAssembly). |
 
 ### Theming and assets
 
@@ -62,17 +105,19 @@ terminal, a PDF viewer, and audio and video playback.
 |---|---|
 | `TKCode.Arc.Foundation` | The token, theme, language and package registration runtime. Depends on Avalonia only. |
 | `TKCode.Arc.Core` | ArcDesign tokens and palette, the motion engine, shared primitives and built-in Lucide glyphs. |
-| `TKCode.Arc.Templates` | `dotnet new` templates: a starter app, a cross-platform app, six finished apps, a control library, and item templates for a page, window, dialog and control. |
+| `TKCode.Arc.Templates` | `dotnet new` templates: a starter app, a cross-platform app, six finished apps (admin, AI chat, developer tool, workflow editor, project planner, analytics dashboard), a control library, and item templates for a page, window, dialog and control. |
 
 ## Status and compatibility
 
-Arc follows [Semantic Versioning](https://semver.org/): from 1.0.0 on, breaking API changes come only with a new major version. [CHANGELOG.md](https://github.com/AIDotNet/TKCode.Arc/blob/main/CHANGELOG.md)
-lists each release and its migration notes.
+Arc follows [Semantic Versioning](https://semver.org/): from 1.0.0 on, breaking API changes come only with a new major
+version, and a public member is never removed or renamed in one step (it stays as `[Obsolete]` for at least two stable
+releases). [CHANGELOG.md](https://github.com/AIDotNet/TKCode.Arc/blob/main/CHANGELOG.md) lists each release and its
+migration notes.
 
 | | |
 |---|---|
 | **.NET** | `net8.0`, `net10.0` and `net11.0`. `TKCode.Arc.Terminal` targets `net10.0` and `net11.0`. |
-| **Avalonia** | Avalonia 12, pinned to an exact version in [`build/Versions.props`](https://github.com/AIDotNet/TKCode.Arc/blob/main/build/Versions.props). |
+| **Avalonia** | Avalonia 12.1.5 or any later 12.x release (`[12.1.5, 13.0.0)`), so apps can update Avalonia without waiting for an Arc release. |
 | **Desktop** | Windows, macOS and Linux. |
 | **Browser** | The gallery itself runs on WebAssembly, and audio, video and PDF have browser backends. |
 | **Mobile** | `TKCode.Arc.Mobile` is previewed in a desktop phone frame and is not yet verified on Android or iOS devices. |
@@ -81,14 +126,15 @@ lists each release and its migration notes.
 
 | Path | Contents |
 |---|---|
-| `src/` | The libraries above and their source generators. |
+| `src/` | The libraries above and their source generators. `TKCode.Arc.A2UI`, an A2UI 1.0 renderer, is in development and not yet on NuGet. |
 | `tests/` | Unit, headless Avalonia and generator snapshot tests, with token and preset baselines. |
 | `templates/` | The source of `TKCode.Arc.Templates`. |
 | `native/` | Native shims and libraries for the terminal, audio and video. |
-| `tools/` | Generators and scripts for icons, native libraries, templates and packaging. |
+| `tools/` | Generators and scripts for icons, native libraries, templates, docs screenshots and packaging. |
+| `design/` | The design notes and decisions, starting at `design/overview.md`. |
 
-The gallery and documentation site, with its desktop and browser hosts, the docs pages and the demos, is a separate repository:
-[AIDotNet/ArcGallery](https://github.com/AIDotNet/ArcGallery). It builds against a checkout of this one.
+The gallery and documentation site, with its desktop and browser hosts, the docs pages and the demos, is a separate
+repository: [AIDotNet/ArcGallery](https://github.com/AIDotNet/ArcGallery). It builds against a checkout of this one.
 
 ## Working on the library
 
@@ -98,7 +144,7 @@ Building needs the .NET 11 SDK (see `global.json`) and the .NET 10 runtime, whic
 dotnet build TKCode.Arc.slnx
 dotnet test tests/TKCode.Arc.Core.Tests
 dotnet test tests/TKCode.Arc.Foundation.Tests
-dotnet test tests/TKCode.Arc.Tests
+dotnet test tests/TKCode.Arc.Tests --filter "FullyQualifiedName~ButtonTests"   # the whole suite takes 8 minutes or more
 ```
 
 To run the gallery, clone [ArcGallery](https://github.com/AIDotNet/ArcGallery) next to this repository as `../ArcGallery`
@@ -108,7 +154,8 @@ PDFium and pdf.js are not committed: `tools/pdf/sync-native.sh` and `tools/pdf/s
 checksums. Without them the desktop gallery shows a simulated document in the PDF demos, and a browser build has no pdf.js to
 import.
 
-Project rules and conventions are in [AGENTS.md](https://github.com/AIDotNet/TKCode.Arc/blob/main/AGENTS.md).
+Project rules and conventions are in [AGENTS.md](https://github.com/AIDotNet/TKCode.Arc/blob/main/AGENTS.md), and the
+guide to writing a component is [design/engineering/implementation-guide.md](https://github.com/AIDotNet/TKCode.Arc/blob/main/design/engineering/implementation-guide.md).
 
 ## Community
 
