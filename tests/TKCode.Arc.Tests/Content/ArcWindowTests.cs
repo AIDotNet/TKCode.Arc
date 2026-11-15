@@ -346,6 +346,71 @@ public class ArcWindowTests
     }
 
     [AvaloniaFact]
+    public void Unavailable_Buttons_Hide_When_The_Window_Asks_For_It()
+    {
+        // Issue #130: UnavailableCaptionButtons="Hide" on the window reaches the bar's buttons.
+        var window = Open(new ArcWindow
+        {
+            CanResize = false,
+            CanMinimize = false,
+            UnavailableCaptionButtons = UnavailableCaptionButtonMode.Hide,
+            TitleBar = new TitleBar { CaptionButtons = TitleBarCaptionButtons.Drawn }
+        });
+        try
+        {
+            var bar = window.TitleBar!;
+            bar.UnavailableCaptionButtons.ShouldBe(UnavailableCaptionButtonMode.Hide);
+            var minimize = Button(bar, TitleBar.MinimizeButtonPart);
+            var maximize = Button(bar, TitleBar.MaximizeButtonPart);
+            minimize.IsVisible.ShouldBeFalse();
+            maximize.IsVisible.ShouldBeFalse();
+            Button(bar, TitleBar.CloseButtonPart).IsVisible.ShouldBeTrue();
+
+            window.CanResize = true;
+            maximize.IsVisible.ShouldBeTrue();
+            maximize.IsEnabled.ShouldBeTrue();
+            window.CanMinimize = true;
+            minimize.IsVisible.ShouldBeTrue();
+
+            // The bar's own value wins over the window's.
+            window.CanMaximize = false;
+            maximize.IsVisible.ShouldBeFalse();
+            bar.UnavailableCaptionButtons = UnavailableCaptionButtonMode.Disable;
+            maximize.IsVisible.ShouldBeTrue();
+            maximize.IsEnabled.ShouldBeFalse();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void The_Bar_Shows_Only_The_Caption_Buttons_It_Is_Asked_For()
+    {
+        var window = Open(new ArcWindow
+        {
+            TitleBar = new TitleBar { CaptionButtons = TitleBarCaptionButtons.Drawn, ShowMinimizeButton = false }
+        });
+        try
+        {
+            var bar = window.TitleBar!;
+            Button(bar, TitleBar.MinimizeButtonPart).IsVisible.ShouldBeFalse();
+            Button(bar, TitleBar.MaximizeButtonPart).IsVisible.ShouldBeTrue();
+            bar.ShowMaximizeButton = false;
+            bar.ShowCloseButton = false;
+            Button(bar, TitleBar.MaximizeButtonPart).IsVisible.ShouldBeFalse();
+            Button(bar, TitleBar.CloseButtonPart).IsVisible.ShouldBeFalse();
+            bar.ShowMinimizeButton = true;
+            Button(bar, TitleBar.MinimizeButtonPart).IsVisible.ShouldBeTrue();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void System_Buttons_Leave_Room_At_The_Left_Except_In_Full_Screen()
     {
         var window = Open(new ArcWindow { Title = "Mac", TitleBar = new TitleBar { CaptionButtons = TitleBarCaptionButtons.System } });

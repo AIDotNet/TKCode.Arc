@@ -141,6 +141,9 @@
                                         VerticalAlignment="Center"
                                         IsVisible="False">
                                 <arc:WindowCaptionButtons Name="PART_WindowCaptionButtons"
+                                                          ShowMinimizeButton="{TemplateBinding ShowMinimizeButton}"
+                                                          ShowMaximizeButton="{TemplateBinding ShowMaximizeButton}"
+                                                          ShowCloseButton="{TemplateBinding ShowCloseButton}"
                                                           ButtonSize="{arc:TitleBarTokenResource CaptionButtonSize}"
                                                           ButtonSpacing="{arc:TitleBarTokenResource ButtonSpacing}"
                                                           GlyphSize="{arc:TitleBarTokenResource CaptionGlyphSize}"

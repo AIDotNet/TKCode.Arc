@@ -108,6 +108,27 @@ public class TitleBar : TemplatedControl
     public static readonly StyledProperty<bool> ShowTopmostButtonProperty =
         AvaloniaProperty.Register<TitleBar, bool>(nameof(ShowTopmostButton));
 
+    /// <summary>Shows the minimize button when the bar draws the caption buttons. True by default.</summary>
+    public static readonly StyledProperty<bool> ShowMinimizeButtonProperty =
+        WindowCaptionButtons.ShowMinimizeButtonProperty.AddOwner<TitleBar>();
+
+    /// <summary>Shows the maximize / restore button when the bar draws the caption buttons. True by default.</summary>
+    public static readonly StyledProperty<bool> ShowMaximizeButtonProperty =
+        WindowCaptionButtons.ShowMaximizeButtonProperty.AddOwner<TitleBar>();
+
+    /// <summary>Shows the close button when the bar draws the caption buttons. True by default.</summary>
+    public static readonly StyledProperty<bool> ShowCloseButtonProperty =
+        WindowCaptionButtons.ShowCloseButtonProperty.AddOwner<TitleBar>();
+
+    /// <summary>
+    /// What the drawn minimize and maximize show while the window does not allow them (<c>CanMinimize</c>, or
+    /// <c>CanResize</c> and <c>CanMaximize</c>, false): <c>Disable</c> (the default) keeps them disabled, <c>Hide</c> hides
+    /// them. Inherited from the window, so <c>UnavailableCaptionButtons="Hide"</c> on the <see cref="ArcWindow"/> reaches
+    /// the bar. The macOS traffic lights (<c>System</c>) are the system's and stay as they are.
+    /// </summary>
+    public static readonly StyledProperty<UnavailableCaptionButtonMode> UnavailableCaptionButtonsProperty =
+        WindowCaptionButtons.UnavailableCaptionButtonsProperty.AddOwner<TitleBar>();
+
     private AvaloniaWindow? _window;
     private IDisposable? _titleBinding;
     private WindowCaptionButtons? _captionButtons;
@@ -165,6 +186,34 @@ public class TitleBar : TemplatedControl
     {
         get => GetValue(ShowTopmostButtonProperty);
         set => SetValue(ShowTopmostButtonProperty, value);
+    }
+
+    /// <inheritdoc cref="ShowMinimizeButtonProperty"/>
+    public bool ShowMinimizeButton
+    {
+        get => GetValue(ShowMinimizeButtonProperty);
+        set => SetValue(ShowMinimizeButtonProperty, value);
+    }
+
+    /// <inheritdoc cref="ShowMaximizeButtonProperty"/>
+    public bool ShowMaximizeButton
+    {
+        get => GetValue(ShowMaximizeButtonProperty);
+        set => SetValue(ShowMaximizeButtonProperty, value);
+    }
+
+    /// <inheritdoc cref="ShowCloseButtonProperty"/>
+    public bool ShowCloseButton
+    {
+        get => GetValue(ShowCloseButtonProperty);
+        set => SetValue(ShowCloseButtonProperty, value);
+    }
+
+    /// <inheritdoc cref="UnavailableCaptionButtonsProperty"/>
+    public UnavailableCaptionButtonMode UnavailableCaptionButtons
+    {
+        get => GetValue(UnavailableCaptionButtonsProperty);
+        set => SetValue(UnavailableCaptionButtonsProperty, value);
     }
 
     /// <summary>What <see cref="CaptionButtons"/> means on this system: never <see cref="TitleBarCaptionButtons.Auto"/>.</summary>

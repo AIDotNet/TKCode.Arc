@@ -8,6 +8,16 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0), `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` (from 1.1.0-preview.1).
 
+## Unreleased
+
+### Added
+
+- `UnavailableCaptionButtons` (`UnavailableCaptionButtonMode`: `Disable`, `Hide`) on `ArcWindow`, `TitleBar` and
+  `WindowCaptionButtons` (issue #130): `Hide` hides minimize while `CanMinimize` is false and maximize while `CanResize`
+  or `CanMaximize` is false, instead of disabling them. `Disable` (the default) keeps today's behavior. The property is
+  inherited, so `UnavailableCaptionButtons="Hide"` on the window reaches its title bar; the macOS traffic lights stay
+  the system's. `TitleBar` also gains `ShowMinimizeButton`, `ShowMaximizeButton` and `ShowCloseButton`.
+
 ## 1.1.1-preview.1 - 2026-11-14
 
 New components: `MonthCalendar` (`TKCode.Arc.Blocks`, Screens › Calendars), a calendar app screen around a month, and

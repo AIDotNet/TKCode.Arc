@@ -198,6 +198,65 @@ public class WindowCaptionButtonsTests
     }
 
     [AvaloniaFact]
+    public void Hide_Hides_The_Buttons_The_Window_Does_Not_Allow()
+    {
+        var buttons = new WindowCaptionButtons();
+        var window = Open(new Border { Child = buttons });
+        try
+        {
+            var minimize = Button(buttons, WindowCaptionButtons.MinimizeButtonPart);
+            var maximize = Button(buttons, WindowCaptionButtons.MaximizeButtonPart);
+            window.CanResize = false;
+            window.CanMinimize = false;
+            maximize.IsVisible.ShouldBeTrue();
+            minimize.IsVisible.ShouldBeTrue();
+
+            buttons.UnavailableCaptionButtons = UnavailableCaptionButtonMode.Hide;
+            maximize.IsVisible.ShouldBeFalse();
+            minimize.IsVisible.ShouldBeFalse();
+            Button(buttons, WindowCaptionButtons.CloseButtonPart).IsVisible.ShouldBeTrue();
+
+            window.CanResize = true;
+            maximize.IsVisible.ShouldBeTrue();
+            window.CanMaximize = false;
+            maximize.IsVisible.ShouldBeFalse();
+            window.CanMinimize = true;
+            minimize.IsVisible.ShouldBeTrue();
+
+            // ShowMinimizeButton = false still hides an allowed button, and Disable brings the unavailable one back.
+            buttons.ShowMinimizeButton = false;
+            minimize.IsVisible.ShouldBeFalse();
+            buttons.UnavailableCaptionButtons = UnavailableCaptionButtonMode.Disable;
+            maximize.IsVisible.ShouldBeTrue();
+            maximize.IsEnabled.ShouldBeFalse();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Hide_Is_Inherited_From_The_Window_And_Leaves_A_Preview_Shown()
+    {
+        var buttons = new WindowCaptionButtons();
+        var preview = new WindowCaptionButtons { IsPreview = true };
+        var window = new Window { CanResize = false };
+        window.SetValue(WindowCaptionButtons.UnavailableCaptionButtonsProperty, UnavailableCaptionButtonMode.Hide);
+        Open(new StackPanel { Children = { buttons, preview } }, window);
+        try
+        {
+            buttons.UnavailableCaptionButtons.ShouldBe(UnavailableCaptionButtonMode.Hide);
+            Button(buttons, WindowCaptionButtons.MaximizeButtonPart).IsVisible.ShouldBeFalse();
+            Button(preview, WindowCaptionButtons.MaximizeButtonPart).IsVisible.ShouldBeTrue();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void Each_Button_Can_Be_Hidden_And_Takes_No_Room()
     {
         var buttons = new WindowCaptionButtons

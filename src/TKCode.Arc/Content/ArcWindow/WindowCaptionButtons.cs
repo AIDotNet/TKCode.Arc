@@ -11,10 +11,24 @@ using AvaloniaWindow = Avalonia.Controls.Window;
 namespace TKCode.Arc;
 
 /// <summary>
+/// What minimize and maximize show while the window does not allow them (see
+/// <see cref="WindowCaptionButtons.UnavailableCaptionButtons"/>).
+/// </summary>
+public enum UnavailableCaptionButtonMode
+{
+    /// <summary>The button stays in place, disabled.</summary>
+    Disable,
+
+    /// <summary>The button is hidden; the other buttons close up.</summary>
+    Hide
+}
+
+/// <summary>
 /// Minimize, maximize / restore and close for a window whose content reaches the top (an <see cref="ArcWindow"/> with
 /// <c>IsTitleBarVisible="False"</c>), placed wherever the app draws its own header. The buttons drive the window they are
 /// in and follow it: maximize shows restore while the window is maximized and is disabled while the window cannot grow
-/// (<c>CanResize</c> or <c>CanMaximize</c> false), minimize while <c>CanMinimize</c> is false. On Windows they tell the
+/// (<c>CanResize</c> or <c>CanMaximize</c> false), minimize while <c>CanMinimize</c> is false; with
+/// <see cref="UnavailableCaptionButtons"/> set to <c>Hide</c> they are hidden instead. On Windows they tell the
 /// system what they are, so the maximize button opens Snap Layouts. <see cref="TitleBar"/> draws its own caption buttons
 /// with this control; show one set per window.
 /// </summary>
@@ -44,6 +58,15 @@ public class WindowCaptionButtons : TemplatedControl
     /// <summary>Shows the close button. True by default.</summary>
     public static readonly StyledProperty<bool> ShowCloseButtonProperty =
         AvaloniaProperty.Register<WindowCaptionButtons, bool>(nameof(ShowCloseButton), true);
+
+    /// <summary>
+    /// What minimize and maximize show while the window does not allow them (<c>CanMinimize</c>, or <c>CanResize</c> and
+    /// <c>CanMaximize</c>, false): <c>Disable</c> (the default) keeps them disabled, <c>Hide</c> hides them. Inherited, so it
+    /// can be set on the window (<see cref="ArcWindow"/>) or a <see cref="TitleBar"/>.
+    /// </summary>
+    public static readonly StyledProperty<UnavailableCaptionButtonMode> UnavailableCaptionButtonsProperty =
+        AvaloniaProperty.Register<WindowCaptionButtons, UnavailableCaptionButtonMode>(nameof(UnavailableCaptionButtons),
+            inherits: true);
 
     /// <summary>
     /// True draws the buttons without driving the window: they minimize, maximize and close nothing and the system does
@@ -93,6 +116,13 @@ public class WindowCaptionButtons : TemplatedControl
     {
         get => GetValue(ShowCloseButtonProperty);
         set => SetValue(ShowCloseButtonProperty, value);
+    }
+
+    /// <inheritdoc cref="UnavailableCaptionButtonsProperty"/>
+    public UnavailableCaptionButtonMode UnavailableCaptionButtons
+    {
+        get => GetValue(UnavailableCaptionButtonsProperty);
+        set => SetValue(UnavailableCaptionButtonsProperty, value);
     }
 
     /// <inheritdoc cref="IsPreviewProperty"/>
@@ -206,6 +236,11 @@ public class WindowCaptionButtons : TemplatedControl
         {
             SyncState();
         }
+        else if (change.Property == ShowMinimizeButtonProperty || change.Property == ShowMaximizeButtonProperty
+                 || change.Property == UnavailableCaptionButtonsProperty)
+        {
+            SyncButtons();
+        }
     }
 
     private AvaloniaWindow? FindWindow() => IsPreview ? null : TopLevel.GetTopLevel(this) as AvaloniaWindow;
@@ -277,17 +312,25 @@ public class WindowCaptionButtons : TemplatedControl
         }
     }
 
-    /// <summary>The buttons follow what the window allows; with no window to drive they stay enabled.</summary>
+    /// <summary>
+    /// The buttons follow what the window allows: a button the window does not allow is disabled, or hidden with
+    /// <see cref="UnavailableCaptionButtonMode.Hide"/>. With no window to drive they stay enabled and shown.
+    /// </summary>
     private void SyncButtons()
     {
         var window = _window;
+        var hide = UnavailableCaptionButtons == UnavailableCaptionButtonMode.Hide;
+        var canMinimize = window is null || window.CanMinimize;
+        var canMaximize = window is null || (window.CanResize && window.CanMaximize);
         if (_minimize is not null)
         {
-            _minimize.IsEnabled = window is null || window.CanMinimize;
+            _minimize.IsEnabled = canMinimize;
+            _minimize.IsVisible = ShowMinimizeButton && (canMinimize || !hide);
         }
         if (_maximize is not null)
         {
-            _maximize.IsEnabled = window is null || (window.CanResize && window.CanMaximize);
+            _maximize.IsEnabled = canMaximize;
+            _maximize.IsVisible = ShowMaximizeButton && (canMaximize || !hide);
         }
     }
 

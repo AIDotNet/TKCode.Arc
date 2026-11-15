@@ -50,6 +50,15 @@ public class ArcWindow : AvaloniaWindow
         AvaloniaProperty.Register<ArcWindow, bool>(nameof(IsTitleBarVisible), true);
 
     /// <summary>
+    /// What the drawn minimize and maximize buttons show while the window does not allow them (<c>CanMinimize</c>, or
+    /// <c>CanResize</c> and <c>CanMaximize</c>, false): <c>Disable</c> (the default) keeps them disabled, <c>Hide</c> hides
+    /// them. Inherited by the window's <see cref="Arc.TitleBar"/> and any <see cref="WindowCaptionButtons"/> in it. The
+    /// macOS traffic lights are the system's and stay as they are.
+    /// </summary>
+    public static readonly StyledProperty<UnavailableCaptionButtonMode> UnavailableCaptionButtonsProperty =
+        WindowCaptionButtons.UnavailableCaptionButtonsProperty.AddOwner<ArcWindow>();
+
+    /// <summary>
     /// An empty theme for the decorations Avalonia draws where the system leaves them to the app (Windows, Linux): it draws
     /// no title bar of its own, so the Arc bar is the only one. The resize grips are not part of the theme and stay.
     /// </summary>
@@ -84,6 +93,13 @@ public class ArcWindow : AvaloniaWindow
     {
         get => GetValue(IsTitleBarVisibleProperty);
         set => SetValue(IsTitleBarVisibleProperty, value);
+    }
+
+    /// <inheritdoc cref="UnavailableCaptionButtonsProperty"/>
+    public UnavailableCaptionButtonMode UnavailableCaptionButtons
+    {
+        get => GetValue(UnavailableCaptionButtonsProperty);
+        set => SetValue(UnavailableCaptionButtonsProperty, value);
     }
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
