@@ -12,6 +12,14 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 
 ### Added
 
+- `SlideToConfirm` (TKCode.Arc.Special, gallery: Special › Loaders): a slider you drag to the end to confirm an action.
+  A liquid fill trails the thumb and necks down when the thumb pulls ahead, the track swells around the pressed thumb,
+  an early release springs back, and a confirm draws the track into the thumb, shows a spinner while `ConfirmAction`
+  runs and turns the arrow into a check. `Label`, `PendingLabel`, `ConfirmedLabel`, `ErrorLabel`, `ConfirmAction`,
+  `Threshold` (0.9), `ResetAfter`, `IsHintEnabled`, `AccentBrush`, read-only `State` (`SlideToConfirmState`) and
+  `Progress`; events `Confirmed` and `StateChanged` (`SlideToConfirmStateChangedEventArgs`); `Confirm()` and `Reset()`.
+  Arrow, Page, Home and End keys move the thumb, holding Space or Enter glides it to the end. The track is 56 px tall
+  below 360 px of width and 64 px from there.
 - `UnavailableCaptionButtons` (`UnavailableCaptionButtonMode`: `Disable`, `Hide`) on `ArcWindow`, `TitleBar` and
   `WindowCaptionButtons` (issue #130): `Hide` hides minimize while `CanMinimize` is false and maximize while `CanResize`
   or `CanMaximize` is false, instead of disabling them. `Disable` (the default) keeps today's behavior. The property is

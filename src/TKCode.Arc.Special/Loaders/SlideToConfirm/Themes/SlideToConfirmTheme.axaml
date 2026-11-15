@@ -1,0 +1,54 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.SlideToConfirmTheme">
+
+    <!--
+        The control draws itself (track, liquid, label, thumb, status and focus ring); the theme only hands it inks and
+        geometry. Track = SurfaceMuted with a 1 px Border edge, tinted to Border on hover and keyboard focus; label =
+        TextSecondary; liquid and success circle = ControlFill (follows the accent; AccentBrush overrides); text and
+        check on the liquid = ControlGlyph; thumb = ControlThumb; status = Foreground; error label = Danger.
+    -->
+    <ControlTheme x:Key="{x:Type arc:SlideToConfirm}" TargetType="arc:SlideToConfirm">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="MinWidth" Value="200" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="TrackBrush" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="TrackHoverBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="FillBrush" Value="{arc:ArcDesignTokenResource ControlFill}" />
+        <Setter Property="OnFillBrush" Value="{arc:ArcDesignTokenResource ControlGlyph}" />
+        <Setter Property="ThumbBrush" Value="{arc:ArcDesignTokenResource ControlThumb}" />
+        <Setter Property="StatusBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="DangerBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+        <Setter Property="FocusRingBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+        <Setter Property="ThumbInk" Value="{arc:SlideToConfirmTokenResource ThumbInk}" />
+        <Setter Property="InsetShadow" Value="{arc:SlideToConfirmTokenResource InsetShadowColor}" />
+        <Setter Property="ThumbShadow" Value="{arc:SlideToConfirmTokenResource ThumbShadow}" />
+        <Setter Property="TrackHeight" Value="{arc:SlideToConfirmTokenResource TrackHeight}" />
+        <Setter Property="TallTrackHeight" Value="{arc:SlideToConfirmTokenResource TallTrackHeight}" />
+        <Setter Property="TallFromWidth" Value="{arc:SlideToConfirmTokenResource TallFromWidth}" />
+        <Setter Property="LabelFontSize" Value="{arc:SlideToConfirmTokenResource LabelFontSize}" />
+        <Setter Property="TallLabelFontSize" Value="{arc:SlideToConfirmTokenResource TallLabelFontSize}" />
+        <Setter Property="StatusGap" Value="{arc:SlideToConfirmTokenResource StatusGap}" />
+        <Setter Property="GrabReach" Value="{arc:SlideToConfirmTokenResource GrabReach}" />
+        <Setter Property="DisabledOpacity" Value="{arc:SlideToConfirmTokenResource DisabledOpacity}" />
+        <Style Selector="^:dragging">
+            <Setter Property="Cursor" Value="SizeWestEast" />
+        </Style>
+        <Style Selector="^:pending">
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:done">
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>
