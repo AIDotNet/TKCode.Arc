@@ -66,6 +66,8 @@ internal abstract class DataGridColumnRow<TCell> : Control where TCell : Control
         _layoutVersion = -1;
         InvalidateMeasure();
         InvalidateArrange();
+        // The row paints its surface itself; a palette change reaches it only through this refresh.
+        InvalidateVisual();
     }
 
     /// <summary>Called when the horizontal offset changed.</summary>
