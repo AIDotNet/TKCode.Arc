@@ -172,6 +172,20 @@ public class TagInput : TemplatedControl
     /// <summary>The tags (two-way, never null).</summary>
     public IReadOnlyList<string> Value { get => GetValue(ValueProperty); set => SetValue(ValueProperty, value); }
 
+    /// <inheritdoc cref="Field.LabelPlacementProperty"/>
+    public static readonly AttachedProperty<FormLabelPlacement> LabelPlacementProperty =
+        Field.LabelPlacementProperty.AddOwner<TagInput>();
+
+    /// <inheritdoc cref="Field.LabelWidthProperty"/>
+    public static readonly AttachedProperty<double> LabelWidthProperty =
+        Field.LabelWidthProperty.AddOwner<TagInput>();
+
+    /// <summary>Where the label sits: Top (default) or Left of the editor. Inherited from <c>arc:Field.LabelPlacement</c> on a container.</summary>
+    public FormLabelPlacement LabelPlacement { get => GetValue(LabelPlacementProperty); set => SetValue(LabelPlacementProperty, value); }
+
+    /// <summary>Width of the left label column; NaN (default) takes the widest left label of the scope, up to 240 px.</summary>
+    public double LabelWidth { get => GetValue(LabelWidthProperty); set => SetValue(LabelWidthProperty, value); }
+
     /// <summary>The visible label.</summary>
     public string? Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
 

@@ -7,7 +7,7 @@
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:Textarea">
                 <!-- Field's template is inlined so a text input no longer nests a second themed Field control. -->
-                <StackPanel>
+                <arc:FieldLayout Size="{TemplateBinding Size}">
                     <TextBlock Name="PART_Label"
                                Text="{TemplateBinding Label}"
                                Margin="{arc:FieldTokenResource LabelMargin}"
@@ -83,7 +83,7 @@
                     <arc:FieldMessage Name="PART_Error"
                                       Kind="Error"
                                       Text="{TemplateBinding EffectiveErrorMessage}" />
-                </StackPanel>
+                </arc:FieldLayout>
             </ControlTemplate>
         </Setter>
 

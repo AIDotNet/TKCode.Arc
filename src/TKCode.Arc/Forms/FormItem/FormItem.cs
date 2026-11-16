@@ -58,7 +58,7 @@ public class FormItem : Field
     /// <summary>Set while the effective <see cref="Form.IsReadOnlyProperty"/> is true.</summary>
     public const string ReadOnlyPseudoClass = ":readonly";
 
-    /// <summary>Set while <see cref="Form.LabelPlacementProperty"/> is <see cref="FormLabelPlacement.Left"/> (Top has none).</summary>
+    /// <summary>Set while <see cref="Form.LabelPlacementProperty"/> or <see cref="Field.LabelPlacementProperty"/> is <see cref="FormLabelPlacement.Left"/> (Top has none).</summary>
     public const string LabelLeftPseudoClass = ":label-left";
 
     /// <summary>The shared size group of automatic left label columns (<c>Grid.IsSharedSizeScope</c> starts a new one).</summary>
@@ -566,7 +566,7 @@ public class FormItem : Field
 
     private void UpdateLabelLayout()
     {
-        var left = GetValue(Form.LabelPlacementProperty) == FormLabelPlacement.Left;
+        var left = IsLabelLeft;
         PseudoClasses.Set(LabelLeftPseudoClass, left);
         if (_layout is null || _labelRow is null || _body is null)
         {
@@ -580,6 +580,11 @@ public class FormItem : Field
         if (left)
         {
             var width = GetValue(Form.LabelWidthProperty);
+            if (double.IsNaN(width) || width < 0)
+            {
+                // Form.LabelWidth first; Field.LabelWidth (set with Field.LabelPlacement outside a form) otherwise.
+                width = LabelWidth;
+            }
             if (double.IsNaN(width) || width < 0)
             {
                 // Auto: every left label of the shared size scope (the form, or a section that starts its own) takes the
@@ -611,12 +616,15 @@ public class FormItem : Field
 
     private bool IsLabelShown => IsLabelVisible && !string.IsNullOrEmpty(Label);
 
+    // Form.LabelPlacement, or Field.LabelPlacement (inherited from a container, or set on the item).
+    private bool IsLabelLeft => GetValue(Form.LabelPlacementProperty) == FormLabelPlacement.Left || LabelPlacement == FormLabelPlacement.Left;
+
     private void UpdateLabelRowVisibility()
     {
         if (_labelRow is not null)
         {
             // A left column stays (empty) so the editor lines up with the others.
-            _labelRow.IsVisible = IsLabelShown || GetValue(Form.LabelPlacementProperty) == FormLabelPlacement.Left;
+            _labelRow.IsVisible = IsLabelShown || IsLabelLeft;
         }
     }
 
@@ -877,7 +885,8 @@ public class FormItem : Field
         {
             UpdateErrorPresentation();
         }
-        else if (property == Form.LabelPlacementProperty || property == Form.LabelWidthProperty)
+        else if (property == Form.LabelPlacementProperty || property == Form.LabelWidthProperty
+                 || property == LabelPlacementProperty || property == LabelWidthProperty)
         {
             UpdateLabelLayout();
         }

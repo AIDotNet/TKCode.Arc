@@ -7,7 +7,7 @@
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:MorphSelect">
-                <StackPanel Name="PART_Root" Spacing="{arc:ArcDesignTokenResource Space2}">
+                <arc:FieldLayout Name="PART_Root" Spacing="{arc:ArcDesignTokenResource Space2}">
                     <TextBlock Name="PART_Label"
                                Text="{TemplateBinding Label}"
                                FontSize="{arc:ArcDesignTokenResource TypeSM}"
@@ -61,7 +61,7 @@
                                       TakesFocusFromNativeControl="False"
                                       WindowManagerAddShadowHint="False" />
                     </Panel>
-                </StackPanel>
+                </arc:FieldLayout>
             </ControlTemplate>
         </Setter>
 

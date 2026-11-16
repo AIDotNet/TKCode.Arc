@@ -6,7 +6,7 @@
     <ControlTheme x:Key="{x:Type arc:Field}" TargetType="arc:Field">
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:Field">
-                <StackPanel>
+                <arc:FieldLayout Size="{TemplateBinding Size}">
                     <TextBlock Name="PART_Label"
                                Text="{TemplateBinding Label}"
                                Margin="{arc:FieldTokenResource LabelMargin}"
@@ -31,7 +31,7 @@
                                       Kind="Error"
                                       Swap="{TemplateBinding MessageSwap}"
                                       Text="{TemplateBinding ErrorMessage}" />
-                </StackPanel>
+                </arc:FieldLayout>
             </ControlTemplate>
         </Setter>
         <Setter Property="ClipToBounds" Value="False" />

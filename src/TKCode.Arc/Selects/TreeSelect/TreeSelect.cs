@@ -183,6 +183,20 @@ public class TreeSelect : TemplatedControl, ISelectFieldAutomation
     public static readonly RoutedEvent<TreeSelectSelectionChangedEventArgs> SelectionChangedEvent =
         RoutedEvent.Register<TreeSelect, TreeSelectSelectionChangedEventArgs>(nameof(SelectionChanged), RoutingStrategies.Bubble);
 
+    /// <inheritdoc cref="Field.LabelPlacementProperty"/>
+    public static readonly AttachedProperty<FormLabelPlacement> LabelPlacementProperty =
+        Field.LabelPlacementProperty.AddOwner<TreeSelect>();
+
+    /// <inheritdoc cref="Field.LabelWidthProperty"/>
+    public static readonly AttachedProperty<double> LabelWidthProperty =
+        Field.LabelWidthProperty.AddOwner<TreeSelect>();
+
+    /// <summary>Where the label sits: Top (default) or Left of the editor. Inherited from <c>arc:Field.LabelPlacement</c> on a container.</summary>
+    public FormLabelPlacement LabelPlacement { get => GetValue(LabelPlacementProperty); set => SetValue(LabelPlacementProperty, value); }
+
+    /// <summary>Width of the left label column; NaN (default) takes the widest left label of the scope, up to 240 px.</summary>
+    public double LabelWidth { get => GetValue(LabelWidthProperty); set => SetValue(LabelWidthProperty, value); }
+
     /// <inheritdoc cref="LabelProperty"/>
     public string? Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
 

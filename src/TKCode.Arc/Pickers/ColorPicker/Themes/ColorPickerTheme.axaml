@@ -7,9 +7,11 @@
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:ColorPicker">
+                <!-- The label names the swatch and is never shown, so a container's left placement does not apply here. -->
                 <arc:Field Name="PART_Field"
                            Label="{TemplateBinding Label}"
                            IsLabelVisible="False"
+                           LabelPlacement="Top"
                            Description="{TemplateBinding Description}"
                            ErrorMessage="{TemplateBinding EffectiveErrorMessage}">
                     <Panel HorizontalAlignment="Left">
