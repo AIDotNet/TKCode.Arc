@@ -8,6 +8,19 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0), `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` (from 1.1.0-preview.1).
 
+## 1.1.1-preview.3 - 2026-11-16
+
+A fix for `DataGrid` (`TKCode.Arc.AdvancedCharts`): the filter row's gutter now follows a light/dark switch at run time
+([#135](https://github.com/AIDotNet/TKCode.Arc/issues/135)). Nothing is added or removed and the API is unchanged.
+Install it with `--version 1.1.1-preview.3` (or `--prerelease`).
+
+### Fixed
+
+- `DataGrid`: the gutter cell of the filter row (below the select-all box, where the clear-filters button sits) kept the
+  previous theme's surface after a light/dark switch at run time while no filter was active ([#135](https://github.com/AIDotNet/TKCode.Arc/issues/135)).
+  The gutter paints its own background, and with the clear button hidden nothing asked it to repaint. A palette change
+  now repaints it, and the header, filter and totals rows repaint their own surface as well.
+
 ## 1.1.1-preview.2 - 2026-11-15
 
 New component: `SlideToConfirm` (`TKCode.Arc.Special`, Special › Loaders), a slider you drag to the end to confirm an action.
@@ -1877,6 +1890,7 @@ ArcTheme.Apply(t => t
 
 First preview release.
 
+[1.1.1-preview.3]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.1.1-preview.2...v1.1.1-preview.3
 [1.1.1-preview.2]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.1.1-preview.1...v1.1.1-preview.2
 [1.1.1-preview.1]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.1.0...v1.1.1-preview.1
 [1.1.0]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.0.0...v1.1.0
