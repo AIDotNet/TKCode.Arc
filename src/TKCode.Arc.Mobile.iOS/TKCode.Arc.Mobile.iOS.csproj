@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <!-- iOS only, so it needs the .NET ios workload and is not in TKCode.Arc.slnx (CI builds and packs that on Linux).
+         Build:  dotnet build src/TKCode.Arc.Mobile.iOS
+         Check it on the simulator with tools/dev/TextEditMobileSample (issue #137). -->
+    <PropertyGroup>
+        <TargetFrameworks>net10.0-ios;net11.0-ios</TargetFrameworks>
+        <SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
+        <AssemblyName>TKCode.Arc.Mobile.iOS</AssemblyName>
+        <RootNamespace>TKCode.Arc.Mobile</RootNamespace>
+        <PackageId>TKCode.Arc.Mobile.iOS</PackageId>
+        <Description>iOS integration for TKCode.Arc.Mobile: the system edit menu and the keyboard's paste suggestion for Avalonia text boxes. Derive the app delegate from ArcAppDelegate&lt;App&gt;.</Description>
+        <PackageTags>$(PackageTags);ios;mobile;clipboard</PackageTags>
+        <!-- Not packed by CI yet: the pack job runs on Linux, without the ios workload. ArcPackingDeferred says so. -->
+        <ArcPackingDeferred>true</ArcPackingDeferred>
+        <!-- Core contains generated types with identical names. -->
+        <NoWarn>$(NoWarn);CS0436</NoWarn>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Avalonia.iOS" />
+        <ProjectReference Include="../TKCode.Arc.Mobile/TKCode.Arc.Mobile.csproj" />
+    </ItemGroup>
+</Project>

@@ -135,6 +135,8 @@ jobs:
           failed=0
           for project in src/*/*.csproj; do
             name="$(basename "$project" .csproj)"
+            # iOS-only projects need the ios workload, which this runner does not install (they are not in the solution).
+            [[ "$name" == *.iOS ]] && continue
             values="$(dotnet msbuild "$project" -getProperty:ArcIsLibrary -getProperty:IsPackable -getProperty:GenerateDocumentationFile -getProperty:ArcPackingDeferred | tr -d '\r')"
             echo "$name: $(echo "$values" | tr -d ' \n')"
             if ! echo "$values" | grep -q '"ArcIsLibrary": "true"'; then
@@ -160,7 +162,7 @@ jobs:
           failed=0
           for project in src/*/*.csproj; do
             name="$(basename "$project" .csproj)"
-            [[ "$name" == *.Generators ]] && continue
+            [[ "$name" == *.Generators || "$name" == *.iOS ]] && continue
             if ! ls "src/$name"/bin/Debug/*/"$name.xml" > /dev/null 2>&1; then
               echo "::error::src/$name/bin/Debug/<tfm>/$name.xml is missing"
               failed=1

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="2.1" srcLang="en-US" trgLang="zh-TW" xmlns="urn:oasis:names:tc:xliff:document:2.0">
+  <file id="TKCode.Arc.Localization.TextEditMenuLangResourceKind">
+    <unit id="Cut">
+      <segment>
+        <source>Cut</source>
+        <target state="translated">剪下</target>
+      </segment>
+    </unit>
+    <unit id="Copy">
+      <segment>
+        <source>Copy</source>
+        <target state="translated">拷貝</target>
+      </segment>
+    </unit>
+    <unit id="Paste">
+      <segment>
+        <source>Paste</source>
+        <target state="translated">貼上</target>
+      </segment>
+    </unit>
+    <unit id="SelectAll">
+      <segment>
+        <source>Select All</source>
+        <target state="translated">全選</target>
+      </segment>
+    </unit>
+  </file>
+</xliff>

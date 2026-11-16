@@ -8,6 +8,42 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0), `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` (from 1.1.0-preview.1).
 
+## Unreleased
+
+### Added
+
+- `TextEditMenu` (`TKCode.Arc.Mobile`): the long-press edit menu of a text field, a row of Cut, Copy, Paste and Select
+  All above the text ([#137](https://github.com/AIDotNet/TKCode.Arc/issues/137)). It derives from Avalonia's
+  `PopupFlyoutBase`, so set it as the `ContextFlyout` of any `TextBox` to give it the menu. It shows only the actions
+  that apply (no Cut or Copy without a selection or in a password box, no Cut or Paste when read only, no Select All
+  once all is selected), opens without taking focus so the soft keyboard stays up, and closes on a tap outside, on
+  typing and when the field loses focus. Its text comes from the new `TextEditMenuLangResourceKind` catalog (en-US,
+  zh-CN, zh-TW), and its geometry from `TextEditMenuToken`. `TextEditMenu.Platform` (an `ITextEditMenuPlatform`) lets a
+  platform package show the system's own edit menu in its place.
+- `TKCode.Arc.Mobile.iOS` (new package, `net10.0-ios` and `net11.0-ios`): the iOS edit actions for Avalonia text boxes
+  ([#137](https://github.com/AIDotNet/TKCode.Arc/issues/137)). Avalonia.iOS 12.1.5 does not implement `cut:`, `copy:`,
+  `paste:` and `selectAll:`, so the keyboard's "Paste from …" suggestion did nothing. Derive the app delegate from
+  `ArcAppDelegate<App>` (in place of `AvaloniaAppDelegate<App>`) and those actions reach the focused `TextBox`, the
+  suggestion pastes, and on iOS 16 and later a long press on a `TextField` opens the system edit menu above the text.
+  Paste reads the pasteboard inside the system's paste action, so iOS does not ask "Allow Paste?". An app that keeps
+  its own delegate base forwards to `ArcIosTextEditing`. Android needs no package: Avalonia.Android already handles the
+  keyboard's paste, and the Arc menu shows there.
+
+### Fixed
+
+- `TextField` and `Searchbar` (`TKCode.Arc.Mobile`) had no long-press menu, so on a phone there was no way to paste
+  into them ([#137](https://github.com/AIDotNet/TKCode.Arc/issues/137)). Avalonia's `TextBox` shows its `ContextFlyout`
+  on a long press and from the selection handles, but the theme set none. It now sets a `TextEditMenu`; a long press
+  opens it above the field at the finger, also in a field nobody has typed in yet. A `ContextFlyout` or `ContextMenu`
+  you set on the field still replaces it.
+
+### Migration
+
+- `TKCode.Arc.Mobile` now has a language catalog, `TextEditMenuLangResourceKind`, with en-US, zh-CN and zh-TW text. An
+  app that enables `UseArcMobile()` and lists another language in `UseLanguages` gets the startup error that lists
+  missing text, as it already does with the catalogs of the other Arc packages; keep to those three languages until the
+  package ships that language.
+
 ## 1.1.1-preview.4 - 2026-11-16
 
 Standalone Arc fields can put their label on the left: `LabelPlacement="Left"` and `LabelWidth` on the field, or
