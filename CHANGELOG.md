@@ -8,6 +8,26 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0), `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` (from 1.1.0-preview.1).
 
+## 1.1.1-preview.4 - 2026-11-16
+
+Standalone Arc fields can put their label on the left: `LabelPlacement="Left"` and `LabelWidth` on the field, or
+`arc:Field.LabelPlacement` / `arc:Field.LabelWidth` on a container ([#131](https://github.com/AIDotNet/TKCode.Arc/issues/131)).
+Nothing is removed and the default (label on top) is unchanged. Install it with `--version 1.1.1-preview.4` (or `--prerelease`).
+
+### Added
+
+- `Field.LabelPlacement` and `Field.LabelWidth` (`TKCode.Arc`): inherited attached properties, also exposed as
+  `LabelPlacement` / `LabelWidth` on `Field`, `Input`, `Textarea`, `PasswordField`, `PasswordStrength`, `SearchField`,
+  `NumberField`, `MoneyInput`, `PhoneInput`, the pickers (`DatePicker`, `DateRangePicker`, `TimePicker`), `TagInput`,
+  `Select`, `Combobox`, `MultiSelect`, `TreeSelect`, `Cascader` and `MorphSelect` ([#131](https://github.com/AIDotNet/TKCode.Arc/issues/131)).
+  With `Left`, the label sits in a column left of the frame, vertically centred on the frame height of the field's `Size`
+  (36, 44 or 50 px), and the description and error rows stay under the frame. `LabelWidth` fixes the column; `NaN`
+  (the default) gives every field under the element that sets the placement (or the width, or `Grid.IsSharedSizeScope`)
+  one column as wide as its widest label, capped at 240 px (`Form`'s `AutoLabelMaxWidth`), after which labels wrap.
+  A field inside a `FormItem` keeps leaving its label to the item, and `FormItem` now also follows an inherited
+  `Field.LabelPlacement="Left"`. A field inside another control's template ignores an inherited value, and the
+  `ColorPicker` keeps its label on top.
+
 ## 1.1.1-preview.3 - 2026-11-16
 
 A fix for `DataGrid` (`TKCode.Arc.AdvancedCharts`): the filter row's gutter now follows a light/dark switch at run time
@@ -1890,6 +1910,7 @@ ArcTheme.Apply(t => t
 
 First preview release.
 
+[1.1.1-preview.4]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.1.1-preview.3...v1.1.1-preview.4
 [1.1.1-preview.3]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.1.1-preview.2...v1.1.1-preview.3
 [1.1.1-preview.2]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.1.1-preview.1...v1.1.1-preview.2
 [1.1.1-preview.1]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.1.0...v1.1.1-preview.1
