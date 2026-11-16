@@ -9,9 +9,12 @@ public static unsafe class GhosttyRuntime
 {
     private static readonly Lazy<string> VersionValue = new(ReadVersion);
 
+    /// <summary>Prepares the process for libghostty-vt; every entry point calls it before its first native call.</summary>
     public static void EnsureInitialized()
     {
-        // M0：无进程级初始化。M6 在这里注入 PNG 解码器（GHOSTTY_SYS_OPT_DECODE_PNG）。
+        // iOS: libghostty-vt is an embedded framework that the default probing does not find.
+        GhosttyLibrary.EnsureResolver();
+        // M6 在这里注入 PNG 解码器（GHOSTTY_SYS_OPT_DECODE_PNG）。
     }
 
     /// <summary>libghostty 的版本字符串（例如 <c>1.3.2-dev+b3dc3d7</c>）。</summary>
@@ -21,6 +24,7 @@ public static unsafe class GhosttyRuntime
     {
         get
         {
+            EnsureInitialized();
             bool simd;
             TerminalCore.Check(GhosttyNative.BuildInfo(GhosttyBuildInfo.Simd, &simd));
             return simd;
@@ -40,12 +44,14 @@ public static unsafe class GhosttyRuntime
     /// <summary>ghostty_type_json() 的类型清单（结构体布局、枚举值、packed 位布局）。</summary>
     public static string TypeManifestJson()
     {
+        EnsureInitialized();
         var p = GhosttyNative.TypeJson();
         return p == null ? string.Empty : Encoding.UTF8.GetString(new ReadOnlySpan<byte>(p, int.MaxValue).SliceToNull());
     }
 
     private static string ReadVersion()
     {
+        EnsureInitialized();
         GhosttyString s;
         TerminalCore.Check(GhosttyNative.BuildInfo(GhosttyBuildInfo.VersionString, &s));
         return Encoding.UTF8.GetString(s.Ptr, checked((int)s.Len));

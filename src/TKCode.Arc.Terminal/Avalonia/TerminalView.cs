@@ -29,6 +29,7 @@ public sealed partial class TerminalView : Control
     private readonly Dictionary<int, GlyphTypeface?> _fallback = [];
     private GlyphTypeface? _face;
     private CellMetrics? _metrics;
+    private TopLevel? _topLevel;
 
     static TerminalView()
     {
@@ -88,10 +89,37 @@ public sealed partial class TerminalView : Control
         }
     }
 
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        _topLevel = TopLevel.GetTopLevel(this);
+        if (_topLevel is not null)
+        {
+            _topLevel.ScalingChanged += OnScalingChanged;
+        }
+        InvalidateMetrics();
+    }
+
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
+        if (_topLevel is not null)
+        {
+            _topLevel.ScalingChanged -= OnScalingChanged;
+            _topLevel = null;
+        }
         ClearRowCache();
+    }
+
+    // Metrics are in device pixels: recompute them when the scaling is known (phones report it after the first layout)
+    // or changes (another monitor).
+    private void OnScalingChanged(object? sender, EventArgs e) => InvalidateMetrics();
+
+    private void InvalidateMetrics()
+    {
+        _metrics = null;
+        InvalidateMeasure();
+        InvalidateVisual();
     }
 
     protected override Size MeasureOverride(Size availableSize)
@@ -191,9 +219,39 @@ public sealed partial class TerminalView : Control
         context.DrawGlyphRun(Brush(color), run);
     }
 
+    /// <summary>
+    /// The face of the first family in <see cref="FontFamily"/> that the platform has. Avalonia on Android answers a family
+    /// it does not have with the system default (proportional) face instead of a miss, which would end the list at its
+    /// first name; so a face named differently from the family asked for counts as a miss here, except for the generic
+    /// <c>monospace</c>. A family from a font source (<c>avares://...#Name</c>, <c>fonts:...#Name</c>), or no match at all:
+    /// Avalonia's choice.
+    /// </summary>
+    private GlyphTypeface PrimaryFace()
+    {
+        if (_face is { } face)
+        {
+            return face;
+        }
+        var family = FontFamily;
+        // System families only: no key (one name) or a comma-separated list of names (a "compositefont:" key without '#').
+        if (family.Key is null || (family.Key.Source.Scheme == "compositefont" && !family.Key.Source.OriginalString.Contains('#')))
+        {
+            foreach (var name in family.FamilyNames)
+            {
+                if (FontManager.Current.TryGetGlyphTypeface(new Typeface(name), out var candidate) &&
+                    (string.Equals(candidate.FamilyName, name, StringComparison.OrdinalIgnoreCase) ||
+                     string.Equals(name, "monospace", StringComparison.OrdinalIgnoreCase)))
+                {
+                    return _face = candidate;
+                }
+            }
+        }
+        return _face = new Typeface(family).GlyphTypeface;
+    }
+
     private GlyphTypeface? FaceFor(int codepoint)
     {
-        var primary = _face ??= new Typeface(FontFamily).GlyphTypeface;
+        var primary = PrimaryFace();
         if (primary.CharacterToGlyphMap.TryGetGlyph(codepoint, out _))
         {
             return primary;
@@ -210,7 +268,6 @@ public sealed partial class TerminalView : Control
     private CellMetrics ComputeMetrics()
     {
         var scaling = TopLevel.GetTopLevel(this)?.RenderScaling ?? 1.0;
-        _face ??= new Typeface(FontFamily).GlyphTypeface;
-        return CellMetrics.Compute(_face, FontSize, scaling);
+        return CellMetrics.Compute(PrimaryFace(), FontSize, scaling);
     }
 }

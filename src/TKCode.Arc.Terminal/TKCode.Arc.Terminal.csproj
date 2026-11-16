@@ -5,7 +5,7 @@
         <AssemblyName>TKCode.Arc.Terminal</AssemblyName>
         <RootNamespace>TKCode.Terminal</RootNamespace>
         <PackageId>TKCode.Arc.Terminal</PackageId>
-        <Description>Terminal emulator for Avalonia: the TerminalView control and a managed facade over libghostty-vt (VT parsing, screen state, selection, input encoding). The native library ships in the package under runtimes/&lt;rid&gt;/native.</Description>
+        <Description>Terminal emulator for Avalonia: the TerminalView control and a managed facade over libghostty-vt (VT parsing, screen state, selection, input encoding). The native library ships in the package under runtimes/&lt;rid&gt;/native: Windows, macOS and Linux (x64, arm64), Android (arm64, x64, arm; API 29+) and iOS (an xcframework for devices and the simulator).</Description>
         <PackageTags>$(PackageTags);terminal;ghostty;vt</PackageTags>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
@@ -19,7 +19,11 @@
         <InternalsVisibleTo Include="TKCode.Arc.Tests" />
         <InternalsVisibleTo Include="TKCode.Arc.Gallery.Tests" />
     </ItemGroup>
-    <!-- libghostty-vt per RID. The binaries are not committed: tools/terminal/sync-native.sh copies them in from the TKCode build. -->
+    <!-- libghostty-vt per RID. The binaries are not committed: tools/terminal/build-ghostty.sh (+ build-ghostty-ios.sh) builds them
+         and tools/terminal/sync-native.sh copies them in. Apps pick them up without any build targets from this package:
+         desktop through deps.json; Android apps take runtimes/android-<abi>/native, which NuGet prefers over the linux-*
+         fallback of the android RIDs; iOS apps embed runtimes/ios/native/ghostty-vt.xcframework as a framework (the iOS SDK
+         does that for an xcframework among a package's native assets), and GhosttyLibrary loads it from Frameworks/. -->
     <ItemGroup>
         <None Include="runtimes/**" Pack="true" PackagePath="runtimes/" Visible="false" />
     </ItemGroup>

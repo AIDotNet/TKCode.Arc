@@ -85,7 +85,7 @@ All 23 packages are released together on one version; keep them on the same one.
 |---|---|
 | `TKCode.Arc.Workflow` | A canvas for showing, editing and running graphs of steps, with pan, zoom, auto-arrange and undo. |
 | `TKCode.Arc.Dock` | IDE-style tab groups and resizable splits, with keyboard navigation and layouts saved as JSON. |
-| `TKCode.Arc.Terminal` | `TerminalView` over libghostty-vt, with the native libraries bundled. |
+| `TKCode.Arc.Terminal` | `TerminalView` over libghostty-vt, with the native libraries bundled for Windows, macOS, Linux, Android and iOS. |
 | `TKCode.Arc.Pdf`, `.Pdf.Native`, `.Pdf.Browser` | `PdfViewer` with thumbnails, outline, search, text selection and links, using PDFium on desktop and pdf.js on WebAssembly. |
 | `TKCode.Arc.Audio`, `.Audio.Native`, `.Audio.Browser` | The `IAudioPlayer` abstraction, with miniaudio on desktop and HTML audio on WebAssembly. |
 | `TKCode.Arc.Video`, `.Video.Native`, `.Video.Browser` | `VideoPlayer` and `VideoSurface` over each platform's own player (Media Foundation, AVFoundation, GStreamer on desktop, and the browser's video element on WebAssembly). |
@@ -120,7 +120,7 @@ migration notes.
 | **Avalonia** | Avalonia 12.1.5 or any later 12.x release (`[12.1.5, 13.0.0)`), so apps can update Avalonia without waiting for an Arc release. |
 | **Desktop** | Windows, macOS and Linux. |
 | **Browser** | The gallery itself runs on WebAssembly, and audio, video and PDF have browser backends. |
-| **Mobile** | `TKCode.Arc.Mobile` is previewed in a desktop phone frame and is not yet verified on Android or iOS devices. |
+| **Mobile** | `TKCode.Arc.Mobile` is previewed in a desktop phone frame and is not yet verified on Android or iOS devices. `TKCode.Arc.Terminal` carries libghostty-vt for Android (arm64, x64 and arm, API 29 or later) and iOS (devices and the simulator, as an xcframework the iOS SDK embeds), with or without NativeAOT; `tools/dev/TerminalMobileSample` checks it on the iOS simulator and an Android emulator. |
 
 ## Repository
 

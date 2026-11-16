@@ -333,8 +333,9 @@ jobs:
         run: dotnet test tests/TKCode.Arc.Pdf.Native.Tests -c Release
 
   # libghostty-vt for every RID, built from the commit pinned in native/ghostty/ghostty-upstream.json (+ overlays) with
-  # the Zig in native/toolchain.json. Linux cross-compiles the Linux and Windows targets; the macOS targets need the
-  # Apple SDK. TKCode.Arc.Terminal ships the results under runtimes/<rid>/native. The same job builds the miniaudio shim of
+  # the Zig in native/toolchain.json. Linux cross-compiles the Linux, Windows and Android targets (Android with the NDK
+  # pinned in native/toolchain.json); the macOS and iOS targets need the Apple SDK (iOS: one xcframework for devices and the
+  # simulator). TKCode.Arc.Terminal ships the results under runtimes/<rid>/native and runtimes/ios/native. The same job builds the miniaudio shim of
   # TKCode.Arc.Audio.Native (native/miniaudio, pinned in miniaudio-upstream.json) with the same Zig and RID split.
   native:
     name: Native (${{ matrix.host }})
@@ -348,9 +349,11 @@ jobs:
           - host: linux
             os: ubuntu-24.04
             rids: linux-x64 linux-arm64 win-x64 win-arm64
+            mobile: android
           - host: macos
             os: macos-15
             rids: osx-arm64 osx-x64
+            mobile: ios
     env:
       ZIG_GLOBAL_CACHE_DIR: ${{ github.workspace }}/.zig-cache-global
     steps:
@@ -371,6 +374,21 @@ jobs:
 
       - name: Build libghostty-vt
         run: for rid in ${{ matrix.rids }}; do tools/terminal/build-ghostty.sh "$rid"; done
+
+      # The runner's Android SDK, plus the NDK version libghostty-vt is built with.
+      - name: Install the Android NDK
+        if: matrix.mobile == 'android'
+        run: |
+          ndk="$(python3 -c "import json; print(json.load(open('native/toolchain.json'))['androidNdk']['version'])")"
+          (yes || true) | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --install "ndk;$ndk" > /dev/null
+          echo "ANDROID_NDK_HOME=$ANDROID_HOME/ndk/$ndk" >> "$GITHUB_ENV"
+
+      - name: Build libghostty-vt for ${{ matrix.mobile }}
+        run: |
+          case "${{ matrix.mobile }}" in
+            android) for rid in android-arm64 android-x64 android-arm; do tools/terminal/build-ghostty.sh "$rid"; done;;
+            ios) tools/terminal/build-ghostty-ios.sh;;
+          esac
 
       - name: Build the miniaudio shim
         run: for rid in ${{ matrix.rids }}; do tools/audio/build-miniaudio.sh "$rid"; done
@@ -401,6 +419,7 @@ jobs:
           path: |
             artifacts/native/*/*ghostty-vt.*
             artifacts/native/*/ghostty-commit.txt
+            artifacts/native/ios/ghostty-vt.xcframework/**
             artifacts/native/*/*tkcode_audio.*
             artifacts/native/*/miniaudio-version.txt
             artifacts/native/*/*tkcode_video.*
@@ -506,11 +525,16 @@ jobs:
           fi
           unzip -p "$templates" content/ArcStarterApp/ArcStarterApp.csproj | grep -q "Include=\"TKCode.Arc\" Version=\"$VERSION\"" \
             || { echo "::error::$templates does not reference TKCode.Arc $VERSION"; exit 1; }
-          # TKCode.Arc.Terminal must carry libghostty-vt for every RID.
+          # TKCode.Arc.Terminal must carry libghostty-vt for every RID, Android and iOS included.
           terminal="artifacts/nupkg/TKCode.Arc.Terminal.$VERSION.nupkg"
           for entry in runtimes/linux-x64/native/libghostty-vt.so runtimes/linux-arm64/native/libghostty-vt.so \
                        runtimes/win-x64/native/ghostty-vt.dll runtimes/win-arm64/native/ghostty-vt.dll \
-                       runtimes/osx-x64/native/libghostty-vt.dylib runtimes/osx-arm64/native/libghostty-vt.dylib; do
+                       runtimes/osx-x64/native/libghostty-vt.dylib runtimes/osx-arm64/native/libghostty-vt.dylib \
+                       runtimes/android-arm64/native/libghostty-vt.so runtimes/android-x64/native/libghostty-vt.so \
+                       runtimes/android-arm/native/libghostty-vt.so \
+                       runtimes/ios/native/ghostty-vt.xcframework/Info.plist \
+                       runtimes/ios/native/ghostty-vt.xcframework/ios-arm64/ghostty-vt.framework/ghostty-vt \
+                       runtimes/ios/native/ghostty-vt.xcframework/ios-arm64_x86_64-simulator/ghostty-vt.framework/ghostty-vt; do
             unzip -l "$terminal" | grep -q " $entry\$" || { echo "::error::$terminal lacks $entry"; exit 1; }
           done
           # TKCode.Arc.Audio.Native must carry the miniaudio shim for every RID.

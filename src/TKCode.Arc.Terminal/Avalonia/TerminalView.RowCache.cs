@@ -204,7 +204,7 @@ public sealed partial class TerminalView
             ushort glyph;
             if (GlyphOverride is { } lookup)
             {
-                face = _face ??= new Typeface(FontFamily).GlyphTypeface;
+                face = PrimaryFace();
                 glyph = lookup((int)cp);
             }
             else
