@@ -1,0 +1,30 @@
+{
+  "measuredOn": "2026-11-16",
+  "sourceCommit": "57e42d28dd56b0d91237b523271cabeb36eafed4",
+  "arcVersion": "1.1.1-preview.2",
+  "sdk": "11.0.100",
+  "runtimePack": "10.0.15",
+  "targetFramework": "net10.0",
+  "avaloniaVersion": "12.1.5",
+  "rid": "win-x64",
+  "selfContained": true,
+  "publishTrimmed": true,
+  "trimMode": "full",
+  "excludedExtensions": [".pdb", ".xml"],
+  "hostIntermediates": "Isolated per variant",
+  "hostValidation": "Startup and Button theme lookup; no full template/state/render validation",
+  "sourceResults": [
+    { "variant": "source-full", "bytes": 58478232, "registeredThemes": 179, "arcDllBytes": 3581952 },
+    { "variant": "selective", "bytes": 43722405, "registeredThemes": 1, "arcDllBytes": 72704 },
+    { "variant": "no-heavy", "bytes": 49440740, "registeredThemes": 174, "arcDllBytes": 3284992 },
+    { "variant": "combined", "bytes": 43179204, "registeredThemes": 1, "arcDllBytes": 72192 },
+    { "variant": "no-charts", "bytes": 58324632, "registeredThemes": 166 },
+    { "variant": "no-editors", "bytes": 58185880, "registeredThemes": 174 }
+  ],
+  "separateNugetResults": [
+    { "variant": "baseline", "bytes": 42373176 },
+    { "variant": "core", "bytes": 43046782 },
+    { "variant": "nuget", "bytes": 58478701 },
+    { "variant": "reference", "bytes": 42916349 }
+  ]
+}

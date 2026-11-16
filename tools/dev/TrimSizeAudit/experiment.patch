@@ -1,0 +1,64 @@
+diff --git a/src/TKCode.Arc.Foundation.Generators/ThemeEmitter.cs b/src/TKCode.Arc.Foundation.Generators/ThemeEmitter.cs
+index 13b4c243..8c1d9161 100644
+--- a/src/TKCode.Arc.Foundation.Generators/ThemeEmitter.cs
++++ b/src/TKCode.Arc.Foundation.Generators/ThemeEmitter.cs
+@@ -61,7 +61,16 @@ namespace TKCode.Arc.Foundation.Generators
+             sb.AppendLine("        {");
+             foreach (var token in tokens)
+             {
++                var optional = assemblyName == "TKCode.Arc" && token.Stem != "Button";
++                if (optional)
++                {
++                    sb.AppendLine("#if !ARC_AUDIT_BUTTON_ONLY");
++                }
+                 sb.Append("            global::").Append(token.TokensNamespace).Append('.').Append(token.Stem).AppendLine("Tokens.Descriptor,");
++                if (optional)
++                {
++                    sb.AppendLine("#endif");
++                }
+             }
+             sb.AppendLine("        };");
+             sb.AppendLine();
+@@ -70,9 +79,18 @@ namespace TKCode.Arc.Foundation.Generators
+             sb.AppendLine("        {");
+             foreach (var (file, className, keys) in assets)
+             {
++                var optional = assemblyName == "TKCode.Arc" && className != "TKCode.Arc.ButtonTheme";
++                if (optional)
++                {
++                    sb.AppendLine("#if !ARC_AUDIT_BUTTON_ONLY");
++                }
+                 sb.Append("            new global::TKCode.Arc.ArcThemeAsset(\"").Append(assemblyName).Append(':').Append(file.RelativePath)
+                   .Append("\", new object[] { ").Append(string.Join(", ", keys)).Append(" }, static () => new global::")
+                   .Append(className).AppendLine("()),");
++                if (optional)
++                {
++                    sb.AppendLine("#endif");
++                }
+             }
+             sb.AppendLine("        };");
+             sb.AppendLine();
+diff --git a/src/TKCode.Arc/TKCode.Arc.csproj b/src/TKCode.Arc/TKCode.Arc.csproj
+index eb9fc523..1a83a524 100644
+--- a/src/TKCode.Arc/TKCode.Arc.csproj
++++ b/src/TKCode.Arc/TKCode.Arc.csproj
+@@ -18,4 +18,19 @@
+         <InternalsVisibleTo Include="TKCode.Arc.Gallery.Tests" />
+         <InternalsVisibleTo Include="TKCode.Arc.AdvancedCharts" />
+     </ItemGroup>
++    <PropertyGroup Condition="'$(ArcAuditButtonOnly)' == 'true'">
++        <DefineConstants>$(DefineConstants);ARC_AUDIT_BUTTON_ONLY</DefineConstants>
++    </PropertyGroup>
++    <PropertyGroup Condition="'$(ArcAuditNoHeavy)' == 'true'">
++        <DefaultItemExcludes>$(DefaultItemExcludes);Content/Markdown/**;Tables/CodeBlock/**;Activity/ChatThread/**;Editors/RichTextEditor/**</DefaultItemExcludes>
++    </PropertyGroup>
++    <ItemGroup Condition="'$(ArcAuditNoHeavy)' == 'true'">
++        <PackageReference Remove="TKCode.StreamMark.Highlighting.TextMate" />
++    </ItemGroup>
++    <PropertyGroup Condition="'$(ArcAuditNoCharts)' == 'true'">
++        <DefaultItemExcludes>$(DefaultItemExcludes);Charts/ActivityHeatmap/**;Charts/BarChart/**;Charts/BrushChart/**;Charts/DonutChart/**;Charts/Gauge/**;Charts/LineChart/**;Charts/Ridgeline/**;Charts/SlopeChart/**;Charts/Sparkline/**;Charts/SplitBar/**;Charts/Streamgraph/**;Charts/Treemap/**;Charts/WaffleChart/**</DefaultItemExcludes>
++    </PropertyGroup>
++    <PropertyGroup Condition="'$(ArcAuditNoEditors)' == 'true'">
++        <DefaultItemExcludes>$(DefaultItemExcludes);Editors/**</DefaultItemExcludes>
++    </PropertyGroup>
+ </Project>

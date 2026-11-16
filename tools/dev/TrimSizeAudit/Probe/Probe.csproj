@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <!-- Copied outside the repository by run.ps1, so repository build defaults do not affect the host. -->
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AuditMode Condition="'$(AuditMode)' == ''">baseline</AuditMode>
+        <DefineConstants>$(DefineConstants);$(AuditMode)</DefineConstants>
+        <PublishTrimmed>true</PublishTrimmed>
+        <TrimMode>full</TrimMode>
+        <SelfContained>true</SelfContained>
+        <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+        <DebugType>none</DebugType>
+        <DebugSymbols>false</DebugSymbols>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Avalonia.Desktop" Version="12.1.5" />
+    </ItemGroup>
+    <ItemGroup Condition="'$(AuditMode)' == 'core'">
+        <PackageReference Include="TKCode.Arc.Core" Version="1.1.1-preview.2" />
+    </ItemGroup>
+    <ItemGroup Condition="('$(AuditMode)' == 'arc' or '$(AuditMode)' == 'reference') and '$(UseSource)' != 'true'">
+        <PackageReference Include="TKCode.Arc" Version="1.1.1-preview.2" />
+    </ItemGroup>
+    <ItemGroup Condition="'$(UseSource)' == 'true'">
+        <ProjectReference Include="$(ArcSourceRoot)/src/TKCode.Arc/TKCode.Arc.csproj" />
+    </ItemGroup>
+</Project>
