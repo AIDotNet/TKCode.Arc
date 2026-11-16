@@ -8,7 +8,12 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0), `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` (from 1.1.0-preview.1).
 
-## Unreleased
+## 1.1.1-preview.5 - 2026-11-16
+
+Mobile text fields get a long-press edit menu: `TextField` and `Searchbar` (`TKCode.Arc.Mobile`) now offer Cut, Copy,
+Paste and Select All, so text can be pasted on a phone ([#137](https://github.com/AIDotNet/TKCode.Arc/issues/137)).
+`TKCode.Arc.Terminal` now runs on iOS and Android ([#136](https://github.com/AIDotNet/TKCode.Arc/issues/136)). Nothing is
+removed and the API of existing members is unchanged. Install it with `--version 1.1.1-preview.5` (or `--prerelease`).
 
 ### Added
 
@@ -20,7 +25,12 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
   typing and when the field loses focus. Its text comes from the new `TextEditMenuLangResourceKind` catalog (en-US,
   zh-CN, zh-TW), and its geometry from `TextEditMenuToken`. `TextEditMenu.Platform` (an `ITextEditMenuPlatform`) lets a
   platform package show the system's own edit menu in its place.
-- `TKCode.Arc.Mobile.iOS` (new package, `net10.0-ios` and `net11.0-ios`): the iOS edit actions for Avalonia text boxes
+- `TKCode.Arc.Terminal` carries libghostty-vt for Android (arm64, x64, arm; API 29 and later) and iOS (a dynamic
+  `ghostty-vt.xcframework` for devices and the simulator), so `TerminalView` runs on phones, with or without NativeAOT
+  ([#136](https://github.com/AIDotNet/TKCode.Arc/issues/136)). No build targets are needed: NuGet picks
+  `runtimes/android-*` for the Android RIDs, and the iOS SDK embeds the xcframework from the package.
+- `TKCode.Arc.Mobile.iOS` (new project, `net10.0-ios` and `net11.0-ios`; not on NuGet in this preview, because CI does
+  not pack iOS projects yet: reference the project for now): the iOS edit actions for Avalonia text boxes
   ([#137](https://github.com/AIDotNet/TKCode.Arc/issues/137)). Avalonia.iOS 12.1.5 does not implement `cut:`, `copy:`,
   `paste:` and `selectAll:`, so the keyboard's "Paste from …" suggestion did nothing. Derive the app delegate from
   `ArcAppDelegate<App>` (in place of `AvaloniaAppDelegate<App>`) and those actions reach the focused `TextBox`, the
@@ -36,6 +46,10 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
   on a long press and from the selection handles, but the theme set none. It now sets a `TextEditMenu`; a long press
   opens it above the field at the finger, also in a field nobody has typed in yet. A `ContextFlyout` or `ContextMenu`
   you set on the field still replaces it.
+- `TerminalView` on Android: an unknown font family resolved to Roboto instead of a miss, so the default family list
+  stopped at "Menlo"; a substituted face now counts as a miss and the list falls through to monospace. Cell metrics are
+  recomputed on attach and when the scaling changes (phones report it after the first measure, which left the grid at
+  1x) ([#136](https://github.com/AIDotNet/TKCode.Arc/issues/136)).
 
 ### Migration
 
@@ -1946,6 +1960,7 @@ ArcTheme.Apply(t => t
 
 First preview release.
 
+[1.1.1-preview.5]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.1.1-preview.4...v1.1.1-preview.5
 [1.1.1-preview.4]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.1.1-preview.3...v1.1.1-preview.4
 [1.1.1-preview.3]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.1.1-preview.2...v1.1.1-preview.3
 [1.1.1-preview.2]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.1.1-preview.1...v1.1.1-preview.2
