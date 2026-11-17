@@ -444,6 +444,7 @@ public partial class PdfViewer : PageViewer
     {
         base.OnAttachedToVisualTree(e);
         UpdateLabelSubscription();
+        ArcPdf.BackendChanged += OnBackendChanged;
         // A source opens while the viewer is in a tree and closes when it leaves. Back before the leaving took effect, it just goes on.
         var moved = _leaving && _session == _leavingSession;
         _leaving = false;
@@ -459,6 +460,7 @@ public partial class PdfViewer : PageViewer
     {
         base.OnDetachedFromVisualTree(e);
         UpdateLabelSubscription();
+        ArcPdf.BackendChanged -= OnBackendChanged;
         ClearLinkTip();
         PauseSearch();
         if (Source is not null)

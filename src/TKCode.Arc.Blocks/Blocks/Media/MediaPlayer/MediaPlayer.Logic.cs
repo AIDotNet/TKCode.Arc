@@ -206,13 +206,29 @@ public partial class MediaPlayer
     {
         base.OnAttachedToVisualTree(e);
         _clock ??= new LiveLoop(this, OnClockFrame);
+        ArcAudio.BackendChanged += OnArcAudioBackendChanged;
         EnsurePlayer();
         LoadCurrent();
     }
 
+    /// <summary>
+    /// A process backend that arrives after the player was made (a browser's <c>UseAsync</c> finishing late, #149) replaces
+    /// the player, unless <see cref="AudioBackend"/> picks one. Raised on the setting thread.
+    /// </summary>
+    private void OnArcAudioBackendChanged(object? sender, EventArgs e) => Dispatcher.UIThread.Post(() =>
+    {
+        if (AudioBackend is null && _player is not null && this.IsAttachedToVisualTree())
+        {
+            ReleasePlayer();
+            EnsurePlayer();
+            LoadCurrent();
+        }
+    });
+
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
+        ArcAudio.BackendChanged -= OnArcAudioBackendChanged;
         _clock?.Stop();
         ReleasePlayer();
         if (IsPlaying)

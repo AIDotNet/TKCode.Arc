@@ -85,22 +85,7 @@ public static class ArcVideoNative
     /// NuGet consumers get the library from the deps.json probe paths; a project reference copies it to
     /// <c>runtimes/&lt;rid&gt;/native</c> beside the assembly, which the default probing does not look in.
     /// </summary>
-    private static void EnsureResolver()
-    {
-        if (s_resolverSet)
-        {
-            return;
-        }
-        s_resolverSet = true;
-        try
-        {
-            NativeLibrary.SetDllImportResolver(typeof(ArcVideoNative).Assembly, Resolve);
-        }
-        catch (InvalidOperationException)
-        {
-            // A resolver was already set for this assembly by the host; keep it.
-        }
-    }
+    private static void EnsureResolver() => ArcNativeLibrary.SetResolverOnce(typeof(ArcVideoNative).Assembly, Resolve, ref s_resolverSet);
 
     private static nint Resolve(string name, Assembly assembly, DllImportSearchPath? searchPath)
     {
@@ -118,20 +103,6 @@ public static class ArcVideoNative
             var framework = Path.Combine(AppContext.BaseDirectory, "Frameworks", "tkcode_video.framework", "tkcode_video");
             return NativeLibrary.TryLoad(framework, out handle) ? handle : 0;
         }
-        var file = OperatingSystem.IsWindows() ? "tkcode_video.dll" : OperatingSystem.IsMacOS() ? "libtkcode_video.dylib" : "libtkcode_video.so";
-        var path = Path.Combine(AppContext.BaseDirectory, "runtimes", CurrentRid(), "native", file);
-        return NativeLibrary.TryLoad(path, out handle) ? handle : 0;
-    }
-
-    private static string CurrentRid()
-    {
-        var os = OperatingSystem.IsWindows() ? "win" : OperatingSystem.IsMacOS() ? "osx" : "linux";
-        var arch = RuntimeInformation.ProcessArchitecture switch
-        {
-            Architecture.Arm64 => "arm64",
-            Architecture.X86 => "x86",
-            _ => "x64",
-        };
-        return $"{os}-{arch}";
+        return ArcNativeLibrary.TryLoadFromRuntimes("tkcode_video", out handle) ? handle : 0;
     }
 }

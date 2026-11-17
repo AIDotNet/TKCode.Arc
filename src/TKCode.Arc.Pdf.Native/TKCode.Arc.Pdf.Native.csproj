@@ -34,4 +34,8 @@
         <Warning Condition="'@(_PdfNative)' == ''" Text="No PDFium under runtimes/&lt;rid&gt;/native: the package would ship without the native library. Run tools/pdf/sync-native.sh." />
         <Warning Condition="'@(_PdfLicenses)' == ''" Text="No license files under licenses/: the package would ship PDFium without its licenses. Run tools/pdf/sync-native.sh." />
     </Target>
+    <ItemGroup>
+        <!-- RID, file name and runtimes/<rid>/native lookup shared with the other native backends (#149). -->
+        <Compile Include="../Shared/ArcNativeLibrary.cs" Link="Shared/ArcNativeLibrary.cs" />
+    </ItemGroup>
 </Project>

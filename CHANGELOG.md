@@ -18,6 +18,20 @@ looks different after the upgrade; see Changed for how to get the old look back.
 
 ### Added
 
+- **Backends follow late arrivals** ([#149](https://github.com/AIDotNet/TKCode.Arc/issues/149)):
+  - `ArcAudio.BackendChanged` and `ArcPdf.BackendChanged` join `ArcVideo.BackendChanged`. All three are raised once per
+    change, and setting the same backend again raises nothing.
+  - `VideoPlayer` and `MediaPlayer` replace their player when the process backend changes, for example when a browser's
+    `UseAsync()` finishes after they were created. `MediaPlayer` does so only when its `AudioBackend` is not set.
+  - `PdfViewer` and the attached `Pdf.Source` open the source again when it failed with `BackendUnavailable`.
+- **`UseArc(...)` entries for the platform backends** ([#149](https://github.com/AIDotNet/TKCode.Arc/issues/149),
+  [#151](https://github.com/AIDotNet/TKCode.Arc/issues/151)):
+  - `UseArcAudioNative()`, `UseArcAudioBrowser()`, `UseArcVideoNative()`, `UseArcVideoBrowser()`, `UseArcPdfNative()`
+    and `UseArcPdfBrowser(assetsUrl)` enable the backend when the app starts and show up in `ArcRuntime.Packages`.
+  - The Video and Pdf ones also enable `UseArcVideo()` / `UseArcPdf()`.
+  - The browser ones start loading without waiting; the controls move over when the backend arrives.
+  - The static `Use()` / `UseAsync()` methods stay as they are.
+  - `TKCode.Arc.Audio.Native` and `TKCode.Arc.Audio.Browser` now reference `TKCode.Arc.Foundation` for this.
 - **`TKCode.Arc.Terminal`, text** ([#139](https://github.com/AIDotNet/TKCode.Arc/issues/139)): SGR 1 and 3 draw with the
   family's bold, italic and bold-italic faces, or synthesized ones when it has none; a fallback font is asked for the
   same style. New `TerminalView` properties: `FontWeight`, `BoldFontWeight` (default `Bold`; below `SemiBold` it is not
@@ -60,6 +74,9 @@ looks different after the upgrade; see Changed for how to get the old look back.
   - set `UnfocusedCursorStyle="Same"` to stop drawing a hollow cursor while the view does not have focus;
   - set `CursorBlink="Never"` and `TextBlink="False"` to stop blinking;
   - set `CustomGlyphs="False"` to take box drawing and block characters from the font again.
+- `ArcPdfNative.Use()` no longer waits for PDFium to start while it holds its lock. A second caller waits for the same
+  start, and the three native packages share one way of finding their library under `runtimes/<rid>/native`
+  ([#149](https://github.com/AIDotNet/TKCode.Arc/issues/149)).
 - **Dependencies** ([#147](https://github.com/AIDotNet/TKCode.Arc/issues/147)): `TKCode.Arc.Special` no longer depends
   on `TKCode.Arc.Markdown` or `TKCode.Arc.Highlighting`, and `TKCode.Arc.Blocks` no longer depends on
   `TKCode.Arc.Highlighting`. An app that uses Special no longer carries StreamMark, Markdig or TextMate; one that uses

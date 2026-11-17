@@ -393,8 +393,22 @@ public partial class VideoPlayer
             _languages.Changed += OnLanguageChanged;
         }
         UpdateTexts();
+        ArcVideo.BackendChanged += OnArcVideoBackendChanged;
         EnsurePlayerAndLoad();
     }
+
+    /// <summary>
+    /// A backend that arrives after the player was made (a browser's <c>UseAsync</c> finishing late, #149) replaces the
+    /// player and loads the source again. Raised on the setting thread.
+    /// </summary>
+    private void OnArcVideoBackendChanged(object? sender, EventArgs e) => Dispatcher.UIThread.Post(() =>
+    {
+        if (_attached && _player is { } player && !ReferenceEquals(player.Backend, ArcVideo.Backend))
+        {
+            ReleasePlayer();
+            EnsurePlayerAndLoad();
+        }
+    });
 
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
@@ -404,6 +418,7 @@ public partial class VideoPlayer
         }
         base.OnDetachedFromVisualTree(e);
         _attached = false;
+        ArcVideo.BackendChanged -= OnArcVideoBackendChanged;
         if (_languages is not null)
         {
             _languages.Changed -= OnLanguageChanged;
