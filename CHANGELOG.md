@@ -18,6 +18,10 @@ looks different after the upgrade; see Changed for how to get the old look back.
 
 ### Added
 
+- `ArcColor` (Core: `Lerp`, `LerpOklab`, `WithOpacity`) and `ArcFormatting.Bytes` ("512 B", "19 KB", "2.4 MB",
+  "1.5 GB"). These are the shared helpers that controls used to write for themselves
+  ([#148](https://github.com/AIDotNet/TKCode.Arc/issues/148)). The activity components' byte sizes now come from
+  `ArcFormatting.Bytes`, which also shows gigabytes; before, sizes over 1 GB read in MB.
 - `UseArcFonts()` and `UseArcPixelFonts()` (TKCode.Arc.Fonts) register Geist, Geist Mono and the pixel fonts from
   `UseArc(...)`, the same as `WithArcFonts()` / `WithArcPixelFonts()`; calling both is harmless. TKCode.Arc.Fonts now
   references TKCode.Arc.Foundation ([#151](https://github.com/AIDotNet/TKCode.Arc/issues/151)).

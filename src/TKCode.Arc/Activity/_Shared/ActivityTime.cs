@@ -1,4 +1,5 @@
 using System.Globalization;
+using TKCode.Arc.Primitives;
 
 namespace TKCode.Arc;
 
@@ -94,18 +95,7 @@ internal static class ActivityTime
     public static int DaysBefore(DateOnly day, DateOnly today) => today.DayNumber - day.DayNumber;
 
     /// <summary>Arc's <c>formatBytes</c>: "512 B", "18 KB", "2.4 MB".</summary>
-    public static string FormatBytes(long bytes)
-    {
-        if (bytes < 1024)
-        {
-            return $"{Math.Max(0, bytes)} B";
-        }
-        if (bytes < 1024 * 1024)
-        {
-            return $"{Math.Round(bytes / 1024.0, MidpointRounding.AwayFromZero).ToString(CultureInfo.InvariantCulture)} KB";
-        }
-        return $"{(bytes / (1024.0 * 1024.0)).ToString("0.0", CultureInfo.InvariantCulture)} MB";
-    }
+    public static string FormatBytes(long bytes) => ArcFormatting.Bytes(bytes);
 
     /// <summary>Upper-cases the first letter (Arc capitalizes Intl's "today" / "yesterday").</summary>
     public static string Capitalize(string text, CultureInfo? culture)

@@ -1,0 +1,8 @@
+# Files outside Core with their own byte-size formatter (#148). Use ArcFormatting.Bytes in new code.
+src/TKCode.Arc.Blocks/Blocks/Agents/AgentBuilder/AgentBuilderRows.cs
+src/TKCode.Arc.Blocks/Blocks/Agents/KnowledgeBase/KnowledgeBaseText.cs
+src/TKCode.Arc.Blocks/Blocks/Ai/_Shared/AiFileIntake/AiFileIntake.cs
+src/TKCode.Arc.Blocks/Blocks/Media/FileUpload/FileUploadTypes.cs
+src/TKCode.Arc/Activity/_Shared/ActivityTime.cs
+src/TKCode.Arc/Editors/AvatarUpload/AvatarUpload.cs
+src/TKCode.Arc/Editors/FileDropzone/FileDropzoneItem.cs

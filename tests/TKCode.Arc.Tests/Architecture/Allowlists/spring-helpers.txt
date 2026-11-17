@@ -1,0 +1,5 @@
+# Spring helper files outside Core (#148). Use Core's Springs and MotionValue in new code.
+src/TKCode.Arc.Blocks/Blocks/Analytics/_Shared/AnalyticsSprings.cs
+src/TKCode.Arc.Blocks/Blocks/Developer/_Shared/DeveloperSprings.cs
+src/TKCode.Arc.Blocks/Blocks/Projects/_Shared/ProjectsSprings.cs
+src/TKCode.Arc.Blocks/Blocks/Showpieces/_Shared/ShowpieceSprings.cs
