@@ -1,11 +1,11 @@
 using System.Collections.Immutable;
-using StreamMark.Core.Highlighting;
+using TKCode.Arc.CodeTokens;
 
 namespace TKCode.Arc;
 
 /// <summary>
 /// Syntax colors for <see cref="InstallSnippet"/> snippets from the library's highlighter (the public
-/// <see cref="MarkdownHighlightPlugin"/> highlighter: <see cref="CodeBlock"/>'s TextMate grammars painted in Arc's role
+/// <see cref="CodeTokens.CodeTokenHighlighter"/>: <see cref="CodeBlock"/>'s TextMate grammars painted in Arc's role
 /// palette), memoized per snippet. A snippet is highlighted once per language and appearance on a worker; switching back
 /// to a framework, or a new code view for the same snippet during a crossfade, gets its colors at once. Concurrent
 /// requests for one snippet share the work. Snippets are a few lines each, so the cache keeps the latest 64 and then
@@ -15,7 +15,7 @@ internal static class InstallSnippetHighlighter
 {
     private const int Capacity = 64;
 
-    private static readonly ISyntaxHighlighter s_highlighter = new MarkdownHighlightPlugin().Highlighter;
+    private static readonly ISyntaxHighlighter s_highlighter = CodeTokenHighlighter.Shared;
     private static readonly Dictionary<string, IReadOnlyList<ImmutableArray<HighlightToken>>?> s_done = new(StringComparer.Ordinal);
     private static readonly Dictionary<string, Task<IReadOnlyList<ImmutableArray<HighlightToken>>?>> s_running = new(StringComparer.Ordinal);
     private static readonly object s_gate = new();

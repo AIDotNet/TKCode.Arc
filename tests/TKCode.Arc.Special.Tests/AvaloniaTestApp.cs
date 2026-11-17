@@ -20,6 +20,7 @@ public static class TestAppBuilder
         return AppBuilder.Configure<TestApplication>()
                          .UseHeadless(new AvaloniaHeadlessPlatformOptions())
                          .UseArc(arc => arc.UseArcSpecial()
+                                    .UseArcHighlighting()
                                     .UseLanguages(LanguageTags.EnUS, [LanguageTags.EnUS, LanguageTags.ZhCN, LanguageTags.ZhTW]));
     }
 }

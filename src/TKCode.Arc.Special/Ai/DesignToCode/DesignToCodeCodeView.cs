@@ -8,14 +8,14 @@ using Avalonia.Media.Immutable;
 using Avalonia.Media.TextFormatting;
 using Avalonia.Utilities;
 using Avalonia.VisualTree;
-using StreamMark.Core.Highlighting;
+using TKCode.Arc.CodeTokens;
 using TKCode.Arc.Motion;
 
 namespace TKCode.Arc;
 
 /// <summary>
 /// The generated code on the output side: line numbers in a gutter, the code in the monospace font, highlighted with the
-/// library's code palette through the public <see cref="MarkdownHighlightPlugin"/> highlighter (on a worker, one TextMate
+/// library's code palette through <see cref="CodeTokens.CodeTokenHighlighter"/> highlighter (on a worker, one TextMate
 /// session per view). Long lines wrap with a hanging indent (continuation lines start a little right of the line's own
 /// indentation), so nothing scrolls sideways. Each line knows the region its first character belongs to: the lines of
 /// the region being written carry a quiet tint and the lines of a highlighted region a stronger one. Each streamed chunk
@@ -67,7 +67,7 @@ internal sealed class DesignToCodeCodeView : Control
     public static readonly StyledProperty<double> HangingIndentProperty =
         AvaloniaProperty.Register<DesignToCodeCodeView, double>(nameof(HangingIndent), 2);
 
-    private static readonly ISyntaxHighlighter s_highlighter = new MarkdownHighlightPlugin().Highlighter;
+    private static readonly ISyntaxHighlighter s_highlighter = CodeTokenHighlighter.Shared;
 
     private readonly List<CodeLine> _lines = [];
     private readonly AiTextFades _fades;

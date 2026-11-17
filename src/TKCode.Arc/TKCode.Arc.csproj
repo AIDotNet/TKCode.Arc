@@ -23,5 +23,7 @@
         <!-- The split-out packages (ADR 0050) use the code-highlighting contract, palettes and shared parts. -->
         <InternalsVisibleTo Include="TKCode.Arc.Markdown" />
         <InternalsVisibleTo Include="TKCode.Arc.Highlighting" />
+        <!-- Special colors code through the highlighting contract (CodeTokens.CodeTokenHighlighter) without Markdown (#147). -->
+        <InternalsVisibleTo Include="TKCode.Arc.Special" />
     </ItemGroup>
 </Project>

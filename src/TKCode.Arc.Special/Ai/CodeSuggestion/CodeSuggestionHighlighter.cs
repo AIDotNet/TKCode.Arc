@@ -1,11 +1,11 @@
 using System.Collections.Immutable;
-using StreamMark.Core.Highlighting;
+using TKCode.Arc.CodeTokens;
 
 namespace TKCode.Arc;
 
 /// <summary>
 /// Syntax colors for one text of a <see cref="CodeSuggestion"/> (the original file, or the file with every hunk applied),
-/// from the library's highlighter: <see cref="MarkdownHighlightPlugin"/>, the TextMate sessions and Arc role palette of
+/// from the library's highlighter: <see cref="CodeTokens.CodeTokenHighlighter"/>, the TextMate sessions and Arc role palette of
 /// <see cref="CodeBlock"/>. One session per text and appearance runs on a worker, one update at a time (a newer text waits
 /// for the running one, then the latest is highlighted). Sessions work line by line and keep unchanged lines, so a
 /// streamed line never re-highlights the others; <see cref="TokensFor"/> hands out a line's tokens only while its text is
@@ -13,7 +13,7 @@ namespace TKCode.Arc;
 /// </summary>
 internal sealed class CodeSuggestionHighlighter
 {
-    private static readonly ISyntaxHighlighter s_highlighter = new MarkdownHighlightPlugin().Highlighter;
+    private static readonly ISyntaxHighlighter s_highlighter = CodeTokenHighlighter.Shared;
 
     private readonly Action _changed;
     private string _code = string.Empty;

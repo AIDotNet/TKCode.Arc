@@ -5,7 +5,7 @@ using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using Avalonia.Media.TextFormatting;
 using Avalonia.Utilities;
-using StreamMark.Core.Highlighting;
+using TKCode.Arc.CodeTokens;
 using TKCode.Arc.Motion;
 
 namespace TKCode.Arc;
