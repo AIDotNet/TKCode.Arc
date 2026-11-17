@@ -5,14 +5,14 @@ using Avalonia.Controls.Documents;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
-using StreamMark.Core.Highlighting;
+using TKCode.Arc.CodeTokens;
 using TKCode.Arc.Motion;
 
 namespace TKCode.Arc;
 
 /// <summary>
 /// Text that reveals itself in chunks: the SQL of <see cref="AskYourData"/> (syntax tinted through the library highlighter,
-/// the public <see cref="MarkdownHighlightPlugin"/>) and its insight. The whole text is laid out first, so the block holds
+/// <see cref="CodeTokens.CodeTokenHighlighter"/>) and its insight. The whole text is laid out first, so the block holds
 /// its final size while it streams; only the revealed part is drawn, and each chunk fades in on its own over 140ms (the
 /// shared <see cref="AiTextFades"/>: each wrapped line's glyphs at the chunk's opacity). Text appended later (SQL streamed
 /// by the app's model) grows the layout.
@@ -150,7 +150,7 @@ internal sealed class AskYourDataRevealText : SelectableTextBlock
             _highlighted.TrySetResult();
             return;
         }
-        s_highlighter ??= new MarkdownHighlightPlugin().Highlighter;
+        s_highlighter ??= CodeTokenHighlighter.Shared;
         if (!s_highlighter.SupportsLanguage(_language))
         {
             _tokens = null;

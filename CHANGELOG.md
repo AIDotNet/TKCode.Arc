@@ -60,6 +60,14 @@ looks different after the upgrade; see Changed for how to get the old look back.
   - set `UnfocusedCursorStyle="Same"` to stop drawing a hollow cursor while the view does not have focus;
   - set `CursorBlink="Never"` and `TextBlink="False"` to stop blinking;
   - set `CustomGlyphs="False"` to take box drawing and block characters from the font again.
+- **Dependencies** ([#147](https://github.com/AIDotNet/TKCode.Arc/issues/147)): `TKCode.Arc.Special` no longer depends
+  on `TKCode.Arc.Markdown` or `TKCode.Arc.Highlighting`, and `TKCode.Arc.Blocks` no longer depends on
+  `TKCode.Arc.Highlighting`. An app that uses Special no longer carries StreamMark, Markdig or TextMate; one that uses
+  Blocks no longer carries TextMate. The Special components that show code (AskYourData, CodeSuggestion, DesignToCode,
+  InstallSnippet) and the AI and support blocks color it through the same highlighter as `CodeBlock`, which
+  `UseArcHighlighting()` installs. **To keep colored code**, add `TKCode.Arc.Highlighting` and call
+  `UseArcHighlighting()` in `UseArc(...)`: `UseArcSpecial()` and `UseArcBlocks()` no longer enable it, and without it
+  that code is plain text. `UseArcBlocks()` still enables `UseArcMarkdown()`.
 
 ## 1.1.1 - 2026-11-17
 

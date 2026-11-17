@@ -6,10 +6,11 @@ public static class ArcSpecialBuilderExtensions
 {
     /// <summary>
     /// Enables the Arc special components (the animated AI explainers such as <c>AgentLoop</c>). Depends on
-    /// <see cref="ArcBuilderExtensions.UseArcControls"/>, <see cref="ArcMarkdownBuilderExtensions.UseArcMarkdown"/> and
-    /// <see cref="ArcHighlightingBuilderExtensions.UseArcHighlighting"/> (the AI components show highlighted code).
+    /// <see cref="ArcBuilderExtensions.UseArcControls"/>. The AI components that show code (AskYourData, CodeSuggestion,
+    /// DesignToCode, InstallSnippet) color it when the app also calls <c>UseArcHighlighting()</c> (TKCode.Arc.Highlighting);
+    /// without it their code is plain text.
     /// </summary>
     public static ArcBuilder UseArcSpecial(this ArcBuilder builder)
         => builder.UsePackage(ArcGeneratedAssets.PackageId, static package => ArcGeneratedAssets.AddTo(package
-            .DependsOn(static b => b.UseArcControls().UseArcMarkdown().UseArcHighlighting())));
+            .DependsOn(static b => b.UseArcControls())));
 }

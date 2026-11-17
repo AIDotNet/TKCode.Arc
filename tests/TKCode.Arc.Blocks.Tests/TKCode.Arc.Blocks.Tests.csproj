@@ -15,6 +15,8 @@
         <PackageReference Include="Avalonia.Headless.XUnit" />
         <PackageReference Include="Avalonia.Markup.Xaml.Loader" />
         <ProjectReference Include="../../src/TKCode.Arc.Blocks/TKCode.Arc.Blocks.csproj" />
+        <!-- The code-coloring tests need the TextMate highlighter, which UseArcBlocks() / UseArcSpecial() do not enable (#147). -->
+        <ProjectReference Include="../../src/TKCode.Arc.Highlighting/TKCode.Arc.Highlighting.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Icons.Lucide/TKCode.Arc.Icons.Lucide.csproj" />
         <!-- [PropertyGridModel] test types: the Foundation generator registers them (no themes or tokens here). -->
         <ProjectReference Include="../../src/TKCode.Arc.Foundation.Generators/TKCode.Arc.Foundation.Generators.csproj"
